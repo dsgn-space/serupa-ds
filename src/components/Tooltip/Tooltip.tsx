@@ -53,8 +53,11 @@ export function Tooltip(props: TooltipProps): React.ReactElement {
       tip.style.left = r.x + "px"; tip.style.top = r.y + "px"; tip.dataset.side = r.side;
     };
     update();
+    // Its size can change after it opens (a web font arriving, new content): place it again.
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
+    if (ro) { ro.observe(tip); ro.observe(anchor); }
     window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
   }, [open, props.placement, props.content]);
 
   // Escape hides it from anywhere while it's open (the element may not have focus when hovered).
