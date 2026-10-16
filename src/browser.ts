@@ -4,6 +4,7 @@ import * as Diki from "./index";
 
 window.Diki = Object.assign(window.Diki || {}, {
   version: Diki.version,
+  Alert: Diki.Alert,
   Badge: Diki.Badge,
   Button: Diki.Button,
   buttonClass: Diki.buttonClass,
