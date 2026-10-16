@@ -1,0 +1,343 @@
+{
+  "color": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.blue-600}",
+      "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 (emerald 700) with white text; dark themes: brand 400 with brand-950 text.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--primary"
+        }
+      }
+    },
+    "primary-hover": {
+      "$type": "color",
+      "$value": "{color.blue-700}",
+      "$description": "Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--primary-hover"
+        }
+      }
+    },
+    "primary-subtle": {
+      "$type": "color",
+      "$value": "{color.blue-50}",
+      "$description": "Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--primary-subtle"
+        }
+      }
+    },
+    "on-primary": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `primary` fills (white in light themes, brand 950 in dark).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--on-primary"
+        }
+      }
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{color.gray-100}",
+      "$description": "Alias. Secondary button fill; hover fill for outline and ghost buttons.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--secondary"
+        }
+      }
+    },
+    "secondary-hover": {
+      "$type": "color",
+      "$value": "{color.gray-200}",
+      "$description": "Alias. Hover state of `secondary`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--secondary-hover"
+        }
+      }
+    },
+    "surface": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Page and card background (white light, gray-950 dark).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--surface"
+        }
+      }
+    },
+    "surface-muted": {
+      "$type": "color",
+      "$value": "{color.gray-50}",
+      "$description": "Alias. Secondary panels, sidebars, table headers.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--surface-muted"
+        }
+      }
+    },
+    "surface-inverse": {
+      "$type": "color",
+      "$value": "{color.gray-900}",
+      "$description": "Alias. Contrasting blocks: tooltips, inverse banners.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--surface-inverse"
+        }
+      }
+    },
+    "text": {
+      "$type": "color",
+      "$value": "{color.gray-900}",
+      "$description": "Alias. Body text and headings on `surface`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--text"
+        }
+      }
+    },
+    "text-muted": {
+      "$type": "color",
+      "$value": "{color.gray-500}",
+      "$description": "Alias. Secondary text, captions, placeholders (4.5:1+ on `surface` in every theme).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--text-muted"
+        }
+      }
+    },
+    "text-inverse": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text on `surface-inverse`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--text-inverse"
+        }
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": "{color.gray-200}",
+      "$description": "Alias. Default borders and dividers.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--border"
+        }
+      }
+    },
+    "border-strong": {
+      "$type": "color",
+      "$value": "{color.gray-300}",
+      "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--border-strong"
+        }
+      }
+    },
+    "focus-ring": {
+      "$type": "color",
+      "$value": "{color.blue-500}",
+      "$description": "Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--focus-ring"
+        }
+      }
+    },
+    "success": {
+      "$type": "color",
+      "$value": "{color.green-600}",
+      "$description": "Alias. Success icons and fills. For success text on light surfaces use `green-700`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--success"
+        }
+      }
+    },
+    "success-subtle": {
+      "$type": "color",
+      "$value": "{color.green-50}",
+      "$description": "Alias. Success alert / badge background.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--success-subtle"
+        }
+      }
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{color.amber-600}",
+      "$description": "Alias. Warning icons and fills; put dark text on it. For warning text on light surfaces use `amber-700`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--warning"
+        }
+      }
+    },
+    "warning-subtle": {
+      "$type": "color",
+      "$value": "{color.amber-50}",
+      "$description": "Alias. Warning alert / badge background.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--warning-subtle"
+        }
+      }
+    },
+    "danger": {
+      "$type": "color",
+      "$value": "{color.red-600}",
+      "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--danger"
+        }
+      }
+    },
+    "danger-hover": {
+      "$type": "color",
+      "$value": "{color.red-700}",
+      "$description": "Alias. Hover / pressed state of `danger`.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--danger-hover"
+        }
+      }
+    },
+    "on-danger": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `danger` fills.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--on-danger"
+        }
+      }
+    },
+    "danger-subtle": {
+      "$type": "color",
+      "$value": "{color.red-50}",
+      "$description": "Alias. Error alert / badge background.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--danger-subtle"
+        }
+      }
+    },
+    "danger-text": {
+      "$type": "color",
+      "$value": "{color.red-700}",
+      "$description": "Alias. Destructive text and icons on `surface`, `danger-subtle` and its hover (5.3:1+ in every theme).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--danger-text"
+        }
+      }
+    },
+    "danger-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.red-100}",
+      "$description": "Alias. Hover fill for destructive secondary, outline and ghost buttons.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--danger-subtle-hover"
+        }
+      }
+    },
+    "danger-border": {
+      "$type": "color",
+      "$value": "{color.red-300}",
+      "$description": "Alias. Border of a destructive outline button.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--danger-border"
+        }
+      }
+    },
+    "info": {
+      "$type": "color",
+      "$value": "{color.sky-700}",
+      "$description": "Alias. Informational icons and text.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--info"
+        }
+      }
+    },
+    "info-subtle": {
+      "$type": "color",
+      "$value": "{color.sky-50}",
+      "$description": "Alias. Info alert / badge background.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--info-subtle"
+        }
+      }
+    },
+    "field": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Background of text inputs, selects and other form fields.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--field"
+        }
+      }
+    },
+    "field-border": {
+      "$type": "color",
+      "$value": "{color.gray-500}",
+      "$description": "Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--field-border"
+        }
+      }
+    },
+    "field-border-hover": {
+      "$type": "color",
+      "$value": "{color.gray-600}",
+      "$description": "Alias. Field border on hover.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--field-border-hover"
+        }
+      }
+    },
+    "placeholder": {
+      "$type": "color",
+      "$value": "{color.gray-500}",
+      "$description": "Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels.",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--placeholder"
+        }
+      }
+    },
+    "overlay": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0667,
+          0.0941,
+          0.1529
+        ],
+        "hex": "#111827",
+        "alpha": 0.502
+      },
+      "$description": "Alias. The dimmed backdrop behind dialogs and drawers (gray-900 at 50% in light themes, gray-950 at 70% in dark).",
+      "$extensions": {
+        "com.diki": {
+          "cssVar": "--overlay"
+        }
+      }
+    }
+  }
+}

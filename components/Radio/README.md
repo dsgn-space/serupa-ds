@@ -1,0 +1,100 @@
+# Radio and RadioGroup
+
+Native radios for one choice from a short list. `RadioGroup` names them, holds the value and lays them out; each `Radio` is drawn from tokens like Checkbox, sits centered on its label's first line, and the whole label picks it. Arrow keys move the choice, as browsers do for radios.
+
+## Usage
+
+```jsx
+const { Radio, RadioGroup, Field } = window.Diki;
+
+<Field group label="Plan" hint="You can change it later." error={error}>
+  <RadioGroup name="plan" value={plan} onChange={(value) => setPlan(value)}>
+    <Radio value="free" description="Up to 3 projects.">Free</Radio>
+    <Radio value="pro" description="Unlimited projects and history.">Pro</Radio>
+  </RadioGroup>
+</Field>
+
+// uncontrolled, in a row
+<RadioGroup aria-label="Density" defaultValue="md" orientation="horizontal">
+  <Radio value="sm">Compact</Radio>
+  <Radio value="md">Default</Radio>
+  <Radio value="lg">Roomy</Radio>
+</RadioGroup>
+```
+
+## RadioGroup props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `value` | string \| number \| null | | The picked radio's value (controlled). `null` picks none |
+| `defaultValue` | string \| number | | The value picked at first (uncontrolled) |
+| `onChange` | `(value, event) => void` | | Called with the picked radio's value and the change event |
+| `name` | string | generated | The radios' name, for forms |
+| `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | A stack 8px apart, or a wrapping row 16px apart |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Every radio's size, unless one sets its own |
+| `invalid` | boolean | `false` | `aria-invalid` on the group, and a danger border on each unchecked radio. Field sets it from its error |
+| `disabled` | boolean | `false` | Disables every radio (and sets `aria-disabled` on the group) |
+| `required` | boolean | `false` | `aria-required` on the group, `required` on each radio |
+
+Other props (`id`, `aria-label`, `aria-labelledby`, `className`…) and `ref` go to the `<div role="radiogroup">`, which has `data-component="radio-group"` and `data-orientation`.
+
+## Radio props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `value` | string \| number | | What the group reports when this radio is picked |
+| `children` | node | | The label. Without one, give the radio an `aria-label` |
+| `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | the group's, or `'md'` | A 14px circle with `text-xs`, 16px with `text-sm`, 20px with `text-base` |
+| `invalid` | boolean | `false` | A danger border and `aria-invalid`. In a group, set `invalid` on the RadioGroup instead |
+
+Other props (`id`, `disabled`, `aria-*`, `onChange`…) and `ref` go to the `<input type="radio">`. `className` and `style` go to the `<label>`, which has `data-component="radio"` and `data-size`. In a group, the group sets `name` and `checked` (a radio's own are ignored). Outside one, a Radio is a plain radio: pass `name` and `checked` or `defaultChecked` yourself.
+
+## States
+
+| State | Look |
+| --- | --- |
+| Unchecked | `field` background, 1px `field-border` |
+| Checked | `primary` fill and border, with a dot in `on-primary` (6, 6 or 8px) |
+| Hover | `field-border-hover`; a checked radio turns `primary-hover` |
+| Focus | From the keyboard: a 2px `focus-ring` ring outside a 2px `surface` gap, like Button; a visible outline in forced-colors mode |
+| Invalid | `danger` border while unchecked, and a `danger` focus ring |
+| Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` circle; also inside a disabled fieldset (`Field group disabled`) |
+
+## Accessibility
+
+- They're real radios: Tab moves to the group (to the picked one), arrow keys move the choice, and screen readers announce the position ("2 of 3").
+- Name the group: wrap it in `Field group` (a `<fieldset>` and `<legend>`, with the hint and error describing it), or give the RadioGroup an `aria-label` or `aria-labelledby`.
+- A radio's label names it; a description is read after it. The dot is decorative.
+- The label and description keep 4.5:1, and the border, checked fill, dot, focus ring and invalid border 3:1, in all six themes (`tools/test/radio.mjs`).
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one radio. The list lives in `components/Radio/radio.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--radio-bg` | `field` | The circle while unchecked |
+| `--radio-bg-disabled` | `surface-muted` | The circle when disabled and unchecked |
+| `--radio-bg-checked` | `primary` | Fill and border when checked |
+| `--radio-bg-checked-hover` | `primary-hover` | The same, on hover |
+| `--radio-border` | `field-border` | Border while unchecked |
+| `--radio-border-hover` | `field-border-hover` | Border on hover |
+| `--radio-dot-color` | `on-primary` | The dot |
+| `--radio-label-color` | `text` | The label |
+| `--radio-description-color` | `text-muted` | The description |
+| `--radio-focus-ring` | `focus-ring` | The focus ring |
+| `--radio-invalid` | `danger` | Border and focus ring when invalid |
+| `--radio-size-sm` / `-md` / `-lg` | `spacing-3.5` / `spacing-4` / `spacing-5` | Circle sizes (14, 16, 20px) |
+| `--radio-dot-size-sm` / `-md` / `-lg` | `spacing-1.5` / `spacing-1.5` / `spacing-2` | Dot sizes (6, 6, 8px) |
+| `--radio-gap` | `spacing-2` | Circle to label (8px) |
+| `--radio-group-gap` | `spacing-2` | Between radios in a stack, and between rows (8px) |
+| `--radio-group-gap-horizontal` | `spacing-4` | Between radios in a row (16px) |
+| `--radio-border-width` | `border-width-1` | Border width (1px) |
+
+## Guidelines
+
+- Use radios for 2 to about 5 options people should compare; past that, a Select saves space.
+- Pick a default when one is safe, so the group never starts empty; leave it empty when the choice has to be deliberate.
+- Stack options; use a row only for short labels that fit on one line.
+- For on and off, use a checkbox or a switch, not two radios.

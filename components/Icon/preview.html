@@ -1,0 +1,34 @@
+<!-- @dsCard group="Foundations" height=300 subtitle="Material Symbols · Rounded · Fill, plus custom icons" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Icon — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 6px; }
+  .cell span:last-child { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+  .row { display: flex; align-items: center; gap: 16px; margin-top: 16px; color: var(--text-muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  var names = ['add','edit','delete','close','search','settings','more_vert','arrow_forward','expand_more','home','person','notifications','check_circle','error','warning','info'];
+  var tones = { check_circle: 'var(--success)', error: 'var(--danger)', warning: 'var(--warning)', info: 'var(--info)' };
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div', { className: 'grid' }, names.map(function (n) {
+      return h('div', { className: 'cell', key: n }, h(T.Icon, { name: n, style: tones[n] ? { color: tones[n] } : null }), h('span', null, n));
+    })),
+    T.customIcons && T.customIcons.length ? h(React.Fragment, null,
+      h('div', { className: 'row' }, 'Custom icons'),
+      h('div', { className: 'grid' }, T.customIcons.map(function (n) {
+        return h('div', { className: 'cell', key: n }, h(T.Icon, { name: n }), h('span', null, n));
+      }))) : null,
+    h('div', { className: 'row' }, [14, 16, 20, 24, 40].map(function (s) {
+      return h('span', { key: s, style: { display: 'inline-flex', alignItems: 'center', gap: 6 } }, h(T.Icon, { name: 'favorite', size: s, style: { color: 'var(--text)' } }), s + 'px');
+    }))
+  ));
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!-- @dsCard group="Forms" height=260 subtitle="Native radios in a RadioGroup: sm, md, lg; vertical, horizontal; description; invalid, disabled" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Radio — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .row { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 14px; max-width: 600px; }
+  .lbl { width: 80px; flex-shrink: 0; font-size: 12px; line-height: 20px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
+  function Opts() { return [h(T.Radio, { key: 1, value: 'day' }, 'Daily'), h(T.Radio, { key: 2, value: 'week' }, 'Weekly'), h(T.Radio, { key: 3, value: 'never' }, 'Never')]; }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    Row('Sizes', [h(T.RadioGroup, { key: 1, size: 'sm', orientation: 'horizontal', defaultValue: 'a', 'aria-label': 'Small' }, h(T.Radio, { value: 'a' }, 'Small')), h(T.RadioGroup, { key: 2, orientation: 'horizontal', defaultValue: 'a', 'aria-label': 'Medium' }, h(T.Radio, { value: 'a' }, 'Medium')), h(T.RadioGroup, { key: 3, size: 'lg', orientation: 'horizontal', defaultValue: 'a', 'aria-label': 'Large' }, h(T.Radio, { value: 'a' }, 'Large'))]),
+    Row('Horizontal', h(T.RadioGroup, { orientation: 'horizontal', defaultValue: 'week', 'aria-label': 'Digest' }, Opts())),
+    Row('Description', h(T.RadioGroup, { defaultValue: 'pro', 'aria-label': 'Plan' }, h(T.Radio, { value: 'free', description: 'Up to 3 projects.' }, 'Free'), h(T.Radio, { value: 'pro', description: 'Unlimited projects and history.' }, 'Pro'))),
+    Row('Invalid', h(T.RadioGroup, { invalid: true, orientation: 'horizontal', 'aria-label': 'Digest (invalid)' }, Opts())),
+    Row('Disabled', h(T.RadioGroup, { disabled: true, orientation: 'horizontal', defaultValue: 'day', 'aria-label': 'Digest (disabled)' }, Opts()))
+  ));
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+{
+  "loader": {
+    "$description": "Loader's component tokens. Each one is an optional override: set the CSS variable (--loader-<name>) on the page, a container or one loader, and every Loader inside follows. Unset, it uses the shared token it references here, resolved in the loader's own theme. The ring's speed is the shared animate-spin token. tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Color with tone=\"primary\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-primary"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Color with tone=\"muted\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-muted"
+          }
+        }
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "Color with tone=\"inverse\" (ring, dots or text): white in every theme, for dark scrims, overlays and media.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-inverse"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Size sm (16px): inline with text-sm, inside small controls.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-size-sm"
+          }
+        }
+      },
+      "size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Size md (24px, default): in cards, panels and lists.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-size-md"
+          }
+        }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "Size lg (40px): a whole page or an empty area that is loading.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-size-lg"
+          }
+        }
+      },
+      "skeleton-rect-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "Height of the skeleton's rect shape (96px) when className doesn't set one.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-skeleton-rect-height"
+          }
+        }
+      }
+    },
+    "shape": {
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{borders.stroke-width-2}",
+        "$description": "Ring thickness, in the ring's 24-unit drawing (2: about 8% of its size, at any size).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-stroke-width"
+          }
+        }
+      },
+      "track-opacity": {
+        "$type": "number",
+        "$value": "{opacity.opacity-20}",
+        "$description": "How strong the ring's faint track is (20% of the color).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-track-opacity"
+          }
+        }
+      },
+      "dots-dim": {
+        "$type": "number",
+        "$value": "{opacity.opacity-25}",
+        "$description": "How faint a dot gets between pulses (25%).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-dots-dim"
+          }
+        }
+      },
+      "label-dim": {
+        "$type": "number",
+        "$value": "{opacity.opacity-65}",
+        "$description": "How strong the text variant's words are between shines (65% of the text color: still 4.5:1 on surface in every theme).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-label-dim"
+          }
+        }
+      },
+      "skeleton-fill": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "The skeleton's fill: the text color at this strength.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-skeleton-fill"
+          }
+        }
+      },
+      "skeleton-shine": {
+        "$type": "number",
+        "$value": "{opacity.opacity-5}",
+        "$description": "The band that sweeps through the skeleton: the text color at this strength (lighter than the fill).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-skeleton-shine"
+          }
+        }
+      },
+      "skeleton-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "Corner radius of the skeleton's rect shape (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-skeleton-radius"
+          }
+        }
+      },
+      "skeleton-text-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "Corner radius of the skeleton's text lines (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-skeleton-text-radius"
+          }
+        }
+      },
+      "pixel-dim": {
+        "$type": "number",
+        "$value": "{opacity.opacity-15}",
+        "$description": "How faint a pixel square is between waves.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-dim"
+          }
+        }
+      },
+      "pixel-glow": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0}",
+        "$description": "Glow around the lit pixel squares, as a blur radius; 0 (default) is off. The glow prop sets it to --loader-pixel-glow-size; set it yourself to glow every pixel loader in an area.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-glow"
+          }
+        }
+      },
+      "pixel-divider": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "Strength of the hairlines between pixel squares, in the loader's color (10%); the same whether the squares beside them are lit or dim.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-divider"
+          }
+        }
+      },
+      "pixel-divider-width": {
+        "$type": "number",
+        "$value": "{borders.stroke-width-1}",
+        "$description": "Width of the hairlines between pixel squares, in half-units of the grid's 24-unit drawing (1: 0.5px at 24px, 1px at 48px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-divider-width"
+          }
+        }
+      },
+      "pixel-glow-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Blur radius of the glow that the glow prop turns on (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-glow-size"
+          }
+        }
+      },
+      "spokes-width": {
+        "$type": "number",
+        "$value": "{borders.stroke-width-4}",
+        "$description": "Spoke thickness, in the spokes' drawing (drawn at 5/8 scale: 4 is 2.5 of the 24 units, about 10% of the loader's size, like iOS).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-spokes-width"
+          }
+        }
+      }
+    },
+    "motion": {
+      "dots-duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-1000}",
+        "$description": "One pulse of the dots (1s).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-dots-duration"
+          }
+        }
+      },
+      "dots-stagger": {
+        "$type": "duration",
+        "$value": "{transitions.delay-150}",
+        "$description": "Delay between one dot and the next (150ms).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-dots-stagger"
+          }
+        }
+      },
+      "pixel-stagger": {
+        "$type": "duration",
+        "$value": "{transitions.delay-75}",
+        "$description": "Delay from one step of a pixel pattern to the next (75ms): one diagonal of the wave, one square of the snake or spiral; rows and columns take two.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-stagger"
+          }
+        }
+      },
+      "pixel-duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-1200}",
+        "$description": "One loop of the pixel grid in the wave, sweep, fall and rise patterns (1.2s). Snake and spiral loop in 1.5s, cross and checker in 1s, random on its own clocks. Each square spends about 30% of a loop brightening, 25% lit and 30% fading.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-pixel-duration"
+          }
+        }
+      },
+      "spokes-duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-1000}",
+        "$description": "One full turn of the spokes, a spoke at a time (1s: a tick every 125ms).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--loader-spokes-duration"
+          }
+        }
+      }
+    }
+  }
+}

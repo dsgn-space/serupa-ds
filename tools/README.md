@@ -1,0 +1,111 @@
+# Tools
+
+Everything needed to maintain the Diki Design System: the test suite, the documentation site generator, the design tokens export, the custom icon build, the release script and the CSS trimmer. Nothing here ships to products; consumers only need `tokens.css`, `components/` and `fonts/`.
+
+## Setup
+
+Download the design system's files (keep the folder layout), then from the folder that holds `tokens.json`:
+
+```sh
+npm i -D playwright@1.56.0 style-dictionary@5.6.0   # or just: npm install (package.json lists both)
+npx playwright install chromium                      # add firefox webkit to run the suite in those too
+```
+
+Python 3 is needed for the docs build and the foundation audit. Nothing else.
+
+## Test suite
+
+```sh
+node tools/test/run.mjs                   # everything, about two minutes
+node tools/test/run.mjs --update          # accept intended changes as the new baselines
+node tools/test/run.mjs --browser webkit  # the suite in WebKit (or firefox); baselines are kept per engine
+node tools/test/run.mjs --compat safari   # add the cross-browser comparison (safari, firefox or webkitgtk)
+```
+
+| Test | What it checks |
+| --- | --- |
+| `foundation.py` | Contrast of 21 text, control and focus pairs in all six themes (WCAG 2.2) · responsive variants switch at the `screen-*` values · `base.css` reads tokens only · `tokens.json` fits the design system page's limits (12 extra groups, 60 tokens a group, names, values) · `bundle.css` under 2 MB · every `var()` names a real token and its fallback equals the token · no utility class writes out a value a token holds · Button and Icon use only tokens · every component token (Button, Spinner) refers to a shared token, and the CSS uses each one with exactly the default its tokens file gives · nothing loads from another server · `tokens.css` is in step with `tokens.json` |
+| `design_tokens.py` | `design-tokens/` is in step with `tokens.json`; every token has a standard `$type` and a value of the right shape (DTCG 2025.10); every reference resolves; every token in `tokens.json` is exported somewhere |
+| `style_dictionary.mjs` | Builds `design-tokens/` with Style Dictionary 5 through `tools/tokens/style-dictionary.config.mjs` together with the component tokens, and checks every variable it outputs equals the token, in every theme (skipped if Style Dictionary isn't installed) |
+| `utilities.mjs` | All 25,561 utility classes (including the `sm:` … `2xl:` versions), each rendered on its own and compared with `baseline-utilities.json` (computed styles on the element and its children, plus the system's `--dk-*` variables and `::placeholder`) |
+| `badge.mjs` | Badge: defaults and fallbacks, the one size (20px, text-xs, 12px icons; the removed size prop is ignored with a warning), the outline border, contrast of all 23 tones × 3 styles in all six themes (4.5:1 text, 3:1 outline borders), the subtle style's outline (text color at 20%, its token turns it off), status tones mapped to their palette families, palette steps following the nearest theme (nested light in dark), primary following the brand; the dot, the icon (replacing the dot), count (round pill, tabular digits, "99+", max, nothing at 0, showZero), ping (the system's ping animation on a dot in a label or the indicator, off by default, ignored without a dot, off under reduced motion); optical balance (2px more on the text side with an icon on one side only, mirrored in right-to-left); the remove button (the × spaced like a leading icon, a 24×24 target and focus ring, a real button named "Remove <label>", removeLabel, click and Enter call onRemove); clickable badges (a button with onClick, a link with href, hover 10% and pressed 15% layers, the focus ring, disabled, onRemove ignored with a warning) and contrast in hover and pressed for every tone and style in all six themes; loading (a centered ring at the icon size, width kept, aria-busy, announced, clicks blocked with focus kept); micro-interactions like Button's (press to 97% by pointer and Enter, the ripple under the label and its removal, the loading cross-fade, each token turning its interaction off, none on plain, disabled or loading badges, reduced motion); ref and attributes pass through |
+| `input.mjs` | Input: a native input in its box (ref and attributes to the input, className to the box, a label names it), the three sizes, a controlled value, focus (border and ring in the focus color, a forced-colors outline), hover, invalid (aria-invalid, danger border and ring), read-only and disabled, decorative icons that don't take clicks, and contrast of text, placeholder, border, focus ring and invalid border in all six themes |
+| `textarea.mjs` | Textarea: a native textarea in its box (ref and attributes to the textarea, className to the box, a label names it), the three sizes and their padding, `rows` setting the height (3 by default, a bad value falls back), a controlled value with new lines, focus, hover, the resize handle (vertical, `none`, none when read-only, disabled or auto-resizing), `autoResize` (starts at `rows`, grows a line at a time, stops at `maxRows` and scrolls, shrinks when emptied, refits when its width changes), `showCount` ("n / max", linked by `aria-describedby` after the field's own ids, stops at `maxLength` and turns text-colored, follows a controlled value), invalid, read-only and disabled, and contrast of text, placeholder, count, border, focus ring and invalid border in all six themes |
+| `field.mjs` | Field: the label names the control (Field's `id` or a generated one; the control's ref still works), hint and error added after the control's own `aria-describedby` and removed with the error, the error making an Input invalid (and a plain DOM control `aria-invalid`, never an unknown attribute), `required` (`aria-required`, a hidden `*`) and `optional`, `disabled`, `group` (a fieldset whose legend lays out like a label, described by the hint and error, disabling every control), contrast of the label, hint, error and `*` in all six themes, no React warnings |
+| `select.mjs` | Select: a native select (no system arrow) in its box, the three sizes and an unknown size falling back, `multiple` ignored with a warning, ref and attributes to the select, options from strings, objects, groups and children, a controlled value, the placeholder (an empty first option that can't be picked, the placeholder color until something is picked), the decorative left icon and chevron (no clicks; a click on the chevron lands on the select), focus, hover, invalid, disabled, inside a Field, and contrast of text, placeholder, chevron, border, focus ring and invalid border in all six themes |
+| `checkbox.mjs` | Checkbox: a native checkbox in a `<label>`, the three sizes centered on the label's first line and an unknown size falling back, ref and attributes to the input, the accessible name (just the label, not the icon or description), a click on the label and Space toggling a controlled checkbox, the checked fill and check, indeterminate (a dash, following the prop), the description in `aria-describedby`, a bare box with `aria-label`, hover, keyboard focus ring, invalid, disabled (own and in a disabled Field group), inside a Field, and contrast of label, description, border, fill, check, focus ring and invalid border in all six themes |
+| `radio.mjs` | Radio: RadioGroup's role, generated name, ref and orientation; native radios in labels at the three sizes, centered; a controlled value with `onChange(value, event)`, clicks on labels and arrow keys; an uncontrolled `defaultValue` with numbers; the group's size and a radio's own; horizontal layout; the description kept out of the name; invalid and required on the group; a disabled group; a radio on its own; hover, keyboard focus ring; a Field group's legend, hint, error and disabled; and contrast of label, description, border, fill, dot, focus ring and invalid border in all six themes |
+| `switch.mjs` | Switch: a native checkbox with `role="switch"` in a `<label>`, the track and thumb at the three sizes centered on the first line and an unknown size falling back, ref and attributes to the input, the accessible name, a click on the label and Space flipping a controlled switch, the on track and thumb, the description, `labelPosition="start"`, a bare track, right-to-left, hover, keyboard focus ring, invalid, disabled, inside a Field, the 150ms slide and none with reduced motion, and contrast of label, description, tracks, thumbs and focus ring in all six themes |
+| `button.mjs` | 38 behaviour checks: form submission and `type`, loading (blocks clicks, keys and Enter-key resubmission, keeps focus and name, announces "Loading", centered spinner), links (`href` through `Diki.configure`, `rel` for new tabs, refs, disabled links without `href`), the API names, native attributes (`form*`, `popoverTarget`, `command`), Icon accessibility, reduced motion, component tokens (overrides on a container and on one button, defaults that follow a nested theme), and that Buttons and Spinners can be unmounted without errors |
+| `button-motion.mjs` | Button's micro-interactions: press (97% while held by pointer or Enter, back on release, the click still fires once, scale only at 100ms), right-icon nudge (off by default; turned on, 2px, mirrored in right-to-left, left icons still), loading cross-fade, ripple (from the press point, covers the far corner, text color at 20%, under the label, no pointer events, removed after release, spreads all the way before fading so a quick click shows the whole wave); none on link, disabled or loading buttons, right-clicks or when your `onPointerDown` prevents the default; your handlers still run; each component token turns its interaction off; reduced motion turns press, nudge and ripple off |
+| `loader.mjs` | Loader: sizes (16/24/40px), the ring (arc on a 20% track, rounded ends, stroke-width-2; turns every 2s while the arc grows from a dot to most of the ring and shrinks every 1.5s; a steady quarter arc turning at 3s under reduced motion) the spokes (eight, iOS proportions, fading to 25% behind the lead spoke, ticking 45° every 125ms, half speed under reduced motion) and dots (three, 1s pulse, 150ms apart); the pixel grid (nine squares, a diagonal wave 100ms per step, 1.5s, half speed under reduced motion, glow off by default; pattern="random": nine distinct clocks and starts; the seven step patterns' orders and timings; the glow prop); tones (text color, `primary` and `muted` on the drawing only, `inverse` white in every theme, nested themes); the text variant (words only, at the type size, hidden from screen readers, the shine's gradient, timing and seamless loop, 4.5:1 for the resting words in all six themes, plain under reduced motion); the skeleton (text lines at each size, the shorter last line, circle and rect sizes and corners, `className` sizing, shrinking beside an avatar, the fill and shimmer, a still fill under reduced motion, its space kept during the delay); component tokens; `role="progressbar"` with its label, decorative with `label=""`, announced through the shared status region; the 300ms delay (space kept, nothing shown or announced, a loader removed in time never shows); ref and attributes pass through; Button's loading uses it, centered at the icon size; reduced motion |
+| `icons.py` | The custom icon build (`tools/icons/build.py`): accepts Figma, Illustrator and outlined exports and draws them in `currentColor`; refuses scripts, event handlers, links, images, text, gradients, masks, DOCTYPEs, other grids, second colors and bad names, each with its reason; repeatable; `--check` notices a stale bundle; a bad file leaves the bundle untouched; the icons now in `bundle.js` and `index.d.ts` are exactly the build's output |
+| `icons.mjs` | Builds two sample icons into a scratch bundle and checks them in the browser: an inline SVG in the 1em box, 24px by default and `size` honoured, the text color (also inline in text and in a nested theme), the same line position as font icons, `aria-hidden` by default and `role="img"` with `aria-label`, Button icon sizes, icon-only and loading, the font for every other name, and real pixels |
+| `visual.mjs` | Each component preview in all six themes, at rest, hovered and focused, compared with `baseline-visual/` (0.2% pixel tolerance for anti-aliasing) |
+| `page.mjs` | Page groundwork: responsive classes switch at each breakpoint (390–1536px), `base.css` defaults (and that utilities still win), `theme.js` (follows the system live, remembers a choice, `reset()`, ignores bad values), and `purge.py` output renders identically to the full CSS |
+| `compat.mjs` | Cross-browser, through WebDriver: every utility class in Safari (`safaridriver`), Firefox (`geckodriver`) or WebKitGTK compared with Chromium (colors as RGBA, lengths within 1px), browser-support gaps listed with reasons in `KNOWN`; plus responsive classes, `base.css`, `theme.js`, Button behaviour, the Loader's ring, dots, text and skeleton, and `purge.py` output in that engine. Safari: run `safaridriver --enable` once |
+| `docs.mjs` | Builds the docs site and opens every page at 1280px and 390px, light and dark: broken links, script errors, outside requests, duplicate ids, sideways scrolling. The Changelog page lists every released version in `CHANGELOG.md` in order, with working version links, and leaves out Unreleased. The Button playground, a Button-page demo and a hand-written demo button ripple when pressed (the link variant doesn't). The Loader playground updates the preview and code for every prop (skeleton `shape` and `lines` included), shows the delay on Replay, darkens its stage for `inverse` and explains empty labels; the skeleton demo cards name one skeleton each and nothing spills out |
+
+When a test fails, it names what changed. If the change is intended, run with `--update` and commit the new baselines with the change.
+
+**When `tokens.css` is reported out of date:** `tokens.css`, `manifest.json` and `api/` are generated by the design system page. After `tokens.json` changes, open the page and save once (any edit, even changing a value and back).
+
+## Releasing a version
+
+Write the changes under `## [Unreleased]` in `CHANGELOG.md` (Added, Changed, Deprecated, Removed, Fixed), then:
+
+```sh
+python3 tools/release.py minor      # or major, patch, or a number such as 1.2.0
+python3 tools/release.py --check    # every file carries the same version (the foundation audit runs this too)
+```
+
+It moves the notes under the new version with today's date (rebuild the docs site afterwards so its Changelog page shows the release) and stamps the version into `package.json`, the headers of `bundle.css`, `bundle.js`, `base.css` and `theme.js`, and `Diki.version`. The README's Versioning section says which kind of release a change needs.
+
+## Design tokens export
+
+```sh
+python3 tools/tokens/export.py                       # regenerate design-tokens/ after changing tokens.json
+node tools/tokens/style-dictionary.config.mjs out/   # build them into CSS with Style Dictionary (one file per theme)
+```
+
+`export.py` writes the W3C Design Tokens files (see the README). The Style Dictionary config adds two things Style Dictionary 5.6 lacks: converting the format's duration objects (`{ "value": 150, "unit": "ms" }`), and using the system's own variable names (from `$extensions["com.diki"].cssVar`). Add platforms to it for iOS, Android or Sass.
+
+## Custom icons
+
+```sh
+python3 tools/icons/build.py                  # build assets/Icons/*.svg into components/bundle.js and index.d.ts
+python3 tools/icons/build.py path/to/svgs     # from another folder
+python3 tools/icons/build.py --check          # exit 1 if the components are out of step (for CI)
+```
+
+Each file becomes an icon named after the file. The build keeps only shapes, draws them in the text color, and refuses unsafe or off-system files with the reason; the Icon guidelines (`components/Icon/README.md`) have the drawing rules. On the design system page, icons dropped into an Icons set are uploads: download them into `assets/Icons/` (or ask Claude) and run the build.
+
+## Trimming CSS for production
+
+```sh
+python3 tools/purge.py src/ public/index.html -o dist/bundle.min.css
+```
+
+Scans the sources for class names and writes a copy of `bundle.css` with only the rules they need, plus the component styles, keyframes and variables. A typical page goes from 1.7 MB to a few dozen KB. Class names built at runtime (`"grid-cols-" + n`) can't be found; list them with `--keep grid-cols-2 grid-cols-3` or `--keep @safelist.txt`.
+
+## Docs site
+
+```sh
+python3 tools/docs/build.py . docs-site
+```
+
+Builds the documentation from `tokens.json`, `components/bundle.css`, `CHANGELOG.md` (the Changelog page) and `tools/docs/template.html` into `docs-site/`: one HTML page per section, a shared `styles.css` and `app.js`, the fonts, and two redirect pages for old links (`aliases.html`, `palette.html` → `colors.html`). Open `docs-site/index.html` to read it offline. To publish it as the docs artifact, publish `index.html` as `ds-docs.html` and every other file alongside it.
+
+| File | Role |
+| --- | --- |
+| `docs/template.html` | The pages' content and design. Edit prose and layout here; `%%NAME%%` placeholders are filled from the tokens. |
+| `docs/generate.py` | Fills the template: token tables, swatches, specimens, theme CSS and the component styles. |
+| `docs/split.py` | Splits the result into one page per section with a shared sidebar, stylesheet and script. |
+| `docs/build.py` | Runs both and copies fonts and redirect pages. |
+
+## Rules the tests enforce
+
+- Components and utilities read tokens; no value is written out when a token holds it. The documented exceptions are breakpoints inside `@media`, shadow shapes (so color classes can recolor them) and `rounded-full` (9999px).
+- Every `var(--token, fallback)` carries the token's exact value as its fallback.
+- Utility classes keep the same names and effects; a change is deliberate and goes with an updated baseline.
+- The system loads nothing from other servers.

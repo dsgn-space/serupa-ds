@@ -1,0 +1,26 @@
+<!-- @dsCard group="Forms" height=260 subtitle="Native select: sm, md, lg; placeholder, icon, groups; invalid, disabled" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Select — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; max-width: 560px; }
+  .lbl { width: 80px; flex-shrink: 0; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  var roles = ['Viewer', 'Editor', 'Admin'];
+  function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    Row('Sizes', [h(T.Select, { key: 1, size: 'sm', options: roles, 'aria-label': 'Small' }), h(T.Select, { key: 2, options: roles, defaultValue: 'Editor', 'aria-label': 'Medium' }), h(T.Select, { key: 3, size: 'lg', options: roles, defaultValue: 'Admin', 'aria-label': 'Large' })]),
+    Row('Placeholder', h(T.Select, { placeholder: 'Choose a country', options: ['Denmark', 'Japan', 'Kenya'], 'aria-label': 'Country' })),
+    Row('Icon, groups', h(T.Select, { leftIcon: 'schedule', defaultValue: 'Europe/Paris', 'aria-label': 'Time zone', options: [{ label: 'Europe', options: [{ value: 'Europe/London', label: 'London (GMT+1)' }, { value: 'Europe/Paris', label: 'Paris (GMT+2)' }] }, { label: 'Asia', options: [{ value: 'Asia/Tokyo', label: 'Tokyo (GMT+9)' }] }] })),
+    Row('Invalid', h(T.Select, { invalid: true, placeholder: 'Choose a plan', options: ['Free', 'Pro'], 'aria-label': 'Plan' })),
+    Row('Disabled', h(T.Select, { disabled: true, options: ['Owner'], 'aria-label': 'Role' }))
+  ));
+</script>
+</body>
+</html>
