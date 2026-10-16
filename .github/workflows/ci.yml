@@ -22,6 +22,10 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Every file carries the same version
         run: python3 tools/release.py --check
+      - name: Type check
+        run: npm run typecheck
+      - name: Build the package
+        run: npm run build
       - name: Test suite
         shell: bash
         run: |

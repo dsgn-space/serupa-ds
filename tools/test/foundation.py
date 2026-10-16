@@ -22,9 +22,9 @@ def check(name, ok, detail=''):
     results.append((name, ok, detail))
 
 t = json.load(open(os.path.join(P, 'tokens.json'), encoding='utf-8'))
-css_raw = open(os.path.join(P, 'components', 'bundle.css'), encoding='utf-8').read()
+css_raw = open(os.path.join(P, 'dist', 'bundle.css'), encoding='utf-8').read()
 css = re.sub(r'/\*.*?\*/', '', css_raw, flags=re.S)
-js = open(os.path.join(P, 'components', 'bundle.js'), encoding='utf-8').read()
+js = open(os.path.join(P, 'dist', 'bundle.js'), encoding='utf-8').read()
 
 first = lambda v: next(iter(v.values())) if isinstance(v, dict) else v
 groups = {k: v for k, v in t.items() if isinstance(v, dict) and isinstance(v.get('tokens'), list)}
@@ -47,13 +47,13 @@ badv = [x['name'] for k in others for x in groups[k]['tokens']
 check('tokens.json: extra-group values are plain values (no var(), allowed characters, 200 max)', not badv, ', '.join(badv[:10]))
 
 # 2. size
-size = os.path.getsize(os.path.join(P, 'components', 'bundle.css'))
+size = os.path.getsize(os.path.join(P, 'dist', 'bundle.css'))
 check('bundle.css is under 2 MB', size < 2 * 1024 * 1024, f'{size / 1048576:.2f} MB')
 
-# component tokens (components/<Name>/<name>.tokens.json): their CSS variables are overrides with a default
+# component tokens (src/components/<Name>/<name>.tokens.json): their CSS variables are overrides with a default
 import glob
 COMP = {}   # css var name (without --) -> (file, token)
-for f in sorted(glob.glob(os.path.join(P, 'components', '*', '*.tokens.json'))):
+for f in sorted(glob.glob(os.path.join(P, 'src', 'components', '*', '*.tokens.json'))):
     data = json.load(open(f, encoding='utf-8'))
     def walk(tree):
         for k, v in tree.items():
@@ -128,7 +128,7 @@ check('components: Button and Icon use only tokens', not bad, '; '.join(sorted(b
 
 # 6. self-contained
 extra = ''
-for f in ('components/base.css', 'components/theme.js'):
+for f in ('src/styles/base.css', 'src/theme.js'):
     fp = os.path.join(P, f)
     if os.path.exists(fp): extra += open(fp, encoding='utf-8').read()
 ext = re.findall(r'(?:https?:)?//[a-z0-9.-]+\.[a-z]{2,}/[^\s"\')]*', css_raw + js + extra)
@@ -172,7 +172,7 @@ for m in re.finditer(r'@media \(min-width: ([0-9a-z.]+)\) \{ \.([a-z0-9]+)\\:', 
 check('responsive variants switch at the screen-* breakpoints', not bad_bp, '; '.join(bad_bp))
 
 # 10. base.css reads tokens only
-bp = os.path.join(P, 'components', 'base.css')
+bp = os.path.join(P, 'src', 'styles', 'base.css')
 if os.path.exists(bp):
     base = re.sub(r'/\*.*?\*/', '', open(bp, encoding='utf-8').read(), flags=re.S)
     miss = sorted({n for n in re.findall(r'var\(--([A-Za-z0-9._-]+)', base) if n not in TV and n not in FAM})

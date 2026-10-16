@@ -2,24 +2,34 @@
   "name": "@diki/design-system",
   "version": "4.7.0",
   "private": true,
-  "description": "Diki Design System: tokens, utility classes, page defaults, automatic dark mode and React components. Self-contained: fonts and React ship with it. bundle.js is a browser script that reads React from window.React (React 18.3.1 ships in components/lib/).",
-  "style": "components/bundle.css",
-  "types": "components/index.d.ts",
+  "type": "module",
+  "description": "Diki Design System: tokens, utility classes, page defaults, automatic dark mode and React components. Import the components as ES modules (React 18+ is a peer dependency), or load dist/diki.iife.js on a plain page, where it reads window.React (React 18.3.1 ships in dist/lib/).",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "style": "./dist/bundle.css",
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./tokens.css": "./tokens.css",
     "./tokens.json": "./tokens.json",
-    "./base.css": "./components/base.css",
-    "./bundle.css": "./components/bundle.css",
-    "./bundle.js": "./components/bundle.js",
-    "./theme.js": "./components/theme.js",
+    "./base.css": "./dist/base.css",
+    "./bundle.css": "./dist/bundle.css",
+    "./components.css": "./dist/components.css",
+    "./utilities.css": "./dist/utilities.css",
+    "./bundle.js": "./dist/bundle.js",
+    "./diki.iife.js": "./dist/diki.iife.js",
+    "./theme.js": "./dist/theme.js",
     "./design-tokens/*": "./design-tokens/*",
     "./fonts/*": "./fonts/*",
     "./package.json": "./package.json"
   },
   "files": [
+    "dist/",
     "tokens.css",
     "tokens.json",
-    "components/",
     "fonts/",
     "licenses/",
     "design-tokens/",
@@ -28,10 +38,14 @@
   ],
   "sideEffects": [
     "*.css",
-    "components/theme.js",
-    "components/bundle.js"
+    "./dist/theme.js",
+    "./dist/diki.iife.js",
+    "./dist/bundle.js"
   ],
   "scripts": {
+    "build": "node tools/build/build.mjs",
+    "typecheck": "tsc -p .",
+    "pretest": "node tools/build/build.mjs",
     "test": "node tools/test/run.mjs",
     "docs": "python3 tools/docs/build.py . docs-site",
     "tokens": "python3 tools/tokens/export.py",
@@ -40,11 +54,20 @@
     "test:firefox": "node tools/test/run.mjs --browser firefox",
     "test:webkit": "node tools/test/run.mjs --browser webkit"
   },
-  "devDependencies": {
-    "playwright": "1.56.0",
-    "style-dictionary": "5.6.0"
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
-  "browser": "components/bundle.js",
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "playwright": "1.56.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "style-dictionary": "5.6.0",
+    "tsup": "8.5.1",
+    "typescript": "5.6.3"
+  },
   "engines": {
     "node": ">=20"
   }

@@ -75,7 +75,7 @@ const EQUIV = [['none', undefined], ['normal', undefined], ['row', undefined], [
 const equiv = (a, b) => EQUIV.some(([x, y]) => (norm(a) === x && b === y) || (norm(b) === x && a === y)) || (a && b && norm(a).split(', ').every((x, i, arr) => x === arr[0]) && norm(b).split(', ').every((x, i, arr) => x === arr[0]) && norm(a).split(', ')[0] === norm(b).split(', ')[0]);
 
 // ---------- measurement (runs in both engines)
-const css = read('components/bundle.css').replace(/\/\*[\s\S]*?\*\//g, '');
+const css = read('dist/bundle.css').replace(/\/\*[\s\S]*?\*\//g, '');
 const unescape = (n) => n.replace(/\\([0-9a-f]{1,6}) ?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
 const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-9a-f]{1,6} ?|\\.)+)(?=[\s{,:)>])/gim)].map((m) => unescape(m[1])))].filter((c) => !c.startsWith('dk-')).sort();
 const internal = [...new Set([...css.matchAll(/--dk-[a-z0-9-]+/g)].map((m) => m[0]))];
@@ -221,10 +221,10 @@ try {
   const dir = path.join(PROJECT, '.test-tmp'); fs.mkdirSync(dir, { recursive: true });
   const SAMPLE = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-surface-muted"><div class="rounded-lg shadow-md p-4 bg-surface text-sm md:text-base divide-y divide-border"><p class="py-2">a</p><p class="py-2">b</p></div><input class="h-control-md px-3 border border-field-border bg-field rounded-md" placeholder="Name"><p class="hidden lg:block text-primary">x</p></div>';
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
-  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', path.join(dir, 'min.css'), '--css', path.join(PROJECT, 'components', 'bundle.css')], { stdio: 'ignore' });
+  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', path.join(dir, 'min.css'), '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
   const snap = async (bundle) => { await wd.goto(writePage('compat-purge.html', SAMPLE, { bundle })); await wd.evaluate(() => document.fonts.ready);
     return wd.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e), o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return o.sort().join(';'); }).join('\n')); };
-  t('purge.py: trimmed CSS renders identically in this engine', (await snap('../components/bundle.css')) === (await snap('min.css')));
+  t('purge.py: trimmed CSS renders identically in this engine', (await snap('../dist/bundle.css')) === (await snap('min.css')));
 } finally {
   await wd.quit().catch(() => {});
   if (drv) drv.stop();

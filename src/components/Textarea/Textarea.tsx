@@ -1,0 +1,82 @@
+import * as React from "react";
+import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
+
+export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'> {
+  /** 'sm' (text-xs), 'md' (text-sm, default) or 'lg' (text-base): Input's text sizes and side padding. */
+  size?: 'sm' | 'md' | 'lg';
+  /** Visible lines of text: the starting height, and the smallest one with autoResize. Default: 3. */
+  rows?: number;
+  /** Grows with the text, from rows up to maxRows, and scrolls past that. Turns off the resize handle. Default: false. */
+  autoResize?: boolean;
+  /** With autoResize: the most lines it grows to before it scrolls. Unset: no limit. */
+  maxRows?: number;
+  /** 'vertical' (default): a handle to drag the height. 'none': a fixed height. Read-only, disabled and autoResize textareas have none. */
+  resize?: 'vertical' | 'none';
+  /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
+  invalid?: boolean;
+  /** A character count under the text, "12 / 200" with maxLength (text-colored once it's reached). Linked to the field with aria-describedby. Default: false. */
+  showCount?: boolean;
+}
+
+/* Textarea: a multi-line text field, Input's sibling. size "sm", "md" (default) or "lg" (Input's text sizes and
+   side padding); rows (default 3); autoResize (grows with the text from rows up to maxRows, then scrolls);
+   resize "vertical" (default) or "none"; invalid; showCount (a character count under the text, "12 / 200" with
+   maxLength). Renders <span class="dk-textarea"> around a native <textarea>: className and style go to the
+   box, every other prop (value, onChange, placeholder, disabled, readOnly, maxLength, aria-*…) and ref to the
+   <textarea>. */
+const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1, showCount: 1, className: 1, style: 1 } as const;
+
+/** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box that holds the count; className and style go to the box. Label it with <label htmlFor> or aria-label. */
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(props, ref) {
+  const rest = omit(props, OWN);
+  const size = oneOf(SIZES, props.size, "md");
+  const invalid = isInvalid(props, rest);
+  if (invalid) rest["aria-invalid"] = true;
+  const rows = (props.rows as number) > 0 ? Math.floor(props.rows as number) : 3;
+  const auto = !!props.autoResize;
+  const maxRows = (props.maxRows as number) > 0 ? Math.max(rows, Math.floor(props.maxRows as number)) : 0;
+  const resize = auto || props.resize === "none" ? "none" : "vertical";
+  const controlled = rest.value != null;
+  const own = React.useRef<HTMLTextAreaElement | null>(null);
+  const [len, setLen] = React.useState(function () { return String(controlled ? rest.value : rest.defaultValue != null ? rest.defaultValue : "").length; });
+  const length = controlled ? String(rest.value).length : len;
+  const countId = domId("dk-ta", React.useId());
+
+  /* Auto-resize: measure the text and set the height, between rows and maxRows lines. */
+  const fit = React.useCallback(function () {
+    const el = own.current;
+    if (!auto || !el) return;
+    const cs = getComputedStyle(el), line = parseFloat(cs.lineHeight) || 0, pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+    el.style.height = "auto";
+    const need = el.scrollHeight, max = maxRows ? maxRows * line + pad : Infinity;
+    el.style.height = Math.min(need, max) + "px";
+    el.style.overflowY = need > max ? "auto" : "hidden";
+  }, [auto, maxRows]);
+  useIsoLayoutEffect(fit);   // after every render: a new value, size or font
+  React.useEffect(function () {
+    if (!auto || typeof ResizeObserver === "undefined" || !own.current) return;
+    let w = own.current.offsetWidth;
+    const ro = new ResizeObserver(function () { const nw = own.current && own.current.offsetWidth; if (nw !== w) { w = nw as number; fit(); } });   // re-wrap when the width changes
+    ro.observe(own.current);
+    return function () { ro.disconnect(); };
+  }, [auto, fit]);
+
+  const setRefs = React.useCallback(function (node: HTMLTextAreaElement | null) {
+    own.current = node;
+    setRef(ref, node);
+  }, [ref]);
+  const onChange = rest.onChange;
+  rest.onChange = function (e: React.ChangeEvent<HTMLTextAreaElement>) {
+    if (!controlled) setLen(e.target.value.length);
+    if (onChange) onChange(e);
+  };
+  if (props.showCount) rest["aria-describedby"] = cn(rest["aria-describedby"], countId);
+  const max = rest.maxLength > 0 ? rest.maxLength : null;
+  return (
+    <span className={cn("dk-textarea", "dk-textarea--size-" + size, invalid && "dk-textarea--invalid", rest.disabled && "dk-textarea--disabled", rest.readOnly && "dk-textarea--readonly", resize === "none" && "dk-textarea--resize-none", auto && "dk-textarea--auto", props.className)} style={props.style} data-component="textarea" data-size={size}>
+      <textarea {...rest} ref={setRefs} rows={rows} className="dk-textarea__field" key="field" />
+      {props.showCount ? <span className={cn("dk-textarea__count", max != null && length >= max && "dk-textarea__count--full")} id={countId} key="count">{max != null ? length + " / " + max : String(length)}</span> : null}
+    </span>
+  );
+});
+Textarea.displayName = "Textarea";

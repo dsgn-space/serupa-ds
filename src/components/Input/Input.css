@@ -1,0 +1,42 @@
+/* ---------------------------------------------------------------
+   Input: a single-line text field. Sizes sm, md, lg at the control heights (24, 32, 44px, like Button), with
+   text-xs, text-sm and text-base. Field colors come from the alias tokens (field, field-border, placeholder),
+   so it keeps 4.5:1 text and a 3:1 border in every theme. Structure: .dk-input (the box) > .dk-input__icon--left,
+   .dk-input__field (the native <input>), .dk-input__icon--right. Every value goes through --input-* tokens.
+   --------------------------------------------------------------- */
+.dk-input {
+  --dk-input-h: var(--input-height-md, var(--control-height-md, 2rem));
+  --dk-input-px: var(--input-padding-x-md, var(--spacing-3, 0.75rem));
+  --dk-input-icon: var(--input-icon-size-md, var(--spacing-4, 1rem));
+  --dk-input-bd: var(--input-border, var(--field-border));
+  --dk-input-ring: var(--input-focus-ring, var(--focus-ring));
+  display: inline-flex; align-items: center; gap: var(--input-gap, var(--spacing-2, 0.5rem));
+  box-sizing: border-box; width: var(--sizing-full, 100%); height: var(--dk-input-h);
+  padding: var(--spacing-0, 0px) var(--dk-input-px);
+  background: var(--input-bg, var(--field)); color: var(--text);
+  border: var(--input-border-width, var(--border-width-1, 1px)) solid var(--dk-input-bd);
+  border-radius: var(--input-radius, var(--rounded-md, 0.375rem));
+  font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem);
+  cursor: text; vertical-align: middle;
+  transition: border-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-input--size-sm { --dk-input-h: var(--input-height-sm, var(--control-height-sm, 1.5rem)); --dk-input-px: var(--input-padding-x-sm, var(--spacing-2, 0.5rem)); --dk-input-icon: var(--input-icon-size-sm, var(--spacing-3\.5, 0.875rem)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
+.dk-input--size-lg { --dk-input-h: var(--input-height-lg, var(--control-height-lg, 2.75rem)); --dk-input-px: var(--input-padding-x-lg, var(--spacing-4, 1rem)); --dk-input-icon: var(--input-icon-size-lg, var(--spacing-5, 1.25rem)); font-size: var(--text-base, 1rem); line-height: var(--text-base--line-height, 1.5rem); }
+.dk-input__field {
+  flex: auto; min-width: var(--spacing-0, 0px); height: var(--sizing-full, 100%);
+  margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); border: 0; background: transparent; outline: none;
+  color: inherit; font: inherit; letter-spacing: inherit;
+}
+.dk-input__field::placeholder { color: var(--input-placeholder, var(--placeholder)); opacity: var(--opacity-100, 100%); }
+.dk-input__icon { display: inline-flex; flex-shrink: 0; color: var(--text-muted); pointer-events: none; }
+.dk-input__icon .dk-icon { font-size: var(--dk-input-icon); }
+.dk-input:hover:not(.dk-input--disabled, .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-border-hover, var(--field-border-hover)); }
+/* Focus: the border and a ring hugging it take the focus color (2px in all), and a transparent outline that
+   forced-colors mode draws, since box-shadow rings disappear there. */
+.dk-input:focus-within { --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1, 1px)) var(--dk-input-ring); outline: var(--outline-width-2, 2px) solid transparent; outline-offset: var(--spacing-0, 0px); }
+.dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--danger)); --dk-input-ring: var(--input-invalid, var(--danger)); }
+.dk-input--invalid:hover:not(.dk-input--disabled, .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--danger)); }
+.dk-input--readonly { background: var(--input-bg-readonly, var(--surface-muted)); }
+.dk-input--disabled { background: var(--input-bg-readonly, var(--surface-muted)); opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+.dk-input--disabled .dk-input__field { cursor: not-allowed; }
+

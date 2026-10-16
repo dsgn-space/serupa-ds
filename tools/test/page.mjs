@@ -83,8 +83,8 @@ for (const scheme of ['light', 'dark']) {
   const SAMPLE = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-surface-muted"><div class="rounded-lg shadow-md p-4 bg-surface text-sm md:text-base divide-y divide-border"><p class="py-2">a</p><p class="py-2">b</p></div><input class="h-control-md px-3 border border-field-border bg-field rounded-md placeholder-placeholder" placeholder="Name"><div class="bg-linear-to-r from-blue-500 to-violet-500 h-4 -translate-x-1/2 ring-2 ring-focus-ring ring-offset-2 animate-spin"></div><p class="hidden lg:block text-primary">x</p></div>';
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
   const out = path.join(dir, 'min.css');
-  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'components', 'bundle.css')], { stdio: 'ignore' });
-  const full = fs.statSync(path.join(PROJECT, 'components', 'bundle.css')).size, small = fs.statSync(out).size;
+  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
+  const full = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size, small = fs.statSync(out).size;
   t(`purge.py: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB`, small < full / 20);
   const snap = async (bundle, w) => {
     const p = await b.newPage({ viewport: { width: w, height: 500 } });
@@ -95,7 +95,7 @@ for (const scheme of ['light', 'dark']) {
   };
   t('purge.py: keeps the keyframes the page animates with', /@keyframes spin\b/.test(fs.readFileSync(out, 'utf8')));
   for (const w of [390, 1280]) {
-    const a = await snap('../components/bundle.css', w), c = await snap('min.css', w);
+    const a = await snap('../dist/bundle.css', w), c = await snap('min.css', w);
     const d = []; a.forEach((x, i) => { if (x !== c[i]) { const A = x.split(';'), C = c[i].split(';'); A.forEach((y, j) => { if (y !== C[j]) d.push(i + ' ' + y + ' ≠ ' + C[j]); }); } });
     t(`purge.py: the page renders identically with the trimmed CSS (${w}px)`, !d.length, d.slice(0, 4).join(' | '));
   }

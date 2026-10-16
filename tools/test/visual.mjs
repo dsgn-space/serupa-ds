@@ -1,4 +1,4 @@
-// Visual snapshots: renders each component preview (components/*/preview.html) in every theme,
+// Visual snapshots: renders each component preview (src/components/*/preview.html) in every theme,
 // with hover and focus states, and compares it with the saved image in baseline-visual/.
 //   node tools/test/visual.mjs            check
 //   node tools/test/visual.mjs --update   accept the current look as the new baseline
@@ -12,7 +12,7 @@ const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
 fs.mkdirSync(DIR, { recursive: true });
 
-const comps = fs.readdirSync(path.join(PROJECT, 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'components', c, 'preview.html')) && c !== 'Cover');
+const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')) && c !== 'Cover');
 const { themes } = tokensCss();
 const b = await browser();
 const page = await b.newPage({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });
@@ -31,7 +31,7 @@ async function diff(a, bb) {   // share of differing pixels, computed in the bro
 }
 
 for (const c of comps) {
-  const src = read(`components/${c}/preview.html`);
+  const src = read(`src/components/${c}/preview.html`);
   const style = (src.match(/<style>[\s\S]*?<\/style>/) || [''])[0];
   const body = src.slice(src.indexOf('<body>') + 6, src.lastIndexOf('</body>'));
   const url = writePage(`${c}.html`, body, { react: true, extraHead: style + '<style>.dk-btn__spinner,.animate-spin,.dk-loader,.dk-loader *{animation:none!important}*{transition:none!important;caret-color:transparent}</style>' });
