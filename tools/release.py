@@ -15,12 +15,10 @@ import datetime, json, os, re, sys
 P = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 STAMPS = {   # file -> pattern whose group 1 is the version
     'package.json': r'"version": "([0-9]+\.[0-9]+\.[0-9]+)"',
-    'components/bundle.css': r'Diki Design System v([0-9]+\.[0-9]+\.[0-9]+)',
-    'components/bundle.js': r'Diki Design System v([0-9]+\.[0-9]+\.[0-9]+)',
-    'components/base.css': r'Diki Design System v([0-9]+\.[0-9]+\.[0-9]+)',
-    'components/theme.js': r'Diki Design System v([0-9]+\.[0-9]+\.[0-9]+)',
-}
-EXTRA = {'components/bundle.js': r'version: "([0-9]+\.[0-9]+\.[0-9]+)"', 'components/theme.js': r'window\.Diki\.version = "([0-9]+\.[0-9]+\.[0-9]+)"'}
+    'src/styles/base.css': r'Diki Design System v([0-9]+\.[0-9]+\.[0-9]+)',
+    'src/theme.js': r'Diki Design System v([0-9]+\.[0-9]+\.[0-9]+)',
+}   # the built files (dist/) take the version from package.json when npm run build makes them
+EXTRA = {'src/theme.js': r'window\.Diki\.version = "([0-9]+\.[0-9]+\.[0-9]+)"'}
 
 def read(f): return open(os.path.join(P, f), encoding='utf-8').read()
 def write(f, s): open(os.path.join(P, f), 'w', encoding='utf-8').write(s)

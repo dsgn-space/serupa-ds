@@ -12,7 +12,7 @@ if 'transitions' in t:  # motion tokens live in one group; split them back for t
     t['easing']={'tokens':[x for x in _tr if x['name'].startswith('ease-')]}
     t['transitionProperty']={'tokens':[x for x in _tr if x['name'].startswith('transition')]}
     t['animation']={'tokens':[x for x in _tr if x['name'].startswith('animate-')]}
-bcss=open(P+'components/bundle.css').read()
+bcss=open(P+'dist/bundle.css').read()
 E=html.escape
 TH=[x['id'] for x in t['color']['themes']]; THN={x['id']:x['name'] for x in t['color']['themes']}
 def val(x,th=None):
@@ -183,12 +183,12 @@ kwrows="".join(f'<tr><td><code class="tok">{x["name"].replace("sizing-","")}</co
 bmopts="".join(f'<option value="{x["name"][8:]}"{" selected" if x["name"][8:]=="4" else ""}>{x["name"][8:]} · {x["value"]}</option>' for x in t['spacing']['tokens'])
 bmopts2=bmopts.replace(' selected','').replace('value="6">','value="6" selected>')
 n_alias=len(aliases); n_prim=len(prims)
-_bt=json.load(open(P+'components/Button/button.tokens.json'))['button']
+_bt=json.load(open(P+'src/components/Button/button.tokens.json'))['button']
 def _bdef(v): return 'transparent' if isinstance(v,dict) else v[1:-1].split('.',1)[1].replace('_','.')
 btntokens="".join(f'<tr><td><code class="tok">--button-{n}</code></td><td><code>{_bdef(x["$value"])}</code></td><td class="use">{md(x["$description"])}</td></tr>' for g in ['color','spacing','sizing','border','motion'] for n,x in _bt[g].items())
 import importlib.util as _ilu
 _spec=_ilu.spec_from_file_location('icon_build', os.path.join(HERE,'..','icons','build.py')); _ib=_ilu.module_from_spec(_spec); _spec.loader.exec_module(_ib)
-_custom=_ib.read_registry(open(P+'components/bundle.js',encoding='utf-8').read())
+_custom=_ib.read_registry(open(P+'src/icons.ts',encoding='utf-8').read())
 customicons="".join(f'<button type="button" class="icell" data-copy="{n}" title="Copy {n}"><span class="dk-icon dk-icon--custom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false">{b}</svg></span><code>{n}</code></button>' for n,b in sorted(_custom.items())) or '<p class="dim small">None yet. Add SVGs to <code>assets/Icons/</code> and run <code>python3 tools/icons/build.py</code>.</p>'
 
 # ---- changelog: CHANGELOG.md (Keep a Changelog) as a page, newest first
@@ -270,7 +270,7 @@ spin_demo=(SROW('Ring',''.join(f'<span class="sp-cell">{SPN("ring",s)}<code>{s}<
   +SROW('Composed','<div class="sp-card" aria-busy="true">'+SK('rect','md',cls='h-28',label='Loading article')+'<div class="sp-card-row">'+SK('circle','lg')+SK('text','md',2)+'</div></div><div class="sp-card" aria-busy="true"><div class="sp-card-row">'+SK('circle','md',label='Loading comments')+SK('text','sm',3)+'</div><div class="sp-card-row">'+SK('circle','md')+SK('text','sm',2)+'</div></div>')
   +'<div class="sp-row sp-scrim"><span class="sp-lbl">Inverse</span>'+SPN('ring','md','inverse')+SPN('spokes','md','inverse')+SPN('dots','md','inverse')+SPN('pixel','md','inverse',glow=True)+SPN('text','md','inverse',text='Uploading photo…')+'<span class="sp-skc">'+SK('text','md',2,'inverse')+'</span></div>'
   +SROW('In use','<span class="sp-inline">'+SPN('ring','sm','muted').replace('role="progressbar" aria-label="Loading"','aria-hidden="true"')+'Loading projects…</span>'+B(LAB('Save changes')+'<span class="dk-btn__loader" aria-hidden="true">'+SPN('ring','md','').replace('class="dk-loader ','class="dk-loader dk-btn__spinner ').replace('role="progressbar" aria-label="Loading"','aria-hidden="true"')+'</span>',extra='aria-busy="true" aria-disabled="true"').replace('dk-btn--size-md"','dk-btn--size-md dk-btn--loading dk-btn--loading-cover"')))
-_st=json.load(open(P+'components/Loader/loader.tokens.json'))['loader']
+_st=json.load(open(P+'src/components/Loader/loader.tokens.json'))['loader']
 spintokens="".join(f'<tr><td><code class="tok">--loader-{n}</code></td><td><code>{_bdef(x["$value"])}</code></td><td class="use">{md(x["$description"])}</td></tr>' for g in ['color','sizing','shape','motion'] for n,x in _st[g].items())
 # ---- Badge page: the component's markup, written out
 BSTATUS=['neutral','primary','success','warning','danger','info']
@@ -300,7 +300,7 @@ badge_extras=(BROW('Dot',BDG('Online','subtle','success',dot=True)+BDG('Away','s
   +BROW('Indicator',ONICON('notifications','md','danger','Notifications, new')+ONICON('mail','sm','primary','Mail, new')+'<span class="bd-ind bd-ind--avatar" role="img" aria-label="Dana, online"><span class="bd-avatar" aria-hidden="true">DK</span>'+IND('success','md')+'</span>'+''.join(IND(t,'md') for t in ('neutral','primary','success','warning','danger','info'))+IND('danger','sm')))
 def BSTATES(v,t): return BROW(v.capitalize(),BDG('Rest',v,t,tag='button')+BDG('Hover',v,t,tag='button',state='hover')+BDG('Active',v,t,tag='button',state='active')+BDG('Focus',v,t,tag='button',state='focus')+BDG('Loading',v,t,tag='button',loading=True)+BDG('Disabled',v,t,tag='button',disabled=True))
 badge_states=BSTATES('subtle','primary')+BSTATES('solid','primary')+BSTATES('outline','primary')+BROW('Try it',BDG('Open',tag='button',tone='success',dot=True)+BDG('Docs',tag='a',tone='info',icon='open_in_new')+BDG('In review','solid','warning',tag='button'))
-_bdt=json.load(open(P+'components/Badge/badge.tokens.json'))['badge']
+_bdt=json.load(open(P+'src/components/Badge/badge.tokens.json'))['badge']
 badgetokens="".join(f'<tr><td><code class="tok">--badge-{n}</code></td><td><code>{_bdef(x["$value"])}</code></td><td class="use">{md(x["$description"])}</td></tr>' for g in ['sizing','spacing','border','state','motion'] for n,x in _bdt[g].items())
 tpl=open(HERE+'template.html').read()
 

@@ -1,0 +1,81 @@
+# Textarea
+
+A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize and a character count. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
+
+## Usage
+
+```jsx
+const { Textarea } = window.Diki;
+
+<label htmlFor="notes">Notes</label>
+<Textarea id="notes" placeholder="Anything the team should know" />
+
+// grows with the text from 2 lines up to 8, then scrolls
+<Textarea aria-label="Reply" autoResize rows={2} maxRows={8} value={reply} onChange={(e) => setReply(e.target.value)} />
+
+// a count under the text: "32 / 280"
+<Textarea id="bio" maxLength={280} showCount />
+
+// invalid: say what's wrong in text, linked to the field
+<Textarea id="desc" invalid aria-describedby="desc-error" />
+<p id="desc-error">Write at least 20 characters.</p>
+```
+
+## Props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | `text-xs`, `text-sm` or `text-base`, with 8, 12 or 16px side padding and 4, 6 or 10px top and bottom |
+| `rows` | number | `3` | Visible lines: the starting height, and the smallest one with `autoResize` |
+| `autoResize` | boolean | `false` | Grows with the text, a line at a time, and shrinks back when text is deleted. No resize handle |
+| `maxRows` | number | | With `autoResize`: the most lines it grows to; past that the text scrolls. Unset: no limit |
+| `resize` | `'vertical'` \| `'none'` | `'vertical'` | A handle to drag the height, or a fixed height |
+| `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
+| `showCount` | boolean | `false` | A character count under the text: "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached |
+
+Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `maxLength`, `disabled`, `readOnly`, `required`, `name`, `id`, `aria-*`) and `ref` go to the `<textarea>`. `className` and `style` go to the box, so `className="w-96"` sets its width (full width by default). The box has `data-component="textarea"` and `data-size`.
+
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, a resize handle at the bottom corner |
+| Hover | `field-border-hover` |
+| Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `surface-muted` background, no hover change, no resize handle; still focusable and selectable |
+| Disabled | `surface-muted` background at 50%, `not-allowed` cursor, no resize handle |
+
+## Accessibility
+
+- Every textarea needs a name: a visible `<label htmlFor>` (best) or `aria-label`. A placeholder isn't a label: it disappears as soon as someone types.
+- `invalid` sets `aria-invalid`, but color alone doesn't explain the problem: put the message in text and link it with `aria-describedby`.
+- The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. It isn't announced on every keystroke, which would drown out the typing.
+- `maxLength` stops typing at the limit. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
+- Text, the placeholder and the count keep 4.5:1 on `field`, and the border 3:1, in all six themes (`tools/test/textarea.mjs`).
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one textarea. The list lives in `src/components/Textarea/textarea.tokens.json` (also in `design-tokens/components/`). The defaults are the same shared tokens Input uses.
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--textarea-bg` | `field` | Background |
+| `--textarea-bg-readonly` | `surface-muted` | Background when read-only or disabled |
+| `--textarea-border` | `field-border` | Border |
+| `--textarea-border-hover` | `field-border-hover` | Border on hover |
+| `--textarea-placeholder` | `placeholder` | Placeholder text |
+| `--textarea-focus-ring` | `focus-ring` | Border and ring while focused |
+| `--textarea-invalid` | `danger` | Border and ring when invalid |
+| `--textarea-count` | `text-muted` | The character count |
+| `--textarea-padding-x-sm` / `-md` / `-lg` | `spacing-2` / `spacing-3` / `spacing-4` | Side padding (8, 12, 16px), like Input |
+| `--textarea-padding-y-sm` / `-md` / `-lg` | `spacing-1` / `spacing-1.5` / `spacing-2.5` | Top and bottom padding (4, 6, 10px) |
+| `--textarea-border-width` | `border-width-1` | Border width (1px) |
+| `--textarea-radius` | `rounded-md` | Corner radius (6px), like Input and Button |
+
+## Guidelines
+
+- Use Textarea for answers that can run past one line: comments, descriptions, notes, messages. For a name, an email or a search, use Input.
+- Size `rows` to the answer you expect, so people see how much to write: 2 or 3 for a short note, 5 or more for a description.
+- Use `autoResize` where the page has room to grow, such as a comment box; give it a `maxRows` so a long text doesn't push the page's buttons out of view.
+- Show a count only when there's a limit people need to plan around, and match the textarea's size to the inputs in the same form.

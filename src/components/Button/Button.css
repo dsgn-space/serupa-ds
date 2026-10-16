@@ -1,0 +1,165 @@
+/* Button: every value is a token. Colors, spacing, sizes and borders go through Button's own component
+   tokens (--button-*, listed in src/components/Button/button.tokens.json): set one on the page, a container or a
+   single button to override it; unset, it falls back to the shared token, resolved in the button's own theme. */
+.dk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--button-gap-md, var(--spacing-1\.5, 0.375rem));
+  white-space: nowrap;
+  box-sizing: border-box;
+  height: var(--button-height-md, var(--control-height-md, 2rem));
+  padding: var(--spacing-0, 0px) var(--button-padding-x-md, var(--spacing-3, 0.75rem));
+  border: var(--button-border-width, var(--border-width-1, 1px)) solid transparent;   /* invisible, but drawn in forced-colors mode */
+  border-radius: var(--button-radius, var(--rounded-md, 0.375rem));
+  font-family: var(--font-sans);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--text-sm--line-height, 1.25rem);
+  font-weight: var(--font-medium, 500);
+  letter-spacing: var(--tracking-normal, 0em);
+  text-decoration: none;
+  cursor: pointer;              /* default, hover, pressed, focused */
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;   /* no double-tap zoom delay on touch screens */
+  /* the properties a button changes, each with its own timing: colors and the focus ring at duration-150,
+     the press (scale) at --button-press-duration (see Micro-interactions below) */
+  transition-property: background-color, color, border-color, text-decoration-color, box-shadow, scale;
+  transition-duration: var(--duration-150, 150ms), var(--duration-150, 150ms), var(--duration-150, 150ms), var(--duration-150, 150ms), var(--duration-150, 150ms), var(--button-press-duration, var(--duration-100, 100ms));
+  transition-timing-function: var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+  position: relative;
+  --dk-btn-press: var(--button-press-scale, var(--scale-97, 97%));
+  --dk-btn-nudge: var(--button-icon-nudge, var(--spacing-0, 0px));   /* off by default; opt in with --button-icon-nudge */
+  --dk-btn-loader-from: var(--scale-50, 50%);
+  --dk-btn-shadow: var(--shadow-none, 0 0 #0000);
+  --dk-btn-ring: var(--button-focus-ring, var(--focus-ring));
+  box-shadow: var(--dk-btn-shadow);
+}
+.dk-btn__label { display: inline-flex; }
+.dk-btn:focus-visible {
+  /* a 2px focus ring outside a 2px surface gap; the transparent outline is invisible
+     normally but drawn in forced-colors mode, where box-shadow rings disappear */
+  box-shadow: 0 0 0 var(--outline-offset-2, 2px) var(--surface), 0 0 0 calc(var(--outline-offset-2, 2px) + var(--outline-width-2, 2px)) var(--dk-btn-ring), var(--dk-btn-shadow);
+  outline: var(--outline-width-2, 2px) solid transparent;
+  outline-offset: var(--outline-offset-2, 2px);
+}
+.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) {
+  opacity: var(--opacity-50, 50%);
+  cursor: not-allowed;          /* no hover change; disabled buttons ignore clicks */
+}
+.dk-btn__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.dk-btn svg {
+  width: var(--button-icon-size-md, var(--spacing-4, 1rem));
+  height: var(--button-icon-size-md, var(--spacing-4, 1rem));
+  flex-shrink: 0;
+  pointer-events: none;
+}
+.dk-btn .dk-icon { font-size: var(--button-icon-size-md, var(--spacing-4, 1rem)); }
+
+/* Variants */
+.dk-btn--primary { background: var(--button-primary-bg, var(--primary)); color: var(--button-primary-text, var(--on-primary)); }
+.dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-primary-bg-hover, var(--primary-hover)); }
+
+.dk-btn--outline { background: var(--button-outline-bg, var(--surface)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border)); }
+.dk-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-outline-bg-hover, var(--secondary)); }
+
+.dk-btn--secondary { background: var(--button-secondary-bg, var(--surface)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */
+.dk-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); }
+
+.dk-btn--ghost { background: var(--button-ghost-bg, transparent); color: var(--button-ghost-text, var(--text)); }
+.dk-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-ghost-bg-hover, var(--secondary)); }
+
+.dk-btn--link { background: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4, 4px); }
+.dk-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; }
+
+/* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
+.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--shadow-xs, 0 1px 2px 0 rgb(0 0 0 / 0.05)); }
+.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none, 0 0 #0000); }
+
+/* Destructive: a modifier on every variant (destructive prop) */
+.dk-btn--destructive { --dk-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
+.dk-btn--primary.dk-btn--destructive { background: var(--button-destructive-primary-bg, var(--danger)); color: var(--button-destructive-primary-text, var(--on-danger)); }
+.dk-btn--primary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-primary-bg-hover, var(--danger-hover)); }
+.dk-btn--secondary.dk-btn--destructive { background: var(--button-destructive-secondary-bg, var(--surface)); color: var(--button-destructive-secondary-text, var(--danger-text)); border-color: var(--button-destructive-secondary-border, var(--danger)); }
+.dk-btn--secondary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-secondary-bg-hover, var(--danger-subtle)); }
+.dk-btn--outline.dk-btn--destructive { background: var(--button-destructive-outline-bg, var(--surface)); color: var(--button-destructive-outline-text, var(--danger-text)); border-color: var(--button-destructive-outline-border, var(--danger-border)); }
+.dk-btn--outline.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-outline-bg-hover, var(--danger-subtle)); }
+.dk-btn--ghost.dk-btn--destructive { color: var(--button-destructive-ghost-text, var(--danger-text)); }
+.dk-btn--ghost.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); }
+.dk-btn--link.dk-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
+
+/* Sizes: sm 24px, md 32px, lg 44px */
+.dk-btn--size-sm { height: var(--button-height-sm, var(--control-height-sm, 1.5rem)); padding: var(--spacing-0, 0px) var(--button-padding-x-sm, var(--spacing-2, 0.5rem)); gap: var(--button-gap-sm, var(--spacing-1, 0.25rem)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
+.dk-btn--size-sm svg { width: var(--button-icon-size-sm, var(--spacing-3\.5, 0.875rem)); height: var(--button-icon-size-sm, var(--spacing-3\.5, 0.875rem)); }
+.dk-btn--size-sm .dk-icon { font-size: var(--button-icon-size-sm, var(--spacing-3\.5, 0.875rem)); }
+.dk-btn--size-lg { height: var(--button-height-lg, var(--control-height-lg, 2.75rem)); padding: var(--spacing-0, 0px) var(--button-padding-x-lg, var(--spacing-5, 1.25rem)); gap: var(--button-gap-lg, var(--spacing-2, 0.5rem)); font-size: var(--text-base, 1rem); line-height: var(--text-base--line-height, 1.5rem); }
+.dk-btn--size-lg svg { width: var(--button-icon-size-lg, var(--spacing-5, 1.25rem)); height: var(--button-icon-size-lg, var(--spacing-5, 1.25rem)); }
+.dk-btn--size-lg .dk-icon { font-size: var(--button-icon-size-lg, var(--spacing-5, 1.25rem)); }
+
+/* Icon only: a square at each size's height */
+.dk-btn--icon-only { padding: var(--spacing-0, 0px); width: var(--button-height-md, var(--control-height-md, 2rem)); }
+.dk-btn--icon-only.dk-btn--size-sm { width: var(--button-height-sm, var(--control-height-sm, 1.5rem)); }
+.dk-btn--icon-only.dk-btn--size-lg { width: var(--button-height-lg, var(--control-height-lg, 2.75rem)); }
+
+/* Optical balance: an icon looks lighter than text, so the text side gets icon-offset (4px) more padding */
+.dk-btn--icon-left { padding-right: calc(var(--button-padding-x-md, var(--spacing-3, 0.75rem)) + var(--button-icon-offset, var(--spacing-1, 0.25rem))); }    /* 16px */
+.dk-btn--icon-right { padding-left: calc(var(--button-padding-x-md, var(--spacing-3, 0.75rem)) + var(--button-icon-offset, var(--spacing-1, 0.25rem))); }
+.dk-btn--size-sm.dk-btn--icon-left { padding-right: calc(var(--button-padding-x-sm, var(--spacing-2, 0.5rem)) + var(--button-icon-offset, var(--spacing-1, 0.25rem))); }   /* 12px */
+.dk-btn--size-sm.dk-btn--icon-right { padding-left: calc(var(--button-padding-x-sm, var(--spacing-2, 0.5rem)) + var(--button-icon-offset, var(--spacing-1, 0.25rem))); }
+.dk-btn--size-lg.dk-btn--icon-left { padding-right: calc(var(--button-padding-x-lg, var(--spacing-5, 1.25rem)) + var(--button-icon-offset, var(--spacing-1, 0.25rem))); }  /* 24px */
+.dk-btn--size-lg.dk-btn--icon-right { padding-left: calc(var(--button-padding-x-lg, var(--spacing-5, 1.25rem)) + var(--button-icon-offset, var(--spacing-1, 0.25rem))); }
+
+/* Loading: full color (not faded), not clickable, keeps keyboard focus and its width */
+.dk-btn--loading { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
+/* opacity, not visibility: hidden, so the label stays in the accessibility tree and the button keeps its name */
+.dk-btn--loading-cover > .dk-btn__label,
+.dk-btn--loading-cover > .dk-btn__icon { opacity: var(--opacity-0, 0%); }
+.dk-btn__loader { position: absolute; inset: var(--spacing-0, 0px); display: flex; align-items: center; justify-content: center; }
+/* The spinner is the Loader component (ring): its motion, and its calmer reduced-motion version, are in the Loader section. */
+/* A Button with href that is disabled renders <a> without href and with aria-disabled: no pointer events */
+a.dk-btn[aria-disabled="true"] { pointer-events: none; }
+
+/* Micro-interactions. Only scale, translate and opacity move, so nothing reflows. Each has a component
+   token (src/components/Button/button.tokens.json) to tune it or turn it off; under reduced motion the
+   press, the nudge and the ripple stop and loading only fades.
+   Press: the button shrinks to --button-press-scale while held (pointer, Space, or Enter through the
+   data-pressed attribute Button sets). Not on the link variant, which reads as text. */
+.dk-btn:not(.dk-btn--link):active:not(:disabled, [aria-disabled="true"]),
+.dk-btn:not(.dk-btn--link)[data-pressed]:not(:disabled, [aria-disabled="true"]) { scale: var(--dk-btn-press); }
+/* Nudge (off by default): on hover (devices that hover), a right icon slides --button-icon-nudge in its direction.
+   Set it, e.g. to var(--spacing-0\.5), where right icons are arrows that mean "go forward". */
+.dk-btn__label, .dk-btn__icon { position: relative; }   /* content paints above the ripple */
+.dk-btn__label { transition: opacity var(--button-loading-duration, var(--duration-150, 150ms)) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)); }
+.dk-btn__icon {
+  transition-property: opacity, translate;
+  transition-duration: var(--button-loading-duration, var(--duration-150, 150ms)), var(--button-icon-nudge-duration, var(--duration-150, 150ms));
+  transition-timing-function: var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+@media (hover: hover) {
+  .dk-btn:hover:not(:disabled, [aria-disabled="true"]) > .dk-btn__icon--right { translate: var(--dk-btn-nudge) 0; }
+  .dk-btn:dir(rtl):hover:not(:disabled, [aria-disabled="true"]) > .dk-btn__icon--right { translate: calc(var(--spacing-0, 0px) - var(--dk-btn-nudge)) 0; }
+}
+/* Loading: the content fades out (transition above) while the spinner fades and grows in. */
+.dk-btn__loader { animation: dk-btn-loader-in var(--button-loading-duration, var(--duration-150, 150ms)) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)) both; }
+@keyframes dk-btn-loader-in { from { opacity: var(--opacity-0, 0%); scale: var(--dk-btn-loader-from); } }
+/* Ripple: from the press point, in the text color at --button-ripple-opacity; Button adds the circles. */
+.dk-btn__ripples { position: absolute; inset: var(--spacing-0, 0px); border-radius: inherit; overflow: hidden; pointer-events: none; }
+.dk-btn__ripple {
+  position: absolute;
+  border-radius: var(--rounded-full, 9999px);
+  background-color: currentColor;
+  opacity: var(--button-ripple-opacity, var(--opacity-20, 20%));
+  animation: dk-btn-ripple var(--button-ripple-duration, var(--duration-500, 500ms)) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)) both;   /* even spread: reads as a wave, not a flash */
+  transition: opacity var(--button-ripple-fade-duration, var(--duration-300, 300ms)) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.dk-btn__ripple--out { opacity: var(--opacity-0, 0%); }
+@keyframes dk-btn-ripple { from { scale: var(--scale-0, 0%); } }
+@media (prefers-reduced-motion: reduce) {
+  .dk-btn { --dk-btn-press: var(--scale-100, 100%); --dk-btn-nudge: var(--spacing-0, 0px); --dk-btn-loader-from: var(--scale-100, 100%); }
+  .dk-btn__ripples { display: none; }
+}
+

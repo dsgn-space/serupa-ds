@@ -1,5 +1,5 @@
 // Custom icons in the browser: builds two sample SVGs with tools/icons/build.py into a scratch copy of
-// the bundle, then checks Icon and Button draw them like the font icons (size, color, alignment,
+// the source and bundles it, then checks Icon and Button draw them like the font icons (size, color, alignment,
 // accessibility, loading) and that every other name still comes from Material Symbols.
 //   node tools/test/icons.mjs
 import fs from 'node:fs';
@@ -10,15 +10,19 @@ import { PROJECT, writePage, browser, cleanup, report } from './lib.mjs';
 const TMP = path.join(PROJECT, '.test-tmp');
 const proj = path.join(TMP, 'iconproj');
 const src = path.join(TMP, 'iconsrc');
-fs.mkdirSync(path.join(proj, 'components'), { recursive: true });
+fs.mkdirSync(proj, { recursive: true });
 fs.mkdirSync(src, { recursive: true });
-for (const f of ['bundle.js', 'index.d.ts']) fs.copyFileSync(path.join(PROJECT, 'components', f), path.join(proj, 'components', f));
+// a scratch copy of the source, so the icons are built into it and not into the real one
+fs.cpSync(path.join(PROJECT, 'src'), path.join(proj, 'src'), { recursive: true });
+for (const f of ['package.json', 'tsup.config.mjs']) fs.copyFileSync(path.join(PROJECT, f), path.join(proj, f));
 // a filled icon as Figma exports it, and an outlined one
 fs.writeFileSync(path.join(src, 'test-square.svg'), '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2H22V22H2Z" fill="#1E1E1E"/></svg>');
 fs.writeFileSync(path.join(src, 'test-ring.svg'), '<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/></svg>');
 const built = spawnSync('python3', ['-I', path.join(PROJECT, 'tools', 'icons', 'build.py'), '--project', proj, src], { encoding: 'utf8' });
+// then the browser script, as npm run build makes it
+const bundled = spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: proj, encoding: 'utf8', env: { ...process.env, DIKI_BUILD: 'iife' } });
 
-const libs = ['components/lib/react.production.min.js', 'components/lib/react-dom.production.min.js'].map((s) => `<script src="../${s}"></script>`).join('') + '<script src="iconproj/components/bundle.js"></script>';
+const libs = ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js'].map((s) => `<script src="../${s}"></script>`).join('') + '<script src="iconproj/dist/diki.iife.js"></script>';
 const APP = `<div id="root"></div>
 <script>
 var D = window.Diki, h = React.createElement;
@@ -46,6 +50,7 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 
 t('build.py builds the two sample icons', built.status === 0, built.stdout + built.stderr);
+t('npm run build bundles them into the browser script', bundled.status === 0, bundled.stdout + bundled.stderr);
 t('Diki.customIcons lists them', JSON.stringify(await p.evaluate(() => window.Diki.customIcons)) === '["test-ring","test-square"]');
 const info = await p.evaluate(() => {
   const q = (s) => document.querySelector(s);

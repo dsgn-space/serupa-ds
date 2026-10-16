@@ -4,6 +4,21 @@ Every change to the Diki Design System, newest first. The format follows [Keep a
 
 ## [Unreleased]
 
+### Added
+
+- The components install as a package: `import { Button } from '@diki/design-system'` works in Vite, Next.js, Remix and Storybook. ES modules with types (`dist/index.js`, `dist/index.d.ts`); React 18 or later is a peer dependency, so the app and the system share one React; the components render on the server (nothing touches `window` or `document` until they run in the browser, and no React warnings).
+- `components.css` (the `dk-*` component styles, about 90 KB) and `utilities.css` (the utility classes), beside `bundle.css`, which is still both in one file.
+- `diki.iife.js`: the browser script under its new name. `bundle.js` is the same file.
+- `version` is exported from the package, as `Diki.version` is on plain pages.
+- `npm run build`, `npm run typecheck`, and a Package test: every export exists, every component renders on the server, the types declare every component, and `bundle.css` is `components.css` + `utilities.css`.
+
+### Changed
+
+- The source moved to `src/`: each component is a folder in `src/components/<Name>/` with its TypeScript source, its CSS, its component tokens, its guidelines and its preview. The types are generated from the code, so they can't drift from it. Every component behaves and looks exactly as before (all 90 screenshots and 25,561 utility classes match 4.7.0).
+- The built files are in `dist/` (not committed): `bundle.css`, `bundle.js`, `base.css`, `theme.js` and React (`dist/lib/`). Package imports such as `@diki/design-system/bundle.css` keep working; only direct file paths change (`components/bundle.css` is now `dist/bundle.css`).
+- The browser script is built for ES2019 browsers (all current ones) instead of being hand-written ES5.
+- `tools/icons/build.py` writes custom icons into `src/icons.ts`; `npm run build` puts them in the components.
+
 ## [4.7.0] - 2026-10-16
 
 ### Added

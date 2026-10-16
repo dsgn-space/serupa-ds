@@ -1,6 +1,6 @@
-"""Trim components/bundle.css to the classes a product actually uses.
+"""Trim dist/bundle.css (npm run build) to the classes a product actually uses.
 
-usage:  python3 tools/purge.py <source files or folders...> [-o out.css] [--css components/bundle.css] [--keep class ...]
+usage:  python3 tools/purge.py <source files or folders...> [-o out.css] [--css dist/bundle.css] [--keep class ...]
 
 Scans the sources (HTML, JSX/TSX, JS/TS, Vue, Svelte, templates…) for anything that looks like a
 class name and writes a copy of bundle.css with only the rules those classes need. Kept always:
@@ -16,7 +16,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 ap.add_argument('sources', nargs='+')
 ap.add_argument('-o', '--out', default='bundle.min.css')
-ap.add_argument('--css', default=os.path.join(HERE, '..', 'components', 'bundle.css'))
+ap.add_argument('--css', default=os.path.join(HERE, '..', 'dist', 'bundle.css'))
 ap.add_argument('--keep', nargs='*', default=[])
 a = ap.parse_args()
 

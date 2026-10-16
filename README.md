@@ -2,18 +2,30 @@
 
 Diki's tokens and a complete set of utility classes, with role-based alias colors in six themes. The palette has 22 color families with 11 shades each (`50`–`950`), plus `white` and `black` — 244 colors in all — plus 33 alias tokens that give colours a role (`primary`, `text`, `border`…), in six themes: Blue, Violet and Emerald, each in light and dark.
 
-**How the pieces connect.** Load `tokens.css`, then `components/bundle.css`. On a page built with the system, also load `components/theme.js` first (automatic dark mode) and `components/base.css` between the two (page defaults):
+**How the pieces connect.** Load `tokens.css`, then `bundle.css`. On a page built with the system, also load `theme.js` first (automatic dark mode) and `base.css` between the two (page defaults). In the package these are `tokens.css` at the top and the rest in `dist/`:
 
 ```html
 <html lang="en" data-brand="blue" data-mode="auto">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="components/theme.js"></script>
+  <script src="dist/theme.js"></script>
   <link rel="stylesheet" href="tokens.css">
-  <link rel="stylesheet" href="components/base.css">
-  <link rel="stylesheet" href="components/bundle.css">
+  <link rel="stylesheet" href="dist/base.css">
+  <link rel="stylesheet" href="dist/bundle.css">
 </head>
 ```
+
+**In a React app** (Vite, Next.js, Remix), import the components as ES modules. React 18 or later is a peer dependency, so the app's own React is the one they use, and they render on the server too:
+
+```js
+import '@diki/design-system/tokens.css';
+import '@diki/design-system/bundle.css';      // or components.css, plus utilities.css if you use the classes
+import { Button, Field, Input } from '@diki/design-system';
+```
+
+`bundle.css` is `components.css` (the `dk-*` component styles, about 90 KB) followed by `utilities.css` (every utility class). Types come with the package (`dist/index.d.ts`).
+
+**On a plain page** without a bundler, load React 18 (it ships in `dist/lib/`), then `dist/diki.iife.js`, which puts the components on `window.Diki`. `dist/bundle.js` is the same file under its old name.
 
 `base.css` sets page defaults from the tokens, all inside `:where()` so any class wins: border-box sizing, body background, text color and font (`surface`, `text`, `font-sans`, `text-base`), no stray margins on headings and paragraphs, form controls in the page font, media that fits its container, links in `primary`, one visible focus style (`focus-ring`), `placeholder` color, native controls and scrollbars in the theme's light or dark (`color-scheme`), and shorter motion when the visitor asks for it. Leave it out when dropping the system into an existing app. For production, trim `bundle.css` (1.7 MB, every class) to the classes your code uses: `python3 tools/purge.py src/ -o bundle.min.css` keeps the component styles and gives a few dozen KB for a typical page.
 
@@ -66,11 +78,11 @@ Six themes share **one set of foundations**: the same palette, type, spacing, ra
 
 Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
-**Automatic dark mode** — `components/theme.js` (standalone, no React) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
+**Automatic dark mode** — `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
 ```html
 <html data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
-<script src="components/theme.js"></script>
+<script src="dist/theme.js"></script>
 ```
 
 ```js
@@ -202,7 +214,7 @@ Rules of thumb:
 
 ### Text utilities
 
-Every typography property has classes in `components/bundle.css`. The values that form a scale are tokens in the `typography` group: weights, tracking, leading, font stretch, underline thickness and offset, line clamp and tab size.
+Every typography property has classes in `bundle.css`. The values that form a scale are tokens in the `typography` group: weights, tracking, leading, font stretch, underline thickness and offset, line clamp and tab size.
 
 | Property | Classes |
 | --- | --- |
@@ -262,7 +274,7 @@ The font family is also a token: `font-icon` (`var(--font-icon)`).
 
 ## Backgrounds
 
-Background utilities, as classes in `components/bundle.css`. Backgrounds have no scale of their own: colors come from the palette and alias tokens, so there are no new tokens.
+Background utilities, as classes in `bundle.css`. Backgrounds have no scale of their own: colors come from the palette and alias tokens, so there are no new tokens.
 
 | Property | Classes |
 | --- | --- |
@@ -294,7 +306,7 @@ The spacing scale, named `spacing-<step>`: 1 step = 4px (`spacing-4` = 16px = `p
 
 ### Padding and margin
 
-Every spacing step works as padding and margin, as classes in `components/bundle.css`.
+Every spacing step works as padding and margin, as classes in `bundle.css`.
 
 | Padding | Margin | Sets |
 | --- | --- | --- |
@@ -336,7 +348,7 @@ A container nested inside another should have a smaller radius than its parent.
 
 ## Borders and outlines
 
-Border and outline utilities, as classes in `components/bundle.css`. Widths and offsets are tokens in the `borders` group; colors come from the palette and alias tokens.
+Border and outline utilities, as classes in `bundle.css`. Widths and offsets are tokens in the `borders` group; colors come from the palette and alias tokens.
 
 | Property | Classes |
 | --- | --- |
@@ -359,7 +371,7 @@ Rules of thumb:
 
 ## Effects
 
-Effect utilities, as classes in `components/bundle.css`. Box, inner and text shadows are tokens in the `shadow` group; opacity uses the `opacity` group; blend modes and masks are keywords.
+Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are tokens in the `shadow` group; opacity uses the `opacity` group; blend modes and masks are keywords.
 
 **Shadow names.** `shadow-2xs` → `shadow-xs` → `shadow-sm` → `shadow-md` → `shadow-lg` → `shadow-xl` → `shadow-2xl`, all black at 5–25% opacity. Earlier versions of this system used other names: the old `shadow-sm` is now `shadow-xs` (Button uses it, so buttons look the same), the old bare `shadow` is now `shadow-sm`, and `shadow-inner` is now `inset-shadow-sm`. `shadow` and `shadow-inner` still work.
 
@@ -398,7 +410,7 @@ Rules of thumb:
 
 ## Filters
 
-Filter and backdrop-filter utilities, as classes in `components/bundle.css`. Scales are tokens in the `filters` group (backdrop opacity uses the `opacity` group); grayscale, invert and sepia need none. Filter classes combine on one element (`blur-sm grayscale`), and so do backdrop classes.
+Filter and backdrop-filter utilities, as classes in `bundle.css`. Scales are tokens in the `filters` group (backdrop opacity uses the `opacity` group); grayscale, invert and sepia need none. Filter classes combine on one element (`blur-sm grayscale`), and so do backdrop classes.
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
@@ -428,7 +440,7 @@ Rules of thumb:
 
 ## Tables
 
-Table utilities, as classes in `components/bundle.css`. They add no tokens: `border-spacing` uses the spacing scale, and the rest are keywords.
+Table utilities, as classes in `bundle.css`. They add no tokens: `border-spacing` uses the spacing scale, and the rest are keywords.
 
 | Property | Classes |
 | --- | --- |
@@ -446,7 +458,7 @@ Rules of thumb:
 
 ## Transforms
 
-Transform utilities, as classes in `components/bundle.css`. Perspective, rotation, scale, skew and zoom are tokens in the `transforms` group; translate uses the spacing scale. `rotate`, `scale` and `translate` set the CSS properties of the same name, so `rotate-45 scale-110 translate-x-2` all apply together.
+Transform utilities, as classes in `bundle.css`. Perspective, rotation, scale, skew and zoom are tokens in the `transforms` group; translate uses the spacing scale. `rotate`, `scale` and `translate` set the CSS properties of the same name, so `rotate-45 scale-110 translate-x-2` all apply together.
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
@@ -478,7 +490,7 @@ Rules of thumb:
 
 ## Layout
 
-Layout scales as tokens, and layout utilities as classes in `components/bundle.css` (`.container`, `.flex`, `.grid`, `.sticky`, `.z-30`, `.aspect-video`, `.overflow-hidden`…).
+Layout scales as tokens, and layout utilities as classes in `bundle.css` (`.container`, `.flex`, `.grid`, `.sticky`, `.z-30`, `.aspect-video`, `.overflow-hidden`…).
 
 **Breakpoints** — mobile first: styles apply from the breakpoint up.
 
@@ -546,7 +558,7 @@ For responsive changes, write your own media queries with the breakpoint values.
 
 ## Flexbox and grid
 
-Flexbox and grid utilities, as classes in `components/bundle.css`. Most are keywords; the few values that aren't on another scale are tokens in the `flexGrid` group (`flex-auto`, `grid-auto-fr`, `order-first`…). `order-first` and `order-last` are -9999 and 9999.
+Flexbox and grid utilities, as classes in `bundle.css`. Most are keywords; the few values that aren't on another scale are tokens in the `flexGrid` group (`flex-auto`, `grid-auto-fr`, `order-first`…). `order-first` and `order-last` are -9999 and 9999.
 
 | Property | Classes |
 | --- | --- |
@@ -579,7 +591,7 @@ Rules of thumb:
 
 ## Sizing
 
-The full sizing set: **width**, **min-width**, **max-width**, **height**, **min-height**, **max-height**, **inline-size**, **min-inline-size**, **max-inline-size**, **block-size**, **min-block-size** and **max-block-size**. Every one takes the same scale, so tokens hold the scale once and `components/bundle.css` has a class for each property × value.
+The full sizing set: **width**, **min-width**, **max-width**, **height**, **min-height**, **max-height**, **inline-size**, **min-inline-size**, **max-inline-size**, **block-size**, **min-block-size** and **max-block-size**. Every one takes the same scale, so tokens hold the scale once and `bundle.css` has a class for each property × value.
 
 | Property | Class prefix |
 | --- | --- |
@@ -636,7 +648,7 @@ Rules of thumb:
 
 ## Motion
 
-Transition and animation scales, as tokens in one `transitions` group (`var(--duration-150)`, `var(--ease-out)`, `var(--animate-spin)`) and as matching utility classes in `components/bundle.css` (`.transition`, `.duration-200`, `.ease-out`, `.animate-pulse`).
+Transition and animation scales, as tokens in one `transitions` group (`var(--duration-150)`, `var(--ease-out)`, `var(--animate-spin)`) and as matching utility classes in `bundle.css` (`.transition`, `.duration-200`, `.ease-out`, `.animate-pulse`).
 
 **Duration** — `duration-0`, `75`, `100`, `150`, `200`, `300`, `500`, `700`, `1000` (ms).
 
@@ -666,7 +678,7 @@ Transition and animation scales, as tokens in one `transitions` group (`var(--du
 | `animate-bounce` | `bounce 1s infinite` | A scroll-down hint. Use sparingly. |
 | `animate-none` | `none` | Turns an animation off. |
 
-The `spin`, `ping`, `pulse` and `bounce` keyframes ship in `components/bundle.css`.
+The `spin`, `ping`, `pulse` and `bounce` keyframes ship in `bundle.css`.
 
 Rules of thumb:
 
@@ -676,7 +688,7 @@ Rules of thumb:
 
 ## SVG
 
-SVG utilities, as classes in `components/bundle.css`. Colors come from the palette and alias tokens; stroke widths are the `stroke-width-*` tokens in the `borders` group.
+SVG utilities, as classes in `bundle.css`. Colors come from the palette and alias tokens; stroke widths are the `stroke-width-*` tokens in the `borders` group.
 
 | Property | Classes | Tokens |
 | --- | --- | --- |
@@ -693,7 +705,7 @@ Rules of thumb:
 
 ## Interactivity
 
-Interactivity utilities, as classes in `components/bundle.css`. They add no tokens: colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, and the rest are keywords.
+Interactivity utilities, as classes in `bundle.css`. They add no tokens: colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, and the rest are keywords.
 
 | Property | Classes |
 | --- | --- |
@@ -734,7 +746,7 @@ Rules of thumb:
 
 ## Accessibility
 
-Accessibility utilities, as classes in `components/bundle.css`. They add no tokens.
+Accessibility utilities, as classes in `bundle.css`. They add no tokens.
 
 | Property | Classes |
 | --- | --- |
@@ -752,7 +764,7 @@ Accessibility utilities, as classes in `components/bundle.css`. They add no toke
 
 ## Components
 
-React components styled only with this system's tokens (aliases first). They load as `window.Diki` after React 18, which ships with the system in `components/lib/`.
+React components styled only with this system's tokens (aliases first). Import them from the package as ES modules, or on a plain page load `dist/diki.iife.js` after React 18 (it ships in `dist/lib/`) and use `window.Diki`. Each one's source, styles, component tokens and guidelines are in `src/components/<Name>/`.
 
 | Component | What |
 | --- | --- |
@@ -789,7 +801,7 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | `diki.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
 | `themes/<theme>.tokens.json` | The 33 alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `diki.tokens.json` plus one theme file |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
-| `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `components/<Name>/<name>.tokens.json` |
+| `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 
 Each token keeps its CSS variable in `$extensions["com.diki"].cssVar`. The files are generated from `tokens.json` (`python3 tools/tokens/export.py`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
 
@@ -809,7 +821,9 @@ Popover and command buttons (`popoverTarget`, `command`) and `text-wrap: balance
 
 ## Maintaining the system
 
-`tools/` holds the test suite, the documentation site generator, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `node tools/test/run.mjs` before publishing a change. It audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,561 utility classes and the component previews with saved baselines, tests Button's behaviour, the custom icon build and the page groundwork, and builds and checks the docs site. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
+The source is in `src/`: one folder per component in `src/components/<Name>/` (the component in TypeScript, its CSS, its component tokens, its guidelines and its preview), the utility classes in `src/styles/utilities.css`, and `base.css` and `theme.js`. `npm run build` makes `dist/`, which is never edited or committed: `index.js` and `index.d.ts` (ES modules and types), `diki.iife.js` (the browser script), `components.css`, `utilities.css`, `bundle.css`, `base.css`, `theme.js` and `lib/`. `npm run typecheck` checks the types.
+
+`tools/` holds the build, the test suite, the documentation site generator, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,561 utility classes and the component previews with saved baselines, tests Button's behaviour, the custom icon build and the page groundwork, and builds and checks the docs site. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
 
@@ -820,7 +834,7 @@ The system is self-contained: every file it needs is in it, and nothing loads fr
 | Tailwind CSS (Tailwind Labs) | The naming and values of the utility classes, the palette and the scales, checked against its compiler (v4.3.3) | MIT — `licenses/TailwindCSS-MIT.txt` |
 | Inter (Rasmus Andersson) | `font-sans` — `fonts/InterVariable.woff2`, `fonts/InterVariable-Italic.woff2` | SIL Open Font License 1.1 — `licenses/Inter-OFL-1.1.txt` |
 | Material Symbols (Google) | Icons — `fonts/MaterialSymbolsRounded-Filled.woff2`, cut to the filled, weight-400 style | Apache 2.0 — `licenses/MaterialSymbols-Apache-2.0.txt` |
-| React 18.3.1 (Meta) | Running the components — `components/lib/` | MIT — `licenses/React-MIT.txt` |
+| React 18.3.1 (Meta) | Running the components on plain pages — `dist/lib/`, copied from the `react` and `react-dom` packages by the build | MIT — `licenses/React-MIT.txt` |
 
 ---
 

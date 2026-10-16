@@ -125,9 +125,9 @@ for th in THEMES:
 
 files = {'diki.tokens.json': base, 'css-values.json': {'$description': 'Tokens the W3C Design Tokens format (2025.10) has no type for yet: degrees, em, percentages of a box, viewport units, keywords, CSS shorthands, and text shadows (the shadow type in the format always has a spread, which CSS text-shadow does not allow). Use the CSS value as-is.', **css_only}}
 for th, d in themes.items(): files[f'themes/{th}.tokens.json'] = d
-# component tokens (components/<Name>/<name>.tokens.json) are already in the format: published as they are
+# component tokens (src/components/<Name>/<name>.tokens.json) are already in the format: published as they are
 import glob
-for f in sorted(glob.glob(os.path.join(P, 'components', '*', '*.tokens.json'))):
+for f in sorted(glob.glob(os.path.join(P, 'src', 'components', '*', '*.tokens.json'))):
     files['components/' + os.path.basename(f)] = json.load(open(f, encoding='utf-8'))
 dump = lambda d: json.dumps(d, indent=2, ensure_ascii=False) + '\n'
 

@@ -29,6 +29,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Render the baselines
         run: |
+          npm run build
           node tools/test/visual.mjs --update
           node tools/test/utilities.mjs --update
       - name: Commit them to the branch

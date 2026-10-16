@@ -85,13 +85,13 @@ refuses('an empty icon', svg('<g></g>'), 'no shapes')
 refuses('file names with spaces or capitals', svg('<path d="M0 0h24v24H0z"/>'), 'lowercase', name='My Icon')
 refuses('not SVG at all', 'hello', 'not valid SVG')
 
-# --- the build: writes bundle.js and index.d.ts, repeatable, --check, and the shipped registry
+# --- the build: writes src/icons.ts (the registry and CustomIconName), repeatable, --check, and the shipped registry
 tmp = tempfile.mkdtemp()
 try:
     proj = os.path.join(tmp, 'p')
-    os.makedirs(os.path.join(proj, 'components'))
-    for f in ('bundle.js', 'index.d.ts'):
-        shutil.copy(os.path.join(P, 'components', f), os.path.join(proj, 'components', f))
+    os.makedirs(os.path.join(proj, 'src'))
+    shutil.copy(os.path.join(P, 'src', 'icons.ts'), os.path.join(proj, 'src', 'icons.ts'))
+    ICONS_TS = os.path.join(proj, 'src', 'icons.ts')
     icons = os.path.join(tmp, 'icons')
     os.makedirs(icons)
     open(os.path.join(icons, 'diki-star.svg'), 'w').write(FIGMA)
@@ -99,31 +99,29 @@ try:
     open(os.path.join(icons, 'notes.txt'), 'w').write('ignored')
     run = lambda *a: subprocess.run([sys.executable, '-I', BUILD, '--project', proj, *a], capture_output=True, text=True)
     r = run(icons)
-    js = open(os.path.join(proj, 'components', 'bundle.js')).read()
-    ts = open(os.path.join(proj, 'components', 'index.d.ts')).read()
+    js = ts = open(ICONS_TS).read()
     reg = B.read_registry(js)
-    check('build writes the icons into bundle.js, sorted by name', r.returncode == 0 and list(reg) == ['diki-clock', 'diki-star'], r.stdout + r.stderr)
-    check('build writes CustomIconName into index.d.ts', 'export type CustomIconName = "diki-clock" | "diki-star";' in ts, re.search(r'CustomIconName = [^;]*;', ts).group(0))
-    check('bundle.js holds no literal </script and no outside URL', '</script' not in js.lower() and 'http' not in json.dumps(reg))
+    check('build writes the icons into src/icons.ts, sorted by name', r.returncode == 0 and list(reg) == ['diki-clock', 'diki-star'], r.stdout + r.stderr)
+    check('build writes CustomIconName into src/icons.ts', 'export type CustomIconName = "diki-clock" | "diki-star";' in ts, re.search(r'CustomIconName = [^;]*;', ts).group(0))
+    check('src/icons.ts holds no literal </script and no outside URL', '</script' not in js.lower() and 'http' not in json.dumps(reg))
     r2 = run(icons)
-    check('building again changes nothing', open(os.path.join(proj, 'components', 'bundle.js')).read() == js and r2.returncode == 0)
+    check('building again changes nothing', open(ICONS_TS).read() == js and r2.returncode == 0)
     check('--check passes when in step', run('--check', icons).returncode == 0)
     open(os.path.join(icons, 'diki-new.svg'), 'w').write(HOLES)
     check('--check fails after an icon is added', run('--check', icons).returncode == 1)
     open(os.path.join(icons, 'bad.svg'), 'w').write(svg('<script>x</script>'))
     r3 = run(icons)
-    check('a bad file stops the build and leaves bundle.js untouched',
-          r3.returncode == 1 and 'bad:' in r3.stderr and open(os.path.join(proj, 'components', 'bundle.js')).read() == js, r3.stderr)
+    check('a bad file stops the build and leaves src/icons.ts untouched',
+          r3.returncode == 1 and 'bad:' in r3.stderr and open(ICONS_TS).read() == js, r3.stderr)
     os.remove(os.path.join(icons, 'bad.svg'))
     r4 = run(os.path.join(tmp, 'nowhere'))
-    check('a missing folder removes every custom icon', r4.returncode == 0 and B.read_registry(open(os.path.join(proj, 'components', 'bundle.js')).read()) == {}
-          and 'CustomIconName = never;' in open(os.path.join(proj, 'components', 'index.d.ts')).read(), r4.stdout + r4.stderr)
+    check('a missing folder removes every custom icon', r4.returncode == 0 and B.read_registry(open(ICONS_TS).read()) == {}
+          and 'CustomIconName = never;' in open(ICONS_TS).read(), r4.stdout + r4.stderr)
 finally:
     shutil.rmtree(tmp, ignore_errors=True)
 
 # the icons shipped now: each one is exactly what the builder makes of it, and the types list the same names
-js = open(os.path.join(P, 'components', 'bundle.js'), encoding='utf-8').read()
-ts = open(os.path.join(P, 'components', 'index.d.ts'), encoding='utf-8').read()
+js = ts = open(os.path.join(P, 'src', 'icons.ts'), encoding='utf-8').read()
 reg = B.read_registry(js)
 unsafe = []
 for n, b in reg.items():
@@ -133,7 +131,10 @@ for n, b in reg.items():
     except B.IconError as e:
         unsafe.append(f'{n} ({e})')
 check(f'shipped custom icons ({len(reg)}) are clean builder output', not unsafe, ', '.join(unsafe))
-check('index.d.ts lists the same custom icon names as bundle.js', B.ts_block(reg) in ts)
+check('CustomIconName lists the same custom icon names as the registry', B.ts_block(reg) in ts)
+built = os.path.join(P, 'dist', 'index.d.ts')
+if os.path.exists(built):
+    check('the built types (dist/index.d.ts) carry the same CustomIconName', re.search(r'type CustomIconName = ([^;]*);', open(built, encoding='utf-8').read()).group(1) == (' | '.join(json.dumps(n) for n in sorted(reg)) or 'never'))
 src = os.path.join(P, 'assets', 'Icons')
 if os.path.isdir(src):
     r = subprocess.run([sys.executable, '-I', BUILD, '--project', P, '--check', src], capture_output=True, text=True)

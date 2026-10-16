@@ -4,7 +4,7 @@ usage:  python3 tools/docs/build.py [project dir] [out dir]
         project dir  the design system folder that holds tokens.json (default: two levels up from this file)
         out dir      where the site is written (default: ./docs-site)
 
-Reads tokens.json and components/bundle.css, fills template.html, splits it into one
+Reads tokens.json and dist/bundle.css (npm run build), fills template.html, splits it into one
 page per section, and copies the fonts. The result is a static site with no outside
 requests: open out/index.html, or publish the folder as the docs artifact (its page is
 index.html, published as ds-docs.html; every other file goes in `files`).

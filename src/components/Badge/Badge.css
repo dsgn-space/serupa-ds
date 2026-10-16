@@ -1,0 +1,184 @@
+/* ---------------------------------------------------------------
+   Badge: a short label for status, counts and categories. Styles subtle (a tint), solid (a full fill)
+   and outline (a border); tones neutral and primary (alias colors), success (green), warning (amber),
+   danger (red), info (sky) and the 17 chromatic palette families. Palette tones use fixed steps, checked
+   for contrast in light and dark (tools/test/badge.mjs): light: subtle 100 fill + 700 text, solid 600 or
+   700 fill + white, outline 700; dark: subtle 950 fill + 300 text, solid 400 fill + 950 text, outline 300
+   text on a 400 border. The steps follow the nearest theme (data-theme ending -light or -dark).
+   Structure: .dk-badge (a <span>, or a <button> / link when interactive) > .dk-badge__icon (an icon, or .dk-badge__dot in an icon-sized box), .dk-badge__label,
+   .dk-badge__remove, .dk-badge__loader (while loading).
+   --------------------------------------------------------------- */
+:root, [data-theme$="-light"] { --dk-bdg-xlayer: var(--black); --dk-bdg-red-sbg: var(--red-100); --dk-bdg-red-sfg: var(--red-700); --dk-bdg-red-xbg: var(--red-600); --dk-bdg-red-xfg: var(--white); --dk-bdg-red-o: var(--red-700); --dk-bdg-red-obd: var(--red-700); --dk-bdg-orange-sbg: var(--orange-100); --dk-bdg-orange-sfg: var(--orange-700); --dk-bdg-orange-xbg: var(--orange-700); --dk-bdg-orange-xfg: var(--white); --dk-bdg-orange-o: var(--orange-700); --dk-bdg-orange-obd: var(--orange-700); --dk-bdg-amber-sbg: var(--amber-100); --dk-bdg-amber-sfg: var(--amber-700); --dk-bdg-amber-xbg: var(--amber-700); --dk-bdg-amber-xfg: var(--white); --dk-bdg-amber-o: var(--amber-700); --dk-bdg-amber-obd: var(--amber-700); --dk-bdg-yellow-sbg: var(--yellow-100); --dk-bdg-yellow-sfg: var(--yellow-700); --dk-bdg-yellow-xbg: var(--yellow-700); --dk-bdg-yellow-xfg: var(--white); --dk-bdg-yellow-o: var(--yellow-700); --dk-bdg-yellow-obd: var(--yellow-700); --dk-bdg-lime-sbg: var(--lime-100); --dk-bdg-lime-sfg: var(--lime-700); --dk-bdg-lime-xbg: var(--lime-700); --dk-bdg-lime-xfg: var(--white); --dk-bdg-lime-o: var(--lime-700); --dk-bdg-lime-obd: var(--lime-700); --dk-bdg-green-sbg: var(--green-100); --dk-bdg-green-sfg: var(--green-700); --dk-bdg-green-xbg: var(--green-700); --dk-bdg-green-xfg: var(--white); --dk-bdg-green-o: var(--green-700); --dk-bdg-green-obd: var(--green-700); --dk-bdg-emerald-sbg: var(--emerald-100); --dk-bdg-emerald-sfg: var(--emerald-700); --dk-bdg-emerald-xbg: var(--emerald-700); --dk-bdg-emerald-xfg: var(--white); --dk-bdg-emerald-o: var(--emerald-700); --dk-bdg-emerald-obd: var(--emerald-700); --dk-bdg-teal-sbg: var(--teal-100); --dk-bdg-teal-sfg: var(--teal-700); --dk-bdg-teal-xbg: var(--teal-700); --dk-bdg-teal-xfg: var(--white); --dk-bdg-teal-o: var(--teal-700); --dk-bdg-teal-obd: var(--teal-700); --dk-bdg-cyan-sbg: var(--cyan-100); --dk-bdg-cyan-sfg: var(--cyan-700); --dk-bdg-cyan-xbg: var(--cyan-700); --dk-bdg-cyan-xfg: var(--white); --dk-bdg-cyan-o: var(--cyan-700); --dk-bdg-cyan-obd: var(--cyan-700); --dk-bdg-sky-sbg: var(--sky-100); --dk-bdg-sky-sfg: var(--sky-700); --dk-bdg-sky-xbg: var(--sky-700); --dk-bdg-sky-xfg: var(--white); --dk-bdg-sky-o: var(--sky-700); --dk-bdg-sky-obd: var(--sky-700); --dk-bdg-blue-sbg: var(--blue-100); --dk-bdg-blue-sfg: var(--blue-700); --dk-bdg-blue-xbg: var(--blue-600); --dk-bdg-blue-xfg: var(--white); --dk-bdg-blue-o: var(--blue-700); --dk-bdg-blue-obd: var(--blue-700); --dk-bdg-indigo-sbg: var(--indigo-100); --dk-bdg-indigo-sfg: var(--indigo-700); --dk-bdg-indigo-xbg: var(--indigo-600); --dk-bdg-indigo-xfg: var(--white); --dk-bdg-indigo-o: var(--indigo-700); --dk-bdg-indigo-obd: var(--indigo-700); --dk-bdg-violet-sbg: var(--violet-100); --dk-bdg-violet-sfg: var(--violet-700); --dk-bdg-violet-xbg: var(--violet-600); --dk-bdg-violet-xfg: var(--white); --dk-bdg-violet-o: var(--violet-700); --dk-bdg-violet-obd: var(--violet-700); --dk-bdg-purple-sbg: var(--purple-100); --dk-bdg-purple-sfg: var(--purple-700); --dk-bdg-purple-xbg: var(--purple-600); --dk-bdg-purple-xfg: var(--white); --dk-bdg-purple-o: var(--purple-700); --dk-bdg-purple-obd: var(--purple-700); --dk-bdg-fuchsia-sbg: var(--fuchsia-100); --dk-bdg-fuchsia-sfg: var(--fuchsia-700); --dk-bdg-fuchsia-xbg: var(--fuchsia-600); --dk-bdg-fuchsia-xfg: var(--white); --dk-bdg-fuchsia-o: var(--fuchsia-700); --dk-bdg-fuchsia-obd: var(--fuchsia-700); --dk-bdg-pink-sbg: var(--pink-100); --dk-bdg-pink-sfg: var(--pink-700); --dk-bdg-pink-xbg: var(--pink-600); --dk-bdg-pink-xfg: var(--white); --dk-bdg-pink-o: var(--pink-700); --dk-bdg-pink-obd: var(--pink-700); --dk-bdg-rose-sbg: var(--rose-100); --dk-bdg-rose-sfg: var(--rose-700); --dk-bdg-rose-xbg: var(--rose-600); --dk-bdg-rose-xfg: var(--white); --dk-bdg-rose-o: var(--rose-700); --dk-bdg-rose-obd: var(--rose-700); }
+[data-theme$="-dark"] { --dk-bdg-xlayer: var(--white); --dk-bdg-red-sbg: var(--red-950); --dk-bdg-red-sfg: var(--red-300); --dk-bdg-red-xbg: var(--red-400); --dk-bdg-red-xfg: var(--red-950); --dk-bdg-red-o: var(--red-300); --dk-bdg-red-obd: var(--red-400); --dk-bdg-orange-sbg: var(--orange-950); --dk-bdg-orange-sfg: var(--orange-300); --dk-bdg-orange-xbg: var(--orange-400); --dk-bdg-orange-xfg: var(--orange-950); --dk-bdg-orange-o: var(--orange-300); --dk-bdg-orange-obd: var(--orange-400); --dk-bdg-amber-sbg: var(--amber-950); --dk-bdg-amber-sfg: var(--amber-300); --dk-bdg-amber-xbg: var(--amber-400); --dk-bdg-amber-xfg: var(--amber-950); --dk-bdg-amber-o: var(--amber-300); --dk-bdg-amber-obd: var(--amber-400); --dk-bdg-yellow-sbg: var(--yellow-950); --dk-bdg-yellow-sfg: var(--yellow-300); --dk-bdg-yellow-xbg: var(--yellow-400); --dk-bdg-yellow-xfg: var(--yellow-950); --dk-bdg-yellow-o: var(--yellow-300); --dk-bdg-yellow-obd: var(--yellow-400); --dk-bdg-lime-sbg: var(--lime-950); --dk-bdg-lime-sfg: var(--lime-300); --dk-bdg-lime-xbg: var(--lime-400); --dk-bdg-lime-xfg: var(--lime-950); --dk-bdg-lime-o: var(--lime-300); --dk-bdg-lime-obd: var(--lime-400); --dk-bdg-green-sbg: var(--green-950); --dk-bdg-green-sfg: var(--green-300); --dk-bdg-green-xbg: var(--green-400); --dk-bdg-green-xfg: var(--green-950); --dk-bdg-green-o: var(--green-300); --dk-bdg-green-obd: var(--green-400); --dk-bdg-emerald-sbg: var(--emerald-950); --dk-bdg-emerald-sfg: var(--emerald-300); --dk-bdg-emerald-xbg: var(--emerald-400); --dk-bdg-emerald-xfg: var(--emerald-950); --dk-bdg-emerald-o: var(--emerald-300); --dk-bdg-emerald-obd: var(--emerald-400); --dk-bdg-teal-sbg: var(--teal-950); --dk-bdg-teal-sfg: var(--teal-300); --dk-bdg-teal-xbg: var(--teal-400); --dk-bdg-teal-xfg: var(--teal-950); --dk-bdg-teal-o: var(--teal-300); --dk-bdg-teal-obd: var(--teal-400); --dk-bdg-cyan-sbg: var(--cyan-950); --dk-bdg-cyan-sfg: var(--cyan-300); --dk-bdg-cyan-xbg: var(--cyan-400); --dk-bdg-cyan-xfg: var(--cyan-950); --dk-bdg-cyan-o: var(--cyan-300); --dk-bdg-cyan-obd: var(--cyan-400); --dk-bdg-sky-sbg: var(--sky-950); --dk-bdg-sky-sfg: var(--sky-300); --dk-bdg-sky-xbg: var(--sky-400); --dk-bdg-sky-xfg: var(--sky-950); --dk-bdg-sky-o: var(--sky-300); --dk-bdg-sky-obd: var(--sky-400); --dk-bdg-blue-sbg: var(--blue-950); --dk-bdg-blue-sfg: var(--blue-300); --dk-bdg-blue-xbg: var(--blue-400); --dk-bdg-blue-xfg: var(--blue-950); --dk-bdg-blue-o: var(--blue-300); --dk-bdg-blue-obd: var(--blue-400); --dk-bdg-indigo-sbg: var(--indigo-950); --dk-bdg-indigo-sfg: var(--indigo-300); --dk-bdg-indigo-xbg: var(--indigo-400); --dk-bdg-indigo-xfg: var(--indigo-950); --dk-bdg-indigo-o: var(--indigo-300); --dk-bdg-indigo-obd: var(--indigo-400); --dk-bdg-violet-sbg: var(--violet-950); --dk-bdg-violet-sfg: var(--violet-300); --dk-bdg-violet-xbg: var(--violet-400); --dk-bdg-violet-xfg: var(--violet-950); --dk-bdg-violet-o: var(--violet-300); --dk-bdg-violet-obd: var(--violet-400); --dk-bdg-purple-sbg: var(--purple-950); --dk-bdg-purple-sfg: var(--purple-300); --dk-bdg-purple-xbg: var(--purple-400); --dk-bdg-purple-xfg: var(--purple-950); --dk-bdg-purple-o: var(--purple-300); --dk-bdg-purple-obd: var(--purple-400); --dk-bdg-fuchsia-sbg: var(--fuchsia-950); --dk-bdg-fuchsia-sfg: var(--fuchsia-300); --dk-bdg-fuchsia-xbg: var(--fuchsia-400); --dk-bdg-fuchsia-xfg: var(--fuchsia-950); --dk-bdg-fuchsia-o: var(--fuchsia-300); --dk-bdg-fuchsia-obd: var(--fuchsia-400); --dk-bdg-pink-sbg: var(--pink-950); --dk-bdg-pink-sfg: var(--pink-300); --dk-bdg-pink-xbg: var(--pink-400); --dk-bdg-pink-xfg: var(--pink-950); --dk-bdg-pink-o: var(--pink-300); --dk-bdg-pink-obd: var(--pink-400); --dk-bdg-rose-sbg: var(--rose-950); --dk-bdg-rose-sfg: var(--rose-300); --dk-bdg-rose-xbg: var(--rose-400); --dk-bdg-rose-xfg: var(--rose-950); --dk-bdg-rose-o: var(--rose-300); --dk-bdg-rose-obd: var(--rose-400); }
+.dk-badge {
+  --dk-badge-h: var(--badge-height, var(--spacing-5, 1.25rem));
+  --dk-badge-px: var(--badge-padding-x, var(--spacing-1\.5, 0.375rem));
+  --dk-badge-icon: var(--badge-icon-size, var(--spacing-3, 0.75rem));
+  --dk-badge-sbg: var(--secondary); --dk-badge-sfg: var(--text);
+  --dk-badge-xbg: var(--surface-inverse); --dk-badge-xfg: var(--text-inverse);
+  --dk-badge-ofg: var(--text); --dk-badge-obd: var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--badge-gap, var(--spacing-1, 0.25rem));
+  box-sizing: border-box;
+  height: var(--dk-badge-h);
+  max-width: var(--sizing-full, 100%);
+  padding: var(--spacing-0, 0px) var(--dk-badge-px);
+  border: var(--badge-border-width, var(--border-width-1, 1px)) solid transparent;
+  border-radius: var(--badge-radius, var(--rounded-md, 0.375rem));
+  font-family: var(--font-sans);
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--text-xs--line-height, 1rem);
+  font-weight: var(--font-medium, 500);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.dk-badge--tone-primary { --dk-badge-sbg: var(--primary-subtle); --dk-badge-sfg: var(--primary); --dk-badge-xbg: var(--primary); --dk-badge-xfg: var(--on-primary); --dk-badge-ofg: var(--primary); --dk-badge-obd: var(--primary); }
+.dk-badge--tone-success { --dk-badge-sbg: var(--dk-bdg-green-sbg); --dk-badge-sfg: var(--dk-bdg-green-sfg); --dk-badge-xbg: var(--dk-bdg-green-xbg); --dk-badge-xfg: var(--dk-bdg-green-xfg); --dk-badge-ofg: var(--dk-bdg-green-o); --dk-badge-obd: var(--dk-bdg-green-obd); }
+.dk-badge--tone-warning { --dk-badge-sbg: var(--dk-bdg-amber-sbg); --dk-badge-sfg: var(--dk-bdg-amber-sfg); --dk-badge-xbg: var(--dk-bdg-amber-xbg); --dk-badge-xfg: var(--dk-bdg-amber-xfg); --dk-badge-ofg: var(--dk-bdg-amber-o); --dk-badge-obd: var(--dk-bdg-amber-obd); }
+.dk-badge--tone-danger { --dk-badge-sbg: var(--dk-bdg-red-sbg); --dk-badge-sfg: var(--dk-bdg-red-sfg); --dk-badge-xbg: var(--dk-bdg-red-xbg); --dk-badge-xfg: var(--dk-bdg-red-xfg); --dk-badge-ofg: var(--dk-bdg-red-o); --dk-badge-obd: var(--dk-bdg-red-obd); }
+.dk-badge--tone-info { --dk-badge-sbg: var(--dk-bdg-sky-sbg); --dk-badge-sfg: var(--dk-bdg-sky-sfg); --dk-badge-xbg: var(--dk-bdg-sky-xbg); --dk-badge-xfg: var(--dk-bdg-sky-xfg); --dk-badge-ofg: var(--dk-bdg-sky-o); --dk-badge-obd: var(--dk-bdg-sky-obd); }
+.dk-badge--tone-red { --dk-badge-sbg: var(--dk-bdg-red-sbg); --dk-badge-sfg: var(--dk-bdg-red-sfg); --dk-badge-xbg: var(--dk-bdg-red-xbg); --dk-badge-xfg: var(--dk-bdg-red-xfg); --dk-badge-ofg: var(--dk-bdg-red-o); --dk-badge-obd: var(--dk-bdg-red-obd); }
+.dk-badge--tone-orange { --dk-badge-sbg: var(--dk-bdg-orange-sbg); --dk-badge-sfg: var(--dk-bdg-orange-sfg); --dk-badge-xbg: var(--dk-bdg-orange-xbg); --dk-badge-xfg: var(--dk-bdg-orange-xfg); --dk-badge-ofg: var(--dk-bdg-orange-o); --dk-badge-obd: var(--dk-bdg-orange-obd); }
+.dk-badge--tone-amber { --dk-badge-sbg: var(--dk-bdg-amber-sbg); --dk-badge-sfg: var(--dk-bdg-amber-sfg); --dk-badge-xbg: var(--dk-bdg-amber-xbg); --dk-badge-xfg: var(--dk-bdg-amber-xfg); --dk-badge-ofg: var(--dk-bdg-amber-o); --dk-badge-obd: var(--dk-bdg-amber-obd); }
+.dk-badge--tone-yellow { --dk-badge-sbg: var(--dk-bdg-yellow-sbg); --dk-badge-sfg: var(--dk-bdg-yellow-sfg); --dk-badge-xbg: var(--dk-bdg-yellow-xbg); --dk-badge-xfg: var(--dk-bdg-yellow-xfg); --dk-badge-ofg: var(--dk-bdg-yellow-o); --dk-badge-obd: var(--dk-bdg-yellow-obd); }
+.dk-badge--tone-lime { --dk-badge-sbg: var(--dk-bdg-lime-sbg); --dk-badge-sfg: var(--dk-bdg-lime-sfg); --dk-badge-xbg: var(--dk-bdg-lime-xbg); --dk-badge-xfg: var(--dk-bdg-lime-xfg); --dk-badge-ofg: var(--dk-bdg-lime-o); --dk-badge-obd: var(--dk-bdg-lime-obd); }
+.dk-badge--tone-green { --dk-badge-sbg: var(--dk-bdg-green-sbg); --dk-badge-sfg: var(--dk-bdg-green-sfg); --dk-badge-xbg: var(--dk-bdg-green-xbg); --dk-badge-xfg: var(--dk-bdg-green-xfg); --dk-badge-ofg: var(--dk-bdg-green-o); --dk-badge-obd: var(--dk-bdg-green-obd); }
+.dk-badge--tone-emerald { --dk-badge-sbg: var(--dk-bdg-emerald-sbg); --dk-badge-sfg: var(--dk-bdg-emerald-sfg); --dk-badge-xbg: var(--dk-bdg-emerald-xbg); --dk-badge-xfg: var(--dk-bdg-emerald-xfg); --dk-badge-ofg: var(--dk-bdg-emerald-o); --dk-badge-obd: var(--dk-bdg-emerald-obd); }
+.dk-badge--tone-teal { --dk-badge-sbg: var(--dk-bdg-teal-sbg); --dk-badge-sfg: var(--dk-bdg-teal-sfg); --dk-badge-xbg: var(--dk-bdg-teal-xbg); --dk-badge-xfg: var(--dk-bdg-teal-xfg); --dk-badge-ofg: var(--dk-bdg-teal-o); --dk-badge-obd: var(--dk-bdg-teal-obd); }
+.dk-badge--tone-cyan { --dk-badge-sbg: var(--dk-bdg-cyan-sbg); --dk-badge-sfg: var(--dk-bdg-cyan-sfg); --dk-badge-xbg: var(--dk-bdg-cyan-xbg); --dk-badge-xfg: var(--dk-bdg-cyan-xfg); --dk-badge-ofg: var(--dk-bdg-cyan-o); --dk-badge-obd: var(--dk-bdg-cyan-obd); }
+.dk-badge--tone-sky { --dk-badge-sbg: var(--dk-bdg-sky-sbg); --dk-badge-sfg: var(--dk-bdg-sky-sfg); --dk-badge-xbg: var(--dk-bdg-sky-xbg); --dk-badge-xfg: var(--dk-bdg-sky-xfg); --dk-badge-ofg: var(--dk-bdg-sky-o); --dk-badge-obd: var(--dk-bdg-sky-obd); }
+.dk-badge--tone-blue { --dk-badge-sbg: var(--dk-bdg-blue-sbg); --dk-badge-sfg: var(--dk-bdg-blue-sfg); --dk-badge-xbg: var(--dk-bdg-blue-xbg); --dk-badge-xfg: var(--dk-bdg-blue-xfg); --dk-badge-ofg: var(--dk-bdg-blue-o); --dk-badge-obd: var(--dk-bdg-blue-obd); }
+.dk-badge--tone-indigo { --dk-badge-sbg: var(--dk-bdg-indigo-sbg); --dk-badge-sfg: var(--dk-bdg-indigo-sfg); --dk-badge-xbg: var(--dk-bdg-indigo-xbg); --dk-badge-xfg: var(--dk-bdg-indigo-xfg); --dk-badge-ofg: var(--dk-bdg-indigo-o); --dk-badge-obd: var(--dk-bdg-indigo-obd); }
+.dk-badge--tone-violet { --dk-badge-sbg: var(--dk-bdg-violet-sbg); --dk-badge-sfg: var(--dk-bdg-violet-sfg); --dk-badge-xbg: var(--dk-bdg-violet-xbg); --dk-badge-xfg: var(--dk-bdg-violet-xfg); --dk-badge-ofg: var(--dk-bdg-violet-o); --dk-badge-obd: var(--dk-bdg-violet-obd); }
+.dk-badge--tone-purple { --dk-badge-sbg: var(--dk-bdg-purple-sbg); --dk-badge-sfg: var(--dk-bdg-purple-sfg); --dk-badge-xbg: var(--dk-bdg-purple-xbg); --dk-badge-xfg: var(--dk-bdg-purple-xfg); --dk-badge-ofg: var(--dk-bdg-purple-o); --dk-badge-obd: var(--dk-bdg-purple-obd); }
+.dk-badge--tone-fuchsia { --dk-badge-sbg: var(--dk-bdg-fuchsia-sbg); --dk-badge-sfg: var(--dk-bdg-fuchsia-sfg); --dk-badge-xbg: var(--dk-bdg-fuchsia-xbg); --dk-badge-xfg: var(--dk-bdg-fuchsia-xfg); --dk-badge-ofg: var(--dk-bdg-fuchsia-o); --dk-badge-obd: var(--dk-bdg-fuchsia-obd); }
+.dk-badge--tone-pink { --dk-badge-sbg: var(--dk-bdg-pink-sbg); --dk-badge-sfg: var(--dk-bdg-pink-sfg); --dk-badge-xbg: var(--dk-bdg-pink-xbg); --dk-badge-xfg: var(--dk-bdg-pink-xfg); --dk-badge-ofg: var(--dk-bdg-pink-o); --dk-badge-obd: var(--dk-bdg-pink-obd); }
+.dk-badge--tone-rose { --dk-badge-sbg: var(--dk-bdg-rose-sbg); --dk-badge-sfg: var(--dk-bdg-rose-sfg); --dk-badge-xbg: var(--dk-bdg-rose-xbg); --dk-badge-xfg: var(--dk-bdg-rose-xfg); --dk-badge-ofg: var(--dk-bdg-rose-o); --dk-badge-obd: var(--dk-bdg-rose-obd); }
+.dk-badge--subtle { background: var(--dk-badge-sbg); color: var(--dk-badge-sfg); border-color: color-mix(in srgb, currentColor var(--badge-subtle-border, var(--opacity-20, 20%)), transparent); }
+.dk-badge--solid { background: var(--dk-badge-xbg); color: var(--dk-badge-xfg); }
+.dk-badge--solid:not(.dk-badge--tone-neutral) { --dk-badge-layer: var(--dk-bdg-xlayer); }   /* the state layer darkens the fill in light themes and lightens it in dark, away from the text, so contrast only goes up */
+.dk-badge--outline { background: transparent; color: var(--dk-badge-ofg); border-color: var(--dk-badge-obd); }
+.dk-badge__label { min-width: var(--spacing-0, 0px); overflow: hidden; text-overflow: ellipsis; }
+.dk-badge__dot { flex-shrink: 0; width: var(--badge-dot-size, var(--spacing-1\.5, 0.375rem)); height: var(--badge-dot-size, var(--spacing-1\.5, 0.375rem)); border-radius: var(--rounded-full, 9999px); background: currentColor; }
+.dk-badge__icon { display: inline-flex; flex-shrink: 0; }
+.dk-badge__icon--dot { align-items: center; justify-content: center; width: calc(var(--dk-badge-icon) - var(--spacing-0\.5, 0.125rem)); height: var(--dk-badge-icon); }   /* the dot sits centered in a box as tall as an icon and 2px narrower (10×12px): a dot reads lighter than an icon, so it needs a little less room */
+.dk-badge .dk-icon { font-size: var(--dk-badge-icon); }
+/* Count: a pill as wide as it is tall for one digit, growing with the number; digits keep one width. */
+.dk-badge--count { justify-content: center; min-width: var(--dk-badge-h); padding: var(--spacing-0, 0px) var(--spacing-1, 0.25rem); border-radius: var(--rounded-full, 9999px); font-variant-numeric: tabular-nums; }
+/* Removable: an × at the end that mirrors a leading icon: an icon-sized box, --badge-gap from the label, and the
+   same end padding as the start, so an icon + label + × badge is balanced. The × glyph sits further inside its box
+   (about 3px) than most icons (about 1.5px), so the box is pulled in by spacing-0.5 on each side to even out what
+   you see. The button is still a 24×24 target (the control-height-sm a small Button has, the WCAG 2.2 minimum)
+   through ::after, which reaches past its box and the badge's edges; its focus ring goes round all of it. */
+.dk-badge--removable {
+  --dk-badge-rm-reach: calc((var(--control-height-sm, 1.5rem) - var(--dk-badge-icon)) / 2);
+  --dk-badge-rm-reach-y: calc((var(--control-height-sm, 1.5rem) - var(--dk-badge-h)) / 2);
+}
+/* Optical balance, like Button: an icon reads lighter than text, so with an icon on one side only (a leading icon
+   or dot, or the ×) the text side gets --badge-icon-offset more padding. Icons on both sides, or none: even. */
+.dk-badge--lead:not(.dk-badge--removable) { padding-inline-end: calc(var(--dk-badge-px) + var(--badge-icon-offset, var(--spacing-0\.5, 0.125rem))); }
+.dk-badge--removable:not(.dk-badge--lead) { padding-inline-start: calc(var(--dk-badge-px) + var(--badge-icon-offset, var(--spacing-0\.5, 0.125rem))); }
+.dk-badge__remove {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: var(--dk-badge-icon); height: var(--dk-badge-h);
+  margin-block: calc(var(--spacing-0, 0px) - var(--badge-border-width, var(--border-width-1, 1px)));
+  margin-inline: calc(var(--spacing-0, 0px) - var(--spacing-0\.5, 0.125rem));
+  padding: var(--spacing-0, 0px); border: 0; background: transparent; color: inherit; cursor: pointer;
+  outline: none;
+  opacity: var(--opacity-70, 70%);
+  transition: opacity var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-badge__remove::after {
+  content: ""; position: absolute; inset-block: calc(var(--spacing-0, 0px) - var(--dk-badge-rm-reach-y));
+  inset-inline: calc(var(--spacing-0, 0px) - var(--dk-badge-rm-reach));
+  border-radius: var(--badge-radius, var(--rounded-md, 0.375rem));
+}
+.dk-badge__remove:hover { opacity: var(--opacity-100, 100%); }
+.dk-badge__remove:focus-visible { opacity: var(--opacity-100, 100%); }
+.dk-badge__remove:focus-visible::after { outline: var(--outline-width-2, 2px) solid var(--focus-ring); outline-offset: calc(var(--spacing-0, 0px) - var(--outline-width-2, 2px)); }   /* the ring goes round the whole 24×24 target */
+/* Interactive (onClick: a <button>; href: a link): a state layer (hover, then stronger while pressed) in the text
+   color on subtle and outline, and black (light themes) or white (dark) on solid, a 2px focus ring outside a 2px surface gap, and a 50% fade when disabled. The layer sits above the
+   fill and below the content, so every style and tone gets the same treatment. */
+.dk-badge--interactive, .dk-badge--loading { position: relative; isolation: isolate; }
+.dk-badge--interactive { margin: var(--spacing-0, 0px); cursor: pointer; text-decoration: none; text-align: center; -webkit-tap-highlight-color: transparent; }
+.dk-badge--interactive::before {
+  content: ""; position: absolute; pointer-events: none;
+  inset: calc(var(--spacing-0, 0px) - var(--badge-border-width, var(--border-width-1, 1px)));
+  border-radius: inherit; background: var(--dk-badge-layer, currentColor); opacity: var(--opacity-0, 0%);
+  transition: opacity var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-badge--interactive > :not(.dk-badge__ripples, .dk-badge__loader) { position: relative; }   /* positioned, so the content paints above the layer and the ripple (which come first) */
+.dk-badge--interactive:hover:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-hover-layer, var(--opacity-10, 10%)); }
+.dk-badge--interactive:active:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-active-layer, var(--opacity-15, 15%)); }
+/* …and on subtle and outline the text moves away from the layer (darker in light themes, lighter in dark), so it keeps 4.5:1 */
+.dk-badge--interactive.dk-badge--subtle:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-sfg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30, 30%))); }
+.dk-badge--interactive.dk-badge--outline:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-ofg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30, 30%))); }
+.dk-badge--interactive:focus-visible {
+  /* the transparent outline is invisible normally but drawn in forced-colors mode, where box-shadow rings disappear */
+  box-shadow: 0 0 0 var(--outline-offset-2, 2px) var(--surface), 0 0 0 calc(var(--outline-offset-2, 2px) + var(--outline-width-2, 2px)) var(--badge-focus-ring, var(--focus-ring));
+  outline: var(--outline-width-2, 2px) solid transparent;
+  outline-offset: var(--outline-offset-2, 2px);
+}
+.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+/* Loading: the content fades out under a centered ring at the icon size; the badge keeps its width and colors. */
+.dk-badge--loading { cursor: progress; }
+.dk-badge--loading > :not(.dk-badge__loader) { opacity: var(--opacity-0, 0%); }
+.dk-badge__loader { position: absolute; inset: var(--spacing-0, 0px); display: flex; align-items: center; justify-content: center; }
+.dk-badge .dk-loader { --dk-loader-size: var(--dk-badge-icon); }
+/* Micro-interactions, the same as Button's, each with a component token (src/components/Badge/badge.tokens.json)
+   to tune it or turn it off. Only scale and opacity move, so nothing reflows. Press and ripple are on
+   clickable badges only; the loading cross-fade is on every badge. Under reduced motion press and ripple
+   stop and loading only fades.
+   Press: shrinks to --badge-press-scale while held (pointer, Space, or Enter through data-pressed). */
+.dk-badge { --dk-badge-press: var(--badge-press-scale, var(--scale-97, 97%)); --dk-badge-loader-from: var(--scale-50, 50%); }
+.dk-badge--interactive {
+  transition-property: color, scale;
+  transition-duration: var(--duration-150, 150ms), var(--badge-press-duration, var(--duration-100, 100ms));
+  transition-timing-function: var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-badge--interactive:active:not(:disabled, [aria-disabled="true"]),
+.dk-badge--interactive[data-pressed]:not(:disabled, [aria-disabled="true"]) { scale: var(--dk-badge-press); }
+/* Loading: the content fades out while the ring fades and grows in. */
+.dk-badge > :not(.dk-badge__loader, .dk-badge__ripples) { transition: opacity var(--badge-loading-duration, var(--duration-150, 150ms)) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)); }
+.dk-badge__loader { animation: dk-badge-loader-in var(--badge-loading-duration, var(--duration-150, 150ms)) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)) both; }
+@keyframes dk-badge-loader-in { from { opacity: var(--opacity-0, 0%); scale: var(--dk-badge-loader-from); } }
+/* Ripple: from the press point, in the text color at --badge-ripple-opacity; Badge adds the circles. */
+.dk-badge__ripples { position: absolute; inset: var(--spacing-0, 0px); border-radius: inherit; overflow: hidden; pointer-events: none; }
+.dk-badge__ripple {
+  position: absolute;
+  border-radius: var(--rounded-full, 9999px);
+  background-color: currentColor;
+  opacity: var(--badge-ripple-opacity, var(--opacity-20, 20%));
+  animation: dk-badge-ripple var(--badge-ripple-duration, var(--duration-500, 500ms)) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)) both;
+  transition: opacity var(--badge-ripple-fade-duration, var(--duration-300, 300ms)) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.dk-badge__ripple--out { opacity: var(--opacity-0, 0%); }
+@keyframes dk-badge-ripple { from { scale: var(--scale-0, 0%); } }
+@media (prefers-reduced-motion: reduce) {
+  .dk-badge { --dk-badge-press: var(--scale-100, 100%); --dk-badge-loader-from: var(--scale-100, 100%); }
+  .dk-badge__ripples { display: none; }
+}
+/* Indicator: <Badge dot /> with no label, icon or count. A lone dot ("something new", no number) in the tone's solid
+   fill (whatever the variant), 8px, with a ring in the surface color so it stays apart from
+   the icon, avatar or picture it overlaps. Place it yourself (e.g. absolute in the corner). */
+.dk-badge--indicator {
+  display: inline-block; flex-shrink: 0; box-sizing: border-box;
+  width: var(--badge-indicator-size, var(--spacing-2, 0.5rem)); height: var(--badge-indicator-size, var(--spacing-2, 0.5rem));
+  padding: var(--spacing-0, 0px); border: 0; border-radius: var(--rounded-full, 9999px);
+  background: var(--dk-badge-xbg);
+  box-shadow: 0 0 0 var(--badge-indicator-ring, var(--border-width-2, 2px)) var(--surface);
+}
+/* Ping (opt-in, ping with dot): a copy of the dot grows to twice its size and fades, every second, with the system's
+   ping animation (the --animate-ping token behind the animate-ping utility), for live states. The dot itself stays.
+   :where() keeps the indicator's position: relative weightless, so a class you add (absolute) still places it. */
+:where(.dk-badge--ping) .dk-badge__dot, :where(.dk-badge--ping.dk-badge--indicator) { position: relative; }
+.dk-badge--ping .dk-badge__dot::after, .dk-badge--ping.dk-badge--indicator::after {
+  content: ""; position: absolute; inset: var(--spacing-0, 0px); pointer-events: none;
+  border-radius: inherit; background: inherit;
+  animation: var(--animate-ping, ping 1s cubic-bezier(0, 0, 0.2, 1) infinite);
+}
+@media (prefers-reduced-motion: reduce) { .dk-badge--ping .dk-badge__dot::after, .dk-badge--ping.dk-badge--indicator::after { animation: var(--animate-none, none); display: none; } }
+@media (forced-colors: active) { .dk-badge--ping .dk-badge__dot::after, .dk-badge--ping.dk-badge--indicator::after { display: none; } }
+@media (forced-colors: active) { .dk-badge { border-color: CanvasText; } .dk-badge--indicator { forced-color-adjust: none; background: CanvasText; box-shadow: 0 0 0 var(--badge-indicator-ring, var(--border-width-2, 2px)) Canvas; } }
+
