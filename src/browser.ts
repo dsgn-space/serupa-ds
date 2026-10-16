@@ -15,6 +15,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Checkbox: Diki.Checkbox,
   configure: Diki.configure,
   Field: Diki.Field,
+  Heading: Diki.Heading,
   Icon: Diki.Icon,
   Input: Diki.Input,
   Loader: Diki.Loader,
@@ -22,6 +23,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   RadioGroup: Diki.RadioGroup,
   Select: Diki.Select,
   Switch: Diki.Switch,
+  Text: Diki.Text,
   Textarea: Diki.Textarea,
   customIcons: Diki.customIcons   // names of your custom icons
 });

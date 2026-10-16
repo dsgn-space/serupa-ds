@@ -1,0 +1,47 @@
+{
+  "text": {
+    "$description": "Text's component tokens. Each one is an optional override: set the CSS variable (--text-<name>) on the page, a container or one element, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "tone=\"default\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--text-color"
+          }
+        }
+      },
+      "color-muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "tone=\"muted\": secondary text (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--text-color-muted"
+          }
+        }
+      },
+      "color-primary": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "tone=\"primary\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--text-color-primary"
+          }
+        }
+      },
+      "color-danger": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "tone=\"danger\": error text (4.5:1 on surface and danger-subtle).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--text-color-danger"
+          }
+        }
+      }
+    }
+  }
+}

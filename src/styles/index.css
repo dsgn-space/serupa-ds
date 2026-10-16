@@ -3,6 +3,8 @@
    A component that styles another one (Loader inside Button) comes after it, so add new components
    at the end of the component list unless they must win over an earlier one. */
 @import "../components/Icon/Icon.css";
+@import "../components/Heading/Heading.css";
+@import "../components/Text/Text.css";
 @import "../components/Button/Button.css";
 @import "../components/Loader/Loader.css";
 @import "../components/Badge/Badge.css";
