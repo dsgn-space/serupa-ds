@@ -18,6 +18,7 @@ const steps = [
   ['Button micro-interactions', 'node', [path.join(HERE, 'button-motion.mjs')]],
   ['Loader', 'node', [path.join(HERE, 'loader.mjs')]],
   ['Badge', 'node', [path.join(HERE, 'badge.mjs')]],
+  ['Card', 'node', [path.join(HERE, 'card.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

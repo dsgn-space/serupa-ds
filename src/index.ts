@@ -3,6 +3,8 @@ import { Badge } from "./components/Badge/Badge";
 export type { BadgeProps, BadgeTone, BadgeVariant } from "./components/Badge/Badge";
 import { Button, buttonClass } from "./components/Button/Button";
 export type { ButtonAsButtonProps, ButtonAsLinkProps, ButtonProps, ButtonSize, ButtonVariant } from "./components/Button/Button";
+import { Card, CardBody, CardFooter, CardHeader } from "./components/Card/Card";
+export type { CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant } from "./components/Card/Card";
 import { Checkbox } from "./components/Checkbox/Checkbox";
 export type { CheckboxProps } from "./components/Checkbox/Checkbox";
 import { Field } from "./components/Field/Field";
@@ -27,7 +29,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Badge, Button, buttonClass, Checkbox, configure, customIcons, Field, Icon, Input, Loader, Radio, RadioGroup, Select, Switch, Textarea };
+export { Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Field, Icon, Input, Loader, Radio, RadioGroup, Select, Switch, Textarea };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -38,7 +40,8 @@ declare global {
     /** The components on plain pages (diki.iife.js, also shipped as bundle.js). */
     Diki: {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
-      Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass; Checkbox: typeof Checkbox; configure: typeof configure;
+      Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
+      Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Field: typeof Field; Icon: typeof Icon; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch; Textarea: typeof Textarea; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;

@@ -1,0 +1,175 @@
+{
+  "card": {
+    "$description": "Card's component tokens. Each one is an optional override: set the CSS variable (--card-<name>) on the page, a container or one card, and every Card inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The card's background (outline and elevated cards).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-bg"
+          }
+        }
+      },
+      "bg-filled": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The background of a filled card.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-bg-filled"
+          }
+        }
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The border of an outline card.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-border-color"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-title-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description under the title (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-description-color"
+          }
+        }
+      },
+      "hover-border-color": {
+        "$type": "color",
+        "$value": "{color.border-strong}",
+        "$description": "The border of an interactive card while hovered.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-hover-border-color"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-xs}",
+        "$description": "An outline card's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-shadow"
+          }
+        }
+      },
+      "shadow-elevated": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-md}",
+        "$description": "An elevated card's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-shadow-elevated"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xl}",
+        "$description": "The corner radius (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The border width of an outline card.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-border-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Padding with padding=\"sm\" (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-padding-sm"
+          }
+        }
+      },
+      "padding-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Padding with padding=\"md\", the default (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-padding-md"
+          }
+        }
+      },
+      "padding-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Padding with padding=\"lg\" (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-padding-lg"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space between the header, body and footer (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-gap"
+          }
+        }
+      },
+      "header-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the title and the description (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-header-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--card-title-weight"
+          }
+        }
+      }
+    }
+  }
+}
