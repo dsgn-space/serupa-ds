@@ -22,6 +22,7 @@ const steps = [
   ['Card', 'node', [path.join(HERE, 'card.mjs')]],
   ['IconButton and Fab', 'node', [path.join(HERE, 'icon-button.mjs')]],
   ['Alert', 'node', [path.join(HERE, 'alert.mjs')]],
+  ['Avatar', 'node', [path.join(HERE, 'avatar.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

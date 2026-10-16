@@ -1,6 +1,8 @@
 /*! Diki Design System · React components (needs React 18+) · CHANGELOG.md */
 import { Alert } from "./components/Alert/Alert";
 export type { AlertProps, AlertTone } from "./components/Alert/Alert";
+import { Avatar, initials } from "./components/Avatar/Avatar";
+export type { AvatarProps, AvatarSize, AvatarStatus } from "./components/Avatar/Avatar";
 import { Badge } from "./components/Badge/Badge";
 export type { BadgeProps, BadgeTone, BadgeVariant } from "./components/Badge/Badge";
 import { Button, buttonClass } from "./components/Button/Button";
@@ -39,7 +41,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, Input, Loader, Radio, RadioGroup, Select, Switch, Text, Textarea };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Radio, RadioGroup, Select, Switch, Text, Textarea };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -50,7 +52,7 @@ declare global {
     /** The components on plain pages (diki.iife.js, also shipped as bundle.js). */
     Diki: {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
-      Alert: typeof Alert; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
+      Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch; Text: typeof Text; Textarea: typeof Textarea; customIcons: typeof customIcons;

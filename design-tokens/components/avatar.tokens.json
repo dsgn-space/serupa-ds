@@ -1,0 +1,163 @@
+{
+  "avatar": {
+    "$description": "Avatar's component tokens. Each one is an optional override: set the CSS variable (--avatar-<name>) on the page, a container or one avatar, and every Avatar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The background behind initials and the fallback icon.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-bg"
+          }
+        }
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The initials and the fallback icon (4.5:1 on the background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-color"
+          }
+        }
+      },
+      "ring": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The ring that separates the status dot from the picture.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-ring"
+          }
+        }
+      },
+      "status-online": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The status dot for status=\"online\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-status-online"
+          }
+        }
+      },
+      "status-busy": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The status dot for status=\"busy\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-status-busy"
+          }
+        }
+      },
+      "status-away": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The status dot for status=\"away\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-status-away"
+          }
+        }
+      },
+      "status-offline": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The status dot for status=\"offline\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-status-offline"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "size-xs": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "size=\"xs\" (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-size-xs"
+          }
+        }
+      },
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "size=\"sm\" (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-size-sm"
+          }
+        }
+      },
+      "size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "size=\"md\", the default (40px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-size-md"
+          }
+        }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "size=\"lg\" (48px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-size-lg"
+          }
+        }
+      },
+      "size-xl": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "size=\"xl\" (64px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-size-xl"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius-square": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The corners of shape=\"square\" (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-radius-square"
+          }
+        }
+      },
+      "ring-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The ring around the status dot (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-ring-width"
+          }
+        }
+      }
+    },
+    "typography": {
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The initials' weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-weight"
+          }
+        }
+      }
+    }
+  }
+}

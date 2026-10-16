@@ -5,6 +5,8 @@ import * as Diki from "./index";
 window.Diki = Object.assign(window.Diki || {}, {
   version: Diki.version,
   Alert: Diki.Alert,
+  Avatar: Diki.Avatar,
+  initials: Diki.initials,
   Badge: Diki.Badge,
   Button: Diki.Button,
   buttonClass: Diki.buttonClass,
