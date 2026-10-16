@@ -1,4 +1,6 @@
 /*! Diki Design System · React components (needs React 18+) · CHANGELOG.md */
+import { Accordion, AccordionItem } from "./components/Accordion/Accordion";
+export type { AccordionItemProps, AccordionProps } from "./components/Accordion/Accordion";
 import { Alert } from "./components/Alert/Alert";
 export type { AlertProps, AlertTone } from "./components/Alert/Alert";
 import { Avatar, initials } from "./components/Avatar/Avatar";
@@ -71,7 +73,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Pagination, paginationRange, Radio, RadioGroup, Select, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Pagination, paginationRange, Radio, RadioGroup, Select, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;

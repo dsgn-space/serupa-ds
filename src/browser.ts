@@ -26,6 +26,8 @@ window.Diki = Object.assign(window.Diki || {}, {
   Breadcrumb: Diki.Breadcrumb,
   BreadcrumbItem: Diki.BreadcrumbItem,
   Pagination: Diki.Pagination,
+  Accordion: Diki.Accordion,
+  AccordionItem: Diki.AccordionItem,
   Table: Diki.Table,
   TableBody: Diki.TableBody,
   TableCell: Diki.TableCell,

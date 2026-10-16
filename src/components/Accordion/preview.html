@@ -1,0 +1,22 @@
+<!-- @dsCard group="Data display" height=260 subtitle="single or multiple; plain or card; disabled items" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Accordion — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { max-width: 480px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement, I = D.AccordionItem;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h(D.Accordion, { defaultValue: ['s'], variant: 'card' },
+      h(I, { value: 's', title: 'How long does shipping take?' }, 'Orders ship within 2 business days, and arrive in 3 to 5.'),
+      h(I, { value: 'r', title: 'Can I return an item?' }, 'Yes, within 30 days of delivery.'),
+      h(I, { value: 'w', title: 'Is there a warranty?' }, 'One year against defects.'))
+  );
+</script>
+</body>
+</html>
