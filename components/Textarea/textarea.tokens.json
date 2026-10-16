@@ -1,0 +1,171 @@
+{
+  "textarea": {
+    "$description": "Textarea's component tokens. Each one is an optional override: set the CSS variable (--textarea-<name>) on the page, a container or one textarea, and every Textarea inside follows. Unset, it uses the shared token it references here, the same ones Input uses; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "Field background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-bg"
+          }
+        }
+      },
+      "bg-readonly": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "Background when read-only or disabled.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-bg-readonly"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "Border (3:1 on the field and the page in every theme).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-border"
+          }
+        }
+      },
+      "border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "Border on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-border-hover"
+          }
+        }
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.placeholder}",
+        "$description": "Placeholder text (4.5:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-placeholder"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "Border and ring while focused.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-focus-ring"
+          }
+        }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "Border and focus ring when invalid.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-invalid"
+          }
+        }
+      },
+      "count": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The character count (showCount), 4.5:1 on the field; it turns text-colored at maxLength.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-count"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Side padding, sm (8px), like Input sm.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-padding-x-sm"
+          }
+        }
+      },
+      "padding-x-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Side padding, md (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-padding-x-md"
+          }
+        }
+      },
+      "padding-x-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Side padding, lg (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-padding-x-lg"
+          }
+        }
+      },
+      "padding-y-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Top and bottom padding, sm (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-padding-y-sm"
+          }
+        }
+      },
+      "padding-y-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Top and bottom padding, md (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-padding-y-md"
+          }
+        }
+      },
+      "padding-y-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2_5}",
+        "$description": "Top and bottom padding, lg (10px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-padding-y-lg"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "Border width (1px); the focus ring adds as much again.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-border-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "Corner radius (6px), like Input and Button.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--textarea-radius"
+          }
+        }
+      }
+    }
+  }
+}

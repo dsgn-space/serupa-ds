@@ -1,0 +1,76 @@
+// Utility classes: renders every class in components/bundle.css on its own and compares what it
+// does (computed styles on the element and its children) with the saved baseline.
+//   node tools/test/utilities.mjs            check against baseline-utilities.json
+//   node tools/test/utilities.mjs --update   accept the current output as the new baseline
+// Custom properties count too, so classes that only set a variable (ring colors, gradient stops) are covered.
+// A change shows up as CHANGED (different effect), NEW (class added) or MISSING (class gone).
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { HERE, read, writePage, browser, cleanup, suffix, ENGINE } from './lib.mjs';
+
+const BASE = path.join(HERE, `baseline-utilities${suffix}.json`);
+const update = process.argv.includes('--update');
+
+const css = read('components/bundle.css').replace(/\/\*[\s\S]*?\*\//g, '');
+// CSS escapes: "\32 xl\:flex" is the class "2xl:flex" (a class can't start with a digit unescaped).
+const unescape = (n) => n.replace(/\\([0-9a-f]{1,6}) ?/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
+const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-9a-f]{1,6} ?|\\.)+)(?=[\s{,:)>])/gim)].map((m) => unescape(m[1])))]
+  .filter((c) => !c.startsWith('dk-')).sort();
+// The system's own internal variables (--dk-*): browsers don't list unregistered custom properties
+// in computed styles, so they're read by name.
+const internal = [...new Set([...css.matchAll(/--dk-[a-z0-9-]+/g)].map((m) => m[0]))];
+
+const b = await browser();
+const page = await b.newPage({ viewport: { width: 1200, height: 800 } });
+await page.goto(writePage('utilities.html', '<div id="host" style="position:relative;width:1000px"></div>'));
+await page.evaluate(() => document.fonts.ready);
+
+const measure = ([list, internal]) => {
+  const host = document.getElementById('host');
+  host.innerHTML = '';
+  const base = document.createElement('div'); base.innerHTML = '<i>a</i><i>b</i>'; host.appendChild(base);
+  const els = list.map((c) => { const w = document.createElement('section'); w.style.position = 'relative'; w.style.transform = 'translateZ(0)';   /* contains fixed elements too, so their position doesn't depend on the class's place in the list */ const d = document.createElement('div'); d.className = c; d.innerHTML = '<i>a</i><i>b</i>'; w.appendChild(d); host.appendChild(w); return d; });
+  const B = getComputedStyle(base), B1 = getComputedStyle(base.firstChild);
+  const props = []; for (let j = 0; j < B.length; j++) props.push(B[j]); for (const v of internal) if (!props.includes(v)) props.push(v);
+  const bv = {}, b1 = {}; props.forEach((p) => { bv[p] = B.getPropertyValue(p); b1[p] = B1.getPropertyValue(p); });
+  return els.map((d) => {
+    const s = getComputedStyle(d), s1 = getComputedStyle(d.firstChild); const o = [];
+    props.forEach((p) => { const v = s.getPropertyValue(p); if (v !== bv[p]) o.push(p + ':' + v); const v1 = s1.getPropertyValue(p); if (v1 !== b1[p]) o.push('child ' + p + ':' + v1); });
+    if (d.className.startsWith('placeholder-')) {   // ::placeholder only exists on form fields
+      const inp = document.createElement('input'); inp.className = d.className; inp.placeholder = 'x'; host.appendChild(inp);
+      const ref = document.createElement('input'); ref.placeholder = 'x'; host.appendChild(ref);
+      const ph = getComputedStyle(inp, '::placeholder').color;
+      if (ph !== getComputedStyle(ref, '::placeholder').color) o.push('placeholder color:' + ph);
+    }
+    return o.join(';');
+  });
+};
+
+const now = {};
+for (let i = 0; i < classes.length; i += 1000) {
+  const chunk = classes.slice(i, i + 1000);
+  const out = await page.evaluate(measure, [chunk, internal]);
+  chunk.forEach((c, j) => { now[c] = crypto.createHash('sha1').update(out[j]).digest('hex').slice(0, 12) + (out[j] ? '' : ' (no effect)'); });
+}
+await b.close();
+cleanup();
+
+if (update || !fs.existsSync(BASE)) {
+  fs.writeFileSync(BASE, JSON.stringify(now, null, 0).replace(/","/g, '",\n"'));
+  console.log(`Baseline saved: ${classes.length} classes.`);
+  process.exit(0);
+}
+const base = JSON.parse(fs.readFileSync(BASE, 'utf8'));
+const changed = classes.filter((c) => c in base && base[c] !== now[c]);
+const added = classes.filter((c) => !(c in base));
+const missing = Object.keys(base).filter((c) => !(c in now));
+const noEffect = classes.filter((c) => now[c].endsWith('(no effect)') && !(base[c] || '').endsWith('(no effect)'));
+for (const c of changed) console.log('CHANGED  .' + c);
+for (const c of added) console.log('NEW      .' + c);
+for (const c of missing) console.log('MISSING  .' + c + '   (removing or renaming a class is a breaking change: major version)');
+for (const c of noEffect) console.log('NO EFFECT .' + c);
+const ok = !changed.length && !missing.length;
+console.log(`\nUtilities (${ENGINE}): ${classes.length} classes, ${changed.length} changed, ${added.length} new, ${missing.length} missing${ok ? ' — all match the baseline' : ''}`);
+if (!ok) console.log('If the changes are intended, run with --update to accept them.');
+process.exit(ok ? 0 : 1);

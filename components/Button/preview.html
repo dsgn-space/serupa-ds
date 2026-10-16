@@ -1,0 +1,62 @@
+<!-- @dsCard group="Actions" height=380 subtitle="Actions" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Button — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); font-family: var(--font-sans); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .lbl { width: 80px; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    Row('Variants', [
+      h(T.Button, { key: 1 }, 'Primary'),
+      h(T.Button, { key: 2, variant: 'secondary' }, 'Secondary'),
+      h(T.Button, { key: 3, variant: 'outline' }, 'Outline'),
+      h(T.Button, { key: 4, variant: 'ghost' }, 'Ghost'),
+      h(T.Button, { key: 6, variant: 'link' }, 'Link')
+    ]),
+    Row('Destructive', [
+      h(T.Button, { key: 1, destructive: true }, 'Primary'),
+      h(T.Button, { key: 2, variant: 'secondary', destructive: true }, 'Secondary'),
+      h(T.Button, { key: 3, variant: 'outline', destructive: true }, 'Outline'),
+      h(T.Button, { key: 4, variant: 'ghost', destructive: true }, 'Ghost'),
+      h(T.Button, { key: 5, variant: 'link', destructive: true }, 'Link')
+    ]),
+    Row('Sizes', [
+      h(T.Button, { key: 1, size: 'sm' }, 'Small'),
+      h(T.Button, { key: 2 }, 'Medium'),
+      h(T.Button, { key: 3, size: 'lg' }, 'Large')
+    ]),
+    Row('Content', [
+      h(T.Button, { key: 1 }, 'Label'),
+      h(T.Button, { key: 2, leftIcon: 'add' }, 'Left icon'),
+      h(T.Button, { key: 3, variant: 'outline', rightIcon: 'arrow_forward' }, 'Right icon'),
+      h(T.Button, { key: 4, variant: 'outline', icon: 'add', 'aria-label': 'Add' })
+    ]),
+    Row('Icon only', [
+      h(T.Button, { key: 1, size: 'sm', variant: 'outline', icon: 'add', 'aria-label': 'Add' }),
+      h(T.Button, { key: 2, variant: 'outline', icon: 'add', 'aria-label': 'Add' }),
+      h(T.Button, { key: 3, size: 'lg', variant: 'outline', icon: 'add', 'aria-label': 'Add' }),
+      h(T.Button, { key: 4, variant: 'ghost', destructive: true, icon: 'delete', 'aria-label': 'Delete' })
+    ]),
+    Row('Loading', [
+      h(T.Button, { key: 1, loading: true }, 'Save changes'),
+      h(T.Button, { key: 2, loading: true, variant: 'outline', leftIcon: 'save' }, 'Save'),
+      h(T.Button, { key: 3, loading: true, variant: 'secondary', rightIcon: 'arrow_forward' }, 'Continue'),
+      h(T.Button, { key: 4, loading: true, variant: 'outline', icon: 'refresh', 'aria-label': 'Refresh' }),
+      h(T.Button, { key: 5, loading: true, destructive: true }, 'Delete')
+    ]),
+    Row('Disabled', [
+      h(T.Button, { key: 1, disabled: true }, 'Disabled'),
+      h(T.Button, { key: 2, variant: 'outline', disabled: true }, 'Disabled')
+    ])
+  ));
+</script>
+</body>
+</html>

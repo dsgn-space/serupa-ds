@@ -1,0 +1,44 @@
+<!-- @dsCard group="Data display" height=470 subtitle="Subtle, solid and outline; status and palette tones; clickable and loading" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Badge — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .lbl { width: 80px; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  var STATUS = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
+  var PAL = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
+  function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
+  function name(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+  function Tags() {
+    var s = React.useState(['Design', 'Research', 'Engineering']), tags = s[0];
+    return tags.map(function (t) { return h(T.Badge, { key: t, tone: 'violet', onRemove: function () { s[1](tags.filter(function (x) { return x !== t; })); } }, t); });
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    Row('Subtle', STATUS.map(function (t) { return h(T.Badge, { key: t, tone: t }, name(t)); })),
+    Row('Solid', STATUS.map(function (t) { return h(T.Badge, { key: t, tone: t, variant: 'solid' }, name(t)); })),
+    Row('Outline', STATUS.map(function (t) { return h(T.Badge, { key: t, tone: t, variant: 'outline' }, name(t)); })),
+    Row('Palette', PAL.map(function (t) { return h(T.Badge, { key: t, tone: t }, name(t)); })),
+    Row('Extras', [
+      h(T.Badge, { key: 1, tone: 'success', dot: true }, 'Online'),
+      h(T.Badge, { key: 2, tone: 'warning', leftIcon: 'schedule' }, 'Pending'),
+      h(T.Badge, { key: 3, tone: 'danger', variant: 'solid', count: 3 }),
+      h(T.Badge, { key: 4, tone: 'primary', variant: 'solid', count: 128 }),
+      h(T.Badge, { key: 5, tone: 'info', variant: 'outline' }, 'Beta')
+    ]),
+    Row('Removable', h(Tags)),
+    Row('Clickable', [
+      h(T.Badge, { key: 1, tone: 'success', dot: true, onClick: function () {} }, 'Open'),
+      h(T.Badge, { key: 2, tone: 'info', variant: 'outline', href: '#' }, 'Docs'),
+      h(T.Badge, { key: 3, tone: 'primary', variant: 'solid', loading: true, onClick: function () {} }, 'Saving')
+    ])
+  ));
+</script>
+</body>
+</html>

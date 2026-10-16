@@ -1,0 +1,93 @@
+{
+  "field": {
+    "$description": "Field's component tokens. Each one is an optional override: set the CSS variable (--field-<name>) on the page, a container or one field, and every Field inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "label-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-label-color"
+          }
+        }
+      },
+      "hint-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The hint (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-hint-color"
+          }
+        }
+      },
+      "error-color": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "The error message and its icon (4.5:1+ on surface in every theme).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-error-color"
+          }
+        }
+      },
+      "required-color": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "The required asterisk.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-required-color"
+          }
+        }
+      }
+    },
+    "typography": {
+      "label-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The label's weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-label-weight"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space between the label, hint, control and error (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-gap"
+          }
+        }
+      },
+      "error-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the error icon and its text (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-error-gap"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "error-icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The error icon (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--field-error-icon-size"
+          }
+        }
+      }
+    }
+  }
+}

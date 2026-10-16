@@ -1,0 +1,24 @@
+<!-- @dsCard group="Forms" height=580 subtitle="Label, hint and error around a control; required and optional; a group of radios" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Field — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .form { display: grid; gap: 20px; max-width: 420px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'form' },
+    h(T.Field, { label: 'Full name', required: true }, h(T.Input, { defaultValue: 'Dana Kim', autoComplete: 'name' })),
+    h(T.Field, { label: 'Email', hint: 'We only use it for receipts.', error: 'Enter an email address like name@example.com.', required: true }, h(T.Input, { type: 'email', defaultValue: 'dana@', leftIcon: 'mail' })),
+    h(T.Field, { label: 'Company', optional: true }, h(T.Input, { placeholder: 'Acme Inc.' })),
+    h(T.Field, { label: 'Notes', hint: 'Anything the team should know before the call.' }, h(T.Textarea, { rows: 2 })),
+    h(T.Field, { group: true, label: 'Plan', hint: 'You can change it later.' }, h(T.RadioGroup, { name: 'plan', defaultValue: 'pro', orientation: 'horizontal' }, h(T.Radio, { value: 'free' }, 'Free'), h(T.Radio, { value: 'pro' }, 'Pro'), h(T.Radio, { value: 'team' }, 'Team'))),
+    h(T.Field, { label: 'Account ID', disabled: true }, h(T.Input, { defaultValue: 'ACC-2048' }))
+  ));
+</script>
+</body>
+</html>

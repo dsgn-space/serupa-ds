@@ -1,0 +1,64 @@
+// Shared helpers for the Diki test suite.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export const HERE = path.dirname(fileURLToPath(import.meta.url));
+export const PROJECT = path.resolve(process.env.DIKI_PROJECT || path.join(HERE, '..', '..'));
+export const read = (p) => fs.readFileSync(path.join(PROJECT, p), 'utf8');
+export const tokens = () => JSON.parse(read('tokens.json'));
+
+const first = (v) => (v && typeof v === 'object' ? Object.values(v)[0] : v);
+const ref = (v) => String(v).replace(/^\{(.+)\}$/, 'var(--$1)');
+
+// tokens.json -> CSS, the same variables tokens.css defines (built from the source, so the
+// tests also cover token edits that haven't been saved on the design system page yet).
+export function tokensCss(t = tokens()) {
+  const themes = Object.keys(t.color.tokens.find((x) => x.value && typeof x.value === 'object' && Object.keys(x.value).length > 1).value);
+  let root = '';
+  for (const [, g] of Object.entries(t)) {
+    if (!g || !Array.isArray(g.tokens)) continue;
+    for (const x of g.tokens) root += `--${x.name.replace(/\./g, '\\.')}:${ref(first(x.value))};`;
+  }
+  for (const [k, v] of Object.entries(t.type.families)) root += `--font-${k}:${v};`;
+  let css = (t.type.fonts || []).map((f) => `@font-face{font-family:"${f.family}";src:url("${path.join(PROJECT, f.file)}") format("woff2");font-weight:${f.weight};font-style:${f.style};font-display:block}`).join('');
+  css += `:root{${root}}`;
+  for (const th of themes) {
+    css += `[data-theme="${th}"]{` + t.color.tokens.filter((x) => x.value && typeof x.value === 'object' && x.value[th] != null && Object.keys(x.value).length > 1).map((x) => `--${x.name}:${ref(x.value[th])};`).join('') + '}';
+  }
+  return { css, themes };
+}
+
+// A page with the tokens, bundle.css and (optionally) React + bundle.js, written next to the
+// project so file:// URLs to fonts and libraries resolve.
+export function writePage(name, body, { react = false, extraHead = '', base = false, theme = false, htmlAttrs = null, bundle = '../components/bundle.css' } = {}) {
+  const dir = path.join(PROJECT, '.test-tmp');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'tokens.test.css'), tokensCss().css);
+  const libs = react ? ['components/lib/react.production.min.js', 'components/lib/react-dom.production.min.js', 'components/bundle.js'].map((s) => `<script src="../${s}"></script>`).join('') : '';
+  const attrs = htmlAttrs ?? `data-theme="${tokensCss().themes[0]}"`;
+  const head = (theme ? '<script src="../components/theme.js"></script>' : '') + '<link rel="stylesheet" href="tokens.test.css">' + (base ? '<link rel="stylesheet" href="../components/base.css">' : '') + `<link rel="stylesheet" href="${bundle}">`;
+  const html = `<!doctype html><html ${attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${head}${libs}${extraHead}</head><body>${body}</body></html>`;
+  const file = path.join(dir, name);
+  fs.writeFileSync(file, html);
+  return 'file://' + file;
+}
+export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursive: true, force: true }); }
+
+// Which engine the Playwright suites run in: DIKI_BROWSER=chromium (default) | firefox | webkit.
+// Baselines are kept per engine (Chromium's are the reference; tools/test/compat.mjs compares engines).
+export const ENGINE = process.env.DIKI_BROWSER || 'chromium';
+export const suffix = ENGINE === 'chromium' ? '' : '-' + ENGINE;
+export async function browser() {
+  let pw;
+  try { pw = await import('playwright'); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
+  if (!pw[ENGINE]) { console.error(`Unknown DIKI_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
+  try { return await pw[ENGINE].launch(); } catch (e) { console.error(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); process.exit(2); }
+}
+
+export function report(name, results) {
+  const failed = results.filter((r) => !r.ok);
+  for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${r.name}${r.ok || !r.detail ? '' : '\n      ' + r.detail}`);
+  console.log(`\n${name}: ${results.length - failed.length}/${results.length} passed`);
+  return failed.length === 0;
+}
