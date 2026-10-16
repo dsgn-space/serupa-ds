@@ -52,6 +52,8 @@ import { VisuallyHidden } from "./components/VisuallyHidden/VisuallyHidden";
 export type { VisuallyHiddenProps } from "./components/VisuallyHidden/VisuallyHidden";
 import { Switch } from "./components/Switch/Switch";
 export type { SwitchProps } from "./components/Switch/Switch";
+import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow } from "./components/Table/Table";
+export type { SortDirection, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps } from "./components/Table/Table";
 import { Tab, TabList, TabPanel, Tabs } from "./components/Tabs/Tabs";
 export type { TabPanelProps, TabProps, TabsProps, TabsVariant } from "./components/Tabs/Tabs";
 import { Text } from "./components/Text/Text";
@@ -69,7 +71,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Pagination, paginationRange, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
+export { Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Pagination, paginationRange, Radio, RadioGroup, Select, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -86,6 +88,7 @@ declare global {
       Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Link: typeof Link; VisuallyHidden: typeof VisuallyHidden;
       Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
+      Table: typeof Table; TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead; TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow;
       Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };

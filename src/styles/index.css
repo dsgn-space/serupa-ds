@@ -33,4 +33,5 @@
 @import "../components/Link/Link.css";
 @import "../components/Breadcrumb/Breadcrumb.css";
 @import "../components/Pagination/Pagination.css";
+@import "../components/Table/Table.css";
 @import "./utilities.css";

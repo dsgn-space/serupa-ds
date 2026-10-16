@@ -1,0 +1,45 @@
+/* ---------------------------------------------------------------
+   Table: a 1px-bordered, rounded frame that scrolls when the table is too wide; text-sm cells with 12px padding
+   (sm: 8px top and bottom) and a line between rows; a surface-muted header in muted, font-medium text. Body rows
+   shade on hover (or every other one, striped); a selected row is shaded with a 2px primary bar at its start.
+   --------------------------------------------------------------- */
+.dk-table {
+  box-sizing: border-box; max-width: var(--sizing-full, 100%); overflow: auto; position: relative;
+  border: var(--table-border-width, var(--border-width-1, 1px)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--rounded-lg, 0.5rem));
+  background: var(--table-bg, var(--surface));
+}
+.dk-table:focus-visible { outline: var(--outline-width-2, 2px) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
+.dk-table__table { width: var(--sizing-full, 100%); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); }
+.dk-table__caption { padding: var(--table-padding-y, var(--spacing-3, 0.75rem)) var(--table-padding-x, var(--spacing-3, 0.75rem)); text-align: start; font-weight: var(--font-semibold, 600); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1, 1px)) solid var(--table-border, var(--border)); }
+.dk-table__cell { padding: var(--table-padding-y, var(--spacing-3, 0.75rem)) var(--table-padding-x, var(--spacing-3, 0.75rem)); text-align: start; vertical-align: middle; border-bottom: var(--table-border-width, var(--border-width-1, 1px)) solid var(--table-border, var(--border)); }
+.dk-table--sm .dk-table__cell { padding-block: var(--table-padding-y-sm, var(--spacing-2, 0.5rem)); }
+.dk-table__body .dk-table__row:last-child .dk-table__cell, .dk-table__foot .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0, 0px); }
+.dk-table__foot .dk-table__row:first-child .dk-table__cell { border-top: var(--table-border-width, var(--border-width-1, 1px)) solid var(--table-border, var(--border)); font-weight: var(--font-medium, 500); }
+.dk-table__body:has(+ .dk-table__foot) .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0, 0px); }
+.dk-table__header { background: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium, 500)); white-space: nowrap; }
+.dk-table__cell--center { text-align: center; }
+.dk-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
+.dk-table__body .dk-table__row { transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)); }
+.dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover,
+.dk-table--striped .dk-table__body .dk-table__row:nth-child(even) { background: var(--table-row-bg-hover, var(--surface-muted)); }
+.dk-table__row--selected, .dk-table .dk-table__body .dk-table__row--selected { background: var(--table-row-bg-selected, var(--surface-muted)); }
+.dk-table__row--selected > :first-child { box-shadow: inset var(--table-indicator-width, var(--border-width-2, 2px)) 0 0 var(--table-row-indicator-selected, var(--primary)); }
+[dir="rtl"] .dk-table__row--selected > :first-child { box-shadow: inset calc(var(--spacing-0, 0px) - var(--table-indicator-width, var(--border-width-2, 2px))) 0 0 var(--table-row-indicator-selected, var(--primary)); }
+.dk-table--sticky .dk-table__head .dk-table__cell { position: sticky; top: 0; z-index: var(--z-10, 10); }
+/* sortable headers: the whole label is a button */
+.dk-table__header--sortable { padding: var(--spacing-0, 0px); }
+.dk-table__sort {
+  box-sizing: border-box; display: inline-flex; align-items: center; gap: var(--spacing-1, 0.25rem); width: var(--sizing-full, 100%);
+  padding: var(--table-padding-y, var(--spacing-3, 0.75rem)) var(--table-padding-x, var(--spacing-3, 0.75rem));
+  border: var(--spacing-0, 0px); background: transparent; color: inherit; font: inherit; text-align: inherit; cursor: pointer;
+}
+.dk-table--sm .dk-table__sort { padding-block: var(--table-padding-y-sm, var(--spacing-2, 0.5rem)); }
+.dk-table__cell--center .dk-table__sort { justify-content: center; }
+.dk-table__cell--end .dk-table__sort { justify-content: flex-end; }
+.dk-table__sort:hover { color: var(--table-text, var(--text)); }
+.dk-table__sort:focus-visible { outline: var(--outline-width-2, 2px) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0, 0px) - var(--outline-width-2, 2px)); }
+.dk-table__sort-icon.dk-icon { font-size: var(--spacing-4, 1rem); }
+.dk-table__sort-icon--idle { opacity: var(--opacity-50, 50%); }
+.dk-table__sort:hover .dk-table__sort-icon--idle { opacity: var(--opacity-100, 100%); }
+@media (forced-colors: active) { .dk-table__row--selected > :first-child { border-inline-start: var(--table-indicator-width, var(--border-width-2, 2px)) solid Highlight; } }
+@media (prefers-reduced-motion: reduce) { .dk-table__body .dk-table__row { transition: none; } }

@@ -1,0 +1,87 @@
+# Table
+
+A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Rows shade on hover (or every other one with `striped`), can be selected, and columns can be sorted.
+
+## Usage
+
+```jsx
+const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell } = window.Diki;
+
+<Table caption="Team members">
+  <TableHead>
+    <TableRow>
+      <TableHeaderCell>Name</TableHeaderCell>
+      <TableHeaderCell>Role</TableHeaderCell>
+      <TableHeaderCell align="end" sort={sort} onSort={() => setSort(sort === 'ascending' ? 'descending' : 'ascending')}>Calls</TableHeaderCell>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {people.map((p) => (
+      <TableRow key={p.id} selected={p.id === selectedId}>
+        <TableCell>{p.name}</TableCell>
+        <TableCell><Text as="span" tone="muted">{p.role}</Text></TableCell>
+        <TableCell align="end">{p.calls}</TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+
+<Table size="sm" striped stickyHeader containerProps={{ style: { maxHeight: 400 } }}>…</Table>
+```
+
+Table only lays out what you give it: sorting, filtering and selection state stay in your code.
+
+## Props
+
+### Table
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `size` | `'sm'` \| `'md'` | `'md'` | 12px cell padding, or 8px top and bottom for dense data |
+| `striped` | boolean | `false` | Shades every other body row (rows then don't change on hover) |
+| `stickyHeader` | boolean | `false` | Keeps the header in view; give the frame a height with `containerProps` |
+| `caption` | node | none | The table's title, as its `<caption>` |
+| `captionHidden` | boolean | `false` | Hides the caption on screen; screen readers still announce it |
+| `containerProps` | div props | none | Go to the scrolling frame, which has `data-component="table"` |
+
+`className`, `ref` and everything else go to the `<table>`.
+
+### The parts
+
+| Part | Element | Props |
+| --- | --- | --- |
+| `TableHead`, `TableBody`, `TableFoot` | `<thead>`, `<tbody>`, `<tfoot>` | everything goes to the element |
+| `TableRow` | `<tr>` | `selected`: shaded, a primary bar at its start, `aria-selected` |
+| `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button. Pass `scope="row"` for a row header |
+| `TableCell` | `<td>` | `align`; `'end'` also gives tabular digits, for numbers |
+
+## Accessibility
+
+- It's a real `<table>`, so screen readers announce rows, columns and headers. Give it a `caption` (or `aria-label`) so people know what it holds.
+- When it's too wide and scrolls, the frame becomes a focusable region named by the caption, so keyboard users can scroll it with the arrow keys. When it fits, it adds no tab stop.
+- A sortable header is a button, and its `<th>` has `aria-sort` once sorted. After sorting, the button keeps focus.
+- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `tools/test/table.mjs`). Selection isn't shown by color alone: the bar and `aria-selected` say it too.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one table's frame. The list lives in `src/components/Table/table.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--table-bg` | `surface` | The table's background. |
+| `--table-text` | `text` | Cell text. |
+| `--table-border` | `border` | The frame and the lines between rows. |
+| `--table-header-bg` | `surface-muted` | The header row's background. |
+| `--table-header-text` | `text-muted` | Header text (4.5:1 on header-bg). |
+| `--table-row-bg-hover` | `surface-muted` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
+| `--table-row-bg-selected` | `surface-muted` | A selected row's background. |
+| `--table-row-indicator-selected` | `primary` | The bar at the start of a selected row. |
+| `--table-focus-ring` | `focus-ring` | The keyboard focus ring (sort buttons, a scrolling table). |
+| `--table-font-size` | `text-sm` | Cell text (14px). |
+| `--table-header-weight` | `font-medium` | Header text weight (500). |
+| `--table-padding-x` | `spacing-3` | A cell's side padding (12px). |
+| `--table-padding-y` | `spacing-3` | A cell's top and bottom padding at size md (12px). |
+| `--table-padding-y-sm` | `spacing-2` | At size sm (8px). |
+| `--table-border-width` | `border-width-1` | The frame and row lines (1px). |
+| `--table-indicator-width` | `border-width-2` | The selected row's bar (2px). |
+| `--table-radius` | `rounded-lg` | The frame's corners (8px). |
