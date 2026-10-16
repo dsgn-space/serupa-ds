@@ -13,4 +13,5 @@
 @import "../components/Checkbox/Checkbox.css";
 @import "../components/Radio/Radio.css";
 @import "../components/Switch/Switch.css";
+@import "../components/Card/Card.css";
 @import "./utilities.css";

@@ -84,8 +84,13 @@ for (const scheme of ['light', 'dark']) {
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
   const out = path.join(dir, 'min.css');
   execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
+  // Component styles (dk-*) are always kept and grow with every component, so the size check trims utilities.css,
+  // the part purge decides on.
   const full = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size, small = fs.statSync(out).size;
-  t(`purge.py: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB`, small < full / 20);
+  const outU = path.join(dir, 'min-utilities.css');
+  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', outU, '--css', path.join(PROJECT, 'dist', 'utilities.css')], { stdio: 'ignore' });
+  const fullU = fs.statSync(path.join(PROJECT, 'dist', 'utilities.css')).size, smallU = fs.statSync(outU).size;
+  t(`purge.py: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB (utilities: ${(smallU / 1024).toFixed(0)} KB of ${(fullU / 1024).toFixed(0)} KB)`, smallU > 0 && smallU < fullU / 20 && small < full / 10);
   const snap = async (bundle, w) => {
     const p = await b.newPage({ viewport: { width: w, height: 500 } });
     await p.goto(writePage(`purge-${w}.html`, SAMPLE, { bundle, extraHead: '<style>*{animation-play-state:paused!important;animation-delay:0s!important}</style>' }));   // a spinning element would be caught mid-turn
