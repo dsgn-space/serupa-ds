@@ -27,6 +27,8 @@ import { Input } from "./components/Input/Input";
 export type { InputProps } from "./components/Input/Input";
 import { Loader } from "./components/Loader/Loader";
 export type { LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant } from "./components/Loader/Loader";
+import { Menu, MenuGroup, MenuItem, MenuSeparator } from "./components/Menu/Menu";
+export type { MenuGroupProps, MenuItemProps, MenuProps } from "./components/Menu/Menu";
 import { Radio, RadioGroup } from "./components/Radio/Radio";
 export type { RadioGroupProps, RadioProps } from "./components/Radio/Radio";
 import { Select } from "./components/Select/Select";
@@ -48,7 +50,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Dialog, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, Tooltip };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Dialog, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, Tooltip };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -61,7 +63,8 @@ declare global {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
       Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
-      Dialog: typeof Dialog; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
+      Dialog: typeof Dialog; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
+      Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
       Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;

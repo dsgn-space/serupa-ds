@@ -6,7 +6,7 @@ import { defineConfig } from 'tsup';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 const define = { __VERSION__: JSON.stringify(version) };
-const COMPONENTS = ['Alert', 'Avatar', 'Badge', 'Button', 'Card', 'CardBody', 'CardFooter', 'CardHeader', 'Checkbox', 'Dialog', 'Fab', 'Field', 'Heading', 'Icon', 'IconButton', 'Input', 'Loader', 'Radio', 'RadioGroup', 'Select', 'Switch', 'Tab', 'TabList', 'TabPanel', 'Tabs', 'Text', 'Textarea', 'Tooltip'];
+const COMPONENTS = ['Alert', 'Avatar', 'Badge', 'Button', 'Card', 'CardBody', 'CardFooter', 'CardHeader', 'Checkbox', 'Dialog', 'Fab', 'Field', 'Heading', 'Icon', 'IconButton', 'Input', 'Loader', 'Menu', 'MenuGroup', 'MenuItem', 'MenuSeparator', 'Radio', 'RadioGroup', 'Select', 'Switch', 'Tab', 'TabList', 'TabPanel', 'Tabs', 'Text', 'Textarea', 'Tooltip'];
 
 // In the browser script, react comes from the page: window.React.
 const windowReact = {
