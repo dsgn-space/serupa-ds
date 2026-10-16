@@ -32,4 +32,5 @@
 @import "../components/VisuallyHidden/VisuallyHidden.css";
 @import "../components/Link/Link.css";
 @import "../components/Breadcrumb/Breadcrumb.css";
+@import "../components/Pagination/Pagination.css";
 @import "./utilities.css";

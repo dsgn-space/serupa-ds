@@ -1,0 +1,21 @@
+<!-- @dsCard group="Navigation" height=150 subtitle="pages with … skipped; md or sm; buttons or links" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Pagination — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; flex-direction: column; gap: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(D.Pagination, { count: 10, defaultPage: 1, 'aria-label': 'First' }),
+    h(D.Pagination, { count: 20, defaultPage: 10, 'aria-label': 'Middle' }),
+    h(D.Pagination, { count: 5, defaultPage: 3, size: 'sm', 'aria-label': 'Small' })
+  ));
+</script>
+</body>
+</html>

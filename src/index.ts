@@ -39,6 +39,8 @@ import { Link } from "./components/Link/Link";
 export type { LinkProps } from "./components/Link/Link";
 import { Menu, MenuGroup, MenuItem, MenuSeparator } from "./components/Menu/Menu";
 export type { MenuGroupProps, MenuItemProps, MenuProps } from "./components/Menu/Menu";
+import { Pagination, paginationRange } from "./components/Pagination/Pagination";
+export type { PaginationProps } from "./components/Pagination/Pagination";
 import { Radio, RadioGroup } from "./components/Radio/Radio";
 export type { RadioGroupProps, RadioProps } from "./components/Radio/Radio";
 import { Select } from "./components/Select/Select";
@@ -67,7 +69,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
+export { Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Pagination, paginationRange, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;

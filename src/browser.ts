@@ -25,6 +25,8 @@ window.Diki = Object.assign(window.Diki || {}, {
   Link: Diki.Link,
   Breadcrumb: Diki.Breadcrumb,
   BreadcrumbItem: Diki.BreadcrumbItem,
+  Pagination: Diki.Pagination,
+  paginationRange: Diki.paginationRange,
   VisuallyHidden: Diki.VisuallyHidden,
   Heading: Diki.Heading,
   Icon: Diki.Icon,
