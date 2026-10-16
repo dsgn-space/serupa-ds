@@ -57,8 +57,10 @@ export function Menu(props: MenuProps): React.ReactElement {
     const target = focusOn.current === "last" ? list[list.length - 1] : list[0];
     focusOn.current = null;
     if (target) target.focus(); else menu.focus();
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
+    if (ro) { ro.observe(menu); ro.observe(trigger); }
     window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
   }, [open, props.placement]);
 
   // A press outside the menu and its button closes it (focus stays where the press put it).
