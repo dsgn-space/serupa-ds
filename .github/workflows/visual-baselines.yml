@@ -1,8 +1,9 @@
-name: Update visual baselines
+name: Update baselines
 
-# Screenshots differ slightly between machines (font smoothing), so the visual baselines are
-# made on the same runner CI uses. Add the "update-visual-baselines" label to a pull request to
-# re-render them on its branch; the new PNGs are committed back to the branch. Review them in
+# Screenshots and text measurements differ slightly between machines (font smoothing, and the
+# system fonts behind serif and mono), so the visual and utility baselines are made on the same
+# runner CI uses. Add the "update-visual-baselines" label to a pull request to re-render them on
+# its branch; the new baselines are committed back to the branch. Review them in
 # the pull request's Files changed tab before merging.
 on:
   pull_request:
@@ -27,14 +28,16 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - name: Render the baselines
-        run: node tools/test/visual.mjs --update
+        run: |
+          node tools/test/visual.mjs --update
+          node tools/test/utilities.mjs --update
       - name: Commit them to the branch
         run: |
-          git add tools/test/baseline-visual
+          git add tools/test/baseline-visual tools/test/baseline-utilities.json
           if git diff --cached --quiet; then echo "Baselines unchanged."; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Update visual baselines on the CI runner"
+          git commit -m "Update test baselines on the CI runner"
           git push
       - name: Remove the label
         if: always()

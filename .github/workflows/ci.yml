@@ -33,7 +33,7 @@ jobs:
         run: |
           # One annotation listing the failing tests, so they show on the PR without opening the log.
           # Which groups failed first, then the failing tests (an annotation holds a limited amount of text).
-          msg=$( { sed -n '/━━ Summary ━━/,$p' test-output.txt | grep '^FAIL'; echo; grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -60; } | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+          msg=$( { sed -n '/━━ Summary ━━/,$p' test-output.txt | grep '^FAIL'; echo; grep -E '^(CHANGED|NEW|MISSING|NO EFFECT) ' test-output.txt | head -20; grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -60; } | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
           echo "::error title=Failing tests::${msg}"
           { echo '## Failing tests'; echo '```'; grep -E -A1 '^FAIL|^(PASS|FAIL)  [A-Z]' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload failure details
