@@ -33,5 +33,6 @@ window.Diki = Object.assign(window.Diki || {}, {
   Tabs: Diki.Tabs,
   Text: Diki.Text,
   Textarea: Diki.Textarea,
+  Tooltip: Diki.Tooltip,
   customIcons: Diki.customIcons   // names of your custom icons
 });

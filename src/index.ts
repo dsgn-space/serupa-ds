@@ -37,13 +37,16 @@ import { Text } from "./components/Text/Text";
 export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Text/Text";
 import { Textarea } from "./components/Textarea/Textarea";
 export type { TextareaProps } from "./components/Textarea/Textarea";
+import { Tooltip } from "./components/Tooltip/Tooltip";
+export type { TooltipProps } from "./components/Tooltip/Tooltip";
+export type { Placement } from "./internal/position";
 import { configure } from "./internal/config";
 export type { DikiConfig } from "./internal/config";
 import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, Tooltip };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -58,7 +61,7 @@ declare global {
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
-      Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; customIcons: typeof customIcons;
+      Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };
   }
