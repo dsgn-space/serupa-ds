@@ -1,0 +1,43 @@
+name: Update visual baselines
+
+# Screenshots differ slightly between machines (font smoothing), so the visual baselines are
+# made on the same runner CI uses. Add the "update-visual-baselines" label to a pull request to
+# re-render them on its branch; the new PNGs are committed back to the branch. Review them in
+# the pull request's Files changed tab before merging.
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Render the baselines
+        run: node tools/test/visual.mjs --update
+      - name: Commit them to the branch
+        run: |
+          git add tools/test/baseline-visual
+          if git diff --cached --quiet; then echo "Baselines unchanged."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update visual baselines on the CI runner"
+          git push
+      - name: Remove the label
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr edit ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --remove-label update-visual-baselines
