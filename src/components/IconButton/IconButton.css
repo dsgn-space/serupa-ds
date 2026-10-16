@@ -1,0 +1,5 @@
+/* ---------------------------------------------------------------
+   IconButton: a Button that shows only an icon (.dk-btn--icon-only, square at the size's height). shape="round"
+   makes it a circle. Everything else is the Button's.
+   --------------------------------------------------------------- */
+.dk-icon-btn--round { border-radius: var(--icon-button-radius-round, var(--rounded-full, 9999px)); }

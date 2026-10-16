@@ -9,12 +9,16 @@ import { Card, CardBody, CardFooter, CardHeader } from "./components/Card/Card";
 export type { CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant } from "./components/Card/Card";
 import { Checkbox } from "./components/Checkbox/Checkbox";
 export type { CheckboxProps } from "./components/Checkbox/Checkbox";
+import { Fab } from "./components/Fab/Fab";
+export type { FabPosition, FabProps } from "./components/Fab/Fab";
 import { Field } from "./components/Field/Field";
 export type { FieldProps } from "./components/Field/Field";
 import { Heading } from "./components/Heading/Heading";
 export type { HeadingLevel, HeadingProps, HeadingSize } from "./components/Heading/Heading";
 import { Icon } from "./components/Icon/Icon";
 export type { IconName, IconProps } from "./components/Icon/Icon";
+import { IconButton } from "./components/IconButton/IconButton";
+export type { IconButtonProps } from "./components/IconButton/IconButton";
 import { Input } from "./components/Input/Input";
 export type { InputProps } from "./components/Input/Input";
 import { Loader } from "./components/Loader/Loader";
@@ -35,7 +39,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Field, Heading, Icon, Input, Loader, Radio, RadioGroup, Select, Switch, Text, Textarea };
+export { Alert, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, Input, Loader, Radio, RadioGroup, Select, Switch, Text, Textarea };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -48,7 +52,7 @@ declare global {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
       Alert: typeof Alert; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
-      Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
+      Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch; Text: typeof Text; Textarea: typeof Textarea; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };
