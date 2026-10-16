@@ -11,6 +11,8 @@ import { Breadcrumb, BreadcrumbItem } from "./components/Breadcrumb/Breadcrumb";
 export type { BreadcrumbItemProps, BreadcrumbProps } from "./components/Breadcrumb/Breadcrumb";
 import { Button, buttonClass } from "./components/Button/Button";
 export type { ButtonAsButtonProps, ButtonAsLinkProps, ButtonProps, ButtonSize, ButtonVariant } from "./components/Button/Button";
+import { ButtonGroup } from "./components/ButtonGroup/ButtonGroup";
+export type { ButtonGroupProps } from "./components/ButtonGroup/ButtonGroup";
 import { Card, CardBody, CardFooter, CardHeader } from "./components/Card/Card";
 export type { CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant } from "./components/Card/Card";
 import { Checkbox } from "./components/Checkbox/Checkbox";
@@ -68,6 +70,8 @@ import { Textarea } from "./components/Textarea/Textarea";
 export type { TextareaProps } from "./components/Textarea/Textarea";
 import { toast, Toaster } from "./components/Toast/Toast";
 export type { ToasterPosition, ToasterProps, ToastOptions, ToastTone } from "./components/Toast/Toast";
+import { ToggleButton } from "./components/ToggleButton/ToggleButton";
+export type { ToggleButtonProps } from "./components/ToggleButton/ToggleButton";
 import { Tooltip } from "./components/Tooltip/Tooltip";
 export type { TooltipProps } from "./components/Tooltip/Tooltip";
 export type { Placement } from "./internal/position";
@@ -77,7 +81,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, Radio, RadioGroup, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, Radio, RadioGroup, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;

@@ -37,4 +37,6 @@
 @import "../components/Accordion/Accordion.css";
 @import "../components/Navbar/Navbar.css";
 @import "../components/Sidebar/Sidebar.css";
+@import "../components/ToggleButton/ToggleButton.css";
+@import "../components/ButtonGroup/ButtonGroup.css";
 @import "./utilities.css";
