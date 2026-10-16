@@ -23,11 +23,25 @@ jobs:
       - name: Every file carries the same version
         run: python3 tools/release.py --check
       - name: Test suite
-        run: npm test
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee test-output.txt
+      - name: Show failures on the pull request
+        if: failure()
+        shell: bash
+        run: |
+          # One annotation listing the failing tests, so they show on the PR without opening the log.
+          msg=$(grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -80 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+          echo "::error title=Failing tests::${msg}"
+          { echo '## Failing tests'; echo '```'; grep -E -A1 '^FAIL|^(PASS|FAIL)  [A-Z]' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload failure details
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-output
-          path: .test-tmp/
+          path: |
+            test-output.txt
+            .test-tmp/
+            tools/test/baseline-visual/*.actual.png
           if-no-files-found: ignore
