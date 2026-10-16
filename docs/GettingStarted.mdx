@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Getting started" />
+
+# Getting started
+
+## In a React app
+
+Vite, Next.js, Remix or any bundler. React 18 or later is a peer dependency, so the components use your app's React.
+
+```js
+import '@diki/design-system/tokens.css';
+import '@diki/design-system/bundle.css';   // or components.css, plus utilities.css if you use the classes
+import { Button, Field, Input } from '@diki/design-system';
+
+export function SignUp() {
+  return (
+    <form>
+      <Field label="Email" required><Input type="email" /></Field>
+      <Button type="submit">Create account</Button>
+    </form>
+  );
+}
+```
+
+For router links, set the link component once at startup: `configure({ link: Link })`. The components render on the server too.
+
+## On a plain page
+
+```html
+<html lang="en" data-brand="blue" data-mode="auto">
+<head>
+  <script src="dist/theme.js"></script>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="dist/base.css">
+  <link rel="stylesheet" href="dist/bundle.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script src="dist/lib/react.production.min.js"></script>
+  <script src="dist/lib/react-dom.production.min.js"></script>
+  <script src="dist/diki.iife.js"></script>
+  <script>
+    const { Button } = window.Diki;
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Button, null, 'Hello'));
+  </script>
+</body>
+</html>
+```
+
+## Themes
+
+`data-theme` on any element picks one of the six themes (`blue-light`, `blue-dark`, `violet-light`, `violet-dark`, `emerald-light`, `emerald-dark`). `theme.js` sets it on the page from `data-brand` and `data-mode` and follows the visitor's light or dark setting. See [Themes](?path=/docs/foundations-themes--docs).
+
+## Working on the system
+
+```sh
+npm install
+npm run storybook   # these pages, at http://localhost:6006, updating as you edit
+npm test            # builds the package and runs every test
+```
+
+Each component lives in `src/components/<Name>/`: the component (`<Name>.tsx`), its styles (`<Name>.css`), its component tokens, its guidelines (`README.md`, shown on its page here), its stories and this page (`<Name>.mdx`).
