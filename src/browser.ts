@@ -23,6 +23,8 @@ window.Diki = Object.assign(window.Diki || {}, {
   Field: Diki.Field,
   Grid: Diki.Grid,
   Link: Diki.Link,
+  Breadcrumb: Diki.Breadcrumb,
+  BreadcrumbItem: Diki.BreadcrumbItem,
   VisuallyHidden: Diki.VisuallyHidden,
   Heading: Diki.Heading,
   Icon: Diki.Icon,

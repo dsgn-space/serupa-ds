@@ -5,6 +5,8 @@ import { Avatar, initials } from "./components/Avatar/Avatar";
 export type { AvatarProps, AvatarSize, AvatarStatus } from "./components/Avatar/Avatar";
 import { Badge } from "./components/Badge/Badge";
 export type { BadgeProps, BadgeTone, BadgeVariant } from "./components/Badge/Badge";
+import { Breadcrumb, BreadcrumbItem } from "./components/Breadcrumb/Breadcrumb";
+export type { BreadcrumbItemProps, BreadcrumbProps } from "./components/Breadcrumb/Breadcrumb";
 import { Button, buttonClass } from "./components/Button/Button";
 export type { ButtonAsButtonProps, ButtonAsLinkProps, ButtonProps, ButtonSize, ButtonVariant } from "./components/Button/Button";
 import { Card, CardBody, CardFooter, CardHeader } from "./components/Card/Card";
@@ -65,7 +67,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
+export { Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -79,7 +81,7 @@ declare global {
       Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Container: typeof Container; Dialog: typeof Dialog; Divider: typeof Divider; Grid: typeof Grid; Stack: typeof Stack; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
-      Link: typeof Link; VisuallyHidden: typeof VisuallyHidden;
+      Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Link: typeof Link; VisuallyHidden: typeof VisuallyHidden;
       Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
       Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
