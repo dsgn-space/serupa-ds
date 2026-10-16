@@ -1,0 +1,37 @@
+{
+  "container": {
+    "$description": "Container's component tokens. Each one is an optional override: set the CSS variable (--container-<name>) on the page or a container, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Side padding on small screens (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--container-padding-x"
+          }
+        }
+      },
+      "padding-x-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Side padding from 640px (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--container-padding-x-sm"
+          }
+        }
+      },
+      "padding-x-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "Side padding from 1024px (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--container-padding-x-lg"
+          }
+        }
+      }
+    }
+  }
+}

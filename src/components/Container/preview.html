@@ -1,0 +1,18 @@
+<!-- @dsCard group="Layout" height=200 subtitle="prose, md, lg, xl, 2xl or full; responsive side padding" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Container — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); font-size: 14px; }
+  .b { background: var(--surface-muted); border-radius: var(--radius-md); padding: 8px 12px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement;
+  function b(t) { return h('div', { key: t, className: 'b' }, t); }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(D.Stack, { gap: 2 }, ['prose', 'md', 'lg'].map(function (s) { return h(D.Container, { key: s, size: s, style: { maxWidth: s === 'prose' ? '240px' : s === 'md' ? '320px' : '400px' } }, b('size=' + s)); })));
+</script>
+</body>
+</html>

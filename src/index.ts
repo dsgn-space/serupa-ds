@@ -11,12 +11,18 @@ import { Card, CardBody, CardFooter, CardHeader } from "./components/Card/Card";
 export type { CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant } from "./components/Card/Card";
 import { Checkbox } from "./components/Checkbox/Checkbox";
 export type { CheckboxProps } from "./components/Checkbox/Checkbox";
+import { Container } from "./components/Container/Container";
+export type { ContainerProps, ContainerSize } from "./components/Container/Container";
 import { Dialog } from "./components/Dialog/Dialog";
 export type { DialogProps } from "./components/Dialog/Dialog";
+import { Divider } from "./components/Divider/Divider";
+export type { DividerProps } from "./components/Divider/Divider";
 import { Fab } from "./components/Fab/Fab";
 export type { FabPosition, FabProps } from "./components/Fab/Fab";
 import { Field } from "./components/Field/Field";
 export type { FieldProps } from "./components/Field/Field";
+import { Grid } from "./components/Grid/Grid";
+export type { GridProps } from "./components/Grid/Grid";
 import { Heading } from "./components/Heading/Heading";
 export type { HeadingLevel, HeadingProps, HeadingSize } from "./components/Heading/Heading";
 import { Icon } from "./components/Icon/Icon";
@@ -33,6 +39,9 @@ import { Radio, RadioGroup } from "./components/Radio/Radio";
 export type { RadioGroupProps, RadioProps } from "./components/Radio/Radio";
 import { Select } from "./components/Select/Select";
 export type { SelectOption, SelectOptionGroup, SelectProps } from "./components/Select/Select";
+import { Stack } from "./components/Stack/Stack";
+export type { StackProps } from "./components/Stack/Stack";
+export type { Space } from "./internal/space";
 import { Switch } from "./components/Switch/Switch";
 export type { SwitchProps } from "./components/Switch/Switch";
 import { Tab, TabList, TabPanel, Tabs } from "./components/Tabs/Tabs";
@@ -52,7 +61,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Dialog, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -65,7 +74,7 @@ declare global {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
       Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
-      Dialog: typeof Dialog; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
+      Container: typeof Container; Dialog: typeof Dialog; Divider: typeof Divider; Grid: typeof Grid; Stack: typeof Stack; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
       Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
       Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
