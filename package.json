@@ -45,9 +45,10 @@
   "scripts": {
     "build": "node tools/build/build.mjs",
     "typecheck": "tsc -p .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build -o storybook-static",
     "pretest": "node tools/build/build.mjs",
     "test": "node tools/test/run.mjs",
-    "docs": "python3 tools/docs/build.py . docs-site",
     "tokens": "python3 tools/tokens/export.py",
     "release": "python3 tools/release.py",
     "test:safari": "node tools/test/run.mjs --compat safari",
@@ -59,14 +60,22 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "8.6.18",
+    "@storybook/addon-essentials": "8.6.18",
+    "@storybook/blocks": "8.6.18",
+    "@storybook/react": "8.6.18",
+    "@storybook/react-vite": "8.6.18",
+    "@storybook/test": "8.6.18",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "playwright": "1.56.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "storybook": "8.6.18",
     "style-dictionary": "5.6.0",
     "tsup": "8.5.1",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "vite": "6.4.3"
   },
   "engines": {
     "node": ">=20"

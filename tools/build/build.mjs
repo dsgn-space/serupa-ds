@@ -17,9 +17,8 @@ const D = path.join(P, 'dist');
 const { version } = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
 const read = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 
-// The order the component styles cascade in. A component that styles another one (Loader inside Button)
-// comes after it, so keep new components at the end unless they must win over an earlier one.
-export const CSS_ORDER = ['Icon', 'Button', 'Loader', 'Badge', 'Input', 'Textarea', 'Field', 'Select', 'Checkbox', 'Radio', 'Switch'];
+// The order the styles cascade in: the @import list in src/styles/index.css (Storybook loads that file).
+const IMPORTS = [...read('src/styles/index.css').matchAll(/^@import "\.\.\/components\/(\w+)\/\1\.css";$/gm)].map((m) => m[1]);
 
 fs.mkdirSync(D, { recursive: true });
 if (!process.argv.includes('--css')) {
@@ -28,9 +27,9 @@ if (!process.argv.includes('--css')) {
   fs.copyFileSync(path.join(D, 'diki.iife.js'), path.join(D, 'bundle.js'));
 }
 
-const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !CSS_ORDER.includes(n));
-if (missing.length) { console.error(`Add ${missing.join(', ')} to CSS_ORDER in tools/build/build.mjs`); process.exit(1); }
-const components = CSS_ORDER.map((n) => read(`src/components/${n}/${n}.css`)).join('');
+const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !IMPORTS.includes(n));
+if (missing.length) { console.error(`Add ${missing.join(', ')} to the @import list in src/styles/index.css`); process.exit(1); }
+const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join('');
 const utilities = read('src/styles/utilities.css');
 const banner = (what) => `/*! Diki Design System v${version} · ${what} · CHANGELOG.md */\n`;
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + components);

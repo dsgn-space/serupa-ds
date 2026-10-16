@@ -1,0 +1,4 @@
+/* Only for the Storybook pages (docs/blocks.tsx): a dot that pulses at a token's duration. */
+@keyframes dk-sb-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+.dk-sb-pulse { animation: dk-sb-pulse 1s infinite; }
+@media (prefers-reduced-motion: reduce) { .dk-sb-pulse { animation: none; } }

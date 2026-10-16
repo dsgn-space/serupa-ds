@@ -1,6 +1,6 @@
 # Tools
 
-Everything needed to maintain the Diki Design System: the test suite, the documentation site generator, the design tokens export, the custom icon build, the release script and the CSS trimmer. Nothing here ships to products; consumers only need the package: `tokens.css`, `dist/` and `fonts/`.
+Everything needed to maintain the Diki Design System: the test suite, the design tokens export, the custom icon build, the release script and the CSS trimmer. Nothing here ships to products; consumers only need the package: `tokens.css`, `dist/` and `fonts/`.
 
 ## Setup
 
@@ -20,7 +20,7 @@ npm run build       # src/ → dist/ (tools/build/build.mjs: tsup for the JavaSc
 npm run typecheck   # tsc over src/
 ```
 
-`dist/` is build output: never edit it, and it isn't committed. A new component's CSS joins `components.css` in the order of `CSS_ORDER` in `tools/build/build.mjs`.
+`dist/` is build output: never edit it, and it isn't committed. A new component's CSS joins `components.css` in the order of the `@import` list in `src/styles/index.css`.
 
 ## Test suite
 
@@ -55,7 +55,7 @@ node tools/test/run.mjs --compat safari   # add the cross-browser comparison (sa
 | `visual.mjs` | Each component preview in all six themes, at rest, hovered and focused, compared with `baseline-visual/` (0.2% pixel tolerance for anti-aliasing) |
 | `page.mjs` | Page groundwork: responsive classes switch at each breakpoint (390–1536px), `base.css` defaults (and that utilities still win), `theme.js` (follows the system live, remembers a choice, `reset()`, ignores bad values), and `purge.py` output renders identically to the full CSS |
 | `compat.mjs` | Cross-browser, through WebDriver: every utility class in Safari (`safaridriver`), Firefox (`geckodriver`) or WebKitGTK compared with Chromium (colors as RGBA, lengths within 1px), browser-support gaps listed with reasons in `KNOWN`; plus responsive classes, `base.css`, `theme.js`, Button behaviour, the Loader's ring, dots, text and skeleton, and `purge.py` output in that engine. Safari: run `safaridriver --enable` once |
-| `docs.mjs` | Builds the docs site and opens every page at 1280px and 390px, light and dark: broken links, script errors, outside requests, duplicate ids, sideways scrolling. The Changelog page lists every released version in `CHANGELOG.md` in order, with working version links, and leaves out Unreleased. The Button playground, a Button-page demo and a hand-written demo button ripple when pressed (the link variant doesn't). The Loader playground updates the preview and code for every prop (skeleton `shape` and `lines` included), shows the delay on Replay, darkens its stage for `inverse` and explains empty labels; the skeleton demo cards name one skeleton each and nothing spills out |
+| `storybook.mjs` | Opens every Storybook docs page and story (from `storybook-static/`): no errors, no missing README sections, and every story passes axe's WCAG 2.1 AA checks in all six themes (text inside a disabled control is exempt from contrast, as WCAG allows). Skipped locally until `npm run build-storybook`; a failure in CI |
 
 When a test fails, it names what changed. If the change is intended, run with `--update` and commit the new baselines with the change.
 
@@ -72,7 +72,7 @@ python3 tools/release.py minor      # or major, patch, or a number such as 1.2.0
 python3 tools/release.py --check    # every file carries the same version (the foundation audit runs this too)
 ```
 
-It moves the notes under the new version with today's date (rebuild the docs site afterwards so its Changelog page shows the release) and stamps the version into `package.json`, `src/styles/base.css` and `src/theme.js`. The build puts it in the headers of the files in `dist/` and in `Diki.version`. The README's Versioning section says which kind of release a change needs.
+It moves the notes under the new version with today's date and stamps the version into `package.json`, `src/styles/base.css` and `src/theme.js`. The build puts it in the headers of the files in `dist/` and in `Diki.version`. The README's Versioning section says which kind of release a change needs.
 
 ## Design tokens export
 
@@ -101,20 +101,14 @@ python3 tools/purge.py src/ public/index.html -o dist/bundle.min.css
 
 Scans the sources for class names and writes a copy of `bundle.css` with only the rules they need, plus the component styles, keyframes and variables. A typical page goes from 1.7 MB to a few dozen KB. Class names built at runtime (`"grid-cols-" + n`) can't be found; list them with `--keep grid-cols-2 grid-cols-3` or `--keep @safelist.txt`.
 
-## Docs site
+## Storybook
 
 ```sh
-python3 tools/docs/build.py . docs-site
+npm run storybook         # the documentation at http://localhost:6006, updating as you edit
+npm run build-storybook   # a static copy in storybook-static/ (CI builds it and the Storybook test opens every page)
 ```
 
-Builds the documentation from `tokens.json`, `dist/bundle.css` (run `npm run build` first), `CHANGELOG.md` (the Changelog page) and `tools/docs/template.html` into `docs-site/`: one HTML page per section, a shared `styles.css` and `app.js`, the fonts, and two redirect pages for old links (`aliases.html`, `palette.html` → `colors.html`). Open `docs-site/index.html` to read it offline. To publish it as the docs artifact, publish `index.html` as `ds-docs.html` and every other file alongside it.
-
-| File | Role |
-| --- | --- |
-| `docs/template.html` | The pages' content and design. Edit prose and layout here; `%%NAME%%` placeholders are filled from the tokens. |
-| `docs/generate.py` | Fills the template: token tables, swatches, specimens, theme CSS and the component styles. |
-| `docs/split.py` | Splits the result into one page per section with a shared sidebar, stylesheet and script. |
-| `docs/build.py` | Runs both and copies fonts and redirect pages. |
+Storybook is the system's documentation. `.storybook/` holds its setup (the brand and mode toolbar sets `data-theme`; the Accessibility addon checks each story). The pages are in `docs/` (introduction, getting started, foundations, versioning, changelog) and `src/components/<Name>/<Name>.mdx`; they read `tokens.json`, the README and each component's `README.md`, so they can't drift. Stories are `src/components/<Name>/<Name>.stories.tsx`, one per state and variant.
 
 ## Rules the tests enforce
 
