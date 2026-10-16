@@ -1,0 +1,140 @@
+import * as React from "react";
+import { cn, domId, omit } from "../../internal/cn";
+import { asIcon, Icon, type IconName } from "../Icon/Icon";
+import { Tooltip } from "../Tooltip/Tooltip";
+import { Menu, MenuItem } from "../Menu/Menu";
+
+export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
+  /** SidebarSections, or SidebarItems directly. */
+  children?: React.ReactNode;
+  /** Above the items: a logo, a workspace switcher. */
+  header?: React.ReactNode;
+  /** Pinned to the bottom: settings, the signed-in user. */
+  footer?: React.ReactNode;
+  /** Narrows it to icons only (64px). Labels show as tooltips, and groups open their items in a menu. Default: false. */
+  collapsed?: boolean;
+  /** The nav's accessible name. Default: "Main". */
+  "aria-label"?: string;
+}
+
+export interface SidebarSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  /** A small heading over the section's items. Hidden when the sidebar is collapsed. */
+  title?: React.ReactNode;
+  /** SidebarItems. */
+  children?: React.ReactNode;
+}
+
+export interface SidebarItemProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
+  /** The item's text. */
+  label: React.ReactNode;
+  /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
+  icon?: IconName | React.ReactElement;
+  /** The current page: shaded, with aria-current="page". Default: false. */
+  active?: boolean;
+  /** Something at the end, such as a count Badge. Hidden when collapsed. */
+  badge?: React.ReactNode;
+  /** Nested SidebarItems: the item becomes a button that shows and hides them. */
+  children?: React.ReactNode;
+  /** With children: open at first. Default: open when one of them is active. */
+  defaultOpen?: boolean;
+  /** What renders the link: 'a' (default), or your router's link component. */
+  as?: React.ElementType;
+}
+
+const SidebarContext = React.createContext<{ collapsed: boolean; depth: number }>({ collapsed: false, depth: 0 });
+
+function isSection(c: React.ReactNode): boolean {
+  return React.isValidElement(c) && (c.type as any) === SidebarSection;
+}
+
+/* Sidebar: a vertical <nav> for an app's main pages: an optional header, sections of items (icons, labels,
+   badges, nested groups), and a footer pinned to the bottom. collapsed narrows it to an icon rail. It takes
+   its parent's height; className and every other prop go to the <nav>. */
+/** A vertical nav for an app's pages: sections of items with icons, badges and nested groups; collapses to an icon rail. */
+export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(function Sidebar(props, ref) {
+  const rest = omit(props, { header: 1, footer: 1, collapsed: 1, className: 1, children: 1, "aria-label": 1 });
+  const collapsed = !!props.collapsed;
+  // runs of loose items get their own list
+  const body: React.ReactNode[] = [];
+  let run: React.ReactNode[] = [];
+  const flush = () => { if (run.length) { body.push(<ul key={"l" + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
+  React.Children.forEach(props.children, (c) => { if (isSection(c)) { flush(); body.push(c); } else if (c != null && c !== false) run.push(c); });
+  flush();
+  return (
+    <SidebarContext.Provider value={{ collapsed, depth: 0 }}>
+      <nav {...rest} aria-label={props["aria-label"] || "Main"} ref={ref} data-component="sidebar" data-collapsed={collapsed ? "" : undefined}
+        className={cn("dk-sidebar", collapsed && "dk-sidebar--collapsed", props.className)}>
+        {props.header != null ? <div className="dk-sidebar__header">{props.header}</div> : null}
+        <div className="dk-sidebar__body">{body}</div>
+        {props.footer != null ? <div className="dk-sidebar__footer">{props.footer}</div> : null}
+      </nav>
+    </SidebarContext.Provider>
+  );
+});
+Sidebar.displayName = "Sidebar";
+
+/** A group of items in a Sidebar, with an optional small heading. */
+export const SidebarSection = React.forwardRef<HTMLDivElement, SidebarSectionProps>(function SidebarSection(props, ref) {
+  const rest = omit(props, { title: 1, className: 1, children: 1 });
+  const id = domId("dk-sbs", React.useId());
+  const titled = props.title != null && props.title !== false && props.title !== "";
+  return (
+    <div {...rest} ref={ref} className={cn("dk-sidebar__section", props.className)}>
+      {titled ? <div id={id} className="dk-sidebar__section-title">{props.title}</div> : null}
+      <ul className="dk-sidebar__list" aria-labelledby={titled ? id : undefined}>{props.children}</ul>
+    </div>
+  );
+});
+SidebarSection.displayName = "SidebarSection";
+
+/* SidebarItem: a link (icon, label, badge), or with nested items a button with aria-expanded that shows and
+   hides them. Collapsed: only the icon, with the label as a tooltip; a group opens its items in a Menu. */
+/** An item in a Sidebar: a link, or a group of nested items. */
+export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(function SidebarItem(props, ref) {
+  const ctx = React.useContext(SidebarContext);
+  const rest: Record<string, any> = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
+  const kids = React.Children.toArray(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
+  const group = kids.length > 0;
+  const childActive = kids.some((k) => k.props.active);
+  const [open, setOpen] = React.useState(props.defaultOpen != null ? !!props.defaultOpen : childActive);
+  const listId = domId("dk-sbi", React.useId());
+  const rail = ctx.collapsed && ctx.depth === 0;
+  const inner = (chevron: boolean) => <>
+    {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}</span> : null}
+    <span className="dk-sidebar__label">{props.label}</span>
+    {props.badge != null && !rail ? <span className="dk-sidebar__badge">{props.badge}</span> : null}
+    {chevron && !rail ? <Icon name="expand_more" className="dk-sidebar__chevron" /> : null}
+  </>;
+  const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, onClick: 1 });
+  const cls = cn("dk-sidebar__item", ctx.depth > 0 && "dk-sidebar__item--nested", (props.active || (group && childActive)) && "dk-sidebar__item--active", props.className);
+
+  if (group && rail) {
+    return (
+      <li className="dk-sidebar__li">
+        <Menu placement="right-start" trigger={
+          <button type="button" {...btnProps} className={cls}>{inner(false)}</button>
+        }>
+          {kids.map((k, i) => <MenuItem key={k.key != null ? k.key : i} href={k.props.href} icon={k.props.icon as any}
+            onSelect={k.props.onClick as any}>{k.props.label}</MenuItem>)}
+        </Menu>
+      </li>
+    );
+  }
+  if (group) {
+    return (
+      <li className="dk-sidebar__li" data-state={open ? "open" : "closed"}>
+        <button type="button" {...btnProps} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) (props.onClick as any)(e); setOpen(!open); }}>{inner(true)}</button>
+        <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
+          <ul id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={!open}>{kids}</ul>
+        </SidebarContext.Provider>
+      </li>
+    );
+  }
+  const link = React.createElement(props.as || "a", Object.assign(rest, { ref: ref, className: cls, "aria-current": props.active ? "page" : undefined }), inner(false));
+  return (
+    <li className="dk-sidebar__li">
+      {rail && typeof props.label === "string" ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}
+    </li>
+  );
+});
+SidebarItem.displayName = "SidebarItem";

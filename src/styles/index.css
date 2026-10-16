@@ -36,4 +36,5 @@
 @import "../components/Table/Table.css";
 @import "../components/Accordion/Accordion.css";
 @import "../components/Navbar/Navbar.css";
+@import "../components/Sidebar/Sidebar.css";
 @import "./utilities.css";

@@ -1,0 +1,102 @@
+# Sidebar
+
+A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). `collapsed` narrows it to a 64px icon rail.
+
+## Usage
+
+```jsx
+const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Diki;
+
+<div style={{ display: 'flex', height: '100vh' }}>
+  <Sidebar header={<Logo />} footer={<UserButton />} collapsed={collapsed}>
+    <SidebarSection>
+      <SidebarItem href="/" icon="home" label="Home" active />
+      <SidebarItem href="/inbox" icon="inbox" label="Inbox" badge={<Badge count={4} />} />
+    </SidebarSection>
+    <SidebarSection title="Workspace">
+      <SidebarItem icon="folder" label="Projects">
+        <SidebarItem href="/projects/web" label="Website" />
+        <SidebarItem href="/projects/app" label="Mobile app" />
+      </SidebarItem>
+      <SidebarItem as={RouterLink} to="/reports" icon="bar_chart" label="Reports" />
+    </SidebarSection>
+  </Sidebar>
+  <main style={{ flex: 1 }}>…</main>
+</div>
+```
+
+It takes its parent's height and scrolls its items when they don't fit, so give the parent a height (a full-height flex row, as above).
+
+## Props
+
+### Sidebar
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `children` | SidebarSections or SidebarItems | none | The items |
+| `header` | node | none | Above the items |
+| `footer` | node | none | Pinned to the bottom, under a line |
+| `collapsed` | boolean | `false` | A 64px rail of icons. Labels become tooltips (and stay the items' names); groups open their items in a menu |
+| `aria-label` | string | `"Main"` | The nav's name |
+
+`className`, `style`, `ref` and everything else go to the `<nav>`, which has `data-component="sidebar"`.
+
+### SidebarSection
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `title` | node | none | A small heading that names the section's list. Hidden when collapsed |
+
+### SidebarItem
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `label` | node | required | The item's text |
+| `href` | string | none | Where it goes |
+| `icon` | an icon name or element | none | A 20px icon; top-level items need one to show when collapsed |
+| `active` | boolean | `false` | The current page: shaded, with `aria-current="page"` |
+| `badge` | node | none | At the end, such as a count Badge. Hidden when collapsed |
+| `children` | SidebarItems | none | Makes it a group: a button that shows and hides them |
+| `defaultOpen` | boolean | open when a child is active | Whether a group starts open |
+| `as` | a component | `'a'` | Your router's link component |
+
+`className`, `ref` and everything else go to the link (or a group's button).
+
+## Accessibility
+
+- It's a `<nav>` landmark with lists of links; section titles name their lists.
+- The current page has `aria-current="page"` and a shaded background. A group holding it is text-colored, so the trail stays visible when it's closed.
+- A group is a button with `aria-expanded` and `aria-controls`.
+- Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus. Use a string `label` so the tooltip can show it.
+- In a collapsed rail, a group's menu shows its items as plain links (`href`); a router `as` there falls back to a normal page load.
+- Items, the current page, hovered items and section titles keep 4.5:1 in all six themes (`tools/test/sidebar.mjs`).
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one sidebar. The list lives in `src/components/Sidebar/sidebar.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--sidebar-bg` | `surface` | The sidebar's background. |
+| `--sidebar-border` | `border` | The line on its inner edge. |
+| `--sidebar-item-text` | `text-muted` | An item (4.5:1 on bg). |
+| `--sidebar-item-text-hover` | `text` | An item on hover. |
+| `--sidebar-item-text-active` | `text` | The current page's item. |
+| `--sidebar-item-bg-hover` | `secondary` | An item's background on hover. |
+| `--sidebar-item-bg-active` | `secondary` | The current page's item background. |
+| `--sidebar-section-title` | `text-muted` | A section's title (4.5:1 on bg). |
+| `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--sidebar-item-size` | `text-sm` | Item text (14px). |
+| `--sidebar-item-weight` | `font-medium` | Item weight (500). |
+| `--sidebar-section-title-size` | `text-xs` | Section titles (12px). |
+| `--sidebar-width` | `container-3xs` | The sidebar's width (256px). |
+| `--sidebar-width-collapsed` | `spacing-16` | Its width when collapsed to icons (64px). |
+| `--sidebar-icon-size` | `spacing-5` | An item's icon (20px). |
+| `--sidebar-padding` | `spacing-3` | Space inside the sidebar (12px). |
+| `--sidebar-item-padding-x` | `spacing-3` | An item's side padding (12px). |
+| `--sidebar-item-padding-y` | `spacing-2` | An item's top and bottom padding (8px). |
+| `--sidebar-item-gap` | `spacing-3` | Space between an item's icon and label (12px). |
+| `--sidebar-section-gap` | `spacing-6` | Space between sections (24px). |
+| `--sidebar-nested-indent` | `spacing-11` | Where nested items' labels start, lined up with their parent's label (44px). |
+| `--sidebar-border-width` | `border-width-1` | The edge line (1px). |
+| `--sidebar-item-radius` | `rounded-md` | An item's corners (6px). |

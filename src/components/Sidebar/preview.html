@@ -1,0 +1,24 @@
+<!-- @dsCard group="Navigation" height=360 subtitle="sections, icons, badges, nested groups; collapses to an icon rail" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Sidebar — preview</title>
+<style>
+  body { margin: 0; background: var(--surface-muted); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; gap: 16px; height: 360px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement, S = D.SidebarSection, I = D.SidebarItem;
+  function items() {
+    return [h(S, { key: 'a' }, h(I, { href: '#', icon: 'home', label: 'Home', active: true }), h(I, { href: '#', icon: 'inbox', label: 'Inbox', badge: h(D.Badge, { count: 4 }) })),
+      h(S, { key: 'b', title: 'Workspace' }, h(I, { icon: 'folder', label: 'Projects', defaultOpen: true }, h(I, { href: '#', label: 'Website' }), h(I, { href: '#', label: 'Mobile app' })), h(I, { href: '#', icon: 'group', label: 'Team' }))];
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(D.Sidebar, { header: h('strong', null, 'Acme'), 'aria-label': 'Expanded' }, items()),
+    h(D.Sidebar, { collapsed: true, 'aria-label': 'Collapsed' }, items())
+  ));
+</script>
+</body>
+</html>

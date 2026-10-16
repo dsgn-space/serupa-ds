@@ -49,6 +49,8 @@ import { Radio, RadioGroup } from "./components/Radio/Radio";
 export type { RadioGroupProps, RadioProps } from "./components/Radio/Radio";
 import { Select } from "./components/Select/Select";
 export type { SelectOption, SelectOptionGroup, SelectProps } from "./components/Select/Select";
+import { Sidebar, SidebarItem, SidebarSection } from "./components/Sidebar/Sidebar";
+export type { SidebarItemProps, SidebarProps, SidebarSectionProps } from "./components/Sidebar/Sidebar";
 import { Stack } from "./components/Stack/Stack";
 export type { StackProps } from "./components/Stack/Stack";
 export type { Space } from "./internal/space";
@@ -75,7 +77,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, Radio, RadioGroup, Select, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, Radio, RadioGroup, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
