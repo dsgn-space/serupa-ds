@@ -1,0 +1,147 @@
+{
+  "dialog": {
+    "$description": "Dialog's component tokens. Each one is an optional override: set the CSS variable (--dialog-<name>) on the page, a container or one dialog, and every Dialog inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The panel's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-bg"
+          }
+        }
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": "{color.overlay}",
+        "$description": "The dimmed backdrop over the page.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-overlay"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-title-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description under the title (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-description-color"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-xl}",
+        "$description": "The panel's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xl}",
+        "$description": "The panel's corners (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.container-sm}",
+        "$description": "size=\"sm\" (384px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-width-sm"
+          }
+        }
+      },
+      "width-md": {
+        "$type": "dimension",
+        "$value": "{sizing.container-lg}",
+        "$description": "size=\"md\", the default (512px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-width-md"
+          }
+        }
+      },
+      "width-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.container-2xl}",
+        "$description": "size=\"lg\" (672px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-width-lg"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Padding inside the panel (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space between the header, body and footer (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-gap"
+          }
+        }
+      },
+      "margin": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The least space between the panel and the edge of the screen (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-margin"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--dialog-title-weight"
+          }
+        }
+      }
+    }
+  }
+}
