@@ -33,6 +33,8 @@ import { Input } from "./components/Input/Input";
 export type { InputProps } from "./components/Input/Input";
 import { Loader } from "./components/Loader/Loader";
 export type { LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant } from "./components/Loader/Loader";
+import { Link } from "./components/Link/Link";
+export type { LinkProps } from "./components/Link/Link";
 import { Menu, MenuGroup, MenuItem, MenuSeparator } from "./components/Menu/Menu";
 export type { MenuGroupProps, MenuItemProps, MenuProps } from "./components/Menu/Menu";
 import { Radio, RadioGroup } from "./components/Radio/Radio";
@@ -42,6 +44,8 @@ export type { SelectOption, SelectOptionGroup, SelectProps } from "./components/
 import { Stack } from "./components/Stack/Stack";
 export type { StackProps } from "./components/Stack/Stack";
 export type { Space } from "./internal/space";
+import { VisuallyHidden } from "./components/VisuallyHidden/VisuallyHidden";
+export type { VisuallyHiddenProps } from "./components/VisuallyHidden/VisuallyHidden";
 import { Switch } from "./components/Switch/Switch";
 export type { SwitchProps } from "./components/Switch/Switch";
 import { Tab, TabList, TabPanel, Tabs } from "./components/Tabs/Tabs";
@@ -61,7 +65,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Stack, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -75,6 +79,7 @@ declare global {
       Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Container: typeof Container; Dialog: typeof Dialog; Divider: typeof Divider; Grid: typeof Grid; Stack: typeof Stack; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
+      Link: typeof Link; VisuallyHidden: typeof VisuallyHidden;
       Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
       Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
