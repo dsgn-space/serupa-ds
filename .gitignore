@@ -8,3 +8,5 @@ test-output.txt
 tools/test/baseline-visual/*.actual.png
 __pycache__/
 storybook-static/
+.release-notes.md
+*.tgz

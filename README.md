@@ -15,6 +15,12 @@ Diki's tokens and a complete set of utility classes, with role-based alias color
 </head>
 ```
 
+**Installing it** in a project, from a released version on GitHub (the package builds itself as it installs):
+
+```sh
+npm install github:diki-stwn/design-system#v4.8.0
+```
+
 **In a React app** (Vite, Next.js, Remix), import the components as ES modules. React 18 or later is a peer dependency, so the app's own React is the one they use, and they render on the server too:
 
 ```js
@@ -790,7 +796,7 @@ The system follows [Semantic Versioning](https://semver.org): the version is in 
 | **Minor** (1.1.0) | Something new; everything existing keeps working | New tokens, classes, components or props; a new theme |
 | **Patch** (1.0.1) | A fix that doesn't change what correct code gets | A contrast fix inside the rules, a bug in a component, docs |
 
-Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: write the changes under `## [Unreleased]` in `CHANGELOG.md`, then run `python3 tools/release.py minor` (or `major`, `patch`, or a number), which stamps the version into every file. 
+Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
 
 ## Design tokens for design tools
 

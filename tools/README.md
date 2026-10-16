@@ -65,14 +65,15 @@ When a test fails, it names what changed. If the change is intended, run with `-
 
 ## Releasing a version
 
-Write the changes under `## [Unreleased]` in `CHANGELOG.md` (Added, Changed, Deprecated, Removed, Fixed), then:
+Releases run on GitHub, from changesets (`.changeset/README.md` has the details):
 
-```sh
-python3 tools/release.py minor      # or major, patch, or a number such as 1.2.0
-python3 tools/release.py --check    # every file carries the same version (the foundation audit runs this too)
-```
+1. **Each pull request** that changes what projects get adds a changeset: `npx changeset` (patch, minor or major, and a note whose lines start with Added, Changed, Fixed…).
+2. **On `main`**, the Release workflow keeps a pull request called "Release: next version" open. It runs `npm run version-packages` (`tools/version.mjs`): the notes go into `CHANGELOG.md` under the new version, and `tools/release.py` stamps the version into `package.json`, `src/styles/base.css` and `src/theme.js` (the build puts it in `dist/` and `Diki.version`).
+3. **Merging that pull request** releases it: `npm run release` (`tools/publish.mjs`) tags `vX.Y.Z` and makes a GitHub release with the notes and the package (`npm pack`) attached.
 
-It moves the notes under the new version with today's date and stamps the version into `package.json`, `src/styles/base.css` and `src/theme.js`. The build puts it in the headers of the files in `dist/` and in `Diki.version`. The README's Versioning section says which kind of release a change needs.
+The workflow needs one repository setting: Settings → Actions → General → Workflow permissions → **Allow GitHub Actions to create and approve pull requests**. Pull requests the workflow opens don't start CI themselves; the changes in them are the changelog and version numbers.
+
+By hand, without GitHub: write the notes under `## [Unreleased]` and run `python3 tools/release.py minor` (or major, patch, or a number). `python3 tools/release.py --check` checks that every file carries the same version (CI runs it). The README's Versioning section says which kind of release a change needs.
 
 ## Design tokens export
 
