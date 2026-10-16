@@ -1,0 +1,185 @@
+{
+  "tabs": {
+    "$description": "Tabs' component tokens. Each one is an optional override: set the CSS variable (--tabs-<name>) on the page, a container or one set of tabs, and every Tabs inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A tab's label (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-text"
+          }
+        }
+      },
+      "text-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A tab's label on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-text-hover"
+          }
+        }
+      },
+      "text-selected": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The selected tab's label (line).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-text-selected"
+          }
+        }
+      },
+      "indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The line under the selected tab (3:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-indicator"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line under the whole tab list (line).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-border"
+          }
+        }
+      },
+      "pill-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "A pill tab's background on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-pill-bg-hover"
+          }
+        }
+      },
+      "pill-bg-selected": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The selected pill tab's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-pill-bg-selected"
+          }
+        }
+      },
+      "pill-text-selected": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "The selected pill tab's label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-pill-text-selected"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "A tab's height with size=\"sm\" (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-9}",
+        "$description": "A tab's height with size=\"md\", the default (36px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-height-md"
+          }
+        }
+      }
+    },
+    "border": {
+      "indicator-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The thickness of the selected tab's line (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-indicator-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "A tab's corners (6px): the focus ring, and the pills.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Padding at a tab's sides (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-padding-x"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between tabs (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-gap"
+          }
+        }
+      },
+      "icon-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between a tab's icon and label (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-icon-gap"
+          }
+        }
+      },
+      "panel-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space above a panel (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-panel-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "A tab's label weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tabs-weight"
+          }
+        }
+      }
+    }
+  }
+}

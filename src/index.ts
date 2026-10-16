@@ -31,6 +31,8 @@ import { Select } from "./components/Select/Select";
 export type { SelectOption, SelectOptionGroup, SelectProps } from "./components/Select/Select";
 import { Switch } from "./components/Switch/Switch";
 export type { SwitchProps } from "./components/Switch/Switch";
+import { Tab, TabList, TabPanel, Tabs } from "./components/Tabs/Tabs";
+export type { TabPanelProps, TabProps, TabsProps, TabsVariant } from "./components/Tabs/Tabs";
 import { Text } from "./components/Text/Text";
 export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Text/Text";
 import { Textarea } from "./components/Textarea/Textarea";
@@ -41,7 +43,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Radio, RadioGroup, Select, Switch, Text, Textarea };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -55,7 +57,8 @@ declare global {
       Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
-      Select: typeof Select; Switch: typeof Switch; Text: typeof Text; Textarea: typeof Textarea; customIcons: typeof customIcons;
+      Select: typeof Select; Switch: typeof Switch;
+      Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };
   }

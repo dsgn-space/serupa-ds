@@ -27,6 +27,10 @@ window.Diki = Object.assign(window.Diki || {}, {
   RadioGroup: Diki.RadioGroup,
   Select: Diki.Select,
   Switch: Diki.Switch,
+  Tab: Diki.Tab,
+  TabList: Diki.TabList,
+  TabPanel: Diki.TabPanel,
+  Tabs: Diki.Tabs,
   Text: Diki.Text,
   Textarea: Diki.Textarea,
   customIcons: Diki.customIcons   // names of your custom icons
