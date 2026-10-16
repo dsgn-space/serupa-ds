@@ -35,4 +35,5 @@
 @import "../components/Pagination/Pagination.css";
 @import "../components/Table/Table.css";
 @import "../components/Accordion/Accordion.css";
+@import "../components/Navbar/Navbar.css";
 @import "./utilities.css";

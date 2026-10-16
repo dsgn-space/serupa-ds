@@ -34,6 +34,7 @@ const steps = [
   ['Pagination', 'node', [path.join(HERE, 'pagination.mjs')]],
   ['Table', 'node', [path.join(HERE, 'table.mjs')]],
   ['Accordion', 'node', [path.join(HERE, 'accordion.mjs')]],
+  ['Navbar', 'node', [path.join(HERE, 'navbar.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],
