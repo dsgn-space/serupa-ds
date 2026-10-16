@@ -24,4 +24,5 @@
 @import "../components/Tooltip/Tooltip.css";
 @import "../components/Dialog/Dialog.css";
 @import "../components/Menu/Menu.css";
+@import "../components/Toast/Toast.css";
 @import "./utilities.css";

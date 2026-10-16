@@ -27,6 +27,7 @@ const steps = [
   ['Tooltip', 'node', [path.join(HERE, 'tooltip.mjs')]],
   ['Dialog', 'node', [path.join(HERE, 'dialog.mjs')]],
   ['Menu', 'node', [path.join(HERE, 'menu.mjs')]],
+  ['Toast', 'node', [path.join(HERE, 'toast.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

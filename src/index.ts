@@ -41,6 +41,8 @@ import { Text } from "./components/Text/Text";
 export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Text/Text";
 import { Textarea } from "./components/Textarea/Textarea";
 export type { TextareaProps } from "./components/Textarea/Textarea";
+import { toast, Toaster } from "./components/Toast/Toast";
+export type { ToasterPosition, ToasterProps, ToastOptions, ToastTone } from "./components/Toast/Toast";
 import { Tooltip } from "./components/Tooltip/Tooltip";
 export type { TooltipProps } from "./components/Tooltip/Tooltip";
 export type { Placement } from "./internal/position";
@@ -50,7 +52,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Dialog, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, Tooltip };
+export { Alert, Avatar, Badge, Button, buttonClass, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, customIcons, Dialog, Fab, Field, Heading, Icon, IconButton, initials, Input, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Radio, RadioGroup, Select, Switch, Tab, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, Tooltip };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -66,7 +68,7 @@ declare global {
       Dialog: typeof Dialog; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
       Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Radio: typeof Radio; RadioGroup: typeof RadioGroup;
       Select: typeof Select; Switch: typeof Switch;
-      Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
+      Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };
   }
