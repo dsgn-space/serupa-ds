@@ -49,6 +49,16 @@ t('a grid named by the "March 2025" title (aria-live), six weeks of 7 days from 
 t('each day is named by its full date and the chosen one is aria-selected', g.label === 'Monday, March 10, 2025' && g.sel === 'true', g.label);
 const de = await p.evaluate(() => [...document.querySelectorAll('[data-testid=de] th')].map((x) => x.textContent).join() + ' ' + document.querySelector('[data-testid=de] .dk-calendar__title').textContent);
 t('de-DE: German names and weeks starting on Monday', /^Mo\.?,Di\.?,Mi\.?,Do\.?,Fr\.?,Sa\.?,So\.? März 2025$/.test(de), de);
+// Without Intl.Locale week info (Firefox has none), the week start comes from the locale's region.
+const nw = await (await b.newContext({ locale: 'en-US' })).newPage();
+await nw.addInitScript(() => { delete Intl.Locale.prototype.getWeekInfo; delete Intl.Locale.prototype.weekInfo; });
+await nw.goto(writePage('date-picker-noweek.html', `<div id="root"></div><script>var h = React.createElement, D = window.Diki;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div', null, ['en-US', 'de-DE', 'de', 'ar-EG', 'dv-MV', 'pt-BR'].map(function (l) { return h(D.Calendar, { key: l, 'data-l': l, locale: l, defaultMonth: new Date(2025, 2, 1) }); })));
+</script>`, { react: true }));
+await nw.waitForTimeout(300);
+const starts = await nw.evaluate(() => [...document.querySelectorAll('[data-l]')].map((c) => c.dataset.l + ':' + c.querySelector('[role=grid] [data-date]').dataset.date).join());
+t('without Intl.Locale week info: weeks start by region (US Sunday, DE Monday, EG Saturday, MV Friday, BR Sunday)', starts === 'en-US:2025-02-23,de-DE:2025-02-24,de:2025-02-24,ar-EG:2025-03-01,dv-MV:2025-02-28,pt-BR:2025-02-23', starts);
+await nw.close();
 const td = await p.evaluate(() => { const b = document.querySelector('[data-testid=today] [aria-current=date]'); const n = new Date(); return b && b.textContent === String(n.getDate()) && b.getAttribute('tabindex') === '0' && /today/.test(b.className); });
 t('today is aria-current="date" and the Tab stop when nothing is chosen', td);
 
