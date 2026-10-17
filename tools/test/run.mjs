@@ -40,6 +40,7 @@ const steps = [
   ['PasswordInput', 'node', [path.join(HERE, 'password-input.mjs')]],
   ['List', 'node', [path.join(HERE, 'list.mjs')]],
   ['EmptyState', 'node', [path.join(HERE, 'empty-state.mjs')]],
+  ['Popover', 'node', [path.join(HERE, 'popover.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

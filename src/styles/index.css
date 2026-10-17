@@ -42,4 +42,5 @@
 @import "../components/PasswordInput/PasswordInput.css";
 @import "../components/List/List.css";
 @import "../components/EmptyState/EmptyState.css";
+@import "../components/Popover/Popover.css";
 @import "./utilities.css";
