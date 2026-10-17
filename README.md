@@ -1,8 +1,51 @@
 # Diki Design System
 
-Diki's tokens and a complete set of utility classes, with role-based alias colors in six themes. The palette has 22 color families with 11 shades each (`50`–`950`), plus `white` and `black` — 244 colors in all — plus 33 alias tokens that give colours a role (`primary`, `text`, `border`…), in six themes: Blue, Violet and Emerald, each in light and dark.
+Tokens, themes, utility classes and accessible React components that every Diki project starts from, so new projects are quicker to build, look consistent, and pick up fixes with a version bump.
 
-**How the pieces connect.** Load `tokens.css`, then `bundle.css`. On a page built with the system, also load `theme.js` first (automatic dark mode) and `base.css` between the two (page defaults). In the package these are `tokens.css` at the top and the rest in `dist/`:
+- **Token-driven.** Every color, size, space, radius, shadow, motion and type value is a design token. Components never hardcode a value.
+- **Six themes.** Blue, Violet and Emerald, each light and dark, switched with one attribute and no component changes.
+- **Accessible by default.** WCAG 2.1 AA contrast in every theme, full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
+- **Works anywhere.** ES modules for React apps (React 18+), or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
+
+The documentation is Storybook: run `npm run storybook` in this repo and open http://localhost:6006.
+
+## Getting started
+
+### 1. Install a released version from GitHub
+
+```sh
+npm install github:diki-stwn/design-system#v4.8.0
+```
+
+Always pin a tag (`#v4.8.0`), never `#main`, so an update only reaches your project when you choose it. The package builds itself as it installs (about 20 seconds). Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+
+> **Until the first release tag exists**, pin a commit instead: `npm install github:diki-stwn/design-system#<commit>`, using the latest commit on `main`. Swap it for a tag once one is published.
+
+To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
+
+### 2. Load the styles and use the components
+
+In a React app (Vite, Next.js, Remix):
+
+```js
+import '@diki/design-system/tokens.css';
+import '@diki/design-system/base.css';     // page defaults; leave out when adding the system to an existing app
+import '@diki/design-system/bundle.css';   // or components.css, plus utilities.css if you use the classes
+import { Button, Field, Input } from '@diki/design-system';
+
+export function SignUp() {
+  return (
+    <form>
+      <Field label="Email" required><Input type="email" /></Field>
+      <Button type="submit">Create account</Button>
+    </form>
+  );
+}
+```
+
+React 18 or later is a peer dependency, so the components use your app's React, and they render on the server too. Types ship with the package.
+
+On a plain page without a bundler:
 
 ```html
 <html lang="en" data-brand="blue" data-mode="auto">
@@ -13,29 +56,54 @@ Diki's tokens and a complete set of utility classes, with role-based alias color
   <link rel="stylesheet" href="dist/base.css">
   <link rel="stylesheet" href="dist/bundle.css">
 </head>
+<body>
+  <div id="root"></div>
+  <script src="dist/lib/react.production.min.js"></script>
+  <script src="dist/lib/react-dom.production.min.js"></script>
+  <script src="dist/diki.iife.js"></script>   <!-- puts the components on window.Diki -->
+</body>
+</html>
 ```
 
-**Installing it** in a project, from a released version on GitHub (the package builds itself as it installs):
+### 3. Pick a theme
+
+Set the brand and mode on `<html>` and load `theme.js` first in `<head>`, so the page follows the visitor's light or dark setting without a flash:
+
+```html
+<html data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
+```
+
+Or set one theme directly on any element: `data-theme="violet-dark"`. See [Themes](#themes).
+
+### 4. Ship it
+
+`bundle.css` holds every utility class (1.7 MB). For production, trim it to the classes your code uses with `tools/purge.py`. The script isn't in the installed package, so run it from a clone of this repo, pointing at your project's source and the installed CSS:
 
 ```sh
-npm install github:diki-stwn/design-system#v4.8.0
+python3 tools/purge.py ../my-app/src --css ../my-app/node_modules/@diki/design-system/dist/bundle.css -o ../my-app/public/bundle.min.css
 ```
 
-**In a React app** (Vite, Next.js, Remix), import the components as ES modules. React 18 or later is a peer dependency, so the app's own React is the one they use, and they render on the server too:
+That keeps the component styles and usually gives a few dozen KB.
 
-```js
-import '@diki/design-system/tokens.css';
-import '@diki/design-system/bundle.css';      // or components.css, plus utilities.css if you use the classes
-import { Button, Field, Input } from '@diki/design-system';
-```
+### What's in the package
 
-`bundle.css` is `components.css` (the `dk-*` component styles, about 90 KB) followed by `utilities.css` (every utility class). Types come with the package (`dist/index.d.ts`).
+| File | What it is |
+| --- | --- |
+| `tokens.css` | Every token as a CSS variable, the six themes, and the fonts. Load it first. |
+| `dist/base.css` | Page defaults (font, colors, focus style, reduced motion), all inside `:where()` so any class wins. |
+| `dist/components.css` | The component styles (`dk-*`), about 90 KB. |
+| `dist/utilities.css` | Every utility class. |
+| `dist/bundle.css` | `components.css` + `utilities.css`. |
+| `dist/index.js`, `dist/index.d.ts` | The components as ES modules, with types. |
+| `dist/diki.iife.js` | The components for a plain page (`window.Diki`). `dist/bundle.js` is the same file under its old name. |
+| `dist/theme.js` | Automatic dark mode and the theme switcher API. |
+| `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. |
 
-**On a plain page** without a bundler, load React 18 (it ships in `dist/lib/`), then `dist/diki.iife.js`, which puts the components on `window.Diki`. `dist/bundle.js` is the same file under its old name.
+### How the utility classes read tokens
 
-`base.css` sets page defaults from the tokens, all inside `:where()` so any class wins: border-box sizing, body background, text color and font (`surface`, `text`, `font-sans`, `text-base`), no stray margins on headings and paragraphs, form controls in the page font, media that fits its container, links in `primary`, one visible focus style (`focus-ring`), `placeholder` color, native controls and scrollbars in the theme's light or dark (`color-scheme`), and shorter motion when the visitor asks for it. Leave it out when dropping the system into an existing app. For production, trim `bundle.css` (1.7 MB, every class) to the classes your code uses: `python3 tools/purge.py src/ -o bundle.min.css` keeps the component styles and gives a few dozen KB for a typical page.
+Every utility class works on its own, with no framework or build step, and every class whose value is on a scale reads it from its token: `p-4` is `var(--spacing-4)`, `duration-300` is `var(--duration-300)`. Change a token on a page and its classes follow. Three deliberate exceptions: breakpoints (CSS can't read variables inside `@media`), shadow classes (they write the token's shape out so a color class can recolor it), and `rounded-full` (9999px). Border and divide style classes (`border-dashed`) only change a line that a width class draws, so the system needs no CSS reset.
 
-Every utility class works on its own, with no framework or build step (base classes plus responsive versions of the layout classes; for hover styles write your own selectors), and every class whose value is on a scale reads it from its token — `p-4` is `var(--spacing-4)`, `duration-300` is `var(--duration-300)` — so a token changed on this page changes its classes too. Three deliberate exceptions: breakpoints (CSS can't read variables inside `@media`), shadow classes (box, text and drop shadows write the token's shape out so a color class can recolor it), and `rounded-full`, which is 9999px (a circle on any element). Border and divide style classes (`border-dashed`) only change a line that a width class draws, so the system needs no CSS reset.
+The palette has 22 color families with 11 shades each (`50`–`950`) plus `white` and `black`, and 33 alias tokens that give colors a role (`primary`, `text`, `border`…). Build with the aliases; they change per theme.
 
 ## Color families
 
@@ -770,21 +838,26 @@ Accessibility utilities, as classes in `bundle.css`. They add no tokens.
 
 ## Components
 
-React components styled only with this system's tokens (aliases first). Import them from the package as ES modules, or on a plain page load `dist/diki.iife.js` after React 18 (it ships in `dist/lib/`) and use `window.Diki`. Each one's source, styles, component tokens and guidelines are in `src/components/<Name>/`.
+React components, styled only with this system's tokens. Each one's guide (when to use it, when not to, props, keyboard and accessibility notes, component tokens) is on its Storybook page and in `src/components/<Name>/README.md`.
 
-| Component | What |
+| Group | Components |
 | --- | --- |
-| `Icon` | One Material Symbols Rounded (filled) icon by name; decorative unless given an `aria-label`. |
-| `Badge` | A short label for status, counts and categories: `subtle`, `solid` or `outline`; tones `neutral`, `primary`, `success`, `warning`, `danger`, `info` and 17 palette families, each keeping 4.5:1 text in every theme; one size (20px, `text-xs`, 12px icons); an optional status `dot`, `leftIcon`, `count` (with `max`, "99+") and `onRemove` (a real × button); clickable with `onClick` (a button) or `href` (a link), with hover, focus and active states; `loading` on any badge. |
-| `Field` | A label, an optional `hint` and an `error` message around one form control (Input, Textarea, Select or any native control): it links the label, adds the hint and error to the control's `aria-describedby`, makes it invalid with an error, marks `required` (a hidden `*` and `aria-required`) or `optional`, and passes `disabled`. `group` renders a `<fieldset>` and `<legend>` for a set of checkboxes or radios. |
-| `Input` | A single-line text field: a native `<input>` in a box with optional `leftIcon` / `rightIcon`; sizes `sm`, `md`, `lg` at the control heights (24, 32, 44px, like Button); focus ring, `invalid` (danger border, `aria-invalid`), read-only and disabled; 4.5:1 text and a 3:1 border in every theme. |
-| `Select` | A native `<select>` styled like Input: sizes `sm`, `md`, `lg` at the control heights, a chevron, an optional `leftIcon`, a `placeholder` (an empty first option in the placeholder color), `options` as strings, `{ value, label, disabled }` or groups (or `<option>` children); focus ring, `invalid` and disabled like Input. Keeps the browser's own picker, keyboard and screen-reader support. |
-| `Textarea` | A multi-line text field, Input's sibling: a native `<textarea>` in a box; sizes `sm`, `md`, `lg` with Input's text sizes and padding; `rows` (default 3), a resize handle (`resize="none"` for a fixed height), `autoResize` (grows with the text up to `maxRows`, then scrolls) and `showCount` ("32 / 280" with `maxLength`); focus ring, `invalid`, read-only and disabled like Input; 4.5:1 text and a 3:1 border in every theme. |
-| `Checkbox` | A native checkbox and its label (`children`): sizes `sm`, `md`, `lg` (14, 16, 20px boxes), `description` (a muted second line, linked with `aria-describedby`), `indeterminate` (a dash, announced as mixed), `invalid` and disabled. The box sits on the label's first line and the whole label toggles it. Sets go in `Field group`. |
-| `Radio` | Native radios with labels (`Radio`) in a `RadioGroup` (`role="radiogroup"`) that gives them a name, holds `value`/`defaultValue` and calls `onChange(value, event)`, lays them out `vertical` or `horizontal`, and passes `size`, `invalid`, `disabled` and `required` down. Sizes `sm`, `md`, `lg` (14, 16, 20px circles), `description`. Arrow keys move the choice natively. Label the group with `Field group` or `aria-label`. |
-| `Switch` | An on/off setting that applies at once: a native checkbox with `role="switch"`, drawn as a track and thumb, sizes `sm`, `md`, `lg` (28×16, 36×20, 44×24 tracks), `description`, `labelPosition` `end` or `start`, `invalid` and disabled. The thumb slides in 150ms (not with reduced motion) and follows the text direction. |
-| `Button` | Actions, and links that look like buttons (`href`). Variants `primary`, `secondary`, `outline`, `ghost`, `link`, each with a `destructive` version; sizes `sm` (24px), `md` (32px), `lg` (44px); label, left icon, right icon or icon only (Material Symbols or custom icon names, or elements); `loading`; micro-interactions (press, ripple, loading cross-fade, and an opt-in icon nudge) that follow reduced motion. Plus `buttonClass()` for class names and `Diki.configure({ link })` for router links. |
-| `Loader` | Loading when progress is unknown: a ring whose arc grows and shrinks as it turns on a faint track, spokes that tick round like the iOS activity indicator, three pulsing dots, a pixel grid with a diagonal wave, text with a shine, or a skeleton (text lines, circle or rect placeholders with a shimmer); sizes `sm` (16px), `md` (24px), `lg` (40px); the text color, `primary` / `muted`, or `inverse` (white, for dark scrims); waits 300ms before showing (`delay`) and announces its `label` ("Loading"). Button's `loading` uses it. |
+| Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `Link` |
+| Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload` |
+| Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Badge`, `EmptyState` |
+| Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
+| Navigation | `Navbar`, `Sidebar`, `Tabs`, `Breadcrumb`, `Pagination`, `Stepper` |
+| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd` |
+| Layout and type | `Stack`, `Grid`, `Container`, `Divider`, `Heading`, `Text`, `VisuallyHidden` |
+
+Shared conventions, so learning one component teaches the rest:
+
+- `size` is `'sm' | 'md' | 'lg'` at the control heights 24, 32 and 44px (some components have only `sm` and `md`).
+- Form controls take `invalid` and `disabled`, and get their label, hint and error from `Field`.
+- Components read their own component tokens (`--button-*`, `--input-*`), which default to the shared aliases. Override one on a page, a container or a single instance.
+- For router links, set the link component once at startup: `configure({ link: Link })`.
+
+Not every component is in a release yet: check the changelog for the version that added it.
 
 ## Versioning
 
