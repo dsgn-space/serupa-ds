@@ -1,0 +1,22 @@
+<!-- @dsCard group="Data display" height=240 subtitle="avatars or icons, descriptions, trailing meta or actions; rows can be links" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>List — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { max-width: 440px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement, I = D.ListItem;
+  var people = [['Ada Lovelace', 'ada@example.com', 'Admin'], ['Grace Hopper', 'grace@example.com', 'Editor'], ['Linus Torvalds', 'linus@example.com', 'Viewer']];
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h(D.List, { variant: 'card', 'aria-label': 'Members' }, people.map(function (p, i) {
+      return h(I, { key: p[0], href: '#', selected: i === 0, leading: h(D.Avatar, { name: p[0], size: 'sm' }), title: p[0], description: p[1], trailing: h(D.Badge, null, p[2]) });
+    }))
+  );
+</script>
+</body>
+</html>
