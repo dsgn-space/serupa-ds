@@ -43,8 +43,8 @@ Each is an optional override: set it on the page, a container or one link. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--link-color` | `primary` | tone="primary" text and underline (4.5:1 on surface). |
-| `--link-color-hover` | `primary-hover` | tone="primary" on hover. |
+| `--link-text` (was `--link-color`, which still works until 5.0.0) | `primary` | tone="primary" text and underline (4.5:1 on surface). |
+| `--link-text-hover` (was `--link-color-hover`, which still works until 5.0.0) | `primary-hover` | tone="primary" on hover. |
 | `--link-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--link-thickness` | `decoration-1` | The underline's thickness (1px). |
 | `--link-thickness-hover` | `decoration-2` | The underline's thickness on hover (2px). |

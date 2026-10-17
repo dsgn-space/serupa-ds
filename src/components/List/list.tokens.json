@@ -28,7 +28,8 @@
         "$description": "An item's title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--list-title"
+            "cssVar": "--list-title-color",
+            "deprecatedCssVar": "--list-title"
           }
         }
       },
@@ -38,7 +39,8 @@
         "$description": "An item's description (4.5:1 on bg and bg-hover).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--list-description"
+            "cssVar": "--list-description-color",
+            "deprecatedCssVar": "--list-description"
           }
         }
       },

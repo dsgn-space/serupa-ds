@@ -30,7 +30,7 @@
   overflow: hidden;
   border-radius: var(--rounded-full, 9999px);
   background: var(--avatar-bg, var(--secondary));
-  color: var(--avatar-color, var(--text));
+  color: var(--avatar-text, var(--avatar-color, var(--text)));
   font-weight: var(--avatar-weight, var(--font-medium, 500));
   user-select: none;
 }
