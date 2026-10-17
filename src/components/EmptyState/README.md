@@ -2,8 +2,6 @@
 
 What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it.
 
-## Usage
-
 ```jsx
 const { EmptyState, Button } = window.Diki;
 
@@ -22,6 +20,32 @@ const { EmptyState, Button } = window.Diki;
 <EmptyState variant="dashed" icon="upload" title="Drop files here" />
 ```
 
+## When to use
+
+- A list, a table or a page has nothing in it yet, such as a new account with no projects.
+- A search or a filter matches nothing.
+- A slot people fill themselves, such as an area waiting for its first item.
+
+## When not to use
+
+- Content that's still loading: use [Loader](../Loader/README.md) (a skeleton or a ring) instead, and show the empty state only once you know it's empty.
+- Content that couldn't load because something failed: use an [Alert](../Alert/README.md) with a way to retry instead.
+- A place to drop or choose files: use [FileUpload](../FileUpload/README.md), which checks and lists the files, instead.
+
+## Usage
+
+- Say what's empty and why, then what to do: "No invoices yet. Invoices you send show up here." with a "New invoice" button.
+- After a search or a filter, say nothing matches and offer to clear it, rather than suggesting to create something.
+- Keep it to one primary action.
+- Use `size="sm"` inside a card, a table or a menu, and the default size for a whole page or panel.
+
+## Accessibility
+
+- The title is a heading (`h3` by default), so people can find it; set `headingLevel` to fit the page.
+- The icon is decorative and hidden from screen readers.
+- When the empty state appears after an action (a search), consider announcing it, for example by putting it in a region with `aria-live="polite"`.
+- The title and description keep 4.5:1 on `surface`, and the icon 3:1 on its circle, in all six themes (`tools/test/empty-state.mjs`).
+
 ## Props
 
 | Prop | Type | Default | What it does |
@@ -35,19 +59,6 @@ const { EmptyState, Button } = window.Diki;
 | `headingLevel` | `2`–`6` | `3` | The title's heading level |
 
 `className`, `style`, `ref` and everything else go to the wrapper, which has `data-component="empty-state"`.
-
-## Writing it
-
-- Say what's empty and why, then what to do: "No invoices yet. Invoices you send show up here." with a "New invoice" button.
-- After a search or a filter, say nothing matches and offer to clear it, rather than suggesting to create something.
-- Keep it to one primary action.
-
-## Accessibility
-
-- The title is a heading (`h3` by default), so people can find it; set `headingLevel` to fit the page.
-- The icon is decorative and hidden from screen readers.
-- When the empty state appears after an action (a search), consider announcing it, for example by putting it in a region with `aria-live="polite"`.
-- The title and description keep 4.5:1 on `surface`, and the icon 3:1 on its circle, in all six themes (`tools/test/empty-state.mjs`).
 
 ## Component tokens
 

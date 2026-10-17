@@ -2,8 +2,6 @@
 
 Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. Use it for a set of actions on the same thing (Copy, Paste), a toolbar of ToggleButtons, or a split button.
 
-## Usage
-
 ```jsx
 const { ButtonGroup, Button, IconButton, ToggleButton } = window.Diki;
 
@@ -23,7 +21,26 @@ const { ButtonGroup, Button, IconButton, ToggleButton } = window.Diki;
 </ButtonGroup>
 ```
 
+## When to use
+
+- A few actions on the same thing, such as Copy and Paste, that read as one control.
+- A toolbar of [ToggleButton](../ToggleButton/README.md)s, such as text formatting.
+- A pair of buttons that belong together but stay apart, such as Cancel and Save in a footer (`attached={false}`).
+
+## When not to use
+
+- One choice out of a few options: use [SegmentedControl](../SegmentedControl/README.md), which lets only one be on.
+- Many actions, or ones people rarely use: put them in a [Menu](../Menu/README.md).
+
+## Usage
+
 Size and variant stay on each button: give them all the same ones.
+
+## Accessibility
+
+- It's a `role="group"`: name it with `aria-label` when the buttons share a purpose ("Text formatting"), so screen readers announce it on the way in.
+- A hovered, focused or pressed button comes to the front, so its border and focus ring are never hidden by its neighbor.
+- Each button keeps its own colors and contrast; the group adds none.
 
 ## Props
 
@@ -34,12 +51,6 @@ Size and variant stay on each button: give them all the same ones.
 | `aria-label` | string | none | What the group is for |
 
 `className`, `style`, `ref` and everything else go to the wrapper, which has `role="group"`, `data-component="button-group"` and `data-orientation`.
-
-## Accessibility
-
-- It's a `role="group"`: name it with `aria-label` when the buttons share a purpose ("Text formatting"), so screen readers announce it on the way in.
-- A hovered, focused or pressed button comes to the front, so its border and focus ring are never hidden by its neighbor.
-- Each button keeps its own colors and contrast; the group adds none.
 
 ## Component tokens
 

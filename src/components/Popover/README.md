@@ -2,10 +2,6 @@
 
 A small panel next to its trigger for content people interact with: a short form, filters, details with links. It's a non-modal dialog: the rest of the page stays usable, and it closes on Escape, a click outside, or when focus moves elsewhere.
 
-Use Tooltip for a short hint and Menu for a list of actions; use Dialog when people must finish or dismiss something before going on.
-
-## Usage
-
 ```jsx
 const { Popover, Button, Field, Input } = window.Diki;
 
@@ -24,6 +20,32 @@ const { Popover, Button, Field, Input } = window.Diki;
 </Popover>
 ```
 
+## When to use
+
+- A short form tied to one control, such as sharing with an email address or renaming in place.
+- Filters or settings people adjust and then close, while the page stays in view.
+- Details with links or buttons about one item, such as a person's card or an explanation with a "Learn more" link.
+
+## When not to use
+
+- A short hint: use [Tooltip](../Tooltip/README.md) instead.
+- A list of actions: use [Menu](../Menu/README.md) instead.
+- Something people must finish or dismiss before going on: use [Dialog](../Dialog/README.md) instead.
+
+## Usage
+
+- Keep it small: a few fields or a short paragraph. If it needs scrolling, use a [Drawer](../Drawer/README.md) or a [Dialog](../Dialog/README.md).
+- Give it a `title`, or an `aria-label` when there's none, so it has a name.
+- Use the function form of `children` to close it from a Done, Cancel or submit button.
+- When it holds only text, set `initialFocus="panel"`: there's no control inside to focus.
+
+## Accessibility
+
+- The panel is a `role="dialog"` named by its title (or `aria-label`); the trigger has `aria-expanded` and `aria-controls`.
+- Opening moves focus inside; Escape and `close()` return it to the trigger. It sits right after the trigger in the tab order, so Tab moves from the trigger into it.
+- A click outside or focus moving elsewhere closes it, without moving focus.
+- Text and the title keep 4.5:1 on the panel in all six themes (`tools/test/popover.mjs`). With reduced motion it appears without growing in.
+
 ## Props
 
 | Prop | Type | Default | What it does |
@@ -36,13 +58,6 @@ const { Popover, Button, Field, Input } = window.Diki;
 | `aria-label` | string | none | Its name when there's no title |
 | `initialFocus` | `'first'` \| `'panel'` | `'first'` | Focus the first control inside, or the panel itself (for text only) |
 | `className`, `style` | | | Go to the panel, which has `data-component="popover"` and `data-side` |
-
-## Accessibility
-
-- The panel is a `role="dialog"` named by its title (or `aria-label`); the trigger has `aria-expanded` and `aria-controls`.
-- Opening moves focus inside; Escape and `close()` return it to the trigger. It sits right after the trigger in the tab order, so Tab moves from the trigger into it.
-- A click outside or focus moving elsewhere closes it, without moving focus.
-- Text and the title keep 4.5:1 on the panel in all six themes (`tools/test/popover.mjs`). With reduced motion it appears without growing in.
 
 ## Component tokens
 

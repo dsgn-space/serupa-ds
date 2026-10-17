@@ -2,8 +2,6 @@
 
 A Button that stays on or off, for a setting that applies right away: bold in a text editor, mute, show the grid. It has `aria-pressed`, and when it's on it turns primary-subtle with primary text.
 
-## Usage
-
 ```jsx
 const { ToggleButton, ButtonGroup } = window.Diki;
 
@@ -16,7 +14,28 @@ const { ToggleButton, ButtonGroup } = window.Diki;
 </ButtonGroup>
 ```
 
-For one choice out of several (Day, Week, Month), use a segmented control or radios instead: a set of toggles can all be on at once.
+## When to use
+
+- A setting that applies right away and stays on or off: bold in a text editor, mute, show the grid.
+- A toolbar of independent options that can be on at the same time, such as bold and italic.
+
+## When not to use
+
+- For one choice out of several (Day, Week, Month), use a [SegmentedControl](../SegmentedControl/README.md) or [radios](../Radio/README.md) instead: a set of toggles can all be on at once.
+- A labeled on/off setting in a form or a settings list: use [Switch](../Switch/README.md).
+- An action that doesn't stay on, such as Save: use [Button](../Button/README.md).
+
+## Usage
+
+- Group related toggles in a [ButtonGroup](../ButtonGroup/README.md) with an `aria-label` that says what they're for ("Text formatting").
+- Use `variant="ghost"` in toolbars and the default `outline` elsewhere.
+- Give the toggles in one group the same `size`.
+
+## Accessibility
+
+- `aria-pressed` tells screen readers it's on or off. Keep the label the same either way ("Bold", not "Make bold" / "Remove bold"), since the state is announced separately.
+- An icon-only toggle needs an `aria-label`.
+- Pressed text keeps 4.5:1 on its background, and the pressed border 3:1 on `surface`, in all six themes (`tools/test/button-group.mjs`). In Windows high-contrast mode it uses the system highlight colors.
 
 ## Props
 
@@ -28,12 +47,6 @@ For one choice out of several (Day, Week, Month), use a segmented control or rad
 | `variant` | `'outline'` \| `'ghost'` | `'outline'` | Ghost suits toolbars |
 
 Every other Button prop works (`size`, `icon`, `leftIcon`, `rightIcon`, `disabled`, `onClick`…), except `destructive` and `loading`. An `onClick` that calls `preventDefault()` stops the toggle. It renders Button's element, with `data-component="button"` and the class `dk-toggle-button`.
-
-## Accessibility
-
-- `aria-pressed` tells screen readers it's on or off. Keep the label the same either way ("Bold", not "Make bold" / "Remove bold"), since the state is announced separately.
-- An icon-only toggle needs an `aria-label`.
-- Pressed text keeps 4.5:1 on its background, and the pressed border 3:1 on `surface`, in all six themes (`tools/test/button-group.mjs`). In Windows high-contrast mode it uses the system highlight colors.
 
 ## Component tokens
 

@@ -2,8 +2,6 @@
 
 A label, an optional hint and an error message around one form control, wired up for screen readers. The label names the control, the hint and error are added to its `aria-describedby`, and an error makes the control invalid. It works with Input, Textarea, Select and any native control. With `group` it renders a `<fieldset>` and `<legend>` for a set of checkboxes or radios.
 
-## Usage
-
 ```jsx
 const { Field, Input, Textarea } = window.Diki;
 
@@ -23,6 +21,34 @@ const { Field, Input, Textarea } = window.Diki;
 </Field>
 ```
 
+## When to use
+
+- Any form control that needs a visible label, with or without a hint or an error: an [Input](../Input/README.md), a [Select](../Select/README.md), a [Textarea](../Textarea/README.md) or a native control.
+- A set of checkboxes or radios that answer one question, with `group`.
+
+## When not to use
+
+- A single [Checkbox](../Checkbox/README.md) or [Switch](../Switch/README.md): it carries its own label (its children), so use it on its own.
+- A control with no visible label, such as a row checkbox in a table: give the control an `aria-label` instead.
+
+## Usage
+
+- Keep labels short and specific ("Work email", not "Please enter your email address"). Put format help in the hint, never only in the placeholder.
+- Show errors after someone leaves the field or submits, not on every keystroke, and on submit move focus to the first field with an error.
+- Stack fields with `gap-5` or `gap-6` between them.
+
+### Layout
+
+Label, hint, control and error stack with 6px between them (`--field-gap`). The label is `text-sm` in `font-medium`; hint and error are `text-sm`. The error's 16px icon sits centered on its first line. A group's legend lays out exactly like a label.
+
+## Accessibility
+
+- Screen readers read the label as the control's name and the hint and error as its description, so a person hears "Email, required, invalid entry, We only use it for receipts. Enter an email address like name@example.com."
+- Say what went wrong and how to fix it, not just "Invalid". The error icon is decorative; the words carry the meaning.
+- The `*` is hidden from screen readers, which hear `aria-required` instead. Explain it once at the top of a long form ("Fields marked * are required"), or when most fields are required, mark the optional ones instead.
+- For radios and checkboxes use `group`: screen readers announce the legend when focus enters the set.
+- Label, hint, error and `*` keep 4.5:1 on `surface` in all six themes (`tools/test/field.mjs`).
+
 ## Props
 
 | Prop | Type | Default | What it does |
@@ -38,18 +64,6 @@ const { Field, Input, Textarea } = window.Diki;
 
 Field takes one control as its child (any number with `group`). The control keeps its own props, `ref` and `aria-describedby` (Field's ids are added after yours). `className` and any other attribute go to the outer element, which has `data-component="field"`.
 
-## Layout
-
-Label, hint, control and error stack with 6px between them (`--field-gap`). The label is `text-sm` in `font-medium`; hint and error are `text-sm`. The error's 16px icon sits centered on its first line. A group's legend lays out exactly like a label.
-
-## Accessibility
-
-- Screen readers read the label as the control's name and the hint and error as its description, so a person hears "Email, required, invalid entry, We only use it for receipts. Enter an email address like name@example.com."
-- Say what went wrong and how to fix it, not just "Invalid". The error icon is decorative; the words carry the meaning.
-- The `*` is hidden from screen readers, which hear `aria-required` instead. Explain it once at the top of a long form ("Fields marked * are required"), or when most fields are required, mark the optional ones instead.
-- For radios and checkboxes use `group`: screen readers announce the legend when focus enters the set.
-- Label, hint, error and `*` keep 4.5:1 on `surface` in all six themes (`tools/test/field.mjs`).
-
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one field. The list lives in `src/components/Field/field.tokens.json` (also in `design-tokens/components/`).
@@ -64,9 +78,3 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--field-gap` | `spacing-1.5` | Space between label, hint, control and error (6px) |
 | `--field-error-gap` | `spacing-1` | Error icon to text (4px) |
 | `--field-error-icon-size` | `spacing-4` | Error icon (16px) |
-
-## Guidelines
-
-- Keep labels short and specific ("Work email", not "Please enter your email address"). Put format help in the hint, never only in the placeholder.
-- Show errors after someone leaves the field or submits, not on every keystroke, and on submit move focus to the first field with an error.
-- Stack fields with `gap-5` or `gap-6` between them.

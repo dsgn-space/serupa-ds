@@ -11,6 +11,50 @@ const [due, setDue] = React.useState<Date | null>(null);
 </Field>
 ```
 
+## When to use
+
+- A single, specific day the person knows or can find on a calendar: a due date, a start date, an appointment day.
+- Dates near today, where seeing the month helps people choose (the next delivery day, a booking in the coming weeks).
+- When some days can't be chosen (past days, weekends, fully booked days) and people should see that before they pick.
+
+## When not to use
+
+- A start and an end date: use [DateRangePicker](../DateRangePicker/README.md) instead.
+- A date people know by heart and that's far from today, such as a date of birth: a plain [Input](../Input/README.md) with a format hint (or separate day, month and year fields) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
+- Only a month or a year: use a [Select](../Select/README.md).
+- A calendar that's always on the page, such as a scheduling view: use [Calendar](../Calendar/README.md) on its own.
+
+## Usage
+
+- Always wrap it in [Field](../Field/README.md) with a label, and put the expected format in the `hint` ("mm/dd/yyyy") for people who type.
+- Set `min`, `max` or `isDateDisabled` rather than rejecting a date after it's entered: blocked days show faded and struck through in the calendar and a blocked typed date puts back the last good value.
+- Leave `locale` unset in most products so the format follows the visitor's browser. Set it only when the whole product uses one locale.
+- Use `name` in a plain form: it sends `yyyy-mm-dd`, whatever the display format.
+- Match the `size` of the other fields in the same form.
+
+## Behavior
+
+- People type in the locale's numeric order (11/22/2025 in en-US, 22.11.2025 in de-DE) or as `2025-11-22` anywhere. Two-digit years are read as 20xx.
+- The text is read on blur and on Enter. A date that can't be read, or one that can't be chosen, puts back the last good value. An empty field clears it.
+- The calendar opens from the button or Alt+↓ in the field, showing the typed or chosen month with focus on that day. Picking a day, Escape or a click outside closes it and returns focus to the field.
+
+## Accessibility
+
+- **Role and name:** the field is a text input; label it with Field, `<label htmlFor>` or `aria-label`. The calendar button is named by `buttonLabel` ("Choose date").
+- **Keyboard:**
+
+  | Key | Does |
+  | --- | --- |
+  | Type, then Enter or Tab | Enters the date. |
+  | Alt+↓ | Opens the calendar, focused on the typed or chosen day. |
+  | Arrows, Home, End, PageUp, PageDown | Move around the calendar (see [Calendar](../Calendar/README.md)). |
+  | Enter, Space | Pick the focused day and close the calendar. |
+  | Escape | Closes the calendar and returns focus to the field. |
+
+- **ARIA states:** the button has `aria-haspopup="dialog"` and `aria-expanded`; the popup is a `role="dialog"` in the top layer holding a Calendar.
+- **Contrast:** the calendar icon keeps 3:1 on the field in all six themes (`tools/test/date-picker.mjs`).
+- **What's still yours:** the label, and the format in the hint.
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -28,19 +72,6 @@ const [due, setDue] = React.useState<Date | null>(null);
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 
-## Behavior
-
-- People type in the locale's numeric order (11/22/2025 in en-US, 22.11.2025 in de-DE) or as `2025-11-22` anywhere. Two-digit years are read as 20xx.
-- The text is read on blur and on Enter. A date that can't be read, or one that can't be chosen, puts back the last good value. An empty field clears it.
-- The calendar opens from the button or Alt+↓ in the field, showing the typed or chosen month with focus on that day. Picking a day, Escape or a click outside closes it and returns focus to the field.
-- Uses Input's box (the `dk-input` classes and `--input-*` tokens), so it lines up with other fields.
-
-## Accessibility
-
-- The button has `aria-haspopup="dialog"` and `aria-expanded`; the popup is a `role="dialog"` in the top layer holding a Calendar (see its keyboard table).
-- Label the field with Field, `<label htmlFor>` or `aria-label`, and say the format in the hint for people who type.
-- The calendar icon keeps 3:1 on the field in all six themes (`tools/test/date-picker.mjs`).
-
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one picker. The list lives in `src/components/DatePicker/date-picker.tokens.json` (also in `design-tokens/components/`). The calendar inside uses the `--calendar-*` tokens.
@@ -55,3 +86,11 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |
 | `--date-picker-offset` | `spacing-1` | The gap between the field and the panel (4px). |
 | `--date-picker-z-index` | `z-50` | The panel's stacking order, where the top layer isn't available. |
+
+The field itself uses Input's box (the `dk-input` classes and `--input-*` tokens), so it lines up with other fields.
+
+## Related
+
+- [Field](../Field/README.md): the label, hint and error around it.
+- [DateRangePicker](../DateRangePicker/README.md): two dates, start and end.
+- [Calendar](../Calendar/README.md): the calendar on its own, always visible.
