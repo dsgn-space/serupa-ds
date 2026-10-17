@@ -11,10 +11,10 @@ const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'P
 // AvatarGroup and Carousel are in open pull requests with the old outline, so they're listed ahead of time.
 const PENDING = new Set([
   'Accordion', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'Calendar',
-  'Card', 'Carousel', 'Checkbox', 'Combobox', 'Container', 'DatePicker', 'DateRangePicker', 'Dialog',
-  'Divider', 'Drawer', 'EmptyState', 'Field', 'FileUpload', 'Grid', 'Heading', 'Icon', 'Image', 'Input', 'Kbd', 'List', 'Loader', 'Menu', 'Navbar', 'NumberInput', 'Pagination',
-  'PasswordInput', 'Popover', 'Progress', 'Radio', 'SearchInput', 'SegmentedControl', 'Select', 'Sidebar',
-  'Slider', 'Stack', 'Stepper', 'Switch', 'Table', 'Tabs', 'Text', 'Textarea', 'TimePicker', 'Toast',
+  'Card', 'Carousel', 'Container', 'DatePicker', 'DateRangePicker', 'Dialog',
+  'Divider', 'Drawer', 'EmptyState', 'FileUpload', 'Grid', 'Heading', 'Icon', 'Image', 'Kbd', 'List', 'Loader', 'Menu', 'Navbar', 'NumberInput', 'Pagination',
+  'PasswordInput', 'Popover', 'Progress', 'SearchInput', 'SegmentedControl', 'Sidebar',
+  'Stack', 'Stepper', 'Table', 'Tabs', 'Text', 'TimePicker', 'Toast',
   'Tooltip', 'VisuallyHidden'
 ]);
 
