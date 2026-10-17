@@ -2,8 +2,6 @@
 
 A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. Call `toast()` from anywhere; messages show in the `<Toaster>`, which you render once near the root of the app, and go away on their own.
 
-## Usage
-
 ```jsx
 const { Toaster, toast } = window.Diki;
 
@@ -23,7 +21,35 @@ toast({ id, title: "Saved", tone: "success" });
 toast.dismiss(id);   // or toast.dismiss() for all
 ```
 
-## toast(options)
+## When to use
+
+- Confirming an action people just took, when the result isn't obvious on the page: "Link copied", "Invite sent".
+- Offering a quick undo after an action, such as moving something to the trash.
+- Reporting on work that finishes in the background, such as a save or an export.
+
+## When not to use
+
+- Something people must read or act on before going on: use a [Dialog](../Dialog/README.md) instead.
+- A problem that stays until it's fixed, or a message about one part of the page: use an [Alert](../Alert/README.md) near that part instead.
+- An error on one field: use the error in [Field](../Field/README.md) instead.
+
+## Usage
+
+- Keep the title short and say what happened, in a few words: "Changes saved", not "Your changes have been saved successfully."
+- Use one `action` at most, for something quick such as Undo; the toast may go before people reach it.
+- For work that takes a while, show a toast with `duration: 0` and replace it by `id` when the work is done, as above.
+- Render one `<Toaster>` for the whole app, and keep its `position` the same on every page.
+
+## Accessibility
+
+- Each new toast is read out through the shared polite live region, so it doesn't interrupt.
+- The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1). Use `duration: 0` for anything people must act on, or better, an Alert or a Dialog.
+- Each toast has a close button; the Toaster is a named region people can find.
+- Titles and descriptions keep 4.5:1 and icons 3:1 in all six themes (`tools/test/toast.mjs`). Toasts slide in over 200ms, and appear at once with `prefers-reduced-motion`.
+
+## Props
+
+### toast(options)
 
 | Option | Type | Default | What it does |
 | --- | --- | --- | --- |
@@ -37,7 +63,7 @@ toast.dismiss(id);   // or toast.dismiss() for all
 
 It returns the toast's id. `toast.dismiss(id)` closes one, `toast.dismiss()` all of them.
 
-## Toaster
+### Toaster
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
@@ -46,13 +72,6 @@ It returns the toast's id. `toast.dismiss(id)` closes one, `toast.dismiss()` all
 | `dismissLabel` | string | `'Dismiss'` | The close buttons' name |
 
 `className`, `style` and other props go to the `<section>`, which has `data-component="toaster"` and `data-position`.
-
-## Accessibility
-
-- Each new toast is read out through the shared polite live region, so it doesn't interrupt.
-- The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1). Use `duration: 0` for anything people must act on, or better, an Alert or a Dialog.
-- Each toast has a close button; the Toaster is a named region people can find.
-- Titles and descriptions keep 4.5:1 and icons 3:1 in all six themes (`tools/test/toast.mjs`). Toasts slide in over 200ms, and appear at once with `prefers-reduced-motion`.
 
 ## Component tokens
 
