@@ -1,6 +1,6 @@
 {
   "menu": {
-    "$description": "Menu's component tokens. Each one is an optional override: set the CSS variable (--menu-<name>) on the page, a container or one menu, and every Menu inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Menu's component tokens. Each one is an optional override: set the CSS variable (--menu-<name>) on the page, a container or one menu, and every Menu inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",
@@ -18,8 +18,7 @@
         "$description": "The menu's border.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--menu-border",
-            "deprecatedCssVar": "--menu-border-color"
+            "cssVar": "--menu-border"
           }
         }
       },
@@ -29,8 +28,7 @@
         "$description": "An item's label.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--menu-item-text",
-            "deprecatedCssVar": "--menu-item-color"
+            "cssVar": "--menu-item-text"
           }
         }
       },

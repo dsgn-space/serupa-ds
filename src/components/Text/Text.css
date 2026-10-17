@@ -3,19 +3,21 @@
    primary, danger: each 4.5:1 on surface) and weight are set only when given, so anything unset follows the
    parent. truncate keeps it on one line with an ellipsis. Margins are left to the layout (none by default).
    --------------------------------------------------------------- */
-.dk-text { margin: var(--spacing-0, 0px); font-family: var(--font-sans); }
-.dk-text--xs { font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
-.dk-text--sm { font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem); }
-.dk-text--base { font-size: var(--text-base, 1rem); line-height: var(--text-base--line-height, 1.5rem); }
-.dk-text--lg { font-size: var(--text-lg, 1.125rem); line-height: var(--text-lg--line-height, 1.75rem); }
-.dk-text--xl { font-size: var(--text-xl, 1.25rem); line-height: var(--text-xl--line-height, 1.75rem); }
+@layer dk.components {
+.dk-text { margin: var(--spacing-0); font-family: var(--font-sans); }
+.dk-text--xs { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-text--sm { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-text--base { font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-text--lg { font-size: var(--text-lg); line-height: var(--text-lg--line-height); }
+.dk-text--xl { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
 .dk-text--default { color: var(--text-color, var(--text)); }
 .dk-text--muted { color: var(--text-color-muted, var(--text-muted)); }
 .dk-text--primary { color: var(--text-color-primary, var(--primary)); }
 .dk-text--danger { color: var(--text-color-danger, var(--danger-text)); }
-.dk-text--normal { font-weight: var(--font-normal, 400); }
-.dk-text--medium { font-weight: var(--font-medium, 500); }
-.dk-text--semibold { font-weight: var(--font-semibold, 600); }
-.dk-text--bold { font-weight: var(--font-bold, 700); }
+.dk-text--normal { font-weight: var(--font-normal); }
+.dk-text--medium { font-weight: var(--font-medium); }
+.dk-text--semibold { font-weight: var(--font-semibold); }
+.dk-text--bold { font-weight: var(--font-bold); }
 .dk-text--truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 span.dk-text--truncate, strong.dk-text--truncate, em.dk-text--truncate, small.dk-text--truncate, label.dk-text--truncate { display: block; }
+}

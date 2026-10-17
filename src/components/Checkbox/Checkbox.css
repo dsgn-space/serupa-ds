@@ -4,17 +4,18 @@
    .dk-checkbox__control (.dk-checkbox__input, .dk-checkbox__icon), .dk-checkbox__text (.dk-checkbox__label,
    .dk-checkbox__description). Every value goes through --checkbox-* tokens.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-checkbox {
-  --dk-checkbox-box: var(--checkbox-size-md, var(--spacing-4, 1rem));
-  --dk-checkbox-icon: var(--checkbox-icon-size-md, var(--spacing-3\.5, 0.875rem));
-  --dk-checkbox-lh: var(--text-sm--line-height, 1.25rem);
-  display: inline-flex; align-items: flex-start; gap: var(--checkbox-gap, var(--spacing-2, 0.5rem));
+  --dk-checkbox-box: var(--checkbox-size-md, var(--spacing-4));
+  --dk-checkbox-icon: var(--checkbox-icon-size-md, var(--spacing-3\.5));
+  --dk-checkbox-lh: var(--text-sm--line-height);
+  display: inline-flex; align-items: flex-start; gap: var(--checkbox-gap, var(--spacing-2));
   vertical-align: top; color: var(--checkbox-label-color, var(--text));
-  font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--dk-checkbox-lh);
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--dk-checkbox-lh);
   cursor: pointer;
 }
-.dk-checkbox--size-sm { --dk-checkbox-box: var(--checkbox-size-sm, var(--spacing-3\.5, 0.875rem)); --dk-checkbox-icon: var(--checkbox-icon-size-sm, var(--spacing-3, 0.75rem)); --dk-checkbox-lh: var(--text-xs--line-height, 1rem); font-size: var(--text-xs, 0.75rem); }
-.dk-checkbox--size-lg { --dk-checkbox-box: var(--checkbox-size-lg, var(--spacing-5, 1.25rem)); --dk-checkbox-icon: var(--checkbox-icon-size-lg, var(--spacing-4, 1rem)); --dk-checkbox-lh: var(--text-base--line-height, 1.5rem); font-size: var(--text-base, 1rem); }
+.dk-checkbox--size-sm { --dk-checkbox-box: var(--checkbox-size-sm, var(--spacing-3\.5)); --dk-checkbox-icon: var(--checkbox-icon-size-sm, var(--spacing-3)); --dk-checkbox-lh: var(--text-xs--line-height); font-size: var(--text-xs); }
+.dk-checkbox--size-lg { --dk-checkbox-box: var(--checkbox-size-lg, var(--spacing-5)); --dk-checkbox-icon: var(--checkbox-icon-size-lg, var(--spacing-4)); --dk-checkbox-lh: var(--text-base--line-height); font-size: var(--text-base); }
 .dk-checkbox__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; height: var(--dk-checkbox-lh); }
 .dk-checkbox--bare .dk-checkbox__control { height: var(--dk-checkbox-box); }
 .dk-checkbox__input {
@@ -22,29 +23,29 @@
   --dk-checkbox-fill: var(--checkbox-bg-checked, var(--primary));
   --dk-checkbox-ring: var(--checkbox-focus-ring, var(--focus-ring));
   appearance: none; -webkit-appearance: none;
-  box-sizing: border-box; flex-shrink: 0; width: var(--dk-checkbox-box); height: var(--dk-checkbox-box); margin: var(--spacing-0, 0px);
+  box-sizing: border-box; flex-shrink: 0; width: var(--dk-checkbox-box); height: var(--dk-checkbox-box); margin: var(--spacing-0);
   background: var(--checkbox-bg, var(--field));
-  border: var(--checkbox-border-width, var(--border-width-1, 1px)) solid var(--dk-checkbox-bd);
-  border-radius: var(--checkbox-radius, var(--rounded-sm, 0.25rem));
+  border: var(--checkbox-border-width, var(--border-width-1)) solid var(--dk-checkbox-bd);
+  border-radius: var(--checkbox-radius, var(--rounded-sm));
   cursor: inherit;
-  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), border-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--duration-150) var(--ease-in-out), border-color var(--duration-150) var(--ease-in-out);
 }
 .dk-checkbox:hover .dk-checkbox__input:not(:disabled) { --dk-checkbox-bd: var(--checkbox-border-hover, var(--field-border-hover)); --dk-checkbox-fill: var(--checkbox-bg-checked-hover, var(--primary-hover)); }
 .dk-checkbox__input:checked, .dk-checkbox__input:indeterminate { background: var(--dk-checkbox-fill); border-color: var(--dk-checkbox-fill); }
-.dk-checkbox__icon { position: absolute; inset: var(--spacing-0, 0px); display: flex; align-items: center; justify-content: center; color: var(--checkbox-icon-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
+.dk-checkbox__icon { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--checkbox-icon-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-checkbox__icon .dk-icon { font-size: var(--dk-checkbox-icon); }
 .dk-checkbox__input:checked + .dk-checkbox__icon, .dk-checkbox__input:indeterminate + .dk-checkbox__icon { visibility: visible; }
 /* Focus: a 2px ring outside a 2px surface gap, like Button; the transparent outline is drawn in forced-colors mode. */
 .dk-checkbox__input:focus-visible {
-  box-shadow: 0 0 0 var(--outline-offset-2, 2px) var(--surface), 0 0 0 calc(var(--outline-offset-2, 2px) + var(--outline-width-2, 2px)) var(--dk-checkbox-ring);
-  outline: var(--outline-width-2, 2px) solid transparent; outline-offset: var(--outline-offset-2, 2px);
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-checkbox-ring);
+  outline: var(--outline-width-2) solid transparent; outline-offset: var(--outline-offset-2);
 }
 /* Invalid: a danger border while unchecked, and a danger focus ring. A checked box keeps its fill. */
 .dk-checkbox--invalid .dk-checkbox__input, .dk-checkbox--invalid:hover .dk-checkbox__input:not(:disabled) { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); }
-.dk-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0, 0px); }
+.dk-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0); }
 .dk-checkbox__description { color: var(--checkbox-description-color, var(--text-muted)); }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
-.dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+.dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-50); cursor: not-allowed; }
 .dk-checkbox__input:disabled:not(:checked, :indeterminate) { background: var(--checkbox-bg-disabled, var(--surface-muted)); }
 @media (forced-colors: active) { .dk-checkbox__icon { color: CanvasText; } }
-
+}

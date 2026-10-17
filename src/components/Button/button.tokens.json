@@ -1,6 +1,6 @@
 {
   "button": {
-    "$description": "Button's component tokens. Each one is an optional override: set the CSS variable (--button-<name>) on the page, a container or one button, and every Button inside follows. Unset, it uses the shared token it references here, resolved in the button's own theme. tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Button's component tokens. Each one is an optional override: set the CSS variable (--button-<name>) on the page, a container or one button, and every Button inside follows. Unset, it uses the shared token it references here, resolved in the button's own theme. tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "primary-bg": {
         "$type": "color",

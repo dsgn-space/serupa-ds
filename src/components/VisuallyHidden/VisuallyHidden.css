@@ -2,8 +2,10 @@
    VisuallyHidden: a 1px clipped box, out of the layout, that screen readers still read. --focusable comes
    back (in its own place, unclipped) while it or something inside it has focus.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-visually-hidden:not(.dk-visually-hidden--focusable:focus-within) {
-  position: absolute; width: var(--spacing-px, 1px); height: var(--spacing-px, 1px);
-  margin: calc(var(--spacing-0, 0px) - var(--spacing-px, 1px)); padding: var(--spacing-0, 0px); border: var(--spacing-0, 0px);
+  position: absolute; width: var(--spacing-px); height: var(--spacing-px);
+  margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0); border: var(--spacing-0);
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
 }

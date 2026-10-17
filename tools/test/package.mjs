@@ -66,7 +66,8 @@ const dts = fs.existsSync(path.join(PROJECT, 'dist', 'index.d.ts')) ? read('dist
 const missingTypes = ['Badge', 'Button', 'Checkbox', 'Field', 'Icon', 'Input', 'Loader', 'Radio', 'RadioGroup', 'Select', 'Switch', 'Textarea', 'ButtonProps', 'InputProps', 'DikiConfig', 'CustomIconName']
   .filter((n) => !new RegExp(`\\b${n}\\b`).test(dts));
 t('dist/index.d.ts declares every component and its props', dts && !missingTypes.length, missingTypes.join(', '));
-const body = (f) => read(f).replace(/^\/\*![^\n]*\*\/\n/, '');
+// Each file starts with its banner and the cascade layer order; the rest is the styles.
+const body = (f) => read(f).replace(/^\/\*![^\n]*\*\/\n@layer [^;]*;\n/, '');
 t('bundle.css = components.css + utilities.css', body('dist/bundle.css') === body('dist/components.css') + body('dist/utilities.css'));
 t('components.css holds no utility classes (only dk-* and the keyframes they use)', !/^\.(?!dk-)[a-z]/m.test(body('dist/components.css').replace(/\/\*[\s\S]*?\*\//g, '')));
 t('the browser script and bundle.js are the same file', read('dist/diki.iife.js') === read('dist/bundle.js'));

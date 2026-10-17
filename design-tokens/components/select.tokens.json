@@ -1,6 +1,6 @@
 {
   "select": {
-    "$description": "Select's component tokens. Each one is an optional override: set the CSS variable (--select-<name>) on the page, a container or one select, and every Select inside follows. Unset, it uses the shared token it references here, the same ones Input uses; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Select's component tokens. Each one is an optional override: set the CSS variable (--select-<name>) on the page, a container or one select, and every Select inside follows. Unset, it uses the shared token it references here, the same ones Input uses; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",

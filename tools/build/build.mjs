@@ -35,7 +35,9 @@ const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => 
 if (missing.length) { console.error(`Add ${missing.join(', ')} to the @import list in src/styles/index.css`); process.exit(1); }
 const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join('');
 const utilities = read('src/styles/utilities.css');
-const banner = (what) => `/*! Diki Design System v${version} · ${what} · CHANGELOG.md */\n`;
+// Each file declares the system's cascade layers in one order (dk.tokens, dk.base, dk.components, dk.utilities),
+// so page styles outside the layers win over them whatever loads first.
+const banner = (what) => `/*! Diki Design System v${version} · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + components);
 fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + utilities);
 fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + components + utilities);

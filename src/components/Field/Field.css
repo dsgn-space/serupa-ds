@@ -3,16 +3,17 @@
    around several). Structure: .dk-field > .dk-field__label (with .dk-field__required or .dk-field__optional),
    .dk-field__hint, .dk-field__control, .dk-field__error. Every value goes through --field-* tokens.
    --------------------------------------------------------------- */
-.dk-field { display: flex; flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5, 0.375rem)); min-width: var(--spacing-0, 0px); font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem); color: var(--text); }
-.dk-field--group { margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); border: 0; }
-.dk-field__label { display: block; padding: var(--spacing-0, 0px); color: var(--field-label-color, var(--text)); font-weight: var(--field-label-weight, var(--font-medium, 500)); }
-.dk-field--group > .dk-field__label { float: left; width: var(--sizing-full, 100%); }   /* a floated legend lays out like the label of a single field */
+@layer dk.components {
+.dk-field { display: flex; flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--text); }
+.dk-field--group { margin: var(--spacing-0); padding: var(--spacing-0); border: 0; }
+.dk-field__label { display: block; padding: var(--spacing-0); color: var(--field-label-color, var(--text)); font-weight: var(--field-label-weight, var(--font-medium)); }
+.dk-field--group > .dk-field__label { float: left; width: var(--sizing-full); }   /* a floated legend lays out like the label of a single field */
 .dk-field--group > .dk-field__label + * { clear: both; }
-.dk-field__required { margin-inline-start: var(--spacing-0\.5, 0.125rem); color: var(--field-required-color, var(--danger-text)); }
-.dk-field__optional { margin-inline-start: var(--spacing-1, 0.25rem); color: var(--field-hint-color, var(--text-muted)); font-weight: var(--font-normal, 400); }
+.dk-field__required { margin-inline-start: var(--spacing-0\.5); color: var(--field-required-color, var(--danger-text)); }
+.dk-field__optional { margin-inline-start: var(--spacing-1); color: var(--field-hint-color, var(--text-muted)); font-weight: var(--font-normal); }
 .dk-field__hint { color: var(--field-hint-color, var(--text-muted)); }
-.dk-field__control { display: flex; flex-direction: column; gap: var(--spacing-2, 0.5rem); min-width: var(--spacing-0, 0px); }
-.dk-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1, 0.25rem)); color: var(--field-error-color, var(--danger-text)); }
-.dk-field__error .dk-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-4, 1rem)); height: var(--text-sm--line-height, 1.25rem); line-height: var(--text-sm--line-height, 1.25rem); }   /* centered on the first line */
-.dk-field--disabled > .dk-field__label, .dk-field--disabled > .dk-field__hint { opacity: var(--opacity-50, 50%); }
-
+.dk-field__control { display: flex; flex-direction: column; gap: var(--spacing-2); min-width: var(--spacing-0); }
+.dk-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--danger-text)); }
+.dk-field__error .dk-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }   /* centered on the first line */
+.dk-field--disabled > .dk-field__label, .dk-field--disabled > .dk-field__hint { opacity: var(--opacity-50); }
+}

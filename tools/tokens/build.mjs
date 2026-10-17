@@ -9,6 +9,7 @@
 //   :root                                 every other token, the font families, and the type-* shorthands
 //   .type-*                               one class per complete text style
 //   @font-face                            the fonts in fonts/
+// Everything but the @font-face rules sits in the dk.tokens cascade layer, the first of the system's layers.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -25,6 +26,7 @@ export function buildTokensCss(t) {
   const all = groups.flatMap((g) => g.tokens);
 
   let css = '/* Diki Design System — generated from tokens.json */\n';
+  css += '@layer dk.tokens, dk.base, dk.components, dk.utilities;\n@layer dk.tokens {\n';
   css += `:root, [data-theme="${themes[0]}"] {\n`;
   for (const x of all.filter(themed)) css += line(x.name, x.value[themes[0]], x.usage);
   css += '}\n';
@@ -46,6 +48,7 @@ export function buildTokensCss(t) {
     if (s.opticalSize != null) css += `  font-variation-settings: "opsz" ${s.opticalSize};\n`;
     css += '}\n';
   }
+  css += '}\n';
   for (const f of t.type.fonts || [])
     css += `@font-face {\n  font-family: "${f.family}";\n  src: url("${f.file}") format("woff2");\n  font-weight: ${f.weight};\n  font-style: ${f.style};\n  font-display: swap;\n}\n`;
   return css;

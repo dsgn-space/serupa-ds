@@ -1,6 +1,6 @@
 {
   "slider": {
-    "$description": "Slider's component tokens. Each one is an optional override: set the CSS variable (--slider-<name>) on the page, a container or one slider, and every Slider inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Slider's component tokens. Each one is an optional override: set the CSS variable (--slider-<name>) on the page, a container or one slider, and every Slider inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "track": {
         "$type": "color",

@@ -1,6 +1,6 @@
 {
   "number-input": {
-    "$description": "NumberInput's component tokens. Each one is an optional override: set the CSS variable (--number-input-<name>) on the page, a container or one field, and every NumberInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The box itself uses Input's tokens.",
+    "$description": "NumberInput's component tokens. Each one is an optional override: set the CSS variable (--number-input-<name>) on the page, a container or one field, and every NumberInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The box itself uses Input's tokens.",
     "color": {
       "stepper": {
         "$type": "color",

@@ -21,7 +21,7 @@ function App() {
       h(I, { id: 'irouter', as: RouterLink, linkProps: { to: '/team' }, title: 'Team' }),
       h(I, { id: 'idis', href: '#dis', title: 'Disabled', disabled: true })),
     h(D.List, { id: 'lnodiv', divided: false, variant: 'boxed', as: 'table' }, h(I, { title: 'A' }), h(I, { title: 'B' })),
-    h(D.List, { id: 'ltok', style: { '--list-padding-y': '5px', '--list-title': 'rgb(1, 2, 3)' } }, h(I, { title: 'T' })));
+    h(D.List, { id: 'ltok', style: { '--list-padding-y': '5px', '--list-title-color': 'rgb(1, 2, 3)' } }, h(I, { title: 'T' })));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -74,7 +74,7 @@ t('disabled: no href, aria-disabled, out of the tab order, dimmed, clicks do not
 const nd = await p.evaluate(() => { const l = document.getElementById('lnodiv'); return [l.tagName, l.className, getComputedStyle(l.children[1]).borderTopWidth].join(); });
 t('divided={false}: no lines; unknown variant and as fall back to plain and ul', nd === 'UL,dk-list,0px', nd);
 const tk = await p.evaluate(() => { const li = document.querySelector('#ltok li'); return [getComputedStyle(li.querySelector('.dk-list__main')).paddingTop, getComputedStyle(li.querySelector('.dk-list__title')).color].join(); });
-t('List tokens (--list-padding-y, --list-title) override one list', tk === '5px,rgb(1, 2, 3)', tk);
+t('List tokens (--list-padding-y, --list-title-color) override one list', tk === '5px,rgb(1, 2, 3)', tk);
 
 const contrast = await p.evaluate(() => {
   const rgb = (c) => c.match(/[\d.]+/g).map(Number);

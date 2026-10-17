@@ -23,7 +23,7 @@ function App() {
     h(A, { id: 'afixed', collapsible: false, defaultValue: ['p', 'q'] }, h(I, { value: 'p', title: 'P' }, 'p'), h(I, { value: 'q', title: 'Q' }, 'q')),
     h(Controlled),
     h(A, { id: 'abad', variant: 'boxed', headingLevel: 9 }, h(I, { title: 'Bad' }, 'b')),
-    h(A, { id: 'atok', style: { '--accordion-title': 'rgb(1, 2, 3)', '--accordion-padding-y': '7px' } }, h(I, { title: 'T' }, 't')));
+    h(A, { id: 'atok', style: { '--accordion-title-color': 'rgb(1, 2, 3)', '--accordion-padding-y': '7px' } }, h(I, { title: 'T' }, 't')));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -89,7 +89,7 @@ t('controlled: onValueChange gets the open values, the parent sets them', (await
 const bad = await p.evaluate(() => { const a = document.getElementById('abad'); return [a.className, a.querySelector('.dk-accordion__heading').tagName].join(); });
 t('unknown variant and headingLevel fall back to plain and h3', bad === 'dk-accordion,H3', bad);
 const tk = await st('#atok .dk-accordion__trigger', ['color', 'paddingTop']);
-t('Accordion tokens (--accordion-title, --accordion-padding-y) override one accordion', tk.color === 'rgb(1, 2, 3)' && tk.paddingTop === '7px', JSON.stringify(tk));
+t('Accordion tokens (--accordion-title-color, --accordion-padding-y) override one accordion', tk.color === 'rgb(1, 2, 3)' && tk.paddingTop === '7px', JSON.stringify(tk));
 
 const contrast = await p.evaluate(() => {
   const rgb = (c) => c.match(/[\d.]+/g).map(Number);

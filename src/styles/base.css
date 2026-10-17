@@ -2,6 +2,8 @@
 /* Diki base: page defaults. Optional — load it after tokens.css and before bundle.css on pages
    built with the system; leave it out when the system is dropped into an existing app.
    Every value is a token. It sets defaults only (all selectors are :where(), so any class wins). */
+@layer dk.tokens, dk.base, dk.components, dk.utilities;
+@layer dk.base {
 
 /* Sizing includes padding and border everywhere, the way components are measured. */
 :where(*, *::before, *::after) { box-sizing: border-box; }
@@ -17,12 +19,12 @@
 }
 
 :where(body) {
-  margin: var(--spacing-0, 0px);
+  margin: var(--spacing-0);
   background-color: var(--surface);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: var(--text-base, 1rem);
-  line-height: var(--text-base--line-height, 1.5rem);
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -32,29 +34,29 @@
 :where(button, input, select, textarea) { font: inherit; letter-spacing: inherit; color: inherit; }
 
 /* Media fits its container and keeps its proportions. */
-:where(img, svg, video, canvas, picture) { display: block; max-width: var(--sizing-full, 100%); }
-:where(img, video) { height: var(--sizing-auto, auto); }
+:where(img, svg, video, canvas, picture) { display: block; max-width: var(--sizing-full); }
+:where(img, video) { height: var(--sizing-auto); }
 
 /* Headings and paragraphs: no browser margins; space them with the spacing utilities. */
-:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) { margin: var(--spacing-0, 0px); }
+:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) { margin: var(--spacing-0); }
 :where(h1, h2, h3, h4, h5, h6) { text-wrap: balance; }
 :where(p) { text-wrap: pretty; }
 
-:where(a) { color: var(--primary); text-underline-offset: var(--underline-offset-2, 2px); }
+:where(a) { color: var(--primary); text-underline-offset: var(--underline-offset-2); }
 :where(a:hover) { color: var(--primary-hover); }
 
-:where(hr) { border: var(--border-width-0, 0px); border-top: var(--border-width-1, 1px) solid var(--border); margin: var(--spacing-0, 0px); }
+:where(hr) { border: var(--border-width-0); border-top: var(--border-width-1) solid var(--border); margin: var(--spacing-0); }
 
 :where(code, kbd, samp, pre) { font-family: var(--font-mono); }
 
 ::selection { background-color: var(--primary-subtle); color: var(--text); }   /* pseudo-elements can't go inside :where(); a utility on the element still wins */
 
-::placeholder { color: var(--placeholder); opacity: var(--opacity-100, 100%); }
+::placeholder { color: var(--placeholder); opacity: var(--opacity-100); }
 
 /* One visible focus style for every focusable element (WCAG 2.4.7); components may draw their own. */
 :where(:focus-visible) {
-  outline: var(--outline-width-2, 2px) solid var(--focus-ring);
-  outline-offset: var(--outline-offset-2, 2px);
+  outline: var(--outline-width-2) solid var(--focus-ring);
+  outline-offset: var(--outline-offset-2);
 }
 
 /* Hidden means hidden, even on elements that set their own display. */
@@ -63,5 +65,6 @@
 /* Respect reduced motion across the page: no smooth scrolling, near-instant transitions. */
 @media (prefers-reduced-motion: reduce) {
   :where(html) { scroll-behavior: auto; }
-  :where(*, *::before, *::after) { transition-duration: var(--duration-0, 0ms) !important; scroll-behavior: auto !important; }
+  :where(*, *::before, *::after) { transition-duration: var(--duration-0) !important; scroll-behavior: auto !important; }
+}
 }

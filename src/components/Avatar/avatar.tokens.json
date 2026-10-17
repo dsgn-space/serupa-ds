@@ -1,6 +1,6 @@
 {
   "avatar": {
-    "$description": "Avatar's component tokens. Each one is an optional override: set the CSS variable (--avatar-<name>) on the page, a container or one avatar, and every Avatar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Avatar's component tokens. Each one is an optional override: set the CSS variable (--avatar-<name>) on the page, a container or one avatar, and every Avatar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",
@@ -18,8 +18,7 @@
         "$description": "The initials and the fallback icon (4.5:1 on the background).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--avatar-text",
-            "deprecatedCssVar": "--avatar-color"
+            "cssVar": "--avatar-text"
           }
         }
       },

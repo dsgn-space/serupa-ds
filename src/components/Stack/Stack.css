@@ -2,8 +2,9 @@
    Stack: a flex column (or row) with gap from the spacing scale (--dk-stack-gap, set from the gap prop, else
    --stack-gap). Lists lose their bullets and margins.
    --------------------------------------------------------------- */
-.dk-stack { display: flex; flex-direction: column; gap: var(--dk-stack-gap, var(--stack-gap, var(--spacing-4, 1rem))); min-width: var(--spacing-0, 0px); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
-fieldset.dk-stack { border: var(--spacing-0, 0px); }
+@layer dk.components {
+.dk-stack { display: flex; flex-direction: column; gap: var(--dk-stack-gap, var(--stack-gap, var(--spacing-4))); min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+fieldset.dk-stack { border: var(--spacing-0); }
 .dk-stack--row { flex-direction: row; }
 .dk-stack--wrap { flex-wrap: wrap; }
 .dk-stack--align-stretch { align-items: stretch; }
@@ -14,3 +15,4 @@ fieldset.dk-stack { border: var(--spacing-0, 0px); }
 .dk-stack--justify-center { justify-content: center; }
 .dk-stack--justify-end { justify-content: flex-end; }
 .dk-stack--justify-between { justify-content: space-between; }
+}

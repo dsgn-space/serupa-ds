@@ -1,6 +1,6 @@
 {
   "link": {
-    "$description": "Link's component tokens. Each one is an optional override: set the CSS variable (--link-<name>) on the page, a container or one link, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Link's component tokens. Each one is an optional override: set the CSS variable (--link-<name>) on the page, a container or one link, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "color": {
         "$type": "color",
@@ -8,8 +8,7 @@
         "$description": "tone=\"primary\" text and underline (4.5:1 on surface).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--link-text",
-            "deprecatedCssVar": "--link-color"
+            "cssVar": "--link-text"
           }
         }
       },
@@ -19,8 +18,7 @@
         "$description": "tone=\"primary\" on hover.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--link-text-hover",
-            "deprecatedCssVar": "--link-color-hover"
+            "cssVar": "--link-text-hover"
           }
         }
       },

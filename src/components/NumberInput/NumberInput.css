@@ -3,17 +3,19 @@
    hover, faded when they'd go past min or max. The buttons are skipped by Tab: the arrow keys do the same.
    Digits line up (tabular numbers).
    --------------------------------------------------------------- */
-.dk-number-input--steppers { padding-inline-end: var(--number-input-stepper-padding, var(--spacing-1, 0.25rem)); }
+@layer dk.components {
+.dk-number-input--steppers { padding-inline-end: var(--number-input-stepper-padding, var(--spacing-1)); }
 .dk-number-input .dk-input__field { font-variant-numeric: tabular-nums; }
-.dk-number-input__steppers { display: inline-flex; align-items: center; gap: var(--number-input-stepper-gap, var(--spacing-0\.5, 0.125rem)); flex-shrink: 0; }
+.dk-number-input__steppers { display: inline-flex; align-items: center; gap: var(--number-input-stepper-gap, var(--spacing-0\.5)); flex-shrink: 0; }
 .dk-number-input__step {
-  display: inline-flex; align-items: center; justify-content: center; padding: var(--number-input-stepper-padding, var(--spacing-1, 0.25rem));
-  border: var(--spacing-0, 0px); border-radius: var(--number-input-stepper-radius, var(--rounded-sm, 0.25rem)); background: transparent;
+  display: inline-flex; align-items: center; justify-content: center; padding: var(--number-input-stepper-padding, var(--spacing-1));
+  border: var(--spacing-0); border-radius: var(--number-input-stepper-radius, var(--rounded-sm)); background: transparent;
   color: var(--number-input-stepper, var(--text-muted)); cursor: pointer;
-  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
 .dk-number-input__step .dk-icon { font-size: var(--dk-input-icon); }
 .dk-number-input__step:hover:not(:disabled) { background: var(--number-input-stepper-bg-hover, var(--secondary)); color: var(--number-input-stepper-hover, var(--text)); }
-.dk-number-input__step:disabled { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
-.dk-input--disabled .dk-number-input__step:disabled { opacity: var(--opacity-100, 100%); }
+.dk-number-input__step:disabled { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-input--disabled .dk-number-input__step:disabled { opacity: var(--opacity-100); }
 @media (prefers-reduced-motion: reduce) { .dk-number-input__step { transition: none; } }
+}

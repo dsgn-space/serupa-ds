@@ -12,7 +12,7 @@ function App() {
     h(E, { id: 'esm', size: 'sm', variant: 'dashed', icon: 'search_off', title: 'No results', headingLevel: 4 }),
     h(E, { id: 'ecustom', icon: h('svg', { width: 80, height: 60, id: 'art' }), title: 'Custom art' }),
     h(E, { id: 'ebad', size: 'xl', variant: 'boxed', headingLevel: 9, title: 'Bad' }),
-    h(E, { id: 'etok', title: 'T', icon: 'inbox', style: { '--empty-state-icon-box': '64px', '--empty-state-title': 'rgb(1, 2, 3)' } }));
+    h(E, { id: 'etok', title: 'T', icon: 'inbox', style: { '--empty-state-icon-box': '64px', '--empty-state-title-color': 'rgb(1, 2, 3)' } }));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -39,7 +39,7 @@ t('an element as the icon (an illustration) shows at its own size, without the c
 const bad = await p.evaluate(() => { const e = document.getElementById('ebad'); return [e.className, e.querySelector('h3') !== null, e.querySelector('.dk-empty-state__icon') === null].join(); });
 t('unknown size, variant and headingLevel fall back to md, plain and h3; no icon when none is given', bad === 'dk-empty-state,true,true', bad);
 const tk = await p.evaluate(() => { const e = document.getElementById('etok'); return [e.querySelector('.dk-empty-state__icon').getBoundingClientRect().width, getComputedStyle(e.querySelector('.dk-empty-state__title')).color].join(); });
-t('EmptyState tokens (--empty-state-icon-box, --empty-state-title) override one empty state', tk === '64,rgb(1, 2, 3)', tk);
+t('EmptyState tokens (--empty-state-icon-box, --empty-state-title-color) override one empty state', tk === '64,rgb(1, 2, 3)', tk);
 await p.focus('#act');
 t('the actions are reachable with the keyboard', (await p.evaluate(() => document.activeElement.id)) === 'act');
 

@@ -4,45 +4,46 @@
    .dk-select__icon--left, .dk-select__field (the native <select>), .dk-select__icon--chevron. Every value goes
    through --select-* tokens.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-select {
-  --dk-select-h: var(--select-height-md, var(--control-height-md, 2rem));
-  --dk-select-px: var(--select-padding-x-md, var(--spacing-3, 0.75rem));
-  --dk-select-icon: var(--select-icon-size-md, var(--spacing-4, 1rem));
+  --dk-select-h: var(--select-height-md, var(--control-height-md));
+  --dk-select-px: var(--select-padding-x-md, var(--spacing-3));
+  --dk-select-icon: var(--select-icon-size-md, var(--spacing-4));
   --dk-select-bd: var(--select-border, var(--field-border));
   --dk-select-ring: var(--select-focus-ring, var(--focus-ring));
   position: relative; display: inline-flex;
-  box-sizing: border-box; width: var(--sizing-full, 100%); height: var(--dk-select-h);
+  box-sizing: border-box; width: var(--sizing-full); height: var(--dk-select-h);
   background: var(--select-bg, var(--field)); color: var(--text);
-  border: var(--select-border-width, var(--border-width-1, 1px)) solid var(--dk-select-bd);
-  border-radius: var(--select-radius, var(--rounded-md, 0.375rem));
-  font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem);
+  border: var(--select-border-width, var(--border-width-1)) solid var(--dk-select-bd);
+  border-radius: var(--select-radius, var(--rounded-md));
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   vertical-align: middle;
-  transition: border-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: border-color var(--duration-150) var(--ease-in-out), box-shadow var(--duration-150) var(--ease-in-out);
 }
-.dk-select--size-sm { --dk-select-h: var(--select-height-sm, var(--control-height-sm, 1.5rem)); --dk-select-px: var(--select-padding-x-sm, var(--spacing-2, 0.5rem)); --dk-select-icon: var(--select-icon-size-sm, var(--spacing-3\.5, 0.875rem)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
-.dk-select--size-lg { --dk-select-h: var(--select-height-lg, var(--control-height-lg, 2.75rem)); --dk-select-px: var(--select-padding-x-lg, var(--spacing-4, 1rem)); --dk-select-icon: var(--select-icon-size-lg, var(--spacing-5, 1.25rem)); font-size: var(--text-base, 1rem); line-height: var(--text-base--line-height, 1.5rem); }
+.dk-select--size-sm { --dk-select-h: var(--select-height-sm, var(--control-height-sm)); --dk-select-px: var(--select-padding-x-sm, var(--spacing-2)); --dk-select-icon: var(--select-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-select--size-lg { --dk-select-h: var(--select-height-lg, var(--control-height-lg)); --dk-select-px: var(--select-padding-x-lg, var(--spacing-4)); --dk-select-icon: var(--select-icon-size-lg, var(--spacing-5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-select__field {
   appearance: none; -webkit-appearance: none;
-  flex: auto; box-sizing: border-box; width: var(--sizing-full, 100%); min-width: var(--spacing-0, 0px); height: var(--sizing-full, 100%);
-  margin: var(--spacing-0, 0px); border: 0; border-radius: inherit; background: transparent; outline: none;
-  padding-block: var(--spacing-0, 0px);
-  padding-inline: var(--dk-select-px) calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2, 0.5rem)));
+  flex: auto; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0); height: var(--sizing-full);
+  margin: var(--spacing-0); border: 0; border-radius: inherit; background: transparent; outline: none;
+  padding-block: var(--spacing-0);
+  padding-inline: var(--dk-select-px) calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2)));
   color: inherit; font: inherit; letter-spacing: inherit; text-overflow: ellipsis; cursor: pointer;
 }
-.dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2, 0.5rem))); }
+.dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2))); }
 .dk-select__field option, .dk-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--text); }
 .dk-select--empty .dk-select__field { color: var(--select-placeholder, var(--placeholder)); }
-.dk-select__icon { position: absolute; inset-block: var(--spacing-0, 0px); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
+.dk-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
 .dk-select__icon--left { inset-inline-start: var(--dk-select-px); }
 .dk-select__icon--chevron { inset-inline-end: var(--dk-select-px); }
 .dk-select__icon .dk-icon { font-size: var(--dk-select-icon); }
 .dk-select:hover:not(.dk-select--disabled, :focus-within) { --dk-select-bd: var(--select-border-hover, var(--field-border-hover)); }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws. */
-.dk-select:focus-within { --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1, 1px)) var(--dk-select-ring); outline: var(--outline-width-2, 2px) solid transparent; outline-offset: var(--spacing-0, 0px); }
+.dk-select:focus-within { --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring); outline: var(--outline-width-2) solid transparent; outline-offset: var(--spacing-0); }
 .dk-select--invalid { --dk-select-bd: var(--select-invalid, var(--danger)); --dk-select-ring: var(--select-invalid, var(--danger)); }
 .dk-select--invalid:hover:not(.dk-select--disabled, :focus-within) { --dk-select-bd: var(--select-invalid, var(--danger)); }
-.dk-select--disabled { background: var(--select-bg-disabled, var(--surface-muted)); opacity: var(--opacity-50, 50%); }
+.dk-select--disabled { background: var(--select-bg-disabled, var(--surface-muted)); opacity: var(--opacity-50); }
 .dk-select--disabled .dk-select__field { cursor: not-allowed; }
 @media (forced-colors: active) { .dk-select__icon { color: CanvasText; } }
-
+}

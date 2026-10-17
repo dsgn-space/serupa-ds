@@ -4,41 +4,43 @@
    icon, shaded on hover; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-sidebar {
-  box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs, 16rem)); height: var(--sizing-full, 100%); flex-shrink: 0;
-  background: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1, 1px)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
-  transition: width var(--duration-200, 200ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0;
+  background: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
+  transition: width var(--duration-200) var(--ease-in-out);
 }
-.dk-sidebar--collapsed { width: var(--sidebar-width-collapsed, var(--spacing-16, 4rem)); }
-.dk-sidebar__header, .dk-sidebar__footer { flex-shrink: 0; padding: var(--sidebar-padding, var(--spacing-3, 0.75rem)); }
-.dk-sidebar__footer { border-top: var(--sidebar-border-width, var(--border-width-1, 1px)) solid var(--sidebar-border, var(--border)); }
-.dk-sidebar__body { display: flex; flex-direction: column; gap: var(--sidebar-section-gap, var(--spacing-6, 1.5rem)); flex: auto; min-height: var(--spacing-0, 0px); overflow-y: auto; padding: var(--sidebar-padding, var(--spacing-3, 0.75rem)); }
-.dk-sidebar__section-title { padding: var(--spacing-0, 0px) var(--sidebar-item-padding-x, var(--spacing-3, 0.75rem)) var(--spacing-2, 0.5rem); color: var(--sidebar-section-title-color, var(--sidebar-section-title, var(--text-muted))); font-size: var(--sidebar-section-title-size, var(--text-xs, 0.75rem)); line-height: var(--text-xs--line-height, 1rem); font-weight: var(--font-medium, 500); }
-.dk-sidebar__list { display: flex; flex-direction: column; gap: var(--spacing-0\.5, 0.125rem); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
-.dk-sidebar__list--nested { margin-top: var(--spacing-0\.5, 0.125rem); }
+.dk-sidebar--collapsed { width: var(--sidebar-width-collapsed, var(--spacing-16)); }
+.dk-sidebar__header, .dk-sidebar__footer { flex-shrink: 0; padding: var(--sidebar-padding, var(--spacing-3)); }
+.dk-sidebar__footer { border-top: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); }
+.dk-sidebar__body { display: flex; flex-direction: column; gap: var(--sidebar-section-gap, var(--spacing-6)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; padding: var(--sidebar-padding, var(--spacing-3)); }
+.dk-sidebar__section-title { padding: var(--spacing-0) var(--sidebar-item-padding-x, var(--spacing-3)) var(--spacing-2); color: var(--sidebar-section-title-color, var(--text-muted)); font-size: var(--sidebar-section-title-size, var(--text-xs)); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
+.dk-sidebar__list { display: flex; flex-direction: column; gap: var(--spacing-0\.5); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.dk-sidebar__list--nested { margin-top: var(--spacing-0\.5); }
 .dk-sidebar__list[hidden] { display: none; }
 .dk-sidebar__item {
-  box-sizing: border-box; display: flex; align-items: center; gap: var(--sidebar-item-gap, var(--spacing-3, 0.75rem)); width: var(--sizing-full, 100%);
-  padding: var(--sidebar-item-padding-y, var(--spacing-2, 0.5rem)) var(--sidebar-item-padding-x, var(--spacing-3, 0.75rem)); border: var(--spacing-0, 0px); border-radius: var(--sidebar-item-radius, var(--rounded-md, 0.375rem));
-  background: transparent; color: var(--sidebar-item-text, var(--text-muted)); font-family: inherit; font-size: var(--sidebar-item-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); font-weight: var(--sidebar-item-weight, var(--font-medium, 500));
+  box-sizing: border-box; display: flex; align-items: center; gap: var(--sidebar-item-gap, var(--spacing-3)); width: var(--sizing-full);
+  padding: var(--sidebar-item-padding-y, var(--spacing-2)) var(--sidebar-item-padding-x, var(--spacing-3)); border: var(--spacing-0); border-radius: var(--sidebar-item-radius, var(--rounded-md));
+  background: transparent; color: var(--sidebar-item-text, var(--text-muted)); font-family: inherit; font-size: var(--sidebar-item-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--sidebar-item-weight, var(--font-medium));
   text-align: start; text-decoration: none; cursor: pointer;
-  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
 .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--secondary)); color: var(--sidebar-item-text-hover, var(--text)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 .dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--secondary)); }
-.dk-sidebar__item:focus-visible { outline: var(--outline-width-2, 2px) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0, 0px) - var(--outline-width-2, 2px)); }
-.dk-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11, 2.75rem)); }
+.dk-sidebar__item:focus-visible { outline: var(--outline-width-2) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
+.dk-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11)); }
 .dk-sidebar__icon { display: inline-flex; flex-shrink: 0; }
-.dk-sidebar__icon .dk-icon { font-size: var(--sidebar-icon-size, var(--spacing-5, 1.25rem)); }
-.dk-sidebar__label { flex: auto; min-width: var(--spacing-0, 0px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-sidebar__icon .dk-icon { font-size: var(--sidebar-icon-size, var(--spacing-5)); }
+.dk-sidebar__label { flex: auto; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-sidebar__badge { display: inline-flex; flex-shrink: 0; }
-.dk-sidebar__chevron.dk-icon { --dk-sidebar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4, 1rem); transition: rotate var(--duration-200, 200ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)); }
+.dk-sidebar__chevron.dk-icon { --dk-sidebar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--duration-200) var(--ease-in-out); }
 .dk-sidebar__li[data-state="open"] > .dk-sidebar__item .dk-sidebar__chevron { rotate: var(--dk-sidebar-turn); }
 /* collapsed: icons only, centered; labels stay for screen readers */
-.dk-sidebar--collapsed .dk-sidebar__item { justify-content: center; padding-inline: var(--spacing-0, 0px); }
+.dk-sidebar--collapsed .dk-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
 .dk-sidebar--collapsed .dk-sidebar__label, .dk-sidebar--collapsed .dk-sidebar__section-title {
-  position: absolute; width: var(--spacing-px, 1px); height: var(--spacing-px, 1px); margin: calc(var(--spacing-0, 0px) - var(--spacing-px, 1px)); padding: var(--spacing-0, 0px); overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0); overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
-@media (forced-colors: active) { .dk-sidebar__item[aria-current="page"] { outline: var(--outline-width-2, 2px) solid CanvasText; } }
+@media (forced-colors: active) { .dk-sidebar__item[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
 @media (prefers-reduced-motion: reduce) { .dk-sidebar, .dk-sidebar__item, .dk-sidebar__chevron.dk-icon { transition: none; } }
+}

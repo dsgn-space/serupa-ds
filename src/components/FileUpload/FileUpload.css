@@ -5,31 +5,33 @@
    chosen files as rows (surface, outline, 6px corners) with a type icon, the name, the size and a remove
    button. Disabled: faded.
    --------------------------------------------------------------- */
-.dk-file-upload { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2, 0.5rem)); font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem); color: var(--file-upload-title-color, var(--text)); }
+@layer dk.components {
+.dk-file-upload { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--file-upload-title-color, var(--text)); }
 .dk-file-upload__zone {
-  position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--file-upload-gap, var(--spacing-2, 0.5rem)); text-align: center;
-  padding: var(--file-upload-zone-padding, var(--spacing-6, 1.5rem));
-  border: var(--border-width-1, 1px) dashed var(--file-upload-zone-border, var(--field-border)); border-radius: var(--file-upload-zone-radius, var(--rounded-lg, 0.5rem));
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--file-upload-gap, var(--spacing-2)); text-align: center;
+  padding: var(--file-upload-zone-padding, var(--spacing-6));
+  border: var(--border-width-1) dashed var(--file-upload-zone-border, var(--field-border)); border-radius: var(--file-upload-zone-radius, var(--rounded-lg));
   background: var(--file-upload-zone-bg, var(--surface-muted)); cursor: pointer;
-  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), border-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--duration-150) var(--ease-in-out), border-color var(--duration-150) var(--ease-in-out);
 }
 .dk-file-upload__zone--over { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
 .dk-file-upload__zone--over .dk-file-upload__hint { color: var(--file-upload-title-color, var(--text)); }
-.dk-file-upload__icon { color: var(--file-upload-icon-color, var(--file-upload-icon, var(--text-muted))); font-size: var(--spacing-8, 2rem); pointer-events: none; }
-.dk-file-upload__title { margin: var(--spacing-0, 0px); font-weight: var(--font-medium, 500); pointer-events: none; }
-.dk-file-upload__hint { margin: var(--spacing-0, 0px); color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); pointer-events: none; }
-.dk-file-upload__input { position: absolute; width: var(--spacing-px, 1px); height: var(--spacing-px, 1px); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: var(--spacing-0, 0px); opacity: var(--opacity-0, 0%); }
-.dk-file-upload__errors { display: flex; flex-direction: column; gap: var(--spacing-1, 0.25rem); }
-.dk-file-upload__error { display: flex; align-items: flex-start; gap: var(--spacing-1\.5, 0.375rem); margin: var(--spacing-0, 0px); color: var(--file-upload-error-color, var(--danger-text)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
-.dk-file-upload__error .dk-icon { font-size: var(--spacing-4, 1rem); }
-.dk-file-upload__list { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2, 0.5rem)); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
+.dk-file-upload__icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-8); pointer-events: none; }
+.dk-file-upload__title { margin: var(--spacing-0); font-weight: var(--font-medium); pointer-events: none; }
+.dk-file-upload__hint { margin: var(--spacing-0); color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: none; }
+.dk-file-upload__input { position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: var(--spacing-0); padding: var(--spacing-0); overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: var(--spacing-0); opacity: var(--opacity-0); }
+.dk-file-upload__errors { display: flex; flex-direction: column; gap: var(--spacing-1); }
+.dk-file-upload__error { display: flex; align-items: flex-start; gap: var(--spacing-1\.5); margin: var(--spacing-0); color: var(--file-upload-error-color, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-file-upload__error .dk-icon { font-size: var(--spacing-4); }
+.dk-file-upload__list { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-file-upload__item {
-  display: flex; align-items: center; gap: var(--spacing-3, 0.75rem); padding: var(--file-upload-item-padding, var(--spacing-2, 0.5rem)); padding-inline-start: var(--spacing-3, 0.75rem);
-  border: var(--border-width-1, 1px) solid var(--file-upload-item-border, var(--border)); border-radius: var(--file-upload-item-radius, var(--rounded-md, 0.375rem)); background: var(--file-upload-item-bg, var(--surface));
+  display: flex; align-items: center; gap: var(--spacing-3); padding: var(--file-upload-item-padding, var(--spacing-2)); padding-inline-start: var(--spacing-3);
+  border: var(--border-width-1) solid var(--file-upload-item-border, var(--border)); border-radius: var(--file-upload-item-radius, var(--rounded-md)); background: var(--file-upload-item-bg, var(--surface));
 }
-.dk-file-upload__file-icon { color: var(--file-upload-icon-color, var(--file-upload-icon, var(--text-muted))); font-size: var(--spacing-5, 1.25rem); }
-.dk-file-upload__file { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0, 0px); }
+.dk-file-upload__file-icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-5); }
+.dk-file-upload__file { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); }
 .dk-file-upload__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dk-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); font-variant-numeric: tabular-nums; }
-.dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+.dk-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
+.dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-50); cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .dk-file-upload__zone { transition: none; } }
+}

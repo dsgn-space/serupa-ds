@@ -5,34 +5,36 @@
    viewable picture is a button with a focus ring and a zoom-in cursor; the remove button sits in the top end
    corner. The viewer is a large Dialog with the picture fitted to the screen.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-image {
   --dk-image-ratio: auto;
-  position: relative; display: inline-block; box-sizing: border-box; max-width: var(--sizing-full, 100%);
+  position: relative; display: inline-block; box-sizing: border-box; max-width: var(--sizing-full);
   aspect-ratio: var(--dk-image-ratio); overflow: hidden; vertical-align: middle; background: var(--image-bg, var(--surface-muted));
 }
-.dk-image--ratio-square { --dk-image-ratio: var(--aspect-square, 1 / 1); }
+.dk-image--ratio-square { --dk-image-ratio: var(--aspect-square); }
 .dk-image--ratio-4-3 { --dk-image-ratio: 4 / 3; }
-.dk-image--ratio-video { --dk-image-ratio: var(--aspect-video, 16 / 9); }
-.dk-image--ratio-auto { min-width: var(--image-min-size, var(--spacing-12, 3rem)); min-height: var(--image-min-size, var(--spacing-12, 3rem)); }
-.dk-image--ratio-auto.dk-image--loaded { min-width: var(--spacing-0, 0px); min-height: var(--spacing-0, 0px); background: transparent; }
-.dk-image--rounded { border-radius: var(--image-radius, var(--rounded-lg, 0.5rem)); }
-.dk-image__img { display: block; width: var(--sizing-full, 100%); height: auto; max-width: var(--sizing-full, 100%); }
-.dk-image:not(.dk-image--ratio-auto) .dk-image__img, .dk-image:not(.dk-image--ratio-auto) .dk-image__view { height: var(--sizing-full, 100%); }
+.dk-image--ratio-video { --dk-image-ratio: var(--aspect-video); }
+.dk-image--ratio-auto { min-width: var(--image-min-size, var(--spacing-12)); min-height: var(--image-min-size, var(--spacing-12)); }
+.dk-image--ratio-auto.dk-image--loaded { min-width: var(--spacing-0); min-height: var(--spacing-0); background: transparent; }
+.dk-image--rounded { border-radius: var(--image-radius, var(--rounded-lg)); }
+.dk-image__img { display: block; width: var(--sizing-full); height: auto; max-width: var(--sizing-full); }
+.dk-image:not(.dk-image--ratio-auto) .dk-image__img, .dk-image:not(.dk-image--ratio-auto) .dk-image__view { height: var(--sizing-full); }
 .dk-image--cover .dk-image__img { object-fit: cover; }
 .dk-image--contain .dk-image__img { object-fit: contain; }
-.dk-image--loading .dk-image__img { opacity: var(--opacity-0, 0%); }
-.dk-image--loading { animation: dk-image-pulse var(--duration-1000, 1000ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)) infinite alternate; }
-@keyframes dk-image-pulse { to { opacity: var(--opacity-60, 60%); } }
-.dk-image__fallback { position: absolute; inset: var(--spacing-0, 0px); display: flex; align-items: center; justify-content: center; color: var(--image-fallback-color, var(--text-muted)); }
-.dk-image__fallback .dk-icon { font-size: var(--image-fallback-icon, var(--spacing-6, 1.5rem)); }
-.dk-image__view { display: block; width: var(--sizing-full, 100%); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); border: var(--spacing-0, 0px); border-radius: inherit; background: transparent; cursor: zoom-in; }
+.dk-image--loading .dk-image__img { opacity: var(--opacity-0); }
+.dk-image--loading { animation: dk-image-pulse var(--duration-1000) var(--ease-in-out) infinite alternate; }
+@keyframes dk-image-pulse { to { opacity: var(--opacity-60); } }
+.dk-image__fallback { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--image-fallback-color, var(--text-muted)); }
+.dk-image__fallback .dk-icon { font-size: var(--image-fallback-icon, var(--spacing-6)); }
+.dk-image__view { display: block; width: var(--sizing-full); margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: inherit; background: transparent; cursor: zoom-in; }
 .dk-image__view:focus { outline: none; }
 .dk-image:has(.dk-image__view:focus-visible) { overflow: visible; }
-.dk-image__view:focus-visible { outline: var(--outline-width-2, 2px) solid var(--image-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
+.dk-image__view:focus-visible { outline: var(--outline-width-2) solid var(--image-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
 .dk-image__view .dk-image__img { border-radius: inherit; }
-.dk-image__remove { position: absolute; inset-block-start: var(--image-remove-offset, var(--spacing-2, 0.5rem)); inset-inline-end: var(--image-remove-offset, var(--spacing-2, 0.5rem)); box-shadow: var(--image-remove-shadow, var(--shadow-sm, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1))); }
-.dk-image__viewer { --dk-image-full-max: calc(var(--sizing-dvh, 100dvh) - var(--spacing-40, 10rem)); }
+.dk-image__remove { position: absolute; inset-block-start: var(--image-remove-offset, var(--spacing-2)); inset-inline-end: var(--image-remove-offset, var(--spacing-2)); box-shadow: var(--image-remove-shadow, var(--shadow-sm)); }
+.dk-image__viewer { --dk-image-full-max: calc(var(--sizing-dvh) - var(--spacing-40)); }
 .dk-image__viewer .dk-dialog__body { display: flex; justify-content: center; }
-.dk-image__full { display: block; max-width: var(--sizing-full, 100%); max-height: var(--dk-image-full-max); height: auto; object-fit: contain; border-radius: var(--image-radius, var(--rounded-lg, 0.5rem)); }
+.dk-image__full { display: block; max-width: var(--sizing-full); max-height: var(--dk-image-full-max); height: auto; object-fit: contain; border-radius: var(--image-radius, var(--rounded-lg)); }
 @media (prefers-reduced-motion: reduce) { .dk-image--loading { animation: none; } }
-@media (forced-colors: active) { .dk-image { border: var(--border-width-1, 1px) solid CanvasText; } }
+@media (forced-colors: active) { .dk-image { border: var(--border-width-1) solid CanvasText; } }
+}

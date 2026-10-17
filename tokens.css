@@ -1,4 +1,6 @@
 /* Diki Design System — generated from tokens.json */
+@layer dk.tokens, dk.base, dk.components, dk.utilities;
+@layer dk.tokens {
 :root, [data-theme="blue-light"] {
   --primary: var(--blue-600); /* Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 (emerald 700) with white text; dark themes: brand 400 with brand-950 text. */
   --primary-hover: var(--blue-700); /* Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark). */
@@ -979,6 +981,7 @@
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0;
+}
 }
 @font-face {
   font-family: "Inter";

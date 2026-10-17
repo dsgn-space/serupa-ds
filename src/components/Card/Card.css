@@ -5,41 +5,43 @@
    .dk-card__action), .dk-card__body, .dk-card__footer. With href the whole card is a link, with a hover border and a
    focus ring. Every value goes through --card-* tokens.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-card {
   display: flex;
   flex-direction: column;
-  gap: var(--card-gap, var(--spacing-4, 1rem));
-  min-width: var(--spacing-0, 0px);
-  padding: var(--card-padding-md, var(--spacing-5, 1.25rem));
+  gap: var(--card-gap, var(--spacing-4));
+  min-width: var(--spacing-0);
+  padding: var(--card-padding-md, var(--spacing-5));
   background: var(--card-bg, var(--surface));
-  border: var(--card-border-width, var(--border-width-1, 1px)) solid var(--card-border, var(--card-border-color, var(--border)));
-  border-radius: var(--card-radius, var(--rounded-xl, 0.75rem));
-  box-shadow: var(--card-shadow, var(--shadow-xs, 0 1px 2px 0 rgb(0 0 0 / 0.05)));
+  border: var(--card-border-width, var(--border-width-1)) solid var(--card-border, var(--border));
+  border-radius: var(--card-radius, var(--rounded-xl));
+  box-shadow: var(--card-shadow, var(--shadow-xs));
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: var(--text-sm, 0.875rem);
-  line-height: var(--text-sm--line-height, 1.25rem);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
   text-align: start;
 }
-.dk-card--elevated { border-color: transparent; box-shadow: var(--card-shadow-elevated, var(--shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1))); }   /* the transparent border keeps the size, and shows in forced-colors mode */
-.dk-card--filled { background: var(--card-bg-filled, var(--surface-muted)); border-color: transparent; box-shadow: var(--shadow-none, 0 0 #0000); }
-.dk-card--padding-none { padding: var(--spacing-0, 0px); }
-.dk-card--padding-sm { padding: var(--card-padding-sm, var(--spacing-3, 0.75rem)); }
-.dk-card--padding-lg { padding: var(--card-padding-lg, var(--spacing-6, 1.5rem)); }
+.dk-card--elevated { border-color: transparent; box-shadow: var(--card-shadow-elevated, var(--shadow-md)); }   /* the transparent border keeps the size, and shows in forced-colors mode */
+.dk-card--filled { background: var(--card-bg-filled, var(--surface-muted)); border-color: transparent; box-shadow: var(--shadow-none); }
+.dk-card--padding-none { padding: var(--spacing-0); }
+.dk-card--padding-sm { padding: var(--card-padding-sm, var(--spacing-3)); }
+.dk-card--padding-lg { padding: var(--card-padding-lg, var(--spacing-6)); }
 
-.dk-card__header { display: flex; align-items: flex-start; gap: var(--spacing-3, 0.75rem); }
-.dk-card__heading { display: flex; flex-direction: column; gap: var(--card-header-gap, var(--spacing-1, 0.25rem)); flex: auto; min-width: var(--spacing-0, 0px); }
-.dk-card__title { margin: var(--spacing-0, 0px); color: var(--card-title-color, var(--text)); font-size: var(--text-base, 1rem); line-height: var(--text-base--line-height, 1.5rem); font-weight: var(--card-title-weight, var(--font-semibold, 600)); }
-.dk-card__description { margin: var(--spacing-0, 0px); color: var(--card-description-color, var(--text-muted)); }
+.dk-card__header { display: flex; align-items: flex-start; gap: var(--spacing-3); }
+.dk-card__heading { display: flex; flex-direction: column; gap: var(--card-header-gap, var(--spacing-1)); flex: auto; min-width: var(--spacing-0); }
+.dk-card__title { margin: var(--spacing-0); color: var(--card-title-color, var(--text)); font-size: var(--text-base); line-height: var(--text-base--line-height); font-weight: var(--card-title-weight, var(--font-semibold)); }
+.dk-card__description { margin: var(--spacing-0); color: var(--card-description-color, var(--text-muted)); }
 .dk-card__action { flex-shrink: 0; }
-.dk-card__body { min-width: var(--spacing-0, 0px); }
-.dk-card__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2, 0.5rem); }
+.dk-card__body { min-width: var(--spacing-0); }
+.dk-card__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); }
 .dk-card__footer--start { justify-content: flex-start; }
 .dk-card__footer--between { justify-content: space-between; }
 
 /* Interactive (href): the whole card is a link. */
-.dk-card--link { color: var(--text); text-decoration: none; cursor: pointer; transition: border-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)); }
-@media (hover: hover) { .dk-card--link:hover { border-color: var(--card-border-hover, var(--card-hover-border-color, var(--border-strong))); } }
-.dk-card--link:focus-visible { outline: var(--outline-width-2, 2px) solid var(--focus-ring); outline-offset: var(--outline-offset-2, 2px); }
+.dk-card--link { color: var(--text); text-decoration: none; cursor: pointer; transition: border-color var(--duration-150) var(--ease-in-out), box-shadow var(--duration-150) var(--ease-in-out); }
+@media (hover: hover) { .dk-card--link:hover { border-color: var(--card-border-hover, var(--border-strong)); } }
+.dk-card--link:focus-visible { outline: var(--outline-width-2) solid var(--focus-ring); outline-offset: var(--outline-offset-2); }
 @media (prefers-reduced-motion: reduce) { .dk-card--link { transition: none; } }
 @media (forced-colors: active) { .dk-card { border-color: CanvasText; } }
+}

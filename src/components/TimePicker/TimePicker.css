@@ -3,31 +3,33 @@
    a 1px border, 8px corners, shadow-lg, 4px padding, at most 240px tall and as wide as the field (at least
    160px). Options are 32px; the highlighted one gets surface-muted, the chosen one a primary check.
    --------------------------------------------------------------- */
-.dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1, 0.25rem)); padding-inline-end: var(--spacing-1, 0.25rem); }
+@layer dk.components {
+.dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1)); padding-inline-end: var(--spacing-1); }
 .dk-time-picker__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box;
-  width: var(--control-height-sm, 1.5rem); height: var(--control-height-sm, 1.5rem); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px);
-  border: var(--spacing-0, 0px); border-radius: var(--rounded-sm, 0.25rem); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: pointer;
+  width: var(--control-height-sm); height: var(--control-height-sm); margin: var(--spacing-0); padding: var(--spacing-0);
+  border: var(--spacing-0); border-radius: var(--rounded-sm); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: pointer;
 }
 .dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 .dk-time-picker__button:hover:not(:disabled) { background: var(--surface-muted); color: var(--text); }
 .dk-time-picker__button:disabled { cursor: not-allowed; }
 .dk-time-picker__list {
-  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-50, 50));
-  min-width: var(--time-picker-list-min-width, var(--spacing-40, 10rem)); max-height: var(--time-picker-list-max-height, var(--spacing-60, 15rem)); overflow-y: auto; overscroll-behavior: contain;
-  margin: var(--spacing-0, 0px); padding: var(--time-picker-list-padding, var(--spacing-1, 0.25rem)); list-style: none;
-  border: var(--border-width-1, 1px) solid var(--time-picker-list-border, var(--border)); border-radius: var(--time-picker-list-radius, var(--rounded-lg, 0.5rem));
+  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-50));
+  min-width: var(--time-picker-list-min-width, var(--spacing-40)); max-height: var(--time-picker-list-max-height, var(--spacing-60)); overflow-y: auto; overscroll-behavior: contain;
+  margin: var(--spacing-0); padding: var(--time-picker-list-padding, var(--spacing-1)); list-style: none;
+  border: var(--border-width-1) solid var(--time-picker-list-border, var(--border)); border-radius: var(--time-picker-list-radius, var(--rounded-lg));
   background: var(--time-picker-list-bg, var(--surface)); color: var(--time-picker-option-color, var(--text));
-  box-shadow: var(--time-picker-list-shadow, var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)));
-  font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem); text-align: start; cursor: default;
+  box-shadow: var(--time-picker-list-shadow, var(--shadow-lg));
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; cursor: default;
 }
 .dk-time-picker__list[hidden] { display: none; }
 .dk-time-picker__option {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2, 0.5rem); box-sizing: border-box;
-  min-height: var(--time-picker-option-height, var(--control-height-md, 2rem)); padding: var(--spacing-0, 0px) var(--spacing-2, 0.5rem);
-  border-radius: var(--rounded-md, 0.375rem); font-variant-numeric: tabular-nums; cursor: pointer; user-select: none;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); box-sizing: border-box;
+  min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-0) var(--spacing-2);
+  border-radius: var(--rounded-md); font-variant-numeric: tabular-nums; cursor: pointer; user-select: none;
 }
 .dk-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--surface-muted)); }
-.dk-time-picker__option--selected { font-weight: var(--font-medium, 500); }
-.dk-time-picker__check { color: var(--time-picker-check, var(--primary)); font-size: var(--spacing-4, 1rem); }
-@media (forced-colors: active) { .dk-time-picker__option--active { outline: var(--border-width-1, 1px) solid Highlight; } .dk-time-picker__list { border-color: CanvasText; } }
+.dk-time-picker__option--selected { font-weight: var(--font-medium); }
+.dk-time-picker__check { color: var(--time-picker-check, var(--primary)); font-size: var(--spacing-4); }
+@media (forced-colors: active) { .dk-time-picker__option--active { outline: var(--border-width-1) solid Highlight; } .dk-time-picker__list { border-color: CanvasText; } }
+}

@@ -66,10 +66,10 @@ Each is an optional override: set it on the page, a container or one empty state
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--empty-state-icon-color` (was `--empty-state-icon`, which still works until 5.0.0) | `text-muted` | The icon (3:1 on icon-bg). |
+| `--empty-state-icon-color` | `text-muted` | The icon (3:1 on icon-bg). |
 | `--empty-state-icon-bg` | `secondary` | The circle behind the icon. |
-| `--empty-state-title-color` (was `--empty-state-title`, which still works until 5.0.0) | `text` | The title. |
-| `--empty-state-description-color` (was `--empty-state-description`, which still works until 5.0.0) | `text-muted` | The description (4.5:1 on surface). |
+| `--empty-state-title-color` | `text` | The title. |
+| `--empty-state-description-color` | `text-muted` | The description (4.5:1 on surface). |
 | `--empty-state-border` | `border` | The dashed frame of variant="dashed". |
 | `--empty-state-title-size` | `text-base` | The title (16px; sm: 14px). |
 | `--empty-state-title-weight` | `font-semibold` | The title's weight (600). |

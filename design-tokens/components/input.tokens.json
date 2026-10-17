@@ -1,6 +1,6 @@
 {
   "input": {
-    "$description": "Input's component tokens. Each one is an optional override: set the CSS variable (--input-<name>) on the page, a container or one input, and every Input inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Input's component tokens. Each one is an optional override: set the CSS variable (--input-<name>) on the page, a container or one input, and every Input inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",

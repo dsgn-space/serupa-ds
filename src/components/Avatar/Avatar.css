@@ -3,10 +3,11 @@
    when there's no picture. Sizes xs 24, sm 32, md 40 (default), lg 48, xl 64px, each with its own type size.
    The status dot sits at the bottom end, in a surface ring. Every value goes through --avatar-* tokens.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-avatar {
-  --dk-avatar-size: var(--avatar-size-md, var(--spacing-10, 2.5rem));
-  --dk-avatar-dot: var(--spacing-2\.5, 0.625rem);
-  --dk-avatar-icon: var(--spacing-6, 1.5rem);
+  --dk-avatar-size: var(--avatar-size-md, var(--spacing-10));
+  --dk-avatar-dot: var(--spacing-2\.5);
+  --dk-avatar-icon: var(--spacing-6);
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
@@ -14,40 +15,41 @@
   height: var(--dk-avatar-size);
   vertical-align: middle;
   font-family: var(--font-sans);
-  font-size: var(--text-sm, 0.875rem);
-  line-height: var(--leading-none, 1);
+  font-size: var(--text-sm);
+  line-height: var(--leading-none);
 }
-.dk-avatar--xs { --dk-avatar-size: var(--avatar-size-xs, var(--spacing-6, 1.5rem)); --dk-avatar-dot: var(--spacing-2, 0.5rem); --dk-avatar-icon: var(--spacing-3\.5, 0.875rem); font-size: var(--text-xs, 0.75rem); }
-.dk-avatar--sm { --dk-avatar-size: var(--avatar-size-sm, var(--spacing-8, 2rem)); --dk-avatar-dot: var(--spacing-2, 0.5rem); --dk-avatar-icon: var(--spacing-5, 1.25rem); font-size: var(--text-xs, 0.75rem); }
-.dk-avatar--lg { --dk-avatar-size: var(--avatar-size-lg, var(--spacing-12, 3rem)); --dk-avatar-dot: var(--spacing-3, 0.75rem); --dk-avatar-icon: var(--spacing-7, 1.75rem); font-size: var(--text-base, 1rem); }
-.dk-avatar--xl { --dk-avatar-size: var(--avatar-size-xl, var(--spacing-16, 4rem)); --dk-avatar-dot: var(--spacing-4, 1rem); --dk-avatar-icon: var(--spacing-10, 2.5rem); font-size: var(--text-xl, 1.25rem); }
+.dk-avatar--xs { --dk-avatar-size: var(--avatar-size-xs, var(--spacing-6)); --dk-avatar-dot: var(--spacing-2); --dk-avatar-icon: var(--spacing-3\.5); font-size: var(--text-xs); }
+.dk-avatar--sm { --dk-avatar-size: var(--avatar-size-sm, var(--spacing-8)); --dk-avatar-dot: var(--spacing-2); --dk-avatar-icon: var(--spacing-5); font-size: var(--text-xs); }
+.dk-avatar--lg { --dk-avatar-size: var(--avatar-size-lg, var(--spacing-12)); --dk-avatar-dot: var(--spacing-3); --dk-avatar-icon: var(--spacing-7); font-size: var(--text-base); }
+.dk-avatar--xl { --dk-avatar-size: var(--avatar-size-xl, var(--spacing-16)); --dk-avatar-dot: var(--spacing-4); --dk-avatar-icon: var(--spacing-10); font-size: var(--text-xl); }
 .dk-avatar__frame {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--sizing-full, 100%);
-  height: var(--sizing-full, 100%);
+  width: var(--sizing-full);
+  height: var(--sizing-full);
   overflow: hidden;
-  border-radius: var(--rounded-full, 9999px);
+  border-radius: var(--rounded-full);
   background: var(--avatar-bg, var(--secondary));
-  color: var(--avatar-text, var(--avatar-color, var(--text)));
-  font-weight: var(--avatar-weight, var(--font-medium, 500));
+  color: var(--avatar-text, var(--text));
+  font-weight: var(--avatar-weight, var(--font-medium));
   user-select: none;
 }
-.dk-avatar--square .dk-avatar__frame { border-radius: var(--avatar-radius-square, var(--rounded-lg, 0.5rem)); }
-.dk-avatar__img { width: var(--sizing-full, 100%); height: var(--sizing-full, 100%); object-fit: cover; }
+.dk-avatar--square .dk-avatar__frame { border-radius: var(--avatar-radius-square, var(--rounded-lg)); }
+.dk-avatar__img { width: var(--sizing-full); height: var(--sizing-full); object-fit: cover; }
 .dk-avatar .dk-avatar__icon { font-size: var(--dk-avatar-icon); }
 .dk-avatar__status {
   position: absolute;
-  inset-block-end: var(--spacing-0, 0px);
-  inset-inline-end: var(--spacing-0, 0px);
+  inset-block-end: var(--spacing-0);
+  inset-inline-end: var(--spacing-0);
   width: var(--dk-avatar-dot);
   height: var(--dk-avatar-dot);
-  border-radius: var(--rounded-full, 9999px);
-  box-shadow: 0 0 0 var(--avatar-ring-width, var(--border-width-2, 2px)) var(--avatar-ring, var(--surface));
+  border-radius: var(--rounded-full);
+  box-shadow: 0 0 0 var(--avatar-ring-width, var(--border-width-2)) var(--avatar-ring, var(--surface));
 }
 .dk-avatar__status--online { background: var(--avatar-status-online, var(--success)); }
 .dk-avatar__status--busy { background: var(--avatar-status-busy, var(--danger)); }
 .dk-avatar__status--away { background: var(--avatar-status-away, var(--warning)); }
 .dk-avatar__status--offline { background: var(--avatar-status-offline, var(--field-border)); }
-@media (forced-colors: active) { .dk-avatar__frame { border: var(--border-width-1, 1px) solid CanvasText; } .dk-avatar__status { background: CanvasText; } }
+@media (forced-colors: active) { .dk-avatar__frame { border: var(--border-width-1) solid CanvasText; } .dk-avatar__status { background: CanvasText; } }
+}

@@ -4,53 +4,55 @@
    672px wide and never wider or taller than the screen less 16px a side (the body scrolls). The page behind
    is dimmed (--dialog-overlay) and doesn't scroll. Fades and grows in; at once with reduced motion.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-dialog {
-  --dk-dialog-width: var(--dialog-width-md, var(--container-lg, 32rem));
+  --dk-dialog-width: var(--dialog-width-md, var(--container-lg));
   box-sizing: border-box;
   position: fixed;
-  inset: var(--spacing-0, 0px);
-  width: var(--sizing-full, 100%);
+  inset: var(--spacing-0);
+  width: var(--sizing-full);
   max-width: none;
-  height: var(--sizing-full, 100%);
+  height: var(--sizing-full);
   max-height: none;
-  margin: var(--spacing-0, 0px);
-  padding: var(--dialog-margin, var(--spacing-4, 1rem));
-  border: var(--spacing-0, 0px);
+  margin: var(--spacing-0);
+  padding: var(--dialog-margin, var(--spacing-4));
+  border: var(--spacing-0);
   background: transparent;
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: var(--text-sm, 0.875rem);
-  line-height: var(--text-sm--line-height, 1.25rem);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
   overflow: hidden;
 }
 .dk-dialog[open] { display: flex; align-items: center; justify-content: center; }
-.dk-dialog--sm { --dk-dialog-width: var(--dialog-width-sm, var(--container-sm, 24rem)); }
-.dk-dialog--lg { --dk-dialog-width: var(--dialog-width-lg, var(--container-2xl, 42rem)); }
+.dk-dialog--sm { --dk-dialog-width: var(--dialog-width-sm, var(--container-sm)); }
+.dk-dialog--lg { --dk-dialog-width: var(--dialog-width-lg, var(--container-2xl)); }
 .dk-dialog::backdrop { background: var(--dialog-overlay, var(--overlay)); }
 :root:has(.dk-dialog[open]) { overflow: hidden; }
 .dk-dialog__panel {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--dialog-gap, var(--spacing-4, 1rem));
+  gap: var(--dialog-gap, var(--spacing-4));
   width: var(--dk-dialog-width);
-  max-width: var(--sizing-full, 100%);
-  max-height: var(--sizing-full, 100%);
-  padding: var(--dialog-padding, var(--spacing-6, 1.5rem));
+  max-width: var(--sizing-full);
+  max-height: var(--sizing-full);
+  padding: var(--dialog-padding, var(--spacing-6));
   background: var(--dialog-bg, var(--surface));
-  border-radius: var(--dialog-radius, var(--rounded-xl, 0.75rem));
-  box-shadow: var(--dialog-shadow, var(--shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)));
-  animation: dk-dialog-in var(--duration-200, 200ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+  border-radius: var(--dialog-radius, var(--rounded-xl));
+  box-shadow: var(--dialog-shadow, var(--shadow-xl));
+  animation: dk-dialog-in var(--duration-200) var(--ease-out);
 }
-.dk-dialog[open]::backdrop { animation: dk-dialog-fade var(--duration-200, 200ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)); }
-@keyframes dk-dialog-in { from { opacity: var(--opacity-0, 0%); scale: var(--scale-95, 95%); } }
-@keyframes dk-dialog-fade { from { opacity: var(--opacity-0, 0%); } }
-.dk-dialog__header { display: flex; align-items: flex-start; gap: var(--spacing-3, 0.75rem); }
-.dk-dialog__heading { display: flex; flex-direction: column; gap: var(--spacing-1, 0.25rem); flex: auto; min-width: var(--spacing-0, 0px); }
-.dk-dialog__title { margin: var(--spacing-0, 0px); color: var(--dialog-title-color, var(--text)); font-size: var(--text-lg, 1.125rem); line-height: var(--text-lg--line-height, 1.75rem); font-weight: var(--dialog-title-weight, var(--font-semibold, 600)); }
-.dk-dialog__description { margin: var(--spacing-0, 0px); color: var(--dialog-description-color, var(--text-muted)); }
+.dk-dialog[open]::backdrop { animation: dk-dialog-fade var(--duration-200) var(--ease-out); }
+@keyframes dk-dialog-in { from { opacity: var(--opacity-0); scale: var(--scale-95); } }
+@keyframes dk-dialog-fade { from { opacity: var(--opacity-0); } }
+.dk-dialog__header { display: flex; align-items: flex-start; gap: var(--spacing-3); }
+.dk-dialog__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
+.dk-dialog__title { margin: var(--spacing-0); color: var(--dialog-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--dialog-title-weight, var(--font-semibold)); }
+.dk-dialog__description { margin: var(--spacing-0); color: var(--dialog-description-color, var(--text-muted)); }
 .dk-dialog__close { flex-shrink: 0; }
-.dk-dialog__body { min-height: var(--spacing-0, 0px); overflow-y: auto; overscroll-behavior: contain; }
-.dk-dialog__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2, 0.5rem); }
+.dk-dialog__body { min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; }
+.dk-dialog__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); }
 @media (prefers-reduced-motion: reduce) { .dk-dialog__panel, .dk-dialog[open]::backdrop { animation: none; } }
-@media (forced-colors: active) { .dk-dialog__panel { border: var(--border-width-1, 1px) solid CanvasText; } }
+@media (forced-colors: active) { .dk-dialog__panel { border: var(--border-width-1) solid CanvasText; } }
+}

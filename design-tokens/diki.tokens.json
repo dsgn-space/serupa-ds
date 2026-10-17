@@ -5,9 +5,9 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
-          1.0,
-          1.0
+          1,
+          1,
+          1
         ],
         "hex": "#ffffff"
       },
@@ -23,9 +23,9 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.0,
-          0.0,
-          0.0
+          0,
+          0,
+          0
         ],
         "hex": "#000000"
       },
@@ -1229,7 +1229,7 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
+          1,
           0.9686,
           0.9294
         ],
@@ -1247,7 +1247,7 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
+          1,
           0.9294,
           0.8353
         ],
@@ -1427,7 +1427,7 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
+          1,
           0.9843,
           0.9216
         ],
@@ -2617,7 +2617,7 @@
         "components": [
           0.9255,
           0.9961,
-          1.0
+          1
         ],
         "hex": "#ecfeff"
       },
@@ -2815,7 +2815,7 @@
         "components": [
           0.9412,
           0.9765,
-          1.0
+          1
         ],
         "hex": "#f0f9ff"
       },
@@ -3013,7 +3013,7 @@
         "components": [
           0.9373,
           0.9647,
-          1.0
+          1
         ],
         "hex": "#eff6ff"
       },
@@ -3211,7 +3211,7 @@
         "components": [
           0.9333,
           0.949,
-          1.0
+          1
         ],
         "hex": "#eef2ff"
       },
@@ -3229,7 +3229,7 @@
         "components": [
           0.8784,
           0.9059,
-          1.0
+          1
         ],
         "hex": "#e0e7ff"
       },
@@ -3409,7 +3409,7 @@
         "components": [
           0.9608,
           0.9529,
-          1.0
+          1
         ],
         "hex": "#f5f3ff"
       },
@@ -3607,7 +3607,7 @@
         "components": [
           0.9804,
           0.9608,
-          1.0
+          1
         ],
         "hex": "#faf5ff"
       },
@@ -3625,7 +3625,7 @@
         "components": [
           0.9529,
           0.9098,
-          1.0
+          1
         ],
         "hex": "#f3e8ff"
       },
@@ -3643,7 +3643,7 @@
         "components": [
           0.9137,
           0.8353,
-          1.0
+          1
         ],
         "hex": "#e9d5ff"
       },
@@ -3805,7 +3805,7 @@
         "components": [
           0.9922,
           0.9569,
-          1.0
+          1
         ],
         "hex": "#fdf4ff"
       },
@@ -3823,7 +3823,7 @@
         "components": [
           0.9804,
           0.9098,
-          1.0
+          1
         ],
         "hex": "#fae8ff"
       },
@@ -4199,7 +4199,7 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
+          1,
           0.9451,
           0.949
         ],
@@ -4217,7 +4217,7 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1.0,
+          1,
           0.8941,
           0.902
         ],
@@ -5002,9 +5002,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.05
@@ -5039,9 +5039,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.05
@@ -5077,9 +5077,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5105,9 +5105,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5144,9 +5144,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5172,9 +5172,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5211,9 +5211,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5239,9 +5239,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5278,9 +5278,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5306,9 +5306,9 @@
           "color": {
             "colorSpace": "srgb",
             "components": [
-              0.0,
-              0.0,
-              0.0
+              0,
+              0,
+              0
             ],
             "hex": "#000000",
             "alpha": 0.1
@@ -5344,9 +5344,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.25
@@ -5381,12 +5381,12 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
-          "alpha": 0.0
+          "alpha": 0
         },
         "offsetX": {
           "value": 0,
@@ -5418,9 +5418,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.05
@@ -5456,9 +5456,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.05
@@ -5494,9 +5494,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.05
@@ -5532,12 +5532,12 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
-          "alpha": 0.0
+          "alpha": 0
         },
         "offsetX": {
           "value": 0,
@@ -7017,9 +7017,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.05
@@ -7054,9 +7054,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.15
@@ -7091,9 +7091,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.12
@@ -7128,9 +7128,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.15
@@ -7165,9 +7165,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.1
@@ -7202,9 +7202,9 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
           "alpha": 0.15
@@ -7239,12 +7239,12 @@
         "color": {
           "colorSpace": "srgb",
           "components": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "hex": "#000000",
-          "alpha": 0.0
+          "alpha": 0
         },
         "offsetX": {
           "value": 0,
@@ -7272,7 +7272,7 @@
     },
     "brightness-0": {
       "$type": "number",
-      "$value": 0.0,
+      "$value": 0,
       "$description": "`brightness-0`, `backdrop-brightness-0`.",
       "$extensions": {
         "com.diki": {
@@ -7322,7 +7322,7 @@
     },
     "brightness-100": {
       "$type": "number",
-      "$value": 1.0,
+      "$value": 1,
       "$description": "`brightness-100`, `backdrop-brightness-100`. Unchanged.",
       "$extensions": {
         "com.diki": {
@@ -7372,7 +7372,7 @@
     },
     "brightness-200": {
       "$type": "number",
-      "$value": 2.0,
+      "$value": 2,
       "$description": "`brightness-200`, `backdrop-brightness-200`.",
       "$extensions": {
         "com.diki": {
@@ -7382,7 +7382,7 @@
     },
     "contrast-0": {
       "$type": "number",
-      "$value": 0.0,
+      "$value": 0,
       "$description": "`contrast-0`, `backdrop-contrast-0`.",
       "$extensions": {
         "com.diki": {
@@ -7412,7 +7412,7 @@
     },
     "contrast-100": {
       "$type": "number",
-      "$value": 1.0,
+      "$value": 1,
       "$description": "`contrast-100`, `backdrop-contrast-100`. Unchanged.",
       "$extensions": {
         "com.diki": {
@@ -7442,7 +7442,7 @@
     },
     "contrast-200": {
       "$type": "number",
-      "$value": 2.0,
+      "$value": 2,
       "$description": "`contrast-200`, `backdrop-contrast-200`.",
       "$extensions": {
         "com.diki": {
@@ -7452,7 +7452,7 @@
     },
     "saturate-0": {
       "$type": "number",
-      "$value": 0.0,
+      "$value": 0,
       "$description": "`saturate-0`, `backdrop-saturate-0`. Fully desaturated.",
       "$extensions": {
         "com.diki": {
@@ -7472,7 +7472,7 @@
     },
     "saturate-100": {
       "$type": "number",
-      "$value": 1.0,
+      "$value": 1,
       "$description": "`saturate-100`, `backdrop-saturate-100`. Unchanged.",
       "$extensions": {
         "com.diki": {
@@ -7492,7 +7492,7 @@
     },
     "saturate-200": {
       "$type": "number",
-      "$value": 2.0,
+      "$value": 2,
       "$description": "`saturate-200`, `backdrop-saturate-200`.",
       "$extensions": {
         "com.diki": {
@@ -7569,7 +7569,7 @@
     },
     "scale-0": {
       "$type": "number",
-      "$value": 0.0,
+      "$value": 0,
       "$description": "`scale-0`, `-scale-0`, `scale-x-0`, `scale-y-0`, `scale-z-0`. Hidden (enter/exit animations).",
       "$extensions": {
         "com.diki": {
@@ -7629,7 +7629,7 @@
     },
     "scale-100": {
       "$type": "number",
-      "$value": 1.0,
+      "$value": 1,
       "$description": "`scale-100`, `-scale-100`, `scale-x-100`, `scale-y-100`, `scale-z-100`. Unchanged.",
       "$extensions": {
         "com.diki": {
@@ -7679,7 +7679,7 @@
     },
     "scale-200": {
       "$type": "number",
-      "$value": 2.0,
+      "$value": 2,
       "$description": "`scale-200`, `-scale-200`, `scale-x-200`, `scale-y-200`, `scale-z-200`. Doubles the size.",
       "$extensions": {
         "com.diki": {
@@ -7729,7 +7729,7 @@
     },
     "zoom-100": {
       "$type": "number",
-      "$value": 1.0,
+      "$value": 1,
       "$description": "`zoom-100`. Unchanged.",
       "$extensions": {
         "com.diki": {
@@ -7779,7 +7779,7 @@
     },
     "zoom-200": {
       "$type": "number",
-      "$value": 2.0,
+      "$value": 2,
       "$description": "`zoom-200`.",
       "$extensions": {
         "com.diki": {
@@ -7791,7 +7791,7 @@
   "opacity": {
     "opacity-0": {
       "$type": "number",
-      "$value": 0.0,
+      "$value": 0,
       "$description": "`opacity-0`, `backdrop-opacity-0`. Hidden but still in the layout.",
       "$extensions": {
         "com.diki": {
@@ -7991,7 +7991,7 @@
     },
     "opacity-100": {
       "$type": "number",
-      "$value": 1.0,
+      "$value": 1,
       "$description": "`opacity-100`, `backdrop-opacity-100`. Fully opaque.",
       "$extensions": {
         "com.diki": {
@@ -8267,9 +8267,9 @@
       "$type": "cubicBezier",
       "$value": [
         0.4,
-        0.0,
-        1.0,
-        1.0
+        0,
+        1,
+        1
       ],
       "$description": "Starts slow: elements leaving the screen.",
       "$extensions": {
@@ -8281,10 +8281,10 @@
     "ease-out": {
       "$type": "cubicBezier",
       "$value": [
-        0.0,
-        0.0,
+        0,
+        0,
         0.2,
-        1.0
+        1
       ],
       "$description": "Ends slow: elements entering (menus, dialogs, toasts).",
       "$extensions": {
@@ -8297,9 +8297,9 @@
       "$type": "cubicBezier",
       "$value": [
         0.4,
-        0.0,
+        0,
         0.2,
-        1.0
+        1
       ],
       "$description": "Default: state changes that stay on screen (hover, toggles).",
       "$extensions": {
@@ -8877,7 +8877,7 @@
           "value": 0,
           "unit": "px"
         },
-        "lineHeight": 1.0
+        "lineHeight": 1
       },
       "$description": "`type-5xl`: the whole 48px style in one class (Inter 400, line height 1). Same size as `text-5xl`.",
       "$extensions": {
@@ -8899,7 +8899,7 @@
           "value": 0,
           "unit": "px"
         },
-        "lineHeight": 1.0
+        "lineHeight": 1
       },
       "$description": "`type-6xl`: the whole 60px style in one class (Inter 400, line height 1). Same size as `text-6xl`.",
       "$extensions": {
@@ -8921,7 +8921,7 @@
           "value": 0,
           "unit": "px"
         },
-        "lineHeight": 1.0
+        "lineHeight": 1
       },
       "$description": "`type-7xl`: the whole 72px style in one class (Inter 400, line height 1). Same size as `text-7xl`.",
       "$extensions": {
@@ -8943,7 +8943,7 @@
           "value": 0,
           "unit": "px"
         },
-        "lineHeight": 1.0
+        "lineHeight": 1
       },
       "$description": "`type-8xl`: the whole 96px style in one class (Inter 400, line height 1). Same size as `text-8xl`.",
       "$extensions": {
@@ -8965,7 +8965,7 @@
           "value": 0,
           "unit": "px"
         },
-        "lineHeight": 1.0
+        "lineHeight": 1
       },
       "$description": "`type-9xl`: the whole 128px style in one class (Inter 400, line height 1). Same size as `text-9xl`.",
       "$extensions": {

@@ -1,6 +1,6 @@
 {
   "sidebar": {
-    "$description": "Sidebar's component tokens. Each one is an optional override: set the CSS variable (--sidebar-<name>) on the page, a container or one sidebar, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Sidebar's component tokens. Each one is an optional override: set the CSS variable (--sidebar-<name>) on the page, a container or one sidebar, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",
@@ -78,8 +78,7 @@
         "$description": "A section's title (4.5:1 on bg).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--sidebar-section-title-color",
-            "deprecatedCssVar": "--sidebar-section-title"
+            "cssVar": "--sidebar-section-title-color"
           }
         }
       },

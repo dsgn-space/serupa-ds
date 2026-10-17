@@ -2,6 +2,8 @@
    Grid: equal columns (--dk-grid-cols) or as many as fit (auto-fill, each at least --dk-grid-min, never wider
    than the grid), with gap from the spacing scale (--dk-grid-gap, else --grid-gap). Lists lose their bullets.
    --------------------------------------------------------------- */
-.dk-grid { display: grid; gap: var(--dk-grid-gap, var(--grid-gap, var(--spacing-4, 1rem))); min-width: var(--spacing-0, 0px); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
+@layer dk.components {
+.dk-grid { display: grid; gap: var(--dk-grid-gap, var(--grid-gap, var(--spacing-4))); min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-grid--fixed { grid-template-columns: repeat(var(--dk-grid-cols), minmax(0, 1fr)); }
-.dk-grid--auto { grid-template-columns: repeat(auto-fill, minmax(min(var(--dk-grid-min, var(--grid-min-column, var(--container-3xs, 16rem))), var(--sizing-full, 100%)), 1fr)); }
+.dk-grid--auto { grid-template-columns: repeat(auto-fill, minmax(min(var(--dk-grid-min, var(--grid-min-column, var(--container-3xs))), var(--sizing-full)), 1fr)); }
+}
