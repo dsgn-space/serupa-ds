@@ -1,0 +1,164 @@
+import * as React from "react";
+import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
+import { Icon } from "../Icon/Icon";
+import { IconButton } from "../IconButton/IconButton";
+
+export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
+  /** The slides, one per child (pictures, cards, anything). */
+  children?: React.ReactNode;
+  /** What the carousel shows, such as "Featured products". Required: it names the region. */
+  label: string;
+  /** The slide shown (from 0), when you control it. */
+  index?: number;
+  /** The first slide shown when you don't control it. Default: 0. */
+  defaultIndex?: number;
+  /** Called with the new slide's index when the person moves to it. */
+  onIndexChange?: (index: number) => void;
+  /** Past the last slide comes the first, and before the first the last. Default: false (the buttons stop at the ends). */
+  loop?: boolean;
+  /** The previous and next buttons on the sides. Default: true. */
+  arrows?: boolean;
+  /** A dot for each slide under the carousel. Default: true. */
+  dots?: boolean;
+  /** The previous button's name. Default: "Previous slide". */
+  previousLabel?: string;
+  /** The next button's name. Default: "Next slide". */
+  nextLabel?: string;
+  /** Each slide's name, and its dot's. Default: "<n> of <count>". */
+  slideLabel?: (index: number, count: number) => string;
+}
+
+/* Carousel: one slide at a time with previous and next buttons, a dot per slide and swipe. The outer
+   <section> is a region named by label (aria-roledescription "carousel"); each slide is a group named
+   "2 of 5", and the slides not shown are inert. It never moves on its own. Slides slide in from the side
+   (at once with reduced motion), and the row runs right to left in RTL. className and every other prop go
+   to the <section>. */
+const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, className: 1, style: 1 } as const;
+const SWIPE = 40; // px a swipe must travel to change the slide
+
+/** One slide at a time, with previous and next buttons, dots and swipe. */
+export const Carousel = React.forwardRef<HTMLElement, CarouselProps>(function Carousel(props, ref) {
+  const rest = omit(props, OWN);
+  const slides = React.Children.toArray(props.children);
+  const count = slides.length;
+  const clamp = (i: number) => Math.min(Math.max(0, Math.floor(i) || 0), Math.max(0, count - 1));
+  const [own, setOwn] = React.useState(() => props.defaultIndex || 0);
+  const controlled = props.index != null;
+  const index = clamp(controlled ? props.index! : own);
+  const loop = !!props.loop && count > 1;
+  const name = props.slideLabel || ((i: number, n: number) => (i + 1) + " of " + n);
+  const dotsRef = React.useRef<HTMLDivElement>(null);
+  const viewport = React.useRef<HTMLDivElement>(null);
+  const drag = React.useRef<{ x: number; y: number; id: number } | null>(null);
+  const [offset, setOffset] = React.useState(0);
+  const dragged = React.useRef(false);   // a drag just ended: the click that follows it doesn't count
+  const prevBtn = React.useRef<HTMLButtonElement>(null), nextBtn = React.useRef<HTMLButtonElement>(null);
+  const refocus = React.useRef<"prev" | "next" | "dot" | null>(null);
+
+  const go = (i: number) => {
+    const next = loop ? ((i % count) + count) % count : clamp(i);
+    if (next === index) return;
+    if (!controlled) setOwn(next);
+    if (props.onIndexChange) props.onIndexChange(next);
+  };
+  const rtl = () => !!viewport.current && getComputedStyle(viewport.current).direction === "rtl";
+  // The direction as laid out (a dir attribute or CSS direction), so the track and chevrons can follow it.
+  const [dir, setDir] = React.useState<"ltr" | "rtl">("ltr");
+  useIsoLayoutEffect(() => { const d = rtl() ? "rtl" : "ltr"; if (d !== dir) setDir(d); });
+
+  const onDotsKey = (e: React.KeyboardEvent) => {
+    const back = rtl() ? "ArrowRight" : "ArrowLeft", fwd = rtl() ? "ArrowLeft" : "ArrowRight";
+    let to = -1;
+    if (e.key === back) to = loop ? index - 1 : Math.max(0, index - 1);
+    else if (e.key === fwd) to = loop ? index + 1 : Math.min(count - 1, index + 1);
+    else if (e.key === "Home") to = 0;
+    else if (e.key === "End") to = count - 1;
+    else return;
+    e.preventDefault();
+    to = ((to % count) + count) % count;
+    refocus.current = "dot";   // focus the current dot once the index settles (a controlled parent may say no)
+    go(to);
+  };
+  const arrow = (step: 1 | -1) => {
+    const to = index + step;
+    if (!loop && (to <= 0 || to >= count - 1)) refocus.current = step > 0 ? "prev" : "next";   // this button hides at the end: keep focus on the other
+    go(to);
+  };
+  useIsoLayoutEffect(() => {
+    const r = refocus.current;
+    refocus.current = null;
+    if (r === "dot") (dotsRef.current?.children[index] as HTMLElement | undefined)?.focus();
+    else if (r && (document.activeElement === prevBtn.current || document.activeElement === nextBtn.current || document.activeElement === document.body)) (r === "prev" ? prevBtn : nextBtn).current?.focus();
+  });
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (count < 2 || (e.pointerType === "mouse" && e.button !== 0)) return;
+    drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    dragged.current = false;
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = drag.current;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    if (offset === 0 && Math.abs(dx) < 8) return;
+    if (offset === 0 && Math.abs(e.clientY - d.y) > Math.abs(dx)) { drag.current = null; return; }
+    if (offset === 0 && viewport.current) try { viewport.current.setPointerCapture(e.pointerId); } catch { /* the pointer is already gone */ }
+    dragged.current = true;
+    setOffset(dx);
+  };
+  const onPointerEnd = (e: React.PointerEvent) => {
+    const d = drag.current;
+    if (!d || d.id !== e.pointerId) return;
+    drag.current = null;
+    const dx = e.clientX - d.x;
+    setOffset(0);
+    if (Math.abs(dx) >= SWIPE) go(index + ((dx < 0) !== rtl() ? 1 : -1));
+  };
+  // The browser took the gesture (a scroll) or the pointer left before a drag began: put the slide back, change nothing.
+  const onPointerCancel = (e: React.PointerEvent) => { if (drag.current && drag.current.id === e.pointerId) { drag.current = null; dragged.current = false; setOffset(0); } };
+  const onPointerLeave = (e: React.PointerEvent) => { if (offset === 0) onPointerCancel(e); };
+
+  const style = { ...props.style, "--dk-carousel-index": index, "--dk-carousel-drag": offset + "px" } as React.CSSProperties;
+  const track = React.useRef<HTMLDivElement>(null);
+  useIsoLayoutEffect(() => {   // the slides not shown can't be reached (inert isn't a React 18 prop)
+    if (track.current) Array.from(track.current.children).forEach((el, i) => { (el as HTMLElement).inert = i !== index; });
+  }, [index, count]);
+  const prevOff = !loop && index === 0, nextOff = !loop && index >= count - 1;
+
+  return (
+    <section {...rest} ref={ref} className={cn("dk-carousel", props.className)} style={style}
+      aria-roledescription="carousel" aria-label={props.label} data-component="carousel" data-index={index} data-dir={dir}>
+      <div className="dk-carousel__viewport" ref={viewport} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onPointerLeave={onPointerLeave}
+        onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe
+        onClickCapture={(e) => { if (dragged.current && e.detail) { dragged.current = false; e.preventDefault(); e.stopPropagation(); } }}   // a swipe across a link isn't a click
+        data-dragging={offset ? "" : undefined}>
+        <div className="dk-carousel__track" ref={track} aria-live="polite">
+          {slides.map((s, i) => (
+            <div key={(s as React.ReactElement).key ?? i} className="dk-carousel__slide" role="group" aria-roledescription="slide" aria-label={name(i, count)}
+              aria-hidden={i === index ? undefined : true} data-active={i === index ? "" : undefined}>
+              {s}
+            </div>
+          ))}
+        </div>
+        {props.arrows !== false && count > 1 ? <>
+          <IconButton className="dk-carousel__arrow dk-carousel__arrow--prev" label={props.previousLabel || "Previous slide"} size="sm" variant="secondary" shape="round" noTitle
+            icon={<><Icon name="chevron_left" className="dk-carousel__ltr" /><Icon name="chevron_right" className="dk-carousel__rtl" /></>}
+            ref={prevBtn} disabled={prevOff} onClick={() => arrow(-1)} />
+          <IconButton className="dk-carousel__arrow dk-carousel__arrow--next" label={props.nextLabel || "Next slide"} size="sm" variant="secondary" shape="round" noTitle
+            icon={<><Icon name="chevron_right" className="dk-carousel__ltr" /><Icon name="chevron_left" className="dk-carousel__rtl" /></>}
+            ref={nextBtn} disabled={nextOff} onClick={() => arrow(1)} />
+        </> : null}
+      </div>
+      {props.dots !== false && count > 1 ? (
+        <div className="dk-carousel__dots" ref={dotsRef} onKeyDown={onDotsKey}>
+          {slides.map((_, i) => (
+            <button key={i} type="button" className="dk-carousel__dot" aria-label={name(i, count)} aria-current={i === index ? "true" : undefined}
+              tabIndex={i === index ? 0 : -1} onClick={() => go(i)} />
+          ))}
+        </div>
+      ) : null}
+    </section>
+  );
+});
+Carousel.displayName = "Carousel";
