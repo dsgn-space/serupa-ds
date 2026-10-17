@@ -73,7 +73,7 @@ const steps = [
 // CI runs the suite as parallel jobs, one per group: node tools/test/run.mjs --group checks|components|visual|storybook.
 // A step not named here is a component suite.
 const GROUPS = {
-  checks: ['Package', 'Component contract', 'Foundation audit', 'Design tokens export', 'Style Dictionary', 'Utility classes', 'Icon names', 'Icon builder', 'Custom icons', 'Page groundwork'],
+  checks: ['Package', 'Component contract', 'Foundation audit', 'Design tokens export', 'Style Dictionary', 'Utility classes', 'Icon names', 'Icon builder', 'Custom icons', 'Page groundwork', 'Usage guides'],
   visual: ['Visual snapshots'],
   storybook: ['Storybook'],
 };
