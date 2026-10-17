@@ -1,5 +1,5 @@
 // IconButton and Fab: the label as the name, the defaults, shapes, links, the FAB's size, shape, shadow, corner
-// placement (and right-to-left), extended, and component tokens.
+// placement (and right-to-left), extended, keyboard (Tab, Enter, Space, the focus ring) and component tokens.
 //   node tools/test/icon-button.mjs
 import { writePage, browser, cleanup, report } from './lib.mjs';
 
@@ -65,6 +65,29 @@ const rtl = await box('frtl');
 t('Fab: the corner follows the text direction (top-end is top-left in right-to-left)', rtl[0] === 24 && rtl[1] === 24, rtl.join());
 await p.hover('#fst'); await p.waitForTimeout(300);
 t('Fab hover: a deeper shadow (shadow-xl)', /20px 25px -5px/.test((await st('#fst', ['boxShadow'])).boxShadow));
+// Keyboard: Tab reaches the buttons in order, Enter and Space press them, and focus shows a ring.
+await p.reload(); await p.waitForSelector('#ib');   // a fresh page, so Tab starts at the top
+await p.keyboard.press('Tab');
+t('keyboard: Tab reaches the first IconButton', await p.evaluate(() => document.activeElement.id === 'ib'));
+await p.keyboard.press('Enter'); await p.keyboard.press('Space');
+t('keyboard: Enter and Space press an IconButton', await p.evaluate(() => window.clicks === 2));
+// The ring: focus-visible, the --dk-btn-ring color in the box-shadow, and the outline drawn in forced-colors mode.
+const ring = (id) => p.evaluate(async (id) => {
+  const e = document.getElementById(id);
+  await Promise.all(e.getAnimations().map((a) => a.finished));   // the ring fades in
+  const probe = document.createElement('span');
+  probe.style.color = 'var(--dk-btn-ring)'; e.appendChild(probe); const c = getComputedStyle(probe).color; probe.remove();
+  const s = getComputedStyle(e);
+  return e.matches(':focus-visible') && s.boxShadow.includes(c) && s.outlineStyle === 'solid' && s.outlineWidth === '2px';
+}, id);
+t('keyboard: a focused IconButton shows its focus ring', await ring('ib'));
+let order = [];
+for (let i = 0; i < 12 && !order.includes('fab'); i++) { await p.keyboard.press('Tab'); order.push(await p.evaluate(() => document.activeElement.id)); }
+t('keyboard: Tab reaches the Fab', order.includes('fab'), order.join());
+await p.evaluate(() => { window.clicks = 0; });
+await p.keyboard.press('Enter'); await p.keyboard.press('Space');
+t('keyboard: Enter and Space press the Fab', await p.evaluate(() => window.clicks === 2));
+t('keyboard: a focused Fab shows its focus ring', await ring('fab'));
 t('no warnings about missing labels, no errors', !(await p.evaluate(() => window.warns.some((m) => /aria-label/.test(m)))) && errors.length === 0, errors.join('; '));
 
 await b.close();
