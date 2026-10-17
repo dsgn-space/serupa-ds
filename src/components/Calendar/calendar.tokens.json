@@ -82,6 +82,26 @@
           }
         }
       },
+      "range-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "Days between the start and end of a range (DateRangePicker).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-range-bg"
+          }
+        }
+      },
+      "range-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Their numbers (4.5:1 on range-bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-range-color"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",

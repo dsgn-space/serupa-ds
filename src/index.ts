@@ -25,6 +25,8 @@ import { Container } from "./components/Container/Container";
 export type { ContainerProps, ContainerSize } from "./components/Container/Container";
 import { DatePicker } from "./components/DatePicker/DatePicker";
 export type { DatePickerProps } from "./components/DatePicker/DatePicker";
+import { DateRangePicker } from "./components/DateRangePicker/DateRangePicker";
+export type { DateRange, DateRangePickerProps } from "./components/DateRangePicker/DateRangePicker";
 import { Dialog } from "./components/Dialog/Dialog";
 export type { DialogProps } from "./components/Dialog/Dialog";
 import { Divider } from "./components/Divider/Divider";
@@ -113,7 +115,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, DatePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -128,7 +130,7 @@ declare global {
       Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Button: typeof Button; buttonClass: typeof buttonClass;
       ButtonGroup: typeof ButtonGroup; Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader;
       Calendar: typeof Calendar; Checkbox: typeof Checkbox; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; customIcons: typeof customIcons;
-      DatePicker: typeof DatePicker; Dialog: typeof Dialog; Divider: typeof Divider; Drawer: typeof Drawer; EmptyState: typeof EmptyState; Fab: typeof Fab; Field: typeof Field; FileUpload: typeof FileUpload; formatFileSize: typeof formatFileSize;
+      DatePicker: typeof DatePicker; DateRangePicker: typeof DateRangePicker; Dialog: typeof Dialog; Divider: typeof Divider; Drawer: typeof Drawer; EmptyState: typeof EmptyState; Fab: typeof Fab; Field: typeof Field; FileUpload: typeof FileUpload; formatFileSize: typeof formatFileSize;
       Grid: typeof Grid; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; initials: typeof initials; Input: typeof Input; Kbd: typeof Kbd;
       Link: typeof Link; List: typeof List; ListItem: typeof ListItem; Loader: typeof Loader; Menu: typeof Menu; MenuGroup: typeof MenuGroup;
       MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Navbar: typeof Navbar; NavbarLink: typeof NavbarLink;

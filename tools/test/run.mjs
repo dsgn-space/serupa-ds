@@ -53,6 +53,7 @@ const steps = [
   ['Kbd', 'node', [path.join(HERE, 'kbd.mjs')]],
   ['FileUpload', 'node', [path.join(HERE, 'file-upload.mjs')]],
   ['DatePicker', 'node', [path.join(HERE, 'date-picker.mjs')]],
+  ['DateRangePicker', 'node', [path.join(HERE, 'date-range-picker.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],
