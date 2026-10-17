@@ -13,17 +13,21 @@ export const toHHmm = (n: number) => `${String(Math.floor(n / 60)).padStart(2, "
 export function uses12h(locale?: string): boolean {
   return !!new Intl.DateTimeFormat(locale, { hour: "numeric" }).resolvedOptions().hour12;
 }
+const formats = new Map<string, Intl.DateTimeFormat>();
 /** A time as the locale writes it: "2:05 PM", "14:05". */
 export function formatTime(n: number, locale?: string, hour12?: boolean): string {
   const h12 = hour12 ?? uses12h(locale);
-  return new Intl.DateTimeFormat(locale, { hour: h12 ? "numeric" : "2-digit", minute: "2-digit", hour12: h12 }).format(new Date(2000, 0, 1, Math.floor(n / 60), n % 60));
+  const key = (locale || "") + "|" + h12;
+  let f = formats.get(key);
+  if (!f) formats.set(key, f = new Intl.DateTimeFormat(locale, { hour: h12 ? "numeric" : "2-digit", minute: "2-digit", hour12: h12 }));
+  return f.format(new Date(2000, 0, 1, Math.floor(n / 60), n % 60));
 }
 /** A typed time, as minutes, or null: "14:05", "2:05 pm", "2pm", "1405", "9", "9.30", "21h30". Without am/pm, a 12-hour
     locale still reads 13–23 as afternoon; 1–11 stay morning. */
 export function parseTime(text: string): number | null {
   const s = text.trim().toLowerCase().replace(/\s+/g, "");
   if (!s) return null;
-  const m = /^(\d{1,2})(?:[:.h]?(\d{2}))?(a|am|a\.m\.|p|pm|p\.m\.)?$/.exec(s) || /^(\d{1,2})(\d{2})(a|am|p|pm)?$/.exec(s);
+  const m = /^(\d{1,2})(?:[:.h]?(\d{2}))?(a|am|a\.m\.|p|pm|p\.m\.)?$/.exec(s);
   if (!m) return null;
   let h = Number(m[1]);
   const min = m[2] ? Number(m[2]) : 0;

@@ -16,7 +16,7 @@
   background: var(--dk-alert-bg);
   border: var(--alert-border-width, var(--border-width-1, 1px)) solid color-mix(in srgb, var(--dk-alert-icon) var(--alert-border-strength, var(--opacity-30, 30%)), transparent);
   border-radius: var(--alert-radius, var(--rounded-lg, 0.5rem));
-  color: var(--alert-text-color, var(--text));
+  color: var(--alert-text, var(--alert-text-color, var(--text)));
   font-family: var(--font-sans);
   font-size: var(--text-sm, 0.875rem);
   line-height: var(--text-sm--line-height, 1.25rem);
@@ -34,5 +34,5 @@
 .dk-alert__message > :first-child { margin-top: var(--spacing-0, 0px); }
 .dk-alert__message > :last-child { margin-bottom: var(--spacing-0, 0px); }
 .dk-alert__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2, 0.5rem); margin-top: var(--spacing-2, 0.5rem); }
-.dk-alert__dismiss { flex-shrink: 0; color: var(--alert-text-color, var(--text)); }
+.dk-alert__dismiss { flex-shrink: 0; color: var(--alert-text, var(--alert-text-color, var(--text))); }
 @media (forced-colors: active) { .dk-alert { border-color: CanvasText; } .dk-alert__icon { color: CanvasText; } }

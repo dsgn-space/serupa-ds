@@ -38,7 +38,8 @@
         "$description": "The title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--popover-title"
+            "cssVar": "--popover-title-color",
+            "deprecatedCssVar": "--popover-title"
           }
         }
       },

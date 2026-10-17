@@ -28,7 +28,8 @@
         "$description": "The border of an outline card.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--card-border-color"
+            "cssVar": "--card-border",
+            "deprecatedCssVar": "--card-border-color"
           }
         }
       },
@@ -58,7 +59,8 @@
         "$description": "The border of an interactive card while hovered.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--card-hover-border-color"
+            "cssVar": "--card-border-hover",
+            "deprecatedCssVar": "--card-hover-border-color"
           }
         }
       }
