@@ -22,6 +22,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Fab: Diki.Fab,
   Field: Diki.Field,
   Grid: Diki.Grid,
+  EmptyState: Diki.EmptyState,
   Link: Diki.Link,
   List: Diki.List,
   ListItem: Diki.ListItem,
