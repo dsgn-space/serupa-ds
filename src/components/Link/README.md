@@ -2,8 +2,6 @@
 
 An inline text link: underlined, in the primary color or the surrounding text's. `external` opens a new tab and says so, and `as` renders your router's link so client-side navigation keeps working.
 
-## Usage
-
 ```jsx
 const { Link, Text } = window.Diki;
 
@@ -16,7 +14,30 @@ const { Link, Text } = window.Diki;
 <Link as={RouterLink} to="/settings">Settings</Link>
 ```
 
-For an action that doesn't go anywhere, use a Button (`variant="link"` if it should look like a link).
+## When to use
+
+- Going to another page or place from inside a sentence.
+- Lists of links where the place already says they're links: a nav bar, a footer, a list of related pages.
+- Pointing to another site, with `external` so people know it opens a new tab.
+
+## When not to use
+
+- For an action that doesn't go anywhere, use a [Button](../Button/README.md) (`variant="link"` if it should look like a link).
+- A call to action that should stand out, such as "Get started": use a [Button](../Button/README.md) with `href`.
+- The trail of pages above the current one: use [Breadcrumb](../Breadcrumb/README.md).
+
+## Usage
+
+- Keep the default underline in body text; use `underline="hover"` only where the place already says it's a link.
+- Use `tone="neutral"` in muted small print, such as terms under a form, so the link takes the text's color.
+- With a router, pass its link component in `as` so client-side navigation keeps working.
+
+## Accessibility
+
+- Underlined by default, so a link in a sentence doesn't rely on color alone (WCAG 1.4.1). Use `underline="hover"` only where the place already says it's a link: a nav bar, a footer, a list of links.
+- The primary color keeps 4.5:1 on `surface`, on hover too, and the focus ring 3:1, in all six themes (`tools/test/link.mjs`).
+- Write link text that makes sense on its own ("Read the pricing guide", not "click here"): screen reader users often move from link to link.
+- The keyboard focus ring follows the text when a link wraps onto two lines.
 
 ## Props
 
@@ -29,13 +50,6 @@ For an action that doesn't go anywhere, use a Button (`variant="link"` if it sho
 | `as` | a component | `'a'` | Your router's link component; it gets `className`, `ref` and every other prop |
 
 `className`, `style`, `ref`, `target`, `rel` and everything else go to the element, which has `data-component="link"`. It has no font size of its own: it takes the text around it.
-
-## Accessibility
-
-- Underlined by default, so a link in a sentence doesn't rely on color alone (WCAG 1.4.1). Use `underline="hover"` only where the place already says it's a link: a nav bar, a footer, a list of links.
-- The primary color keeps 4.5:1 on `surface`, on hover too, and the focus ring 3:1, in all six themes (`tools/test/link.mjs`).
-- Write link text that makes sense on its own ("Read the pricing guide", not "click here"): screen reader users often move from link to link.
-- The keyboard focus ring follows the text when a link wraps onto two lines.
 
 ## Component tokens
 
