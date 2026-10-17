@@ -55,4 +55,5 @@
 @import "../components/FileUpload/FileUpload.css";
 @import "../components/Calendar/Calendar.css";
 @import "../components/DatePicker/DatePicker.css";
+@import "../components/DateRangePicker/DateRangePicker.css";
 @import "./utilities.css";

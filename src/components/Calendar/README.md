@@ -65,6 +65,8 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
 | `--calendar-selected-bg` | `primary` | The selected day. |
 | `--calendar-selected-color` | `on-primary` | Its number. |
+| `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
+| `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
 | `--calendar-day-size` | `control-height-md` | Each day's square (32px). |
 | `--calendar-day-radius` | `rounded-md` | A day's corners (6px). |

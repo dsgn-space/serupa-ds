@@ -38,9 +38,11 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   isDateSelected?: (date: Date) => boolean;
   /** @internal Called when a day gets focus or the pointer, for DateRangePicker's preview. */
   onDayHover?: (date: Date) => void;
+  /** @internal Leaves the days of other months blank, for DateRangePicker's two months side by side. */
+  hideOutside?: boolean;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, className: 1 } as const;
 
 /* Calendar: a month of days to pick one from. Follows the ARIA date grid pattern: one Tab stop on the days,
    arrows move a day or a week, Home and End to the week's start and end, PageUp and PageDown a month (with
@@ -126,6 +128,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
             <tr key={w}>
               {row.map((d) => {
                 const off = !!disabled(d), sel = selected(d), outside = !sameMonth(d, month);
+                if (outside && props.hideOutside) return <td key={d.getTime()} role="gridcell" className="dk-calendar__blank" />;
                 return (
                   <td key={d.getTime()} aria-selected={sel} role="gridcell">
                     <button type="button" tabIndex={sameDay(d, focus) ? 0 : -1} aria-label={full.format(d)} aria-disabled={off || undefined} aria-current={sameDay(d, today) ? "date" : undefined}
