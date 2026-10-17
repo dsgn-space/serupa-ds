@@ -1,0 +1,29 @@
+{
+  "button-group": {
+    "$description": "ButtonGroup's component tokens. Each one is an optional override: set the CSS variable (--button-group-<name>) on the page, a container or one group, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between buttons when not attached (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--button-group-gap"
+          }
+        }
+      }
+    },
+    "border": {
+      "overlap": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "How much attached buttons overlap, so their borders make one line (1px, the button border).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--button-group-overlap"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+import * as React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Input } from './Input';
+
+const meta = {
+  title: 'Components/Input',
+  component: Input,
+  args: { placeholder: 'you@example.com', 'aria-label': 'Email', size: 'md' },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: { control: 'text' }, rightIcon: { control: 'text' } },
+} satisfies Meta<typeof Input>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const Col = ({ children }: { children: React.ReactNode }) => <div className="flex flex-col gap-3" style={{ maxWidth: 320 }}>{children}</div>;
+
+export const Playground: Story = {};
+
+export const Sizes: Story = {
+  render: () => <Col>
+    <Input size="sm" aria-label="Small" placeholder="Small" />
+    <Input aria-label="Medium" placeholder="Medium" />
+    <Input size="lg" aria-label="Large" placeholder="Large" />
+  </Col>,
+};
+
+export const Icons: Story = {
+  render: () => <Col>
+    <Input leftIcon="search" aria-label="Search" placeholder="Search" />
+    <Input type="url" rightIcon="link" aria-label="Website" placeholder="https://" />
+  </Col>,
+};
+
+export const States: Story = {
+  render: () => <Col>
+    <Input aria-label="Default" defaultValue="Default" />
+    <Input aria-label="Invalid" invalid defaultValue="not-an-email" />
+    <Input aria-label="Read-only" readOnly defaultValue="Read-only" />
+    <Input aria-label="Disabled" disabled defaultValue="Disabled" />
+  </Col>,
+};

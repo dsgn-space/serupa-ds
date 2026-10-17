@@ -1,0 +1,37 @@
+{
+  "toggle-button": {
+    "$description": "ToggleButton's component tokens. Each one is an optional override: set the CSS variable (--toggle-button-<name>) on the page, a container or one toggle, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg-pressed": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The background while pressed (on).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toggle-button-bg-pressed"
+          }
+        }
+      },
+      "text-pressed": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Text and icon while pressed (4.5:1 on bg-pressed).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toggle-button-text-pressed"
+          }
+        }
+      },
+      "border-pressed": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The outline variant's border while pressed (3:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toggle-button-border-pressed"
+          }
+        }
+      }
+    }
+  }
+}

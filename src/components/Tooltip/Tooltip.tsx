@@ -1,0 +1,98 @@
+import * as React from "react";
+import { cn, domId, useIsoLayoutEffect } from "../../internal/cn";
+import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
+
+export interface TooltipProps {
+  /** What the tooltip says: a short line of text. Keep links and buttons out (people can't reach them). */
+  content: React.ReactNode;
+  /** One element that can take focus (a Button, a link, an IconButton). The tooltip describes it. */
+  children: React.ReactElement;
+  /** 'top' (default), 'bottom', 'left', 'right', or with '-start' / '-end' ('bottom-start'). It flips when there's no room. */
+  placement?: Placement;
+  /** Milliseconds the pointer rests before it shows. Default: 400. Keyboard focus shows it at once. */
+  delay?: number;
+  /** 'description' (default): adds to the element's name (aria-describedby). 'label': is its name (aria-labelledby), for an icon-only button with no other label. */
+  role?: 'description' | 'label';
+  /** Open it yourself (controlled); with onOpenChange. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Never shows it, for example while the element is disabled. */
+  disabled?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+type Handlers = Record<string, ((e: any) => void) | undefined>;
+
+/* Tooltip: a short hint about an element, shown while it's hovered (after a delay) or focused, and placed next to
+   it in the top layer. Escape hides it; the pointer can move onto the tooltip without it closing (WCAG 1.4.13).
+   It describes the element (aria-describedby) or, with role="label", names it. */
+/** A short hint about one element, shown on hover and keyboard focus. */
+export function Tooltip(props: TooltipProps): React.ReactElement {
+  const id = domId("dk-tip", React.useId());
+  const [inner, setInner] = React.useState(false);
+  const controlled = props.open !== undefined;
+  const open = !props.disabled && (controlled ? !!props.open : inner);
+  const tipRef = React.useRef<HTMLDivElement | null>(null);
+  const anchorRef = React.useRef<HTMLElement | null>(null);
+  const timer = React.useRef<number | undefined>(undefined);
+  const onOpenChange = React.useRef(props.onOpenChange); onOpenChange.current = props.onOpenChange;
+  const set = React.useCallback((v: boolean) => { window.clearTimeout(timer.current); if (!controlled) setInner(v); if (onOpenChange.current) onOpenChange.current(v); }, [controlled]);
+  const later = (v: boolean, ms: number) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => set(v), ms); };
+  React.useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  // Place it while open, and keep it placed as the page scrolls or resizes.
+  useIsoLayoutEffect(() => {
+    const tip = tipRef.current, anchor = anchorRef.current;
+    if (!tip) return;
+    if (!open || !anchor) { hideLayer(tip); return; }
+    showLayer(tip);
+    const update = () => {
+      const offset = cssLength(tip, "--dk-tooltip-offset");
+      const r = place(anchor.getBoundingClientRect(), { width: tip.offsetWidth, height: tip.offsetHeight }, props.placement, offset, "top");
+      tip.style.left = r.x + "px"; tip.style.top = r.y + "px"; tip.dataset.side = r.side;
+    };
+    update();
+    // Its size can change after it opens (a web font arriving, new content): place it again.
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
+    if (ro) { ro.observe(tip); ro.observe(anchor); }
+    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+  }, [open, props.placement, props.content]);
+
+  // Escape hides it from anywhere while it's open (the element may not have focus when hovered).
+  React.useEffect(() => {
+    if (!open) return;
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") set(false); };
+    document.addEventListener("keydown", esc);
+    return () => document.removeEventListener("keydown", esc);
+  }, [open, set]);
+
+  const child = React.Children.only(props.children) as React.ReactElement<any> & { ref?: React.Ref<HTMLElement> };
+  const cp: Handlers & Record<string, any> = child.props;
+  const delay = props.delay == null ? 400 : props.delay;
+  const chain = (name: string, fn: (e: any) => void) => (e: any) => { if (cp[name]) cp[name](e); fn(e); };
+  const childRef = (child as any).ref;
+  const aria = props.role === "label" ? "aria-labelledby" : "aria-describedby";
+  const merged = [cp[aria], id].filter(Boolean).join(" ");
+  const trigger = React.cloneElement(child, {
+    ref: (n: HTMLElement | null) => { anchorRef.current = n; if (typeof childRef === "function") childRef(n); else if (childRef && typeof childRef === "object") childRef.current = n; },
+    [aria]: merged,
+    onMouseEnter: chain("onMouseEnter", () => later(true, delay)),
+    onMouseLeave: chain("onMouseLeave", () => later(false, 100)),
+    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(":focus-visible")) set(true); }),
+    onBlur: chain("onBlur", () => set(false)),
+    onPointerDown: chain("onPointerDown", () => set(false)),
+  });
+  return (
+    <>
+      {trigger}
+      <div ref={tipRef} id={id} role="tooltip" {...{ popover: "manual" }} hidden={!open || undefined}
+        className={cn("dk-tooltip", props.className)} style={props.style} data-component="tooltip" data-state={open ? "open" : "closed"}
+        onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, 100)}>
+        {props.content}
+      </div>
+    </>
+  );
+}
+Tooltip.displayName = "Tooltip";

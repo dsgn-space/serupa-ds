@@ -1,0 +1,63 @@
+/* ---------------------------------------------------------------
+   Tabs: a row of tabs (.dk-tabs__list > .dk-tabs__tab) over panels (.dk-tabs__panel). line (default): a border
+   under the row and a 2px primary line under the selected tab, whose label turns from text-muted to text.
+   pill: no border; the selected tab is filled in primary. Tabs are 36px tall (32px with size sm), text-sm,
+   font-medium. A 2px focus ring, 50% when disabled. Every value goes through --tabs-* tokens.
+   --------------------------------------------------------------- */
+.dk-tabs { font-family: var(--font-sans); }
+.dk-tabs__list {
+  display: flex;
+  padding: var(--spacing-0, 0px);
+  align-items: stretch;
+  gap: var(--tabs-gap, var(--spacing-1, 0.25rem));
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.dk-tabs--line .dk-tabs__list { border-bottom: var(--border-width-1, 1px) solid var(--tabs-border, var(--border)); }
+.dk-tabs__tab {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tabs-icon-gap, var(--spacing-2, 0.5rem));
+  height: var(--tabs-height-md, var(--spacing-9, 2.25rem));
+  padding: var(--spacing-0, 0px) var(--tabs-padding-x, var(--spacing-3, 0.75rem));
+  margin: var(--spacing-0, 0px);
+  border: var(--spacing-0, 0px);
+  border-radius: var(--tabs-radius, var(--rounded-md, 0.375rem));
+  background: transparent;
+  color: var(--tabs-text, var(--text-muted));
+  font: inherit;
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--text-sm--line-height, 1.25rem);
+  font-weight: var(--tabs-weight, var(--font-medium, 500));
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-tabs--sm .dk-tabs__tab { height: var(--tabs-height-sm, var(--control-height-md, 2rem)); }
+.dk-tabs__icon { display: inline-flex; }
+.dk-tabs__icon .dk-icon { font-size: var(--spacing-4, 1rem); }
+@media (hover: hover) { .dk-tabs__tab:hover:not(:disabled) { color: var(--tabs-text-hover, var(--text)); } }
+.dk-tabs__tab:focus-visible { outline: var(--outline-width-2, 2px) solid transparent; box-shadow: inset 0 0 0 var(--outline-width-2, 2px) var(--focus-ring); }   /* inside the tab, since the scrolling row would clip a ring outside it; the transparent outline shows in forced colors */
+.dk-tabs__tab:disabled { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+
+/* line */
+.dk-tabs--line .dk-tabs__tab { border-end-start-radius: var(--spacing-0, 0px); border-end-end-radius: var(--spacing-0, 0px); }
+.dk-tabs--line .dk-tabs__tab[aria-selected="true"] { color: var(--tabs-text-selected, var(--text)); }
+.dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { content: ""; position: absolute; inset-inline: var(--spacing-0, 0px); bottom: var(--spacing-0, 0px); height: var(--tabs-indicator-width, var(--border-width-2, 2px)); background: var(--tabs-indicator, var(--primary)); }
+
+/* pill */
+@media (hover: hover) { .dk-tabs--pill .dk-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }
+.dk-tabs--pill .dk-tabs__tab[aria-selected="true"] { background: var(--tabs-pill-bg-selected, var(--primary)); color: var(--tabs-pill-text-selected, var(--on-primary)); }
+.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:focus-visible { box-shadow: inset 0 0 0 var(--outline-width-2, 2px) var(--focus-ring), inset 0 0 0 var(--spacing-1, 0.25rem) var(--surface); }
+
+.dk-tabs__panel { padding-top: var(--tabs-panel-gap, var(--spacing-4, 1rem)); }
+.dk-tabs__panel:focus-visible { outline: var(--outline-width-2, 2px) solid var(--focus-ring); outline-offset: var(--outline-offset-2, 2px); border-radius: var(--rounded-sm, 0.25rem); }
+.dk-tabs__panel[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .dk-tabs__tab { transition: none; } }
+@media (forced-colors: active) {
+  .dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { background: Highlight; }
+  .dk-tabs--pill .dk-tabs__tab[aria-selected="true"] { outline: var(--border-width-2, 2px) solid Highlight; }
+}

@@ -1,0 +1,177 @@
+{
+  "combobox": {
+    "$description": "Combobox's component tokens. Each one is an optional override: set the CSS variable (--combobox-<name>) on the page, a container or one combobox, and every Combobox inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The field itself uses Input's tokens.",
+    "color": {
+      "chevron": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The chevron button's icon (3:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-chevron"
+          }
+        }
+      },
+      "listbox-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The list's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-listbox-bg"
+          }
+        }
+      },
+      "listbox-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The list's outline.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-listbox-border"
+          }
+        }
+      },
+      "option-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An option's label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-option-color"
+          }
+        }
+      },
+      "option-bg-active": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The highlighted option (hover or arrow keys), so muted text keeps 4.5:1 on it.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-option-bg-active"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An option's second line, and the empty and loading messages.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-description-color"
+          }
+        }
+      },
+      "check": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The check next to the selected option.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-check"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "listbox-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "The list's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-listbox-shadow"
+          }
+        }
+      }
+    },
+    "radius": {
+      "listbox-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The list's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-listbox-radius"
+          }
+        }
+      },
+      "option-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "An option's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-option-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "listbox-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "The list's height before it scrolls (240px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-listbox-max-height"
+          }
+        }
+      },
+      "option-height": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "An option's least height (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-option-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "listbox-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space inside the list (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-listbox-padding"
+          }
+        }
+      },
+      "option-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space on each side of an option (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-option-padding-x"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The gap between the field and the list (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The list's stacking order, where the top layer isn't available.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--combobox-z-index"
+          }
+        }
+      }
+    }
+  }
+}

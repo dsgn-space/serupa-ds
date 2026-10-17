@@ -1,0 +1,71 @@
+{
+  "number-input": {
+    "$description": "NumberInput's component tokens. Each one is an optional override: set the CSS variable (--number-input-<name>) on the page, a container or one field, and every NumberInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The box itself uses Input's tokens.",
+    "color": {
+      "stepper": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The − and + icons (3:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--number-input-stepper"
+          }
+        }
+      },
+      "stepper-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The icons on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--number-input-stepper-hover"
+          }
+        }
+      },
+      "stepper-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The buttons' background on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--number-input-stepper-bg-hover"
+          }
+        }
+      }
+    },
+    "radius": {
+      "stepper-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "The buttons' corners (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--number-input-stepper-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "stepper-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space around each button's icon (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--number-input-stepper-padding"
+          }
+        }
+      },
+      "stepper-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Space between the − and + buttons (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--number-input-stepper-gap"
+          }
+        }
+      }
+    }
+  }
+}

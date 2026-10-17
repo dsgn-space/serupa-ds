@@ -1,0 +1,161 @@
+{
+  "file-upload": {
+    "$description": "FileUpload's component tokens. Each one is an optional override: set the CSS variable (--file-upload-<name>) on the page, a container or one upload, and every FileUpload inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "zone-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The drop area's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-zone-bg"
+          }
+        }
+      },
+      "zone-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The drop area's dashed outline (3:1 on the surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-zone-border"
+          }
+        }
+      },
+      "zone-bg-active": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The drop area while files are dragged over it.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-zone-bg-active"
+          }
+        }
+      },
+      "zone-border-active": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Its outline then.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-zone-border-active"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The upload icon and file icons (3:1).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-icon"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The drop area's title and file names.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-title-color"
+          }
+        }
+      },
+      "hint-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The hint and file sizes (4.5:1 on zone-bg and the surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-hint-color"
+          }
+        }
+      },
+      "error-color": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "Messages about files that weren't added.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-error-color"
+          }
+        }
+      },
+      "item-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A file row's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-item-bg"
+          }
+        }
+      },
+      "item-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A file row's outline.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-item-border"
+          }
+        }
+      }
+    },
+    "radius": {
+      "zone-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The drop area's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-zone-radius"
+          }
+        }
+      },
+      "item-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "A file row's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-item-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "zone-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space inside the drop area (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-zone-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between the drop area's lines, and between file rows (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-gap"
+          }
+        }
+      },
+      "item-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space inside a file row (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--file-upload-item-padding"
+          }
+        }
+      }
+    }
+  }
+}

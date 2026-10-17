@@ -1,0 +1,19 @@
+/* ---------------------------------------------------------------
+   SearchInput: Input's box with a muted search icon at the start and, once something is typed, a × at the end:
+   a muted icon at the field's icon size, shaded on hover, with its own focus ring. The browser's own clear
+   button and decoration are hidden so there's only one.
+   --------------------------------------------------------------- */
+.dk-search-input:has(.dk-search-input__clear) { padding-inline-end: var(--search-input-clear-padding, var(--spacing-1, 0.25rem)); }
+.dk-search-input__icon { color: var(--search-input-icon, var(--text-muted)); }
+.dk-search-input__icon .dk-loader { --dk-loader-size: var(--dk-input-icon); }
+.dk-search-input .dk-input__field::-webkit-search-cancel-button, .dk-search-input .dk-input__field::-webkit-search-decoration { appearance: none; }
+.dk-search-input__clear {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--search-input-clear-padding, var(--spacing-1, 0.25rem));
+  border: var(--spacing-0, 0px); border-radius: var(--search-input-clear-radius, var(--rounded-sm, 0.25rem)); background: transparent;
+  color: var(--search-input-clear, var(--text-muted)); cursor: pointer;
+  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-search-input__clear .dk-icon { font-size: var(--dk-input-icon); }
+.dk-search-input__clear:hover { background: var(--search-input-clear-bg-hover, var(--secondary)); color: var(--search-input-clear-hover, var(--text)); }
+.dk-search-input__clear:focus-visible { outline: var(--outline-width-2, 2px) solid var(--search-input-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0, 0px); }
+@media (prefers-reduced-motion: reduce) { .dk-search-input__clear { transition: none; } }

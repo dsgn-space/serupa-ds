@@ -1,0 +1,23 @@
+<!-- @dsCard group="Feedback" height=340 subtitle="neutral with an action; success, info, danger with a description" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Toast — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); min-height: 308px; }
+  .dk-toast { animation: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Toaster, { position: 'top-start' }));
+  setTimeout(function () {
+    T.toast({ title: 'Upload failed', description: 'The file is over 10 MB.', tone: 'danger', duration: 0 });
+    T.toast({ title: 'New version available', description: 'Reload to update.', tone: 'info', duration: 0 });
+    T.toast({ title: 'Changes saved', tone: 'success', duration: 0 });
+    T.toast({ title: 'Moved to trash', action: { label: 'Undo', onClick: function () {} }, duration: 0 });
+  }, 0);
+</script>
+</body>
+</html>

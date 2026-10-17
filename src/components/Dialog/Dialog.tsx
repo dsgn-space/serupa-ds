@@ -1,0 +1,90 @@
+import * as React from "react";
+import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
+import { IconButton } from "../IconButton/IconButton";
+
+export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
+  /** Whether it's open. Controlled: close it yourself in onOpenChange. */
+  open: boolean;
+  /** Called with false when people ask to close it: Escape, the close button, or a click on the backdrop. */
+  onOpenChange?: (open: boolean) => void;
+  /** The heading, which also names the dialog. */
+  title?: React.ReactNode;
+  /** A muted line under the title, read when the dialog opens. */
+  description?: React.ReactNode;
+  /** Buttons at the bottom end: the main action last. */
+  footer?: React.ReactNode;
+  /** 'sm' 384px, 'md' 512px (default) or 'lg' 672px wide, at most the screen less 16px each side. */
+  size?: 'sm' | 'md' | 'lg';
+  /** An alert dialog (role="alertdialog") for a confirmation that needs an answer: no close button, and the backdrop doesn't close it. Escape still does. */
+  alert?: boolean;
+  /** Shows the × in the corner. Default: true (false for alert). */
+  closeButton?: boolean;
+  /** The × button's name. Default: 'Close'. */
+  closeLabel?: string;
+  /** Whether a click on the backdrop closes it. Default: true (false for alert). */
+  closeOnBackdrop?: boolean;
+}
+
+/* Dialog: a modal on the native <dialog> (showModal), so the browser keeps focus inside, makes the page behind
+   inert, and puts it in the top layer. title names it, description describes it. Escape, the × and a click on
+   the backdrop ask to close (onOpenChange(false)); focus goes back to where it was. The page doesn't scroll
+   behind it. alert makes a role="alertdialog" for confirmations. */
+const OWN = { open: 1, onOpenChange: 1, title: 1, description: 1, footer: 1, size: 1, alert: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, className: 1, children: 1 } as const;
+
+/** A modal dialog on the native <dialog>: a title, content and actions, over a dimmed page. */
+export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(function Dialog(props, ref) {
+  const rest = omit(props, OWN);
+  const base = domId("dk-dlg", React.useId());
+  const el = React.useRef<HTMLDialogElement | null>(null);
+  const back = React.useRef<HTMLElement | null>(null);
+  const size = oneOf(["sm", "md", "lg"] as const, props.size, "md");
+  const alert = !!props.alert;
+  const showClose = props.closeButton != null ? props.closeButton : !alert;
+  const backdrop = props.closeOnBackdrop != null ? props.closeOnBackdrop : !alert;
+  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
+  const close = React.useCallback(() => { if (ask.current) ask.current(false); }, []);
+  const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
+
+  useIsoLayoutEffect(() => {
+    const d = el.current;
+    if (!d) return;
+    if (props.open && !d.open) {
+      back.current = document.activeElement as HTMLElement | null;
+      if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    } else if (!props.open && d.open) {
+      if (typeof d.close === "function") d.close(); else d.removeAttribute("open");
+      const b = back.current; back.current = null;
+      if (b && b.isConnected && typeof b.focus === "function") b.focus();
+    }
+  }, [props.open]);
+  // Closed while unmounting: give focus back too.
+  React.useEffect(() => () => { const b = back.current; if (b && b.isConnected) b.focus(); }, []);
+
+  // Escape fires "cancel": ask instead of closing, so open stays the truth.
+  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
+  // A click that lands on the <dialog> itself (outside the panel) is on the backdrop.
+  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && e.target === e.currentTarget) close(); };
+  return (
+    <dialog {...rest} ref={(n) => { el.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+      role={alert ? "alertdialog" : undefined} aria-modal="true"
+      aria-labelledby={rest["aria-labelledby"] || (has(props.title) ? base + "-title" : undefined)}
+      aria-describedby={rest["aria-describedby"] || (has(props.description) ? base + "-desc" : undefined)}
+      className={cn("dk-dialog", "dk-dialog--" + size, props.className)} data-component="dialog" data-size={size}
+      onCancel={onCancel} onClick={onClick}>
+      <div className="dk-dialog__panel">
+        {has(props.title) || has(props.description) || showClose ? (
+          <div className="dk-dialog__header">
+            <div className="dk-dialog__heading">
+              {has(props.title) ? <h2 className="dk-dialog__title" id={base + "-title"}>{props.title}</h2> : null}
+              {has(props.description) ? <p className="dk-dialog__description" id={base + "-desc"}>{props.description}</p> : null}
+            </div>
+            {showClose ? <IconButton className="dk-dialog__close" icon="close" label={props.closeLabel || "Close"} size="sm" noTitle onClick={close} /> : null}
+          </div>
+        ) : null}
+        {has(props.children) ? <div className="dk-dialog__body">{props.children}</div> : null}
+        {has(props.footer) ? <div className="dk-dialog__footer">{props.footer}</div> : null}
+      </div>
+    </dialog>
+  );
+});
+Dialog.displayName = "Dialog";

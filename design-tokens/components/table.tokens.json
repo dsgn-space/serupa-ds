@@ -1,0 +1,185 @@
+{
+  "table": {
+    "$description": "Table's component tokens. Each one is an optional override: set the CSS variable (--table-<name>) on the page, a container or one table, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The table's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Cell text.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-text"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The frame and the lines between rows.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-border"
+          }
+        }
+      },
+      "header-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The header row's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-header-bg"
+          }
+        }
+      },
+      "header-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Header text (4.5:1 on header-bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-header-text"
+          }
+        }
+      },
+      "row-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A body row on hover, and every other row when striped (muted text keeps 4.5:1).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-row-bg-hover"
+          }
+        }
+      },
+      "row-bg-selected": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A selected row's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-row-bg-selected"
+          }
+        }
+      },
+      "row-indicator-selected": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The bar at the start of a selected row.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-row-indicator-selected"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring (sort buttons, a scrolling table).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Cell text (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-font-size"
+          }
+        }
+      },
+      "header-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "Header text weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-header-weight"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "A cell's side padding (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-padding-x"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "A cell's top and bottom padding at size md (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-padding-y"
+          }
+        }
+      },
+      "padding-y-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "At size sm (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-padding-y-sm"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The frame and row lines (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-border-width"
+          }
+        }
+      },
+      "indicator-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The selected row's bar (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-indicator-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The frame's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--table-radius"
+          }
+        }
+      }
+    }
+  }
+}

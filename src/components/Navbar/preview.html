@@ -1,0 +1,19 @@
+<!-- @dsCard group="Navigation" height=140 subtitle="brand, links with the current page, actions; folds into a menu below 768px" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Navbar — preview</title>
+<style>
+  body { margin: 0; background: var(--surface-muted); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement, L = D.NavbarLink;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h(D.Navbar, { brand: h('strong', null, 'Acme'), actions: h(D.Avatar, { name: 'Ada Lovelace', size: 'sm' }) },
+      h(L, { href: '#', active: true }, 'Dashboard'), h(L, { href: '#' }, 'Projects'), h(L, { href: '#' }, 'Team'))
+  );
+</script>
+</body>
+</html>

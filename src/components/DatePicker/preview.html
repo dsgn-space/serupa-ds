@@ -1,0 +1,17 @@
+<!-- @dsCard group="Forms" height=420 subtitle="a date field with its calendar open" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DatePicker — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root" style="width:280px"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Field, { label: 'Due date', hint: 'mm/dd/yyyy' }, h(T.DatePicker, { defaultValue: new Date(), locale: 'en-US' })));
+  setTimeout(function () { var b = document.querySelector('.dk-date-picker__button'); if (b) b.click(); }, 50);
+</script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+{
+  "list": {
+    "$description": "List's component tokens. Each one is an optional override: set the CSS variable (--list-<name>) on the page, a container or one list, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "Lines between items, and the frame of variant=\"card\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-border"
+          }
+        }
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The background of variant=\"card\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-bg"
+          }
+        }
+      },
+      "title": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An item's title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-title"
+          }
+        }
+      },
+      "description": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An item's description (4.5:1 on bg and bg-hover).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-description"
+          }
+        }
+      },
+      "bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A link or button item on hover, and a selected item.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-bg-hover"
+          }
+        }
+      },
+      "indicator-selected": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The bar at the start of a selected item.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-indicator-selected"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Titles (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-title-size"
+          }
+        }
+      },
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "Title weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-title-weight"
+          }
+        }
+      },
+      "description-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Descriptions (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-description-size"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "An item's side padding (12px; variant=\"card\": padding-x-card).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-padding-x"
+          }
+        }
+      },
+      "padding-x-card": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "An item's side padding in variant=\"card\" (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-padding-x-card"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "An item's top and bottom padding (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-padding-y"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the leading element, the text and the trailing element (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-gap"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "Lines and frame (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-border-width"
+          }
+        }
+      },
+      "indicator-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The selected item's bar (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-indicator-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The corners of variant=\"card\" (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--list-radius"
+          }
+        }
+      }
+    }
+  }
+}

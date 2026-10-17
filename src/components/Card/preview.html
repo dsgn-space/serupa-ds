@@ -1,0 +1,31 @@
+<!-- @dsCard group="Layout" height=420 subtitle="outline, elevated, filled; header, body, footer; padding sm, lg; as a link" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Card — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 640px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div', { className: 'grid' },
+      h(T.Card, null, h(T.CardHeader, { title: 'Outline', description: 'A border and a hairline shadow' })),
+      h(T.Card, { variant: 'elevated' }, h(T.CardHeader, { title: 'Elevated', description: 'A raised shadow' })),
+      h(T.Card, { variant: 'filled' }, h(T.CardHeader, { title: 'Filled', description: 'Muted and flat' }))),
+    h('div', { style: { maxWidth: 400, marginBottom: 16 } },
+      h(T.Card, null,
+        h(T.CardHeader, { title: 'Team plan', description: 'Up to 10 members', action: h(T.Badge, { tone: 'success' }, 'Active') }),
+        h(T.CardBody, null, 'Renews on 1 March. You’re using 6 of 10 seats.'),
+        h(T.CardFooter, null, h(T.Button, { variant: 'secondary' }, 'Manage seats'), h(T.Button, null, 'Upgrade')))),
+    h('div', { className: 'grid' },
+      h(T.Card, { padding: 'sm' }, h(T.CardHeader, { title: 'Small padding' })),
+      h(T.Card, { padding: 'lg' }, h(T.CardHeader, { title: 'Large padding' })),
+      h(T.Card, { href: '#atlas' }, h(T.CardHeader, { title: 'Atlas', description: 'A linked card' })))
+  ));
+</script>
+</body>
+</html>

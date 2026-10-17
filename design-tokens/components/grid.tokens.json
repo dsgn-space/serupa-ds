@@ -1,0 +1,29 @@
+{
+  "grid": {
+    "$description": "Grid's component tokens. Each one is an optional override: set the CSS variable (--grid-<name>) on the page or a container, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The space between cells when gap isn't given (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--grid-gap"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "min-column": {
+        "$type": "dimension",
+        "$value": "{sizing.container-3xs}",
+        "$description": "The narrowest a column gets with columns=\"auto\" when minColumnWidth isn't given (256px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--grid-min-column"
+          }
+        }
+      }
+    }
+  }
+}

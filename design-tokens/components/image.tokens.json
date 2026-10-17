@@ -1,0 +1,95 @@
+{
+  "image": {
+    "$description": "Image's component tokens. Each one is an optional override: set the CSS variable (--image-<name>) on the page, a container or one image, and every Image inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The frame's fill while the picture loads, and behind a failed one.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-bg"
+          }
+        }
+      },
+      "fallback-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The broken-image icon (3:1 on bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-fallback-color"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "A viewable picture's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-focus-ring"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The frame's corners with rounded (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "min-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "The least width and height of an 'auto' frame before the picture arrives (48px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-min-size"
+          }
+        }
+      },
+      "fallback-icon": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The broken-image icon's size (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-fallback-icon"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "remove-offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The remove button's distance from the corner (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-remove-offset"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "remove-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-sm}",
+        "$description": "The remove button's shadow, so it stands out on any picture.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--image-remove-shadow"
+          }
+        }
+      }
+    }
+  }
+}

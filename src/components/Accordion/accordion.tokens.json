@@ -1,0 +1,169 @@
+{
+  "accordion": {
+    "$description": "Accordion's component tokens. Each one is an optional override: set the CSS variable (--accordion-<name>) on the page, a container or one accordion, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The lines between items, and the frame of variant=\"card\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-border"
+          }
+        }
+      },
+      "title": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An item's title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-title"
+          }
+        }
+      },
+      "content": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An item's content (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-content"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The chevron.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-icon"
+          }
+        }
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The background of variant=\"card\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-bg"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Title text (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-title-size"
+          }
+        }
+      },
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "Title weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-title-weight"
+          }
+        }
+      },
+      "content-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Content text (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-content-size"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space above and below a title, and below the content (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-padding-y"
+          }
+        }
+      },
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Side padding in variant=\"card\" (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-padding-x"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "The chevron (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-icon-size"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "Lines and frame (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-border-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The corners of variant=\"card\" (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-radius"
+          }
+        }
+      }
+    },
+    "motion": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-200}",
+        "$description": "Opening and closing (200ms).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--accordion-duration"
+          }
+        }
+      }
+    }
+  }
+}

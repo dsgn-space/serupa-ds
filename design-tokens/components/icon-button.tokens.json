@@ -1,0 +1,17 @@
+{
+  "icon-button": {
+    "$description": "IconButton's component tokens. Each one is an optional override: set the CSS variable (--icon-button-<name>) on the page, a container or one button, and every one inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "border": {
+      "radius-round": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "The corners of a round icon button (shape=\"round\").",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--icon-button-radius-round"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,139 @@
+import * as React from "react";
+import { cn, omit } from "../../internal/cn";
+
+type SliderValue = number | [number, number];
+export interface SliderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
+  /** The value (controlled): a number, or [low, high] for a range with two thumbs. Use with onValueChange. */
+  value?: SliderValue;
+  /** The value at first (uncontrolled). Default: min. */
+  defaultValue?: SliderValue;
+  /** Called with the new value as it moves (dragging, keys). */
+  onValueChange?: (value: any) => void;
+  /** Called once when a drag or key press ends: for saving or fetching. */
+  onValueCommit?: (value: any) => void;
+  /** Default: 0. */
+  min?: number;
+  /** Default: 100. */
+  max?: number;
+  /** The smallest change. Default: 1. */
+  step?: number;
+  /** How many steps PageUp, PageDown and Shift with an arrow move. Default: 10. */
+  largeStep?: number;
+  /** 'sm' (4px track, 16px thumb) or 'md' (6px, 20px, default). */
+  size?: 'sm' | 'md';
+  disabled?: boolean;
+  /** Turns a value into the words read out (aria-valuetext), such as "$40". Default: the number. */
+  formatValue?: (value: number) => string;
+  /** A range's thumb names. Default: ["Minimum", "Maximum"]. A single thumb is named by aria-label or aria-labelledby. */
+  thumbLabels?: [string, string];
+  /** Submits the value with a form: one hidden input, or two with the same name for a range. */
+  name?: string;
+}
+
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const;
+
+/* Slider: picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Each thumb
+   is role="slider" with aria-valuenow, min, max and valuetext. Arrows change it by step (Right and Up raise it;
+   Left and Right swap in right-to-left pages), PageUp, PageDown and Shift+arrows by largeStep steps, Home and End
+   go to the ends. A press anywhere on the track moves the nearest thumb there; range thumbs can't cross.
+   onValueChange fires as it moves, onValueCommit once when a drag or key press ends. */
+/** Picks a number, or a range with two thumbs, on a track. */
+export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
+  const rest = omit(props, OWN);
+  const min = isFinite(Number(props.min)) && props.min != null ? Number(props.min) : 0;
+  const maxIn = isFinite(Number(props.max)) && props.max != null ? Number(props.max) : 100;
+  const max = maxIn > min ? maxIn : min + 1;
+  const step = Number(props.step) > 0 ? Number(props.step) : 1;
+  const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
+  const places = (String(step).split(".")[1] || "").length;
+  const snap = (v: number) => Math.min(max, Math.max(min, Number((Math.round((v - min) / step) * step + min).toFixed(places))));
+  const controlled = props.value !== undefined;
+  const [own, setOwn] = React.useState<SliderValue>(props.defaultValue ?? min);
+  const raw = controlled ? (props.value as SliderValue) : own;
+  const isRange = Array.isArray(raw);
+  const vals: number[] = isRange ? [snap((raw as number[])[0]), snap((raw as number[])[1])].sort((a, b) => a - b) : [snap(raw as number)];
+  const latest = React.useRef(vals); latest.current = vals;
+  const root = React.useRef<HTMLDivElement | null>(null);
+  const thumbs = React.useRef<(HTMLSpanElement | null)[]>([]);
+  const drag = React.useRef<number | null>(null);
+  const disabled = !!props.disabled;
+  const pct = (v: number) => ((v - min) / (max - min)) * 100;
+  const out = (vs: number[]) => (isRange ? [vs[0], vs[1]] : vs[0]);
+  const text = (v: number) => (props.formatValue ? props.formatValue(v) : String(v));
+
+  const set = (i: number, v: number) => {
+    const vs = latest.current.slice();
+    let n = snap(v);
+    if (isRange) n = i === 0 ? Math.min(n, vs[1]) : Math.max(n, vs[0]);
+    if (n === vs[i]) return vs;
+    vs[i] = n;
+    latest.current = vs;
+    if (!controlled) setOwn(out(vs) as SliderValue);
+    if (props.onValueChange) props.onValueChange(out(vs));
+    return vs;
+  };
+  const commit = () => { if (props.onValueCommit) props.onValueCommit(out(latest.current)); };
+  const fromPoint = (x: number) => {
+    const r = root.current!.querySelector(".dk-slider__track")!.getBoundingClientRect();
+    let share = r.width ? (x - r.left) / r.width : 0;
+    if (getComputedStyle(root.current!).direction === "rtl") share = 1 - share;
+    return min + Math.min(1, Math.max(0, share)) * (max - min);
+  };
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (rest.onPointerDown) rest.onPointerDown(e);
+    if (disabled || e.button !== 0 || e.defaultPrevented) return;
+    e.preventDefault();
+    const v = fromPoint(e.clientX), vs = latest.current;
+    let i = 0;
+    if (isRange) { const d0 = Math.abs(v - vs[0]), d1 = Math.abs(v - vs[1]); i = d1 < d0 || (d1 === d0 && v > vs[1]) ? 1 : 0; }
+    drag.current = i;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    set(i, v);
+    const t = thumbs.current[i]; if (t) t.focus({ preventScroll: true });
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX)); };
+  const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); commit(); };
+  const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    if (disabled) return;
+    const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+    const by = (e.shiftKey ? large : 1) * step, v = latest.current[i];
+    let n: number;
+    switch (e.key) {
+      case "ArrowUp": n = v + by; break;
+      case "ArrowDown": n = v - by; break;
+      case "ArrowRight": n = rtl ? v - by : v + by; break;
+      case "ArrowLeft": n = rtl ? v + by : v - by; break;
+      case "PageUp": n = v + large * step; break;
+      case "PageDown": n = v - large * step; break;
+      case "Home": n = isRange && i === 1 ? latest.current[0] : min; break;
+      case "End": n = isRange && i === 0 ? latest.current[1] : max; break;
+      default: return;
+    }
+    e.preventDefault();
+    const before = latest.current[i];
+    if (set(i, n)[i] !== before) commit();
+  };
+
+  const names = props.thumbLabels || ["Minimum", "Maximum"];
+  const lo = isRange ? pct(vals[0]) : 0, hi = pct(vals[vals.length - 1]);
+  return (
+    <div {...rest} ref={(n) => { root.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+      role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? props["aria-labelledby"] : undefined}
+      className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", props.className)}
+      data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined}
+      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}>
+      <div className="dk-slider__track">
+        <div className="dk-slider__fill" style={{ insetInlineStart: lo + "%", inlineSize: hi - lo + "%" }} />
+        {vals.map((v, i) => (
+          <span key={i} ref={(n) => { thumbs.current[i] = n; }} className="dk-slider__thumb" style={{ insetInlineStart: pct(v) + "%" }}
+            role="slider" tabIndex={disabled ? -1 : 0} aria-valuenow={v} aria-valuemin={isRange && i === 1 ? vals[0] : min} aria-valuemax={isRange && i === 0 ? vals[1] : max}
+            aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation="horizontal" aria-disabled={disabled || undefined}
+            aria-label={isRange ? names[i] : props["aria-label"]} aria-labelledby={isRange ? undefined : props["aria-labelledby"]}
+            onKeyDown={onKeyDown(i)} />
+        ))}
+      </div>
+      {props.name ? vals.map((v, i) => <input key={"in" + i} type="hidden" name={props.name} value={v} disabled={disabled} />) : null}
+    </div>
+  );
+});
+Slider.displayName = "Slider";

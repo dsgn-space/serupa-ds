@@ -1,0 +1,83 @@
+# List
+
+Rows of related things: people, files, notifications, settings. Each row has a title, an optional muted description, something before it (an Avatar or an icon) and something after it (a date, a Badge, an action). A row can be a link or a button; trailing actions stay outside it, so controls are never nested.
+
+## Usage
+
+```jsx
+const { List, ListItem, Avatar, Badge, IconButton } = window.Diki;
+
+<List variant="card" aria-label="Members">
+  {people.map((p) => (
+    <ListItem key={p.id} href={`/people/${p.id}`}
+      leading={<Avatar name={p.name} src={p.photo} size="sm" />}
+      title={p.name} description={p.email}
+      trailing={<IconButton icon="more_horiz" label={`More for ${p.name}`} />} />
+  ))}
+</List>
+
+<List>
+  <ListItem leading="description" title="Report.pdf" description="2 MB" trailing="Yesterday" />
+  <ListItem leading="settings" title="Open settings" onClick={openSettings} />
+</List>
+```
+
+## Props
+
+### List
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `variant` | `'plain'` \| `'card'` | `'plain'` | Bare rows, or rows in a bordered, rounded frame |
+| `divided` | boolean | `true` | Lines between rows |
+| `as` | `'ul'` \| `'ol'` | `'ul'` | `ol` when the order matters |
+
+`className`, `style`, `ref`, `aria-label` and everything else go to the list, which has `data-component="list"`.
+
+### ListItem
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `title` | node | required | The main line |
+| `description` | node | none | A second, muted line |
+| `leading` | an icon name or node | none | Before the text: a 20px muted icon, an Avatar, an image |
+| `trailing` | node | none | After the text, outside any link or button |
+| `href` | string | none | Makes the main area a link |
+| `onClick` | function | none | Makes the main area a button (without `href`) |
+| `as` | a component | `'a'` | Your router's link component; its props (such as `to`) go in `linkProps` |
+| `linkProps` | object | none | Extra props for the link or button |
+| `selected` | boolean | `false` | Shaded with a primary bar; `aria-current="true"` on a link, `aria-pressed` on a button |
+| `disabled` | boolean | `false` | Dims a link or button row and stops it |
+
+`className`, `ref` and everything else go to the `<li>`.
+
+## Accessibility
+
+- It's a real list, so screen readers say how many rows there are. Name it with `aria-label` when there's no heading over it.
+- A whole row is one link or button, named by its title and description; trailing actions are separate controls, so give them names that say which row they're for ("More for Ada Lovelace").
+- Selected rows have a bar and `aria-current` or `aria-pressed`, not only a background.
+- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in all six themes (`tools/test/list.mjs`).
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one list. The list lives in `src/components/List/list.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--list-border` | `border` | Lines between items, and the frame of variant="card". |
+| `--list-bg` | `surface` | The background of variant="card". |
+| `--list-title` | `text` | An item's title. |
+| `--list-description` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
+| `--list-bg-hover` | `surface-muted` | A link or button item on hover, and a selected item. |
+| `--list-indicator-selected` | `primary` | The bar at the start of a selected item. |
+| `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--list-title-size` | `text-sm` | Titles (14px). |
+| `--list-title-weight` | `font-medium` | Title weight (500). |
+| `--list-description-size` | `text-sm` | Descriptions (14px). |
+| `--list-padding-x` | `spacing-3` | An item's side padding (12px; variant="card": padding-x-card). |
+| `--list-padding-x-card` | `spacing-4` | An item's side padding in variant="card" (16px). |
+| `--list-padding-y` | `spacing-3` | An item's top and bottom padding (12px). |
+| `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
+| `--list-border-width` | `border-width-1` | Lines and frame (1px). |
+| `--list-indicator-width` | `border-width-2` | The selected item's bar (2px). |
+| `--list-radius` | `rounded-lg` | The corners of variant="card" (8px). |

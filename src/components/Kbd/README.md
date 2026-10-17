@@ -1,0 +1,64 @@
+# Kbd
+
+Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states.
+
+```tsx
+import { Kbd } from "@diki/design-system";
+
+<p>Press <Kbd>/</Kbd> to search.</p>
+<Kbd keys={["mod", "K"]} />        // ⌘ K on a Mac, Ctrl + K elsewhere
+<Kbd keys={["shift", "enter"]} size="sm" />
+```
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `keys` | `string[]` | | A combination, one key each. Or pass a single key as children. |
+| `size` | `'sm' \| 'md'` | `'md'` | 20 or 24px keycaps. |
+
+`className`, `ref` and other props go to the outer `<kbd>`.
+
+## Named keys
+
+These names (in any case) show as symbols on Apple devices and as words elsewhere, and screen readers hear the key's name:
+
+| Name | Apple | Elsewhere |
+| --- | --- | --- |
+| `mod` | ⌘ | Ctrl |
+| `cmd`, `meta` | ⌘ | ⊞ |
+| `ctrl` | ⌃ | Ctrl |
+| `alt`, `option` | ⌥ | Alt |
+| `shift` | ⇧ | Shift |
+| `enter`, `return` | ↵ | Enter |
+| `backspace`, `delete` | ⌫, ⌦ | Backspace, Del |
+| `tab`, `esc`, `space` | ⇥, Esc, Space | Tab, Esc, Space |
+| `up`, `down`, `left`, `right` | ↑ ↓ ← → | ↑ ↓ ← → |
+
+Use `mod` for shortcuts that follow the platform. Any other text shows as it is, and single letters show in capitals.
+
+## Behavior
+
+- The platform is read in the browser after the page loads, so server-rendered pages show the words first.
+- It sits with the text, so it can go inline in a sentence.
+
+## Accessibility
+
+- A combination is one `<kbd>` holding a `<kbd>` per key, as HTML recommends. Symbols are hidden from screen readers and replaced with the key's name; the + between keys is hidden.
+- Labels and the + keep 4.5:1 in all six themes (`tools/test/kbd.mjs`).
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one key. The list lives in `src/components/Kbd/kbd.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--kbd-bg` | `surface-muted` | A key's background. |
+| `--kbd-border` | `field-border` | A key's outline, thicker at the bottom like a keycap. |
+| `--kbd-text` | `text` | The key's label (4.5:1 on bg). |
+| `--kbd-separator` | `text-muted` | The + between keys in a combination. |
+| `--kbd-radius` | `rounded-sm` | A key's corners (4px). |
+| `--kbd-height-sm` | `spacing-5` | size="sm" (20px). |
+| `--kbd-height-md` | `spacing-6` | size="md", the default (24px). |
+| `--kbd-padding-x` | `spacing-1_5` | Space on each side of a key's label (6px). |
+| `--kbd-gap` | `spacing-1` | Space between keys and the + in a combination (4px). |

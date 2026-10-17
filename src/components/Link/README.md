@@ -1,0 +1,53 @@
+# Link
+
+An inline text link: underlined, in the primary color or the surrounding text's. `external` opens a new tab and says so, and `as` renders your router's link so client-side navigation keeps working.
+
+## Usage
+
+```jsx
+const { Link, Text } = window.Diki;
+
+<Text>Read <Link href="/docs">the guide</Link> before you start.</Text>
+<Link href="https://status.example.com" external>Status page</Link>
+<Text size="sm" tone="muted">By signing up you agree to the <Link href="/terms" tone="neutral">terms</Link>.</Text>
+<Link href="/pricing" underline="hover">Pricing</Link>
+
+// With a router (React Router, Next.js…)
+<Link as={RouterLink} to="/settings">Settings</Link>
+```
+
+For an action that doesn't go anywhere, use a Button (`variant="link"` if it should look like a link).
+
+## Props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `href` | string | none | Where it goes |
+| `tone` | `'primary'` \| `'neutral'` | `'primary'` | The primary color, or the surrounding text's color (still underlined) |
+| `underline` | `'always'` \| `'hover'` | `'always'` | Always underlined, or only on hover and focus |
+| `external` | boolean | `false` | Opens a new tab (`target="_blank"`, adds `noopener noreferrer` to your `rel`), with a new-tab icon and "(opens in a new tab)" for screen readers |
+| `as` | a component | `'a'` | Your router's link component; it gets `className`, `ref` and every other prop |
+
+`className`, `style`, `ref`, `target`, `rel` and everything else go to the element, which has `data-component="link"`. It has no font size of its own: it takes the text around it.
+
+## Accessibility
+
+- Underlined by default, so a link in a sentence doesn't rely on color alone (WCAG 1.4.1). Use `underline="hover"` only where the place already says it's a link: a nav bar, a footer, a list of links.
+- The primary color keeps 4.5:1 on `surface`, on hover too, and the focus ring 3:1, in all six themes (`tools/test/link.mjs`).
+- Write link text that makes sense on its own ("Read the pricing guide", not "click here"): screen reader users often move from link to link.
+- The keyboard focus ring follows the text when a link wraps onto two lines.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one link. The list lives in `src/components/Link/link.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--link-color` | `primary` | tone="primary" text and underline (4.5:1 on surface). |
+| `--link-color-hover` | `primary-hover` | tone="primary" on hover. |
+| `--link-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--link-thickness` | `decoration-1` | The underline's thickness (1px). |
+| `--link-thickness-hover` | `decoration-2` | The underline's thickness on hover (2px). |
+| `--link-offset` | `underline-offset-2` | The gap between the text and the underline (2px). |
+| `--link-icon-gap` | `spacing-0_5` | Space before the new-tab icon of an external link (2px). |
+| `--link-focus-radius` | `rounded-sm` | The focus ring's corners (4px). |

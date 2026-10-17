@@ -1,0 +1,203 @@
+{
+  "input": {
+    "$description": "Input's component tokens. Each one is an optional override: set the CSS variable (--input-<name>) on the page, a container or one input, and every Input inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "Field background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-bg"
+          }
+        }
+      },
+      "bg-readonly": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "Background when read-only or disabled.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-bg-readonly"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "Border (3:1 on the field and the page in every theme).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-border"
+          }
+        }
+      },
+      "border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "Border on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-border-hover"
+          }
+        }
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.placeholder}",
+        "$description": "Placeholder text (4.5:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-placeholder"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "Border and ring while focused.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-focus-ring"
+          }
+        }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "Border and focus ring when invalid.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-invalid"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-sm}",
+        "$description": "Height, sm (24px), like Button sm.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "Height, md (32px, default).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "Height, lg (44px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-height-lg"
+          }
+        }
+      },
+      "icon-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3_5}",
+        "$description": "Icon size, sm (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-icon-size-sm"
+          }
+        }
+      },
+      "icon-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Icon size, md (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-icon-size-md"
+          }
+        }
+      },
+      "icon-size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Icon size, lg (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-icon-size-lg"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Side padding, sm (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-padding-x-sm"
+          }
+        }
+      },
+      "padding-x-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Side padding, md (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-padding-x-md"
+          }
+        }
+      },
+      "padding-x-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Side padding, lg (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-padding-x-lg"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Gap between an icon and the text (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-gap"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "Border width (1px); the focus ring adds as much again.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-border-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "Corner radius (6px), like Button and Badge.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--input-radius"
+          }
+        }
+      }
+    }
+  }
+}

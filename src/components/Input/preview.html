@@ -1,0 +1,25 @@
+<!-- @dsCard group="Forms" height=330 subtitle="Text field: sm, md, lg; icons; focus, invalid, read-only, disabled" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Input — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; max-width: 560px; }
+  .lbl { width: 80px; flex-shrink: 0; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    Row('Sizes', [h(T.Input, { key: 1, size: 'sm', placeholder: 'Small', 'aria-label': 'Small' }), h(T.Input, { key: 2, placeholder: 'Medium', 'aria-label': 'Medium' }), h(T.Input, { key: 3, size: 'lg', placeholder: 'Large', 'aria-label': 'Large' })]),
+    Row('Icons', [h(T.Input, { key: 1, leftIcon: 'search', placeholder: 'Search projects', 'aria-label': 'Search projects' }), h(T.Input, { key: 2, type: 'email', rightIcon: 'mail', defaultValue: 'dana@example.com', 'aria-label': 'Email' })]),
+    Row('Invalid', h(T.Input, { invalid: true, defaultValue: 'not-an-email', 'aria-label': 'Email' })),
+    Row('Read-only', h(T.Input, { readOnly: true, defaultValue: 'INV-2048', 'aria-label': 'Invoice number' })),
+    Row('Disabled', h(T.Input, { disabled: true, placeholder: 'Not available', 'aria-label': 'Disabled' }))
+  ));
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+{
+  "alert": {
+    "$description": "Alert's component tokens. Each one is an optional override: set the CSS variable (--alert-<name>) on the page, a container or one alert, and every Alert inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg-info": {
+        "$type": "color",
+        "$value": "{color.info-subtle}",
+        "$description": "The background of a info alert.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-bg-info"
+          }
+        }
+      },
+      "icon-info": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "The icon and the border tint of a info alert (3:1 on its background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-icon-info"
+          }
+        }
+      },
+      "bg-success": {
+        "$type": "color",
+        "$value": "{color.success-subtle}",
+        "$description": "The background of a success alert.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-bg-success"
+          }
+        }
+      },
+      "icon-success": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The icon and the border tint of a success alert (3:1 on its background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-icon-success"
+          }
+        }
+      },
+      "bg-warning": {
+        "$type": "color",
+        "$value": "{color.warning-subtle}",
+        "$description": "The background of a warning alert.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-bg-warning"
+          }
+        }
+      },
+      "icon-warning": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The icon and the border tint of a warning alert (3:1 on its background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-icon-warning"
+          }
+        }
+      },
+      "bg-danger": {
+        "$type": "color",
+        "$value": "{color.danger-subtle}",
+        "$description": "The background of a danger alert.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-bg-danger"
+          }
+        }
+      },
+      "icon-danger": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The icon and the border tint of a danger alert (3:1 on its background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-icon-danger"
+          }
+        }
+      },
+      "bg-neutral": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The background of a neutral alert.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-bg-neutral"
+          }
+        }
+      },
+      "icon-neutral": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The icon and the border tint of a neutral alert (3:1 on its background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-icon-neutral"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-title-color"
+          }
+        }
+      },
+      "text-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The message (4.5:1 on every tone's background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-text-color"
+          }
+        }
+      }
+    },
+    "opacity": {
+      "border-strength": {
+        "$type": "number",
+        "$value": "{opacity.opacity-30}",
+        "$description": "How strongly the border shows the tone's color (30%).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-border-strength"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The corner radius (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The border width.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-border-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Padding at the start and end (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-padding-x"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Padding at the top and bottom (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-padding-y"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the icon, the content and the close button (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-gap"
+          }
+        }
+      },
+      "content-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the title, the message and the actions (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-content-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--alert-title-weight"
+          }
+        }
+      }
+    }
+  }
+}

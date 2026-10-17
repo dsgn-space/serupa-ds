@@ -1,0 +1,22 @@
+<!-- @dsCard group="Overlays" height=300 subtitle="open: icons, a shortcut, disabled, a group and a destructive item" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Menu — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .dk-menu { animation: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Menu, { open: true, trigger: h(T.Button, { variant: 'secondary', rightIcon: 'expand_more' }, 'Actions') },
+    h(T.MenuItem, { icon: 'edit', shortcut: '⌘E' }, 'Edit'),
+    h(T.MenuItem, { icon: 'content_copy' }, 'Duplicate'),
+    h(T.MenuItem, { icon: 'archive', disabled: true }, 'Archive'),
+    h(T.MenuSeparator),
+    h(T.MenuGroup, { label: 'Danger zone' }, h(T.MenuItem, { icon: 'delete', destructive: true }, 'Delete'))));
+</script>
+</body>
+</html>

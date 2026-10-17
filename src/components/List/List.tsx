@@ -1,0 +1,84 @@
+import * as React from "react";
+import { cn, oneOf, omit } from "../../internal/cn";
+import { asIcon, type IconName } from "../Icon/Icon";
+
+export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
+  /** ListItems. */
+  children?: React.ReactNode;
+  /** 'plain' (default) or 'card': inside a bordered, rounded frame. */
+  variant?: 'plain' | 'card';
+  /** Lines between items. Default: true. */
+  divided?: boolean;
+  /** 'ul' (default) or 'ol' when the order matters. */
+  as?: 'ul' | 'ol';
+}
+
+export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "title" | "onClick"> {
+  /** The item's main line. */
+  title: React.ReactNode;
+  /** A second, muted line. */
+  description?: React.ReactNode;
+  /** Before the text: an Avatar, an icon name or an image. */
+  leading?: IconName | React.ReactNode;
+  /** After the text: meta (a date, a Badge) or actions (an IconButton, a Menu). Stays outside the link or button. */
+  trailing?: React.ReactNode;
+  /** Makes the item's main area a link. */
+  href?: string;
+  /** Makes the item's main area a button (when there's no href). */
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  /** What renders the link: 'a' (default), or your router's link component. Its props go in linkProps. */
+  as?: React.ElementType;
+  /** Extra props for the link or button (to for a router link, target, aria-*). */
+  linkProps?: Record<string, any>;
+  /** Shaded with a primary bar at its start, and aria-current="true" (or aria-pressed for a button). Default: false. */
+  selected?: boolean;
+  /** Dims a link or button item and stops it. Default: false. */
+  disabled?: boolean;
+}
+
+/* List: rows of related things (people, files, settings), each a title with an optional description, leading
+   avatar or icon and trailing meta or actions. A row can be a link or a button; trailing actions stay outside
+   it so controls are never nested. className and every other prop go to the <ul>. */
+/** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
+export const List = React.forwardRef<HTMLUListElement, ListProps>(function List(props, ref) {
+  const rest = omit(props, { variant: 1, divided: 1, as: 1, className: 1 });
+  const variant = oneOf(["plain", "card"] as const, props.variant, "plain");
+  return React.createElement(oneOf(["ul", "ol"] as const, props.as, "ul"), Object.assign(rest, {
+    ref: ref, "data-component": "list",
+    className: cn("dk-list", variant === "card" && "dk-list--card", props.divided !== false && "dk-list--divided", props.className),
+  }));
+});
+List.displayName = "List";
+
+/** One row in a List. */
+export const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(function ListItem(props, ref) {
+  const rest = omit(props, { title: 1, description: 1, leading: 1, trailing: 1, href: 1, onClick: 1, as: 1, linkProps: 1, selected: 1, disabled: 1, className: 1 });
+  const lead = asIcon(props.leading as React.ReactNode);
+  const body = <>
+    {lead != null && lead !== false ? <span className={cn("dk-list__leading", typeof props.leading === "string" && "dk-list__leading--icon")}>{lead}</span> : null}
+    <span className="dk-list__text">
+      <span className="dk-list__title">{props.title}</span>
+      {props.description != null ? <span className="dk-list__description">{props.description}</span> : null}
+    </span>
+  </>;
+  const lp = Object.assign({}, props.linkProps);
+  let main: React.ReactNode;
+  if (props.href != null || props.as) {
+    const attrs: Record<string, any> = Object.assign(lp, { className: cn("dk-list__main", lp.className), "aria-current": props.selected ? "true" : undefined });
+    if (props.disabled) { attrs["aria-disabled"] = true; attrs.tabIndex = -1; attrs.onClick = (e: React.MouseEvent) => e.preventDefault(); }
+    else { attrs.href = props.href; if (props.onClick) attrs.onClick = props.onClick; }
+    main = React.createElement(props.as || "a", attrs, body);
+  } else if (props.onClick) {
+    main = <button type="button" {...lp} className={cn("dk-list__main", lp.className)} onClick={props.onClick} disabled={props.disabled} aria-pressed={props.selected === undefined ? undefined : !!props.selected}>{body}</button>;
+  } else {
+    main = <div className="dk-list__main dk-list__main--static">{body}</div>;
+  }
+  const interactive = props.href != null || !!props.as || !!props.onClick;
+  return (
+    <li {...rest} ref={ref} className={cn("dk-list__item", interactive && "dk-list__item--interactive", props.selected && "dk-list__item--selected", props.disabled && "dk-list__item--disabled", props.className)}>
+      {main}
+      {props.trailing != null ? <span className="dk-list__trailing">{props.trailing}</span> : null}
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";

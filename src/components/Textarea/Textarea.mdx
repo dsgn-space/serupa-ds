@@ -1,0 +1,18 @@
+import { Meta, Title, Description, Primary, Controls, Stories } from '@storybook/blocks';
+import { Guide } from '../../../docs/blocks';
+import * as StoriesTextarea from './Textarea.stories';
+import guide from './README.md?raw';
+
+<Meta of={StoriesTextarea} />
+
+<Title />
+
+<Primary />
+
+<Controls />
+
+<Guide source={guide} />
+
+## Examples
+
+<Stories title="" includePrimary={false} />
