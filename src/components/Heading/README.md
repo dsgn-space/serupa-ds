@@ -33,7 +33,7 @@ Each is an optional override: set it on the page, a container or one heading. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--heading-color` | `text` | The heading's color. |
+| `--heading-text` (was `--heading-color`, which still works until 5.0.0) | `text` | The heading's color. |
 | `--heading-weight` | `font-semibold` | The weight of every level (600). |
 | `--heading-size-1` | `text-3xl` | The size of a level 1 heading (text-3xl). |
 | `--heading-size-2` | `text-2xl` | The size of a level 2 heading (text-2xl). |
