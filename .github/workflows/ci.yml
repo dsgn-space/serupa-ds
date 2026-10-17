@@ -9,11 +9,19 @@ jobs:
   suite:
     # The suite runs as parallel jobs, one per group (tools/test/run.mjs --group), so a run takes as long as
     # its slowest group instead of all of them in a row.
-    name: suite (${{ matrix.group }})
+    name: suite (${{ matrix.group }}${{ matrix.shard && format(' {0}', matrix.shard) || '' }})
     strategy:
       fail-fast: false
       matrix:
-        group: [checks, components, visual, storybook]
+        # Storybook's check (every story in six themes) is the slowest, so it runs as four shards.
+        include:
+          - { group: checks }
+          - { group: components }
+          - { group: visual }
+          - { group: storybook, shard: 1/4 }
+          - { group: storybook, shard: 2/4 }
+          - { group: storybook, shard: 3/4 }
+          - { group: storybook, shard: 4/4 }
     # Pinned so font rendering, and with it the visual snapshots, stays the same between runs.
     runs-on: ubuntu-24.04
     steps:
@@ -42,6 +50,8 @@ jobs:
         run: npm run build-storybook
       - name: Test suite
         shell: bash
+        env:
+          DIKI_SHARD: ${{ matrix.shard }}
         run: |
           set -o pipefail
           node tools/test/run.mjs --group ${{ matrix.group }} 2>&1 | tee test-output.txt
@@ -58,7 +68,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-output-${{ matrix.group }}
+          name: test-output-${{ matrix.group }}${{ matrix.shard && format('-{0}', strategy.job-index) || '' }}
           path: |
             test-output.txt
             .test-tmp/
