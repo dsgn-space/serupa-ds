@@ -64,8 +64,9 @@ for (const e of docs) {
     const bg = (s) => { const el = document.querySelector(s); return el ? getComputedStyle(el).backgroundColor : null; };
     const want = getComputedStyle(document.body).backgroundColor, text = getComputedStyle(document.querySelector('.sbdocs-content') || document.body).color;
     const off = ['html', '.sbdocs-wrapper', '.sbdocs-preview', '.docs-story'].filter((s) => bg(s) !== null && bg(s) !== want);
-    // Code in a dark theme: every syntax color 4.5:1 on its block. Controls: the chosen radio or boolean value
-    // still looks different from the others.
+    // Code in a dark theme: every syntax color 4.5:1 on its block. Boolean switches: the chosen half still looks
+    // different from the other, and both halves read 4.5:1 on what's behind them. (Radios show their state with
+    // the native dot.)
     const rgb = (c) => c.match(/[\d.]+/g).map(Number);
     const lum = (c) => { const v = c.slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
     const ratio = (a, b) => { const [x, y] = [lum(rgb(a)), lum(rgb(b))].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
@@ -74,11 +75,18 @@ for (const e of docs) {
       const bg = getComputedStyle(pre).backgroundColor;
       for (const sp of pre.querySelectorAll('span')) { if (!sp.textContent.trim()) continue; const r = ratio(getComputedStyle(sp).color, bg); if (r < 4.5) code.push(`${sp.className || 'text'} ${r.toFixed(2)}`); }
     }
-    const looks = (l) => { const sp = l.querySelector('span'), c = getComputedStyle(sp); return [c.backgroundColor, c.color, c.fontWeight, c.boxShadow].join(); };
-    const flat = [...document.querySelectorAll('.docblock-argstable td:has(label input:checked)')].filter((td) => { const ls = [...td.querySelectorAll('label')]; const on = ls.filter((l) => l.querySelector('input:checked')), off = ls.filter((l) => !l.querySelector('input:checked')); return on.length && off.length && on.every((l) => off.some((o) => looks(o) === looks(l))); }).length;
-    return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat };
+    const behind = (el) => { for (; el; el = el.parentElement) { const c = getComputedStyle(el).backgroundColor; if (rgb(c)[3] !== 0) return c; } return want; };
+    const looks = (sp) => { const c = getComputedStyle(sp); return [c.backgroundColor, c.color, c.boxShadow].join(); };
+    const flat = [];
+    for (const l of document.querySelectorAll('.docblock-argstable label:has(> input[role="switch"])')) {
+      const [a, b] = l.querySelectorAll(':scope > span');
+      if (!a || !b) continue;
+      if (looks(a) === looks(b)) flat.push(`${l.getAttribute('aria-label')} same`);
+      for (const sp of [a, b]) { const c = getComputedStyle(sp).color, r = rgb(c)[3] === undefined || rgb(c)[3] === 1 ? ratio(c, behind(sp)) : 0; if (r < 4.5) flat.push(`${l.getAttribute('aria-label')} ${sp.textContent} ${r.toFixed(2)}`); }
+    }
+    return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
-  t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(3, 7, 18)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat, darkNotReady || JSON.stringify(dark));
+  t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(3, 7, 18)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark));
 }
 for (const e of stories) {
   const problems = [];
