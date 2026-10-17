@@ -4,6 +4,18 @@ Every change to the Diki Design System, newest first. The format follows [Keep a
 
 ## [Unreleased]
 
+## [4.8.1] - 2026-10-17
+
+### Changed
+
+- The documentation runs on Storybook 10.6 (from 8.6). Nothing in the package changes; `npm run storybook` and `npm run build-storybook` work as before. The Essentials addon is gone (its parts are now built into Storybook), and the Docs addon takes its place.
+
+### Fixed
+
+- Avatar falls back to initials when its picture fails to load quickly (as in Safari), instead of keeping the broken picture.
+- Calendar, DatePicker and DateRangePicker start the week on the locale's day in Firefox too (Monday for de-DE, for example); Firefox has no Intl.Locale week info, so they always started on Sunday.
+- Textarea with `autoResize` no longer raises "ResizeObserver loop completed with undelivered notifications" on the window when its width changes.
+
 ## [4.8.0] - 2026-10-17
 
 ### Added
