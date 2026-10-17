@@ -101,10 +101,10 @@ Each is an optional override: set it on the page, a container or one card. The l
 | --- | --- | --- |
 | `--card-bg` | `surface` | The background (outline and elevated) |
 | `--card-bg-filled` | `surface-muted` | The background of a filled card |
-| `--card-border-color` | `border` | The border of an outline card |
+| `--card-border` (was `--card-border-color`, which still works until 5.0.0) | `border` | The border of an outline card |
 | `--card-title-color` | `text` | The title |
 | `--card-description-color` | `text-muted` | The description |
-| `--card-hover-border-color` | `border-strong` | A linked card's border on hover |
+| `--card-border-hover` (was `--card-hover-border-color`, which still works until 5.0.0) | `border-strong` | A linked card's border on hover |
 | `--card-shadow` | `shadow-xs` | An outline card's shadow |
 | `--card-shadow-elevated` | `shadow-md` | An elevated card's shadow |
 | `--card-radius` | `rounded-xl` | The corners |

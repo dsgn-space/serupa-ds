@@ -74,7 +74,7 @@ Each is an optional override: set it on the page, a container or one alert. The 
 | `--alert-bg-neutral` | `surface-muted` | The background of a neutral alert. |
 | `--alert-icon-neutral` | `text-muted` | The icon and the border tint of a neutral alert (3:1 on its background). |
 | `--alert-title-color` | `text` | The title. |
-| `--alert-text-color` | `text` | The message (4.5:1 on every tone's background). |
+| `--alert-text` (was `--alert-text-color`, which still works until 5.0.0) | `text` | The message (4.5:1 on every tone's background). |
 | `--alert-border-strength` | `opacity-30` | How strongly the border shows the tone's color (30%). |
 | `--alert-radius` | `rounded-lg` | The corner radius (8px). |
 | `--alert-border-width` | `border-width-1` | The border width. |

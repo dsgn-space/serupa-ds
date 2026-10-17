@@ -18,7 +18,8 @@
         "$description": "An item's title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--accordion-title"
+            "cssVar": "--accordion-title-color",
+            "deprecatedCssVar": "--accordion-title"
           }
         }
       },
@@ -28,7 +29,8 @@
         "$description": "An item's content (4.5:1 on surface).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--accordion-content"
+            "cssVar": "--accordion-content-color",
+            "deprecatedCssVar": "--accordion-content"
           }
         }
       },
@@ -38,7 +40,8 @@
         "$description": "The chevron.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--accordion-icon"
+            "cssVar": "--accordion-icon-color",
+            "deprecatedCssVar": "--accordion-icon"
           }
         }
       },

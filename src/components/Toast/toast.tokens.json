@@ -18,7 +18,8 @@
         "$description": "A toast's border.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--toast-border-color"
+            "cssVar": "--toast-border",
+            "deprecatedCssVar": "--toast-border-color"
           }
         }
       },

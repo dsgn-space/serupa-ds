@@ -24,7 +24,7 @@
   align-items: flex-start;
   gap: var(--toast-gap, var(--spacing-3, 0.75rem));
   padding: var(--toast-padding, var(--spacing-4, 1rem));
-  border: var(--toast-border-width, var(--border-width-1, 1px)) solid var(--toast-border-color, var(--border));
+  border: var(--toast-border-width, var(--border-width-1, 1px)) solid var(--toast-border, var(--toast-border-color, var(--border)));
   border-radius: var(--toast-radius, var(--rounded-lg, 0.5rem));
   background: var(--toast-bg, var(--surface));
   color: var(--toast-title-color, var(--text));
