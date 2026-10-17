@@ -36,9 +36,10 @@ import { Carousel, Image } from "@diki/design-system";
 ## Behavior
 
 - The previous and next buttons move one slide. A click on a dot goes to that slide. On the dots, the arrow keys move to the previous or next slide, and Home and End go to the first and last.
-- A swipe of 40px or more, with touch, pen or mouse, moves one slide; a shorter one springs back. Up and down swipes still scroll the page.
+- A swipe of 40px or more, with touch, pen or mouse, moves one slide; a shorter one springs back. Up and down swipes still scroll the page. Swiping works over pictures, and a swipe that starts on a link doesn't follow it.
+- Without `loop`, the button for the way you can't go hides; if it had focus, focus moves to the other button.
 - Slides slide in over 300ms, and change at once with reduced motion. With one slide there are no buttons or dots.
-- In RTL the row runs right to left, and the buttons and arrow keys follow it.
+- In RTL (a `dir` attribute or CSS `direction`) the row runs right to left, and the buttons and arrow keys follow it.
 
 ## Accessibility
 

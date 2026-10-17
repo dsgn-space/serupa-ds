@@ -21,6 +21,9 @@ function App() {
     h(D.Carousel, { id: 'one', label: 'One' }, slides(1, 'o')),
     h(D.Carousel, { id: 'bare', label: 'Bare', arrows: false, dots: false, defaultIndex: 9 }, slides(3, 'b')),
     h('div', { dir: 'rtl' }, h(D.Carousel, { id: 'rtl', label: 'RTL' }, slides(3, 'r'))),
+    h(D.Carousel, { id: 'pics', label: 'Pictures' }, ['#c00', '#0c0', '#00c'].map(function (c) { return h('img', { key: c, alt: c, style: { display: 'block', width: '100%', height: 120 }, src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="30"><rect width="40" height="30" fill="' + c + '"/></svg>') }); })),
+    h('div', { style: { direction: 'rtl' } }, h(D.Carousel, { id: 'cssrtl', label: 'CSS RTL', defaultIndex: 1 }, slides(3, 'x'))),
+    h(D.Carousel, { id: 'fixed', label: 'Fixed', index: 0, onIndexChange: function () {} }, slides(3, 'f')),
     h(D.Carousel, { id: 'tok', label: 'Tokens', style: { '--carousel-dot-active': 'rgb(1, 2, 3)', '--carousel-radius': '3px' } }, slides(2, 't')));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
@@ -124,6 +127,30 @@ const contrast = await p.evaluate(() => {
   return { low, n };
 });
 t('contrast: the dots and the button icons keep 3:1 in all six themes', contrast.low.length === 0 && contrast.n === 18, contrast.low.join('; '));
+await p.locator('#pics').scrollIntoViewIfNeeded();
+await swipe('pics', -120);
+t('a mouse swipe over a picture works (the picture\'s own drag is stopped)', (await state('pics')).index === 1, String((await state('pics')).index));
+await p.locator('#car').scrollIntoViewIfNeeded();
+const h0 = await p.evaluate(() => location.hash);
+{ const box = await p.locator('#car .dk-carousel__slide[data-active] a').boundingBox(); const x = box.x + box.width / 2, y = box.y + box.height / 2; await p.mouse.move(x, y); await p.mouse.down(); for (let i = 1; i <= 5; i++) await p.mouse.move(x - 24 * i, y); await p.mouse.up(); await p.waitForTimeout(50); }
+t('a swipe that starts on a link doesn\'t follow it', (await p.evaluate(() => location.hash)) === h0, await p.evaluate(() => location.hash));
+const i0 = (await state('car')).index;
+await p.evaluate(() => { const v = document.querySelector('#car .dk-carousel__viewport'), o = { bubbles: true, pointerId: 7, pointerType: 'touch', isPrimary: true, clientY: v.getBoundingClientRect().top + 40 }; v.dispatchEvent(new PointerEvent('pointerdown', { ...o, clientX: 300 })); v.dispatchEvent(new PointerEvent('pointermove', { ...o, clientX: 250 })); v.dispatchEvent(new PointerEvent('pointermove', { ...o, clientX: 180 })); v.dispatchEvent(new PointerEvent('pointercancel', { ...o, clientX: 180 })); });
+await p.waitForTimeout(50);
+const cs = await p.evaluate(() => document.querySelector('#car').style.getPropertyValue('--dk-carousel-drag'));
+t('a cancelled touch (the browser scrolls instead) puts the slide back and doesn\'t change it', (await state('car')).index === i0 && cs === '0px', (await state('car')).index + ' ' + cs);
+await p.click('#car .dk-carousel__dot >> nth=0');
+await p.focus('#car .dk-carousel__arrow--next');
+for (let i = 0; i < 3; i++) await p.keyboard.press('Enter');
+const fe = await p.evaluate(() => [document.querySelector('#car').dataset.index, document.activeElement.getAttribute('aria-label')].join());
+await p.keyboard.press('Enter'); await p.keyboard.press('Enter'); await p.keyboard.press('Enter');
+const fs2 = await p.evaluate(() => [document.querySelector('#car').dataset.index, document.activeElement.getAttribute('aria-label')].join());
+t('without loop, reaching the last slide moves focus to Previous (and the first, to Next), so focus isn\'t lost', fe === '3,Previous slide' && fs2 === '0,Next slide', fe + ' / ' + fs2);
+const cr = await p.evaluate(() => { const c = document.getElementById('cssrtl'), v = c.querySelector('.dk-carousel__viewport').getBoundingClientRect(), sl = [...c.querySelectorAll('.dk-carousel__slide')]; return sl.findIndex((x) => Math.abs(x.getBoundingClientRect().left - v.left) < 1); });
+t('RTL from CSS direction alone (no dir attribute) shows the right slide', cr === 1, String(cr));
+await p.focus('#fixed .dk-carousel__dot >> nth=0'); await p.keyboard.press('ArrowRight');
+const fx = await p.evaluate(() => [document.getElementById('fixed').dataset.index, document.activeElement.getAttribute('aria-label')].join());
+t('controlled: when the parent keeps the index, focus stays on the current dot', fx === '0,1 of 3', fx);
 t('no errors on the page', errors.length === 0, errors.join('; '));
 
 {
