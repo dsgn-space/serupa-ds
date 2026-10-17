@@ -146,7 +146,7 @@ try {
   const RESP = writePage('compat-resp.html', '<div id="r" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2"><i>1</i></div><p id="h" class="hidden md:block">x</p>', { extraHead: '<style>html,body{margin:0}</style>' });
   await wd.goto(RESP);
   const chrome = await wd.evaluate(() => ({ w: outerWidth - innerWidth }));
-  for (const [w, cols] of [[700, 2], [900, 3], [1100, 4], [1400, 5]]) {
+  for (const [w] of [[700, 2], [900, 3], [1100, 4], [1400, 5]]) {
     await wd.size(w + chrome.w, 900);
     await wd.evaluate((w) => new Promise((ok) => { const t0 = Date.now(); (function poll() { if (Math.abs(innerWidth - w) < 2 || Date.now() - t0 > 3000) ok(); else setTimeout(poll, 50); })(); }), w);
     const r = await wd.evaluate(() => ({ iw: innerWidth, cols: getComputedStyle(document.getElementById('r')).gridTemplateColumns.split(' ').length, h: getComputedStyle(document.getElementById('h')).display }));

@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 export const WithValue: Story = { args: { defaultValue: { start: new Date(2025, 2, 10), end: new Date(2025, 2, 14) } } };
 export const InField: Story = {
-  render: () => {
+  render: function Render() {
     const [stay, setStay] = React.useState<DateRange>({ start: null, end: null });
     return <Field label="Stay" hint="mm/dd/yyyy, from today on"><DateRangePicker value={stay} onValueChange={setStay} min={new Date()} /></Field>;
   },

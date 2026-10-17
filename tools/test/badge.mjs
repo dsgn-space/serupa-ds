@@ -12,6 +12,7 @@ var TONES = ${JSON.stringify(TONES)};
 function App() {
   var s = React.useState(['Design', 'Research']), tags = s[0];
   var ls = React.useState(false); window.setLoading = ls[1];
+  var cs = React.useState(0); window.setCount = cs[1];
   var hit = function () { window.clicks++; };
   return h(React.Fragment, null,
     h(D.Badge, { id: 'def' }, 'Default'),
@@ -53,6 +54,7 @@ function App() {
     h(D.Badge, { id: 'c120', count: 120 }),
     h(D.Badge, { id: 'c12m9', count: 12, max: 9 }),
     h('span', { id: 'zero' }, h(D.Badge, { count: 0 })),
+    h('span', { id: 'grow' }, h(D.Badge, { count: cs[0] })),
     h(D.Badge, { id: 'zshow', count: 0, showZero: true }),
     h(D.Badge, { id: 'ref', ref: window.r = React.createRef(), className: 'extra', 'data-x': 'y', title: 'tip' }, 'Ref'),
     h('div', { id: 'tags' }, tags.map(function (t) { return h(D.Badge, { key: t, tone: 'violet', onRemove: function () { window.removed.push(t); s[1](tags.filter(function (x) { return x !== t; })); } }, t); })),
@@ -219,7 +221,7 @@ t('micro-interactions: a clickable badge has the ripple layer first (under the c
 const scl = (id) => p.evaluate((id) => getComputedStyle(document.getElementById(id)).scale, id);
 const bb = await p.evaluate(() => { const r = document.getElementById('mi').getBoundingClientRect(); return { x: r.left + 12, y: r.top + 12, w: r.width, h: r.height }; });
 await p.mouse.move(bb.x, bb.y); await p.mouse.down(); await p.waitForTimeout(200);
-const held = await p.evaluate(() => { const e = document.getElementById('mi'), dots = e.querySelectorAll('.dk-badge__ripple'), d = dots[0]; if (!d) return null; const r = d.getBoundingClientRect(), s = getComputedStyle(d), host = e.querySelector('.dk-badge__ripples').getBoundingClientRect(), lab = getComputedStyle(e.querySelector('.dk-badge__label')).position;
+const held = await p.evaluate(() => { const e = document.getElementById('mi'), dots = e.querySelectorAll('.dk-badge__ripple'), d = dots[0]; if (!d) return null; const s = getComputedStyle(d), host = e.querySelector('.dk-badge__ripples').getBoundingClientRect(), lab = getComputedStyle(e.querySelector('.dk-badge__label')).position;
   return { n: dots.length, op: s.opacity, bg: s.backgroundColor, color: getComputedStyle(e).color, dia: parseFloat(d.style.width), host: [host.width, host.height], pe: s.pointerEvents, lab, anim: s.animationDuration }; });
 const pressed = await scl('mi');
 await p.mouse.up(); await p.waitForTimeout(200);
@@ -256,6 +258,11 @@ t('ping: off by default; with dot, a copy of the dot (its color, its size) runs 
   && pg.ind.name === 'ping' && pg.ind.bg === pg.indBg && pg.ind.w === '8px' && pg.indPos === 'relative' && pg.abs === 'absolute' && !pg.nodot && !pg.icon, JSON.stringify(pg));
 const rf = await p.evaluate(() => { const e = window.r.current; return e && e.id === 'ref' && e.classList.contains('extra') && e.dataset.x === 'y' && e.title === 'tip'; });
 t('ref, className and other attributes pass through', rf);
+await p.evaluate(() => window.setCount(2)); await p.waitForTimeout(50);
+const grown = await p.evaluate(() => document.querySelector('#grow .dk-badge') ? document.querySelector('#grow .dk-badge').textContent : null);
+await p.evaluate(() => window.setCount(0)); await p.waitForTimeout(50);
+const shrunk = await p.evaluate(() => document.getElementById('grow').children.length);
+t('count: a badge whose count goes from 0 to 2 and back to 0 appears and disappears without an error (hooks run on every render)', grown === '2' && shrunk === 0, JSON.stringify({ grown, shrunk }));
 t('no page errors', errors.length === 0, errors.join(' | '));
 
 // reduced motion: no press, no ripple; loading only fades

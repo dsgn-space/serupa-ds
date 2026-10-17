@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 export const Loop: Story = { args: { loop: true } };
 export const Controlled: Story = {
-  render: (args) => {
+  render: function Render(args) {
     const [i, setI] = React.useState(2);
     return <div style={{ maxWidth: 480 }}>
       <Carousel {...args} index={i} onIndexChange={setI}>{PICS.map((p) => <Image key={p.alt} {...p} ratio="4:3" rounded={false} />)}</Carousel>

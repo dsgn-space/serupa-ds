@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const WorkingHours: Story = {
-  render: () => {
+  render: function Render() {
     const [t, setT] = React.useState<string | null>('09:00');
     return <Field label="Start time" hint="Between 8 AM and 6 PM"><TimePicker value={t} onValueChange={setT} min="08:00" max="18:00" step={15} /></Field>;
   },

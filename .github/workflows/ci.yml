@@ -43,6 +43,9 @@ jobs:
       - name: Type check
         if: matrix.group == 'checks'
         run: npm run typecheck
+      - name: Lint (ESLint and Stylelint)
+        if: matrix.group == 'checks'
+        run: npm run lint
       - name: Build the package
         run: npm run build
       - name: Build Storybook

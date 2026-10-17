@@ -33,7 +33,6 @@ const p = await (await b.newContext({ viewport: { width: 900, height: 600 } })).
 p.on('pageerror', (e) => errors.push(e.message));
 await p.goto(writePage('menu.html', APP, { react: true }));
 await p.waitForTimeout(300);
-const menuOf = (btn) => `[role="menu"][aria-labelledby="${btn}"]`;
 const st = () => p.evaluate(() => { const m = [...document.querySelectorAll('[role="menu"]')].find((x) => !x.hidden); const a = document.activeElement; return { open: !!m, focus: a.getAttribute('role') === 'menuitem' ? a.querySelector('.dk-menu__label').textContent : a.id, chosen: window.chosen.join() }; });
 
 const w = await p.evaluate(() => { const b = document.getElementById('mb'), m = document.querySelector('[role="menu"]'); return { pop: b.getAttribute('aria-haspopup'), exp: b.getAttribute('aria-expanded'), ctl: b.getAttribute('aria-controls'), lab: m.getAttribute('aria-labelledby'), hidden: m.hidden, kids: m.children.length }; });

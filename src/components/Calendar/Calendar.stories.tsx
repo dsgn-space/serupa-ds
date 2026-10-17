@@ -16,7 +16,7 @@ export const MinAndMax: Story = { args: { min: new Date(2025, 2, 5), max: new Da
 export const NoWeekends: Story = { args: { isDateDisabled: (d: Date) => d.getDay() === 0 || d.getDay() === 6 } };
 export const German: Story = { args: { locale: 'de-DE', previousLabel: 'Vorheriger Monat', nextLabel: 'Nächster Monat' } };
 export const Controlled: Story = {
-  render: () => {
+  render: function Render() {
     const [day, setDay] = React.useState<Date | null>(new Date(2025, 2, 10));
     return <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)' }}>
       <Calendar value={day} onValueChange={setDay} />

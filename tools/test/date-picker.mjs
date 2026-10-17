@@ -131,7 +131,6 @@ const contrast = await p.evaluate(() => {
     document.documentElement.setAttribute('data-theme', th);
     const pop = document.querySelector('#ctl ~ .dk-date-picker__popup'), bg = getComputedStyle(pop).backgroundColor, cs = (sel) => getComputedStyle(pop.querySelector(sel));
     const day = pop.querySelector('.dk-calendar__day:not(.dk-calendar__day--outside):not(.dk-calendar__day--selected):not(.dk-calendar__day--today)');
-    const hover = getComputedStyle(document.body).getPropertyValue('--surface-muted');
     const sel = cs('.dk-calendar__day--selected');
     const pairs = [['title', cs('.dk-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.dk-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', sel.backgroundColor, bg, 3]];
     day.style.background = 'var(--calendar-day-bg-hover, var(--surface-muted))';

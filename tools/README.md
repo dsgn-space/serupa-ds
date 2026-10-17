@@ -18,6 +18,7 @@ Node 20 or later (`.nvmrc`) and Python 3 (the docs build and the foundation audi
 ```sh
 npm run build       # src/ → dist/ (tools/build/build.mjs: tsup for the JavaScript and types, then the CSS)
 npm run typecheck   # tsc over src/
+npm run lint        # ESLint (TypeScript, React hooks rules, the tools) and Stylelint (the CSS)
 ```
 
 `dist/` is build output: never edit it, and it isn't committed. A new component's CSS joins `components.css` in the order of the `@import` list in `src/styles/index.css`.

@@ -1,0 +1,8 @@
+{
+  "extends": "stylelint-config-recommended",
+  "ignoreFiles": ["dist/**", "storybook-static/**", "node_modules/**", "tokens.css"],
+  "rules": {
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null
+  }
+}
