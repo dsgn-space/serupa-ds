@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Markdown } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
+import foundations from './foundations.md?raw';
 import iconNames from './icon-names.json';
 import { Icon } from '../src/components/Icon/Icon';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
@@ -26,14 +27,14 @@ export function Guide({ source }: { source: string }) {
   return <Markdown>{relink(source.replace(/^# .*\n+/, ''))}</Markdown>;
 }
 
-const ROOT = readme.slice(0, readme.indexOf('\n---\n\n## Consuming this system'));
+const ROOT = readme;
 /** The README's introduction, before its first section. */
 export function ReadmeIntro() {
   return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
 }
-/** README sections by their headings (## level), each with its subsections. */
+/** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
 export function ReadmeSections({ headings }: { headings: string[] }) {
-  const parts = ROOT.split(/\n(?=## )/);
+  const parts = [ROOT, foundations].flatMap((md) => md.split(/\n(?=## )/));
   const md = headings.map((h) => parts.find((p) => p.startsWith(`## ${h}\n`)) || `> Missing README section: ${h}`).join('\n\n');
   return <Markdown>{relink(md)}</Markdown>;
 }

@@ -8,8 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { HERE, PROJECT, tokensCss, report } from './lib.mjs';
 
-// Not components: Cover is the preview of the system's cover page.
-const SKIP = ['Cover'];
+const SKIP = [];
 // Parts a component doesn't need, and why. Keep the reason: an exemption without one is a gap.
 const EXEMPT = {
   Icon: { tokens: 'draws in currentColor at 1em; no visual values of its own' },
