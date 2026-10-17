@@ -2,8 +2,6 @@
 
 A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a user menu. It follows the WAI-ARIA menu button pattern and opens next to its button in the browser's top layer.
 
-## Usage
-
 ```jsx
 const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.Diki;
 
@@ -19,6 +17,44 @@ const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.
 
 <Menu trigger={<IconButton icon="more_vert" label="Row actions" />} placement="bottom-end">…</Menu>
 ```
+
+## When to use
+
+- A set of actions on one item that would crowd the page as buttons, such as a table row's "More" menu.
+- Grouping related actions behind one "Actions" button in a toolbar.
+- A user or account menu with a few actions and links.
+
+## When not to use
+
+- Picking a value: use [Select](../Select/README.md) instead (or [Combobox](../Combobox/README.md) for a long list).
+- Navigation links: use a plain list of links instead, or [Navbar](../Navbar/README.md) or [Sidebar](../Sidebar/README.md) for an app's pages.
+- One or two actions: show them as [Button](../Button/README.md)s instead, so people don't have to open anything.
+- Content with fields or text: use [Popover](../Popover/README.md) instead.
+
+## Usage
+
+- Start each label with a verb ("Edit", "Duplicate", "Delete") and keep it short.
+- Put the most used actions first, and destructive ones last, after a `MenuSeparator` or in their own `MenuGroup`.
+- Keep `disabled` items in place rather than hiding them, so people learn the action exists.
+- `shortcut` only shows a hint: wire the shortcut yourself, and show only shortcuts that work.
+
+## Accessibility
+
+- `role="menu"` with `menuitem`s, `group`s and `separator`s; only the highlighted item takes focus.
+- Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in all six themes (`tools/test/menu.mjs`).
+
+### Keyboard
+
+| Key | On the button | In the menu |
+| --- | --- | --- |
+| Enter, Space | Opens it on the first item | Chooses the item |
+| ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
+| Home, End | | The first or last item |
+| A letter | | The next item starting with it |
+| Escape | | Closes it; focus goes back to the button |
+| Tab | | Closes it and moves on |
+
+Hovering an item highlights it, and a press outside closes the menu.
 
 ## Props
 
@@ -44,25 +80,6 @@ const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.
 | `href` | string | | Makes it a link (the `configure({ link })` component) |
 
 `MenuGroup` takes a `label` (a small heading that names the group); `MenuSeparator` is a line. Every part takes `className`, `style` and `ref`.
-
-## Keyboard
-
-| Key | On the button | In the menu |
-| --- | --- | --- |
-| Enter, Space | Opens it on the first item | Chooses the item |
-| ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
-| Home, End | | The first or last item |
-| A letter | | The next item starting with it |
-| Escape | | Closes it; focus goes back to the button |
-| Tab | | Closes it and moves on |
-
-Hovering an item highlights it, and a press outside closes the menu.
-
-## Accessibility
-
-- `role="menu"` with `menuitem`s, `group`s and `separator`s; only the highlighted item takes focus.
-- Use a Menu for actions. To pick a value use Select, and for navigation links a plain list of links.
-- Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in all six themes (`tools/test/menu.mjs`).
 
 ## Component tokens
 

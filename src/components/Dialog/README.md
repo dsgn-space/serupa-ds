@@ -2,8 +2,6 @@
 
 A modal window over a dimmed page, for a task or a decision that needs attention before people go on: inviting someone, confirming a delete, editing a few fields. It's built on the native `<dialog>`, so the browser keeps focus inside it, makes the page behind unreachable, and puts it above everything.
 
-## Usage
-
 ```jsx
 const { Dialog, Button, Input, Field } = window.Diki;
 
@@ -19,6 +17,38 @@ const [open, setOpen] = React.useState(false);
 <Dialog alert size="sm" open={confirm} onOpenChange={setConfirm} title="Delete Atlas?" description="This can't be undone."
   footer={<><Button variant="secondary" onClick={() => setConfirm(false)}>Keep</Button><Button destructive onClick={remove}>Delete</Button></>} />
 ```
+
+## When to use
+
+- A short task that needs people's full attention before they go back to the page: inviting someone, renaming an item, editing a few fields.
+- Confirming an action that can't be undone, such as a delete (with `alert`).
+- A decision the product can't go on without.
+
+## When not to use
+
+- A long form, filters, or details people check while looking at the page: use a [Drawer](../Drawer/README.md) instead.
+- A few controls or details next to the button that opens them, where the page should stay usable: use a [Popover](../Popover/README.md) instead.
+- A confirmation that something happened: use a [Toast](../Toast/README.md) instead.
+- A message about the page that doesn't need an answer: use an [Alert](../Alert/README.md) instead.
+
+## Usage
+
+- Use a `title` that says what the dialog is for; for a confirmation, ask the question: "Delete Atlas?".
+- Name the buttons in `footer` after what they do ("Delete", "Keep"), not "OK" and "Cancel" alone, and put the main action last.
+- Use `alert` only for decisions people must make. It hides the × and stops a backdrop click from closing it.
+- Keep the body short. Pick `size="sm"` for a confirmation and `lg` only when the content needs the width.
+
+## Behavior
+
+- Opening moves focus to the first thing in it that takes focus (put `autoFocus` on another to choose); closing moves it back to where it was.
+- Tab and Shift+Tab stay inside. The page behind can't be clicked or reached, and doesn't scroll.
+- It fades and grows in over 200ms, and appears at once with `prefers-reduced-motion`.
+
+## Accessibility
+
+- `aria-modal`, named by the title (`aria-labelledby`) and described by the description. Without a title, give it an `aria-label`.
+- Use `alert` only for decisions people must make; Escape still cancels.
+- The title and description keep 4.5:1 on the panel in all six themes (`tools/test/dialog.mjs`). In forced-colors mode the panel gets a border.
 
 ## Props
 
@@ -36,18 +66,6 @@ const [open, setOpen] = React.useState(false);
 | `closeOnBackdrop` | boolean | `true` (`false` for alert) | Whether a click on the dimmed page closes it |
 
 `children` is the body, which scrolls when it's taller than the screen. `className`, `style`, `ref` and everything else go to the `<dialog>`, which has `data-component="dialog"` and `data-size`.
-
-## Behavior
-
-- Opening moves focus to the first thing in it that takes focus (put `autoFocus` on another to choose); closing moves it back to where it was.
-- Tab and Shift+Tab stay inside. The page behind can't be clicked or reached, and doesn't scroll.
-- It fades and grows in over 200ms, and appears at once with `prefers-reduced-motion`.
-
-## Accessibility
-
-- `aria-modal`, named by the title (`aria-labelledby`) and described by the description. Without a title, give it an `aria-label`.
-- Use `alert` only for decisions people must make; Escape still cancels.
-- The title and description keep 4.5:1 on the panel in all six themes (`tools/test/dialog.mjs`). In forced-colors mode the panel gets a border.
 
 ## Component tokens
 

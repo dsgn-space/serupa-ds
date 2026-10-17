@@ -2,8 +2,6 @@
 
 A short hint about one element, shown while it's hovered or focused: what an icon button does, a keyboard shortcut, why something is unavailable. It sits next to the element in the browser's top layer, so nothing on the page can cover or clip it.
 
-## Usage
-
 ```jsx
 const { Tooltip, IconButton, Button } = window.Diki;
 
@@ -21,6 +19,33 @@ const { Tooltip, IconButton, Button } = window.Diki;
 </Tooltip>
 ```
 
+## When to use
+
+- Naming an icon-only button, such as Download or Settings.
+- Showing a keyboard shortcut for a control.
+- Saying why a control is unavailable.
+
+## When not to use
+
+- Content with links, buttons or fields: use a [Popover](../Popover/README.md) instead; people can't reach anything inside a tooltip.
+- Anything people need to do the task: put it in the page instead, such as the `hint` of a [Field](../Field/README.md). Touch screens have no hover.
+- Error or status messages: use the error in [Field](../Field/README.md) or an [Alert](../Alert/README.md) instead.
+
+## Usage
+
+- Keep `content` to a short line of text, a few words where you can.
+- Use `role="label"` only when the tooltip is the element's only name; otherwise keep the default, which adds to the element's own name.
+- On an IconButton that has a Tooltip, set `noTitle` so the browser's own title doesn't show as well.
+- Keep the default `placement` unless it covers something people need to see.
+
+## Accessibility
+
+- It shows on keyboard focus as well as hover, and only for the focus ring (not after a click).
+- WCAG 1.4.13: Escape hides it from anywhere, the pointer can move onto it without it closing, and it stays until the pointer or focus leaves.
+- Don't put anything only in a tooltip that people need to do the task: touch screens have no hover.
+- A disabled `<button>` can't take focus or hover events: wrap it in a `<span tabIndex={0}>`, or use `aria-disabled` instead.
+- The text keeps 4.5:1 on the tooltip in all six themes (`tools/test/tooltip.mjs`). In forced-colors mode it gets a border.
+
 ## Props
 
 | Prop | Type | Default | What it does |
@@ -34,14 +59,6 @@ const { Tooltip, IconButton, Button } = window.Diki;
 | `disabled` | boolean | `false` | Never shows |
 
 `className` and `style` go to the tooltip, which has `role="tooltip"`, `data-component="tooltip"`, `data-state` and `data-side`.
-
-## Accessibility
-
-- It shows on keyboard focus as well as hover, and only for the focus ring (not after a click).
-- WCAG 1.4.13: Escape hides it from anywhere, the pointer can move onto it without it closing, and it stays until the pointer or focus leaves.
-- Don't put anything only in a tooltip that people need to do the task: touch screens have no hover.
-- A disabled `<button>` can't take focus or hover events: wrap it in a `<span tabIndex={0}>`, or use `aria-disabled` instead.
-- The text keeps 4.5:1 on the tooltip in all six themes (`tools/test/tooltip.mjs`). In forced-colors mode it gets a border.
 
 ## Component tokens
 

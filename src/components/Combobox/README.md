@@ -15,6 +15,47 @@ const [owner, setOwner] = React.useState<string | null>(null);
 <Combobox aria-label="Person" options={results} filter={false} loading={fetching} onInputChange={search} />
 ```
 
+## When to use
+
+- One choice from a long list people know the name of: a country, an assignee, a project.
+- Options that come from a server as people type (`filter={false}`, `onInputChange` and `loading`).
+
+## When not to use
+
+- A short list (under about 10): use [Select](../Select/README.md).
+- An answer that may not be in the list: use [Input](../Input/README.md), since only listed options can be picked.
+- Picking more than one option: use [checkboxes](../Checkbox/README.md).
+
+## Usage
+
+- Label it with [Field](../Field/README.md), a `<label htmlFor>` or `aria-label`; the placeholder isn't a label.
+- Add a `description` when options look alike, such as people with the same name (their email).
+- Set `clearable` when no selection is a valid answer, so people can clear it in one click.
+- Write an `emptyText` that says what to try next, and match the `size` to the fields beside it.
+
+## Behavior
+
+- Opening with a click, the chevron or an arrow shows every option; typing narrows them and highlights the first match.
+- Leaving the field closes the list and puts back the picked label. Leaving it empty clears the selection.
+- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room.
+
+## Accessibility
+
+- The ARIA combobox pattern: `role="combobox"` with `aria-expanded`, `aria-controls`, `aria-autocomplete="list"` and `aria-activedescendant`, and a `role="listbox"` of `role="option"` items with `aria-selected`. Empty and loading messages are `role="status"`.
+- Labels and descriptions keep 4.5:1, even on the highlighted option, and the chevron 3:1, in all six themes (`tools/test/combobox.mjs`).
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| ArrowDown, ArrowUp | Open the list, then move through it (skipping disabled options, wrapping) |
+| Alt+ArrowDown | Open without moving |
+| PageUp, PageDown | First and last option |
+| Enter | Pick the highlighted option |
+| Escape | Close and put back the picked label (and stop there, so a surrounding Dialog stays open) |
+
+Focus stays in the field the whole time.
+
 ## Props
 
 Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`, `readOnly`…), except `type`, `value`, `defaultValue`, `rightIcon` and `onChange`.
@@ -35,29 +76,6 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `name` | `string` | | Sends the value with a form, in a hidden input. |
 
 `className` and `style` go to the box; `ref` and every other prop go to the `<input>`.
-
-## Keyboard
-
-| Key | Does |
-| --- | --- |
-| ArrowDown, ArrowUp | Open the list, then move through it (skipping disabled options, wrapping) |
-| Alt+ArrowDown | Open without moving |
-| PageUp, PageDown | First and last option |
-| Enter | Pick the highlighted option |
-| Escape | Close and put back the picked label (and stop there, so a surrounding Dialog stays open) |
-
-Focus stays in the field the whole time.
-
-## Behavior
-
-- Opening with a click, the chevron or an arrow shows every option; typing narrows them and highlights the first match.
-- Leaving the field closes the list and puts back the picked label. Leaving it empty clears the selection.
-- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room.
-
-## Accessibility
-
-- The ARIA combobox pattern: `role="combobox"` with `aria-expanded`, `aria-controls`, `aria-autocomplete="list"` and `aria-activedescendant`, and a `role="listbox"` of `role="option"` items with `aria-selected`. Empty and loading messages are `role="status"`.
-- Labels and descriptions keep 4.5:1, even on the highlighted option, and the chevron 3:1, in all six themes (`tools/test/combobox.mjs`).
 
 ## Component tokens
 

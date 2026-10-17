@@ -68,6 +68,7 @@ const steps = [
   ['Visual snapshots', 'node', [path.join(HERE, 'visual.mjs'), ...update]],
   ['Page groundwork', 'node', [path.join(HERE, 'page.mjs')]],
   ['Storybook', 'node', [path.join(HERE, 'storybook.mjs')]],
+  ['Usage guides', 'node', [path.join(HERE, 'guides.mjs')]],
 ];
 if (arg('--compat')) steps.push([`Cross-browser (${arg('--compat')})`, 'node', [path.join(HERE, 'compat.mjs'), '--engine', arg('--compat'), ...(arg('--driver') ? ['--driver', arg('--driver')] : [])]]);
 const summary = [];
