@@ -2,8 +2,6 @@
 
 The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). Below 768px wide the links fold into a menu button that opens them in a panel under the bar.
 
-## Usage
-
 ```jsx
 const { Navbar, NavbarLink, Button, Avatar } = window.Diki;
 
@@ -17,6 +15,31 @@ const { Navbar, NavbarLink, Button, Avatar } = window.Diki;
   <NavbarLink as={RouterLink} to="/team">Team</NavbarLink>
 </Navbar>
 ```
+
+## When to use
+
+- The top level of an app or site with a handful of main pages.
+- A place for the brand and app-wide actions, such as search, a user menu or sign in.
+
+## When not to use
+
+- Many pages, or pages in groups and levels: use a [Sidebar](../Sidebar/README.md) instead.
+- Switching between views of the same thing on one page: use [Tabs](../Tabs/README.md) instead.
+- Showing where a page sits in a hierarchy: use a [Breadcrumb](../Breadcrumb/README.md) instead.
+
+## Usage
+
+- Keep the links to the main pages, a few short words each; below 768px they fold into the menu button.
+- Mark the current page with `active` on its NavbarLink.
+- Use `as` to render your router's link component, so links don't reload the page.
+- Set `size` to the same width as the page's Container, so the bar lines up with the content.
+
+## Accessibility
+
+- It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.
+- The current page has `aria-current="page"` and a shaded background, not just a color change.
+- On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button.
+- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`tools/test/navbar.mjs`).
 
 ## Props
 
@@ -43,13 +66,6 @@ const { Navbar, NavbarLink, Button, Avatar } = window.Diki;
 | `as` | a component | `'a'` | Your router's link component |
 
 Following a link closes the small-screen menu. `className`, `ref` and everything else go to the link.
-
-## Accessibility
-
-- It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.
-- The current page has `aria-current="page"` and a shaded background, not just a color change.
-- On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button.
-- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`tools/test/navbar.mjs`).
 
 ## Component tokens
 
