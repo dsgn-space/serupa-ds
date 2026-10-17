@@ -1,0 +1,64 @@
+# Progress
+
+Shows how far along a task is when you can tell: an upload, a setup, a quota. Use a bar in forms, cards and lists, and the ring where space is tight. When you can't tell how far along it is, leave `value` out, or use the lighter Loader.
+
+```tsx
+import { Progress } from "@diki/design-system";
+
+<Progress value={45} label="Uploading report.pdf" showValue />
+<Progress value={3} max={8} label="Setup" showValue formatValue={(v, m) => `${v} of ${m} steps`} />
+<Progress tone="warning" value={92} label="Storage" showValue />
+<Progress variant="circle" value={30} showValue aria-label="Storage used" />
+<Progress label="Preparing your export" />   // indeterminate
+```
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | | From 0 to `max`, clamped. Leave it out for an indeterminate bar or ring. |
+| `max` | `number` | `100` | The value that means done. |
+| `variant` | `'bar' \| 'circle'` | `'bar'` | A full-width bar or a ring. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The bar is 4, 8 or 12px thick; the ring is 24, 40 or 64px. |
+| `tone` | `'primary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | The fill color. Say what the color means in text too. |
+| `label` | `ReactNode` | | Bar only: a visible name above the bar. Otherwise pass `aria-label`. |
+| `showValue` | `boolean` | `false` | The value at the end of the label row, or inside the ring (md and lg). |
+| `formatValue` | `(value, max) => string` | the percentage | The value's words, shown and read out. |
+
+Every other prop, `className` and `ref` go to the outer `<div>`. It has `data-component="progress"`, `data-variant`, `data-size`, `data-tone` and `data-state` (`loading`, `complete` or `indeterminate`).
+
+## Behavior
+
+- The fill moves to a new value over 300ms.
+- Indeterminate: a segment slides across the bar (right to left in right-to-left pages), or a quarter arc turns. Both stand still with `prefers-reduced-motion`.
+
+## Accessibility
+
+- `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.
+- Every tone's fill keeps 3:1 on the page, and the label and value 4.5:1, in all six themes (`tools/test/progress.mjs`). In forced-colors mode the track gets a border and the fill uses Highlight.
+- To announce progress as it changes, say it in a live region at milestones; reading out every step is noisy.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one progress indicator. The list lives in `src/components/Progress/progress.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--progress-track` | `secondary` | The empty part of the bar or ring. |
+| `--progress-fill` | `primary` | The done part, tone="primary" (the default; 3:1 on the track and the surface). |
+| `--progress-fill-success` | `success` | The done part, tone="success". |
+| `--progress-fill-warning` | `warning` | The done part, tone="warning". |
+| `--progress-fill-danger` | `danger` | The done part, tone="danger". |
+| `--progress-label-color` | `text` | The label above the bar. |
+| `--progress-value-color` | `text-muted` | The value (45%) next to the label or inside the ring (4.5:1 on surface). |
+| `--progress-height-sm` | `spacing-1` | The bar's thickness, size="sm" (4px). |
+| `--progress-height-md` | `spacing-2` | The bar's thickness, size="md", the default (8px). |
+| `--progress-height-lg` | `spacing-3` | The bar's thickness, size="lg" (12px). |
+| `--progress-circle-sm` | `spacing-6` | The ring, size="sm" (24px). |
+| `--progress-circle-md` | `spacing-10` | The ring, size="md" (40px). |
+| `--progress-circle-lg` | `spacing-16` | The ring, size="lg" (64px). |
+| `--progress-radius` | `rounded-full` | The bar's ends. |
+| `--progress-stroke-width` | `stroke-width-3` | The ring's thickness, in 24ths of its size (3: 3px at 24px). |
+| `--progress-gap` | `spacing-1_5` | Space between the label row and the bar (6px). |
+| `--progress-label-weight` | `font-medium` | The label's weight (500). |
+| `--progress-duration` | `duration-300` | How long the fill takes to move to a new value. |

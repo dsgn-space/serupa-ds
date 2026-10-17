@@ -59,6 +59,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   MenuGroup: Diki.MenuGroup,
   MenuItem: Diki.MenuItem,
   MenuSeparator: Diki.MenuSeparator,
+  Progress: Diki.Progress,
   Radio: Diki.Radio,
   RadioGroup: Diki.RadioGroup,
   Select: Diki.Select,
