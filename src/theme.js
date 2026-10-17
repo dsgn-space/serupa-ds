@@ -1,4 +1,4 @@
-/*! Diki Design System v4.7.0 · theme.js */
+/*! Diki Design System v4.8.0 · theme.js */
 /* Diki theme: picks the theme for a page and keeps it in step with the visitor's light/dark setting.
    Optional and standalone (no React). Load it in <head>, before the stylesheets, so the first paint
    already has the right theme:
@@ -66,6 +66,6 @@
   };
   window.Diki = window.Diki || {};
   window.Diki.theme = api;
-  if (!window.Diki.version) window.Diki.version = "4.7.0";
+  if (!window.Diki.version) window.Diki.version = "4.8.0";
   apply();
 })();
