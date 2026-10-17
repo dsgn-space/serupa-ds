@@ -2,8 +2,6 @@
 
 A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Rows shade on hover (or every other one with `striped`), can be selected, and columns can be sorted.
 
-## Usage
-
 ```jsx
 const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell } = window.Diki;
 
@@ -29,7 +27,32 @@ const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, Table
 <Table size="sm" striped stickyHeader containerProps={{ style: { maxHeight: 400 } }}>…</Table>
 ```
 
+## When to use
+
+- Data with several values per row that people compare down the columns: members and their roles, orders and their totals.
+- People need to sort by a column, or read numbers lined up under each other.
+
+## When not to use
+
+- Items with a line or two of text each, such as people or files: use [List](../List/README.md) instead.
+- Items with pictures or a lot of content each: use [Card](../Card/README.md)s in a [Grid](../Grid/README.md).
+- Laying out a page or a form in columns: use [Grid](../Grid/README.md) or [Stack](../Stack/README.md); a table is for data.
+
+## Usage
+
 Table only lays out what you give it: sorting, filtering and selection state stay in your code.
+
+- Give every table a `caption`. When a heading on the page already says what it holds, add `captionHidden` so screen readers still hear it.
+- Set `align="end"` on number columns, in the header and the cells, so the digits line up.
+- Use `size="sm"` for dense data, and `striped` when long rows are hard to follow across.
+- With `stickyHeader`, give the frame a height through `containerProps`.
+
+## Accessibility
+
+- It's a real `<table>`, so screen readers announce rows, columns and headers. Give it a `caption` (or `aria-label`) so people know what it holds.
+- When it's too wide and scrolls, the frame becomes a focusable region named by the caption, so keyboard users can scroll it with the arrow keys. When it fits, it adds no tab stop.
+- A sortable header is a button, and its `<th>` has `aria-sort` once sorted. After sorting, the button keeps focus.
+- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `tools/test/table.mjs`). Selection isn't shown by color alone: the bar and `aria-selected` say it too.
 
 ## Props
 
@@ -55,13 +78,6 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 | `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button. Pass `scope="row"` for a row header |
 | `TableCell` | `<td>` | `align`; `'end'` also gives tabular digits, for numbers |
 
-## Accessibility
-
-- It's a real `<table>`, so screen readers announce rows, columns and headers. Give it a `caption` (or `aria-label`) so people know what it holds.
-- When it's too wide and scrolls, the frame becomes a focusable region named by the caption, so keyboard users can scroll it with the arrow keys. When it fits, it adds no tab stop.
-- A sortable header is a button, and its `<th>` has `aria-sort` once sorted. After sorting, the button keeps focus.
-- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `tools/test/table.mjs`). Selection isn't shown by color alone: the bar and `aria-selected` say it too.
-
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one table's frame. The list lives in `src/components/Table/table.tokens.json` (also in `design-tokens/components/`).
@@ -85,3 +101,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-border-width` | `border-width-1` | The frame and row lines (1px). |
 | `--table-indicator-width` | `border-width-2` | The selected row's bar (2px). |
 | `--table-radius` | `rounded-lg` | The frame's corners (8px). |
+
+## Related
+
+- [Pagination](../Pagination/README.md): pages through a long table.

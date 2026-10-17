@@ -2,8 +2,6 @@
 
 A small picture of a person (a circle) or of a team, project or organisation (a square). When there's no picture, or it fails to load, it shows the initials, or a person icon when there's no name either.
 
-## Usage
-
 ```jsx
 const { Avatar } = window.Diki;
 
@@ -14,6 +12,32 @@ const { Avatar } = window.Diki;
 // the name is already written next to it: hide the avatar from screen readers
 <div className="flex items-center gap-2"><Avatar src={u.photo} name={u.name} alt="" size="sm" />{u.name}</div>
 ```
+
+## When to use
+
+- Showing who someone is: next to a comment, in a list of members, for the signed-in user.
+- A team, project or organisation's picture or initials, as a square.
+- Showing whether a person is online, busy, away or offline.
+
+## When not to use
+
+- Any other picture, such as a photo, a screenshot or an upload: use [Image](../Image/README.md) instead.
+- A symbol for an action or a status: use [Icon](../Icon/README.md) instead.
+- A count, a status word or a tag: use [Badge](../Badge/README.md) instead.
+
+## Usage
+
+- Pass `name` even when there's a `src`: it gives the accessible name, and the initials if the picture fails to load.
+- Next to the written name, pass `alt=""` so screen readers don't read it twice.
+- Use circles for people and squares for everything else.
+- Set `statusLabel` when the status means something more specific, such as "in a meeting".
+
+## Accessibility
+
+- With a name, the avatar is one image (`role="img"`) named by it; the picture inside is decorative. Next to the written name, pass `alt=""` so it isn't read twice.
+- The status is part of the name, so it isn't told by color alone.
+- Initials and the person icon keep 4.5:1 on their background in all six themes (`tools/test/avatar.mjs`).
+- In forced-colors mode the frame gets a border.
 
 ## Props
 
@@ -28,13 +52,6 @@ const { Avatar } = window.Diki;
 | `statusLabel` | string | the status | What the status says to screen readers, such as "in a meeting" |
 
 `className`, `style`, `ref` and everything else go to the outer `<span>`, which has `data-component="avatar"`, `data-size` and `data-shape`. `initials(name)` is exported too.
-
-## Accessibility
-
-- With a name, the avatar is one image (`role="img"`) named by it; the picture inside is decorative. Next to the written name, pass `alt=""` so it isn't read twice.
-- The status is part of the name, so it isn't told by color alone.
-- Initials and the person icon keep 4.5:1 on their background in all six themes (`tools/test/avatar.mjs`).
-- In forced-colors mode the frame gets a border.
 
 ## Component tokens
 
