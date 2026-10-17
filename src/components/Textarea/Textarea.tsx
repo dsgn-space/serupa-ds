@@ -55,10 +55,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
   useIsoLayoutEffect(fit);   // after every render: a new value, size or font
   React.useEffect(function () {
     if (!auto || typeof ResizeObserver === "undefined" || !own.current) return;
-    let w = own.current.offsetWidth;
-    const ro = new ResizeObserver(function () { const nw = own.current && own.current.offsetWidth; if (nw !== w) { w = nw as number; fit(); } });   // re-wrap when the width changes
+    let w = own.current.offsetWidth, raf = 0;
+    // Re-wrap when the width changes, on the next frame: resizing the observed element inside the callback
+    // raises "ResizeObserver loop completed with undelivered notifications" on window.
+    const ro = new ResizeObserver(function () { const nw = own.current && own.current.offsetWidth; if (nw !== w) { w = nw as number; cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); } });
     ro.observe(own.current);
-    return function () { ro.disconnect(); };
+    return function () { cancelAnimationFrame(raf); ro.disconnect(); };
   }, [auto, fit]);
 
   const setRefs = React.useCallback(function (node: HTMLTextAreaElement | null) {
