@@ -1,0 +1,247 @@
+{
+  "sidebar": {
+    "$description": "Sidebar's component tokens. Each one is an optional override: set the CSS variable (--sidebar-<name>) on the page, a container or one sidebar, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The sidebar's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line on its inner edge.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-border"
+          }
+        }
+      },
+      "item-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An item (4.5:1 on bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-text"
+          }
+        }
+      },
+      "item-text-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An item on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-text-hover"
+          }
+        }
+      },
+      "item-text-active": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The current page's item.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-text-active"
+          }
+        }
+      },
+      "item-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "An item's background on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-bg-hover"
+          }
+        }
+      },
+      "item-bg-active": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The current page's item background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-bg-active"
+          }
+        }
+      },
+      "section-title": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A section's title (4.5:1 on bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-section-title"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "item-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Item text (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-size"
+          }
+        }
+      },
+      "item-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "Item weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-weight"
+          }
+        }
+      },
+      "section-title-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-xs}",
+        "$description": "Section titles (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-section-title-size"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-3xs}",
+        "$description": "The sidebar's width (256px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-width"
+          }
+        }
+      },
+      "width-collapsed": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "Its width when collapsed to icons (64px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-width-collapsed"
+          }
+        }
+      },
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "An item's icon (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-icon-size"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space inside the sidebar (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-padding"
+          }
+        }
+      },
+      "item-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "An item's side padding (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-padding-x"
+          }
+        }
+      },
+      "item-padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "An item's top and bottom padding (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-padding-y"
+          }
+        }
+      },
+      "item-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between an item's icon and label (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-gap"
+          }
+        }
+      },
+      "section-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space between sections (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-section-gap"
+          }
+        }
+      },
+      "nested-indent": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-11}",
+        "$description": "Where nested items' labels start, lined up with their parent's label (44px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-nested-indent"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The edge line (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-border-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "item-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "An item's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--sidebar-item-radius"
+          }
+        }
+      }
+    }
+  }
+}

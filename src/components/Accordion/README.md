@@ -1,0 +1,76 @@
+# Accordion
+
+A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. One item open at a time by default, or several with `type="multiple"`.
+
+## Usage
+
+```jsx
+const { Accordion, AccordionItem } = window.Diki;
+
+<Accordion defaultValue={['shipping']}>
+  <AccordionItem value="shipping" title="How long does shipping take?">Orders ship within 2 business days.</AccordionItem>
+  <AccordionItem value="returns" title="Can I return an item?">Yes, within 30 days.</AccordionItem>
+</Accordion>
+
+<Accordion type="multiple" variant="card" headingLevel={2}>…</Accordion>
+
+// Controlled
+<Accordion value={open} onValueChange={setOpen}>…</Accordion>
+```
+
+## Props
+
+### Accordion
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `type` | `'single'` \| `'multiple'` | `'single'` | One open at a time, or any number |
+| `value` | `string[]` | none | The open items (controlled) |
+| `defaultValue` | `string[]` | `[]` | The items open at first. With `single`, only the first counts |
+| `onValueChange` | `(value: string[]) => void` | none | Called when an item opens or closes |
+| `collapsible` | boolean | `true` | With `single`: lets the open item close, leaving none open |
+| `variant` | `'plain'` \| `'card'` | `'plain'` | Lines between items, or a bordered, rounded frame |
+| `headingLevel` | `2`–`6` | `3` | The titles' heading level, to fit the page outline |
+
+`className`, `style`, `ref` and everything else go to the wrapper, which has `data-component="accordion"`.
+
+### AccordionItem
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `title` | node | required | What the title button says |
+| `value` | string | its position (`"0"`, `"1"`…) | Identifies it in `value` |
+| `disabled` | boolean | `false` | Can't be opened or closed |
+| `children` | node | none | The content |
+
+`className`, `ref` and everything else go to the item, which has `data-state="open"` or `"closed"`.
+
+## Accessibility
+
+- Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; the content is a region labelled by its title.
+- Up and Down move between titles (wrapping, skipping disabled ones), Home and End go to the first and last; Enter and Space open and close.
+- Closed content is hidden from everyone (`visibility: hidden`), so it's out of the tab order and screen readers skip it.
+- With `collapsible={false}` the open item's button has `aria-disabled`, since pressing it does nothing.
+- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in all six themes (`tools/test/accordion.mjs`). With reduced motion it opens without animating.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one accordion. The list lives in `src/components/Accordion/accordion.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--accordion-border` | `border` | The lines between items, and the frame of variant="card". |
+| `--accordion-title` | `text` | An item's title. |
+| `--accordion-content` | `text-muted` | An item's content (4.5:1 on surface). |
+| `--accordion-icon` | `text-muted` | The chevron. |
+| `--accordion-bg` | `surface` | The background of variant="card". |
+| `--accordion-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--accordion-title-size` | `text-sm` | Title text (14px). |
+| `--accordion-title-weight` | `font-medium` | Title weight (500). |
+| `--accordion-content-size` | `text-sm` | Content text (14px). |
+| `--accordion-padding-y` | `spacing-4` | Space above and below a title, and below the content (16px). |
+| `--accordion-padding-x` | `spacing-4` | Side padding in variant="card" (16px). |
+| `--accordion-icon-size` | `spacing-5` | The chevron (20px). |
+| `--accordion-border-width` | `border-width-1` | Lines and frame (1px). |
+| `--accordion-radius` | `rounded-lg` | The corners of variant="card" (8px). |
+| `--accordion-duration` | `duration-200` | Opening and closing (200ms). |

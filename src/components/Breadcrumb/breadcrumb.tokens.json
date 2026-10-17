@@ -1,0 +1,125 @@
+{
+  "breadcrumb": {
+    "$description": "Breadcrumb's component tokens. Each one is an optional override: set the CSS variable (--breadcrumb-<name>) on the page, a container or one breadcrumb, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A link to a parent page (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-text"
+          }
+        }
+      },
+      "text-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A link on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-text-hover"
+          }
+        }
+      },
+      "text-current": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The current page.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-text-current"
+          }
+        }
+      },
+      "separator": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The chevron or slash between items.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-separator"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The text (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-font-size"
+          }
+        }
+      },
+      "weight-current": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The current page's weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-weight-current"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space between an item and a separator (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-gap"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "separator-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The chevron's size (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-separator-size"
+          }
+        }
+      },
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "An item's icon (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-icon-size"
+          }
+        }
+      }
+    },
+    "radius": {
+      "focus-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "The focus ring's corners (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--breadcrumb-focus-radius"
+          }
+        }
+      }
+    }
+  }
+}

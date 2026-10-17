@@ -1,0 +1,52 @@
+/* ---------------------------------------------------------------
+   Drawer: a native <dialog> (showModal) that fills the screen; its panel sits against one edge: full height and
+   320, 384 or 512px wide (left, right), or full width and as tall as its content (top, bottom, rounded on the
+   open side). Header, a body that scrolls, and a footer under a line. The page behind is dimmed and doesn't
+   scroll. Slides in from its edge (300ms); at once with reduced motion.
+   --------------------------------------------------------------- */
+.dk-drawer {
+  --dk-drawer-width: var(--drawer-width-md, var(--container-sm, 24rem));
+  box-sizing: border-box; position: fixed; inset: var(--spacing-0, 0px);
+  width: var(--sizing-full, 100%); max-width: none; height: var(--sizing-full, 100%); max-height: none;
+  margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); border: var(--spacing-0, 0px); background: transparent; overflow: hidden;
+  color: var(--text); font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem);
+}
+.dk-drawer[open] { display: flex; }
+.dk-drawer--right[open] { justify-content: flex-end; }
+.dk-drawer--bottom[open] { align-items: flex-end; }
+.dk-drawer--sm { --dk-drawer-width: var(--drawer-width-sm, var(--container-xs, 20rem)); }
+.dk-drawer--lg { --dk-drawer-width: var(--drawer-width-lg, var(--container-lg, 32rem)); }
+.dk-drawer::backdrop { background: var(--drawer-overlay, var(--overlay)); }
+:root:has(.dk-drawer[open]) { overflow: hidden; }
+.dk-drawer__panel {
+  box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4, 1rem));
+  width: var(--dk-drawer-width); max-width: var(--sizing-full, 100%); height: var(--sizing-full, 100%);
+  padding: var(--drawer-padding, var(--spacing-6, 1.5rem));
+  background: var(--drawer-bg, var(--surface));
+  box-shadow: var(--drawer-shadow, var(--shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)));
+  animation: dk-drawer-in var(--drawer-duration, var(--duration-300, 300ms)) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.dk-drawer--right { --dk-drawer-from: var(--sizing-full, 100%) 0; }
+.dk-drawer--left { --dk-drawer-from: calc(var(--spacing-0, 0px) - var(--sizing-full, 100%)) 0; }
+.dk-drawer--top { --dk-drawer-from: 0 calc(var(--spacing-0, 0px) - var(--sizing-full, 100%)); }
+.dk-drawer--bottom { --dk-drawer-from: 0 var(--sizing-full, 100%); }
+.dk-drawer--top .dk-drawer__panel, .dk-drawer--bottom .dk-drawer__panel { width: var(--sizing-full, 100%); height: auto; max-height: calc(var(--sizing-full, 100%) - var(--spacing-16, 4rem)); }
+.dk-drawer--top .dk-drawer__panel { border-end-start-radius: var(--drawer-radius, var(--rounded-xl, 0.75rem)); border-end-end-radius: var(--drawer-radius, var(--rounded-xl, 0.75rem)); }
+.dk-drawer--bottom .dk-drawer__panel { border-start-start-radius: var(--drawer-radius, var(--rounded-xl, 0.75rem)); border-start-end-radius: var(--drawer-radius, var(--rounded-xl, 0.75rem)); }
+.dk-drawer[open]::backdrop { animation: dk-drawer-fade var(--drawer-duration, var(--duration-300, 300ms)) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)); }
+@keyframes dk-drawer-in { from { translate: var(--dk-drawer-from); } }
+@keyframes dk-drawer-fade { from { opacity: var(--opacity-0, 0%); } }
+.dk-drawer__header { display: flex; align-items: flex-start; gap: var(--spacing-3, 0.75rem); flex-shrink: 0; }
+.dk-drawer__heading { display: flex; flex-direction: column; gap: var(--spacing-1, 0.25rem); flex: auto; min-width: var(--spacing-0, 0px); }
+.dk-drawer__title { margin: var(--spacing-0, 0px); color: var(--drawer-title-color, var(--text)); font-size: var(--text-lg, 1.125rem); line-height: var(--text-lg--line-height, 1.75rem); font-weight: var(--drawer-title-weight, var(--font-semibold, 600)); }
+.dk-drawer__description { margin: var(--spacing-0, 0px); color: var(--drawer-description-color, var(--text-muted)); }
+.dk-drawer__close { flex-shrink: 0; }
+.dk-drawer__body { flex: auto; min-height: var(--spacing-0, 0px); overflow-y: auto; overscroll-behavior: contain; }
+.dk-drawer__footer {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2, 0.5rem); flex-shrink: 0;
+  margin: var(--spacing-0, 0px) calc(var(--spacing-0, 0px) - var(--drawer-padding, var(--spacing-6, 1.5rem))) calc(var(--spacing-0, 0px) - var(--drawer-padding, var(--spacing-6, 1.5rem)));
+  padding: var(--spacing-4, 1rem) var(--drawer-padding, var(--spacing-6, 1.5rem));
+  border-top: var(--drawer-border-width, var(--border-width-1, 1px)) solid var(--drawer-border, var(--border));
+}
+@media (prefers-reduced-motion: reduce) { .dk-drawer__panel, .dk-drawer[open]::backdrop { animation: none; } }
+@media (forced-colors: active) { .dk-drawer__panel { border: var(--border-width-1, 1px) solid CanvasText; } }

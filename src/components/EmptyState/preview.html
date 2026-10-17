@@ -1,0 +1,20 @@
+<!-- @dsCard group="Feedback" height=300 subtitle="icon, title, description, actions; md or sm; plain or dashed" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>EmptyState — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(D.EmptyState, { size: 'sm', icon: 'folder_open', title: 'No projects yet', description: 'Create a project to start tracking your work.', actions: h(D.Button, { size: 'sm', leftIcon: 'add' }, 'New project') }),
+    h(D.EmptyState, { size: 'sm', variant: 'dashed', icon: 'upload', title: 'Drop files here', description: 'PNG, JPG or PDF, up to 10 MB.' })
+  ));
+</script>
+</body>
+</html>

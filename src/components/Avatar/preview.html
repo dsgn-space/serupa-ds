@@ -1,0 +1,22 @@
+<!-- @dsCard group="Data display" height=220 subtitle="picture, initials, icon; xs to xl; circle, square; status" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Avatar — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  var PHOTO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" fill="#db2777"/><circle cx="40" cy="32" r="14" fill="#fff"/><ellipse cx="40" cy="74" rx="26" ry="20" fill="#fff"/></svg>');
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div', { className: 'row' }, ['xs', 'sm', 'md', 'lg', 'xl'].map(function (s) { return h(T.Avatar, { key: s, size: s, name: 'Grace Hopper' }); })),
+    h('div', { className: 'row' }, h(T.Avatar, { src: PHOTO, name: 'Ada Lovelace' }), h(T.Avatar, null), h(T.Avatar, { name: 'Atlas', shape: 'square' }),
+      ['online', 'busy', 'away', 'offline'].map(function (s) { return h(T.Avatar, { key: s, name: 'Ada Lovelace', status: s }); }))
+  ));
+</script>
+</body>
+</html>

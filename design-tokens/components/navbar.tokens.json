@@ -1,0 +1,199 @@
+{
+  "navbar": {
+    "$description": "Navbar's component tokens. Each one is an optional override: set the CSS variable (--navbar-<name>) on the page, a container or one navbar, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The bar's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line under the bar.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-border"
+          }
+        }
+      },
+      "link-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A link (4.5:1 on bg and link-bg-hover).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-text"
+          }
+        }
+      },
+      "link-text-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A link on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-text-hover"
+          }
+        }
+      },
+      "link-text-active": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The current page's link.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-text-active"
+          }
+        }
+      },
+      "link-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "A link's background on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-bg-hover"
+          }
+        }
+      },
+      "link-bg-active": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The current page's link background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-bg-active"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "link-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "Link text (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-size"
+          }
+        }
+      },
+      "link-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "Link weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-weight"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "The bar's height (64px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space between the brand, the links and the actions (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-gap"
+          }
+        }
+      },
+      "link-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between links (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-gap"
+          }
+        }
+      },
+      "link-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "A link's side padding (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-padding-x"
+          }
+        }
+      },
+      "link-padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "A link's top and bottom padding (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-padding-y"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The line under the bar (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-border-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "link-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "A link's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-link-radius"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-40}",
+        "$description": "Above the page when sticky.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--navbar-z-index"
+          }
+        }
+      }
+    }
+  }
+}

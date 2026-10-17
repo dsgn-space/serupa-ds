@@ -1,0 +1,71 @@
+/*! Diki Design System v4.7.0 · theme.js */
+/* Diki theme: picks the theme for a page and keeps it in step with the visitor's light/dark setting.
+   Optional and standalone (no React). Load it in <head>, before the stylesheets, so the first paint
+   already has the right theme:
+
+     <html data-brand="blue" data-mode="auto">
+     <script src="components/theme.js"></script>
+
+   data-brand  blue | violet | emerald         (default: blue)
+   data-mode   auto | light | dark             (default: auto = follow the operating system)
+   It sets data-theme (e.g. "blue-dark"), which tokens.css reads. A choice made with
+   Diki.theme.set() is remembered in this browser; without the script, set data-theme yourself.
+
+   API (window.Diki.theme):
+     get()                       -> { brand, mode, theme }   mode is what was asked for (auto/light/dark)
+     set({ brand?, mode? })      change and remember the choice
+     reset()                     forget the choice and go back to the page's data-brand / data-mode
+     onChange(fn)                fn({ brand, mode, theme }) after every change; returns an unsubscribe function */
+(function () {
+  var BRANDS = ["blue", "violet", "emerald"], MODES = ["auto", "light", "dark"], KEY = "diki-theme";
+  var root = document.documentElement;
+  var page = { brand: pick(root.getAttribute("data-brand"), BRANDS, "blue"), mode: pick(root.getAttribute("data-mode"), MODES, "auto") };
+  var media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  var listeners = [];
+  var state = Object.assign({}, page, load());
+
+  function pick(v, list, fallback) { return list.indexOf(v) >= 0 ? v : fallback; }
+  function load() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (!s) return {};
+      var o = {};
+      if (BRANDS.indexOf(s.brand) >= 0) o.brand = s.brand;
+      if (MODES.indexOf(s.mode) >= 0) o.mode = s.mode;
+      return o;
+    } catch (e) { return {}; }   // storage blocked (private window, sandbox): use the page's defaults
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ brand: state.brand, mode: state.mode })); } catch (e) {} }
+  function resolved() { return state.mode === "auto" ? (media && media.matches ? "dark" : "light") : state.mode; }
+  function info() { return { brand: state.brand, mode: state.mode, theme: state.brand + "-" + resolved() }; }
+  function apply(always) {
+    var i = info();
+    if (root.getAttribute("data-theme") === i.theme && !always) return;
+    root.setAttribute("data-theme", i.theme);
+    listeners.slice().forEach(function (fn) { try { fn(i); } catch (e) { if (window.console) console.error(e); } });
+  }
+
+  if (media) {
+    var onScheme = function () { if (state.mode === "auto") apply(); };
+    if (media.addEventListener) media.addEventListener("change", onScheme); else if (media.addListener) media.addListener(onScheme);
+  }
+  // Another tab changed the choice: follow it.
+  window.addEventListener("storage", function (e) { if (e.key === KEY) { state = Object.assign({}, page, load()); apply(true); } });
+
+  var api = {
+    get: info,
+    set: function (o) {
+      o = o || {};
+      if (o.brand != null) state.brand = pick(o.brand, BRANDS, state.brand);
+      if (o.mode != null) state.mode = pick(o.mode, MODES, state.mode);
+      save(); apply(true);
+      return info();
+    },
+    reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} state = Object.assign({}, page); apply(true); return info(); },
+    onChange: function (fn) { listeners.push(fn); return function () { listeners = listeners.filter(function (f) { return f !== fn; }); }; }
+  };
+  window.Diki = window.Diki || {};
+  window.Diki.theme = api;
+  if (!window.Diki.version) window.Diki.version = "4.7.0";
+  apply();
+})();

@@ -1,0 +1,93 @@
+{
+  "link": {
+    "$description": "Link's component tokens. Each one is an optional override: set the CSS variable (--link-<name>) on the page, a container or one link, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "tone=\"primary\" text and underline (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-color"
+          }
+        }
+      },
+      "color-hover": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "tone=\"primary\" on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-color-hover"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-focus-ring"
+          }
+        }
+      }
+    },
+    "typography": {
+      "thickness": {
+        "$type": "dimension",
+        "$value": "{typography.decoration-1}",
+        "$description": "The underline's thickness (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-thickness"
+          }
+        }
+      },
+      "thickness-hover": {
+        "$type": "dimension",
+        "$value": "{typography.decoration-2}",
+        "$description": "The underline's thickness on hover (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-thickness-hover"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{typography.underline-offset-2}",
+        "$description": "The gap between the text and the underline (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-offset"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "icon-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Space before the new-tab icon of an external link (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-icon-gap"
+          }
+        }
+      }
+    },
+    "radius": {
+      "focus-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "The focus ring's corners (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--link-focus-radius"
+          }
+        }
+      }
+    }
+  }
+}

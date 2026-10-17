@@ -1,0 +1,67 @@
+import * as React from "react";
+import { cn, oneOf, omit } from "../../internal/cn";
+import { Icon } from "../Icon/Icon";
+
+export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
+
+export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /** The picture's URL. Without one, or when it fails to load, the initials (or the person icon) show instead. */
+  src?: string;
+  /** The person's or thing's name: the initials come from it, and it's the accessible name. */
+  name?: string;
+  /** The accessible name, when it isn't the name. Pass alt="" when the name is already written next to it. */
+  alt?: string;
+  /** 'xs' 24px, 'sm' 32px, 'md' 40px (default), 'lg' 48px or 'xl' 64px. */
+  size?: AvatarSize;
+  /** 'circle' (default, people) or 'square' (teams, projects, organisations). */
+  shape?: 'circle' | 'square';
+  /** A dot at the bottom end: 'online', 'busy', 'away' or 'offline'. Added to the accessible name. */
+  status?: AvatarStatus;
+  /** What a screen reader hears for the status. Default: the status in English ("online"). */
+  statusLabel?: string;
+}
+
+/* Avatar: a picture of a person (circle) or a team or project (square), with initials or a person icon when
+   there's no picture or it fails to load. Sizes xs to xl (24 to 64px). status adds a colored dot. The name
+   (or alt) is the accessible name; alt="" hides it from screen readers. className and every other prop go to
+   the outer <span>. */
+const OWN = { src: 1, name: 1, alt: 1, size: 1, shape: 1, status: 1, statusLabel: 1, className: 1, children: 1 } as const;
+const SIZES: readonly AvatarSize[] = ["xs", "sm", "md", "lg", "xl"];
+const STATUSES: readonly AvatarStatus[] = ["online", "busy", "away", "offline"];
+
+/** The initials of a name: the first letters of the first and last words ("Ada Lovelace" → "AL"), or one letter. */
+export function initials(name?: string): string {
+  const words = (name || "").trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return "";
+  const first = Array.from(words[0])[0] || "";
+  const last = words.length > 1 ? Array.from(words[words.length - 1])[0] || "" : "";
+  return (first + last).toUpperCase();
+}
+
+/** A picture of a person, team or project, with initials or an icon when there's no picture. */
+export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(props, ref) {
+  const rest = omit(props, OWN);
+  const size = oneOf(SIZES, props.size, "md");
+  const square = props.shape === "square";
+  const status = props.status && STATUSES.indexOf(props.status) >= 0 ? props.status : null;
+  const [failed, setFailed] = React.useState(false);
+  React.useEffect(() => { setFailed(false); }, [props.src]);
+  const label = props.alt != null ? props.alt : props.name || "";
+  const full = label && status ? label + ", " + (props.statusLabel || status) : label;
+  const showImg = !!props.src && !failed;
+  const text = initials(props.name);
+  const body = showImg
+    ? <img className="dk-avatar__img" src={props.src} alt="" onError={() => setFailed(true)} />
+    : text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span>
+    : <Icon className="dk-avatar__icon" name="person" />;
+  if (full) { rest.role = "img"; rest["aria-label"] = full; } else rest["aria-hidden"] = true;
+  return (
+    <span {...rest} ref={ref} className={cn("dk-avatar", "dk-avatar--" + size, square && "dk-avatar--square", props.className)}
+      data-component="avatar" data-size={size} data-shape={square ? "square" : "circle"}>
+      <span className="dk-avatar__frame">{body}</span>
+      {status ? <span className={"dk-avatar__status dk-avatar__status--" + status} aria-hidden="true" /> : null}
+    </span>
+  );
+});
+Avatar.displayName = "Avatar";

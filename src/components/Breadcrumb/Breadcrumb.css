@@ -1,0 +1,23 @@
+/* ---------------------------------------------------------------
+   Breadcrumb: a wrapping row of muted text-sm links with chevrons (or slashes) between them; a link turns
+   text-colored and underlined on hover; the current page is text, font-medium. The "…" button looks like a link.
+   --------------------------------------------------------------- */
+.dk-breadcrumb { font-family: var(--font-sans); font-size: var(--breadcrumb-font-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); }
+.dk-breadcrumb__list { display: flex; flex-wrap: wrap; align-items: center; gap: var(--breadcrumb-gap, var(--spacing-1\.5, 0.375rem)); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
+.dk-breadcrumb__li { display: inline-flex; min-width: var(--spacing-0, 0px); }
+.dk-breadcrumb__item {
+  display: inline-flex; align-items: center; gap: var(--spacing-1, 0.25rem); min-width: var(--spacing-0, 0px);
+  color: var(--breadcrumb-text, var(--text-muted)); text-decoration: none; border-radius: var(--breadcrumb-focus-radius, var(--rounded-sm, 0.25rem));
+  transition: color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.dk-breadcrumb__link:hover, .dk-breadcrumb__more:hover { color: var(--breadcrumb-text-hover, var(--text)); text-decoration: underline; text-underline-offset: var(--underline-offset-2, 2px); }
+.dk-breadcrumb__item:focus-visible { outline: var(--outline-width-2, 2px) solid var(--breadcrumb-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
+.dk-breadcrumb__item--current { color: var(--breadcrumb-text-current, var(--text)); font-weight: var(--breadcrumb-weight-current, var(--font-medium, 500)); }
+.dk-breadcrumb__more { padding: var(--spacing-0, 0px) var(--spacing-0\.5, 0.125rem); border: var(--spacing-0, 0px); background: transparent; font: inherit; cursor: pointer; }
+.dk-breadcrumb__icon { display: inline-flex; }
+.dk-breadcrumb__icon .dk-icon { font-size: var(--breadcrumb-icon-size, var(--spacing-4, 1rem)); }
+.dk-breadcrumb__separator { display: inline-flex; color: var(--breadcrumb-separator, var(--text-muted)); user-select: none; }
+.dk-breadcrumb__separator .dk-icon { font-size: var(--breadcrumb-separator-size, var(--spacing-4, 1rem)); }
+.dk-breadcrumb__rtl, [dir="rtl"] .dk-breadcrumb__ltr { display: none; }
+[dir="rtl"] .dk-breadcrumb__rtl { display: inline-block; }
+@media (prefers-reduced-motion: reduce) { .dk-breadcrumb__item { transition: none; } }

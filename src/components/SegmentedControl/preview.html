@@ -1,0 +1,20 @@
+<!-- @dsCard group="Forms" height=150 subtitle="text, icons with text, and icon-only small" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SegmentedControl — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .dk-segmented__indicator { transition: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' } },
+    h(T.SegmentedControl, { 'aria-label': 'Period', defaultValue: 'week', options: [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }] }),
+    h(T.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', icon: 'list', label: 'List' }, { value: 'board', icon: 'view_kanban', label: 'Board' }] }),
+    h(T.SegmentedControl, { 'aria-label': 'Align', size: 'sm', defaultValue: 'c', options: [{ value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'c', icon: 'format_align_center', 'aria-label': 'Center' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' }] })));
+</script>
+</body>
+</html>

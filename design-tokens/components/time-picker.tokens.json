@@ -1,0 +1,157 @@
+{
+  "time-picker": {
+    "$description": "TimePicker's component tokens. Each one is an optional override: set the CSS variable (--time-picker-<name>) on the page, a container or one picker, and every TimePicker inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "button": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The clock button's icon (3:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-button"
+          }
+        }
+      },
+      "list-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The list's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-bg"
+          }
+        }
+      },
+      "list-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The list's outline.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-border"
+          }
+        }
+      },
+      "option-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A time in the list.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-option-color"
+          }
+        }
+      },
+      "option-bg-active": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The highlighted time (pointer or keyboard).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-option-bg-active"
+          }
+        }
+      },
+      "check": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The check by the chosen time (3:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-check"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "list-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "The list's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "list-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The list's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "list-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "The list's tallest before it scrolls (240px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-max-height"
+          }
+        }
+      },
+      "list-min-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-40}",
+        "$description": "The list's least width (160px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-min-width"
+          }
+        }
+      },
+      "option-height": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "Each time's height (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-option-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "list-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space inside the list (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-list-padding"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The gap between the field and the list (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The list's stacking order, where the top layer isn't available.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--time-picker-z-index"
+          }
+        }
+      }
+    }
+  }
+}

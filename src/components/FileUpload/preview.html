@@ -1,0 +1,17 @@
+<!-- @dsCard group="Forms" height=300 subtitle="the drop area, a hint, and two chosen files" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>FileUpload — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root" style="max-width:384px"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  var files = [new File([new Uint8Array(240 * 1024)], 'site-plan.pdf', { type: 'application/pdf' }), new File([new Uint8Array(1677722)], 'cover.jpg', { type: 'image/jpeg' })];
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.FileUpload, { multiple: true, hint: 'Images or PDF, up to 5 MB each', files: files }));
+</script>
+</body>
+</html>

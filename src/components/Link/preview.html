@@ -1,0 +1,22 @@
+<!-- @dsCard group="Navigation" height=180 subtitle="primary or neutral; always or hover underline; external" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Link — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); font-size: 14px; }
+  #root { display: flex; flex-direction: column; gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(D.Text, null, 'Read ', h(D.Link, { href: '#' }, 'the guide'), ' before you start.'),
+    h(D.Text, null, 'See the ', h(D.Link, { href: 'https://example.com', external: true }, 'status page'), '.'),
+    h(D.Text, { size: 'sm', tone: 'muted' }, 'You agree to the ', h(D.Link, { href: '#', tone: 'neutral' }, 'terms'), '.'),
+    h(D.Stack, { direction: 'row', gap: 4 }, ['Pricing', 'Docs', 'Blog'].map(function (l) { return h(D.Link, { key: l, href: '#', underline: 'hover' }, l); }))
+  ));
+</script>
+</body>
+</html>

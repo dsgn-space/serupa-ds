@@ -1,0 +1,51 @@
+{
+  "divider": {
+    "$description": "Divider's component tokens. Each one is an optional override: set the CSS variable (--divider-<name>) on the page or a container, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--divider-color"
+          }
+        }
+      },
+      "label-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A label in the line (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--divider-label-color"
+          }
+        }
+      }
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The line's thickness (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--divider-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "label-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space on each side of a label (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--divider-label-gap"
+          }
+        }
+      }
+    }
+  }
+}

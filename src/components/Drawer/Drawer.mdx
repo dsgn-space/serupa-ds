@@ -1,0 +1,18 @@
+import { Meta, Title, Description, Primary, Controls, Stories } from '@storybook/blocks';
+import { Guide } from '../../../docs/blocks';
+import * as StoriesDrawer from './Drawer.stories';
+import guide from './README.md?raw';
+
+<Meta of={StoriesDrawer} />
+
+<Title />
+
+<Primary />
+
+<Controls />
+
+<Guide source={guide} />
+
+## Examples
+
+<Stories title="" includePrimary={false} />

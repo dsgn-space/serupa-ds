@@ -1,0 +1,73 @@
+<!-- @dsCard group="Feedback" height=640 subtitle="Ring, spokes, dots, pixel, text and skeleton" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Loader — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-bottom: 18px; }
+  .lbl { width: 80px; font-size: 12px; color: var(--text-muted); }
+  .card { display: flex; gap: 12px; align-items: flex-start; width: 260px; padding: 12px; border: 1px solid var(--border); border-radius: var(--rounded-lg); }
+  .inline { font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    Row('Ring', [
+      h(T.Loader, { key: 1, size: 'sm', delay: 0 }),
+      h(T.Loader, { key: 2, delay: 0 }),
+      h(T.Loader, { key: 3, size: 'lg', delay: 0 })
+    ]),
+    Row('Spokes', [
+      h(T.Loader, { key: 1, variant: 'spokes', size: 'sm', delay: 0 }),
+      h(T.Loader, { key: 2, variant: 'spokes', delay: 0 }),
+      h(T.Loader, { key: 3, variant: 'spokes', size: 'lg', delay: 0 }),
+      h(T.Loader, { key: 4, variant: 'spokes', size: 'lg', tone: 'primary', delay: 0 })
+    ]),
+    Row('Dots', [
+      h(T.Loader, { key: 1, variant: 'dots', size: 'sm', delay: 0 }),
+      h(T.Loader, { key: 2, variant: 'dots', delay: 0 }),
+      h(T.Loader, { key: 3, variant: 'dots', size: 'lg', delay: 0 })
+    ]),
+    Row('Pixel', [
+      h(T.Loader, { key: 1, variant: 'pixel', size: 'sm', delay: 0 }),
+      h(T.Loader, { key: 2, variant: 'pixel', delay: 0 }),
+      h(T.Loader, { key: 3, variant: 'pixel', size: 'lg', delay: 0 }),
+      h(T.Loader, { key: 4, variant: 'pixel', size: 'lg', tone: 'primary', delay: 0 }),
+      h(T.Loader, { key: 5, variant: 'pixel', size: 'lg', pattern: 'random', delay: 0 })
+    ]),
+    Row('Tones', [
+      h(T.Loader, { key: 1, delay: 0 }),
+      h(T.Loader, { key: 2, tone: 'primary', delay: 0 }),
+      h(T.Loader, { key: 3, tone: 'muted', delay: 0 }),
+      h(T.Loader, { key: 4, variant: 'dots', tone: 'primary', delay: 0 })
+    ]),
+    Row('Text', [
+      h(T.Loader, { key: 1, variant: 'text', size: 'sm', label: 'Saving…', delay: 0 }),
+      h(T.Loader, { key: 2, variant: 'text', label: 'Thinking…', delay: 0 }),
+      h(T.Loader, { key: 3, variant: 'text', size: 'lg', label: 'Generating summary…', delay: 0 })
+    ]),
+    Row('Skeleton', [
+      h('div', { key: 1, className: 'card', 'aria-busy': 'true' },
+        h(T.Loader, { variant: 'skeleton', shape: 'circle', size: 'lg', label: 'Loading profile', delay: 0 }),
+        h(T.Loader, { variant: 'skeleton', lines: 3, label: '', delay: 0 })),
+      h('div', { key: 2, style: { width: '160px' } }, h(T.Loader, { variant: 'skeleton', shape: 'rect', className: 'h-20', label: '', delay: 0 }))
+    ]),
+    h('div', { key: 'inv', className: 'row', style: { background: 'var(--gray-900)', padding: 'var(--spacing-3) var(--spacing-4)', borderRadius: 'var(--rounded-lg)' } },
+      h('span', { className: 'lbl', style: { color: 'var(--gray-300)' } }, 'Inverse'),
+      h(T.Loader, { tone: 'inverse', delay: 0 }),
+      h(T.Loader, { tone: 'inverse', variant: 'dots', delay: 0 }),
+      h(T.Loader, { tone: 'inverse', variant: 'pixel', pattern: 'spiral', glow: true, delay: 0 }),
+      h(T.Loader, { tone: 'inverse', variant: 'text', label: 'Uploading photo…', delay: 0 }),
+      h('span', { style: { width: '120px' } }, h(T.Loader, { tone: 'inverse', variant: 'skeleton', lines: 2, label: '', delay: 0 }))),
+    Row('In use', [
+      h('span', { key: 1, className: 'inline' }, h(T.Loader, { size: 'sm', tone: 'muted', delay: 0, label: '' }), 'Loading projects…'),
+      h(T.Button, { key: 2, loading: true }, 'Save changes')
+    ])
+  ));
+</script>
+</body>
+</html>

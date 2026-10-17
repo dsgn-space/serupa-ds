@@ -1,0 +1,23 @@
+<!-- @dsCard group="Feedback" height=440 subtitle="info, success, warning, danger, neutral; title, actions, dismiss" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Alert — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; flex-direction: column; gap: 12px; max-width: 480px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(T.Alert, null, 'A new version is available.'),
+    h(T.Alert, { tone: 'success', onDismiss: function () {} }, 'Changes saved.'),
+    h(T.Alert, { tone: 'warning', title: 'Storage almost full' }, 'You’ve used 9.5 of 10 GB.'),
+    h(T.Alert, { tone: 'danger', title: 'Payment failed', actions: h(T.Button, { size: 'sm', variant: 'secondary' }, 'Update card') }, 'We couldn’t charge the card ending 4242.'),
+    h(T.Alert, { tone: 'neutral' }, 'Comments are turned off for this file.')
+  ));
+</script>
+</body>
+</html>

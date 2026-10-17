@@ -1,0 +1,19 @@
+/* ---------------------------------------------------------------
+   Kbd: keycaps for keys and shortcuts: 20 or 24px tall, at least square, text-xs in the sans font, on
+   surface-muted with an outline that's thicker at the bottom. A combination shows its keys with a muted +
+   between them. Sits on the text's baseline, so it can go inline in a sentence.
+   --------------------------------------------------------------- */
+.dk-kbd {
+  --dk-kbd-h: var(--kbd-height-md, var(--spacing-6, 1.5rem));
+  display: inline-flex; align-items: center; gap: var(--kbd-gap, var(--spacing-1, 0.25rem)); vertical-align: baseline;
+  font-family: var(--font-sans); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); font-weight: var(--font-medium, 500); white-space: nowrap;
+}
+.dk-kbd--size-sm { --dk-kbd-h: var(--kbd-height-sm, var(--spacing-5, 1.25rem)); }
+.dk-kbd__key {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--dk-kbd-h); height: var(--dk-kbd-h);
+  padding: var(--spacing-0, 0px) var(--kbd-padding-x, var(--spacing-1\.5, 0.375rem));
+  border: var(--border-width-1, 1px) solid var(--kbd-border, var(--field-border)); border-bottom-width: var(--border-width-2, 2px);
+  border-radius: var(--kbd-radius, var(--rounded-sm, 0.25rem)); background: var(--kbd-bg, var(--surface-muted)); color: var(--kbd-text, var(--text));
+  font: inherit;
+}
+.dk-kbd__plus { color: var(--kbd-separator, var(--text-muted)); }

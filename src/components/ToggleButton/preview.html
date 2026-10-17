@@ -1,0 +1,20 @@
+<!-- @dsCard group="Actions" height=200 subtitle="off or on (aria-pressed); outline or ghost; icon-only" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ToggleButton — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement, B = D.Button, T = D.ToggleButton;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(T, { leftIcon: 'grid_on' }, 'Show grid'), h(T, { leftIcon: 'grid_on', defaultPressed: true }, 'Show grid'),
+    h('div', { style: { display: 'flex', gap: '4px' } }, h(T, { variant: 'ghost', icon: 'format_bold', 'aria-label': 'Bold', defaultPressed: true }), h(T, { variant: 'ghost', icon: 'format_italic', 'aria-label': 'Italic' }))
+  ));
+</script>
+</body>
+</html>

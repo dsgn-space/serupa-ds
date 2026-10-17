@@ -1,0 +1,105 @@
+{
+  "fab": {
+    "$description": "Fab's component tokens. Each one is an optional override: set the CSS variable (--fab-<name>) on the page, a container or one button, and every one inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "sizing": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-14}",
+        "$description": "The height (and width, without a label) of a medium FAB (56px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-size"
+          }
+        }
+      },
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "The height of a small FAB (40px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-size-sm"
+          }
+        }
+      },
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The icon (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-icon-size"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "The raised shadow at rest.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-shadow"
+          }
+        }
+      },
+      "shadow-hover": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-xl}",
+        "$description": "The shadow on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-shadow-hover"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "The corners (round).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The distance from the corner of the screen (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-offset"
+          }
+        }
+      },
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Padding at the sides of an extended FAB (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-padding-x"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-30}",
+        "$description": "The stacking level: above the page, under dialogs and toasts.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--fab-z-index"
+          }
+        }
+      }
+    }
+  }
+}

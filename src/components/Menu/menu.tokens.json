@@ -1,0 +1,207 @@
+{
+  "menu": {
+    "$description": "Menu's component tokens. Each one is an optional override: set the CSS variable (--menu-<name>) on the page, a container or one menu, and every Menu inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The menu's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-bg"
+          }
+        }
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The menu's border.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-border-color"
+          }
+        }
+      },
+      "item-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An item's label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-item-color"
+          }
+        }
+      },
+      "item-bg-active": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The highlighted item's background (hover and keyboard).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-item-bg-active"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Icons, shortcuts and group labels (4.5:1 on surface; the highlighted item's shortcut turns to item-color).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-muted"
+          }
+        }
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "A destructive item's label and icon.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-danger"
+          }
+        }
+      },
+      "danger-bg-active": {
+        "$type": "color",
+        "$value": "{color.danger-subtle}",
+        "$description": "A highlighted destructive item's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-danger-bg-active"
+          }
+        }
+      },
+      "separator": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line between groups.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-separator"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "The menu's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The menu's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-radius"
+          }
+        }
+      },
+      "item-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "An item's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-item-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The menu's border.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-border-width"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "min-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-48}",
+        "$description": "The narrowest a menu gets (192px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-min-width"
+          }
+        }
+      },
+      "item-height": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "An item's height (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-item-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Padding inside the menu (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-padding"
+          }
+        }
+      },
+      "item-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Padding at an item's sides (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-item-padding-x"
+          }
+        }
+      },
+      "item-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between an item's icon, label and shortcut (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-item-gap"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The gap between the menu and its button (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The stacking level where the browser has no top layer (popover).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--menu-z-index"
+          }
+        }
+      }
+    }
+  }
+}

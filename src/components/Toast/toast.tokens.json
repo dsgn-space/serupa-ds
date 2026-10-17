@@ -1,0 +1,199 @@
+{
+  "toast": {
+    "$description": "Toast's component tokens. Each one is an optional override: set the CSS variable (--toast-<name>) on the page or the Toaster, and every toast follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A toast's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-bg"
+          }
+        }
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A toast's border.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-border-color"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-title-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-description-color"
+          }
+        }
+      },
+      "icon-info": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "The icon of an info toast (3:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-icon-info"
+          }
+        }
+      },
+      "icon-success": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The icon of a success toast.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-icon-success"
+          }
+        }
+      },
+      "icon-warning": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The icon of a warning toast.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-icon-warning"
+          }
+        }
+      },
+      "icon-danger": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The icon of a danger toast.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-icon-danger"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "A toast's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "A toast's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "A toast's border.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-border-width"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-sm}",
+        "$description": "A toast's width (384px), at most the screen less the offset on each side.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Padding inside a toast (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between a toast's icon, text and buttons (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-gap"
+          }
+        }
+      },
+      "stack-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between toasts (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-stack-gap"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The distance from the edges of the screen (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-offset"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-title-weight"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The stacking level: above the page and the FAB.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--toast-z-index"
+          }
+        }
+      }
+    }
+  }
+}

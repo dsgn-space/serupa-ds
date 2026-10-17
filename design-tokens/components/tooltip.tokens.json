@@ -1,0 +1,107 @@
+{
+  "tooltip": {
+    "$description": "Tooltip's component tokens. Each one is an optional override: set the CSS variable (--tooltip-<name>) on the page, a container or one tooltip, and every Tooltip inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-inverse}",
+        "$description": "The background: the inverse surface, so it stands out in light and dark themes.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-bg"
+          }
+        }
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.text-inverse}",
+        "$description": "The text (4.5:1 on the background).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-color"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-md}",
+        "$description": "The shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "The corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Padding at the sides (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-padding-x"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Padding at the top and bottom (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-padding-y"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "The gap between the tooltip and what it describes (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-offset"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "The widest a tooltip gets before it wraps (240px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-max-width"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The stacking level where the browser has no top layer (popover).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--tooltip-z-index"
+          }
+        }
+      }
+    }
+  }
+}

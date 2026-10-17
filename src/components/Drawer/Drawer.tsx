@@ -1,0 +1,87 @@
+import * as React from "react";
+import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
+import { IconButton } from "../IconButton/IconButton";
+
+export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
+  /** Whether it's open. Controlled: close it yourself in onOpenChange. */
+  open: boolean;
+  /** Called with false when people ask to close it: Escape, the close button, or a click on the backdrop. */
+  onOpenChange?: (open: boolean) => void;
+  /** The edge it slides in from: 'right' (default), 'left', 'top' or 'bottom'. */
+  side?: 'right' | 'left' | 'top' | 'bottom';
+  /** The width of a left or right drawer: 'sm' 320px, 'md' 384px (default) or 'lg' 512px, at most the screen. Top and bottom drawers fit their content. */
+  size?: 'sm' | 'md' | 'lg';
+  /** The heading, which also names the drawer. */
+  title?: React.ReactNode;
+  /** A muted line under the title, read when it opens. */
+  description?: React.ReactNode;
+  /** Buttons pinned to the bottom, under a line: the main action last. */
+  footer?: React.ReactNode;
+  /** Shows the × in the corner. Default: true. */
+  closeButton?: boolean;
+  /** The × button's name. Default: 'Close'. */
+  closeLabel?: string;
+  /** Whether a click on the backdrop closes it. Default: true. */
+  closeOnBackdrop?: boolean;
+}
+
+const OWN = { open: 1, onOpenChange: 1, side: 1, size: 1, title: 1, description: 1, footer: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, className: 1, children: 1 } as const;
+
+/* Drawer: a modal panel that slides in from an edge of the screen, for navigation on small screens, filters,
+   or details and edits without leaving the page. It's a native <dialog> (showModal) like Dialog: focus stays
+   inside, the page behind is inert and doesn't scroll, Escape, the × and the backdrop ask to close
+   (onOpenChange(false)), and focus goes back where it was. */
+/** A modal panel that slides in from an edge: navigation, filters, details. */
+export const Drawer = React.forwardRef<HTMLDialogElement, DrawerProps>(function Drawer(props, ref) {
+  const rest = omit(props, OWN);
+  const base = domId("dk-drw", React.useId());
+  const el = React.useRef<HTMLDialogElement | null>(null);
+  const back = React.useRef<HTMLElement | null>(null);
+  const side = oneOf(["right", "left", "top", "bottom"] as const, props.side, "right");
+  const size = oneOf(["sm", "md", "lg"] as const, props.size, "md");
+  const showClose = props.closeButton !== false;
+  const backdrop = props.closeOnBackdrop !== false;
+  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
+  const close = React.useCallback(() => { if (ask.current) ask.current(false); }, []);
+  const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
+
+  useIsoLayoutEffect(() => {
+    const d = el.current;
+    if (!d) return;
+    if (props.open && !d.open) {
+      back.current = document.activeElement as HTMLElement | null;
+      if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+    } else if (!props.open && d.open) {
+      if (typeof d.close === "function") d.close(); else d.removeAttribute("open");
+      const b = back.current; back.current = null;
+      if (b && b.isConnected && typeof b.focus === "function") b.focus();
+    }
+  }, [props.open]);
+  React.useEffect(() => () => { const b = back.current; if (b && b.isConnected) b.focus(); }, []);
+
+  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
+  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && e.target === e.currentTarget) close(); };
+  return (
+    <dialog {...rest} ref={(n) => { el.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+      aria-modal="true"
+      aria-labelledby={rest["aria-labelledby"] || (has(props.title) ? base + "-title" : undefined)}
+      aria-describedby={rest["aria-describedby"] || (has(props.description) ? base + "-desc" : undefined)}
+      className={cn("dk-drawer", "dk-drawer--" + side, "dk-drawer--" + size, props.className)} data-component="drawer" data-side={side} data-size={size}
+      onCancel={onCancel} onClick={onClick}>
+      <div className="dk-drawer__panel">
+        {has(props.title) || has(props.description) || showClose ? (
+          <div className="dk-drawer__header">
+            <div className="dk-drawer__heading">
+              {has(props.title) ? <h2 className="dk-drawer__title" id={base + "-title"}>{props.title}</h2> : null}
+              {has(props.description) ? <p className="dk-drawer__description" id={base + "-desc"}>{props.description}</p> : null}
+            </div>
+            {showClose ? <IconButton className="dk-drawer__close" icon="close" label={props.closeLabel || "Close"} size="sm" noTitle onClick={close} /> : null}
+          </div>
+        ) : null}
+        {has(props.children) ? <div className="dk-drawer__body">{props.children}</div> : null}
+        {has(props.footer) ? <div className="dk-drawer__footer">{props.footer}</div> : null}
+      </div>
+    </dialog>
+  );
+});
+Drawer.displayName = "Drawer";
