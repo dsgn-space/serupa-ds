@@ -10,6 +10,7 @@ const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.a
 if (arg('--browser')) process.env.DIKI_BROWSER = arg('--browser');
 const steps = [
   ['Package', 'node', [path.join(HERE, 'package.mjs')]],
+  ['Component contract', 'node', [path.join(HERE, 'contract.mjs')]],
   ['Foundation audit', 'python3', ['-I', path.join(HERE, 'foundation.py'), PROJECT]],
   ['Design tokens export', 'python3', ['-I', path.join(HERE, 'design_tokens.py'), PROJECT]],
   ['Style Dictionary', 'node', [path.join(HERE, 'style_dictionary.mjs')]],
