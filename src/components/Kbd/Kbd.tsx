@@ -33,7 +33,7 @@ const NAMED: Record<string, [string, string, string, string]> = {
   left: ["←", "Left arrow", "←", "Left arrow"],
   right: ["→", "Right arrow", "→", "Right arrow"],
 };
-const isApple = () => typeof navigator !== "undefined" && [(navigator as any).userAgentData?.platform, navigator.platform, navigator.userAgent].some((s) => /Mac|iPhone|iPad|iPod/.test(s || ""));
+const isApple = () => typeof navigator !== "undefined" && [(navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform, navigator.platform, navigator.userAgent].some((s) => /Mac|iPhone|iPad|iPod/.test(s || ""));
 
 function Key({ k, apple }: { k: string; apple: boolean }) {
   const n = NAMED[k.toLowerCase()];

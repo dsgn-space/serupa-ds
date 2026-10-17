@@ -11,7 +11,9 @@ import { customIcons } from '../src/icons';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
-const T = tokens as unknown as Record<string, Group> & { type: any; color: Group & { themes: { id: string; name: string }[] } };
+type TypeStyle = { name: string; fontSize: string; lineHeight: string; fontWeight: string };
+type TypeGroup = { name: string; note?: string; styles: TypeStyle[] };
+const T = tokens as unknown as Record<string, Group> & { type: { groups: TypeGroup[] }; color: Group & { themes: { id: string; name: string }[] } };
 
 // Links between component guides (../Loader/README.md) become links to their Storybook pages.
 function relink(md: string): string {
@@ -91,9 +93,9 @@ export function Aliases() {
 
 /** The type scale: each type-* style rendered in its own family, size, line height and weight. */
 export function TypeScale() {
-  return <div>{T.type.groups.map((g: any) => <div key={g.name} style={{ marginBottom: 24 }}>
+  return <div>{T.type.groups.map((g) => <div key={g.name} style={{ marginBottom: 24 }}>
     <h3>{g.name}</h3>{g.note && <p>{code(g.note)}</p>}
-    {g.styles.map((s: any) => <div key={s.name} style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 16, alignItems: 'baseline', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+    {g.styles.map((s) => <div key={s.name} style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 16, alignItems: 'baseline', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
       <div style={{ fontSize: 12 }}><code>{s.name}</code><br />{s.fontSize} / {s.lineHeight} · {s.fontWeight}</div>
       <div className={s.name}>The quick brown fox jumps over the lazy dog</div>
     </div>)}
@@ -104,7 +106,7 @@ export function TypeScale() {
 export function IconGallery() {
   const [q, setQ] = React.useState('');
   const [copied, setCopied] = React.useState('');
-  const groups: Record<string, string[]> = { ...(iconNames as Record<string, any>) };
+  const groups: Record<string, string[]> = { ...(iconNames as unknown as Record<string, string[]>) };
   delete groups.$description;
   if (customIcons.length) groups['Your custom icons'] = [...customIcons];
   const term = q.trim().toLowerCase().replace(/\s+/g, '_');

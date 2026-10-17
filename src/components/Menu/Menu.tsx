@@ -4,6 +4,9 @@ import { config } from "../../internal/config";
 import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
 import { asIcon } from "../Icon/Icon";
 
+/** The trigger element's props this component reads and adds to. */
+type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
+
 export interface MenuProps {
   /** The button that opens the menu: one element, such as a Button or IconButton. It gets aria-haspopup, aria-expanded and the keys. */
   trigger: React.ReactElement;
@@ -95,17 +98,17 @@ export function Menu(props: MenuProps): React.ReactElement {
     }
   };
 
-  const child = React.Children.only(props.trigger) as React.ReactElement<any>;
+  const child = React.Children.only(props.trigger) as React.ReactElement<TriggerProps>;
   const cp = child.props;
-  const childRef = (child as any).ref;
+  const childRef = (child as { ref?: React.ForwardedRef<HTMLElement> }).ref;
   const trigger = React.cloneElement(child, {
     ref: (n: HTMLElement | null) => { triggerRef.current = n; if (typeof childRef === "function") childRef(n); else if (childRef && typeof childRef === "object") childRef.current = n; },
     id: cp.id || id + "-button",
     "aria-haspopup": "menu",
     "aria-expanded": open,
     "aria-controls": open ? id : undefined,
-    onClick: (e: React.MouseEvent) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; if (!open) focusOn.current = "first"; set(!open); },
-    onKeyDown: (e: React.KeyboardEvent) => {
+    onClick: (e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; if (!open) focusOn.current = "first"; set(!open); },
+    onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
       if (cp.onKeyDown) cp.onKeyDown(e);
       if (e.defaultPrevented) return;
       if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); focusOn.current = e.key === "ArrowUp" ? "last" : "first"; set(true); }

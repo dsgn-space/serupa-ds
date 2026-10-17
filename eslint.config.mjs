@@ -12,7 +12,7 @@ export default tseslint.config(
     rules: {
       // A leading underscore marks a value that is pulled out on purpose and not used.
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrors: 'none', ignoreRestSiblings: true }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }],
     },
   },

@@ -53,7 +53,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(function Ima
   // An image already in the cache can finish before React listens.
   React.useEffect(() => { const i = img.current; if (i && i.complete) setState(i.naturalWidth > 0 ? "loaded" : "error"); }, [src]);
   const named = (base: string) => (alt ? base + ": " + alt : base);
-  const frameStyle = typeof ratio === "number" ? { ...(frameProps && frameProps.style), ["--dk-image-ratio" as any]: String(ratio) } : frameProps && frameProps.style;
+  const frameStyle = typeof ratio === "number" ? { ...(frameProps && frameProps.style), "--dk-image-ratio": String(ratio) } as React.CSSProperties : frameProps && frameProps.style;
   const picture = state === "error"
     ? <span className="dk-image__fallback" role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon name="broken_image" />}</span>
     : <img {...rest} ref={(n) => { img.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }} src={src} alt={alt} loading={loading || "lazy"}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "../../internal/cn";
+import { cn, omit } from "../../internal/cn";
 import { ICONS, hasIcon, type CustomIconName } from "../../icons";
 
 /** A custom icon's name, or any Material Symbols name ('add', 'arrow_forward'…). Custom names autocomplete. */
@@ -16,8 +16,7 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
    (font in fonts/). Both are sized by font-size and drawn in the text color. */
 /** An icon: one of your custom SVG icons, or Material Symbols Rounded (filled). Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
 export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(props, ref) {
-  const rest: Record<string, any> = {};
-  for (const k in props) if (k !== "name" && k !== "size" && k !== "className" && k !== "style") rest[k] = (props as any)[k];
+  const rest = omit(props, { name: 1, size: 1, className: 1, style: 1 } as const);
   const labelled = rest["aria-label"] || rest["aria-labelledby"];
   if (!labelled) rest["aria-hidden"] = true; else rest.role = "img";
   const style: React.CSSProperties = Object.assign({}, props.style);

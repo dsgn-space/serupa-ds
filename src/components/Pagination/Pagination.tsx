@@ -67,7 +67,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(functio
     if (!controlled) setOwn(n);
     if (props.onPageChange) props.onPageChange(n);
   };
-  const item = (n: number, content: React.ReactNode, aria: Record<string, any>, disabled: boolean, cls: string) => {
+  const item = (n: number, content: React.ReactNode, aria: React.AriaAttributes & { rel?: string }, disabled: boolean, cls: string) => {
     const common = Object.assign({ className: cn("dk-pagination__item", cls), onClick: (e: React.MouseEvent) => go(n, e) }, aria);
     if (props.getHref) return disabled ? <a {...common} role="link" aria-disabled="true">{content}</a> : <a {...common} href={props.getHref(n)}>{content}</a>;
     return <button type="button" {...common} disabled={disabled}>{content}</button>;

@@ -42,13 +42,11 @@ export function place(anchor: DOMRect, floating: { width: number; height: number
 /** Shows an element in the top layer when the browser supports popover="manual", so nothing can cover or clip it. */
 export function showLayer(el: HTMLElement | null): void {
   if (!el) return;
-  const any = el as any;
-  if (typeof any.showPopover === "function" && el.hasAttribute("popover")) { try { if (!el.matches(":popover-open")) any.showPopover(); } catch { /* not connected yet */ } }
+  if (typeof el.showPopover === "function" && el.hasAttribute("popover")) { try { if (!el.matches(":popover-open")) el.showPopover(); } catch { /* not connected yet */ } }
 }
 export function hideLayer(el: HTMLElement | null): void {
   if (!el) return;
-  const any = el as any;
-  if (typeof any.hidePopover === "function" && el.hasAttribute("popover")) { try { if (el.matches(":popover-open")) any.hidePopover(); } catch { /* already gone */ } }
+  if (typeof el.hidePopover === "function" && el.hasAttribute("popover")) { try { if (el.matches(":popover-open")) el.hidePopover(); } catch { /* already gone */ } }
 }
 
 /** A CSS length from a custom property ("0.375rem", "6px") in px. */

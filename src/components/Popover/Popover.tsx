@@ -2,6 +2,9 @@ import * as React from "react";
 import { cn, domId, useIsoLayoutEffect } from "../../internal/cn";
 import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
 
+/** The trigger element's props this component reads and adds to. */
+type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
+
 export interface PopoverProps {
   /** The element that opens it: one element that can take focus, such as a Button. It gets aria-expanded and aria-controls. */
   trigger: React.ReactElement;
@@ -84,15 +87,15 @@ export function Popover(props: PopoverProps): React.ReactElement {
     close(false);
   };
 
-  const child = React.Children.only(props.trigger) as React.ReactElement<any>;
+  const child = React.Children.only(props.trigger) as React.ReactElement<TriggerProps>;
   const cp = child.props;
-  const childRef = (child as any).ref;
+  const childRef = (child as { ref?: React.ForwardedRef<HTMLElement> }).ref;
   const trigger = React.cloneElement(child, {
     ref: (n: HTMLElement | null) => { triggerRef.current = n; if (typeof childRef === "function") childRef(n); else if (childRef && typeof childRef === "object") childRef.current = n; },
     "aria-haspopup": "dialog",
     "aria-expanded": open,
     "aria-controls": open ? id : undefined,
-    onClick: (e: React.MouseEvent) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; set(!open); },
+    onClick: (e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; set(!open); },
   });
   const titled = props.title != null && props.title !== false && props.title !== "";
   const content = typeof props.children === "function" ? (props.children as (c: () => void) => React.ReactNode)(() => close(true)) : props.children;

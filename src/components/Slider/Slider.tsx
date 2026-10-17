@@ -8,8 +8,10 @@ export interface SliderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   /** The value at first (uncontrolled). Default: min. */
   defaultValue?: SliderValue;
   /** Called with the new value as it moves (dragging, keys). */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- public API; narrowing it to SliderValue is a breaking change, so it waits for 5.0.0
   onValueChange?: (value: any) => void;
   /** Called once when a drag or key press ends: for saving or fetching. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- as onValueChange
   onValueCommit?: (value: any) => void;
   /** Default: 0. */
   min?: number;

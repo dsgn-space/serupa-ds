@@ -39,7 +39,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(function DatePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale, weekStartsOn, size: _s, invalid: _i, buttonLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest as Record<string, any>);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<Date | null>(isValid(props.defaultValue) ? day(props.defaultValue) : null);
   const value = controlled ? (isValid(props.value) ? day(props.value) : null) : own;

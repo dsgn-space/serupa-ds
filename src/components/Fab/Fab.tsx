@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, oneOf } from "../../internal/cn";
-import { Button, type ButtonAsButtonProps } from "../Button/Button";
+import { ButtonBase, type ButtonAsButtonProps } from "../Button/Button";
 
 export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
 
@@ -27,10 +27,10 @@ export const Fab = React.forwardRef<HTMLButtonElement, FabProps>(function Fab(pr
   const { icon, label, extended, size, position, className, ...rest } = props;
   const pos = oneOf(POSITIONS, position, "bottom-end");
   const sm = size === "sm";
-  const look = { ref: ref, variant: "primary", size: sm ? "sm" : "md", "data-position": pos,
-    className: cn("dk-fab", sm && "dk-fab--sm", extended && "dk-fab--extended", pos !== "static" && "dk-fab--" + pos, className) };
+  const look = { variant: "primary", size: sm ? "sm" : "md", "data-position": pos,
+    className: cn("dk-fab", sm && "dk-fab--sm", extended && "dk-fab--extended", pos !== "static" && "dk-fab--" + pos, className) } as const;
   return extended
-    ? React.createElement(Button as any, Object.assign({}, rest, look, { leftIcon: icon }), label)
-    : React.createElement(Button as any, Object.assign({ title: label }, rest, look, { icon: icon, "aria-label": label }));
+    ? <ButtonBase {...rest} {...look} ref={ref as React.Ref<HTMLElement>} leftIcon={icon}>{label}</ButtonBase>
+    : <ButtonBase title={label} {...rest} {...look} ref={ref as React.Ref<HTMLElement>} icon={icon} aria-label={label} />;
 });
 Fab.displayName = "Fab";

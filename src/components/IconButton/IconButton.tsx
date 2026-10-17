@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "../../internal/cn";
-import { Button, type ButtonAsButtonProps, type ButtonAsLinkProps } from "../Button/Button";
+import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from "../Button/Button";
 
 type Without<T> = T extends unknown ? Omit<T, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'aria-label'> : never;
 
@@ -22,12 +22,10 @@ export type IconButtonProps = Without<ButtonAsButtonProps> & IconButtonOwnProps 
    loading, href, onClick, ref…) works the same. */
 /** A Button that shows only an icon, with a required label for screen readers. Default variant: ghost. */
 export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, IconButtonProps>(function IconButton(props, ref) {
-  const { icon, label, shape, noTitle, className, ...rest } = props as IconButtonOwnProps & { className?: string; variant?: string; title?: string } & Record<string, any>;
+  const { icon, label, shape, noTitle, className, ...rest } = props;
   const round = shape === "round";
-  const extra: Record<string, any> = { "aria-label": label, "data-shape": round ? "round" : "square" };
-  if (!noTitle && rest.title == null) extra.title = label;
-  return React.createElement(Button as any, Object.assign({ variant: "ghost" }, rest, extra, {
-    ref: ref, icon: icon, className: cn("dk-icon-btn", round && "dk-icon-btn--round", className),
-  }));
+  const title = !noTitle && rest.title == null ? label : rest.title;
+  return <ButtonBase variant="ghost" {...rest} aria-label={label} data-shape={round ? "round" : "square"} title={title}
+    ref={ref as React.Ref<HTMLElement>} icon={icon} className={cn("dk-icon-btn", round && "dk-icon-btn--round", className)} />;
 });
 IconButton.displayName = "IconButton";

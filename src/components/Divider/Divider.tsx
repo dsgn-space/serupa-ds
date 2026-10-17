@@ -18,7 +18,7 @@ export const Divider = React.forwardRef<HTMLElement, DividerProps>(function Divi
   const vertical = props.orientation === "vertical";
   const label = props.label != null && props.label !== false && props.label !== "" && !vertical ? props.label : null;
   const cls = cn("dk-divider", vertical && "dk-divider--vertical", label != null && "dk-divider--label", props.className);
-  const a11y: Record<string, any> = props.decorative ? { role: "none", "aria-hidden": true } : { role: "separator", "aria-orientation": vertical ? "vertical" : undefined };
+  const a11y: React.AriaAttributes & { role?: React.AriaRole } = props.decorative ? { role: "none", "aria-hidden": true } : { role: "separator", "aria-orientation": vertical ? "vertical" : undefined };
   if (label == null && !vertical) return React.createElement("hr", Object.assign(rest, a11y, { ref: ref, className: cls, "data-component": "divider", role: props.decorative ? "none" : undefined }));
   return React.createElement("div", Object.assign(rest, a11y, { ref: ref, className: cls, "data-component": "divider" }),
     label != null ? <span className="dk-divider__label">{label}</span> : null);

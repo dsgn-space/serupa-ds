@@ -44,7 +44,7 @@ export interface SidebarItemProps extends Omit<React.AnchorHTMLAttributes<HTMLAn
 const SidebarContext = React.createContext<{ collapsed: boolean; depth: number }>({ collapsed: false, depth: 0 });
 
 function isSection(c: React.ReactNode): boolean {
-  return React.isValidElement(c) && (c.type as any) === SidebarSection;
+  return React.isValidElement(c) && c.type === SidebarSection;
 }
 
 /* Sidebar: a vertical <nav> for an app's main pages: an optional header, sections of items (icons, labels,
@@ -92,7 +92,7 @@ SidebarSection.displayName = "SidebarSection";
 /** An item in a Sidebar: a link, or a group of nested items. */
 export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(function SidebarItem(props, ref) {
   const ctx = React.useContext(SidebarContext);
-  const rest: Record<string, any> = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
+  const rest = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
   const kids = React.Children.toArray(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
   const group = kids.length > 0;
   const childActive = kids.some((k) => k.props.active);
@@ -105,7 +105,8 @@ export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>
     {props.badge != null && !rail ? <span className="dk-sidebar__badge">{props.badge}</span> : null}
     {chevron && !rail ? <Icon name="expand_more" className="dk-sidebar__chevron" /> : null}
   </>;
-  const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, onClick: 1 });
+  // An item with children is a button, not a link: its other attributes and handlers go to the button.
+  const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, type: 1, onClick: 1 }) as unknown as React.ButtonHTMLAttributes<HTMLButtonElement>;
   const cls = cn("dk-sidebar__item", ctx.depth > 0 && "dk-sidebar__item--nested", (props.active || (group && childActive)) && "dk-sidebar__item--active", props.className);
 
   if (group && rail) {
@@ -114,8 +115,8 @@ export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>
         <Menu placement="right-start" trigger={
           <button type="button" {...btnProps} className={cls}>{inner(false)}</button>
         }>
-          {kids.map((k, i) => <MenuItem key={k.key != null ? k.key : i} href={k.props.href} icon={k.props.icon as any}
-            onSelect={k.props.onClick as any}>{k.props.label}</MenuItem>)}
+          {kids.map((k, i) => <MenuItem key={k.key != null ? k.key : i} href={k.props.href} icon={k.props.icon}
+            onSelect={k.props.onClick as ((e: React.SyntheticEvent) => void) | undefined}>{k.props.label}</MenuItem>)}
         </Menu>
       </li>
     );
@@ -123,7 +124,7 @@ export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>
   if (group) {
     return (
       <li className="dk-sidebar__li" data-state={open ? "open" : "closed"}>
-        <button type="button" {...btnProps} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) (props.onClick as any)(e); setOpen(!open); }}>{inner(true)}</button>
+        <button type="button" {...btnProps} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e as unknown as React.MouseEvent<HTMLAnchorElement>); setOpen(!open); }}>{inner(true)}</button>
         <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
           <ul id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={!open}>{kids}</ul>
         </SidebarContext.Provider>

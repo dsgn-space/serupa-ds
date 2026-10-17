@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, domId, isInvalid, omit, SIZES } from "../../internal/cn";
+import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 
 export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The radios' name; a generated one by default. */
@@ -9,6 +9,7 @@ export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   /** The value picked at first (uncontrolled). */
   defaultValue?: string | number;
   /** Called with the picked radio's value and the change event. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- public API; narrowing it to string | number is a breaking change, so it waits for 5.0.0
   onChange?: (value: any, event: React.ChangeEvent<HTMLInputElement>) => void;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
   orientation?: 'vertical' | 'horizontal';
@@ -57,7 +58,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(func
   const autoName = domId("dk-rg", React.useId());
   const controlled = props.value !== undefined;
   const [picked, setPicked] = React.useState<unknown>(props.defaultValue), cur = controlled ? props.value : picked;
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const orientation = props.orientation === "horizontal" ? "horizontal" : "vertical";
   const onChange = props.onChange;
   const ctx: RadioContextValue = { name: props.name || autoName, value: cur, size: props.size, invalid: invalid, disabled: !!props.disabled, required: !!props.required,
@@ -81,8 +82,8 @@ const OWN = { size: 1, invalid: 1, description: 1, children: 1, className: 1, st
 export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Radio(props, ref) {
   const ctx = React.useContext(RadioContext);
   const rest = omit(props, OWN);
-  const size = SIZES.indexOf(props.size as any) >= 0 ? props.size : ctx && SIZES.indexOf(ctx.size as any) >= 0 ? ctx.size : "md";
-  const invalid = isInvalid(props, rest);
+  const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx && ctx.size, "md"));
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;   // a group's invalid is on the group
   if (ctx) {
     const own = rest.onChange;

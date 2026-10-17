@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, isInvalid, oneOf, SIZES } from "../../internal/cn";
+import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { asIcon, Icon } from "../Icon/Icon";
 import type { InputProps } from "../Input/Input";
 
@@ -34,11 +34,9 @@ const decimals = (n: number) => { const s = String(n); const i = s.indexOf(".");
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
 export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(function NumberInput(props, ref) {
-  const rest: Record<string, any> = {};
-  const own: Record<string, 1> = { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1 };
-  for (const k in props) if (!own[k]) rest[k] = (props as any)[k];
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const step = Number(props.step) > 0 ? Number(props.step) : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;

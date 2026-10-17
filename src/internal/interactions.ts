@@ -1,5 +1,5 @@
 /* Micro-interactions that need the DOM (the CSS does the rest). Shared by Button and Badge. */
-type Handler = (e: any) => void;
+type Handler<E extends React.SyntheticEvent> = (e: E) => void;
 
 export function block(e: { preventDefault(): void; stopPropagation(): void }): void {
   e.preventDefault();
@@ -7,12 +7,12 @@ export function block(e: { preventDefault(): void; stopPropagation(): void }): v
 }
 
 /** a, then b unless a prevented the default. */
-export function chain(a: Handler | undefined, b: Handler): Handler {
+export function chain<E extends React.SyntheticEvent>(a: Handler<E> | undefined, b: Handler<E>): Handler<E> {
   return a ? function (e) { a(e); if (!e.defaultPrevented) b(e); } : b;
 }
 
 /** a, then b. */
-export function both(a: Handler | undefined, b: Handler): Handler {
+export function both<E extends React.SyntheticEvent>(a: Handler<E> | undefined, b: Handler<E>): Handler<E> {
   return a ? function (e) { a(e); b(e); } : b;
 }
 

@@ -12,7 +12,7 @@ const items = faq.map(([v, t, c]) => <AccordionItem key={v} value={v} title={t}>
 const meta = {
   title: 'Components/Accordion',
   component: Accordion,
-  subcomponents: { AccordionItem } as any,
+  subcomponents: { AccordionItem },
   args: { defaultValue: ['shipping'], children: items },
   argTypes: {
     type: { control: 'inline-radio', options: ['single', 'multiple'] },
