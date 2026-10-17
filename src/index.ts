@@ -49,6 +49,8 @@ import { Icon } from "./components/Icon/Icon";
 export type { IconName, IconProps } from "./components/Icon/Icon";
 import { IconButton } from "./components/IconButton/IconButton";
 export type { IconButtonProps } from "./components/IconButton/IconButton";
+import { Image } from "./components/Image/Image";
+export type { ImageProps, ImageRatio } from "./components/Image/Image";
 import { Input } from "./components/Input/Input";
 export type { InputProps } from "./components/Input/Input";
 import { List, ListItem } from "./components/List/List";
@@ -115,7 +117,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -131,7 +133,7 @@ declare global {
       ButtonGroup: typeof ButtonGroup; Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader;
       Calendar: typeof Calendar; Checkbox: typeof Checkbox; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; customIcons: typeof customIcons;
       DatePicker: typeof DatePicker; DateRangePicker: typeof DateRangePicker; Dialog: typeof Dialog; Divider: typeof Divider; Drawer: typeof Drawer; EmptyState: typeof EmptyState; Fab: typeof Fab; Field: typeof Field; FileUpload: typeof FileUpload; formatFileSize: typeof formatFileSize;
-      Grid: typeof Grid; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; initials: typeof initials; Input: typeof Input; Kbd: typeof Kbd;
+      Grid: typeof Grid; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Image: typeof Image; initials: typeof initials; Input: typeof Input; Kbd: typeof Kbd;
       Link: typeof Link; List: typeof List; ListItem: typeof ListItem; Loader: typeof Loader; Menu: typeof Menu; MenuGroup: typeof MenuGroup;
       MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Navbar: typeof Navbar; NavbarLink: typeof NavbarLink;
       NumberInput: typeof NumberInput; Pagination: typeof Pagination; paginationRange: typeof paginationRange; PasswordInput: typeof PasswordInput;
