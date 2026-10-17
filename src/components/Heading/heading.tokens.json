@@ -8,7 +8,8 @@
         "$description": "The heading's color.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--heading-color"
+            "cssVar": "--heading-text",
+            "deprecatedCssVar": "--heading-color"
           }
         }
       }

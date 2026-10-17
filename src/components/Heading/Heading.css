@@ -3,7 +3,7 @@
    6: text-sm) with the type scale's line height, font-semibold and the text color; 2xl and up are tracked
    tight. size="..." picks another step of the scale. Margins are left to the layout (none by default).
    --------------------------------------------------------------- */
-.dk-heading { margin: var(--spacing-0, 0px); color: var(--heading-color, var(--text)); font-family: var(--font-sans); font-weight: var(--heading-weight, var(--font-semibold, 600)); text-wrap: balance; }
+.dk-heading { margin: var(--spacing-0, 0px); color: var(--heading-text, var(--heading-color, var(--text))); font-family: var(--font-sans); font-weight: var(--heading-weight, var(--font-semibold, 600)); text-wrap: balance; }
 .dk-heading--1 { font-size: var(--heading-size-1, var(--text-3xl, 1.875rem)); line-height: var(--text-3xl--line-height, 2.25rem); letter-spacing: var(--tracking-tight, -0.025em); }
 .dk-heading--2 { font-size: var(--heading-size-2, var(--text-2xl, 1.5rem)); line-height: var(--text-2xl--line-height, 2rem); letter-spacing: var(--tracking-tight, -0.025em); }
 .dk-heading--3 { font-size: var(--heading-size-3, var(--text-xl, 1.25rem)); line-height: var(--text-xl--line-height, 1.75rem); }

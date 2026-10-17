@@ -67,7 +67,7 @@ Each is an optional override: set it on the page, a container or one tooltip. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--tooltip-bg` | `surface-inverse` | The background: the inverse surface, so it stands out in light and dark themes. |
-| `--tooltip-color` | `text-inverse` | The text (4.5:1 on the background). |
+| `--tooltip-text` (was `--tooltip-color`, which still works until 5.0.0) | `text-inverse` | The text (4.5:1 on the background). |
 | `--tooltip-shadow` | `shadow-md` | The shadow. |
 | `--tooltip-radius` | `rounded-md` | The corners (6px). |
 | `--tooltip-padding-x` | `spacing-2` | Padding at the sides (8px). |

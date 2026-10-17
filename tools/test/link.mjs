@@ -20,7 +20,8 @@ function App() {
     h('p', null, 'Unread ', h(D.VisuallyHidden, { id: 'vh', ref: window.vr = React.createRef(), className: 'extra' }, 'messages: '), '3'),
     h(D.VisuallyHidden, { id: 'vskip', as: 'div', focusable: true }, h('a', { id: 'skip', href: '#main' }, 'Skip to content')),
     h(D.VisuallyHidden, { id: 'vbad', as: 'table' }, 'x'),
-    h('button', { id: 'after' }, 'after'));
+    h('button', { id: 'after' }, 'after'),
+    h(D.Link, { id: 'ltok2', href: '#f', style: { '--link-text': 'rgb(4, 5, 6)', '--link-color': 'rgb(1, 2, 3)' } }, 'New name'));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -63,6 +64,8 @@ const lr = await p.evaluate(() => { const e = document.getElementById('lrouter')
 t('as: renders your router link with className and the rest', lr.router && lr.href === '#router/settings' && lr.cls === 'dk-link', JSON.stringify(lr));
 const lt = await st('#ltok', U);
 t('Link tokens (--link-color, --link-thickness, --link-offset) override one link', lt.color === 'rgb(1, 2, 3)' && lt.textDecorationThickness === '3px' && lt.textUnderlineOffset === '5px', JSON.stringify(lt));
+const lt2 = await st('#ltok2', U);
+t('--link-text, the new name for --link-color, overrides it when both are set (the old name keeps working until 5.0.0)', lt2.color === 'rgb(4, 5, 6)', JSON.stringify(lt2));
 await p.focus('#ldef'); await p.keyboard.press('Shift+Tab'); await p.keyboard.press('Tab');
 const f = await st('#ldef', ['outlineStyle', 'outlineWidth', 'outlineOffset']);
 t('keyboard focus: a 2px ring, 2px out', f.outlineStyle === 'solid' && f.outlineWidth === '2px' && f.outlineOffset === '2px', JSON.stringify(f));
@@ -90,7 +93,7 @@ const contrast = await p.evaluate(() => {
   for (const th of ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark']) {
     document.documentElement.setAttribute('data-theme', th);
     const bg = col('var(--surface)');
-    for (const [v, min] of [['var(--link-color, var(--primary))', 4.5], ['var(--link-color-hover, var(--primary-hover))', 4.5], ['var(--link-focus-ring, var(--focus-ring))', 3]]) {
+    for (const [v, min] of [['var(--link-text, var(--link-color, var(--primary)))', 4.5], ['var(--link-text-hover, var(--link-color-hover, var(--primary-hover)))', 4.5], ['var(--link-focus-ring, var(--focus-ring))', 3]]) {
       const r = ratio(col(v), bg); n++;
       if (r < min) low.push(`${th} ${v}: ${r.toFixed(2)}`);
     }

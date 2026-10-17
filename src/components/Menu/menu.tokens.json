@@ -18,7 +18,8 @@
         "$description": "The menu's border.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--menu-border-color"
+            "cssVar": "--menu-border",
+            "deprecatedCssVar": "--menu-border-color"
           }
         }
       },
@@ -28,7 +29,8 @@
         "$description": "An item's label.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--menu-item-color"
+            "cssVar": "--menu-item-text",
+            "deprecatedCssVar": "--menu-item-color"
           }
         }
       },

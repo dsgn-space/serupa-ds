@@ -53,12 +53,16 @@ check('bundle.css is under 2 MB', size < 2 * 1024 * 1024, f'{size / 1048576:.2f}
 # component tokens (src/components/<Name>/<name>.tokens.json): their CSS variables are overrides with a default
 import glob
 COMP = {}   # css var name (without --) -> (file, token)
+DEPRECATED = {}   # css var name -> its old name, kept working until 5.0.0: var(--new, var(--old, default))
 for f in sorted(glob.glob(os.path.join(P, 'src', 'components', '*', '*.tokens.json'))):
     data = json.load(open(f, encoding='utf-8'))
     def walk(tree):
         for k, v in tree.items():
             if k.startswith('$'): continue
-            if isinstance(v, dict) and '$value' in v: COMP[v['$extensions']['com.diki']['cssVar'][2:]] = (os.path.relpath(f, P), v)
+            if isinstance(v, dict) and '$value' in v:
+                ext = v['$extensions']['com.diki']
+                COMP[ext['cssVar'][2:]] = (os.path.relpath(f, P), v)
+                if ext.get('deprecatedCssVar'): DEPRECATED[ext['cssVar'][2:]] = ext['deprecatedCssVar'][2:]
             elif isinstance(v, dict): walk(v)
     walk(data)
 DT_BASE = json.load(open(os.path.join(P, 'design-tokens', 'diki.tokens.json'), encoding='utf-8')) if os.path.exists(os.path.join(P, 'design-tokens', 'diki.tokens.json')) else {}
@@ -78,7 +82,7 @@ def norm(v): return re.sub(r'\s+', ' ', v.strip().strip('"').replace('"', "'"))
 missing, wrongfb = set(), set()
 for m in re.finditer(r'var\(--([A-Za-z0-9\\._-]+)(?:,\s*((?:[^()]|\((?:[^()]|\([^()]*\))*\))*))?\)', css):
     n = m.group(1).replace('\\', ''); fb = m.group(2)
-    if n.startswith('dk-') or n in COMP: continue
+    if n.startswith('dk-') or n in COMP or n in DEPRECATED.values(): continue
     if n not in TV and n not in FAM: missing.add(n); continue
     if fb is not None and fb.strip() and n in TV and norm(fb) != norm(TV[n]):
         wrongfb.add(f'{n}: fallback {fb.strip()[:40]} ≠ token {TV[n][:40]}')
@@ -90,13 +94,16 @@ bad_ref, unused, wrong = [], [], []
 for n, (f, tok) in COMP.items():
     d = comp_default(tok)
     if d is None: bad_ref.append(f'{n} → {tok["$value"]}'); continue
-    uses = re.findall(r'var\(--' + re.escape(n) + r'(?:,\s*((?:[^()]|\((?:[^()]|\([^()]*\))*\))*))?\)', css)
+    uses = re.findall(r'var\(--' + re.escape(n) + r'(?:,\s*((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*))?\)', css)
     if not uses: unused.append(n)
+    if n in DEPRECATED: d = f'var(--{DEPRECATED[n]}, {d})'   # the old name still works, under the new one
     for fb in uses:
         if norm(fb) != norm(d): wrong.append(f'{n}: CSS default {fb.strip()[:50]} ≠ {d}')
 if COMP:
     check(f'component tokens: all {len(COMP)} refer to shared tokens', not bad_ref, '; '.join(bad_ref[:8]))
     check('component tokens: every one is used, with exactly the default its tokens file gives', not unused and not wrong, '; '.join((['unused: ' + ', '.join(unused)] if unused else []) + wrong[:8]))
+    stray = sorted({o for o in DEPRECATED.values() if o in COMP or len(re.findall(r'var\(--' + re.escape(o) + r'(?![\w-])', css)) != len(re.findall(r'var\(--[\w-]+, var\(--' + re.escape(o) + r'(?![\w-])', css))})
+    check(f'component tokens: {len(DEPRECATED)} old names still work, each only as the fallback of its new name', not stray, ', '.join(stray[:8]))
 
 # 4. literal values that a token holds
 EXCEPT = re.compile(r'^-?(shadow|inset-shadow|text-shadow|drop-shadow|rounded(-[a-z]+)?-full)\b')  # documented exceptions
