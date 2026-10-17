@@ -1,0 +1,47 @@
+name: Cross-browser
+
+# Every night, the component suites run in Firefox and WebKit (Safari's engine) as well as Chromium.
+# It doesn't block pull requests: a red run here is a browser difference to look at, not a broken main.
+# It also runs on a pull request that changes this file, and on demand from the Actions tab.
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths: ['.github/workflows/cross-browser.yml']
+
+jobs:
+  components:
+    name: components (${{ matrix.browser }})
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Build the package
+        run: npm run build
+      - name: Component suites in ${{ matrix.browser }}
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/test/run.mjs --browser ${{ matrix.browser }} --group components 2>&1 | tee test-output.txt
+      - name: List the failures
+        if: failure()
+        shell: bash
+        run: |
+          { echo '## Failing in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload failure details
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-${{ matrix.browser }}
+          path: test-output.txt
+          if-no-files-found: ignore
