@@ -39,6 +39,9 @@ async function open(e, theme) {
   errors = [];
   await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode}`);
   await page.waitForFunction(() => document.body.classList.contains('sb-show-main') || document.body.classList.contains('sb-show-errordisplay'), null, { timeout: 15000 }).catch(() => {});
+  // Wait for the story and the icon font: before the font loads, an icon's ligature reads as words to axe.
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0 || document.querySelector('#storybook-docs')?.children.length > 0, null, { timeout: 15000 }).catch(() => {});
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await page.waitForTimeout(150);
 }
 
@@ -49,12 +52,21 @@ for (const e of docs) {
   const ok = await page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
   const missing = await page.evaluate(() => [...document.querySelectorAll('blockquote')].map((q) => q.textContent).filter((x) => /Missing README section/.test(x)));
   t(`docs · ${e.title}`, ok && !errors.length && !missing.length, [...errors, ...missing].slice(0, 3).join(' | '));
+  // In a dark mode the whole docs page follows the theme, so dark components aren't shown on white.
+  await open(e, 'blue-dark');
+  const dark = await page.evaluate(() => {
+    const bg = (s) => { const el = document.querySelector(s); return el ? getComputedStyle(el).backgroundColor : null; };
+    const want = getComputedStyle(document.body).backgroundColor, text = getComputedStyle(document.querySelector('.sbdocs-content') || document.body).color;
+    const off = ['html', '.sbdocs-wrapper', '.sbdocs-preview', '.docs-story'].filter((s) => bg(s) !== null && bg(s) !== want);
+    return { theme: document.documentElement.getAttribute('data-theme'), want, text, off };
+  });
+  t(`docs · ${e.title} · dark: the page, story frames and text follow the theme`, dark.theme === 'blue-dark' && dark.want === 'rgb(3, 7, 18)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)', JSON.stringify(dark));
 }
 for (const e of stories) {
   const problems = [];
   for (const th of THEMES) {
     await open(e, th);
-    const shown = await page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th, th);
+    const shown = await page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
     if (!shown || errors.length) { problems.push(`${th}: ${errors[0] || 'did not render'}`); continue; }
     await page.addScriptTag({ content: axe });
     const v = await page.evaluate(async () => {
