@@ -2,8 +2,6 @@
 
 A password field with a button at the end that shows and hides what was typed, so people can check it before they submit. It's Input's box, so it has the same sizes, states and tokens.
 
-## Usage
-
 ```jsx
 const { PasswordInput, Field } = window.Diki;
 
@@ -14,6 +12,28 @@ const { PasswordInput, Field } = window.Diki;
 
 <PasswordInput visible={shown} onVisibleChange={setShown} />
 ```
+
+## When to use
+
+- Signing in, signing up, and changing a password.
+- Any secret people type and may want to check before they submit, such as a PIN.
+
+## When not to use
+
+- Text that isn't secret: use [Input](../Input/README.md).
+
+## Usage
+
+- Label it with [Field](../Field/README.md), and put the password rules in the hint ("At least 12 characters"), not only in an error.
+- Set `autoComplete="new-password"` when people create a password, so password managers suggest one; the default suits sign-in.
+- Match the `size` to the other fields in the form.
+
+## Accessibility
+
+- The button is named "Show password" and has `aria-pressed`, so screen readers say whether the password is shown. Its `aria-controls` points at the field when the field has an `id` (Field gives it one).
+- Clicking it keeps focus in the field, so typing carries on. It's also reachable with Tab, and Enter or Space press it.
+- Spell check and auto-capitalization are off, so a shown password isn't underlined or changed.
+- The text keeps 4.5:1 and the eye icon 3:1 on the field in all six themes (`tools/test/password-input.mjs`).
 
 ## Props
 
@@ -28,13 +48,6 @@ const { PasswordInput, Field } = window.Diki;
 | `leftIcon` | an icon name or element | none | A decorative icon before the text |
 
 `autoComplete` defaults to `"current-password"`; use `"new-password"` when creating one. `ref`, `value`, `onChange` and every other input attribute go to the `<input>`; `className` and `style` go to the box, which has `data-component="password-input"`.
-
-## Accessibility
-
-- The button is named "Show password" and has `aria-pressed`, so screen readers say whether the password is shown. Its `aria-controls` points at the field when the field has an `id` (Field gives it one).
-- Clicking it keeps focus in the field, so typing carries on. It's also reachable with Tab, and Enter or Space press it.
-- Spell check and auto-capitalization are off, so a shown password isn't underlined or changed.
-- The text keeps 4.5:1 and the eye icon 3:1 on the field in all six themes (`tools/test/password-input.mjs`).
 
 ## Component tokens
 
