@@ -45,8 +45,11 @@ async function open(e, theme) {
   await page.waitForTimeout(150);
 }
 
-const docs = Object.values(entries).filter((e) => e.type === 'docs');
-const stories = Object.values(entries).filter((e) => e.type === 'story');
+// DIKI_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
+// the docs pages are checked in the first shard.
+const [shard, shards] = (process.env.DIKI_SHARD || '1/1').split('/').map(Number);
+const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs') : [];
+const stories = Object.values(entries).filter((e) => e.type === 'story').filter((_, i) => i % shards === shard - 1);
 for (const e of docs) {
   await open(e, 'blue-light');
   const ok = await page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
