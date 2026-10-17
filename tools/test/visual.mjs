@@ -31,6 +31,19 @@ async function diff(a, bb) {   // share of differing pixels, computed in the bro
   }, [a, bb]);
 }
 
+// Screenshot once the page has stopped changing: two captures 100 ms apart must match, so a late paint
+// (a popover still placing itself, a glyph still loading on a slow runner) can't land in the image.
+async function stableShot() {
+  let last = await page.screenshot({ fullPage: true });
+  for (let i = 0; i < 10; i++) {
+    await page.waitForTimeout(100);
+    const next = await page.screenshot({ fullPage: true });
+    if (next.equals(last)) return next;
+    last = next;
+  }
+  return last;
+}
+
 for (const c of comps) {
   const src = read(`src/components/${c}/preview.html`);
   const style = (src.match(/<style>[\s\S]*?<\/style>/) || [''])[0];
@@ -40,13 +53,16 @@ for (const c of comps) {
     for (const state of ['rest', 'hover', 'focus']) {
       await page.goto(url);
       await page.evaluate((th) => { document.documentElement.setAttribute('data-theme', th); const b = document.body; b.style.display = 'none'; void b.offsetHeight; b.style.display = ''; }, th);   // rebuild the boxes: Chromium doesn't repaint still currentColor gradients (the paused skeleton) on a theme change
-      await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(150);
+      // Load every font face up front: React renders after the load event, so document.fonts.ready alone can
+      // resolve before any icon is on the page, and the icon font (font-display: block) then draws blank or late.
+      await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+      await page.waitForTimeout(150);   // previews that open a popover do it on a 50 ms timer
       if (state !== 'rest') {
         const first = page.locator('.dk-btn:not(:disabled):visible').first();
         if (!(await first.count())) continue;
         if (state === 'hover') await first.hover(); else await page.keyboard.press('Tab');
       }
-      const shot = (await page.screenshot({ fullPage: true })).toString('base64');
+      const shot = (await stableShot()).toString('base64');
       const file = path.join(DIR, `${c}-${th}-${state}.png`);
       if (update) { fs.writeFileSync(file, Buffer.from(shot, 'base64')); continue; }
       // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a

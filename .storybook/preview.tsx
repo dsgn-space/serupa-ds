@@ -14,7 +14,7 @@ const apply = (g: Record<string, unknown> | undefined) => {
   document.documentElement.setAttribute('data-theme', `${g.brand || 'blue'}-${g.mode || 'light'}`);
 };
 const channel = addons.getChannel();
-channel.on('setGlobals', (e: { globals?: Record<string, unknown>; userGlobals?: Record<string, unknown> }) => apply({ ...e.globals, ...e.userGlobals }));
+channel.on('setGlobals', (e: { globals?: Record<string, unknown> }) => apply(e.globals));   // already merged, with a story's own globals on top
 channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply(e.globals));
 
 const withTheme: Decorator = (Story, context) => {
