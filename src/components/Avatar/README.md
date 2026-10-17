@@ -43,7 +43,7 @@ Each is an optional override: set it on the page, a container or one avatar. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--avatar-bg` | `secondary` | The background behind initials and the fallback icon. |
-| `--avatar-color` | `text` | The initials and the fallback icon (4.5:1 on the background). |
+| `--avatar-text` (was `--avatar-color`, which still works until 5.0.0) | `text` | The initials and the fallback icon (4.5:1 on the background). |
 | `--avatar-ring` | `surface` | The ring that separates the status dot from the picture. |
 | `--avatar-status-online` | `success` | The status dot for status="online". |
 | `--avatar-status-busy` | `danger` | The status dot for status="busy". |

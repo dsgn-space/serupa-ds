@@ -4,7 +4,7 @@
    button and decoration are hidden so there's only one.
    --------------------------------------------------------------- */
 .dk-search-input:has(.dk-search-input__clear) { padding-inline-end: var(--search-input-clear-padding, var(--spacing-1, 0.25rem)); }
-.dk-search-input__icon { color: var(--search-input-icon, var(--text-muted)); }
+.dk-search-input__icon { color: var(--search-input-icon-color, var(--search-input-icon, var(--text-muted))); }
 .dk-search-input__icon .dk-loader { --dk-loader-size: var(--dk-input-icon); }
 .dk-search-input .dk-input__field::-webkit-search-cancel-button, .dk-search-input .dk-input__field::-webkit-search-decoration { appearance: none; }
 .dk-search-input__clear {
