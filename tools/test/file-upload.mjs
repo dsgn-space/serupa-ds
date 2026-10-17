@@ -1,6 +1,6 @@
 // FileUpload: the drop area and button, choosing files through the input, dropping files, accept (types and
 // extensions), maxSize, maxFiles, single vs multiple, duplicates, the file list (icon, name, size, remove and
-// where focus goes), rejections (role="alert", onReject), controlled, disabled, the native input following the
+// where focus goes), rejections (role="alert", onReject), controlled, disabled, keyboard, the native input following the
 // list, formatFileSize, contrast in every theme and tokens.
 //   node tools/test/file-upload.mjs
 import { writePage, browser, cleanup, report } from './lib.mjs';
@@ -104,6 +104,30 @@ const contrast = await p.evaluate(() => {
 });
 t('contrast: text 4.5:1 (also while dragging), the icon and outline 3:1, in all six themes', contrast.low.length === 0 && contrast.n === 54, contrast.low.join('; '));
 t('--file-upload-zone-bg overrides one upload', await p.evaluate(() => getComputedStyle(document.querySelector('#tok').closest('[data-component=file-upload]').querySelector('.dk-file-upload__zone')).backgroundColor === 'rgb(1, 2, 3)'));
+
+// Keyboard, on a fresh page so Tab starts at the top: the choose button is the first stop, Enter and Space
+// open the file picker, each chosen file's remove button follows, and removing one returns focus to the button.
+// A standing listener set before the reload, so the picker is intercepted from the first key press
+// (a waitForEvent started with the key press can lose that race).
+let picked = null; p.on('filechooser', (fc) => { picked = fc; });
+await p.reload(); await p.waitForSelector(`${many} .dk-btn`);
+await p.keyboard.press('Tab');
+const first = await p.evaluate((m) => document.activeElement === document.querySelector(m + ' .dk-btn'), many);
+t('keyboard: Tab reaches the choose button first (the hidden input and the drop area are skipped)', first);
+const opens = async (key) => { picked = null; await p.keyboard.press(key); for (let i = 0; i < 30 && !picked; i++) await p.waitForTimeout(100); return picked; };
+const byEnter = await opens('Enter');
+if (byEnter) await byEnter.setFiles([]);   // close it: one picker at a time
+const bySpace = await opens('Space');
+t('keyboard: Enter and Space on the choose button open the file picker', !!byEnter && !!bySpace, JSON.stringify({ enter: !!byEnter, space: !!bySpace }));
+if (bySpace) await bySpace.setFiles([file('a.png', 'image/png', 10), file('b.pdf', 'application/pdf', 10)]);
+await p.waitForFunction((m) => document.querySelectorAll(m + ' .dk-file-upload__item').length === 2, many);
+const stops = [];
+for (let i = 0; i < 2; i++) { await p.keyboard.press('Tab'); stops.push(await p.evaluate(() => document.activeElement.getAttribute('aria-label'))); }
+t('keyboard: Tab then reaches each file\'s remove button, named after the file', stops.length === 2 && stops.every((x, i) => x && x.includes(['a.png', 'b.pdf'][i])), stops.join(' | '));
+await p.keyboard.press('Enter');
+await p.waitForFunction((m) => document.querySelectorAll(m + ' .dk-file-upload__item').length === 1, many);
+const back = await p.evaluate((m) => document.activeElement === document.querySelector(m + ' .dk-btn'), many);
+t('keyboard: Enter removes the file and focus goes back to the choose button', back);
 t('no errors on the page', errors.length === 0, errors.join('; '));
 
 await b.close();
