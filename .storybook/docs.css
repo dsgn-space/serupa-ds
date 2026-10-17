@@ -17,10 +17,15 @@ html, body { background-color: var(--surface); }
 [data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) tr:nth-of-type(2n) :is(td, th) { background-color: var(--surface-muted); }
 [data-theme$="-dark"] .sbdocs-content :not(pre) > code:not(.docs-story *) { background-color: var(--surface-muted); border-color: var(--border); color: var(--text); }
 [data-theme$="-dark"] .sbdocs-content pre, [data-theme$="-dark"] .docblock-source { background-color: var(--surface-muted); border-color: var(--border); }
+/* Code keeps its light-theme syntax colors (dark blue, maroon) on the dark background, so recolor them: names
+   and keywords in primary, the rest in text, each 4.5:1 on surface-muted. */
+[data-theme$="-dark"] :is(.sbdocs-content pre, .docblock-source) :is(code, span) { color: var(--text) !important; }
+[data-theme$="-dark"] :is(.sbdocs-content pre, .docblock-source) .token:is(.keyword, .tag, .attr-name, .class-name, .boolean, .number, .builtin) { color: var(--primary) !important; }
+[data-theme$="-dark"] :is(.sbdocs-content pre, .docblock-source) .token:is(.comment, .prolog, .doctype) { color: var(--text-muted) !important; }
 [data-theme$="-dark"] .docblock-argstable :is(tbody, tr, td, th) { background-color: var(--surface) !important; color: var(--text) !important; border-color: var(--border) !important; }
 [data-theme$="-dark"] .docblock-argstable tbody { box-shadow: 0 0 0 1px var(--border) !important; }
 [data-theme$="-dark"] .docblock-argstable :is(input, textarea, select, button) { background-color: var(--field); color: var(--text); border-color: var(--field-border); }
-[data-theme$="-dark"] .docblock-argstable td span { background-color: transparent !important; border-color: var(--border) !important; color: var(--text-muted) !important; }
+[data-theme$="-dark"] .docblock-argstable td span:not(label span, [title="Required"]) { background-color: transparent !important; border-color: var(--border) !important; color: var(--text-muted) !important; }   /* type chips; not the boolean and radio controls, whose spans show the selected value, or the required mark */
 [data-theme$="-dark"] .docblock-argstable td div:not(:has(input, textarea, select, button)) { color: var(--text-muted) !important; }
 [data-theme$="-dark"] .docblock-argstable td:first-child, [data-theme$="-dark"] .docblock-argstable td:first-child * { color: var(--text) !important; }
 [data-theme$="-dark"] .sbdocs-content .sb-unstyled { color: var(--text); }
