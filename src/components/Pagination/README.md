@@ -2,8 +2,6 @@
 
 Moves through pages of results: previous and next arrows around the page numbers, with … where pages are skipped. It always shows the same number of slots, so the arrows stay put as the page changes. Pages are buttons, or links with `getHref` when each page has its own URL.
 
-## Usage
-
 ```jsx
 const { Pagination } = window.Diki;
 
@@ -16,7 +14,32 @@ const [page, setPage] = React.useState(1);
 <Pagination count={8} size="sm" siblings={0} />
 ```
 
+## When to use
+
+- Long lists or tables of results split into pages, where people jump to a page or come back to one: orders, search results, logs.
+- Results where each page should have its own URL, to share, bookmark or render on the server.
+
+## When not to use
+
+- A feed people scroll through without caring which page they're on: use a "Load more" [Button](../Button/README.md) under the list instead.
+- Steps of a task done in order: use [Stepper](../Stepper/README.md) instead.
+- A few views of the same thing: use [Tabs](../Tabs/README.md) instead.
+
+## Usage
+
+- Put it under the list or table it pages through.
+- When pages have URLs, pass `getHref` so every page is a link; clicks still call `onPageChange`.
+- Where space is tight, use `size="sm"` and fewer `siblings`. The number of slots stays the same, so the arrows don't move.
+
 `paginationRange(page, count, siblings, boundaries)` returns the same list of pages and ellipses, for building your own.
+
+## Accessibility
+
+- It's a `<nav>` landmark named "Pagination" with a list. The current page has `aria-current="page"`; the ellipses are hidden from screen readers.
+- At the first or last page the arrow is disabled (a link loses its `href` and gets `aria-disabled`).
+- Pages, also on hover, the current page and the ellipsis keep 4.5:1 in all six themes (`tools/test/pagination.mjs`).
+- The arrows point the other way in right-to-left pages.
+- After a page change, move focus to the top of the new results (or announce them) so keyboard and screen reader users know the list changed.
 
 ## Props
 
@@ -35,14 +58,6 @@ const [page, setPage] = React.useState(1);
 | `pageLabel` | `(page) => string` | `"Page " + page` | A page's name |
 
 `className`, `style`, `ref` and everything else go to the `<nav>`, which has `data-component="pagination"`.
-
-## Accessibility
-
-- It's a `<nav>` landmark named "Pagination" with a list. The current page has `aria-current="page"`; the ellipses are hidden from screen readers.
-- At the first or last page the arrow is disabled (a link loses its `href` and gets `aria-disabled`).
-- Pages, also on hover, the current page and the ellipsis keep 4.5:1 in all six themes (`tools/test/pagination.mjs`).
-- The arrows point the other way in right-to-left pages.
-- After a page change, move focus to the top of the new results (or announce them) so keyboard and screen reader users know the list changed.
 
 ## Component tokens
 

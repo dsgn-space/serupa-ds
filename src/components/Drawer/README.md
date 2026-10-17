@@ -13,6 +13,37 @@ const [open, setOpen] = React.useState(false);
 </Drawer>
 ```
 
+## When to use
+
+- Navigation on small screens, where a [Sidebar](../Sidebar/README.md) doesn't fit.
+- Filters for a list or a table, which people set and then apply.
+- Viewing or editing one item's details without leaving the page, such as a row in a table.
+
+## When not to use
+
+- A short question or form: use a [Dialog](../Dialog/README.md) instead.
+- Something people keep open while they work: put it in the page instead, such as a [Sidebar](../Sidebar/README.md) or a side panel.
+- A few controls next to the button that opens them: use a [Popover](../Popover/README.md) instead.
+
+## Usage
+
+- Use `side="right"` (the default) for details and filters, and `side="left"` for navigation; use `bottom` for short sheets on small screens.
+- Give it a `title` that names what's inside ("Filters", "Order #1042").
+- Put the actions in `footer` so they stay in view, with the main action last.
+- Set `closeOnBackdrop={false}` when closing would lose work, such as unsaved edits.
+
+## Behavior
+
+- It's a native `<dialog>` opened with `showModal()`, like Dialog. Focus moves inside and stays there, the page behind can't be reached and doesn't scroll, and closing moves focus back to where it was.
+- Left and right drawers are full height. Top and bottom drawers are full width, as tall as their content up to the screen less 64px, and rounded on the open side.
+- The body scrolls on its own, so the header and footer stay in view.
+- It slides in over 300ms, and appears at once with `prefers-reduced-motion`.
+
+## Accessibility
+
+- `aria-modal`, named by the title (`aria-labelledby`) and described by the description.
+- The title, description and body text keep 4.5:1 on the panel in all six themes (`tools/test/drawer.mjs`). In forced-colors mode the panel gets a border.
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -29,18 +60,6 @@ const [open, setOpen] = React.useState(false);
 | `closeOnBackdrop` | `boolean` | `true` | Whether a click on the backdrop closes it. Turn it off when closing would lose work. |
 
 Every other prop, `className` and `ref` go to the native `<dialog>`.
-
-## Behavior
-
-- It's a native `<dialog>` opened with `showModal()`, like Dialog. Focus moves inside and stays there, the page behind can't be reached and doesn't scroll, and closing moves focus back to where it was.
-- Left and right drawers are full height. Top and bottom drawers are full width, as tall as their content up to the screen less 64px, and rounded on the open side.
-- The body scrolls on its own, so the header and footer stay in view.
-- It slides in over 300ms, and appears at once with `prefers-reduced-motion`.
-
-## Accessibility
-
-- `aria-modal`, named by the title (`aria-labelledby`) and described by the description.
-- The title, description and body text keep 4.5:1 on the panel in all six themes (`tools/test/drawer.mjs`). In forced-colors mode the panel gets a border.
 
 ## Component tokens
 
