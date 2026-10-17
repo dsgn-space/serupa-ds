@@ -3,7 +3,8 @@
 //   node tools/test/avatar.mjs
 import { writePage, browser, cleanup, report } from './lib.mjs';
 
-const IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="#c00"/></svg>');
+// A 10×10 red PNG rather than an SVG data URL: WebKit's loaded check failed on the SVG (no 10px natural width).
+const IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEklEQVR4nGM4w8CAB+GTG8HSAJNGT7H9UgyzAAAAAElFTkSuQmCC';
 const APP = `<div id="root" style="padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
 <script>
 var D = window.Diki, h = React.createElement;
