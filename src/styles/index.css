@@ -51,4 +51,5 @@
 @import "../components/SegmentedControl/SegmentedControl.css";
 @import "../components/Combobox/Combobox.css";
 @import "../components/Stepper/Stepper.css";
+@import "../components/Kbd/Kbd.css";
 @import "./utilities.css";
