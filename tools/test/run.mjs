@@ -51,6 +51,7 @@ const steps = [
   ['Icon names', 'node', [path.join(HERE, 'icon-names.mjs')]],
   ['Stepper', 'node', [path.join(HERE, 'stepper.mjs')]],
   ['Kbd', 'node', [path.join(HERE, 'kbd.mjs')]],
+  ['FileUpload', 'node', [path.join(HERE, 'file-upload.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

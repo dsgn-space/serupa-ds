@@ -22,6 +22,8 @@ window.Diki = Object.assign(window.Diki || {}, {
   Divider: Diki.Divider,
   Fab: Diki.Fab,
   Field: Diki.Field,
+  FileUpload: Diki.FileUpload,
+  formatFileSize: Diki.formatFileSize,
   Grid: Diki.Grid,
   Drawer: Diki.Drawer,
   EmptyState: Diki.EmptyState,
