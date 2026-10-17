@@ -10,11 +10,10 @@ const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'P
 // off this list; a guide on the list that already has every section fails, so the list only shrinks.
 // AvatarGroup and Carousel are in open pull requests with the old outline, so they're listed ahead of time.
 const PENDING = new Set([
-  'Accordion', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'Calendar',
-  'Card', 'Carousel', 'Container', 'DatePicker', 'DateRangePicker', 'Dialog',
-  'Divider', 'Drawer', 'EmptyState', 'FileUpload', 'Grid', 'Heading', 'Icon', 'Image', 'Kbd', 'List', 'Loader', 'Menu', 'Navbar', 'NumberInput', 'Pagination',
-  'PasswordInput', 'Popover', 'Progress', 'SearchInput', 'SegmentedControl', 'Sidebar',
-  'Stack', 'Stepper', 'Table', 'Tabs', 'Text', 'TimePicker', 'Toast',
+  'Accordion', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'Card', 'Carousel', 'Container', 'Dialog',
+  'Divider', 'Drawer', 'EmptyState', 'Grid', 'Heading', 'Icon', 'Image', 'Kbd', 'List', 'Loader', 'Menu', 'Navbar', 'Pagination',
+  'Popover', 'Progress', 'Sidebar',
+  'Stack', 'Stepper', 'Table', 'Tabs', 'Text', 'Toast',
   'Tooltip', 'VisuallyHidden'
 ]);
 

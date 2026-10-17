@@ -11,6 +11,37 @@ const [start, setStart] = React.useState<string | null>("09:00");
 </Field>
 ```
 
+## When to use
+
+- A time of day: a meeting start, an opening hour, a reminder time.
+- When times usually fall on regular slots (every 15 or 30 minutes) but people may also type an exact time.
+- When only some hours are allowed, such as business hours.
+
+## When not to use
+
+- A length of time, such as "45 minutes": use [NumberInput](../NumberInput/README.md) with the unit in the label instead.
+- A date as well as a time: pair a [DatePicker](../DatePicker/README.md) with a TimePicker; TimePicker holds the time only.
+- A handful of fixed slots that people must choose from: use [Select](../Select/README.md) or a [Radio](../Radio/README.md) group instead. TimePicker accepts typed times between the slots.
+
+## Usage
+
+- Wrap it in [Field](../Field/README.md) with a label that says which time it is ("Start time", "Remind me at").
+- Set `step` to the slots people usually pick, and `min` and `max` to the hours that are allowed.
+- Leave `hour12` and `locale` unset in most products so times follow the visitor's settings.
+- Use `name` in a plain form: it sends `"HH:mm"`, whatever the display format.
+
+## Behavior
+
+- People type `2:30 pm`, `2:30p`, `2pm`, `14:30`, `1430` or `9`. Without AM or PM, 13–23 are afternoon and 0–11 morning. The text is read on blur and Enter; text that isn't a time, or a time outside `min`–`max`, puts back the last good value.
+- The list opens on ↓ or ↑ in the field, or the clock button, with the chosen time (or the one nearest the typed text) highlighted and near the top.
+- In the list: ↑ ↓ move one time, PageUp and PageDown four, Ctrl+Home and Ctrl+End to the ends, Enter picks, Escape closes, Tab closes and moves on. Typing while the list is open moves the highlight to the nearest time, and Enter then keeps what was typed. Focus stays in the field throughout, the clock button included.
+
+## Accessibility
+
+- The field is an ARIA combobox (`aria-haspopup="listbox"`, `aria-expanded`, `aria-activedescendant`) and the list a `role="listbox"` with `aria-selected` on the chosen time. The check is decorative.
+- The clock button is out of the tab order, since ↓ in the field does the same.
+- Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in all six themes (`tools/test/time-picker.mjs`).
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -27,19 +58,6 @@ const [start, setStart] = React.useState<string | null>("09:00");
 | `listLabel` | `string` | `"Choose time"` | The list's name, and the clock button's. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
-
-## Behavior
-
-- People type `2:30 pm`, `2:30p`, `2pm`, `14:30`, `1430` or `9`. Without AM or PM, 13–23 are afternoon and 0–11 morning. The text is read on blur and Enter; text that isn't a time, or a time outside `min`–`max`, puts back the last good value.
-- The list opens on ↓ or ↑ in the field, or the clock button, with the chosen time (or the one nearest the typed text) highlighted and near the top.
-- In the list: ↑ ↓ move one time, PageUp and PageDown four, Ctrl+Home and Ctrl+End to the ends, Enter picks, Escape closes, Tab closes and moves on. Typing while the list is open moves the highlight to the nearest time, and Enter then keeps what was typed. Focus stays in the field throughout, the clock button included.
-- Uses Input's box, so it lines up with other fields.
-
-## Accessibility
-
-- The field is an ARIA combobox (`aria-haspopup="listbox"`, `aria-expanded`, `aria-activedescendant`) and the list a `role="listbox"` with `aria-selected` on the chosen time. The check is decorative.
-- The clock button is out of the tab order, since ↓ in the field does the same.
-- Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in all six themes (`tools/test/time-picker.mjs`).
 
 ## Component tokens
 
@@ -61,3 +79,5 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-list-padding` | `spacing-1` | Space inside the list (4px). |
 | `--time-picker-offset` | `spacing-1` | The gap between the field and the list (4px). |
 | `--time-picker-z-index` | `z-50` | The list's stacking order, where the top layer isn't available. |
+
+It uses Input's box, so it lines up with other fields.
