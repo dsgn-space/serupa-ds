@@ -23,7 +23,8 @@ const errors = [];
 const keys = (p, id) => p.evaluate((id) => [...document.querySelectorAll('#' + id + ' .dk-kbd__key')].map((k) => k.textContent + (k.title ? '(' + k.title + ')' : '')).join(' '), id);
 const spoken = (p, id) => p.evaluate((id) => { const el = document.getElementById(id).cloneNode(true); el.querySelectorAll('[aria-hidden]').forEach((x) => x.remove()); return [...el.querySelectorAll('.dk-kbd__key')].map((k) => k.textContent).join(' + '); }, id);
 
-const p = await (await b.newContext()).newPage();
+// Playwright's WebKit sends a Mac user agent even on Linux, and Kbd reads it too, so fake both the platform and the user agent.
+const p = await (await b.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)' })).newPage();
 p.on('pageerror', (e) => errors.push(e.message));
 await p.addInitScript(() => Object.defineProperty(navigator, 'platform', { get: () => 'Win32' }));
 await p.goto(writePage('kbd.html', APP(), { react: true }));
@@ -55,7 +56,7 @@ const contrast = await p.evaluate(() => {
 t('contrast: labels and the + keep 4.5:1 in all six themes', contrast.low.length === 0 && contrast.n === 12, contrast.low.join('; '));
 t('--kbd-bg overrides one key', await p.evaluate(() => getComputedStyle(document.querySelector('#tok .dk-kbd__key')).backgroundColor === 'rgb(1, 2, 3)'));
 
-const mac = await (await b.newContext()).newPage();
+const mac = await (await b.newContext({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)' })).newPage();
 mac.on('pageerror', (e) => errors.push(e.message));
 await mac.addInitScript(() => Object.defineProperty(navigator, 'platform', { get: () => 'MacIntel' }));
 await mac.goto(writePage('kbd-mac.html', APP(), { react: true }));

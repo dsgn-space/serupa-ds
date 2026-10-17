@@ -60,8 +60,10 @@ t('clicking the trailing action doesn\'t follow the link; clicking the row does'
 const bt = await p.evaluate(() => { const m = document.querySelector('#ibtn .dk-list__main'); return [m.tagName, m.type, m.getAttribute('aria-pressed')].join(); });
 await p.focus('#ibtn .dk-list__main'); await p.keyboard.press('Enter');
 t('onClick: the main area is a button (aria-pressed with selected), and Enter presses it', bt === 'BUTTON,button,false' && (await p.evaluate(() => window.clicks.join())) === 'more,btn', bt);
-const fr = await st('#ibtn .dk-list__main', ['outlineStyle', 'outlineWidth']);
-t('keyboard focus: a 2px ring inside the row', fr.outlineStyle === 'solid' && fr.outlineWidth === '2px', JSON.stringify(fr));
+// After the mouse clicks above, focus set by script isn't :focus-visible in Firefox and WebKit; arrive by Tab like a keyboard user.
+await p.keyboard.press('Tab'); await p.keyboard.press('Shift+Tab');
+const fr = { ...(await st('#ibtn .dk-list__main', ['outlineStyle', 'outlineWidth'])), active: await p.evaluate(() => document.activeElement === document.querySelector('#ibtn .dk-list__main')) };
+t('keyboard focus: a 2px ring inside the row', fr.active && fr.outlineStyle === 'solid' && fr.outlineWidth === '2px', JSON.stringify(fr));
 const sel = await p.evaluate(() => { const li = document.getElementById('isel'), s = getComputedStyle(li); return { cur: li.querySelector('a').getAttribute('aria-current'), bg: s.backgroundColor, sh: s.boxShadow }; });
 t('selected: aria-current, shaded, a 2px primary bar at the start', sel.cur === 'true' && sel.bg === await tok('var(--surface-muted)') && sel.sh.endsWith('2px 0px 0px 0px inset') && sel.sh.includes(await tok('var(--primary)', 'color')), JSON.stringify(sel));
 const rt = await p.evaluate(() => { const a = document.querySelector('#irouter .dk-list__main'); return [a.hasAttribute('data-router'), a.getAttribute('href'), a.className].join(); });

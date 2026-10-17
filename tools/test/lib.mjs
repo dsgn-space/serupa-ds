@@ -53,7 +53,10 @@ export async function browser() {
   let pw;
   try { pw = await import('playwright'); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
   if (!pw[ENGINE]) { console.error(`Unknown DIKI_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
-  try { return await pw[ENGINE].launch(); } catch (e) { console.error(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); process.exit(2); }
+  // Headless Firefox finds no pointing device and reports (hover: none), so hover styles behind
+  // @media (hover: hover) never apply. Give it a desktop's fine, hovering pointer (2 | 4).
+  const opts = ENGINE === 'firefox' ? { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } : {};
+  try { return await pw[ENGINE].launch(opts); } catch (e) { console.error(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); process.exit(2); }
 }
 
 export function report(name, results) {

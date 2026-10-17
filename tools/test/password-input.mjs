@@ -36,7 +36,7 @@ await p.waitForTimeout(300);
 const st = (sel, props) => p.evaluate(([s, ps]) => { const c = getComputedStyle(document.querySelector(s)); return Object.fromEntries(ps.map((k) => [k, c[k]])); }, [sel, props]);
 const tg = (id) => `#${id} + .dk-password-input__toggle`;
 
-const d = await p.evaluate(() => { const i = document.getElementById('pw'), box = i.parentElement, btn = box.querySelector('button'); return { type: i.type, ac: i.autocomplete, ref: window.pr.current === i, box: box.className, comp: box.dataset.component, mt: box.style.marginTop, h: box.getBoundingClientRect().height, ph: i.placeholder, label: i.labels[0] && i.labels[0].textContent, btn: btn.type, bl: btn.getAttribute('aria-label'), bp: btn.getAttribute('aria-pressed'), bc: btn.getAttribute('aria-controls'), icon: btn.textContent, left: box.querySelector('.dk-input__icon--left').textContent, spell: i.spellcheck }; });
+const d = await p.evaluate(() => { const i = document.getElementById('pw'), box = i.parentElement, btn = box.querySelector('button'); return { type: i.type, ac: i.getAttribute('autocomplete'), ref: window.pr.current === i, box: box.className, comp: box.dataset.component, mt: box.style.marginTop, h: box.getBoundingClientRect().height, ph: i.placeholder, label: i.labels[0] && i.labels[0].textContent, btn: btn.type, bl: btn.getAttribute('aria-label'), bp: btn.getAttribute('aria-pressed'), bc: btn.getAttribute('aria-controls'), icon: btn.textContent, left: box.querySelector('.dk-input__icon--left').textContent, spell: i.spellcheck }; });
 t('PasswordInput: Input\'s box (32px, md) around a type="password" field, autocomplete current-password, no spellcheck; ref to the input, className and style to the box', d.type === 'password' && d.ac === 'current-password' && d.ref && d.box === 'dk-input dk-password-input dk-input--size-md extra' && d.comp === 'password-input' && d.mt === '2px' && d.h === 32 && d.ph === 'Your password' && d.label === 'Password' && d.left === 'lock' && d.spell === false, JSON.stringify(d));
 t('the show/hide button: type button, "Show password", aria-pressed="false", controls the field, an eye icon', d.btn === 'button' && d.bl === 'Show password' && d.bp === 'false' && d.bc === 'pw' && d.icon === 'visibility', JSON.stringify(d));
 await p.fill('#pw', 'hunter2');
@@ -51,7 +51,7 @@ const s3 = await p.evaluate(() => document.getElementById('pw').type);
 t('keyboard: Enter and Space on the button toggle it', s2 === 'password' && s3 === 'text', [s2, s3].join());
 const ring = await st(tg('pw'), ['outlineStyle', 'outlineWidth']);
 t('the button shows a 2px focus ring', ring.outlineStyle === 'solid' && ring.outlineWidth === '2px', JSON.stringify(ring));
-const nw = await p.evaluate(() => { const i = document.getElementById('pnew'); return [i.type, i.autocomplete, i.nextElementSibling.getAttribute('aria-label'), Math.round(i.parentElement.getBoundingClientRect().height)].join(); });
+const nw = await p.evaluate(() => { const i = document.getElementById('pnew'); return [i.type, i.getAttribute('autocomplete'), i.nextElementSibling.getAttribute('aria-label'), Math.round(i.parentElement.getBoundingClientRect().height)].join(); });
 t('defaultVisible starts shown; autoComplete and toggleLabel are yours; size lg is 44px', nw === 'text,new-password,Show the new password,44', nw);
 await p.click(tg('pctl'));
 t('controlled: onVisibleChange gets the new state, the parent sets it', (await p.evaluate(() => [document.getElementById('pctl').type, window.calls.join()].join('|'))) === 'password|false');
