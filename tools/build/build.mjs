@@ -7,6 +7,7 @@
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
 //   lib/                   React 18 for plain pages (react and react-dom UMD builds)
 //   node tools/build/build.mjs [--css]     --css skips the JavaScript (tsup) step
+// First it brings tokens.css (at the package root, committed) up to date with tokens.json: tools/tokens/build.mjs.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -19,6 +20,9 @@ const read = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 
 // The order the styles cascade in: the @import list in src/styles/index.css (Storybook loads that file).
 const IMPORTS = [...read('src/styles/index.css').matchAll(/^@import "\.\.\/components\/(\w+)\/\1\.css";$/gm)].map((m) => m[1]);
+
+const tokens = spawnSync(process.execPath, [path.join(P, 'tools', 'tokens', 'build.mjs')], { cwd: P, stdio: 'inherit' });
+if (tokens.status !== 0) process.exit(tokens.status || 1);
 
 fs.mkdirSync(D, { recursive: true });
 if (!process.argv.includes('--css')) {

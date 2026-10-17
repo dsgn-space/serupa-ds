@@ -20,6 +20,8 @@ jobs:
           python-version: '3.12'
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: tokens.css is generated from tokens.json
+        run: node tools/tokens/build.mjs --check
       - name: Every file carries the same version
         run: python3 tools/release.py --check
       - name: Type check
