@@ -2,8 +2,6 @@
 
 Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. Use it for most layout inside a page: a form's fields, a card's content, a row of buttons.
 
-## Usage
-
 ```jsx
 const { Stack, Button } = window.Diki;
 
@@ -20,6 +18,29 @@ const { Stack, Button } = window.Diki;
 <Stack as="ul" gap={2}>{items.map((i) => <li key={i.id}>{i.name}</li>)}</Stack>
 ```
 
+## When to use
+
+- Things one after another with even space between them: a form's fields, a card's content, a row of buttons.
+- Spacing siblings from the spacing scale, instead of a margin on each one.
+
+## When not to use
+
+- Items in columns that line up from row to row: use [Grid](../Grid/README.md) instead.
+- Setting the page's width and side padding: use [Container](../Container/README.md) instead.
+- Buttons joined into one control: use [ButtonGroup](../ButtonGroup/README.md) instead.
+
+## Usage
+
+- Use a larger gap between groups and a smaller one inside them, such as `gap={6}` between fields and `gap={2}` between buttons.
+- Set `wrap` on a row that may not fit on narrow screens.
+- Pick the element with `as`: `ul` or `ol` for a list, `form` or `fieldset` for a form's fields.
+- Nest Stacks for more complex layouts, such as a row of buttons at the end of a column of fields.
+
+## Accessibility
+
+- Stack only lays things out: the reading and tab order stay the order of the children, so keep it the same as what people see.
+- Use `as="ul"` or `as="ol"` when the items are a list, so screen readers say how many there are.
+
 ## Props
 
 | Prop | Type | Default | What it does |
@@ -32,11 +53,6 @@ const { Stack, Button } = window.Diki;
 | `as` | `'div'` \| `'section'` \| `'ul'` \| `'ol'` \| `'nav'` \| `'header'` \| `'footer'` \| `'form'` \| `'fieldset'` \| `'span'` | `'div'` | The element. A list loses its bullets, margins and padding |
 
 A value that isn't on the list falls back to the default. `className`, `style`, `ref` and everything else go to the element, which has `data-component="stack"`.
-
-## Accessibility
-
-- Stack only lays things out: the reading and tab order stay the order of the children, so keep it the same as what people see.
-- Use `as="ul"` or `as="ol"` when the items are a list, so screen readers say how many there are.
 
 ## Component tokens
 

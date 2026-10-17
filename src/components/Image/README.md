@@ -10,6 +10,38 @@ import { Image } from "@diki/design-system";
 <Image src={upload.url} alt={upload.name} ratio="4:3" onRemove={() => remove(upload)} />
 ```
 
+## When to use
+
+- Photos, screenshots and other pictures in a page, a card or a gallery.
+- Pictures in a set that should all have the same shape, whatever their own size.
+- Uploads people may want to see full size, or remove.
+
+## When not to use
+
+- A person's, team's or project's picture: use [Avatar](../Avatar/README.md) instead.
+- A symbol for an action or a status: use [Icon](../Icon/README.md) instead.
+- A purely decorative background: use a CSS `background-image` instead.
+
+## Usage
+
+- Write `alt` to say what the picture shows. Use `""` only for a picture that's there for decoration.
+- Use `fit="contain"` when the whole picture must show, such as a receipt or a document.
+- With `viewable`, pass a larger `fullSrc` when `src` is a small thumbnail.
+- Ask for confirmation yourself before `onRemove` removes something for good.
+
+## Behavior
+
+- It loads lazily by default (`loading="lazy"`); pass `loading="eager"` for a picture at the top of the page.
+- While loading, the frame shows a pulsing placeholder fill (still with reduced motion). A frame with `ratio="auto"` is at least 48px until the picture arrives, so give it a width and set `width` and `height` on the `<img>` to avoid a jump.
+- The viewer is a large Dialog titled with the alt text: Escape, the × or a click on the backdrop close it, and focus goes back to the picture.
+- The remove button only calls `onRemove`; ask for confirmation yourself if removing can't be undone.
+
+## Accessibility
+
+- `alt` is required by the types. A failed picture's fallback is a `role="img"` named by the alt text.
+- The view button is named "View image: <alt>" and has `aria-haspopup="dialog"`; the remove button is named "Remove image: <alt>". Both work with the keyboard and show a focus ring.
+- The fallback icon and the remove button keep 3:1 in all six themes (`tools/test/image.mjs`).
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -28,19 +60,6 @@ import { Image } from "@diki/design-system";
 | `frameProps` | `HTMLAttributes` | | For the frame, such as `style={{ width: 240 }}`. |
 
 `ref`, `className`, `loading`, `width`, `height`, `srcSet`, `sizes`, `onLoad`, `onError` and other `<img>` props go to the `<img>`.
-
-## Behavior
-
-- It loads lazily by default (`loading="lazy"`); pass `loading="eager"` for a picture at the top of the page.
-- While loading, the frame shows a pulsing placeholder fill (still with reduced motion). A frame with `ratio="auto"` is at least 48px until the picture arrives, so give it a width and set `width` and `height` on the `<img>` to avoid a jump.
-- The viewer is a large Dialog titled with the alt text: Escape, the × or a click on the backdrop close it, and focus goes back to the picture.
-- The remove button only calls `onRemove`; ask for confirmation yourself if removing can't be undone.
-
-## Accessibility
-
-- `alt` is required by the types. A failed picture's fallback is a `role="img"` named by the alt text.
-- The view button is named "View image: <alt>" and has `aria-haspopup="dialog"`; the remove button is named "Remove image: <alt>". Both work with the keyboard and show a focus ring.
-- The fallback icon and the remove button keep 3:1 in all six themes (`tools/test/image.mjs`).
 
 ## Component tokens
 
