@@ -1,5 +1,5 @@
 // Toast: toast() into the Toaster, the region, tones and icons, announcements, the action and close buttons,
-// auto-dismiss with pause on hover and focus, replacing by id, positions, contrast in every theme and tokens.
+// auto-dismiss with pause on hover and focus, keyboard, replacing by id, positions, contrast in every theme and tokens.
 //   node tools/test/toast.mjs
 import { writePage, browser, cleanup, report } from './lib.mjs';
 
@@ -51,6 +51,23 @@ await p.waitForTimeout(100); await p.focus('.dk-toast__action'); await p.waitFor
 const fheld = (await list()).length;
 await p.evaluate(() => document.activeElement.blur()); await p.waitForTimeout(350);
 t('and while something in it has focus', fheld === 1 && (await list()).length === 0, fheld);
+// Keyboard: Tab reaches the action and then Dismiss; Enter and Space press them.
+await p.evaluate(() => { window.undos = 0; D.toast({ title: 'Archived', action: { label: 'Undo', onClick: function () { window.undos++; } }, duration: 0 }); });
+await p.waitForSelector('.dk-toast__action');
+const tabTo = async (cls) => { for (let i = 0; i < 10; i++) { await p.keyboard.press('Tab'); if (await p.evaluate((c) => document.activeElement.classList.contains(c), cls)) return true; } return false; };
+await p.evaluate(() => document.activeElement && document.activeElement.blur());
+const toAction = await tabTo('dk-toast__action');
+await p.keyboard.press('Tab');
+const thenClose = await p.evaluate(() => document.activeElement.classList.contains('dk-toast__close'));
+t('keyboard: Tab reaches the action button, then Dismiss', toAction && thenClose, JSON.stringify({ toAction, thenClose }));
+await p.keyboard.press('Shift+Tab'); await p.keyboard.press('Enter');
+await p.waitForFunction(() => !document.querySelector('.dk-toast'));
+t('keyboard: Enter on the action runs it and closes the toast', (await p.evaluate(() => window.undos)) === 1);
+await p.evaluate(() => D.toast({ title: 'Saved', duration: 0 }));
+await p.waitForSelector('.dk-toast__close');
+await p.focus('.dk-toast__close'); await p.keyboard.press('Space');
+await p.waitForFunction(() => !document.querySelector('.dk-toast'));
+t('keyboard: Space on Dismiss closes the toast', (await list()).length === 0);
 await p.evaluate(() => { window.setPos('top-center'); D.toast({ title: 'First', duration: 0 }); D.toast({ title: 'Second', duration: 0 }); });
 await p.waitForTimeout(150);
 const top = await p.evaluate(() => { const s = document.querySelector('.dk-toaster').getBoundingClientRect(); return { top: Math.round(s.top), center: Math.round(s.left + s.width / 2), order: [...document.querySelectorAll('.dk-toast__title')].map((x) => x.textContent).join() }; });
