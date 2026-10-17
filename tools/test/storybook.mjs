@@ -39,6 +39,9 @@ async function open(e, theme) {
   errors = [];
   await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode}`);
   await page.waitForFunction(() => document.body.classList.contains('sb-show-main') || document.body.classList.contains('sb-show-errordisplay'), null, { timeout: 15000 }).catch(() => {});
+  // Wait for the story and the icon font: before the font loads, an icon's ligature reads as words to axe.
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0 || document.querySelector('#storybook-docs')?.children.length > 0, null, { timeout: 15000 }).catch(() => {});
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await page.waitForTimeout(150);
 }
 
