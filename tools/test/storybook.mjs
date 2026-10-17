@@ -38,7 +38,8 @@ page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 async function open(e, theme) {
   const [brand, mode] = theme.split('-');
   errors = [];
-  await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode}`);
+  // a11y.manual stops the a11y addon's own axe run after each story: it shares window.axe with this check's run.
+  await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode};a11y.manual:!true`);
   const drawn = await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0 || document.querySelector('#storybook-docs')?.children.length > 0, null, { timeout: 15000 }).then(() => true, () => false);
   if (!drawn) return 'did not render in 15 s';
   // The icon font uses font-display: swap, so until it loads an icon's ligature ("close") is visible text and

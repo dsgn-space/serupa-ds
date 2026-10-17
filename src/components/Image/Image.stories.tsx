@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Image } from './Image';
 
 // A local picture (a hillside at dusk), so stories load nothing from other servers.

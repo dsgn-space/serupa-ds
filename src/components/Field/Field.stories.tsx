@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Field } from './Field';
 import { Input } from '../Input/Input';
 import { Textarea } from '../Textarea/Textarea';

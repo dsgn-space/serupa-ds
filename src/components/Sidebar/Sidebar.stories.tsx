@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Sidebar, SidebarItem, SidebarSection } from './Sidebar';
 import { Badge } from '../Badge/Badge';
 import { Avatar } from '../Avatar/Avatar';
