@@ -49,4 +49,5 @@
 @import "../components/NumberInput/NumberInput.css";
 @import "../components/Slider/Slider.css";
 @import "../components/SegmentedControl/SegmentedControl.css";
+@import "../components/Combobox/Combobox.css";
 @import "./utilities.css";

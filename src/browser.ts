@@ -16,6 +16,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   CardHeader: Diki.CardHeader,
   Checkbox: Diki.Checkbox,
   configure: Diki.configure,
+  Combobox: Diki.Combobox,
   Container: Diki.Container,
   Dialog: Diki.Dialog,
   Divider: Diki.Divider,

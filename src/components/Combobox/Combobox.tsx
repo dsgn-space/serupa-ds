@@ -1,0 +1,200 @@
+import * as React from "react";
+import { cn, domId, isInvalid, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
+import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
+import { asIcon, Icon } from "../Icon/Icon";
+import { Loader } from "../Loader/Loader";
+import type { InputProps } from "../Input/Input";
+
+export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
+export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
+  /** The choices: strings, or { value, label, description, disabled }. The label is what's typed to find it and shown once picked. */
+  options: ComboboxOption[];
+  /** The selected value (controlled), or null. Use with onValueChange. */
+  value?: string | null;
+  /** The value selected at first (uncontrolled). */
+  defaultValue?: string | null;
+  /** Called with the picked value, or null when the field is emptied or cleared. */
+  onValueChange?: (value: string | null) => void;
+  /** Called with the text as it's typed: for loading options from a server (with filter={false} and loading). */
+  onInputChange?: (text: string) => void;
+  /** How typing narrows the list. Default: options whose label contains the text, ignoring case and accents. false shows every option (filter them yourself). */
+  filter?: false | ((option: { value: string; label: string }, text: string) => boolean);
+  /** Shows a × that clears the selection once something is picked. Default: false. */
+  clearable?: boolean;
+  /** Shows a loading row in the list. Default: false. */
+  loading?: boolean;
+  /** Shown when nothing matches. Default: "No results". */
+  emptyText?: React.ReactNode;
+  /** Shown while loading. Default: "Loading…". */
+  loadingText?: string;
+  /** The chevron button's name. Default: "Show options". */
+  toggleLabel?: string;
+  /** The × button's name. Default: "Clear". */
+  clearLabel?: string;
+}
+
+interface Opt { value: string; label: string; description?: React.ReactNode; disabled?: boolean; i: number }
+const plain = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+/* Combobox: a text field with a list of options that narrows as you type: pick a country, an assignee, a
+   project. Follows the ARIA combobox pattern: the field is role="combobox" (aria-expanded, aria-controls,
+   aria-activedescendant) and focus stays in it while ArrowDown and ArrowUp move through a role="listbox" in the
+   top layer. Enter or a click picks, Escape closes and puts back the picked label, and leaving the field does
+   the same (emptying it clears the selection). Only listed options can be picked. It uses Input's box and
+   tokens: className and style go to the box; ref and every other prop to the <input>. */
+/** A text field with a list of options that narrows as you type; picks one listed option. */
+export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(function Combobox(props, ref) {
+  const rest: Record<string, any> = {};
+  const own: Record<string, 1> = { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1 };
+  for (const k in props) if (!own[k]) rest[k] = (props as any)[k];
+  const size = oneOf(SIZES, props.size, "md");
+  const invalid = isInvalid(props, rest);
+  if (invalid) rest["aria-invalid"] = true;
+  const base = domId("dk-cbx", React.useId());
+  const opts: Opt[] = (props.options || []).map((o, i) => (typeof o === "string" ? { value: o, label: o, i } : { value: String(o.value), label: String(o.label ?? o.value), description: o.description, disabled: !!o.disabled, i }));
+  const controlled = props.value !== undefined;
+  const [ownValue, setOwnValue] = React.useState<string | null>(props.defaultValue ?? null);
+  const value = controlled ? (props.value ?? null) : ownValue;
+  const selected = opts.find((o) => o.value === value) || null;
+  const [text, setText] = React.useState(selected ? selected.label : "");
+  const [typed, setTyped] = React.useState(false);   // false: show every option (just opened); true: filter by the text
+  const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState(-1);    // index into opts
+  const box = React.useRef<HTMLSpanElement | null>(null);
+  const input = React.useRef<HTMLInputElement | null>(null);
+  const pop = React.useRef<HTMLDivElement | null>(null);
+  const locked = !!rest.disabled || !!rest.readOnly;
+
+  React.useEffect(() => { if (!open || !typed) setText(selected ? selected.label : ""); }, [value, selected && selected.label]);
+
+  const matches = (o: Opt) => {
+    if (!typed || props.filter === false) return true;
+    if (typeof props.filter === "function") return props.filter({ value: o.value, label: o.label }, text);
+    return plain(o.label).includes(plain(text.trim()));
+  };
+  const shown = opts.filter(matches);
+  const usable = shown.filter((o) => !o.disabled);
+
+  const commit = (v: string | null) => {
+    if (!controlled) setOwnValue(v);
+    if (v !== value && props.onValueChange) props.onValueChange(v);
+  };
+  const show = (to?: "first" | "last" | "selected") => {
+    if (locked) return;
+    setOpen(true);
+    const list = opts.filter((o) => !o.disabled);
+    const sel = selected && !selected.disabled ? selected.i : -1;
+    setActive(to === "last" ? (sel >= 0 ? sel : list.length ? list[list.length - 1].i : -1) : to === "first" ? (sel >= 0 ? sel : list.length ? list[0].i : -1) : sel);
+  };
+  const hide = (revert = true) => {
+    setOpen(false); setActive(-1); setTyped(false);
+    if (revert) setText(selected ? selected.label : "");
+  };
+  const pick = (o: Opt) => {
+    if (o.disabled) return;
+    commit(o.value); setText(o.label); setOpen(false); setActive(-1); setTyped(false);
+    if (props.onInputChange && o.label !== text) props.onInputChange(o.label);
+  };
+  const move = (by: number) => {
+    if (!usable.length) return;
+    const i = usable.findIndex((o) => o.i === active);
+    const n = i < 0 ? (by > 0 ? 0 : usable.length - 1) : (i + by + usable.length) % usable.length;
+    setActive(usable[n].i);
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const t = e.target.value;
+    setText(t); setTyped(true);
+    if (!locked) setOpen(true);
+    const first = opts.filter((o) => !o.disabled && (props.filter === false || (typeof props.filter === "function" ? props.filter({ value: o.value, label: o.label }, t) : plain(o.label).includes(plain(t.trim())))))[0];
+    setActive(t.trim() && first ? first.i : -1);
+    if (props.onInputChange) props.onInputChange(t);
+  };
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (rest.onKeyDown) rest.onKeyDown(e);
+    if (e.defaultPrevented || locked) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); if (!open) show(e.altKey ? "selected" : "first"); else move(1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); if (!open) show("last"); else move(-1); }
+    else if (e.key === "Enter" && open) { e.preventDefault(); const o = opts[active]; if (o && shown.includes(o)) pick(o); else hide(); }
+    else if (e.key === "Escape" && open) { e.preventDefault(); e.stopPropagation(); hide(); }
+    else if ((e.key === "PageDown" || e.key === "PageUp") && open) { e.preventDefault(); if (usable.length) setActive(usable[e.key === "PageDown" ? usable.length - 1 : 0].i); }
+  };
+  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (rest.onBlur) rest.onBlur(e);
+    if (text.trim() === "" && value != null) { commit(null); setOpen(false); setActive(-1); setTyped(false); setText(""); }
+    else hide();
+  };
+  const clear = () => {
+    commit(null); setText(""); setTyped(false); setActive(-1);
+    if (props.onInputChange) props.onInputChange("");
+    if (input.current) input.current.focus();
+  };
+
+  // Place the list under the field, in the top layer, as wide as the field at least.
+  useIsoLayoutEffect(() => {
+    const p = pop.current, b = box.current;
+    if (!p) return;
+    if (!open || !b) { hideLayer(p); return; }
+    showLayer(p);
+    const update = () => {
+      p.style.minWidth = b.offsetWidth + "px";
+      const r = place(b.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, "bottom-start", cssLength(p, "--dk-combobox-offset"), "bottom-start");
+      p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
+    };
+    update();
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
+    if (ro) { ro.observe(p); ro.observe(b); }
+    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+  }, [open]);
+  React.useEffect(() => {
+    if (!open || active < 0 || !pop.current) return;
+    const el = pop.current.querySelector<HTMLElement>("#" + base + "-opt-" + active);
+    if (el && typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest" });
+  }, [active, open]);
+
+  const left = asIcon(props.leftIcon);
+  const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
+  const listId = base + "-list";
+  const activeShown = active >= 0 && shown.some((o) => o.i === active);
+  return (
+    <span ref={box} className={cn("dk-input dk-combobox", "dk-input--size-" + size, invalid && "dk-input--invalid", rest.disabled && "dk-input--disabled", rest.readOnly && "dk-input--readonly", props.className)}
+      style={props.style} data-component="combobox" data-size={size} data-state={open ? "open" : "closed"}>
+      {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
+      <input {...rest} ref={(n) => { input.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+        type="text" role="combobox" aria-expanded={open} aria-controls={listId} aria-autocomplete="list" aria-haspopup="listbox"
+        aria-activedescendant={open && activeShown ? base + "-opt-" + active : undefined}
+        autoComplete="off" autoCorrect="off" spellCheck={false} className="dk-input__field" value={text}
+        onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur}
+        onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show("selected"); }} />
+      {props.clearable && value != null && !locked ? (
+        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || "Clear"} onMouseDown={keep} onClick={clear}>
+          <Icon name="close" />
+        </button>
+      ) : null}
+      <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" aria-label={props.toggleLabel || "Show options"} aria-expanded={open} aria-controls={listId}
+        disabled={locked} onMouseDown={keep} onClick={() => { if (open) hide(); else show("selected"); if (input.current) input.current.focus(); }}>
+        <Icon name="expand_more" />
+      </button>
+      <div ref={pop} className="dk-combobox__popup" {...{ popover: "manual" }} hidden={!open || undefined} onMouseDown={keep}>
+        {props.loading ? <div className="dk-combobox__message" role="status"><Loader size="sm" delay={0} label="" />{props.loadingText || "Loading…"}</div> : null}
+        <div id={listId} role="listbox" className="dk-combobox__listbox" aria-labelledby={rest["aria-labelledby"]} aria-label={rest["aria-labelledby"] ? undefined : rest["aria-label"]}>
+          {shown.map((o) => (
+            <div key={o.value} id={base + "-opt-" + o.i} role="option" aria-selected={o.value === value} aria-disabled={o.disabled || undefined}
+              className={cn("dk-combobox__option", o.i === active && "dk-combobox__option--active", o.value === value && "dk-combobox__option--selected")}
+              onMouseMove={() => { if (!o.disabled && active !== o.i) setActive(o.i); }} onClick={() => pick(o)}>
+              <span className="dk-combobox__text">
+                <span className="dk-combobox__label">{o.label}</span>
+                {o.description != null && o.description !== "" ? <span className="dk-combobox__description">{o.description}</span> : null}
+              </span>
+              {o.value === value ? <Icon name="check" className="dk-combobox__check" /> : null}
+            </div>
+          ))}
+        </div>
+        {!props.loading && shown.length === 0 ? <div className="dk-combobox__message" role="status">{props.emptyText ?? "No results"}</div> : null}
+      </div>
+      {props.name ? <input type="hidden" name={props.name} value={value ?? ""} disabled={rest.disabled} /> : null}
+    </span>
+  );
+});
+Combobox.displayName = "Combobox";

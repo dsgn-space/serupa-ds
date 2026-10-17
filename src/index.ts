@@ -17,6 +17,8 @@ import { Card, CardBody, CardFooter, CardHeader } from "./components/Card/Card";
 export type { CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant } from "./components/Card/Card";
 import { Checkbox } from "./components/Checkbox/Checkbox";
 export type { CheckboxProps } from "./components/Checkbox/Checkbox";
+import { Combobox } from "./components/Combobox/Combobox";
+export type { ComboboxOption, ComboboxProps } from "./components/Combobox/Combobox";
 import { Container } from "./components/Container/Container";
 export type { ContainerProps, ContainerSize } from "./components/Container/Container";
 import { Dialog } from "./components/Dialog/Dialog";
@@ -101,7 +103,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -112,14 +114,22 @@ declare global {
     /** The components on plain pages (diki.iife.js, also shipped as bundle.js). */
     Diki: {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
-      Alert: typeof Alert; Avatar: typeof Avatar; initials: typeof initials; Badge: typeof Badge; Button: typeof Button; buttonClass: typeof buttonClass;
-      Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
-      Container: typeof Container; Dialog: typeof Dialog; Divider: typeof Divider; Grid: typeof Grid; Stack: typeof Stack; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
-      Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Link: typeof Link; VisuallyHidden: typeof VisuallyHidden;
-      Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; NumberInput: typeof NumberInput; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; SearchInput: typeof SearchInput; SegmentedControl: typeof SegmentedControl; Slider: typeof Slider;
-      Select: typeof Select; Switch: typeof Switch;
-      Table: typeof Table; TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead; TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow;
-      Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
+      Accordion: typeof Accordion; AccordionItem: typeof AccordionItem; Alert: typeof Alert; Avatar: typeof Avatar; Badge: typeof Badge;
+      Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Button: typeof Button; buttonClass: typeof buttonClass;
+      ButtonGroup: typeof ButtonGroup; Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader;
+      Checkbox: typeof Checkbox; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; customIcons: typeof customIcons;
+      Dialog: typeof Dialog; Divider: typeof Divider; Drawer: typeof Drawer; EmptyState: typeof EmptyState; Fab: typeof Fab; Field: typeof Field;
+      Grid: typeof Grid; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; initials: typeof initials; Input: typeof Input;
+      Link: typeof Link; List: typeof List; ListItem: typeof ListItem; Loader: typeof Loader; Menu: typeof Menu; MenuGroup: typeof MenuGroup;
+      MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Navbar: typeof Navbar; NavbarLink: typeof NavbarLink;
+      NumberInput: typeof NumberInput; Pagination: typeof Pagination; paginationRange: typeof paginationRange; PasswordInput: typeof PasswordInput;
+      Popover: typeof Popover; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; SearchInput: typeof SearchInput;
+      SegmentedControl: typeof SegmentedControl; Select: typeof Select; Sidebar: typeof Sidebar; SidebarItem: typeof SidebarItem;
+      SidebarSection: typeof SidebarSection; Slider: typeof Slider; Stack: typeof Stack; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
+      TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead;
+      TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs;
+      Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; ToggleButton: typeof ToggleButton;
+      Tooltip: typeof Tooltip; VisuallyHidden: typeof VisuallyHidden;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };
   }

@@ -16,6 +16,12 @@ const targets = [];
 for (const [k, v] of Object.entries(pkg.exports)) for (const f of typeof v === 'string' ? [v] : Object.values(v)) if (!f.includes('*')) targets.push([k, f]);
 const absent = targets.filter(([, f]) => !fs.existsSync(path.join(PROJECT, f)));
 t('every file package.json exports exists', !absent.length, absent.map(([k, f]) => `${k} → ${f}`).join(', '));
+const index = read('src/index.ts');
+const exported = /export \{ ([^}]*) \};/.exec(index)[1].split(', ');
+const typed = new Set([...index.matchAll(/(\w+): typeof \w+;/g)].map((m) => m[1]));
+const browserTs = read('src/browser.ts');
+const untyped = exported.filter((n) => !typed.has(n)), unbundled = exported.filter((n) => !new RegExp(`\\b${n}: Diki\\.${n}\\b`).test(browserTs));
+t('every export is on window.Diki (src/browser.ts) and in its type (src/index.ts)', !untyped.length && !unbundled.length, `not typed: ${untyped.join(', ')}; not in browser.ts: ${unbundled.join(', ')}`);
 t('react and react-dom are peer dependencies (one React in the app)', pkg.peerDependencies && pkg.peerDependencies.react && pkg.peerDependencies['react-dom'] && !(pkg.dependencies || {}).react);
 
 // 2. server rendering: no window, document or navigator while importing and rendering
