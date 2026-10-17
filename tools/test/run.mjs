@@ -9,6 +9,8 @@ const update = process.argv.includes('--update') ? ['--update'] : [];
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 if (arg('--browser')) process.env.DIKI_BROWSER = arg('--browser');
 const steps = [
+  // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in Vitest.
+  ['Component tests (Vitest)', process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run']],
   ['Package', 'node', [path.join(HERE, 'package.mjs')]],
   ['Component contract', 'node', [path.join(HERE, 'contract.mjs')]],
   ['Foundation audit', 'python3', ['-I', path.join(HERE, 'foundation.py'), PROJECT]],
@@ -59,11 +61,8 @@ const steps = [
   ['Image', 'node', [path.join(HERE, 'image.mjs')]],
   ['TimePicker', 'node', [path.join(HERE, 'time-picker.mjs')]],
   ['Carousel', 'node', [path.join(HERE, 'carousel.mjs')]],
-  ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
-  ['Field', 'node', [path.join(HERE, 'field.mjs')]],
   ['Select', 'node', [path.join(HERE, 'select.mjs')]],
-  ['Checkbox', 'node', [path.join(HERE, 'checkbox.mjs')]],
   ['Radio', 'node', [path.join(HERE, 'radio.mjs')]],
   ['Switch', 'node', [path.join(HERE, 'switch.mjs')]],
   ['Icon builder', 'python3', ['-I', path.join(HERE, 'icons.py'), PROJECT]],
@@ -91,7 +90,7 @@ const summary = [];
 for (const [name, cmd, args] of steps) {
   console.log(`\n━━ ${name} ━━`);
   const t0 = Date.now();
-  const r = spawnSync(cmd, args, { stdio: 'inherit', env: { ...process.env, DIKI_PROJECT: PROJECT } });
+  const r = spawnSync(cmd, args, { stdio: 'inherit', cwd: PROJECT, env: { ...process.env, DIKI_PROJECT: PROJECT } });
   summary.push([name, r.status === 0, Date.now() - t0]);
 }
 console.log('\n━━ Summary ━━');
