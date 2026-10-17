@@ -54,11 +54,13 @@ await p.click('#opener'); await p.waitForTimeout(300);
 const x = await p.evaluate(() => { const c = document.querySelector('#dlg .dk-dialog__close'); return [c.getAttribute('aria-label'), c.tagName].join(); });
 await p.click('#dlg .dk-dialog__close'); await p.waitForTimeout(100);
 t('the × (a button named "Close") asks to close', x === 'Close,BUTTON' && !(await isOpen('dlg')), x);
-await p.evaluate(() => { window.setSize('lg'); window.setOpen(true); }); await p.waitForTimeout(300);
+// Measure once the opening animation has ended (it scales the panel from 95%): headless WebKit can start it late.
+const settled = () => p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))));
+await p.evaluate(() => { window.setSize('lg'); window.setOpen(true); }); await p.waitForTimeout(300); await settled();
 const lg = await p.evaluate(() => Math.round(document.querySelector('#dlg .dk-dialog__panel').getBoundingClientRect().width));
 await p.evaluate(() => window.setOpen(false)); await p.waitForTimeout(100);
 await p.setViewportSize({ width: 360, height: 300 });
-await p.evaluate(() => { window.setSize('md'); window.setOpen(true); }); await p.waitForTimeout(300);
+await p.evaluate(() => { window.setSize('md'); window.setOpen(true); }); await p.waitForTimeout(300); await settled();
 const small = await p.evaluate(() => { const r = document.querySelector('#dlg .dk-dialog__panel').getBoundingClientRect(); return [Math.round(r.left), Math.round(r.width), Math.round(r.top), Math.round(r.bottom)]; });
 await p.evaluate(() => window.setOpen(false)); await p.waitForTimeout(100);
 await p.setViewportSize({ width: 1000, height: 700 });

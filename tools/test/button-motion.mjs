@@ -132,15 +132,17 @@ await p.evaluate(() => window.setL(true)); await p.waitForTimeout(200);
 const busyR = await p.evaluate(() => [document.querySelectorAll('#busy .dk-btn__ripple').length, getComputedStyle(document.getElementById('busy')).scale]); await p.mouse.up();
 t('loading: no press and no ripple while busy', busyR[0] === 0 && ['none', '1'].includes(busyR[1]), JSON.stringify(busyR));
 await p.evaluate(() => window.setL(false)); await p.waitForTimeout(200);
-[x, y] = await center(p, '#big'); await p.mouse.click(x, y, { button: 'right' }); await p.waitForTimeout(60);
-t('ripple: not on a right-click', await p.evaluate(() => document.querySelectorAll('#big .dk-btn__ripple').length === 0));
-await p.keyboard.press('Escape');
-
-// your handlers still run
+// your handlers still run (before the right-click below: WebKit's context menu takes its mouseup and leaves the
+// right button down, so the next left press arrives as a pointermove with no pointerdown)
 [x, y] = await center(p, '#mine'); await p.mouse.move(x, y); await p.mouse.down(); await p.mouse.up();
 await p.focus('#mine'); await p.keyboard.press('Enter');
 const mine = await L(p);
 t('your onPointerDown, onKeyDown and onKeyUp still run', mine.includes('mine-down') && mine.includes('mine-key') && mine.includes('mine-up'), mine.join());
+
+[x, y] = await center(p, '#big'); await p.mouse.click(x, y, { button: 'right' }); await p.waitForTimeout(60);
+t('ripple: not on a right-click', await p.evaluate(() => document.querySelectorAll('#big .dk-btn__ripple').length === 0));
+await p.keyboard.press('Escape');
+
 t('the link variant renders no ripple layer', await p.evaluate(() => !document.querySelector('#lnk .dk-btn__ripples')));
 t('no page errors', errors.length === 0, errors.join(' | '));
 

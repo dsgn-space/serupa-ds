@@ -61,9 +61,10 @@ const bb = await p.evaluate(() => { const n = document.getElementById('bbad'); r
 t('unknown separator falls back to the chevron; maxItems below 2 is ignored', bb === '3,chevron_right', bb);
 const rtl = await p.evaluate(() => [...document.querySelectorAll('#brtl .dk-breadcrumb__separator .dk-icon')].filter((i) => getComputedStyle(i).display !== 'none').map((i) => i.textContent).join());
 t('right to left: the chevron points left', rtl === 'chevron_left', rtl);
-await p.focus('#bdef a'); await p.keyboard.press('Shift+Tab'); await p.keyboard.press('Tab');
-const fr = await st('#bdef a', ['outlineStyle', 'outlineWidth']);
-t('keyboard focus: a 2px ring on the link', fr.outlineStyle === 'solid' && fr.outlineWidth === '2px', JSON.stringify(fr));
+// The first link is the page's first focusable element: Shift+Tab from it leaves the page (Firefox doesn't Tab back in), so Tab away and back.
+await p.focus('#bdef a'); await p.keyboard.press('Tab'); await p.keyboard.press('Shift+Tab');
+const fr = { ...(await st('#bdef a', ['outlineStyle', 'outlineWidth'])), active: await p.evaluate(() => document.activeElement === document.querySelector('#bdef a')) };
+t('keyboard focus: a 2px ring on the link', fr.active && fr.outlineStyle === 'solid' && fr.outlineWidth === '2px', JSON.stringify(fr));
 const tk = await p.evaluate(() => { const n = document.getElementById('btok'); return [getComputedStyle(n.querySelector('a')).color, getComputedStyle(n.querySelector('ol')).columnGap].join(); });
 t('Breadcrumb tokens (--breadcrumb-text, --breadcrumb-gap) override one breadcrumb', tk === 'rgb(1, 2, 3),11px', tk);
 

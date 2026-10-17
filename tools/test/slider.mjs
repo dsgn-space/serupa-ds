@@ -54,7 +54,7 @@ await p.evaluate(() => { window.calls = []; window.commits = []; });
 await p.mouse.move(g.l + g.w * 0.3, g.y); await p.mouse.down();
 const pressed = await now('one');
 await p.mouse.move(g.l + g.w * 0.6, g.y, { steps: 5 }); const dragged = await now('one');
-await p.mouse.move(g.l + g.w * 2, g.y, { steps: 3 }); const beyond = await now('one');
+await p.mouse.move(Math.min(g.r + 80, 590), g.y, { steps: 3 }); const beyond = await now('one');   // past the end but inside the 600px viewport: Firefox mangles synthetic mouse events outside it
 await p.mouse.up();
 const dc = await p.evaluate(() => ({ commits: window.commits.join(), calls: window.calls.length, focus: document.activeElement === document.querySelector('#one [role=slider]') }));
 t('pointer: a press on the track jumps there (30), dragging follows (60), past the end clamps (100); one commit at the end; the thumb takes focus', pressed === 30 && dragged === 60 && beyond === 100 && dc.commits === '100' && dc.calls >= 3 && dc.focus, JSON.stringify({ pressed, dragged, beyond, dc }));
