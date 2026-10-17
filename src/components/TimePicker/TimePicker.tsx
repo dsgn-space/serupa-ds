@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, domId, isInvalid, oneOf, SIZES } from "../../internal/cn";
+import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../internal/times";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
@@ -39,7 +39,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props, rest as Record<string, any>);
   const h12 = props.hour12 ?? uses12h(locale);
-  const step = props.step && props.step > 0 ? Math.round(props.step) : 30;
+  const step = props.step && Math.round(props.step) >= 1 ? Math.round(props.step) : 30;
   const lo = toMinutes(min) ?? 0, hi = toMinutes(max) ?? 24 * 60 - 1;
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<number | null>(toMinutes(props.defaultValue));
@@ -47,15 +47,20 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
   const fmt = (n: number | null) => (n == null ? "" : formatTime(n, locale, h12));
   const [text, setText] = React.useState(fmt(value));
   const shown = React.useRef(value);
-  if (value !== shown.current) { shown.current = value; if (fmt(value) !== text) setText(fmt(value)); }
+  const shownFmt = React.useRef(locale + "|" + h12);
+  if (value !== shown.current || shownFmt.current !== locale + "|" + h12) {   // a new value, or a new locale or hour12
+    shown.current = value; shownFmt.current = locale + "|" + h12;
+    if (fmt(value) !== text) setText(fmt(value));
+  }
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(0);
   const id = domId("dk-tp", React.useId());
   const box = React.useRef<HTMLSpanElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
   const list = React.useRef<HTMLUListElement | null>(null);
+  const typed = React.useRef(false);   // text typed since the list opened or the active time last moved
 
-  const times = React.useMemo(() => { const out: number[] = []; for (let n = Math.ceil(lo / step) * step; n <= hi; n += step) out.push(n); return out; }, [lo, hi, step]);
+  const times = React.useMemo(() => { const out: number[] = []; for (let n = lo; n <= hi; n += step) out.push(n); return out; }, [lo, hi, step]);
   const nearest = (n: number | null) => {
     if (n == null || !times.length) return 0;
     let best = 0;
@@ -74,7 +79,9 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
     const n = parseTime(text);
     commit(n != null && n >= lo && n <= hi ? n : value);
   };
-  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text); setActive(nearest(n != null ? n : value)); setOpen(true); };
+  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
+  // The list is at least as wide as the field.
+  useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + "px"; }, [open]);
   useAnchoredLayer(open, list, box, { placement: "bottom-start", offsetVar: "--dk-tp-offset", onOutside: () => setOpen(false), inside: box });
   // Keep the active time in view.
   React.useEffect(() => {
@@ -94,19 +101,20 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
     if (onKeyDown) onKeyDown(e);
     if (e.defaultPrevented) return;
     const last = times.length - 1, page = 4;
+    const move = (i: number) => { e.preventDefault(); typed.current = false; setActive(i); };
     if (!open) {
       if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); show(); }
       else if (e.key === "Enter") read();
       return;
     }
     switch (e.key) {
-      case "ArrowDown": e.preventDefault(); setActive(Math.min(last, active + 1)); break;
-      case "ArrowUp": e.preventDefault(); setActive(Math.max(0, active - 1)); break;
-      case "PageDown": e.preventDefault(); setActive(Math.min(last, active + page)); break;
-      case "PageUp": e.preventDefault(); setActive(Math.max(0, active - page)); break;
-      case "Home": if (e.altKey || e.ctrlKey) { e.preventDefault(); setActive(0); } break;
-      case "End": if (e.altKey || e.ctrlKey) { e.preventDefault(); setActive(last); } break;
-      case "Enter": e.preventDefault(); pick(times[active]); break;
+      case "ArrowDown": move(Math.min(last, active + 1)); break;
+      case "ArrowUp": move(Math.max(0, active - 1)); break;
+      case "PageDown": move(Math.min(last, active + page)); break;
+      case "PageUp": move(Math.max(0, active - page)); break;
+      case "Home": if (e.altKey || e.ctrlKey) move(0); break;
+      case "End": if (e.altKey || e.ctrlKey) move(last); break;
+      case "Enter": e.preventDefault(); if (typed.current) { read(); setOpen(false); } else pick(times[active]); break;   // what was typed wins over the highlight
       case "Escape": e.preventDefault(); e.stopPropagation(); setOpen(false); break;
       case "Tab": setOpen(false); break;
     }
@@ -114,13 +122,16 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
   const label = listLabel || "Choose time";
   return (
     <span ref={box} className={cn("dk-input", "dk-input--size-" + size, "dk-time-picker", invalid && "dk-input--invalid", disabled && "dk-input--disabled", readOnly && "dk-input--readonly", className)} style={style} data-component="time-picker" data-size={size}>
-      <input {...rest} ref={(n) => { field.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+      <input {...rest} ref={(n) => { field.current = n; setRef(ref, n); }}
         type="text" role="combobox" autoComplete="off" className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
         placeholder={placeholder != null ? placeholder : h12 ? "hh:mm am" : "hh:mm"} aria-invalid={invalid || undefined}
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
-        onChange={(e) => setText(e.target.value)} onBlur={(e) => { read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
+        onChange={(e) => {
+          setText(e.target.value);
+          if (open) { typed.current = true; const n = parseTime(e.target.value); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
+        }} onBlur={(e) => { read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
-        onClick={() => { if (open) setOpen(false); else { read(); show(); } if (field.current) field.current.focus(); }}>
+        onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false); else show(); if (field.current) field.current.focus(); }}>
         <Icon name="schedule" />
       </button>
       {name ? <input type="hidden" name={name} value={value == null ? "" : toHHmm(value)} disabled={disabled} /> : null}
@@ -128,7 +139,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
         {open ? times.map((n, i) => (
           <li key={n} id={`${id}-${i}`} role="option" aria-selected={n === value} data-value={toHHmm(n)}
             className={cn("dk-time-picker__option", i === active && "dk-time-picker__option--active", n === value && "dk-time-picker__option--selected")}
-            onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) setActive(i); }} onClick={() => pick(n)}>
+            onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
             <span className="dk-time-picker__time">{fmt(n)}</span>
             {n === value ? <Icon name="check" className="dk-time-picker__check" /> : null}
           </li>
