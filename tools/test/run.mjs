@@ -57,6 +57,7 @@ const steps = [
   ['DateRangePicker', 'node', [path.join(HERE, 'date-range-picker.mjs')]],
   ['Image', 'node', [path.join(HERE, 'image.mjs')]],
   ['TimePicker', 'node', [path.join(HERE, 'time-picker.mjs')]],
+  ['Carousel', 'node', [path.join(HERE, 'carousel.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

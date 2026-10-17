@@ -18,6 +18,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Checkbox: Diki.Checkbox,
   configure: Diki.configure,
   Calendar: Diki.Calendar,
+  Carousel: Diki.Carousel,
   Combobox: Diki.Combobox,
   DatePicker: Diki.DatePicker,
   DateRangePicker: Diki.DateRangePicker,

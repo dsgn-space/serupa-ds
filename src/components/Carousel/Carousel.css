@@ -1,0 +1,49 @@
+/* ---------------------------------------------------------------
+   Carousel: one slide at a time across the full width, with 12px corners. Round secondary previous and next
+   buttons sit over the sides, 8px in, with shadow-sm; the dots sit centered 12px below: 8px circles in
+   field-border, the current one primary and 24px wide, each in a 24px target. Slides move in 300ms (at once
+   with reduced motion) and follow a swipe. Every value goes through --carousel-* tokens.
+   --------------------------------------------------------------- */
+.dk-carousel { display: flex; flex-direction: column; gap: var(--carousel-gap, var(--spacing-3, 0.75rem)); min-width: var(--spacing-0, 0px); }
+.dk-carousel__viewport { position: relative; overflow: hidden; border-radius: var(--carousel-radius, var(--rounded-xl, 0.75rem)); touch-action: pan-y; }
+.dk-carousel__track {
+  display: flex;
+  transform: translateX(calc(var(--spacing-0, 0px) - var(--dk-carousel-index) * var(--sizing-full, 100%) + var(--dk-carousel-drag, 0px)));
+  transition: transform var(--duration-300, 300ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+[dir="rtl"] .dk-carousel__track { transform: translateX(calc(var(--dk-carousel-index) * var(--sizing-full, 100%) + var(--dk-carousel-drag, 0px))); }
+.dk-carousel__viewport[data-dragging] .dk-carousel__track { transition: none; user-select: none; }
+.dk-carousel__slide { flex: 0 0 var(--sizing-full, 100%); min-width: var(--spacing-0, 0px); }
+.dk-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2, 50%); translate: 0 calc(var(--spacing-0, 0px) - var(--sizing-1-2, 50%)); box-shadow: var(--carousel-arrow-shadow, var(--shadow-sm, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1))); }
+.dk-carousel__arrow--prev { inset-inline-start: var(--carousel-arrow-offset, var(--spacing-2, 0.5rem)); }
+.dk-carousel__arrow--next { inset-inline-end: var(--carousel-arrow-offset, var(--spacing-2, 0.5rem)); }
+.dk-carousel__arrow:disabled { visibility: hidden; }
+.dk-carousel__rtl, [dir="rtl"] .dk-carousel__ltr { display: none; }
+[dir="rtl"] .dk-carousel__rtl { display: inline-block; }
+.dk-carousel__dots { display: flex; justify-content: center; flex-wrap: wrap; }
+.dk-carousel__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--spacing-6, 1.5rem);
+  height: var(--spacing-6, 1.5rem);
+  margin: var(--spacing-0, 0px);
+  padding: var(--spacing-0, 0px) var(--spacing-1, 0.25rem);
+  border: var(--spacing-0, 0px);
+  background: transparent;
+  cursor: pointer;
+}
+.dk-carousel__dot::before {
+  content: "";
+  width: var(--carousel-dot-size, var(--spacing-2, 0.5rem));
+  height: var(--carousel-dot-size, var(--spacing-2, 0.5rem));
+  border-radius: var(--rounded-full, 9999px);
+  background: var(--carousel-dot, var(--field-border));
+  transition: width var(--duration-150, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.dk-carousel__dot[aria-current="true"]::before { width: var(--carousel-dot-active-width, var(--spacing-6, 1.5rem)); background: var(--carousel-dot-active, var(--primary)); }
+.dk-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--text-muted)); }
+.dk-carousel__dot:focus { outline: none; }
+.dk-carousel__dot:focus-visible { outline: var(--outline-width-2, 2px) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); border-radius: var(--rounded-full, 9999px); }
+@media (prefers-reduced-motion: reduce) { .dk-carousel__track, .dk-carousel__dot::before { transition: none; } }
+@media (forced-colors: active) { .dk-carousel__dot::before { background: CanvasText; } .dk-carousel__dot[aria-current="true"]::before { background: Highlight; } }
