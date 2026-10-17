@@ -37,6 +37,7 @@ const steps = [
   ['Navbar', 'node', [path.join(HERE, 'navbar.mjs')]],
   ['Sidebar', 'node', [path.join(HERE, 'sidebar.mjs')]],
   ['ButtonGroup', 'node', [path.join(HERE, 'button-group.mjs')]],
+  ['PasswordInput', 'node', [path.join(HERE, 'password-input.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],
