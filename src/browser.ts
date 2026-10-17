@@ -61,6 +61,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Heading: Diki.Heading,
   Icon: Diki.Icon,
   IconButton: Diki.IconButton,
+  Image: Diki.Image,
   Input: Diki.Input,
   Loader: Diki.Loader,
   Menu: Diki.Menu,

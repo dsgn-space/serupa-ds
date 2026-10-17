@@ -1,0 +1,58 @@
+# Image
+
+A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails. It can open full size in a viewer, and show a remove button.
+
+```tsx
+import { Image } from "@diki/design-system";
+
+<Image src="/team.jpg" alt="The team at the 2025 offsite" ratio="video" />
+<Image src={thumb} fullSrc={original} alt="Receipt from March 3" ratio="square" viewable />
+<Image src={upload.url} alt={upload.name} ratio="4:3" onRemove={() => remove(upload)} />
+```
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `src` | `string` | | The picture's address. |
+| `alt` | `string` | | Required. What the picture shows; `""` only for a decorative picture. |
+| `ratio` | `'auto' \| 'square' \| '4:3' \| 'video' \| number` | `'auto'` | The frame's shape. A number is width / height. `auto` keeps the picture's own shape. |
+| `fit` | `'cover' \| 'contain'` | `'cover'` | With a fixed ratio: fill and crop, or fit whole. |
+| `rounded` | `boolean` | `true` | Corners from `--image-radius`. |
+| `fallback` | `ReactNode` | a broken-image icon | Shown if the picture fails to load. |
+| `viewable` | `boolean` | `false` | Makes the picture a button that opens it full size in a Dialog. |
+| `fullSrc` | `string` | `src` | A larger version for the viewer. |
+| `viewLabel` | `string` | `"View image: <alt>"` | The view button's name. |
+| `onRemove` | `() => void` | | Shows a remove button in the top end corner. |
+| `removeLabel` | `string` | `"Remove image: <alt>"` | The remove button's name. |
+| `frameProps` | `HTMLAttributes` | | For the frame, such as `style={{ width: 240 }}`. |
+
+`ref`, `className`, `loading`, `width`, `height`, `srcSet`, `sizes`, `onLoad`, `onError` and other `<img>` props go to the `<img>`.
+
+## Behavior
+
+- It loads lazily by default (`loading="lazy"`); pass `loading="eager"` for a picture at the top of the page.
+- While loading, the frame shows a pulsing placeholder fill (still with reduced motion). A frame with `ratio="auto"` is at least 48px until the picture arrives, so give it a width and set `width` and `height` on the `<img>` to avoid a jump.
+- The viewer is a large Dialog titled with the alt text: Escape, the × or a click on the backdrop close it, and focus goes back to the picture.
+- The remove button only calls `onRemove`; ask for confirmation yourself if removing can't be undone.
+
+## Accessibility
+
+- `alt` is required by the types. A failed picture's fallback is a `role="img"` named by the alt text.
+- The view button is named "View image: <alt>" and has `aria-haspopup="dialog"`; the remove button is named "Remove image: <alt>". Both work with the keyboard and show a focus ring.
+- The fallback icon and the remove button keep 3:1 in all six themes (`tools/test/image.mjs`).
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one image. The list lives in `src/components/Image/image.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--image-bg` | `surface-muted` | The frame's fill while the picture loads, and behind a failed one. |
+| `--image-fallback-color` | `text-muted` | The broken-image icon (3:1 on bg). |
+| `--image-focus-ring` | `focus-ring` | A viewable picture's keyboard focus ring. |
+| `--image-radius` | `rounded-lg` | The frame's corners with rounded (8px). |
+| `--image-min-size` | `spacing-12` | The least width and height of an 'auto' frame before the picture arrives (48px). |
+| `--image-fallback-icon` | `spacing-6` | The broken-image icon's size (24px). |
+| `--image-remove-offset` | `spacing-2` | The remove button's distance from the corner (8px). |
+| `--image-remove-shadow` | `shadow-sm` | The remove button's shadow, so it stands out on any picture. |
