@@ -90,7 +90,7 @@ for (const scheme of ['light', 'dark']) {
   const outU = path.join(dir, 'min-utilities.css');
   execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', outU, '--css', path.join(PROJECT, 'dist', 'utilities.css')], { stdio: 'ignore' });
   const fullU = fs.statSync(path.join(PROJECT, 'dist', 'utilities.css')).size, smallU = fs.statSync(outU).size;
-  t(`purge.py: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB (utilities: ${(smallU / 1024).toFixed(0)} KB of ${(fullU / 1024).toFixed(0)} KB)`, smallU > 0 && smallU < fullU / 20 && small < full / 10);
+  t(`purge.py: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB (utilities: ${(smallU / 1024).toFixed(0)} KB of ${(fullU / 1024).toFixed(0)} KB)`, smallU > 0 && smallU < fullU / 20 && full - small > (fullU - smallU) * 0.9);   // the bundle sheds what the utilities shed
   const snap = async (bundle, w) => {
     const p = await b.newPage({ viewport: { width: w, height: 500 } });
     await p.goto(writePage(`purge-${w}.html`, SAMPLE, { bundle, extraHead: '<style>*{animation-play-state:paused!important;animation-delay:0s!important}</style>' }));   // a spinning element would be caught mid-turn

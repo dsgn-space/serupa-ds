@@ -104,6 +104,8 @@ import { Text } from "./components/Text/Text";
 export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Text/Text";
 import { Textarea } from "./components/Textarea/Textarea";
 export type { TextareaProps } from "./components/Textarea/Textarea";
+import { TimePicker } from "./components/TimePicker/TimePicker";
+export type { TimePickerProps } from "./components/TimePicker/TimePicker";
 import { toast, Toaster } from "./components/Toast/Toast";
 export type { ToasterPosition, ToasterProps, ToastOptions, ToastTone } from "./components/Toast/Toast";
 import { ToggleButton } from "./components/ToggleButton/ToggleButton";
@@ -117,7 +119,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -142,7 +144,7 @@ declare global {
       SidebarSection: typeof SidebarSection; Slider: typeof Slider; Stack: typeof Stack; Stepper: typeof Stepper; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
       TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead;
       TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs;
-      Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; ToggleButton: typeof ToggleButton;
+      Text: typeof Text; Textarea: typeof Textarea; TimePicker: typeof TimePicker; toast: typeof toast; Toaster: typeof Toaster; ToggleButton: typeof ToggleButton;
       Tooltip: typeof Tooltip; VisuallyHidden: typeof VisuallyHidden;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };
