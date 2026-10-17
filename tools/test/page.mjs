@@ -27,8 +27,6 @@ for (const [w, cols, disp, fs_] of expect) {
   await p.goto(writePage('base.html', '<h1 id="h1">Title</h1><a id="a" href="#">link</a><input id="in" placeholder="Name"><img id="img" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%222000%22 height=%2210%22/%3E"><p id="u" class="m-4 font-mono">utility wins</p>', { base: true }));
   const r = await p.evaluate(() => {
     const cs = (id, pr) => getComputedStyle(document.getElementById(id)).getPropertyValue(pr);
-    const root = getComputedStyle(document.documentElement);
-    const v = (n) => root.getPropertyValue(n).trim();
     const tmp = document.createElement('div'); document.body.appendChild(tmp);
     const col = (n) => { tmp.style.color = `var(${n})`; return getComputedStyle(tmp).color; };
     return { bodyBg: getComputedStyle(document.body).backgroundColor, surface: (() => { tmp.style.backgroundColor = 'var(--surface)'; return getComputedStyle(tmp).backgroundColor; })(), bodyColor: getComputedStyle(document.body).color, text: col('--text'),

@@ -96,7 +96,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
       className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", props.className)}
       data-component="segmented-control" data-size={size}>
       {box ? <span className="dk-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
-      {options.map((o, i) => {
+      {options.map((o) => {
         const on = o.value === value, off = disabled || !!o.disabled;
         const icon = asIcon(o.icon);
         const hasLabel = o.label != null && o.label !== false && o.label !== "";

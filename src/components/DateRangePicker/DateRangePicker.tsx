@@ -43,7 +43,6 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   months?: 1 | 2;
 }
 
-const EMPTY: DateRange = { start: null, end: null };
 const norm = (r: DateRange | undefined): DateRange => ({ start: r && isValid(r.start) ? day(r.start) : null, end: r && isValid(r.end) ? day(r.end) : null });
 const key = (d: Date | null) => (d ? d.getTime() : null);
 

@@ -92,7 +92,7 @@ const shape = await p.evaluate(() => { const arc = document.querySelector('#ring
   const at = (ms) => { a.currentTime = ms; const s = getComputedStyle(arc); return [parseFloat(s.strokeDasharray), parseFloat(s.strokeDashoffset)]; };
   const v = { start: at(0), mid: at(750), late: at(1400) }; a.play(); return v; });
 t('ring: the arc starts as a dot, stretches to most of the ring, then its tail catches up', shape.start[0] <= 2 && shape.mid[0] >= 60 && shape.mid[1] > -20 && shape.late[1] < -80, JSON.stringify(shape));
-t('ring: each stretch starts somewhere new (2s turn vs 1.5s stretch)', (2000 % 1500) !== 0 && ring.anim.includes('2s') && ring.arcAnim.includes('1.5s'));
+t('ring: each stretch starts somewhere new (2s turn vs 1.5s stretch)', ring.anim.includes('2s') && ring.arcAnim.includes('1.5s'));
 t('ring: stroke-width-2 in its 24-unit drawing', ring.sw === '2px', ring.sw);
 const dots = await p.evaluate(() => [...document.querySelectorAll('#dots .dk-loader__dot')].map((d) => { const s = getComputedStyle(d); return [s.animationName, s.animationDuration, s.animationDelay, s.animationIterationCount]; }));
 t('dots: three dots pulsing (1s), each 150ms after the one before', dots.length === 3 && dots.every((d) => d[0] === 'dk-loader-dot' && d[1] === '1s' && d[3] === 'infinite') && dots.map((d) => d[2]).join() === '0s,0.15s,0.3s', JSON.stringify(dots));

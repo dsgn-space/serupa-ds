@@ -17,7 +17,7 @@ const channel = addons.getChannel();
 channel.on('setGlobals', (e: { globals?: Record<string, unknown> }) => apply(e.globals));   // already merged, with a story's own globals on top
 channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply(e.globals));
 
-const withTheme: Decorator = (Story, context) => {
+const WithTheme: Decorator = (Story, context) => {
   const theme = `${context.globals.brand || 'blue'}-${context.globals.mode || 'light'}`;
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -39,7 +39,7 @@ const preview: Preview = {
     },
   },
   initialGlobals: { brand: 'blue', mode: 'light' },
-  decorators: [withTheme],
+  decorators: [WithTheme],
   parameters: {
     layout: 'padded',
     controls: { expanded: true, sort: 'requiredFirst' },

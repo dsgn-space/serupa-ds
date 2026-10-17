@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 export const WithValue: Story = { args: { defaultValue: new Date(2025, 10, 22) } };
 export const InField: Story = {
-  render: () => {
+  render: function Render() {
     const [due, setDue] = React.useState<Date | null>(null);
     return <Field label="Due date" hint="mm/dd/yyyy, from today on"><DatePicker value={due} onValueChange={setDue} min={new Date()} /></Field>;
   },

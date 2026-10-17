@@ -67,6 +67,15 @@ export const Badge = React.forwardRef<HTMLElement, BadgeProps>(function Badge(pr
   const variant = oneOf(VARIANTS, props.variant, "subtle");
   const tone = oneOf(TONES, props.tone, "neutral");
   if (props.size != null) warnOnce("badge-size", "Badge: size was removed in 4.0.0; badges have one size (20px, text-xs). Remove the size prop.");   // still swallowed, so it never reaches the DOM
+  const loading = !!props.loading;
+  const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
+  // Hooks first: a count of 0 renders nothing below, and hooks must run on every render.
+  React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
+  const wasLoading = React.useRef(false);
+  React.useEffect(function () {
+    if (loading && !wasLoading.current && loadingText) announce(loadingText);
+    wasLoading.current = loading;
+  }, [loading]);
   const isCount = props.count != null;
   let label: React.ReactNode = props.children;
   if (isCount) {
@@ -81,14 +90,6 @@ export const Badge = React.forwardRef<HTMLElement, BadgeProps>(function Badge(pr
     warnOnce("badge-remove-interactive", "Badge: onRemove is ignored on a badge with onClick or href (a button can't hold another button).");
     removable = false;
   }
-  const loading = !!props.loading;
-  const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
-  React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
-  const wasLoading = React.useRef(false);
-  React.useEffect(function () {
-    if (loading && !wasLoading.current && loadingText) announce(loadingText);
-    wasLoading.current = loading;
-  }, [loading]);
   // Indicator: dot with no label, icon or count is a lone dot ("something new", no number): a solid circle in the
   // tone with a ring in the surface color, for the corner of an icon or avatar. Decorative unless you name it.
   const hasLabel = !(label == null || label === false || label === "");

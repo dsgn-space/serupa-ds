@@ -3,7 +3,7 @@
 //   node tools/test/kbd.mjs
 import { writePage, browser, cleanup, report } from './lib.mjs';
 
-const APP = (id) => `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-direction:column;gap:12px"></div>
+const APP = () => `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-direction:column;gap:12px"></div>
 <script>
 var D = window.Diki, h = React.createElement;
 ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,

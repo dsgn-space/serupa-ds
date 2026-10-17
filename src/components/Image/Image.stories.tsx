@@ -23,7 +23,7 @@ export const Ratios: Story = {
 export const Contain: Story = { args: { ratio: 'square', fit: 'contain' } };
 export const Viewable: Story = { args: { viewable: true } };
 export const Removable: Story = {
-  render: (args) => {
+  render: function Render(args) {
     const [shown, setShown] = React.useState(true);
     return shown ? <Image {...args} viewable onRemove={() => setShown(false)} /> : <button type="button" onClick={() => setShown(true)}>Put it back</button>;
   },

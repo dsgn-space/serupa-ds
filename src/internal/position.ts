@@ -17,7 +17,8 @@ export function parsePlacement(p: string | undefined, fallback: Placement): [Sid
 /** Where to put the floating element (left, top in viewport px) and the side it ended up on. */
 export function place(anchor: DOMRect, floating: { width: number; height: number }, placement: string | undefined, offset: number, fallback: Placement = "top", margin = 8): { x: number; y: number; side: Side } {
   const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
-  let [side, align] = parsePlacement(placement, fallback);
+  const parsed = parsePlacement(placement, fallback), align = parsed[1];
+  let side = parsed[0];
   const rtl = getComputedStyle(document.documentElement).direction === "rtl";
   const room = (s: Side) => s === "top" ? anchor.top - offset - floating.height >= margin
     : s === "bottom" ? anchor.bottom + offset + floating.height <= vh - margin
