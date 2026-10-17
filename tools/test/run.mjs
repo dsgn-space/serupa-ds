@@ -43,6 +43,7 @@ const steps = [
   ['Popover', 'node', [path.join(HERE, 'popover.mjs')]],
   ['Drawer', 'node', [path.join(HERE, 'drawer.mjs')]],
   ['Progress', 'node', [path.join(HERE, 'progress.mjs')]],
+  ['SearchInput', 'node', [path.join(HERE, 'search-input.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],
