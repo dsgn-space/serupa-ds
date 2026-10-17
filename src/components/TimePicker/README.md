@@ -18,7 +18,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 | `value` / `defaultValue` | `string \| null` | | The time as `"HH:mm"` (24-hour), controlled or not. The same format as `<input type="time">`. |
 | `onValueChange` | `(value: string \| null) => void` | | Called with `"HH:mm"`, or `null` when the field is cleared. |
 | `min`, `max` | `string` | `"00:00"`, `"23:59"` | The earliest and latest times, typed or picked. |
-| `step` | `number` | `30` | Minutes between the times in the list. Typed times don't have to fall on a step. |
+| `step` | `number` | `30` | Minutes between the times in the list, counted from `min` (or midnight), like `<input type="time">`. Under 1, it's 30. Typed times don't have to fall on a step. |
 | `locale` | `string` | the browser's | How times are written. |
 | `hour12` | `boolean` | the locale's | 12-hour (2:30 PM) or 24-hour (14:30). |
 | `size`, `invalid` | | `'md'`, `false` | Like Input. |
@@ -32,7 +32,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 
 - People type `2:30 pm`, `2:30p`, `2pm`, `14:30`, `1430` or `9`. Without AM or PM, 13–23 are afternoon and 0–11 morning. The text is read on blur and Enter; text that isn't a time, or a time outside `min`–`max`, puts back the last good value.
 - The list opens on ↓ or ↑ in the field, or the clock button, with the chosen time (or the one nearest the typed text) highlighted and near the top.
-- In the list: ↑ ↓ move one time, PageUp and PageDown four, Ctrl+Home and Ctrl+End to the ends, Enter picks, Escape closes, Tab closes and moves on. Focus stays in the field throughout.
+- In the list: ↑ ↓ move one time, PageUp and PageDown four, Ctrl+Home and Ctrl+End to the ends, Enter picks, Escape closes, Tab closes and moves on. Typing while the list is open moves the highlight to the nearest time, and Enter then keeps what was typed. Focus stays in the field throughout, the clock button included.
 - Uses Input's box, so it lines up with other fields.
 
 ## Accessibility
