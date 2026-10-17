@@ -78,7 +78,8 @@
         "$description": "A section's title (4.5:1 on bg).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--sidebar-section-title"
+            "cssVar": "--sidebar-section-title-color",
+            "deprecatedCssVar": "--sidebar-section-title"
           }
         }
       },

@@ -66,8 +66,8 @@ Each is an optional override: set it on the page, a container or one list. The l
 | --- | --- | --- |
 | `--list-border` | `border` | Lines between items, and the frame of variant="card". |
 | `--list-bg` | `surface` | The background of variant="card". |
-| `--list-title` | `text` | An item's title. |
-| `--list-description` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
+| `--list-title-color` (was `--list-title`, which still works until 5.0.0) | `text` | An item's title. |
+| `--list-description-color` (was `--list-description`, which still works until 5.0.0) | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
 | `--list-bg-hover` | `surface-muted` | A link or button item on hover, and a selected item. |
 | `--list-indicator-selected` | `primary` | The bar at the start of a selected item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
