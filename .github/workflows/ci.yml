@@ -6,7 +6,22 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  suite:
+    # The suite runs as parallel jobs, one per group (tools/test/run.mjs --group), so a run takes as long as
+    # its slowest group instead of all of them in a row.
+    name: suite (${{ matrix.group }}${{ matrix.shard && format(' {0}', matrix.shard) || '' }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # Storybook's check (every story in six themes) is the slowest, so it runs as four shards.
+        include:
+          - { group: checks }
+          - { group: components }
+          - { group: visual }
+          - { group: storybook, shard: 1/4 }
+          - { group: storybook, shard: 2/4 }
+          - { group: storybook, shard: 3/4 }
+          - { group: storybook, shard: 4/4 }
     # Pinned so font rendering, and with it the visual snapshots, stays the same between runs.
     runs-on: ubuntu-24.04
     steps:
@@ -23,18 +38,23 @@ jobs:
       - name: tokens.css is generated from tokens.json
         run: node tools/tokens/build.mjs --check
       - name: Every file carries the same version
+        if: matrix.group == 'checks'
         run: python3 tools/release.py --check
       - name: Type check
+        if: matrix.group == 'checks'
         run: npm run typecheck
       - name: Build the package
         run: npm run build
       - name: Build Storybook
+        if: matrix.group == 'storybook'
         run: npm run build-storybook
       - name: Test suite
         shell: bash
+        env:
+          DIKI_SHARD: ${{ matrix.shard }}
         run: |
           set -o pipefail
-          npm test 2>&1 | tee test-output.txt
+          node tools/test/run.mjs --group ${{ matrix.group }} 2>&1 | tee test-output.txt
       - name: Show failures on the pull request
         if: failure()
         shell: bash
@@ -42,15 +62,23 @@ jobs:
           # One annotation listing the failing tests, so they show on the PR without opening the log.
           # Which groups failed first, then the failing tests (an annotation holds a limited amount of text).
           msg=$( { sed -n '/━━ Summary ━━/,$p' test-output.txt | grep '^FAIL'; echo; grep -E '^(CHANGED|NEW|MISSING|NO EFFECT) ' test-output.txt | head -20; grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -60; } | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
-          echo "::error title=Failing tests::${msg}"
-          { echo '## Failing tests'; echo '```'; grep -E -A1 '^FAIL|^(PASS|FAIL)  [A-Z]' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=Failing tests (${{ matrix.group }})::${msg}"
+          { echo '## Failing tests (${{ matrix.group }})'; echo '```'; grep -E -A1 '^FAIL|^(PASS|FAIL)  [A-Z]' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload failure details
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-output
+          name: test-output-${{ matrix.group }}${{ matrix.shard && format('-{0}', strategy.job-index) || '' }}
           path: |
             test-output.txt
             .test-tmp/
             tools/test/baseline-visual/*.actual.png
           if-no-files-found: ignore
+
+  # One check that passes only when every group passed, under the name the single job used to have.
+  test:
+    needs: suite
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - run: test "${{ needs.suite.result }}" = success

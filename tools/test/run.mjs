@@ -10,6 +10,7 @@ const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.a
 if (arg('--browser')) process.env.DIKI_BROWSER = arg('--browser');
 const steps = [
   ['Package', 'node', [path.join(HERE, 'package.mjs')]],
+  ['Component contract', 'node', [path.join(HERE, 'contract.mjs')]],
   ['Foundation audit', 'python3', ['-I', path.join(HERE, 'foundation.py'), PROJECT]],
   ['Design tokens export', 'python3', ['-I', path.join(HERE, 'design_tokens.py'), PROJECT]],
   ['Style Dictionary', 'node', [path.join(HERE, 'style_dictionary.mjs')]],
@@ -71,13 +72,27 @@ const steps = [
   ['Page groundwork', 'node', [path.join(HERE, 'page.mjs')]],
   ['Storybook', 'node', [path.join(HERE, 'storybook.mjs')]],
 ];
+// CI runs the suite as parallel jobs, one per group: node tools/test/run.mjs --group checks|components|visual|storybook.
+// A step not named here is a component suite.
+const GROUPS = {
+  checks: ['Package', 'Component contract', 'Foundation audit', 'Design tokens export', 'Style Dictionary', 'Utility classes', 'Icon names', 'Icon builder', 'Custom icons', 'Page groundwork', 'Usage guides'],
+  visual: ['Visual snapshots'],
+  storybook: ['Storybook'],
+};
+const groupOf = (name) => Object.keys(GROUPS).find((g) => GROUPS[g].includes(name)) || 'components';
+if (arg('--group')) {
+  const g = arg('--group');
+  if (![...Object.keys(GROUPS), 'components'].includes(g)) { console.error(`Unknown --group "${g}" (checks, components, visual or storybook)`); process.exit(2); }
+  steps.splice(0, steps.length, ...steps.filter(([name]) => groupOf(name) === g));
+}
 if (arg('--compat')) steps.push([`Cross-browser (${arg('--compat')})`, 'node', [path.join(HERE, 'compat.mjs'), '--engine', arg('--compat'), ...(arg('--driver') ? ['--driver', arg('--driver')] : [])]]);
 const summary = [];
 for (const [name, cmd, args] of steps) {
   console.log(`\n━━ ${name} ━━`);
+  const t0 = Date.now();
   const r = spawnSync(cmd, args, { stdio: 'inherit', env: { ...process.env, DIKI_PROJECT: PROJECT } });
-  summary.push([name, r.status === 0]);
+  summary.push([name, r.status === 0, Date.now() - t0]);
 }
 console.log('\n━━ Summary ━━');
-for (const [name, ok] of summary) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}`);
+for (const [name, ok, ms] of summary) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}  (${(ms / 1000).toFixed(1)}s)`);
 process.exit(summary.every(([, ok]) => ok) ? 0 : 1);
