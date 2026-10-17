@@ -8,7 +8,8 @@
         "$description": "tone=\"primary\" text and underline (4.5:1 on surface).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--link-color"
+            "cssVar": "--link-text",
+            "deprecatedCssVar": "--link-color"
           }
         }
       },
@@ -18,7 +19,8 @@
         "$description": "tone=\"primary\" on hover.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--link-color-hover"
+            "cssVar": "--link-text-hover",
+            "deprecatedCssVar": "--link-color-hover"
           }
         }
       },
