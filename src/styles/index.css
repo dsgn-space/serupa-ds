@@ -20,6 +20,7 @@
 @import "../components/IconButton/IconButton.css";
 @import "../components/Fab/Fab.css";
 @import "../components/Avatar/Avatar.css";
+@import "../components/AvatarGroup/AvatarGroup.css";
 @import "../components/Tabs/Tabs.css";
 @import "../components/Tooltip/Tooltip.css";
 @import "../components/Dialog/Dialog.css";
@@ -58,4 +59,5 @@
 @import "../components/DateRangePicker/DateRangePicker.css";
 @import "../components/Image/Image.css";
 @import "../components/TimePicker/TimePicker.css";
+@import "../components/Carousel/Carousel.css";
 @import "./utilities.css";
