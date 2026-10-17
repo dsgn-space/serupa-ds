@@ -54,7 +54,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-zone-border` | `field-border` | The drop area's dashed outline (3:1 on the surface). |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
 | `--file-upload-zone-border-active` | `primary` | Its outline then. |
-| `--file-upload-icon` | `text-muted` | The upload icon and file icons (3:1). |
+| `--file-upload-icon-color` (was `--file-upload-icon`, which still works until 5.0.0) | `text-muted` | The upload icon and file icons (3:1). |
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |
 | `--file-upload-hint-color` | `text-muted` | The hint and file sizes (4.5:1 on zone-bg and the surface). |
 | `--file-upload-error-color` | `danger-text` | Messages about files that weren't added. |

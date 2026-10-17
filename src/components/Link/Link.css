@@ -3,12 +3,12 @@
    Focus: a 2px ring that follows the text across lines. external adds a 1em new-tab icon.
    --------------------------------------------------------------- */
 .dk-link {
-  color: var(--link-color, var(--primary)); cursor: pointer; border-radius: var(--link-focus-radius, var(--rounded-sm, 0.25rem));
+  color: var(--link-text, var(--link-color, var(--primary))); cursor: pointer; border-radius: var(--link-focus-radius, var(--rounded-sm, 0.25rem));
   text-decoration-line: underline; text-decoration-thickness: var(--link-thickness, var(--decoration-1, 1px)); text-underline-offset: var(--link-offset, var(--underline-offset-2, 2px));
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
   transition: color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
 }
-.dk-link:hover { color: var(--link-color-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2, 2px)); }
+.dk-link:hover { color: var(--link-text-hover, var(--link-color-hover, var(--primary-hover))); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2, 2px)); }
 .dk-link--neutral, .dk-link--neutral:hover { color: inherit; }
 .dk-link--hover-underline:not(:hover, :focus-visible) { text-decoration-line: none; }
 .dk-link:focus-visible { outline: var(--outline-width-2, 2px) solid var(--link-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }

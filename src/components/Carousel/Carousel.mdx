@@ -1,0 +1,18 @@
+import { Meta, Title, Description, Primary, Controls, Stories } from '@storybook/blocks';
+import { Guide } from '../../../docs/blocks';
+import * as StoriesCarousel from './Carousel.stories';
+import guide from './README.md?raw';
+
+<Meta of={StoriesCarousel} />
+
+<Title />
+
+<Primary />
+
+<Controls />
+
+<Guide source={guide} />
+
+## Examples
+
+<Stories title="" includePrimary={false} />
