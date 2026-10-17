@@ -4,6 +4,10 @@ import * as React from 'react';
 import { Markdown } from '@storybook/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
+import iconNames from './icon-names.json';
+import { Icon } from '../src/components/Icon/Icon';
+import { SearchInput } from '../src/components/SearchInput/SearchInput';
+import { customIcons } from '../src/icons';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -94,4 +98,44 @@ export function TypeScale() {
       <div className={s.name}>The quick brown fox jumps over the lazy dog</div>
     </div>)}
   </div>)}</div>;
+}
+
+/** A searchable gallery of icons (docs/icon-names.json) and your custom icons; a click copies an icon's name. */
+export function IconGallery() {
+  const [q, setQ] = React.useState('');
+  const [copied, setCopied] = React.useState('');
+  const groups: Record<string, string[]> = { ...(iconNames as Record<string, any>) };
+  delete groups.$description;
+  if (customIcons.length) groups['Your custom icons'] = [...customIcons];
+  const term = q.trim().toLowerCase().replace(/\s+/g, '_');
+  const copy = (n: string) => {
+    try { navigator.clipboard.writeText(n); } catch { /* no clipboard: the name still shows */ }
+    setCopied(n);
+  };
+  const shown = Object.entries(groups).map(([g, list]) => [g, list.filter((n) => !term || n.includes(term))] as const).filter(([, l]) => l.length);
+  // sb-unstyled: Storybook's docs styles would otherwise set the icons' font to its own.
+  return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div style={{ maxWidth: 320 }}><SearchInput aria-label="Find an icon" placeholder="Find an icon, such as arrow" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+    <p role="status" style={{ margin: 0, minHeight: 20, color: 'var(--text-muted)' }}>{copied ? <>Copied <code>{copied}</code></> : 'Click an icon to copy its name.'}</p>
+    {shown.length ? shown.map(([g, list]) => <section key={g}>
+      <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600 }}>{g}</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))', gap: 8 }}>
+        {list.map((n) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer', font: 'inherit' }}>
+          <Icon name={n} />
+          <span style={{ fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' }}>{n}</span>
+        </button>)}
+      </div>
+    </section>) : <p>No icon here matches. Every Material Symbols name works: search the full set at <a href="https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols">fonts.google.com/icons</a> (Rounded, Fill on).</p>}
+  </div>;
+}
+
+/** Icons at the system's sizes, with what each is for. */
+export function IconSizes() {
+  const sizes: [number, string][] = [[14, '`sm` buttons'], [16, '`md` buttons, inline with `text-sm`'], [20, '`lg` buttons, list rows'], [24, 'The default: toolbars, navigation'], [40, 'Empty states']];
+  return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
+    {sizes.map(([s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
+      <Icon name="favorite" size={s} /><strong>{s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+    </div>)}
+  </div>;
 }

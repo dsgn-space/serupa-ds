@@ -267,7 +267,7 @@ Text rules of thumb:
 
 Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. The font ships in `fonts/` (`MaterialSymbolsRounded-Filled.woff2`, cut down to this one style) and `tokens.css` declares it, so there's nothing to load.
 
-Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Icon names are listed in the Icon guidelines.
+Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Icon names are listed on the Foundations/Icons page in Storybook.
 
 - **Sizes:** 14px (`sm` buttons), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows), 24px (default, toolbars and navigation), 40px+ (empty states).
 - **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `success`, `warning`, `danger` or `info` for status.
