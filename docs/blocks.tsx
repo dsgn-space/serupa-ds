@@ -1,7 +1,7 @@
 // Building blocks for the Storybook pages. Everything here reads tokens.json, README.md and the component
 // guidelines at build time, so the documentation can't drift from the system.
 import * as React from 'react';
-import { Markdown } from '@storybook/blocks';
+import { Markdown } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
 import iconNames from './icon-names.json';
