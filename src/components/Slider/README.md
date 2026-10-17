@@ -11,6 +11,43 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 <Slider aria-label="Price" value={price} onValueChange={setPrice} max={200} step={5} formatValue={(v) => `$${v}`} />
 ```
 
+## When to use
+
+- A value where its place in a range matters more than the exact number: volume, brightness, a zoom level.
+- A range with two ends, such as a price filter (pass a pair as the value).
+
+## When not to use
+
+- An exact number people type, such as a quantity: use [NumberInput](../NumberInput/README.md), or pair the two.
+- A few named options, such as Small, Medium, Large: use [SegmentedControl](../SegmentedControl/README.md) or [radios](../Radio/README.md).
+
+## Usage
+
+- Show a visible label next to it and point `aria-labelledby` at it, or use `aria-label`.
+- Use `formatValue` whenever the number has a unit or a currency, so screen readers hear "$40", not "40".
+- Update what's on screen in `onValueChange`, and save or fetch in `onValueCommit`, which runs once per change.
+- Set `step` to the precision people need, so values snap to sensible numbers.
+
+## Behavior
+
+- A press anywhere on the track moves the nearest thumb there, and dragging follows the pointer even off the slider.
+- Range thumbs can't cross.
+- The thumb grows a little while pressed; it doesn't with `prefers-reduced-motion`.
+
+## Accessibility
+
+- Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
+- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`tools/test/slider.mjs`). In forced-colors mode it uses system colors.
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| ArrowRight, ArrowUp | + `step` (ArrowLeft raises it in right-to-left pages) |
+| ArrowLeft, ArrowDown | − `step` |
+| Shift+Arrow, PageUp, PageDown | ± `largeStep` steps |
+| Home, End | The ends; a range thumb stops at the other thumb |
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -29,26 +66,6 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
 
 Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`.
-
-## Keyboard
-
-| Key | Does |
-| --- | --- |
-| ArrowRight, ArrowUp | + `step` (ArrowLeft raises it in right-to-left pages) |
-| ArrowLeft, ArrowDown | − `step` |
-| Shift+Arrow, PageUp, PageDown | ± `largeStep` steps |
-| Home, End | The ends; a range thumb stops at the other thumb |
-
-## Behavior
-
-- A press anywhere on the track moves the nearest thumb there, and dragging follows the pointer even off the slider.
-- Range thumbs can't cross.
-- The thumb grows a little while pressed; it doesn't with `prefers-reduced-motion`.
-
-## Accessibility
-
-- Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
-- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`tools/test/slider.mjs`). In forced-colors mode it uses system colors.
 
 ## Component tokens
 

@@ -2,8 +2,6 @@
 
 A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. It's built from parts (`CardHeader`, `CardBody`, `CardFooter`) that you can mix with any content, and with `href` the whole card becomes one link.
 
-## Usage
-
 ```jsx
 const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Diki;
 
@@ -29,6 +27,43 @@ const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Diki;
   <div className="p-5"><CardHeader title="Release notes" /></div>
 </Card>
 ```
+
+## When to use
+
+- A summary of one thing with its own actions: a plan, a project, a report.
+- A set of similar items in a grid, each opening its own page.
+- A panel that sets one group of settings or content apart from the rest of the page.
+
+## When not to use
+
+- Rows of similar items people scan down: use [List](../List/README.md) instead, or [Table](../Table/README.md) when there are columns to compare.
+- Only separating two parts of a page: use space from [Stack](../Stack/README.md), or a [Divider](../Divider/README.md).
+- Content that sits over the page, such as a confirmation or a short form: use [Dialog](../Dialog/README.md) or [Popover](../Popover/README.md) instead.
+
+## Usage
+
+- Use `outline` for most cards, `elevated` for content over the page, and `filled` for a panel inside another surface.
+- Keep a linked card to a title and a line. When a card needs buttons, don't link it: put them in `CardFooter`.
+- Wrap linked cards in a list's `<li>` yourself, since `as` is ignored with `href`.
+- For full-bleed media, set `padding="none"` and pad the parts yourself.
+
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `surface` with a `border` border and `shadow-xs` (outline); `shadow-md` (elevated); `surface-muted` (filled) |
+| Hover (a linked card) | A `border-strong` border |
+| Focus (a linked card) | From the keyboard: a 2px `focus-ring` outline, 2px outside the card |
+
+The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `prefers-reduced-motion`.
+
+## Accessibility
+
+- A card is a plain container: give it `as="section"` with a title when it's a landmark-worthy region, or `as="article"` for a self-contained item.
+- The title is a real heading, so screen reader users can jump between cards. Set `headingLevel` to fit the page.
+- A linked card is one link: its name is all the text inside it. Keep it short (a title and a line), and keep buttons and other links out of it, since a link can't hold them.
+- In forced-colors mode every card gets a visible border.
+- The title, description and body text keep 4.5:1 on every variant, in all six themes (`tools/test/card.mjs`).
 
 ## Props
 
@@ -58,24 +93,6 @@ Children come after the description.
 
 `CardBody` holds the main content. `CardFooter` lays its children out in a wrapping row: `justify` is `'end'` (default), `'start'` or `'between'`.
 
-## States
-
-| State | Look |
-| --- | --- |
-| Rest | `surface` with a `border` border and `shadow-xs` (outline); `shadow-md` (elevated); `surface-muted` (filled) |
-| Hover (a linked card) | A `border-strong` border |
-| Focus (a linked card) | From the keyboard: a 2px `focus-ring` outline, 2px outside the card |
-
-The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `prefers-reduced-motion`.
-
-## Accessibility
-
-- A card is a plain container: give it `as="section"` with a title when it's a landmark-worthy region, or `as="article"` for a self-contained item.
-- The title is a real heading, so screen reader users can jump between cards. Set `headingLevel` to fit the page.
-- A linked card is one link: its name is all the text inside it. Keep it short (a title and a line), and keep buttons and other links out of it, since a link can't hold them.
-- In forced-colors mode every card gets a visible border.
-- The title, description and body text keep 4.5:1 on every variant, in all six themes (`tools/test/card.mjs`).
-
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one card. The list lives in `src/components/Card/card.tokens.json` (also in `design-tokens/components/`).
@@ -98,3 +115,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-gap` | `spacing-4` | The space between the parts |
 | `--card-header-gap` | `spacing-1` | The space between the title and the description |
 | `--card-title-weight` | `font-semibold` | The title's weight |
+
+## Related
+
+- [Grid](../Grid/README.md): lays out a set of cards in columns that fit the screen.

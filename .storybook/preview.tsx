@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Decorator, Preview } from '@storybook/react';
+import type { Decorator, Preview } from '@storybook/react-vite';
 import { addons } from 'storybook/internal/preview-api';
 import '../tokens.css';
 import '../src/styles/base.css';
@@ -14,7 +14,7 @@ const apply = (g: Record<string, unknown> | undefined) => {
   document.documentElement.setAttribute('data-theme', `${g.brand || 'blue'}-${g.mode || 'light'}`);
 };
 const channel = addons.getChannel();
-channel.on('setGlobals', (e: { globals?: Record<string, unknown>; userGlobals?: Record<string, unknown> }) => apply({ ...e.globals, ...e.userGlobals }));
+channel.on('setGlobals', (e: { globals?: Record<string, unknown> }) => apply(e.globals));   // already merged, with a story's own globals on top
 channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply(e.globals));
 
 const withTheme: Decorator = (Story, context) => {
@@ -43,8 +43,8 @@ const preview: Preview = {
   parameters: {
     layout: 'padded',
     controls: { expanded: true, sort: 'requiredFirst' },
-    backgrounds: { disable: true },   // the theme sets the page background (surface)
-    a11y: { element: '#storybook-root' },
+    backgrounds: { disabled: true },   // the theme sets the page background (surface)
+    a11y: { context: '#storybook-root' },
     options: { storySort: { order: ['Introduction', 'Getting started', 'Foundations', ['Colors', 'Themes', 'Typography', 'Spacing', 'Corner radius', 'Effects and borders', 'Motion', 'Utility classes'], 'Components', 'Versioning and tools', 'Changelog'] } },
   },
 };

@@ -19,6 +19,35 @@ import { Stepper } from "@diki/design-system";
 <Stepper orientation="vertical" current={2} steps={steps} />
 ```
 
+## When to use
+
+- A task split into 3 to about 7 steps done in order, such as sign-up, checkout or setup.
+- People need to see which steps are done and how many are left.
+- People may go back to a finished step to change it.
+
+## When not to use
+
+- Views people can open in any order: use [Tabs](../Tabs/README.md) instead.
+- How far along one thing is, such as an upload: use [Progress](../Progress/README.md) instead.
+- Where a page sits in the site: use [Breadcrumb](../Breadcrumb/README.md) instead.
+
+## Usage
+
+- Keep step titles to a word or two, and put any detail in `description`.
+- Mark a step people can skip with `optional: true` rather than writing it in the title; it shows the "Optional" tag.
+- Set `status: 'error'` on a step with a problem, so people can find it from the stepper.
+- Pass `onStepClick` only when going back is safe: it makes completed steps buttons that go back to them.
+
+## Behavior
+
+- Upcoming steps have an outlined circle with their number. The current step is filled in primary with a ring around it. Completed steps are filled with a check, and the line after them turns primary. Error steps are filled in danger.
+- Horizontal lines stretch between steps, level with the middle of the circles. On narrow screens, use `orientation="vertical"` or `size="sm"`.
+
+## Accessibility
+
+- An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed or error steps add ", completed" or ", has an error" for screen readers, so the state isn't shown by color alone.
+- Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`tools/test/stepper.mjs`).
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -31,16 +60,6 @@ import { Stepper } from "@diki/design-system";
 | `labels` | `{ completed?, error?, optional? }` | `'completed'`, `'has an error'`, `'Optional'` | Words read out after a step's title, and the optional tag. |
 
 It renders a `<nav>`; name it with `aria-label` (default `'Progress'`). `className`, `ref` and other props go to the `<nav>`.
-
-## Behavior
-
-- Upcoming steps have an outlined circle with their number. The current step is filled in primary with a ring around it. Completed steps are filled with a check, and the line after them turns primary. Error steps are filled in danger.
-- Horizontal lines stretch between steps, level with the middle of the circles. On narrow screens, use `orientation="vertical"` or `size="sm"`.
-
-## Accessibility
-
-- An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed or error steps add ", completed" or ", has an error" for screen readers, so the state isn't shown by color alone.
-- Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`tools/test/stepper.mjs`).
 
 ## Component tokens
 

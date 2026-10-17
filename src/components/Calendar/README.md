@@ -10,6 +10,49 @@ const [day, setDay] = React.useState<Date | null>(null);
 <Calendar defaultValue={new Date(2025, 2, 10)} isDateDisabled={(d) => d.getDay() === 0 || d.getDay() === 6} />
 ```
 
+## When to use
+
+- Picking a day is the main task on the page or panel, such as choosing a booking day.
+- People should see which days are free or blocked before they choose.
+- There's room to keep the month on screen while people look at other details beside it.
+
+## When not to use
+
+- A date field in a form: use [DatePicker](../DatePicker/README.md), which opens a Calendar only when needed.
+- A start and an end date: use [DateRangePicker](../DateRangePicker/README.md); Calendar picks one day.
+- A date people know by heart, such as a date of birth: use an [Input](../Input/README.md) with a format hint.
+
+## Usage
+
+- Put a heading or a line of text near it saying what the day is for ("Pick a delivery day"): the grid is named by its month title only.
+- Block days with `min`, `max` and `isDateDisabled` so people see them before they pick, rather than refusing a day afterwards.
+- Set `autoFocus` only when the Calendar appears because people asked for it, such as in a panel they just opened.
+- Leave `locale` and `weekStartsOn` unset in most products so names and the first day follow the visitor's browser.
+
+## Behavior
+
+- Always six weeks tall, so the layout doesn't jump between months. Days of the months before and after are muted and can be picked.
+- Today is in primary and semibold. The selected day is filled in primary.
+
+## Accessibility
+
+- A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
+- Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
+- Weekday headers show the short name and carry the full name in `abbr`.
+- Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`tools/test/date-picker.mjs`).
+
+### Keyboard
+
+| Key | Moves to |
+| --- | --- |
+| ← → | The day before or after (mirrored right to left). |
+| ↑ ↓ | The same day a week before or after. |
+| Home, End | The start or end of the week. |
+| PageUp, PageDown | The same day a month before or after. With Shift, a year. |
+| Enter, Space | Picks the focused day. |
+
+Moving past the shown month shows the next one.
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -26,30 +69,6 @@ const [day, setDay] = React.useState<Date | null>(null);
 | `previousLabel`, `nextLabel` | `string` | `"Previous month"`, `"Next month"` | The month buttons' names. |
 
 `className`, `ref` and other props go to the outer `<div>`.
-
-## Behavior
-
-- Always six weeks tall, so the layout doesn't jump between months. Days of the months before and after are muted and can be picked.
-- Today is in primary and semibold. The selected day is filled in primary.
-
-## Keyboard
-
-| Key | Moves to |
-| --- | --- |
-| ← → | The day before or after (mirrored right to left). |
-| ↑ ↓ | The same day a week before or after. |
-| Home, End | The start or end of the week. |
-| PageUp, PageDown | The same day a month before or after. With Shift, a year. |
-| Enter, Space | Picks the focused day. |
-
-Moving past the shown month shows the next one.
-
-## Accessibility
-
-- A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
-- Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
-- Weekday headers show the short name and carry the full name in `abbr`.
-- Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`tools/test/date-picker.mjs`).
 
 ## Component tokens
 

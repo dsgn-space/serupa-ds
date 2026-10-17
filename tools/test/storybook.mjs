@@ -34,15 +34,22 @@ let errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 
+// Opens an entry in a theme and returns what kept it from being ready ('' when it is).
 async function open(e, theme) {
   const [brand, mode] = theme.split('-');
   errors = [];
-  await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode}`);
-  await page.waitForFunction(() => document.body.classList.contains('sb-show-main') || document.body.classList.contains('sb-show-errordisplay'), null, { timeout: 15000 }).catch(() => {});
-  // Wait for the story and the icon font: before the font loads, an icon's ligature reads as words to axe.
-  await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0 || document.querySelector('#storybook-docs')?.children.length > 0, null, { timeout: 15000 }).catch(() => {});
+  // a11y.manual stops the a11y addon's own axe run after each story: it shares window.axe with this check's run.
+  await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode};a11y.manual:!true`);
+  const drawn = await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0 || document.querySelector('#storybook-docs')?.children.length > 0, null, { timeout: 15000 }).then(() => true, () => false);
+  if (!drawn) return 'did not render in 15 s';
+  // The icon font uses font-display: swap, so until it loads an icon's ligature ("close") is visible text and
+  // axe compares it with the button's name. document.fonts.ready doesn't wait for a font that hasn't started
+  // loading yet, so load it by name and check it.
+  const font = await page.evaluate(() => document.fonts.load('24px "Material Symbols Rounded"').then(() => document.fonts.check('24px "Material Symbols Rounded"'), () => false));
+  if (!font) return 'icon font not loaded';
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await page.waitForTimeout(150);
+  return '';
 }
 
 // DIKI_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
@@ -51,24 +58,45 @@ const [shard, shards] = (process.env.DIKI_SHARD || '1/1').split('/').map(Number)
 const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs') : [];
 const stories = Object.values(entries).filter((e) => e.type === 'story').filter((_, i) => i % shards === shard - 1);
 for (const e of docs) {
-  await open(e, 'blue-light');
-  const ok = await page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
+  const notReady = await open(e, 'blue-light');
+  const ok = !notReady && await page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
   const missing = await page.evaluate(() => [...document.querySelectorAll('blockquote')].map((q) => q.textContent).filter((x) => /Missing README section/.test(x)));
-  t(`docs · ${e.title}`, ok && !errors.length && !missing.length, [...errors, ...missing].slice(0, 3).join(' | '));
+  t(`docs · ${e.title}`, ok && !errors.length && !missing.length, [notReady, ...errors, ...missing].filter(Boolean).slice(0, 3).join(' | '));
   // In a dark mode the whole docs page follows the theme, so dark components aren't shown on white.
-  await open(e, 'blue-dark');
+  const darkNotReady = await open(e, 'blue-dark');
   const dark = await page.evaluate(() => {
     const bg = (s) => { const el = document.querySelector(s); return el ? getComputedStyle(el).backgroundColor : null; };
     const want = getComputedStyle(document.body).backgroundColor, text = getComputedStyle(document.querySelector('.sbdocs-content') || document.body).color;
     const off = ['html', '.sbdocs-wrapper', '.sbdocs-preview', '.docs-story'].filter((s) => bg(s) !== null && bg(s) !== want);
-    return { theme: document.documentElement.getAttribute('data-theme'), want, text, off };
+    // Code in a dark theme: every syntax color 4.5:1 on its block. Boolean switches: the chosen half still looks
+    // different from the other, and both halves read 4.5:1 on what's behind them. (Radios show their state with
+    // the native dot.)
+    const rgb = (c) => c.match(/[\d.]+/g).map(Number);
+    const lum = (c) => { const v = c.slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+    const ratio = (a, b) => { const [x, y] = [lum(rgb(a)), lum(rgb(b))].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+    const code = [];
+    for (const pre of document.querySelectorAll('.docblock-source, .sbdocs-content pre')) {
+      const bg = getComputedStyle(pre).backgroundColor;
+      for (const sp of pre.querySelectorAll('span')) { if (!sp.textContent.trim()) continue; const r = ratio(getComputedStyle(sp).color, bg); if (r < 4.5) code.push(`${sp.className || 'text'} ${r.toFixed(2)}`); }
+    }
+    const behind = (el) => { for (; el; el = el.parentElement) { const c = getComputedStyle(el).backgroundColor; if (rgb(c)[3] !== 0) return c; } return want; };
+    const looks = (sp) => { const c = getComputedStyle(sp); return [c.backgroundColor, c.color, c.boxShadow].join(); };
+    const flat = [];
+    for (const l of document.querySelectorAll('.docblock-argstable label:has(> input[role="switch"])')) {
+      const [a, b] = l.querySelectorAll(':scope > span');
+      if (!a || !b) continue;
+      if (looks(a) === looks(b)) flat.push(`${l.getAttribute('aria-label')} same`);
+      for (const sp of [a, b]) { const c = getComputedStyle(sp).color, r = rgb(c)[3] === undefined || rgb(c)[3] === 1 ? ratio(c, behind(sp)) : 0; if (r < 4.5) flat.push(`${l.getAttribute('aria-label')} ${sp.textContent} ${r.toFixed(2)}`); }
+    }
+    return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
-  t(`docs · ${e.title} · dark: the page, story frames and text follow the theme`, dark.theme === 'blue-dark' && dark.want === 'rgb(3, 7, 18)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)', JSON.stringify(dark));
+  t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(3, 7, 18)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark));
 }
 for (const e of stories) {
   const problems = [];
   for (const th of THEMES) {
-    await open(e, th);
+    const notReady = await open(e, th);
+    if (notReady) { problems.push(`${th}: ${notReady}`); continue; }
     const shown = await page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
     if (!shown || errors.length) { problems.push(`${th}: ${errors[0] || 'did not render'}`); continue; }
     await page.addScriptTag({ content: axe });

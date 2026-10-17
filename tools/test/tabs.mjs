@@ -69,8 +69,10 @@ const pill = await p.evaluate(() => { const r = document.getElementById('dv'), s
 t('pill, size sm: 32px tabs, the selected one filled in primary with 6px corners, no row border or line', pill.h === 32 && pill.bg === prim && pill.border === 'none' && pill.r === '6px' && pill.after === 'none', JSON.stringify(pill));
 const bad = await p.evaluate(() => { const r = document.getElementById('bad'), sel = r.querySelector('[aria-selected="true"]'); return [r.dataset.variant, Math.round(sel.getBoundingClientRect().height), getComputedStyle(sel, '::after').backgroundColor].join(); });
 t('unknown variant and size fall back to line and md; --tabs-indicator and --tabs-height-md override', bad === 'line,40,rgb(1, 2, 3)', bad);
-await p.focus('#un [role="tab"][aria-selected="true"]'); await p.keyboard.press('ArrowRight'); await p.keyboard.press('ArrowLeft');
-const fr = await p.evaluate(() => getComputedStyle(document.activeElement).boxShadow);
+// Arrive by Tab (to the panel and back) so focus counts as keyboard focus in every engine, then rove with the arrows.
+await p.focus('#un [role="tab"][aria-selected="true"]'); await p.keyboard.press('Tab'); await p.keyboard.press('Shift+Tab');
+await p.keyboard.press('ArrowRight'); await p.keyboard.press('ArrowLeft');
+const fr = await p.evaluate(() => (document.activeElement.getAttribute('role') === 'tab' && document.activeElement.closest('#un') ? '' : 'not a #un tab: ') + getComputedStyle(document.activeElement).boxShadow);
 t('focus from the keyboard: a 2px focus-ring inside the tab', /0px 0px 0px 2px inset|inset 0px 0px 0px 2px/.test(fr), fr);
 
 const contrast = await p.evaluate(() => {

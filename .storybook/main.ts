@@ -4,7 +4,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 const config: StorybookConfig = {
   framework: { name: '@storybook/react-vite', options: {} },
   stories: ['../docs/**/*.mdx', '../src/**/*.mdx', '../src/**/*.stories.tsx'],
-  addons: ['@storybook/addon-essentials', '@storybook/addon-a11y'],
+  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   core: { disableTelemetry: true },
   docs: { defaultName: 'Docs' },
   viteFinal: async (cfg) => {

@@ -153,12 +153,14 @@ t('interactive: onClick renders <button type="button">, href a link (rel noopene
 await p.click('#btn'); await p.focus('#btn'); await p.keyboard.press('Enter'); await p.keyboard.press(' ');
 t('interactive: click, Enter and Space call onClick', await p.evaluate(() => window.clicks) === 3, String(await p.evaluate(() => window.clicks)));
 const layer = (sel) => p.evaluate((s) => { const c = getComputedStyle(document.querySelector(s), '::before'); return [c.opacity, c.backgroundColor].join('|'); }, sel);
-await p.mouse.move(0, 0); await p.waitForTimeout(250);
+// Wait out the layer's fade as well as the fixed pause: a slow runner (WebKit) can still be mid-transition after 250ms.
+const settled = async () => { await p.waitForTimeout(250); await p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {})))); };
+await p.mouse.move(0, 0); await settled();
 const rest = await layer('#btn');
-await p.hover('#btn'); await p.waitForTimeout(250); const hov = await layer('#btn'); const htxt = (await st('#btn', ['color'])).color;
-await p.mouse.down(); await p.waitForTimeout(250); const act = await layer('#btn'); await p.mouse.up();
-await p.hover('#sbtn'); await p.waitForTimeout(250); const shov = await layer('#sbtn');
-await p.hover('#dis'); await p.waitForTimeout(250); const dhov = await layer('#dis'); const dop = await st('#dis', ['opacity', 'cursor']);
+await p.hover('#btn'); await settled(); const hov = await layer('#btn'); const htxt = (await st('#btn', ['color'])).color;
+await p.mouse.down(); await settled(); const act = await layer('#btn'); await p.mouse.up();
+await p.hover('#sbtn'); await settled(); const shov = await layer('#sbtn');
+await p.hover('#dis'); await settled(); const dhov = await layer('#dis'); const dop = await st('#dis', ['opacity', 'cursor']);
 await p.mouse.move(0, 0);
 const txt = await st('#btn', ['color']);
 t('hover and active: a layer in the text color, 10% on hover and 15% while pressed, with the text 30% darker (subtle and outline); solid uses black in light themes; disabled fades to 50% with no layer',

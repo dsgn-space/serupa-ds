@@ -66,9 +66,10 @@ const lt = await st('#ltok', U);
 t('Link tokens (--link-color, --link-thickness, --link-offset) override one link', lt.color === 'rgb(1, 2, 3)' && lt.textDecorationThickness === '3px' && lt.textUnderlineOffset === '5px', JSON.stringify(lt));
 const lt2 = await st('#ltok2', U);
 t('--link-text, the new name for --link-color, overrides it when both are set (the old name keeps working until 5.0.0)', lt2.color === 'rgb(4, 5, 6)', JSON.stringify(lt2));
-await p.focus('#ldef'); await p.keyboard.press('Shift+Tab'); await p.keyboard.press('Tab');
-const f = await st('#ldef', ['outlineStyle', 'outlineWidth', 'outlineOffset']);
-t('keyboard focus: a 2px ring, 2px out', f.outlineStyle === 'solid' && f.outlineWidth === '2px' && f.outlineOffset === '2px', JSON.stringify(f));
+// #ldef is the first focusable element: Shift+Tab from it leaves the page (Firefox doesn't Tab back in), so Tab away and back.
+await p.focus('#ldef'); await p.keyboard.press('Tab'); await p.keyboard.press('Shift+Tab');
+const f = { ...(await st('#ldef', ['outlineStyle', 'outlineWidth', 'outlineOffset'])), active: await p.evaluate(() => document.activeElement.id) };
+t('keyboard focus: a 2px ring, 2px out', f.active === 'ldef' && f.outlineStyle === 'solid' && f.outlineWidth === '2px' && f.outlineOffset === '2px', JSON.stringify(f));
 
 // VisuallyHidden
 const vh = await p.evaluate(() => { const e = document.getElementById('vh'), r = e.getBoundingClientRect(), s = getComputedStyle(e); return { tag: e.tagName, cls: e.className, ref: window.vr.current === e, w: r.width, h: r.height, pos: s.position, ov: s.overflow, text: e.textContent, display: s.display, vis: s.visibility }; });

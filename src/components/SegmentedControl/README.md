@@ -2,8 +2,6 @@
 
 Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). It's a radio group drawn as segments, with the selection sliding between them.
 
-Use Tabs to switch panels of content, ButtonGroup with ToggleButton for independent on/off buttons, and RadioGroup or Select when there are more than about five options.
-
 ```tsx
 import { SegmentedControl } from "@diki/design-system";
 
@@ -19,6 +17,33 @@ import { SegmentedControl } from "@diki/design-system";
 ]} />
 ```
 
+## When to use
+
+- Switching how the same content is shown, such as List and Board.
+- One choice from 2 to about 5 short options that applies right away, such as Day, Week, Month.
+
+## When not to use
+
+- Switching panels of content: use [Tabs](../Tabs/README.md).
+- Independent on/off buttons: use [ButtonGroup](../ButtonGroup/README.md) with [ToggleButton](../ToggleButton/README.md).
+- More than about five options: use [RadioGroup](../Radio/README.md) or [Select](../Select/README.md).
+
+## Usage
+
+- Keep labels to one or two words, so the segments stay short and even.
+- Give an icon-only segment an `aria-label`, and use icons alone only when they're widely understood.
+- Use `fullWidth` in narrow spaces such as a panel or a phone layout, and match the `size` to the controls beside it.
+
+## Accessibility
+
+- `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
+- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`tools/test/segmented-control.mjs`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced-colors mode the selection uses Highlight.
+- The selection slides over 200ms, and jumps with `prefers-reduced-motion`.
+
+### Keyboard
+
+It's one Tab stop, on the selected segment. Arrow keys move and select at once, skipping disabled segments and wrapping (left and right swap in right-to-left pages). Home and End go to the first and last.
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -33,16 +58,6 @@ import { SegmentedControl } from "@diki/design-system";
 | `name` | `string` | | Sends the value with a form, in a hidden input. |
 
 Name it with `aria-label` or `aria-labelledby`. `className`, `ref` and other props go to the root `<div>`.
-
-## Keyboard
-
-It's one Tab stop, on the selected segment. Arrow keys move and select at once, skipping disabled segments and wrapping (left and right swap in right-to-left pages). Home and End go to the first and last.
-
-## Accessibility
-
-- `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
-- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`tools/test/segmented-control.mjs`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced-colors mode the selection uses Highlight.
-- The selection slides over 200ms, and jumps with `prefers-reduced-motion`.
 
 ## Component tokens
 

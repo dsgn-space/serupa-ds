@@ -10,16 +10,24 @@ import { Kbd } from "@diki/design-system";
 <Kbd keys={["shift", "enter"]} size="sm" />
 ```
 
-## Props
+## When to use
 
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `keys` | `string[]` | | A combination, one key each. Or pass a single key as children. |
-| `size` | `'sm' \| 'md'` | `'md'` | 20 or 24px keycaps. |
+- Telling people about a keyboard shortcut: in help text, a tooltip or an empty state.
+- Instructions that name a key, such as "Press Enter to send".
 
-`className`, `ref` and other props go to the outer `<kbd>`.
+## When not to use
 
-## Named keys
+- Code, or a command people type: use the native `<code>` element instead.
+- A shortcut hint at the end of a menu item: use [Menu](../Menu/README.md)'s `shortcut` prop instead.
+- A short label such as a status or a count: use [Badge](../Badge/README.md) instead.
+
+## Usage
+
+- Pass a combination as `keys`, one key each, and a single key as children.
+- Use `mod` for shortcuts that follow the platform, so Mac users see ⌘ and others see Ctrl.
+- Kbd only shows the keys: wire the shortcut yourself.
+
+### Named keys
 
 These names (in any case) show as symbols on Apple devices and as words elsewhere, and screen readers hear the key's name:
 
@@ -46,6 +54,15 @@ Use `mod` for shortcuts that follow the platform. Any other text shows as it is,
 
 - A combination is one `<kbd>` holding a `<kbd>` per key, as HTML recommends. Symbols are hidden from screen readers and replaced with the key's name; the + between keys is hidden.
 - Labels and the + keep 4.5:1 in all six themes (`tools/test/kbd.mjs`).
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `keys` | `string[]` | | A combination, one key each. Or pass a single key as children. |
+| `size` | `'sm' \| 'md'` | `'md'` | 20 or 24px keycaps. |
+
+`className`, `ref` and other props go to the outer `<kbd>`.
 
 ## Component tokens
 

@@ -2,8 +2,6 @@
 
 A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). `collapsed` narrows it to a 64px icon rail.
 
-## Usage
-
 ```jsx
 const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Diki;
 
@@ -25,7 +23,35 @@ const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Diki;
 </div>
 ```
 
+## When to use
+
+- An app with many pages, or pages in sections and groups.
+- Navigation people use all the time, which should stay in view beside the content.
+- When the screen has room for a column, or for a 64px icon rail with `collapsed`.
+
+## When not to use
+
+- A handful of top-level pages: use a [Navbar](../Navbar/README.md) instead.
+- Small screens: Sidebar doesn't hide on its own, so put the nav in a [Drawer](../Drawer/README.md) or use a [Navbar](../Navbar/README.md), whose links fold into a menu button.
+- Switching between views on one page: use [Tabs](../Tabs/README.md) instead.
+
+## Usage
+
 It takes its parent's height and scrolls its items when they don't fit, so give the parent a height (a full-height flex row, as above).
+
+- Give top-level items an `icon`, so they still show when the sidebar is collapsed, and use a string `label` so the tooltip can show it.
+- Group related items under a `SidebarSection` with a short `title`; keep nesting to one level of SidebarItems.
+- Mark the current page with `active`; a group holding it starts open.
+- Put settings and the signed-in user in `footer`, so they stay at the bottom.
+
+## Accessibility
+
+- It's a `<nav>` landmark with lists of links; section titles name their lists.
+- The current page has `aria-current="page"` and a shaded background. A group holding it is text-colored, so the trail stays visible when it's closed.
+- A group is a button with `aria-expanded` and `aria-controls`.
+- Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus. Use a string `label` so the tooltip can show it.
+- In a collapsed rail, a group's menu shows its items as plain links (`href`); a router `as` there falls back to a normal page load.
+- Items, the current page, hovered items and section titles keep 4.5:1 in all six themes (`tools/test/sidebar.mjs`).
 
 ## Props
 
@@ -61,15 +87,6 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 | `as` | a component | `'a'` | Your router's link component |
 
 `className`, `ref` and everything else go to the link (or a group's button).
-
-## Accessibility
-
-- It's a `<nav>` landmark with lists of links; section titles name their lists.
-- The current page has `aria-current="page"` and a shaded background. A group holding it is text-colored, so the trail stays visible when it's closed.
-- A group is a button with `aria-expanded` and `aria-controls`.
-- Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus. Use a string `label` so the tooltip can show it.
-- In a collapsed rail, a group's menu shows its items as plain links (`href`); a router `as` there falls back to a normal page load.
-- Items, the current page, hovered items and section titles keep 4.5:1 in all six themes (`tools/test/sidebar.mjs`).
 
 ## Component tokens
 

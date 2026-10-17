@@ -2,8 +2,6 @@
 
 A short label for status, counts and categories, optionally clickable. One size (20px tall, `text-xs`, 12px icons) in three styles (**subtle**, **solid**, **outline**), six tones built on the status colors and 17 palette tones for categories and tags. Every tone and style keeps 4.5:1 text in all six themes. Extras: a status dot, a leading icon, a count and a remove button. States: hover, focus and active on clickable badges, and loading on any badge.
 
-## Usage
-
 ```jsx
 const { Badge } = window.Diki;
 
@@ -33,29 +31,25 @@ const { Badge } = window.Diki;
 </button>
 ```
 
-## Props
+## When to use
 
-| Prop | Type | Default | What it does |
-| --- | --- | --- | --- |
-| `variant` | `'subtle'` \| `'solid'` \| `'outline'` | `'subtle'` | The style |
-| `tone` | `'neutral'` \| `'primary'` \| `'success'` \| `'warning'` \| `'danger'` \| `'info'` \| a palette family (`'red'` … `'rose'`) | `'neutral'` | The color |
-| `dot` | boolean | `false` | A 6px status dot before the label, in the text color. With no label, icon or count, a lone indicator dot (see Extras) |
-| `ping` | boolean | `false` | With `dot` (in a label or the indicator): the dot pings, growing and fading every second. For live states. Ignored without a dot |
-| `leftIcon` | icon name or element | | An icon before the label (Material Symbols or custom icon name); replaces the dot |
-| `count` | number | | Makes it a count badge: a round pill with the number. 0 renders nothing |
-| `max` | number | `99` | Past this, the count shows `99+` |
-| `showZero` | boolean | `false` | Show a count of 0 |
-| `onRemove` | function | | Adds a × button at the end that calls it |
-| `removeLabel` | string | `'Remove'` | The × button's accessible name, before the label: "Remove Design" |
-| `onClick` | function | | Renders a `<button type="button">` with hover, focus and active states. `onRemove` is ignored then (a button can't hold another button) |
-| `href` | string | | Renders a link (the component set with `Diki.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
-| `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
-| `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile |
-| `loadingText` | string | `'Loading'` | Announced to screen readers when loading starts ("" announces nothing) |
+- The status of an item in a table, a list or a card: "Draft", "Paid", "Failed".
+- Tags and categories on an item, including filter chips people can remove.
+- A count or a "something new" dot on an icon or a nav item, such as unread messages.
 
-Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `data-*`, `ref`) goes to the outer element: a `<span>`, or the `<button>` or link when clickable. Every badge has `data-component="badge"`, `data-variant`, `data-tone` and `data-size` for tests, plus `data-interactive` when clickable and `data-loading` while loading.
+## When not to use
 
-## Styles
+- An action: use [Button](../Button/README.md) instead. A badge is a label first. Make it clickable when the badge itself is the natural target (a status that opens its filter, a tag that links to its page).
+- A message that needs a sentence, or that people must act on: use [Alert](../Alert/README.md) instead.
+- Picking one option from a few: use [SegmentedControl](../SegmentedControl/README.md) instead.
+
+## Usage
+
+- Keep labels to one or two words; a badge is not a sentence.
+- Use status tones for status and palette tones for categories. Don't make a category red or green: it reads as a status.
+- Use `subtle` by default and `solid` sparingly: one strong badge per row or card.
+
+### Styles
 
 | Style | Light themes | Dark themes | Use for |
 | --- | --- | --- | --- |
@@ -63,7 +57,7 @@ Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `dat
 | `solid` | 600 or 700 fill, white text | 400 fill, 950 text | Strong emphasis: "New", counts, one urgent status |
 | `outline` | 700 text and 1px border | 300 text, 400 border | Quiet labels on busy or tinted surfaces (transparent fill) |
 
-## Tones
+### Tones
 
 - **`neutral`** (default): `secondary` fill and `text` (subtle, outlined in the text color at 20% like every subtle badge), `surface-inverse` and `text-inverse` (solid), `border-strong` and `text` (outline).
 - **`primary`**: the theme's brand color, through the alias colors (`primary-subtle`, `primary`, `on-primary`), so it follows Blue, Violet and Emerald.
@@ -72,7 +66,7 @@ Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `dat
 
 Status and palette tones use the fixed palette steps in the Styles table. Solid uses 600 where white text keeps 4.5:1 on it (red, blue, indigo, violet, purple, fuchsia, pink, rose) and 700 for the lighter families. The steps follow the nearest theme: a badge in a dark area nested in a light page takes the dark steps.
 
-## Extras
+### Extras
 
 - **Dot**: `dot` adds a 6px dot before the label, centered in a box as tall as an icon and 2px narrower (10×12px), so a dot badge spaces like an icon badge with a little less room for the lighter dot. Use it for live states ("Online", "Away").
 - **Indicator**: `dot` with no label, icon or count renders a lone dot that says "something new" without a number, for the corner of an icon or avatar. It's a solid circle in the tone's fill (any `variant` is ignored), 8px, with a 2px ring in the surface color so it stays apart from what it overlaps. You place it (for example `className="absolute top-0 right-0"` inside a `relative` parent). It can't be clicked or removed (too small to target): `onClick`, `href` and `onRemove` are dropped with a warning. Switch to `count` once you know how many.
@@ -94,7 +88,9 @@ Only a clickable badge (`onClick` or `href`) has hover, focus and active states,
 | Loading | Any badge: a 12px ring in the text color, centered over the hidden content; the badge keeps its width and colors |
 | Disabled | A disabled clickable badge: 50% opacity, `not-allowed` cursor, no layer |
 
-## Micro-interactions
+## Behavior
+
+### Micro-interactions
 
 The same as Button's, each with a component token to tune it or turn it off. Only scale and opacity move, so nothing around the badge reflows.
 
@@ -113,6 +109,28 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 - While loading, the label stays in the accessibility tree (the badge keeps its name), `aria-busy` is set and `loadingText` is announced once.
 - The remove button is reachable with Tab and pressed with Enter or Space. After a badge is removed, move focus somewhere sensible, such as the next tag or the input that adds tags.
 - In forced-colors (high-contrast) mode every badge gets a visible border.
+
+## Props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `variant` | `'subtle'` \| `'solid'` \| `'outline'` | `'subtle'` | The style |
+| `tone` | `'neutral'` \| `'primary'` \| `'success'` \| `'warning'` \| `'danger'` \| `'info'` \| a palette family (`'red'` … `'rose'`) | `'neutral'` | The color |
+| `dot` | boolean | `false` | A 6px status dot before the label, in the text color. With no label, icon or count, a lone indicator dot (see Extras) |
+| `ping` | boolean | `false` | With `dot` (in a label or the indicator): the dot pings, growing and fading every second. For live states. Ignored without a dot |
+| `leftIcon` | icon name or element | | An icon before the label (Material Symbols or custom icon name); replaces the dot |
+| `count` | number | | Makes it a count badge: a round pill with the number. 0 renders nothing |
+| `max` | number | `99` | Past this, the count shows `99+` |
+| `showZero` | boolean | `false` | Show a count of 0 |
+| `onRemove` | function | | Adds a × button at the end that calls it |
+| `removeLabel` | string | `'Remove'` | The × button's accessible name, before the label: "Remove Design" |
+| `onClick` | function | | Renders a `<button type="button">` with hover, focus and active states. `onRemove` is ignored then (a button can't hold another button) |
+| `href` | string | | Renders a link (the component set with `Diki.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
+| `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
+| `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile |
+| `loadingText` | string | `'Loading'` | Announced to screen readers when loading starts ("" announces nothing) |
+
+Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `data-*`, `ref`) goes to the outer element: a `<span>`, or the `<button>` or link when clickable. Every badge has `data-component="badge"`, `data-variant`, `data-tone` and `data-size` for tests, plus `data-interactive` when clickable and `data-loading` while loading.
 
 ## Component tokens
 
@@ -141,10 +159,3 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | `--badge-ripple-duration` | `duration-500` | How long the ripple takes to spread (500ms) |
 | `--badge-ripple-fade-duration` | `duration-300` | How long the ripple takes to fade after release (300ms) |
 | `--badge-loading-duration` | `duration-150` | Cross-fade between the content and the loading ring (150ms) |
-
-## Guidelines
-
-- Keep labels to one or two words; a badge is not a sentence.
-- Use status tones for status and palette tones for categories. Don't make a category red or green: it reads as a status.
-- Use `subtle` by default and `solid` sparingly: one strong badge per row or card.
-- A badge is a label first. Make it clickable when the badge itself is the natural target (a status that opens its filter, a tag that links to its page); for actions, use a Button.

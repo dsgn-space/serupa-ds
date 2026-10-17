@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Navbar, NavbarLink } from './Navbar';
 import { Button } from '../Button/Button';
 import { Avatar } from '../Avatar/Avatar';
