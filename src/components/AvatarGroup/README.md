@@ -34,7 +34,7 @@ import { Avatar, AvatarGroup } from "@diki/design-system";
 
 - Each avatar overlaps the one before by 8px (xs, sm), 12px (md, lg) or 16px (xl); earlier ones sit on top, so every status dot shows. The overlap uses logical margins, so the row runs right to left in RTL.
 - Each avatar has a 2px ring in `surface`. On another background, set `--avatar-group-ring` to that color.
-- Past 99, "+N" reads "99+" so it fits at every size; its name keeps the exact count ("116 more").
+- Past 99, "+N" reads "99+" (past 9 at `xs`, "9+") so it fits; its name keeps the exact count ("116 more").
 - Wrap an avatar in a Tooltip to show the name on hover; it still lines up with the others.
 - To show who's in "+N", wrap the group in a Tooltip or Popover with the full list.
 

@@ -64,7 +64,7 @@ t('the Tooltip still opens on hover', await p.evaluate(() => !document.querySele
 const fr = await p.evaluate(() => { const g = document.getElementById('frag'); return [g.querySelectorAll('.dk-avatar:not(.dk-avatar-group__more)').length, g.querySelector('.dk-avatar-group__more').textContent].join(); });
 t('avatars in a fragment count one by one for max and "+N"', fr === '2,+2', fr);
 const big = await p.evaluate(() => { const m = document.querySelector('#big .dk-avatar-group__more'), s = m.querySelector('.dk-avatar__initials'); return [s.textContent, m.getAttribute('aria-label'), s.getBoundingClientRect().width <= m.getBoundingClientRect().width].join(); });
-t('past 99, "+N" reads "99+" so it fits even at xs, and its name keeps the exact count', big === '99+,116 more,true', big);
+t('at xs, past 9, "+N" reads "9+" so it fits, and its name keeps the exact count', big === '9+,116 more,true', big);
 const rtl = await p.evaluate(() => { const a = [...document.getElementById('rtl').children].map((e) => e.getBoundingClientRect()); return [Math.round(a[1].right - a[0].left), a[1].left < a[0].left].join(); });
 t('RTL: the row runs right to left with the same overlap', rtl === '12,true', rtl);
 const tok = await p.evaluate(() => { const a = [...document.getElementById('tok').children]; return [Math.round(a[0].getBoundingClientRect().right - a[1].getBoundingClientRect().left), getComputedStyle(a[0].querySelector('.dk-avatar__frame')).boxShadow.includes('rgb(1, 2, 3)')].join(); });

@@ -45,6 +45,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(fu
   const shown = all.slice(0, max);
   const more = total - shown.length;
   const count = shown.length + (more > 0 ? 1 : 0);
+  const cap = size === "xs" ? 9 : 99;   // the most "+N" writes out: three characters don't fit in 24px
   if (props.label) rest["aria-label"] = props.label;
   return (
     <div {...rest} ref={ref} role="group" className={cn("dk-avatar-group", "dk-avatar-group--" + size, props.className)}
@@ -56,7 +57,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(fu
         <span className="dk-avatar-group__item" style={{ zIndex: 1 }}>
           <span className={"dk-avatar dk-avatar--" + size + " dk-avatar-group__more"} role="img"
             aria-label={props.moreLabel ? props.moreLabel(more) : more + " more"} data-component="avatar" data-size={size}>
-            <span className="dk-avatar__frame"><span className="dk-avatar__initials" aria-hidden="true">{more > 99 ? "99+" : "+" + more}</span></span>
+            <span className="dk-avatar__frame"><span className="dk-avatar__initials" aria-hidden="true">{more > cap ? cap + "+" : "+" + more}</span></span>
           </span>
         </span>
       ) : null}

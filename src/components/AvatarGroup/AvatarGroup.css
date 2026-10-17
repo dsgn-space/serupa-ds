@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    AvatarGroup: avatars in a row, each overlapping the one before by 8px (xs, sm), 12px (md, lg) or 16px (xl)
    and set in a 2px surface ring so the edges stay clear. The "+N" avatar at the end is secondary with text,
-   like initials ("99+" past 99). Earlier avatars sit on top, so each status dot shows. Every value goes through --avatar-group-* tokens.
+   like initials ("99+" past 99, "9+" at xs). Earlier avatars sit on top, so each status dot shows. Every value goes through --avatar-group-* tokens.
    --------------------------------------------------------------- */
 .dk-avatar-group {
   --dk-avatar-group-overlap: var(--avatar-group-overlap-md, var(--spacing-3, 0.75rem));
