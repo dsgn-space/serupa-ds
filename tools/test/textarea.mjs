@@ -35,6 +35,8 @@ const errors = [];
 const p = await (await b.newContext()).newPage();
 p.on('pageerror', (e) => errors.push(e.message));
 p.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+// Chromium doesn't report window error events such as "ResizeObserver loop completed" as page errors; collect them here.
+await p.addInitScript(() => { window.winErrors = []; addEventListener('error', (e) => window.winErrors.push(e.message)); });
 await p.goto(writePage('textarea.html', APP, { react: true }));
 await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
 const box = (id) => p.evaluate((id) => { const i = document.getElementById(id), w = i.parentElement, c = getComputedStyle(w), f = getComputedStyle(i); return { tag: i.tagName, rows: i.rows, wrap: w.className, h: w.getBoundingClientRect().height, fh: i.getBoundingClientRect().height, fs: f.fontSize, lh: f.lineHeight, pl: f.paddingLeft, pt: f.paddingTop, bc: c.borderTopColor, bw: c.borderTopWidth, r: c.borderRadius, bs: c.boxShadow, bg: c.backgroundColor, op: c.opacity, size: w.dataset.size, comp: w.dataset.component, resize: f.resize, oy: f.overflowY }; }, id);
@@ -100,6 +102,7 @@ const con = await p.evaluate(() => {
   return low;
 });
 t('contrast in all six themes: text, placeholder and count 4.5:1 on the field; border, focus ring and invalid border 3:1', con.length === 0, con.join('; '));
+errors.push(...(await p.evaluate(() => window.winErrors)));
 t('no page errors', errors.length === 0, errors.join(' | '));
 await b.close();
 cleanup();
