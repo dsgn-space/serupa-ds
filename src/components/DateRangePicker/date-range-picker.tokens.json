@@ -1,0 +1,49 @@
+{
+  "date-range-picker": {
+    "$description": "DateRangePicker's component tokens. Each one is an optional override: set the CSS variable (--date-range-picker-<name>) on the page, a container or one picker. Its calendar button and popup use the --date-picker-* tokens and its days the --calendar-* tokens. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "dash": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The dash between the two fields.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-range-picker-dash"
+          }
+        }
+      },
+      "status-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "\"Choose the start date\" under the months (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-range-picker-status-color"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "months-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space between the two months (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-range-picker-months-gap"
+          }
+        }
+      },
+      "field-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "Each field's width (96px), enough for a full date.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-range-picker-field-width"
+          }
+        }
+      }
+    }
+  }
+}

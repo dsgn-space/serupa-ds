@@ -1,0 +1,21 @@
+<!-- @dsCard group="Forms" height=180 subtitle="hidden or shown; sizes; invalid" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>PasswordInput — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; flex-direction: column; gap: 12px; max-width: 320px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Diki, h = React.createElement, P = D.PasswordInput;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(P, { 'aria-label': 'Hidden', defaultValue: 'hunter2' }),
+    h(P, { 'aria-label': 'Shown', defaultValue: 'correct horse battery staple', defaultVisible: true }),
+    h(P, { 'aria-label': 'Invalid', defaultValue: 'abc', invalid: true, size: 'sm' })
+  ));
+</script>
+</body>
+</html>

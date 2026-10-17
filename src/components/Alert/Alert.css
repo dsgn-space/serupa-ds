@@ -1,0 +1,38 @@
+/* ---------------------------------------------------------------
+   Alert: a message about the page or a task. A tinted box (each tone's -subtle color) with a border in the tone's
+   color at 30%, an icon in the tone's color (3:1 on the tint), and the title and message in text (4.5:1).
+   Tones info (default), success, warning, danger and neutral. Structure: .dk-alert > .dk-alert__icon,
+   .dk-alert__content (.dk-alert__title, .dk-alert__message, .dk-alert__actions), .dk-alert__dismiss (a ghost
+   Button). Every value goes through --alert-* tokens.
+   --------------------------------------------------------------- */
+.dk-alert {
+  --dk-alert-bg: var(--alert-bg-info, var(--info-subtle));
+  --dk-alert-icon: var(--alert-icon-info, var(--info));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--alert-gap, var(--spacing-3, 0.75rem));
+  min-width: var(--spacing-0, 0px);
+  padding: var(--alert-padding-y, var(--spacing-3, 0.75rem)) var(--alert-padding-x, var(--spacing-4, 1rem));
+  background: var(--dk-alert-bg);
+  border: var(--alert-border-width, var(--border-width-1, 1px)) solid color-mix(in srgb, var(--dk-alert-icon) var(--alert-border-strength, var(--opacity-30, 30%)), transparent);
+  border-radius: var(--alert-radius, var(--rounded-lg, 0.5rem));
+  color: var(--alert-text-color, var(--text));
+  font-family: var(--font-sans);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--text-sm--line-height, 1.25rem);
+  text-align: start;
+}
+.dk-alert--success { --dk-alert-bg: var(--alert-bg-success, var(--success-subtle)); --dk-alert-icon: var(--alert-icon-success, var(--success)); }
+.dk-alert--warning { --dk-alert-bg: var(--alert-bg-warning, var(--warning-subtle)); --dk-alert-icon: var(--alert-icon-warning, var(--warning)); }
+.dk-alert--danger { --dk-alert-bg: var(--alert-bg-danger, var(--danger-subtle)); --dk-alert-icon: var(--alert-icon-danger, var(--danger)); }
+.dk-alert--neutral { --dk-alert-bg: var(--alert-bg-neutral, var(--surface-muted)); --dk-alert-icon: var(--alert-icon-neutral, var(--text-muted)); }
+
+.dk-alert__icon { display: flex; flex-shrink: 0; color: var(--dk-alert-icon); }
+.dk-alert__icon .dk-icon { font-size: var(--spacing-5, 1.25rem); }
+.dk-alert__content { display: flex; flex-direction: column; gap: var(--alert-content-gap, var(--spacing-1, 0.25rem)); flex: auto; min-width: var(--spacing-0, 0px); }
+.dk-alert__title { margin: var(--spacing-0, 0px); color: var(--alert-title-color, var(--text)); font-weight: var(--alert-title-weight, var(--font-semibold, 600)); }
+.dk-alert__message > :first-child { margin-top: var(--spacing-0, 0px); }
+.dk-alert__message > :last-child { margin-bottom: var(--spacing-0, 0px); }
+.dk-alert__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2, 0.5rem); margin-top: var(--spacing-2, 0.5rem); }
+.dk-alert__dismiss { flex-shrink: 0; color: var(--alert-text-color, var(--text)); }
+@media (forced-colors: active) { .dk-alert { border-color: CanvasText; } .dk-alert__icon { color: CanvasText; } }

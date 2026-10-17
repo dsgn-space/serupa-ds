@@ -1,0 +1,52 @@
+/* ---------------------------------------------------------------
+   Toast: short messages in a corner (or the middle of an edge) of the screen, from toast(). The Toaster is a
+   fixed list 16px from the edges; each toast is 384px (at most the screen less 32px): surface, a border,
+   8px corners, shadow-lg, a tone icon (3:1 on surface), a semibold title and a muted description, an action
+   and a close button. They slide in from their edge; with reduced motion they appear at once.
+   --------------------------------------------------------------- */
+.dk-toaster {
+  --dk-toast-offset: var(--toast-offset, var(--spacing-4, 1rem));
+  position: fixed;
+  z-index: var(--toast-z-index, var(--z-50, 50));
+  width: var(--toast-width, var(--container-sm, 24rem));
+  max-width: calc(var(--sizing-full, 100%) - var(--dk-toast-offset) - var(--dk-toast-offset));
+  pointer-events: none;
+}
+.dk-toaster--top-start, .dk-toaster--top-center, .dk-toaster--top-end { inset-block-start: var(--dk-toast-offset); }
+.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end { inset-block-end: var(--dk-toast-offset); }
+.dk-toaster--top-start, .dk-toaster--bottom-start { inset-inline-start: var(--dk-toast-offset); }
+.dk-toaster--top-end, .dk-toaster--bottom-end { inset-inline-end: var(--dk-toast-offset); }
+.dk-toaster--top-center, .dk-toaster--bottom-center { left: var(--spacing-0, 0px); right: var(--spacing-0, 0px); margin-inline: auto; }
+.dk-toaster__list { display: flex; flex-direction: column; gap: var(--toast-stack-gap, var(--spacing-2, 0.5rem)); margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
+.dk-toast {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--toast-gap, var(--spacing-3, 0.75rem));
+  padding: var(--toast-padding, var(--spacing-4, 1rem));
+  border: var(--toast-border-width, var(--border-width-1, 1px)) solid var(--toast-border-color, var(--border));
+  border-radius: var(--toast-radius, var(--rounded-lg, 0.5rem));
+  background: var(--toast-bg, var(--surface));
+  color: var(--toast-title-color, var(--text));
+  box-shadow: var(--toast-shadow, var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)));
+  font-family: var(--font-sans);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: var(--text-sm--line-height, 1.25rem);
+  pointer-events: auto;
+  animation: dk-toast-up var(--duration-200, 200ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.dk-toaster--top-start .dk-toast, .dk-toaster--top-center .dk-toast, .dk-toaster--top-end .dk-toast { animation-name: dk-toast-down; }
+@keyframes dk-toast-up { from { opacity: var(--opacity-0, 0%); translate: var(--spacing-0, 0px) var(--spacing-2, 0.5rem); } }
+@keyframes dk-toast-down { from { opacity: var(--opacity-0, 0%); translate: var(--spacing-0, 0px) calc(var(--spacing-0, 0px) - var(--spacing-2, 0.5rem)); } }
+.dk-toast__icon { display: flex; flex-shrink: 0; }
+.dk-toast__icon .dk-icon { font-size: var(--spacing-5, 1.25rem); }
+.dk-toast--info .dk-toast__icon { color: var(--toast-icon-info, var(--info)); }
+.dk-toast--success .dk-toast__icon { color: var(--toast-icon-success, var(--success)); }
+.dk-toast--warning .dk-toast__icon { color: var(--toast-icon-warning, var(--warning)); }
+.dk-toast--danger .dk-toast__icon { color: var(--toast-icon-danger, var(--danger)); }
+.dk-toast__content { display: flex; flex-direction: column; gap: var(--spacing-0\.5, 0.125rem); flex: auto; min-width: var(--spacing-0, 0px); }
+.dk-toast__title { margin: var(--spacing-0, 0px); font-weight: var(--toast-title-weight, var(--font-semibold, 600)); }
+.dk-toast__description { margin: var(--spacing-0, 0px); color: var(--toast-description-color, var(--text-muted)); }
+.dk-toast__action, .dk-toast__close { flex-shrink: 0; }
+@media (prefers-reduced-motion: reduce) { .dk-toast { animation: none; } }
+@media (forced-colors: active) { .dk-toast { border-color: CanvasText; } }

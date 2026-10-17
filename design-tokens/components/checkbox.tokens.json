@@ -1,0 +1,213 @@
+{
+  "checkbox": {
+    "$description": "Checkbox's component tokens. Each one is an optional override: set the CSS variable (--checkbox-<name>) on the page, a container or one checkbox, and every Checkbox inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "The box's background while unchecked.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-bg"
+          }
+        }
+      },
+      "bg-disabled": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The box's background when disabled and unchecked.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-bg-disabled"
+          }
+        }
+      },
+      "bg-checked": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Fill and border when checked or indeterminate (3:1 on the page in every theme).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-bg-checked"
+          }
+        }
+      },
+      "bg-checked-hover": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "Fill and border when checked, on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-bg-checked-hover"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The box's border while unchecked (3:1 on the field and the page).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-border"
+          }
+        }
+      },
+      "border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "The border on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-border-hover"
+          }
+        }
+      },
+      "icon-color": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "The check and the dash.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-icon-color"
+          }
+        }
+      },
+      "label-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-label-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description (4.5:1 on the page).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-description-color"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-focus-ring"
+          }
+        }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "Border and focus ring when invalid.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-invalid"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3_5}",
+        "$description": "Box size, sm (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-size-sm"
+          }
+        }
+      },
+      "size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Box size, md (16px, default).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-size-md"
+          }
+        }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Box size, lg (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-size-lg"
+          }
+        }
+      },
+      "icon-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Check size, sm (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-icon-size-sm"
+          }
+        }
+      },
+      "icon-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3_5}",
+        "$description": "Check size, md (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-icon-size-md"
+          }
+        }
+      },
+      "icon-size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Check size, lg (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-icon-size-lg"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Gap between the box and the label (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-gap"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The box's border width (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-border-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "The box's corner radius (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--checkbox-radius"
+          }
+        }
+      }
+    }
+  }
+}

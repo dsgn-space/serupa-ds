@@ -1,0 +1,133 @@
+{
+  "slider": {
+    "$description": "Slider's component tokens. Each one is an optional override: set the CSS variable (--slider-<name>) on the page, a container or one slider, and every Slider inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "track": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The track (3:1 on the surface, so the control can be seen).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-track"
+          }
+        }
+      },
+      "fill": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The selected part of the track.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-fill"
+          }
+        }
+      },
+      "thumb-bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "The thumb's inside.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-thumb-bg"
+          }
+        }
+      },
+      "thumb-border": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The thumb's ring (3:1 on the surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-thumb-border"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The thumb's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-focus-ring"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "track-height-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The track's thickness, size=\"sm\" (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-track-height-sm"
+          }
+        }
+      },
+      "track-height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "The track's thickness, size=\"md\", the default (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-track-height-md"
+          }
+        }
+      },
+      "thumb-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The thumb, size=\"sm\" (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-thumb-size-sm"
+          }
+        }
+      },
+      "thumb-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "The thumb, size=\"md\" (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-thumb-size-md"
+          }
+        }
+      }
+    },
+    "borders": {
+      "thumb-border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The thumb's ring (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-thumb-border-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "The track's ends and the thumb.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-radius"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "thumb-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-sm}",
+        "$description": "The thumb's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--slider-thumb-shadow"
+          }
+        }
+      }
+    }
+  }
+}

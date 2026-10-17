@@ -1,0 +1,103 @@
+{
+  "kbd": {
+    "$description": "Kbd's component tokens. Each one is an optional override: set the CSS variable (--kbd-<name>) on the page, a container or one key, and every Kbd inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A key's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "A key's outline, thicker at the bottom like a keycap.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-border"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The key's label (4.5:1 on bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-text"
+          }
+        }
+      },
+      "separator": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The + between keys in a combination.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-separator"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "A key's corners (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "size=\"sm\" (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "size=\"md\", the default (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-height-md"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space on each side of a key's label (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-padding-x"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between keys and the + in a combination (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--kbd-gap"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "progress": {
+    "$description": "Progress's component tokens. Each one is an optional override: set the CSS variable (--progress-<name>) on the page, a container or one progress indicator, and every Progress inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "track": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The empty part of the bar or ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-track"
+          }
+        }
+      },
+      "fill": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The done part, tone=\"primary\" (the default; 3:1 on the track and the surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-fill"
+          }
+        }
+      },
+      "fill-success": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The done part, tone=\"success\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-fill-success"
+          }
+        }
+      },
+      "fill-warning": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The done part, tone=\"warning\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-fill-warning"
+          }
+        }
+      },
+      "fill-danger": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The done part, tone=\"danger\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-fill-danger"
+          }
+        }
+      },
+      "label-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The label above the bar.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-label-color"
+          }
+        }
+      },
+      "value-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The value (45%) next to the label or inside the ring (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-value-color"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The bar's thickness, size=\"sm\" (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The bar's thickness, size=\"md\", the default (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "The bar's thickness, size=\"lg\" (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-height-lg"
+          }
+        }
+      },
+      "circle-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The ring, size=\"sm\" (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-circle-sm"
+          }
+        }
+      },
+      "circle-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "The ring, size=\"md\" (40px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-circle-md"
+          }
+        }
+      },
+      "circle-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "The ring, size=\"lg\" (64px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-circle-lg"
+          }
+        }
+      }
+    },
+    "borders": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "The bar's ends.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-radius"
+          }
+        }
+      },
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{borders.stroke-width-3}",
+        "$description": "The ring's thickness, in 24ths of its size (3: 3px at 24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-stroke-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space between the label row and the bar (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "label-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The label's weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-label-weight"
+          }
+        }
+      }
+    },
+    "transitions": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-300}",
+        "$description": "How long the fill takes to move to a new value.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--progress-duration"
+          }
+        }
+      }
+    }
+  }
+}

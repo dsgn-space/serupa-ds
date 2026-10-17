@@ -1,0 +1,91 @@
+{
+  "heading": {
+    "$description": "Heading's component tokens. Each one is an optional override: set the CSS variable (--heading-<name>) on the page, a container or one element, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The heading's color.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-color"
+          }
+        }
+      }
+    },
+    "typography": {
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The weight of every level (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-weight"
+          }
+        }
+      }
+    },
+    "fontSize": {
+      "size-1": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-3xl}",
+        "$description": "The size of a level 1 heading (text-3xl).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-size-1"
+          }
+        }
+      },
+      "size-2": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-2xl}",
+        "$description": "The size of a level 2 heading (text-2xl).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-size-2"
+          }
+        }
+      },
+      "size-3": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-xl}",
+        "$description": "The size of a level 3 heading (text-xl).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-size-3"
+          }
+        }
+      },
+      "size-4": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-lg}",
+        "$description": "The size of a level 4 heading (text-lg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-size-4"
+          }
+        }
+      },
+      "size-5": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-base}",
+        "$description": "The size of a level 5 heading (text-base).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-size-5"
+          }
+        }
+      },
+      "size-6": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The size of a level 6 heading (text-sm).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--heading-size-6"
+          }
+        }
+      }
+    }
+  }
+}

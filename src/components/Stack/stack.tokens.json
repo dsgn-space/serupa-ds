@@ -1,0 +1,17 @@
+{
+  "stack": {
+    "$description": "Stack's component tokens. Each one is an optional override: set the CSS variable (--stack-<name>) on the page or a container, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The space between items when gap isn't given (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stack-gap"
+          }
+        }
+      }
+    }
+  }
+}

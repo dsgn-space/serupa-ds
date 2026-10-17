@@ -1,0 +1,221 @@
+{
+  "switch": {
+    "$description": "Switch's component tokens. Each one is an optional override: set the CSS variable (--switch-<name>) on the page, a container or one switch, and every Switch inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "track": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The track while off (3:1 on the page in every theme).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-track"
+          }
+        }
+      },
+      "track-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "The track while off, on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-track-hover"
+          }
+        }
+      },
+      "track-checked": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The track while on.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-track-checked"
+          }
+        }
+      },
+      "track-checked-hover": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "The track while on, on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-track-checked-hover"
+          }
+        }
+      },
+      "thumb": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "The thumb while off (3:1 on the track).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-thumb"
+          }
+        }
+      },
+      "thumb-checked": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "The thumb while on.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-thumb-checked"
+          }
+        }
+      },
+      "label-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-label-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description (4.5:1 on the page).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-description-color"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-focus-ring"
+          }
+        }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The track while off and the focus ring when invalid.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-invalid"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-7}",
+        "$description": "Track width, sm (28px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-width-sm"
+          }
+        }
+      },
+      "width-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-9}",
+        "$description": "Track width, md (36px, default).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-width-md"
+          }
+        }
+      },
+      "width-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-11}",
+        "$description": "Track width, lg (44px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-width-lg"
+          }
+        }
+      },
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Track height, sm (16px, the text-xs line).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Track height, md (20px, the text-sm line).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Track height, lg (24px, the text-base line).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-height-lg"
+          }
+        }
+      },
+      "thumb-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Thumb size, sm (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-thumb-size-sm"
+          }
+        }
+      },
+      "thumb-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Thumb size, md (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-thumb-size-md"
+          }
+        }
+      },
+      "thumb-size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "Thumb size, lg (20px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-thumb-size-lg"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Space between the thumb and the track's ends (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Gap between the track and the label (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--switch-gap"
+          }
+        }
+      }
+    }
+  }
+}

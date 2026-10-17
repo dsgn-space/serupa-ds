@@ -1,0 +1,22 @@
+/* ---------------------------------------------------------------
+   Fab: a floating action button. A primary Button made round (--fab-radius) and raised (--fab-shadow, deeper on
+   hover), 56px square (--fab-size) or 40px (--fab-size-sm), with a 24px icon; extended adds the label and side
+   padding. Fixed to a corner of the screen, --fab-offset (24px) from it, at --fab-z-index; static leaves it in
+   the flow.
+   --------------------------------------------------------------- */
+.dk-btn.dk-fab {
+  --dk-btn-shadow: var(--fab-shadow, var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)));
+  height: var(--fab-size, var(--spacing-14, 3.5rem));
+  width: var(--fab-size, var(--spacing-14, 3.5rem));
+  border-radius: var(--fab-radius, var(--rounded-full, 9999px));
+}
+.dk-btn.dk-fab .dk-icon { font-size: var(--fab-icon-size, var(--spacing-6, 1.5rem)); }
+.dk-btn.dk-fab svg { width: var(--fab-icon-size, var(--spacing-6, 1.5rem)); height: var(--fab-icon-size, var(--spacing-6, 1.5rem)); }
+.dk-btn.dk-fab--sm { height: var(--fab-size-sm, var(--spacing-10, 2.5rem)); width: var(--fab-size-sm, var(--spacing-10, 2.5rem)); }
+.dk-btn.dk-fab--extended { width: auto; padding: var(--spacing-0, 0px) var(--fab-padding-x, var(--spacing-5, 1.25rem)); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem); }
+@media (hover: hover) { .dk-btn.dk-fab:hover:not(:disabled):not([aria-disabled="true"]) { --dk-btn-shadow: var(--fab-shadow-hover, var(--shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1))); } }
+.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start { position: fixed; z-index: var(--fab-z-index, var(--z-30, 30)); }
+.dk-fab--bottom-end { inset-block-end: var(--fab-offset, var(--spacing-6, 1.5rem)); inset-inline-end: var(--fab-offset, var(--spacing-6, 1.5rem)); }
+.dk-fab--bottom-start { inset-block-end: var(--fab-offset, var(--spacing-6, 1.5rem)); inset-inline-start: var(--fab-offset, var(--spacing-6, 1.5rem)); }
+.dk-fab--top-end { inset-block-start: var(--fab-offset, var(--spacing-6, 1.5rem)); inset-inline-end: var(--fab-offset, var(--spacing-6, 1.5rem)); }
+.dk-fab--top-start { inset-block-start: var(--fab-offset, var(--spacing-6, 1.5rem)); inset-inline-start: var(--fab-offset, var(--spacing-6, 1.5rem)); }

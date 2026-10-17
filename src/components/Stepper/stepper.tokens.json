@@ -1,0 +1,205 @@
+{
+  "stepper": {
+    "$description": "Stepper's component tokens. Each one is an optional override: set the CSS variable (--stepper-<name>) on the page, a container or one stepper, and every Stepper inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "indicator-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "An upcoming step's circle.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-indicator-bg"
+          }
+        }
+      },
+      "indicator-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "An upcoming step's ring (3:1 on the surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-indicator-border"
+          }
+        }
+      },
+      "indicator-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An upcoming step's number.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-indicator-text"
+          }
+        }
+      },
+      "active-bg": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The current and completed steps' circle.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-active-bg"
+          }
+        }
+      },
+      "active-text": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "The number or check on them.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-active-text"
+          }
+        }
+      },
+      "error-bg": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "A step with an error.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-error-bg"
+          }
+        }
+      },
+      "error-text": {
+        "$type": "color",
+        "$value": "{color.on-danger}",
+        "$description": "The mark on it.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-error-text"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Step titles.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-title-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The line under a title, and \"Optional\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-description-color"
+          }
+        }
+      },
+      "connector": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The line to an upcoming step.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-connector"
+          }
+        }
+      },
+      "connector-complete": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The line after a completed step.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-connector-complete"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "A clickable step's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-focus-ring"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "indicator-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The circle, size=\"sm\" (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-indicator-size-sm"
+          }
+        }
+      },
+      "indicator-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "The circle, size=\"md\", the default (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-indicator-size-md"
+          }
+        }
+      }
+    },
+    "borders": {
+      "connector-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The line's thickness (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-connector-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "The circle.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between a circle and its text (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-gap"
+          }
+        }
+      },
+      "connector-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space around a line (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-connector-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "Step titles (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--stepper-title-weight"
+          }
+        }
+      }
+    }
+  }
+}

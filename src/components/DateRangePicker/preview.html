@@ -1,0 +1,18 @@
+<!-- @dsCard group="Forms" height=420 subtitle="a start and end with the two-month popup open" -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DateRangePicker — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Diki, h = React.createElement;
+  var a = new Date(), b = new Date(); b.setDate(b.getDate() + 4);
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Field, { label: 'Stay', hint: 'mm/dd/yyyy' }, h(T.DateRangePicker, { defaultValue: { start: a, end: b }, locale: 'en-US' })));
+  setTimeout(function () { var x = document.querySelector('.dk-date-range-picker button'); if (x) x.click(); }, 50);
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{
+  "search-input": {
+    "$description": "SearchInput's component tokens. Each one is an optional override: set the CSS variable (--search-input-<name>) on the page, a container or one field, and every SearchInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The box itself uses Input's tokens.",
+    "color": {
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The search icon (3:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-icon"
+          }
+        }
+      },
+      "clear": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The clear button's icon.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-clear"
+          }
+        }
+      },
+      "clear-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The clear button's icon on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-clear-hover"
+          }
+        }
+      },
+      "clear-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The clear button's background on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-clear-bg-hover"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The clear button's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "clear-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "The clear button's corners (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-clear-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "clear-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space around the clear button's icon (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--search-input-clear-padding"
+          }
+        }
+      }
+    }
+  }
+}

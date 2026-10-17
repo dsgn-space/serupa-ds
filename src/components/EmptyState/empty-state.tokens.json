@@ -1,0 +1,187 @@
+{
+  "empty-state": {
+    "$description": "EmptyState's component tokens. Each one is an optional override: set the CSS variable (--empty-state-<name>) on the page, a container or one empty state, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The icon (3:1 on icon-bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-icon"
+          }
+        }
+      },
+      "icon-bg": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The circle behind the icon.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-icon-bg"
+          }
+        }
+      },
+      "title": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-title"
+          }
+        }
+      },
+      "description": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-description"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The dashed frame of variant=\"dashed\".",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-border"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-base}",
+        "$description": "The title (16px; sm: 14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-title-size"
+          }
+        }
+      },
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-title-weight"
+          }
+        }
+      },
+      "description-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The description (14px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-description-size"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The icon (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-icon-size"
+          }
+        }
+      },
+      "icon-box": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "The circle behind it (48px; sm: 40px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-icon-box"
+          }
+        }
+      },
+      "icon-box-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "The circle at size sm (40px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-icon-box-sm"
+          }
+        }
+      },
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-sm}",
+        "$description": "The widest the text gets (384px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-max-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "Space around the content (48px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-padding"
+          }
+        }
+      },
+      "padding-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "At size sm (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-padding-sm"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space between the icon, the text and the actions (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-gap"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The dashed frame (1px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-border-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The dashed frame's corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--empty-state-radius"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+import { Meta, Title, Description, Primary, Controls, Stories } from '@storybook/blocks';
+import { Guide } from '../../../docs/blocks';
+import * as StoriesCalendar from './Calendar.stories';
+import guide from './README.md?raw';
+
+<Meta of={StoriesCalendar} />
+
+<Title />
+
+<Primary />
+
+<Controls />
+
+<Guide source={guide} />
+
+## Examples
+
+<Stories title="" includePrimary={false} />
