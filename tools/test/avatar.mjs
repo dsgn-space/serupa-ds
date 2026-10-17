@@ -3,7 +3,8 @@
 //   node tools/test/avatar.mjs
 import { writePage, browser, cleanup, report } from './lib.mjs';
 
-const IMG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="#c00"/></svg>');
+// A 10×10 red PNG rather than an SVG data URL: WebKit's loaded check failed on the SVG (no 10px natural width).
+const IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEklEQVR4nGM4w8CAB+GTG8HSAJNGT7H9UgyzAAAAAElFTkSuQmCC';
 const APP = `<div id="root" style="padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
 <script>
 var D = window.Diki, h = React.createElement;
@@ -73,6 +74,16 @@ const contrast = await p.evaluate(() => {
   return { low, n };
 });
 t('contrast: initials and the icon keep 4.5:1 on their background in all six themes', contrast.low.length === 0 && contrast.n === 6, contrast.low.join('; '));
+// The picture belongs to its src: an error that lands before React's effects (fast in WebKit) still falls back, and a new src tries again.
+const sw = await (await b.newContext()).newPage();
+await sw.goto(writePage('avatar-src.html', `<div id="root"></div><script>var h = React.createElement;
+function App() { var s = React.useState('/nowhere.png'); window.setSrc = s[1]; return h(window.Diki.Avatar, { id: 'sw', src: s[0], name: 'Alan Turing' }); }
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));</script>`, { react: true }));
+const kind = () => sw.evaluate(() => { const e = document.getElementById('sw'); return e.querySelector('img') ? 'img' : e.textContent; });
+await sw.waitForTimeout(300); const k1 = await kind();
+await sw.evaluate((u) => window.setSrc(u), IMG); await sw.waitForTimeout(300); const k2 = await kind();
+await sw.evaluate(() => window.setSrc('/elsewhere.png')); await sw.waitForTimeout(300); const k3 = await kind();
+t('a failed src falls back to initials; a new src shows its picture; a new failing one falls back again', [k1, k2, k3].join() === 'AT,img,AT', [k1, k2, k3].join());
 t('no errors on the page', errors.length === 0, errors.join('; '));
 
 {

@@ -48,14 +48,16 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(function Av
   const size = React.useContext(AvatarGroupSize) || oneOf(SIZES, props.size, "md");
   const square = props.shape === "square";
   const status = props.status && STATUSES.indexOf(props.status) >= 0 ? props.status : null;
-  const [failed, setFailed] = React.useState(false);
-  React.useEffect(() => { setFailed(false); }, [props.src]);
+  // Remember which src failed rather than resetting a flag in an effect: a fast error (WebKit) can land
+  // before that effect runs, and the reset would then bring back the broken picture.
+  const [failedSrc, setFailedSrc] = React.useState<string | null>(null);
+  const failed = failedSrc != null && failedSrc === props.src;
   const label = props.alt != null ? props.alt : props.name || "";
   const full = label && status ? label + ", " + (props.statusLabel || status) : label;
   const showImg = !!props.src && !failed;
   const text = initials(props.name);
   const body = showImg
-    ? <img className="dk-avatar__img" src={props.src} alt="" onError={() => setFailed(true)} />
+    ? <img className="dk-avatar__img" src={props.src} alt="" onError={() => setFailedSrc(props.src as string)} />
     : text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span>
     : <Icon className="dk-avatar__icon" name="person" />;
   if (full) { rest.role = "img"; rest["aria-label"] = full; } else rest["aria-hidden"] = true;
