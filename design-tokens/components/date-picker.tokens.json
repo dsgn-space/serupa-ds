@@ -1,0 +1,95 @@
+{
+  "date-picker": {
+    "$description": "DatePicker's component tokens. Each one is an optional override: set the CSS variable (--date-picker-<name>) on the page, a container or one picker, and every DatePicker inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The field uses Input's tokens and the calendar Calendar's.",
+    "color": {
+      "button": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The calendar button's icon (3:1 on the field).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-button"
+          }
+        }
+      },
+      "popup-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The calendar panel's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-popup-bg"
+          }
+        }
+      },
+      "popup-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "Its outline.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-popup-border"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "popup-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "Its shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-popup-shadow"
+          }
+        }
+      }
+    },
+    "radius": {
+      "popup-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "Its corners (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-popup-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "popup-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space inside it (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-popup-padding"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The gap between the field and the panel (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The panel's stacking order, where the top layer isn't available.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--date-picker-z-index"
+          }
+        }
+      }
+    }
+  }
+}

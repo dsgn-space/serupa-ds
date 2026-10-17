@@ -1,0 +1,155 @@
+{
+  "calendar": {
+    "$description": "Calendar's component tokens (also used by DatePicker). Each one is an optional override: set the CSS variable (--calendar-<name>) on the page, a container or one calendar, and every Calendar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The month and year.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-title-color"
+          }
+        }
+      },
+      "weekday-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The weekday names (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-weekday-color"
+          }
+        }
+      },
+      "day-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Days of the shown month.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-day-color"
+          }
+        }
+      },
+      "outside-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Days of the months before and after.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-outside-color"
+          }
+        }
+      },
+      "day-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A day under the pointer.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-day-bg-hover"
+          }
+        }
+      },
+      "today-color": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Today's number (4.5:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-today-color"
+          }
+        }
+      },
+      "selected-bg": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The selected day.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-selected-bg"
+          }
+        }
+      },
+      "selected-color": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "Its number.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-selected-color"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "A day's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-focus-ring"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "day-size": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "Each day's square (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-day-size"
+          }
+        }
+      }
+    },
+    "radius": {
+      "day-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "A day's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-day-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between the header and the days (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The month and year (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-title-weight"
+          }
+        }
+      },
+      "today-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "Today's number (600).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--calendar-today-weight"
+          }
+        }
+      }
+    }
+  }
+}
