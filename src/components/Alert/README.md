@@ -2,8 +2,6 @@
 
 A message about the page or a task: something saved, something to know, something that went wrong. It's a tinted box with an icon, an optional title, a message, optional actions and an optional close button.
 
-## Usage
-
 ```jsx
 const { Alert, Button } = window.Diki;
 
@@ -16,6 +14,34 @@ const { Alert, Button } = window.Diki;
 // dismissible: hide it yourself in onDismiss
 {show && <Alert tone="success" onDismiss={() => setShow(false)}>Changes saved.</Alert>}
 ```
+
+## When to use
+
+- Something about the page or a task that people should see and that stays until it's dealt with: a failed payment, an expiring trial.
+- A form or a section couldn't be saved, and people need to know why and what to do.
+- A warning before people act, such as "This project is shared with 12 people."
+
+## When not to use
+
+- A quick confirmation that something happened, such as "Link copied": use a [Toast](../Toast/README.md) instead.
+- A decision people must make before they go on: use a [Dialog](../Dialog/README.md) with `alert` instead.
+- An error on one field: use the error in [Field](../Field/README.md) instead.
+- A short status label in a table or a card: use a [Badge](../Badge/README.md) instead.
+
+## Usage
+
+- Pick the `tone` from what happened: `danger` for something that failed, `warning` for a risk, `success` for a done task, `info` or `neutral` for something to know.
+- Put the alert near what it's about: at the top of the form or section, not far from it.
+- Keep the `title` to a few words and let the message say what happened and what to do. Put the way out in `actions`, such as "Update card".
+- Add `onDismiss` only when the message can be safely ignored; leave it out for problems that still need fixing.
+
+## Accessibility
+
+- `role="alert"` (warning, danger) is read out at once when the alert appears; `role="status"` waits for a pause. A screen reader only announces an alert that's added to the page, so render it when the event happens rather than toggling its text.
+- The icon is decorative: the title or message must say what happened. Don't rely on the color alone.
+- The close button is a real button with a name, 24×24px.
+- In forced-colors mode the box gets a visible border and the icon a system color.
+- The title and message keep 4.5:1 and the icon 3:1 on every tone, in all six themes (`tools/test/alert.mjs`).
 
 ## Props
 
@@ -30,14 +56,6 @@ const { Alert, Button } = window.Diki;
 | `dismissLabel` | string | `'Dismiss'` | The close button's name |
 
 `role` is `"alert"` for warning and danger and `"status"` for the others; pass `role` to change it. `className`, `style`, `ref` and everything else go to the box, which has `data-component="alert"` and `data-tone`.
-
-## Accessibility
-
-- `role="alert"` (warning, danger) is read out at once when the alert appears; `role="status"` waits for a pause. A screen reader only announces an alert that's added to the page, so render it when the event happens rather than toggling its text.
-- The icon is decorative: the title or message must say what happened. Don't rely on the color alone.
-- The close button is a real button with a name, 24×24px.
-- In forced-colors mode the box gets a visible border and the icon a system color.
-- The title and message keep 4.5:1 and the icon 3:1 on every tone, in all six themes (`tools/test/alert.mjs`).
 
 ## Component tokens
 

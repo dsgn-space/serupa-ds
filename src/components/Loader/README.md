@@ -4,8 +4,6 @@ Shows that something is loading when you can't say how far along it is. Six look
 
 Called Spinner before 3.0.0: see the upgrade table in the changelog.
 
-## Usage
-
 ```jsx
 const { Loader } = window.Diki;
 
@@ -30,6 +28,25 @@ const { Loader } = window.Diki;
 </div>
 ```
 
+## When to use
+
+- Content or a result is on its way and you can't tell how long it will take: a list loading, a search running.
+- A reply or an AI task is being prepared and people should see that work is going on.
+- The layout of what's coming is known, so a skeleton can hold its place while it loads.
+
+## When not to use
+
+- Waits you can measure (uploads, imports): use [Progress](../Progress/README.md) instead; a progress bar tells people how long it will take.
+- A button whose action is running: use `<Button loading>` on the [Button](../Button/README.md) instead; it shows the ring in the center of the button, so buttons don't need a loader of their own.
+
+## Usage
+
+- Use a skeleton when you know the shape of what's loading, such as a list, a card or a profile; use the ring when you don't.
+- Keep the pixel grid for moments that can carry it; the ring is the everyday loader.
+- Show one ring per loading area, not one per row.
+- Keep the label specific when it helps ("Loading projects"), and short.
+- If loading fails, replace the loader with an error message and a way to retry; never leave it spinning.
+
 Mark the area that is loading with `aria-busy` while the loader shows, and replace the loader with the content when it arrives:
 
 ```jsx
@@ -38,27 +55,7 @@ Mark the area that is loading with `aria-busy` while the loader shows, and repla
 </section>
 ```
 
-Buttons don't need a loader of their own: `<Button loading>` shows the ring in the center of the button.
-
-## Props
-
-| Prop | Type | Default | What it does |
-| --- | --- | --- | --- |
-| `variant` | `'ring'` \| `'spokes'` \| `'dots'` \| `'pixel'` \| `'text'` \| `'skeleton'` | `'ring'` | The look |
-| `shape` | `'text'` \| `'circle'` \| `'rect'` | `'text'` | Skeleton only: lines of text, an avatar, or an image or card |
-| `lines` | number, 1 to 20 | `1` | Skeleton with `shape="text"` only: how many lines |
-| `pattern` | `'wave'` \| `'random'` \| `'sweep'` \| `'fall'` \| `'rise'` \| `'snake'` \| `'spiral'` \| `'cross'` \| `'checker'` | `'wave'` | Pixel only: the order the squares light in (see Patterns) |
-| `glow` | boolean | `false` | Pixel only: a soft halo of its color round the lit squares; best on dark surfaces |
-| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 16px, 24px or 40px, the same steps as icons (and the skeleton circle); for `text` and skeleton lines, `text-xs`, `text-sm` or `text-base` |
-| `tone` | `'neutral'` \| `'primary'` \| `'muted'` \| `'inverse'` | `'neutral'` | `neutral` takes the text color, so it fits any surface (white on a primary button, `text` on a page). `primary` and `muted` color the ring, dots or pixel grid with those aliases (`text` and `skeleton` stay in the text color). `inverse` makes it white in every theme, for dark scrims, overlays and media |
-| `label` | string | `'Loading'` | Its accessible name, announced when it appears, and the words `text` shows. `''` makes it decorative |
-| `delay` | number (ms) | `300` | Waits this long before showing. `0` shows it at once |
-
-`tone="current"`, the old name of `neutral`, was removed in 4.0.0; like any unknown tone it falls back to `neutral`, with no warning.
-
-Any other attribute (`id`, `className`, `style`, `data-*`, `ref`) goes to the outer `<span>`. Every loader has `data-component="loader"`, `data-variant` and `data-size` for tests, and a skeleton also `data-shape`, and a pixel loader `data-pattern`.
-
-## Variants and sizes
+### Variants and sizes
 
 | | sm | md | lg |
 | --- | --- | --- | --- |
@@ -71,7 +68,7 @@ Any other attribute (`id`, `className`, `style`, `data-*`, `ref`) goes to the ou
 
 Use one look per kind of wait across the product: the ring for loading content you can't predict, the skeleton when you know its shape, the dots for "someone is replying", the text when the words matter ("Thinking…", "Generating summary…").
 
-## Spokes
+### Spokes
 
 `variant="spokes"` is eight rounded spokes round a circle, like the current iOS activity indicator, in its proportions: each spoke is about 10% of the loader's size wide (2.4px at 24px) and 25% long, round an empty middle about 40% across. The lead spoke is at full strength and each one behind it (anticlockwise) is fainter, down to 25% (85, 70, 55, 45, 35, 30, 25), a tail that shows the direction. The drawing ticks a spoke at a time (45°, no easing between ticks) and makes a full turn every second (`--loader-spokes-duration`, `duration-1000`): a tick every 125ms.
 
@@ -82,7 +79,7 @@ Use one look per kind of wait across the product: the ring for loading content y
 
 It takes the same sizes, tones and delay as the ring; `primary` and `muted` color it. Under reduced motion it ticks at half speed (2s a turn). Use it where the product should feel at home on Apple platforms, or where a quieter, more mechanical motion suits better than the ring's growing arc; keep one of the two per product.
 
-## Pixel
+### Pixel
 
 `variant="pixel"` is a 3×3 grid of square pixels in one color, the loader's tone: no rounded corners and no gaps, just subtle dividers between them. The dividers are hairlines (half a unit of its 24-unit drawing: 0.5px at 24px, 0.8px at 40px) in the loader's color at 10%, cut through the squares, so a divider looks the same whether the squares beside it are lit or dim, on any surface and in every tone. A wave of light runs along the diagonals from the top-left corner to the bottom-right: each square rises from 15% to full strength, holds, and fades again, 75ms after the diagonal before it, in a 1.2s loop (`--loader-pixel-duration`, `duration-1200`, `ease-in-out`).
 
@@ -93,7 +90,7 @@ It takes the same sizes, tones and delay as the ring; `primary` and `muted` colo
 <Loader variant="pixel" pattern="random" tone="inverse" glow />            // with a glow, on a dark scrim
 ```
 
-### Patterns
+#### Patterns
 
 `pattern` sets the order the squares light in. Every pattern moves like the wave: each square rises from 15% to full, holds and fades with the same curve (`ease-in-out`), only in its own order. Wave, sweep, fall and rise loop in 1.2s (`--loader-pixel-duration`); snake and spiral in 1.5s; cross and checker in 1s, with steps `--loader-pixel-stagger` (75ms) apart.
 
@@ -111,11 +108,11 @@ It takes the same sizes, tones and delay as the ring; `primary` and `muted` colo
 
 Under reduced motion every pattern slows to half speed (2.4s; snake and spiral 3s; cross and checker 2s; random 4s) and keeps its order: the squares only fade, without moving.
 
-### Glow
+#### Glow
 
 `glow` adds a soft halo of the loader's color round the lit squares (a 2px blur, `--loader-pixel-glow-size`). It's off by default and works best on dark surfaces; on light ones it looks blurry. To glow every pixel loader in an area without the prop, set `--loader-pixel-glow` there. It has more character than the ring: keep it for moments that can carry it, such as an empty page, an AI task or a splash screen.
 
-## Text
+### Text
 
 `variant="text"` is a loader made of words: the label, with a shine sweeping through it. Use it where the words say more than a drawing would:
 
@@ -130,7 +127,7 @@ To put words next to a ring, place a Text loader beside a decorative ring, or a 
 
 Keep it short and specific, and end with an ellipsis when the wait continues: "Loading projects…", "Saving…".
 
-## Skeleton
+### Skeleton
 
 `variant="skeleton"` draws gray shapes where the content will be, so the layout is already in place and nothing jumps when the content arrives.
 
@@ -154,7 +151,7 @@ The fill is the text color at 10% (`--loader-skeleton-fill`), so it fits any sur
 
 `primary` and `muted` don't apply; `inverse` makes it white for dark scrims. While it waits out the delay it is hidden, but its shapes keep their space. Match the real layout closely and keep it short: a few rows, not a screenful.
 
-## Inverse tone
+### Inverse tone
 
 On a dark scrim, overlay, photo or video, which stay dark in every theme, use `tone="inverse"`: the ring, spokes, dots, pixel grid, text or skeleton turn white.
 
@@ -166,7 +163,9 @@ On a dark scrim, overlay, photo or video, which stay dark in every theme, use `t
 
 Don't use it on `surface-inverse`, which turns light in dark themes; there, leave the tone as `neutral` and it takes `text-inverse` from its parent.
 
-## Show-after delay
+## Behavior
+
+### Show-after delay
 
 By default a loader waits 300ms before it appears. Most requests finish sooner, so people never see a loader flash on and off. While it waits it keeps its space (nothing jumps when it appears), shows nothing, and isn't announced. If the content arrives first and you remove the loader, it never shows at all. Use `delay={0}` where the wait is certain to be long, or when the loader replaces something the person just clicked.
 
@@ -179,6 +178,24 @@ By default a loader waits 300ms before it appears. Most requests finish sooner, 
 - It draws in the text color, so it keeps the contrast of the text it sits with. With `tone`, use it on `surface` backgrounds, where `primary` and `text-muted` meet the 3:1 non-text contrast.
 - The text variant's visible words are hidden from screen readers, which already hear the same text as its name.
 - Under reduced motion the text variant is plain text, the skeleton a still fill, the pixel patterns run at half speed (2.4s), the spokes tick at half speed (2s), the ring keeps a steady quarter arc and turns slowly (the `animate-spin-reduced` token, 3s a turn), and the dots fade without growing.
+
+## Props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `variant` | `'ring'` \| `'spokes'` \| `'dots'` \| `'pixel'` \| `'text'` \| `'skeleton'` | `'ring'` | The look |
+| `shape` | `'text'` \| `'circle'` \| `'rect'` | `'text'` | Skeleton only: lines of text, an avatar, or an image or card |
+| `lines` | number, 1 to 20 | `1` | Skeleton with `shape="text"` only: how many lines |
+| `pattern` | `'wave'` \| `'random'` \| `'sweep'` \| `'fall'` \| `'rise'` \| `'snake'` \| `'spiral'` \| `'cross'` \| `'checker'` | `'wave'` | Pixel only: the order the squares light in (see Patterns) |
+| `glow` | boolean | `false` | Pixel only: a soft halo of its color round the lit squares; best on dark surfaces |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 16px, 24px or 40px, the same steps as icons (and the skeleton circle); for `text` and skeleton lines, `text-xs`, `text-sm` or `text-base` |
+| `tone` | `'neutral'` \| `'primary'` \| `'muted'` \| `'inverse'` | `'neutral'` | `neutral` takes the text color, so it fits any surface (white on a primary button, `text` on a page). `primary` and `muted` color the ring, dots or pixel grid with those aliases (`text` and `skeleton` stay in the text color). `inverse` makes it white in every theme, for dark scrims, overlays and media |
+| `label` | string | `'Loading'` | Its accessible name, announced when it appears, and the words `text` shows. `''` makes it decorative |
+| `delay` | number (ms) | `300` | Waits this long before showing. `0` shows it at once |
+
+`tone="current"`, the old name of `neutral`, was removed in 4.0.0; like any unknown tone it falls back to `neutral`, with no warning.
+
+Any other attribute (`id`, `className`, `style`, `data-*`, `ref`) goes to the outer `<span>`. Every loader has `data-component="loader"`, `data-variant` and `data-size` for tests, and a skeleton also `data-shape`, and a pixel loader `data-pattern`.
 
 ## Component tokens
 
@@ -220,12 +237,3 @@ Each is an optional override: set it on the page, a container or one loader. Uns
 | `--loader-pixel-stagger` | `delay-75` | Delay from one step of a pixel pattern to the next |
 
 The ring turns once every 2s while its arc stretches from a dot to most of the ring and shrinks again every 1.5s, its tail chasing its head. The two periods don't line up, so each stretch starts somewhere new. Both are sums of the motion tokens (`duration-1000` + `duration-1000`, `duration-1000` + `duration-500`), with `ease-linear` for the turn and `ease-in-out` for the arc. The text shine and the skeleton shimmer take 2s (`duration-1000` twice) with `ease-in-out`. Under reduced motion the arc stays a steady quarter and the ring turns at `animate-spin-reduced` (3s). It fades in over `duration-150` with `ease-out`.
-
-## Guidelines
-
-- Use a skeleton when you know the shape of what's loading, such as a list, a card or a profile; use the ring when you don't.
-- Keep the pixel grid for moments that can carry it; the ring is the everyday loader.
-- Show one ring per loading area, not one per row.
-- Don't use a loader for waits you can measure (uploads, imports): a progress bar tells people how long it will take.
-- Keep the label specific when it helps ("Loading projects"), and short.
-- If loading fails, replace the loader with an error message and a way to retry; never leave it spinning.
