@@ -2,3 +2,25 @@
 @keyframes dk-sb-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 .dk-sb-pulse { animation: dk-sb-pulse 1s infinite; }
 @media (prefers-reduced-motion: reduce) { .dk-sb-pulse { animation: none; } }
+
+/* The theme toolbar's mode reaches the whole preview: the canvas and the Docs pages take the theme's surface
+   and text, so dark components sit on a dark page. Storybook paints its docs white with its own colors, so in
+   the dark modes its page, story frames, tables, code and controls follow the tokens instead. */
+html, body { background-color: var(--surface); }
+[data-theme$="-dark"] .sbdocs-wrapper, [data-theme$="-dark"] .sbdocs-preview, [data-theme$="-dark"] .docs-story, [data-theme$="-dark"] .sbdocs-preview > div { background-color: var(--surface); }
+[data-theme$="-dark"] .sbdocs-preview { border-color: var(--border); box-shadow: none; }
+[data-theme$="-dark"] .sbdocs-preview .docblock-code-toggle { background: var(--surface-muted); color: var(--text); border-color: var(--border); }
+[data-theme$="-dark"] .sbdocs-content, [data-theme$="-dark"] .sbdocs-content :is(h1, h2, h3, h4, h5, h6, p, li, td, th):not(.docs-story *, .sb-unstyled *) { color: var(--text); }
+[data-theme$="-dark"] .sbdocs-content :is(h1, h2, h3, h4, h5, h6):not(.docs-story *) { border-color: var(--border); }
+[data-theme$="-dark"] .sbdocs-content a:not(.docs-story *, .sb-unstyled *) { color: var(--primary); }
+[data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) :is(tr, td, th) { background-color: var(--surface); border-color: var(--border); }
+[data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) tr:nth-of-type(2n) :is(td, th) { background-color: var(--surface-muted); }
+[data-theme$="-dark"] .sbdocs-content :not(pre) > code:not(.docs-story *) { background-color: var(--surface-muted); border-color: var(--border); color: var(--text); }
+[data-theme$="-dark"] .sbdocs-content pre, [data-theme$="-dark"] .docblock-source { background-color: var(--surface-muted); border-color: var(--border); }
+[data-theme$="-dark"] .docblock-argstable :is(tbody, tr, td, th) { background-color: var(--surface) !important; color: var(--text) !important; border-color: var(--border) !important; }
+[data-theme$="-dark"] .docblock-argstable tbody { box-shadow: 0 0 0 1px var(--border) !important; }
+[data-theme$="-dark"] .docblock-argstable :is(input, textarea, select, button) { background-color: var(--field); color: var(--text); border-color: var(--field-border); }
+[data-theme$="-dark"] .docblock-argstable td span { background-color: transparent !important; border-color: var(--border) !important; color: var(--text-muted) !important; }
+[data-theme$="-dark"] .docblock-argstable td div:not(:has(input, textarea, select, button)) { color: var(--text-muted) !important; }
+[data-theme$="-dark"] .docblock-argstable td:first-child, [data-theme$="-dark"] .docblock-argstable td:first-child * { color: var(--text) !important; }
+[data-theme$="-dark"] .sbdocs-content .sb-unstyled { color: var(--text); }
