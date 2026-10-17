@@ -48,4 +48,5 @@
 @import "../components/SearchInput/SearchInput.css";
 @import "../components/NumberInput/NumberInput.css";
 @import "../components/Slider/Slider.css";
+@import "../components/SegmentedControl/SegmentedControl.css";
 @import "./utilities.css";

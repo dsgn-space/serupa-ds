@@ -46,6 +46,7 @@ const steps = [
   ['SearchInput', 'node', [path.join(HERE, 'search-input.mjs')]],
   ['NumberInput', 'node', [path.join(HERE, 'number-input.mjs')]],
   ['Slider', 'node', [path.join(HERE, 'slider.mjs')]],
+  ['SegmentedControl', 'node', [path.join(HERE, 'segmented-control.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],

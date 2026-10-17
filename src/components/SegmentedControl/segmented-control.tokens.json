@@ -1,0 +1,199 @@
+{
+  "segmented-control": {
+    "$description": "SegmentedControl's component tokens. Each one is an optional override: set the CSS variable (--segmented-control-<name>) on the page, a container or one control, and every SegmentedControl inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The control's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The control's outline (3:1 on the surface, so it can be seen).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-border"
+          }
+        }
+      },
+      "indicator": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The selected segment's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-indicator"
+          }
+        }
+      },
+      "indicator-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The selected segment's outline.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-indicator-border"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The other segments' labels (4.5:1 on bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-text"
+          }
+        }
+      },
+      "text-selected": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The selected segment's label.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-text-selected"
+          }
+        }
+      },
+      "text-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A segment's label on hover.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-text-hover"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "A segment's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-focus-ring"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "indicator-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-sm}",
+        "$description": "The selected segment's shadow.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-indicator-shadow"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "The control's corners (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-radius"
+          }
+        }
+      },
+      "indicator-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-sm}",
+        "$description": "The selected segment's corners (4px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-indicator-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-sm}",
+        "$description": "size=\"sm\" (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "size=\"md\", the default (32px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-height-md"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Space between the outline and the segments (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-padding"
+          }
+        }
+      },
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space on each side of a segment's label (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-padding-x"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space between a segment's icon and label (6px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The labels' weight (500).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-weight"
+          }
+        }
+      }
+    },
+    "transitions": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-200}",
+        "$description": "How long the selection takes to slide to a new segment.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--segmented-control-duration"
+          }
+        }
+      }
+    }
+  }
+}
