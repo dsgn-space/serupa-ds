@@ -3,7 +3,19 @@
 // (a button named by the alt text that opens a Dialog with the full-size picture; Escape closes it and focus
 // comes back), the remove button, contrast in every theme and tokens.
 //   node tools/test/image.mjs
-import { writePage, browser, cleanup, report } from './lib.mjs';
+import fs from 'node:fs';
+import { writePage, browser, cleanup, report, PROJECT } from './lib.mjs';
+
+// Serve the test pages from an http origin: Firefox doesn't send a file:// page's requests through Playwright's
+// routes, so the held (slow.test) and failing (broken.test) pictures would never reach them.
+const ORIGIN = 'http://dk.test';
+const served = async (page, file) => {
+  await page.route(ORIGIN + '/**', (route) => {
+    const u = decodeURIComponent(new URL(route.request().url()).pathname), f = u.startsWith(PROJECT) ? u : PROJECT + u;
+    return fs.existsSync(f) ? route.fulfill({ path: f }) : route.fulfill({ status: 404, body: '' });
+  });
+  return ORIGIN + file.slice('file://'.length).slice(PROJECT.length);
+};
 
 const PIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect width="400" height="200" fill="#3b82f6"/></svg>');
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px;width:900px"></div>
@@ -37,7 +49,7 @@ let release;
 const held = new Promise((r) => { release = r; });
 await p.route('http://slow.test/**', async (route) => { await held; await route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>' }); });
 await p.route('http://broken.test/**', (route) => route.fulfill({ status: 404, body: '' }));
-await p.goto(writePage('image.html', APP, { react: true }));
+await p.goto(await served(p, writePage('image.html', APP, { react: true })));
 await p.addStyleTag({ content: '*, *::before, *::after { transition: none !important; animation: none !important; }' });
 await p.waitForTimeout(400);
 const box = (id) => p.evaluate((id) => { const f = document.querySelector(`[data-testid=${id}]`), r = f.getBoundingClientRect(), i = f.querySelector('img'); return { w: Math.round(r.width), h: Math.round(r.height), state: f.dataset.state, fit: i && getComputedStyle(i).objectFit, radius: getComputedStyle(f).borderTopLeftRadius }; }, id);
