@@ -90,7 +90,7 @@ export type { SelectOption, SelectOptionGroup, SelectProps } from "./components/
 import { Sidebar, SidebarItem, SidebarSection } from "./components/Sidebar/Sidebar";
 export type { SidebarItemProps, SidebarProps, SidebarSectionProps } from "./components/Sidebar/Sidebar";
 import { Slider } from "./components/Slider/Slider";
-export type { SliderProps } from "./components/Slider/Slider";
+export type { SliderProps, SliderValue } from "./components/Slider/Slider";
 import { Stack } from "./components/Stack/Stack";
 export type { StackProps } from "./components/Stack/Stack";
 export type { Space } from "./internal/space";

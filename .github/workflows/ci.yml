@@ -78,10 +78,35 @@ jobs:
             tools/test/baseline-visual/*.actual.png
           if-no-files-found: ignore
 
+  # The components on React 19: the package is built as usual (its plain-page React stays 18, which has the
+  # UMD files dist/lib/ ships), then React 19 replaces 18 for the type check, the component tests and the
+  # server render of every component.
+  react-19:
+    name: React 19
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build the package
+        run: npm run build
+      - name: Switch to React 19
+        run: npm install --no-save react@19.2.9 react-dom@19.2.9 @types/react@19.2.18 @types/react-dom@19.2.3
+      - name: Type check
+        run: npm run typecheck
+      - name: Component tests (Vitest)
+        run: npx vitest run
+      - name: Package (server render of every component)
+        run: node tools/test/package.mjs
+
   # One check that passes only when every group passed, under the name the single job used to have.
   test:
-    needs: suite
+    needs: [suite, react-19]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      - run: test "${{ needs.suite.result }}" = success
+      - run: test "${{ needs.suite.result }}" = success && test "${{ needs.react-19.result }}" = success

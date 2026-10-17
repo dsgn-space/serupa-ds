@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, domId, useIsoLayoutEffect } from "../../internal/cn";
+import { cn, domId, elementRef, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
 
 export interface TooltipProps {
@@ -74,11 +74,11 @@ export function Tooltip(props: TooltipProps): React.ReactElement {
   const cp = child.props;
   const delay = props.delay == null ? 400 : props.delay;
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own = cp[name]; if (typeof own === "function") (own as Handler)(e); fn(e); };
-  const childRef = (child as { ref?: React.ForwardedRef<HTMLElement> }).ref;
+  const childRef = elementRef<HTMLElement>(child);
   const aria = props.role === "label" ? "aria-labelledby" : "aria-describedby";
   const merged = [cp[aria], id].filter(Boolean).join(" ");
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { anchorRef.current = n; if (typeof childRef === "function") childRef(n); else if (childRef && typeof childRef === "object") childRef.current = n; },
+    ref: (n: HTMLElement | null) => { anchorRef.current = n; if (childRef) setRef(childRef, n); },
     [aria]: merged,
     onMouseEnter: chain("onMouseEnter", () => later(true, delay)),
     onMouseLeave: chain("onMouseLeave", () => later(false, 100)),

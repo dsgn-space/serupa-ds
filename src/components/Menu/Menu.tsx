@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, domId, omit, useIsoLayoutEffect } from "../../internal/cn";
+import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
 import { asIcon } from "../Icon/Icon";
@@ -100,9 +100,9 @@ export function Menu(props: MenuProps): React.ReactElement {
 
   const child = React.Children.only(props.trigger) as React.ReactElement<TriggerProps>;
   const cp = child.props;
-  const childRef = (child as { ref?: React.ForwardedRef<HTMLElement> }).ref;
+  const childRef = elementRef<HTMLElement>(child);
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (typeof childRef === "function") childRef(n); else if (childRef && typeof childRef === "object") childRef.current = n; },
+    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
     id: cp.id || id + "-button",
     "aria-haspopup": "menu",
     "aria-expanded": open,

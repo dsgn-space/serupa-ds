@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, omit } from "../../internal/cn";
+import { cn, domId, omit } from "../../internal/cn";
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from "../../internal/dates";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
@@ -108,7 +108,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
   const title = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
   const short = new Intl.DateTimeFormat(locale, { weekday: "short" }), long = new Intl.DateTimeFormat(locale, { weekday: "long" });
   const full = new Intl.DateTimeFormat(locale, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-  const titleId = React.useId().replace(/:/g, "") + "-title";
+  const titleId = domId("dk-cal", React.useId()) + "-title";
   const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   return (
     <div {...rest} ref={ref} className={cn("dk-calendar", props.className)} data-component="calendar">

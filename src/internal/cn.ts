@@ -39,6 +39,12 @@ export function setRef<T>(ref: React.ForwardedRef<T>, node: T | null): void {
   else if (ref) ref.current = node;
 }
 
+/** The ref already on an element we clone: a prop since React 19 (reading element.ref there warns), element.ref before. */
+export function elementRef<T>(el: React.ReactElement): React.ForwardedRef<T> | undefined {
+  const r = parseInt(React.version, 10) >= 19 ? (el.props as { ref?: unknown }).ref : (el as { ref?: unknown }).ref;
+  return (r ?? undefined) as React.ForwardedRef<T> | undefined;
+}
+
 export const SIZES = ["sm", "md", "lg"] as const;
 
 /** useLayoutEffect in the browser; on the server (where it can't run, and React warns) useEffect. */
