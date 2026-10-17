@@ -80,6 +80,8 @@ export type { StackProps } from "./components/Stack/Stack";
 export type { Space } from "./internal/space";
 import { VisuallyHidden } from "./components/VisuallyHidden/VisuallyHidden";
 export type { VisuallyHiddenProps } from "./components/VisuallyHidden/VisuallyHidden";
+import { Stepper } from "./components/Stepper/Stepper";
+export type { StepperProps, StepperStep } from "./components/Stepper/Stepper";
 import { Switch } from "./components/Switch/Switch";
 export type { SwitchProps } from "./components/Switch/Switch";
 import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow } from "./components/Table/Table";
@@ -103,7 +105,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, Combobox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -125,7 +127,7 @@ declare global {
       NumberInput: typeof NumberInput; Pagination: typeof Pagination; paginationRange: typeof paginationRange; PasswordInput: typeof PasswordInput;
       Popover: typeof Popover; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; SearchInput: typeof SearchInput;
       SegmentedControl: typeof SegmentedControl; Select: typeof Select; Sidebar: typeof Sidebar; SidebarItem: typeof SidebarItem;
-      SidebarSection: typeof SidebarSection; Slider: typeof Slider; Stack: typeof Stack; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
+      SidebarSection: typeof SidebarSection; Slider: typeof Slider; Stack: typeof Stack; Stepper: typeof Stepper; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
       TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead;
       TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs;
       Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; ToggleButton: typeof ToggleButton;

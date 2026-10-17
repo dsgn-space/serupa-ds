@@ -69,6 +69,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Slider: Diki.Slider,
   Select: Diki.Select,
   Stack: Diki.Stack,
+  Stepper: Diki.Stepper,
   Switch: Diki.Switch,
   Tab: Diki.Tab,
   TabList: Diki.TabList,

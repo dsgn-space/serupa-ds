@@ -49,6 +49,7 @@ const steps = [
   ['SegmentedControl', 'node', [path.join(HERE, 'segmented-control.mjs')]],
   ['Combobox', 'node', [path.join(HERE, 'combobox.mjs')]],
   ['Icon names', 'node', [path.join(HERE, 'icon-names.mjs')]],
+  ['Stepper', 'node', [path.join(HERE, 'stepper.mjs')]],
   ['Input', 'node', [path.join(HERE, 'input.mjs')]],
   ['Textarea', 'node', [path.join(HERE, 'textarea.mjs')]],
   ['Field', 'node', [path.join(HERE, 'field.mjs')]],
