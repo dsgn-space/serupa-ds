@@ -7,7 +7,7 @@
         "$value": "{radius.rounded-full}",
         "$description": "The corners of a round icon button (shape=\"round\").",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--icon-button-radius-round"
           }
         }

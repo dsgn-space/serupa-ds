@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "The ring around each avatar, which keeps the overlapping edges clear. Set it to the background the group sits on.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-ring"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.secondary}",
         "$description": "The \"+N\" avatar's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-more-bg"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The \"+N\" text (4.5:1 on more-bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-more-color"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{borders.border-width-2}",
         "$description": "The ring's width (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-ring-width"
           }
         }
@@ -51,7 +51,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "How far each avatar overlaps the one before at size xs and sm (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-overlap-sm"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "The overlap at size md, the default, and lg (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-overlap-md"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The overlap at size xl (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-group-overlap-lg"
           }
         }

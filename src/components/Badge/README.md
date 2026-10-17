@@ -3,7 +3,7 @@
 A short label for status, counts and categories, optionally clickable. One size (20px tall, `text-xs`, 12px icons) in three styles (**subtle**, **solid**, **outline**), six tones built on the status colors and 17 palette tones for categories and tags. Every tone and style keeps 4.5:1 text in all six themes. Extras: a status dot, a leading icon, a count and a remove button. States: hover, focus and active on clickable badges, and loading on any badge.
 
 ```jsx
-const { Badge } = window.Diki;
+const { Badge } = window.Serupa;
 
 <Badge>Draft</Badge>                                    // subtle, neutral
 <Badge tone="success" dot>Online</Badge>
@@ -125,7 +125,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `onRemove` | function | | Adds a × button at the end that calls it |
 | `removeLabel` | string | `'Remove'` | The × button's accessible name, before the label: "Remove Design" |
 | `onClick` | function | | Renders a `<button type="button">` with hover, focus and active states. `onRemove` is ignored then (a button can't hold another button) |
-| `href` | string | | Renders a link (the component set with `Diki.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
+| `href` | string | | Renders a link (the component set with `Serupa.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
 | `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
 | `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile |
 | `loadingText` | string | `'Loading'` | Announced to screen readers when loading starts ("" announces nothing) |

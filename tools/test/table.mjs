@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;width:600px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 var rows = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
 function Sortable() {
   var s = React.useState('none');

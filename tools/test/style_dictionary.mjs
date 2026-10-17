@@ -14,7 +14,7 @@ try { await import('style-dictionary'); } catch {
   if (process.env.CI) { console.log('FAIL  Style Dictionary is not installed (npm ci should install it)'); process.exit(1); }
   console.log('SKIP  Style Dictionary is not installed (npm i -D style-dictionary@5)'); process.exit(0);
 }
-const out = fs.mkdtempSync(path.join(os.tmpdir(), 'diki-sd-'));
+const out = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-sd-'));
 const r = spawnSync('node', [path.join(HERE, '..', 'tokens', 'style-dictionary.config.mjs'), out], { encoding: 'utf8' });
 if (r.status !== 0) { console.log('FAIL  Style Dictionary build\n' + r.stderr); process.exit(1); }
 
@@ -24,14 +24,14 @@ const flat = {};
 for (const g of Object.values(t)) if (g && Array.isArray(g.tokens)) for (const x of g.tokens) flat[x.name] = x.value;
 for (const [k, v] of Object.entries(t.type.families)) flat['font-' + k] = v;
 // component tokens: --button-* → the shared token they reference
-const base = JSON.parse(fs.readFileSync(path.join(HERE, '..', '..', 'design-tokens', 'diki.tokens.json'), 'utf8'));
+const base = JSON.parse(fs.readFileSync(path.join(HERE, '..', '..', 'design-tokens', 'serupa.tokens.json'), 'utf8'));
 const compDir = path.join(HERE, '..', '..', 'design-tokens', 'components');
 const COMP = {};
 if (fs.existsSync(compDir)) for (const f of fs.readdirSync(compDir)) {
-  const walk = (tree) => { for (const [k, v] of Object.entries(tree)) { if (k.startsWith('$')) continue; if (v && v.$value !== undefined) COMP[v.$extensions['com.diki'].cssVar.slice(2)] = v.$value; else if (v && typeof v === 'object') walk(v); } };
+  const walk = (tree) => { for (const [k, v] of Object.entries(tree)) { if (k.startsWith('$')) continue; if (v && v.$value !== undefined) COMP[v.$extensions['com.serupa'].cssVar.slice(2)] = v.$value; else if (v && typeof v === 'object') walk(v); } };
   walk(JSON.parse(fs.readFileSync(path.join(compDir, f), 'utf8')));
 }
-const compRef = (v) => { if (typeof v === 'object') return v.alpha === 0 ? 'transparent' : v.hex; const [grp, name] = v.slice(1, -1).split(/\.(.+)/); return grp === 'color' ? '{' + name + '}' : '{' + base[grp][name].$extensions['com.diki'].cssVar.slice(2) + '}'; };
+const compRef = (v) => { if (typeof v === 'object') return v.alpha === 0 ? 'transparent' : v.hex; const [grp, name] = v.slice(1, -1).split(/\.(.+)/); return grp === 'color' ? '{' + name + '}' : '{' + base[grp][name].$extensions['com.serupa'].cssVar.slice(2) + '}'; };
 for (const [n, v] of Object.entries(COMP)) flat[n] = compRef(v);
 const resolve = (name, th) => { let v = flat[name]; v = v && typeof v === 'object' ? (v[th] ?? first(v)) : v; const m = /^\{(.+)\}$/.exec(v); return m ? resolve(m[1], th) : v; };
 

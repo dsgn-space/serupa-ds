@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "The clock button's icon (3:1 on the field).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-button"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.surface}",
         "$description": "The list's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-bg"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.border}",
         "$description": "The list's outline.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-border"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text}",
         "$description": "A time in the list.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-option-color"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The highlighted time (pointer or keyboard).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-option-bg-active"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.primary}",
         "$description": "The check by the chosen time (3:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-check"
           }
         }
@@ -69,7 +69,7 @@
         "$value": "{shadow.shadow-lg}",
         "$description": "The list's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-shadow"
           }
         }
@@ -81,7 +81,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The list's corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-radius"
           }
         }
@@ -93,7 +93,7 @@
         "$value": "{spacing.spacing-60}",
         "$description": "The list's tallest before it scrolls (240px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-max-height"
           }
         }
@@ -103,7 +103,7 @@
         "$value": "{spacing.spacing-40}",
         "$description": "The list's least width (160px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-min-width"
           }
         }
@@ -113,7 +113,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "Each time's height (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-option-height"
           }
         }
@@ -125,7 +125,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space inside the list (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-list-padding"
           }
         }
@@ -135,7 +135,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "The gap between the field and the list (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-offset"
           }
         }
@@ -147,7 +147,7 @@
         "$value": "{layout.z-50}",
         "$description": "The list's stacking order, where the top layer isn't available.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--time-picker-z-index"
           }
         }

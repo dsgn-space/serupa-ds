@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 const TONES = ['info', 'success', 'warning', 'danger', 'neutral'];
 const APP = `<div id="root" style="padding:16px;display:flex;flex-direction:column;gap:12px;max-width:480px"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.dismissed = 0;
+var D = window.Serupa, h = React.createElement; window.dismissed = 0;
 var TONES = ${JSON.stringify(TONES)};
 function App() {
   var s = React.useState(true);

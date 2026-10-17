@@ -167,17 +167,17 @@ try {
 
   // theme.js
   await wd.goto(writePage('compat-theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="emerald" data-mode="auto"' }));
-  const th = await wd.evaluate(() => { try { localStorage.removeItem('diki-theme'); } catch (e) {} Diki.theme.reset(); const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; return { got: document.documentElement.getAttribute('data-theme'), want: 'emerald-' + sys }; });
+  const th = await wd.evaluate(() => { try { localStorage.removeItem('serupa-theme'); } catch (e) {} Serupa.theme.reset(); const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; return { got: document.documentElement.getAttribute('data-theme'), want: 'emerald-' + sys }; });
   t('theme.js: auto follows the system setting', th.got === th.want, JSON.stringify(th));
-  const set = await wd.evaluate(() => { Diki.theme.set({ brand: 'violet', mode: 'dark' }); return document.documentElement.getAttribute('data-theme'); });
+  const set = await wd.evaluate(() => { Serupa.theme.set({ brand: 'violet', mode: 'dark' }); return document.documentElement.getAttribute('data-theme'); });
   t('theme.js: set() applies the theme', set === 'violet-dark', set);
-  const persisted = await wd.evaluate(() => { try { return JSON.parse(localStorage.getItem('diki-theme')); } catch (e) { return 'storage unavailable'; } });
+  const persisted = await wd.evaluate(() => { try { return JSON.parse(localStorage.getItem('serupa-theme')); } catch (e) { return 'storage unavailable'; } });
   t('theme.js: the choice is stored (or storage is unavailable and it still works)', persisted === 'storage unavailable' || (persisted && persisted.mode === 'dark'), JSON.stringify(persisted));
-  await wd.evaluate(() => Diki.theme.reset());
+  await wd.evaluate(() => Serupa.theme.reset());
 
   // Button
   const APP = `<form id="f"><input id="in"><span id="slot"></span></form><div id="root"></div><script>
-    var h = React.createElement, D = Diki; window.log = [];
+    var h = React.createElement, D = Serupa; window.log = [];
     document.getElementById('f').addEventListener('submit', function (e) { e.preventDefault(); log.push('submit'); });
     function App() { var s = React.useState(false); window.setL = s[1];
       return h('div', null,
@@ -201,7 +201,7 @@ try {
   t('Button loading: "Loading" is announced', (await wd.evaluate(() => new Promise((r) => setTimeout(() => r(document.querySelector('[data-dk-announcer]').textContent), 150)))) === 'Loading');
 
   // Loader: the ring's arc grows and shrinks (dash animation on a pathLength="100" circle), and the dots pulse
-  await wd.goto(writePage('compat-loader.html', '<div id="root"></div><script>var h=React.createElement;ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment,null,h(Diki.Loader,{id:"r",size:"lg",delay:0}),h(Diki.Loader,{id:"d",variant:"dots",delay:0}),h(Diki.Loader,{id:"sp",variant:"spokes",delay:0}),h(Diki.Loader,{id:"px",variant:"pixel",delay:0}),h(Diki.Loader,{id:"l",variant:"text",label:"Loading projects",delay:0}),h("div",{style:{display:"flex",gap:"12px",width:"300px"}},h(Diki.Loader,{id:"sc",variant:"skeleton",shape:"circle",size:"lg",label:"",delay:0}),h(Diki.Loader,{id:"st",variant:"skeleton",lines:3,label:"",delay:0}))));</script>', { react: true }));
+  await wd.goto(writePage('compat-loader.html', '<div id="root"></div><script>var h=React.createElement;ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment,null,h(Serupa.Loader,{id:"r",size:"lg",delay:0}),h(Serupa.Loader,{id:"d",variant:"dots",delay:0}),h(Serupa.Loader,{id:"sp",variant:"spokes",delay:0}),h(Serupa.Loader,{id:"px",variant:"pixel",delay:0}),h(Serupa.Loader,{id:"l",variant:"text",label:"Loading projects",delay:0}),h("div",{style:{display:"flex",gap:"12px",width:"300px"}},h(Serupa.Loader,{id:"sc",variant:"skeleton",shape:"circle",size:"lg",label:"",delay:0}),h(Serupa.Loader,{id:"st",variant:"skeleton",lines:3,label:"",delay:0}))));</script>', { react: true }));
   const sp = await wd.evaluate(() => new Promise((res) => setTimeout(() => {
     const arc = document.querySelector('#r .dk-loader__arc'), svg = document.querySelector('#r svg');
     const len = (ms) => { const a = arc.getAnimations().find((x) => x.animationName === 'dk-loader-arc'); if (!a) return NaN; a.pause(); a.currentTime = ms; return parseFloat(getComputedStyle(arc).strokeDasharray); };

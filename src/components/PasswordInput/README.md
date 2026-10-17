@@ -3,7 +3,7 @@
 A password field with a button at the end that shows and hides what was typed, so people can check it before they submit. It's Input's box, so it has the same sizes, states and tokens.
 
 ```jsx
-const { PasswordInput, Field } = window.Diki;
+const { PasswordInput, Field } = window.Serupa;
 
 <Field label="Password"><PasswordInput /></Field>
 

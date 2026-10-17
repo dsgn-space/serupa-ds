@@ -7,7 +7,7 @@
         "$value": "{color.field}",
         "$description": "The box's background while unchecked.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The box's background when disabled and unchecked.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-bg-disabled"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary}",
         "$description": "Fill and border when checked or indeterminate (3:1 on the page in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-bg-checked"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.primary-hover}",
         "$description": "Fill and border when checked, on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-bg-checked-hover"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.field-border}",
         "$description": "The box's border while unchecked (3:1 on the field and the page).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-border"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.field-border-hover}",
         "$description": "The border on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-border-hover"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.on-primary}",
         "$description": "The check and the dash.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-icon-color"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.text}",
         "$description": "The label.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-label-color"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.text-muted}",
         "$description": "The description (4.5:1 on the page).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-description-color"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-focus-ring"
           }
         }
@@ -107,7 +107,7 @@
         "$value": "{color.danger}",
         "$description": "Border and focus ring when invalid.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-invalid"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{spacing.spacing-3_5}",
         "$description": "Box size, sm (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-size-sm"
           }
         }
@@ -129,7 +129,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Box size, md (16px, default).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-size-md"
           }
         }
@@ -139,7 +139,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "Box size, lg (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-size-lg"
           }
         }
@@ -149,7 +149,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Check size, sm (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-icon-size-sm"
           }
         }
@@ -159,7 +159,7 @@
         "$value": "{spacing.spacing-3_5}",
         "$description": "Check size, md (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-icon-size-md"
           }
         }
@@ -169,7 +169,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Check size, lg (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-icon-size-lg"
           }
         }
@@ -181,7 +181,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Gap between the box and the label (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-gap"
           }
         }
@@ -193,7 +193,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The box's border width (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-border-width"
           }
         }
@@ -203,7 +203,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "The box's corner radius (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--checkbox-radius"
           }
         }

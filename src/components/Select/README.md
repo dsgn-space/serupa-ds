@@ -3,7 +3,7 @@
 A native `<select>` styled like Input: the same three heights (24, 32 and 44px), colors, focus ring and states, with a chevron and an optional left icon. It keeps everything the browser gives a select for free: the system picker on phones, type-to-find, and full keyboard and screen-reader support.
 
 ```jsx
-const { Select, Field } = window.Diki;
+const { Select, Field } = window.Serupa;
 
 <Field label="Role">
   <Select options={["Viewer", "Editor", "Admin"]} value={role} onChange={(e) => setRole(e.target.value)} />

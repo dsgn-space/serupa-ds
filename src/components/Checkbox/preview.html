@@ -10,7 +10,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     Row('Sizes', [h(T.Checkbox, { key: 1, size: 'sm', defaultChecked: true }, 'Small'), h(T.Checkbox, { key: 2, defaultChecked: true }, 'Medium'), h(T.Checkbox, { key: 3, size: 'lg', defaultChecked: true }, 'Large')]),

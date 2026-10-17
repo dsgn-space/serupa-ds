@@ -3,7 +3,7 @@
 Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states.
 
 ```tsx
-import { Kbd } from "@diki/design-system";
+import { Kbd } from "serupa-ds";
 
 <p>Press <Kbd>/</Kbd> to search.</p>
 <Kbd keys={["mod", "K"]} />        // ⌘ K on a Mac, Ctrl + K elsewhere

@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); }</style><div id="root" style="padding:16px;width:400px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 function App() {
   var v = React.useState(45); window.setV = v[1];
   return h('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } },

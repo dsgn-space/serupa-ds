@@ -3,7 +3,7 @@
 An on/off setting that takes effect at once. It's a native checkbox with `role="switch"`, so screen readers announce "on" and "off", drawn as a track (the input, `appearance: none`) and a thumb that slides along it. The track sits centered on the label's first line (each size's track is as tall as its line), and a click anywhere on the label flips it.
 
 ```jsx
-const { Switch } = window.Diki;
+const { Switch } = window.Serupa;
 
 <Switch checked={wifi} onChange={(e) => setWifi(e.target.checked)}>Wi-Fi</Switch>
 

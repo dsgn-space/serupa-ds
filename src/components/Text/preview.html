@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     ['xs', 'sm', 'base', 'lg', 'xl'].map(function (s) { return h(T.Text, { key: s, size: s }, 'text-' + s + ': The quick brown fox'); }),
     ['muted', 'primary', 'danger'].map(function (t) { return h(T.Text, { key: t, size: 'sm', tone: t }, t + ': The quick brown fox'); }),

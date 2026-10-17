@@ -7,7 +7,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space between buttons when not attached (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-group-gap"
           }
         }
@@ -19,7 +19,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "How much attached buttons overlap, so their borders make one line (1px, the button border).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-group-overlap"
           }
         }

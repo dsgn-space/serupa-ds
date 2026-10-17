@@ -1,10 +1,10 @@
-// Shared helpers for the Diki test suite.
+// Shared helpers for the Serupa test suite.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const HERE = path.dirname(fileURLToPath(import.meta.url));
-export const PROJECT = path.resolve(process.env.DIKI_PROJECT || path.join(HERE, '..', '..'));
+export const PROJECT = path.resolve(process.env.SERUPA_PROJECT || path.join(HERE, '..', '..'));
 export const read = (p) => fs.readFileSync(path.join(PROJECT, p), 'utf8');
 export const tokens = () => JSON.parse(read('tokens.json'));
 
@@ -45,14 +45,14 @@ export function writePage(name, body, { react = false, extraHead = '', base = fa
 }
 export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursive: true, force: true }); }
 
-// Which engine the Playwright suites run in: DIKI_BROWSER=chromium (default) | firefox | webkit.
+// Which engine the Playwright suites run in: SERUPA_BROWSER=chromium (default) | firefox | webkit.
 // Baselines are kept per engine (Chromium's are the reference; tools/test/compat.mjs compares engines).
-export const ENGINE = process.env.DIKI_BROWSER || 'chromium';
+export const ENGINE = process.env.SERUPA_BROWSER || 'chromium';
 export const suffix = ENGINE === 'chromium' ? '' : '-' + ENGINE;
 export async function browser() {
   let pw;
   try { pw = await import('playwright'); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
-  if (!pw[ENGINE]) { console.error(`Unknown DIKI_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
+  if (!pw[ENGINE]) { console.error(`Unknown SERUPA_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
   // Headless Firefox finds no pointing device and reports (hover: none), so hover styles behind
   // @media (hover: hover) never apply. Give it a desktop's fine, hovering pointer (2 | 4).
   const opts = ENGINE === 'firefox' ? { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } : {};

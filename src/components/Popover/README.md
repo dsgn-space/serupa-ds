@@ -3,7 +3,7 @@
 A small panel next to its trigger for content people interact with: a short form, filters, details with links. It's a non-modal dialog: the rest of the page stays usable, and it closes on Escape, a click outside, or when focus moves elsewhere.
 
 ```jsx
-const { Popover, Button, Field, Input } = window.Diki;
+const { Popover, Button, Field, Input } = window.Serupa;
 
 <Popover title="Share" trigger={<Button variant="outline" leftIcon="share">Share</Button>}>
   {(close) => (

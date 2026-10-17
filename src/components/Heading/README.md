@@ -3,7 +3,7 @@
 A heading, `h1` to `h6`, in the system's type. `level` sets the element, which is what screen readers and the page's outline see; `size` sets the look. So a card's title can be an `h3` that looks like body text, or a page's `h1` can be small.
 
 ```jsx
-const { Heading } = window.Diki;
+const { Heading } = window.Serupa;
 
 <Heading level={1}>Projects</Heading>
 <Heading>Recent activity</Heading>                 {/* h2 */}

@@ -7,7 +7,7 @@
         "$value": "{color.field}",
         "$description": "The circle's background while unchecked.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The circle's background when disabled and unchecked.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-bg-disabled"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary}",
         "$description": "Fill and border when checked (3:1 on the page in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-bg-checked"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.primary-hover}",
         "$description": "Fill and border when checked, on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-bg-checked-hover"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.field-border}",
         "$description": "The circle's border while unchecked (3:1 on the field and the page).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-border"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.field-border-hover}",
         "$description": "The border on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-border-hover"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.on-primary}",
         "$description": "The dot in a checked radio.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-dot-color"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.text}",
         "$description": "The label.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-label-color"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.text-muted}",
         "$description": "The description (4.5:1 on the page).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-description-color"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-focus-ring"
           }
         }
@@ -107,7 +107,7 @@
         "$value": "{color.danger}",
         "$description": "Border and focus ring when invalid.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-invalid"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{spacing.spacing-3_5}",
         "$description": "Circle size, sm (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-size-sm"
           }
         }
@@ -129,7 +129,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Circle size, md (16px, default).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-size-md"
           }
         }
@@ -139,7 +139,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "Circle size, lg (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-size-lg"
           }
         }
@@ -149,7 +149,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Dot size, sm (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-dot-size-sm"
           }
         }
@@ -159,7 +159,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Dot size, md (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-dot-size-md"
           }
         }
@@ -169,7 +169,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Dot size, lg (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-dot-size-lg"
           }
         }
@@ -181,7 +181,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Gap between the circle and the label (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-gap"
           }
         }
@@ -191,7 +191,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Gap between radios in a vertical group, and between rows of a horizontal one (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-group-gap"
           }
         }
@@ -201,7 +201,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Gap between radios in a horizontal group (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-group-gap-horizontal"
           }
         }
@@ -213,7 +213,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The circle's border width (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--radio-border-width"
           }
         }

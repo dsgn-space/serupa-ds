@@ -7,7 +7,7 @@
         "$value": "{color.text}",
         "$description": "A page number and the arrows.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-text"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.secondary}",
         "$description": "A page or arrow on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-bg-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary}",
         "$description": "The current page's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-current-bg"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.on-primary}",
         "$description": "The current page's number (4.5:1 on current-bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-current-text"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.text-muted}",
         "$description": "The … between page ranges (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-ellipsis"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-focus-ring"
           }
         }
@@ -69,7 +69,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "Page numbers (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-font-size"
           }
         }
@@ -79,7 +79,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The current page's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-weight-current"
           }
         }
@@ -91,7 +91,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "A page's width and height at size md (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-size"
           }
         }
@@ -101,7 +101,7 @@
         "$value": "{sizing.control-height-sm}",
         "$description": "At size sm (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-size-sm"
           }
         }
@@ -113,7 +113,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space between pages (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-gap"
           }
         }
@@ -123,7 +123,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Side padding inside a page, for wide numbers (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-padding-x"
           }
         }
@@ -135,7 +135,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "A page's corners (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-radius"
           }
         }
@@ -147,7 +147,7 @@
         "$value": "{opacity.opacity-50}",
         "$description": "Previous or next when there's no page that way.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--pagination-disabled"
           }
         }

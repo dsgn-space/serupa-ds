@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var D = window.Diki, h = React.createElement, B = D.Button, T = D.ToggleButton;
+  var D = window.Serupa, h = React.createElement, B = D.Button, T = D.ToggleButton;
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     h(D.ButtonGroup, { 'aria-label': 'Clipboard' }, h(B, { variant: 'outline', leftIcon: 'content_copy' }, 'Copy'), h(B, { variant: 'outline', leftIcon: 'content_cut' }, 'Cut'), h(B, { variant: 'outline', leftIcon: 'content_paste' }, 'Paste')),
     h(D.ButtonGroup, { attached: false }, h(B, { variant: 'outline' }, 'Cancel'), h(B, null, 'Save')),

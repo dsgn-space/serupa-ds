@@ -6,7 +6,7 @@ or write the file yourself:
 
 ```md
 ---
-"@diki/design-system": minor
+"serupa-ds": minor
 ---
 
 - Added: Tooltip component, with 12 component tokens.

@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "The − and + icons (3:1 on the field).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--number-input-stepper"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text}",
         "$description": "The icons on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--number-input-stepper-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.secondary}",
         "$description": "The buttons' background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--number-input-stepper-bg-hover"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "The buttons' corners (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--number-input-stepper-radius"
           }
         }
@@ -51,7 +51,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space around each button's icon (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--number-input-stepper-padding"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{spacing.spacing-0_5}",
         "$description": "Space between the − and + buttons (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--number-input-stepper-gap"
           }
         }

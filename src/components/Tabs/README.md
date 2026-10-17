@@ -3,7 +3,7 @@
 Switches between related panels in one place, such as a project's Overview, Activity and Settings. It follows the WAI-ARIA tabs pattern: `Tabs` holds the state, `TabList` the row of `Tab`s, and each `TabPanel` the content for the tab with the same `value`.
 
 ```jsx
-const { Tabs, TabList, Tab, TabPanel } = window.Diki;
+const { Tabs, TabList, Tab, TabPanel } = window.Serupa;
 
 <Tabs defaultValue="overview">
   <TabList aria-label="Project">

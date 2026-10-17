@@ -7,7 +7,7 @@
         "$value": "{color.text}",
         "$description": "tone=\"default\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--text-color"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "tone=\"muted\": secondary text (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--text-color-muted"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary}",
         "$description": "tone=\"primary\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--text-color-primary"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.danger-text}",
         "$description": "tone=\"danger\": error text (4.5:1 on surface and danger-subtle).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--text-color-danger"
           }
         }

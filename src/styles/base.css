@@ -1,5 +1,5 @@
-/*! Diki Design System v4.8.1 · base.css */
-/* Diki base: page defaults. Optional — load it after tokens.css and before bundle.css on pages
+/*! Serupa v4.8.1 by Diki · base.css */
+/* Serupa base: page defaults. Optional — load it after tokens.css and before bundle.css on pages
    built with the system; leave it out when the system is dropped into an existing app.
    Every value is a token. It sets defaults only (all selectors are :where(), so any class wins). */
 @layer dk.tokens, dk.base, dk.components, dk.utilities;

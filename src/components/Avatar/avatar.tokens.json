@@ -7,7 +7,7 @@
         "$value": "{color.secondary}",
         "$description": "The background behind initials and the fallback icon.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text}",
         "$description": "The initials and the fallback icon (4.5:1 on the background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-text"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.surface}",
         "$description": "The ring that separates the status dot from the picture.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-ring"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.success}",
         "$description": "The status dot for status=\"online\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-status-online"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.danger}",
         "$description": "The status dot for status=\"busy\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-status-busy"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.warning}",
         "$description": "The status dot for status=\"away\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-status-away"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.field-border}",
         "$description": "The status dot for status=\"offline\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-status-offline"
           }
         }
@@ -79,7 +79,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "size=\"xs\" (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-size-xs"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{spacing.spacing-8}",
         "$description": "size=\"sm\" (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-size-sm"
           }
         }
@@ -99,7 +99,7 @@
         "$value": "{spacing.spacing-10}",
         "$description": "size=\"md\", the default (40px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-size-md"
           }
         }
@@ -109,7 +109,7 @@
         "$value": "{spacing.spacing-12}",
         "$description": "size=\"lg\" (48px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-size-lg"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{spacing.spacing-16}",
         "$description": "size=\"xl\" (64px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-size-xl"
           }
         }
@@ -131,7 +131,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The corners of shape=\"square\" (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-radius-square"
           }
         }
@@ -141,7 +141,7 @@
         "$value": "{borders.border-width-2}",
         "$description": "The ring around the status dot (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-ring-width"
           }
         }
@@ -153,7 +153,7 @@
         "$value": "{typography.font-medium}",
         "$description": "The initials' weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--avatar-weight"
           }
         }

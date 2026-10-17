@@ -7,7 +7,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The space between items when gap isn't given (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stack-gap"
           }
         }

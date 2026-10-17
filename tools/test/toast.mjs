@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.undos = 0;
+var D = window.Serupa, h = React.createElement; window.undos = 0;
 function App() { var s = React.useState('bottom-end'); window.setPos = s[1]; return h(D.Toaster, { position: s[0], className: 'extra' }); }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;

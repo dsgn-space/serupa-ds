@@ -16,7 +16,7 @@ Rules:
 <One or two sentences: what it is and the job it does for the person using the product.>
 
 ```tsx
-import { <Name> } from "@diki/design-system";
+import { <Name> } from "serupa-ds";
 
 <The smallest realistic example, using Field for labels where it applies.>
 ```

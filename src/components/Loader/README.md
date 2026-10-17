@@ -5,7 +5,7 @@ Shows that something is loading when you can't say how far along it is. Six look
 Called Spinner before 3.0.0: see the upgrade table in the changelog.
 
 ```jsx
-const { Loader } = window.Diki;
+const { Loader } = window.Serupa;
 
 <Loader />                                   // ring, 24px, text color, "Loading"
 <Loader size="lg" />                         // a page or an empty area that is loading

@@ -3,7 +3,7 @@
 A short hint about one element, shown while it's hovered or focused: what an icon button does, a keyboard shortcut, why something is unavailable. It sits next to the element in the browser's top layer, so nothing on the page can cover or clip it.
 
 ```jsx
-const { Tooltip, IconButton, Button } = window.Diki;
+const { Tooltip, IconButton, Button } = window.Serupa;
 
 <Tooltip content="Download as PDF">
   <IconButton icon="download" label="Download" noTitle />

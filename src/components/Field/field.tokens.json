@@ -7,7 +7,7 @@
         "$value": "{color.text}",
         "$description": "The label.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-label-color"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "The hint (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-hint-color"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.danger-text}",
         "$description": "The error message and its icon (4.5:1+ on surface in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-error-color"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.danger-text}",
         "$description": "The required asterisk.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-required-color"
           }
         }
@@ -49,7 +49,7 @@
         "$value": "{typography.font-medium}",
         "$description": "The label's weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-label-weight"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Space between the label, hint, control and error (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-gap"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space between the error icon and its text (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-error-gap"
           }
         }
@@ -83,7 +83,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The error icon (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--field-error-icon-size"
           }
         }

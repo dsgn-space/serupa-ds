@@ -4,11 +4,11 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<form id="other" action="about:blank"></form><div id="pop" popover>Popover</div><dialog id="dlg">Dialog</dialog><div id="root"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.log = []; window.r1 = React.createRef(); window.r2 = React.createRef(); window.warnings = [];
+var D = window.Serupa, h = React.createElement; window.log = []; window.r1 = React.createRef(); window.r2 = React.createRef(); window.warnings = [];
 var cw = console.warn; console.warn = function (m) { window.warnings.push(String(m)); cw.apply(console, arguments); };
-// a router-style link component, as an app would register with Diki.configure({ link })
+// a router-style link component, as an app would register with Serupa.configure({ link })
 var RouterLink = React.forwardRef(function RouterLink(p, ref) { return h('a', Object.assign({}, p, { ref: ref, 'data-router': '', onClick: function (e) { if (p.onClick) p.onClick(e); if (!e.defaultPrevented) { e.preventDefault(); window.log.push('router:' + p.href); } } })); });
-window.configured = Diki.configure({ link: RouterLink });
+window.configured = Serupa.configure({ link: RouterLink });
 function App() {
   var s = React.useState(false), loading = s[0]; window.setL = s[1];
   return h('div', null,
@@ -88,13 +88,13 @@ await p.evaluate(() => window.setL(false)); await p.waitForTimeout(150);
 await p.click('#sub'); t('after loading the button submits again', (await L()).includes('submit'));
 const w = await p.evaluate(() => window.warnings);
 t('no warnings for correct use', w.length === 0, w.join(' | '));
-await p.evaluate(() => { const h = React.createElement, d = document.createElement('div'); document.body.appendChild(d); ReactDOM.createRoot(d).render(h('div', null, h(Diki.Button, { icon: 'close' }))); });
+await p.evaluate(() => { const h = React.createElement, d = document.createElement('div'); document.body.appendChild(d); ReactDOM.createRoot(d).render(h('div', null, h(Serupa.Button, { icon: 'close' }))); });
 await p.waitForTimeout(150);
 const w2 = await p.evaluate(() => window.warnings.join(' | '));
 t('warns on an icon-only button without a label', /needs an aria-label/.test(w2), w2);
-t('the API is Diki\'s own: buttonClass and configure, none of the 1.0 names', await p.evaluate(() => typeof Diki.buttonClass === 'function' && typeof Diki.configure === 'function' && !('buttonVariants' in Diki) && !('TailwindPalette' in window) && Diki.buttonClass() === 'dk-btn dk-btn--primary dk-btn--size-md'));
+t('the API is Serupa\'s own: buttonClass and configure, none of the 1.0 names', await p.evaluate(() => typeof Serupa.buttonClass === 'function' && typeof Serupa.configure === 'function' && !('buttonVariants' in Serupa) && !('TailwindPalette' in window) && Serupa.buttonClass() === 'dk-btn dk-btn--primary dk-btn--size-md'));
 const um = await p.evaluate(() => new Promise((res) => { const d = document.createElement('div'); document.body.appendChild(d); const root = ReactDOM.createRoot(d); const h = React.createElement;
-  root.render(h('div', null, h(Diki.Button, null, 'A'), h(Diki.Button, { loading: true }, 'B'), h(Diki.Loader, { delay: 0 }), h(Diki.Loader, {})));
+  root.render(h('div', null, h(Serupa.Button, null, 'A'), h(Serupa.Button, { loading: true }, 'B'), h(Serupa.Loader, { delay: 0 }), h(Serupa.Loader, {})));
   setTimeout(() => { try { root.unmount(); res('ok'); } catch (e) { res(e.message); } }, 100); }));
 await p.waitForTimeout(100);
 t('Buttons and Loaders can be removed from the page (unmounted) without errors', um === 'ok' && errors.length === 0, um + ' ' + errors.join(' | '));
@@ -103,10 +103,10 @@ t('no page errors', errors.length === 0, errors.join(' | '));
 // component tokens: overrides on a container and on one button, and themes still work inside
 await p.evaluate(() => { const h = React.createElement, d = document.createElement('div'); d.id = 'ctok'; document.body.appendChild(d);
   ReactDOM.createRoot(d).render(h('div', null,
-    h('div', { id: 'pill', style: { '--button-radius': 'var(--rounded-full)', '--button-height-md': 'var(--control-height-lg)' } }, h(Diki.Button, { id: 'pb' }, 'Pill')),
-    h(Diki.Button, { id: 'one', style: { '--button-primary-bg': 'var(--emerald-600)' } }, 'One'),
-    h(Diki.Button, { id: 'plainb' }, 'Plain'),
-    h('div', { 'data-theme': 'violet-dark' }, h(Diki.Button, { id: 'nested' }, 'Nested'), h(Diki.Button, { id: 'nested-d', destructive: true, variant: 'outline' }, 'Del')))); });
+    h('div', { id: 'pill', style: { '--button-radius': 'var(--rounded-full)', '--button-height-md': 'var(--control-height-lg)' } }, h(Serupa.Button, { id: 'pb' }, 'Pill')),
+    h(Serupa.Button, { id: 'one', style: { '--button-primary-bg': 'var(--emerald-600)' } }, 'One'),
+    h(Serupa.Button, { id: 'plainb' }, 'Plain'),
+    h('div', { 'data-theme': 'violet-dark' }, h(Serupa.Button, { id: 'nested' }, 'Nested'), h(Serupa.Button, { id: 'nested-d', destructive: true, variant: 'outline' }, 'Del')))); });
 await p.waitForTimeout(150);
 const ct = await p.evaluate(() => { const g = (id) => getComputedStyle(document.getElementById(id)); const probe = (theme, prop, v) => { const d = document.createElement('div'); if (theme) d.setAttribute('data-theme', theme); d.style[prop] = v; document.body.appendChild(d); const r = getComputedStyle(d)[prop]; d.remove(); return r; };
   return { pillRadius: g('pb').borderTopLeftRadius, pillH: g('pb').height, oneBg: g('one').backgroundColor, emerald: probe(null, 'backgroundColor', 'var(--emerald-600)'), plainBg: g('plainb').backgroundColor, primary: probe(null, 'backgroundColor', 'var(--primary)'),

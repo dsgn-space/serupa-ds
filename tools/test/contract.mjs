@@ -45,8 +45,8 @@ for (const c of comps) {
     guide: has('README.md'),
     preview: has('preview.html'),
     // Its own test file; components on the SCRIPT_TESTED list instead need a script that renders it (D.Name /
-    // Diki.Name) or checks its classes (dk-name).
-    test: SCRIPT_TESTED.includes(c) ? new RegExp(`\\b(?:D|Diki)\\.${c}\\b|\\bdk-${kebab(c)}\\b`).test(testSrc) : has(`${c}.test.tsx`),
+    // Serupa.Name) or checks its classes (dk-name).
+    test: SCRIPT_TESTED.includes(c) ? new RegExp(`\\b(?:D|Serupa)\\.${c}\\b|\\bdk-${kebab(c)}\\b`).test(testSrc) : has(`${c}.test.tsx`),
     visual: themes.every((th) => baselines.has(`${c}-${th}-rest.png`)),
   };
   const missing = [], fixed = [];

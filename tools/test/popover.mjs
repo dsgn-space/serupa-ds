@@ -6,7 +6,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:40px"></div>
 <script>
-var D = window.Diki, h = React.createElement, P = D.Popover;
+var D = window.Serupa, h = React.createElement, P = D.Popover;
 window.changes = [];
 function Controlled() {
   var s = React.useState(false);

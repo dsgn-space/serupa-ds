@@ -8,7 +8,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-direction:column;gap:24px;width:240px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 window.changes = [];
 function Ctl() {
   var s = React.useState('09:00'); window.setCtl = s[1];

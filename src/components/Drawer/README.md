@@ -3,7 +3,7 @@
 A modal panel that slides in from an edge of the screen: navigation on small screens, filters, or details and edits without leaving the page. For a short question or form, use Dialog; for something people keep open while they work, put it in the page.
 
 ```tsx
-import { Drawer, Button } from "@diki/design-system";
+import { Drawer, Button } from "serupa-ds";
 
 const [open, setOpen] = React.useState(false);
 <Button onClick={() => setOpen(true)}>Filters</Button>

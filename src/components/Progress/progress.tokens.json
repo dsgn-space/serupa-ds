@@ -7,7 +7,7 @@
         "$value": "{color.secondary}",
         "$description": "The empty part of the bar or ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-track"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.primary}",
         "$description": "The done part, tone=\"primary\" (the default; 3:1 on the track and the surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-fill"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.success}",
         "$description": "The done part, tone=\"success\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-fill-success"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.warning}",
         "$description": "The done part, tone=\"warning\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-fill-warning"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.danger}",
         "$description": "The done part, tone=\"danger\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-fill-danger"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.text}",
         "$description": "The label above the bar.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-label-color"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.text-muted}",
         "$description": "The value (45%) next to the label or inside the ring (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-value-color"
           }
         }
@@ -79,7 +79,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "The bar's thickness, size=\"sm\" (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-height-sm"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "The bar's thickness, size=\"md\", the default (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-height-md"
           }
         }
@@ -99,7 +99,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "The bar's thickness, size=\"lg\" (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-height-lg"
           }
         }
@@ -109,7 +109,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The ring, size=\"sm\" (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-circle-sm"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{spacing.spacing-10}",
         "$description": "The ring, size=\"md\" (40px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-circle-md"
           }
         }
@@ -129,7 +129,7 @@
         "$value": "{spacing.spacing-16}",
         "$description": "The ring, size=\"lg\" (64px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-circle-lg"
           }
         }
@@ -141,7 +141,7 @@
         "$value": "{radius.rounded-full}",
         "$description": "The bar's ends.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-radius"
           }
         }
@@ -151,7 +151,7 @@
         "$value": "{borders.stroke-width-3}",
         "$description": "The ring's thickness, in 24ths of its size (3: 3px at 24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-stroke-width"
           }
         }
@@ -163,7 +163,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Space between the label row and the bar (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-gap"
           }
         }
@@ -175,7 +175,7 @@
         "$value": "{typography.font-medium}",
         "$description": "The label's weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-label-weight"
           }
         }
@@ -187,7 +187,7 @@
         "$value": "{transitions.duration-300}",
         "$description": "How long the fill takes to move to a new value.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--progress-duration"
           }
         }

@@ -1,5 +1,5 @@
 // Builds the components (src/) into dist/: index.js (ESM, React as a peer dependency), index.d.ts and
-// diki.iife.js (the browser script that reads window.React and sets window.Diki). The CSS and the other
+// serupa.iife.js (the browser script that reads window.React and sets window.Serupa). The CSS and the other
 // files come from tools/build/build.mjs, which runs this first: npm run build.
 import fs from 'node:fs';
 import { defineConfig } from 'tsup';
@@ -16,8 +16,8 @@ const windowReact = {
   },
 };
 
-// DIKI_BUILD=iife builds the browser script only (the icon test builds a scratch copy that way).
-const only = process.env.DIKI_BUILD;
+// SERUPA_BUILD=iife builds the browser script only (the icon test builds a scratch copy that way).
+const only = process.env.SERUPA_BUILD;
 
 export default defineConfig([
   ...(only === 'iife' ? [] : [{
@@ -32,7 +32,7 @@ export default defineConfig([
     define,
   }]),
   {
-    entry: { 'diki.iife': 'src/browser.ts' },
+    entry: { 'serupa.iife': 'src/browser.ts' },
     format: ['iife'],
     outExtension: () => ({ js: '.js' }),
     target: 'es2019',
@@ -41,7 +41,7 @@ export default defineConfig([
     define,
     esbuildPlugins: [windowReact],
     banner: {
-      js: `/*! Diki Design System v${version} · components (needs React 18+) · CHANGELOG.md */`,
+      js: `/*! Serupa v${version} by Diki · components (needs React 18 or 19) · CHANGELOG.md */`,
     },
   },
 ]);

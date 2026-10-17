@@ -7,7 +7,7 @@
         "$value": "{color.text}",
         "$description": "The heading's color.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-text"
           }
         }
@@ -19,7 +19,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The weight of every level (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-weight"
           }
         }
@@ -31,7 +31,7 @@
         "$value": "{fontSize.text-3xl}",
         "$description": "The size of a level 1 heading (text-3xl).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-size-1"
           }
         }
@@ -41,7 +41,7 @@
         "$value": "{fontSize.text-2xl}",
         "$description": "The size of a level 2 heading (text-2xl).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-size-2"
           }
         }
@@ -51,7 +51,7 @@
         "$value": "{fontSize.text-xl}",
         "$description": "The size of a level 3 heading (text-xl).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-size-3"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{fontSize.text-lg}",
         "$description": "The size of a level 4 heading (text-lg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-size-4"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{fontSize.text-base}",
         "$description": "The size of a level 5 heading (text-base).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-size-5"
           }
         }
@@ -81,7 +81,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "The size of a level 6 heading (text-sm).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--heading-size-6"
           }
         }

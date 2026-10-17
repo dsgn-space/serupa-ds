@@ -3,7 +3,7 @@
 A native checkbox with its label, for turning one option on or off, or picking any number from a list. The box is drawn from tokens (`appearance: none`) and sits centered on the label's first line; a click anywhere on the label toggles it. `indeterminate` shows a dash for a select-all box when only some items are picked.
 
 ```jsx
-const { Checkbox, Field } = window.Diki;
+const { Checkbox, Field } = window.Serupa;
 
 <Checkbox checked={agree} onChange={(e) => setAgree(e.target.checked)}>I accept the terms</Checkbox>
 

@@ -3,7 +3,7 @@
 A field for a number, with − and + buttons at the end. People can type freely; the arrow keys and buttons change it by `step`, and it's kept within `min` and `max`. It uses Input's box, sizes and tokens.
 
 ```tsx
-import { NumberInput } from "@diki/design-system";
+import { NumberInput } from "serupa-ds";
 
 <NumberInput aria-label="Quantity" defaultValue={1} min={1} max={99} />
 

@@ -3,7 +3,7 @@
 A time-of-day field: people type a time, or pick one from a list.
 
 ```tsx
-import { Field, TimePicker } from "@diki/design-system";
+import { Field, TimePicker } from "serupa-ds";
 
 const [start, setStart] = React.useState<string | null>("09:00");
 <Field label="Start time">

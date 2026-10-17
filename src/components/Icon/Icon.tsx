@@ -6,7 +6,7 @@ import { ICONS, hasIcon, type CustomIconName } from "../../icons";
 export type IconName = CustomIconName | (string & {});
 
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** One of your custom icons (Diki.customIcons), or a Material Symbols name such as 'add', 'delete', 'arrow_forward' (Rounded style, filled). A custom icon with the same name wins. */
+  /** One of your custom icons (Serupa.customIcons), or a Material Symbols name such as 'add', 'delete', 'arrow_forward' (Rounded style, filled). A custom icon with the same name wins. */
   name: IconName;
   /** Size in px (number) or any CSS length. Default: 24px, or the button's icon size inside a Button. */
   size?: number | string;

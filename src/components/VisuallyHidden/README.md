@@ -3,7 +3,7 @@
 Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. With `focusable` it shows while it has keyboard focus, for a "Skip to content" link.
 
 ```jsx
-const { VisuallyHidden } = window.Diki;
+const { VisuallyHidden } = window.Serupa;
 
 <span>3 <VisuallyHidden>unread messages</VisuallyHidden></span>
 <VisuallyHidden as="h2">Filters</VisuallyHidden>

@@ -1,11 +1,11 @@
-# Diki Design System
+# Serupa
 
-Tokens, themes, utility classes and accessible React components that every Diki project starts from, so new projects are quicker to build, look consistent, and pick up fixes with a version bump.
+A design system by **Diki**. Tokens, themes, utility classes and accessible React components that every project starts from, so new projects are quicker to build, look consistent, and pick up fixes with a version bump.
 
 - **Token-driven.** Every color, size, space, radius, shadow, motion and type value is a design token. Components never hardcode a value.
 - **Six themes.** Blue, Violet and Emerald, each light and dark, switched with one attribute and no component changes.
 - **Accessible by default.** WCAG 2.1 AA contrast in every theme, full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
-- **Works anywhere.** ES modules for React apps (React 18+), or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
+- **Works anywhere.** ES modules for React apps (React 18 or 19), or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
 
 The documentation is Storybook: run `npm run storybook` in this repo and open http://localhost:6006. The foundations (colors, themes, type, spacing, motion and the utility classes) are written in `docs/foundations.md`; each component's guide is `src/components/<Name>/README.md`.
 
@@ -14,12 +14,12 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/design-system#v4.8.0
+npm install github:diki-stwn/serupa-ds#v5.0.0
 ```
 
-Always pin a tag (`#v4.8.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v5.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
-> **Until the first release tag exists**, pin a commit instead: `npm install github:diki-stwn/design-system#<commit>`, using the latest commit on `main`. A commit isn't prebuilt, so that install builds the package first (about 20 seconds). Swap it for a tag once one is published.
+> **Until the first release tag exists**, pin a commit instead: `npm install github:diki-stwn/serupa-ds#<commit>`, using the latest commit on `main`. A commit isn't prebuilt, so that install builds the package first (about 20 seconds). Swap it for a tag once one is published.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
 
@@ -28,10 +28,10 @@ To update later, change the tag in `package.json` (or run the install again with
 In a React app (Vite, Next.js, Remix):
 
 ```js
-import '@diki/design-system/tokens.css';
-import '@diki/design-system/base.css';     // page defaults; leave out when adding the system to an existing app
-import '@diki/design-system/bundle.css';   // or components.css, plus utilities.css if you use the classes
-import { Button, Field, Input } from '@diki/design-system';
+import 'serupa-ds/tokens.css';
+import 'serupa-ds/base.css';     // page defaults; leave out when adding the system to an existing app
+import 'serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
+import { Button, Field, Input } from 'serupa-ds';
 
 export function SignUp() {
   return (
@@ -62,7 +62,7 @@ On a plain page without a bundler:
   <div id="root"></div>
   <script src="dist/lib/react.production.min.js"></script>
   <script src="dist/lib/react-dom.production.min.js"></script>
-  <script src="dist/diki.iife.js"></script>   <!-- puts the components on window.Diki -->
+  <script src="dist/serupa.iife.js"></script>   <!-- puts the components on window.Serupa -->
 </body>
 </html>
 ```
@@ -82,7 +82,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. See Founda
 `bundle.css` holds every utility class (1.7 MB). For production, trim it to the classes your code uses with `tools/purge.py`. The script isn't in the installed package, so run it from a clone of this repo, pointing at your project's source and the installed CSS:
 
 ```sh
-python3 tools/purge.py ../my-app/src --css ../my-app/node_modules/@diki/design-system/dist/bundle.css -o ../my-app/public/bundle.min.css
+python3 tools/purge.py ../my-app/src --css ../my-app/node_modules/serupa-ds/dist/bundle.css -o ../my-app/public/bundle.min.css
 ```
 
 That keeps the component styles and usually gives a few dozen KB.
@@ -97,7 +97,7 @@ That keeps the component styles and usually gives a few dozen KB.
 | `dist/utilities.css` | Every utility class. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
 | `dist/index.js`, `dist/index.d.ts` | The components as ES modules, with types. |
-| `dist/diki.iife.js` | The components for a plain page (`window.Diki`). `dist/bundle.js` is the same file under its old name. |
+| `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). `dist/bundle.js` is the same file under its old name. |
 | `dist/theme.js` | Automatic dark mode and the theme switcher API. |
 | `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. |
 
@@ -132,7 +132,7 @@ Not every component is in a release yet: check the changelog for the version tha
 
 ## Versioning
 
-The system follows [Semantic Versioning](https://semver.org): the version is in `package.json`, at the top of every shipped file and in `Diki.version`, and every release is listed in `CHANGELOG.md`.
+The system follows [Semantic Versioning](https://semver.org): the version is in `package.json`, at the top of every shipped file and in `Serupa.version`, and every release is listed in `CHANGELOG.md`.
 
 | Release | When | Examples |
 | --- | --- | --- |
@@ -148,12 +148,12 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 
 | File | Holds |
 | --- | --- |
-| `diki.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
-| `themes/<theme>.tokens.json` | The 33 alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `diki.tokens.json` plus one theme file |
+| `serupa.tokens.json` | The palette and every scale: colors, dimensions, durations, easings, font families and weights, numbers, shadows, and the type styles as typography tokens |
+| `themes/<theme>.tokens.json` | The 33 alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 
-Each token keeps its CSS variable in `$extensions["com.diki"].cssVar`. The files are generated from `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
+Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The files are generated from `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
 
 ## Browser support
 
@@ -171,11 +171,13 @@ Popover and command buttons (`popoverTarget`, `command`) and `text-wrap: balance
 
 ## Maintaining the system
 
-The source is in `src/`: one folder per component in `src/components/<Name>/` (the component in TypeScript, its CSS, its component tokens, its guidelines and its preview), the utility classes in `src/styles/utilities.css`, and `base.css` and `theme.js`. `npm run build` makes `dist/`, which is never edited or committed: `index.js` and `index.d.ts` (ES modules and types), `diki.iife.js` (the browser script), `components.css`, `utilities.css`, `bundle.css`, `base.css`, `theme.js` and `lib/`. `npm run typecheck` checks the types.
+The source is in `src/`: one folder per component in `src/components/<Name>/` (the component in TypeScript, its CSS, its component tokens, its guidelines and its preview), the utility classes in `src/styles/utilities.css`, and `base.css` and `theme.js`. `npm run build` makes `dist/`, which is never edited or committed: `index.js` and `index.d.ts` (ES modules and types), `serupa.iife.js` (the browser script), `components.css`, `utilities.css`, `bundle.css`, `base.css`, `theme.js` and `lib/`. `npm run typecheck` checks the types.
 
 `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,561 utility classes and the component previews with saved baselines, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.1 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
+
+Serupa is designed and built by **Diki** ([@diki-stwn](https://github.com/diki-stwn)). It was called the Diki Design System up to version 4.
 
 The system is self-contained: every file it needs is in it, and nothing loads from another server. It builds on these open-source works; their licenses are in `licenses/`.
 

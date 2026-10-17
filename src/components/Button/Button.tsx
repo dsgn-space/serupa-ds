@@ -43,7 +43,7 @@ export interface ButtonAsButtonProps extends ButtonOwnProps, Omit<React.ButtonHT
   command?: string;
 }
 
-/** A Button with href: a link (<a>, or the component set with Diki.configure({ link })), for navigation. */
+/** A Button with href: a link (<a>, or the component set with Serupa.configure({ link })), for navigation. */
 export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'type'> {
   /** Where the link goes. With target="_blank", rel defaults to "noopener noreferrer". */
   href: string;

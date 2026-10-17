@@ -7,7 +7,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;width:420px;display:flex;flex-direction:column;gap:24px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 window.changes = []; window.rejects = [];
 function Controlled() {
   var s = React.useState([]); window.ctlFiles = s[0]; window.setCtl = s[1];
@@ -80,7 +80,7 @@ await p.evaluate(() => window.setCtl([])); await p.waitForTimeout(50);
 t('controlled: clearing the list from outside empties it', (await list(ctlRoot)).length === 0);
 const dis = await p.evaluate(() => { const el = document.querySelector('[data-component=file-upload]:has(#dis)'); return { btn: el.querySelector('button').disabled, input: el.querySelector('input').disabled, op: getComputedStyle(el.querySelector('.dk-file-upload__zone')).opacity }; });
 t('disabled: the button and input are disabled, the area faded', dis.btn && dis.input && dis.op === '0.5', JSON.stringify(dis));
-const fmt = await p.evaluate(() => [0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map(window.Diki.formatFileSize).join('|'));
+const fmt = await p.evaluate(() => [0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map(window.Serupa.formatFileSize).join('|'));
 t('formatFileSize: 0 B, 12 B, 1023 B, 1 KB, 1.5 KB, 10 MB, 3.3 GB', fmt === '0 B|12 B|1023 B|1 KB|1.5 KB|10 MB|3.3 GB', fmt);
 await p.setInputFiles(many + ' input[type=file]', [file('x.txt', 'text/plain', 1)]);
 const contrast = await p.evaluate(() => {

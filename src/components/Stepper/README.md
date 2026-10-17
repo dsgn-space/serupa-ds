@@ -3,7 +3,7 @@
 Shows where people are in a task split into steps, such as sign-up, checkout or setup. Each step has a numbered circle and a title; completed steps show a check. Use it for 3 to about 7 steps. For switching between views use Tabs, and for a single value use Progress.
 
 ```tsx
-import { Stepper } from "@diki/design-system";
+import { Stepper } from "serupa-ds";
 
 <Stepper current={1} steps={[
   { title: "Account", description: "Email and password" },

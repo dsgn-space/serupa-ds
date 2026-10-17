@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "The calendar button's icon (3:1 on the field).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-button"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.surface}",
         "$description": "The calendar panel's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-popup-bg"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.border}",
         "$description": "Its outline.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-popup-border"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{shadow.shadow-lg}",
         "$description": "Its shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-popup-shadow"
           }
         }
@@ -51,7 +51,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "Its corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-popup-radius"
           }
         }
@@ -63,7 +63,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space inside it (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-popup-padding"
           }
         }
@@ -73,7 +73,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "The gap between the field and the panel (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-offset"
           }
         }
@@ -85,7 +85,7 @@
         "$value": "{layout.z-50}",
         "$description": "The panel's stacking order, where the top layer isn't available.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-picker-z-index"
           }
         }

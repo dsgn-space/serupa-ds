@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var D = window.Diki, h = React.createElement, S = D.SidebarSection, I = D.SidebarItem;
+  var D = window.Serupa, h = React.createElement, S = D.SidebarSection, I = D.SidebarItem;
   function items() {
     return [h(S, { key: 'a' }, h(I, { href: '#', icon: 'home', label: 'Home', active: true }), h(I, { href: '#', icon: 'inbox', label: 'Inbox', badge: h(D.Badge, { count: 4 }) })),
       h(S, { key: 'b', title: 'Workspace' }, h(I, { icon: 'folder', label: 'Projects', defaultOpen: true }, h(I, { href: '#', label: 'Website' }), h(I, { href: '#', label: 'Mobile app' })), h(I, { href: '#', icon: 'group', label: 'Team' }))];

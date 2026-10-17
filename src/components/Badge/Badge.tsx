@@ -35,7 +35,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   removeLabel?: string;
   /** Makes it interactive: renders a <button type="button"> with hover, focus and active states. onRemove is ignored then. */
   onClick?: React.MouseEventHandler<HTMLElement>;
-  /** Makes it a link (the component set with Diki.configure({ link }), <a> by default), with hover, focus and active states. */
+  /** Makes it a link (the component set with Serupa.configure({ link }), <a> by default), with hover, focus and active states. */
   href?: string;
   target?: string;
   rel?: string;

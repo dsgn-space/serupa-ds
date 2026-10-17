@@ -3,7 +3,7 @@
 Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both.
 
 ```tsx
-import { DateRangePicker, Field, type DateRange } from "@diki/design-system";
+import { DateRangePicker, Field, type DateRange } from "serupa-ds";
 
 const [stay, setStay] = React.useState<DateRange>({ start: null, end: null });
 <Field label="Stay" hint="mm/dd/yyyy">

@@ -1,6 +1,6 @@
 // npm run build: everything a project installs, into dist/ (never edited or committed).
 //   index.js, index.d.ts   the components as ES modules, with types (React is a peer dependency)
-//   diki.iife.js           the browser script: reads window.React, sets window.Diki (bundle.js is the same file)
+//   serupa.iife.js           the browser script: reads window.React, sets window.Serupa (bundle.js is the same file)
 //   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.css
 //   bundle.css             both in one file, components first (what bundle.css has always been)
@@ -28,7 +28,7 @@ fs.mkdirSync(D, { recursive: true });
 if (!process.argv.includes('--css')) {
   const r = spawnSync(process.execPath, [path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: 'inherit' });
   if (r.status !== 0) process.exit(r.status || 1);
-  fs.copyFileSync(path.join(D, 'diki.iife.js'), path.join(D, 'bundle.js'));
+  fs.copyFileSync(path.join(D, 'serupa.iife.js'), path.join(D, 'bundle.js'));
 }
 
 const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !IMPORTS.includes(n));
@@ -37,7 +37,7 @@ const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join
 const utilities = read('src/styles/utilities.css');
 // Each file declares the system's cascade layers in one order (dk.tokens, dk.base, dk.components, dk.utilities),
 // so page styles outside the layers win over them whatever loads first.
-const banner = (what) => `/*! Diki Design System v${version} · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
+const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + components);
 fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + utilities);
 fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + components + utilities);

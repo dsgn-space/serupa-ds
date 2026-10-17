@@ -4,7 +4,7 @@ usage:  python3 tools/icons/build.py [folder of .svg files]     (default: assets
         python3 tools/icons/build.py --check [folder]            exit 1 if the components are out of step
         python3 tools/icons/build.py --project <dir> [folder]    work on another copy of the system
 
-Each file becomes one icon, named after the file: diki-sparkle.svg -> <Icon name="diki-sparkle" />.
+Each file becomes one icon, named after the file: serupa-sparkle.svg -> <Icon name="serupa-sparkle" />.
 The icons and their names (CustomIconName) are written into src/icons.ts, between the @icons markers;
 npm run build then puts them in dist/. Run it again after adding, changing or removing a file; an
 empty or missing folder removes every custom icon.
@@ -16,7 +16,7 @@ What a file needs (the same grid as Material Symbols, so they sit together):
     white shapes. fill="none" is kept, so outlined (stroke) icons work too; strokes use the text color.
   - only shapes: path, circle, ellipse, rect, line, polyline, polygon, grouped with g.
     No images, text, gradients, masks, clip paths, filters, <use>, styles, scripts or links.
-  - a file name in lowercase letters and digits, words joined by - or _ (diki-sparkle, chart_up).
+  - a file name in lowercase letters and digits, words joined by - or _ (serupa-sparkle, chart_up).
 
 Anything else stops the build with the reason, so nothing unsafe or off-system reaches the bundle.
 Ids, classes, styles, sizes and editor metadata (Figma, Illustrator, Sketch) are removed.
@@ -75,7 +75,7 @@ def attr_name(k):
 def clean(svg_text, name='icon'):
     """SVG text -> the icon's inner markup (shapes only, drawn in currentColor). Raises IconError."""
     if not NAME.fullmatch(name):
-        raise IconError(f'"{name}": name the file in lowercase letters and digits, words joined by - or _ (e.g. diki-sparkle.svg)')
+        raise IconError(f'"{name}": name the file in lowercase letters and digits, words joined by - or _ (e.g. serupa-sparkle.svg)')
     if re.search(r'<!DOCTYPE|<!ENTITY', svg_text, re.I):
         raise IconError(f'{name}: remove the DOCTYPE/ENTITY declarations')
     try:

@@ -3,7 +3,7 @@
 What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it.
 
 ```jsx
-const { EmptyState, Button } = window.Diki;
+const { EmptyState, Button } = window.Serupa;
 
 <EmptyState
   icon="folder_open"

@@ -3,7 +3,7 @@
 A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. One item open at a time by default, or several with `type="multiple"`.
 
 ```jsx
-const { Accordion, AccordionItem } = window.Diki;
+const { Accordion, AccordionItem } = window.Serupa;
 
 <Accordion defaultValue={['shipping']}>
   <AccordionItem value="shipping" title="How long does shipping take?">Orders ship within 2 business days.</AccordionItem>

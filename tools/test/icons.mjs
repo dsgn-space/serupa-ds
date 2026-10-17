@@ -20,12 +20,12 @@ fs.writeFileSync(path.join(src, 'test-square.svg'), '<svg width="24" height="24"
 fs.writeFileSync(path.join(src, 'test-ring.svg'), '<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/></svg>');
 const built = spawnSync('python3', ['-I', path.join(PROJECT, 'tools', 'icons', 'build.py'), '--project', proj, src], { encoding: 'utf8' });
 // then the browser script, as npm run build makes it
-const bundled = spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: proj, encoding: 'utf8', env: { ...process.env, DIKI_BUILD: 'iife' } });
+const bundled = spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: proj, encoding: 'utf8', env: { ...process.env, SERUPA_BUILD: 'iife' } });
 
-const libs = ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js'].map((s) => `<script src="../${s}"></script>`).join('') + '<script src="iconproj/dist/diki.iife.js"></script>';
+const libs = ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js'].map((s) => `<script src="../${s}"></script>`).join('') + '<script src="iconproj/dist/serupa.iife.js"></script>';
 const APP = `<div id="root"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
   h('p', { id: 'line', style: { fontSize: '16px', lineHeight: '24px', color: 'rgb(200, 30, 40)' } }, 'Text ', h(D.Icon, { id: 'fontinline', name: 'home' }), ' and ', h(D.Icon, { id: 'custominline', name: 'test-square' })),
   h(D.Icon, { id: 'deco', name: 'test-square' }),
@@ -51,7 +51,7 @@ const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 
 t('build.py builds the two sample icons', built.status === 0, built.stdout + built.stderr);
 t('npm run build bundles them into the browser script', bundled.status === 0, bundled.stdout + bundled.stderr);
-t('Diki.customIcons lists them', JSON.stringify(await p.evaluate(() => window.Diki.customIcons)) === '["test-ring","test-square"]');
+t('Serupa.customIcons lists them', JSON.stringify(await p.evaluate(() => window.Serupa.customIcons)) === '["test-ring","test-square"]');
 const info = await p.evaluate(() => {
   const q = (s) => document.querySelector(s);
   const box = (s) => { const r = q(s).getBoundingClientRect(); return [Math.round(r.width * 10) / 10, Math.round(r.height * 10) / 10]; };

@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.warnings = []; var cw = console.warn; console.warn = function (m) { window.warnings.push(String(m)); cw.apply(console, arguments); };
+var D = window.Serupa, h = React.createElement; window.warnings = []; var cw = console.warn; console.warn = function (m) { window.warnings.push(String(m)); cw.apply(console, arguments); };
 function App() {
   var s = React.useState(false), late = s[0]; window.showLate = function () { s[1](true); };
   var q = React.useState(true), quick = q[0]; window.hideQuick = function () { q[1](false); };

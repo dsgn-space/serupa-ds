@@ -3,7 +3,7 @@
 A 1px line between content, horizontal or vertical, with an optional label in the middle such as "or".
 
 ```jsx
-const { Divider, Stack } = window.Diki;
+const { Divider, Stack } = window.Serupa;
 
 <Divider />
 <Divider label="or" />

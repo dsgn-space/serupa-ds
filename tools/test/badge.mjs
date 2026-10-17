@@ -6,7 +6,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 const TONES = ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 const APP = `<div id="root" style="padding:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.removed = []; window.clicks = 0; window.warns = [];
+var D = window.Serupa, h = React.createElement; window.removed = []; window.clicks = 0; window.warns = [];
 var cw = console.warn; console.warn = function (m) { window.warns.push(String(m)); cw.apply(console, arguments); };
 var TONES = ${JSON.stringify(TONES)};
 function App() {

@@ -3,7 +3,7 @@
 Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). It's a radio group drawn as segments, with the selection sliding between them.
 
 ```tsx
-import { SegmentedControl } from "@diki/design-system";
+import { SegmentedControl } from "serupa-ds";
 
 <SegmentedControl aria-label="Period" defaultValue="week"
   options={[{ value: "day", label: "Day" }, { value: "week", label: "Week" }, { value: "month", label: "Month" }]} />

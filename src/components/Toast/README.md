@@ -3,7 +3,7 @@
 A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. Call `toast()` from anywhere; messages show in the `<Toaster>`, which you render once near the root of the app, and go away on their own.
 
 ```jsx
-const { Toaster, toast } = window.Diki;
+const { Toaster, toast } = window.Serupa;
 
 // once, near the root
 <Toaster />

@@ -3,7 +3,7 @@
 Shows one icon: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon name straight to Button's `leftIcon`, `rightIcon` or `icon`.
 
 ```jsx
-const { Icon, Button } = window.Diki;
+const { Icon, Button } = window.Serupa;
 
 <Icon name="home" />                       // 24px, decorative
 <Icon name="warning" size={20} style={{ color: 'var(--warning)' }} />
@@ -41,8 +41,8 @@ Nothing to load: the font ships with the system as `fonts/MaterialSymbolsRounded
 For what Material Symbols doesn't have, add your own SVG icons. They work everywhere a Material Symbols name does, with the same sizes, colors and accessibility:
 
 ```jsx
-<Icon name="diki-sparkle" />
-<Button leftIcon="diki-sparkle">Generate</Button>
+<Icon name="serupa-sparkle" />
+<Button leftIcon="serupa-sparkle">Generate</Button>
 ```
 
 **Draw** each icon so it sits with Material Symbols Rounded:
@@ -54,13 +54,13 @@ For what Material Symbols doesn't have, add your own SVG icons. They work everyw
 
 **Add** them:
 
-1. Put the SVG in `assets/Icons/` (the Icons set on the design system page). The file name is the icon's name: lowercase letters and digits, words joined by `-` or `_`, such as `diki-sparkle.svg`. A prefix such as `diki-` keeps your names apart from Material Symbols; a custom icon with the same name as a Material Symbol replaces it everywhere.
+1. Put the SVG in `assets/Icons/` (the Icons set on the design system page). The file name is the icon's name: lowercase letters and digits, words joined by `-` or `_`, such as `serupa-sparkle.svg`. A prefix such as `serupa-` keeps your names apart from Material Symbols; a custom icon with the same name as a Material Symbol replaces it everywhere.
 2. Run `python3 tools/icons/build.py` (or `python3 tools/icons/build.py path/to/folder`). It writes the icons into `components/bundle.js` and their names into `components/index.d.ts` (`CustomIconName`), so TypeScript autocompletes them.
 3. Run it again after changing or removing a file. `python3 tools/icons/build.py --check` fails if the components are out of step, for CI.
 
 The build keeps only the shapes and removes editor leftovers (ids, classes, sizes, Figma and Illustrator metadata). It refuses a file, with the reason, when it holds anything that could run code or load something (scripts, event handlers, links, images), anything that isn't a plain shape (text, gradients, masks, filters, `<use>`), another grid, or a second color. A refused file stops the build, and the components stay as they were.
 
-`Diki.customIcons` lists the custom icons' names.
+`Serupa.customIcons` lists the custom icons' names.
 
 ### Sizes
 

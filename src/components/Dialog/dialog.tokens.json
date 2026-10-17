@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "The panel's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.overlay}",
         "$description": "The dimmed backdrop over the page.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-overlay"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The title.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-title-color"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "The description under the title (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-description-color"
           }
         }
@@ -49,7 +49,7 @@
         "$value": "{shadow.shadow-xl}",
         "$description": "The panel's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-shadow"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{radius.rounded-xl}",
         "$description": "The panel's corners (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-radius"
           }
         }
@@ -73,7 +73,7 @@
         "$value": "{sizing.container-sm}",
         "$description": "size=\"sm\" (384px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-width-sm"
           }
         }
@@ -83,7 +83,7 @@
         "$value": "{sizing.container-lg}",
         "$description": "size=\"md\", the default (512px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-width-md"
           }
         }
@@ -93,7 +93,7 @@
         "$value": "{sizing.container-2xl}",
         "$description": "size=\"lg\" (672px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-width-lg"
           }
         }
@@ -105,7 +105,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "Padding inside the panel (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-padding"
           }
         }
@@ -115,7 +115,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Space between the header, body and footer (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-gap"
           }
         }
@@ -125,7 +125,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The least space between the panel and the edge of the screen (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-margin"
           }
         }
@@ -137,7 +137,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The title's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--dialog-title-weight"
           }
         }

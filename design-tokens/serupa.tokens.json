@@ -13,7 +13,7 @@
       },
       "$description": "Pure white.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--white"
         }
       }
@@ -31,7 +31,7 @@
       },
       "$description": "Pure black.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--black"
         }
       }
@@ -49,7 +49,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-50"
         }
       }
@@ -67,7 +67,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-100"
         }
       }
@@ -85,7 +85,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-200"
         }
       }
@@ -103,7 +103,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-300"
         }
       }
@@ -121,7 +121,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-400"
         }
       }
@@ -139,7 +139,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-500"
         }
       }
@@ -157,7 +157,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-600"
         }
       }
@@ -175,7 +175,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-700"
         }
       }
@@ -193,7 +193,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-800"
         }
       }
@@ -211,7 +211,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (17.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-900"
         }
       }
@@ -229,7 +229,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (20.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--slate-950"
         }
       }
@@ -247,7 +247,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-50"
         }
       }
@@ -265,7 +265,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-100"
         }
       }
@@ -283,7 +283,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-200"
         }
       }
@@ -301,7 +301,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-300"
         }
       }
@@ -319,7 +319,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-400"
         }
       }
@@ -337,7 +337,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-500"
         }
       }
@@ -355,7 +355,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-600"
         }
       }
@@ -373,7 +373,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-700"
         }
       }
@@ -391,7 +391,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-800"
         }
       }
@@ -409,7 +409,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (17.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-900"
         }
       }
@@ -427,7 +427,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--gray-950"
         }
       }
@@ -445,7 +445,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-50"
         }
       }
@@ -463,7 +463,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-100"
         }
       }
@@ -481,7 +481,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-200"
         }
       }
@@ -499,7 +499,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-300"
         }
       }
@@ -517,7 +517,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-400"
         }
       }
@@ -535,7 +535,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-500"
         }
       }
@@ -553,7 +553,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-600"
         }
       }
@@ -571,7 +571,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-700"
         }
       }
@@ -589,7 +589,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-800"
         }
       }
@@ -607,7 +607,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (17.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-900"
         }
       }
@@ -625,7 +625,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (19.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zinc-950"
         }
       }
@@ -643,7 +643,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-50"
         }
       }
@@ -661,7 +661,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-100"
         }
       }
@@ -679,7 +679,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-200"
         }
       }
@@ -697,7 +697,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-300"
         }
       }
@@ -715,7 +715,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-400"
         }
       }
@@ -733,7 +733,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-500"
         }
       }
@@ -751,7 +751,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-600"
         }
       }
@@ -769,7 +769,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-700"
         }
       }
@@ -787,7 +787,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-800"
         }
       }
@@ -805,7 +805,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (17.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-900"
         }
       }
@@ -823,7 +823,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (19.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--neutral-950"
         }
       }
@@ -841,7 +841,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-50"
         }
       }
@@ -859,7 +859,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-100"
         }
       }
@@ -877,7 +877,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-200"
         }
       }
@@ -895,7 +895,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-300"
         }
       }
@@ -913,7 +913,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-400"
         }
       }
@@ -931,7 +931,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-500"
         }
       }
@@ -949,7 +949,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-600"
         }
       }
@@ -967,7 +967,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-700"
         }
       }
@@ -985,7 +985,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-800"
         }
       }
@@ -1003,7 +1003,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (17.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-900"
         }
       }
@@ -1021,7 +1021,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (19.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stone-950"
         }
       }
@@ -1039,7 +1039,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-50"
         }
       }
@@ -1057,7 +1057,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-100"
         }
       }
@@ -1075,7 +1075,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 14.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-200"
         }
       }
@@ -1093,7 +1093,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-300"
         }
       }
@@ -1111,7 +1111,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-400"
         }
       }
@@ -1129,7 +1129,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.8:1); black 5.6:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-500"
         }
       }
@@ -1147,7 +1147,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-600"
         }
       }
@@ -1165,7 +1165,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (6.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-700"
         }
       }
@@ -1183,7 +1183,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-800"
         }
       }
@@ -1201,7 +1201,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-900"
         }
       }
@@ -1219,7 +1219,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (16.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--red-950"
         }
       }
@@ -1237,7 +1237,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-50"
         }
       }
@@ -1255,7 +1255,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-100"
         }
       }
@@ -1273,7 +1273,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 15.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-200"
         }
       }
@@ -1291,7 +1291,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 12.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-300"
         }
       }
@@ -1309,7 +1309,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 9.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-400"
         }
       }
@@ -1327,7 +1327,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 7.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-500"
         }
       }
@@ -1345,7 +1345,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.6:1); black 5.9:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-600"
         }
       }
@@ -1363,7 +1363,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-700"
         }
       }
@@ -1381,7 +1381,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-800"
         }
       }
@@ -1399,7 +1399,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-900"
         }
       }
@@ -1417,7 +1417,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--orange-950"
         }
       }
@@ -1435,7 +1435,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-50"
         }
       }
@@ -1453,7 +1453,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-100"
         }
       }
@@ -1471,7 +1471,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-200"
         }
       }
@@ -1489,7 +1489,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-300"
         }
       }
@@ -1507,7 +1507,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 12.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-400"
         }
       }
@@ -1525,7 +1525,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 9.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-500"
         }
       }
@@ -1543,7 +1543,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.2:1); black 6.6:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-600"
         }
       }
@@ -1561,7 +1561,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-700"
         }
       }
@@ -1579,7 +1579,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-800"
         }
       }
@@ -1597,7 +1597,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-900"
         }
       }
@@ -1615,7 +1615,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--amber-950"
         }
       }
@@ -1633,7 +1633,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-50"
         }
       }
@@ -1651,7 +1651,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-100"
         }
       }
@@ -1669,7 +1669,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-200"
         }
       }
@@ -1687,7 +1687,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 15.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-300"
         }
       }
@@ -1705,7 +1705,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 13.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-400"
         }
       }
@@ -1723,7 +1723,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 11.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-500"
         }
       }
@@ -1741,7 +1741,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 7.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-600"
         }
       }
@@ -1759,7 +1759,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (4.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-700"
         }
       }
@@ -1777,7 +1777,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (6.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-800"
         }
       }
@@ -1795,7 +1795,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-900"
         }
       }
@@ -1813,7 +1813,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--yellow-950"
         }
       }
@@ -1831,7 +1831,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-50"
         }
       }
@@ -1849,7 +1849,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-100"
         }
       }
@@ -1867,7 +1867,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-200"
         }
       }
@@ -1885,7 +1885,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 16.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-300"
         }
       }
@@ -1903,7 +1903,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 13.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-400"
         }
       }
@@ -1921,7 +1921,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 10.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-500"
         }
       }
@@ -1939,7 +1939,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.1:1); black 6.8:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-600"
         }
       }
@@ -1957,7 +1957,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-700"
         }
       }
@@ -1975,7 +1975,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-800"
         }
       }
@@ -1993,7 +1993,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-900"
         }
       }
@@ -2011,7 +2011,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--lime-950"
         }
       }
@@ -2029,7 +2029,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-50"
         }
       }
@@ -2047,7 +2047,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-100"
         }
       }
@@ -2065,7 +2065,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-200"
         }
       }
@@ -2083,7 +2083,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 15.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-300"
         }
       }
@@ -2101,7 +2101,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 12.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-400"
         }
       }
@@ -2119,7 +2119,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 9.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-500"
         }
       }
@@ -2137,7 +2137,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.3:1); black 6.4:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-600"
         }
       }
@@ -2155,7 +2155,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-700"
         }
       }
@@ -2173,7 +2173,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-800"
         }
       }
@@ -2191,7 +2191,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-900"
         }
       }
@@ -2209,7 +2209,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--green-950"
         }
       }
@@ -2227,7 +2227,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-50"
         }
       }
@@ -2245,7 +2245,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-100"
         }
       }
@@ -2263,7 +2263,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-200"
         }
       }
@@ -2281,7 +2281,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 13.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-300"
         }
       }
@@ -2299,7 +2299,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 10.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-400"
         }
       }
@@ -2317,7 +2317,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 8.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-500"
         }
       }
@@ -2335,7 +2335,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.8:1); black 5.6:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-600"
         }
       }
@@ -2353,7 +2353,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-700"
         }
       }
@@ -2371,7 +2371,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-800"
         }
       }
@@ -2389,7 +2389,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-900"
         }
       }
@@ -2407,7 +2407,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--emerald-950"
         }
       }
@@ -2425,7 +2425,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-50"
         }
       }
@@ -2443,7 +2443,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-100"
         }
       }
@@ -2461,7 +2461,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-200"
         }
       }
@@ -2479,7 +2479,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-300"
         }
       }
@@ -2497,7 +2497,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-400"
         }
       }
@@ -2515,7 +2515,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 8.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-500"
         }
       }
@@ -2533,7 +2533,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.7:1); black 5.6:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-600"
         }
       }
@@ -2551,7 +2551,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-700"
         }
       }
@@ -2569,7 +2569,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-800"
         }
       }
@@ -2587,7 +2587,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-900"
         }
       }
@@ -2605,7 +2605,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--teal-950"
         }
       }
@@ -2623,7 +2623,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 20.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-50"
         }
       }
@@ -2641,7 +2641,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-100"
         }
       }
@@ -2659,7 +2659,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 16.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-200"
         }
       }
@@ -2677,7 +2677,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 14.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-300"
         }
       }
@@ -2695,7 +2695,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-400"
         }
       }
@@ -2713,7 +2713,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 8.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-500"
         }
       }
@@ -2731,7 +2731,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.7:1); black 5.7:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-600"
         }
       }
@@ -2749,7 +2749,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-700"
         }
       }
@@ -2767,7 +2767,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-800"
         }
       }
@@ -2785,7 +2785,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-900"
         }
       }
@@ -2803,7 +2803,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (13.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--cyan-950"
         }
       }
@@ -2821,7 +2821,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-50"
         }
       }
@@ -2839,7 +2839,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-100"
         }
       }
@@ -2857,7 +2857,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 15.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-200"
         }
       }
@@ -2875,7 +2875,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 12.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-300"
         }
       }
@@ -2893,7 +2893,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 9.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-400"
         }
       }
@@ -2911,7 +2911,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Use dark text on it (black 7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-500"
         }
       }
@@ -2929,7 +2929,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (4.1:1); black 5.1:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-600"
         }
       }
@@ -2947,7 +2947,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (5.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-700"
         }
       }
@@ -2965,7 +2965,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-800"
         }
       }
@@ -2983,7 +2983,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-900"
         }
       }
@@ -3001,7 +3001,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (13.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sky-950"
         }
       }
@@ -3019,7 +3019,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-50"
         }
       }
@@ -3037,7 +3037,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-100"
         }
       }
@@ -3055,7 +3055,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 14.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-200"
         }
       }
@@ -3073,7 +3073,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-300"
         }
       }
@@ -3091,7 +3091,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-400"
         }
       }
@@ -3109,7 +3109,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.7:1); black 5.7:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-500"
         }
       }
@@ -3127,7 +3127,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (5.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-600"
         }
       }
@@ -3145,7 +3145,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (6.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-700"
         }
       }
@@ -3163,7 +3163,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-800"
         }
       }
@@ -3181,7 +3181,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-900"
         }
       }
@@ -3199,7 +3199,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blue-950"
         }
       }
@@ -3217,7 +3217,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-50"
         }
       }
@@ -3235,7 +3235,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-100"
         }
       }
@@ -3253,7 +3253,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 14.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-200"
         }
       }
@@ -3271,7 +3271,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 10.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-300"
         }
       }
@@ -3289,7 +3289,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 7.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-400"
         }
       }
@@ -3307,7 +3307,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (4.5:1); black 4.7:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-500"
         }
       }
@@ -3325,7 +3325,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (6.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-600"
         }
       }
@@ -3343,7 +3343,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-700"
         }
       }
@@ -3361,7 +3361,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-800"
         }
       }
@@ -3379,7 +3379,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (11.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-900"
         }
       }
@@ -3397,7 +3397,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (16.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--indigo-950"
         }
       }
@@ -3415,7 +3415,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-50"
         }
       }
@@ -3433,7 +3433,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-100"
         }
       }
@@ -3451,7 +3451,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 15.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-200"
         }
       }
@@ -3469,7 +3469,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-300"
         }
       }
@@ -3487,7 +3487,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 7.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-400"
         }
       }
@@ -3505,7 +3505,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (4.2:1); black 5.0:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-500"
         }
       }
@@ -3523,7 +3523,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (5.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-600"
         }
       }
@@ -3541,7 +3541,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-700"
         }
       }
@@ -3559,7 +3559,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-800"
         }
       }
@@ -3577,7 +3577,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (11.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-900"
         }
       }
@@ -3595,7 +3595,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--violet-950"
         }
       }
@@ -3613,7 +3613,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-50"
         }
       }
@@ -3631,7 +3631,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-100"
         }
       }
@@ -3649,7 +3649,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 15.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-200"
         }
       }
@@ -3667,7 +3667,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-300"
         }
       }
@@ -3685,7 +3685,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 7.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-400"
         }
       }
@@ -3703,7 +3703,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (4.0:1); black 5.3:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-500"
         }
       }
@@ -3721,7 +3721,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (5.4:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-600"
         }
       }
@@ -3739,7 +3739,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-700"
         }
       }
@@ -3757,7 +3757,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-800"
         }
       }
@@ -3775,7 +3775,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-900"
         }
       }
@@ -3793,7 +3793,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--purple-950"
         }
       }
@@ -3811,7 +3811,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-50"
         }
       }
@@ -3829,7 +3829,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 18.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-100"
         }
       }
@@ -3847,7 +3847,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 15.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-200"
         }
       }
@@ -3865,7 +3865,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-300"
         }
       }
@@ -3883,7 +3883,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 8.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-400"
         }
       }
@@ -3901,7 +3901,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.5:1); black 6.1:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-500"
         }
       }
@@ -3919,7 +3919,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-600"
         }
       }
@@ -3937,7 +3937,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (6.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-700"
         }
       }
@@ -3955,7 +3955,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-800"
         }
       }
@@ -3973,7 +3973,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (10.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-900"
         }
       }
@@ -3991,7 +3991,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (14.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--fuchsia-950"
         }
       }
@@ -4009,7 +4009,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-50"
         }
       }
@@ -4027,7 +4027,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-100"
         }
       }
@@ -4045,7 +4045,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 15.2:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-200"
         }
       }
@@ -4063,7 +4063,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-300"
         }
       }
@@ -4081,7 +4081,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 7.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-400"
         }
       }
@@ -4099,7 +4099,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.5:1); black 6.0:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-500"
         }
       }
@@ -4117,7 +4117,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-600"
         }
       }
@@ -4135,7 +4135,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (6.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-700"
         }
       }
@@ -4153,7 +4153,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (7.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-800"
         }
       }
@@ -4171,7 +4171,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-900"
         }
       }
@@ -4189,7 +4189,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--pink-950"
         }
       }
@@ -4207,7 +4207,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 19.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-50"
         }
       }
@@ -4225,7 +4225,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 17.5:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-100"
         }
       }
@@ -4243,7 +4243,7 @@
       },
       "$description": "Tints, subtle backgrounds. Use dark text on it (black 14.9:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-200"
         }
       }
@@ -4261,7 +4261,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 11.1:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-300"
         }
       }
@@ -4279,7 +4279,7 @@
       },
       "$description": "Borders, accents, decorative fills. Use dark text on it (black 7.8:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-400"
         }
       }
@@ -4297,7 +4297,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. White passes only for large text/icons (3.7:1); black 5.7:1.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-500"
         }
       }
@@ -4315,7 +4315,7 @@
       },
       "$description": "Solid fills, buttons, brand accents. Text: white passes on it (4.7:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-600"
         }
       }
@@ -4333,7 +4333,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (6.3:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-700"
         }
       }
@@ -4351,7 +4351,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (8.0:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-800"
         }
       }
@@ -4369,7 +4369,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (9.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-900"
         }
       }
@@ -4387,7 +4387,7 @@
       },
       "$description": "Text, dark surfaces. Text: white passes on it (15.6:1).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rose-950"
         }
       }
@@ -4402,7 +4402,7 @@
       },
       "$description": "`0` (`p-0`, `m-0`, `gap-0`…): 0px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-0"
         }
       }
@@ -4415,7 +4415,7 @@
       },
       "$description": "`px` (`p-px`, `m-px`, `gap-px`…): 1px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-px"
         }
       }
@@ -4428,7 +4428,7 @@
       },
       "$description": "`0.5` (`p-0.5`, `m-0.5`, `gap-0.5`…): 2px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-0.5"
         }
       }
@@ -4441,7 +4441,7 @@
       },
       "$description": "`1` (`p-1`, `m-1`, `gap-1`…): 4px. Icon-to-label gaps.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-1"
         }
       }
@@ -4454,7 +4454,7 @@
       },
       "$description": "`1.5` (`p-1.5`, `m-1.5`, `gap-1.5`…): 6px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-1.5"
         }
       }
@@ -4467,7 +4467,7 @@
       },
       "$description": "`2` (`p-2`, `m-2`, `gap-2`…): 8px. Tight gaps inside controls.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-2"
         }
       }
@@ -4480,7 +4480,7 @@
       },
       "$description": "`2.5` (`p-2.5`, `m-2.5`, `gap-2.5`…): 10px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-2.5"
         }
       }
@@ -4493,7 +4493,7 @@
       },
       "$description": "`3` (`p-3`, `m-3`, `gap-3`…): 12px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-3"
         }
       }
@@ -4506,7 +4506,7 @@
       },
       "$description": "`3.5` (`p-3.5`, `m-3.5`, `gap-3.5`…): 14px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-3.5"
         }
       }
@@ -4519,7 +4519,7 @@
       },
       "$description": "`4` (`p-4`, `m-4`, `gap-4`…): 16px. Default padding and gaps.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-4"
         }
       }
@@ -4532,7 +4532,7 @@
       },
       "$description": "`5` (`p-5`, `m-5`, `gap-5`…): 20px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-5"
         }
       }
@@ -4545,7 +4545,7 @@
       },
       "$description": "`6` (`p-6`, `m-6`, `gap-6`…): 24px. Card padding.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-6"
         }
       }
@@ -4558,7 +4558,7 @@
       },
       "$description": "`7` (`p-7`, `m-7`, `gap-7`…): 28px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-7"
         }
       }
@@ -4571,7 +4571,7 @@
       },
       "$description": "`8` (`p-8`, `m-8`, `gap-8`…): 32px. Gaps between groups.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-8"
         }
       }
@@ -4584,7 +4584,7 @@
       },
       "$description": "`9` (`p-9`, `m-9`, `gap-9`…): 36px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-9"
         }
       }
@@ -4597,7 +4597,7 @@
       },
       "$description": "`10` (`p-10`, `m-10`, `gap-10`…): 40px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-10"
         }
       }
@@ -4610,7 +4610,7 @@
       },
       "$description": "`11` (`p-11`, `m-11`, `gap-11`…): 44px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-11"
         }
       }
@@ -4623,7 +4623,7 @@
       },
       "$description": "`12` (`p-12`, `m-12`, `gap-12`…): 48px. Section spacing.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-12"
         }
       }
@@ -4636,7 +4636,7 @@
       },
       "$description": "`14` (`p-14`, `m-14`, `gap-14`…): 56px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-14"
         }
       }
@@ -4649,7 +4649,7 @@
       },
       "$description": "`16` (`p-16`, `m-16`, `gap-16`…): 64px. Large section spacing.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-16"
         }
       }
@@ -4662,7 +4662,7 @@
       },
       "$description": "`20` (`p-20`, `m-20`, `gap-20`…): 80px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-20"
         }
       }
@@ -4675,7 +4675,7 @@
       },
       "$description": "`24` (`p-24`, `m-24`, `gap-24`…): 96px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-24"
         }
       }
@@ -4688,7 +4688,7 @@
       },
       "$description": "`28` (`p-28`, `m-28`, `gap-28`…): 112px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-28"
         }
       }
@@ -4701,7 +4701,7 @@
       },
       "$description": "`32` (`p-32`, `m-32`, `gap-32`…): 128px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-32"
         }
       }
@@ -4714,7 +4714,7 @@
       },
       "$description": "`36` (`p-36`, `m-36`, `gap-36`…): 144px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-36"
         }
       }
@@ -4727,7 +4727,7 @@
       },
       "$description": "`40` (`p-40`, `m-40`, `gap-40`…): 160px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-40"
         }
       }
@@ -4740,7 +4740,7 @@
       },
       "$description": "`44` (`p-44`, `m-44`, `gap-44`…): 176px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-44"
         }
       }
@@ -4753,7 +4753,7 @@
       },
       "$description": "`48` (`p-48`, `m-48`, `gap-48`…): 192px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-48"
         }
       }
@@ -4766,7 +4766,7 @@
       },
       "$description": "`52` (`p-52`, `m-52`, `gap-52`…): 208px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-52"
         }
       }
@@ -4779,7 +4779,7 @@
       },
       "$description": "`56` (`p-56`, `m-56`, `gap-56`…): 224px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-56"
         }
       }
@@ -4792,7 +4792,7 @@
       },
       "$description": "`60` (`p-60`, `m-60`, `gap-60`…): 240px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-60"
         }
       }
@@ -4805,7 +4805,7 @@
       },
       "$description": "`64` (`p-64`, `m-64`, `gap-64`…): 256px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-64"
         }
       }
@@ -4818,7 +4818,7 @@
       },
       "$description": "`72` (`p-72`, `m-72`, `gap-72`…): 288px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-72"
         }
       }
@@ -4831,7 +4831,7 @@
       },
       "$description": "`80` (`p-80`, `m-80`, `gap-80`…): 320px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-80"
         }
       }
@@ -4844,7 +4844,7 @@
       },
       "$description": "`96` (`p-96`, `m-96`, `gap-96`…): 384px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--spacing-96"
         }
       }
@@ -4859,7 +4859,7 @@
       },
       "$description": "`rounded-none`: Square corners.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-none"
         }
       }
@@ -4872,7 +4872,7 @@
       },
       "$description": "`rounded-xs`: 2px. Tags, small chips, focus outlines.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-xs"
         }
       }
@@ -4885,7 +4885,7 @@
       },
       "$description": "`rounded-sm`: 4px. Inputs, small buttons, checkboxes.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-sm"
         }
       }
@@ -4898,7 +4898,7 @@
       },
       "$description": "`rounded`: 4px. Same as `rounded-sm`; kept for older code.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded"
         }
       }
@@ -4911,7 +4911,7 @@
       },
       "$description": "`rounded-md`: 6px. Buttons, inputs (Button uses it).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-md"
         }
       }
@@ -4924,7 +4924,7 @@
       },
       "$description": "`rounded-lg`: 8px. Cards, menus, popovers.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-lg"
         }
       }
@@ -4937,7 +4937,7 @@
       },
       "$description": "`rounded-xl`: 12px. Large cards, panels.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-xl"
         }
       }
@@ -4950,7 +4950,7 @@
       },
       "$description": "`rounded-2xl`: 16px. Modals, feature cards.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-2xl"
         }
       }
@@ -4963,7 +4963,7 @@
       },
       "$description": "`rounded-3xl`: 24px. Hero blocks, large surfaces.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-3xl"
         }
       }
@@ -4976,7 +4976,7 @@
       },
       "$description": "`rounded-4xl`: 32px. Very large surfaces, marketing blocks.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-4xl"
         }
       }
@@ -4989,7 +4989,7 @@
       },
       "$description": "`rounded-full`: Pills and circles: avatars, badges, toggles.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--rounded-full"
         }
       }
@@ -5028,7 +5028,7 @@
       },
       "$description": "`shadow-2xs`. Hairline lift under flat controls.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-2xs"
         }
       }
@@ -5065,7 +5065,7 @@
       },
       "$description": "`shadow-xs`. Buttons and inputs (Button uses it).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-xs"
         }
       }
@@ -5132,7 +5132,7 @@
       ],
       "$description": "`shadow-sm`. Cards at rest.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-sm"
         }
       }
@@ -5199,7 +5199,7 @@
       ],
       "$description": "`shadow-md`. Raised cards, hover states.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-md"
         }
       }
@@ -5266,7 +5266,7 @@
       ],
       "$description": "`shadow-lg`. Dropdowns, popovers.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-lg"
         }
       }
@@ -5333,7 +5333,7 @@
       ],
       "$description": "`shadow-xl`. Dialogs, floating panels.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-xl"
         }
       }
@@ -5370,7 +5370,7 @@
       },
       "$description": "`shadow-2xl`. Modals, the highest elevation.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-2xl"
         }
       }
@@ -5407,7 +5407,7 @@
       },
       "$description": "`shadow-none`. Removes a shadow.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--shadow-none"
         }
       }
@@ -5445,7 +5445,7 @@
       },
       "$description": "`inset-shadow-2xs`. A hairline inner edge.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--inset-shadow-2xs"
         }
       }
@@ -5483,7 +5483,7 @@
       },
       "$description": "`inset-shadow-xs`. Inputs and wells.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--inset-shadow-xs"
         }
       }
@@ -5521,7 +5521,7 @@
       },
       "$description": "`inset-shadow-sm`. Pressed or recessed areas (was `shadow-inner`).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--inset-shadow-sm"
         }
       }
@@ -5559,7 +5559,7 @@
       },
       "$description": "`inset-shadow-none`. Removes an inner shadow.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--inset-shadow-none"
         }
       }
@@ -5574,7 +5574,7 @@
       },
       "$description": "`border-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border-width-0"
         }
       }
@@ -5587,7 +5587,7 @@
       },
       "$description": "`border-1` (`border`): the default hairline.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border-width-1"
         }
       }
@@ -5600,7 +5600,7 @@
       },
       "$description": "`border-2`. Focus and selected states.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border-width-2"
         }
       }
@@ -5613,7 +5613,7 @@
       },
       "$description": "`border-4`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border-width-4"
         }
       }
@@ -5626,7 +5626,7 @@
       },
       "$description": "`border-8`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border-width-8"
         }
       }
@@ -5639,7 +5639,7 @@
       },
       "$description": "`outline-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-width-0"
         }
       }
@@ -5652,7 +5652,7 @@
       },
       "$description": "`outline-1` (`outline`).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-width-1"
         }
       }
@@ -5665,7 +5665,7 @@
       },
       "$description": "`outline-2`. Focus outlines.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-width-2"
         }
       }
@@ -5678,7 +5678,7 @@
       },
       "$description": "`outline-4`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-width-4"
         }
       }
@@ -5691,7 +5691,7 @@
       },
       "$description": "`outline-8`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-width-8"
         }
       }
@@ -5704,7 +5704,7 @@
       },
       "$description": "`outline-offset-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-offset-0"
         }
       }
@@ -5717,7 +5717,7 @@
       },
       "$description": "`outline-offset-1`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-offset-1"
         }
       }
@@ -5730,7 +5730,7 @@
       },
       "$description": "`outline-offset-2`. Gap between an element and its focus outline.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-offset-2"
         }
       }
@@ -5743,7 +5743,7 @@
       },
       "$description": "`outline-offset-4`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-offset-4"
         }
       }
@@ -5756,7 +5756,7 @@
       },
       "$description": "`outline-offset-8`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--outline-offset-8"
         }
       }
@@ -5766,7 +5766,7 @@
       "$value": 0,
       "$description": "`stroke-0`. No stroke.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stroke-width-0"
         }
       }
@@ -5776,7 +5776,7 @@
       "$value": 1,
       "$description": "`stroke-1`. Hairline outlines and dividers in illustrations.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stroke-width-1"
         }
       }
@@ -5786,7 +5786,7 @@
       "$value": 2,
       "$description": "`stroke-2`. The usual weight for outline icons (as in Lucide/Heroicons).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stroke-width-2"
         }
       }
@@ -5796,7 +5796,7 @@
       "$value": 3,
       "$description": "`stroke-3`. Bold strokes for large or emphasized icons.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stroke-width-3"
         }
       }
@@ -5806,7 +5806,7 @@
       "$value": 4,
       "$description": "`stroke-4`. Heavy strokes for charts and display graphics.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--stroke-width-4"
         }
       }
@@ -5818,7 +5818,7 @@
       "$value": 100,
       "$description": "`font-thin` (100). Available for special cases (marketing, display type, data viz); not used by components.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-thin"
         }
       }
@@ -5828,7 +5828,7 @@
       "$value": 200,
       "$description": "`font-extralight` (200). Available for special cases (marketing, display type, data viz); not used by components.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-extralight"
         }
       }
@@ -5838,7 +5838,7 @@
       "$value": 300,
       "$description": "`font-light` (300). Available for special cases (marketing, display type, data viz); not used by components.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-light"
         }
       }
@@ -5848,7 +5848,7 @@
       "$value": 400,
       "$description": "Default · Regular (400): body text, long-form reading, inputs.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-normal"
         }
       }
@@ -5858,7 +5858,7 @@
       "$value": 500,
       "$description": "Default · Medium (500): buttons, labels, tabs, table headers, emphasis inside body text.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-medium"
         }
       }
@@ -5868,7 +5868,7 @@
       "$value": 600,
       "$description": "Default · Semibold (600): headings and titles at every size.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-semibold"
         }
       }
@@ -5878,7 +5878,7 @@
       "$value": 700,
       "$description": "`font-bold` (700). Available for special cases (marketing, display type, data viz); not used by components.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-bold"
         }
       }
@@ -5888,7 +5888,7 @@
       "$value": 800,
       "$description": "`font-extrabold` (800). Available for special cases (marketing, display type, data viz); not used by components.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-extrabold"
         }
       }
@@ -5898,7 +5898,7 @@
       "$value": 900,
       "$description": "`font-black` (900). Available for special cases (marketing, display type, data viz); not used by components.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-black"
         }
       }
@@ -5908,7 +5908,7 @@
       "$value": 1,
       "$description": "Display numerals, single-line headings.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-none"
         }
       }
@@ -5918,7 +5918,7 @@
       "$value": 1.25,
       "$description": "Headings.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-tight"
         }
       }
@@ -5928,7 +5928,7 @@
       "$value": 1.375,
       "$description": "`leading-snug`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-snug"
         }
       }
@@ -5938,7 +5938,7 @@
       "$value": 1.5,
       "$description": "Body text.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-normal"
         }
       }
@@ -5948,7 +5948,7 @@
       "$value": 1.625,
       "$description": "Long-form reading.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-relaxed"
         }
       }
@@ -5958,7 +5958,7 @@
       "$value": 2,
       "$description": "`leading-loose`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-loose"
         }
       }
@@ -5971,7 +5971,7 @@
       },
       "$description": "`leading-3`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-3"
         }
       }
@@ -5984,7 +5984,7 @@
       },
       "$description": "`leading-4`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-4"
         }
       }
@@ -5997,7 +5997,7 @@
       },
       "$description": "`leading-5`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-5"
         }
       }
@@ -6010,7 +6010,7 @@
       },
       "$description": "`leading-6`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-6"
         }
       }
@@ -6023,7 +6023,7 @@
       },
       "$description": "`leading-7`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-7"
         }
       }
@@ -6036,7 +6036,7 @@
       },
       "$description": "`leading-8`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-8"
         }
       }
@@ -6049,7 +6049,7 @@
       },
       "$description": "`leading-9`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-9"
         }
       }
@@ -6062,7 +6062,7 @@
       },
       "$description": "`leading-10`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--leading-10"
         }
       }
@@ -6075,7 +6075,7 @@
       },
       "$description": "`decoration-0`: underline thickness 0px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--decoration-0"
         }
       }
@@ -6088,7 +6088,7 @@
       },
       "$description": "`decoration-1`: underline thickness 1px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--decoration-1"
         }
       }
@@ -6101,7 +6101,7 @@
       },
       "$description": "`decoration-2`: underline thickness 2px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--decoration-2"
         }
       }
@@ -6114,7 +6114,7 @@
       },
       "$description": "`decoration-4`: underline thickness 4px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--decoration-4"
         }
       }
@@ -6127,7 +6127,7 @@
       },
       "$description": "`decoration-8`: underline thickness 8px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--decoration-8"
         }
       }
@@ -6140,7 +6140,7 @@
       },
       "$description": "`underline-offset-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--underline-offset-0"
         }
       }
@@ -6153,7 +6153,7 @@
       },
       "$description": "`underline-offset-1`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--underline-offset-1"
         }
       }
@@ -6166,7 +6166,7 @@
       },
       "$description": "Links in body text.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--underline-offset-2"
         }
       }
@@ -6179,7 +6179,7 @@
       },
       "$description": "Button `link` variant.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--underline-offset-4"
         }
       }
@@ -6192,7 +6192,7 @@
       },
       "$description": "`underline-offset-8`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--underline-offset-8"
         }
       }
@@ -6202,7 +6202,7 @@
       "$value": 1,
       "$description": "`line-clamp-1`: cut text after 1 line with an ellipsis.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--line-clamp-1"
         }
       }
@@ -6212,7 +6212,7 @@
       "$value": 2,
       "$description": "`line-clamp-2`: cut text after 2 lines with an ellipsis.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--line-clamp-2"
         }
       }
@@ -6222,7 +6222,7 @@
       "$value": 3,
       "$description": "`line-clamp-3`: cut text after 3 lines with an ellipsis.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--line-clamp-3"
         }
       }
@@ -6232,7 +6232,7 @@
       "$value": 4,
       "$description": "`line-clamp-4`: cut text after 4 lines with an ellipsis.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--line-clamp-4"
         }
       }
@@ -6242,7 +6242,7 @@
       "$value": 5,
       "$description": "`line-clamp-5`: cut text after 5 lines with an ellipsis.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--line-clamp-5"
         }
       }
@@ -6252,7 +6252,7 @@
       "$value": 6,
       "$description": "`line-clamp-6`: cut text after 6 lines with an ellipsis.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--line-clamp-6"
         }
       }
@@ -6262,7 +6262,7 @@
       "$value": 2,
       "$description": "`tab-2`: tab characters as wide as 2 spaces (code blocks).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--tab-2"
         }
       }
@@ -6272,7 +6272,7 @@
       "$value": 4,
       "$description": "`tab-4`: tab characters as wide as 4 spaces (code blocks).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--tab-4"
         }
       }
@@ -6282,7 +6282,7 @@
       "$value": 8,
       "$description": "`tab-8`: tab characters as wide as 8 spaces (code blocks).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--tab-8"
         }
       }
@@ -6297,7 +6297,7 @@
       },
       "$description": "`sm:` breakpoint, `@media (min-width: 640px)`. Large phones in landscape, small tablets. Container max-width 640px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--screen-sm"
         }
       }
@@ -6310,7 +6310,7 @@
       },
       "$description": "`md:` breakpoint, `@media (min-width: 768px)`. Tablets. Container max-width 768px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--screen-md"
         }
       }
@@ -6323,7 +6323,7 @@
       },
       "$description": "`lg:` breakpoint, `@media (min-width: 1024px)`. Laptops and small desktops. Container max-width 1024px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--screen-lg"
         }
       }
@@ -6336,7 +6336,7 @@
       },
       "$description": "`xl:` breakpoint, `@media (min-width: 1280px)`. Desktops. Container max-width 1280px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--screen-xl"
         }
       }
@@ -6349,7 +6349,7 @@
       },
       "$description": "`2xl:` breakpoint, `@media (min-width: 1536px)`. Large desktops. Container max-width 1536px.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--screen-2xl"
         }
       }
@@ -6359,7 +6359,7 @@
       "$value": 0,
       "$description": "`z-0`. Base layer.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-0"
         }
       }
@@ -6369,7 +6369,7 @@
       "$value": 10,
       "$description": "`z-10`. Local stacking, step 1: lift an element over its siblings, such as a badge over an avatar.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-10"
         }
       }
@@ -6379,7 +6379,7 @@
       "$value": 20,
       "$description": "`z-20`. Local stacking, step 2.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-20"
         }
       }
@@ -6389,7 +6389,7 @@
       "$value": 30,
       "$description": "`z-30`. Local stacking, step 3.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-30"
         }
       }
@@ -6399,7 +6399,7 @@
       "$value": 40,
       "$description": "`z-40`. Local stacking, step 4.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-40"
         }
       }
@@ -6409,7 +6409,7 @@
       "$value": 50,
       "$description": "`z-50`. Local stacking, step 5. For page layers (menus, dialogs, toasts) use the named layers.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-50"
         }
       }
@@ -6419,7 +6419,7 @@
       "$value": 20,
       "$description": "Layer: Sticky headers and toolbars. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-sticky"
         }
       }
@@ -6429,7 +6429,7 @@
       "$value": 30,
       "$description": "Layer: Dropdown menus and select lists. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-dropdown"
         }
       }
@@ -6439,7 +6439,7 @@
       "$value": 40,
       "$description": "Layer: The `overlay` backdrop behind a dialog. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-overlay"
         }
       }
@@ -6449,7 +6449,7 @@
       "$value": 50,
       "$description": "Layer: Dialogs and drawers, above their backdrop. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-modal"
         }
       }
@@ -6459,7 +6459,7 @@
       "$value": 60,
       "$description": "Layer: Popovers opened from inside a dialog. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-popover"
         }
       }
@@ -6469,7 +6469,7 @@
       "$value": 70,
       "$description": "Layer: Toast notifications, above dialogs. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-toast"
         }
       }
@@ -6479,7 +6479,7 @@
       "$value": 80,
       "$description": "Layer: Tooltips, above everything. Use the named layers instead of numbers so stacking stays consistent.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--z-tooltip"
         }
       }
@@ -6492,7 +6492,7 @@
       },
       "$description": "`columns-3xs`: as many columns as fit at least 256px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-3xs"
         }
       }
@@ -6505,7 +6505,7 @@
       },
       "$description": "`columns-2xs`: as many columns as fit at least 288px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-2xs"
         }
       }
@@ -6518,7 +6518,7 @@
       },
       "$description": "`columns-xs`: as many columns as fit at least 320px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-xs"
         }
       }
@@ -6531,7 +6531,7 @@
       },
       "$description": "`columns-sm`: as many columns as fit at least 384px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-sm"
         }
       }
@@ -6544,7 +6544,7 @@
       },
       "$description": "`columns-md`: as many columns as fit at least 448px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-md"
         }
       }
@@ -6557,7 +6557,7 @@
       },
       "$description": "`columns-lg`: as many columns as fit at least 512px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-lg"
         }
       }
@@ -6570,7 +6570,7 @@
       },
       "$description": "`columns-xl`: as many columns as fit at least 576px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-xl"
         }
       }
@@ -6583,7 +6583,7 @@
       },
       "$description": "`columns-2xl`: as many columns as fit at least 672px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-2xl"
         }
       }
@@ -6596,7 +6596,7 @@
       },
       "$description": "`columns-3xl`: as many columns as fit at least 768px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-3xl"
         }
       }
@@ -6609,7 +6609,7 @@
       },
       "$description": "`columns-4xl`: as many columns as fit at least 896px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-4xl"
         }
       }
@@ -6622,7 +6622,7 @@
       },
       "$description": "`columns-5xl`: as many columns as fit at least 1024px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-5xl"
         }
       }
@@ -6635,7 +6635,7 @@
       },
       "$description": "`columns-6xl`: as many columns as fit at least 1152px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-6xl"
         }
       }
@@ -6648,7 +6648,7 @@
       },
       "$description": "`columns-7xl`: as many columns as fit at least 1280px wide.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--columns-7xl"
         }
       }
@@ -6663,7 +6663,7 @@
       },
       "$description": "256px, used by `w-3xs`, `min-w-3xs`, `max-w-3xs`, `inline-3xs`, `min-inline-3xs`, `max-inline-3xs`. Narrow popovers, sidebars.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-3xs"
         }
       }
@@ -6676,7 +6676,7 @@
       },
       "$description": "288px, used by `w-2xs`, `min-w-2xs`, `max-w-2xs`, `inline-2xs`, `min-inline-2xs`, `max-inline-2xs`. Sidebars, filter panels.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-2xs"
         }
       }
@@ -6689,7 +6689,7 @@
       },
       "$description": "320px, used by `w-xs`, `min-w-xs`, `max-w-xs`, `inline-xs`, `min-inline-xs`, `max-inline-xs`. Small dialogs, popover cards.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-xs"
         }
       }
@@ -6702,7 +6702,7 @@
       },
       "$description": "384px, used by `w-sm`, `min-w-sm`, `max-w-sm`, `inline-sm`, `min-inline-sm`, `max-inline-sm`. Sign-in forms, narrow dialogs.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-sm"
         }
       }
@@ -6715,7 +6715,7 @@
       },
       "$description": "448px, used by `w-md`, `min-w-md`, `max-w-md`, `inline-md`, `min-inline-md`, `max-inline-md`. Standard dialogs.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-md"
         }
       }
@@ -6728,7 +6728,7 @@
       },
       "$description": "512px, used by `w-lg`, `min-w-lg`, `max-w-lg`, `inline-lg`, `min-inline-lg`, `max-inline-lg`. Wide dialogs, forms.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-lg"
         }
       }
@@ -6741,7 +6741,7 @@
       },
       "$description": "576px, used by `w-xl`, `min-w-xl`, `max-w-xl`, `inline-xl`, `min-inline-xl`, `max-inline-xl`. Side panels, form pages.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-xl"
         }
       }
@@ -6754,7 +6754,7 @@
       },
       "$description": "672px, used by `w-2xl`, `min-w-2xl`, `max-w-2xl`, `inline-2xl`, `min-inline-2xl`, `max-inline-2xl`. Settings pages, long forms.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-2xl"
         }
       }
@@ -6767,7 +6767,7 @@
       },
       "$description": "768px, used by `w-3xl`, `min-w-3xl`, `max-w-3xl`, `inline-3xl`, `min-inline-3xl`, `max-inline-3xl`. Article and document bodies with images.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-3xl"
         }
       }
@@ -6780,7 +6780,7 @@
       },
       "$description": "896px, used by `w-4xl`, `min-w-4xl`, `max-w-4xl`, `inline-4xl`, `min-inline-4xl`, `max-inline-4xl`. Content pages.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-4xl"
         }
       }
@@ -6793,7 +6793,7 @@
       },
       "$description": "1024px, used by `w-5xl`, `min-w-5xl`, `max-w-5xl`, `inline-5xl`, `min-inline-5xl`, `max-inline-5xl`. Dashboards with a sidebar.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-5xl"
         }
       }
@@ -6806,7 +6806,7 @@
       },
       "$description": "1152px, used by `w-6xl`, `min-w-6xl`, `max-w-6xl`, `inline-6xl`, `min-inline-6xl`, `max-inline-6xl`. Wide app layouts.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-6xl"
         }
       }
@@ -6819,7 +6819,7 @@
       },
       "$description": "1280px, used by `w-7xl`, `min-w-7xl`, `max-w-7xl`, `inline-7xl`, `min-inline-7xl`, `max-inline-7xl`. Marketing and full app shells.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--container-7xl"
         }
       }
@@ -6832,7 +6832,7 @@
       },
       "$description": "One pixel: hairlines.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--sizing-px"
         }
       }
@@ -6845,7 +6845,7 @@
       },
       "$description": "Height of small controls (24px): `sm` buttons, compact inputs. The WCAG 2.2 AA minimum target size.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--control-height-sm"
         }
       }
@@ -6858,7 +6858,7 @@
       },
       "$description": "Height of default controls (32px): buttons, inputs and selects line up at this height.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--control-height-md"
         }
       }
@@ -6871,7 +6871,7 @@
       },
       "$description": "Height of large controls (44px), the comfortable touch target (WCAG 2.5.5).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--control-height-lg"
         }
       }
@@ -6883,7 +6883,7 @@
       "$value": 1,
       "$description": "`flex-1`: share the free space equally (`flex: 1`).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--flex-1"
         }
       }
@@ -6893,7 +6893,7 @@
       "$value": -9999,
       "$description": "`order-first`: before every other item.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--order-first"
         }
       }
@@ -6903,7 +6903,7 @@
       "$value": 9999,
       "$description": "`order-last`: after every other item.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--order-last"
         }
       }
@@ -6913,7 +6913,7 @@
       "$value": 0,
       "$description": "`order-none`: source order.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--order-none"
         }
       }
@@ -6928,7 +6928,7 @@
       },
       "$description": "`blur-xs`, `backdrop-blur-xs`. Soften a background image slightly.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-xs"
         }
       }
@@ -6941,7 +6941,7 @@
       },
       "$description": "`blur-sm`, `backdrop-blur-sm`. Frosted glass behind menus and popovers (`backdrop-blur-sm`).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-sm"
         }
       }
@@ -6954,7 +6954,7 @@
       },
       "$description": "`blur-md`, `backdrop-blur-md`. Frosted glass behind sticky headers and sheets.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-md"
         }
       }
@@ -6967,7 +6967,7 @@
       },
       "$description": "`blur-lg`, `backdrop-blur-lg`. Dialog overlays (`backdrop-blur-lg`).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-lg"
         }
       }
@@ -6980,7 +6980,7 @@
       },
       "$description": "`blur-xl`, `backdrop-blur-xl`. Strong glass effects.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-xl"
         }
       }
@@ -6993,7 +6993,7 @@
       },
       "$description": "`blur-2xl`, `backdrop-blur-2xl`. Decorative glows and blurred blobs.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-2xl"
         }
       }
@@ -7006,7 +7006,7 @@
       },
       "$description": "`blur-3xl`, `backdrop-blur-3xl`. Large ambient background glows.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--blur-3xl"
         }
       }
@@ -7043,7 +7043,7 @@
       },
       "$description": "`drop-shadow-xs`. Barely-there lift for icons and small shapes.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-xs"
         }
       }
@@ -7080,7 +7080,7 @@
       },
       "$description": "`drop-shadow-sm`. Icons and logos on a surface.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-sm"
         }
       }
@@ -7117,7 +7117,7 @@
       },
       "$description": "`drop-shadow-md`. Floating shapes and cut-out images.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-md"
         }
       }
@@ -7154,7 +7154,7 @@
       },
       "$description": "`drop-shadow-lg`. Illustrations and product shots.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-lg"
         }
       }
@@ -7191,7 +7191,7 @@
       },
       "$description": "`drop-shadow-xl`. Hero illustrations.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-xl"
         }
       }
@@ -7228,7 +7228,7 @@
       },
       "$description": "`drop-shadow-2xl`. The highest drop shadow.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-2xl"
         }
       }
@@ -7265,7 +7265,7 @@
       },
       "$description": "`drop-shadow-none`. Removes a drop shadow.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--drop-shadow-none"
         }
       }
@@ -7275,7 +7275,7 @@
       "$value": 0,
       "$description": "`brightness-0`, `backdrop-brightness-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-0"
         }
       }
@@ -7285,7 +7285,7 @@
       "$value": 0.5,
       "$description": "`brightness-50`, `backdrop-brightness-50`. Dims an image behind text.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-50"
         }
       }
@@ -7295,7 +7295,7 @@
       "$value": 0.75,
       "$description": "`brightness-75`, `backdrop-brightness-75`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-75"
         }
       }
@@ -7305,7 +7305,7 @@
       "$value": 0.9,
       "$description": "`brightness-90`, `backdrop-brightness-90`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-90"
         }
       }
@@ -7315,7 +7315,7 @@
       "$value": 0.95,
       "$description": "`brightness-95`, `backdrop-brightness-95`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-95"
         }
       }
@@ -7325,7 +7325,7 @@
       "$value": 1,
       "$description": "`brightness-100`, `backdrop-brightness-100`. Unchanged.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-100"
         }
       }
@@ -7335,7 +7335,7 @@
       "$value": 1.05,
       "$description": "`brightness-105`, `backdrop-brightness-105`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-105"
         }
       }
@@ -7345,7 +7345,7 @@
       "$value": 1.1,
       "$description": "`brightness-110`, `backdrop-brightness-110`. Hover lift on images.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-110"
         }
       }
@@ -7355,7 +7355,7 @@
       "$value": 1.25,
       "$description": "`brightness-125`, `backdrop-brightness-125`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-125"
         }
       }
@@ -7365,7 +7365,7 @@
       "$value": 1.5,
       "$description": "`brightness-150`, `backdrop-brightness-150`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-150"
         }
       }
@@ -7375,7 +7375,7 @@
       "$value": 2,
       "$description": "`brightness-200`, `backdrop-brightness-200`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--brightness-200"
         }
       }
@@ -7385,7 +7385,7 @@
       "$value": 0,
       "$description": "`contrast-0`, `backdrop-contrast-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-0"
         }
       }
@@ -7395,7 +7395,7 @@
       "$value": 0.5,
       "$description": "`contrast-50`, `backdrop-contrast-50`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-50"
         }
       }
@@ -7405,7 +7405,7 @@
       "$value": 0.75,
       "$description": "`contrast-75`, `backdrop-contrast-75`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-75"
         }
       }
@@ -7415,7 +7415,7 @@
       "$value": 1,
       "$description": "`contrast-100`, `backdrop-contrast-100`. Unchanged.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-100"
         }
       }
@@ -7425,7 +7425,7 @@
       "$value": 1.25,
       "$description": "`contrast-125`, `backdrop-contrast-125`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-125"
         }
       }
@@ -7435,7 +7435,7 @@
       "$value": 1.5,
       "$description": "`contrast-150`, `backdrop-contrast-150`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-150"
         }
       }
@@ -7445,7 +7445,7 @@
       "$value": 2,
       "$description": "`contrast-200`, `backdrop-contrast-200`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--contrast-200"
         }
       }
@@ -7455,7 +7455,7 @@
       "$value": 0,
       "$description": "`saturate-0`, `backdrop-saturate-0`. Fully desaturated.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--saturate-0"
         }
       }
@@ -7465,7 +7465,7 @@
       "$value": 0.5,
       "$description": "`saturate-50`, `backdrop-saturate-50`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--saturate-50"
         }
       }
@@ -7475,7 +7475,7 @@
       "$value": 1,
       "$description": "`saturate-100`, `backdrop-saturate-100`. Unchanged.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--saturate-100"
         }
       }
@@ -7485,7 +7485,7 @@
       "$value": 1.5,
       "$description": "`saturate-150`, `backdrop-saturate-150`. Richer colors behind frosted glass.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--saturate-150"
         }
       }
@@ -7495,7 +7495,7 @@
       "$value": 2,
       "$description": "`saturate-200`, `backdrop-saturate-200`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--saturate-200"
         }
       }
@@ -7510,7 +7510,7 @@
       },
       "$description": "`perspective-dramatic`. Strong, close-up 3D: card flips at small sizes.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--perspective-dramatic"
         }
       }
@@ -7523,7 +7523,7 @@
       },
       "$description": "`perspective-near`. Noticeable depth for tilted cards.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--perspective-near"
         }
       }
@@ -7536,7 +7536,7 @@
       },
       "$description": "`perspective-normal`. The everyday choice for 3D transforms.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--perspective-normal"
         }
       }
@@ -7549,7 +7549,7 @@
       },
       "$description": "`perspective-midrange`. Subtle depth for large panels.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--perspective-midrange"
         }
       }
@@ -7562,7 +7562,7 @@
       },
       "$description": "`perspective-distant`. Barely-there depth.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--perspective-distant"
         }
       }
@@ -7572,7 +7572,7 @@
       "$value": 0,
       "$description": "`scale-0`, `-scale-0`, `scale-x-0`, `scale-y-0`, `scale-z-0`. Hidden (enter/exit animations).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-0"
         }
       }
@@ -7582,7 +7582,7 @@
       "$value": 0.5,
       "$description": "`scale-50`, `-scale-50`, `scale-x-50`, `scale-y-50`, `scale-z-50`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-50"
         }
       }
@@ -7592,7 +7592,7 @@
       "$value": 0.75,
       "$description": "`scale-75`, `-scale-75`, `scale-x-75`, `scale-y-75`, `scale-z-75`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-75"
         }
       }
@@ -7602,7 +7602,7 @@
       "$value": 0.9,
       "$description": "`scale-90`, `-scale-90`, `scale-x-90`, `scale-y-90`, `scale-z-90`. Enter animations for menus and dialogs.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-90"
         }
       }
@@ -7612,7 +7612,7 @@
       "$value": 0.95,
       "$description": "`scale-95`, `-scale-95`, `scale-x-95`, `scale-y-95`, `scale-z-95`. Pressed cards and large surfaces.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-95"
         }
       }
@@ -7622,7 +7622,7 @@
       "$value": 0.97,
       "$description": "`scale-97`, `-scale-97`, `scale-x-97`, `scale-y-97`, `scale-z-97`. Pressed buttons and small controls (Button's press feedback).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-97"
         }
       }
@@ -7632,7 +7632,7 @@
       "$value": 1,
       "$description": "`scale-100`, `-scale-100`, `scale-x-100`, `scale-y-100`, `scale-z-100`. Unchanged.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-100"
         }
       }
@@ -7642,7 +7642,7 @@
       "$value": 1.05,
       "$description": "`scale-105`, `-scale-105`, `scale-x-105`, `scale-y-105`, `scale-z-105`. Hover lift on cards and images.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-105"
         }
       }
@@ -7652,7 +7652,7 @@
       "$value": 1.1,
       "$description": "`scale-110`, `-scale-110`, `scale-x-110`, `scale-y-110`, `scale-z-110`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-110"
         }
       }
@@ -7662,7 +7662,7 @@
       "$value": 1.25,
       "$description": "`scale-125`, `-scale-125`, `scale-x-125`, `scale-y-125`, `scale-z-125`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-125"
         }
       }
@@ -7672,7 +7672,7 @@
       "$value": 1.5,
       "$description": "`scale-150`, `-scale-150`, `scale-x-150`, `scale-y-150`, `scale-z-150`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-150"
         }
       }
@@ -7682,7 +7682,7 @@
       "$value": 2,
       "$description": "`scale-200`, `-scale-200`, `scale-x-200`, `scale-y-200`, `scale-z-200`. Doubles the size.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--scale-200"
         }
       }
@@ -7692,7 +7692,7 @@
       "$value": 0.5,
       "$description": "`zoom-50`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-50"
         }
       }
@@ -7702,7 +7702,7 @@
       "$value": 0.75,
       "$description": "`zoom-75`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-75"
         }
       }
@@ -7712,7 +7712,7 @@
       "$value": 0.9,
       "$description": "`zoom-90`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-90"
         }
       }
@@ -7722,7 +7722,7 @@
       "$value": 0.95,
       "$description": "`zoom-95`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-95"
         }
       }
@@ -7732,7 +7732,7 @@
       "$value": 1,
       "$description": "`zoom-100`. Unchanged.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-100"
         }
       }
@@ -7742,7 +7742,7 @@
       "$value": 1.05,
       "$description": "`zoom-105`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-105"
         }
       }
@@ -7752,7 +7752,7 @@
       "$value": 1.1,
       "$description": "`zoom-110`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-110"
         }
       }
@@ -7762,7 +7762,7 @@
       "$value": 1.25,
       "$description": "`zoom-125`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-125"
         }
       }
@@ -7772,7 +7772,7 @@
       "$value": 1.5,
       "$description": "`zoom-150`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-150"
         }
       }
@@ -7782,7 +7782,7 @@
       "$value": 2,
       "$description": "`zoom-200`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--zoom-200"
         }
       }
@@ -7794,7 +7794,7 @@
       "$value": 0,
       "$description": "`opacity-0`, `backdrop-opacity-0`. Hidden but still in the layout.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-0"
         }
       }
@@ -7804,7 +7804,7 @@
       "$value": 0.05,
       "$description": "`opacity-5`, `backdrop-opacity-5`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-5"
         }
       }
@@ -7814,7 +7814,7 @@
       "$value": 0.1,
       "$description": "`opacity-10`, `backdrop-opacity-10`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-10"
         }
       }
@@ -7824,7 +7824,7 @@
       "$value": 0.15,
       "$description": "`opacity-15`, `backdrop-opacity-15`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-15"
         }
       }
@@ -7834,7 +7834,7 @@
       "$value": 0.2,
       "$description": "`opacity-20`, `backdrop-opacity-20`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-20"
         }
       }
@@ -7844,7 +7844,7 @@
       "$value": 0.25,
       "$description": "`opacity-25`, `backdrop-opacity-25`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-25"
         }
       }
@@ -7854,7 +7854,7 @@
       "$value": 0.3,
       "$description": "`opacity-30`, `backdrop-opacity-30`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-30"
         }
       }
@@ -7864,7 +7864,7 @@
       "$value": 0.35,
       "$description": "`opacity-35`, `backdrop-opacity-35`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-35"
         }
       }
@@ -7874,7 +7874,7 @@
       "$value": 0.4,
       "$description": "`opacity-40`, `backdrop-opacity-40`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-40"
         }
       }
@@ -7884,7 +7884,7 @@
       "$value": 0.45,
       "$description": "`opacity-45`, `backdrop-opacity-45`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-45"
         }
       }
@@ -7894,7 +7894,7 @@
       "$value": 0.5,
       "$description": "`opacity-50`, `backdrop-opacity-50`. Disabled controls.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-50"
         }
       }
@@ -7904,7 +7904,7 @@
       "$value": 0.55,
       "$description": "`opacity-55`, `backdrop-opacity-55`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-55"
         }
       }
@@ -7914,7 +7914,7 @@
       "$value": 0.6,
       "$description": "`opacity-60`, `backdrop-opacity-60`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-60"
         }
       }
@@ -7924,7 +7924,7 @@
       "$value": 0.65,
       "$description": "`opacity-65`, `backdrop-opacity-65`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-65"
         }
       }
@@ -7934,7 +7934,7 @@
       "$value": 0.7,
       "$description": "`opacity-70`, `backdrop-opacity-70`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-70"
         }
       }
@@ -7944,7 +7944,7 @@
       "$value": 0.75,
       "$description": "`opacity-75`, `backdrop-opacity-75`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-75"
         }
       }
@@ -7954,7 +7954,7 @@
       "$value": 0.8,
       "$description": "`opacity-80`, `backdrop-opacity-80`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-80"
         }
       }
@@ -7964,7 +7964,7 @@
       "$value": 0.85,
       "$description": "`opacity-85`, `backdrop-opacity-85`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-85"
         }
       }
@@ -7974,7 +7974,7 @@
       "$value": 0.9,
       "$description": "`opacity-90`, `backdrop-opacity-90`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-90"
         }
       }
@@ -7984,7 +7984,7 @@
       "$value": 0.95,
       "$description": "`opacity-95`, `backdrop-opacity-95`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-95"
         }
       }
@@ -7994,7 +7994,7 @@
       "$value": 1,
       "$description": "`opacity-100`, `backdrop-opacity-100`. Fully opaque.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--opacity-100"
         }
       }
@@ -8009,7 +8009,7 @@
       },
       "$description": "Instant: no transition.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-0"
         }
       }
@@ -8022,7 +8022,7 @@
       },
       "$description": "Micro feedback: checkbox ticks, toggles.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-75"
         }
       }
@@ -8035,7 +8035,7 @@
       },
       "$description": "Small hover changes on dense UI.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-100"
         }
       }
@@ -8048,7 +8048,7 @@
       },
       "$description": "Default: hover and focus colors, buttons, links.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-150"
         }
       }
@@ -8061,7 +8061,7 @@
       },
       "$description": "Small elements entering: tooltips, dropdowns.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-200"
         }
       }
@@ -8074,7 +8074,7 @@
       },
       "$description": "Larger elements entering: popovers, dialogs, drawers.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-300"
         }
       }
@@ -8087,7 +8087,7 @@
       },
       "$description": "Large surfaces or page-level changes.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-500"
         }
       }
@@ -8100,7 +8100,7 @@
       },
       "$description": "Slow, deliberate emphasis. Use rarely.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-700"
         }
       }
@@ -8113,7 +8113,7 @@
       },
       "$description": "Decorative or attention animations only.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-1000"
         }
       }
@@ -8126,7 +8126,7 @@
       },
       "$description": "Long loops, such as the pixel loader (1.2s). Decorative only.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--duration-1200"
         }
       }
@@ -8139,7 +8139,7 @@
       },
       "$description": "`delay-0`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-0"
         }
       }
@@ -8152,7 +8152,7 @@
       },
       "$description": "`delay-75`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-75"
         }
       }
@@ -8165,7 +8165,7 @@
       },
       "$description": "`delay-100`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-100"
         }
       }
@@ -8178,7 +8178,7 @@
       },
       "$description": "`delay-150`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-150"
         }
       }
@@ -8191,7 +8191,7 @@
       },
       "$description": "`delay-200`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-200"
         }
       }
@@ -8204,7 +8204,7 @@
       },
       "$description": "Tooltips: wait before showing.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-300"
         }
       }
@@ -8217,7 +8217,7 @@
       },
       "$description": "Tooltips: wait before showing.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-500"
         }
       }
@@ -8230,7 +8230,7 @@
       },
       "$description": "`delay-700`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-700"
         }
       }
@@ -8243,7 +8243,7 @@
       },
       "$description": "`delay-1000`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--delay-1000"
         }
       }
@@ -8258,7 +8258,7 @@
       ],
       "$description": "Constant speed: spinners, progress bars.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--ease-linear"
         }
       }
@@ -8273,7 +8273,7 @@
       ],
       "$description": "Starts slow: elements leaving the screen.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--ease-in"
         }
       }
@@ -8288,7 +8288,7 @@
       ],
       "$description": "Ends slow: elements entering (menus, dialogs, toasts).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--ease-out"
         }
       }
@@ -8303,7 +8303,7 @@
       ],
       "$description": "Default: state changes that stay on screen (hover, toggles).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--ease-in-out"
         }
       }
@@ -8318,7 +8318,7 @@
       },
       "$description": "`text-xs` font size (12px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-xs"
         }
       }
@@ -8331,7 +8331,7 @@
       },
       "$description": "`text-sm` font size (14px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-sm"
         }
       }
@@ -8344,7 +8344,7 @@
       },
       "$description": "`text-base` font size (16px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-base"
         }
       }
@@ -8357,7 +8357,7 @@
       },
       "$description": "`text-lg` font size (18px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-lg"
         }
       }
@@ -8370,7 +8370,7 @@
       },
       "$description": "`text-xl` font size (20px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-xl"
         }
       }
@@ -8383,7 +8383,7 @@
       },
       "$description": "`text-2xl` font size (24px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-2xl"
         }
       }
@@ -8396,7 +8396,7 @@
       },
       "$description": "`text-3xl` font size (30px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-3xl"
         }
       }
@@ -8409,7 +8409,7 @@
       },
       "$description": "`text-4xl` font size (36px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-4xl"
         }
       }
@@ -8422,7 +8422,7 @@
       },
       "$description": "`text-5xl` font size (48px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-5xl"
         }
       }
@@ -8435,7 +8435,7 @@
       },
       "$description": "`text-6xl` font size (60px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-6xl"
         }
       }
@@ -8448,7 +8448,7 @@
       },
       "$description": "`text-7xl` font size (72px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-7xl"
         }
       }
@@ -8461,7 +8461,7 @@
       },
       "$description": "`text-8xl` font size (96px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-8xl"
         }
       }
@@ -8474,7 +8474,7 @@
       },
       "$description": "`text-9xl` font size (128px).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-9xl"
         }
       }
@@ -8487,7 +8487,7 @@
       },
       "$description": "The line height that goes with `text-xs`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-xs--line-height"
         }
       }
@@ -8500,7 +8500,7 @@
       },
       "$description": "The line height that goes with `text-sm`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-sm--line-height"
         }
       }
@@ -8513,7 +8513,7 @@
       },
       "$description": "The line height that goes with `text-base`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-base--line-height"
         }
       }
@@ -8526,7 +8526,7 @@
       },
       "$description": "The line height that goes with `text-lg`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-lg--line-height"
         }
       }
@@ -8539,7 +8539,7 @@
       },
       "$description": "The line height that goes with `text-xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-xl--line-height"
         }
       }
@@ -8552,7 +8552,7 @@
       },
       "$description": "The line height that goes with `text-2xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-2xl--line-height"
         }
       }
@@ -8565,7 +8565,7 @@
       },
       "$description": "The line height that goes with `text-3xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-3xl--line-height"
         }
       }
@@ -8578,7 +8578,7 @@
       },
       "$description": "The line height that goes with `text-4xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-4xl--line-height"
         }
       }
@@ -8588,7 +8588,7 @@
       "$value": 1,
       "$description": "The line height that goes with `text-5xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-5xl--line-height"
         }
       }
@@ -8598,7 +8598,7 @@
       "$value": 1,
       "$description": "The line height that goes with `text-6xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-6xl--line-height"
         }
       }
@@ -8608,7 +8608,7 @@
       "$value": 1,
       "$description": "The line height that goes with `text-7xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-7xl--line-height"
         }
       }
@@ -8618,7 +8618,7 @@
       "$value": 1,
       "$description": "The line height that goes with `text-8xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-8xl--line-height"
         }
       }
@@ -8628,7 +8628,7 @@
       "$value": 1,
       "$description": "The line height that goes with `text-9xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-9xl--line-height"
         }
       }
@@ -8644,7 +8644,7 @@
         "sans-serif"
       ],
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-sans"
         }
       }
@@ -8657,7 +8657,7 @@
         "serif"
       ],
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-serif"
         }
       }
@@ -8670,7 +8670,7 @@
         "monospace"
       ],
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-mono"
         }
       }
@@ -8681,7 +8681,7 @@
         "Material Symbols Rounded"
       ],
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--font-icon"
         }
       }
@@ -8705,7 +8705,7 @@
       },
       "$description": "`type-xs`: the whole 12px style in one class (Inter 400, line height 1rem). Same size as `text-xs`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-xs"
         }
       }
@@ -8727,7 +8727,7 @@
       },
       "$description": "`type-sm`: the whole 14px style in one class (Inter 400, line height 1.25rem). Same size as `text-sm`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-sm"
         }
       }
@@ -8749,7 +8749,7 @@
       },
       "$description": "`type-base`: the whole 16px style in one class (Inter 400, line height 1.5rem). Same size as `text-base`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-base"
         }
       }
@@ -8771,7 +8771,7 @@
       },
       "$description": "`type-lg`: the whole 18px style in one class (Inter 400, line height 1.75rem). Same size as `text-lg`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-lg"
         }
       }
@@ -8793,7 +8793,7 @@
       },
       "$description": "`type-xl`: the whole 20px style in one class (Inter 400, line height 1.75rem). Same size as `text-xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-xl"
         }
       }
@@ -8815,7 +8815,7 @@
       },
       "$description": "`type-2xl`: the whole 24px style in one class (Inter 400, line height 2rem). Same size as `text-2xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-2xl"
         }
       }
@@ -8837,7 +8837,7 @@
       },
       "$description": "`type-3xl`: the whole 30px style in one class (Inter 400, line height 2.25rem). Same size as `text-3xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-3xl"
         }
       }
@@ -8859,7 +8859,7 @@
       },
       "$description": "`type-4xl`: the whole 36px style in one class (Inter 400, line height 2.5rem). Same size as `text-4xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-4xl"
         }
       }
@@ -8881,7 +8881,7 @@
       },
       "$description": "`type-5xl`: the whole 48px style in one class (Inter 400, line height 1). Same size as `text-5xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-5xl"
         }
       }
@@ -8903,7 +8903,7 @@
       },
       "$description": "`type-6xl`: the whole 60px style in one class (Inter 400, line height 1). Same size as `text-6xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-6xl"
         }
       }
@@ -8925,7 +8925,7 @@
       },
       "$description": "`type-7xl`: the whole 72px style in one class (Inter 400, line height 1). Same size as `text-7xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-7xl"
         }
       }
@@ -8947,7 +8947,7 @@
       },
       "$description": "`type-8xl`: the whole 96px style in one class (Inter 400, line height 1). Same size as `text-8xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-8xl"
         }
       }
@@ -8969,7 +8969,7 @@
       },
       "$description": "`type-9xl`: the whole 128px style in one class (Inter 400, line height 1). Same size as `text-9xl`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "class": "type-9xl"
         }
       }

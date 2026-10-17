@@ -10,7 +10,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
   function Opts() { return [h(T.Radio, { key: 1, value: 'day' }, 'Daily'), h(T.Radio, { key: 2, value: 'week' }, 'Weekly'), h(T.Radio, { key: 3, value: 'never' }, 'Never')]; }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,

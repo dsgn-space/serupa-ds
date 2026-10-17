@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;width:600px;display:flex;flex-direction:column;gap:16px"></div>
 <script>
-var D = window.Diki, h = React.createElement, E = D.EmptyState;
+var D = window.Serupa, h = React.createElement, E = D.EmptyState;
 function App() {
   return h(React.Fragment, null,
     h(E, { id: 'edef', ref: window.er = React.createRef(), className: 'extra', 'data-x': 'y', icon: 'folder_open', title: 'No projects yet', description: 'Create a project to start tracking your work.', actions: [h(D.Button, { key: 'n', id: 'act' }, 'New project'), h(D.Button, { key: 'i', variant: 'outline' }, 'Import')] }),

@@ -20,7 +20,7 @@ const served = async (page, file) => {
 const PIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect width="400" height="200" fill="#3b82f6"/></svg>');
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px;width:900px"></div>
 <script>
-var D = window.Diki, h = React.createElement, PIC = ${JSON.stringify(PIC)};
+var D = window.Serupa, h = React.createElement, PIC = ${JSON.stringify(PIC)};
 window.removed = 0;
 function App() {
   var w = function (id, extra) { return { frameProps: Object.assign({ 'data-testid': id, style: { width: 200 } }, extra || {}) }; };

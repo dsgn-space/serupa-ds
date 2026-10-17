@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;display:grid;gap:8px;width:320px"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.changes = [];
+var D = window.Serupa, h = React.createElement; window.changes = [];
 function App() {
   var s = React.useState(''), v = s[0], c = React.useState('abc'), cv = c[0];
   window.setCtrl = c[1];

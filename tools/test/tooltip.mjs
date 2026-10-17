@@ -6,7 +6,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 const APP = `<div id="root" style="padding:120px 200px;display:flex;flex-wrap:wrap;gap:24px;align-items:center"></div>
 <div style="height:200px;overflow:hidden;position:relative;width:200px" id="clip"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.opens = [];
+var D = window.Serupa, h = React.createElement; window.opens = [];
 function App() {
   var c = React.useState(false); window.setCtl = c[1];
   return h(React.Fragment, null,

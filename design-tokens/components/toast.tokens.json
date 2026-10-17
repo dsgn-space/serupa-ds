@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "A toast's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.border}",
         "$description": "A toast's border.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-border"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The title.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-title-color"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "The description (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-description-color"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.info}",
         "$description": "The icon of an info toast (3:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-icon-info"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.success}",
         "$description": "The icon of a success toast.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-icon-success"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.warning}",
         "$description": "The icon of a warning toast.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-icon-warning"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.danger}",
         "$description": "The icon of a danger toast.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-icon-danger"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{shadow.shadow-lg}",
         "$description": "A toast's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-shadow"
           }
         }
@@ -101,7 +101,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "A toast's corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-radius"
           }
         }
@@ -111,7 +111,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "A toast's border.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-border-width"
           }
         }
@@ -123,7 +123,7 @@
         "$value": "{sizing.container-sm}",
         "$description": "A toast's width (384px), at most the screen less the offset on each side.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-width"
           }
         }
@@ -135,7 +135,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Padding inside a toast (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-padding"
           }
         }
@@ -145,7 +145,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space between a toast's icon, text and buttons (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-gap"
           }
         }
@@ -155,7 +155,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space between toasts (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-stack-gap"
           }
         }
@@ -165,7 +165,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The distance from the edges of the screen (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-offset"
           }
         }
@@ -177,7 +177,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The title's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-title-weight"
           }
         }
@@ -189,7 +189,7 @@
         "$value": "{layout.z-50}",
         "$description": "The stacking level: above the page and the FAB.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toast-z-index"
           }
         }

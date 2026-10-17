@@ -6,7 +6,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;width:480px;display:flex;flex-direction:column;gap:16px;align-items:flex-start"></div>
 <script>
-var D = window.Diki, h = React.createElement, SC = D.SegmentedControl;
+var D = window.Serupa, h = React.createElement, SC = D.SegmentedControl;
 window.calls = [];
 var PERIODS = [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }, { value: 'year', label: 'Year', disabled: true }];
 function Controlled() {

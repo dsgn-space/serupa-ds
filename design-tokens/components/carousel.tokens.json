@@ -7,7 +7,7 @@
         "$value": "{color.field-border}",
         "$description": "The dots for the slides not shown (3:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-dot"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "A dot under the pointer.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-dot-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary}",
         "$description": "The current slide's dot.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-dot-active"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.focus-ring}",
         "$description": "A dot's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-focus-ring"
           }
         }
@@ -49,7 +49,7 @@
         "$value": "{radius.rounded-xl}",
         "$description": "The slides' corners (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-radius"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "A dot's size (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-dot-size"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The current dot's width (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-dot-active-width"
           }
         }
@@ -83,7 +83,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space between the slides and the dots (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-gap"
           }
         }
@@ -93,7 +93,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "The previous and next buttons' distance from the sides (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-arrow-offset"
           }
         }
@@ -105,7 +105,7 @@
         "$value": "{shadow.shadow-sm}",
         "$description": "The previous and next buttons' shadow, so they stand out on any slide.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--carousel-arrow-shadow"
           }
         }

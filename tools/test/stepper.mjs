@@ -6,7 +6,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;width:640px;display:flex;flex-direction:column;gap:32px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 window.clicks = [];
 var STEPS = [{ title: 'Account', description: 'Email and password' }, { title: 'Profile', optional: true }, { title: 'Billing' }, { title: 'Review' }];
 function App() {

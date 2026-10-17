@@ -7,7 +7,7 @@
         "$value": "{color.field}",
         "$description": "Field background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.surface-muted}",
         "$description": "Background when read-only or disabled.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-bg-readonly"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.field-border}",
         "$description": "Border (3:1 on the field and the page in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-border"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.field-border-hover}",
         "$description": "Border on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-border-hover"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.placeholder}",
         "$description": "Placeholder text (4.5:1 on the field).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-placeholder"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.focus-ring}",
         "$description": "Border and ring while focused.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-focus-ring"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.danger}",
         "$description": "Border and focus ring when invalid.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-invalid"
           }
         }
@@ -79,7 +79,7 @@
         "$value": "{sizing.control-height-sm}",
         "$description": "Height, sm (24px), like Button sm.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-height-sm"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "Height, md (32px, default).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-height-md"
           }
         }
@@ -99,7 +99,7 @@
         "$value": "{sizing.control-height-lg}",
         "$description": "Height, lg (44px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-height-lg"
           }
         }
@@ -109,7 +109,7 @@
         "$value": "{spacing.spacing-3_5}",
         "$description": "Icon size, sm (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-icon-size-sm"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Icon size, md (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-icon-size-md"
           }
         }
@@ -129,7 +129,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "Icon size, lg (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-icon-size-lg"
           }
         }
@@ -141,7 +141,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Side padding, sm (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-padding-x-sm"
           }
         }
@@ -151,7 +151,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Side padding, md (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-padding-x-md"
           }
         }
@@ -161,7 +161,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Side padding, lg (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-padding-x-lg"
           }
         }
@@ -171,7 +171,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Gap between an icon and the text (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-gap"
           }
         }
@@ -183,7 +183,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "Border width (1px); the focus ring adds as much again.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-border-width"
           }
         }
@@ -193,7 +193,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "Corner radius (6px), like Button and Badge.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--input-radius"
           }
         }

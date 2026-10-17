@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;display:flex;flex-direction:column;gap:24px;width:400px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 function slides(n, p) { return Array.from({ length: n }, function (_, i) { return h('div', { key: i, style: { height: 120, background: '#ddd' } }, h('a', { href: '#' + p + i }, 'Link ' + (i + 1))); }); }
 window.changes = [];
 function Ctl() {

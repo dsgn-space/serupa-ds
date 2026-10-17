@@ -3,7 +3,7 @@
 Picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Use it when the exact number matters less than its place in a range (volume, a price filter); for exact numbers, use NumberInput, or pair the two.
 
 ```tsx
-import { Slider } from "@diki/design-system";
+import { Slider } from "serupa-ds";
 
 <Slider aria-label="Volume" defaultValue={50} />
 

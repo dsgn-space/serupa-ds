@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;height:2000px"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.asks = [];
+var D = window.Serupa, h = React.createElement; window.asks = [];
 function App() {
   var a = React.useState(false), al = React.useState(false), s = React.useState('md');
   window.setOpen = a[1]; window.setAlert = al[1]; window.setSize = s[1];

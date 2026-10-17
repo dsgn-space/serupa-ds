@@ -3,7 +3,7 @@
 A Button that stays on or off, for a setting that applies right away: bold in a text editor, mute, show the grid. It has `aria-pressed`, and when it's on it turns primary-subtle with primary text.
 
 ```jsx
-const { ToggleButton, ButtonGroup } = window.Diki;
+const { ToggleButton, ButtonGroup } = window.Serupa;
 
 <ToggleButton defaultPressed leftIcon="grid_on">Show grid</ToggleButton>
 <ToggleButton pressed={muted} onPressedChange={setMuted} icon={muted ? 'volume_off' : 'volume_up'} aria-label="Mute" />

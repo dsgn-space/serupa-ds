@@ -3,7 +3,7 @@
 A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. It's built from parts (`CardHeader`, `CardBody`, `CardFooter`) that you can mix with any content, and with `href` the whole card becomes one link.
 
 ```jsx
-const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Diki;
+const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
 
 <Card>
   <CardHeader title="Team plan" description="Up to 10 members" action={<Badge tone="success">Active</Badge>} />

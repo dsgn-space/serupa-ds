@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   var PHOTO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" fill="#db2777"/><circle cx="40" cy="32" r="14" fill="#fff"/><ellipse cx="40" cy="74" rx="26" ry="20" fill="#fff"/></svg>');
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     h('div', { className: 'row' }, ['xs', 'sm', 'md', 'lg', 'xl'].map(function (s) { return h(T.Avatar, { key: s, size: s, name: 'Grace Hopper' }); })),

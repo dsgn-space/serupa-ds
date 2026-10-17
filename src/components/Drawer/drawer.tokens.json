@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "The panel's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.overlay}",
         "$description": "The dimmed backdrop over the page.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-overlay"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The title.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-title-color"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "The description under the title (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-description-color"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.border}",
         "$description": "The line above the footer.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-border"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{shadow.shadow-xl}",
         "$description": "The panel's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-shadow"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{sizing.container-xs}",
         "$description": "size=\"sm\" (320px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-width-sm"
           }
         }
@@ -81,7 +81,7 @@
         "$value": "{sizing.container-sm}",
         "$description": "size=\"md\", the default (384px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-width-md"
           }
         }
@@ -91,7 +91,7 @@
         "$value": "{sizing.container-lg}",
         "$description": "size=\"lg\" (512px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-width-lg"
           }
         }
@@ -103,7 +103,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "Padding inside the panel (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-padding"
           }
         }
@@ -113,7 +113,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Space between the header and the body (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-gap"
           }
         }
@@ -125,7 +125,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The line above the footer (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-border-width"
           }
         }
@@ -135,7 +135,7 @@
         "$value": "{radius.rounded-xl}",
         "$description": "The corners on the open side of a top or bottom drawer (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-radius"
           }
         }
@@ -147,7 +147,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The title's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-title-weight"
           }
         }
@@ -159,7 +159,7 @@
         "$value": "{transitions.duration-300}",
         "$description": "Sliding in (300ms).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--drawer-duration"
           }
         }

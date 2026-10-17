@@ -3,7 +3,7 @@
 Body text in the system's type: a paragraph, a caption, an error line. `size`, `tone` and `weight` set only what you give them, so anything you leave out follows the parent, and Text can sit inside a card, a cell or a button without fighting it.
 
 ```jsx
-const { Text } = window.Diki;
+const { Text } = window.Serupa;
 
 <Text>Invite people to work on this project with you.</Text>
 <Text size="sm" tone="muted">Last edited 2 hours ago</Text>

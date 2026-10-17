@@ -3,7 +3,7 @@
 A search field: a search icon at the start, and a × at the end once something is typed. Escape clears it and Enter calls `onSearch`. It uses Input's box, sizes and tokens.
 
 ```tsx
-import { SearchInput } from "@diki/design-system";
+import { SearchInput } from "serupa-ds";
 
 <SearchInput aria-label="Search projects" placeholder="Search projects" onSearch={run} />
 

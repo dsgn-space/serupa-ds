@@ -36,7 +36,7 @@ function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined):
 /** A native <select> styled like Input (ref, value, onChange and every select attribute go to it), with a chevron; className and style go to the box. Label it with <label htmlFor>, aria-label or Field. multiple isn't supported. */
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(props, ref) {
   const rest = omit(props, OWN);
-  if ((props as { multiple?: boolean }).multiple) warnOnce("select-multiple", "Diki.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
+  if ((props as { multiple?: boolean }).multiple) warnOnce("select-multiple", "Serupa.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;

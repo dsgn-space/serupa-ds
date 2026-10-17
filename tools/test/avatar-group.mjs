@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;display:flex;flex-direction:column;gap:12px;align-items:flex-start"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 var P = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Katherine Johnson', 'Linus Torvalds'];
 function av(n) { return P.slice(0, n).map(function (x) { return h(D.Avatar, { key: x, name: x, size: 'lg' }); }); }
 function App() {

@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;width:320px;display:flex;flex-direction:column;gap:12px"></div>
 <script>
-var D = window.Diki, h = React.createElement, P = D.PasswordInput;
+var D = window.Serupa, h = React.createElement, P = D.PasswordInput;
 window.calls = [];
 function Controlled() {
   var s = React.useState(true);

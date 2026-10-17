@@ -3,7 +3,7 @@
 A small picture of a person (a circle) or of a team, project or organisation (a square). When there's no picture, or it fails to load, it shows the initials, or a person icon when there's no name either.
 
 ```jsx
-const { Avatar } = window.Diki;
+const { Avatar } = window.Serupa;
 
 <Avatar src={user.photo} name={user.name} />
 <Avatar name="Grace Hopper" size="lg" status="online" />

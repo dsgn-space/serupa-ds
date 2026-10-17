@@ -7,7 +7,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 const IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEklEQVR4nGM4w8CAB+GTG8HSAJNGT7H9UgyzAAAAAElFTkSuQmCC';
 const APP = `<div id="root" style="padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 function App() {
   return h(React.Fragment, null,
     h(D.Avatar, { id: 'img', src: ${JSON.stringify(IMG)}, name: 'Ada Lovelace', ref: window.r = React.createRef(), className: 'extra', 'data-x': 'y' }),
@@ -77,7 +77,7 @@ t('contrast: initials and the icon keep 4.5:1 on their background in all six the
 // The picture belongs to its src: an error that lands before React's effects (fast in WebKit) still falls back, and a new src tries again.
 const sw = await (await b.newContext()).newPage();
 await sw.goto(writePage('avatar-src.html', `<div id="root"></div><script>var h = React.createElement;
-function App() { var s = React.useState('/nowhere.png'); window.setSrc = s[1]; return h(window.Diki.Avatar, { id: 'sw', src: s[0], name: 'Alan Turing' }); }
+function App() { var s = React.useState('/nowhere.png'); window.setSrc = s[1]; return h(window.Serupa.Avatar, { id: 'sw', src: s[0], name: 'Alan Turing' }); }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));</script>`, { react: true }));
 const kind = () => sw.evaluate(() => { const e = document.getElementById('sw'); return e.querySelector('img') ? 'img' : e.textContent; });
 await sw.waitForTimeout(300); const k1 = await kind();

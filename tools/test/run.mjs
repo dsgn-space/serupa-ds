@@ -7,7 +7,7 @@ const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
 // cross-browser comparison through WebDriver (see compat.mjs).
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
-if (arg('--browser')) process.env.DIKI_BROWSER = arg('--browser');
+if (arg('--browser')) process.env.SERUPA_BROWSER = arg('--browser');
 const steps = [
   // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in Vitest.
   ['Component tests (Vitest)', process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run']],
@@ -90,7 +90,7 @@ const summary = [];
 for (const [name, cmd, args] of steps) {
   console.log(`\n━━ ${name} ━━`);
   const t0 = Date.now();
-  const r = spawnSync(cmd, args, { stdio: 'inherit', cwd: PROJECT, env: { ...process.env, DIKI_PROJECT: PROJECT } });
+  const r = spawnSync(cmd, args, { stdio: 'inherit', cwd: PROJECT, env: { ...process.env, SERUPA_PROJECT: PROJECT } });
   summary.push([name, r.status === 0, Date.now() - t0]);
 }
 console.log('\n━━ Summary ━━');

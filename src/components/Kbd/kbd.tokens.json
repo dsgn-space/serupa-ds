@@ -7,7 +7,7 @@
         "$value": "{color.surface-muted}",
         "$description": "A key's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.field-border}",
         "$description": "A key's outline, thicker at the bottom like a keycap.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-border"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The key's label (4.5:1 on bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-text"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "The + between keys in a combination.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-separator"
           }
         }
@@ -49,7 +49,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "A key's corners (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-radius"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "size=\"sm\" (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-height-sm"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "size=\"md\", the default (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-height-md"
           }
         }
@@ -83,7 +83,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Space on each side of a key's label (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-padding-x"
           }
         }
@@ -93,7 +93,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space between keys and the + in a combination (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--kbd-gap"
           }
         }

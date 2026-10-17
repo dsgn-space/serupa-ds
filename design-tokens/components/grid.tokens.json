@@ -7,7 +7,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The space between cells when gap isn't given (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--grid-gap"
           }
         }
@@ -19,7 +19,7 @@
         "$value": "{sizing.container-3xs}",
         "$description": "The narrowest a column gets with columns=\"auto\" when minColumnWidth isn't given (256px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--grid-min-column"
           }
         }

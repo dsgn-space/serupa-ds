@@ -3,7 +3,7 @@
 A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked. For a short list (under about 10), a Select is simpler.
 
 ```tsx
-import { Combobox } from "@diki/design-system";
+import { Combobox } from "serupa-ds";
 
 <Combobox aria-label="Country" placeholder="Pick a country" options={["Argentina", "Brazil", "Canada"]} />
 

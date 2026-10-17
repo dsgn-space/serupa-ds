@@ -6,7 +6,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); }</style><div id="root" style="padding:16px;width:320px;display:flex;flex-direction:column;gap:12px"></div>
 <script>
-var D = window.Diki, h = React.createElement, S = D.SearchInput;
+var D = window.Serupa, h = React.createElement, S = D.SearchInput;
 window.calls = [];
 function Controlled() {
   var s = React.useState('atlas'); window.ctl = s[0];

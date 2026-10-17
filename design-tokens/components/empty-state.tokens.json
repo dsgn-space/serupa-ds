@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "The icon (3:1 on icon-bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-icon-color"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.secondary}",
         "$description": "The circle behind the icon.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-icon-bg"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The title.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-title-color"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "The description (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-description-color"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.border}",
         "$description": "The dashed frame of variant=\"dashed\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-border"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{fontSize.text-base}",
         "$description": "The title (16px; sm: 14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-title-size"
           }
         }
@@ -69,7 +69,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The title's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-title-weight"
           }
         }
@@ -79,7 +79,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "The description (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-description-size"
           }
         }
@@ -91,7 +91,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The icon (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-icon-size"
           }
         }
@@ -101,7 +101,7 @@
         "$value": "{spacing.spacing-12}",
         "$description": "The circle behind it (48px; sm: 40px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-icon-box"
           }
         }
@@ -111,7 +111,7 @@
         "$value": "{spacing.spacing-10}",
         "$description": "The circle at size sm (40px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-icon-box-sm"
           }
         }
@@ -121,7 +121,7 @@
         "$value": "{sizing.container-sm}",
         "$description": "The widest the text gets (384px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-max-width"
           }
         }
@@ -133,7 +133,7 @@
         "$value": "{spacing.spacing-12}",
         "$description": "Space around the content (48px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-padding"
           }
         }
@@ -143,7 +143,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "At size sm (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-padding-sm"
           }
         }
@@ -153,7 +153,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Space between the icon, the text and the actions (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-gap"
           }
         }
@@ -165,7 +165,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The dashed frame (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-border-width"
           }
         }
@@ -177,7 +177,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The dashed frame's corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--empty-state-radius"
           }
         }

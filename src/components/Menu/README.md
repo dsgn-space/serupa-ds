@@ -3,7 +3,7 @@
 A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a user menu. It follows the WAI-ARIA menu button pattern and opens next to its button in the browser's top layer.
 
 ```jsx
-const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.Diki;
+const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.Serupa;
 
 <Menu trigger={<Button variant="secondary" rightIcon="expand_more">Actions</Button>}>
   <MenuItem icon="edit" shortcut="⌘E" onSelect={edit}>Edit</MenuItem>

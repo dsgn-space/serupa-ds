@@ -3,7 +3,7 @@
 A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). `collapsed` narrows it to a 64px icon rail.
 
 ```jsx
-const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Diki;
+const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Serupa;
 
 <div style={{ display: 'flex', height: '100vh' }}>
   <Sidebar header={<Logo />} footer={<UserButton />} collapsed={collapsed}>
