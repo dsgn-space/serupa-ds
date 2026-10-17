@@ -18,12 +18,19 @@ export const isValid = (d: unknown): d is Date => d instanceof Date && !isNaN(d.
 export const isoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 /** The locale's first day of the week (0 Sunday … 6 Saturday), where the browser knows it; otherwise Sunday. */
+// Regions whose week starts on Sunday or Saturday (CLDR weekData; the Maldives starts on Friday, the rest on
+// Monday), for browsers without Intl.Locale week info (Firefox).
+const SUNDAY_FIRST = /^(AG|AS|BD|BR|BS|BT|BW|BZ|CA|CO|DM|DO|ET|GT|GU|HK|HN|ID|IL|IN|JM|JP|KE|KH|KR|LA|MH|MM|MO|MT|MX|MZ|NI|NP|PA|PE|PH|PK|PR|PT|PY|SA|SG|SV|TH|TT|TW|UM|US|VE|VI|WS|YE|ZA|ZW)$/;
+const SATURDAY_FIRST = /^(AF|BH|DJ|DZ|EG|IQ|IR|JO|KW|LY|OM|QA|SD|SY)$/;
+
 export function firstDayOfWeek(locale?: string): number {
   try {
     const l: any = new Intl.Locale(locale || new Intl.DateTimeFormat().resolvedOptions().locale);
     const info = typeof l.getWeekInfo === "function" ? l.getWeekInfo() : l.weekInfo;
     if (info && info.firstDay) return info.firstDay % 7;
-  } catch { /* no Intl.Locale week info */ }
+    const region = l.region || (typeof l.maximize === "function" ? l.maximize().region : undefined);
+    if (region) return SUNDAY_FIRST.test(region) ? 0 : SATURDAY_FIRST.test(region) ? 6 : region === "MV" ? 5 : 1;
+  } catch { /* no Intl.Locale */ }
   return 0;
 }
 
