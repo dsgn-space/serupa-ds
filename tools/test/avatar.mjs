@@ -73,6 +73,16 @@ const contrast = await p.evaluate(() => {
   return { low, n };
 });
 t('contrast: initials and the icon keep 4.5:1 on their background in all six themes', contrast.low.length === 0 && contrast.n === 6, contrast.low.join('; '));
+// The picture belongs to its src: an error that lands before React's effects (fast in WebKit) still falls back, and a new src tries again.
+const sw = await (await b.newContext()).newPage();
+await sw.goto(writePage('avatar-src.html', `<div id="root"></div><script>var h = React.createElement;
+function App() { var s = React.useState('/nowhere.png'); window.setSrc = s[1]; return h(window.Diki.Avatar, { id: 'sw', src: s[0], name: 'Alan Turing' }); }
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));</script>`, { react: true }));
+const kind = () => sw.evaluate(() => { const e = document.getElementById('sw'); return e.querySelector('img') ? 'img' : e.textContent; });
+await sw.waitForTimeout(300); const k1 = await kind();
+await sw.evaluate((u) => window.setSrc(u), IMG); await sw.waitForTimeout(300); const k2 = await kind();
+await sw.evaluate(() => window.setSrc('/elsewhere.png')); await sw.waitForTimeout(300); const k3 = await kind();
+t('a failed src falls back to initials; a new src shows its picture; a new failing one falls back again', [k1, k2, k3].join() === 'AT,img,AT', [k1, k2, k3].join());
 t('no errors on the page', errors.length === 0, errors.join('; '));
 
 {
