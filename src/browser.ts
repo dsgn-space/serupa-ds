@@ -37,6 +37,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   SidebarSection: Diki.SidebarSection,
   NavbarLink: Diki.NavbarLink,
   Pagination: Diki.Pagination,
+  NumberInput: Diki.NumberInput,
   PasswordInput: Diki.PasswordInput,
   Popover: Diki.Popover,
   Accordion: Diki.Accordion,

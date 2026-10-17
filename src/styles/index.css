@@ -46,4 +46,5 @@
 @import "../components/Drawer/Drawer.css";
 @import "../components/Progress/Progress.css";
 @import "../components/SearchInput/SearchInput.css";
+@import "../components/NumberInput/NumberInput.css";
 @import "./utilities.css";

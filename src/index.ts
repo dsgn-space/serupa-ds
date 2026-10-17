@@ -51,6 +51,8 @@ import { Menu, MenuGroup, MenuItem, MenuSeparator } from "./components/Menu/Menu
 export type { MenuGroupProps, MenuItemProps, MenuProps } from "./components/Menu/Menu";
 import { Navbar, NavbarLink } from "./components/Navbar/Navbar";
 export type { NavbarLinkProps, NavbarProps } from "./components/Navbar/Navbar";
+import { NumberInput } from "./components/NumberInput/NumberInput";
+export type { NumberInputProps } from "./components/NumberInput/NumberInput";
 import { Pagination, paginationRange } from "./components/Pagination/Pagination";
 export type { PaginationProps } from "./components/Pagination/Pagination";
 import { PasswordInput } from "./components/PasswordInput/PasswordInput";
@@ -95,7 +97,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -110,7 +112,7 @@ declare global {
       Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader; Checkbox: typeof Checkbox; configure: typeof configure;
       Container: typeof Container; Dialog: typeof Dialog; Divider: typeof Divider; Grid: typeof Grid; Stack: typeof Stack; Fab: typeof Fab; Field: typeof Field; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Input: typeof Input; Loader: typeof Loader;
       Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Link: typeof Link; VisuallyHidden: typeof VisuallyHidden;
-      Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; SearchInput: typeof SearchInput;
+      Menu: typeof Menu; MenuGroup: typeof MenuGroup; MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; NumberInput: typeof NumberInput; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; SearchInput: typeof SearchInput;
       Select: typeof Select; Switch: typeof Switch;
       Table: typeof Table; TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead; TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow;
       Tab: typeof Tab; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs; Text: typeof Text; Textarea: typeof Textarea; toast: typeof toast; Toaster: typeof Toaster; Tooltip: typeof Tooltip; customIcons: typeof customIcons;
