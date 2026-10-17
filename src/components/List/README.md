@@ -2,8 +2,6 @@
 
 Rows of related things: people, files, notifications, settings. Each row has a title, an optional muted description, something before it (an Avatar or an icon) and something after it (a date, a Badge, an action). A row can be a link or a button; trailing actions stay outside it, so controls are never nested.
 
-## Usage
-
 ```jsx
 const { List, ListItem, Avatar, Badge, IconButton } = window.Diki;
 
@@ -21,6 +19,33 @@ const { List, ListItem, Avatar, Badge, IconButton } = window.Diki;
   <ListItem leading="settings" title="Open settings" onClick={openSettings} />
 </List>
 ```
+
+## When to use
+
+- A set of similar things people scan and pick from: people, files, notifications, settings.
+- Rows that each open something or do one thing, with an action of their own at the end.
+- A list beside a detail view, where the selected row shows what's open.
+
+## When not to use
+
+- Data with several columns to compare or sort: use [Table](../Table/README.md) instead.
+- Items with pictures or a lot of content each: use [Card](../Card/README.md)s in a [Grid](../Grid/README.md).
+- Actions behind a button: use [Menu](../Menu/README.md) instead.
+- An app's main navigation: use [Sidebar](../Sidebar/README.md) instead.
+
+## Usage
+
+- Put actions in `trailing`, never inside the row's link or button, and name them for their row ("More for Ada Lovelace").
+- Use `as="ol"` when the order matters.
+- Use `variant="card"` for a list that stands on its own; inside a Card or a panel that already has a frame, keep it `plain`.
+- With a router, pass its link component as `as` and its props (such as `to`) in `linkProps`.
+
+## Accessibility
+
+- It's a real list, so screen readers say how many rows there are. Name it with `aria-label` when there's no heading over it.
+- A whole row is one link or button, named by its title and description; trailing actions are separate controls, so give them names that say which row they're for ("More for Ada Lovelace").
+- Selected rows have a bar and `aria-current` or `aria-pressed`, not only a background.
+- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in all six themes (`tools/test/list.mjs`).
 
 ## Props
 
@@ -50,13 +75,6 @@ const { List, ListItem, Avatar, Badge, IconButton } = window.Diki;
 | `disabled` | boolean | `false` | Dims a link or button row and stops it |
 
 `className`, `ref` and everything else go to the `<li>`.
-
-## Accessibility
-
-- It's a real list, so screen readers say how many rows there are. Name it with `aria-label` when there's no heading over it.
-- A whole row is one link or button, named by its title and description; trailing actions are separate controls, so give them names that say which row they're for ("More for Ada Lovelace").
-- Selected rows have a bar and `aria-current` or `aria-pressed`, not only a background.
-- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in all six themes (`tools/test/list.mjs`).
 
 ## Component tokens
 
