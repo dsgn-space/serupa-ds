@@ -20,7 +20,14 @@ function App() {
     h(Ctl),
     h(D.TimePicker, { id: 'de', 'aria-label': 'Beginn', locale: 'de-DE', defaultValue: '14:30' }),
     h(D.TimePicker, { id: 'dis', 'aria-label': 'Off', disabled: true, defaultValue: '10:00' }),
-    h(D.TimePicker, { id: 'tok', 'aria-label': 'Tok', style: { '--time-picker-option-bg-active': 'rgb(1, 2, 3)' } }));
+    h(D.TimePicker, { id: 'tok', 'aria-label': 'Tok', style: { '--time-picker-option-bg-active': 'rgb(1, 2, 3)' } }),
+    h(D.TimePicker, { id: 'mn', 'aria-label': 'From min', locale: 'en-US', min: '08:10', max: '10:00', onBlur: function () { window.blurs = (window.blurs || 0) + 1; } }),
+    h(D.TimePicker, { id: 'tiny', 'aria-label': 'Tiny step', locale: 'en-US', step: 0.25 }),
+    h(Loc));
+}
+function Loc() {
+  var s = React.useState('en-US'); window.setLoc = s[1];
+  return h(D.TimePicker, { id: 'loc', 'aria-label': 'Locale', locale: s[0], defaultValue: '14:30' });
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -105,6 +112,32 @@ t('contrast: times 4.5:1 (also highlighted), the check and clock icon 3:1, in al
 await p.keyboard.press('Escape');
 await p.focus('#tok'); await p.keyboard.press('ArrowDown');
 t('--time-picker-option-bg-active overrides one picker', await p.$eval('#tok ~ ul .dk-time-picker__option--active', (o) => getComputedStyle(o).backgroundColor === 'rgb(1, 2, 3)'));
+await p.click('#tp'); await p.keyboard.press('ArrowDown'); await p.keyboard.press('ArrowDown');
+await p.keyboard.type('3:15 pm');
+const ty = await st('tp');
+await p.keyboard.press('Enter');
+const te = await st('tp');
+t('typing with the list open moves the highlight to the nearest time, and Enter keeps what was typed', ty.open && ty.active === '3:00 PM' && te.v === '3:15 PM' && !te.open, JSON.stringify([ty.active, te.v, te.open]));
+await p.fill('#tp', ''); await p.keyboard.type('9a'); await p.keyboard.press('ArrowDown'); await p.keyboard.press('ArrowDown'); await p.keyboard.press('Enter');
+t('after typing, moving with the arrows makes Enter pick the highlighted time again', (await p.inputValue('#tp')) === '9:30 AM', await p.inputValue('#tp'));
+await p.click('#mn'); await p.keyboard.type('8:4');
+const b0 = await p.evaluate(() => window.blurs || 0);
+await p.click('#mn ~ button');
+const mb = await p.evaluate(() => [window.blurs || 0, document.activeElement.id, document.getElementById('mn').value].join());
+t('the clock button keeps focus in the field: no blur, and half-typed text is left alone', mb === b0 + ',mn,8:4', mb);
+const mnl = await st('mn');
+t('the list counts steps from min, like <input type="time">: 8:10, 8:40 … 9:40 AM', mnl.first === '8:10 AM' && mnl.last === '9:40 AM' && mnl.n === 4, JSON.stringify(mnl));
+const wd = await p.evaluate(() => { const i = document.getElementById('mn'), l = document.getElementById(i.getAttribute('aria-controls')); return [Math.round(l.getBoundingClientRect().width), Math.round(i.parentElement.getBoundingClientRect().width)]; });
+t('the list is at least as wide as the field', wd[0] >= wd[1], wd.join(' >= '));
+await p.keyboard.press('Escape');
+await p.click('#tiny'); await p.keyboard.press('ArrowDown');
+const tn = await st('tiny');
+t('a step under one minute falls back to 30', tn.open && tn.n === 48, JSON.stringify(tn));
+await p.keyboard.press('Escape');
+const l1 = await p.inputValue('#loc');
+await p.evaluate(() => window.setLoc('de-DE')); await p.waitForTimeout(50);
+t('a new locale rewrites the field in its format', l1 === '2:30 PM' && (await p.inputValue('#loc')) === '14:30', l1 + ' → ' + (await p.inputValue('#loc')));
+
 t('no errors on the page', errors.length === 0, errors.join('; '));
 
 await b.close();
