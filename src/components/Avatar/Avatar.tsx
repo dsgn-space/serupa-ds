@@ -27,7 +27,10 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
    (or alt) is the accessible name; alt="" hides it from screen readers. className and every other prop go to
    the outer <span>. */
 const OWN = { src: 1, name: 1, alt: 1, size: 1, shape: 1, status: 1, statusLabel: 1, className: 1, children: 1 } as const;
-const SIZES: readonly AvatarSize[] = ["xs", "sm", "md", "lg", "xl"];
+export const AVATAR_SIZES: readonly AvatarSize[] = ["xs", "sm", "md", "lg", "xl"];
+const SIZES = AVATAR_SIZES;
+/** The size an AvatarGroup sets for every Avatar inside it, however deep (inside a Tooltip or a link too). */
+export const AvatarGroupSize = React.createContext<AvatarSize | null>(null);
 const STATUSES: readonly AvatarStatus[] = ["online", "busy", "away", "offline"];
 
 /** The initials of a name: the first letters of the first and last words ("Ada Lovelace" → "AL"), or one letter. */
@@ -42,7 +45,7 @@ export function initials(name?: string): string {
 /** A picture of a person, team or project, with initials or an icon when there's no picture. */
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(props, ref) {
   const rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, "md");
+  const size = React.useContext(AvatarGroupSize) || oneOf(SIZES, props.size, "md");
   const square = props.shape === "square";
   const status = props.status && STATUSES.indexOf(props.status) >= 0 ? props.status : null;
   const [failed, setFailed] = React.useState(false);

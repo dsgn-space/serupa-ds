@@ -1,0 +1,81 @@
+{
+  "avatar-group": {
+    "$description": "AvatarGroup's component tokens. Each one is an optional override: set the CSS variable (--avatar-group-<name>) on the page, a container or one group, and every AvatarGroup inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "ring": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The ring around each avatar, which keeps the overlapping edges clear. Set it to the background the group sits on.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-ring"
+          }
+        }
+      },
+      "more-bg": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The \"+N\" avatar's background.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-more-bg"
+          }
+        }
+      },
+      "more-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The \"+N\" text (4.5:1 on more-bg).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-more-color"
+          }
+        }
+      }
+    },
+    "border": {
+      "ring-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The ring's width (2px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-ring-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "overlap-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "How far each avatar overlaps the one before at size xs and sm (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-overlap-sm"
+          }
+        }
+      },
+      "overlap-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "The overlap at size md, the default, and lg (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-overlap-md"
+          }
+        }
+      },
+      "overlap-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The overlap at size xl (16px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--avatar-group-overlap-lg"
+          }
+        }
+      }
+    }
+  }
+}

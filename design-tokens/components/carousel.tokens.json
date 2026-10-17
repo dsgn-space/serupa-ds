@@ -1,0 +1,115 @@
+{
+  "carousel": {
+    "$description": "Carousel's component tokens. Each one is an optional override: set the CSS variable (--carousel-<name>) on the page, a container or one carousel, and every Carousel inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "dot": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The dots for the slides not shown (3:1 on surface).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-dot"
+          }
+        }
+      },
+      "dot-hover": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A dot under the pointer.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-dot-hover"
+          }
+        }
+      },
+      "dot-active": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The current slide's dot.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-dot-active"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "A dot's keyboard focus ring.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-focus-ring"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xl}",
+        "$description": "The slides' corners (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "dot-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "A dot's size (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-dot-size"
+          }
+        }
+      },
+      "dot-active-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The current dot's width (24px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-dot-active-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the slides and the dots (12px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-gap"
+          }
+        }
+      },
+      "arrow-offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The previous and next buttons' distance from the sides (8px).",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-arrow-offset"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "arrow-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-sm}",
+        "$description": "The previous and next buttons' shadow, so they stand out on any slide.",
+        "$extensions": {
+          "com.diki": {
+            "cssVar": "--carousel-arrow-shadow"
+          }
+        }
+      }
+    }
+  }
+}
