@@ -2,8 +2,6 @@
 
 An on/off setting that takes effect at once. It's a native checkbox with `role="switch"`, so screen readers announce "on" and "off", drawn as a track (the input, `appearance: none`) and a thumb that slides along it. The track sits centered on the label's first line (each size's track is as tall as its line), and a click anywhere on the label flips it.
 
-## Usage
-
 ```jsx
 const { Switch } = window.Diki;
 
@@ -18,17 +16,21 @@ const { Switch } = window.Diki;
 <Switch aria-label="Enable rule" />
 ```
 
-## Props
+## When to use
 
-| Prop | Type | Default | What it does |
-| --- | --- | --- | --- |
-| `children` | node | | The label. Without one, give the switch an `aria-label` |
-| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | A 28×16px track and 12px thumb with `text-xs`; 36×20 and 16 with `text-sm`; 44×24 and 20 with `text-base` |
-| `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
-| `labelPosition` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
-| `invalid` | boolean | `false` | A danger track while off, a danger focus ring, and `aria-invalid` |
+- A setting that applies right away, like turning on Wi-Fi.
+- A list of settings, each turned on or off on its own row.
 
-Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox" role="switch">` (`type` and `role` can't be changed). `className` and `style` go to the `<label>` around it, which has `data-component="switch"` and `data-size`.
+## When not to use
+
+- If the change waits for a Save button, use a [Checkbox](../Checkbox/README.md).
+- An on/off button in a toolbar, such as bold: use [ToggleButton](../ToggleButton/README.md).
+
+## Usage
+
+- Label the setting, not the state: "Wi-Fi", not "Turn Wi-Fi on". The switch shows on or off.
+- Don't change the label with the state, and don't add "On" and "Off" text beside it.
+- In a settings list, put the label first and the switch at the end of the row.
 
 ## States
 
@@ -49,6 +51,18 @@ The thumb slides in 150ms (`duration-150`, `ease-in-out`) and jumps with `prefer
 - The label names it; a description is read after it. The thumb is decorative.
 - In forced-colors mode the track gets a border and the thumb and on track use system colors.
 - The label and description keep 4.5:1; the tracks on the page, each thumb on its track (at rest and on hover) and the focus ring 3:1, in all six themes (`tools/test/switch.mjs`).
+
+## Props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `children` | node | | The label. Without one, give the switch an `aria-label` |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | A 28×16px track and 12px thumb with `text-xs`; 36×20 and 16 with `text-sm`; 44×24 and 20 with `text-base` |
+| `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
+| `labelPosition` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
+| `invalid` | boolean | `false` | A danger track while off, a danger focus ring, and `aria-invalid` |
+
+Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox" role="switch">` (`type` and `role` can't be changed). `className` and `style` go to the `<label>` around it, which has `data-component="switch"` and `data-size`.
 
 ## Component tokens
 
@@ -71,10 +85,3 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-thumb-size-sm` / `-md` / `-lg` | `spacing-3` / `spacing-4` / `spacing-5` | Thumb sizes (12, 16, 20px) |
 | `--switch-padding` | `spacing-0.5` | Thumb to the track's ends (2px) |
 | `--switch-gap` | `spacing-2` | Track to label (8px) |
-
-## Guidelines
-
-- Use a switch for a setting that applies right away, like turning on Wi-Fi. If the change waits for a Save button, use a checkbox.
-- Label the setting, not the state: "Wi-Fi", not "Turn Wi-Fi on". The switch shows on or off.
-- Don't change the label with the state, and don't add "On" and "Off" text beside it.
-- In a settings list, put the label first and the switch at the end of the row.

@@ -12,7 +12,32 @@ const [q, setQ] = React.useState("");
 <SearchInput aria-label="Filter" value={q} onChange={(e) => setQ(e.target.value)} loading={fetching} />
 ```
 
-Put it in a `<form role="search">` when it searches the whole site or app.
+## When to use
+
+- Searching a site, an app or a large set of records, with `onSearch` on Enter.
+- Filtering a list or a table on the page as people type.
+
+## When not to use
+
+- Picking one value from a known list: use [Combobox](../Combobox/README.md).
+- A one-line answer in a form that isn't a search: use [Input](../Input/README.md).
+
+## Usage
+
+- Put it in a `<form role="search">` when it searches the whole site or app.
+- Name it with a visible label or `aria-label`, and use the placeholder for what can be searched ("Search projects").
+- Set `loading` while results are on their way, so people know the search is running.
+
+## Behavior
+
+- The × shows only when there's text and the field isn't disabled or read-only. Clicking it clears the field and keeps focus there.
+- Escape clears a field that has text, and stops there, so a surrounding Dialog or Popover stays open. On an empty field Escape passes through.
+- The browser's own clear button is hidden, so there's only one ×.
+
+## Accessibility
+
+- `type="search"` (a searchbox) with `enterkeyhint="search"`. Name it with a `<label>` or `aria-label`; a placeholder isn't a name.
+- The icon and × keep 3:1 and the text 4.5:1 on the field in all six themes (`tools/test/search-input.mjs`).
 
 ## Props
 
@@ -27,17 +52,6 @@ Every Input prop works (`size`, `invalid`, `value`, `defaultValue`, `onChange`, 
 | `loadingLabel` | `string` | `'Searching'` | The loader's name. |
 
 `className` and `style` go to the box; `ref` and every other prop go to the `<input>`.
-
-## Behavior
-
-- The × shows only when there's text and the field isn't disabled or read-only. Clicking it clears the field and keeps focus there.
-- Escape clears a field that has text, and stops there, so a surrounding Dialog or Popover stays open. On an empty field Escape passes through.
-- The browser's own clear button is hidden, so there's only one ×.
-
-## Accessibility
-
-- `type="search"` (a searchbox) with `enterkeyhint="search"`. Name it with a `<label>` or `aria-label`; a placeholder isn't a name.
-- The icon and × keep 3:1 and the text 4.5:1 on the field in all six themes (`tools/test/search-input.mjs`).
 
 ## Component tokens
 

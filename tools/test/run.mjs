@@ -71,6 +71,7 @@ const steps = [
   ['Visual snapshots', 'node', [path.join(HERE, 'visual.mjs'), ...update]],
   ['Page groundwork', 'node', [path.join(HERE, 'page.mjs')]],
   ['Storybook', 'node', [path.join(HERE, 'storybook.mjs')]],
+  ['Usage guides', 'node', [path.join(HERE, 'guides.mjs')]],
 ];
 // CI runs the suite as parallel jobs, one per group: node tools/test/run.mjs --group checks|components|visual|storybook.
 // A step not named here is a component suite.

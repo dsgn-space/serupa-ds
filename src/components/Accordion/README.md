@@ -2,8 +2,6 @@
 
 A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. One item open at a time by default, or several with `type="multiple"`.
 
-## Usage
-
 ```jsx
 const { Accordion, AccordionItem } = window.Diki;
 
@@ -17,6 +15,34 @@ const { Accordion, AccordionItem } = window.Diki;
 // Controlled
 <Accordion value={open} onValueChange={setOpen}>…</Accordion>
 ```
+
+## When to use
+
+- Many sections where most people need only one or two, such as FAQs.
+- Settings groups or a long form split into sections that people open as they need them.
+- A narrow screen where showing every section at once would make the page very long.
+
+## When not to use
+
+- Content everyone needs to read, or compare across sections: show it on the page under [Heading](../Heading/README.md)s instead.
+- Views of the same thing that people switch between: use [Tabs](../Tabs/README.md) instead.
+- Steps people go through in order: use [Stepper](../Stepper/README.md) instead.
+- One piece of content that shows and hides on its own: the native `<details>` and `<summary>` do that.
+
+## Usage
+
+- Write titles that say what's inside, so people can pick one without opening the others.
+- Use `type="multiple"` when people may want two sections open to compare them.
+- Set `headingLevel` to fit the page's outline.
+- Keep anything people must not miss out of a closed item: closed content is hidden from everyone.
+
+## Accessibility
+
+- Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; the content is a region labelled by its title.
+- Up and Down move between titles (wrapping, skipping disabled ones), Home and End go to the first and last; Enter and Space open and close.
+- Closed content is hidden from everyone (`visibility: hidden`), so it's out of the tab order and screen readers skip it.
+- With `collapsible={false}` the open item's button has `aria-disabled`, since pressing it does nothing.
+- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in all six themes (`tools/test/accordion.mjs`). With reduced motion it opens without animating.
 
 ## Props
 
@@ -44,14 +70,6 @@ const { Accordion, AccordionItem } = window.Diki;
 | `children` | node | none | The content |
 
 `className`, `ref` and everything else go to the item, which has `data-state="open"` or `"closed"`.
-
-## Accessibility
-
-- Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; the content is a region labelled by its title.
-- Up and Down move between titles (wrapping, skipping disabled ones), Home and End go to the first and last; Enter and Space open and close.
-- Closed content is hidden from everyone (`visibility: hidden`), so it's out of the tab order and screen readers skip it.
-- With `collapsible={false}` the open item's button has `aria-disabled`, since pressing it does nothing.
-- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in all six themes (`tools/test/accordion.mjs`). With reduced motion it opens without animating.
 
 ## Component tokens
 

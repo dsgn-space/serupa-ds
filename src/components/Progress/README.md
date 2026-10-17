@@ -12,6 +12,36 @@ import { Progress } from "@diki/design-system";
 <Progress label="Preparing your export" />   // indeterminate
 ```
 
+## When to use
+
+- A task that takes a while and whose progress you can measure: an upload, an import, an export.
+- How much of something is used: storage, a plan's quota, seats.
+- How far people are through a set of steps, shown as a single value.
+
+## When not to use
+
+- A short wait you can't measure, such as content loading: use [Loader](../Loader/README.md) instead.
+- Steps people move through, each with its own title: use [Stepper](../Stepper/README.md) instead.
+- A value people set themselves: use [Slider](../Slider/README.md) instead.
+
+## Usage
+
+- Give every bar a `label` that says what's in progress ("Uploading report.pdf"), or an `aria-label` for the ring.
+- Use `formatValue` when a percentage isn't the clearest words: "3 of 8 steps", "4.6 of 5 GB".
+- Keep `tone="primary"` for ordinary progress; switch to `warning` or `danger` when a quota is nearly full, and say so in the label or nearby text too.
+- When the task finishes, replace the bar with the result or a confirmation, such as a [Toast](../Toast/README.md).
+
+## Behavior
+
+- The fill moves to a new value over 300ms.
+- Indeterminate: a segment slides across the bar (right to left in right-to-left pages), or a quarter arc turns. Both stand still with `prefers-reduced-motion`.
+
+## Accessibility
+
+- `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.
+- Every tone's fill keeps 3:1 on the page, and the label and value 4.5:1, in all six themes (`tools/test/progress.mjs`). In forced-colors mode the track gets a border and the fill uses Highlight.
+- To announce progress as it changes, say it in a live region at milestones; reading out every step is noisy.
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -26,17 +56,6 @@ import { Progress } from "@diki/design-system";
 | `formatValue` | `(value, max) => string` | the percentage | The value's words, shown and read out. |
 
 Every other prop, `className` and `ref` go to the outer `<div>`. It has `data-component="progress"`, `data-variant`, `data-size`, `data-tone` and `data-state` (`loading`, `complete` or `indeterminate`).
-
-## Behavior
-
-- The fill moves to a new value over 300ms.
-- Indeterminate: a segment slides across the bar (right to left in right-to-left pages), or a quarter arc turns. Both stand still with `prefers-reduced-motion`.
-
-## Accessibility
-
-- `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.
-- Every tone's fill keeps 3:1 on the page, and the label and value 4.5:1, in all six themes (`tools/test/progress.mjs`). In forced-colors mode the track gets a border and the fill uses Highlight.
-- To announce progress as it changes, say it in a live region at milestones; reading out every step is noisy.
 
 ## Component tokens
 

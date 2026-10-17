@@ -11,6 +11,36 @@ import { FileUpload } from "@diki/design-system";
   onReject={(r) => console.log(r)} />
 ```
 
+## When to use
+
+- People attach one or more files to a form or a message: a profile photo, receipts, documents.
+- Files must be a certain type, size or number, and people should hear about a bad file before they submit.
+- Uploads where people often drag files in from their desktop or file manager.
+
+## When not to use
+
+- An empty area that only invites people to add content, with no file picker: use [EmptyState](../EmptyState/README.md) with `variant="dashed"` instead.
+- Showing how far an upload has got: FileUpload doesn't upload; show a [Progress](../Progress/README.md) bar while your upload runs.
+
+## Usage
+
+- Say the allowed types and the largest size in `hint` ("PNG or JPG, up to 5 MB"), and keep it in step with `accept` and `maxSize`.
+- Without `multiple`, a new file replaces the old one; set `multiple` (and `maxFiles` if there's a limit) when people may add several.
+- Use `onReject` if you need to log refused files or show the reason elsewhere; the messages already show under the area.
+- Change `title` and `buttonLabel` to name what's expected ("Drag your CV here", "Choose a CV").
+
+## Behavior
+
+- The button opens the file picker; files can also be dropped on the area, which highlights while they're dragged over it.
+- Files that don't fit are listed under the area in danger text and passed to `onReject`; the same file picked twice is skipped quietly.
+- Removing a file moves focus to the Choose button, since the row is gone.
+- The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
+
+## Accessibility
+
+- The button is the keyboard and screen-reader way in; dragging is an extra. Messages about refused files are `role="alert"`, so they're announced.
+- Text keeps 4.5:1 (also while dragging), and the icons and dashed outline 3:1, in all six themes (`tools/test/file-upload.mjs`).
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -31,18 +61,6 @@ import { FileUpload } from "@diki/design-system";
 | `removeLabel` | `(name) => string` | `` `Remove ${name}` `` | The remove buttons' names. |
 
 `formatFileSize(bytes)` is exported too (`1.5 MB`). `className`, `ref` and other props go to the root `<div>`.
-
-## Behavior
-
-- The button opens the file picker; files can also be dropped on the area, which highlights while they're dragged over it.
-- Files that don't fit are listed under the area in danger text and passed to `onReject`; the same file picked twice is skipped quietly.
-- Removing a file moves focus to the Choose button, since the row is gone.
-- The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
-
-## Accessibility
-
-- The button is the keyboard and screen-reader way in; dragging is an extra. Messages about refused files are `role="alert"`, so they're announced.
-- Text keeps 4.5:1 (also while dragging), and the icons and dashed outline 3:1, in all six themes (`tools/test/file-upload.mjs`).
 
 ## Component tokens
 

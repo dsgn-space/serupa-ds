@@ -1,8 +1,6 @@
 # Fab
 
-A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. It's a primary [Button](?path=/docs/components-button--docs), so loading, disabled and focus all work the same.
-
-## Usage
+A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. It's a primary [Button](../Button/README.md), so loading, disabled and focus all work the same.
 
 ```jsx
 const { Fab } = window.Diki;
@@ -11,6 +9,27 @@ const { Fab } = window.Diki;
 <Fab icon="edit" label="Compose" extended />
 <Fab icon="chat" label="Help" size="sm" position="bottom-start" />
 ```
+
+## When to use
+
+- The one action people come to a screen for, such as "New project" or "Compose".
+- When that action must stay in reach as people scroll.
+
+## When not to use
+
+- On wide screens, a regular [Button](../Button/README.md) in the header is often clearer.
+- Any other action on the same screen: use a [Button](../Button/README.md) in the page, since there's only one FAB per screen.
+- An icon action in a toolbar or a row: use [IconButton](../IconButton/README.md).
+
+## Usage
+
+- One per screen, for the action people come to the screen for. Other actions go in the page.
+- Leave room at the end of the content so the FAB never covers the last item.
+
+## Accessibility
+
+- It's a real `<button>` named by `label`. Put it where it comes in the reading order (often after the main content), since it's fixed but still focused in source order.
+- `shadow-lg` at rest and `shadow-xl` on hover lift it off the page; the colors and focus ring are Button's primary (`tools/test/button.mjs`, `tools/test/icon-button.mjs`).
 
 ## Props
 
@@ -23,17 +42,6 @@ const { Fab } = window.Diki;
 | `position` | `'bottom-end'` \| `'bottom-start'` \| `'top-end'` \| `'top-start'` \| `'static'` | `'bottom-end'` | The corner of the screen it's fixed to, 24px in; start and end follow the text direction. `static` leaves it in the page for you to place |
 
 Every other Button prop works the same: `onClick`, `loading`, `disabled`, `destructive`, `ref`. It sits at `z-30`: above the page, under dialogs and toasts.
-
-## Usage guidelines
-
-- One per screen, for the action people come to the screen for. Other actions go in the page.
-- Leave room at the end of the content so the FAB never covers the last item.
-- On wide screens, a regular Button in the header is often clearer; use the FAB where the main action must stay in reach as people scroll.
-
-## Accessibility
-
-- It's a real `<button>` named by `label`. Put it where it comes in the reading order (often after the main content), since it's fixed but still focused in source order.
-- `shadow-lg` at rest and `shadow-xl` on hover lift it off the page; the colors and focus ring are Button's primary (`tools/test/button.mjs`, `tools/test/icon-button.mjs`).
 
 ## Component tokens
 

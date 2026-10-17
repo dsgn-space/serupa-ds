@@ -2,8 +2,6 @@
 
 Switches between related panels in one place, such as a project's Overview, Activity and Settings. It follows the WAI-ARIA tabs pattern: `Tabs` holds the state, `TabList` the row of `Tab`s, and each `TabPanel` the content for the tab with the same `value`.
 
-## Usage
-
 ```jsx
 const { Tabs, TabList, Tab, TabPanel } = window.Diki;
 
@@ -21,6 +19,42 @@ const { Tabs, TabList, Tab, TabPanel } = window.Diki;
 // controlled, as pills
 <Tabs value={view} onValueChange={setView} variant="pill" size="sm">…</Tabs>
 ```
+
+## When to use
+
+- Several views of the same thing that people switch between, one at a time: a project's Overview, Activity and Settings.
+- A page with more content than fits, where each part stands on its own and people know which one they want.
+- Panels that should keep their state while people look elsewhere, such as a half-filled form: hidden panels stay in the page.
+
+## When not to use
+
+- Choosing a value, such as a period (Day, Week, Month) for the same content: use [SegmentedControl](../SegmentedControl/README.md) instead. It's a radio group, not a set of panels.
+- Steps people go through in order: use [Stepper](../Stepper/README.md) instead.
+- Moving between pages that each have their own URL: use links, in a [Navbar](../Navbar/README.md) or a [Sidebar](../Sidebar/README.md).
+- Sections people may want open side by side, or read one after another: use [Accordion](../Accordion/README.md) instead.
+
+## Usage
+
+- Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways, and tabs out of view are easy to miss.
+- Set `activation="manual"` when a panel is slow to show, so arrowing past a tab doesn't select it.
+- Hidden panels keep their state. Set `keepMounted={false}` on a panel that doesn't need to, so it renders only while it's selected.
+- Show a tab people can't use yet as `disabled` rather than leaving it out, when knowing it exists helps them.
+
+## Accessibility
+
+- `role="tablist"`, `"tab"` and `"tabpanel"`, with `aria-selected`, `aria-controls` and `aria-labelledby` set for you.
+- Only the selected tab is in the Tab order, and the panel itself can take focus, so keyboard users always reach the content.
+- Tab labels keep 4.5:1, and the selected line and pill 3:1 against `surface`, in all six themes (`tools/test/tabs.mjs`). The focus ring sits inside the tab so the scrolling row can't clip it.
+- In forced-colors mode the selected tab is marked in `Highlight`.
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | Into the tab list (on the selected tab), then to the selected panel |
+| ← → | The previous or next tab, wrapping, following the text direction; disabled tabs are skipped. Also selects it unless `activation="manual"` |
+| Home, End | The first or last tab |
+| Enter, Space | Selects the focused tab |
 
 ## Props
 
@@ -42,22 +76,6 @@ const { Tabs, TabList, Tab, TabPanel } = window.Diki;
 - `TabPanel`: `value` (required). Hidden panels stay in the page and keep their state; `keepMounted={false}` renders a panel only while it's selected.
 
 Each part takes `className`, `style`, `ref` and other props. `Tabs` has `data-component="tabs"` and `data-variant`; tabs and panels have `data-state="active"` or `"inactive"`.
-
-## Keyboard
-
-| Key | Does |
-| --- | --- |
-| Tab | Into the tab list (on the selected tab), then to the selected panel |
-| ← → | The previous or next tab, wrapping, following the text direction; disabled tabs are skipped. Also selects it unless `activation="manual"` |
-| Home, End | The first or last tab |
-| Enter, Space | Selects the focused tab |
-
-## Accessibility
-
-- `role="tablist"`, `"tab"` and `"tabpanel"`, with `aria-selected`, `aria-controls` and `aria-labelledby` set for you.
-- Only the selected tab is in the Tab order, and the panel itself can take focus, so keyboard users always reach the content.
-- Tab labels keep 4.5:1, and the selected line and pill 3:1 against `surface`, in all six themes (`tools/test/tabs.mjs`). The focus ring sits inside the tab so the scrolling row can't clip it.
-- In forced-colors mode the selected tab is marked in `Highlight`.
 
 ## Component tokens
 

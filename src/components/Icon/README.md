@@ -2,12 +2,6 @@
 
 Shows one icon: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon name straight to Button's `leftIcon`, `rightIcon` or `icon`.
 
-## Setup
-
-Nothing to load: the font ships with the system as `fonts/MaterialSymbolsRounded-Filled.woff2`, and `tokens.css` declares it. It holds only the filled, weight-400 Rounded style, with optical sizes from 20 to 48, about 1 MB.
-
-## Usage
-
 ```jsx
 const { Icon, Button } = window.Diki;
 
@@ -18,9 +12,31 @@ const { Icon, Button } = window.Diki;
 <Button variant="ghost" icon="settings" aria-label="Settings" />
 ```
 
+## When to use
+
+- A symbol next to a label that helps people find it quickly: in buttons, menus, list rows and navigation.
+- A status (success, warning, error, info) next to the message it belongs to.
+- A large symbol in an empty state or an illustration.
+
+## When not to use
+
+- A button that shows only an icon: use [IconButton](../IconButton/README.md) instead; it requires the label an icon alone doesn't have.
+- A photo, a screenshot or any other picture: use [Image](../Image/README.md) instead.
+- A person's or team's picture: use [Avatar](../Avatar/README.md) instead.
+
+## Usage
+
 Find names in the Material Symbols catalog (Rounded style) at fonts.google.com/icons; the font is already here, only the names come from the catalog. Names are lowercase with underscores: `arrow_forward`, `more_vert`.
 
-## Custom icons
+- Use Material Symbols Rounded, filled, and custom icons drawn to the same rules. Don't mix in other icon sets or the Outlined/Sharp styles.
+- Before drawing a custom icon, check that Material Symbols doesn't already have one for that meaning.
+- One icon per meaning across the product: `delete`, not `delete` in one place and `remove` in another.
+
+### Setup
+
+Nothing to load: the font ships with the system as `fonts/MaterialSymbolsRounded-Filled.woff2`, and `tokens.css` declares it. It holds only the filled, weight-400 Rounded style, with optical sizes from 20 to 48, about 1 MB.
+
+### Custom icons
 
 For what Material Symbols doesn't have, add your own SVG icons. They work everywhere a Material Symbols name does, with the same sizes, colors and accessibility:
 
@@ -46,7 +62,7 @@ The build keeps only the shapes and removes editor leftovers (ids, classes, size
 
 `Diki.customIcons` lists the custom icons' names.
 
-## Sizes
+### Sizes
 
 The same for Material Symbols and custom icons.
 
@@ -60,11 +76,11 @@ The same for Material Symbols and custom icons.
 
 The optical size is the font's own: the browser picks it from the icon's size (`font-optical-sizing: auto`), so small icons get slightly bolder strokes and large ones finer detail. Nothing in the system overrides it.
 
-## Color
+### Color
 
 Icons take the text color (`currentColor`). Set it with an alias, never a palette color: `text` or `text-muted` for neutral icons, and `success`, `warning`, `danger` or `info` for status icons. Icons that carry meaning need 3:1 contrast against their background.
 
-## Common icons
+### Common icons
 
 | Action | Name |
 | --- | --- |
@@ -79,9 +95,24 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 | Menu open | `expand_more`, `chevron_right` |
 | Success / error / warning / info | `check_circle`, `error`, `warning`, `info` |
 
-## Guidelines
+## Accessibility
 
-- Use Material Symbols Rounded, filled, and custom icons drawn to the same rules. Don't mix in other icon sets or the Outlined/Sharp styles.
-- Before drawing a custom icon, check that Material Symbols doesn't already have one for that meaning.
-- Icons are decorative by default (`aria-hidden`). Give an icon an `aria-label` only when it's the sole carrier of meaning, such as a status icon without text.
-- One icon per meaning across the product: `delete`, not `delete` in one place and `remove` in another.
+- **Role and name:** icons are decorative by default (`aria-hidden`). Give an icon an `aria-label` only when it's the sole carrier of meaning, such as a status icon without text. With `aria-label` or `aria-labelledby` it becomes `role="img"` with that name.
+- **Next to text:** leave it decorative; the text already says what it means.
+- **Icon-only buttons:** the button needs the name, not the icon: pass `aria-label` to the Button, or use [IconButton](../IconButton/README.md), which requires a `label`.
+- **Contrast:** icons that carry meaning need 3:1 against their background (see Color, under Usage).
+- **Translation:** a Material Symbols icon is its name written in the icon font, so it has `translate="no"` to keep translation tools from changing the name and breaking the icon.
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `name` | `IconName`: a custom icon's name or any Material Symbols name | | Required. A custom icon with the same name as a Material Symbol wins. Custom names autocomplete. |
+| `size` | `number \| string` | 24px, or the button's icon size inside a Button | Pixels as a number, or any CSS length. Sets the font size; the icon is 1em square. |
+| `aria-label` | `string` | | Makes the icon meaningful: `role="img"` with this name. Without it (or `aria-labelledby`) the icon is `aria-hidden`. |
+
+`className`, `style`, `ref` and other `<span>` props go to the outer `<span>`. Custom icons have `data-icon` with their name.
+
+## Component tokens
+
+None: it draws in `currentColor` at 1em of its font size, so it takes its color from the text and its size from `size` or the text around it.
