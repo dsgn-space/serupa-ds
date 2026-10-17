@@ -1,0 +1,70 @@
+# Slider
+
+Picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Use it when the exact number matters less than its place in a range (volume, a price filter); for exact numbers, use NumberInput, or pair the two.
+
+```tsx
+import { Slider } from "@diki/design-system";
+
+<Slider aria-label="Volume" defaultValue={50} />
+
+const [price, setPrice] = React.useState<[number, number]>([20, 80]);
+<Slider aria-label="Price" value={price} onValueChange={setPrice} max={200} step={5} formatValue={(v) => `$${v}`} />
+```
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `value` | `number \| [number, number]` | | Controlled. A pair makes a range with two thumbs. |
+| `defaultValue` | `number \| [number, number]` | `min` | Uncontrolled. |
+| `onValueChange` | `(value) => void` | | As it moves. |
+| `onValueCommit` | `(value) => void` | | Once when a drag ends or a key press changes it: for saving or fetching. |
+| `min`, `max` | `number` | `0`, `100` | |
+| `step` | `number` | `1` | Values snap to it. |
+| `largeStep` | `number` | `10` | Steps moved by PageUp, PageDown and Shift with an arrow. |
+| `size` | `'sm' \| 'md'` | `'md'` | 4px track and 16px thumb, or 6px and 20px. |
+| `disabled` | `boolean` | `false` | |
+| `formatValue` | `(value: number) => string` | | The words read out for a value (`aria-valuetext`), such as "$40". |
+| `thumbLabels` | `[string, string]` | `['Minimum', 'Maximum']` | A range's thumb names. |
+| `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
+
+Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`.
+
+## Keyboard
+
+| Key | Does |
+| --- | --- |
+| ArrowRight, ArrowUp | + `step` (ArrowLeft raises it in right-to-left pages) |
+| ArrowLeft, ArrowDown | − `step` |
+| Shift+Arrow, PageUp, PageDown | ± `largeStep` steps |
+| Home, End | The ends; a range thumb stops at the other thumb |
+
+## Behavior
+
+- A press anywhere on the track moves the nearest thumb there, and dragging follows the pointer even off the slider.
+- Range thumbs can't cross.
+- The thumb grows a little while pressed; it doesn't with `prefers-reduced-motion`.
+
+## Accessibility
+
+- Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
+- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`tools/test/slider.mjs`). In forced-colors mode it uses system colors.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one slider. The list lives in `src/components/Slider/slider.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--slider-track` | `field-border` | The track (3:1 on the surface, so the control can be seen). |
+| `--slider-fill` | `primary` | The selected part of the track. |
+| `--slider-thumb-bg` | `field` | The thumb's inside. |
+| `--slider-thumb-border` | `primary` | The thumb's ring (3:1 on the surface). |
+| `--slider-focus-ring` | `focus-ring` | The thumb's keyboard focus ring. |
+| `--slider-track-height-sm` | `spacing-1` | The track's thickness, size="sm" (4px). |
+| `--slider-track-height-md` | `spacing-1_5` | The track's thickness, size="md", the default (6px). |
+| `--slider-thumb-size-sm` | `spacing-4` | The thumb, size="sm" (16px). |
+| `--slider-thumb-size-md` | `spacing-5` | The thumb, size="md" (20px). |
+| `--slider-thumb-border-width` | `border-width-2` | The thumb's ring (2px). |
+| `--slider-radius` | `rounded-full` | The track's ends and the thumb. |
+| `--slider-thumb-shadow` | `shadow-sm` | The thumb's shadow. |

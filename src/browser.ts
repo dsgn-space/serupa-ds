@@ -64,6 +64,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Radio: Diki.Radio,
   RadioGroup: Diki.RadioGroup,
   SearchInput: Diki.SearchInput,
+  Slider: Diki.Slider,
   Select: Diki.Select,
   Stack: Diki.Stack,
   Switch: Diki.Switch,
