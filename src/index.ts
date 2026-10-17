@@ -23,6 +23,8 @@ import { Dialog } from "./components/Dialog/Dialog";
 export type { DialogProps } from "./components/Dialog/Dialog";
 import { Divider } from "./components/Divider/Divider";
 export type { DividerProps } from "./components/Divider/Divider";
+import { Drawer } from "./components/Drawer/Drawer";
+export type { DrawerProps } from "./components/Drawer/Drawer";
 import { EmptyState } from "./components/EmptyState/EmptyState";
 export type { EmptyStateProps } from "./components/EmptyState/EmptyState";
 import { Fab } from "./components/Fab/Fab";
@@ -89,7 +91,7 @@ import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
 export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, PasswordInput, Popover, Radio, RadioGroup, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Checkbox, configure, Container, customIcons, Dialog, Divider, Drawer, EmptyState, Fab, Field, Grid, Heading, Icon, IconButton, initials, Input, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, Pagination, paginationRange, PasswordInput, Popover, Radio, RadioGroup, Select, Sidebar, SidebarItem, SidebarSection, Stack, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
