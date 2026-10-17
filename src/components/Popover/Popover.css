@@ -18,5 +18,5 @@
 .dk-popover:focus { outline: none; }
 .dk-popover:focus-visible { outline: var(--outline-width-2, 2px) solid var(--popover-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
 @keyframes dk-popover-in { from { opacity: var(--opacity-0, 0%); scale: var(--scale-95, 95%); } }
-.dk-popover__title { margin-bottom: var(--popover-gap, var(--spacing-2, 0.5rem)); color: var(--popover-title, var(--text)); font-size: var(--popover-title-size, var(--text-sm, 0.875rem)); font-weight: var(--popover-title-weight, var(--font-semibold, 600)); }
+.dk-popover__title { margin-bottom: var(--popover-gap, var(--spacing-2, 0.5rem)); color: var(--popover-title-color, var(--popover-title, var(--text))); font-size: var(--popover-title-size, var(--text-sm, 0.875rem)); font-weight: var(--popover-title-weight, var(--font-semibold, 600)); }
 @media (prefers-reduced-motion: reduce) { .dk-popover { animation: none; } }
