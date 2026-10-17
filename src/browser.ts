@@ -84,6 +84,7 @@ window.Diki = Object.assign(window.Diki || {}, {
   Tabs: Diki.Tabs,
   Text: Diki.Text,
   Textarea: Diki.Textarea,
+  TimePicker: Diki.TimePicker,
   toast: Diki.toast,
   Toaster: Diki.Toaster,
   Tooltip: Diki.Tooltip,
