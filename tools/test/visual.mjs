@@ -2,6 +2,7 @@
 // with hover and focus states, and compares it with the saved image in baseline-visual/.
 //   node tools/test/visual.mjs            check
 //   node tools/test/visual.mjs --update   accept the current look as the new baseline
+// A component without a baseline fails the check; --update is the only way to write one.
 // Small anti-aliasing differences between machines are tolerated (TOLERANCE of pixels may differ).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -47,7 +48,15 @@ for (const c of comps) {
       }
       const shot = (await page.screenshot({ fullPage: true })).toString('base64');
       const file = path.join(DIR, `${c}-${th}-${state}.png`);
-      if (update || !fs.existsSync(file)) { fs.writeFileSync(file, Buffer.from(shot, 'base64')); continue; }
+      if (update) { fs.writeFileSync(file, Buffer.from(shot, 'base64')); continue; }
+      // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a
+      // component can't pass without being compared.
+      if (!fs.existsSync(file)) {
+        fs.writeFileSync(path.join(DIR, `${c}-${th}-${state}.actual.png`), Buffer.from(shot, 'base64'));
+        console.log(`MISSING ${c}-${th}-${state}.png`);
+        R.push({ name: `${c} · ${th} · ${state}`, ok: false, detail: `no baseline; add the "update-visual-baselines" label to the pull request (or run node tools/test/visual.mjs --update) and review the new images` });
+        continue;
+      }
       const share = await diff(fs.readFileSync(file).toString('base64'), shot);
       if (share > TOLERANCE) fs.writeFileSync(path.join(DIR, `${c}-${th}-${state}.actual.png`), Buffer.from(shot, 'base64'));
       R.push({ name: `${c} · ${th} · ${state}`, ok: share <= TOLERANCE, detail: `${(share * 100).toFixed(2)}% of pixels differ; see ${c}-${th}-${state}.actual.png` });

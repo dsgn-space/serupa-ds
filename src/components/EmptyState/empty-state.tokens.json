@@ -8,7 +8,8 @@
         "$description": "The icon (3:1 on icon-bg).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--empty-state-icon"
+            "cssVar": "--empty-state-icon-color",
+            "deprecatedCssVar": "--empty-state-icon"
           }
         }
       },
@@ -28,7 +29,8 @@
         "$description": "The title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--empty-state-title"
+            "cssVar": "--empty-state-title-color",
+            "deprecatedCssVar": "--empty-state-title"
           }
         }
       },
@@ -38,7 +40,8 @@
         "$description": "The description (4.5:1 on surface).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--empty-state-description"
+            "cssVar": "--empty-state-description-color",
+            "deprecatedCssVar": "--empty-state-description"
           }
         }
       },

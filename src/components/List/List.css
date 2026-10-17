@@ -20,11 +20,11 @@
 .dk-list__main:focus-visible { outline: var(--outline-width-2, 2px) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0, 0px) - var(--outline-width-2, 2px)); }
 .dk-list__item--disabled .dk-list__main { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
 .dk-list__leading { display: inline-flex; flex-shrink: 0; }
-.dk-list__leading--icon { color: var(--list-description, var(--text-muted)); }
+.dk-list__leading--icon { color: var(--list-description-color, var(--list-description, var(--text-muted))); }
 .dk-list__leading--icon .dk-icon { font-size: var(--spacing-5, 1.25rem); }
 .dk-list__text { display: flex; flex-direction: column; min-width: var(--spacing-0, 0px); }
-.dk-list__title { color: var(--list-title, var(--text)); font-size: var(--list-title-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); font-weight: var(--list-title-weight, var(--font-medium, 500)); overflow-wrap: anywhere; }
-.dk-list__description { color: var(--list-description, var(--text-muted)); font-size: var(--list-description-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); overflow-wrap: anywhere; }
-.dk-list__trailing { display: inline-flex; align-items: center; gap: var(--spacing-2, 0.5rem); flex-shrink: 0; margin-inline-start: auto; color: var(--list-description, var(--text-muted)); font-size: var(--text-sm, 0.875rem); }
+.dk-list__title { color: var(--list-title-color, var(--list-title, var(--text))); font-size: var(--list-title-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); font-weight: var(--list-title-weight, var(--font-medium, 500)); overflow-wrap: anywhere; }
+.dk-list__description { color: var(--list-description-color, var(--list-description, var(--text-muted))); font-size: var(--list-description-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); overflow-wrap: anywhere; }
+.dk-list__trailing { display: inline-flex; align-items: center; gap: var(--spacing-2, 0.5rem); flex-shrink: 0; margin-inline-start: auto; color: var(--list-description-color, var(--list-description, var(--text-muted))); font-size: var(--text-sm, 0.875rem); }
 @media (forced-colors: active) { .dk-list__item--selected { outline: var(--outline-width-2, 2px) solid Highlight; outline-offset: calc(var(--spacing-0, 0px) - var(--outline-width-2, 2px)); } }
 @media (prefers-reduced-motion: reduce) { .dk-list__item { transition: none; } }

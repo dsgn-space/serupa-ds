@@ -50,7 +50,7 @@
     "prepare": "node tools/build/build.mjs",
     "pretest": "node tools/build/build.mjs",
     "test": "node tools/test/run.mjs",
-    "tokens": "python3 tools/tokens/export.py",
+    "tokens": "node tools/tokens/build.mjs && python3 tools/tokens/export.py",
     "test:safari": "node tools/test/run.mjs --compat safari",
     "test:firefox": "node tools/test/run.mjs --browser firefox",
     "test:webkit": "node tools/test/run.mjs --browser webkit",
