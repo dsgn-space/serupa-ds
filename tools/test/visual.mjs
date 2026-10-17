@@ -41,7 +41,7 @@ for (const c of comps) {
       await page.evaluate((th) => { document.documentElement.setAttribute('data-theme', th); const b = document.body; b.style.display = 'none'; void b.offsetHeight; b.style.display = ''; }, th);   // rebuild the boxes: Chromium doesn't repaint still currentColor gradients (the paused skeleton) on a theme change
       await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(150);
       if (state !== 'rest') {
-        const first = page.locator('.dk-btn:not(:disabled)').first();
+        const first = page.locator('.dk-btn:not(:disabled):visible').first();
         if (!(await first.count())) continue;
         if (state === 'hover') await first.hover(); else await page.keyboard.press('Tab');
       }
