@@ -64,6 +64,8 @@ t('Fab: an unknown position falls back to bottom-end; --fab-size and --fab-offse
 const rtl = await box('frtl');
 t('Fab: the corner follows the text direction (top-end is top-left in right-to-left)', rtl[0] === 24 && rtl[1] === 24, rtl.join());
 await p.hover('#fst'); await p.waitForTimeout(300);
+// WebKit can still be easing the shadow at 300ms: wait for the transition to end
+await p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))));
 t('Fab hover: a deeper shadow (shadow-xl)', /20px 25px -5px/.test((await st('#fst', ['boxShadow'])).boxShadow));
 // Keyboard: Tab reaches the buttons in order, Enter and Space press them, and focus shows a ring.
 await p.reload(); await p.waitForSelector('#ib');   // a fresh page, so Tab starts at the top

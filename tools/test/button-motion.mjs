@@ -58,6 +58,8 @@ t('press: animates scale only, at --button-press-duration (100ms), ease-out', aw
   return i >= 0 && s.transitionDuration.split(', ')[i] === '0.1s' && /cubic-bezier\(0, 0, 0.2, 1\)/.test(s.transitionTimingFunction.split(/, (?=c|l|e)/)[i]) && !props.includes('all') && !props.includes('width');
 }));
 await p.focus('#press'); await p.keyboard.down('Enter'); await p.waitForTimeout(200);
+// WebKit can still be easing the scale at 200ms: wait for the transition to end
+await p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))));
 const enterHeld = [await scale(p, 'press'), await p.evaluate(() => document.getElementById('press').hasAttribute('data-pressed'))];
 await p.keyboard.up('Enter'); await p.waitForTimeout(200);
 t('press: Enter shows the press too (data-pressed while the key is down)', enterHeld[0] === '0.97' && enterHeld[1], JSON.stringify(enterHeld));
