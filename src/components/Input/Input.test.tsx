@@ -56,9 +56,10 @@ describe('Input', () => {
   test('focus: the border and a 1px ring take the focus color; a transparent outline for forced-colors mode', async () => {
     await render(<Input id="f" aria-label="Focus" />);
     field('f').focus();
-    await settle(250);
-    const s = css(box('f')), ring = color('var(--focus-ring)');
-    expect(s.borderTopColor).toBe(ring);
+    const ring = color('var(--focus-ring)');
+    // the border eases to the focus color; Firefox and WebKit can take longer than the 150ms to finish
+    await expect.poll(() => css(box('f')).borderTopColor).toBe(ring);
+    const s = css(box('f'));
     expect(s.boxShadow).toContain(ring);
     expect(s.boxShadow).toMatch(/0px 0px 0px 1px/);
     expect([s.outlineWidth, s.outlineColor]).toEqual(['2px', 'rgba(0, 0, 0, 0)']);
