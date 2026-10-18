@@ -1,0 +1,15 @@
+/* ---------------------------------------------------------------
+   Container: full width up to a maximum (prose 672, md 768, lg 1024, xl 1280 by default, 2xl 1536px, or
+   full), centered, with side padding of 16px, 24px from 640px and 32px from 1024px wide screens.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-container { box-sizing: border-box; width: var(--sizing-full); margin-inline: auto; }
+.dk-container--prose { max-width: var(--container-2xl); }
+.dk-container--md { max-width: var(--screen-md); }
+.dk-container--lg { max-width: var(--screen-lg); }
+.dk-container--xl { max-width: var(--screen-xl); }
+.dk-container--2xl { max-width: var(--screen-2xl); }
+.dk-container--padded { padding-inline: var(--container-padding-x, var(--spacing-4)); }
+@media (min-width: 640px) { .dk-container--padded { padding-inline: var(--container-padding-x-sm, var(--spacing-6)); } }
+@media (min-width: 1024px) { .dk-container--padded { padding-inline: var(--container-padding-x-lg, var(--spacing-8)); } }
+}

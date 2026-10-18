@@ -1,0 +1,463 @@
+{
+  "$description": "Tokens the W3C Design Tokens format (2025.10) has no type for yet: degrees, em, percentages of a box, viewport units, keywords, CSS shorthands, and text shadows (the shadow type in the format always has a spread, which CSS text-shadow does not allow). Use the CSS value as-is.",
+  "shadow": {
+    "text-shadow-2xs": {
+      "css": "0px 1px 0px rgb(0 0 0 / 0.15)",
+      "description": "`text-shadow-2xs`. Crisp edge on small text over images."
+    },
+    "text-shadow-xs": {
+      "css": "0px 1px 1px rgb(0 0 0 / 0.2)",
+      "description": "`text-shadow-xs`. Text over busy backgrounds."
+    },
+    "text-shadow-sm": {
+      "css": "0px 1px 0px rgb(0 0 0 / 0.075), 0px 1px 1px rgb(0 0 0 / 0.075), 0px 2px 2px rgb(0 0 0 / 0.075)",
+      "description": "`text-shadow-sm`. Headings over photos."
+    },
+    "text-shadow-md": {
+      "css": "0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1), 0px 2px 4px rgb(0 0 0 / 0.1)",
+      "description": "`text-shadow-md`. Large display text."
+    },
+    "text-shadow-lg": {
+      "css": "0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1)",
+      "description": "`text-shadow-lg`. Hero text."
+    },
+    "text-shadow-none": {
+      "css": "none",
+      "description": "`text-shadow-none`. Removes a text shadow."
+    }
+  },
+  "typography": {
+    "tracking-tighter": {
+      "css": "-0.05em",
+      "description": "Very large display text."
+    },
+    "tracking-tight": {
+      "css": "-0.025em",
+      "description": "Headings, text-2xl and up."
+    },
+    "tracking-normal": {
+      "css": "0em",
+      "description": "Body text."
+    },
+    "tracking-wide": {
+      "css": "0.025em",
+      "description": "`tracking-wide`."
+    },
+    "tracking-wider": {
+      "css": "0.05em",
+      "description": "Small caps labels."
+    },
+    "tracking-widest": {
+      "css": "0.1em",
+      "description": "Uppercase eyebrows, overlines."
+    },
+    "font-stretch-ultra-condensed": {
+      "css": "ultra-condensed",
+      "description": "`font-stretch-ultra-condensed` (50%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-extra-condensed": {
+      "css": "extra-condensed",
+      "description": "`font-stretch-extra-condensed` (62.5%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-condensed": {
+      "css": "condensed",
+      "description": "`font-stretch-condensed` (75%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-semi-condensed": {
+      "css": "semi-condensed",
+      "description": "`font-stretch-semi-condensed` (87.5%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-normal": {
+      "css": "normal",
+      "description": "`font-stretch-normal` (100%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-semi-expanded": {
+      "css": "semi-expanded",
+      "description": "`font-stretch-semi-expanded` (112.5%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-expanded": {
+      "css": "expanded",
+      "description": "`font-stretch-expanded` (125%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-extra-expanded": {
+      "css": "extra-expanded",
+      "description": "`font-stretch-extra-expanded` (150%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "font-stretch-ultra-expanded": {
+      "css": "ultra-expanded",
+      "description": "`font-stretch-ultra-expanded` (200%). Only for fonts with width variants; Inter has none, so the browser picks the closest."
+    },
+    "decoration-auto": {
+      "css": "auto",
+      "description": "`decoration-auto`: browser default thickness."
+    },
+    "decoration-from-font": {
+      "css": "from-font",
+      "description": "`decoration-from-font`: the thickness the font recommends."
+    },
+    "underline-offset-auto": {
+      "css": "auto",
+      "description": "`underline-offset-auto`."
+    }
+  },
+  "layout": {
+    "z-auto": {
+      "css": "auto",
+      "description": "Follow the parent stacking context."
+    },
+    "aspect-auto": {
+      "css": "auto",
+      "description": "Natural ratio of the content."
+    },
+    "aspect-square": {
+      "css": "1 / 1",
+      "description": "Avatars, thumbnails, icon tiles."
+    },
+    "aspect-video": {
+      "css": "16 / 9",
+      "description": "Video, hero media, cover images."
+    }
+  },
+  "sizing": {
+    "container-prose": {
+      "css": "65ch",
+      "description": "`max-w-prose`: about 65 characters per line, the comfortable reading width for body text."
+    },
+    "sizing-1-2": {
+      "css": "50%",
+      "description": "Fraction 1/2: `w-1/2`, `h-1/2`, `inline-1/2`… = 50% of the parent."
+    },
+    "sizing-1-3": {
+      "css": "33.333333%",
+      "description": "Fraction 1/3: `w-1/3`, `h-1/3`, `inline-1/3`… = 33.333333% of the parent."
+    },
+    "sizing-2-3": {
+      "css": "66.666667%",
+      "description": "Fraction 2/3: `w-2/3`, `h-2/3`, `inline-2/3`… = 66.666667% of the parent."
+    },
+    "sizing-1-4": {
+      "css": "25%",
+      "description": "Fraction 1/4: `w-1/4`, `h-1/4`, `inline-1/4`… = 25% of the parent."
+    },
+    "sizing-2-4": {
+      "css": "50%",
+      "description": "Fraction 2/4: `w-2/4`, `h-2/4`, `inline-2/4`… = 50% of the parent."
+    },
+    "sizing-3-4": {
+      "css": "75%",
+      "description": "Fraction 3/4: `w-3/4`, `h-3/4`, `inline-3/4`… = 75% of the parent."
+    },
+    "sizing-1-5": {
+      "css": "20%",
+      "description": "Fraction 1/5: `w-1/5`, `h-1/5`, `inline-1/5`… = 20% of the parent."
+    },
+    "sizing-2-5": {
+      "css": "40%",
+      "description": "Fraction 2/5: `w-2/5`, `h-2/5`, `inline-2/5`… = 40% of the parent."
+    },
+    "sizing-3-5": {
+      "css": "60%",
+      "description": "Fraction 3/5: `w-3/5`, `h-3/5`, `inline-3/5`… = 60% of the parent."
+    },
+    "sizing-4-5": {
+      "css": "80%",
+      "description": "Fraction 4/5: `w-4/5`, `h-4/5`, `inline-4/5`… = 80% of the parent."
+    },
+    "sizing-1-6": {
+      "css": "16.666667%",
+      "description": "Fraction 1/6: `w-1/6`, `h-1/6`, `inline-1/6`… = 16.666667% of the parent."
+    },
+    "sizing-2-6": {
+      "css": "33.333333%",
+      "description": "Fraction 2/6: `w-2/6`, `h-2/6`, `inline-2/6`… = 33.333333% of the parent."
+    },
+    "sizing-3-6": {
+      "css": "50%",
+      "description": "Fraction 3/6: `w-3/6`, `h-3/6`, `inline-3/6`… = 50% of the parent."
+    },
+    "sizing-4-6": {
+      "css": "66.666667%",
+      "description": "Fraction 4/6: `w-4/6`, `h-4/6`, `inline-4/6`… = 66.666667% of the parent."
+    },
+    "sizing-5-6": {
+      "css": "83.333333%",
+      "description": "Fraction 5/6: `w-5/6`, `h-5/6`, `inline-5/6`… = 83.333333% of the parent."
+    },
+    "sizing-1-12": {
+      "css": "8.333333%",
+      "description": "Fraction 1/12: `w-1/12`, `h-1/12`, `inline-1/12`… = 8.333333% of the parent."
+    },
+    "sizing-2-12": {
+      "css": "16.666667%",
+      "description": "Fraction 2/12: `w-2/12`, `h-2/12`, `inline-2/12`… = 16.666667% of the parent."
+    },
+    "sizing-3-12": {
+      "css": "25%",
+      "description": "Fraction 3/12: `w-3/12`, `h-3/12`, `inline-3/12`… = 25% of the parent."
+    },
+    "sizing-4-12": {
+      "css": "33.333333%",
+      "description": "Fraction 4/12: `w-4/12`, `h-4/12`, `inline-4/12`… = 33.333333% of the parent."
+    },
+    "sizing-5-12": {
+      "css": "41.666667%",
+      "description": "Fraction 5/12: `w-5/12`, `h-5/12`, `inline-5/12`… = 41.666667% of the parent."
+    },
+    "sizing-6-12": {
+      "css": "50%",
+      "description": "Fraction 6/12: `w-6/12`, `h-6/12`, `inline-6/12`… = 50% of the parent."
+    },
+    "sizing-7-12": {
+      "css": "58.333333%",
+      "description": "Fraction 7/12: `w-7/12`, `h-7/12`, `inline-7/12`… = 58.333333% of the parent."
+    },
+    "sizing-8-12": {
+      "css": "66.666667%",
+      "description": "Fraction 8/12: `w-8/12`, `h-8/12`, `inline-8/12`… = 66.666667% of the parent."
+    },
+    "sizing-9-12": {
+      "css": "75%",
+      "description": "Fraction 9/12: `w-9/12`, `h-9/12`, `inline-9/12`… = 75% of the parent."
+    },
+    "sizing-10-12": {
+      "css": "83.333333%",
+      "description": "Fraction 10/12: `w-10/12`, `h-10/12`, `inline-10/12`… = 83.333333% of the parent."
+    },
+    "sizing-11-12": {
+      "css": "91.666667%",
+      "description": "Fraction 11/12: `w-11/12`, `h-11/12`, `inline-11/12`… = 91.666667% of the parent."
+    },
+    "sizing-auto": {
+      "css": "auto",
+      "description": "Let the browser decide (not for max-*)."
+    },
+    "sizing-full": {
+      "css": "100%",
+      "description": "Fill the parent."
+    },
+    "sizing-screen-w": {
+      "css": "100vw",
+      "description": "Viewport width: `w-screen`, `inline-screen`."
+    },
+    "sizing-screen-h": {
+      "css": "100vh",
+      "description": "Viewport height: `h-screen`, `block-screen`."
+    },
+    "sizing-dvw": {
+      "css": "100dvw",
+      "description": "Dynamic viewport width."
+    },
+    "sizing-dvh": {
+      "css": "100dvh",
+      "description": "Dynamic viewport height: tracks the mobile browser bar."
+    },
+    "sizing-lvw": {
+      "css": "100lvw",
+      "description": "Large viewport width."
+    },
+    "sizing-lvh": {
+      "css": "100lvh",
+      "description": "Large viewport height (browser bar hidden)."
+    },
+    "sizing-svw": {
+      "css": "100svw",
+      "description": "Small viewport width."
+    },
+    "sizing-svh": {
+      "css": "100svh",
+      "description": "Small viewport height (browser bar shown)."
+    },
+    "sizing-min": {
+      "css": "min-content",
+      "description": "Narrowest the content allows."
+    },
+    "sizing-max": {
+      "css": "max-content",
+      "description": "Widest the content wants, no wrapping."
+    },
+    "sizing-fit": {
+      "css": "fit-content",
+      "description": "Content size, capped by the space available."
+    },
+    "sizing-none": {
+      "css": "none",
+      "description": "No limit (max-* only)."
+    },
+    "sizing-lh": {
+      "css": "1lh",
+      "description": "One line of text (height-axis)."
+    }
+  },
+  "flexGrid": {
+    "flex-auto": {
+      "css": "auto",
+      "description": "`flex-auto`: grow and shrink from the content size."
+    },
+    "flex-initial": {
+      "css": "0 auto",
+      "description": "`flex-initial`: shrink but don't grow."
+    },
+    "flex-none": {
+      "css": "none",
+      "description": "`flex-none`: keep the content size."
+    },
+    "grid-auto-auto": {
+      "css": "auto",
+      "description": "`auto-cols-auto` / `auto-rows-auto`."
+    },
+    "grid-auto-min": {
+      "css": "min-content",
+      "description": "`auto-cols-min` / `auto-rows-min`."
+    },
+    "grid-auto-max": {
+      "css": "max-content",
+      "description": "`auto-cols-max` / `auto-rows-max`."
+    },
+    "grid-auto-fr": {
+      "css": "minmax(0, 1fr)",
+      "description": "`auto-cols-fr` / `auto-rows-fr`, and each track of `grid-cols-<n>` / `grid-rows-<n>`."
+    }
+  },
+  "filters": {
+    "hue-rotate-0": {
+      "css": "0deg",
+      "description": "`hue-rotate-0`, `-hue-rotate-0`, `backdrop-hue-rotate-0`."
+    },
+    "hue-rotate-15": {
+      "css": "15deg",
+      "description": "`hue-rotate-15`, `-hue-rotate-15`, `backdrop-hue-rotate-15`."
+    },
+    "hue-rotate-30": {
+      "css": "30deg",
+      "description": "`hue-rotate-30`, `-hue-rotate-30`, `backdrop-hue-rotate-30`."
+    },
+    "hue-rotate-60": {
+      "css": "60deg",
+      "description": "`hue-rotate-60`, `-hue-rotate-60`, `backdrop-hue-rotate-60`."
+    },
+    "hue-rotate-90": {
+      "css": "90deg",
+      "description": "`hue-rotate-90`, `-hue-rotate-90`, `backdrop-hue-rotate-90`."
+    },
+    "hue-rotate-180": {
+      "css": "180deg",
+      "description": "`hue-rotate-180`, `-hue-rotate-180`, `backdrop-hue-rotate-180`."
+    }
+  },
+  "transforms": {
+    "rotate-0": {
+      "css": "0deg",
+      "description": "`rotate-0`, `-rotate-0`, `rotate-x-0`, `rotate-y-0`, `rotate-z-0`."
+    },
+    "rotate-1": {
+      "css": "1deg",
+      "description": "`rotate-1`, `-rotate-1`, `rotate-x-1`, `rotate-y-1`, `rotate-z-1`."
+    },
+    "rotate-2": {
+      "css": "2deg",
+      "description": "`rotate-2`, `-rotate-2`, `rotate-x-2`, `rotate-y-2`, `rotate-z-2`."
+    },
+    "rotate-3": {
+      "css": "3deg",
+      "description": "`rotate-3`, `-rotate-3`, `rotate-x-3`, `rotate-y-3`, `rotate-z-3`."
+    },
+    "rotate-6": {
+      "css": "6deg",
+      "description": "`rotate-6`, `-rotate-6`, `rotate-x-6`, `rotate-y-6`, `rotate-z-6`."
+    },
+    "rotate-12": {
+      "css": "12deg",
+      "description": "`rotate-12`, `-rotate-12`, `rotate-x-12`, `rotate-y-12`, `rotate-z-12`."
+    },
+    "rotate-45": {
+      "css": "45deg",
+      "description": "`rotate-45`, `-rotate-45`, `rotate-x-45`, `rotate-y-45`, `rotate-z-45`."
+    },
+    "rotate-90": {
+      "css": "90deg",
+      "description": "`rotate-90`, `-rotate-90`, `rotate-x-90`, `rotate-y-90`, `rotate-z-90`. Quarter turns."
+    },
+    "rotate-180": {
+      "css": "180deg",
+      "description": "`rotate-180`, `-rotate-180`, `rotate-x-180`, `rotate-y-180`, `rotate-z-180`. Chevrons and expand icons."
+    },
+    "skew-0": {
+      "css": "0deg",
+      "description": "`skew-0`, `-skew-0`, `skew-x-0`, `skew-y-0`."
+    },
+    "skew-1": {
+      "css": "1deg",
+      "description": "`skew-1`, `-skew-1`, `skew-x-1`, `skew-y-1`."
+    },
+    "skew-2": {
+      "css": "2deg",
+      "description": "`skew-2`, `-skew-2`, `skew-x-2`, `skew-y-2`."
+    },
+    "skew-3": {
+      "css": "3deg",
+      "description": "`skew-3`, `-skew-3`, `skew-x-3`, `skew-y-3`."
+    },
+    "skew-6": {
+      "css": "6deg",
+      "description": "`skew-6`, `-skew-6`, `skew-x-6`, `skew-y-6`."
+    },
+    "skew-12": {
+      "css": "12deg",
+      "description": "`skew-12`, `-skew-12`, `skew-x-12`, `skew-y-12`."
+    }
+  },
+  "transitions": {
+    "transition": {
+      "css": "opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events",
+      "description": "`transition` (default) animates `transition-colors` plus these: opacity, shadow, transforms, filters and discrete properties like display."
+    },
+    "transition-colors": {
+      "css": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --dk-gradient-from, --dk-gradient-via, --dk-gradient-to",
+      "description": "`transition-colors`: hover and focus color changes, gradients included."
+    },
+    "transition-opacity": {
+      "css": "opacity",
+      "description": "`transition-opacity`: fades."
+    },
+    "transition-shadow": {
+      "css": "box-shadow",
+      "description": "`transition-shadow`: elevation changes."
+    },
+    "transition-transform": {
+      "css": "transform, translate, scale, rotate",
+      "description": "`transition-transform`: moves, scales and rotations, including the translate/scale/rotate classes."
+    },
+    "transition-all": {
+      "css": "all",
+      "description": "Avoid in components: it also animates layout properties."
+    },
+    "transition-none": {
+      "css": "none",
+      "description": "`transition-none`."
+    },
+    "animate-none": {
+      "css": "none",
+      "description": "`animate-none`."
+    },
+    "animate-spin": {
+      "css": "spin 1s linear infinite",
+      "description": "`animate-spin`: loading spinners (Button uses it)."
+    },
+    "animate-spin-reduced": {
+      "css": "spin 3s linear infinite",
+      "description": "`animate-spin` when the viewer prefers reduced motion: the same turn, three times slower. Applied automatically."
+    },
+    "animate-ping": {
+      "css": "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
+      "description": "`animate-ping`: a radar ping behind a notification dot or live badge."
+    },
+    "animate-pulse": {
+      "css": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      "description": "`animate-pulse`: skeleton placeholders while content loads."
+    },
+    "animate-bounce": {
+      "css": "bounce 1s infinite",
+      "description": "`animate-bounce`: a scroll-down hint. Use sparingly."
+    }
+  }
+}
