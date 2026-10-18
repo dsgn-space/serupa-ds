@@ -23,5 +23,14 @@ export default defineConfig({
       instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
       viewport: { width: 900, height: 700 },
     },
+    // npm run test:coverage: which lines of src/ the component tests run (V8, in Chromium), written to coverage/
+    // (index.html to browse, coverage-summary.json for CI). Only the components with a <Name>.test.tsx count yet.
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts'],
+      reporter: ['text-summary', 'html', 'json-summary'],
+      reportsDirectory: 'coverage',
+    },
   },
 });

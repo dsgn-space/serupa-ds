@@ -34,6 +34,7 @@ node tools/test/run.mjs --compat safari   # add the cross-browser comparison (sa
 node tools/test/run.mjs --list            # the steps it would run (with --group, of one group)
 npm run test:unit                         # only the component tests (Vitest), straight from src/, in a few seconds
 npm run test:watch                        # the same, re-running as you edit
+npm run test:coverage                     # the same, and which lines they run (coverage/index.html)
 npx vitest run src/components/Checkbox    # one component's tests
 ```
 
