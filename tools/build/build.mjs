@@ -1,6 +1,6 @@
 // npm run build: everything a project installs, into dist/ (never edited or committed).
 //   index.js, index.d.ts   the components as ES modules, with types (React is a peer dependency)
-//   serupa.iife.js           the browser script: reads window.React, sets window.Serupa (bundle.js is the same file)
+//   serupa.iife.js           the browser script: reads window.React, sets window.Serupa
 //   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
@@ -29,7 +29,6 @@ fs.mkdirSync(D, { recursive: true });
 if (!process.argv.includes('--css')) {
   const r = spawnSync(process.execPath, [path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: 'inherit' });
   if (r.status !== 0) process.exit(r.status || 1);
-  fs.copyFileSync(path.join(D, 'serupa.iife.js'), path.join(D, 'bundle.js'));
 }
 
 const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !IMPORTS.includes(n));

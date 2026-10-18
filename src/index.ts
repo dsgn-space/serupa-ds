@@ -133,7 +133,7 @@ export const version: string = __VERSION__;
 type ThemeApi = import("./theme-types").SerupaTheme;
 declare global {
   interface Window {
-    /** The components on plain pages (serupa.iife.js, also shipped as bundle.js). */
+    /** The components on plain pages (serupa.iife.js). */
     Serupa: {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
       Accordion: typeof Accordion; AccordionItem: typeof AccordionItem; Alert: typeof Alert; Avatar: typeof Avatar; AvatarGroup: typeof AvatarGroup; Badge: typeof Badge;

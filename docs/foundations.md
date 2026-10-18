@@ -542,7 +542,7 @@ Flexbox and grid utilities, as classes in `bundle.css`. Most are keywords; the f
 | grid-auto-flow | `grid-flow-row`, `-col`, `-dense`, `-row-dense`, `-col-dense` |
 | grid-auto-columns / rows | `auto-cols-auto`, `-min`, `-max`, `-fr`, `-<spacing>` (and `auto-rows-*`) |
 | gap | `gap-<spacing>`, `gap-x-<spacing>`, `gap-y-<spacing>` |
-| justify-content | `justify-start`, `-end`, `-center`, `-between`, `-around`, `-evenly`, `-stretch`, `-baseline`, `-normal`, `-center-safe`, `-end-safe` |
+| justify-content | `justify-start`, `-end`, `-center`, `-between`, `-around`, `-evenly`, `-stretch`, `-normal`, `-center-safe`, `-end-safe` |
 | justify-items / justify-self | `justify-items-*`, `justify-self-*` (start, end, center, stretch, normal/auto, safe variants) |
 | align-content | `content-start`, `-end`, `-center`, `-between`, `-around`, `-evenly`, `-baseline`, `-stretch`, `-normal`, `-center-safe`, `-end-safe` |
 | align-items / align-self | `items-*`, `self-*` (start, end, center, baseline, baseline-last, stretch, auto, safe variants) |

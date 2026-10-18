@@ -32,7 +32,6 @@
     "./bundle.css": "./dist/bundle.css",
     "./components.css": "./dist/components.css",
     "./utilities.css": "./dist/utilities.css",
-    "./bundle.js": "./dist/bundle.js",
     "./serupa.iife.js": "./dist/serupa.iife.js",
     "./serupa-icons.iife.js": "./dist/serupa-icons.iife.js",
     "./theme.js": "./dist/theme.js",
@@ -58,8 +57,7 @@
     "*.css",
     "./dist/theme.js",
     "./dist/serupa.iife.js",
-    "./dist/serupa-icons.iife.js",
-    "./dist/bundle.js"
+    "./dist/serupa-icons.iife.js"
   ],
   "scripts": {
     "build": "node tools/build/build.mjs",

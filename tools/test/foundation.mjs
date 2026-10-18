@@ -36,7 +36,7 @@ const VAR = String.raw`var\((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*\
 const t = JSON.parse(read('tokens.json'));
 const cssRaw = read('dist/bundle.css');
 const css = stripComments(cssRaw);
-const js = read('dist/bundle.js');
+const js = read('dist/serupa.iife.js');
 
 const first = (v) => (v && typeof v === 'object' ? Object.values(v)[0] : v);
 const groups = Object.fromEntries(Object.entries(t).filter(([, v]) => v && typeof v === 'object' && Array.isArray(v.tokens)));

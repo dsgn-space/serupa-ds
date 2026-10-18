@@ -129,6 +129,6 @@ t('dist/index.d.ts declares every component and its props', dts && !missingTypes
 const body = (f) => read(f).replace(/^\/\*![^\n]*\*\/\n@layer [^;]*;\n/, '');
 t('bundle.css = components.css + utilities.css', body('dist/bundle.css') === body('dist/components.css') + body('dist/utilities.css'));
 t('components.css holds no utility classes (only dk-* and the keyframes they use)', !/^\.(?!dk-)[a-z]/m.test(body('dist/components.css').replace(/\/\*[\s\S]*?\*\//g, '')));
-t('the browser script and bundle.js are the same file', read('dist/serupa.iife.js') === read('dist/bundle.js'));
+t('the old bundle.js alias is gone (removed in 8.0.0)', !fs.existsSync(path.join(PROJECT, 'dist', 'bundle.js')));
 
 process.exit(report('Package', R) ? 0 : 1);
