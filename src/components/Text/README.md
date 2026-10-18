@@ -56,7 +56,7 @@ Each is an optional override: set it on the page, a container or one element. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--text-color` | `text` | tone="default". |
-| `--text-color-muted` | `text-muted` | tone="muted": secondary text (4.5:1 on surface). |
-| `--text-color-primary` | `primary` | tone="primary". |
-| `--text-color-danger` | `danger-text` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
+| `--text-tone-default` (was `--text-color`, which still works until 6.0.0) | `text` | tone="default". |
+| `--text-tone-muted` (was `--text-color-muted`, which still works until 6.0.0) | `text-muted` | tone="muted": secondary text (4.5:1 on surface). |
+| `--text-tone-primary` (was `--text-color-primary`, which still works until 6.0.0) | `primary` | tone="primary". |
+| `--text-tone-danger` (was `--text-color-danger`, which still works until 6.0.0) | `danger-text` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
