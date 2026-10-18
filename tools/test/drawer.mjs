@@ -32,7 +32,9 @@ await p.goto(writePage('drawer.html', APP, { react: true }));
 await p.waitForTimeout(300);
 const isOpen = () => p.evaluate(() => document.getElementById('drw').open);
 const box = () => p.evaluate(() => { const r = document.querySelector('#drw .dk-drawer__panel').getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); });
-const reopen = async (fn) => { await p.evaluate(() => window.setOpen(false)); await p.waitForTimeout(50); await p.evaluate(fn); await p.evaluate(() => window.setOpen(true)); await p.waitForTimeout(400); };
+const reopen = async (fn) => { await p.evaluate(() => window.setOpen(false)); await p.waitForTimeout(50); await p.evaluate(fn); await p.evaluate(() => window.setOpen(true)); await p.waitForTimeout(400); await settled(); };
+// Wait for the slide-in to end: Firefox and WebKit can still be running it after 400ms.
+const settled = () => p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))));
 
 t('closed at first: not shown', !(await isOpen()) && await p.evaluate(() => getComputedStyle(document.getElementById('drw')).display === 'none'));
 await p.focus('#opener'); await p.keyboard.press('Enter'); await p.waitForTimeout(400);
