@@ -14,13 +14,19 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrors: 'none', ignoreRestSiblings: true }],
       '@typescript-eslint/no-explicit-any': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }],
+      // New in ESLint 10's recommended set; off so the upgrade keeps lint behaving as it did on ESLint 9.
+      'no-unassigned-vars': 'off',
+      'no-useless-assignment': 'off',
+      'preserve-caught-error': 'off',
     },
   },
   {
     files: ['src/**/*.{ts,tsx,js}', 'docs/**/*.tsx', '.storybook/**/*.{ts,tsx}'],
     plugins: { 'react-hooks': reactHooks },
     languageOptions: { globals: globals.browser },
-    rules: { ...reactHooks.configs.recommended.rules },
+    // The two classic hook rules only. Plugin 7's recommended set also turns on the React Compiler rules
+    // (refs, immutability and others), which flag patterns the components use on purpose.
+    rules: { 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'warn' },
   },
   {
     // The tests are Node scripts, but much of their code runs in the page (page.evaluate), where React,
