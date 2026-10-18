@@ -8,9 +8,8 @@ import { PROJECT, report } from './lib.mjs';
 const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'Props', 'Component tokens'];
 // Guides still in the old outline. Each one moves to the template in its own docs pull request, which takes it
 // off this list; a guide on the list that already has every section fails, so the list only shrinks.
-// AvatarGroup and Carousel are in open pull requests with the old outline, so they're listed ahead of time.
 const PENDING = new Set([
-  'AvatarGroup', 'Carousel'
+  'Carousel'
 ]);
 
 const DIR = path.join(PROJECT, 'src', 'components');
