@@ -69,8 +69,7 @@ describe('Input', () => {
   test('hover changes the border', async () => {
     await render(<><Input id="h" aria-label="Hover" /><Input id="r" aria-label="Rest" /></>);
     await page.getByRole('textbox', { name: 'Hover' }).hover();
-    await settle(250);
-    expect(css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
+    await expect.poll(() => css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
   });
 
   test('invalid: aria-invalid, a danger border and a danger focus ring', async () => {
