@@ -22,8 +22,8 @@ function App() {
     h(D.Text, { id: 'tbad', as: 'section', size: 'huge', tone: 'gold', weight: 'heavy' }, 'Bad'),
     h(D.Text, { id: 'tlabel', as: 'label', htmlFor: 'x' }, 'Label'),
     h('div', { style: { width: '80px' } }, h(D.Text, { id: 'trunc', as: 'span', truncate: true }, 'A very long line of text that will not fit')),
-    h(D.Text, { id: 'ttok', tone: 'muted', style: { '--text-color-muted': 'rgb(1, 2, 3)' } }, 'Tokens'),
-    h(D.Text, { id: 'ttok2', tone: 'muted', style: { '--text-tone-muted': 'rgb(4, 5, 6)', '--text-color-muted': 'rgb(1, 2, 3)' } }, 'New name'));
+    h(D.Text, { id: 'ttok', tone: 'muted', style: { '--text-tone-muted': 'rgb(1, 2, 3)' } }, 'Tokens'),
+    h(D.Text, { id: 'ttok2', tone: 'muted', style: { '--text-color-muted': 'rgb(1, 2, 3)' } }, 'Old name'));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -63,8 +63,8 @@ t('Text: unknown as, size, tone and weight fall back to <p> and inherit', tb ===
 t('Text as label passes htmlFor', await p.evaluate(() => { const e = document.getElementById('tlabel'); return e.tagName === 'LABEL' && e.htmlFor === 'x'; }));
 const tr = await p.evaluate(() => { const e = document.getElementById('trunc'), s = getComputedStyle(e); return { d: s.display, ws: s.whiteSpace, to: s.textOverflow, cut: e.scrollWidth > e.clientWidth, w: e.clientWidth }; });
 t('truncate: one line with an ellipsis, as a block even on a span', tr.d === 'block' && tr.ws === 'nowrap' && tr.to === 'ellipsis' && tr.cut && tr.w === 80, JSON.stringify(tr));
-t('Text tokens (--text-color-muted) override one element', (await st('#ttok', ['color'])).color === 'rgb(1, 2, 3)');
-t('--text-tone-muted, the new name for --text-color-muted, overrides it when both are set (the old name keeps working until 6.0.0)', (await st('#ttok2', ['color'])).color === 'rgb(4, 5, 6)');
+t('Text tokens (--text-tone-muted) override one element', (await st('#ttok', ['color'])).color === 'rgb(1, 2, 3)');
+t('the old name --text-color-muted, removed in 6.0.0, no longer changes Text', (await st('#ttok2', ['color'])).color !== 'rgb(1, 2, 3)');
 
 const contrast = await p.evaluate(() => {
   const rgb = (c) => c.match(/[\d.]+/g).map(Number);
