@@ -16,6 +16,8 @@
 //  10. base.css reads tokens only.
 //  11. One version everywhere (tools/release.py --check).
 //  12. Every stylesheet puts its rules in the dk.* cascade layers, declared in one order.
+//  13. Every width in a media query in src/ (CSS and matchMedia) is a screen-* value (max-width may be value - 0.02px or - 1px).
+//  14. One brand list: theme.js, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -219,6 +221,73 @@ for (const [f, layer] of Object.entries(layered)) {
   if (outside) unlayered.push(`${f}: rules outside @layer ${layer}: ${outside.slice(0, 60)}`);
 }
 check('cascade layers: tokens, base, components and utilities each sit in their dk.* layer, in one order', !unlayered.length, unlayered.join('; '));
+
+// 13. component breakpoints: every width in a media query is a screen-* value. CSS variables don't work inside
+// @media, so the values are written out; this keeps them in step with the tokens. min-width (and width >= / >)
+// must be a token value; max-width (and width <= / <) may also end just below one: value - 0.02px (the
+// convention here, e.g. 767.98px) or value - 1px. Covers the CSS in src/ and matchMedia() strings in the source.
+const SCREENS = groups.layout.tokens.filter((x) => x.name.startsWith('screen-')).map((x) => [x.name, parseFloat(x.value)]);
+const srcFiles = (dir) => fs.readdirSync(path.join(P, dir), { withFileTypes: true }).flatMap((d) =>
+  d.isDirectory() ? srcFiles(path.join(dir, d.name)) : /\.(css|tsx?|js)$/.test(d.name) && !/\.(stories|test)\.tsx?$/.test(d.name) ? [path.join(dir, d.name)] : []);
+const badMq = [];
+let mqCount = 0;
+for (const f of srcFiles('src')) {
+  const text = stripComments(read(f));
+  const preludes = f.endsWith('.css')
+    ? [...text.matchAll(/@media([^{;]*)\{/g)].map((m) => m[1])
+    : [...text.matchAll(/matchMedia\(\s*(["'`])(.*?)\1/g)].map((m) => m[2]);
+  for (const pre of preludes) for (const [feat] of pre.matchAll(/\([^()]*\bwidth\b[^()]*\)/g)) {
+    if (/device-width|aspect/.test(feat)) { badMq.push(`${f}: ${feat} (use min-width / max-width)`); continue; }
+    let m, kind, num, unit;
+    if ((m = /^\(\s*(min|max)-width\s*:\s*([\d.]+)([a-z]*)\s*\)$/.exec(feat))) [, kind, num, unit] = m;
+    else if ((m = /^\(\s*width\s*(>=?|<=?)\s*([\d.]+)([a-z]*)\s*\)$/.exec(feat))) { kind = m[1][0] === '>' ? 'min' : 'max'; [, , num, unit] = m; }
+    else if ((m = /^\(\s*([\d.]+)([a-z]*)\s*(<=?|>=?)\s*width\s*\)$/.exec(feat))) { kind = m[3][0] === '<' ? 'min' : 'max'; [, num, unit] = m; }
+    else { badMq.push(`${f}: ${feat} (not a form this check reads)`); continue; }
+    mqCount++;
+    const v = parseFloat(num);
+    const near = (a, b) => Math.abs(a - b) < 1e-6;
+    const ok = unit === 'px' && SCREENS.some(([, s]) => near(v, s) || (kind === 'max' && (near(v, s - 0.02) || near(v, s - 1))));
+    if (!ok) badMq.push(`${f}: ${feat} is not a screen-* value (${SCREENS.map(([n, s]) => `${n} ${s}px`).join(', ')})`);
+  }
+}
+check(`breakpoints: all ${mqCount} widths in media queries are screen-* values`, !badMq.length && mqCount > 0, badMq.slice(0, 10).join('; '));
+
+// 14. one brand list: tokens.json's color.themes ("<brand>-<mode>") is the source. Storybook's toolbar reads it
+// directly; theme.js, the ThemeBrand type and the theme lists written out in the tests must name the same brands
+// and themes, in the same order. Each brand needs a light and a dark theme, since theme.js puts the two together.
+const THEME_IDS = t.color.themes.map((x) => x.id);
+const BRANDS = [...new Set(THEME_IDS.map((id) => id.replace(/-(light|dark)$/, '')))];
+const brandIssues = [];
+const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+const badIds = THEME_IDS.filter((id) => !/^[a-z][a-z0-9]*-(light|dark)$/.test(id));
+if (badIds.length) brandIssues.push(`tokens.json: theme ids must be <brand>-light or <brand>-dark: ${badIds.join(', ')}`);
+const pairs = BRANDS.flatMap((b) => [`${b}-light`, `${b}-dark`]);
+if (!same([...THEME_IDS].sort(), [...pairs].sort())) brandIssues.push(`tokens.json: each brand needs exactly a light and a dark theme (has ${THEME_IDS.join(', ')})`);
+const listOf = (s) => [...s.matchAll(/["']([^"']+)["']/g)].map((m) => m[1]);
+const themeJs = read('src/theme.js');
+const jsBrands = /var BRANDS = \[([^\]]*)\]/.exec(themeJs);
+if (!jsBrands) brandIssues.push('src/theme.js: no "var BRANDS = [...]" found');
+else if (!same(listOf(jsBrands[1]), BRANDS)) brandIssues.push(`src/theme.js: BRANDS is [${listOf(jsBrands[1]).join(', ')}], tokens.json gives [${BRANDS.join(', ')}]`);
+const jsDoc = /data-brand\s+([a-z0-9 |]+?)\s+\(default: ([a-z0-9]+)\)/.exec(themeJs);
+if (!jsDoc || !same(jsDoc[1].split('|').map((s) => s.trim()), BRANDS) || jsDoc[2] !== BRANDS[0]) brandIssues.push(`src/theme.js: the header should read "data-brand  ${BRANDS.join(' | ')}  (default: ${BRANDS[0]})"`);
+const jsDefault = /pick\(root\.getAttribute\("data-brand"\), BRANDS, "([^"]+)"\)/.exec(themeJs);
+if (!jsDefault || jsDefault[1] !== BRANDS[0]) brandIssues.push(`src/theme.js: the default brand should be "${BRANDS[0]}" (the first theme's brand)`);
+const tsType = /export type ThemeBrand\s*=\s*([^;]+);/.exec(read('src/theme-types.ts'));
+if (!tsType) brandIssues.push('src/theme-types.ts: no ThemeBrand type found');
+else if (!same(listOf(tsType[1]), BRANDS)) brandIssues.push(`src/theme-types.ts: ThemeBrand is ${listOf(tsType[1]).join(' | ')}, tokens.json gives ${BRANDS.map((b) => `'${b}'`).join(' | ')}`);
+if (fs.existsSync(path.join(P, '.storybook', 'preview.tsx')) && !read('.storybook/preview.tsx').includes("from '../tokens.json'"))
+  brandIssues.push('.storybook/preview.tsx: the toolbar should take the brands from tokens.json');
+// Theme lists written out in the tests: any array of two or more "<brand>-light|dark" strings must be the whole list.
+const testFiles = (dir) => fs.readdirSync(path.join(P, dir), { withFileTypes: true }).flatMap((d) =>
+  d.isDirectory() ? (d.name.startsWith('baseline') ? [] : testFiles(path.join(dir, d.name))) : /\.(mjs|ts|tsx)$/.test(d.name) ? [path.join(dir, d.name)] : []);
+let lists = 0;
+for (const f of testFiles(path.join('tools', 'test'))) {
+  for (const m of read(f).matchAll(/\[\s*((?:['"][a-z0-9]+-(?:light|dark)['"]\s*,\s*)+['"][a-z0-9]+-(?:light|dark)['"])\s*,?\s*\]/g)) {
+    lists++;
+    if (!same(listOf(m[1]), THEME_IDS)) brandIssues.push(`${f}: theme list [${listOf(m[1]).join(', ')}] differs from tokens.json`);
+  }
+}
+check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
 
 for (const [name, ok, detail] of results) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}` + (ok || !detail ? '' : `\n      ${detail}`));
 const failed = results.filter((r) => !r[1]);

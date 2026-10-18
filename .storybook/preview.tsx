@@ -5,20 +5,26 @@ import '../tokens.css';
 import '../src/styles/base.css';
 import '../src/styles/index.css';
 import './docs.css';
+import tokens from '../tokens.json';
+
+// The brands come from tokens.json's themes ("<brand>-<mode>"), the one list every theme name is made from,
+// so a brand added there shows up here with no edit (ADR-0003).
+const BRANDS = [...new Set(tokens.color.themes.map((t: { id: string }) => t.id.replace(/-(light|dark)$/, '')))];
+const DEFAULT_BRAND = BRANDS[0];
 
 // The toolbar picks a brand and a mode; together they are the page's data-theme, as theme.js sets it.
 // Docs pages without stories (Foundations, Introduction) run no decorator, so the globals are also followed
 // straight from the channel; the theme then paints the whole page (see docs.css).
 const apply = (g: Record<string, unknown> | undefined) => {
   if (!g) return;
-  document.documentElement.setAttribute('data-theme', `${g.brand || 'blue'}-${g.mode || 'light'}`);
+  document.documentElement.setAttribute('data-theme', `${g.brand || DEFAULT_BRAND}-${g.mode || 'light'}`);
 };
 const channel = addons.getChannel();
 channel.on('setGlobals', (e: { globals?: Record<string, unknown> }) => apply(e.globals));   // already merged, with a story's own globals on top
 channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply(e.globals));
 
 const WithTheme: Decorator = (Story, context) => {
-  const theme = `${context.globals.brand || 'blue'}-${context.globals.mode || 'light'}`;
+  const theme = `${context.globals.brand || DEFAULT_BRAND}-${context.globals.mode || 'light'}`;
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
@@ -29,8 +35,8 @@ const preview: Preview = {
   globalTypes: {
     brand: {
       description: 'Brand',
-      toolbar: { title: 'Brand', icon: 'paintbrush', dynamicTitle: true, items: [
-        { value: 'blue', title: 'Blue' }, { value: 'violet', title: 'Violet' }, { value: 'emerald', title: 'Emerald' }] },
+      toolbar: { title: 'Brand', icon: 'paintbrush', dynamicTitle: true, items:
+        BRANDS.map((b) => ({ value: b, title: b[0].toUpperCase() + b.slice(1) })) },
     },
     mode: {
       description: 'Light or dark',
@@ -38,7 +44,7 @@ const preview: Preview = {
         { value: 'light', title: 'Light', icon: 'sun' }, { value: 'dark', title: 'Dark', icon: 'moon' }] },
     },
   },
-  initialGlobals: { brand: 'blue', mode: 'light' },
+  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light' },
   decorators: [WithTheme],
   parameters: {
     layout: 'padded',
