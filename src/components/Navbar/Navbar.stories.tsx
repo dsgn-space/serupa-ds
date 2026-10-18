@@ -12,7 +12,7 @@ const links = [
 ];
 
 const meta = {
-  title: 'Components/Navbar',
+  title: 'Components/Navigation/Navbar',
   component: Navbar,
   subcomponents: { NavbarLink },
   parameters: { layout: 'fullscreen' },

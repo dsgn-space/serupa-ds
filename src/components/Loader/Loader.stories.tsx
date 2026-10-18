@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Loader } from './Loader';
 
 const meta = {
-  title: 'Components/Loader',
+  title: 'Components/Feedback/Loader',
   component: Loader,
   args: { variant: 'ring', size: 'md', tone: 'neutral', delay: 0 },
   argTypes: {

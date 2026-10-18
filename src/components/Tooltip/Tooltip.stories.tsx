@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 
 const meta = {
-  title: 'Components/Tooltip',
+  title: 'Components/Overlays/Tooltip',
   component: Tooltip,
   args: { content: 'Download as PDF', placement: 'top', open: true, children: <IconButton icon="download" label="Download" variant="secondary" noTitle /> },
   argTypes: { placement: { control: 'select', options: ['top', 'bottom', 'left', 'right', 'top-start', 'top-end', 'bottom-start', 'bottom-end'] } },

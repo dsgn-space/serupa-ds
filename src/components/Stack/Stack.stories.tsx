@@ -6,7 +6,7 @@ import { Button } from '../Button/Button';
 const Box = ({ children }: { children?: React.ReactNode }) => <div className="rounded-md bg-surface-muted p-3 text-sm text-text">{children}</div>;
 
 const meta = {
-  title: 'Components/Stack',
+  title: 'Components/Layout and type/Stack',
   component: Stack,
   args: { gap: 4, children: [<Box key="1">One</Box>, <Box key="2">Two</Box>, <Box key="3">Three</Box>] },
   argTypes: {

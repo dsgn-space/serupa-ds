@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Textarea } from './Textarea';
 
 const meta = {
-  title: 'Components/Textarea',
+  title: 'Components/Forms/Textarea',
   component: Textarea,
   args: { placeholder: 'Tell us more', 'aria-label': 'Message', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, resize: { control: 'inline-radio', options: ['vertical', 'none'] } },

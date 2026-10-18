@@ -4,7 +4,7 @@ import { Link } from './Link';
 import { Text } from '../Text/Text';
 
 const meta = {
-  title: 'Components/Link',
+  title: 'Components/Actions/Link',
   component: Link,
   args: { href: '#', children: 'the guide' },
   argTypes: {

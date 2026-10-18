@@ -4,7 +4,7 @@ import { Alert } from './Alert';
 import { Button } from '../Button/Button';
 
 const meta = {
-  title: 'Components/Alert',
+  title: 'Components/Feedback/Alert',
   component: Alert,
   args: { tone: 'info', title: 'Heads up', children: 'Your trial ends in 3 days.' },
   argTypes: { tone: { control: 'inline-radio', options: ['info', 'success', 'warning', 'danger', 'neutral'] } },

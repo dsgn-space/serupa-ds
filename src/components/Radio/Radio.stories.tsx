@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Radio, RadioGroup } from './Radio';
 
 const meta = {
-  title: 'Components/Radio',
+  title: 'Components/Forms/Radio',
   component: RadioGroup,
   subcomponents: { Radio },
   args: { 'aria-label': 'Plan', defaultValue: 'pro', orientation: 'vertical', size: 'md' },

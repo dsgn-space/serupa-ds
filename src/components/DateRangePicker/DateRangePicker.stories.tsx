@@ -4,7 +4,7 @@ import { DateRangePicker, type DateRange } from './DateRangePicker';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/DateRangePicker',
+  title: 'Components/Forms/DateRangePicker',
   component: DateRangePicker,
   args: { 'aria-label': 'Dates', size: 'md', months: 2, invalid: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, months: { control: 'inline-radio', options: [1, 2] } },

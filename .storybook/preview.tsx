@@ -45,7 +45,25 @@ const preview: Preview = {
     controls: { expanded: true, sort: 'requiredFirst' },
     backgrounds: { disabled: true },   // the theme sets the page background (surface)
     a11y: { context: '#storybook-root' },
-    options: { storySort: { order: ['Introduction', 'Getting started', 'Foundations', ['Colors', 'Themes', 'Typography', 'Spacing', 'Corner radius', 'Effects and borders', 'Motion', 'Utility classes'], 'Components', 'Versioning and tools', 'Changelog'] } },
+    // The docs pages and the Foundations pages keep their reading order; the component groups and the
+    // components in them go A-Z. Stories in one component keep the order of their file. Storybook turns this
+    // function into a string and runs it on its own, so it can't use anything from outside it or TypeScript types.
+    options: {
+      storySort: (a, b) => {
+        const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Changelog'];
+        const foundations = ['Colors', 'Themes', 'Typography', 'Spacing', 'Corner radius', 'Effects and borders', 'Motion', 'Utility classes', 'Icons'];
+        const at = (list, name) => { const i = list.indexOf(name); return i < 0 ? list.length : i; };
+        const x = a.title.split('/'), y = b.title.split('/');
+        if (x[0] !== y[0]) return at(order, x[0]) - at(order, y[0]);
+        if (x[0] === 'Foundations') return at(foundations, x[1]) - at(foundations, y[1]);
+        if (x[0] !== 'Components') return 0;
+        for (let i = 1; i < Math.min(x.length, y.length); i++) {
+          const c = x[i].localeCompare(y[i], 'en', { sensitivity: 'base' });
+          if (c) return c;
+        }
+        return x.length - y.length;
+      },
+    },
   },
 };
 export default preview;

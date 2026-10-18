@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Container } from './Container';
 
 const meta = {
-  title: 'Components/Container',
+  title: 'Components/Layout and type/Container',
   component: Container,
   parameters: { layout: 'fullscreen' },
   args: { children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text">The content stays this wide and centered, with padding at the sides.</div> },

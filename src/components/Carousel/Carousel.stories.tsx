@@ -14,7 +14,7 @@ const PICS = [
 ];
 
 const meta = {
-  title: 'Components/Carousel',
+  title: 'Components/Content/Carousel',
   component: Carousel,
   args: { label: 'Landscape photos', loop: false, arrows: true, dots: true },
   render: (args) => <div style={{ maxWidth: 480 }}><Carousel {...args}>{PICS.map((p) => <Image key={p.alt} {...p} ratio="4:3" rounded={false} />)}</Carousel></div>,

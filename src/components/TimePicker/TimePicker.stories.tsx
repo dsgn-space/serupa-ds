@@ -4,7 +4,7 @@ import { TimePicker } from './TimePicker';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/TimePicker',
+  title: 'Components/Forms/TimePicker',
   component: TimePicker,
   args: { 'aria-label': 'Time', size: 'md', step: 30, invalid: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

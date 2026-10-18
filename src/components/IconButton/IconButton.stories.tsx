@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { IconButton, type IconButtonProps } from './IconButton';
 
 const meta = {
-  title: 'Components/IconButton',
+  title: 'Components/Actions/IconButton',
   component: IconButton as React.ComponentType<IconButtonProps>,
   args: { icon: 'more_vert', label: 'More actions', variant: 'ghost', size: 'md', shape: 'square' },
   argTypes: {

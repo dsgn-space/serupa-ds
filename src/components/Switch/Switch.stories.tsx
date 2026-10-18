@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Switch } from './Switch';
 
 const meta = {
-  title: 'Components/Switch',
+  title: 'Components/Forms/Switch',
   component: Switch,
   args: { children: 'Wi-Fi', size: 'md', labelPosition: 'end' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, labelPosition: { control: 'inline-radio', options: ['end', 'start'] } },

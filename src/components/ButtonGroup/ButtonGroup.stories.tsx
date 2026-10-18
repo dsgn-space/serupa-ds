@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 
 const meta = {
-  title: 'Components/ButtonGroup',
+  title: 'Components/Actions/ButtonGroup',
   component: ButtonGroup,
   args: {
     'aria-label': 'Clipboard',

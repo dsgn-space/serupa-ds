@@ -12,7 +12,7 @@ const people = [
 ];
 
 const meta = {
-  title: 'Components/List',
+  title: 'Components/Content/List',
   component: List,
   subcomponents: { ListItem },
   args: {

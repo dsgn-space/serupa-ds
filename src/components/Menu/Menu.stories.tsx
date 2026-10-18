@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 
 const meta = {
-  title: 'Components/Menu',
+  title: 'Components/Overlays/Menu',
   component: Menu,
   args: { placement: 'bottom-start', open: true, trigger: <Button variant="secondary" rightIcon="expand_more">Actions</Button>, children: null },
   argTypes: { placement: { control: 'select', options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'] } },

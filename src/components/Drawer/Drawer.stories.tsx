@@ -7,7 +7,7 @@ import { Field } from '../Field/Field';
 import { Checkbox } from '../Checkbox/Checkbox';
 
 const meta = {
-  title: 'Components/Drawer',
+  title: 'Components/Overlays/Drawer',
   component: Drawer,
   args: { open: false, title: 'Filters', description: 'Narrow the list of projects.', side: 'right', size: 'md' },
   argTypes: { side: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

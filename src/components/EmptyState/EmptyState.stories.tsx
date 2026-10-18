@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 import { Card } from '../Card/Card';
 
 const meta = {
-  title: 'Components/EmptyState',
+  title: 'Components/Feedback/EmptyState',
   component: EmptyState,
   args: {
     icon: 'folder_open',

@@ -4,7 +4,7 @@ import { toast, Toaster } from './Toast';
 import { Button } from '../Button/Button';
 
 const meta = {
-  title: 'Components/Toast',
+  title: 'Components/Feedback/Toast',
   component: Toaster,
   args: { position: 'bottom-end' },
   argTypes: { position: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom-center', 'top-start', 'top-center', 'top-end'] } },

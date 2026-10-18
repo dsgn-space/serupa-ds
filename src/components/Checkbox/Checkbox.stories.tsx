@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Checkbox } from './Checkbox';
 
 const meta = {
-  title: 'Components/Checkbox',
+  title: 'Components/Forms/Checkbox',
   component: Checkbox,
   args: { children: 'Email me about updates', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

@@ -32,7 +32,7 @@ function Rows({ selected }: { selected?: number }) {
 }
 
 const meta = {
-  title: 'Components/Table',
+  title: 'Components/Content/Table',
   component: Table,
   args: { caption: 'Team members' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },

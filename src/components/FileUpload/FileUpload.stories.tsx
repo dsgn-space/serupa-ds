@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FileUpload } from './FileUpload';
 
 const meta = {
-  title: 'Components/FileUpload',
+  title: 'Components/Forms/FileUpload',
   component: FileUpload,
   args: { multiple: true, accept: 'image/*,.pdf', maxSize: 5 * 1024 * 1024, maxFiles: 5, hint: 'Images or PDF, up to 5 MB each', disabled: false },
   decorators: [(Story) => <div style={{ maxWidth: 'var(--container-sm)' }}><Story /></div>],
