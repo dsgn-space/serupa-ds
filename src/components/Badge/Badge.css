@@ -15,9 +15,9 @@
   --dk-badge-h: var(--badge-height, var(--spacing-5));
   --dk-badge-px: var(--badge-padding-x, var(--spacing-1\.5));
   --dk-badge-icon: var(--badge-icon-size, var(--spacing-3));
-  --dk-badge-sbg: var(--secondary); --dk-badge-sfg: var(--text);
-  --dk-badge-xbg: var(--surface-inverse); --dk-badge-xfg: var(--text-inverse);
-  --dk-badge-ofg: var(--text); --dk-badge-obd: var(--border-strong);
+  --dk-badge-sbg: var(--badge-neutral-subtle-bg, var(--secondary)); --dk-badge-sfg: var(--badge-neutral-subtle-text, var(--text));
+  --dk-badge-xbg: var(--badge-neutral-solid-bg, var(--surface-inverse)); --dk-badge-xfg: var(--badge-neutral-solid-text, var(--text-inverse));
+  --dk-badge-ofg: var(--badge-neutral-outline-text, var(--text)); --dk-badge-obd: var(--badge-neutral-outline-border, var(--border-strong));
   display: inline-flex;
   align-items: center;
   gap: var(--badge-gap, var(--spacing-1));
@@ -34,7 +34,7 @@
   white-space: nowrap;
   vertical-align: middle;
 }
-.dk-badge--tone-primary { --dk-badge-sbg: var(--primary-subtle); --dk-badge-sfg: var(--primary); --dk-badge-xbg: var(--primary); --dk-badge-xfg: var(--on-primary); --dk-badge-ofg: var(--primary); --dk-badge-obd: var(--primary); }
+.dk-badge--tone-primary { --dk-badge-sbg: var(--badge-primary-subtle-bg, var(--primary-subtle)); --dk-badge-sfg: var(--badge-primary-subtle-text, var(--primary)); --dk-badge-xbg: var(--badge-primary-solid-bg, var(--primary)); --dk-badge-xfg: var(--badge-primary-solid-text, var(--on-primary)); --dk-badge-ofg: var(--badge-primary-outline-text, var(--primary)); --dk-badge-obd: var(--badge-primary-outline-border, var(--primary)); }
 .dk-badge--tone-success { --dk-badge-sbg: var(--dk-bdg-green-sbg); --dk-badge-sfg: var(--dk-bdg-green-sfg); --dk-badge-xbg: var(--dk-bdg-green-xbg); --dk-badge-xfg: var(--dk-bdg-green-xfg); --dk-badge-ofg: var(--dk-bdg-green-o); --dk-badge-obd: var(--dk-bdg-green-obd); }
 .dk-badge--tone-warning { --dk-badge-sbg: var(--dk-bdg-amber-sbg); --dk-badge-sfg: var(--dk-bdg-amber-sfg); --dk-badge-xbg: var(--dk-bdg-amber-xbg); --dk-badge-xfg: var(--dk-bdg-amber-xfg); --dk-badge-ofg: var(--dk-bdg-amber-o); --dk-badge-obd: var(--dk-bdg-amber-obd); }
 .dk-badge--tone-danger { --dk-badge-sbg: var(--dk-bdg-red-sbg); --dk-badge-sfg: var(--dk-bdg-red-sfg); --dk-badge-xbg: var(--dk-bdg-red-xbg); --dk-badge-xfg: var(--dk-bdg-red-xfg); --dk-badge-ofg: var(--dk-bdg-red-o); --dk-badge-obd: var(--dk-bdg-red-obd); }
@@ -97,7 +97,7 @@
 }
 .dk-badge__remove:hover { opacity: var(--opacity-100); }
 .dk-badge__remove:focus-visible { opacity: var(--opacity-100); }
-.dk-badge__remove:focus-visible::after { outline: var(--outline-width-2) solid var(--focus-ring); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }   /* the ring goes round the whole 24×24 target */
+.dk-badge__remove:focus-visible::after { outline: var(--outline-width-2) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }   /* the ring goes round the whole 24×24 target */
 /* Interactive (onClick: a <button>; href: a link): a state layer (hover, then stronger while pressed) in the text
    color on subtle and outline, and black (light themes) or white (dark) on solid, a 2px focus ring outside a 2px surface gap, and a 50% fade when disabled. The layer sits above the
    fill and below the content, so every style and tone gets the same treatment. */
@@ -117,7 +117,7 @@
 .dk-badge--interactive.dk-badge--outline:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-ofg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); }
 .dk-badge--interactive:focus-visible {
   /* the transparent outline is invisible normally but drawn in forced-colors mode, where box-shadow rings disappear */
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--badge-focus-ring, var(--focus-ring));
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--badge-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--badge-focus-ring, var(--focus-ring));
   outline: var(--outline-width-2) solid transparent;
   outline-offset: var(--outline-offset-2);
 }
@@ -168,7 +168,7 @@
   width: var(--badge-indicator-size, var(--spacing-2)); height: var(--badge-indicator-size, var(--spacing-2));
   padding: var(--spacing-0); border: 0; border-radius: var(--rounded-full);
   background: var(--dk-badge-xbg);
-  box-shadow: 0 0 0 var(--badge-indicator-ring, var(--border-width-2)) var(--surface);
+  box-shadow: 0 0 0 var(--badge-indicator-ring, var(--border-width-2)) var(--badge-indicator-ring-color, var(--surface));
 }
 /* Ping (opt-in, ping with dot): a copy of the dot grows to twice its size and fades, every second, with the system's
    ping animation (the --animate-ping token behind the animate-ping utility), for live states. The dot itself stays.

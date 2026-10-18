@@ -13,7 +13,7 @@
   transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
 .dk-combobox__button .dk-icon { font-size: var(--dk-input-icon); transition: rotate var(--duration-150) var(--ease-in-out); }
-.dk-combobox__button:hover:not(:disabled) { background: var(--secondary); color: var(--text); }
+.dk-combobox__button:hover:not(:disabled) { background: var(--combobox-chevron-bg-hover, var(--secondary)); color: var(--combobox-chevron-hover, var(--text)); }
 .dk-combobox__button:disabled { cursor: not-allowed; }
 .dk-combobox[data-state="open"] .dk-combobox__toggle .dk-icon { --dk-combobox-turn: 180deg; rotate: var(--dk-combobox-turn); }
 .dk-combobox__popup {

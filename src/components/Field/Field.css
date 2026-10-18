@@ -4,7 +4,7 @@
    .dk-field__hint, .dk-field__control, .dk-field__error. Every value goes through --field-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-field { display: flex; flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--text); }
+.dk-field { display: flex; flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--field-text, var(--text)); }
 .dk-field--group { margin: var(--spacing-0); padding: var(--spacing-0); border: 0; }
 .dk-field__label { display: block; padding: var(--spacing-0); color: var(--field-label-color, var(--text)); font-weight: var(--field-label-weight, var(--font-medium)); }
 .dk-field--group > .dk-field__label { float: left; width: var(--sizing-full); }   /* a floated legend lays out like the label of a single field */

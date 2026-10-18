@@ -68,6 +68,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--drawer-bg` | `surface` | The panel's background. |
+| `--drawer-text` | `text` | The panel's text: the body and the footer. |
 | `--drawer-overlay` | `overlay` | The dimmed backdrop over the page. |
 | `--drawer-title-color` | `text` | The title. |
 | `--drawer-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |

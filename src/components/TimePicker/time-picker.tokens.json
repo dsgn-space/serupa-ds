@@ -12,6 +12,26 @@
           }
         }
       },
+      "button-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The clock button's icon on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--time-picker-button-hover"
+          }
+        }
+      },
+      "button-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The clock button's background on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--time-picker-button-bg-hover"
+          }
+        }
+      },
       "list-bg": {
         "$type": "color",
         "$value": "{color.surface}",

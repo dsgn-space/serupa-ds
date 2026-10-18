@@ -38,7 +38,7 @@
 .dk-radio__input:checked + .dk-radio__dot { visibility: visible; }
 /* Focus: a 2px ring outside a 2px surface gap, like Button; the transparent outline is drawn in forced-colors mode. */
 .dk-radio__input:focus-visible {
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-radio-ring);
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--radio-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-radio-ring);
   outline: var(--outline-width-2) solid transparent; outline-offset: var(--outline-offset-2);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */

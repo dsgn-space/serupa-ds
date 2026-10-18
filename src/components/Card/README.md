@@ -104,7 +104,9 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-border` | `border` | The border of an outline card |
 | `--card-title-color` | `text` | The title |
 | `--card-description-color` | `text-muted` | The description |
+| `--card-text` | `text` | Text in the body and footer |
 | `--card-border-hover` | `border-strong` | A linked card's border on hover |
+| `--card-focus-ring` | `focus-ring` | A linked card's keyboard focus ring |
 | `--card-shadow` | `shadow-xs` | An outline card's shadow |
 | `--card-shadow-elevated` | `shadow-md` | An elevated card's shadow |
 | `--card-radius` | `rounded-xl` | The corners |

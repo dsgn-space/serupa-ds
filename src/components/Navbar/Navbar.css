@@ -7,7 +7,7 @@
 .dk-navbar { position: relative; background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
 .dk-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); }
 .dk-navbar__inner { display: flex; align-items: center; gap: var(--navbar-gap, var(--spacing-6)); height: var(--navbar-height, var(--spacing-16)); }
-.dk-navbar__brand { display: flex; align-items: center; flex-shrink: 0; color: var(--text); font-weight: var(--font-semibold); }
+.dk-navbar__brand { display: flex; align-items: center; flex-shrink: 0; color: var(--navbar-brand-text, var(--text)); font-weight: var(--font-semibold); }
 .dk-navbar__nav { flex: auto; min-width: var(--spacing-0); }
 .dk-navbar__links { display: flex; align-items: center; gap: var(--navbar-link-gap, var(--spacing-1)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-navbar__link {

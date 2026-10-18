@@ -265,6 +265,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-destructive-link-text` | `danger-text` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
 | `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
+| `--button-focus-gap-color` | `surface` | The 2px gap between the button and its focus ring; set it to the color the button sits on. |
 
 **Spacing**
 

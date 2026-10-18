@@ -10,7 +10,7 @@
   box-sizing: border-box; position: fixed; inset: var(--spacing-0);
   width: var(--sizing-full); max-width: none; height: var(--sizing-full); max-height: none;
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; overflow: hidden;
-  color: var(--text); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+  color: var(--drawer-text, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
 .dk-drawer[open] { display: flex; }
 .dk-drawer--right[open] { justify-content: flex-end; }

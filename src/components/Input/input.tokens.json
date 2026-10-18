@@ -22,6 +22,16 @@
           }
         }
       },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The typed text.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-text"
+          }
+        }
+      },
       "border": {
         "$type": "color",
         "$value": "{color.field-border}",
@@ -49,6 +59,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--input-placeholder"
+          }
+        }
+      },
+      "icon-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The left and right icons.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-icon-color"
           }
         }
       },

@@ -86,6 +86,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-label-color` | `text` | The label |
 | `--checkbox-description-color` | `text-muted` | The description |
 | `--checkbox-focus-ring` | `focus-ring` | The focus ring |
+| `--checkbox-focus-gap-color` | `surface` | The 2px gap between the box and the focus ring |
 | `--checkbox-invalid` | `danger` | Border and focus ring when invalid |
 | `--checkbox-size-sm` / `-md` / `-lg` | `spacing-3.5` / `spacing-4` / `spacing-5` | Box sizes (14, 16, 20px) |
 | `--checkbox-icon-size-sm` / `-md` / `-lg` | `spacing-3` / `spacing-3.5` / `spacing-4` | Check sizes (12, 14, 16px) |

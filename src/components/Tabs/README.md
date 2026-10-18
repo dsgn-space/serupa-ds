@@ -91,6 +91,8 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-pill-bg-hover` | `secondary` | A pill tab's background on hover. |
 | `--tabs-pill-bg-selected` | `primary` | The selected pill tab's background. |
 | `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
+| `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
+| `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
 | `--tabs-height-sm` | `control-height-md` | A tab's height with size="sm" (32px). |
 | `--tabs-height-md` | `spacing-9` | A tab's height with size="md", the default (36px). |
 | `--tabs-indicator-width` | `border-width-2` | The thickness of the selected tab's line (2px). |

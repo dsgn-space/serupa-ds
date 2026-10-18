@@ -138,10 +138,23 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 
 | Token | Default | Use |
 | --- | --- | --- |
+| `--badge-neutral-subtle-bg` | `secondary` | Neutral subtle: fill |
+| `--badge-neutral-subtle-text` | `text` | Neutral subtle: text and icon |
+| `--badge-neutral-solid-bg` | `surface-inverse` | Neutral solid: fill |
+| `--badge-neutral-solid-text` | `text-inverse` | Neutral solid: text and icon |
+| `--badge-neutral-outline-text` | `text` | Neutral outline: text and icon |
+| `--badge-neutral-outline-border` | `border-strong` | Neutral outline: border |
+| `--badge-primary-subtle-bg` | `primary-subtle` | Primary subtle: fill |
+| `--badge-primary-subtle-text` | `primary` | Primary subtle: text and icon |
+| `--badge-primary-solid-bg` | `primary` | Primary solid: fill |
+| `--badge-primary-solid-text` | `on-primary` | Primary solid: text and icon |
+| `--badge-primary-outline-text` | `primary` | Primary outline: text and icon |
+| `--badge-primary-outline-border` | `primary` | Primary outline: border |
 | `--badge-height` | `spacing-5` | Height (20px) |
 | `--badge-icon-size` | `spacing-3` | Icon size (12px): leading icon, ×, loading ring, the dot box's height |
 | `--badge-indicator-size` | `spacing-2` | The lone indicator dot (8px) |
 | `--badge-indicator-ring` | `border-width-2` | The indicator's ring in the surface color (2px) |
+| `--badge-indicator-ring-color` | `surface` | The indicator's ring color; set it to the color behind |
 | `--badge-dot-size` | `spacing-1.5` | Status dot (6px) |
 | `--badge-padding-x` | `spacing-1.5` | Side padding (6px) |
 | `--badge-icon-offset` | `spacing-0.5` | Extra padding on the text side when there's an icon (or dot, or ×) on one side only (2px) |
@@ -153,6 +166,7 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | `--badge-active-layer` | `opacity-15` | Clickable badges: the layer while pressed (15%) |
 | `--badge-state-text` | `opacity-30` | Clickable subtle and outline badges: how far the text moves toward black (light) or white (dark) on hover and press (30%) |
 | `--badge-focus-ring` | `focus-ring` | Clickable badges: the keyboard focus ring |
+| `--badge-focus-gap-color` | `surface` | Clickable badges: the 2px gap between the badge and its focus ring |
 | `--badge-press-scale` | `scale-97` | Clickable badges: size while pressed (97%); `100%` turns it off |
 | `--badge-press-duration` | `duration-100` | How fast the press scales (100ms) |
 | `--badge-ripple-opacity` | `opacity-20` | Ripple strength, in the text color (20%); `0` turns it off |

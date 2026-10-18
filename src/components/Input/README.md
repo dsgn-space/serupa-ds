@@ -72,9 +72,11 @@ Each is an optional override: set it on the page, a container or one input. The 
 | --- | --- | --- |
 | `--input-bg` | `field` | Background |
 | `--input-bg-readonly` | `surface-muted` | Background when read-only or disabled |
+| `--input-text` | `text` | The typed text |
 | `--input-border` | `field-border` | Border |
 | `--input-border-hover` | `field-border-hover` | Border on hover |
 | `--input-placeholder` | `placeholder` | Placeholder text |
+| `--input-icon-color` | `text-muted` | Left and right icons |
 | `--input-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--input-invalid` | `danger` | Border and ring when invalid |
 | `--input-height-sm` / `-md` / `-lg` | `control-height-sm` / `-md` / `-lg` | Heights (24, 32, 44px) |

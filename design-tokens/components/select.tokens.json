@@ -22,6 +22,16 @@
           }
         }
       },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The chosen value, and the options where the browser draws them.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-text"
+          }
+        }
+      },
       "border": {
         "$type": "color",
         "$value": "{color.field-border}",

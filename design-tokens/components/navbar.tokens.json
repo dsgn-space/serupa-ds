@@ -22,6 +22,16 @@
           }
         }
       },
+      "brand-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The brand (logo and name) at the start of the bar.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-brand-text"
+          }
+        }
+      },
       "link-text": {
         "$type": "color",
         "$value": "{color.text-muted}",

@@ -13,7 +13,7 @@
   --dk-select-ring: var(--select-focus-ring, var(--focus-ring));
   position: relative; display: inline-flex;
   box-sizing: border-box; width: var(--sizing-full); height: var(--dk-select-h);
-  background: var(--select-bg, var(--field)); color: var(--text);
+  background: var(--select-bg, var(--field)); color: var(--select-text, var(--text));
   border: var(--select-border-width, var(--border-width-1)) solid var(--dk-select-bd);
   border-radius: var(--select-radius, var(--rounded-md));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
@@ -31,7 +31,7 @@
   color: inherit; font: inherit; letter-spacing: inherit; text-overflow: ellipsis; cursor: pointer;
 }
 .dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2))); }
-.dk-select__field option, .dk-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--text); }
+.dk-select__field option, .dk-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--select-text, var(--text)); }
 .dk-select--empty .dk-select__field { color: var(--select-placeholder, var(--placeholder)); }
 .dk-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
 .dk-select__icon--left { inset-inline-start: var(--dk-select-px); }

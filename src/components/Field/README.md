@@ -70,6 +70,7 @@ Each is an optional override: set it on the page, a container or one field. The 
 
 | Token | Default | Use |
 | --- | --- | --- |
+| `--field-text` | `text` | Text with no token of its own (the label, hint and error have theirs) |
 | `--field-label-color` | `text` | Label |
 | `--field-label-weight` | `font-medium` | Label weight (500) |
 | `--field-hint-color` | `text-muted` | Hint and "(optional)" |

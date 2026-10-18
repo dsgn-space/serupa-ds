@@ -1,6 +1,138 @@
 {
   "badge": {
     "$description": "Badge's component tokens. Each one is an optional override: set the CSS variable (--badge-<name>) on the page, a container or one badge, and every Badge inside follows. Unset, it uses the shared token it references here. Badge colors come from the alias colors (neutral, primary) and the palette (every other tone), with contrast checked in every theme; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "neutral-subtle-bg": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "Neutral subtle badge: the fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-neutral-subtle-bg"
+          }
+        }
+      },
+      "neutral-subtle-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Neutral subtle badge: the text and icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-neutral-subtle-text"
+          }
+        }
+      },
+      "neutral-solid-bg": {
+        "$type": "color",
+        "$value": "{color.surface-inverse}",
+        "$description": "Neutral solid badge: the fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-neutral-solid-bg"
+          }
+        }
+      },
+      "neutral-solid-text": {
+        "$type": "color",
+        "$value": "{color.text-inverse}",
+        "$description": "Neutral solid badge: the text and icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-neutral-solid-text"
+          }
+        }
+      },
+      "neutral-outline-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Neutral outline badge: the text and icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-neutral-outline-text"
+          }
+        }
+      },
+      "neutral-outline-border": {
+        "$type": "color",
+        "$value": "{color.border-strong}",
+        "$description": "Neutral outline badge: the border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-neutral-outline-border"
+          }
+        }
+      },
+      "primary-subtle-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "Primary subtle badge: the fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-subtle-bg"
+          }
+        }
+      },
+      "primary-subtle-text": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Primary subtle badge: the text and icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-subtle-text"
+          }
+        }
+      },
+      "primary-solid-bg": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Primary solid badge: the fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-solid-bg"
+          }
+        }
+      },
+      "primary-solid-text": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "Primary solid badge: the text and icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-solid-text"
+          }
+        }
+      },
+      "primary-outline-text": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Primary outline badge: the text and icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-outline-text"
+          }
+        }
+      },
+      "primary-outline-border": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Primary outline badge: the border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-primary-outline-border"
+          }
+        }
+      },
+      "indicator-ring-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The lone indicator dot's ring, which keeps it apart from what it overlaps; set it to the color behind.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-indicator-ring-color"
+          }
+        }
+      }
+    },
     "sizing": {
       "height": {
         "$type": "dimension",
@@ -155,6 +287,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--badge-focus-ring"
+          }
+        }
+      },
+      "focus-gap-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "Clickable badges: the 2px gap between the badge and its focus ring; set it to the color the badge sits on.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-focus-gap-color"
           }
         }
       }

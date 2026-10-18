@@ -79,7 +79,11 @@ Each is an optional override: set it on the page, a container or one picker. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--date-picker-button` | `text-muted` | The calendar button's icon (3:1 on the field). |
+| `--date-picker-button-hover` | `text` | The calendar button's icon on hover. |
+| `--date-picker-button-bg-hover` | `surface-muted` | The calendar button's background on hover. |
+| `--date-picker-focus-ring` | `focus-ring` | The calendar button's keyboard focus ring. |
 | `--date-picker-popup-bg` | `surface` | The calendar panel's background. |
+| `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
 | `--date-picker-popup-border` | `border` | Its outline. |
 | `--date-picker-popup-shadow` | `shadow-lg` | Its shadow. |
 | `--date-picker-popup-radius` | `rounded-lg` | Its corners (8px). |

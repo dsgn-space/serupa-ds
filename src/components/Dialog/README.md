@@ -74,6 +74,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--dialog-bg` | `surface` | The panel's background. |
+| `--dialog-text` | `text` | The panel's text: the body and the footer. |
 | `--dialog-overlay` | `overlay` | The dimmed backdrop over the page. |
 | `--dialog-title-color` | `text` | The title. |
 | `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |

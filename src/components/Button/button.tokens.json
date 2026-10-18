@@ -340,6 +340,16 @@
             "cssVar": "--button-destructive-focus-ring"
           }
         }
+      },
+      "focus-gap-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The 2px gap between the button and its focus ring; set it to the color the button sits on.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-focus-gap-color"
+          }
+        }
       }
     },
     "spacing": {

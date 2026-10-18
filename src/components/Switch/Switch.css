@@ -43,7 +43,7 @@
 .dk-switch__input:checked + .dk-switch__thumb { inset-inline-start: calc(var(--dk-switch-w) - var(--dk-switch-thumb) - var(--dk-switch-pad)); background: var(--switch-thumb-checked, var(--on-primary)); }
 /* Focus: a 2px ring outside a 2px surface gap, like Button; the transparent outline is drawn in forced-colors mode. */
 .dk-switch__input:focus-visible {
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-switch-ring);
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--switch-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-switch-ring);
   outline: var(--outline-width-2) solid transparent; outline-offset: var(--outline-offset-2);
 }
 /* Invalid: a danger track while off, and a danger focus ring. */

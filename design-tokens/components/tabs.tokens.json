@@ -81,6 +81,26 @@
             "cssVar": "--tabs-pill-text-selected"
           }
         }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring, on a tab and on the panel.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-focus-ring"
+          }
+        }
+      },
+      "focus-gap-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The gap between the focus ring and the fill of the selected pill tab.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-focus-gap-color"
+          }
+        }
       }
     },
     "sizing": {

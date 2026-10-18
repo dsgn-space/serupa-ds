@@ -77,6 +77,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | --- | --- | --- |
 | `--select-bg` | `field` | Background, and the options where the browser draws them |
 | `--select-bg-disabled` | `surface-muted` | Background when disabled |
+| `--select-text` | `text` | The chosen value, and the options where the browser draws them |
 | `--select-border` | `field-border` | Border |
 | `--select-border-hover` | `field-border-hover` | Border on hover |
 | `--select-placeholder` | `placeholder` | The placeholder |

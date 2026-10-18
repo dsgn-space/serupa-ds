@@ -37,7 +37,7 @@
 .dk-checkbox__input:checked + .dk-checkbox__icon, .dk-checkbox__input:indeterminate + .dk-checkbox__icon { visibility: visible; }
 /* Focus: a 2px ring outside a 2px surface gap, like Button; the transparent outline is drawn in forced-colors mode. */
 .dk-checkbox__input:focus-visible {
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-checkbox-ring);
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--checkbox-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-checkbox-ring);
   outline: var(--outline-width-2) solid transparent; outline-offset: var(--outline-offset-2);
 }
 /* Invalid: a danger border while unchecked, and a danger focus ring. A checked box keeps its fill. */

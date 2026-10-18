@@ -41,7 +41,7 @@
 .dk-btn:focus-visible {
   /* a 2px focus ring outside a 2px surface gap; the transparent outline is invisible
      normally but drawn in forced-colors mode, where box-shadow rings disappear */
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-btn-ring), var(--dk-btn-shadow);
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--button-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-btn-ring), var(--dk-btn-shadow);
   outline: var(--outline-width-2) solid transparent;
   outline-offset: var(--outline-offset-2);
 }

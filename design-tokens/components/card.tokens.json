@@ -52,6 +52,16 @@
           }
         }
       },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The card's text: the body and the footer (the title and description have their own tokens).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-text"
+          }
+        }
+      },
       "hover-border-color": {
         "$type": "color",
         "$value": "{color.border-strong}",
@@ -59,6 +69,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--card-border-hover"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "A linked card's keyboard focus ring.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-focus-ring"
           }
         }
       }

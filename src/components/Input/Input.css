@@ -14,7 +14,7 @@
   display: inline-flex; align-items: center; gap: var(--input-gap, var(--spacing-2));
   box-sizing: border-box; width: var(--sizing-full); height: var(--dk-input-h);
   padding: var(--spacing-0) var(--dk-input-px);
-  background: var(--input-bg, var(--field)); color: var(--text);
+  background: var(--input-bg, var(--field)); color: var(--input-text, var(--text));
   border: var(--input-border-width, var(--border-width-1)) solid var(--dk-input-bd);
   border-radius: var(--input-radius, var(--rounded-md));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
@@ -29,7 +29,7 @@
   color: inherit; font: inherit; letter-spacing: inherit;
 }
 .dk-input__field::placeholder { color: var(--input-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
-.dk-input__icon { display: inline-flex; flex-shrink: 0; color: var(--text-muted); pointer-events: none; }
+.dk-input__icon { display: inline-flex; flex-shrink: 0; color: var(--input-icon-color, var(--text-muted)); pointer-events: none; }
 .dk-input__icon .dk-icon { font-size: var(--dk-input-icon); }
 .dk-input:hover:not(.dk-input--disabled, .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-border-hover, var(--field-border-hover)); }
 /* Focus: the border and a ring hugging it take the focus color (2px in all), and a transparent outline that

@@ -102,6 +102,16 @@
           }
         }
       },
+      "focus-gap-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The 2px gap between the circle and its focus ring; set it to the color the radio sits on.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-focus-gap-color"
+          }
+        }
+      },
       "invalid": {
         "$type": "color",
         "$value": "{color.danger}",

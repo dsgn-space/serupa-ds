@@ -75,6 +75,7 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | --- | --- | --- |
 | `--navbar-bg` | `surface` | The bar's background. |
 | `--navbar-border` | `border` | The line under the bar. |
+| `--navbar-brand-text` | `text` | The brand (logo and name) at the start of the bar. |
 | `--navbar-link-text` | `text-muted` | A link (4.5:1 on bg and link-bg-hover). |
 | `--navbar-link-text-hover` | `text` | A link on hover. |
 | `--navbar-link-text-active` | `text` | The current page's link. |

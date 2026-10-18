@@ -2,6 +2,16 @@
   "field": {
     "$description": "Field's component tokens. Each one is an optional override: set the CSS variable (--field-<name>) on the page, a container or one field, and every Field inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Text in the field that has no token of its own (the label, hint and error have theirs).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--field-text"
+          }
+        }
+      },
       "label-color": {
         "$type": "color",
         "$value": "{color.text}",

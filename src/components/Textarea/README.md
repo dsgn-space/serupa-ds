@@ -75,12 +75,14 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | --- | --- | --- |
 | `--textarea-bg` | `field` | Background |
 | `--textarea-bg-readonly` | `surface-muted` | Background when read-only or disabled |
+| `--textarea-text` | `text` | The typed text |
 | `--textarea-border` | `field-border` | Border |
 | `--textarea-border-hover` | `field-border-hover` | Border on hover |
 | `--textarea-placeholder` | `placeholder` | Placeholder text |
 | `--textarea-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--textarea-invalid` | `danger` | Border and ring when invalid |
 | `--textarea-count` | `text-muted` | The character count |
+| `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
 | `--textarea-padding-x-sm` / `-md` / `-lg` | `spacing-2` / `spacing-3` / `spacing-4` | Side padding (8, 12, 16px), like Input |
 | `--textarea-padding-y-sm` / `-md` / `-lg` | `spacing-1` / `spacing-1.5` / `spacing-2.5` | Top and bottom padding (4, 6, 10px) |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |

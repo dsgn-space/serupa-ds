@@ -12,6 +12,36 @@
           }
         }
       },
+      "button-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The calendar button's icon on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-picker-button-hover"
+          }
+        }
+      },
+      "button-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The calendar button's background on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-picker-button-bg-hover"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The calendar button's keyboard focus ring.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-picker-focus-ring"
+          }
+        }
+      },
       "popup-bg": {
         "$type": "color",
         "$value": "{color.surface}",
@@ -19,6 +49,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--date-picker-popup-bg"
+          }
+        }
+      },
+      "popup-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Text in the calendar panel (the Calendar inside it has its own --calendar-* tokens).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-picker-popup-text"
           }
         }
       },

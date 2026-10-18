@@ -100,6 +100,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-label-color` | `text` | The label |
 | `--radio-description-color` | `text-muted` | The description |
 | `--radio-focus-ring` | `focus-ring` | The focus ring |
+| `--radio-focus-gap-color` | `surface` | The 2px gap between the circle and the focus ring |
 | `--radio-invalid` | `danger` | Border and focus ring when invalid |
 | `--radio-size-sm` / `-md` / `-lg` | `spacing-3.5` / `spacing-4` / `spacing-5` | Circle sizes (14, 16, 20px) |
 | `--radio-dot-size-sm` / `-md` / `-lg` | `spacing-1.5` / `spacing-1.5` / `spacing-2` | Dot sizes (6, 6, 8px) |

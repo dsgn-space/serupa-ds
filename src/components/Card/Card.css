@@ -16,7 +16,7 @@
   border: var(--card-border-width, var(--border-width-1)) solid var(--card-border, var(--border));
   border-radius: var(--card-radius, var(--rounded-xl));
   box-shadow: var(--card-shadow, var(--shadow-xs));
-  color: var(--text);
+  color: var(--card-text, var(--text));
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--text-sm--line-height);
@@ -39,9 +39,9 @@
 .dk-card__footer--between { justify-content: space-between; }
 
 /* Interactive (href): the whole card is a link. */
-.dk-card--link { color: var(--text); text-decoration: none; cursor: pointer; transition: border-color var(--duration-150) var(--ease-in-out), box-shadow var(--duration-150) var(--ease-in-out); }
+.dk-card--link { color: var(--card-text, var(--text)); text-decoration: none; cursor: pointer; transition: border-color var(--duration-150) var(--ease-in-out), box-shadow var(--duration-150) var(--ease-in-out); }
 @media (hover: hover) { .dk-card--link:hover { border-color: var(--card-border-hover, var(--border-strong)); } }
-.dk-card--link:focus-visible { outline: var(--outline-width-2) solid var(--focus-ring); outline-offset: var(--outline-offset-2); }
+.dk-card--link:focus-visible { outline: var(--outline-width-2) solid var(--card-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
 @media (prefers-reduced-motion: reduce) { .dk-card--link { transition: none; } }
 @media (forced-colors: active) { .dk-card { border-color: CanvasText; } }
 }

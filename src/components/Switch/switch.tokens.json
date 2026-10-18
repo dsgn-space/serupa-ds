@@ -92,6 +92,16 @@
           }
         }
       },
+      "focus-gap-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The 2px gap between the track and its focus ring; set it to the color the switch sits on.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-focus-gap-color"
+          }
+        }
+      },
       "invalid": {
         "$type": "color",
         "$value": "{color.danger}",
