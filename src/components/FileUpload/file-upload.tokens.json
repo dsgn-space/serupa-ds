@@ -7,7 +7,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The drop area's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-zone-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.field-border}",
         "$description": "The drop area's dashed outline (3:1 on the surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-zone-border"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary-subtle}",
         "$description": "The drop area while files are dragged over it.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-zone-bg-active"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.primary}",
         "$description": "Its outline then.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-zone-border-active"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.text-muted}",
         "$description": "The upload icon and file icons (3:1).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-icon-color"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.text}",
         "$description": "The drop area's title and file names.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-title-color"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.text-muted}",
         "$description": "The hint and file sizes (4.5:1 on zone-bg and the surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-hint-color"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.danger-text}",
         "$description": "Messages about files that weren't added.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-error-color"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.surface}",
         "$description": "A file row's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-item-bg"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.border}",
         "$description": "A file row's outline.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-item-border"
           }
         }
@@ -109,7 +109,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The drop area's corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-zone-radius"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "A file row's corners (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-item-radius"
           }
         }
@@ -131,7 +131,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "Space inside the drop area (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-zone-padding"
           }
         }
@@ -141,7 +141,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space between the drop area's lines, and between file rows (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-gap"
           }
         }
@@ -151,7 +151,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space inside a file row (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--file-upload-item-padding"
           }
         }

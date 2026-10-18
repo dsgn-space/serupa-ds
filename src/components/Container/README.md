@@ -3,7 +3,7 @@
 Centers a page's content with a maximum width, and side padding that grows with the screen: 16px, 24px from 640px and 32px from 1024px wide.
 
 ```jsx
-const { Container } = window.Diki;
+const { Container } = window.Serupa;
 
 <Container as="main">…</Container>
 <Container size="prose">{article}</Container>

@@ -3,7 +3,7 @@
 Shows how far along a task is when you can tell: an upload, a setup, a quota. Use a bar in forms, cards and lists, and the ring where space is tight. When you can't tell how far along it is, leave `value` out, or use the lighter Loader.
 
 ```tsx
-import { Progress } from "@diki/design-system";
+import { Progress } from "serupa-ds";
 
 <Progress value={45} label="Uploading report.pdf" showValue />
 <Progress value={3} max={8} label="Setup" showValue formatValue={(v, m) => `${v} of ${m} steps`} />

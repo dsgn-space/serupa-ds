@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var D = window.Diki, h = React.createElement;
+  var D = window.Serupa, h = React.createElement;
   function b(t) { return h('div', { key: t, className: 'b' }, t); }
   ReactDOM.createRoot(document.getElementById('root')).render(h(D.Stack, { gap: 4 }, h(D.Stack, { gap: 2 }, b('One'), b('Two')), h(D.Stack, { direction: 'row', gap: 2, justify: 'between' }, b('Left'), h(D.Stack, { direction: 'row', gap: 2 }, b('Cancel'), b('Save')))));
 </script>

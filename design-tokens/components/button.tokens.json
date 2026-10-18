@@ -7,7 +7,7 @@
         "$value": "{color.primary}",
         "$description": "Primary background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-primary-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.primary-hover}",
         "$description": "Primary background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-primary-bg-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.on-primary}",
         "$description": "Primary text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-primary-text"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.surface}",
         "$description": "Secondary background: the page surface (an outline in the brand color).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-secondary-bg"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.primary-subtle}",
         "$description": "Secondary background on hover: a tint of the brand color.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-secondary-bg-hover"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.primary}",
         "$description": "Secondary label and icon color: the brand color (4.5:1+ on surface in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-secondary-text"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.primary-hover}",
         "$description": "Secondary label and icon color on hover (4.5:1+ on the hover tint in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-secondary-text-hover"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.primary}",
         "$description": "Secondary border: the brand color (3:1+ on surface in every theme).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-secondary-border"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.primary-hover}",
         "$description": "Secondary border on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-secondary-border-hover"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.surface}",
         "$description": "Outline background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-outline-bg"
           }
         }
@@ -107,7 +107,7 @@
         "$value": "{color.secondary}",
         "$description": "Outline background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-outline-bg-hover"
           }
         }
@@ -117,7 +117,7 @@
         "$value": "{color.text}",
         "$description": "Outline text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-outline-text"
           }
         }
@@ -127,7 +127,7 @@
         "$value": "{color.border}",
         "$description": "Outline border.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-outline-border"
           }
         }
@@ -146,7 +146,7 @@
         },
         "$description": "Ghost background (transparent).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-ghost-bg"
           }
         }
@@ -156,7 +156,7 @@
         "$value": "{color.secondary}",
         "$description": "Ghost background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-ghost-bg-hover"
           }
         }
@@ -166,7 +166,7 @@
         "$value": "{color.text}",
         "$description": "Ghost text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-ghost-text"
           }
         }
@@ -176,7 +176,7 @@
         "$value": "{color.primary}",
         "$description": "Link text.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-link-text"
           }
         }
@@ -186,7 +186,7 @@
         "$value": "{color.danger}",
         "$description": "Destructive primary background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-primary-bg"
           }
         }
@@ -196,7 +196,7 @@
         "$value": "{color.danger-hover}",
         "$description": "Destructive primary background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-primary-bg-hover"
           }
         }
@@ -206,7 +206,7 @@
         "$value": "{color.on-danger}",
         "$description": "Destructive primary text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-primary-text"
           }
         }
@@ -216,7 +216,7 @@
         "$value": "{color.surface}",
         "$description": "Destructive secondary background: the page surface (an outline in red).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-secondary-bg"
           }
         }
@@ -226,7 +226,7 @@
         "$value": "{color.danger-subtle}",
         "$description": "Destructive secondary background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-secondary-bg-hover"
           }
         }
@@ -236,7 +236,7 @@
         "$value": "{color.danger-text}",
         "$description": "Destructive secondary text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-secondary-text"
           }
         }
@@ -246,7 +246,7 @@
         "$value": "{color.danger}",
         "$description": "Destructive secondary border: solid red (3:1+ on surface), stronger than the destructive outline's.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-secondary-border"
           }
         }
@@ -256,7 +256,7 @@
         "$value": "{color.surface}",
         "$description": "Destructive outline background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-outline-bg"
           }
         }
@@ -266,7 +266,7 @@
         "$value": "{color.danger-subtle}",
         "$description": "Destructive outline background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-outline-bg-hover"
           }
         }
@@ -276,7 +276,7 @@
         "$value": "{color.danger-text}",
         "$description": "Destructive outline text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-outline-text"
           }
         }
@@ -286,7 +286,7 @@
         "$value": "{color.danger-border}",
         "$description": "Destructive outline border.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-outline-border"
           }
         }
@@ -296,7 +296,7 @@
         "$value": "{color.danger-subtle}",
         "$description": "Destructive ghost background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-ghost-bg-hover"
           }
         }
@@ -306,7 +306,7 @@
         "$value": "{color.danger-text}",
         "$description": "Destructive ghost text and icons.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-ghost-text"
           }
         }
@@ -316,7 +316,7 @@
         "$value": "{color.danger-text}",
         "$description": "Destructive link text.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-link-text"
           }
         }
@@ -326,7 +326,7 @@
         "$value": "{color.focus-ring}",
         "$description": "Keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-focus-ring"
           }
         }
@@ -336,7 +336,7 @@
         "$value": "{color.danger}",
         "$description": "Keyboard focus ring on a destructive button.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-destructive-focus-ring"
           }
         }
@@ -348,7 +348,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Side padding, sm (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-padding-x-sm"
           }
         }
@@ -358,7 +358,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Side padding, md (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-padding-x-md"
           }
         }
@@ -368,7 +368,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "Side padding, lg (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-padding-x-lg"
           }
         }
@@ -378,7 +378,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Gap between icon and label, sm (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-gap-sm"
           }
         }
@@ -388,7 +388,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Gap between icon and label, md (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-gap-md"
           }
         }
@@ -398,7 +398,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Gap between icon and label, lg (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-gap-lg"
           }
         }
@@ -408,7 +408,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Extra padding on the text side of a button with one icon, which reads lighter than text (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-icon-offset"
           }
         }
@@ -420,7 +420,7 @@
         "$value": "{sizing.control-height-sm}",
         "$description": "Height, sm (24px); also the width of an icon-only sm button.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-height-sm"
           }
         }
@@ -430,7 +430,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "Height, md (32px); also the width of an icon-only md button.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-height-md"
           }
         }
@@ -440,7 +440,7 @@
         "$value": "{sizing.control-height-lg}",
         "$description": "Height, lg (44px); also the width of an icon-only lg button.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-height-lg"
           }
         }
@@ -450,7 +450,7 @@
         "$value": "{spacing.spacing-3_5}",
         "$description": "Icon size, sm (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-icon-size-sm"
           }
         }
@@ -460,7 +460,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Icon size, md (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-icon-size-md"
           }
         }
@@ -470,7 +470,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "Icon size, lg (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-icon-size-lg"
           }
         }
@@ -482,7 +482,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "Border width (1px; drawn on outline buttons, invisible on the others but shown in forced-colors mode).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-border-width"
           }
         }
@@ -492,7 +492,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "Corner radius (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-radius"
           }
         }
@@ -504,7 +504,7 @@
         "$value": "{transforms.scale-97}",
         "$description": "Size while pressed (97%). 1 turns press feedback off.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-press-scale"
           }
         }
@@ -514,7 +514,7 @@
         "$value": "{transitions.duration-100}",
         "$description": "How fast the press scales down and back (100ms).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-press-duration"
           }
         }
@@ -524,7 +524,7 @@
         "$value": "{spacing.spacing-0}",
         "$description": "How far a right icon slides on hover. Off by default (0); set it to {spacing.spacing-0_5} (2px) where right icons are forward arrows.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-icon-nudge"
           }
         }
@@ -534,7 +534,7 @@
         "$value": "{transitions.duration-150}",
         "$description": "How fast the right icon slides (150ms).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-icon-nudge-duration"
           }
         }
@@ -544,7 +544,7 @@
         "$value": "{transitions.duration-150}",
         "$description": "Cross-fade between the content and the loading spinner (150ms).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-loading-duration"
           }
         }
@@ -554,7 +554,7 @@
         "$value": "{opacity.opacity-20}",
         "$description": "Strength of the ripple from the press point, in the text color (20%). 0 turns the ripple off.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-ripple-opacity"
           }
         }
@@ -564,7 +564,7 @@
         "$value": "{transitions.duration-500}",
         "$description": "How long the ripple takes to spread across the button (500ms, ease-in-out). It always spreads all the way before fading, so a quick click shows the whole wave.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-ripple-duration"
           }
         }
@@ -574,7 +574,7 @@
         "$value": "{transitions.duration-300}",
         "$description": "How long the ripple takes to fade after release (300ms).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--button-ripple-fade-duration"
           }
         }

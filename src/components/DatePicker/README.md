@@ -3,7 +3,7 @@
 A date field: people type a date, or pick one from a calendar that opens under the field.
 
 ```tsx
-import { DatePicker, Field } from "@diki/design-system";
+import { DatePicker, Field } from "serupa-ds";
 
 const [due, setDue] = React.useState<Date | null>(null);
 <Field label="Due date" hint="mm/dd/yyyy">

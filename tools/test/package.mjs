@@ -20,8 +20,8 @@ const index = read('src/index.ts');
 const exported = /export \{ ([^}]*) \};/.exec(index)[1].split(', ');
 const typed = new Set([...index.matchAll(/(\w+): typeof \w+;/g)].map((m) => m[1]));
 const browserTs = read('src/browser.ts');
-const untyped = exported.filter((n) => !typed.has(n)), unbundled = exported.filter((n) => !new RegExp(`\\b${n}: Diki\\.${n}\\b`).test(browserTs));
-t('every export is on window.Diki (src/browser.ts) and in its type (src/index.ts)', !untyped.length && !unbundled.length, `not typed: ${untyped.join(', ')}; not in browser.ts: ${unbundled.join(', ')}`);
+const untyped = exported.filter((n) => !typed.has(n)), unbundled = exported.filter((n) => !new RegExp(`\\b${n}: Serupa\\.${n}\\b`).test(browserTs));
+t('every export is on window.Serupa (src/browser.ts) and in its type (src/index.ts)', !untyped.length && !unbundled.length, `not typed: ${untyped.join(', ')}; not in browser.ts: ${unbundled.join(', ')}`);
 t('react and react-dom are peer dependencies (one React in the app)', pkg.peerDependencies && pkg.peerDependencies.react && pkg.peerDependencies['react-dom'] && !(pkg.dependencies || {}).react);
 
 // 2. server rendering: no window, document or navigator while importing and rendering
@@ -63,13 +63,13 @@ if (D) {
 
 // 3. types and CSS
 const dts = fs.existsSync(path.join(PROJECT, 'dist', 'index.d.ts')) ? read('dist/index.d.ts') : '';
-const missingTypes = ['Badge', 'Button', 'Checkbox', 'Field', 'Icon', 'Input', 'Loader', 'Radio', 'RadioGroup', 'Select', 'Switch', 'Textarea', 'ButtonProps', 'InputProps', 'DikiConfig', 'CustomIconName']
+const missingTypes = ['Badge', 'Button', 'Checkbox', 'Field', 'Icon', 'Input', 'Loader', 'Radio', 'RadioGroup', 'Select', 'Switch', 'Textarea', 'ButtonProps', 'InputProps', 'SerupaConfig', 'CustomIconName']
   .filter((n) => !new RegExp(`\\b${n}\\b`).test(dts));
 t('dist/index.d.ts declares every component and its props', dts && !missingTypes.length, missingTypes.join(', '));
 // Each file starts with its banner and the cascade layer order; the rest is the styles.
 const body = (f) => read(f).replace(/^\/\*![^\n]*\*\/\n@layer [^;]*;\n/, '');
 t('bundle.css = components.css + utilities.css', body('dist/bundle.css') === body('dist/components.css') + body('dist/utilities.css'));
 t('components.css holds no utility classes (only dk-* and the keyframes they use)', !/^\.(?!dk-)[a-z]/m.test(body('dist/components.css').replace(/\/\*[\s\S]*?\*\//g, '')));
-t('the browser script and bundle.js are the same file', read('dist/diki.iife.js') === read('dist/bundle.js'));
+t('the browser script and bundle.js are the same file', read('dist/serupa.iife.js') === read('dist/bundle.js'));
 
 process.exit(report('Package', R) ? 0 : 1);

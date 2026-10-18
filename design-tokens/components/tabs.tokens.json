@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "A tab's label (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-text"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text}",
         "$description": "A tab's label on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-text-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The selected tab's label (line).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-text-selected"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.primary}",
         "$description": "The line under the selected tab (3:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-indicator"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.border}",
         "$description": "The line under the whole tab list (line).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-border"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.secondary}",
         "$description": "A pill tab's background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-pill-bg-hover"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.primary}",
         "$description": "The selected pill tab's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-pill-bg-selected"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.on-primary}",
         "$description": "The selected pill tab's label.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-pill-text-selected"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "A tab's height with size=\"sm\" (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-height-sm"
           }
         }
@@ -99,7 +99,7 @@
         "$value": "{spacing.spacing-9}",
         "$description": "A tab's height with size=\"md\", the default (36px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-height-md"
           }
         }
@@ -111,7 +111,7 @@
         "$value": "{borders.border-width-2}",
         "$description": "The thickness of the selected tab's line (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-indicator-width"
           }
         }
@@ -121,7 +121,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "A tab's corners (6px): the focus ring, and the pills.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-radius"
           }
         }
@@ -133,7 +133,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Padding at a tab's sides (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-padding-x"
           }
         }
@@ -143,7 +143,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space between tabs (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-gap"
           }
         }
@@ -153,7 +153,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space between a tab's icon and label (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-icon-gap"
           }
         }
@@ -163,7 +163,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Space above a panel (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-panel-gap"
           }
         }
@@ -175,7 +175,7 @@
         "$value": "{typography.font-medium}",
         "$description": "A tab's label weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tabs-weight"
           }
         }

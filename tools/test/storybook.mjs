@@ -52,9 +52,9 @@ async function open(e, theme) {
   return '';
 }
 
-// DIKI_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
+// SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
 // the docs pages are checked in the first shard.
-const [shard, shards] = (process.env.DIKI_SHARD || '1/1').split('/').map(Number);
+const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs') : [];
 const stories = Object.values(entries).filter((e) => e.type === 'story').filter((_, i) => i % shards === shard - 1);
 for (const e of docs) {

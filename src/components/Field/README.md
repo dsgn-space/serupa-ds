@@ -3,7 +3,7 @@
 A label, an optional hint and an error message around one form control, wired up for screen readers. The label names the control, the hint and error are added to its `aria-describedby`, and an error makes the control invalid. It works with Input, Textarea, Select and any native control. With `group` it renders a `<fieldset>` and `<legend>` for a set of checkboxes or radios.
 
 ```jsx
-const { Field, Input, Textarea } = window.Diki;
+const { Field, Input, Textarea } = window.Serupa;
 
 <Field label="Email" hint="We only use it for receipts." error={emailError} required>
   <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -55,7 +55,7 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). The 
 | --- | --- | --- | --- |
 | `label` | text or element | | A `<label>` linked to the control; with `group`, the fieldset's `<legend>` |
 | `hint` | text or element | | Help under the label, before the control, in `text-muted`; added to the control's `aria-describedby` |
-| `error` | text or element | | A message under the control, in `danger-text` with an icon; makes the control invalid (`invalid` on Diki components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |
+| `error` | text or element | | A message under the control, in `danger-text` with an icon; makes the control invalid (`invalid` on Serupa components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |
 | `required` | boolean | `false` | A `*` after the label (hidden from screen readers) and `aria-required` on the control. Add the control's own `required` too if you want the browser's check |
 | `optional` | boolean or text | `false` | "(optional)" after the label, or your own words. Ignored with `required` |
 | `disabled` | boolean | `false` | Disables the control (with `group`, every control in the fieldset) and dims the label and hint |

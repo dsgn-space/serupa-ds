@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;display:grid;gap:16px;width:420px;justify-items:start"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.changes = [];
+var D = window.Serupa, h = React.createElement; window.changes = [];
 function App() {
   var s = React.useState('b'), v = s[0];
   return h(React.Fragment, null,

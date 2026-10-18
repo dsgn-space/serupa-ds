@@ -7,7 +7,7 @@
         "$value": "{color.text}",
         "$description": "The month and year.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-title-color"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "The weekday names (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-weekday-color"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "Days of the shown month.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-day-color"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "Days of the months before and after.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-outside-color"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.surface-muted}",
         "$description": "A day under the pointer.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-day-bg-hover"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.primary}",
         "$description": "Today's number (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-today-color"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.primary}",
         "$description": "The selected day.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-selected-bg"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.on-primary}",
         "$description": "Its number.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-selected-color"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.primary-subtle}",
         "$description": "Days between the start and end of a range (DateRangePicker).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-range-bg"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.text}",
         "$description": "Their numbers (4.5:1 on range-bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-range-color"
           }
         }
@@ -107,7 +107,7 @@
         "$value": "{color.focus-ring}",
         "$description": "A day's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-focus-ring"
           }
         }
@@ -119,7 +119,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "Each day's square (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-day-size"
           }
         }
@@ -131,7 +131,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "A day's corners (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-day-radius"
           }
         }
@@ -143,7 +143,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space between the header and the days (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-gap"
           }
         }
@@ -155,7 +155,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The month and year (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-title-weight"
           }
         }
@@ -165,7 +165,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "Today's number (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--calendar-today-weight"
           }
         }

@@ -3,7 +3,7 @@
 Moves through pages of results: previous and next arrows around the page numbers, with … where pages are skipped. It always shows the same number of slots, so the arrows stay put as the page changes. Pages are buttons, or links with `getHref` when each page has its own URL.
 
 ```jsx
-const { Pagination } = window.Diki;
+const { Pagination } = window.Serupa;
 
 const [page, setPage] = React.useState(1);
 <Pagination count={totalPages} page={page} onPageChange={setPage} />

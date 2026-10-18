@@ -3,7 +3,7 @@
 Triggers an action: submitting a form, opening a dialog, confirming or cancelling. With `href` it becomes a link that looks like a button, for navigation. Every variant also has a destructive version; every value comes from this system's tokens.
 
 ```jsx
-const { Button, buttonClass } = window.Diki;
+const { Button, buttonClass } = window.Serupa;
 
 <Button>Save changes</Button>
 <Button variant="outline">Cancel</Button>
@@ -110,11 +110,11 @@ A Button with `href` renders a link (`<a>`) with the button's look, because navi
   ```jsx
   // Next.js
   import Link from 'next/link';
-  Diki.configure({ link: Link });
+  Serupa.configure({ link: Link });
 
   // React Router: its Link takes `to`, so map href to it
   import { Link } from 'react-router-dom';
-  Diki.configure({ link: React.forwardRef(({ href, ...p }, ref) => <Link ref={ref} to={href} {...p} />) });
+  Serupa.configure({ link: React.forwardRef(({ href, ...p }, ref) => <Link ref={ref} to={href} {...p} />) });
   ```
 
 - **New tabs.** `target="_blank"` gets `rel="noopener noreferrer"` unless you pass `rel`.
@@ -209,7 +209,7 @@ Button's behaviour follows web standards; its look comes only from this design s
 
 Button's own props are `variant` (`primary`), `destructive`, `size` (`md`), `leftIcon`, `rightIcon`, `icon`, `loading` and `loadingText` (what screen readers hear when loading starts; default "Loading", `""` for silence). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through.
 
-`buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Diki.configure({ link })` sets the component that renders link Buttons.
+`buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Serupa.configure({ link })` sets the component that renders link Buttons.
 
 ## Component tokens
 

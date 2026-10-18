@@ -3,7 +3,7 @@
 A month of days to pick one from, with full keyboard navigation. DatePicker shows one in a popup; use Calendar on its own for an always-visible picker, such as in a booking page or a side panel.
 
 ```tsx
-import { Calendar } from "@diki/design-system";
+import { Calendar } from "serupa-ds";
 
 const [day, setDay] = React.useState<Date | null>(null);
 <Calendar value={day} onValueChange={setDay} min={new Date()} />

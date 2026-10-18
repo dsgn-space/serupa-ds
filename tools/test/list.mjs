@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;width:420px;display:flex;flex-direction:column;gap:16px"></div>
 <script>
-var D = window.Diki, h = React.createElement, I = D.ListItem;
+var D = window.Serupa, h = React.createElement, I = D.ListItem;
 window.clicks = [];
 var RouterLink = React.forwardRef(function (p, ref) { return h('a', Object.assign({}, p, { ref: ref, href: '#router' + p.to, 'data-router': '' })); });
 function App() {

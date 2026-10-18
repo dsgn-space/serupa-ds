@@ -3,7 +3,7 @@
 A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails. It can open full size in a viewer, and show a remove button.
 
 ```tsx
-import { Image } from "@diki/design-system";
+import { Image } from "serupa-ds";
 
 <Image src="/team.jpg" alt="The team at the 2025 offsite" ratio="video" />
 <Image src={thumb} fullSrc={original} alt="Receipt from March 3" ratio="square" viewable />

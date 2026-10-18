@@ -3,7 +3,7 @@
 A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize and a character count. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
 
 ```jsx
-const { Textarea } = window.Diki;
+const { Textarea } = window.Serupa;
 
 <label htmlFor="notes">Notes</label>
 <Textarea id="notes" placeholder="Anything the team should know" />

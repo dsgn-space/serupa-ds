@@ -8,7 +8,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var D = window.Diki, h = React.createElement, L = D.NavbarLink;
+  var D = window.Serupa, h = React.createElement, L = D.NavbarLink;
   ReactDOM.createRoot(document.getElementById('root')).render(
     h(D.Navbar, { brand: h('strong', null, 'Acme'), actions: h(D.Avatar, { name: 'Ada Lovelace', size: 'sm' }) },
       h(L, { href: '#', active: true }, 'Dashboard'), h(L, { href: '#' }, 'Projects'), h(L, { href: '#' }, 'Team'))

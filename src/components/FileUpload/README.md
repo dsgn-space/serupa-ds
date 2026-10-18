@@ -3,7 +3,7 @@
 A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. It checks file types, sizes and counts on the way in. Uploading is up to you: read the files from `onFilesChange`, or send them with a form through `name`.
 
 ```tsx
-import { FileUpload } from "@diki/design-system";
+import { FileUpload } from "serupa-ds";
 
 <FileUpload accept="image/*" maxSize={5 * 1024 * 1024} hint="PNG or JPG, up to 5 MB" onFilesChange={setAvatar} />
 

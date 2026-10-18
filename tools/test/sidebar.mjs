@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { margin: 0; }</style><div id="root"></div>
 <script>
-var D = window.Diki, h = React.createElement, S = D.SidebarSection, I = D.SidebarItem;
+var D = window.Serupa, h = React.createElement, S = D.SidebarSection, I = D.SidebarItem;
 var RouterLink = React.forwardRef(function (p, ref) { return h('a', Object.assign({}, p, { ref: ref, href: '#router' + p.to, 'data-router': '' })); });
 function items() {
   return [

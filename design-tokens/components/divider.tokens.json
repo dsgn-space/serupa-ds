@@ -7,7 +7,7 @@
         "$value": "{color.border}",
         "$description": "The line.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--divider-color"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "A label in the line (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--divider-label-color"
           }
         }
@@ -29,7 +29,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The line's thickness (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--divider-width"
           }
         }
@@ -41,7 +41,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space on each side of a label (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--divider-label-gap"
           }
         }

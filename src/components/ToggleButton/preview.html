@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var D = window.Diki, h = React.createElement, B = D.Button, T = D.ToggleButton;
+  var D = window.Serupa, h = React.createElement, B = D.Button, T = D.ToggleButton;
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     h(T, { leftIcon: 'grid_on' }, 'Show grid'), h(T, { leftIcon: 'grid_on', defaultPressed: true }, 'Show grid'),
     h('div', { style: { display: 'flex', gap: '4px' } }, h(T, { variant: 'ghost', icon: 'format_bold', 'aria-label': 'Bold', defaultPressed: true }), h(T, { variant: 'ghost', icon: 'format_italic', 'aria-label': 'Italic' }))

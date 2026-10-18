@@ -3,7 +3,7 @@
 A single-line text field: a native `<input>` in a box that can hold icons. Three sizes at the control heights (24, 32 and 44px, like Button), a focus ring, and invalid, read-only and disabled states. Field colors come from the alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
 
 ```jsx
-const { Input } = window.Diki;
+const { Input } = window.Serupa;
 
 <label htmlFor="name">Name</label>
 <Input id="name" placeholder="Dana Kim" />

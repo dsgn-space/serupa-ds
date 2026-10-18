@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "The table's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text}",
         "$description": "Cell text.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-text"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.border}",
         "$description": "The frame and the lines between rows.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-border"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The header row's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-header-bg"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.text-muted}",
         "$description": "Header text (4.5:1 on header-bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-header-text"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.surface-muted}",
         "$description": "A body row on hover, and every other row when striped (muted text keeps 4.5:1).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-row-bg-hover"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.surface-muted}",
         "$description": "A selected row's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-row-bg-selected"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.primary}",
         "$description": "The bar at the start of a selected row.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-row-indicator-selected"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The keyboard focus ring (sort buttons, a scrolling table).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-focus-ring"
           }
         }
@@ -99,7 +99,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "Cell text (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-font-size"
           }
         }
@@ -109,7 +109,7 @@
         "$value": "{typography.font-medium}",
         "$description": "Header text weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-header-weight"
           }
         }
@@ -121,7 +121,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "A cell's side padding (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-padding-x"
           }
         }
@@ -131,7 +131,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "A cell's top and bottom padding at size md (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-padding-y"
           }
         }
@@ -141,7 +141,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "At size sm (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-padding-y-sm"
           }
         }
@@ -153,7 +153,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The frame and row lines (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-border-width"
           }
         }
@@ -163,7 +163,7 @@
         "$value": "{borders.border-width-2}",
         "$description": "The selected row's bar (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-indicator-width"
           }
         }
@@ -175,7 +175,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The frame's corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--table-radius"
           }
         }

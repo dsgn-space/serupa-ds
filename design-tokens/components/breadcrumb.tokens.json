@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "A link to a parent page (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-text"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text}",
         "$description": "A link on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-text-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The current page.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-text-current"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text-muted}",
         "$description": "The chevron or slash between items.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-separator"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-focus-ring"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "The text (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-font-size"
           }
         }
@@ -69,7 +69,7 @@
         "$value": "{typography.font-medium}",
         "$description": "The current page's weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-weight-current"
           }
         }
@@ -81,7 +81,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Space between an item and a separator (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-gap"
           }
         }
@@ -93,7 +93,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The chevron's size (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-separator-size"
           }
         }
@@ -103,7 +103,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "An item's icon (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-icon-size"
           }
         }
@@ -115,7 +115,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "The focus ring's corners (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--breadcrumb-focus-radius"
           }
         }

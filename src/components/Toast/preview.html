@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('root')).render(h(T.Toaster, { position: 'top-start' }));
   setTimeout(function () {
     T.toast({ title: 'Upload failed', description: 'The file is over 10 MB.', tone: 'danger', duration: 0 });

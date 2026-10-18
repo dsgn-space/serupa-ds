@@ -7,7 +7,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The frame's fill while the picture loads, and behind a failed one.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "The broken-image icon (3:1 on bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-fallback-color"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.focus-ring}",
         "$description": "A viewable picture's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-focus-ring"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The frame's corners with rounded (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-radius"
           }
         }
@@ -51,7 +51,7 @@
         "$value": "{spacing.spacing-12}",
         "$description": "The least width and height of an 'auto' frame before the picture arrives (48px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-min-size"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The broken-image icon's size (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-fallback-icon"
           }
         }
@@ -73,7 +73,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "The remove button's distance from the corner (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-remove-offset"
           }
         }
@@ -85,7 +85,7 @@
         "$value": "{shadow.shadow-sm}",
         "$description": "The remove button's shadow, so it stands out on any picture.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--image-remove-shadow"
           }
         }

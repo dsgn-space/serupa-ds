@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "An upcoming step's circle.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-indicator-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.field-border}",
         "$description": "An upcoming step's ring (3:1 on the surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-indicator-border"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text-muted}",
         "$description": "An upcoming step's number.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-indicator-text"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.primary}",
         "$description": "The current and completed steps' circle.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-active-bg"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.on-primary}",
         "$description": "The number or check on them.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-active-text"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.danger}",
         "$description": "A step with an error.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-error-bg"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.on-danger}",
         "$description": "The mark on it.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-error-text"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.text}",
         "$description": "Step titles.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-title-color"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.text-muted}",
         "$description": "The line under a title, and \"Optional\".",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-description-color"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.field-border}",
         "$description": "The line to an upcoming step.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-connector"
           }
         }
@@ -107,7 +107,7 @@
         "$value": "{color.primary}",
         "$description": "The line after a completed step.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-connector-complete"
           }
         }
@@ -117,7 +117,7 @@
         "$value": "{color.focus-ring}",
         "$description": "A clickable step's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-focus-ring"
           }
         }
@@ -129,7 +129,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The circle, size=\"sm\" (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-indicator-size-sm"
           }
         }
@@ -139,7 +139,7 @@
         "$value": "{spacing.spacing-8}",
         "$description": "The circle, size=\"md\", the default (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-indicator-size-md"
           }
         }
@@ -151,7 +151,7 @@
         "$value": "{borders.border-width-2}",
         "$description": "The line's thickness (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-connector-width"
           }
         }
@@ -161,7 +161,7 @@
         "$value": "{radius.rounded-full}",
         "$description": "The circle.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-radius"
           }
         }
@@ -173,7 +173,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space between a circle and its text (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-gap"
           }
         }
@@ -183,7 +183,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space around a line (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-connector-gap"
           }
         }
@@ -195,7 +195,7 @@
         "$value": "{typography.font-medium}",
         "$description": "Step titles (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--stepper-title-weight"
           }
         }

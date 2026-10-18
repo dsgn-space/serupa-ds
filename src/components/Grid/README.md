@@ -3,7 +3,7 @@
 Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. Use it for a set of cards, a gallery, a dashboard's tiles.
 
 ```jsx
-const { Grid, Card } = window.Diki;
+const { Grid, Card } = window.Serupa;
 
 // As many columns as fit, each at least 256px: one on a phone, two or three on wider screens
 <Grid>{projects.map((p) => <Card key={p.id} title={p.name} />)}</Grid>

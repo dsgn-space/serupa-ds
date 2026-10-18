@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "The panel's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text}",
         "$description": "The panel's text.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-text"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.border}",
         "$description": "The panel's border.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-border"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text}",
         "$description": "The title.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-title-color"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The panel's focus ring, when it takes focus itself.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-focus-ring"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{shadow.shadow-lg}",
         "$description": "The panel's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-shadow"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The panel's corners (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-radius"
           }
         }
@@ -81,7 +81,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The panel's border (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-border-width"
           }
         }
@@ -93,7 +93,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "The title (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-title-size"
           }
         }
@@ -103,7 +103,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The title's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-title-weight"
           }
         }
@@ -115,7 +115,7 @@
         "$value": "{sizing.container-3xs}",
         "$description": "The panel's width (256px; it never gets wider than the screen).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-width"
           }
         }
@@ -127,7 +127,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Space inside the panel (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-padding"
           }
         }
@@ -137,7 +137,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Space under the title (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-gap"
           }
         }
@@ -147,7 +147,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "The gap between the panel and its trigger (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-offset"
           }
         }
@@ -159,7 +159,7 @@
         "$value": "{layout.z-50}",
         "$description": "The stacking level where the browser has no top layer (popover).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--popover-z-index"
           }
         }

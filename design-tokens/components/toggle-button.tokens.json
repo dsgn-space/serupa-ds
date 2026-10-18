@@ -7,7 +7,7 @@
         "$value": "{color.primary-subtle}",
         "$description": "The background while pressed (on).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toggle-button-bg-pressed"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.primary}",
         "$description": "Text and icon while pressed (4.5:1 on bg-pressed).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toggle-button-text-pressed"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.primary}",
         "$description": "The outline variant's border while pressed (3:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--toggle-button-border-pressed"
           }
         }

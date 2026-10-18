@@ -7,7 +7,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The control's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.field-border}",
         "$description": "The control's outline (3:1 on the surface, so it can be seen).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-border"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.surface}",
         "$description": "The selected segment's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-indicator"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.field-border}",
         "$description": "The selected segment's outline.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-indicator-border"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.text-muted}",
         "$description": "The other segments' labels (4.5:1 on bg).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-text"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.text}",
         "$description": "The selected segment's label.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-text-selected"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.text}",
         "$description": "A segment's label on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-text-hover"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.focus-ring}",
         "$description": "A segment's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-focus-ring"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{shadow.shadow-sm}",
         "$description": "The selected segment's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-indicator-shadow"
           }
         }
@@ -101,7 +101,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "The control's corners (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-radius"
           }
         }
@@ -111,7 +111,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "The selected segment's corners (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-indicator-radius"
           }
         }
@@ -123,7 +123,7 @@
         "$value": "{sizing.control-height-sm}",
         "$description": "size=\"sm\" (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-height-sm"
           }
         }
@@ -133,7 +133,7 @@
         "$value": "{sizing.control-height-md}",
         "$description": "size=\"md\", the default (32px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-height-md"
           }
         }
@@ -145,7 +145,7 @@
         "$value": "{spacing.spacing-0_5}",
         "$description": "Space between the outline and the segments (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-padding"
           }
         }
@@ -155,7 +155,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space on each side of a segment's label (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-padding-x"
           }
         }
@@ -165,7 +165,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "Space between a segment's icon and label (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-gap"
           }
         }
@@ -177,7 +177,7 @@
         "$value": "{typography.font-medium}",
         "$description": "The labels' weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-weight"
           }
         }
@@ -189,7 +189,7 @@
         "$value": "{transitions.duration-200}",
         "$description": "How long the selection takes to slide to a new segment.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--segmented-control-duration"
           }
         }

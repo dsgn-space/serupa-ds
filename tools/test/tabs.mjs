@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;display:flex;flex-direction:column;gap:24px;max-width:560px"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.changes = [];
+var D = window.Serupa, h = React.createElement; window.changes = [];
 function Set3(p) {
   return [h(D.TabList, { key: 'l', 'aria-label': p.label || 'Sections' },
       h(D.Tab, { value: 'one', icon: p.icon ? 'home' : null }, 'One'), h(D.Tab, { value: 'two', disabled: p.dis }, 'Two'), h(D.Tab, { value: 'three x' }, 'Three')),

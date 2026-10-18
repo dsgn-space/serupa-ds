@@ -8,7 +8,7 @@
 <body>
 <div id="root" style="max-width:360px"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   function pic(sky, sun, hill) { return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="800" height="600" fill="' + sky + '"/><circle cx="560" cy="260" r="70" fill="' + sun + '"/><path d="M0 440 Q200 340 400 420 T800 400 V600 H0Z" fill="' + hill + '"/></svg>'); }
   var PICS = [[pic('#1e3a8a', '#fde68a', '#14532d'), 'Hills at dusk'], [pic('#0ea5e9', '#fef9c3', '#166534'), 'Hills at noon'], [pic('#7c2d12', '#fdba74', '#3f2a1d'), 'Desert at sunset']];
   ReactDOM.createRoot(document.getElementById('root')).render(h(T.Carousel, { label: 'Landscape photos', defaultIndex: 1 },

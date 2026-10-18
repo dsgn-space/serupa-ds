@@ -3,7 +3,7 @@
 One slide at a time, with previous and next buttons, a dot per slide and swipe. Use it for a few related pictures or cards, such as product photos. It never moves on its own.
 
 ```tsx
-import { Carousel, Image } from "@diki/design-system";
+import { Carousel, Image } from "serupa-ds";
 
 <Carousel label="Product photos">
   {photos.map((p) => <Image key={p.id} src={p.url} alt={p.alt} ratio="4:3" rounded={false} />)}

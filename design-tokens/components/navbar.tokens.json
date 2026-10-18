@@ -7,7 +7,7 @@
         "$value": "{color.surface}",
         "$description": "The bar's background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.border}",
         "$description": "The line under the bar.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-border"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text-muted}",
         "$description": "A link (4.5:1 on bg and link-bg-hover).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-text"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.text}",
         "$description": "A link on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-text-hover"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.text}",
         "$description": "The current page's link.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-text-active"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.secondary}",
         "$description": "A link's background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-bg-hover"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.secondary}",
         "$description": "The current page's link background.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-bg-active"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-focus-ring"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{fontSize.text-sm}",
         "$description": "Link text (14px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-size"
           }
         }
@@ -99,7 +99,7 @@
         "$value": "{typography.font-medium}",
         "$description": "Link weight (500).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-weight"
           }
         }
@@ -111,7 +111,7 @@
         "$value": "{spacing.spacing-16}",
         "$description": "The bar's height (64px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-height"
           }
         }
@@ -123,7 +123,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "Space between the brand, the links and the actions (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-gap"
           }
         }
@@ -133,7 +133,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space between links (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-gap"
           }
         }
@@ -143,7 +143,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "A link's side padding (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-padding-x"
           }
         }
@@ -153,7 +153,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "A link's top and bottom padding (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-padding-y"
           }
         }
@@ -165,7 +165,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The line under the bar (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-border-width"
           }
         }
@@ -177,7 +177,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "A link's corners (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-link-radius"
           }
         }
@@ -189,7 +189,7 @@
         "$value": "{layout.z-40}",
         "$description": "Above the page when sticky.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--navbar-z-index"
           }
         }

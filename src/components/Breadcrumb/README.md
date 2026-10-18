@@ -3,7 +3,7 @@
 Shows where the current page sits: links to the pages above it, from the top level down, with chevrons between them. The last item is the current page. On a deep trail, `maxItems` collapses the middle into a "…" button that shows it again.
 
 ```jsx
-const { Breadcrumb, BreadcrumbItem } = window.Diki;
+const { Breadcrumb, BreadcrumbItem } = window.Serupa;
 
 <Breadcrumb>
   <BreadcrumbItem href="/" icon="home">Home</BreadcrumbItem>

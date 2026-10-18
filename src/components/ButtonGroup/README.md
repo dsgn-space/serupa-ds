@@ -3,7 +3,7 @@
 Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. Use it for a set of actions on the same thing (Copy, Paste), a toolbar of ToggleButtons, or a split button.
 
 ```jsx
-const { ButtonGroup, Button, IconButton, ToggleButton } = window.Diki;
+const { ButtonGroup, Button, IconButton, ToggleButton } = window.Serupa;
 
 <ButtonGroup aria-label="Clipboard">
   <Button variant="outline" leftIcon="content_copy">Copy</Button>

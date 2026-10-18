@@ -3,7 +3,7 @@
 An inline text link: underlined, in the primary color or the surrounding text's. `external` opens a new tab and says so, and `as` renders your router's link so client-side navigation keeps working.
 
 ```jsx
-const { Link, Text } = window.Diki;
+const { Link, Text } = window.Serupa;
 
 <Text>Read <Link href="/docs">the guide</Link> before you start.</Text>
 <Link href="https://status.example.com" external>Status page</Link>

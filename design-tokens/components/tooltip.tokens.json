@@ -7,7 +7,7 @@
         "$value": "{color.surface-inverse}",
         "$description": "The background: the inverse surface, so it stands out in light and dark themes.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-bg"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-inverse}",
         "$description": "The text (4.5:1 on the background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-text"
           }
         }
@@ -29,7 +29,7 @@
         "$value": "{shadow.shadow-md}",
         "$description": "The shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-shadow"
           }
         }
@@ -41,7 +41,7 @@
         "$value": "{radius.rounded-md}",
         "$description": "The corners (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-radius"
           }
         }
@@ -53,7 +53,7 @@
         "$value": "{spacing.spacing-2}",
         "$description": "Padding at the sides (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-padding-x"
           }
         }
@@ -63,7 +63,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Padding at the top and bottom (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-padding-y"
           }
         }
@@ -73,7 +73,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "The gap between the tooltip and what it describes (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-offset"
           }
         }
@@ -85,7 +85,7 @@
         "$value": "{spacing.spacing-60}",
         "$description": "The widest a tooltip gets before it wraps (240px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-max-width"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{layout.z-50}",
         "$description": "The stacking level where the browser has no top layer (popover).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--tooltip-z-index"
           }
         }

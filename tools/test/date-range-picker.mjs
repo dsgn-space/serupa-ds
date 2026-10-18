@@ -8,7 +8,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-direction:column;gap:24px;width:700px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 window.changes = [];
 var s = function (r) { return (r.start ? r.start.toDateString() : '-') + '..' + (r.end ? r.end.toDateString() : '-'); };
 function Ctl() {

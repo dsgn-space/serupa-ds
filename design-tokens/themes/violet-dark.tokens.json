@@ -5,7 +5,7 @@
       "$value": "{color.violet-400}",
       "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 (emerald 700) with white text; dark themes: brand 400 with brand-950 text.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--primary"
         }
       }
@@ -15,7 +15,7 @@
       "$value": "{color.violet-300}",
       "$description": "Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--primary-hover"
         }
       }
@@ -25,7 +25,7 @@
       "$value": "{color.violet-950}",
       "$description": "Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--primary-subtle"
         }
       }
@@ -35,7 +35,7 @@
       "$value": "{color.violet-950}",
       "$description": "Alias. Text and icons on `primary` fills (white in light themes, brand 950 in dark).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--on-primary"
         }
       }
@@ -45,7 +45,7 @@
       "$value": "{color.gray-800}",
       "$description": "Alias. Secondary button fill; hover fill for outline and ghost buttons.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--secondary"
         }
       }
@@ -55,7 +55,7 @@
       "$value": "{color.gray-700}",
       "$description": "Alias. Hover state of `secondary`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--secondary-hover"
         }
       }
@@ -65,7 +65,7 @@
       "$value": "{color.gray-950}",
       "$description": "Alias. Page and card background (white light, gray-950 dark).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--surface"
         }
       }
@@ -75,7 +75,7 @@
       "$value": "{color.gray-900}",
       "$description": "Alias. Secondary panels, sidebars, table headers.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--surface-muted"
         }
       }
@@ -85,7 +85,7 @@
       "$value": "{color.gray-50}",
       "$description": "Alias. Contrasting blocks: tooltips, inverse banners.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--surface-inverse"
         }
       }
@@ -95,7 +95,7 @@
       "$value": "{color.gray-50}",
       "$description": "Alias. Body text and headings on `surface`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text"
         }
       }
@@ -105,7 +105,7 @@
       "$value": "{color.gray-400}",
       "$description": "Alias. Secondary text, captions, placeholders (4.5:1+ on `surface` in every theme).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-muted"
         }
       }
@@ -115,7 +115,7 @@
       "$value": "{color.gray-900}",
       "$description": "Alias. Text on `surface-inverse`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--text-inverse"
         }
       }
@@ -125,7 +125,7 @@
       "$value": "{color.gray-800}",
       "$description": "Alias. Default borders and dividers.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border"
         }
       }
@@ -135,7 +135,7 @@
       "$value": "{color.gray-700}",
       "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--border-strong"
         }
       }
@@ -145,7 +145,7 @@
       "$value": "{color.violet-400}",
       "$description": "Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--focus-ring"
         }
       }
@@ -155,7 +155,7 @@
       "$value": "{color.green-500}",
       "$description": "Alias. Success icons and fills. For success text on light surfaces use `green-700`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--success"
         }
       }
@@ -165,7 +165,7 @@
       "$value": "{color.green-950}",
       "$description": "Alias. Success alert / badge background.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--success-subtle"
         }
       }
@@ -175,7 +175,7 @@
       "$value": "{color.amber-500}",
       "$description": "Alias. Warning icons and fills; put dark text on it. For warning text on light surfaces use `amber-700`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--warning"
         }
       }
@@ -185,7 +185,7 @@
       "$value": "{color.amber-950}",
       "$description": "Alias. Warning alert / badge background.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--warning-subtle"
         }
       }
@@ -195,7 +195,7 @@
       "$value": "{color.red-600}",
       "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--danger"
         }
       }
@@ -205,7 +205,7 @@
       "$value": "{color.red-700}",
       "$description": "Alias. Hover / pressed state of `danger`.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--danger-hover"
         }
       }
@@ -215,7 +215,7 @@
       "$value": "{color.white}",
       "$description": "Alias. Text and icons on `danger` fills.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--on-danger"
         }
       }
@@ -225,7 +225,7 @@
       "$value": "{color.red-950}",
       "$description": "Alias. Error alert / badge background.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--danger-subtle"
         }
       }
@@ -235,7 +235,7 @@
       "$value": "{color.red-300}",
       "$description": "Alias. Destructive text and icons on `surface`, `danger-subtle` and its hover (5.3:1+ in every theme).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--danger-text"
         }
       }
@@ -245,7 +245,7 @@
       "$value": "{color.red-900}",
       "$description": "Alias. Hover fill for destructive secondary, outline and ghost buttons.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--danger-subtle-hover"
         }
       }
@@ -255,7 +255,7 @@
       "$value": "{color.red-800}",
       "$description": "Alias. Border of a destructive outline button.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--danger-border"
         }
       }
@@ -265,7 +265,7 @@
       "$value": "{color.sky-400}",
       "$description": "Alias. Informational icons and text.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--info"
         }
       }
@@ -275,7 +275,7 @@
       "$value": "{color.sky-950}",
       "$description": "Alias. Info alert / badge background.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--info-subtle"
         }
       }
@@ -285,7 +285,7 @@
       "$value": "{color.gray-900}",
       "$description": "Alias. Background of text inputs, selects and other form fields.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--field"
         }
       }
@@ -295,7 +295,7 @@
       "$value": "{color.gray-500}",
       "$description": "Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--field-border"
         }
       }
@@ -305,7 +305,7 @@
       "$value": "{color.gray-400}",
       "$description": "Alias. Field border on hover.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--field-border-hover"
         }
       }
@@ -315,7 +315,7 @@
       "$value": "{color.gray-400}",
       "$description": "Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels.",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--placeholder"
         }
       }
@@ -334,7 +334,7 @@
       },
       "$description": "Alias. The dimmed backdrop behind dialogs and drawers (gray-900 at 50% in light themes, gray-950 at 70% in dark).",
       "$extensions": {
-        "com.diki": {
+        "com.serupa": {
           "cssVar": "--overlay"
         }
       }

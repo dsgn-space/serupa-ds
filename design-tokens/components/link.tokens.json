@@ -7,7 +7,7 @@
         "$value": "{color.primary}",
         "$description": "tone=\"primary\" text and underline (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-text"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.primary-hover}",
         "$description": "tone=\"primary\" on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-text-hover"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-focus-ring"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{typography.decoration-1}",
         "$description": "The underline's thickness (1px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-thickness"
           }
         }
@@ -49,7 +49,7 @@
         "$value": "{typography.decoration-2}",
         "$description": "The underline's thickness on hover (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-thickness-hover"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{typography.underline-offset-2}",
         "$description": "The gap between the text and the underline (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-offset"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{spacing.spacing-0_5}",
         "$description": "Space before the new-tab icon of an external link (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-icon-gap"
           }
         }
@@ -83,7 +83,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "The focus ring's corners (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--link-focus-radius"
           }
         }

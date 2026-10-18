@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;max-width:480px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 function App() {
   return h(React.Fragment, null,
     h(D.Heading, { id: 'hdef', ref: window.hr = React.createRef(), className: 'extra', 'data-x': 'y' }, 'Default'),

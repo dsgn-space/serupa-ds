@@ -59,17 +59,17 @@ for (const scheme of ['light', 'dark']) {
   const p = await ctx.newPage();
   const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
   await p.goto(url);
-  await p.evaluate(() => { window.__seen = []; Diki.theme.onChange((i) => window.__seen.push(i.theme)); });
+  await p.evaluate(() => { window.__seen = []; Serupa.theme.onChange((i) => window.__seen.push(i.theme)); });
   await p.emulateMedia({ colorScheme: 'dark' }); await p.waitForTimeout(100);
   t('theme.js: switches live when the system changes', (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'blue-dark');
   t('theme.js: onChange hears the system switch', (await p.evaluate(() => window.__seen)).includes('blue-dark'));
-  const r = await p.evaluate(() => Diki.theme.set({ brand: 'violet', mode: 'light' }));
+  const r = await p.evaluate(() => Serupa.theme.set({ brand: 'violet', mode: 'light' }));
   t('theme.js: set() changes brand and mode', r.theme === 'violet-light' && (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'violet-light');
   await p.reload();
   t('theme.js: the choice is remembered after a reload', (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'violet-light');
-  await p.evaluate(() => Diki.theme.set({ brand: 'nope', mode: 'nope' }));
-  t('theme.js: unknown values are ignored', (await p.evaluate(() => Diki.theme.get().theme)) === 'violet-light');
-  const back = await p.evaluate(() => Diki.theme.reset());
+  await p.evaluate(() => Serupa.theme.set({ brand: 'nope', mode: 'nope' }));
+  t('theme.js: unknown values are ignored', (await p.evaluate(() => Serupa.theme.get().theme)) === 'violet-light');
+  const back = await p.evaluate(() => Serupa.theme.reset());
   t('theme.js: reset() returns to the page default', back.theme === 'blue-dark' && back.mode === 'auto');
   await ctx.close();
 }

@@ -8,7 +8,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   var PIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="800" height="500" fill="url(#s)"/><circle cx="560" cy="300" r="60" fill="#fde68a"/><path d="M0 380 Q200 300 400 370 T800 340 V500 H0Z" fill="#14532d"/></svg>');
   ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { display: 'flex', gap: 16, alignItems: 'flex-start' } },
     h(T.Image, { src: PIC, alt: 'A hillside at dusk', ratio: 'video', viewable: true, frameProps: { style: { width: 220 } } }),

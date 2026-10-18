@@ -15,24 +15,24 @@ const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emera
 
 // The format's duration object ({ value: 150, unit: 'ms' }) isn't converted by Style Dictionary 5.6 yet.
 StyleDictionary.registerTransform({
-  name: 'diki/duration', type: 'value', transitive: true,
+  name: 'serupa/duration', type: 'value', transitive: true,
   filter: (t) => (t.$type ?? t.type) === 'duration' && typeof (t.$value ?? t.value) === 'object',
   transform: (t) => { const v = t.$value ?? t.value; return `${v.value}${v.unit}`; },
 });
-// Use the system's own variable names, kept in $extensions["com.diki"].cssVar.
+// Use the system's own variable names, kept in $extensions["com.serupa"].cssVar.
 StyleDictionary.registerTransform({
-  name: 'diki/name', type: 'name',
-  transform: (t) => (t.$extensions?.['com.diki']?.cssVar || '--' + t.path.join('-')).slice(2),
+  name: 'serupa/name', type: 'name',
+  transform: (t) => (t.$extensions?.['com.serupa']?.cssVar || '--' + t.path.join('-')).slice(2),
 });
 
 for (const theme of THEMES) {
   const sd = new StyleDictionary({
-    source: [path.join(TOKENS, 'diki.tokens.json'), path.join(TOKENS, 'themes', `${theme}.tokens.json`), path.join(TOKENS, 'components', '*.tokens.json')],
+    source: [path.join(TOKENS, 'serupa.tokens.json'), path.join(TOKENS, 'themes', `${theme}.tokens.json`), path.join(TOKENS, 'components', '*.tokens.json')],
     usesDtcg: true,
     log: { verbosity: 'silent', warnings: 'disabled' },
     platforms: {
       css: {
-        transforms: [...StyleDictionary.hooks.transformGroups.css.filter((x) => x !== 'name/kebab'), 'diki/duration', 'diki/name'],
+        transforms: [...StyleDictionary.hooks.transformGroups.css.filter((x) => x !== 'name/kebab'), 'serupa/duration', 'serupa/name'],
         buildPath: OUT.endsWith('/') ? OUT : OUT + '/',
         files: [{ destination: `${theme}.css`, format: 'css/variables', options: { selector: `[data-theme="${theme}"]`, outputReferences: false } }],
       },

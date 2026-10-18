@@ -54,7 +54,7 @@ jobs:
       - name: Test suite
         shell: bash
         env:
-          DIKI_SHARD: ${{ matrix.shard }}
+          SERUPA_SHARD: ${{ matrix.shard }}
         run: |
           set -o pipefail
           node tools/test/run.mjs --group ${{ matrix.group }} 2>&1 | tee test-output.txt

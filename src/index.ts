@@ -1,4 +1,4 @@
-/*! Diki Design System · React components (needs React 18+) · CHANGELOG.md */
+/*! Serupa · React components (needs React 18+) · CHANGELOG.md */
 import { Accordion, AccordionItem } from "./components/Accordion/Accordion";
 export type { AccordionItemProps, AccordionProps } from "./components/Accordion/Accordion";
 import { Alert } from "./components/Alert/Alert";
@@ -118,21 +118,21 @@ import { Tooltip } from "./components/Tooltip/Tooltip";
 export type { TooltipProps } from "./components/Tooltip/Tooltip";
 export type { Placement } from "./internal/position";
 import { configure } from "./internal/config";
-export type { DikiConfig } from "./internal/config";
+export type { SerupaConfig } from "./internal/config";
 import { customIcons } from "./icons";
 export type { CustomIconName } from "./icons";
-export type { DikiTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
+export type { SerupaTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
 export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
 
-type ThemeApi = import("./theme-types").DikiTheme;
+type ThemeApi = import("./theme-types").SerupaTheme;
 declare global {
   interface Window {
-    /** The components on plain pages (diki.iife.js, also shipped as bundle.js). */
-    Diki: {
+    /** The components on plain pages (serupa.iife.js, also shipped as bundle.js). */
+    Serupa: {
       /** The system's version, e.g. "4.8.0" (semver). */ version: string;
       Accordion: typeof Accordion; AccordionItem: typeof AccordionItem; Alert: typeof Alert; Avatar: typeof Avatar; AvatarGroup: typeof AvatarGroup; Badge: typeof Badge;
       Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Button: typeof Button; buttonClass: typeof buttonClass;

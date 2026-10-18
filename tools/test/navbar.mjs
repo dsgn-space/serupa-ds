@@ -5,11 +5,11 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { margin: 0; }</style><div id="root"></div>
 <script>
-var D = window.Diki, h = React.createElement, L = D.NavbarLink;
+var D = window.Serupa, h = React.createElement, L = D.NavbarLink;
 var RouterLink = React.forwardRef(function (p, ref) { return h('a', Object.assign({}, p, { ref: ref, href: '#router' + p.to, 'data-router': '' })); });
 function App() {
   return h('div', null,
-    h(D.Navbar, { id: 'nav', ref: window.nr = React.createRef(), className: 'extra', 'data-x': 'y', brand: h('a', { href: '#home', id: 'brand' }, 'Diki'),
+    h(D.Navbar, { id: 'nav', ref: window.nr = React.createRef(), className: 'extra', 'data-x': 'y', brand: h('a', { href: '#home', id: 'brand' }, 'Serupa'),
       actions: h(D.Button, { size: 'sm', id: 'act' }, 'Sign in') },
       h(L, { href: '#dash', active: true, ref: window.lr = React.createRef() }, 'Dashboard'),
       h(L, { href: '#projects', id: 'lp' }, 'Projects'),

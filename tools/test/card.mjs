@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px;display:flex;flex-direction:column;gap:16px;max-width:480px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 function Parts(p) { return [h(D.CardHeader, { key: 'h', title: 'Team plan', description: 'Up to 10 members', action: h(D.Badge, null, 'Active') }), h(D.CardBody, { key: 'b' }, 'Body text'), h(D.CardFooter, { key: 'f' }, h(D.Button, null, 'Go'))]; }
 function App() {
   return h(React.Fragment, null,

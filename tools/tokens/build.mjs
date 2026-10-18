@@ -25,7 +25,7 @@ export function buildTokensCss(t) {
   const groups = Object.values(t).filter((g) => g && Array.isArray(g.tokens));
   const all = groups.flatMap((g) => g.tokens);
 
-  let css = '/* Diki Design System — generated from tokens.json */\n';
+  let css = '/* Serupa — generated from tokens.json */\n';
   css += '@layer dk.tokens, dk.base, dk.components, dk.utilities;\n@layer dk.tokens {\n';
   css += `:root, [data-theme="${themes[0]}"] {\n`;
   for (const x of all.filter(themed)) css += line(x.name, x.value[themes[0]], x.usage);

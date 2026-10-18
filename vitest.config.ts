@@ -16,8 +16,8 @@ export default defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      // DIKI_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
-      instances: [{ browser: (process.env.DIKI_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
+      // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
+      instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
       viewport: { width: 900, height: 700 },
     },
   },

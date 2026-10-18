@@ -3,7 +3,7 @@
 A modal window over a dimmed page, for a task or a decision that needs attention before people go on: inviting someone, confirming a delete, editing a few fields. It's built on the native `<dialog>`, so the browser keeps focus inside it, makes the page behind unreachable, and puts it above everything.
 
 ```jsx
-const { Dialog, Button, Input, Field } = window.Diki;
+const { Dialog, Button, Input, Field } = window.Serupa;
 
 const [open, setOpen] = React.useState(false);
 

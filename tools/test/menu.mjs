@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:40px;display:flex;gap:24px;align-items:flex-start"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.chosen = []; window.opens = [];
+var D = window.Serupa, h = React.createElement; window.chosen = []; window.opens = [];
 function App() {
   var c = React.useState(false); window.setCtl = c[1];
   var pick = function (k) { return function () { window.chosen.push(k); }; };

@@ -7,7 +7,7 @@
         "$value": "{color.field-border}",
         "$description": "The track (3:1 on the surface, so the control can be seen).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-track"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.primary}",
         "$description": "The selected part of the track.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-fill"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.field}",
         "$description": "The thumb's inside.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-thumb-bg"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.primary}",
         "$description": "The thumb's ring (3:1 on the surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-thumb-border"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The thumb's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-focus-ring"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "The track's thickness, size=\"sm\" (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-track-height-sm"
           }
         }
@@ -69,7 +69,7 @@
         "$value": "{spacing.spacing-1_5}",
         "$description": "The track's thickness, size=\"md\", the default (6px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-track-height-md"
           }
         }
@@ -79,7 +79,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "The thumb, size=\"sm\" (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-thumb-size-sm"
           }
         }
@@ -89,7 +89,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "The thumb, size=\"md\" (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-thumb-size-md"
           }
         }
@@ -101,7 +101,7 @@
         "$value": "{borders.border-width-2}",
         "$description": "The thumb's ring (2px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-thumb-border-width"
           }
         }
@@ -111,7 +111,7 @@
         "$value": "{radius.rounded-full}",
         "$description": "The track's ends and the thumb.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-radius"
           }
         }
@@ -123,7 +123,7 @@
         "$value": "{shadow.shadow-sm}",
         "$description": "The thumb's shadow.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--slider-thumb-shadow"
           }
         }

@@ -57,11 +57,11 @@ Switch themes with the `data-theme` attribute on any element, e.g. `<html data-t
 ```
 
 ```js
-Diki.theme.set({ mode: 'dark' });          // a theme switcher; remembered in this browser
-Diki.theme.set({ brand: 'violet' });
-Diki.theme.reset();                         // back to the page's data-brand / data-mode
-Diki.theme.get();                           // { brand, mode, theme: 'violet-dark' }
-Diki.theme.onChange(({ theme }) => { … });  // returns an unsubscribe function
+Serupa.theme.set({ mode: 'dark' });          // a theme switcher; remembered in this browser
+Serupa.theme.set({ brand: 'violet' });
+Serupa.theme.reset();                         // back to the page's data-brand / data-mode
+Serupa.theme.get();                           // { brand, mode, theme: 'violet-dark' }
+Serupa.theme.onChange(({ theme }) => { … });  // returns an unsubscribe function
 ```
 
 ## Alias tokens
@@ -239,7 +239,7 @@ Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`l
 - **Meaning:** icons are decorative by default. Add an `aria-label` only when the icon carries meaning alone, and give icon-only buttons an `aria-label`.
 - **Consistency:** one icon per meaning across the product (always `delete`, never `delete` in one place and `remove` in another).
 
-**Custom icons.** For what Material Symbols doesn't have, draw your own on the same 24×24 grid, in one color, and put the SVGs in `assets/Icons/` (`diki-sparkle.svg`). `python3 tools/icons/build.py` cleans them and builds them into the components, so `<Icon name="diki-sparkle" />` and `leftIcon="diki-sparkle"` work with the same sizes, colors and accessibility as the font icons. The build refuses anything unsafe or off-system with the reason. Drawing rules and details are in the Icon guidelines.
+**Custom icons.** For what Material Symbols doesn't have, draw your own on the same 24×24 grid, in one color, and put the SVGs in `assets/Icons/` (`serupa-sparkle.svg`). `python3 tools/icons/build.py` cleans them and builds them into the components, so `<Icon name="serupa-sparkle" />` and `leftIcon="serupa-sparkle"` work with the same sizes, colors and accessibility as the font icons. The build refuses anything unsafe or off-system with the reason. Drawing rules and details are in the Icon guidelines.
 
 The font family is also a token: `font-icon` (`var(--font-icon)`).
 

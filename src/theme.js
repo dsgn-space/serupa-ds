@@ -1,5 +1,5 @@
-/*! Diki Design System v4.8.1 · theme.js */
-/* Diki theme: picks the theme for a page and keeps it in step with the visitor's light/dark setting.
+/*! Serupa v4.8.1 by Diki · theme.js */
+/* Serupa theme: picks the theme for a page and keeps it in step with the visitor's light/dark setting.
    Optional and standalone (no React). Load it in <head>, before the stylesheets, so the first paint
    already has the right theme:
 
@@ -9,15 +9,15 @@
    data-brand  blue | violet | emerald         (default: blue)
    data-mode   auto | light | dark             (default: auto = follow the operating system)
    It sets data-theme (e.g. "blue-dark"), which tokens.css reads. A choice made with
-   Diki.theme.set() is remembered in this browser; without the script, set data-theme yourself.
+   Serupa.theme.set() is remembered in this browser; without the script, set data-theme yourself.
 
-   API (window.Diki.theme):
+   API (window.Serupa.theme):
      get()                       -> { brand, mode, theme }   mode is what was asked for (auto/light/dark)
      set({ brand?, mode? })      change and remember the choice
      reset()                     forget the choice and go back to the page's data-brand / data-mode
      onChange(fn)                fn({ brand, mode, theme }) after every change; returns an unsubscribe function */
 (function () {
-  var BRANDS = ["blue", "violet", "emerald"], MODES = ["auto", "light", "dark"], KEY = "diki-theme";
+  var BRANDS = ["blue", "violet", "emerald"], MODES = ["auto", "light", "dark"], KEY = "serupa-theme";
   var root = document.documentElement;
   var page = { brand: pick(root.getAttribute("data-brand"), BRANDS, "blue"), mode: pick(root.getAttribute("data-mode"), MODES, "auto") };
   var media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
@@ -27,7 +27,8 @@
   function pick(v, list, fallback) { return list.indexOf(v) >= 0 ? v : fallback; }
   function load() {
     try {
-      var s = JSON.parse(localStorage.getItem(KEY) || "null");
+      // Before 5.0.0 the choice was saved as "diki-theme": read it once so visitors keep their theme.
+      var s = JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("diki-theme") || "null");
       if (!s) return {};
       var o = {};
       if (BRANDS.indexOf(s.brand) >= 0) o.brand = s.brand;
@@ -64,8 +65,8 @@
     reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} state = Object.assign({}, page); apply(true); return info(); },
     onChange: function (fn) { listeners.push(fn); return function () { listeners = listeners.filter(function (f) { return f !== fn; }); }; }
   };
-  window.Diki = window.Diki || {};
-  window.Diki.theme = api;
-  if (!window.Diki.version) window.Diki.version = "4.8.1";
+  window.Serupa = window.Serupa || {};
+  window.Serupa.theme = api;
+  if (!window.Serupa.version) window.Serupa.version = "4.8.1";
   apply();
 })();

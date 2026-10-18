@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "The search icon (3:1 on the field).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-icon-color"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "The clear button's icon.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-clear"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.text}",
         "$description": "The clear button's icon on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-clear-hover"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.secondary}",
         "$description": "The clear button's background on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-clear-bg-hover"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.focus-ring}",
         "$description": "The clear button's keyboard focus ring.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-focus-ring"
           }
         }
@@ -59,7 +59,7 @@
         "$value": "{radius.rounded-sm}",
         "$description": "The clear button's corners (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-clear-radius"
           }
         }
@@ -71,7 +71,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space around the clear button's icon (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--search-input-clear-padding"
           }
         }

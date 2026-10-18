@@ -4,22 +4,22 @@
 //   node tools/tokens/export.mjs --check    exit 1 if design-tokens/ is out of date with tokens.json
 //
 // Writes
-//   design-tokens/diki.tokens.json            palette and every scale (the theme-independent tokens)
+//   design-tokens/serupa.tokens.json            palette and every scale (the theme-independent tokens)
 //   design-tokens/themes/<theme>.tokens.json  the alias colors for one theme, as references into the palette
-//                                             ("{color.blue-600}"); layer one theme file over diki.tokens.json
+//                                             ("{color.blue-600}"); layer one theme file over serupa.tokens.json
 //   design-tokens/components/<name>.tokens.json  component tokens (Button's --button-*), referencing the tokens above
 //   design-tokens/css-values.json             tokens the format has no type for yet (degrees, em, %, viewport
 //                                             units, keywords, CSS shorthands), as plain CSS values
 //
 // Token paths are "<group>.<token name>", e.g. color.blue-600, spacing.spacing-4. The format doesn't allow "."
-// in a name, so "spacing-0.5" becomes "spacing-0_5"; $extensions["com.diki"].cssVar always gives the CSS variable.
+// in a name, so "spacing-0.5" becomes "spacing-0_5"; $extensions["com.serupa"].cssVar always gives the CSS variable.
 import fs from 'node:fs';
 import path from 'node:path';
 
 const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
 const OUT = path.join(P, 'design-tokens');
-const NS = 'com.diki';
-const BASE_FILE = 'diki.tokens.json';
+const NS = 'com.serupa';
+const BASE_FILE = 'serupa.tokens.json';
 
 const round = (x, n) => Number(x.toFixed(n));
 const first = (v) => (v && typeof v === 'object' ? Object.values(v)[0] : v);

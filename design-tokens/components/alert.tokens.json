@@ -7,7 +7,7 @@
         "$value": "{color.info-subtle}",
         "$description": "The background of a info alert.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-bg-info"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.info}",
         "$description": "The icon and the border tint of a info alert (3:1 on its background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-icon-info"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{color.success-subtle}",
         "$description": "The background of a success alert.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-bg-success"
           }
         }
@@ -37,7 +37,7 @@
         "$value": "{color.success}",
         "$description": "The icon and the border tint of a success alert (3:1 on its background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-icon-success"
           }
         }
@@ -47,7 +47,7 @@
         "$value": "{color.warning-subtle}",
         "$description": "The background of a warning alert.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-bg-warning"
           }
         }
@@ -57,7 +57,7 @@
         "$value": "{color.warning}",
         "$description": "The icon and the border tint of a warning alert (3:1 on its background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-icon-warning"
           }
         }
@@ -67,7 +67,7 @@
         "$value": "{color.danger-subtle}",
         "$description": "The background of a danger alert.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-bg-danger"
           }
         }
@@ -77,7 +77,7 @@
         "$value": "{color.danger}",
         "$description": "The icon and the border tint of a danger alert (3:1 on its background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-icon-danger"
           }
         }
@@ -87,7 +87,7 @@
         "$value": "{color.surface-muted}",
         "$description": "The background of a neutral alert.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-bg-neutral"
           }
         }
@@ -97,7 +97,7 @@
         "$value": "{color.text-muted}",
         "$description": "The icon and the border tint of a neutral alert (3:1 on its background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-icon-neutral"
           }
         }
@@ -107,7 +107,7 @@
         "$value": "{color.text}",
         "$description": "The title.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-title-color"
           }
         }
@@ -117,7 +117,7 @@
         "$value": "{color.text}",
         "$description": "The message (4.5:1 on every tone's background).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-text"
           }
         }
@@ -129,7 +129,7 @@
         "$value": "{opacity.opacity-30}",
         "$description": "How strongly the border shows the tone's color (30%).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-border-strength"
           }
         }
@@ -141,7 +141,7 @@
         "$value": "{radius.rounded-lg}",
         "$description": "The corner radius (8px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-radius"
           }
         }
@@ -151,7 +151,7 @@
         "$value": "{borders.border-width-1}",
         "$description": "The border width.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-border-width"
           }
         }
@@ -163,7 +163,7 @@
         "$value": "{spacing.spacing-4}",
         "$description": "Padding at the start and end (16px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-padding-x"
           }
         }
@@ -173,7 +173,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Padding at the top and bottom (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-padding-y"
           }
         }
@@ -183,7 +183,7 @@
         "$value": "{spacing.spacing-3}",
         "$description": "Space between the icon, the content and the close button (12px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-gap"
           }
         }
@@ -193,7 +193,7 @@
         "$value": "{spacing.spacing-1}",
         "$description": "Space between the title, the message and the actions (4px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-content-gap"
           }
         }
@@ -205,7 +205,7 @@
         "$value": "{typography.font-semibold}",
         "$description": "The title's weight (600).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--alert-title-weight"
           }
         }

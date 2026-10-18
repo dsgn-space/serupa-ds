@@ -23,7 +23,7 @@ interface Ctx { base: string; value: string | null; select: (v: string) => void;
 const TabsContext = React.createContext<Ctx | null>(null);
 const useTabs = (who: string): Ctx => {
   const c = React.useContext(TabsContext);
-  if (!c) throw new Error("Diki: " + who + " must be inside <Tabs>.");
+  if (!c) throw new Error("Serupa: " + who + " must be inside <Tabs>.");
   return c;
 };
 const safe = (v: string) => String(v).replace(/[^A-Za-z0-9_-]/g, "_");

@@ -9,8 +9,8 @@ import { spawnSync } from 'node:child_process';
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const P = path.resolve(process.argv[2] || path.join(HERE, '..', '..'));
 const D = path.join(P, 'design-tokens');
-const BASE_FILE = 'diki.tokens.json';
-const NS = 'com.diki';
+const BASE_FILE = 'serupa.tokens.json';
+const NS = 'com.serupa';
 const R = [];
 const check = (name, ok, detail = '') => R.push([name, !!ok, detail]);
 const report = () => {

@@ -7,7 +7,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;width:320px;display:flex;flex-direction:column;gap:12px"></div>
 <script>
-var D = window.Diki, h = React.createElement, C = D.Combobox;
+var D = window.Serupa, h = React.createElement, C = D.Combobox;
 window.calls = []; window.typed = [];
 var COUNTRIES = ['Argentina', 'Brazil', 'Canada', { value: 'ci', label: 'Côte d’Ivoire', description: 'Africa' }, { value: 'dk', label: 'Denmark', disabled: true }, 'Egypt', 'France'];
 function Controlled() {

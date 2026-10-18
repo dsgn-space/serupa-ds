@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 window.calls = [];
 function Controlled() {
   var s = React.useState(5);
@@ -37,7 +37,7 @@ await p.waitForTimeout(300);
 const st = (sel, props) => p.evaluate(([s, ps]) => { const c = getComputedStyle(document.querySelector(s)); return Object.fromEntries(ps.map((k) => [k, c[k]])); }, [sel, props]);
 const shown = (sel) => p.evaluate((s) => [...document.querySelectorAll(s + ' li')].map((li) => { const e = li.firstElementChild; if (!e) return li.textContent; if (e.classList.contains('dk-pagination__arrow')) return e.disabled || e.getAttribute('aria-disabled') ? '(' + (li.previousElementSibling ? '>' : '<') + ')' : (li.previousElementSibling ? '>' : '<'); return e.getAttribute('aria-current') ? '[' + e.textContent + ']' : e.textContent; }).join(' '), sel);
 
-const range = await p.evaluate(() => { const r = window.Diki.paginationRange; const f = (a) => a.map((x) => typeof x === 'number' ? x : '…').join(' '); return [f(r(1, 10)), f(r(5, 10)), f(r(10, 10)), f(r(4, 10)), f(r(1, 5)), f(r(2, 1)), f(r(1, 0)), f(r(10, 20, 2, 2))]; });
+const range = await p.evaluate(() => { const r = window.Serupa.paginationRange; const f = (a) => a.map((x) => typeof x === 'number' ? x : '…').join(' '); return [f(r(1, 10)), f(r(5, 10)), f(r(10, 10)), f(r(4, 10)), f(r(1, 5)), f(r(2, 1)), f(r(1, 0)), f(r(10, 20, 2, 2))]; });
 t('paginationRange: boundaries, siblings and … keep seven slots; short ranges show every page', range.join(' | ') === '1 2 3 4 5 … 10 | 1 … 4 5 6 … 10 | 1 … 6 7 8 9 10 | 1 2 3 4 5 … 10 | 1 2 3 4 5 | 1 |  | 1 2 … 8 9 10 11 12 … 19 20', range.join(' | '));
 const pd = await p.evaluate(() => { const n = document.getElementById('pdef'); return { tag: n.tagName, label: n.getAttribute('aria-label'), cls: n.className, comp: n.dataset.component, ref: window.pr.current === n, x: n.dataset.x, list: n.firstElementChild.tagName }; });
 t('Pagination: a <nav aria-label="Pagination"> with a list; ref, className and props reach the nav', pd.tag === 'NAV' && pd.label === 'Pagination' && pd.cls === 'dk-pagination extra' && pd.comp === 'pagination' && pd.ref && pd.x === 'y' && pd.list === 'UL', JSON.stringify(pd));

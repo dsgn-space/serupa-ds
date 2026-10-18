@@ -9,7 +9,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>body { background: var(--surface); margin: 0; }</style><div id="root" style="padding:16px;display:flex;flex-direction:column;gap:24px;width:360px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 window.picks = []; window.months = []; window.dp = [];
 function Ctl() {
   var s = React.useState(new Date(2025, 0, 15)); window.setCtl = s[1];
@@ -52,7 +52,7 @@ t('de-DE: German names and weeks starting on Monday', /^Mo\.?,Di\.?,Mi\.?,Do\.?,
 // Without Intl.Locale week info (Firefox has none), the week start comes from the locale's region.
 const nw = await (await b.newContext({ locale: 'en-US' })).newPage();
 await nw.addInitScript(() => { delete Intl.Locale.prototype.getWeekInfo; delete Intl.Locale.prototype.weekInfo; });
-await nw.goto(writePage('date-picker-noweek.html', `<div id="root"></div><script>var h = React.createElement, D = window.Diki;
+await nw.goto(writePage('date-picker-noweek.html', `<div id="root"></div><script>var h = React.createElement, D = window.Serupa;
 ReactDOM.createRoot(document.getElementById('root')).render(h('div', null, ['en-US', 'de-DE', 'de', 'ar-EG', 'dv-MV', 'pt-BR'].map(function (l) { return h(D.Calendar, { key: l, 'data-l': l, locale: l, defaultMonth: new Date(2025, 2, 1) }); })));
 </script>`, { react: true }));
 await nw.waitForTimeout(300);

@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<style>.b { background: #ccc; }</style><div id="root" style="width:600px"></div>
 <script>
-var D = window.Diki, h = React.createElement;
+var D = window.Serupa, h = React.createElement;
 function boxes(n, w) { var a = []; for (var i = 0; i < n; i++) a.push(h('div', { key: i, className: 'b', style: { width: w, height: (10 + i * 5) + 'px' } })); return a; }
 function App() {
   return h('div', null,

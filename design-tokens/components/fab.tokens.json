@@ -7,7 +7,7 @@
         "$value": "{spacing.spacing-14}",
         "$description": "The height (and width, without a label) of a medium FAB (56px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-size"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{spacing.spacing-10}",
         "$description": "The height of a small FAB (40px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-size-sm"
           }
         }
@@ -27,7 +27,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The icon (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-icon-size"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{shadow.shadow-lg}",
         "$description": "The raised shadow at rest.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-shadow"
           }
         }
@@ -49,7 +49,7 @@
         "$value": "{shadow.shadow-xl}",
         "$description": "The shadow on hover.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-shadow-hover"
           }
         }
@@ -61,7 +61,7 @@
         "$value": "{radius.rounded-full}",
         "$description": "The corners (round).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-radius"
           }
         }
@@ -73,7 +73,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "The distance from the corner of the screen (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-offset"
           }
         }
@@ -83,7 +83,7 @@
         "$value": "{spacing.spacing-5}",
         "$description": "Padding at the sides of an extended FAB (20px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-padding-x"
           }
         }
@@ -95,7 +95,7 @@
         "$value": "{layout.z-30}",
         "$description": "The stacking level: above the page, under dialogs and toasts.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--fab-z-index"
           }
         }

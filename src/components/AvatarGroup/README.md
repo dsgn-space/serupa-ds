@@ -3,7 +3,7 @@
 Avatars in an overlapping row, such as the people on a project or the assignees of a task. Avatars past `max` fold into a "+N" avatar at the end.
 
 ```tsx
-import { Avatar, AvatarGroup } from "@diki/design-system";
+import { Avatar, AvatarGroup } from "serupa-ds";
 
 <AvatarGroup label="Assigned to" max={3}>
   <Avatar name="Ada Lovelace" src="/ada.jpg" />

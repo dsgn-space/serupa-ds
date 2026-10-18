@@ -64,14 +64,14 @@ for (const c of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
     const walk = (tree) => {
       for (const [k, v] of Object.entries(tree)) {
         if (k.startsWith('$') || !v || typeof v !== 'object') continue;
-        if ('$value' in v) COMP.set(v.$extensions['com.diki'].cssVar.slice(2), [rel, v]);
+        if ('$value' in v) COMP.set(v.$extensions['com.serupa'].cssVar.slice(2), [rel, v]);
         else walk(v);
       }
     };
     walk(JSON.parse(read(rel)));
   }
 }
-const baseFile = path.join(P, 'design-tokens', 'diki.tokens.json');
+const baseFile = path.join(P, 'design-tokens', 'serupa.tokens.json');
 const DT_BASE = fs.existsSync(baseFile) ? JSON.parse(fs.readFileSync(baseFile, 'utf8')) : {};
 const ALIASES = new Set(groups.color.tokens.filter((x) => x.value && typeof x.value === 'object' && Object.keys(x.value).length > 1).map((x) => x.name));
 function compDefault(tok) {
@@ -81,7 +81,7 @@ function compDefault(tok) {
   if (grp === 'color') return ALIASES.has(name) || TV.has(name) ? `var(--${name})` : null;
   const node = (DT_BASE[grp] || {})[name];
   if (!node) return null;
-  return `var(--${node.$extensions['com.diki'].cssVar.slice(2).replace(/\./g, '\\.')})`;
+  return `var(--${node.$extensions['com.serupa'].cssVar.slice(2).replace(/\./g, '\\.')})`;
 }
 const norm = (v) => v.trim().replace(/^"|"$/g, '').replace(/"/g, "'").replace(/\s+/g, ' ');
 

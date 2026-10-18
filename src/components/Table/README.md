@@ -3,7 +3,7 @@
 A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Rows shade on hover (or every other one with `striped`), can be selected, and columns can be sorted.
 
 ```jsx
-const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell } = window.Diki;
+const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell } = window.Serupa;
 
 <Table caption="Team members">
   <TableHead>

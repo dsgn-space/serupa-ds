@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var T = window.Diki, h = React.createElement;
+  var T = window.Serupa, h = React.createElement;
   function Set(props) {
     return h(T.Tabs, props,
       h(T.TabList, { 'aria-label': 'Project' }, h(T.Tab, { value: 'a' }, 'Overview'), h(T.Tab, { value: 'b', icon: 'history' }, 'Activity'), h(T.Tab, { value: 'c' }, 'Members'), h(T.Tab, { value: 'd', disabled: true }, 'Settings')),

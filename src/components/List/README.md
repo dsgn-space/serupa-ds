@@ -3,7 +3,7 @@
 Rows of related things: people, files, notifications, settings. Each row has a title, an optional muted description, something before it (an Avatar or an icon) and something after it (a date, a Badge, an action). A row can be a link or a button; trailing actions stay outside it, so controls are never nested.
 
 ```jsx
-const { List, ListItem, Avatar, Badge, IconButton } = window.Diki;
+const { List, ListItem, Avatar, Badge, IconButton } = window.Serupa;
 
 <List variant="card" aria-label="Members">
   {people.map((p) => (

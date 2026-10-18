@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:120px 120px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center"></div>
 <script>
-var D = window.Diki, h = React.createElement; window.clicks = 0; window.warns = [];
+var D = window.Serupa, h = React.createElement; window.clicks = 0; window.warns = [];
 var cw = console.warn; console.warn = function (m) { window.warns.push(String(m)); cw.apply(console, arguments); };
 function App() {
   var hit = function () { window.clicks++; };

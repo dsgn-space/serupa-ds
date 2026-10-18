@@ -5,7 +5,7 @@ import { writePage, browser, cleanup, report } from './lib.mjs';
 
 const APP = `<div id="root" style="padding:16px"></div>
 <script>
-var D = window.Diki, h = React.createElement, B = D.Button, T = D.ToggleButton;
+var D = window.Serupa, h = React.createElement, B = D.Button, T = D.ToggleButton;
 window.calls = [];
 function Controlled() {
   var s = React.useState(true);

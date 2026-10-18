@@ -9,7 +9,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 Install a released version straight from GitHub, pinned to its tag:
 
 ```sh
-npm install github:diki-stwn/design-system#v4.8.0
+npm install github:diki-stwn/serupa-ds#v5.0.0
 ```
 
 Pin a tag, never `#main`, so updates reach your project only when you choose. The package builds itself as it installs. Until the first release tag exists, pin the latest commit on `main` instead (`#<commit>`).
@@ -21,10 +21,10 @@ Pin a tag, never `#main`, so updates reach your project only when you choose. Th
 Vite, Next.js, Remix or any bundler. React 18 or later is a peer dependency, so the components use your app's React.
 
 ```js
-import '@diki/design-system/tokens.css';
-import '@diki/design-system/base.css';     // page defaults; skip it when adding the system to an existing app
-import '@diki/design-system/bundle.css';   // or components.css, plus utilities.css if you use the classes
-import { Button, Field, Input } from '@diki/design-system';
+import 'serupa-ds/tokens.css';
+import 'serupa-ds/base.css';     // page defaults; skip it when adding the system to an existing app
+import 'serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
+import { Button, Field, Input } from 'serupa-ds';
 
 export function SignUp() {
   return (
@@ -53,9 +53,9 @@ For router links, set the link component once at startup: `configure({ link: Lin
   <div id="root"></div>
   <script src="dist/lib/react.production.min.js"></script>
   <script src="dist/lib/react-dom.production.min.js"></script>
-  <script src="dist/diki.iife.js"></script>
+  <script src="dist/serupa.iife.js"></script>
   <script>
-    const { Button } = window.Diki;
+    const { Button } = window.Serupa;
     ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Button, null, 'Hello'));
   </script>
 </body>
@@ -64,7 +64,7 @@ For router links, set the link component once at startup: `configure({ link: Lin
 
 ## 3. Pick a theme
 
-`data-theme` on any element picks one of the six themes (`blue-light`, `blue-dark`, `violet-light`, `violet-dark`, `emerald-light`, `emerald-dark`). `theme.js` sets it on the page from `data-brand` and `data-mode`, follows the visitor's light or dark setting, and remembers a choice made with `Diki.theme.set()`. Load it first in `<head>` so the page never flashes the wrong theme. See [Themes](?path=/docs/foundations-themes--docs).
+`data-theme` on any element picks one of the six themes (`blue-light`, `blue-dark`, `violet-light`, `violet-dark`, `emerald-light`, `emerald-dark`). `theme.js` sets it on the page from `data-brand` and `data-mode`, follows the visitor's light or dark setting, and remembers a choice made with `Serupa.theme.set()`. Load it first in `<head>` so the page never flashes the wrong theme. See [Themes](?path=/docs/foundations-themes--docs).
 
 ## 4. Before you ship
 
@@ -81,4 +81,4 @@ npm test            # builds the package and runs every test, including axe in a
 npx changeset       # describe your change and pick patch, minor or major
 ```
 
-Each component lives in `src/components/<Name>/`: the component (`<Name>.tsx`), its styles (`<Name>.css`), its component tokens (`<name>.tokens.json`), its usage guide (`README.md`, shown on its page here), its stories (`<Name>.stories.tsx`), its page (`<Name>.mdx`) and a `preview.html` for the visual tests. Its tests are in `tools/test/`. Write the usage guide from [the template](https://github.com/diki-stwn/design-system/blob/main/docs/usage-guide-template.md) (`docs/usage-guide-template.md`): when to use it, when not to, usage, accessibility, props and component tokens.
+Each component lives in `src/components/<Name>/`: the component (`<Name>.tsx`), its styles (`<Name>.css`), its component tokens (`<name>.tokens.json`), its usage guide (`README.md`, shown on its page here), its stories (`<Name>.stories.tsx`), its page (`<Name>.mdx`) and a `preview.html` for the visual tests. Its tests are in `tools/test/`. Write the usage guide from [the template](https://github.com/diki-stwn/serupa-ds/blob/main/docs/usage-guide-template.md) (`docs/usage-guide-template.md`): when to use it, when not to, usage, accessibility, props and component tokens.

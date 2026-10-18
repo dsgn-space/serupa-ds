@@ -3,7 +3,7 @@
 A button that shows only an icon: a menu trigger, a close button, a toolbar action. It's a [Button](../Button/README.md) with `icon`, and a `label` you can't leave out, because an icon alone has no name for screen readers.
 
 ```jsx
-const { IconButton } = window.Diki;
+const { IconButton } = window.Serupa;
 
 <IconButton icon="more_vert" label="More actions" onClick={openMenu} />
 <IconButton icon="edit" label="Edit" variant="secondary" shape="round" />

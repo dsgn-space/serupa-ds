@@ -9,7 +9,7 @@
 <body>
 <div id="root"></div>
 <script>
-  var D = window.Diki, h = React.createElement, I = D.BreadcrumbItem;
+  var D = window.Serupa, h = React.createElement, I = D.BreadcrumbItem;
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     h(D.Breadcrumb, { 'aria-label': 'Chevron' }, h(I, { href: '#', icon: 'home' }, 'Home'), h(I, { href: '#' }, 'Projects'), h(I, null, 'Website redesign')),
     h(D.Breadcrumb, { separator: 'slash', 'aria-label': 'Slash' }, h(I, { href: '#' }, 'Settings'), h(I, { href: '#' }, 'Team'), h(I, null, 'Members')),

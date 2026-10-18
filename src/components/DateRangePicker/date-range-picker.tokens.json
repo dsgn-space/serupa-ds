@@ -7,7 +7,7 @@
         "$value": "{color.text-muted}",
         "$description": "The dash between the two fields.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-range-picker-dash"
           }
         }
@@ -17,7 +17,7 @@
         "$value": "{color.text-muted}",
         "$description": "\"Choose the start date\" under the months (4.5:1 on surface).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-range-picker-status-color"
           }
         }
@@ -29,7 +29,7 @@
         "$value": "{spacing.spacing-6}",
         "$description": "Space between the two months (24px).",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-range-picker-months-gap"
           }
         }
@@ -39,7 +39,7 @@
         "$value": "{spacing.spacing-24}",
         "$description": "Each field's width (96px), enough for a full date.",
         "$extensions": {
-          "com.diki": {
+          "com.serupa": {
             "cssVar": "--date-range-picker-field-width"
           }
         }

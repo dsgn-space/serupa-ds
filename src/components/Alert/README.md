@@ -3,7 +3,7 @@
 A message about the page or a task: something saved, something to know, something that went wrong. It's a tinted box with an icon, an optional title, a message, optional actions and an optional close button.
 
 ```jsx
-const { Alert, Button } = window.Diki;
+const { Alert, Button } = window.Serupa;
 
 <Alert>Your trial ends in 3 days.</Alert>
 
