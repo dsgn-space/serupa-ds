@@ -53,5 +53,3 @@ Each is an optional override: set it on the page, a container or one element. Th
 | `--container-padding-x` | `spacing-4` | Side padding on small screens (16px). |
 | `--container-padding-x-sm` | `spacing-6` | Side padding from 640px (24px). |
 | `--container-padding-x-lg` | `spacing-8` | Side padding from 1024px (32px). |
-
-These keep the `--container-padding-*` names although the shared width tokens are `--container-<size>` (`--container-2xl`): no width is called `padding`, so the names can't clash, and Navbar reads `--container-padding-x` too so its links line up with the page.
