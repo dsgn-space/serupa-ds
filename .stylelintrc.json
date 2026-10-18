@@ -9,6 +9,27 @@
   ],
   "rules": {
     "no-descending-specificity": null,
-    "no-duplicate-selectors": null
+    "no-duplicate-selectors": null,
+    "property-no-deprecated": [
+      true,
+      {
+        "ignoreProperties": [
+          "-webkit-box-orient"
+        ]
+      }
+    ],
+    "declaration-property-value-no-unknown": [
+      true,
+      {
+        "ignoreProperties": {
+          "mix-blend-mode": [
+            "plus-darker"
+          ],
+          "justify-content": [
+            "baseline"
+          ]
+        }
+      }
+    ]
   }
 }
