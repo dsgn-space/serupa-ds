@@ -10,7 +10,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { cwd: P, encoding: 'utf8', ...opts }).trim();
+const run = (cmd, args, opts = {}) => (execFileSync(cmd, args, { cwd: P, encoding: 'utf8', ...opts }) ?? '').trim();   // null when stdio is inherited
 const pkg = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
 const tag = `v${pkg.version}`;
 
