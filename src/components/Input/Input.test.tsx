@@ -1,0 +1,123 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { page, userEvent } from 'vitest/browser';
+import { color, css, lowContrast, settle } from '../../../tools/test/vitest/helpers';
+import { Input } from './Input';
+
+const field = (id: string) => document.getElementById(id) as HTMLInputElement;
+const box = (id: string) => field(id).parentElement as HTMLElement;
+
+describe('Input', () => {
+  test('a native <input type="text"> in a .dk-input box; md is 32px, text-sm, 12px padding, a 1px border and 6px corners', async () => {
+    await render(<Input id="md" aria-label="Name" />);
+    const s = css(box('md'));
+    expect([field('md').tagName, field('md').type]).toEqual(['INPUT', 'text']);
+    expect(box('md').className).toMatch(/dk-input dk-input--size-md/);
+    expect(box('md').dataset.component).toBe('input');
+    expect([s.height, s.fontSize, s.paddingLeft, s.borderTopWidth, s.borderTopLeftRadius]).toEqual(['32px', '14px', '12px', '1px', '6px']);
+  });
+
+  test('sizes: sm 24px, text-xs, 8px padding; lg 44px, text-base, 16px padding; an unknown size falls back to md', async () => {
+    await render(<>
+      <Input id="sm" size="sm" aria-label="Small" />
+      <Input id="lg" size="lg" aria-label="Large" />
+      {/* @ts-expect-error: an unknown size, as plain JavaScript could pass */}
+      <Input id="bad" size="xl" aria-label="Bad" />
+    </>);
+    const m = (id: string) => { const s = css(box(id)); return [s.height, s.fontSize, s.paddingLeft]; };
+    expect(m('sm')).toEqual(['24px', '12px', '8px']);
+    expect(m('lg')).toEqual(['44px', '16px', '16px']);
+    expect(box('bad').dataset.size).toBe('md');
+  });
+
+  test('ref and attributes go to the <input>, className to the box; a <label htmlFor> names it', async () => {
+    const ref = React.createRef<HTMLInputElement>();
+    await render(<><label htmlFor="a">Name</label><Input id="a" ref={ref} placeholder="Dana" className="extra" data-x="y" /></>);
+    expect(ref.current).toBe(field('a'));
+    expect(box('a').classList.contains('extra')).toBe(true);
+    expect([field('a').dataset.x, field('a').placeholder]).toEqual(['y', 'Dana']);
+    await expect.element(page.getByRole('textbox', { name: 'Name' })).toBeInTheDocument();
+  });
+
+  test('typing updates a controlled value through onChange', async () => {
+    const changes: string[] = [];
+    function App() {
+      const [v, setV] = React.useState('');
+      return <Input id="c" aria-label="Name" value={v} onChange={(e) => { changes.push(e.target.value); setV(e.target.value); }} />;
+    }
+    await render(<App />);
+    await page.getByRole('textbox', { name: 'Name' }).click();
+    await userEvent.keyboard('Kim');
+    expect(field('c').value).toBe('Kim');
+    expect(changes).toEqual(['K', 'Ki', 'Kim']);
+  });
+
+  test('focus: the border and a 1px ring take the focus color; a transparent outline for forced-colors mode', async () => {
+    await render(<Input id="f" aria-label="Focus" />);
+    field('f').focus();
+    await settle(250);
+    const s = css(box('f')), ring = color('var(--focus-ring)');
+    expect(s.borderTopColor).toBe(ring);
+    expect(s.boxShadow).toContain(ring);
+    expect(s.boxShadow).toMatch(/0px 0px 0px 1px/);
+    expect([s.outlineWidth, s.outlineColor]).toEqual(['2px', 'rgba(0, 0, 0, 0)']);
+  });
+
+  test('hover changes the border', async () => {
+    await render(<><Input id="h" aria-label="Hover" /><Input id="r" aria-label="Rest" /></>);
+    await page.getByRole('textbox', { name: 'Hover' }).hover();
+    await settle(250);
+    expect(css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
+  });
+
+  test('invalid: aria-invalid, a danger border and a danger focus ring', async () => {
+    await render(<Input id="i" invalid aria-label="Invalid" />);
+    await settle(300);
+    const danger = color('var(--danger)');
+    expect(field('i').getAttribute('aria-invalid')).toBe('true');
+    expect(css(box('i')).borderTopColor).toBe(danger);
+    field('i').focus();
+    await settle(250);
+    expect(css(box('i')).boxShadow).toContain(danger);
+  });
+
+  test('read-only: a surface-muted background, still focusable; disabled: native disabled, 50%, not-allowed', async () => {
+    await render(<>
+      <Input id="plain" aria-label="Plain" />
+      <Input id="ro" readOnly defaultValue="INV-1" aria-label="Read-only" />
+      <Input id="dis" disabled aria-label="Disabled" />
+    </>);
+    await settle(300);
+    expect(css(box('ro')).backgroundColor).not.toBe(css(box('plain')).backgroundColor);
+    expect(box('ro').className).toMatch(/readonly/);
+    field('ro').focus();
+    expect(document.activeElement).toBe(field('ro'));
+    expect(field('dis').disabled).toBe(true);
+    expect(css(box('dis')).opacity).toBe('0.5');
+    expect(box('dis').className).toMatch(/disabled/);
+    expect(css(field('dis')).cursor).toBe('not-allowed');
+  });
+
+  test('icons: decorative, 16px at md, before and after the field, and they don\'t take clicks', async () => {
+    await render(<Input id="ic" leftIcon="search" rightIcon="mail" aria-label="Icons" />);
+    const w = box('ic'), l = w.querySelector('.dk-input__icon--left')!, r = w.querySelector('.dk-input__icon--right')!;
+    expect([...w.children].map((c) => c.className.split(' ')[0])).toEqual(['dk-input__icon', 'dk-input__field', 'dk-input__icon']);
+    expect(w.firstElementChild).toBe(l);
+    expect(w.lastElementChild).toBe(r);
+    expect([l.getAttribute('aria-hidden'), r.getAttribute('aria-hidden')]).toEqual(['true', 'true']);
+    expect(css(l.querySelector('.dk-icon')).fontSize).toBe('16px');
+    expect(css(l).pointerEvents).toBe('none');
+  });
+
+  test('contrast in all six themes: text and placeholder 4.5:1 on the field; border, focus ring and invalid border 3:1', () => {
+    expect(lowContrast([
+      ['text', 'var(--text)', 'var(--field)', 4.5],
+      ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
+      ['border', 'var(--field-border)', 'var(--field)', 3],
+      ['border on page', 'var(--field-border)', 'var(--surface)', 3],
+      ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
+      ['invalid', 'var(--danger)', 'var(--field)', 3],
+    ])).toEqual([]);
+  });
+});

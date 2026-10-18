@@ -10,3 +10,5 @@ __pycache__/
 storybook-static/
 .release-notes.md
 *.tgz
+__screenshots__/
+.vitest-attachments/

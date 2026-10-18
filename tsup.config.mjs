@@ -6,7 +6,6 @@ import { defineConfig } from 'tsup';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 const define = { __VERSION__: JSON.stringify(version) };
-const COMPONENTS = ['Accordion', 'AccordionItem', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'BreadcrumbItem', 'Button', 'ButtonGroup', 'Calendar', 'Card', 'CardBody', 'CardFooter', 'CardHeader', 'Carousel', 'Checkbox', 'Combobox', 'Container', 'DatePicker', 'DateRangePicker', 'Dialog', 'Divider', 'Drawer', 'EmptyState', 'Fab', 'Field', 'FileUpload', 'Grid', 'Heading', 'Icon', 'IconButton', 'Image', 'Input', 'Kbd', 'Link', 'List', 'ListItem', 'Loader', 'Menu', 'MenuGroup', 'MenuItem', 'MenuSeparator', 'Navbar', 'NavbarLink', 'NumberInput', 'Pagination', 'PasswordInput', 'Popover', 'Progress', 'Radio', 'RadioGroup', 'SearchInput', 'SegmentedControl', 'Select', 'Sidebar', 'SidebarItem', 'SidebarSection', 'Slider', 'Stack', 'Stepper', 'Switch', 'Tab', 'Table', 'TableBody', 'TableCell', 'TableFoot', 'TableHead', 'TableHeaderCell', 'TableRow', 'TabList', 'TabPanel', 'Tabs', 'Text', 'Textarea', 'TimePicker', 'Toaster', 'ToggleButton', 'Tooltip', 'VisuallyHidden'];
 
 // In the browser script, react comes from the page: window.React.
 const windowReact = {
@@ -42,8 +41,7 @@ export default defineConfig([
     define,
     esbuildPlugins: [windowReact],
     banner: {
-      js: `/* @ds-bundle: ${JSON.stringify({ format: 4, namespace: 'Diki', components: COMPONENTS.map((name) => ({ name })) })} */\n`
-        + `/*! Diki Design System v${version} · components (needs React 18+) · CHANGELOG.md */`,
+      js: `/*! Diki Design System v${version} · components (needs React 18+) · CHANGELOG.md */`,
     },
   },
 ]);

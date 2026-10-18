@@ -13,7 +13,7 @@ const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
 fs.mkdirSync(DIR, { recursive: true });
 
-const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')) && c !== 'Cover');
+const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')));
 const { themes } = tokensCss();
 const b = await browser();
 const page = await b.newPage({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });
