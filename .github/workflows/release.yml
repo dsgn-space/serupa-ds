@@ -16,6 +16,7 @@ concurrency: release
 permissions:
   contents: write
   pull-requests: write
+  actions: write   # to start CI on the Release pull request
 
 jobs:
   release:
@@ -35,6 +36,7 @@ jobs:
           python-version: '3.12'
       - run: npm ci
       - uses: changesets/action@v1
+        id: changesets
         with:
           version: npm run version-packages
           publish: npm run release
@@ -42,4 +44,10 @@ jobs:
           commit: 'Release: next version'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # A pull request this workflow opens or updates gets no CI of its own, so start CI on its branch;
+      # the checks land on its head commit, which is what main's required checks look at.
+      - if: steps.changesets.outputs.pullRequestNumber
+        run: gh workflow run ci.yml --ref changeset-release/main
+        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
