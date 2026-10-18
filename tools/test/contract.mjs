@@ -15,9 +15,7 @@ const EXEMPT = {
   VisuallyHidden: { tokens: 'no visual values', preview: 'nothing to see', visual: 'nothing to see' },
 };
 // Known gaps, to be fixed. The check fails when one is fixed, so the entry gets removed and can't come back.
-const GAPS = {
-  Fab: { preview: 'no preview.html yet, so no visual baseline', visual: 'no preview.html yet' },
-};
+const GAPS = {};
 
 // Still tested by a script in tools/test/ instead of <Name>.test.tsx. They move over one at a time; when one
 // gets its own test file, take it off this list (the check fails until you do). Nothing new joins it.

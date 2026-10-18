@@ -15,7 +15,7 @@
   function Opts() { return [h(T.Radio, { key: 1, value: 'day' }, 'Daily'), h(T.Radio, { key: 2, value: 'week' }, 'Weekly'), h(T.Radio, { key: 3, value: 'never' }, 'Never')]; }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     Row('Sizes', [h(T.RadioGroup, { key: 1, size: 'sm', orientation: 'horizontal', defaultValue: 'a', 'aria-label': 'Small' }, h(T.Radio, { value: 'a' }, 'Small')), h(T.RadioGroup, { key: 2, orientation: 'horizontal', defaultValue: 'a', 'aria-label': 'Medium' }, h(T.Radio, { value: 'a' }, 'Medium')), h(T.RadioGroup, { key: 3, size: 'lg', orientation: 'horizontal', defaultValue: 'a', 'aria-label': 'Large' }, h(T.Radio, { value: 'a' }, 'Large'))]),
-    Row('Horizontal', h(T.RadioGroup, { orientation: 'horizontal', defaultValue: 'week', 'aria-label': 'Digest' }, Opts())),
+    Row('Horizontal', h(T.RadioGroup, { orientation: 'horizontal', defaultValue: 'week', 'aria-label': 'Digest' }, h(T.Radio, { value: 'day', 'data-visual-target': 'hover' }, 'Daily'), h(T.Radio, { value: 'week', 'data-visual-target': 'focus' }, 'Weekly'), h(T.Radio, { value: 'never' }, 'Never'))),
     Row('Description', h(T.RadioGroup, { defaultValue: 'pro', 'aria-label': 'Plan' }, h(T.Radio, { value: 'free', description: 'Up to 3 projects.' }, 'Free'), h(T.Radio, { value: 'pro', description: 'Unlimited projects and history.' }, 'Pro'))),
     Row('Invalid', h(T.RadioGroup, { invalid: true, orientation: 'horizontal', 'aria-label': 'Digest (invalid)' }, Opts())),
     Row('Disabled', h(T.RadioGroup, { disabled: true, orientation: 'horizontal', defaultValue: 'day', 'aria-label': 'Digest (disabled)' }, Opts()))

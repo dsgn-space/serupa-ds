@@ -10,13 +10,15 @@
 <div id="root"></div>
 <script>
   var T = window.Serupa, h = React.createElement;
+  // mark: the visual check hovers Members and focuses the selected tab (data-visual-target).
   function Set(props) {
-    return h(T.Tabs, props,
-      h(T.TabList, { 'aria-label': 'Project' }, h(T.Tab, { value: 'a' }, 'Overview'), h(T.Tab, { value: 'b', icon: 'history' }, 'Activity'), h(T.Tab, { value: 'c' }, 'Members'), h(T.Tab, { value: 'd', disabled: true }, 'Settings')),
+    var own = Object.assign({}, props), mark = own.mark; delete own.mark;
+    return h(T.Tabs, own,
+      h(T.TabList, { 'aria-label': 'Project' }, h(T.Tab, { value: 'a', 'data-visual-target': mark ? 'focus' : undefined }, 'Overview'), h(T.Tab, { value: 'b', icon: 'history' }, 'Activity'), h(T.Tab, { value: 'c', 'data-visual-target': mark ? 'hover' : undefined }, 'Members'), h(T.Tab, { value: 'd', disabled: true }, 'Settings')),
       h(T.TabPanel, { value: 'a' }, 'Atlas is on track for the March release.'), h(T.TabPanel, { value: 'b' }, 'Activity'), h(T.TabPanel, { value: 'c' }, 'Members'));
   }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
-    h(Set, { defaultValue: 'a' }),
+    h(Set, { defaultValue: 'a', mark: true }),
     h(Set, { defaultValue: 'b', variant: 'pill', size: 'sm' })
   ));
 </script>

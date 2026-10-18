@@ -12,7 +12,7 @@
   var T = window.Serupa, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     h('div', { className: 'row' },
-      h(T.IconButton, { icon: 'more_vert', label: 'More' }), h(T.IconButton, { icon: 'edit', label: 'Edit', variant: 'secondary' }),
+      h(T.IconButton, { icon: 'more_vert', label: 'More', 'data-visual-target': '' }), h(T.IconButton, { icon: 'edit', label: 'Edit', variant: 'secondary' }),
       h(T.IconButton, { icon: 'share', label: 'Share', variant: 'outline' }), h(T.IconButton, { icon: 'add', label: 'Add', variant: 'primary' }),
       h(T.IconButton, { icon: 'delete', label: 'Delete', destructive: true })),
     h('div', { className: 'row' },
