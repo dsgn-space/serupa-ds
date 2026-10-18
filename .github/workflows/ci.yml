@@ -13,10 +13,56 @@ permissions:
   contents: read
 
 jobs:
+  # Builds the package and Storybook once; every test job downloads them instead of building its own.
+  build:
+    name: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      # --ignore-scripts: npm ci would otherwise run the "prepare" build too, and the next step builds.
+      - run: npm ci --ignore-scripts
+      - name: tokens.css is generated from tokens.json
+        run: node tools/tokens/build.mjs --check
+      - name: Build the package
+        run: npm run build
+      - name: Build Storybook
+        run: npm run build-storybook
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            dist/
+            storybook-static/
+          retention-days: 3
+          if-no-files-found: error
+
+  # The checks that need neither the build nor a browser, beside the build so they don't wait for it.
+  static:
+    name: types and lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Every file carries the same version
+        run: node tools/release.mjs --check
+      - name: Type check
+        run: npm run typecheck
+      - name: Lint (ESLint and Stylelint)
+        run: npm run lint
+
   suite:
     # The suite runs as parallel jobs, one per group (tools/test/run.mjs --group), so a run takes as long as
     # its slowest group instead of all of them in a row.
     name: suite (${{ matrix.group }}${{ matrix.shard && format(' {0}', matrix.shard) || '' }})
+    needs: build
     strategy:
       fail-fast: false
       matrix:
@@ -37,27 +83,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: actions/setup-python@v5
+      # The icon builder and the CSS trimmer the checks group tests are Python.
+      - if: matrix.group == 'checks'
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: tokens.css is generated from tokens.json
-        run: node tools/tokens/build.mjs --check
-      - name: Every file carries the same version
-        if: matrix.group == 'checks'
-        run: node tools/release.mjs --check
-      - name: Type check
-        if: matrix.group == 'checks'
-        run: npm run typecheck
-      - name: Lint (ESLint and Stylelint)
-        if: matrix.group == 'checks'
-        run: npm run lint
-      - name: Build the package
-        run: npm run build
-      - name: Build Storybook
-        if: matrix.group == 'storybook'
-        run: npm run build-storybook
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: ./.github/actions/playwright
       - name: Test suite
         shell: bash
         env:
@@ -85,11 +120,12 @@ jobs:
             tools/test/baseline-visual/*.actual.png
           if-no-files-found: ignore
 
-  # The components on React 19: the package is built as usual (its plain-page React stays 18, which has the
-  # UMD files dist/lib/ ships), then React 19 replaces 18 for the type check, the component tests and the
+  # The components on React 19: the package built above (its plain-page React stays 18, which has the UMD
+  # files dist/lib/ ships), with React 19 in place of 18 for the type check, the component tests and the
   # server render of every component.
   react-19:
     name: React 19
+    needs: build
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -97,12 +133,13 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: Build the package
-        run: npm run build
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+      - uses: ./.github/actions/playwright
       - name: Switch to React 19
-        run: npm install --no-save react@19.2.9 react-dom@19.2.9 @types/react@19.2.18 @types/react-dom@19.2.3
+        run: npm install --no-save --ignore-scripts react@19.2.9 react-dom@19.2.9 @types/react@19.2.18 @types/react-dom@19.2.3
       - name: Type check
         run: npm run typecheck
       - name: Component tests (Vitest)
@@ -112,8 +149,8 @@ jobs:
 
   # One check that passes only when every group passed, under the name the single job used to have.
   test:
-    needs: [suite, react-19]
+    needs: [build, static, suite, react-19]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      - run: test "${{ needs.suite.result }}" = success && test "${{ needs.react-19.result }}" = success
+      - run: test "${{ needs.build.result }}" = success && test "${{ needs.static.result }}" = success && test "${{ needs.suite.result }}" = success && test "${{ needs.react-19.result }}" = success
