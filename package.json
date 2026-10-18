@@ -40,7 +40,11 @@
     "./fonts/*": "./fonts/*",
     "./package.json": "./package.json"
   },
+  "bin": {
+    "serupa-purge": "./bin/serupa-purge.mjs"
+  },
   "files": [
+    "bin/",
     "dist/",
     "tokens.css",
     "tokens.json",

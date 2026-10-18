@@ -23,7 +23,7 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 /* Icon: an inline SVG in a 1em box, drawn in the text color. Material Symbols Rounded, filled (src/material), or
-   one of your custom icons (tools/icons/build.py). */
+   one of your custom icons (tools/icons/build.mjs). */
 /** An icon: Material Symbols Rounded (filled) or one of your custom SVG icons. Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
 export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(props, ref) {
   const [, loadedAll] = React.useReducer((n: number) => n + 1, 0);

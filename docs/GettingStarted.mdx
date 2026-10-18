@@ -68,7 +68,7 @@ For router links, set the link component once at startup: `configure({ link: Lin
 
 ## 4. Before you ship
 
-- **Trim the CSS.** `bundle.css` carries every utility class (nearly 2 MB). `tools/purge.py` in this repo keeps the component styles and only the classes your code uses, usually a few dozen KB. It isn't part of the installed package, so run it from a clone: `python3 tools/purge.py <your src> --css <installed dist/bundle.css> -o bundle.min.css`.
+- **Trim the CSS.** `bundle.css` carries every utility class (nearly 2 MB). `npx serupa-purge src -o public/bundle.min.css`, which comes with the package, keeps the component styles (about 220 KB) and only the utility classes your code uses.
 - **Fonts and icons are included.** `tokens.css` loads Inter from the package's `fonts/` folder, and icons are SVGs inside the components. Nothing loads from another server. Every Material Symbol works by name, such as `<Icon name="category" />`.
 - **Accessibility comes with the components,** but labels are yours: give every field a `Field` label, every icon-only button an `aria-label`, and check each component's Accessibility notes.
 

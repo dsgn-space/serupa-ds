@@ -11,7 +11,7 @@ npm install                       # the build (tsup, TypeScript), React, Playwri
 npx playwright install chromium   # add firefox webkit to run the suite in those too
 ```
 
-Node 24 (`.nvmrc`; 22.18 or later works) and Python 3 (the custom icon build, the Material Symbols build and `purge.py`). Nothing else.
+Node 24 (`.nvmrc`; 22.18 or later works). Nothing else: Python is only needed to rebuild the Material Symbols from the font (`tools/icons/material.py`), which the font never changing makes rare.
 
 ## Build
 
@@ -68,11 +68,11 @@ its own `<Name>.test.tsx`; the contract check fails without one.
 | `button.mjs` | 38 behaviour checks: form submission and `type`, loading (blocks clicks, keys and Enter-key resubmission, keeps focus and name, announces "Loading", centered spinner), links (`href` through `Serupa.configure`, `rel` for new tabs, refs, disabled links without `href`), the API names, native attributes (`form*`, `popoverTarget`, `command`), Icon accessibility, reduced motion, component tokens (overrides on a container and on one button, defaults that follow a nested theme), and that Buttons and Spinners can be unmounted without errors |
 | `button-motion.mjs` | Button's micro-interactions: press (97% while held by pointer or Enter, back on release, the click still fires once, scale only at 100ms), right-icon nudge (off by default; turned on, 2px, mirrored in right-to-left, left icons still), loading cross-fade, ripple (from the press point, covers the far corner, text color at 20%, under the label, no pointer events, removed after release, spreads all the way before fading so a quick click shows the whole wave); none on link, disabled or loading buttons, right-clicks or when your `onPointerDown` prevents the default; your handlers still run; each component token turns its interaction off; reduced motion turns press, nudge and ripple off |
 | `loader.mjs` | Loader: sizes (16/24/40px), the ring (arc on a 20% track, rounded ends, stroke-width-2; turns every 2s while the arc grows from a dot to most of the ring and shrinks every 1.5s; a steady quarter arc turning at 3s under reduced motion) the spokes (eight, iOS proportions, fading to 25% behind the lead spoke, ticking 45° every 125ms, half speed under reduced motion) and dots (three, 1s pulse, 150ms apart); the pixel grid (nine squares, a diagonal wave 100ms per step, 1.5s, half speed under reduced motion, glow off by default; pattern="random": nine distinct clocks and starts; the seven step patterns' orders and timings; the glow prop); tones (text color, `primary` and `muted` on the drawing only, `inverse` white in every theme, nested themes); the text variant (words only, at the type size, hidden from screen readers, the shine's gradient, timing and seamless loop, 4.5:1 for the resting words in all six themes, plain under reduced motion); the skeleton (text lines at each size, the shorter last line, circle and rect sizes and corners, `className` sizing, shrinking beside an avatar, the fill and shimmer, a still fill under reduced motion, its space kept during the delay); component tokens; `role="progressbar"` with its label, decorative with `label=""`, announced through the shared status region; the 300ms delay (space kept, nothing shown or announced, a loader removed in time never shows); ref and attributes pass through; Button's loading uses it, centered at the icon size; reduced motion |
-| `icons.py` | The custom icon build (`tools/icons/build.py`): accepts Figma, Illustrator and outlined exports and draws them in `currentColor`; refuses scripts, event handlers, links, images, text, gradients, masks, DOCTYPEs, other grids, second colors and bad names, each with its reason; repeatable; `--check` notices a stale bundle; a bad file leaves the bundle untouched; the icons now in `bundle.js` and `index.d.ts` are exactly the build's output |
+| `icon-builder.mjs` | The custom icon build (`tools/icons/build.mjs`): accepts Figma, Illustrator and outlined exports and draws them in `currentColor`; refuses scripts, event handlers, links, images, text, gradients, masks, DOCTYPEs, other grids, second colors and bad names, each with its reason; repeatable; `--check` notices a stale bundle; a bad file leaves the bundle untouched; the icons now in `src/icons.ts` and `dist/index.d.ts` are exactly the build's output |
 | `icons.mjs` | Builds two sample icons into a scratch bundle and checks them in the browser: an inline SVG in the 1em box, 24px by default and `size` honoured, the text color (also inline in text and in a nested theme), the same line position as font icons, `aria-hidden` by default and `role="img"` with `aria-label`, Button icon sizes, icon-only and loading, the font for every other name, and real pixels |
 | `visual.mjs` | Each component preview in all six themes, at rest, hovered and focused, compared with `baseline-visual/` (0.2% pixel tolerance for anti-aliasing). Hover and focus act on the element the preview marks with `data-visual-target`, or `data-visual-target="hover"` and `="focus"` when the two states need different elements (an unselected tab to hover, the selected one to focus); focus comes from pressing Tab until it lands on that element or inside it, so `:focus-visible` applies. A preview with no mark uses its first enabled `.dk-btn` (and the first Tab stop for focus); one with neither gets only the rest shot |
-| `page.mjs` | Page groundwork: responsive classes switch at each breakpoint (390–1536px), `base.css` defaults (and that utilities still win), `theme.js` (follows the system live, remembers a choice, `reset()`, ignores bad values), and `purge.py` output renders identically to the full CSS |
-| `compat.mjs` | Cross-browser, through WebDriver: every utility class in Safari (`safaridriver`), Firefox (`geckodriver`) or WebKitGTK compared with Chromium (colors as RGBA, lengths within 1px), browser-support gaps listed with reasons in `KNOWN`; plus responsive classes, `base.css`, `theme.js`, Button behaviour, the Loader's ring, dots, text and skeleton, and `purge.py` output in that engine. Safari: run `safaridriver --enable` once |
+| `page.mjs` | Page groundwork: responsive classes switch at each breakpoint (390–1536px), `base.css` defaults (and that utilities still win), `theme.js` (follows the system live, remembers a choice, `reset()`, ignores bad values), and `serupa-purge` output renders identically to the full CSS |
+| `compat.mjs` | Cross-browser, through WebDriver: every utility class in Safari (`safaridriver`), Firefox (`geckodriver`) or WebKitGTK compared with Chromium (colors as RGBA, lengths within 1px), browser-support gaps listed with reasons in `KNOWN`; plus responsive classes, `base.css`, `theme.js`, Button behaviour, the Loader's ring, dots, text and skeleton, and `serupa-purge` output in that engine. Safari: run `safaridriver --enable` once |
 | `storybook.mjs` | Opens every Storybook docs page and story (from `storybook-static/`): no errors, no missing README sections, and every story passes axe's WCAG 2.1 AA checks in all six themes (text inside a disabled control is exempt from contrast, as WCAG allows). Skipped locally until `npm run build-storybook`; a failure in CI |
 
 When a test fails, it names what changed. If the change is intended, run with `--update` and commit the new baselines with the change.
@@ -107,10 +107,11 @@ node tools/tokens/style-dictionary.config.mjs out/   # build them into CSS with 
 ## Custom icons
 
 ```sh
-python3 tools/icons/build.py                  # build assets/Icons/*.svg into src/icons.ts (then npm run build)
-python3 tools/icons/build.py path/to/svgs     # from another folder
-python3 tools/icons/build.py --check          # exit 1 if the components are out of step (for CI)
-python3 tools/icons/material.py               # Material Symbols as SVG: src/material/ from tools/icons/source/ (needs fonttools, brotli)
+node tools/icons/build.mjs                    # build assets/Icons/*.svg into src/icons.ts (then npm run build)
+node tools/icons/build.mjs path/to/svgs       # from another folder
+node tools/icons/build.mjs --check            # exit 1 if the components are out of step (for CI)
+node tools/icons/builtin.mjs                  # after a component names a new icon: src/material/builtin.ts
+python3 tools/icons/material.py               # rebuild src/material/icons.ts from the font in tools/icons/source/ (needs fonttools, brotli)
 ```
 
 Each file becomes an icon named after the file. The build keeps only shapes, draws them in the text color, and refuses unsafe or off-system files with the reason; the Icon guidelines (`src/components/Icon/README.md`) have the drawing rules. On the design system page, icons dropped into an Icons set are uploads: download them into `assets/Icons/` (or ask Claude) and run the build.
@@ -118,10 +119,10 @@ Each file becomes an icon named after the file. The build keeps only shapes, dra
 ## Trimming CSS for production
 
 ```sh
-python3 tools/purge.py src/ public/index.html -o dist/bundle.min.css
+node bin/serupa-purge.mjs src/ public/index.html -o dist/bundle.min.css   # in a project: npx serupa-purge …
 ```
 
-Scans the sources for class names and writes a copy of `bundle.css` with only the rules they need, plus the component styles, keyframes and variables. A typical page goes from 1.7 MB to a few dozen KB. Class names built at runtime (`"grid-cols-" + n`) can't be found; list them with `--keep grid-cols-2 grid-cols-3` or `--keep @safelist.txt`.
+Scans the sources for class names and writes a copy of `bundle.css` with only the rules they need, plus the component styles, keyframes and variables. A typical page keeps the component styles (about 220 KB) and a few KB of utilities, instead of nearly 2 MB. Class names built at runtime (`"grid-cols-" + n`) can't be found; list them with `--keep grid-cols-2 grid-cols-3` or `--keep @safelist.txt`.
 
 ## Storybook
 

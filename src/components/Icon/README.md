@@ -64,8 +64,8 @@ For what Material Symbols doesn't have, add your own SVG icons. They work everyw
 **Add** them:
 
 1. Put the SVG in `assets/Icons/` (the Icons set on the design system page). The file name is the icon's name: lowercase letters and digits, words joined by `-` or `_`, such as `serupa-sparkle.svg`. A prefix such as `serupa-` keeps your names apart from Material Symbols; a custom icon with the same name as a Material Symbol replaces it everywhere.
-2. Run `python3 tools/icons/build.py` (or `python3 tools/icons/build.py path/to/folder`). It writes the icons into `components/bundle.js` and their names into `components/index.d.ts` (`CustomIconName`), so TypeScript autocompletes them.
-3. Run it again after changing or removing a file. `python3 tools/icons/build.py --check` fails if the components are out of step, for CI.
+2. Run `node tools/icons/build.mjs` (or `node tools/icons/build.mjs path/to/folder`), then `npm run build`. It writes the icons and their names (`CustomIconName`, so TypeScript autocompletes them) into `src/icons.ts`; the build puts them in `dist/`.
+3. Run it again after changing or removing a file. `node tools/icons/build.mjs --check` fails if the components are out of step, for CI.
 
 The build keeps only the shapes and removes editor leftovers (ids, classes, sizes, Figma and Illustrator metadata). It refuses a file, with the reason, when it holds anything that could run code or load something (scripts, event handlers, links, images), anything that isn't a plain shape (text, gradients, masks, filters, `<use>`), another grid, or a second color. A refused file stops the build, and the components stay as they were.
 

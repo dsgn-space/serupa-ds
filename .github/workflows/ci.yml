@@ -83,11 +83,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      # The icon builder and the CSS trimmer the checks group tests are Python.
-      - if: matrix.group == 'checks'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - run: npm ci --ignore-scripts
       - uses: actions/download-artifact@v4
         with:

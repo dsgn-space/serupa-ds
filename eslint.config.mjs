@@ -31,7 +31,7 @@ export default tseslint.config(
   {
     // The tests are Node scripts, but much of their code runs in the page (page.evaluate), where React,
     // ReactDOM and the system's own globals exist; TypeScript-style undefined checks don't apply there.
-    files: ['tools/**/*.mjs', '*.mjs'],
+    files: ['tools/**/*.mjs', 'bin/**/*.mjs', '*.mjs'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
     rules: { 'no-undef': 'off' },
   },

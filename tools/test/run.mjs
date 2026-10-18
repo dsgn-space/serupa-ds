@@ -65,7 +65,7 @@ const steps = [
   ['Select', 'node', [path.join(HERE, 'select.mjs')]],
   ['Radio', 'node', [path.join(HERE, 'radio.mjs')]],
   ['Switch', 'node', [path.join(HERE, 'switch.mjs')]],
-  ['Icon builder', 'python3', ['-I', path.join(HERE, 'icons.py'), PROJECT]],
+  ['Icon builder', 'node', [path.join(HERE, 'icon-builder.mjs'), PROJECT]],
   ['Custom icons', 'node', [path.join(HERE, 'icons.mjs')]],
   ['Visual snapshots', 'node', [path.join(HERE, 'visual.mjs'), ...update]],
   ['Page groundwork', 'node', [path.join(HERE, 'page.mjs')]],

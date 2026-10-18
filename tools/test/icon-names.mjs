@@ -1,10 +1,11 @@
-// Material Symbols as SVG (src/material, built by tools/icons/material.py from the 5.x icon font):
+// Material Symbols as SVG (src/material, built by tools/icons/material.py from the 5.x icon font, the built-in ones by tools/icons/builtin.mjs):
 //   - every Material Symbol works by name and draws exactly as the font did, pixel for pixel at 24px;
 //   - an icon from serupa-ds/icons works through
 //     `icon`, registerIcons() adds a name, an unknown name draws nothing and warns, and on a plain page serupa.iife.js
 //     alone draws any name (serupa-icons.iife.js still loads, for pages that include it).
 //   node tools/test/icon-names.mjs
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { read, writePage, browser, cleanup, report, PROJECT } from './lib.mjs';
 
 const all = new Map([...read('src/material/icons.ts').matchAll(/name: "([a-z0-9_]+)", d: "([^"]+)"/g)].map((m) => [m[1], m[2]]));
@@ -12,6 +13,9 @@ const names = [...all.keys()];
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
+
+const bi = spawnSync(process.execPath, [path.join(PROJECT, 'tools', 'icons', 'builtin.mjs'), '--check'], { encoding: 'utf8' });
+t('src/material/builtin.ts holds every icon the components name (node tools/icons/builtin.mjs)', bi.status === 0, bi.stdout + bi.stderr);
 
 const b = await browser();
 const p = await b.newPage();

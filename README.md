@@ -77,13 +77,15 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. See Founda
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses with `tools/purge.py`. The script isn't in the installed package, so run it from a clone of this repo, pointing at your project's source and the installed CSS:
+`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses with `serupa-purge`, which comes with the package. From your project's folder:
 
 ```sh
-python3 tools/purge.py ../my-app/src --css ../my-app/node_modules/serupa-ds/dist/bundle.css -o ../my-app/public/bundle.min.css
+npx serupa-purge src -o public/bundle.min.css
 ```
 
-That keeps the component styles and usually gives a few dozen KB.
+It reads the installed `bundle.css` (or `--css <file>`); name classes your code builds at runtime with `--keep`.
+
+That keeps the component styles (about 220 KB) and only the utility classes your code uses.
 
 ### What's in the package
 
