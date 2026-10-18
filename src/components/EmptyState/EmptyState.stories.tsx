@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { EmptyState } from './EmptyState';
 import { Button } from '../Button/Button';
 import { Card } from '../Card/Card';
+import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
   title: 'Components/Feedback/EmptyState',
@@ -13,7 +14,7 @@ const meta = {
     description: 'Create a project to start tracking your work.',
     actions: <><Button leftIcon="add">New project</Button><Button variant="outline">Import</Button></>,
   },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] }, variant: { control: 'inline-radio', options: ['plain', 'dashed'] }, actions: { control: false }, icon: { control: 'text' } },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] }, variant: { control: 'inline-radio', options: ['plain', 'dashed'] }, actions: { control: false }, icon: iconArg },
 } satisfies Meta<typeof EmptyState>;
 export default meta;
 type Story = StoryObj<typeof meta>;

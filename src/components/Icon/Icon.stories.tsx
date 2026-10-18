@@ -1,17 +1,22 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Icon } from './Icon';
+import { isIconData } from '../../icons';
+import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
   title: 'Components/Content/Icon',
   component: Icon,
   args: { name: 'home' },
-  argTypes: { name: { control: 'text' }, size: { control: 'number' } },
+  argTypes: { name: iconArg, size: { control: 'number' } },
 } satisfies Meta<typeof Icon>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+// The control passes an everyday icon by name and any other as its imported data (icon={…}), as an app would.
+export const Playground: Story = {
+  render: ({ name, ...args }) => isIconData(name) ? <Icon {...args} icon={name} /> : <Icon {...args} name={name} />,
+};
 
 export const Sizes: Story = {
   render: () => <div className="flex items-end gap-4">{[16, 20, 24, 32, 40].map((s) => <Icon key={s} name="favorite" size={s} />)}</div>,

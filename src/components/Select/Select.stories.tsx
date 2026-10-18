@@ -1,12 +1,13 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Select } from './Select';
+import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
   title: 'Components/Forms/Select',
   component: Select,
   args: { 'aria-label': 'Country', placeholder: 'Choose a country', options: ['Indonesia', 'Malaysia', 'Singapore', 'Thailand'], size: 'md' },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: { control: 'text' } },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: iconArg },
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 } satisfies Meta<typeof Select>;
 export default meta;

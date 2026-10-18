@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, type ButtonAsButtonProps } from './Button';
+import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
   title: 'Components/Actions/Button',
@@ -9,9 +10,9 @@ const meta = {
   argTypes: {
     variant: { control: 'inline-radio', options: ['primary', 'secondary', 'outline', 'ghost', 'link'] },
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
-    leftIcon: { control: 'text' },
-    rightIcon: { control: 'text' },
-    icon: { control: 'text' },
+    leftIcon: iconArg,
+    rightIcon: iconArg,
+    icon: iconArg,
   },
 } satisfies Meta<ButtonAsButtonProps>;
 export default meta;
