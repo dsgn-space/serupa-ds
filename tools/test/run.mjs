@@ -14,6 +14,7 @@ if (arg('--browser')) process.env.SERUPA_BROWSER = arg('--browser');
 const GROUPS = {
   checks: [
     ['Package', 'package.mjs'],
+    ['Package lint', 'package-lint.mjs'],
     ['Component contract', 'contract.mjs'],
     ['Foundation audit', 'foundation.mjs', PROJECT],
     ['Design tokens export', 'design-tokens.mjs', PROJECT],
