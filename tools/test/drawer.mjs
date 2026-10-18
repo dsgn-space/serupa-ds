@@ -61,6 +61,22 @@ await p.click('#opener'); await p.waitForTimeout(400);
 const x = await p.evaluate(() => document.querySelector('#drw .dk-drawer__close').getAttribute('aria-label'));
 await p.click('#drw .dk-drawer__close'); await p.waitForTimeout(100);
 t('the × (a button named "Close") asks to close', x === 'Close' && !(await isOpen()), x);
+// The browser can close the <dialog> on its own (dialog.close(), a form with method="dialog"): it asks to close
+// then too, so open follows and the button opens it again.
+await p.evaluate(() => { window.asks = []; });
+await p.click('#opener'); await p.waitForTimeout(400);
+await p.evaluate(() => document.getElementById('drw').close()); await p.waitForTimeout(100);
+const byClose = await p.evaluate(() => window.asks.join());
+await p.click('#opener'); await p.waitForTimeout(400);
+const again = await isOpen();
+await p.evaluate(() => { const f = document.createElement('form'); f.method = 'dialog'; f.id = 'fdrw'; f.innerHTML = '<button id="fsub">OK</button>'; document.querySelector('#drw .dk-drawer__body').prepend(f); });
+await p.evaluate(() => document.getElementById('fsub').click()); await p.waitForTimeout(100);
+const byForm = await p.evaluate(() => window.asks.join());
+await p.evaluate(() => document.getElementById('fdrw').remove());
+await p.click('#opener'); await p.waitForTimeout(400);
+const again2 = await isOpen();
+t('closed by the browser (dialog.close(), form method="dialog"): asks to close, and opens again next time', byClose === 'false' && again && byForm === 'false,false' && again2, JSON.stringify({ byClose, again, byForm, again2 }));
+await p.evaluate(() => window.setOpen(false)); await p.waitForTimeout(100);
 await reopen(() => window.setBd(false));
 await p.mouse.click(20, 20); await p.waitForTimeout(100);
 t('closeOnBackdrop={false}: a backdrop click leaves it open', await isOpen());

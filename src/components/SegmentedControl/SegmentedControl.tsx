@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
+import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
 
 export interface SegmentedControlOption {
@@ -91,7 +91,7 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
   };
   const checkedUsable = usable.some((o) => o.value === value);
   return (
-    <div {...rest} ref={(n) => { root.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+    <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }}
       role="radiogroup" aria-disabled={disabled || undefined}
       className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", props.className)}
       data-component="segmented-control" data-size={size}>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, oneOf } from "../../internal/cn";
+import { cn, oneOf, setRef } from "../../internal/cn";
 import { Dialog } from "../Dialog/Dialog";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
@@ -56,7 +56,7 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(function Ima
   const frameStyle = typeof ratio === "number" ? { ...(frameProps && frameProps.style), "--dk-image-ratio": String(ratio) } as React.CSSProperties : frameProps && frameProps.style;
   const picture = state === "error"
     ? <span className="dk-image__fallback" role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon name="broken_image" />}</span>
-    : <img {...rest} ref={(n) => { img.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }} src={src} alt={alt} loading={loading || "lazy"}
+    : <img {...rest} ref={(n) => { img.current = n; setRef(ref, n); }} src={src} alt={alt} loading={loading || "lazy"}
         className={cn("dk-image__img", className)} onLoad={(e) => { setState("loaded"); if (onLoad) onLoad(e); }} onError={(e) => { setState("error"); if (onError) onError(e); }} />;
   return (
     <span {...frameProps} style={frameStyle}
