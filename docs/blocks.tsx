@@ -8,7 +8,8 @@ import foundations from './foundations.md?raw';
 import iconNames from './icon-names.json';
 import { Icon } from '../src/components/Icon/Icon';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
-import { customIcons } from '../src/icons';
+import { customIcons, isIconData } from '../src/icons';
+import type { IconData } from '../src/material/types';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -115,29 +116,50 @@ export function TypeScale() {
 export function IconGallery() {
   const [q, setQ] = React.useState('');
   const [copied, setCopied] = React.useState('');
+  const [all, setAll] = React.useState<[string, IconData][] | null>(null);
   const groups: Record<string, string[]> = { ...(iconNames as unknown as Record<string, string[]>) };
   delete groups.$description;
   if (customIcons.length) groups['Your custom icons'] = [...customIcons];
   const term = q.trim().toLowerCase().replace(/\s+/g, '_');
-  const copy = (n: string) => {
-    try { navigator.clipboard.writeText(n); } catch { /* no clipboard: the name still shows */ }
-    setCopied(n);
+  // The full set (about 3 MB) loads only once someone searches.
+  React.useEffect(() => {
+    if (term && !all) import('../src/material/icons').then((m) => setAll(Object.entries(m).filter((e): e is [string, IconData] => isIconData(e[1]))));
+  }, [term, all]);
+  const copy = (text: string) => {
+    try { navigator.clipboard.writeText(text); } catch { /* no clipboard: the text still shows */ }
+    setCopied(text);
   };
   const shown = Object.entries(groups).map(([g, list]) => [g, list.filter((n) => !term || n.includes(term))] as const).filter(([, l]) => l.length);
+  const everyday = new Set(Object.values(groups).flat());
+  const more = term && all ? all.filter(([, d]) => !everyday.has(d.name) && d.name.includes(term)) : [];
+  const LIMIT = 120;
+  const tile = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer', font: 'inherit' } as const;
+  const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))', gap: 8 } as const;
+  const label = { fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' } as const;
   // sb-unstyled: keeps Storybook's docs styles off the buttons.
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
     <div style={{ maxWidth: 320 }}><SearchInput aria-label="Find an icon" placeholder="Find an icon, such as arrow" value={q} onChange={(e) => setQ(e.target.value)} /></div>
-    <p role="status" style={{ margin: 0, minHeight: 20, color: 'var(--text-muted)' }}>{copied ? <>Copied <code>{copied}</code></> : 'Click an icon to copy its name.'}</p>
-    {shown.length ? shown.map(([g, list]) => <section key={g}>
+    <p role="status" style={{ margin: 0, minHeight: 20, color: 'var(--text-muted)' }}>{copied ? <>Copied <code>{copied}</code></> : 'Click an icon to copy its name, or for other icons its import.'}</p>
+    {shown.map(([g, list]) => <section key={g}>
       <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600 }}>{g}</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))', gap: 8 }}>
-        {list.map((n) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer', font: 'inherit' }}>
+      <div style={grid}>
+        {list.map((n) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`} style={tile}>
           <Icon name={n} />
-          <span style={{ fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' }}>{n}</span>
+          <span style={label}>{n}</span>
         </button>)}
       </div>
-    </section>) : <p>No everyday icon matches. Find it in the full set at <a href="https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols">fonts.google.com/icons</a> (Rounded, Fill on) and import it from <code>serupa-ds/icons</code>.</p>}
+    </section>)}
+    {term ? <section>
+      <h3 style={{ margin: '0 0 4px', fontSize: 16, fontWeight: 600 }}>More Material Symbols{all ? ` (${more.length})` : ''}</h3>
+      <p style={{ margin: '0 0 8px', color: 'var(--text-muted)', fontSize: 14 }}>These aren't everyday icons, so they don't work by name. Click one to copy its import, then pass it to the icon prop, such as <code>{'icon={Category}'}</code>.</p>
+      {!all ? <p style={{ margin: 0 }}>Loading the full set…</p> : more.length ? <div style={grid}>
+        {more.slice(0, LIMIT).map(([exp, d]) => <button key={exp} type="button" onClick={() => copy(`import { ${exp} } from "serupa-ds/icons";`)} title={`import { ${exp} } from "serupa-ds/icons"`} style={tile}>
+          <Icon icon={d} />
+          <span style={label}>{exp}</span>
+        </button>)}
+      </div> : <p style={{ margin: 0 }}>No other icon matches.</p>}
+      {more.length > LIMIT ? <p style={{ margin: '8px 0 0', color: 'var(--text-muted)', fontSize: 14 }}>Showing {LIMIT} of {more.length}. Type more of the name to narrow it down.</p> : null}
+    </section> : null}
   </div>;
 }
 

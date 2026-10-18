@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Badge } from './Badge';
+import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
   title: 'Components/Feedback/Badge',
@@ -9,7 +10,7 @@ const meta = {
   argTypes: {
     variant: { control: 'inline-radio', options: ['subtle', 'solid', 'outline'] },
     tone: { control: 'select', options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'] },
-    leftIcon: { control: 'text' },
+    leftIcon: iconArg,
     size: { table: { disable: true } },
   },
 } satisfies Meta<typeof Badge>;

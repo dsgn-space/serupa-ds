@@ -1,12 +1,13 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from './Input';
+import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
   title: 'Components/Forms/Input',
   component: Input,
   args: { placeholder: 'you@example.com', 'aria-label': 'Email', size: 'md' },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: { control: 'text' }, rightIcon: { control: 'text' } },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: iconArg, rightIcon: iconArg },
 } satisfies Meta<typeof Input>;
 export default meta;
 type Story = StoryObj<typeof meta>;
