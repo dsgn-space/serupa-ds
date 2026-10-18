@@ -24,3 +24,26 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+// Shows the given toasts while the story is open (they stay until closed), and clears them when it closes.
+function Showing(props: { position?: React.ComponentProps<typeof Toaster>['position']; toasts: Parameters<typeof toast>[0][] }) {
+  React.useEffect(() => { props.toasts.forEach((o) => toast(typeof o === 'string' ? { title: o, duration: 0 } : { duration: 0, ...o })); return () => toast.dismiss(); }, []);
+  return <Toaster position={props.position} />;
+}
+
+export const Tones: Story = {
+  render: (args) => <Showing position={args.position} toasts={[
+    'Link copied',
+    { title: 'New version available', description: 'Reload to update.', tone: 'info' },
+    { title: 'Changes saved', tone: 'success' },
+    { title: 'Storage almost full', description: 'You’ve used 9.6 of 10 GB.', tone: 'warning' },
+    { title: 'Upload failed', description: 'The file is over 10 MB.', tone: 'danger' },
+  ]} />,
+};
+export const WithAction: Story = {
+  render: (args) => <Showing position={args.position} toasts={[{ title: 'Moved to trash', description: 'Atlas and 3 files.', action: { label: 'Undo', onClick: () => {} } }]} />,
+};
+export const TopCenter: Story = {
+  args: { position: 'top-center' },
+  render: (args) => <Showing position={args.position} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
+};
