@@ -1,4 +1,4 @@
-import { COMMON_ICONS } from "./material/common";
+import * as MATERIAL from "./material/icons";
 import type { IconData } from "./material/types";
 
 /* Custom icons: your own SVGs, built in by tools/icons/build.py. Each is the inner markup of a
@@ -19,11 +19,12 @@ export function hasIcon(name: unknown): name is string {
   return typeof name === "string" && Object.prototype.hasOwnProperty.call(ICONS, name);
 }
 
-/* Material Symbols by name: the everyday set (src/material/common.ts) and any icon a project registers. */
-const NAMED = new Map<string, IconData>(COMMON_ICONS.map((i) => [i.name, i]));
+/* Material Symbols by name: every icon in src/material/icons.ts, and any icon a project registers. */
+const NAMED = new Map<string, IconData>();
+for (const v of Object.values(MATERIAL)) if (isIconData(v)) NAMED.set(v.name, v);
 
-/** Makes Material Symbols work by name (`<Icon name="rocket_launch" />`, `leftIcon="rocket_launch"`).
- * Pass icons, or a whole module: `registerIcons(RocketLaunch, Pets)` or `registerIcons(await import("serupa-ds/icons"))`. */
+/** Adds icons that work by name. Every Material Symbol already does; use this for an icon of your own in the same shape
+ * (`{ name, d }`, drawn on Material's 960-unit grid): `registerIcons(MyIcon)` or a whole module. */
 export function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void {
   for (const x of icons) {
     if (isIconData(x)) NAMED.set(x.name, x);

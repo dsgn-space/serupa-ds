@@ -5,11 +5,11 @@ import { Markdown } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
 import foundations from './foundations.md?raw';
-import iconNames from './icon-names.json';
+import * as MATERIAL from '../src/material/icons';
 import { Icon } from '../src/components/Icon/Icon';
+import { Button } from '../src/components/Button/Button';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
 import { customIcons, isIconData } from '../src/icons';
-import type { IconData } from '../src/material/types';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -112,54 +112,42 @@ export function TypeScale() {
   </div>)}</div>;
 }
 
-/** A searchable gallery of icons (docs/icon-names.json) and your custom icons; a click copies an icon's name. */
+const MATERIAL_ICONS = (Object.values(MATERIAL) as unknown[]).filter(isIconData).sort((x, y) => x.name.localeCompare(y.name));
+
+/** Every Material Symbol, plus your custom icons: search by name, and a click copies an icon's name. */
 export function IconGallery() {
   const [q, setQ] = React.useState('');
   const [copied, setCopied] = React.useState('');
-  const [all, setAll] = React.useState<[string, IconData][] | null>(null);
-  const groups: Record<string, string[]> = { ...(iconNames as unknown as Record<string, string[]>) };
-  delete groups.$description;
-  if (customIcons.length) groups['Your custom icons'] = [...customIcons];
+  const [limit, setLimit] = React.useState(240);
   const term = q.trim().toLowerCase().replace(/\s+/g, '_');
-  // The full set (about 3 MB) loads only once someone searches.
-  React.useEffect(() => {
-    if (term && !all) import('../src/material/icons').then((m) => setAll(Object.entries(m).filter((e): e is [string, IconData] => isIconData(e[1]))));
-  }, [term, all]);
+  React.useEffect(() => setLimit(240), [term]);
   const copy = (text: string) => {
     try { navigator.clipboard.writeText(text); } catch { /* no clipboard: the text still shows */ }
     setCopied(text);
   };
-  const shown = Object.entries(groups).map(([g, list]) => [g, list.filter((n) => !term || n.includes(term))] as const).filter(([, l]) => l.length);
-  const everyday = new Set(Object.values(groups).flat());
-  const more = term && all ? all.filter(([, d]) => !everyday.has(d.name) && d.name.includes(term)) : [];
-  const LIMIT = 120;
+  const custom = customIcons.filter((n) => !term || n.includes(term));
+  const material = MATERIAL_ICONS.filter((d) => !term || d.name.includes(term));
   const tile = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer', font: 'inherit' } as const;
   const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))', gap: 8 } as const;
   const label = { fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' } as const;
+  const heading = { margin: '0 0 8px', fontSize: 16, fontWeight: 600 } as const;
+  const tileFor = (n: string, icon: React.ReactNode) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`} style={tile}>
+    {icon}
+    <span style={label}>{n}</span>
+  </button>;
   // sb-unstyled: keeps Storybook's docs styles off the buttons.
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
     <div style={{ maxWidth: 320 }}><SearchInput aria-label="Find an icon" placeholder="Find an icon, such as arrow" value={q} onChange={(e) => setQ(e.target.value)} /></div>
-    <p role="status" style={{ margin: 0, minHeight: 20, color: 'var(--text-muted)' }}>{copied ? <>Copied <code>{copied}</code></> : 'Click an icon to copy its name, or for other icons its import.'}</p>
-    {shown.map(([g, list]) => <section key={g}>
-      <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600 }}>{g}</h3>
-      <div style={grid}>
-        {list.map((n) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`} style={tile}>
-          <Icon name={n} />
-          <span style={label}>{n}</span>
-        </button>)}
-      </div>
-    </section>)}
-    {term ? <section>
-      <h3 style={{ margin: '0 0 4px', fontSize: 16, fontWeight: 600 }}>More Material Symbols{all ? ` (${more.length})` : ''}</h3>
-      <p style={{ margin: '0 0 8px', color: 'var(--text-muted)', fontSize: 14 }}>These aren't everyday icons, so they don't work by name. Click one to copy its import, then pass it to the icon prop, such as <code>{'icon={Category}'}</code>.</p>
-      {!all ? <p style={{ margin: 0 }}>Loading the full set…</p> : more.length ? <div style={grid}>
-        {more.slice(0, LIMIT).map(([exp, d]) => <button key={exp} type="button" onClick={() => copy(`import { ${exp} } from "serupa-ds/icons";`)} title={`import { ${exp} } from "serupa-ds/icons"`} style={tile}>
-          <Icon icon={d} />
-          <span style={label}>{exp}</span>
-        </button>)}
-      </div> : <p style={{ margin: 0 }}>No other icon matches.</p>}
-      {more.length > LIMIT ? <p style={{ margin: '8px 0 0', color: 'var(--text-muted)', fontSize: 14 }}>Showing {LIMIT} of {more.length}. Type more of the name to narrow it down.</p> : null}
+    <p role="status" style={{ margin: 0, minHeight: 20, color: 'var(--text-muted)' }}>{copied ? <>Copied <code>{copied}</code></> : 'Click an icon to copy its name.'}</p>
+    {custom.length ? <section>
+      <h3 style={heading}>Your custom icons</h3>
+      <div style={grid}>{custom.map((n) => tileFor(n, <Icon name={n} />))}</div>
     </section> : null}
+    <section>
+      <h3 style={heading}>Material Symbols ({material.length})</h3>
+      {material.length ? <div style={grid}>{material.slice(0, limit).map((d) => tileFor(d.name, <Icon icon={d} />))}</div> : <p style={{ margin: 0 }}>No icon matches.</p>}
+      {material.length > limit ? <div style={{ marginTop: 8 }}><Button variant="secondary" size="sm" onClick={() => setLimit(limit + 480)}>Show more ({material.length - limit} left)</Button></div> : null}
+    </section>
   </div>;
 }
 

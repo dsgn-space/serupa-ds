@@ -2,19 +2,19 @@ import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
 import { ICONS, hasIcon, getIcon, isIconData, type CustomIconName } from "../../icons";
-import type { CommonIconName } from "../../material/common";
+import type { MaterialIconName } from "../../material/icons";
 import type { IconData } from "../../material/types";
 
-/** A custom icon's name, one of the everyday Material Symbols, or any name you registered with registerIcons. */
-export type IconName = CustomIconName | CommonIconName | (string & {});
+/** Any Material Symbol's name, a custom icon's name, or a name you registered with registerIcons. */
+export type IconName = CustomIconName | MaterialIconName | (string & {});
 
 /** What icon props (Button's leftIcon, IconButton's icon…) take: an icon name, an icon from serupa-ds/icons
  * (`leftIcon={Add}`), or any element. */
 export type IconSource = IconName | IconData | React.ReactNode;
 
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /** A custom icon's name, or a Material Symbols name that works by name: the everyday set (Foundations/Icons) or
-   * one you registered with registerIcons. A custom icon with the same name wins. Give `name` or `icon`. */
+  /** Any Material Symbols name (search them on Foundations/Icons), a custom icon's name, or one you registered with
+   * registerIcons. A custom icon with the same name wins. Give `name` or `icon`. */
   name?: IconName;
   /** A Material Symbols icon imported from serupa-ds/icons: `icon={ArrowForward}`. Give `name` or `icon`. */
   icon?: IconData;
@@ -41,7 +41,7 @@ export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(p
     );
   }
   const data = props.icon || (props.name != null ? getIcon(props.name) : undefined);
-  if (!data) warnOnce("icon:" + name, `Icon: "${name}" isn't an everyday icon or a registered one. Import it from serupa-ds/icons (icon={…}) or call registerIcons() once.`);
+  if (!data) warnOnce("icon:" + name, `Icon: "${name}" isn't a Material Symbol or one of your icons. Check the name on the Icons page (Foundations/Icons).`);
   return (
     <span {...rest} ref={ref} className={cn("dk-icon", props.className)} style={style}>
       {data && <svg viewBox="0 -960 960 960" fill="currentColor" aria-hidden focusable="false"><path d={data.d} /></svg>}

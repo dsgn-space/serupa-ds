@@ -91,6 +91,6 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   Toaster: Serupa.Toaster,
   Tooltip: Serupa.Tooltip,
   customIcons: Serupa.customIcons,   // names of your custom icons
-  registerIcons: Serupa.registerIcons,   // make more Material Symbols work by name (serupa-icons.iife.js registers them all)
+  registerIcons: Serupa.registerIcons,   // add icons of your own that work by name (every Material Symbol already does)
   getIcon: Serupa.getIcon
 });

@@ -1,6 +1,9 @@
 ---
-"serupa-ds": patch
+"serupa-ds": minor
 ---
 
-- Docs: every icon control in Storybook (Button, Badge, Input, Select, EmptyState, Icon) is now a list of all 3,776 Material Symbols instead of a text box. Everyday icons are passed by name; the others, marked "(import)", are passed as imported icons, the same way an app uses them.
-- Docs: the Foundations/Icons search also finds icons outside the everyday set, shows them, and copies their import line (`import { Category } from "serupa-ds/icons";`) when clicked.
+- Every Material Symbol (all 3,776) now works by name: `<Icon name="category" />`, `leftIcon="category"`. Names autocomplete in TypeScript through the new `MaterialIconName` type. Imported icons (`icon={Category}`) still work.
+- Removed: the `CommonIconName` type and the "everyday icons" list (`docs/icon-names.json`). Every name works now, so there's nothing to pick from. Migration: use `IconName` or `MaterialIconName` instead of `CommonIconName`.
+- Size: the package's main entry now carries every icon, about 520 KB more gzipped.
+- `serupa-icons.iife.js` is no longer needed on plain pages; it's kept, empty, so pages that include it keep working.
+- Docs: every icon control in Storybook (Button, Badge, Input, Select, EmptyState, Icon) is a list of every icon name instead of a text box, and the Foundations/Icons page shows all of them with search; a click copies the name. The icon test now checks every icon against the 5.x font, not only the everyday ones.
