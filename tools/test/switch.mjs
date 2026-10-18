@@ -48,9 +48,9 @@ t('ref, name and attributes go to the <input>, className to the label; named by 
 await p.click('label.extra .dk-switch__label'); await p.mouse.move(0, 0); await p.waitForTimeout(150);
 const on = await box('md'), prim = await col('var(--primary)'), onp = await col('var(--on-primary)');
 t('a click on the label turns a controlled switch on through onChange; on: a primary track and the thumb at the end (2px in) in on-primary', on.checked && on.bg === prim && on.endGap === 2 && on.thumbBg === onp && await p.evaluate(() => window.changes.join() === 'true' && document.getElementById('md').checked), JSON.stringify(on));
-const snap = await p.accessibility.snapshot({ root: await p.$('#md') }).catch(() => null);
+const snap = await p.locator('#md').ariaSnapshot().catch(() => null);   // e.g. - switch "Wi-Fi" [checked]
 await p.focus('#sm'); await p.keyboard.press('Space'); await p.waitForTimeout(100);
-t('Space flips it from the keyboard; it is announced as a checked switch', (await box('sm')).checked && (!snap || (snap.role === 'switch' && snap.checked === true)), JSON.stringify(snap));
+t('Space flips it from the keyboard; it is announced as a checked switch', (await box('sm')).checked && /^- switch\b.*\[checked\]/.test(snap || ''), snap);
 const desc = await p.evaluate(() => { const i = document.getElementById('desc'), d = i.closest('label').querySelector('.dk-switch__description'); return { by: i.getAttribute('aria-describedby'), id: d.id, color: getComputedStyle(d).color }; });
 t('description: a muted second line in aria-describedby', desc.by === desc.id && desc.color === await col('var(--text-muted)'), JSON.stringify(desc));
 const st = await box('start'), bare = await box('bare');
