@@ -1,0 +1,70 @@
+/*! Serupa v7.1.2 by Diki · base.css */
+/* Serupa base: page defaults. Optional — load it after tokens.css and before bundle.css on pages
+   built with the system; leave it out when the system is dropped into an existing app.
+   Every value is a token. It sets defaults only (all selectors are :where(), so any class wins). */
+@layer dk.tokens, dk.base, dk.components, dk.utilities;
+@layer dk.base {
+
+/* Sizing includes padding and border everywhere, the way components are measured. */
+:where(*, *::before, *::after) { box-sizing: border-box; }
+
+/* Native controls, scrollbars and form fields follow the theme's light or dark mode. */
+:where(:root) { color-scheme: light; }
+:where([data-theme$="-dark"]) { color-scheme: dark; }
+
+:where(html) {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(body) {
+  margin: var(--spacing-0);
+  background-color: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Form controls use the page's type instead of the browser's. */
+:where(button, input, select, textarea) { font: inherit; letter-spacing: inherit; color: inherit; }
+
+/* Media fits its container and keeps its proportions. */
+:where(img, svg, video, canvas, picture) { display: block; max-width: var(--sizing-full); }
+:where(img, video) { height: var(--sizing-auto); }
+
+/* Headings and paragraphs: no browser margins; space them with the spacing utilities. */
+:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) { margin: var(--spacing-0); }
+:where(h1, h2, h3, h4, h5, h6) { text-wrap: balance; }
+:where(p) { text-wrap: pretty; }
+
+:where(a) { color: var(--primary); text-underline-offset: var(--underline-offset-2); }
+:where(a:hover) { color: var(--primary-hover); }
+
+:where(hr) { border: var(--border-width-0); border-top: var(--border-width-1) solid var(--border); margin: var(--spacing-0); }
+
+:where(code, kbd, samp, pre) { font-family: var(--font-mono); }
+
+::selection { background-color: var(--primary-subtle); color: var(--text); }   /* pseudo-elements can't go inside :where(); a utility on the element still wins */
+
+::placeholder { color: var(--placeholder); opacity: var(--opacity-100); }
+
+/* One visible focus style for every focusable element (WCAG 2.4.7); components may draw their own. */
+:where(:focus-visible) {
+  outline: var(--outline-width-2) solid var(--focus-ring);
+  outline-offset: var(--outline-offset-2);
+}
+
+/* Hidden means hidden, even on elements that set their own display. */
+:where([hidden]:not([hidden="until-found"])) { display: none !important; }
+
+/* Respect reduced motion across the page: no smooth scrolling, near-instant transitions. */
+@media (prefers-reduced-motion: reduce) {
+  :where(html) { scroll-behavior: auto; }
+  :where(*, *::before, *::after) { transition-duration: var(--duration-0) !important; scroll-behavior: auto !important; }
+}
+}

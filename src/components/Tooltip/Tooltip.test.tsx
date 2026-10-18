@@ -1,0 +1,162 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, settle } from '../../../tools/test/vitest/helpers';
+import { Dialog } from '../Dialog/Dialog';
+import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
+import { Tooltip } from './Tooltip';
+
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+// The tooltip an element points at, through aria-describedby or aria-labelledby.
+const tipOf = (id: string) => {
+  const a = el(id), ids = (a.getAttribute('aria-describedby') || a.getAttribute('aria-labelledby') || '').split(' ');
+  return ids.map((i) => document.getElementById(i)).find((x) => x && x.getAttribute('role') === 'tooltip') as HTMLElement;
+};
+const isOpen = (id: string) => { const t = tipOf(id); return !t.hidden && getComputedStyle(t).display !== 'none'; };
+const rect = (e: Element) => e.getBoundingClientRect();
+// Distances in CSS px: the test page may be drawn scaled, which leaves layout px a fraction off.
+const near = (a: number, b: number) => Math.abs(a - b) <= 1;
+const away = () => userEvent.hover(document.body, { position: { x: 500, y: 20 } });
+
+describe('Tooltip', () => {
+  test('wiring: the tooltip (role tooltip) describes its element, keeping an existing aria-describedby; role="label" names it instead', async () => {
+    await render(<>
+      <Tooltip content="Edit the file"><IconButton id="a" icon="edit" label="Edit" noTitle aria-describedby="other" /></Tooltip>
+      <Tooltip content="Settings" role="label"><button id="b"><Icon name="settings" /></button></Tooltip>
+    </>);
+    const a = el('a'), b = el('b');
+    expect(a.getAttribute('aria-describedby')!.split(' ')[0]).toBe('other');
+    expect([tipOf('a').getAttribute('role'), tipOf('a').dataset.component]).toEqual(['tooltip', 'tooltip']);
+    expect([!!document.getElementById(b.getAttribute('aria-labelledby')!), b.getAttribute('aria-describedby')]).toEqual([true, null]);
+    expect(isOpen('a')).toBe(false);
+  });
+
+  test('hover: shows after the 400ms delay, above and centered, 6px away, in the top layer; leaving hides it after a short grace', async () => {
+    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file"><button id="a">Edit</button></Tooltip></div>);
+    await userEvent.hover(el('a'));
+    await settle(200);
+    expect(isOpen('a')).toBe(false);
+    await settle(350);
+    const t = tipOf('a'), a = el('a');
+    expect([isOpen('a'), t.dataset.side, t.matches(':popover-open')]).toEqual([true, 'top', true]);
+    expect(near(rect(a).top - rect(t).bottom, 6)).toBe(true);
+    expect(near(rect(t).left + rect(t).width / 2, rect(a).left + rect(a).width / 2)).toBe(true);
+    await away();
+    await settle(50);
+    expect(isOpen('a')).toBe(true);
+    await settle(150);
+    expect(isOpen('a')).toBe(false);
+  });
+
+  test('the pointer can move onto the tooltip without it closing (hoverable); Escape hides it even while hovered (dismissible)', async () => {
+    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file"><button id="a">Edit</button></Tooltip></div>);
+    await userEvent.hover(el('a'));
+    await settle(500);
+    await userEvent.hover(tipOf('a'));
+    await settle(300);
+    expect(isOpen('a')).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    expect(isOpen('a')).toBe(false);
+  });
+
+  test('keyboard focus shows it at once; moving on hides it; bottom puts it 6px below; right-start to the right, tops lined up; a press hides it', async () => {
+    await render(<div style={{ padding: '120px 200px', display: 'flex', gap: '24px' }}>
+      <Tooltip content="First"><button id="a">A</button></Tooltip>
+      <Tooltip content="Below" placement="bottom"><button id="b">B</button></Tooltip>
+      <Tooltip content="On the right" placement="right-start"><button id="c">Right</button></Tooltip>
+    </div>);
+    await userEvent.keyboard('{Tab}');
+    expect([document.activeElement!.id, isOpen('a')]).toEqual(['a', true]);
+    await userEvent.keyboard('{Tab}');
+    const b = tipOf('b');
+    expect([isOpen('a'), isOpen('b'), b.dataset.side, near(rect(b).top - rect(el('b')).bottom, 6)]).toEqual([false, true, 'bottom', true]);
+    await userEvent.keyboard('{Tab}');
+    const c = tipOf('c');
+    expect([isOpen('c'), c.dataset.side, near(rect(c).left - rect(el('c')).right, 6), near(rect(c).top, rect(el('c')).top)]).toEqual([true, 'right', true, true]);
+    await userEvent.click(el('c'));
+    expect(isOpen('c')).toBe(false);
+  });
+
+  test('controlled: hovering only asks (onOpenChange(true)); open decides. disabled: never shows', async () => {
+    const opens: boolean[] = [];
+    let setOpen: (v: boolean) => void = () => {};
+    function Controlled() {
+      const [open, set] = React.useState(false); setOpen = set;
+      return <Tooltip content="Controlled" open={open} onOpenChange={(v) => { opens.push(v); }}><button id="d">Controlled</button></Tooltip>;
+    }
+    await render(<><Controlled /><Tooltip content="Never" disabled delay={0}><button id="e">Disabled</button></Tooltip></>);
+    await userEvent.hover(el('d'));
+    await settle(500);
+    expect([isOpen('d'), opens.join()]).toEqual([false, 'true']);
+    React.act(() => setOpen(true));
+    expect(isOpen('d')).toBe(true);
+    await userEvent.hover(el('e'));
+    await settle(100);
+    expect(isOpen('e')).toBe(false);
+  });
+
+  test('no room above: it flips below and stays on screen; an overflow: hidden parent can\'t clip it', async () => {
+    await render(<>
+      <div style={{ position: 'fixed', top: '0px', left: '300px' }}><Tooltip content="Flipped" delay={0}><button id="g">Top edge</button></Tooltip></div>
+      <div style={{ overflow: 'hidden', width: '60px', height: '30px', position: 'relative', margin: '120px 200px' }}><Tooltip content="Not clipped by overflow hidden" delay={0}><button id="h">Clip</button></Tooltip></div>
+    </>);
+    await userEvent.hover(el('g'));
+    await settle(100);
+    const g = rect(tipOf('g'));
+    expect([tipOf('g').dataset.side, g.top >= 0 && g.left >= 0 && g.right <= innerWidth && g.bottom <= innerHeight]).toEqual(['bottom', true]);
+    await userEvent.hover(el('h'));
+    await settle(100);
+    const t = tipOf('h'), r = rect(t), hit = document.elementFromPoint(r.left + 4, r.top + r.height / 2);
+    expect(t.contains(hit)).toBe(true);
+  });
+
+  test('new text while open places it again, still centered', async () => {
+    const tip = (content: string) => <div style={{ padding: '120px 200px' }}><Tooltip content={content} open><button id="n">Name</button></Tooltip></div>;
+    const { rerender } = await render(tip('Short'));
+    await rerender(tip('A much longer line of text than before'));
+    await settle(50);
+    const t = rect(tipOf('n')), a = rect(el('n'));
+    expect(near(t.left + t.width / 2, a.left + a.width / 2)).toBe(true);
+  });
+
+  test('look: text-xs, 6px corners, 4px 8px padding, 240px at most; --tooltip-bg overrides one', async () => {
+    await render(<Tooltip content="Tokens" delay={0} style={{ '--tooltip-bg': 'rgb(1, 2, 3)' } as React.CSSProperties}><button id="f">Tokens</button></Tooltip>);
+    await userEvent.hover(el('f'));
+    await settle(100);
+    const s = getComputedStyle(tipOf('f'));
+    expect([s.backgroundColor, s.fontSize, s.borderTopLeftRadius, s.padding, s.maxWidth]).toEqual(['rgb(1, 2, 3)', '12px', '6px', '4px 8px', '240px']);
+  });
+
+  test('in a Dialog: Escape hides the tooltip and leaves the Dialog open; the next Escape closes the Dialog', async () => {
+    function InDialog() {
+      const [open, setOpen] = React.useState(false);
+      return <><button id="dopen" onClick={() => setOpen(true)}>Open dialog</button>
+        <Dialog id="tdlg" open={open} onOpenChange={setOpen} title="In a dialog"><Tooltip content="Inside" delay={0}><button id="i">Inside</button></Tooltip></Dialog></>;
+    }
+    await render(<InDialog />);
+    await userEvent.click(el('dopen'));
+    await settle(300);
+    await userEvent.hover(el('i'));
+    await settle(100);
+    expect(isOpen('i')).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    await settle(100);
+    expect([isOpen('i'), (el('tdlg') as HTMLDialogElement).open]).toEqual([false, true]);
+    await userEvent.keyboard('{Escape}');
+    await settle(100);
+    expect((el('tdlg') as HTMLDialogElement).open).toBe(false);
+  });
+
+  test('contrast: the text keeps 4.5:1 on the tooltip in all six themes', async () => {
+    await render(<Tooltip content="Settings" open><button id="b">B</button></Tooltip>);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const s = getComputedStyle(tipOf('b')), r = contrast(s.color, s.backgroundColor);
+      if (r < 4.5) low.push(`${th} ${r.toFixed(2)}`);
+    }
+    expect(low).toEqual([]);
+  });
+});

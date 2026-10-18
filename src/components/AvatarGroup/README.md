@@ -1,0 +1,80 @@
+# AvatarGroup
+
+Avatars in an overlapping row, such as the people on a project or the assignees of a task. Avatars past `max` fold into a "+N" avatar at the end.
+
+```tsx
+import { Avatar, AvatarGroup } from "serupa-ds";
+
+<AvatarGroup label="Assigned to" max={3}>
+  <Avatar name="Ada Lovelace" src="/ada.jpg" />
+  <Avatar name="Grace Hopper" />
+  <Avatar name="Alan Turing" />
+  <Avatar name="Katherine Johnson" />
+</AvatarGroup>
+
+<AvatarGroup label="Members" size="sm" total={members.length}>
+  {members.slice(0, 5).map((m) => <Avatar key={m.id} name={m.name} src={m.photo} />)}
+</AvatarGroup>
+```
+
+## When to use
+
+- Showing who's involved in something at a glance: a project's members, a task's assignees, who's viewing a document.
+- A compact list of people where the faces matter more than the names, and the row has little room.
+
+## When not to use
+
+- One person: use [Avatar](../Avatar/README.md) on its own.
+- When people need to read, compare or act on the names (remove a member, change a role): use [List](../List/README.md) with an Avatar in each row instead.
+- A long, complete list of people, such as a team directory: use [Table](../Table/README.md) or List; "+N" hides who's there.
+
+## Usage
+
+- Give the group a `label` that says what the people are to the thing ("Assigned to", "Members"), so a screen reader hears more than a run of names.
+- Keep `max` small (3 to 5). Past that, the row reads as texture rather than people.
+- When you only have some of the people loaded, pass `total` so "+N" counts everyone not shown.
+- Use one `size` for the group; mixed sizes in one row look like a mistake.
+- Put the names on hover by wrapping each Avatar in a [Tooltip](../Tooltip/README.md), and show the full list behind "+N" with a Tooltip or [Popover](../Popover/README.md) around the group.
+- On a background other than `surface`, set `--avatar-group-ring` to that color so the rings blend in.
+
+## Behavior
+
+- Each avatar overlaps the one before by 8px (xs, sm), 12px (md, lg) or 16px (xl); earlier ones sit on top, so every status dot shows. The overlap uses logical margins, so the row runs right to left in RTL.
+- Each avatar has a 2px ring in `surface`. On another background, set `--avatar-group-ring` to that color.
+- Past 99, "+N" reads "99+" (past 9 at `xs`, "9+") so it fits; its name keeps the exact count ("116 more").
+- Wrap an avatar in a Tooltip to show the name on hover; it still lines up with the others.
+- To show who's in "+N", wrap the group in a Tooltip or Popover with the full list.
+
+## Accessibility
+
+- **Role and name:** `role="group"`, named by `label`. Each avatar keeps its own name (and status), so a screen reader reads every person shown, then "N more".
+- **Keyboard:** nothing of its own. Avatars inside links or Tooltips are reached by Tab as usual.
+- **Contrast:** the "+N" text keeps 4.5:1 on its background in all six themes (`tools/test/avatar-group.mjs`).
+- **What's still yours:** a `label` for the group, and a `name` on every Avatar.
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `children` | `<Avatar>` elements | | The avatars, in order. Each can sit inside a Tooltip or a link, and fragments are opened up. |
+| `max` | `number` | all | The most avatars to show; the rest become "+N". |
+| `total` | `number` | the number of children | How many there are in all, when you pass only some. "+N" counts the ones not shown. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Every avatar's size, wrapped ones included. It wins over each avatar's own `size`. |
+| `label` | `string` | | The group's accessible name, such as "Assigned to". |
+| `moreLabel` | `(count) => string` | `"N more"` | What a screen reader hears for "+N". |
+
+`ref`, `className` and other props go to the outer `<div>`.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one group. The list lives in `src/components/AvatarGroup/avatar-group.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--avatar-group-ring` | `surface` | The ring around each avatar, which keeps the overlapping edges clear. Set it to the background the group sits on. |
+| `--avatar-group-more-bg` | `secondary` | The "+N" avatar's background. |
+| `--avatar-group-more-color` | `text` | The "+N" text (4.5:1 on more-bg). |
+| `--avatar-group-ring-width` | `border-width-2` | The ring's width (2px). |
+| `--avatar-group-overlap-sm` | `spacing-2` | How far each avatar overlaps the one before at size xs and sm (8px). |
+| `--avatar-group-overlap-md` | `spacing-3` | The overlap at size md, the default, and lg (12px). |
+| `--avatar-group-overlap-lg` | `spacing-4` | The overlap at size xl (16px). |
