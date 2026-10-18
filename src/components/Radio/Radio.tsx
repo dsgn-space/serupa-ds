@@ -1,16 +1,16 @@
 import * as React from "react";
 import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 
-export interface RadioGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
+/** V is the radios' value type: string (or number) as you use them, inferred from value or onChange. */
+export interface RadioGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The radios' name; a generated one by default. */
   name?: string;
   /** The picked value (controlled); null or undefined for none. Use with onChange. */
-  value?: string | number | null;
+  value?: V | null;
   /** The value picked at first (uncontrolled). */
-  defaultValue?: string | number;
+  defaultValue?: V;
   /** Called with the picked radio's value and the change event. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- public API; narrowing it to string | number is a breaking change, so it waits for 5.0.0
-  onChange?: (value: any, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: V, event: React.ChangeEvent<HTMLInputElement>) => void;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
   orientation?: 'vertical' | 'horizontal';
   /** The radios' size, unless a Radio sets its own. */
@@ -53,7 +53,7 @@ const RadioContext = React.createContext<RadioContextValue | null>(null);
 const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onChange: 1, orientation: 1, size: 1, invalid: 1, disabled: 1, required: 1, children: 1, className: 1 } as const;
 
 /** One choice from a set of Radios: a <div role="radiogroup"> that names them, holds the value and passes size, invalid, disabled and required down. Label it with Field group, aria-label or aria-labelledby. */
-export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup(props, ref) {
+export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup(props: RadioGroupProps, ref) {
   const rest = omit(props, GROUP_OWN);
   const autoName = domId("dk-rg", React.useId());
   const controlled = props.value !== undefined;
@@ -62,14 +62,14 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(func
   const orientation = props.orientation === "horizontal" ? "horizontal" : "vertical";
   const onChange = props.onChange;
   const ctx: RadioContextValue = { name: props.name || autoName, value: cur, size: props.size, invalid: invalid, disabled: !!props.disabled, required: !!props.required,
-    select: function (v, e) { if (!controlled) setPicked(v); if (onChange) onChange(v, e); } };
+    select: function (v, e) { if (!controlled) setPicked(v); if (onChange) onChange(v as string | number, e); } };
   return (
     <div {...rest} ref={ref} role="radiogroup" aria-invalid={invalid || undefined} aria-required={props.required || undefined} aria-disabled={props.disabled || undefined}
       className={cn("dk-radio-group", "dk-radio-group--" + orientation, invalid && "dk-radio-group--invalid", props.className)} data-component="radio-group" data-orientation={orientation}>
       <RadioContext.Provider value={ctx}>{props.children}</RadioContext.Provider>
     </div>
   );
-});
+}) as (<V extends string | number = string | number>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
 RadioGroup.displayName = "RadioGroup";
 
 /* Radio: a native radio and its label, like Checkbox. In a RadioGroup it takes the group's name, checked state,

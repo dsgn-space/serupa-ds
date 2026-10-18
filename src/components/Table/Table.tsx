@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, oneOf, omit } from "../../internal/cn";
+import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
@@ -49,7 +49,7 @@ export const Table = React.forwardRef<HTMLTableElement, TableProps>(function Tab
   const size = oneOf(["sm", "md"] as const, props.size, "md");
   const frame = React.useRef<HTMLDivElement>(null);
   const [scrolls, setScrolls] = React.useState(false);
-  const cid = "dk-tc" + React.useId().replace(/:/g, "");
+  const cid = domId("dk-tc", React.useId());
   React.useEffect(() => {
     const el = frame.current;
     if (!el || typeof ResizeObserver === "undefined") return;

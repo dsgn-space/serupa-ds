@@ -17,9 +17,9 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 npm install github:diki-stwn/design-system#v4.8.0
 ```
 
-Always pin a tag (`#v4.8.0`), never `#main`, so an update only reaches your project when you choose it. The package builds itself as it installs (about 20 seconds). Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v4.8.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
-> **Until the first release tag exists**, pin a commit instead: `npm install github:diki-stwn/design-system#<commit>`, using the latest commit on `main`. Swap it for a tag once one is published.
+> **Until the first release tag exists**, pin a commit instead: `npm install github:diki-stwn/design-system#<commit>`, using the latest commit on `main`. A commit isn't prebuilt, so that install builds the package first (about 20 seconds). Swap it for a tag once one is published.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
 
@@ -43,7 +43,7 @@ export function SignUp() {
 }
 ```
 
-React 18 or later is a peer dependency, so the components use your app's React, and they render on the server too. Types ship with the package.
+React 18 or 19 is a peer dependency (CI tests both), so the components use your app's React, and they render on the server too. Types ship with the package.
 
 Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, dk, app;` (the `dk.*` layers sit inside `dk`).
 

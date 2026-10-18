@@ -1,18 +1,17 @@
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 
-type SliderValue = number | [number, number];
-export interface SliderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
+export type SliderValue = number | [number, number];
+/** V is a number for one thumb or [low, high] for a range, inferred from value, defaultValue or the callbacks. */
+export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
   /** The value (controlled): a number, or [low, high] for a range with two thumbs. Use with onValueChange. */
-  value?: SliderValue;
+  value?: V;
   /** The value at first (uncontrolled). Default: min. */
-  defaultValue?: SliderValue;
+  defaultValue?: V;
   /** Called with the new value as it moves (dragging, keys). */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- public API; narrowing it to SliderValue is a breaking change, so it waits for 5.0.0
-  onValueChange?: (value: any) => void;
+  onValueChange?: (value: V) => void;
   /** Called once when a drag or key press ends: for saving or fetching. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- as onValueChange
-  onValueCommit?: (value: any) => void;
+  onValueCommit?: (value: V) => void;
   /** Default: 0. */
   min?: number;
   /** Default: 100. */
@@ -60,7 +59,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Sli
   const drag = React.useRef<number | null>(null);
   const disabled = !!props.disabled;
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
-  const out = (vs: number[]) => (isRange ? [vs[0], vs[1]] : vs[0]);
+  const out = (vs: number[]): SliderValue => (isRange ? [vs[0], vs[1]] : vs[0]);
   const text = (v: number) => (props.formatValue ? props.formatValue(v) : String(v));
 
   const set = (i: number, v: number) => {
@@ -70,7 +69,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Sli
     if (n === vs[i]) return vs;
     vs[i] = n;
     latest.current = vs;
-    if (!controlled) setOwn(out(vs) as SliderValue);
+    if (!controlled) setOwn(out(vs));
     if (props.onValueChange) props.onValueChange(out(vs));
     return vs;
   };
@@ -137,5 +136,5 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Sli
       {props.name ? vals.map((v, i) => <input key={"in" + i} type="hidden" name={props.name} value={v} disabled={disabled} />) : null}
     </div>
   );
-});
+}) as (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
 Slider.displayName = "Slider";
