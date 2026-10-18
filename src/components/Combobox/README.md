@@ -42,7 +42,7 @@ const [owner, setOwner] = React.useState<string | null>(null);
 ## Accessibility
 
 - The ARIA combobox pattern: `role="combobox"` with `aria-expanded`, `aria-controls`, `aria-autocomplete="list"` and `aria-activedescendant`, and a `role="listbox"` of `role="option"` items with `aria-selected`. Empty and loading messages are `role="status"`.
-- Labels and descriptions keep 4.5:1, even on the highlighted option, and the chevron 3:1, in all six themes (`tools/test/combobox.mjs`).
+- Labels and descriptions keep 4.5:1, even on the highlighted option, and the chevron 3:1, in all six themes (`Combobox.test.tsx`).
 
 ### Keyboard
 

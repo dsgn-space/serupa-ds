@@ -48,7 +48,6 @@ const steps = [
   ['NumberInput', 'node', [path.join(HERE, 'number-input.mjs')]],
   ['Slider', 'node', [path.join(HERE, 'slider.mjs')]],
   ['SegmentedControl', 'node', [path.join(HERE, 'segmented-control.mjs')]],
-  ['Combobox', 'node', [path.join(HERE, 'combobox.mjs')]],
   ['Icon names', 'node', [path.join(HERE, 'icon-names.mjs')]],
   ['Stepper', 'node', [path.join(HERE, 'stepper.mjs')]],
   ['Kbd', 'node', [path.join(HERE, 'kbd.mjs')]],

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { cn, domId, isInvalid, omit, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
-import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
+import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
+import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { asIcon, Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
@@ -129,22 +129,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
   };
 
   // Place the list under the field, in the top layer, as wide as the field at least.
-  useIsoLayoutEffect(() => {
-    const p = pop.current, b = box.current;
-    if (!p) return;
-    if (!open || !b) { hideLayer(p); return; }
-    showLayer(p);
-    const update = () => {
-      p.style.minWidth = b.offsetWidth + "px";
-      const r = place(b.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, "bottom-start", cssLength(p, "--dk-combobox-offset"), "bottom-start");
-      p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
-    };
-    update();
-    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
-    if (ro) { ro.observe(p); ro.observe(b); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
-  }, [open]);
+  useAnchoredLayer(open, pop, box, { placement: "bottom-start", offsetVar: "--dk-combobox-offset", matchWidth: true });
   React.useEffect(() => {
     if (!open || active < 0 || !pop.current) return;
     const el = pop.current.querySelector<HTMLElement>("#" + base + "-opt-" + active);
