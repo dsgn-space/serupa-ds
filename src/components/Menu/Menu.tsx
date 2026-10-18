@@ -1,7 +1,8 @@
 import * as React from "react";
 import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { config } from "../../internal/config";
-import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
+import { type Placement } from "../../internal/position";
+import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { asIcon, type IconSource } from "../Icon/Icon";
 
 /** The trigger element's props this component reads and adds to. */
@@ -46,38 +47,17 @@ export function Menu(props: MenuProps): React.ReactElement {
   const ctx = React.useMemo(() => ({ close }), [close]);
   const items = () => menuRef.current ? Array.from(menuRef.current.querySelectorAll<HTMLElement>(ITEMS)) : [];
 
+  // A press outside the menu and its button closes it (focus stays where the press put it).
+  useAnchoredLayer(open, menuRef, triggerRef, { placement: props.placement, fallback: "bottom-start", offsetVar: "--dk-menu-offset", onOutside: () => close(false), inside: triggerRef });
+  // On open, focus goes to the first item (or the last, opened with ↑).
   useIsoLayoutEffect(() => {
-    const menu = menuRef.current, trigger = triggerRef.current;
-    if (!menu) return;
-    if (!open || !trigger) { hideLayer(menu); return; }
-    showLayer(menu);
-    const update = () => {
-      const r = place(trigger.getBoundingClientRect(), { width: menu.offsetWidth, height: menu.offsetHeight }, props.placement, cssLength(menu, "--dk-menu-offset"), "bottom-start");
-      menu.style.left = r.x + "px"; menu.style.top = r.y + "px"; menu.dataset.side = r.side;
-    };
-    update();
+    const menu = menuRef.current;
+    if (!open || !menu) return;
     const list = items();
     const target = focusOn.current === "last" ? list[list.length - 1] : list[0];
     focusOn.current = null;
     if (target) target.focus(); else menu.focus();
-    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
-    if (ro) { ro.observe(menu); ro.observe(trigger); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
-  }, [open, props.placement]);
-
-  // A press outside the menu and its button closes it (focus stays where the press put it).
-  React.useEffect(() => {
-    if (!open) return;
-    const down = (e: PointerEvent) => {
-      const t = e.target as Node;
-      if (menuRef.current && menuRef.current.contains(t)) return;
-      if (triggerRef.current && triggerRef.current.contains(t)) return;
-      close(false);
-    };
-    document.addEventListener("pointerdown", down, true);
-    return () => document.removeEventListener("pointerdown", down, true);
-  }, [open, close]);
+  }, [open]);
 
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const list = items(), i = list.indexOf(document.activeElement as HTMLElement);

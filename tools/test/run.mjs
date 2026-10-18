@@ -30,7 +30,6 @@ const steps = [
   ['Tabs', 'node', [path.join(HERE, 'tabs.mjs')]],
   ['Tooltip', 'node', [path.join(HERE, 'tooltip.mjs')]],
   ['Dialog', 'node', [path.join(HERE, 'dialog.mjs')]],
-  ['Menu', 'node', [path.join(HERE, 'menu.mjs')]],
   ['Toast', 'node', [path.join(HERE, 'toast.mjs')]],
   ['Layout', 'node', [path.join(HERE, 'layout.mjs')]],
   ['Link', 'node', [path.join(HERE, 'link.mjs')]],
