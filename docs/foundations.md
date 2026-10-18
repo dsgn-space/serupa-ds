@@ -232,7 +232,7 @@ Text rules of thumb:
 
 Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. Each icon is an inline SVG, so there's nothing to load and nothing flashes.
 
-Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Names work for the everyday icons, which are the ones on the Foundations/Icons page in Storybook plus the ones the components use. Any other Material Symbol is an import, `import { RocketLaunch } from "serupa-ds/icons"` then `icon={RocketLaunch}`, and only the icons you import ship. `registerIcons(RocketLaunch)` makes its name work too. Details are in the Icon guidelines.
+Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations/Icons page in Storybook, which searches all of them and copies the name. You can also pass an icon imported from `serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
 
 - **Sizes:** 14px (`sm` buttons), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows), 24px (default, toolbars and navigation), 40px+ (empty states).
 - **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `success`, `warning`, `danger` or `info` for status.

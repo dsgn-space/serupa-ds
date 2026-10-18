@@ -10,11 +10,7 @@ const { Icon, Button } = window.Serupa;
 <Icon name="error" aria-label="Error" />   // meaningful: announced as "Error"
 <Button leftIcon="add">New project</Button>
 <Button variant="ghost" icon="settings" aria-label="Settings" />
-
-// any other Material Symbol: import it (only what you import ships)
-import { RocketLaunch } from "serupa-ds/icons";
-<Icon icon={RocketLaunch} />
-<Button leftIcon={RocketLaunch}>Launch</Button>
+<Icon name="rocket_launch" />              // any of the ~3,800 Material Symbols works by name
 ```
 
 ## When to use
@@ -37,18 +33,16 @@ Find icons in the Material Symbols catalog (Rounded style) at fonts.google.com/i
 - Before drawing a custom icon, check that Material Symbols doesn't already have one for that meaning.
 - One icon per meaning across the product: `delete`, not `delete` in one place and `remove` in another.
 
-### Setup: by name or by import
+### Setup: by name
 
 There's no font to load. Every icon is an SVG drawn in the page, so it shows at once and nothing flashes while a file loads.
 
-- **By name** (`name="add"`, `leftIcon="add"`): works for the **everyday icons**, about 270 of them. These are every icon on the Foundations → Icons page and every icon the components use. They ship with the components.
-- **By import** (`icon={Add}`, `leftIcon={Add}`): works for all ~3,800 Material Symbols. `import { Add } from "serupa-ds/icons"` adds only the icons you import to your bundle.
-- **Register a name once** to use any other icon by name across your app: `registerIcons(RocketLaunch, Pets)` at startup, then `name="rocket_launch"` works everywhere. `registerIcons(await import("serupa-ds/icons"))` registers them all.
-- **On a plain page** (`serupa.iife.js`), the everyday icons work by name. Add `<script src="…/serupa-ds/dist/serupa-icons.iife.js">` after it and every name works (that script is about 3 MB).
+- **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations → Icons page in Storybook: search, then click to copy its name. They all ship with the package (about 520 KB gzipped).
+- **An imported icon works too** (`icon={Category}` with `import { Category } from "serupa-ds/icons"`), the same icon either way.
+- **On a plain page** (`serupa.iife.js`), every name works. `serupa-icons.iife.js` is no longer needed; it's kept, empty, for pages that still include it.
+- `registerIcons({ name, d })` adds an icon of your own in Material's shape (`d` on the 960-unit grid) under a name.
 
-A name that's neither everyday nor registered draws an empty 1em box and logs a console warning saying how to add it.
-
-The everyday set is `docs/icon-names.json` plus the names used in the source. To add or remove an everyday icon, edit that file and run `python3 tools/icons/material.py`. The icon test fails until you do.
+A name that isn't a Material Symbol or one of your icons draws an empty 1em box and logs a console warning.
 
 ### Custom icons
 
@@ -121,14 +115,14 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `name` | `IconName`: a custom icon's name, an everyday Material Symbol, or a name you registered | | Give `name` or `icon`. A custom icon with the same name as a Material Symbol wins. Custom and everyday names autocomplete. |
+| `name` | `IconName`: any Material Symbol's name, a custom icon's name, or a name you registered | | Give `name` or `icon`. A custom icon with the same name as a Material Symbol wins. All names autocomplete. |
 | `icon` | `IconData`: a Material Symbol imported from `serupa-ds/icons` | | Give `name` or `icon`: `icon={ArrowForward}`. |
 | `size` | `number \| string` | 24px, or the button's icon size inside a Button | Pixels as a number, or any CSS length. Sets the font size; the icon is 1em square. |
 | `aria-label` | `string` | | Makes the icon meaningful: `role="img"` with this name. Without it (or `aria-labelledby`) the icon is `aria-hidden`. |
 
 `className`, `style`, `ref` and other `<span>` props go to the outer `<span>`, which has `data-icon` with the icon's name.
 
-Also exported: `registerIcons(...icons)` makes Material Symbols work by name, and `getIcon(name)` returns the one registered under a name. Every icon prop in the system (Button's `leftIcon`, `rightIcon` and `icon`, IconButton and Fab's `icon`, Input's icons, and the rest) takes a name, an imported icon or any element (`IconSource`).
+Also exported: `registerIcons(...icons)` adds icons that work by name, `getIcon(name)` returns the Material Symbol (or registered icon) for a name, and the `MaterialIconName` type lists every name. Every icon prop in the system (Button's `leftIcon`, `rightIcon` and `icon`, IconButton and Fab's `icon`, Input's icons, and the rest) takes a name, an imported icon or any element (`IconSource`).
 
 ## Component tokens
 

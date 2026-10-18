@@ -22,7 +22,7 @@ const only = process.env.SERUPA_BUILD;
 export default defineConfig([
   ...(only === 'iife' ? [] : [{
     entry: { index: 'src/index.ts', icons: 'src/material/index.ts' },
-    splitting: false,   // index.js carries only the everyday icons; icons.js has them all
+    splitting: false,
     format: ['esm'],
     outExtension: () => ({ js: '.js' }),
     target: 'es2019',
