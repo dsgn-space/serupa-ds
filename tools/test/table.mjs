@@ -70,12 +70,12 @@ t('size sm: 8px top and bottom; striped: every other row shaded; no aria-selecte
 await p.hover('#tsm tbody tr:first-child td');
 t('striped rows don\'t change on hover', (await st('#tsm tbody tr', ['backgroundColor'])).backgroundColor === 'rgba(0, 0, 0, 0)');
 const order = () => p.evaluate(() => [...document.querySelectorAll('#tsort tbody tr td:first-child')].map((x) => x.textContent).join());
-const s0 = await p.evaluate(() => { const th = document.getElementById('hsort'), b = th.querySelector('button'); return { sort: th.getAttribute('aria-sort'), btn: b && b.type, name: b && b.textContent, cap: document.querySelector('#tsort caption').getBoundingClientRect().width }; });
-t('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table', s0.sort === null && s0.btn === 'button' && s0.name === 'Callsunfold_more' && s0.cap <= 1, JSON.stringify(s0));
+const s0 = await p.evaluate(() => { const th = document.getElementById('hsort'), b = th.querySelector('button'); return { sort: th.getAttribute('aria-sort'), btn: b && b.type, name: b && b.textContent, icon: b && b.querySelector('.dk-icon')?.dataset.icon, cap: document.querySelector('#tsort caption').getBoundingClientRect().width }; });
+t('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table', s0.sort === null && s0.btn === 'button' && s0.name === 'Calls' && s0.icon === 'unfold_more' && s0.cap <= 1, JSON.stringify(s0));
 await p.focus('#hsort button'); await p.keyboard.press('Enter');
-const s1 = [await p.evaluate(() => document.getElementById('hsort').getAttribute('aria-sort')), await order(), await p.evaluate(() => document.querySelector('#hsort .dk-icon').textContent)];
+const s1 = [await p.evaluate(() => document.getElementById('hsort').getAttribute('aria-sort')), await order(), await p.evaluate(() => document.querySelector('#hsort .dk-icon').dataset.icon)];
 await p.keyboard.press('Space');
-const s2 = [await p.evaluate(() => document.getElementById('hsort').getAttribute('aria-sort')), await order(), await p.evaluate(() => document.querySelector('#hsort .dk-icon').textContent)];
+const s2 = [await p.evaluate(() => document.getElementById('hsort').getAttribute('aria-sort')), await order(), await p.evaluate(() => document.querySelector('#hsort .dk-icon').dataset.icon)];
 t('pressing it calls onSort: aria-sort and the arrow follow the order', s1.join('|') === 'ascending|Grace,Linus,Ada|arrow_upward' && s2.join('|') === 'descending|Ada,Linus,Grace|arrow_downward', JSON.stringify([s1, s2]));
 const sb = await p.evaluate(() => { const b = document.querySelector('#hsort button'), r = b.getBoundingClientRect(), th = b.parentElement.getBoundingClientRect(), s = getComputedStyle(b); return { full: Math.round(r.width) === Math.round(th.width), just: s.justifyContent, outline: s.outlineStyle }; });
 t('the sort button fills the header, lines up with align="end", and shows a focus ring', sb.full && sb.just === 'flex-end' && sb.outline === 'solid', JSON.stringify(sb));

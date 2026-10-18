@@ -63,7 +63,7 @@ t('rounded by default (8px); rounded={false} is square', sizes.square.radius ===
 const slow = await p.evaluate(() => { const f = document.querySelector('[data-testid=slow]'); return { state: f.dataset.state, img: getComputedStyle(f.querySelector('img')).opacity, bg: getComputedStyle(f).backgroundColor, want: getComputedStyle(document.body).getPropertyValue('--surface-muted') }; });
 release(); await p.waitForTimeout(200);
 t('while loading: the picture is hidden and the frame shows the placeholder fill; then it appears', slow.state === 'loading' && slow.img === '0' && (await box('slow')).state === 'loaded', JSON.stringify(slow));
-const br = await p.evaluate(() => { const f = document.querySelector('[data-testid=broken]'), fb = f.querySelector('.dk-image__fallback'); return { state: f.dataset.state, img: !!f.querySelector('img'), role: fb.getAttribute('role'), label: fb.getAttribute('aria-label'), icon: fb.textContent, h: Math.round(f.getBoundingClientRect().height) }; });
+const br = await p.evaluate(() => { const f = document.querySelector('[data-testid=broken]'), fb = f.querySelector('.dk-image__fallback'); return { state: f.dataset.state, img: !!f.querySelector('img'), role: fb.getAttribute('role'), label: fb.getAttribute('aria-label'), icon: fb.querySelector('.dk-icon')?.dataset.icon, h: Math.round(f.getBoundingClientRect().height) }; });
 t('on error: a broken-image icon named by the alt text (role="img") keeps the frame', br.state === 'error' && !br.img && br.role === 'img' && br.label === 'Team photo' && br.icon === 'broken_image' && br.h === 200, JSON.stringify(br));
 t('fallback replaces the icon', await p.$eval('[data-testid=custom] .dk-image__fallback', (x) => x.textContent === 'No logo'));
 

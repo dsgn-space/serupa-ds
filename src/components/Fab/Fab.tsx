@@ -1,4 +1,5 @@
 import * as React from "react";
+import type { IconSource } from "../Icon/Icon";
 import { cn, oneOf } from "../../internal/cn";
 import { ButtonBase, type ButtonAsButtonProps } from "../Button/Button";
 
@@ -6,7 +7,7 @@ export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start
 
 export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'variant' | 'size' | 'aria-label'> {
   /** The icon: a custom or Material Symbols name ("add") or any element. */
-  icon: React.ReactNode;
+  icon: IconSource;
   /** What the button does. Shown next to the icon when extended; otherwise its aria-label and title. */
   label: string;
   /** Shows the label next to the icon (an extended FAB). Default: false. */

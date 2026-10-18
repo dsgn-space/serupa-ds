@@ -50,7 +50,7 @@ export type { GridProps } from "./components/Grid/Grid";
 import { Heading } from "./components/Heading/Heading";
 export type { HeadingLevel, HeadingProps, HeadingSize } from "./components/Heading/Heading";
 import { Icon } from "./components/Icon/Icon";
-export type { IconName, IconProps } from "./components/Icon/Icon";
+export type { IconName, IconProps, IconSource } from "./components/Icon/Icon";
 import { IconButton } from "./components/IconButton/IconButton";
 export type { IconButtonProps } from "./components/IconButton/IconButton";
 import { Image } from "./components/Image/Image";
@@ -119,11 +119,13 @@ export type { TooltipProps } from "./components/Tooltip/Tooltip";
 export type { Placement } from "./internal/position";
 import { configure } from "./internal/config";
 export type { SerupaConfig } from "./internal/config";
-import { customIcons } from "./icons";
+import { customIcons, getIcon, registerIcons } from "./icons";
 export type { CustomIconName } from "./icons";
+export type { IconData } from "./material/types";
+export type { CommonIconName } from "./material/common";
 export type { SerupaTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, Grid, Heading, Icon, IconButton, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, SearchInput, SegmentedControl, Select, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -137,7 +139,7 @@ declare global {
       Accordion: typeof Accordion; AccordionItem: typeof AccordionItem; Alert: typeof Alert; Avatar: typeof Avatar; AvatarGroup: typeof AvatarGroup; Badge: typeof Badge;
       Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Button: typeof Button; buttonClass: typeof buttonClass;
       ButtonGroup: typeof ButtonGroup; Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader;
-      Calendar: typeof Calendar; Carousel: typeof Carousel; Checkbox: typeof Checkbox; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; customIcons: typeof customIcons;
+      Calendar: typeof Calendar; Carousel: typeof Carousel; Checkbox: typeof Checkbox; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; customIcons: typeof customIcons; registerIcons: typeof registerIcons; getIcon: typeof getIcon;
       DatePicker: typeof DatePicker; DateRangePicker: typeof DateRangePicker; Dialog: typeof Dialog; Divider: typeof Divider; Drawer: typeof Drawer; EmptyState: typeof EmptyState; Fab: typeof Fab; Field: typeof Field; FileUpload: typeof FileUpload; formatFileSize: typeof formatFileSize;
       Grid: typeof Grid; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Image: typeof Image; initials: typeof initials; Input: typeof Input; Kbd: typeof Kbd;
       Link: typeof Link; List: typeof List; ListItem: typeof ListItem; Loader: typeof Loader; Menu: typeof Menu; MenuGroup: typeof MenuGroup;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { asIcon } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 
 export type TabsVariant = 'line' | 'pill';
 
@@ -91,7 +91,7 @@ export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElem
   /** Ties the tab to the TabPanel with the same value. */
   value: string;
   /** An icon before the label: an icon name or any element. */
-  icon?: React.ReactNode;
+  icon?: IconSource;
 }
 
 /** One tab: a button that selects its panel. */

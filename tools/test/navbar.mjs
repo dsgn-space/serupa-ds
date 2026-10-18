@@ -60,11 +60,11 @@ t('Navbar tokens (--navbar-height, --navbar-link-text) override one navbar', tk 
 
 // small screens
 await p.setViewportSize({ width: 500, height: 700 }); await p.waitForTimeout(100);
-const tg = await p.evaluate(() => { const b = document.querySelector('#nav .dk-navbar__toggle'), nav = document.querySelector('#nav nav'); return { label: b.getAttribute('aria-label'), exp: b.getAttribute('aria-expanded'), ctl: b.getAttribute('aria-controls') === nav.id, icon: b.textContent, right: Math.round(b.getBoundingClientRect().right) }; });
+const tg = await p.evaluate(() => { const b = document.querySelector('#nav .dk-navbar__toggle'), nav = document.querySelector('#nav nav'); return { label: b.getAttribute('aria-label'), exp: b.getAttribute('aria-expanded'), ctl: b.getAttribute('aria-controls') === nav.id, icon: b.querySelector('.dk-icon')?.dataset.icon, right: Math.round(b.getBoundingClientRect().right) }; });
 t('below 768px: the links hide behind a menu button (aria-expanded, aria-controls), at the right', !(await vis('#nav nav')) && tg.label === 'Menu' && tg.exp === 'false' && tg.ctl && tg.icon === 'menu' && tg.right === 484, JSON.stringify(tg));
 t('menuLabel names the button', (await p.evaluate(() => document.querySelector('#nsticky .dk-navbar__toggle').getAttribute('aria-label'))) === 'Open the menu');
 await p.click('#nav .dk-navbar__toggle');
-const op = await p.evaluate(() => { const n = document.getElementById('nav'), nav = n.querySelector('nav'), r = nav.getBoundingClientRect(), hr = n.getBoundingClientRect(), links = [...nav.querySelectorAll('a')].map((a) => Math.round(a.getBoundingClientRect().top)); return { exp: n.querySelector('.dk-navbar__toggle').getAttribute('aria-expanded'), icon: n.querySelector('.dk-navbar__toggle').textContent, top: Math.round(r.top - hr.bottom), w: Math.round(r.width), stacked: links[0] < links[1] && links[1] < links[2] }; });
+const op = await p.evaluate(() => { const n = document.getElementById('nav'), nav = n.querySelector('nav'), r = nav.getBoundingClientRect(), hr = n.getBoundingClientRect(), links = [...nav.querySelectorAll('a')].map((a) => Math.round(a.getBoundingClientRect().top)); return { exp: n.querySelector('.dk-navbar__toggle').getAttribute('aria-expanded'), icon: n.querySelector('.dk-navbar__toggle .dk-icon')?.dataset.icon, top: Math.round(r.top - hr.bottom), w: Math.round(r.width), stacked: links[0] < links[1] && links[1] < links[2] }; });
 t('pressing it opens the links in a full-width panel under the bar, one per line; the icon becomes close', (await vis('#nav nav')) && op.exp === 'true' && op.icon === 'close' && op.top <= 0 && op.top >= -1 && op.w === 500 && op.stacked, JSON.stringify(op));
 await p.focus('#lp');
 await p.keyboard.press('Escape');

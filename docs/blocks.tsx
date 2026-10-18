@@ -124,7 +124,7 @@ export function IconGallery() {
     setCopied(n);
   };
   const shown = Object.entries(groups).map(([g, list]) => [g, list.filter((n) => !term || n.includes(term))] as const).filter(([, l]) => l.length);
-  // sb-unstyled: Storybook's docs styles would otherwise set the icons' font to its own.
+  // sb-unstyled: keeps Storybook's docs styles off the buttons.
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
     <div style={{ maxWidth: 320 }}><SearchInput aria-label="Find an icon" placeholder="Find an icon, such as arrow" value={q} onChange={(e) => setQ(e.target.value)} /></div>
     <p role="status" style={{ margin: 0, minHeight: 20, color: 'var(--text-muted)' }}>{copied ? <>Copied <code>{copied}</code></> : 'Click an icon to copy its name.'}</p>
@@ -137,7 +137,7 @@ export function IconGallery() {
           <span style={{ fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' }}>{n}</span>
         </button>)}
       </div>
-    </section>) : <p>No icon here matches. Every Material Symbols name works: search the full set at <a href="https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols">fonts.google.com/icons</a> (Rounded, Fill on).</p>}
+    </section>) : <p>No everyday icon matches. Find it in the full set at <a href="https://fonts.google.com/icons?icon.style=Rounded&icon.set=Material+Symbols">fonts.google.com/icons</a> (Rounded, Fill on) and import it from <code>serupa-ds/icons</code>.</p>}
   </div>;
 }
 

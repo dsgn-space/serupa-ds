@@ -69,7 +69,7 @@ For router links, set the link component once at startup: `configure({ link: Lin
 ## 4. Before you ship
 
 - **Trim the CSS.** `bundle.css` carries every utility class (1.7 MB). `tools/purge.py` in this repo keeps the component styles and only the classes your code uses, usually a few dozen KB. It isn't part of the installed package, so run it from a clone: `python3 tools/purge.py <your src> --css <installed dist/bundle.css> -o bundle.min.css`.
-- **Fonts and icons are included.** `tokens.css` loads Inter and the icon font from the package's `fonts/` folder. Nothing loads from another server.
+- **Fonts and icons are included.** `tokens.css` loads Inter from the package's `fonts/` folder, and icons are SVGs inside the components. Nothing loads from another server. Icons outside the everyday set come from `serupa-ds/icons`, and only the ones you import ship.
 - **Accessibility comes with the components,** but labels are yours: give every field a `Field` label, every icon-only button an `aria-label`, and check each component's Accessibility notes.
 
 ## Working on the system

@@ -36,7 +36,7 @@ await p.waitForTimeout(300);
 const file = (name, type, size) => ({ name, mimeType: type, buffer: Buffer.alloc(size, 1) });
 const root = (sel) => `[data-component=file-upload]:has(${sel})`;
 const many = '[data-testid=many]';
-const list = (sel) => p.evaluate((sel) => [...document.querySelectorAll(sel + ' .dk-file-upload__item')].map((li) => li.querySelector('.dk-file-upload__name').textContent + ' ' + li.querySelector('.dk-file-upload__size').textContent + ' ' + li.querySelector('.dk-file-upload__file-icon').textContent), sel);
+const list = (sel) => p.evaluate((sel) => [...document.querySelectorAll(sel + ' .dk-file-upload__item')].map((li) => li.querySelector('.dk-file-upload__name').textContent + ' ' + li.querySelector('.dk-file-upload__size').textContent + ' ' + li.querySelector('.dk-file-upload__file-icon').dataset.icon), sel);
 const errs = (sel) => p.evaluate((sel) => { const e = document.querySelector(sel + ' .dk-file-upload__errors'); return e ? e.getAttribute('role') + ': ' + [...e.querySelectorAll('.dk-file-upload__error')].map((x) => x.textContent.replace(/^error/, '')).join(' / ') : null; }, sel);
 
 const a = await p.evaluate(() => { const el = document.querySelector('[data-testid=many]'), btn = el.querySelector('button'), inp = el.querySelector('input[type=file]'); return { ref: window.fr.current === el, cls: el.className, comp: el.dataset.component, title: el.querySelector('.dk-file-upload__title').textContent, btn: btn.textContent, desc: document.getElementById(btn.getAttribute('aria-describedby')).textContent, accept: inp.accept, multiple: inp.multiple, name: inp.name, id: inp.id, hidden: inp.getAttribute('aria-hidden'), tab: inp.tabIndex }; });

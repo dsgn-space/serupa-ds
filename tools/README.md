@@ -11,7 +11,7 @@ npm install                       # the build (tsup, TypeScript), React, Playwri
 npx playwright install chromium   # add firefox webkit to run the suite in those too
 ```
 
-Node 20 or later (`.nvmrc`) and Python 3 (the version check `release.py`, the custom icon build and `purge.py`). Nothing else.
+Node 20 or later (`.nvmrc`) and Python 3 (the version check `release.py`, the custom icon build, the Material Symbols build and `purge.py`). Nothing else.
 
 ## Build
 
@@ -110,6 +110,7 @@ node tools/tokens/style-dictionary.config.mjs out/   # build them into CSS with 
 python3 tools/icons/build.py                  # build assets/Icons/*.svg into src/icons.ts (then npm run build)
 python3 tools/icons/build.py path/to/svgs     # from another folder
 python3 tools/icons/build.py --check          # exit 1 if the components are out of step (for CI)
+python3 tools/icons/material.py               # Material Symbols as SVG: src/material/ from tools/icons/source/ (needs fonttools, brotli)
 ```
 
 Each file becomes an icon named after the file. The build keeps only shapes, draws them in the text color, and refuses unsafe or off-system files with the reason; the Icon guidelines (`src/components/Icon/README.md`) have the drawing rules. On the design system page, icons dropped into an Icons set are uploads: download them into `assets/Icons/` (or ask Claude) and run the build.

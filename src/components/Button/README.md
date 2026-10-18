@@ -42,7 +42,7 @@ const { Button, buttonClass } = window.Serupa;
 - Use a left icon to reinforce the action (`add` for create) and a right icon for direction (`arrow_forward` for next, `expand_more` for menus). Don't use both.
 - Use `loading` for actions that take longer than about a second, and keep the label as it was ("Save changes", not "Saving…") so the width doesn't jump.
 - Navigation is a link: give the Button an `href`, not an `onClick` that changes the URL.
-- Icons come from Material Symbols Rounded (filled); the font ships with the system. The consumer provides the click handler.
+- Icons come from Material Symbols Rounded (filled), drawn as SVG. The consumer provides the click handler.
 
 ### Variants
 
@@ -99,7 +99,7 @@ A button holds a label, an icon beside a label, or an icon alone:
 
 Button applies this automatically. With `buttonClass`, pass `iconPosition: 'left'` or `'right'`.
 
-Pass a Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`) and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. An icon-only button logs a warning if it has no `aria-label`.
+Pass an everyday Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. An icon-only button logs a warning if it has no `aria-label`.
 
 ### Links
 
@@ -324,4 +324,4 @@ Every value comes from a token. Colors, spacing, sizes, borders and micro-intera
 | States | `opacity-50` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
 | Motion | `duration-150` and `ease-in-out` for colors and the focus ring; `scale-97`, `duration-100`, `spacing-0.5`, `duration-150`, `opacity-20`, `duration-500`, `duration-300`, `ease-out` for the micro-interactions; `scale-50`, `scale-100`, `scale-0`, `spacing-0` and `rounded-full` inside them |
 | Components and utilities it reuses | the Loader (ring) while loading, `sr-only` on the loading announcement |
-| Icons | `font-icon`, `leading-none`, `spacing-6` (Icon's default size) |
+| Icons | `leading-none`, `spacing-6` (Icon's default size) |

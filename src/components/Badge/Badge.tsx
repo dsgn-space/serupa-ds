@@ -4,7 +4,7 @@ import { config } from "../../internal/config";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
-import { Icon, asIcon } from "../Icon/Icon";
+import { Icon, asIcon, type IconSource } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 
 export type BadgeVariant = 'subtle' | 'solid' | 'outline';
@@ -22,7 +22,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   /** With dot (in a label or the lone indicator): a copy of the dot grows and fades every second (the system's ping animation), for live states. Off under reduced motion. Ignored without a dot. Default false. */
   ping?: boolean;
   /** A Material Symbols (or custom) icon name, or an element, before the label. Decorative. */
-  leftIcon?: React.ReactNode;
+  leftIcon?: IconSource;
   /** Makes it a count badge: a round pill with the number. 0 renders nothing unless showZero. */
   count?: number;
   /** With count: above this, shows "max+" (default 99: "99+"). */

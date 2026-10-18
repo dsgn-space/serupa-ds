@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
-import { asIcon } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** 'sm' (24px, text-xs), 'md' (32px, text-sm, default) or 'lg' (44px, text-base): the control heights, like Button. */
@@ -8,9 +8,9 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
   invalid?: boolean;
   /** A decorative icon inside the field, before the text: an icon name or an element. */
-  leftIcon?: React.ReactNode;
+  leftIcon?: IconSource;
   /** A decorative icon inside the field, after the text. */
-  rightIcon?: React.ReactNode;
+  rightIcon?: IconSource;
 }
 
 /* Input: a single-line text field. size "sm", "md" (default) or "lg" (24, 32, 44px: the control heights, like
@@ -24,8 +24,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   if (rest.type === undefined) rest.type = "text";
-  const icon = function (node: React.ReactNode, side: string) {
-    node = asIcon(node);
+  const icon = function (source: IconSource, side: string) {
+    const node = asIcon(source);
     return node == null || node === false ? null : <span className={"dk-input__icon dk-input__icon--" + side} aria-hidden key={side}>{node}</span>;
   };
   return (
