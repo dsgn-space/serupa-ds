@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Fab } from './Fab';
 
 const meta = {
-  title: 'Components/Fab',
+  title: 'Components/Actions/Fab',
   component: Fab,
   args: { icon: 'add', label: 'New project', position: 'static' },
   argTypes: {

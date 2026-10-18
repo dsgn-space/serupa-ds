@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, type ButtonAsButtonProps } from './Button';
 
 const meta = {
-  title: 'Components/Button',
+  title: 'Components/Actions/Button',
   component: Button as React.ComponentType<ButtonAsButtonProps>,   // the <button> form; links are in As a link
   args: { children: 'Save changes', variant: 'primary', size: 'md' },
   argTypes: {

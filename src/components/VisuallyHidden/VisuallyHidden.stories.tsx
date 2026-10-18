@@ -4,7 +4,7 @@ import { VisuallyHidden } from './VisuallyHidden';
 import { Icon } from '../Icon/Icon';
 
 const meta = {
-  title: 'Components/VisuallyHidden',
+  title: 'Components/Layout and type/VisuallyHidden',
   component: VisuallyHidden,
   args: { children: 'unread messages' },
   render: (args) => <p className="text-sm text-text">3 <VisuallyHidden {...args} /> <span aria-hidden>(a screen reader says "3 unread messages")</span></p>,

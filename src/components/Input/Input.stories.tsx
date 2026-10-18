@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from './Input';
 
 const meta = {
-  title: 'Components/Input',
+  title: 'Components/Forms/Input',
   component: Input,
   args: { placeholder: 'you@example.com', 'aria-label': 'Email', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: { control: 'text' }, rightIcon: { control: 'text' } },

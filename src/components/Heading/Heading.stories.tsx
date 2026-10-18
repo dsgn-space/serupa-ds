@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Heading } from './Heading';
 
 const meta = {
-  title: 'Components/Heading',
+  title: 'Components/Layout and type/Heading',
   component: Heading,
   args: { level: 2, children: 'Recent activity' },
   argTypes: {

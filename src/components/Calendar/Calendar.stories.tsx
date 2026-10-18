@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Calendar } from './Calendar';
 
 const meta = {
-  title: 'Components/Calendar',
+  title: 'Components/Forms/Calendar',
   component: Calendar,
   args: { defaultValue: new Date(2025, 2, 10), defaultMonth: new Date(2025, 2, 10) },
 } satisfies Meta<typeof Calendar>;

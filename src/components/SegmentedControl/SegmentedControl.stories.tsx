@@ -4,7 +4,7 @@ import { SegmentedControl } from './SegmentedControl';
 
 const PERIODS = [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }];
 const meta = {
-  title: 'Components/SegmentedControl',
+  title: 'Components/Forms/SegmentedControl',
   component: SegmentedControl,
   args: { 'aria-label': 'Period', options: PERIODS, defaultValue: 'week', size: 'md', fullWidth: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },

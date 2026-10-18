@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tab, TabList, TabPanel, Tabs } from './Tabs';
 
 const meta = {
-  title: 'Components/Tabs',
+  title: 'Components/Navigation/Tabs',
   component: Tabs,
   args: { variant: 'line', size: 'md', activation: 'auto' },
   argTypes: {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Select } from './Select';
 
 const meta = {
-  title: 'Components/Select',
+  title: 'Components/Forms/Select',
   component: Select,
   args: { 'aria-label': 'Country', placeholder: 'Choose a country', options: ['Indonesia', 'Malaysia', 'Singapore', 'Thailand'], size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, leftIcon: { control: 'text' } },

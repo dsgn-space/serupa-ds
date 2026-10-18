@@ -5,7 +5,7 @@ import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
 
 const meta = {
-  title: 'Components/Card',
+  title: 'Components/Content/Card',
   component: Card,
   args: { variant: 'outline', padding: 'md' },
   argTypes: {

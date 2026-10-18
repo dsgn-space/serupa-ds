@@ -8,7 +8,7 @@ import { Checkbox } from '../Checkbox/Checkbox';
 import { Radio, RadioGroup } from '../Radio/Radio';
 
 const meta = {
-  title: 'Components/Field',
+  title: 'Components/Forms/Field',
   component: Field,
   args: { label: 'Email', hint: "We'll send the receipt here.", required: true },
   render: (args) => <Field {...args}><Input type="email" placeholder="you@example.com" /></Field>,

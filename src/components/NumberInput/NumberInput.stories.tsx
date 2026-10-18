@@ -4,7 +4,7 @@ import { NumberInput } from './NumberInput';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/NumberInput',
+  title: 'Components/Forms/NumberInput',
   component: NumberInput,
   args: { 'aria-label': 'Quantity', defaultValue: 1, min: 0, max: 99, step: 1, size: 'md', steppers: true, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

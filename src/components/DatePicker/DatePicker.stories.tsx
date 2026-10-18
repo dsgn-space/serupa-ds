@@ -4,7 +4,7 @@ import { DatePicker } from './DatePicker';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/DatePicker',
+  title: 'Components/Forms/DatePicker',
   component: DatePicker,
   args: { 'aria-label': 'Date', size: 'md', invalid: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

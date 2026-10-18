@@ -11,7 +11,7 @@ const PEOPLE = [
   { value: 'margaret', label: 'Margaret Hamilton', description: 'margaret@example.com' },
 ];
 const meta = {
-  title: 'Components/Combobox',
+  title: 'Components/Forms/Combobox',
   component: Combobox,
   args: { 'aria-label': 'Country', placeholder: 'Pick a country', options: COUNTRIES, size: 'md', clearable: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

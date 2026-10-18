@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 
 const STEPS = [{ title: 'Account', description: 'Email and password' }, { title: 'Profile', optional: true }, { title: 'Billing', description: 'Card or invoice' }, { title: 'Review' }];
 const meta = {
-  title: 'Components/Stepper',
+  title: 'Components/Navigation/Stepper',
   component: Stepper,
   args: { steps: STEPS, current: 1, orientation: 'horizontal', size: 'md' },
   argTypes: {

@@ -8,7 +8,7 @@ const PIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w
 const PEOPLE = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Katherine Johnson', 'Linus Torvalds', 'Margaret Hamilton'];
 
 const meta = {
-  title: 'Components/AvatarGroup',
+  title: 'Components/Content/AvatarGroup',
   component: AvatarGroup,
   args: { label: 'Assigned to', size: 'md', max: 4 },
   argTypes: { size: { control: 'inline-radio', options: ['xs', 'sm', 'md', 'lg', 'xl'] } },

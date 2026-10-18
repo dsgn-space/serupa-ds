@@ -4,7 +4,7 @@ import { PasswordInput } from './PasswordInput';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/PasswordInput',
+  title: 'Components/Forms/PasswordInput',
   component: PasswordInput,
   args: { 'aria-label': 'Password', placeholder: 'Your password' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

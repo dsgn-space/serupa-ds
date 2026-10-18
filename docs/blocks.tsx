@@ -16,9 +16,17 @@ type TypeStyle = { name: string; fontSize: string; lineHeight: string; fontWeigh
 type TypeGroup = { name: string; note?: string; styles: TypeStyle[] };
 const T = tokens as unknown as Record<string, Group> & { type: { groups: TypeGroup[] }; color: Group & { themes: { id: string; name: string }[] } };
 
+// Each component's sidebar path (Components/Forms/Input), read from its stories' title, so links follow the grouping.
+const storyFiles = import.meta.glob('../src/components/*/*.stories.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const docsId: Record<string, string> = {};
+for (const src of Object.values(storyFiles)) {
+  const title = /title: '([^']+)'/.exec(src)?.[1];
+  if (title) docsId[title.split('/').pop()!] = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
 // Links between component guides (../Loader/README.md) become links to their Storybook pages.
 function relink(md: string): string {
-  return md.replace(/\]\((?:\.\.\/)?(?:src\/components\/)?(\w+)\/README\.md(#[\w-]+)?\)/g, (_, name) => `](?path=/docs/components-${name.toLowerCase()}--docs)`)
+  return md.replace(/\]\((?:\.\.\/)?(?:src\/components\/)?(\w+)\/README\.md(#[\w-]+)?\)/g, (_, name) => `](?path=/docs/${docsId[name] || `components-${name.toLowerCase()}`}--docs)`)
     .replace(/\]\(README\.md(#[\w-]+)?\)/g, '](?path=/docs/introduction--docs)');
 }
 

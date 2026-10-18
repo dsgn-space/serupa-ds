@@ -6,7 +6,7 @@ import { Avatar } from './Avatar';
 const PHOTO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#db2777"/></linearGradient></defs><rect width="80" height="80" fill="url(#g)"/><circle cx="40" cy="32" r="14" fill="#fff" opacity=".85"/><ellipse cx="40" cy="74" rx="26" ry="20" fill="#fff" opacity=".85"/></svg>');
 
 const meta = {
-  title: 'Components/Avatar',
+  title: 'Components/Content/Avatar',
   component: Avatar,
   args: { name: 'Grace Hopper', size: 'md', shape: 'circle' },
   argTypes: {

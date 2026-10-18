@@ -4,7 +4,7 @@ import { ToggleButton } from './ToggleButton';
 import { ButtonGroup } from '../ButtonGroup/ButtonGroup';
 
 const meta = {
-  title: 'Components/ToggleButton',
+  title: 'Components/Actions/ToggleButton',
   component: ToggleButton,
   args: { children: 'Show grid', leftIcon: 'grid_on' },
   argTypes: { variant: { control: 'inline-radio', options: ['outline', 'ghost'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

@@ -21,7 +21,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Components/Sidebar',
+  title: 'Components/Navigation/Sidebar',
   component: Sidebar,
   subcomponents: { SidebarSection, SidebarItem },
   parameters: { layout: 'fullscreen' },

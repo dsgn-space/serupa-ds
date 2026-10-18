@@ -6,7 +6,7 @@ const Box = ({ children }: { children?: React.ReactNode }) => <div className="ro
 const cells = (n: number) => Array.from({ length: n }, (_, i) => <Box key={i}>Cell {i + 1}</Box>);
 
 const meta = {
-  title: 'Components/Grid',
+  title: 'Components/Layout and type/Grid',
   component: Grid,
   args: { children: cells(6) },
   argTypes: {

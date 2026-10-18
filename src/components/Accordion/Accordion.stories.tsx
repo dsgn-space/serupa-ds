@@ -10,7 +10,7 @@ const faq = [
 const items = faq.map(([v, t, c]) => <AccordionItem key={v} value={v} title={t}>{c}</AccordionItem>);
 
 const meta = {
-  title: 'Components/Accordion',
+  title: 'Components/Content/Accordion',
   component: Accordion,
   subcomponents: { AccordionItem },
   args: { defaultValue: ['shipping'], children: items },

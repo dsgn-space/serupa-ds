@@ -4,7 +4,7 @@ import { Slider } from './Slider';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/Slider',
+  title: 'Components/Forms/Slider',
   component: Slider,
   args: { 'aria-label': 'Volume', defaultValue: 50, min: 0, max: 100, step: 1, size: 'md', disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },

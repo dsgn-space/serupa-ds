@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SearchInput } from './SearchInput';
 
 const meta = {
-  title: 'Components/SearchInput',
+  title: 'Components/Forms/SearchInput',
   component: SearchInput,
   args: { 'aria-label': 'Search projects', placeholder: 'Search projects', size: 'md', loading: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

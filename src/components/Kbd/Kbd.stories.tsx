@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Kbd } from './Kbd';
 
 const meta = {
-  title: 'Components/Kbd',
+  title: 'Components/Content/Kbd',
   component: Kbd,
   args: { keys: ['mod', 'K'], size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },

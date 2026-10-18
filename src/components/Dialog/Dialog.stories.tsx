@@ -6,7 +6,7 @@ import { Input } from '../Input/Input';
 import { Field } from '../Field/Field';
 
 const meta = {
-  title: 'Components/Dialog',
+  title: 'Components/Overlays/Dialog',
   component: Dialog,
   args: { open: false, title: 'Invite people', description: 'They’ll get an email with a link.', size: 'md' },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },

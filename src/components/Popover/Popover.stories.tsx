@@ -7,7 +7,7 @@ import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 
 const meta = {
-  title: 'Components/Popover',
+  title: 'Components/Overlays/Popover',
   component: Popover,
   args: {
     title: 'Share',
