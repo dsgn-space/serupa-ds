@@ -11,7 +11,7 @@ npm install                       # the build (tsup, TypeScript), React, Playwri
 npx playwright install chromium   # add firefox webkit to run the suite in those too
 ```
 
-Node 24 (`.nvmrc`; 22.18 or later works). Nothing else: Python is only needed to rebuild the Material Symbols from the font (`tools/icons/material.py`), which the font never changing makes rare.
+Node 24 (`.nvmrc`; 22.18 or later works). Dependencies are pinned to exact versions; Dependabot (`.github/dependabot.yml`) opens grouped update pull requests every Monday, for npm and the GitHub Actions, and CI decides whether each one lands. Nothing else: Python is only needed to rebuild the Material Symbols from the font (`tools/icons/material.py`), which the font never changing makes rare.
 
 ## Build
 
