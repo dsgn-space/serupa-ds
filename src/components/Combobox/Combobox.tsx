@@ -63,7 +63,14 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
   const pop = React.useRef<HTMLDivElement | null>(null);
   const locked = !!rest.disabled || !!rest.readOnly;
 
-  React.useEffect(() => { if (!open || !typed) setText(selected ? selected.label : ""); }, [value, selected && selected.label]);
+  // A new value (or a new label for it) puts its label in the field, unless the person is typing. Done while
+  // rendering, not in an effect, so the field never shows the old label for a frame.
+  const label = selected ? selected.label : "";
+  const [shownFor, setShownFor] = React.useState<[string | null, string]>([value, label]);
+  if (shownFor[0] !== value || shownFor[1] !== label) {
+    setShownFor([value, label]);
+    if (!open || !typed) setText(label);
+  }
 
   const matches = (o: Opt) => {
     if (!typed || props.filter === false) return true;
@@ -134,7 +141,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
     if (!open || active < 0 || !pop.current) return;
     const el = pop.current.querySelector<HTMLElement>("#" + base + "-opt-" + active);
     if (el && typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest" });
-  }, [active, open]);
+  }, [active, open, base]);
 
   const left = asIcon(props.leftIcon);
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
