@@ -2,6 +2,7 @@ import * as React from "react";
 import type { IconSource } from "../Icon/Icon";
 import { cn } from "../../internal/cn";
 import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from "../Button/Button";
+import { component } from "../../internal/component";
 
 type Without<T> = T extends unknown ? Omit<T, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'aria-label'> : never;
 
@@ -22,11 +23,10 @@ export type IconButtonProps = Without<ButtonAsButtonProps> & IconButtonOwnProps 
    Variant defaults to "ghost"; shape "square" (default) or "round". Every other Button prop (size, destructive,
    loading, href, onClick, ref…) works the same. */
 /** A Button that shows only an icon, with a required label for screen readers. Default variant: ghost. */
-export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, IconButtonProps>(function IconButton(props, ref) {
+export const IconButton = /* @__PURE__ */ component<HTMLButtonElement | HTMLAnchorElement, IconButtonProps>("IconButton", function IconButton(props, ref) {
   const { icon, label, shape, noTitle, className, ...rest } = props;
   const round = shape === "round";
   const title = !noTitle && rest.title == null ? label : rest.title;
   return <ButtonBase variant="ghost" {...rest} aria-label={label} data-shape={round ? "round" : "square"} title={title}
     ref={ref as React.Ref<HTMLElement>} icon={icon} className={cn("dk-icon-btn", round && "dk-icon-btn--round", className)} />;
 });
-IconButton.displayName = "IconButton";

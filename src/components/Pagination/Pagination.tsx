@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   /** How many pages there are. */
@@ -54,7 +55,7 @@ function int(v: unknown, min: number, fallback: number): number {
    (onPageChange) or, with getHref, links. The current page has aria-current="page". className and every other
    prop go to the <nav>. */
 /** Moves through pages of results: previous, next, and page numbers with … where pages are skipped. */
-export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(function Pagination(props, ref) {
+export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps>("Pagination", function Pagination(props, ref) {
   const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, className: 1 });
   const count = int(props.count, 0, 0);
   const [own, setOwn] = React.useState(() => int(props.defaultPage, 1, 1));
@@ -91,4 +92,3 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(functio
     </nav>
   );
 });
-Pagination.displayName = "Pagination";

@@ -3,6 +3,7 @@ import { cn, domId, omit } from "../../internal/cn";
 import { asIcon, Icon, type IconSource } from "../Icon/Icon";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Menu, MenuItem } from "../Menu/Menu";
+import { component } from "../../internal/component";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -41,7 +42,7 @@ export interface SidebarItemProps extends Omit<React.AnchorHTMLAttributes<HTMLAn
   as?: React.ElementType;
 }
 
-const SidebarContext = React.createContext<{ collapsed: boolean; depth: number }>({ collapsed: false, depth: 0 });
+const SidebarContext = /* @__PURE__ */ React.createContext<{ collapsed: boolean; depth: number }>({ collapsed: false, depth: 0 });
 
 function isSection(c: React.ReactNode): boolean {
   return React.isValidElement(c) && c.type === SidebarSection;
@@ -51,7 +52,7 @@ function isSection(c: React.ReactNode): boolean {
    badges, nested groups), and a footer pinned to the bottom. collapsed narrows it to an icon rail. It takes
    its parent's height; className and every other prop go to the <nav>. */
 /** A vertical nav for an app's pages: sections of items with icons, badges and nested groups; collapses to an icon rail. */
-export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(function Sidebar(props, ref) {
+export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sidebar", function Sidebar(props, ref) {
   const rest = omit(props, { header: 1, footer: 1, collapsed: 1, className: 1, children: 1, "aria-label": 1 });
   const collapsed = !!props.collapsed;
   // runs of loose items get their own list
@@ -71,10 +72,9 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(function Side
     </SidebarContext.Provider>
   );
 });
-Sidebar.displayName = "Sidebar";
 
 /** A group of items in a Sidebar, with an optional small heading. */
-export const SidebarSection = React.forwardRef<HTMLDivElement, SidebarSectionProps>(function SidebarSection(props, ref) {
+export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarSectionProps>("SidebarSection", function SidebarSection(props, ref) {
   const rest = omit(props, { title: 1, className: 1, children: 1 });
   const id = domId("dk-sbs", React.useId());
   const titled = props.title != null && props.title !== false && props.title !== "";
@@ -85,12 +85,11 @@ export const SidebarSection = React.forwardRef<HTMLDivElement, SidebarSectionPro
     </div>
   );
 });
-SidebarSection.displayName = "SidebarSection";
 
 /* SidebarItem: a link (icon, label, badge), or with nested items a button with aria-expanded that shows and
    hides them. Collapsed: only the icon, with the label as a tooltip; a group opens its items in a Menu. */
 /** An item in a Sidebar: a link, or a group of nested items. */
-export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(function SidebarItem(props, ref) {
+export const SidebarItem = /* @__PURE__ */ component<HTMLAnchorElement, SidebarItemProps>("SidebarItem", function SidebarItem(props, ref) {
   const ctx = React.useContext(SidebarContext);
   const rest = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
   const kids = React.Children.toArray(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
@@ -138,4 +137,3 @@ export const SidebarItem = React.forwardRef<HTMLAnchorElement, SidebarItemProps>
     </li>
   );
 });
-SidebarItem.displayName = "SidebarItem";

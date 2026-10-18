@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { AVATAR_SIZES, AvatarGroupSize } from "../Avatar/Avatar";
 import type { AvatarSize } from "../Avatar/Avatar";
+import { component } from "../../internal/component";
 
 export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The avatars: <Avatar> elements, or elements around them such as a Tooltip or a link. */
@@ -36,7 +37,7 @@ function items(children: React.ReactNode): React.ReactElement[] {
 }
 
 /** Avatars in an overlapping row, with "+N" for the rest. */
-export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(function AvatarGroup(props, ref) {
+export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroupProps>("AvatarGroup", function AvatarGroup(props, ref) {
   const rest = omit(props, OWN);
   const size = oneOf(AVATAR_SIZES, props.size, "md");
   const all = items(props.children);
@@ -64,4 +65,3 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(fu
     </div>
   );
 });
-AvatarGroup.displayName = "AvatarGroup";

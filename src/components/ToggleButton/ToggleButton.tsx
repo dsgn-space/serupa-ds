@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf } from "../../internal/cn";
 import { Button, type ButtonAsButtonProps } from "../Button/Button";
+import { component } from "../../internal/component";
 
 export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "variant" | "destructive" | "loading" | "loadingText"> {
   /** Whether it's on (controlled). Use with onPressedChange. */
@@ -17,7 +18,7 @@ export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "variant" |
    mute, show grid. On, it's primary-subtle with primary text. Every Button prop but variant, destructive and
    loading goes through. */
 /** A Button that turns something on and off, with aria-pressed: bold, mute, show grid. */
-export const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProps>(function ToggleButton(props, ref) {
+export const ToggleButton = /* @__PURE__ */ component<HTMLButtonElement, ToggleButtonProps>("ToggleButton", function ToggleButton(props, ref) {
   const { pressed, defaultPressed, onPressedChange, variant, className, onClick, ...rest } = props;
   const [own, setOwn] = React.useState(!!defaultPressed);
   const controlled = pressed !== undefined;
@@ -34,4 +35,3 @@ export const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProp
       }} />
   );
 });
-ToggleButton.displayName = "ToggleButton";

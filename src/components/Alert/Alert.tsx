@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon, asIcon, type IconSource } from "../Icon/Icon";
 import { Button } from "../Button/Button";
+import { component } from "../../internal/component";
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -28,7 +29,7 @@ const TONES: readonly AlertTone[] = ["info", "success", "warning", "danger", "ne
 const ICONS: Record<AlertTone, string> = { info: "info", success: "check_circle", warning: "warning", danger: "error", neutral: "info" };
 
 /** A message about the page or a task: a tinted box with an icon, an optional title, actions and a close button. */
-export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Alert", function Alert(props, ref) {
   const rest = omit(props, OWN);
   const tone = oneOf(TONES, props.tone, "info");
   const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
@@ -46,4 +47,3 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert
     </div>
   );
 });
-Alert.displayName = "Alert";

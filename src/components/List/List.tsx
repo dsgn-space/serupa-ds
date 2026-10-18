@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -40,7 +41,7 @@ export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement
    avatar or icon and trailing meta or actions. A row can be a link or a button; trailing actions stay outside
    it so controls are never nested. className and every other prop go to the <ul>. */
 /** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
-export const List = React.forwardRef<HTMLUListElement, ListProps>(function List(props, ref) {
+export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>("List", function List(props, ref) {
   const rest = omit(props, { variant: 1, divided: 1, as: 1, className: 1 });
   const variant = oneOf(["plain", "card"] as const, props.variant, "plain");
   return React.createElement(oneOf(["ul", "ol"] as const, props.as, "ul"), Object.assign(rest, {
@@ -48,10 +49,9 @@ export const List = React.forwardRef<HTMLUListElement, ListProps>(function List(
     className: cn("dk-list", variant === "card" && "dk-list--card", props.divided !== false && "dk-list--divided", props.className),
   }));
 });
-List.displayName = "List";
 
 /** One row in a List. */
-export const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(function ListItem(props, ref) {
+export const ListItem = /* @__PURE__ */ component<HTMLLIElement, ListItemProps>("ListItem", function ListItem(props, ref) {
   const rest = omit(props, { title: 1, description: 1, leading: 1, trailing: 1, href: 1, onClick: 1, as: 1, linkProps: 1, selected: 1, disabled: 1, className: 1 });
   const lead = asIcon(props.leading as React.ReactNode);
   const body = <>
@@ -81,4 +81,3 @@ export const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(function 
     </li>
   );
 });
-ListItem.displayName = "ListItem";

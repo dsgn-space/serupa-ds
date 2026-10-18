@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
@@ -44,7 +45,7 @@ const ALIGN = ["start", "center", "end"] as const;
    so it can be scrolled with the arrows). size, striped and stickyHeader style the rows; caption names it.
    className and every other prop go to the <table>; containerProps go to the frame. */
 /** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
-export const Table = React.forwardRef<HTMLTableElement, TableProps>(function Table(props, ref) {
+export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>("Table", function Table(props, ref) {
   const rest = omit(props, { size: 1, striped: 1, stickyHeader: 1, caption: 1, captionHidden: 1, containerProps: 1, className: 1, children: 1 });
   const size = oneOf(["sm", "md"] as const, props.size, "md");
   const frame = React.useRef<HTMLDivElement>(null);
@@ -72,37 +73,32 @@ export const Table = React.forwardRef<HTMLTableElement, TableProps>(function Tab
     </div>
   );
 });
-Table.displayName = "Table";
 
 /** The header rows (<thead>). */
-export const TableHead = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(function TableHead(props, ref) {
+export const TableHead = /* @__PURE__ */ component<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>("TableHead", function TableHead(props, ref) {
   return <thead {...props} ref={ref} className={cn("dk-table__head", props.className)} />;
 });
-TableHead.displayName = "TableHead";
 
 /** The body rows (<tbody>). */
-export const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(function TableBody(props, ref) {
+export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>("TableBody", function TableBody(props, ref) {
   return <tbody {...props} ref={ref} className={cn("dk-table__body", props.className)} />;
 });
-TableBody.displayName = "TableBody";
 
 /** Footer rows such as totals (<tfoot>). */
-export const TableFoot = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(function TableFoot(props, ref) {
+export const TableFoot = /* @__PURE__ */ component<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>("TableFoot", function TableFoot(props, ref) {
   return <tfoot {...props} ref={ref} className={cn("dk-table__foot", props.className)} />;
 });
-TableFoot.displayName = "TableFoot";
 
 /** A row (<tr>). selected shades it and sets aria-selected. */
-export const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(function TableRow(props, ref) {
+export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowProps>("TableRow", function TableRow(props, ref) {
   const rest = omit(props, { selected: 1, className: 1 });
   return <tr {...rest} ref={ref} aria-selected={props.selected === undefined ? undefined : !!props.selected} className={cn("dk-table__row", props.selected && "dk-table__row--selected", props.className)} />;
 });
-TableRow.displayName = "TableRow";
 
 const NEXT_ICON: Record<SortDirection, string> = { ascending: "arrow_upward", descending: "arrow_downward", none: "unfold_more" };
 
 /** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. */
-export const TableHeaderCell = React.forwardRef<HTMLTableCellElement, TableHeaderCellProps>(function TableHeaderCell(props, ref) {
+export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>("TableHeaderCell", function TableHeaderCell(props, ref) {
   const rest = omit(props, { align: 1, sort: 1, onSort: 1, className: 1, children: 1 });
   const align = oneOf(ALIGN, props.align, "start");
   const sort = props.sort !== undefined ? oneOf(["ascending", "descending", "none"] as const, props.sort, "none") : null;
@@ -118,12 +114,10 @@ export const TableHeaderCell = React.forwardRef<HTMLTableCellElement, TableHeade
     </th>
   );
 });
-TableHeaderCell.displayName = "TableHeaderCell";
 
 /** A data cell (<td>). align="end" for numbers. */
-export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(function TableCell(props, ref) {
+export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCellProps>("TableCell", function TableCell(props, ref) {
   const rest = omit(props, { align: 1, className: 1 });
   const align = oneOf(ALIGN, props.align, "start");
   return <td {...rest} ref={ref} className={cn("dk-table__cell", align !== "start" && "dk-table__cell--" + align, props.className)} />;
 });
-TableCell.displayName = "TableCell";

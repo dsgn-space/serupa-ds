@@ -3,6 +3,7 @@ import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from "
 import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../internal/times";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -34,7 +35,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    text that isn't a time, or one outside min..max, puts back the last good value. Values are "HH:mm", the form
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
-export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(function TimePicker(props, ref) {
+export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -148,4 +149,3 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
     </span>
   );
 });
-TimePicker.displayName = "TimePicker";

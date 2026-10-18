@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, domId, elementRef, setRef } from "../../internal/cn";
 import { type Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
+import { named } from "../../internal/component";
 
 export interface TooltipProps {
   /** What the tooltip says: a short line of text. Keep links and buttons out (people can't reach them). */
@@ -31,7 +32,7 @@ type Handler = (e: React.SyntheticEvent<HTMLElement>) => void;
    it in the top layer. Escape hides it; the pointer can move onto the tooltip without it closing (WCAG 1.4.13).
    It describes the element (aria-describedby) or, with role="label", names it. */
 /** A short hint about one element, shown on hover and keyboard focus. */
-export function Tooltip(props: TooltipProps): React.ReactElement {
+export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: TooltipProps): React.ReactElement {
   const id = domId("dk-tip", React.useId());
   const [inner, setInner] = React.useState(false);
   const controlled = props.open !== undefined;
@@ -82,5 +83,4 @@ export function Tooltip(props: TooltipProps): React.ReactElement {
       </div>
     </>
   );
-}
-Tooltip.displayName = "Tooltip";
+});

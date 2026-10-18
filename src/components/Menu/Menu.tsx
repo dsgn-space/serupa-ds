@@ -4,6 +4,7 @@ import { config } from "../../internal/config";
 import { type Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { asIcon, type IconSource } from "../Icon/Icon";
+import { component, named } from "../../internal/component";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -25,7 +26,7 @@ export interface MenuProps {
 }
 
 interface Ctx { close: (focusTrigger: boolean) => void }
-const MenuContext = React.createContext<Ctx | null>(null);
+const MenuContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 const ITEMS = '[role="menuitem"]';
 
 /* Menu: a list of actions behind a button, following the WAI-ARIA menu button pattern. Enter, Space or ↓ on the
@@ -33,7 +34,7 @@ const ITEMS = '[role="menuitem"]';
    goes to the next item starting with it, Enter or Space chooses, Escape closes, and focus goes back to the
    button. Tab, a click outside or choosing an item closes it. It sits in the top layer next to the button. */
 /** A list of actions behind a button: MenuItem, MenuGroup and MenuSeparator inside. */
-export function Menu(props: MenuProps): React.ReactElement {
+export const Menu = /* @__PURE__ */ named("Menu", function Menu(props: MenuProps): React.ReactElement {
   const id = domId("dk-menu", React.useId());
   const [inner, setInner] = React.useState(false);
   const controlled = props.open !== undefined;
@@ -104,8 +105,7 @@ export function Menu(props: MenuProps): React.ReactElement {
       </div>
     </MenuContext.Provider>
   );
-}
-Menu.displayName = "Menu";
+});
 
 export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   /** Called when the item is chosen (click, Enter or Space). The menu then closes, unless you call event.preventDefault(). */
@@ -125,7 +125,7 @@ export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLElement>, '
 }
 
 /** One action in a Menu. */
-export const MenuItem = React.forwardRef<HTMLElement, MenuItemProps>(function MenuItem(props, ref) {
+export const MenuItem = /* @__PURE__ */ component<HTMLElement, MenuItemProps>("MenuItem", function MenuItem(props, ref) {
   const ctx = React.useContext(MenuContext);
   const rest = omit(props, { onSelect: 1, icon: 1, shortcut: 1, destructive: 1, disabled: 1, className: 1, children: 1, onClick: 1, onKeyDown: 1, onPointerMove: 1 });
   const own = { onClick: props.onClick, onKeyDown: props.onKeyDown, onPointerMove: props.onPointerMove };
@@ -152,7 +152,6 @@ export const MenuItem = React.forwardRef<HTMLElement, MenuItemProps>(function Me
     <span className="dk-menu__label">{props.children}</span>,
     props.shortcut ? <kbd className="dk-menu__shortcut">{props.shortcut}</kbd> : null);
 });
-MenuItem.displayName = "MenuItem";
 
 export interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** A small heading over the group, which also names it. */
@@ -160,7 +159,7 @@ export interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** Items that belong together, with an optional heading. */
-export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(function MenuGroup(props, ref) {
+export const MenuGroup = /* @__PURE__ */ component<HTMLDivElement, MenuGroupProps>("MenuGroup", function MenuGroup(props, ref) {
   const rest = omit(props, { label: 1, className: 1, children: 1 });
   const id = domId("dk-mg", React.useId());
   return (
@@ -170,10 +169,8 @@ export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(functi
     </div>
   );
 });
-MenuGroup.displayName = "MenuGroup";
 
 /** A line between groups of items. */
-export const MenuSeparator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(function MenuSeparator(props, ref) {
+export const MenuSeparator = /* @__PURE__ */ component<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>("MenuSeparator", function MenuSeparator(props, ref) {
   return <div {...props} ref={ref} role="separator" className={cn("dk-menu__separator", props.className)} />;
 });
-MenuSeparator.displayName = "MenuSeparator";

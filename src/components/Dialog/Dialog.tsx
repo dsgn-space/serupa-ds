@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
+import { component } from "../../internal/component";
 
 export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -32,7 +33,7 @@ export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
 const OWN = { open: 1, onOpenChange: 1, title: 1, description: 1, footer: 1, size: 1, alert: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, className: 1, children: 1 } as const;
 
 /** A modal dialog on the native <dialog>: a title, content and actions, over a dimmed page. */
-export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(function Dialog(props, ref) {
+export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>("Dialog", function Dialog(props, ref) {
   const rest = omit(props, OWN);
   const base = domId("dk-dlg", React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
@@ -101,4 +102,3 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(function 
     </dialog>
   );
 });
-Dialog.displayName = "Dialog";

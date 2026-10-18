@@ -2,6 +2,7 @@ import * as React from "react";
 import type { IconSource } from "../Icon/Icon";
 import { cn, oneOf } from "../../internal/cn";
 import { ButtonBase, type ButtonAsButtonProps } from "../Button/Button";
+import { component } from "../../internal/component";
 
 export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
 
@@ -24,7 +25,7 @@ export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'leftIcon' 
 const POSITIONS: readonly FabPosition[] = ["bottom-end", "bottom-start", "top-end", "top-start", "static"];
 
 /** A floating action button: the screen's main action, round and raised, fixed to a corner. */
-export const Fab = React.forwardRef<HTMLButtonElement, FabProps>(function Fab(props, ref) {
+export const Fab = /* @__PURE__ */ component<HTMLButtonElement, FabProps>("Fab", function Fab(props, ref) {
   const { icon, label, extended, size, position, className, ...rest } = props;
   const pos = oneOf(POSITIONS, position, "bottom-end");
   const sm = size === "sm";
@@ -34,4 +35,3 @@ export const Fab = React.forwardRef<HTMLButtonElement, FabProps>(function Fab(pr
     ? <ButtonBase {...rest} {...look} ref={ref as React.Ref<HTMLElement>} leftIcon={icon}>{label}</ButtonBase>
     : <ButtonBase title={label} {...rest} {...look} ref={ref as React.Ref<HTMLElement>} icon={icon} aria-label={label} />;
 });
-Fab.displayName = "Fab";

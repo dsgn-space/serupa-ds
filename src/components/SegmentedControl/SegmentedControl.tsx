@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface SegmentedControlOption {
   value: string;
@@ -38,7 +39,7 @@ const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, 
    segment. For switching panels of content, use Tabs; for independent on/off buttons, ButtonGroup with
    ToggleButton. */
 /** Picks one of a few options shown side by side: a radio group drawn as segments. */
-export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedControlProps>(function SegmentedControl(props, ref) {
+export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, SegmentedControlProps>("SegmentedControl", function SegmentedControl(props, ref) {
   const rest = omit(props, OWN);
   const options = props.options || [];
   const disabled = !!props.disabled;
@@ -115,4 +116,3 @@ export const SegmentedControl = React.forwardRef<HTMLDivElement, SegmentedContro
     </div>
   );
 });
-SegmentedControl.displayName = "SegmentedControl";

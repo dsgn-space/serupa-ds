@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { named } from "../../internal/component";
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
@@ -33,7 +34,7 @@ type ControlProps = { id?: string; invalid?: boolean; disabled?: boolean; "aria-
 const OWN = { label: 1, hint: 1, error: 1, required: 1, optional: 1, disabled: 1, group: 1, id: 1, children: 1, className: 1 } as const;
 
 /** A label, an optional hint and an error message around one form control, wired up for screen readers. className and other attributes go to the outer element. */
-export function Field(props: FieldProps): React.ReactElement {
+export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldProps): React.ReactElement {
   const rest = omit(props, OWN);
   const base = domId("dk-f", React.useId());
   const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<ControlProps>) : null;
@@ -82,5 +83,4 @@ export function Field(props: FieldProps): React.ReactElement {
       {error}
     </div>
   );
-}
-Field.displayName = "Field";
+});

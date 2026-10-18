@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
   /** 'single' (default): opening one closes the others. 'multiple': any number can be open. */
@@ -31,13 +32,13 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
 }
 
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; base: string; }
-const AccordionContext = React.createContext<Ctx | null>(null);
+const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 
 /* Accordion: a stack of items whose content shows and hides under a heading button (the WAI-ARIA accordion
    pattern). Arrow keys, Home and End move between the titles. className and every other prop go to the
    wrapper. */
 /** Items that show and hide their content under heading buttons; one open at a time, or several. */
-export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(function Accordion(props, ref) {
+export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProps>("Accordion", function Accordion(props, ref) {
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, className: 1, children: 1, onKeyDown: 1 });
   const single = props.type !== "multiple";
   const controlled = props.value !== undefined;
@@ -75,12 +76,11 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(functi
     </AccordionContext.Provider>
   );
 });
-Accordion.displayName = "Accordion";
 
 /* AccordionItem: a heading holding a button (aria-expanded, aria-controls) and a region (aria-labelledby) that
    opens and closes with a height animation; closed content is hidden from everyone. */
 /** One item in an Accordion: a title button and the content it shows and hides. */
-export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(function AccordionItem(props, ref) {
+export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, AccordionItemProps>("AccordionItem", function AccordionItem(props, ref) {
   const ctx = React.useContext(AccordionContext);
   const rest = omit(props, { value: 1, title: 1, disabled: 1, className: 1, children: 1 });
   const index = String(rest["data-index"] || "0");
@@ -106,4 +106,3 @@ export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps
     </div>
   );
 });
-AccordionItem.displayName = "AccordionItem";

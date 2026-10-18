@@ -57,6 +57,12 @@ for (const c of comps) {
     [missing.length && `missing: ${missing.map((p) => what[p]).join(', ')}`, fixed.length && `known gap now fixed, remove it from GAPS in contract.mjs: ${fixed.join(', ')}`].filter(Boolean).join('; '));
 }
 
+// Tree-shaking: a component made with React.forwardRef(...) and a separate `X.displayName = "X"` statement can't be
+// dropped by a bundler (the statement is a side effect), so every component goes through component() or named().
+const unshakeable = comps.flatMap((c) => fs.readdirSync(path.join(COMP, c)).filter((f) => /^[A-Z]\w*\.tsx$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
+  .filter((f) => /^\w+\.displayName = |= React\.forwardRef\b/m.test(fs.readFileSync(path.join(COMP, c, f), 'utf8'))).map((f) => `${c}/${f}`));
+t('components are made with component() or named() (internal/component.ts), so unused ones drop out of a bundle', !unshakeable.length, unshakeable.join(', '));
+
 const moved = SCRIPT_TESTED.filter((c) => fs.existsSync(path.join(COMP, c, `${c}.test.tsx`)));
 t('components with their own test file are off the SCRIPT_TESTED list', !moved.length, `remove from SCRIPT_TESTED in contract.mjs: ${moved.join(', ')}`);
 

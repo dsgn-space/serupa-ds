@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, isInvalid, omit, oneOf } from "../../internal/cn";
 import { asIcon, Icon } from "../Icon/Icon";
 import type { InputProps } from "../Input/Input";
+import { component } from "../../internal/component";
 
 export interface PasswordInputProps extends Omit<InputProps, "type" | "rightIcon"> {
   /** Shows the password as text (controlled). Use with onVisibleChange. */
@@ -20,7 +21,7 @@ const SIZES = ["sm", "md", "lg"] as const;
    Input's box and tokens. autoComplete defaults to "current-password"; use "new-password" on sign-up forms.
    className and style go to the box; ref and every other prop to the <input>. */
 /** A password field with a button that shows and hides what was typed. */
-export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(function PasswordInput(props, ref) {
+export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, PasswordInputProps>("PasswordInput", function PasswordInput(props, ref) {
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -46,4 +47,3 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
     </span>
   );
 });
-PasswordInput.displayName = "PasswordInput";

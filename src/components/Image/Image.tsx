@@ -3,6 +3,7 @@ import { cn, oneOf, setRef } from "../../internal/cn";
 import { Dialog } from "../Dialog/Dialog";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
+import { component } from "../../internal/component";
 
 export type ImageRatio = 'auto' | 'square' | '4:3' | 'video' | number;
 
@@ -42,7 +43,7 @@ const RATIOS = ["auto", "square", "4:3", "video"] as const;
    back). onRemove adds a remove button in the corner. alt is required. ref, className and other img props go
    to the <img>; frameProps to the frame. */
 /** A picture in a frame with a ratio, a loading placeholder and an error fallback; optionally opens full size or can be removed. */
-export const Image = React.forwardRef<HTMLImageElement, ImageProps>(function Image(props, ref) {
+export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Image", function Image(props, ref) {
   const { src, alt, ratio: _r, fit: _f, rounded, fallback, viewable, fullSrc, viewLabel, onRemove, removeLabel, frameProps, className, onLoad, onError, loading, ...rest } = props;
   const ratio = typeof props.ratio === "number" && props.ratio > 0 ? props.ratio : oneOf(RATIOS, props.ratio as string, "auto");
   const fit = oneOf(["cover", "contain"] as const, props.fit, "cover");
@@ -74,4 +75,3 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(function Ima
     </span>
   );
 });
-Image.displayName = "Image";

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 export type ContainerSize = 'prose' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
@@ -18,7 +19,7 @@ const TAGS = ["div", "main", "section", "header", "footer", "article"] as const;
 /* Container: centers the page's content with a maximum width and side padding that grows with the screen.
    className, style and every other prop go to the element. */
 /** Centers content with a maximum width and responsive side padding. */
-export const Container = React.forwardRef<HTMLElement, ContainerProps>(function Container(props, ref) {
+export const Container = /* @__PURE__ */ component<HTMLElement, ContainerProps>("Container", function Container(props, ref) {
   const rest = omit(props, { size: 1, padded: 1, as: 1, className: 1 });
   const size = oneOf(SIZES, props.size, "xl");
   return React.createElement(oneOf(TAGS, props.as, "div"), Object.assign(rest, {
@@ -26,4 +27,3 @@ export const Container = React.forwardRef<HTMLElement, ContainerProps>(function 
     className: cn("dk-container", "dk-container--" + size, props.padded !== false && "dk-container--padded", props.className),
   }));
 });
-Container.displayName = "Container";

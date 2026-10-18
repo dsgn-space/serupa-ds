@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, SIZES } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'role'> {
   /** 'sm' (28 by 16px track, text-xs), 'md' (36 by 20px, text-sm, default) or 'lg' (44 by 24px, text-base). */
@@ -22,7 +23,7 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
 const OWN = { size: 1, invalid: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
 
 /** An on/off setting that applies at once: a native checkbox with role="switch" (ref, checked, onChange and every input attribute go to it), drawn as a track and thumb; className and style go to the <label> around it. */
-export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function Switch(props, ref) {
+export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>("Switch", function Switch(props, ref) {
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -45,4 +46,3 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function S
     </label>
   );
 });
-Switch.displayName = "Switch";

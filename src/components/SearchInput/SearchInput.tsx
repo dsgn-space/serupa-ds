@@ -3,6 +3,7 @@ import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
+import { component } from "../../internal/component";
 
 export interface SearchInputProps extends Omit<InputProps, "type" | "leftIcon" | "rightIcon"> {
   /** Called with the text when Enter is pressed. */
@@ -17,15 +18,13 @@ export interface SearchInputProps extends Omit<InputProps, "type" | "leftIcon" |
   loadingLabel?: string;
 }
 
-const setValue = Object.getOwnPropertyDescriptor(typeof HTMLInputElement === "undefined" ? {} : HTMLInputElement.prototype, "value");
-
 /* SearchInput: an Input for searching: a search icon at the start, type="search", and a × at the end once
    something is typed, which clears the field and puts focus back in it. Escape clears it too, and Enter calls
    onSearch. Clearing fires the input's own onChange with an empty value, so controlled and uncontrolled fields
    both work. It uses Input's box and tokens: className and style go to the box; ref and every other prop to the
    <input>. */
 /** A search field: a search icon, a clear button once something is typed, Escape to clear and Enter to search. */
-export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(props, ref) {
+export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInputProps>("SearchInput", function SearchInput(props, ref) {
   const rest = omit(props, { size: 1, invalid: 1, className: 1, style: 1, onSearch: 1, onClear: 1, clearLabel: 1, loading: 1, loadingLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -39,6 +38,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   const clear = () => {
     const i = el.current;
     if (!i) return;
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
     if (setValue && setValue.set) setValue.set.call(i, ""); else i.value = "";
     i.dispatchEvent(new Event("input", { bubbles: true }));
     if (!controlled) setTyped("");
@@ -69,4 +69,3 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
     </span>
   );
 });
-SearchInput.displayName = "SearchInput";

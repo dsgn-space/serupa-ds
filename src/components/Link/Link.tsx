@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
+import { component } from "../../internal/component";
 
 export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   /** 'primary' (default): the primary color. 'neutral': the surrounding text's color, still underlined. */
@@ -17,7 +18,7 @@ export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>
 /* Link: an inline text link, underlined, in the primary color or the surrounding text's. external opens a new
    tab and says so. `as` renders your router's link instead of an <a>. className and every other prop go to it. */
 /** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. */
-export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props, ref) {
+export const Link = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>("Link", function Link(props, ref) {
   const rest = omit(props, { tone: 1, underline: 1, external: 1, as: 1, className: 1, children: 1 });
   const tone = oneOf(["primary", "neutral"] as const, props.tone, "primary");
   const underline = oneOf(["always", "hover"] as const, props.underline, "always");
@@ -33,4 +34,3 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link
     <VisuallyHidden> (opens in a new tab)</VisuallyHidden>
   </> : null);
 });
-Link.displayName = "Link";

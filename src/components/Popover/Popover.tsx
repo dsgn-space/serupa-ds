@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, domId, elementRef, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { type Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
+import { named } from "../../internal/component";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -33,7 +34,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
    returns focus to the trigger; a click outside, or focus moving elsewhere, closes it too. It sits in the top
    layer, right after the trigger in the tab order. For a hint, use Tooltip; for a list of actions, Menu. */
 /** A small non-modal dialog next to its trigger, for interactive content: a form, filters, details. */
-export function Popover(props: PopoverProps): React.ReactElement {
+export const Popover = /* @__PURE__ */ named("Popover", function Popover(props: PopoverProps): React.ReactElement {
   const id = domId("dk-pop", React.useId());
   const [inner, setInner] = React.useState(false);
   const controlled = props.open !== undefined;
@@ -92,5 +93,4 @@ export function Popover(props: PopoverProps): React.ReactElement {
       </div>
     </>
   );
-}
-Popover.displayName = "Popover";
+});

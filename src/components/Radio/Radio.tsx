@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 /** V is the radios' value type: string (or number) as you use them, inferred from value or onChange. */
 export interface RadioGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
@@ -44,7 +45,7 @@ interface RadioContextValue {
   required: boolean;
   select(value: unknown, event: React.ChangeEvent<HTMLInputElement>): void;
 }
-const RadioContext = React.createContext<RadioContextValue | null>(null);
+const RadioContext = /* @__PURE__ */ React.createContext<RadioContextValue | null>(null);
 
 /* RadioGroup: one choice from a set of Radios. It names them (name, or a generated one), holds the value
    (value with onChange, or defaultValue), and passes size, invalid, disabled and required down. onChange gets
@@ -53,7 +54,7 @@ const RadioContext = React.createContext<RadioContextValue | null>(null);
 const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onChange: 1, orientation: 1, size: 1, invalid: 1, disabled: 1, required: 1, children: 1, className: 1 } as const;
 
 /** One choice from a set of Radios: a <div role="radiogroup"> that names them, holds the value and passes size, invalid, disabled and required down. Label it with Field group, aria-label or aria-labelledby. */
-export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup(props: RadioGroupProps, ref) {
+export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupProps>("RadioGroup", function RadioGroup(props: RadioGroupProps, ref) {
   const rest = omit(props, GROUP_OWN);
   const autoName = domId("dk-rg", React.useId());
   const controlled = props.value !== undefined;
@@ -70,7 +71,6 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(func
     </div>
   );
 }) as (<V extends string | number = string | number>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
-RadioGroup.displayName = "RadioGroup";
 
 /* Radio: a native radio and its label, like Checkbox. In a RadioGroup it takes the group's name, checked state,
    size, invalid, disabled and required; on its own, pass name and checked yourself. size "sm", "md" (default) or
@@ -79,7 +79,7 @@ RadioGroup.displayName = "RadioGroup";
 const OWN = { size: 1, invalid: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
 /** A native radio with its label (ref, value and every input attribute go to the <input>); className and style go to the <label> around it. In a RadioGroup, the group sets name and checked. */
-export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Radio(props, ref) {
+export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>("Radio", function Radio(props, ref) {
   const ctx = React.useContext(RadioContext);
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx && ctx.size, "md"));
@@ -112,4 +112,3 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Rad
     </label>
   );
 });
-Radio.displayName = "Radio";

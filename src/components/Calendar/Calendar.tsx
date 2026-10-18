@@ -3,6 +3,7 @@ import { cn, domId, omit } from "../../internal/cn";
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from "../../internal/dates";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
+import { component } from "../../internal/component";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. */
@@ -49,7 +50,7 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMont
    Shift, a year), Enter or Space picks. Moving past the month shows the next one. Days outside min..max or
    refused by isDateDisabled are aria-disabled and can't be picked. Month and weekday names follow the locale. */
 /** A month of days to pick one from, with keyboard navigation; used by DatePicker. */
-export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function Calendar(props, ref) {
+export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>("Calendar", function Calendar(props, ref) {
   const rest = omit(props, OWN);
   const locale = props.locale;
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
@@ -148,4 +149,3 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function
     </div>
   );
 });
-Calendar.displayName = "Calendar";

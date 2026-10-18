@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { asIcon, Icon, type IconSource } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   /** BreadcrumbItems, from the top level down to the current page (the last one). */
@@ -28,7 +29,7 @@ export interface BreadcrumbItemProps extends React.AnchorHTMLAttributes<HTMLAnch
 
 /* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */
 /** One page in a Breadcrumb: a link, or the current page when it's the last. */
-export const BreadcrumbItem = React.forwardRef<HTMLAnchorElement, BreadcrumbItemProps>(function BreadcrumbItem(props, ref) {
+export const BreadcrumbItem = /* @__PURE__ */ component<HTMLAnchorElement, BreadcrumbItemProps>("BreadcrumbItem", function BreadcrumbItem(props, ref) {
   const rest = omit(props, { icon: 1, as: 1, current: 1, className: 1, children: 1 });
   const content = <>{props.icon ? <span className="dk-breadcrumb__icon">{asIcon(props.icon)}</span> : null}{props.children}</>;
   if (props.current) {
@@ -37,13 +38,12 @@ export const BreadcrumbItem = React.forwardRef<HTMLAnchorElement, BreadcrumbItem
   }
   return React.createElement(props.as || "a", Object.assign(rest, { ref: ref, className: cn("dk-breadcrumb__item dk-breadcrumb__link", props.className) }), content);
 });
-BreadcrumbItem.displayName = "BreadcrumbItem";
 
 /* Breadcrumb: a nav with an ordered list of pages from the top level to the current one, a chevron (or slash)
    between them. maxItems collapses the middle into a "…" button that shows them again. className and every
    other prop go to the <nav>. */
 /** Where the current page sits: links to the pages above it, separated by chevrons. maxItems collapses the middle. */
-export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(function Breadcrumb(props, ref) {
+export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps>("Breadcrumb", function Breadcrumb(props, ref) {
   const rest = omit(props, { separator: 1, maxItems: 1, expandLabel: 1, className: 1, children: 1 });
   const separator = oneOf(["chevron", "slash"] as const, props.separator, "chevron");
   const [expanded, setExpanded] = React.useState(false);
@@ -82,4 +82,3 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(functio
     </nav>
   );
 });
-Breadcrumb.displayName = "Breadcrumb";

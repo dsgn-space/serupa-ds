@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
+import { component } from "../../internal/component";
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -32,7 +33,7 @@ const OWN = { open: 1, onOpenChange: 1, side: 1, size: 1, title: 1, description:
    inside, the page behind is inert and doesn't scroll, Escape, the × and the backdrop ask to close
    (onOpenChange(false)), and focus goes back where it was. */
 /** A modal panel that slides in from an edge: navigation, filters, details. */
-export const Drawer = React.forwardRef<HTMLDialogElement, DrawerProps>(function Drawer(props, ref) {
+export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>("Drawer", function Drawer(props, ref) {
   const rest = omit(props, OWN);
   const base = domId("dk-drw", React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
@@ -98,4 +99,3 @@ export const Drawer = React.forwardRef<HTMLDialogElement, DrawerProps>(function 
     </dialog>
   );
 });
-Drawer.displayName = "Drawer";

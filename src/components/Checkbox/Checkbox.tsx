@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** 'sm' (14px box, text-xs), 'md' (16px, text-sm, default) or 'lg' (20px, text-base). */
@@ -23,7 +24,7 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
 const OWN = { size: 1, invalid: 1, indeterminate: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
 /** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
-export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(props, ref) {
+export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>("Checkbox", function Checkbox(props, ref) {
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -54,4 +55,3 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
     </label>
   );
 });
-Checkbox.displayName = "Checkbox";

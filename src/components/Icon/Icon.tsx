@@ -4,6 +4,7 @@ import { warnOnce } from "../../internal/warn";
 import { ICONS, hasIcon, getIcon, isIconData, loadAllIcons, type CustomIconName } from "../../icons";
 import type { MaterialIconName } from "../../material/icons";
 import type { IconData } from "../../material/types";
+import { component } from "../../internal/component";
 
 /** Any Material Symbol's name, a custom icon's name, or a name you registered with registerIcons. */
 export type IconName = CustomIconName | MaterialIconName | (string & {});
@@ -25,7 +26,7 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 /* Icon: an inline SVG in a 1em box, drawn in the text color. Material Symbols Rounded, filled (src/material), or
    one of your custom icons (tools/icons/build.mjs). */
 /** An icon: Material Symbols Rounded (filled) or one of your custom SVG icons. Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
-export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(props, ref) {
+export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>("Icon", function Icon(props, ref) {
   const [, loadedAll] = React.useReducer((n: number) => n + 1, 0);
   const custom = !props.icon && hasIcon(props.name);
   const data = props.icon || (custom || props.name == null ? undefined : getIcon(props.name));
@@ -61,7 +62,6 @@ export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(p
     </span>
   );
 });
-Icon.displayName = "Icon";
 
 /** An icon name or an icon from serupa-ds/icons becomes an <Icon>; elements pass through. */
 export function asIcon(node: React.ReactNode | IconData): React.ReactNode {

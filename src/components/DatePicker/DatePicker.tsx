@@ -4,6 +4,7 @@ import { compare, datePattern, day, formatDate, isoDate, isValid, parseDate } fr
 import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> {
   /** The chosen day (controlled), or null. Use with onValueChange. */
@@ -36,7 +37,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    and closes on a pick, Escape or a click outside, returning focus to the field. With name, a hidden input sends
    yyyy-mm-dd. ref goes to the text field. */
 /** A date field: type a date or pick one from a calendar popover. */
-export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(function DatePicker(props, ref) {
+export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePickerProps>("DatePicker", function DatePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale, weekStartsOn, size: _s, invalid: _i, buttonLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -123,4 +124,3 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
     </span>
   );
 });
-DatePicker.displayName = "DatePicker";
