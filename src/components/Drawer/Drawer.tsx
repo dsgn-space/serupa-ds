@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
+import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
@@ -60,18 +60,28 @@ export const Drawer = React.forwardRef<HTMLDialogElement, DrawerProps>(function 
   React.useEffect(() => () => { const b = back.current; if (b && b.isConnected) b.focus(); }, []);
 
   const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
+  // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
+  // cancel): if open is still true, ask to close so open and the screen agree again.
+  const openNow = React.useRef(props.open); openNow.current = props.open;
+  const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
+    if (rest.onClose) rest.onClose(e);
+    if (!openNow.current || e.currentTarget.open) return;
+    const b = back.current; back.current = null;
+    if (b && b.isConnected && typeof b.focus === "function") b.focus();
+    close();
+  };
   // A press that starts on the panel (selecting text, say) and ends on the backdrop clicks the <dialog> too: only a
   // press that starts and ends on the backdrop counts.
   const downOnBackdrop = React.useRef(false);
   const onPointerDown = (e: React.PointerEvent<HTMLDialogElement>) => { if (rest.onPointerDown) rest.onPointerDown(e); downOnBackdrop.current = e.target === e.currentTarget; };
   const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && downOnBackdrop.current && e.target === e.currentTarget) close(); downOnBackdrop.current = false; };
   return (
-    <dialog {...rest} ref={(n) => { el.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+    <dialog {...rest} ref={(n) => { el.current = n; setRef(ref, n); }}
       aria-modal="true"
       aria-labelledby={rest["aria-labelledby"] || (has(props.title) ? base + "-title" : undefined)}
       aria-describedby={rest["aria-describedby"] || (has(props.description) ? base + "-desc" : undefined)}
       className={cn("dk-drawer", "dk-drawer--" + side, "dk-drawer--" + size, props.className)} data-component="drawer" data-side={side} data-size={size}
-      onCancel={onCancel} onPointerDown={onPointerDown} onClick={onClick}>
+      onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
       <div className="dk-drawer__panel">
         {has(props.title) || has(props.description) || showClose ? (
           <div className="dk-drawer__header">

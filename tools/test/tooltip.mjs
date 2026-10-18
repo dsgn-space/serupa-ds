@@ -8,7 +8,7 @@ const APP = `<div id="root" style="padding:120px 200px;display:flex;flex-wrap:wr
 <script>
 var D = window.Serupa, h = React.createElement; window.opens = [];
 function App() {
-  var c = React.useState(false); window.setCtl = c[1];
+  var c = React.useState(false), dl = React.useState(false); window.setCtl = c[1];
   return h(React.Fragment, null,
     h(D.Tooltip, { content: 'Edit the file' }, h(D.IconButton, { id: 'a', icon: 'edit', label: 'Edit', noTitle: true, 'aria-describedby': 'other' })),
     h(D.Tooltip, { content: 'Settings', role: 'label', placement: 'bottom', delay: 0 }, h('button', { id: 'b' }, h(D.Icon, { name: 'settings' }))),
@@ -17,7 +17,9 @@ function App() {
     h(D.Tooltip, { content: 'Never', disabled: true, delay: 0 }, h('button', { id: 'e' }, 'Disabled')),
     h(D.Tooltip, { content: 'Tokens', delay: 0, style: { '--tooltip-bg': 'rgb(1, 2, 3)' } }, h('button', { id: 'f' }, 'Tokens')),
     h('div', { style: { position: 'fixed', top: '0px', left: '300px' } }, h(D.Tooltip, { content: 'Flipped', delay: 0 }, h('button', { id: 'g' }, 'Top edge'))),
-    h('div', { style: { overflow: 'hidden', width: '60px', height: '30px', position: 'relative' } }, h(D.Tooltip, { content: 'Not clipped by overflow hidden', delay: 0 }, h('button', { id: 'h' }, 'Clip'))));
+    h('div', { style: { overflow: 'hidden', width: '60px', height: '30px', position: 'relative' } }, h(D.Tooltip, { content: 'Not clipped by overflow hidden', delay: 0 }, h('button', { id: 'h' }, 'Clip'))),
+    h('button', { id: 'dopen', onClick: function () { dl[1](true); } }, 'Open dialog'),
+    h(D.Dialog, { id: 'tdlg', open: dl[0], onOpenChange: dl[1], title: 'In a dialog' }, h(D.Tooltip, { content: 'Inside', delay: 0 }, h('button', { id: 'i' }, 'Inside'))));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>`;
@@ -79,6 +81,16 @@ t('an overflow: hidden parent can\'t clip it', hh);
 await p.hover('#f'); await p.waitForTimeout(100);
 const st = await p.evaluate(() => { const tt = document.getElementById(document.getElementById('f').getAttribute('aria-describedby')); const s = getComputedStyle(tt); return { bg: s.backgroundColor, fs: s.fontSize, r: s.borderTopLeftRadius, p: s.padding, mw: s.maxWidth }; });
 t('look: text-xs, 6px corners, 4px 8px padding, 240px at most; --tooltip-bg overrides one', st.bg === 'rgb(1, 2, 3)' && st.fs === '12px' && st.r === '6px' && st.p === '4px 8px' && st.mw === '240px', JSON.stringify(st));
+
+// Inside a Dialog the tooltip is the top layer: one Escape hides the tooltip only, the next closes the Dialog.
+await p.click('#dopen'); await p.waitForTimeout(300);
+await p.hover('#i'); await p.waitForTimeout(100);
+const inDlg = (await tip('#i')).open;
+await p.keyboard.press('Escape'); await p.waitForTimeout(100);
+const esc1 = { tip: (await tip('#i')).open, dialog: await p.evaluate(() => document.getElementById('tdlg').open) };
+await p.keyboard.press('Escape'); await p.waitForTimeout(100);
+const esc2 = await p.evaluate(() => document.getElementById('tdlg').open);
+t('in a Dialog: Escape hides the tooltip and leaves the Dialog open; the next Escape closes the Dialog', inDlg && !esc1.tip && esc1.dialog && !esc2, JSON.stringify({ inDlg, esc1, esc2 }));
 
 await p.hover('#b'); await p.waitForTimeout(100);
 const contrast = await p.evaluate(() => {

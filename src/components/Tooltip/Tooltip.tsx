@@ -62,12 +62,13 @@ export function Tooltip(props: TooltipProps): React.ReactElement {
     return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
   }, [open, props.placement, props.content]);
 
-  // Escape hides it from anywhere while it's open (the element may not have focus when hovered).
+  // Escape hides it from anywhere while it's open (the element may not have focus when hovered). It's the top
+  // layer, so it takes that Escape: caught first (capture) and stopped, so a Dialog or Menu around it stays open.
   React.useEffect(() => {
     if (!open) return;
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") set(false); };
-    document.addEventListener("keydown", esc);
-    return () => document.removeEventListener("keydown", esc);
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); set(false); } };
+    document.addEventListener("keydown", esc, true);
+    return () => document.removeEventListener("keydown", esc, true);
   }, [open, set]);
 
   const child = React.Children.only(props.children) as React.ReactElement<TriggerProps>;

@@ -58,6 +58,22 @@ await p.click('#opener'); await p.waitForTimeout(300);
 const x = await p.evaluate(() => { const c = document.querySelector('#dlg .dk-dialog__close'); return [c.getAttribute('aria-label'), c.tagName].join(); });
 await p.click('#dlg .dk-dialog__close'); await p.waitForTimeout(100);
 t('the × (a button named "Close") asks to close', x === 'Close,BUTTON' && !(await isOpen('dlg')), x);
+// The browser can close the <dialog> on its own (dialog.close(), a form with method="dialog"): it asks to close
+// then too, so open follows and the button opens it again.
+await p.evaluate(() => { window.asks = []; });
+await p.click('#opener'); await p.waitForTimeout(300);
+await p.evaluate(() => document.getElementById('dlg').close()); await p.waitForTimeout(100);
+const byClose = await p.evaluate(() => window.asks.join());
+await p.click('#opener'); await p.waitForTimeout(300);
+const again = await isOpen('dlg');
+await p.evaluate(() => { const f = document.createElement('form'); f.method = 'dialog'; f.id = 'fdlg'; f.innerHTML = '<button id="fsub">OK</button>'; document.querySelector('#dlg .dk-dialog__body').appendChild(f); });
+await p.evaluate(() => document.getElementById('fsub').click()); await p.waitForTimeout(100);
+const byForm = await p.evaluate(() => window.asks.join());
+await p.evaluate(() => document.getElementById('fdlg').remove());
+await p.click('#opener'); await p.waitForTimeout(300);
+const again2 = await isOpen('dlg');
+t('closed by the browser (dialog.close(), form method="dialog"): asks to close, and opens again next time', byClose === 'dlg:false' && again && byForm === 'dlg:false,dlg:false' && again2, JSON.stringify({ byClose, again, byForm, again2 }));
+await p.evaluate(() => window.setOpen(false)); await p.waitForTimeout(100);
 // Measure once the opening animation has ended (it scales the panel from 95%): headless WebKit can start it late.
 const settled = () => p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))));
 await p.evaluate(() => { window.setSize('lg'); window.setOpen(true); }); await p.waitForTimeout(300); await settled();
