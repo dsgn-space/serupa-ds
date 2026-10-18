@@ -87,7 +87,11 @@ Toaster.displayName = "Toaster";
 function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElement {
   const t = props.item;
   const duration = t.duration == null ? 5000 : t.duration;
-  const [paused, setPaused] = React.useState(false);
+  // Each reason to stop the time is kept apart, so leaving with the mouse doesn't restart it while focus is still inside.
+  const [hovered, setHovered] = React.useState(false);
+  const [focused, setFocused] = React.useState(false);
+  const [hidden, setHidden] = React.useState(false);
+  const paused = hovered || focused || hidden;
   const left = React.useRef(duration);
   React.useEffect(() => { left.current = duration; }, [t]);   // a replaced toast starts its time again
   React.useEffect(() => {
@@ -97,7 +101,7 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
     return () => { window.clearTimeout(timer); left.current -= Date.now() - start; };
   }, [paused, t, duration]);
   React.useEffect(() => {
-    const vis = () => setPaused(document.hidden);
+    const vis = () => setHidden(document.hidden);
     document.addEventListener("visibilitychange", vis);
     return () => document.removeEventListener("visibilitychange", vis);
   }, []);
@@ -105,8 +109,8 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
   const icon = ICONS[t.tone];
   return (
     <li className={cn("dk-toast", "dk-toast--" + t.tone)} data-tone={t.tone} aria-labelledby={titleId} aria-describedby={t.description != null ? descId : undefined}
-      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPaused(false); }}>
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      onFocus={() => setFocused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false); }}>
       {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon name={icon} /></span> : null}
       <div className="dk-toast__content">
         <p className="dk-toast__title" id={titleId}>{t.title}</p>

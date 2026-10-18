@@ -51,6 +51,13 @@ await p.waitForTimeout(100); await p.focus('.dk-toast__action'); await p.waitFor
 const fheld = (await list()).length;
 await p.evaluate(() => document.activeElement.blur()); await p.waitForTimeout(350);
 t('and while something in it has focus', fheld === 1 && (await list()).length === 0, fheld);
+// Focus and hover are separate reasons to wait: the mouse passing over and off a focused toast doesn't restart the time.
+await p.evaluate(() => D.toast({ title: 'Keep me', duration: 300, action: { label: 'Open', onClick: function () {} } }));
+await p.waitForTimeout(100); await p.focus('.dk-toast__action');
+await p.hover('.dk-toast'); await p.mouse.move(0, 0); await p.waitForTimeout(600);
+const kept = (await list()).length;
+await p.evaluate(() => document.activeElement.blur()); await p.waitForTimeout(350);
+t('with focus inside, moving the mouse over and off the toast doesn\'t restart its time', kept === 1 && (await list()).length === 0, kept);
 // Keyboard: Tab reaches the action and then Dismiss; Enter and Space press them.
 await p.evaluate(() => { window.undos = 0; D.toast({ title: 'Archived', action: { label: 'Undo', onClick: function () { window.undos++; } }, duration: 0 }); });
 await p.waitForSelector('.dk-toast__action');
