@@ -4,6 +4,34 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [6.0.0] - 2026-10-18
+
+### Added
+
+- Component tokens for the colors that read a shared color directly, so each one can now be overridden per component. Unset, each one uses the same color as before, so nothing looks different. Card: `--card-text`, `--card-focus-ring`. Badge: `--badge-neutral-subtle-bg`, `--badge-neutral-subtle-text`, `--badge-neutral-solid-bg`, `--badge-neutral-solid-text`, `--badge-neutral-outline-text`, `--badge-neutral-outline-border`, `--badge-primary-subtle-bg`, `--badge-primary-subtle-text`, `--badge-primary-solid-bg`, `--badge-primary-solid-text`, `--badge-primary-outline-text`, `--badge-primary-outline-border`, `--badge-indicator-ring-color`, `--badge-focus-gap-color`. Button, Checkbox, Radio and Switch: `--button-focus-gap-color`, `--checkbox-focus-gap-color`, `--radio-focus-gap-color`, `--switch-focus-gap-color` (the 2px gap between the control and its focus ring; set it to the color the control sits on). Combobox: `--combobox-chevron-hover`, `--combobox-chevron-bg-hover`. DatePicker: `--date-picker-button-hover`, `--date-picker-button-bg-hover`, `--date-picker-focus-ring`, `--date-picker-popup-text`. TimePicker: `--time-picker-button-hover`, `--time-picker-button-bg-hover`. Dialog: `--dialog-text`. Drawer: `--drawer-text`. Field: `--field-text`. Input: `--input-text`, `--input-icon-color`. Navbar: `--navbar-brand-text`. Select: `--select-text`. Textarea: `--textarea-text`, `--textarea-count-full`. Tabs: `--tabs-focus-ring`, `--tabs-focus-gap-color`.
+- Tests: the foundation audit checks that every width in a media query (the component CSS, the utilities and `matchMedia()` in the components) is a `screen-*` value; a `max-width` may end just below one (`767.98px`). CSS variables don't work inside `@media`, so these values are written out and now can't drift from the tokens.
+- Tests: the brand list comes from `tokens.json` (`color.themes`). The foundation audit checks that `theme.js` (`BRANDS`, its default and its header), the `ThemeBrand` type and the theme lists in the tests name the same brands and themes, and that each brand has a light and a dark theme (ADR-0003).
+- Icons: `serupa-ds/icons`, one named export per Material Symbol (`add` is `Add`, `arrow_forward` is `ArrowForward`, `10k` is `Icon10k`); Icon's `icon` prop; `registerIcons()` and `getIcon()`; the `IconData`, `IconSource` and `CommonIconName` types. Every icon prop (Button, IconButton, Fab, Input, Select, Menu, Tabs, Alert, Badge, Breadcrumb, Sidebar, List, EmptyState, SegmentedControl…) takes a name, an imported icon or an element.
+
+### Changed
+
+- Docs: Storybook's Brand toolbar reads the brands from `tokens.json` instead of its own list. It shows the same three brands.
+- Icons: Material Symbols are now inline SVGs instead of an icon font (ADR-0009). Icons show at once with no font to load, nothing flashes while a file loads, and a page carries only the icons it uses: the icon font (990 KB) is gone. Every icon looks the same as before: each SVG is drawn from the 5.x font's own outlines, and the test suite checks them pixel by pixel.
+- Icons by name (`<Icon name="add" />`, `leftIcon="add"`) work for the **everyday icons**, about 270 of them: every icon on the Foundations/Icons page and every icon the components use. Any other Material Symbol is an import: `import { RocketLaunch } from "serupa-ds/icons"`, then `<Icon icon={RocketLaunch} />` or `leftIcon={RocketLaunch}`. Only the icons you import ship. **Migrating:** search your code for icon names outside the everyday set. The console warns about each one (`Icon: "rocket_launch" isn't an everyday icon…`). Either import those icons or register them once at startup with `registerIcons(RocketLaunch, …)`, and then their names keep working. To keep every name working with no changes, call `registerIcons(await import("serupa-ds/icons"))` (this adds about 3 MB), or on a plain page add `serupa-icons.iife.js` after `serupa.iife.js`.
+- Icon's `<span>` has no text any more; its name is in `data-icon`. `translate="no"` is gone, because there's no name to protect from translation. All sizes use the 24px design scaled, where the font picked an optical size between 20 and 48.
+
+### Removed
+
+- `fonts/MaterialSymbolsRounded-Filled.woff2`, its `@font-face` in `tokens.css`, and the `--font-icon` token. If your own CSS used `var(--font-icon)` to write icon names as text, use `<Icon>` instead.
+- Text's `--text-tone-default`, `--text-tone-muted`, `--text-tone-primary` and `--text-tone-danger`, added in 5.1.0. Text's tokens are named `--text-color`, `--text-color-muted`, `--text-color-primary` and `--text-color-danger` again, in line with the theme's color names. **Migrating:** if you set a `--text-tone-*` variable, rename it to the matching `--text-color*` one; the values are the same.
+
+### Fixed
+
+- Badge's remove button (×) takes its focus ring from `--badge-focus-ring`, like the rest of the badge.
+- Dialog and Drawer now call `onOpenChange(false)` when the browser closes the `<dialog>` on its own (`dialog.close()`, a form with `method="dialog"`, or an Escape the browser doesn't let them cancel), so `open` no longer stays true while nothing is on screen, and the button that opened it opens it again.
+- Tooltip takes the Escape that hides it, so inside a Dialog, Drawer or Menu one Escape hides only the tooltip and the next one closes the Dialog.
+- Dialog, Drawer, Image and SegmentedControl set a forwarded ref through the shared helper, like the other components. Function refs and object refs both keep working.
+
 ## [5.1.0] - 2026-10-18
 
 ### Added
