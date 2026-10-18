@@ -48,6 +48,10 @@ t('Escape asks to close (onOpenChange(false)), and focus goes back to the button
 await p.click('#opener'); await p.waitForTimeout(300);
 await p.click('#dlg .dk-dialog__panel', { position: { x: 30, y: 120 } }); await p.waitForTimeout(50);
 t('a click inside the panel doesn\'t close it', await isOpen('dlg'));
+// Selecting text: the press starts on the panel and ends on the backdrop. That isn't a click on the backdrop.
+{ const r = await p.evaluate(() => { const b = document.querySelector('#dlg .dk-dialog__panel').getBoundingClientRect(); return { x: b.left + 30, y: b.top + 120 }; });
+  await p.mouse.move(r.x, r.y); await p.mouse.down(); await p.mouse.move(20, 20, { steps: 4 }); await p.mouse.up(); await p.waitForTimeout(100); }
+t('a press that starts on the panel and ends on the backdrop doesn\'t close it', await isOpen('dlg') && (await p.evaluate(() => window.asks.join())) === 'dlg:false');
 await p.mouse.click(20, 20); await p.waitForTimeout(100);
 t('a click on the backdrop asks to close', !(await isOpen('dlg')) && (await p.evaluate(() => window.asks.join())) === 'dlg:false,dlg:false');
 await p.click('#opener'); await p.waitForTimeout(300);
