@@ -49,7 +49,60 @@ if (D) {
     Select: h(D.Select, { placeholder: 'Pick one', options: ['One', 'Two'] }),
     Switch: h(D.Switch, { defaultChecked: true }, 'Wi-Fi'),
     Textarea: h(D.Textarea, { autoResize: true, showCount: true, maxLength: 200 }),
+    Accordion: h(D.Accordion, { defaultValue: 'a' }, h(D.AccordionItem, { value: 'a', title: 'Shipping' }, 'Free over $50')),
+    Alert: h(D.Alert, { tone: 'warning', title: 'Heads up', onClose() {} }, 'Check your details.'),
+    Avatar: h(D.Avatar, { name: 'Ada Lovelace', status: 'online' }),
+    AvatarGroup: h(D.AvatarGroup, { max: 2 }, h(D.Avatar, { name: 'Ada Lovelace' }), h(D.Avatar, { name: 'Alan Turing' }), h(D.Avatar, { name: 'Grace Hopper' })),
+    Breadcrumb: h(D.Breadcrumb, null, h(D.BreadcrumbItem, { href: '/' }, 'Home'), h(D.BreadcrumbItem, null, 'Settings')),
+    ButtonGroup: h(D.ButtonGroup, { attached: true }, h(D.Button, null, 'Day'), h(D.ToggleButton, { pressed: true }, 'Week')),
+    Calendar: h(D.Calendar, { defaultValue: '2026-10-18', locale: 'en-GB' }),
+    Card: h(D.Card, null, h(D.CardHeader, null, 'Title'), h(D.CardBody, null, 'Body'), h(D.CardFooter, null, 'Footer')),
+    Carousel: h(D.Carousel, { label: 'Photos' }, h('div', null, 'One'), h('div', null, 'Two')),
+    Combobox: h(D.Combobox, { 'aria-label': 'Country', options: ['France', { value: 'de', label: 'Germany' }] }),
+    DatePicker: h(D.DatePicker, { 'aria-label': 'Date', defaultValue: '2026-10-18', name: 'date' }),
+    DateRangePicker: h(D.DateRangePicker, { 'aria-label': 'Dates' }),
+    Dialog: h(D.Dialog, { open: true, title: 'Invite', onOpenChange() {}, footer: h(D.Button, null, 'Send') }, 'Body'),
+    Drawer: h(D.Drawer, { open: true, title: 'Filters', onOpenChange() {} }, 'Body'),
+    EmptyState: h(D.EmptyState, { icon: 'folder_open', title: 'No projects yet', description: 'Create one to start.' }),
+    Fab: h(D.Fab, { icon: 'add', label: 'New' }),
+    FileUpload: h(D.FileUpload, { accept: 'image/*', multiple: true }),
+    Image: h(D.Image, { src: '/a.png', alt: 'A lake', ratio: '16/9', viewable: true }),
+    IconButton: h(D.IconButton, { icon: 'close', label: 'Close' }),
+    Kbd: h(D.Kbd, null, 'mod+k'),
+    Layout: h(D.Container, null, h(D.Stack, { gap: 4 }, h(D.Heading, { level: 2 }, 'Title'), h(D.Divider), h(D.Grid, { columns: 2 }, h(D.Text, { tone: 'muted' }, 'a'), h(D.Text, null, 'b')))),
+    Link: h(D.Link, { href: 'https://example.com', external: true }, 'Docs'),
+    List: h(D.List, null, h(D.ListItem, { title: 'Inbox', description: '3 new' })),
+    Menu: h(D.Menu, { trigger: h(D.Button, null, 'Actions') }, h(D.MenuGroup, { label: 'File' }, h(D.MenuItem, null, 'Rename')), h(D.MenuSeparator), h(D.MenuItem, null, 'Delete')),
+    Navbar: h(D.Navbar, { brand: 'Serupa' }, h(D.NavbarLink, { href: '/', active: true }, 'Home')),
+    NumberInput: h(D.NumberInput, { 'aria-label': 'Quantity', defaultValue: 2, min: 0 }),
+    Pagination: h(D.Pagination, { count: 20, page: 5, onPageChange() {} }),
+    PasswordInput: h(D.PasswordInput, { 'aria-label': 'Password' }),
+    Popover: h(D.Popover, { trigger: h(D.Button, null, 'Share'), title: 'Share' }, 'Body'),
+    Progress: h(D.Progress, { value: 40, label: 'Uploading' }),
+    SearchInput: h(D.SearchInput, { 'aria-label': 'Search', defaultValue: 'tokens' }),
+    SegmentedControl: h(D.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }] }),
+    Sidebar: h(D.Sidebar, null, h(D.SidebarSection, { title: 'Workspace' }, h(D.SidebarItem, { href: '/', icon: 'home', label: 'Home', active: true }))),
+    Slider: h(D.Slider, { 'aria-label': 'Price', defaultValue: [20, 80] }),
+    Stepper: h(D.Stepper, { current: 1, steps: [{ title: 'Account' }, { title: 'Plan' }, { title: 'Pay' }] }),
+    Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
+    Tabs: h(D.Tabs, { defaultValue: 'a' }, h(D.TabList, { 'aria-label': 'Sections' }, h(D.Tab, { value: 'a' }, 'A'), h(D.Tab, { value: 'b' }, 'B')), h(D.TabPanel, { value: 'a' }, 'Panel')),
+    TimePicker: h(D.TimePicker, { 'aria-label': 'Time', defaultValue: '14:30', name: 'time' }),
+    Toaster: h(D.Toaster),
+    Tooltip: h(D.Tooltip, { content: 'Copy link' }, h(D.Button, null, 'Copy')),
+    VisuallyHidden: h(D.VisuallyHidden, null, 'Skip'),
   };
+  // Every component the package exports renders in one of the cases above (as the case or a part inside it), so a
+  // new component can't skip this check.
+  const seen = new Set();
+  const walk = (el) => {
+    if (Array.isArray(el)) return el.forEach(walk);
+    if (!el || typeof el !== 'object' || !el.props) return;
+    for (const [k, v] of Object.entries(D)) if (v === el.type) seen.add(k);
+    for (const v of Object.values(el.props)) walk(v);
+  };
+  Object.values(cases).forEach(walk);
+  const unrendered = Object.keys(D).filter((k) => /^[A-Z]/.test(k) && !seen.has(k));
+  t('every component the package exports is server-rendered here', !unrendered.length, `add a case for: ${unrendered.join(', ')}`);
   for (const [name, el] of Object.entries(cases)) {
     let html = '', e = null;
     try { html = renderToString(el); } catch (x) { e = x; }

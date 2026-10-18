@@ -73,6 +73,20 @@ for (const scheme of ['light', 'dark']) {
   t('theme.js: reset() returns to the page default', back.theme === 'blue-dark' && back.mode === 'auto');
   await ctx.close();
 }
+{
+  // A choice saved by 4.x (as "diki-theme") is kept, and reset() forgets it for good.
+  const ctx = await b.newContext({ colorScheme: 'light' });
+  const p = await ctx.newPage();
+  const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
+  await p.goto(url);
+  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('diki-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
+  await p.reload();
+  t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', (await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join())) === 'violet-dark,,true');
+  await p.evaluate(() => Serupa.theme.reset());
+  await p.reload();
+  t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'blue-light');
+  await ctx.close();
+}
 
 // 4. purge.py keeps exactly what a page needs
 {

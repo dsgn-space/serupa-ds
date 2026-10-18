@@ -6,7 +6,7 @@ The source of the Foundations pages in Storybook (`docs/foundations/*.mdx` show 
 
 | Group | Families | Character |
 | --- | --- | --- |
-| Neutrals | `slate`, `gray`, `zinc`, `neutral`, `stone` | Cool (slate) through pure (neutral) to warm (stone) greys. Pick **one** per product; the aliases use `gray`. |
+| Neutrals | `slate`, `gray`, `zinc`, `neutral`, `stone` | Cool (slate) through pure (neutral) to warm (stone) greys. Pick **one** per product; the aliases use `zinc`. |
 | Warm | `red`, `orange`, `amber`, `yellow` | Errors, warnings, highlights. |
 | Greens | `lime`, `green`, `emerald`, `teal` | Success, positive states. |
 | Blues | `cyan`, `sky`, `blue`, `indigo` | Links, primary actions, info. |
@@ -78,16 +78,16 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `primary-hover` | `‹brand›-700` | `‹brand›-300` | Hover / pressed state of `primary`. |
 | `primary-subtle` | `‹brand›-50` | `‹brand›-950` | Brand tint for selected rows and badges. |
 | `on-primary` | `white` | `‹brand›-950` | Text and icons on `primary` fills. |
-| `secondary` | `gray-100` | `gray-800` | Secondary button fill; hover fill for outline and ghost buttons. |
-| `secondary-hover` | `gray-200` | `gray-700` | Hover state of `secondary`. |
-| `surface` | `white` | `gray-950` | Page and card background. |
-| `surface-muted` | `gray-50` | `gray-900` | Secondary panels, sidebars, table headers. |
-| `surface-inverse` | `gray-900` | `gray-50` | Contrasting blocks: tooltips, inverse banners. |
-| `text` | `gray-900` | `gray-50` | Body text and headings on `surface`. |
-| `text-muted` | `gray-500` | `gray-400` | Secondary text, captions, placeholders. |
-| `text-inverse` | `white` | `gray-900` | Text on `surface-inverse`. |
-| `border` | `gray-200` | `gray-800` | Default borders and dividers. |
-| `border-strong` | `gray-300` | `gray-700` | Emphasised dividers and outlines. Form fields use `field-border`. |
+| `secondary` | `zinc-100` | `zinc-800` | Secondary button fill; hover fill for outline and ghost buttons. |
+| `secondary-hover` | `zinc-200` | `zinc-700` | Hover state of `secondary`. |
+| `surface` | `white` | `zinc-950` | Page and card background. |
+| `surface-muted` | `zinc-50` | `zinc-900` | Secondary panels, sidebars, table headers. |
+| `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
+| `text` | `zinc-900` | `zinc-50` | Body text and headings on `surface`. |
+| `text-muted` | `zinc-500` | `zinc-400` | Secondary text, captions, placeholders. |
+| `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
+| `border` | `zinc-200` | `zinc-800` | Default borders and dividers. |
+| `border-strong` | `zinc-300` | `zinc-700` | Emphasised dividers and outlines. Form fields use `field-border`. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
 | `success` | `green-600` | `green-500` | Success icons and fills. For success text on light surfaces use `green-700`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
@@ -102,11 +102,11 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `danger-border` | `red-300` | `red-800` | Border of a destructive outline button. |
 | `info` | `sky-700` | `sky-400` | Informational icons and text. |
 | `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
-| `field` | `white` | `gray-900` | Background of text inputs, selects and other form fields. |
-| `field-border` | `gray-500` | `gray-500` | Border of form fields: 3:1+ on `field` and `surface` (WCAG 1.4.11, a control's boundary). |
-| `field-border-hover` | `gray-600` | `gray-400` | Field border on hover. |
-| `placeholder` | `gray-500` | `gray-400` | Placeholder text (4.5:1+ on `field`). A hint, never a label. |
-| `overlay` | gray-900 at 50% | gray-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
+| `field` | `white` | `zinc-900` | Background of text inputs, selects and other form fields. |
+| `field-border` | `zinc-500` | `zinc-500` | Border of form fields: 3:1+ on `field` and `surface` (WCAG 1.4.11, a control's boundary). |
+| `field-border-hover` | `zinc-600` | `zinc-400` | Field border on hover. |
+| `placeholder` | `zinc-500` | `zinc-400` | Placeholder text (4.5:1+ on `field`). A hint, never a label. |
+| `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
 
 ### Contrast, checked in every theme
 

@@ -15,6 +15,52 @@ import { Carousel, Image } from "serupa-ds";
 </Carousel>
 ```
 
+## When to use
+
+- A few related pictures or cards of equal weight, such as product photos or the screens of a feature tour, where showing one at a time saves room.
+- Content people browse at their own pace and don't need to compare side by side.
+
+## When not to use
+
+- Content people must see, such as key messages, offers or anything that needs action: most people never get past the first slide. Show it on the page, in a [Card](../Card/README.md) or an [Alert](../Alert/README.md).
+- Items people compare or scan: use a [Grid](../Grid/README.md) of Cards, or a [List](../List/README.md).
+- Steps in a process: use [Stepper](../Stepper/README.md) or [Tabs](../Tabs/README.md), which show where people are and let them jump.
+- A single picture: use [Image](../Image/README.md), with `viewable` to open it full size.
+
+## Usage
+
+- Keep it to a handful of slides (about 3 to 7). With more, people lose track and the dots get small to hit.
+- Give every slide the same size and ratio (Image's `ratio` helps), so the controls don't jump.
+- Put what matters most on the first slide; that's the one everyone sees.
+- Write a `label` that says what the slides are ("Product photos"). Pass `slideLabel` when "2 of 5" isn't the best name, such as each photo's subject.
+- Use `loop` for photos with no natural order, and leave it off when the slides have a start and an end.
+- Turn off `dots` for 2 slides or when the arrows are enough, and `arrows` only when swiping or your own controls (`index` and `onIndexChange`) replace them.
+
+## Behavior
+
+- The previous and next buttons move one slide. A click on a dot goes to that slide. On the dots, the arrow keys move to the previous or next slide, and Home and End go to the first and last.
+- A swipe of 40px or more, with touch, pen or mouse, moves one slide; a shorter one springs back. Up and down swipes still scroll the page. Swiping works over pictures, and a swipe that starts on a link doesn't follow it.
+- Without `loop`, the button for the way you can't go hides; if it had focus, focus moves to the other button.
+- Slides slide in over 300ms, and change at once with reduced motion. With one slide there are no buttons or dots.
+- In RTL (a `dir` attribute or CSS `direction`) the row runs right to left, and the buttons and arrow keys follow it.
+
+## Accessibility
+
+- **Role and name:** the `<section>` is a region named by `label`, with `aria-roledescription="carousel"`. Each slide is a group named "2 of 5" (`aria-roledescription="slide"`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one.
+- **Keyboard:**
+
+  | Key | Does |
+  | --- | --- |
+  | Tab | Reaches the current slide's content, the previous and next buttons, then the current dot. |
+  | Enter, Space | Press a button or a dot. |
+  | ←, → (on the dots) | The previous or next slide, following the reading direction. |
+  | Home, End (on the dots) | The first or last slide. |
+
+- **ARIA states:** the current dot has `aria-current="true"` and is the only one in the Tab order. The slides are in a polite live region, so a screen reader reads the new slide after a button press.
+- **Motion:** it never moves on its own, so nothing needs pausing (WCAG 2.2.2), and slides change at once with reduced motion.
+- **Contrast:** the dots and the buttons keep 3:1 in all six themes (`tools/test/carousel.mjs`).
+- **What's still yours:** a `label`, and alt text on every picture in the slides.
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -32,22 +78,6 @@ import { Carousel, Image } from "serupa-ds";
 | `slideLabel` | `(index, count) => string` | `"2 of 5"` | Each slide's name, and its dot's. |
 
 `ref`, `className`, `style` and other props go to the outer `<section>`.
-
-## Behavior
-
-- The previous and next buttons move one slide. A click on a dot goes to that slide. On the dots, the arrow keys move to the previous or next slide, and Home and End go to the first and last.
-- A swipe of 40px or more, with touch, pen or mouse, moves one slide; a shorter one springs back. Up and down swipes still scroll the page. Swiping works over pictures, and a swipe that starts on a link doesn't follow it.
-- Without `loop`, the button for the way you can't go hides; if it had focus, focus moves to the other button.
-- Slides slide in over 300ms, and change at once with reduced motion. With one slide there are no buttons or dots.
-- In RTL (a `dir` attribute or CSS `direction`) the row runs right to left, and the buttons and arrow keys follow it.
-
-## Accessibility
-
-- The `<section>` is a region named by `label`, with `aria-roledescription="carousel"`. Each slide is a group named "2 of 5" (`aria-roledescription="slide"`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one.
-- The slides are in a polite live region, so a screen reader reads the new slide after a button press.
-- The dots are buttons named like their slide; the current one has `aria-current="true"` and is the only one in the Tab order.
-- It never moves on its own, so nothing needs pausing (WCAG 2.2.2).
-- The dots keep 3:1 and the buttons 3:1 in all six themes (`tools/test/carousel.mjs`).
 
 ## Component tokens
 

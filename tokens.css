@@ -6,16 +6,16 @@
   --primary-hover: var(--blue-700); /* Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark). */
   --primary-subtle: var(--blue-50); /* Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark). */
   --on-primary: var(--white); /* Alias. Text and icons on `primary` fills (white in light themes, brand 950 in dark). */
-  --secondary: var(--gray-100); /* Alias. Secondary button fill; hover fill for outline and ghost buttons. */
-  --secondary-hover: var(--gray-200); /* Alias. Hover state of `secondary`. */
-  --surface: var(--white); /* Alias. Page and card background (white light, gray-950 dark). */
-  --surface-muted: var(--gray-50); /* Alias. Secondary panels, sidebars, table headers. */
-  --surface-inverse: var(--gray-900); /* Alias. Contrasting blocks: tooltips, inverse banners. */
-  --text: var(--gray-900); /* Alias. Body text and headings on `surface`. */
-  --text-muted: var(--gray-500); /* Alias. Secondary text, captions, placeholders (4.5:1+ on `surface` in every theme). */
+  --secondary: var(--zinc-100); /* Alias. Secondary button fill; hover fill for outline and ghost buttons. */
+  --secondary-hover: var(--zinc-200); /* Alias. Hover state of `secondary`. */
+  --surface: var(--white); /* Alias. Page and card background (white light, zinc-950 dark). */
+  --surface-muted: var(--zinc-50); /* Alias. Secondary panels, sidebars, table headers. */
+  --surface-inverse: var(--zinc-900); /* Alias. Contrasting blocks: tooltips, inverse banners. */
+  --text: var(--zinc-900); /* Alias. Body text and headings on `surface`. */
+  --text-muted: var(--zinc-500); /* Alias. Secondary text, captions, placeholders (4.5:1+ on `surface` in every theme). */
   --text-inverse: var(--white); /* Alias. Text on `surface-inverse`. */
-  --border: var(--gray-200); /* Alias. Default borders and dividers. */
-  --border-strong: var(--gray-300); /* Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs. */
+  --border: var(--zinc-200); /* Alias. Default borders and dividers. */
+  --border-strong: var(--zinc-300); /* Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs. */
   --focus-ring: var(--blue-500); /* Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme). */
   --success: var(--green-600); /* Alias. Success icons and fills. For success text on light surfaces use `green-700`. */
   --success-subtle: var(--green-50); /* Alias. Success alert / badge background. */
@@ -31,10 +31,10 @@
   --info: var(--sky-700); /* Alias. Informational icons and text. */
   --info-subtle: var(--sky-50); /* Alias. Info alert / badge background. */
   --field: var(--white); /* Alias. Background of text inputs, selects and other form fields. */
-  --field-border: var(--gray-500); /* Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary. */
-  --field-border-hover: var(--gray-600); /* Alias. Field border on hover. */
-  --placeholder: var(--gray-500); /* Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels. */
-  --overlay: #11182780; /* Alias. The dimmed backdrop behind dialogs and drawers (gray-900 at 50% in light themes, gray-950 at 70% in dark). */
+  --field-border: var(--zinc-500); /* Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary. */
+  --field-border-hover: var(--zinc-600); /* Alias. Field border on hover. */
+  --placeholder: var(--zinc-500); /* Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels. */
+  --overlay: #18181b80; /* Alias. The dimmed backdrop behind dialogs and drawers (zinc-900 at 50% in light themes, zinc-950 at 70% in dark). */
   --white: #ffffff; /* Pure white. */
   --black: #000000; /* Pure black. */
   --slate-50: #f8fafc; /* Tints, subtle backgrounds. Use dark text on it (black 20.1:1). */
@@ -303,16 +303,16 @@
   --primary-hover: var(--blue-300);
   --primary-subtle: var(--blue-950);
   --on-primary: var(--blue-950);
-  --secondary: var(--gray-800);
-  --secondary-hover: var(--gray-700);
-  --surface: var(--gray-950);
-  --surface-muted: var(--gray-900);
-  --surface-inverse: var(--gray-50);
-  --text: var(--gray-50);
-  --text-muted: var(--gray-400);
-  --text-inverse: var(--gray-900);
-  --border: var(--gray-800);
-  --border-strong: var(--gray-700);
+  --secondary: var(--zinc-800);
+  --secondary-hover: var(--zinc-700);
+  --surface: var(--zinc-950);
+  --surface-muted: var(--zinc-900);
+  --surface-inverse: var(--zinc-50);
+  --text: var(--zinc-50);
+  --text-muted: var(--zinc-400);
+  --text-inverse: var(--zinc-900);
+  --border: var(--zinc-800);
+  --border-strong: var(--zinc-700);
   --focus-ring: var(--blue-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -327,27 +327,27 @@
   --danger-border: var(--red-800);
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
-  --field: var(--gray-900);
-  --field-border: var(--gray-500);
-  --field-border-hover: var(--gray-400);
-  --placeholder: var(--gray-400);
-  --overlay: #030712b3;
+  --field: var(--zinc-900);
+  --field-border: var(--zinc-500);
+  --field-border-hover: var(--zinc-400);
+  --placeholder: var(--zinc-400);
+  --overlay: #09090bb3;
 }
 [data-theme="violet-light"] {
   --primary: var(--violet-600);
   --primary-hover: var(--violet-700);
   --primary-subtle: var(--violet-50);
   --on-primary: var(--white);
-  --secondary: var(--gray-100);
-  --secondary-hover: var(--gray-200);
+  --secondary: var(--zinc-100);
+  --secondary-hover: var(--zinc-200);
   --surface: var(--white);
-  --surface-muted: var(--gray-50);
-  --surface-inverse: var(--gray-900);
-  --text: var(--gray-900);
-  --text-muted: var(--gray-500);
+  --surface-muted: var(--zinc-50);
+  --surface-inverse: var(--zinc-900);
+  --text: var(--zinc-900);
+  --text-muted: var(--zinc-500);
   --text-inverse: var(--white);
-  --border: var(--gray-200);
-  --border-strong: var(--gray-300);
+  --border: var(--zinc-200);
+  --border-strong: var(--zinc-300);
   --focus-ring: var(--violet-500);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
@@ -363,26 +363,26 @@
   --info: var(--sky-700);
   --info-subtle: var(--sky-50);
   --field: var(--white);
-  --field-border: var(--gray-500);
-  --field-border-hover: var(--gray-600);
-  --placeholder: var(--gray-500);
-  --overlay: #11182780;
+  --field-border: var(--zinc-500);
+  --field-border-hover: var(--zinc-600);
+  --placeholder: var(--zinc-500);
+  --overlay: #18181b80;
 }
 [data-theme="violet-dark"] {
   --primary: var(--violet-400);
   --primary-hover: var(--violet-300);
   --primary-subtle: var(--violet-950);
   --on-primary: var(--violet-950);
-  --secondary: var(--gray-800);
-  --secondary-hover: var(--gray-700);
-  --surface: var(--gray-950);
-  --surface-muted: var(--gray-900);
-  --surface-inverse: var(--gray-50);
-  --text: var(--gray-50);
-  --text-muted: var(--gray-400);
-  --text-inverse: var(--gray-900);
-  --border: var(--gray-800);
-  --border-strong: var(--gray-700);
+  --secondary: var(--zinc-800);
+  --secondary-hover: var(--zinc-700);
+  --surface: var(--zinc-950);
+  --surface-muted: var(--zinc-900);
+  --surface-inverse: var(--zinc-50);
+  --text: var(--zinc-50);
+  --text-muted: var(--zinc-400);
+  --text-inverse: var(--zinc-900);
+  --border: var(--zinc-800);
+  --border-strong: var(--zinc-700);
   --focus-ring: var(--violet-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -397,27 +397,27 @@
   --danger-border: var(--red-800);
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
-  --field: var(--gray-900);
-  --field-border: var(--gray-500);
-  --field-border-hover: var(--gray-400);
-  --placeholder: var(--gray-400);
-  --overlay: #030712b3;
+  --field: var(--zinc-900);
+  --field-border: var(--zinc-500);
+  --field-border-hover: var(--zinc-400);
+  --placeholder: var(--zinc-400);
+  --overlay: #09090bb3;
 }
 [data-theme="emerald-light"] {
   --primary: var(--emerald-700);
   --primary-hover: var(--emerald-800);
   --primary-subtle: var(--emerald-50);
   --on-primary: var(--white);
-  --secondary: var(--gray-100);
-  --secondary-hover: var(--gray-200);
+  --secondary: var(--zinc-100);
+  --secondary-hover: var(--zinc-200);
   --surface: var(--white);
-  --surface-muted: var(--gray-50);
-  --surface-inverse: var(--gray-900);
-  --text: var(--gray-900);
-  --text-muted: var(--gray-500);
+  --surface-muted: var(--zinc-50);
+  --surface-inverse: var(--zinc-900);
+  --text: var(--zinc-900);
+  --text-muted: var(--zinc-500);
   --text-inverse: var(--white);
-  --border: var(--gray-200);
-  --border-strong: var(--gray-300);
+  --border: var(--zinc-200);
+  --border-strong: var(--zinc-300);
   --focus-ring: var(--emerald-600);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
@@ -433,26 +433,26 @@
   --info: var(--sky-700);
   --info-subtle: var(--sky-50);
   --field: var(--white);
-  --field-border: var(--gray-500);
-  --field-border-hover: var(--gray-600);
-  --placeholder: var(--gray-500);
-  --overlay: #11182780;
+  --field-border: var(--zinc-500);
+  --field-border-hover: var(--zinc-600);
+  --placeholder: var(--zinc-500);
+  --overlay: #18181b80;
 }
 [data-theme="emerald-dark"] {
   --primary: var(--emerald-400);
   --primary-hover: var(--emerald-300);
   --primary-subtle: var(--emerald-950);
   --on-primary: var(--emerald-950);
-  --secondary: var(--gray-800);
-  --secondary-hover: var(--gray-700);
-  --surface: var(--gray-950);
-  --surface-muted: var(--gray-900);
-  --surface-inverse: var(--gray-50);
-  --text: var(--gray-50);
-  --text-muted: var(--gray-400);
-  --text-inverse: var(--gray-900);
-  --border: var(--gray-800);
-  --border-strong: var(--gray-700);
+  --secondary: var(--zinc-800);
+  --secondary-hover: var(--zinc-700);
+  --surface: var(--zinc-950);
+  --surface-muted: var(--zinc-900);
+  --surface-inverse: var(--zinc-50);
+  --text: var(--zinc-50);
+  --text-muted: var(--zinc-400);
+  --text-inverse: var(--zinc-900);
+  --border: var(--zinc-800);
+  --border-strong: var(--zinc-700);
   --focus-ring: var(--emerald-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -467,11 +467,11 @@
   --danger-border: var(--red-800);
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
-  --field: var(--gray-900);
-  --field-border: var(--gray-500);
-  --field-border-hover: var(--gray-400);
-  --placeholder: var(--gray-400);
-  --overlay: #030712b3;
+  --field: var(--zinc-900);
+  --field-border: var(--zinc-500);
+  --field-border-hover: var(--zinc-400);
+  --placeholder: var(--zinc-400);
+  --overlay: #09090bb3;
 }
 :root {
   --spacing-0: 0px; /* `0` (`p-0`, `m-0`, `gap-0`…): 0px. */

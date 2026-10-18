@@ -51,6 +51,10 @@ t('Escape asks to close, and focus goes back to the button that opened it', !(aw
 await p.click('#opener'); await p.waitForTimeout(400);
 await p.click('#drw .dk-drawer__title'); await p.waitForTimeout(50);
 t('a click inside the panel doesn\'t close it', await isOpen());
+// Selecting text: the press starts on the panel and ends on the backdrop. That isn't a click on the backdrop.
+{ const r = await p.evaluate(() => { const b = document.querySelector('#drw .dk-drawer__title').getBoundingClientRect(); return { x: b.left + 4, y: b.top + 4 }; });
+  await p.mouse.move(r.x, r.y); await p.mouse.down(); await p.mouse.move(20, 20, { steps: 4 }); await p.mouse.up(); await p.waitForTimeout(100); }
+t('a press that starts on the panel and ends on the backdrop doesn\'t close it', await isOpen() && (await p.evaluate(() => window.asks.join())) === 'false');
 await p.mouse.click(20, 20); await p.waitForTimeout(100);
 t('a click on the backdrop asks to close', !(await isOpen()) && (await p.evaluate(() => window.asks.join())) === 'false,false');
 await p.click('#opener'); await p.waitForTimeout(400);

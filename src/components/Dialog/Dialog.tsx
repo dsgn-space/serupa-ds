@@ -63,14 +63,18 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(function 
   // Escape fires "cancel": ask instead of closing, so open stays the truth.
   const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
   // A click that lands on the <dialog> itself (outside the panel) is on the backdrop.
-  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && e.target === e.currentTarget) close(); };
+  // A press that starts on the panel (selecting text, say) and ends on the backdrop clicks the <dialog> too: only a
+  // press that starts and ends on the backdrop counts.
+  const downOnBackdrop = React.useRef(false);
+  const onPointerDown = (e: React.PointerEvent<HTMLDialogElement>) => { if (rest.onPointerDown) rest.onPointerDown(e); downOnBackdrop.current = e.target === e.currentTarget; };
+  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && downOnBackdrop.current && e.target === e.currentTarget) close(); downOnBackdrop.current = false; };
   return (
     <dialog {...rest} ref={(n) => { el.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
       role={alert ? "alertdialog" : undefined} aria-modal="true"
       aria-labelledby={rest["aria-labelledby"] || (has(props.title) ? base + "-title" : undefined)}
       aria-describedby={rest["aria-describedby"] || (has(props.description) ? base + "-desc" : undefined)}
       className={cn("dk-dialog", "dk-dialog--" + size, props.className)} data-component="dialog" data-size={size}
-      onCancel={onCancel} onClick={onClick}>
+      onCancel={onCancel} onPointerDown={onPointerDown} onClick={onClick}>
       <div className="dk-dialog__panel">
         {has(props.title) || has(props.description) || showClose ? (
           <div className="dk-dialog__header">
