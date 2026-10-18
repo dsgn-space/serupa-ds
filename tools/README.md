@@ -11,7 +11,7 @@ npm install                       # the build (tsup, TypeScript), React, Playwri
 npx playwright install chromium   # add firefox webkit to run the suite in those too
 ```
 
-Node 20 or later (`.nvmrc`) and Python 3 (the custom icon build, the Material Symbols build and `purge.py`). Nothing else.
+Node 24 (`.nvmrc`; 22.18 or later works) and Python 3 (the custom icon build, the Material Symbols build and `purge.py`). Nothing else.
 
 ## Build
 
