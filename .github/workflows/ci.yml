@@ -18,8 +18,8 @@ jobs:
     name: build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -31,7 +31,7 @@ jobs:
         run: npm run build
       - name: Build Storybook
         run: npm run build-storybook
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: build
           path: |
@@ -45,8 +45,8 @@ jobs:
     name: types and lint
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -78,13 +78,13 @@ jobs:
     # Pinned so font rendering, and with it the visual snapshots, stays the same between runs.
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: build
       - uses: ./.github/actions/playwright
@@ -106,7 +106,7 @@ jobs:
           { echo '## Failing tests (${{ matrix.group }})'; echo '```'; grep -E -A1 '^FAIL|^(PASS|FAIL)  [A-Z]' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload failure details
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-output-${{ matrix.group }}${{ matrix.shard && format('-{0}', strategy.job-index) || '' }}
           path: |
@@ -123,13 +123,13 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: build
       - uses: ./.github/actions/playwright
