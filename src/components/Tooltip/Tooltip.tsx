@@ -1,6 +1,7 @@
 import * as React from "react";
-import { cn, domId, elementRef, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
+import { cn, domId, elementRef, setRef } from "../../internal/cn";
+import { type Placement } from "../../internal/position";
+import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 
 export interface TooltipProps {
   /** What the tooltip says: a short line of text. Keep links and buttons out (people can't reach them). */
@@ -43,24 +44,8 @@ export function Tooltip(props: TooltipProps): React.ReactElement {
   const later = (v: boolean, ms: number) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => set(v), ms); };
   React.useEffect(() => () => window.clearTimeout(timer.current), []);
 
-  // Place it while open, and keep it placed as the page scrolls or resizes.
-  useIsoLayoutEffect(() => {
-    const tip = tipRef.current, anchor = anchorRef.current;
-    if (!tip) return;
-    if (!open || !anchor) { hideLayer(tip); return; }
-    showLayer(tip);
-    const update = () => {
-      const offset = cssLength(tip, "--dk-tooltip-offset");
-      const r = place(anchor.getBoundingClientRect(), { width: tip.offsetWidth, height: tip.offsetHeight }, props.placement, offset, "top");
-      tip.style.left = r.x + "px"; tip.style.top = r.y + "px"; tip.dataset.side = r.side;
-    };
-    update();
-    // Its size can change after it opens (a web font arriving, new content): place it again.
-    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
-    if (ro) { ro.observe(tip); ro.observe(anchor); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
-  }, [open, props.placement, props.content]);
+  // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes.
+  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: "top", offsetVar: "--dk-tooltip-offset", watch: props.content });
 
   // Escape hides it from anywhere while it's open (the element may not have focus when hovered). It's the top
   // layer, so it takes that Escape: caught first (capture) and stopped, so a Dialog or Menu around it stays open.

@@ -28,7 +28,6 @@ const steps = [
   ['Avatar', 'node', [path.join(HERE, 'avatar.mjs')]],
   ['AvatarGroup', 'node', [path.join(HERE, 'avatar-group.mjs')]],
   ['Tabs', 'node', [path.join(HERE, 'tabs.mjs')]],
-  ['Tooltip', 'node', [path.join(HERE, 'tooltip.mjs')]],
   ['Dialog', 'node', [path.join(HERE, 'dialog.mjs')]],
   ['Toast', 'node', [path.join(HERE, 'toast.mjs')]],
   ['Layout', 'node', [path.join(HERE, 'layout.mjs')]],

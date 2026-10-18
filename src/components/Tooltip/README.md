@@ -44,7 +44,7 @@ const { Tooltip, IconButton, Button } = window.Serupa;
 - WCAG 1.4.13: Escape hides it from anywhere, the pointer can move onto it without it closing, and it stays until the pointer or focus leaves.
 - Don't put anything only in a tooltip that people need to do the task: touch screens have no hover.
 - A disabled `<button>` can't take focus or hover events: wrap it in a `<span tabIndex={0}>`, or use `aria-disabled` instead.
-- The text keeps 4.5:1 on the tooltip in all six themes (`tools/test/tooltip.mjs`). In forced-colors mode it gets a border.
+- The text keeps 4.5:1 on the tooltip in all six themes (`Tooltip.test.tsx`). In forced-colors mode it gets a border.
 
 ## Props
 
