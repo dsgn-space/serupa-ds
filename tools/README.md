@@ -1,6 +1,6 @@
 # Tools
 
-Everything needed to maintain the Serupa: the test suite, the design tokens export, the custom icon build, the release script and the CSS trimmer. Nothing here ships to products; consumers only need the package: `tokens.css`, `dist/` and `fonts/`.
+Everything needed to maintain Serupa: the test suite, the design tokens export, the custom icon build, the release script and the CSS trimmer. Nothing here ships to products; consumers only need the package: `tokens.css`, `dist/` and `fonts/`.
 
 ## Setup
 
@@ -11,7 +11,7 @@ npm install                       # the build (tsup, TypeScript), React, Playwri
 npx playwright install chromium   # add firefox webkit to run the suite in those too
 ```
 
-Node 20 or later (`.nvmrc`) and Python 3 (the docs build and the foundation audit). Nothing else.
+Node 20 or later (`.nvmrc`) and Python 3 (the version check `release.py`, the custom icon build and `purge.py`). Nothing else.
 
 ## Build
 
