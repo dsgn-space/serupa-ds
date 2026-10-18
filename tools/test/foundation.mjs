@@ -58,13 +58,17 @@ check('bundle.css is under 2 MB', size < 2 * 1024 * 1024, `${(size / 1048576).to
 
 // component tokens (src/components/<Name>/<name>.tokens.json): their CSS variables are overrides with a default
 const COMP = new Map();   // css var name (without --) -> [file, token]
+const OLD = new Map();    // a renamed token's old name (deprecatedCssVar, kept until the next major) -> its new name
 for (const c of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   for (const f of fs.readdirSync(path.join(P, 'src', 'components', c)).filter((f) => f.endsWith('.tokens.json')).sort()) {
     const rel = `src/components/${c}/${f}`;
     const walk = (tree) => {
       for (const [k, v] of Object.entries(tree)) {
         if (k.startsWith('$') || !v || typeof v !== 'object') continue;
-        if ('$value' in v) COMP.set(v.$extensions['com.serupa'].cssVar.slice(2), [rel, v]);
+        if ('$value' in v) {
+          COMP.set(v.$extensions['com.serupa'].cssVar.slice(2), [rel, v]);
+          if (v.$extensions['com.serupa'].deprecatedCssVar) OLD.set(v.$extensions['com.serupa'].deprecatedCssVar.slice(2), v.$extensions['com.serupa'].cssVar.slice(2));
+        }
         else walk(v);
       }
     };
@@ -89,7 +93,7 @@ const norm = (v) => v.trim().replace(/^"|"$/g, '').replace(/"/g, "'").replace(/\
 const missing = new Set(), withFallback = new Set();
 for (const m of css.matchAll(/var\(--([A-Za-z0-9\\._-]+)(?:,\s*((?:[^()]|\((?:[^()]|\([^()]*\))*\))*))?\)/g)) {
   const n = m[1].replace(/\\/g, '');
-  if (n.startsWith('dk-') || COMP.has(n)) continue;
+  if (n.startsWith('dk-') || COMP.has(n) || OLD.has(n)) continue;
   if (!isToken(n)) { missing.add(n); continue; }
   if (m[2] != null) withFallback.add(`${n}, ${m[2].trim().slice(0, 30)}`);
 }
@@ -99,12 +103,17 @@ check('bundle.css: shared tokens are read with no fallback value', !withFallback
 // 3b. component tokens: each refers to a shared token, is used, and every use carries exactly its default
 const badRef = [], unused = [], wrong = [];
 for (const [n, [, tok]] of COMP) {
-  const d = compDefault(tok);
+  let d = compDefault(tok);
+  const old = tok.$extensions['com.serupa'].deprecatedCssVar;
+  if (d != null && old) d = `var(${old}, ${d})`;   // the old name keeps working: it is the new name's default
   if (d == null) { badRef.push(`${n} → ${JSON.stringify(tok.$value)}`); continue; }
   const uses = [...css.matchAll(new RegExp(String.raw`var\(--${esc(n)}(?:,\s*((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*))?\)`, 'g'))].map((m) => m[1]);
   if (!uses.length) unused.push(n);
   for (const fb of uses) if (fb == null || norm(fb) !== norm(d)) wrong.push(`${n}: CSS default ${String(fb).trim().slice(0, 50)} ≠ ${d}`);
 }
+// 3c. a renamed token's old name is read only as the default of its new name
+const stray = [...OLD].filter(([o, n]) => (css.match(new RegExp(String.raw`var\(--${esc(o)}\b(?!-)`, 'g')) || []).length !== (css.match(new RegExp(String.raw`var\(--${esc(n)}, var\(--${esc(o)}\b(?!-)`, 'g')) || []).length).map(([o]) => o);
+if (OLD.size) check(`renamed component tokens: each of the ${OLD.size} old names is read only under its new name`, !stray.length, stray.join(', '));
 if (COMP.size) {
   check(`component tokens: all ${COMP.size} refer to shared tokens`, !badRef.length, badRef.slice(0, 8).join('; '));
   check('component tokens: every one is used, with exactly the default its tokens file gives', !unused.length && !wrong.length, [...(unused.length ? ['unused: ' + unused.join(', ')] : []), ...wrong.slice(0, 8)].join('; '));
