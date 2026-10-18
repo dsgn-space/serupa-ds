@@ -42,7 +42,7 @@
     },
     "secondary": {
       "$type": "color",
-      "$value": "{color.gray-800}",
+      "$value": "{color.zinc-800}",
       "$description": "Alias. Secondary button fill; hover fill for outline and ghost buttons.",
       "$extensions": {
         "com.serupa": {
@@ -52,7 +52,7 @@
     },
     "secondary-hover": {
       "$type": "color",
-      "$value": "{color.gray-700}",
+      "$value": "{color.zinc-700}",
       "$description": "Alias. Hover state of `secondary`.",
       "$extensions": {
         "com.serupa": {
@@ -62,8 +62,8 @@
     },
     "surface": {
       "$type": "color",
-      "$value": "{color.gray-950}",
-      "$description": "Alias. Page and card background (white light, gray-950 dark).",
+      "$value": "{color.zinc-950}",
+      "$description": "Alias. Page and card background (white light, zinc-950 dark).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface"
@@ -72,7 +72,7 @@
     },
     "surface-muted": {
       "$type": "color",
-      "$value": "{color.gray-900}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. Secondary panels, sidebars, table headers.",
       "$extensions": {
         "com.serupa": {
@@ -82,7 +82,7 @@
     },
     "surface-inverse": {
       "$type": "color",
-      "$value": "{color.gray-50}",
+      "$value": "{color.zinc-50}",
       "$description": "Alias. Contrasting blocks: tooltips, inverse banners.",
       "$extensions": {
         "com.serupa": {
@@ -92,7 +92,7 @@
     },
     "text": {
       "$type": "color",
-      "$value": "{color.gray-50}",
+      "$value": "{color.zinc-50}",
       "$description": "Alias. Body text and headings on `surface`.",
       "$extensions": {
         "com.serupa": {
@@ -102,7 +102,7 @@
     },
     "text-muted": {
       "$type": "color",
-      "$value": "{color.gray-400}",
+      "$value": "{color.zinc-400}",
       "$description": "Alias. Secondary text, captions, placeholders (4.5:1+ on `surface` in every theme).",
       "$extensions": {
         "com.serupa": {
@@ -112,7 +112,7 @@
     },
     "text-inverse": {
       "$type": "color",
-      "$value": "{color.gray-900}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. Text on `surface-inverse`.",
       "$extensions": {
         "com.serupa": {
@@ -122,7 +122,7 @@
     },
     "border": {
       "$type": "color",
-      "$value": "{color.gray-800}",
+      "$value": "{color.zinc-800}",
       "$description": "Alias. Default borders and dividers.",
       "$extensions": {
         "com.serupa": {
@@ -132,7 +132,7 @@
     },
     "border-strong": {
       "$type": "color",
-      "$value": "{color.gray-700}",
+      "$value": "{color.zinc-700}",
       "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
       "$extensions": {
         "com.serupa": {
@@ -282,7 +282,7 @@
     },
     "field": {
       "$type": "color",
-      "$value": "{color.gray-900}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. Background of text inputs, selects and other form fields.",
       "$extensions": {
         "com.serupa": {
@@ -292,7 +292,7 @@
     },
     "field-border": {
       "$type": "color",
-      "$value": "{color.gray-500}",
+      "$value": "{color.zinc-500}",
       "$description": "Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary.",
       "$extensions": {
         "com.serupa": {
@@ -302,7 +302,7 @@
     },
     "field-border-hover": {
       "$type": "color",
-      "$value": "{color.gray-400}",
+      "$value": "{color.zinc-400}",
       "$description": "Alias. Field border on hover.",
       "$extensions": {
         "com.serupa": {
@@ -312,7 +312,7 @@
     },
     "placeholder": {
       "$type": "color",
-      "$value": "{color.gray-400}",
+      "$value": "{color.zinc-400}",
       "$description": "Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels.",
       "$extensions": {
         "com.serupa": {
@@ -325,14 +325,14 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.0118,
-          0.0275,
-          0.0706
+          0.0353,
+          0.0353,
+          0.0431
         ],
-        "hex": "#030712",
+        "hex": "#09090b",
         "alpha": 0.702
       },
-      "$description": "Alias. The dimmed backdrop behind dialogs and drawers (gray-900 at 50% in light themes, gray-950 at 70% in dark).",
+      "$description": "Alias. The dimmed backdrop behind dialogs and drawers (zinc-900 at 50% in light themes, zinc-950 at 70% in dark).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--overlay"
