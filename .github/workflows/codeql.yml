@@ -1,0 +1,40 @@
+# CodeQL: GitHub's code scanning, for the TypeScript and tool scripts and for the workflows themselves.
+# Findings show under Security → Code scanning and on pull requests. Runs on each pull request, on main and weekly
+# (new queries arrive between commits).
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: analyze (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, actions]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          # Build output, generated files and the vendored React bundles aren't ours to scan.
+          config: |
+            paths-ignore:
+              - dist
+              - storybook-static
+              - src/material/icons.ts
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}
