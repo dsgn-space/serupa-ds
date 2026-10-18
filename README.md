@@ -14,12 +14,10 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v5.0.0
+npm install github:diki-stwn/serupa-ds#v7.1.2
 ```
 
-Always pin a tag (`#v5.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
-
-> **Until the first release tag exists**, pin a commit instead: `npm install github:diki-stwn/serupa-ds#<commit>`, using the latest commit on `main`. A commit isn't prebuilt, so that install builds the package first (about 20 seconds). Swap it for a tag once one is published.
+Always pin a tag (`#v7.1.2`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
 
@@ -79,7 +77,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. See Founda
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (1.7 MB). For production, trim it to the classes your code uses with `tools/purge.py`. The script isn't in the installed package, so run it from a clone of this repo, pointing at your project's source and the installed CSS:
+`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses with `tools/purge.py`. The script isn't in the installed package, so run it from a clone of this repo, pointing at your project's source and the installed CSS:
 
 ```sh
 python3 tools/purge.py ../my-app/src --css ../my-app/node_modules/serupa-ds/dist/bundle.css -o ../my-app/public/bundle.min.css

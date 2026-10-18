@@ -9,10 +9,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 Install a released version straight from GitHub, pinned to its tag:
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v5.0.0
+npm install github:diki-stwn/serupa-ds#v7.1.2
 ```
 
-Pin a tag, never `#main`, so updates reach your project only when you choose. The package builds itself as it installs. Until the first release tag exists, pin the latest commit on `main` instead (`#<commit>`).
+Pin a tag, never `#main`, so updates reach your project only when you choose. Each release tag is prebuilt, so nothing runs on install.
 
 **Updating:** change the tag and read the [Changelog](?path=/docs/changelog--docs) entries in between. Minor and patch releases never remove anything; major releases list what changed and how to migrate.
 
@@ -68,7 +68,7 @@ For router links, set the link component once at startup: `configure({ link: Lin
 
 ## 4. Before you ship
 
-- **Trim the CSS.** `bundle.css` carries every utility class (1.7 MB). `tools/purge.py` in this repo keeps the component styles and only the classes your code uses, usually a few dozen KB. It isn't part of the installed package, so run it from a clone: `python3 tools/purge.py <your src> --css <installed dist/bundle.css> -o bundle.min.css`.
+- **Trim the CSS.** `bundle.css` carries every utility class (nearly 2 MB). `tools/purge.py` in this repo keeps the component styles and only the classes your code uses, usually a few dozen KB. It isn't part of the installed package, so run it from a clone: `python3 tools/purge.py <your src> --css <installed dist/bundle.css> -o bundle.min.css`.
 - **Fonts and icons are included.** `tokens.css` loads Inter from the package's `fonts/` folder, and icons are SVGs inside the components. Nothing loads from another server. Every Material Symbol works by name, such as `<Icon name="category" />`.
 - **Accessibility comes with the components,** but labels are yours: give every field a `Field` label, every icon-only button an `aria-label`, and check each component's Accessibility notes.
 
