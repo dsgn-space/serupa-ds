@@ -8,7 +8,8 @@
         "$description": "tone=\"default\".",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--text-tone-default"
+            "cssVar": "--text-tone-default",
+            "deprecatedCssVar": "--text-color"
           }
         }
       },
@@ -18,7 +19,8 @@
         "$description": "tone=\"muted\": secondary text (4.5:1 on surface).",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--text-tone-muted"
+            "cssVar": "--text-tone-muted",
+            "deprecatedCssVar": "--text-color-muted"
           }
         }
       },
@@ -28,7 +30,8 @@
         "$description": "tone=\"primary\".",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--text-tone-primary"
+            "cssVar": "--text-tone-primary",
+            "deprecatedCssVar": "--text-color-primary"
           }
         }
       },
@@ -38,7 +41,8 @@
         "$description": "tone=\"danger\": error text (4.5:1 on surface and danger-subtle).",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--text-tone-danger"
+            "cssVar": "--text-tone-danger",
+            "deprecatedCssVar": "--text-color-danger"
           }
         }
       }

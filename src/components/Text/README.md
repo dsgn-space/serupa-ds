@@ -30,7 +30,7 @@ const { Text } = window.Serupa;
 - Leave `size`, `tone` and `weight` out unless you need them, so the text follows its parent.
 - Use `as="span"` inside other text, and a `p` (the default) for paragraphs.
 - It has no margins: space paragraphs with the layout, such as a [Stack](../Stack/README.md).
-- Text's tokens (`--text-tone-default`, `--text-tone-muted`, `--text-tone-primary`, `--text-tone-danger`) only change Text's tones. They're separate from the shared theme colors such as `--text` and `--text-muted`, which they default to, and from the type sizes such as `--text-sm`: overriding `--text-tone-muted` changes muted Text, not every muted color on the page.
+- Text's tokens (`--text-color`, `--text-color-muted`, `--text-color-primary`, `--text-color-danger`) only change Text's tones. They're separate from the shared theme colors such as `--text` and `--text-muted`, which they default to, and from the type sizes such as `--text-sm`: overriding `--text-color-muted` changes muted Text, not every muted color on the page.
 
 ## Accessibility
 
@@ -56,7 +56,7 @@ Each is an optional override: set it on the page, a container or one element. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--text-tone-default` (was `--text-color`, removed in 6.0.0) | `text` | tone="default". |
-| `--text-tone-muted` (was `--text-color-muted`, removed in 6.0.0) | `text-muted` | tone="muted": secondary text (4.5:1 on surface). |
-| `--text-tone-primary` (was `--text-color-primary`, removed in 6.0.0) | `primary` | tone="primary". |
-| `--text-tone-danger` (was `--text-color-danger`, removed in 6.0.0) | `danger-text` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
+| `--text-tone-default` (was `--text-color`, which still works until 6.0.0) | `text` | tone="default". |
+| `--text-tone-muted` (was `--text-color-muted`, which still works until 6.0.0) | `text-muted` | tone="muted": secondary text (4.5:1 on surface). |
+| `--text-tone-primary` (was `--text-color-primary`, which still works until 6.0.0) | `primary` | tone="primary". |
+| `--text-tone-danger` (was `--text-color-danger`, which still works until 6.0.0) | `danger-text` | tone="danger": error text (4.5:1 on surface and danger-subtle). |
