@@ -50,8 +50,9 @@ export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursi
 export const ENGINE = process.env.SERUPA_BROWSER || 'chromium';
 export const suffix = ENGINE === 'chromium' ? '' : '-' + ENGINE;
 export async function browser() {
+  /** @type {Record<string, import('playwright').BrowserType>} */
   let pw;
-  try { pw = await import('playwright'); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
+  try { pw = /** @type {any} */ (await import('playwright')); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
   if (!pw[ENGINE]) { console.error(`Unknown SERUPA_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
   // Headless Firefox finds no pointing device and reports (hover: none), so hover styles behind
   // @media (hover: hover) never apply. Give it a desktop's fine, hovering pointer (2 | 4).

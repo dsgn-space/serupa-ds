@@ -50,7 +50,7 @@ for (const line of u[1].split('\n')) {
   }
 }
 const order = [...SECTIONS, ...Object.keys(have).filter((s) => !SECTIONS.includes(s))];
-const merged = order.map((s) => [s, [...(have[s] || []), ...(notes[s] || [])]]).filter(([, list]) => list.length)
+const merged = order.map((s) => /** @type {[string, string[]]} */ ([s, [...(have[s] || []), ...(notes[s] || [])]])).filter(([, list]) => list.length)
   .map(([s, list]) => `### ${s}\n\n${list.map((x) => '- ' + x).join('\n')}`).join('\n\n');
 fs.writeFileSync(logPath, log.slice(0, u.index) + `## [Unreleased]\n\n${merged}\n\n` + log.slice(u.index + u[0].length));
 for (const f of files) fs.rmSync(path.join(DIR, f));

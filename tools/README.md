@@ -17,7 +17,7 @@ Node 24 (`.nvmrc`; 22.18 or later works). Dependencies are pinned to exact versi
 
 ```sh
 npm run build       # src/ → dist/ (tools/build/build.mjs: tsup for the JavaScript and types, then the CSS)
-npm run typecheck   # tsc over src/
+npm run typecheck   # tsc over src/ (strict), then tools/ and bin/ (JavaScript, checked from JSDoc)
 npm run lint        # ESLint (TypeScript, React hooks rules, the tools) and Stylelint (the CSS)
 ```
 

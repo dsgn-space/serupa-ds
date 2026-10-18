@@ -61,7 +61,7 @@
   ],
   "scripts": {
     "build": "node tools/build/build.mjs",
-    "typecheck": "tsc -p .",
+    "typecheck": "tsc -p . && tsc -p tools",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
     "prepare": "node tools/build/build.mjs",
@@ -89,6 +89,7 @@
     "@storybook/addon-a11y": "10.6.2",
     "@storybook/addon-docs": "10.6.2",
     "@storybook/react-vite": "10.6.2",
+    "@types/node": "24.19.2",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@vitest/browser-playwright": "5.0.5",
