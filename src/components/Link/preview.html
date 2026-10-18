@@ -11,7 +11,7 @@
 <script>
   var D = window.Serupa, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
-    h(D.Text, null, 'Read ', h(D.Link, { href: '#' }, 'the guide'), ' before you start.'),
+    h(D.Text, null, 'Read ', h(D.Link, { href: '#', 'data-visual-target': '' }, 'the guide'), ' before you start.'),
     h(D.Text, null, 'See the ', h(D.Link, { href: 'https://example.com', external: true }, 'status page'), '.'),
     h(D.Text, { size: 'sm', tone: 'muted' }, 'You agree to the ', h(D.Link, { href: '#', tone: 'neutral' }, 'terms'), '.'),
     h(D.Stack, { direction: 'row', gap: 4 }, ['Pricing', 'Docs', 'Blog'].map(function (l) { return h(D.Link, { key: l, href: '#', underline: 'hover' }, l); }))

@@ -1,8 +1,10 @@
 // Visual snapshots: renders each component preview (src/components/*/preview.html) in every theme,
-// with hover and focus states, and compares it with the saved image in baseline-visual/.
+// at rest, hovered and focused, and compares it with the saved image in baseline-visual/.
 //   node tools/test/visual.mjs            check
 //   node tools/test/visual.mjs --update   accept the current look as the new baseline
 // A component without a baseline fails the check; --update is the only way to write one.
+// Hover and focus act on the element a preview marks with data-visual-target (both states), or
+// data-visual-target="hover" / ="focus" (one each); without one, on the first enabled .dk-btn.
 // Small anti-aliasing differences between machines are tolerated (TOLERANCE of pixels may differ).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -44,6 +46,17 @@ async function stableShot() {
   return last;
 }
 
+// Focus the way a keyboard does (so :focus-visible applies): press Tab from the top of the page until focus
+// is on the element or inside it.
+async function tabTo(el) {
+  const handle = await el.elementHandle();
+  for (let i = 0; i < 40; i++) {
+    await page.keyboard.press('Tab');
+    if (await handle.evaluate((n) => n.contains(document.activeElement))) return true;
+  }
+  return false;
+}
+
 for (const c of comps) {
   const src = read(`src/components/${c}/preview.html`);
   const style = (src.match(/<style>[\s\S]*?<\/style>/) || [''])[0];
@@ -58,9 +71,20 @@ for (const c of comps) {
       await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
       await page.waitForTimeout(150);   // previews that open a popover do it on a 50 ms timer
       if (state !== 'rest') {
-        const first = page.locator('.dk-btn:not(:disabled):visible').first();
-        if (!(await first.count())) continue;
-        if (state === 'hover') await first.hover(); else await page.keyboard.press('Tab');
+        // What to hover and focus: the element marked data-visual-target="hover" / ="focus" for this state, else
+        // the one marked data-visual-target, else the first enabled button. A preview with none of them gets no
+        // hover or focus shot.
+        let el = page.locator(`[data-visual-target="${state}"]`).first();
+        if (!(await el.count())) el = page.locator('[data-visual-target]:not([data-visual-target="hover"], [data-visual-target="focus"])').first();
+        const marked = await el.count() > 0;
+        if (!marked) el = page.locator('.dk-btn:not(:disabled):visible').first();
+        if (!(await el.count())) continue;
+        if (state === 'hover') await el.hover({ timeout: 5000 });
+        else if (!marked) await page.keyboard.press('Tab');   // unmarked previews: the first Tab stop, as their baselines were made
+        else if (!(await tabTo(el))) {
+          R.push({ name: `${c} · ${th} · ${state}`, ok: false, detail: 'Tab never reaches the data-visual-target element (or anything inside it); mark one that takes keyboard focus' });
+          continue;
+        }
       }
       const shot = (await stableShot()).toString('base64');
       const file = path.join(DIR, `${c}-${th}-${state}.png`);

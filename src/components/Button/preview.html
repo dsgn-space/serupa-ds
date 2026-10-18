@@ -14,7 +14,7 @@
   function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     Row('Variants', [
-      h(T.Button, { key: 1 }, 'Primary'),
+      h(T.Button, { key: 1, 'data-visual-target': '' }, 'Primary'),
       h(T.Button, { key: 2, variant: 'secondary' }, 'Secondary'),
       h(T.Button, { key: 3, variant: 'outline' }, 'Outline'),
       h(T.Button, { key: 4, variant: 'ghost' }, 'Ghost'),

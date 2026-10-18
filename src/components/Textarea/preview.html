@@ -13,7 +13,7 @@
   var T = window.Serupa, h = React.createElement;
   function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
-    Row('Sizes', [h(T.Textarea, { key: 1, size: 'sm', rows: 2, placeholder: 'Small', 'aria-label': 'Small' }), h(T.Textarea, { key: 2, rows: 2, placeholder: 'Medium', 'aria-label': 'Medium' }), h(T.Textarea, { key: 3, size: 'lg', rows: 2, placeholder: 'Large', 'aria-label': 'Large' })]),
+    Row('Sizes', [h(T.Textarea, { key: 1, size: 'sm', rows: 2, placeholder: 'Small', 'aria-label': 'Small' }), h(T.Textarea, { key: 2, rows: 2, placeholder: 'Medium', 'aria-label': 'Medium', 'data-visual-target': '' }), h(T.Textarea, { key: 3, size: 'lg', rows: 2, placeholder: 'Large', 'aria-label': 'Large' })]),
     Row('Count', h(T.Textarea, { showCount: true, maxLength: 140, defaultValue: 'Shipped the new onboarding flow.', 'aria-label': 'Update' })),
     Row('Auto-resize', h(T.Textarea, { autoResize: true, rows: 2, maxRows: 5, defaultValue: 'Grows as you type, from 2 lines up to 5,\nthen scrolls.', 'aria-label': 'Notes' })),
     Row('Invalid', h(T.Textarea, { invalid: true, rows: 2, defaultValue: 'Too short', 'aria-label': 'Description' })),
