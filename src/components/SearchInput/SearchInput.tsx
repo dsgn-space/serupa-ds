@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, isInvalid, oneOf, SIZES } from "../../internal/cn";
+import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
@@ -26,11 +26,9 @@ const setValue = Object.getOwnPropertyDescriptor(typeof HTMLInputElement === "un
    <input>. */
 /** A search field: a search icon, a clear button once something is typed, Escape to clear and Enter to search. */
 export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(props, ref) {
-  const rest: Record<string, any> = {};
-  const own: Record<string, 1> = { size: 1, invalid: 1, className: 1, style: 1, onSearch: 1, onClear: 1, clearLabel: 1, loading: 1, loadingLabel: 1 };
-  for (const k in props) if (!own[k]) rest[k] = (props as any)[k];
+  const rest = omit(props, { size: 1, invalid: 1, className: 1, style: 1, onSearch: 1, onClear: 1, clearLabel: 1, loading: 1, loadingLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const el = React.useRef<HTMLInputElement | null>(null);
   const controlled = props.value !== undefined;

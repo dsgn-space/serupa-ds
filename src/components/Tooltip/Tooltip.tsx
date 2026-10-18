@@ -22,7 +22,9 @@ export interface TooltipProps {
   style?: React.CSSProperties;
 }
 
-type Handlers = Record<string, ((e: any) => void) | undefined>;
+/** The trigger element's props this component reads and adds to. */
+type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
+type Handler = (e: React.SyntheticEvent<HTMLElement>) => void;
 
 /* Tooltip: a short hint about an element, shown while it's hovered (after a delay) or focused, and placed next to
    it in the top layer. Escape hides it; the pointer can move onto the tooltip without it closing (WCAG 1.4.13).
@@ -68,11 +70,11 @@ export function Tooltip(props: TooltipProps): React.ReactElement {
     return () => document.removeEventListener("keydown", esc);
   }, [open, set]);
 
-  const child = React.Children.only(props.children) as React.ReactElement<any> & { ref?: React.Ref<HTMLElement> };
-  const cp: Handlers & Record<string, any> = child.props;
+  const child = React.Children.only(props.children) as React.ReactElement<TriggerProps>;
+  const cp = child.props;
   const delay = props.delay == null ? 400 : props.delay;
-  const chain = (name: string, fn: (e: any) => void) => (e: any) => { if (cp[name]) cp[name](e); fn(e); };
-  const childRef = (child as any).ref;
+  const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own = cp[name]; if (typeof own === "function") (own as Handler)(e); fn(e); };
+  const childRef = (child as { ref?: React.ForwardedRef<HTMLElement> }).ref;
   const aria = props.role === "label" ? "aria-labelledby" : "aria-describedby";
   const merged = [cp[aria], id].filter(Boolean).join(" ");
   const trigger = React.cloneElement(child, {

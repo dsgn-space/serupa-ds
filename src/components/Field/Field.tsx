@@ -27,13 +27,16 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
    (unless it has one), links the label to it, adds the hint and error to its aria-describedby, and passes
    invalid (with error), aria-required (with required) and disabled. group renders a <fieldset> with a <legend>
    instead, for a set of checkboxes or radios, and puts the hint and error on the fieldset. */
+/** The props Field reads from and hands to its control (a component like Input, or a DOM element). */
+type ControlProps = { id?: string; invalid?: boolean; disabled?: boolean; "aria-describedby"?: string; "aria-required"?: boolean | "true" | "false"; "aria-invalid"?: boolean };
+
 const OWN = { label: 1, hint: 1, error: 1, required: 1, optional: 1, disabled: 1, group: 1, id: 1, children: 1, className: 1 } as const;
 
 /** A label, an optional hint and an error message around one form control, wired up for screen readers. className and other attributes go to the outer element. */
 export function Field(props: FieldProps): React.ReactElement {
   const rest = omit(props, OWN);
   const base = domId("dk-f", React.useId());
-  const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<any>) : null;
+  const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<ControlProps>) : null;
   const controlId = props.id || (child && child.props.id) || base + "-control";
   const hasError = props.error != null && props.error !== false && props.error !== "";
   const hintId = props.hint ? base + "-hint" : null, errorId = hasError ? base + "-error" : null;
@@ -49,8 +52,8 @@ export function Field(props: FieldProps): React.ReactElement {
   const described = cn(hintId, errorId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
     if (!React.isValidElement(el)) return el;
-    const p = el.props as Record<string, any>;
-    const add: Record<string, any> = {}, dom = typeof el.type === "string";
+    const p = el.props as ControlProps;
+    const add: ControlProps = {}, dom = typeof el.type === "string";
     if (isControl) {
       if (!p.id) add.id = controlId;
       if (described) add["aria-describedby"] = cn(p["aria-describedby"], described);

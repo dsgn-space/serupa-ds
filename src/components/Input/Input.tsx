@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, isInvalid, oneOf, SIZES } from "../../internal/cn";
+import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { asIcon } from "../Icon/Icon";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -19,10 +19,9 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
    prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
 /** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(props, ref) {
-  const rest: Record<string, any> = {};
-  for (const k in props) if (k !== "size" && k !== "invalid" && k !== "leftIcon" && k !== "rightIcon" && k !== "className" && k !== "style") rest[k] = (props as any)[k];
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, className: 1, style: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   if (rest.type === undefined) rest.type = "text";
   const icon = function (node: React.ReactNode, side: string) {

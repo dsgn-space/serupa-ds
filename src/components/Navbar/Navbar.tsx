@@ -78,7 +78,7 @@ Navbar.displayName = "Navbar";
 /** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. */
 export const NavbarLink = React.forwardRef<HTMLAnchorElement, NavbarLinkProps>(function NavbarLink(props, ref) {
   const ctx = React.useContext(NavbarContext);
-  const rest: Record<string, any> = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
+  const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
   return React.createElement(props.as || "a", Object.assign(rest, {
     ref: ref, "aria-current": props.active ? "page" : undefined,
     className: cn("dk-navbar__link", props.active && "dk-navbar__link--active", props.className),

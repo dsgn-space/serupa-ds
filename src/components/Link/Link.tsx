@@ -18,7 +18,7 @@ export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>
    tab and says so. `as` renders your router's link instead of an <a>. className and every other prop go to it. */
 /** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props, ref) {
-  const rest: Record<string, any> = omit(props, { tone: 1, underline: 1, external: 1, as: 1, className: 1, children: 1 });
+  const rest = omit(props, { tone: 1, underline: 1, external: 1, as: 1, className: 1, children: 1 });
   const tone = oneOf(["primary", "neutral"] as const, props.tone, "primary");
   const underline = oneOf(["always", "hover"] as const, props.underline, "always");
   if (props.external) {

@@ -15,16 +15,22 @@ export function oneOf<T extends string>(list: readonly T[], value: unknown, fall
   return list.indexOf(value as T) < 0 ? fallback : (value as T);
 }
 
+/** Attributes a component adds for tests, analytics and styling (data-component, data-size…). */
+export type DataAttributes = { [attr: `data-${string}`]: string | boolean | undefined };
+
+/** The props a component passes on to its DOM element: every prop except its own ones, still typed, plus data-* hooks. */
+export type Rest<P, K extends PropertyKey> = Omit<P, K> & DataAttributes;
+
 /** Copies every prop except the component's own ones (the rest go to the DOM element). */
-export function omit(props: Record<string, any>, own: Record<string, 1>): Record<string, any> {
-  const rest: Record<string, any> = {};
-  for (const k in props) if (!own[k]) rest[k] = props[k];
-  return rest;
+export function omit<P extends object, K extends PropertyKey>(props: P, own: { readonly [k in K]: 1 }): Rest<P, K> {
+  const rest: Record<string, unknown> = {};
+  for (const k in props) if (!(own as Record<PropertyKey, 1 | undefined>)[k]) rest[k] = props[k];
+  return rest as Rest<P, K>;
 }
 
 /** invalid, or aria-invalid passed as true or "true". */
-export function isInvalid(props: Record<string, any>, rest: Record<string, any>): boolean {
-  return !!props.invalid || rest["aria-invalid"] === true || rest["aria-invalid"] === "true";
+export function isInvalid(invalid: boolean | undefined, ariaInvalid: React.AriaAttributes["aria-invalid"]): boolean {
+  return !!invalid || ariaInvalid === true || ariaInvalid === "true";
 }
 
 /** Sets a forwarded ref, a function or an object. */

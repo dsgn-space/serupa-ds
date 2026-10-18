@@ -68,7 +68,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(functi
     if (to) { e.preventDefault(); to.focus(); }
   }
   let n = 0;
-  const items = React.Children.map(props.children, (c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<any>, { "data-index": String(n++) }) : c);
+  const items = React.Children.map(props.children, (c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ "data-index"?: string }>, { "data-index": String(n++) }) : c);
   return (
     <AccordionContext.Provider value={{ open, toggle, level, collapsible, single, base }}>
       <div {...rest} ref={ref} onKeyDown={onKeyDown} data-component="accordion" className={cn("dk-accordion", variant === "card" && "dk-accordion--card", props.className)}>{items}</div>
@@ -82,8 +82,8 @@ Accordion.displayName = "Accordion";
 /** One item in an Accordion: a title button and the content it shows and hides. */
 export const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(function AccordionItem(props, ref) {
   const ctx = React.useContext(AccordionContext);
-  const rest: Record<string, any> = omit(props, { value: 1, title: 1, disabled: 1, className: 1, children: 1 });
-  const index = rest["data-index"] || "0";
+  const rest = omit(props, { value: 1, title: 1, disabled: 1, className: 1, children: 1 });
+  const index = String(rest["data-index"] || "0");
   delete rest["data-index"];
   const value = props.value != null ? props.value : index;
   const open = !!ctx && ctx.open.indexOf(value) >= 0;

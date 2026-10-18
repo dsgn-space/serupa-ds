@@ -14,7 +14,7 @@ const links = [
 const meta = {
   title: 'Components/Navbar',
   component: Navbar,
-  subcomponents: { NavbarLink } as any,
+  subcomponents: { NavbarLink },
   parameters: { layout: 'fullscreen' },
   args: {
     brand: <a href="#" className="text-base font-semibold text-text no-underline">Acme</a>,

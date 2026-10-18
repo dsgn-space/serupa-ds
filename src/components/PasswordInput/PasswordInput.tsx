@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, isInvalid, oneOf } from "../../internal/cn";
+import { cn, isInvalid, omit, oneOf } from "../../internal/cn";
 import { asIcon, Icon } from "../Icon/Icon";
 import type { InputProps } from "../Input/Input";
 
@@ -21,11 +21,9 @@ const SIZES = ["sm", "md", "lg"] as const;
    className and style go to the box; ref and every other prop to the <input>. */
 /** A password field with a button that shows and hides what was typed. */
 export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(function PasswordInput(props, ref) {
-  const rest: Record<string, any> = {};
-  const own: Record<string, 1> = { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1 };
-  for (const k in props) if (!own[k]) rest[k] = (props as any)[k];
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   if (rest.autoComplete === undefined) rest.autoComplete = "current-password";
   const [own2, setOwn] = React.useState(!!props.defaultVisible);

@@ -25,10 +25,10 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
    every other prop (value, defaultValue, onChange, name, disabled, required, aria-*…) and ref to the <select>. */
 const OWN = { size: 1, invalid: 1, leftIcon: 1, placeholder: 1, options: 1, children: 1, className: 1, style: 1, multiple: 1 } as const;
 
-function optionNodes(list: any[] | undefined): React.ReactNode[] {
+function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined): React.ReactNode[] {
   return (list || []).map(function (o, i) {
-    if (o != null && typeof o === "object" && Array.isArray(o.options)) return <optgroup key={"g" + i} label={o.label} disabled={o.disabled}>{optionNodes(o.options)}</optgroup>;
-    const v = o != null && typeof o === "object" ? o : { value: o, label: o };
+    if (o != null && typeof o === "object" && "options" in o && Array.isArray(o.options)) return <optgroup key={"g" + i} label={o.label} disabled={o.disabled}>{optionNodes(o.options)}</optgroup>;
+    const v = o != null && typeof o === "object" ? (o as Exclude<SelectOption, string | number>) : { value: o, label: o, disabled: undefined };
     return <option key={String(v.value)} value={v.value} disabled={v.disabled}>{v.label != null ? v.label : v.value}</option>;
   });
 }
@@ -36,9 +36,9 @@ function optionNodes(list: any[] | undefined): React.ReactNode[] {
 /** A native <select> styled like Input (ref, value, onChange and every select attribute go to it), with a chevron; className and style go to the box. Label it with <label htmlFor>, aria-label or Field. multiple isn't supported. */
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(props, ref) {
   const rest = omit(props, OWN);
-  if ((props as any).multiple) warnOnce("select-multiple", "Diki.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
+  if ((props as { multiple?: boolean }).multiple) warnOnce("select-multiple", "Diki.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const hasPh = props.placeholder != null && props.placeholder !== "";
   const controlled = rest.value !== undefined;

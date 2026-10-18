@@ -50,7 +50,7 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
         {steps.map((s, i) => {
           const state = s.status === "error" ? "error" : i < current ? "complete" : i === current ? "current" : "upcoming";
           const clickable = !!props.onStepClick && i < current;
-          const Head: any = clickable ? "button" : "div";
+          const Head: React.ElementType = clickable ? "button" : "div";
           const hasDesc = s.description != null && s.description !== "";
           return (
             <li key={i} className={cn("dk-stepper__step", "dk-stepper__step--" + state, i < current && "dk-stepper__step--done")} data-state={state} aria-current={i === current ? "step" : undefined}>

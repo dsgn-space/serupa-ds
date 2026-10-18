@@ -29,7 +29,7 @@ export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement
   /** What renders the link: 'a' (default), or your router's link component. Its props go in linkProps. */
   as?: React.ElementType;
   /** Extra props for the link or button (to for a router link, target, aria-*). */
-  linkProps?: Record<string, any>;
+  linkProps?: Record<string, unknown>;
   /** Shaded with a primary bar at its start, and aria-current="true" (or aria-pressed for a button). Default: false. */
   selected?: boolean;
   /** Dims a link or button item and stops it. Default: false. */
@@ -64,7 +64,7 @@ export const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(function 
   const lp = Object.assign({}, props.linkProps);
   let main: React.ReactNode;
   if (props.href != null || props.as) {
-    const attrs: Record<string, any> = Object.assign(lp, { className: cn("dk-list__main", lp.className), "aria-current": props.selected ? "true" : undefined });
+    const attrs: Record<string, unknown> = Object.assign(lp, { className: cn("dk-list__main", lp.className), "aria-current": props.selected ? "true" : undefined });
     if (props.disabled) { attrs["aria-disabled"] = true; attrs.tabIndex = -1; attrs.onClick = (e: React.MouseEvent) => e.preventDefault(); }
     else { attrs.href = props.href; if (props.onClick) attrs.onClick = props.onClick; }
     main = React.createElement(props.as || "a", attrs, body);

@@ -37,7 +37,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(function TimePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest as Record<string, any>);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const h12 = props.hour12 ?? uses12h(locale);
   const step = props.step && Math.round(props.step) >= 1 ? Math.round(props.step) : 30;
   const lo = toMinutes(min) ?? 0, hi = toMinutes(max) ?? 24 * 60 - 1;

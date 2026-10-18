@@ -56,9 +56,9 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = React.forwardRef<HTMLSpanElement, DateRangePickerProps>(function DateRangePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, className, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest as Record<string, any>);
-  const describedBy = (rest as any)["aria-describedby"], required = (rest as any)["aria-required"];
-  delete (rest as any)["aria-describedby"]; delete (rest as any)["aria-required"];
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
+  const describedBy = rest["aria-describedby"], required = rest["aria-required"];
+  delete rest["aria-describedby"]; delete rest["aria-required"];
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<DateRange>(norm(props.defaultValue));
   const value = controlled ? norm(props.value) : own;

@@ -14,7 +14,7 @@ const people = [
 const meta = {
   title: 'Components/List',
   component: List,
-  subcomponents: { ListItem } as any,
+  subcomponents: { ListItem },
   args: {
     'aria-label': 'Members',
     children: people.map((p) => <ListItem key={p.name} leading={<Avatar name={p.name} size="sm" />} title={p.name} description={p.email} trailing={<Badge>{p.role}</Badge>} />),

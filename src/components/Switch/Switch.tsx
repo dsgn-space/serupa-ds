@@ -25,7 +25,7 @@ const OWN = { size: 1, invalid: 1, description: 1, labelPosition: 1, children: 1
 export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(function Switch(props, ref) {
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const base = domId("dk-sw", React.useId()), labelId = base + "-label", descId = base + "-desc";
   const hasLabel = props.children != null && props.children !== false && props.children !== "";

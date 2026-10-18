@@ -44,7 +44,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(function
   const hasLabel = props.label != null && props.label !== false && props.label !== "";
   const showValue = !!props.showValue && known;
   const share = known ? value / max : 0;
-  const aria: Record<string, any> = { role: "progressbar", "aria-valuemin": 0, "aria-valuemax": max };
+  const aria: React.AriaAttributes & { role?: React.AriaRole } = { role: "progressbar", "aria-valuemin": 0, "aria-valuemax": max };
   if (known) { aria["aria-valuenow"] = value; aria["aria-valuetext"] = text; }
   if (hasLabel && variant === "bar" && !rest["aria-label"] && !rest["aria-labelledby"]) aria["aria-labelledby"] = base + "-label";
   const cls = cn("dk-progress", "dk-progress--" + variant, "dk-progress--size-" + size, tone !== "primary" && "dk-progress--" + tone, !known && "dk-progress--indeterminate", props.className);

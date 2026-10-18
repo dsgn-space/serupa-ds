@@ -25,7 +25,8 @@ const SATURDAY_FIRST = /^(AF|BH|DJ|DZ|EG|IQ|IR|JO|KW|LY|OM|QA|SD|SY)$/;
 
 export function firstDayOfWeek(locale?: string): number {
   try {
-    const l: any = new Intl.Locale(locale || new Intl.DateTimeFormat().resolvedOptions().locale);
+    // getWeekInfo() (and the older weekInfo) are newer than TypeScript's Intl types.
+    const l: Intl.Locale & { getWeekInfo?: () => { firstDay?: number }; weekInfo?: { firstDay?: number } } = new Intl.Locale(locale || new Intl.DateTimeFormat().resolvedOptions().locale);
     const info = typeof l.getWeekInfo === "function" ? l.getWeekInfo() : l.weekInfo;
     if (info && info.firstDay) return info.firstDay % 7;
     const region = l.region || (typeof l.maximize === "function" ? l.maximize().region : undefined);

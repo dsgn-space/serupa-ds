@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, oneOf, SIZES } from "../../internal/cn";
+import { cn, type DataAttributes, omit, oneOf, SIZES } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
@@ -54,7 +54,7 @@ export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTML
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 const VARIANTS: readonly ButtonVariant[] = ["primary", "secondary", "outline", "ghost", "link"];
-const OWN: Record<string, 1> = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingText: 1 };
+const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingText: 1 } as const;
 
 /** The button's class names, for styling any other element as a button. iconPosition adds the optical padding for one icon beside a label. */
 export function buttonClass(opts?: { variant?: ButtonVariant; destructive?: boolean; size?: ButtonSize; iconOnly?: boolean; iconPosition?: 'left' | 'right'; className?: string }): string {
@@ -71,10 +71,10 @@ function slot(node: React.ReactNode, side: string): React.ReactNode {
 }
 
 /* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
-const ButtonImpl = React.forwardRef<HTMLElement, ButtonProps>(function Button(props, ref) {
-  const all = props as Record<string, any>;
-  const rest: Record<string, any> = {};
-  for (const k in all) if (!OWN[k]) rest[k] = all[k];
+/** Button without the overloads, for components built on it (IconButton, Fab) that pass either shape through. */
+export const ButtonBase = React.forwardRef<HTMLElement, ButtonProps>(function Button(props, ref) {
+  // Both shapes (button and link) are HTML attributes; which ones apply depends on href below.
+  const rest: React.AllHTMLAttributes<HTMLElement> & DataAttributes = omit(props as ButtonOwnProps & React.AllHTMLAttributes<HTMLElement>, OWN);
   const isLink = rest.href != null;
   const iconOnly = props.icon != null;
   const pos = props.leftIcon != null && props.rightIcon == null ? "left" : props.rightIcon != null && props.leftIcon == null ? "right" : undefined;
@@ -102,7 +102,7 @@ const ButtonImpl = React.forwardRef<HTMLElement, ButtonProps>(function Button(pr
     slot(props.rightIcon, "right")
   ];
   if (loading) content = content.concat([<span className="dk-btn__loader" aria-hidden key="loader">{spin}</span>]);
-  if (variant !== "link") content = [<span className="dk-btn__ripples" aria-hidden key="ripples" />].concat(content as any);
+  if (variant !== "link") content = [<span className="dk-btn__ripples" aria-hidden key="ripples" />, ...content];
 
   // Micro-interactions: ripple on press, Enter shows the press like Space (your handlers run first)
   rest.onPointerDown = chain(rest.onPointerDown, ripple);
@@ -142,10 +142,10 @@ const ButtonImpl = React.forwardRef<HTMLElement, ButtonProps>(function Button(pr
   if (rest.type === undefined) rest.type = "button";   // never submits a form by accident; pass type="submit" to submit
   return React.createElement("button", Object.assign({}, rest, { ref: ref, className: classes }), ...content);
 });
-ButtonImpl.displayName = "Button";
+ButtonBase.displayName = "Button";
 
 /** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press, ripple and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
-export const Button = ButtonImpl as unknown as {
+export const Button = ButtonBase as unknown as {
   (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
   (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;
   displayName?: string;

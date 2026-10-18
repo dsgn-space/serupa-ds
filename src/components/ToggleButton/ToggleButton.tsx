@@ -24,7 +24,7 @@ export const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProp
   const on = controlled ? !!pressed : own;
   const v = oneOf(["outline", "ghost"] as const, variant, "outline");
   return (
-    <Button {...(rest as any)} ref={ref} variant={v} aria-pressed={on}
+    <Button {...rest} ref={ref} variant={v} aria-pressed={on}
       className={cn("dk-toggle-button", on && "dk-toggle-button--pressed", className)}
       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         if (onClick) onClick(e);

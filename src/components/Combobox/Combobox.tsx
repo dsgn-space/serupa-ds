@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn, domId, isInvalid, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
+import { cn, domId, isInvalid, omit, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
 import { asIcon, Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
@@ -44,11 +44,9 @@ const plain = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
    tokens: className and style go to the box; ref and every other prop to the <input>. */
 /** A text field with a list of options that narrows as you type; picks one listed option. */
 export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(function Combobox(props, ref) {
-  const rest: Record<string, any> = {};
-  const own: Record<string, 1> = { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1 };
-  for (const k in props) if (!own[k]) rest[k] = (props as any)[k];
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const base = domId("dk-cbx", React.useId());
   const opts: Opt[] = (props.options || []).map((o, i) => (typeof o === "string" ? { value: o, label: o, i } : { value: String(o.value), label: String(o.label ?? o.value), description: o.description, disabled: !!o.disabled, i }));

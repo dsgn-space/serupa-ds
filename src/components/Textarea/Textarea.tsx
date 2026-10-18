@@ -30,7 +30,7 @@ const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(props, ref) {
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props, rest);
+  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const rows = (props.rows as number) > 0 ? Math.floor(props.rows as number) : 3;
   const auto = !!props.autoResize;
@@ -73,7 +73,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
     if (onChange) onChange(e);
   };
   if (props.showCount) rest["aria-describedby"] = cn(rest["aria-describedby"], countId);
-  const max = rest.maxLength > 0 ? rest.maxLength : null;
+  const max = rest.maxLength != null && rest.maxLength > 0 ? rest.maxLength : null;
   return (
     <span className={cn("dk-textarea", "dk-textarea--size-" + size, invalid && "dk-textarea--invalid", rest.disabled && "dk-textarea--disabled", rest.readOnly && "dk-textarea--readonly", resize === "none" && "dk-textarea--resize-none", auto && "dk-textarea--auto", props.className)} style={props.style} data-component="textarea" data-size={size}>
       <textarea {...rest} ref={setRefs} rows={rows} className="dk-textarea__field" key="field" />

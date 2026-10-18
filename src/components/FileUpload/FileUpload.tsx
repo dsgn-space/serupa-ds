@@ -120,7 +120,7 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(func
         onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
         <Icon name="upload_file" className="dk-file-upload__icon" />
         <p className="dk-file-upload__title">{props.title ?? (multiple ? "Drag files here" : "Drag a file here")}</p>
-        <Button ref={chooser as any} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()} aria-describedby={hasHint ? base + "-hint" : undefined}>
+        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()} aria-describedby={hasHint ? base + "-hint" : undefined}>
           {props.buttonLabel || (multiple ? "Choose files" : "Choose a file")}
         </Button>
         {hasHint ? <p className="dk-file-upload__hint" id={base + "-hint"}>{props.hint}</p> : null}

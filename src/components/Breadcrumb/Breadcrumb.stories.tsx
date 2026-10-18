@@ -5,7 +5,7 @@ import { Breadcrumb, BreadcrumbItem } from './Breadcrumb';
 const meta = {
   title: 'Components/Breadcrumb',
   component: Breadcrumb,
-  subcomponents: { BreadcrumbItem } as any,
+  subcomponents: { BreadcrumbItem },
   args: {
     children: [
       <BreadcrumbItem key="h" href="#" icon="home">Home</BreadcrumbItem>,

@@ -29,11 +29,11 @@ export interface BreadcrumbItemProps extends React.AnchorHTMLAttributes<HTMLAnch
 /* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */
 /** One page in a Breadcrumb: a link, or the current page when it's the last. */
 export const BreadcrumbItem = React.forwardRef<HTMLAnchorElement, BreadcrumbItemProps>(function BreadcrumbItem(props, ref) {
-  const rest: Record<string, any> = omit(props, { icon: 1, as: 1, current: 1, className: 1, children: 1 });
+  const rest = omit(props, { icon: 1, as: 1, current: 1, className: 1, children: 1 });
   const content = <>{props.icon ? <span className="dk-breadcrumb__icon">{asIcon(props.icon)}</span> : null}{props.children}</>;
   if (props.current) {
     delete rest.href;
-    return <span {...rest} ref={ref as any} aria-current="page" className={cn("dk-breadcrumb__item dk-breadcrumb__item--current", props.className)}>{content}</span>;
+    return <span {...rest} ref={ref as React.Ref<HTMLSpanElement>} aria-current="page" className={cn("dk-breadcrumb__item dk-breadcrumb__item--current", props.className)}>{content}</span>;
   }
   return React.createElement(props.as || "a", Object.assign(rest, { ref: ref, className: cn("dk-breadcrumb__item dk-breadcrumb__link", props.className) }), content);
 });

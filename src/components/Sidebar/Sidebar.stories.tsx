@@ -23,7 +23,7 @@ const items = [
 const meta = {
   title: 'Components/Sidebar',
   component: Sidebar,
-  subcomponents: { SidebarSection, SidebarItem } as any,
+  subcomponents: { SidebarSection, SidebarItem },
   parameters: { layout: 'fullscreen' },
   args: {
     header: <strong className="block px-3 py-1 text-base text-text">Acme</strong>,
