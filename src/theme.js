@@ -4,7 +4,7 @@
    already has the right theme:
 
      <html data-brand="blue" data-mode="auto">
-     <script src="components/theme.js"></script>
+     <script src="node_modules/serupa-ds/dist/theme.js"></script>
 
    data-brand  blue | violet | emerald         (default: blue)
    data-mode   auto | light | dark             (default: auto = follow the operating system)
@@ -27,8 +27,14 @@
   function pick(v, list, fallback) { return list.indexOf(v) >= 0 ? v : fallback; }
   function load() {
     try {
-      // Before 5.0.0 the choice was saved as "diki-theme": read it once so visitors keep their theme.
-      var s = JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("diki-theme") || "null");
+      // Before 5.0.0 the choice was saved as "diki-theme": move it to the new key once, so visitors keep their
+      // theme and reset() forgets it for good.
+      var raw = localStorage.getItem(KEY);
+      if (raw == null && (raw = localStorage.getItem("diki-theme")) != null) {
+        localStorage.setItem(KEY, raw);
+        localStorage.removeItem("diki-theme");
+      }
+      var s = JSON.parse(raw || "null");
       if (!s) return {};
       var o = {};
       if (BRANDS.indexOf(s.brand) >= 0) o.brand = s.brand;
