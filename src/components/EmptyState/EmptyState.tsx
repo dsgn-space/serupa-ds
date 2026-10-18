@@ -1,10 +1,10 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { asIcon, type IconName } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 
 export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** A picture of what's missing: an icon name ('inbox', 'search_off') or an element (an illustration). */
-  icon?: IconName | React.ReactElement;
+  icon?: IconSource;
   /** What's empty, in a few words: "No projects yet". */
   title: React.ReactNode;
   /** What it means or what to do next. */

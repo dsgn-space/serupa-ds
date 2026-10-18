@@ -36,9 +36,9 @@ const bd = await p.evaluate(() => { const n = document.getElementById('bdef'), o
 t('Breadcrumb: a <nav aria-label="Breadcrumb"> holding an <ol>; ref, className and props reach the nav', bd.tag === 'NAV' && bd.label === 'Breadcrumb' && bd.cls === 'dk-breadcrumb extra' && bd.comp === 'breadcrumb' && bd.ref && bd.x === 'y' && bd.ol === 'OL' && bd.lis === 5, JSON.stringify(bd));
 const cur = await p.evaluate(() => { const l = [...document.querySelectorAll('#bdef .dk-breadcrumb__item')]; return l.map((e) => [e.tagName, e.getAttribute('href'), e.getAttribute('aria-current')].join(' ')); });
 t('items are links; the last is the current page: text with aria-current="page" and no href', cur.join('|') === 'A #home |A #projects |SPAN  page', cur.join('|'));
-const sp = await p.evaluate(() => { const s = document.querySelector('#bdef .dk-breadcrumb__separator'), vis = [...s.querySelectorAll('.dk-icon')].filter((i) => getComputedStyle(i).display !== 'none'); return { hidden: s.getAttribute('aria-hidden'), icon: vis.map((i) => i.textContent).join(), size: getComputedStyle(vis[0]).fontSize }; });
+const sp = await p.evaluate(() => { const s = document.querySelector('#bdef .dk-breadcrumb__separator'), vis = [...s.querySelectorAll('.dk-icon')].filter((i) => getComputedStyle(i).display !== 'none'); return { hidden: s.getAttribute('aria-hidden'), icon: vis.map((i) => i.dataset.icon).join(), size: getComputedStyle(vis[0]).fontSize }; });
 t('separators: a 16px chevron_right, hidden from screen readers', sp.hidden === 'true' && sp.icon === 'chevron_right' && sp.size === '16px', JSON.stringify(sp));
-const ic = await p.evaluate(() => { const i = document.querySelector('#bdef .dk-breadcrumb__icon .dk-icon'); return i && [i.textContent, getComputedStyle(i).fontSize].join(); });
+const ic = await p.evaluate(() => { const i = document.querySelector('#bdef .dk-breadcrumb__icon .dk-icon'); return i && [i.dataset.icon, getComputedStyle(i).fontSize].join(); });
 t('an item can have a 16px icon', ic === 'home,16px', ic);
 const muted = await p.evaluate(() => { const d = document.createElement('div'); d.style.color = 'var(--text-muted)'; document.body.appendChild(d); const m = getComputedStyle(d).color; d.style.color = 'var(--text)'; const x = getComputedStyle(d).color; d.remove(); return [m, x]; });
 const s0 = await st('#bdef a', ['color', 'textDecorationLine', 'fontSize']);
@@ -57,9 +57,9 @@ await p.focus('#bmax .dk-breadcrumb__more'); await p.keyboard.press('Enter'); aw
 const m1 = await items('#bmax');
 const f = await p.evaluate(() => document.activeElement.textContent);
 t('pressing "…" shows every item and moves focus to the first one it showed', m1.join(' ') === 'Home > Org > Team > Projects > Website > Settings' && f === 'Org', m1.join(' ') + ' focus=' + f);
-const bb = await p.evaluate(() => { const n = document.getElementById('bbad'); return [n.querySelectorAll('.dk-breadcrumb__item').length, n.querySelector('.dk-breadcrumb__separator .dk-icon').textContent].join(); });
+const bb = await p.evaluate(() => { const n = document.getElementById('bbad'); return [n.querySelectorAll('.dk-breadcrumb__item').length, n.querySelector('.dk-breadcrumb__separator .dk-icon').dataset.icon].join(); });
 t('unknown separator falls back to the chevron; maxItems below 2 is ignored', bb === '3,chevron_right', bb);
-const rtl = await p.evaluate(() => [...document.querySelectorAll('#brtl .dk-breadcrumb__separator .dk-icon')].filter((i) => getComputedStyle(i).display !== 'none').map((i) => i.textContent).join());
+const rtl = await p.evaluate(() => [...document.querySelectorAll('#brtl .dk-breadcrumb__separator .dk-icon')].filter((i) => getComputedStyle(i).display !== 'none').map((i) => i.dataset.icon).join());
 t('right to left: the chevron points left', rtl === 'chevron_left', rtl);
 // The first link is the page's first focusable element: Shift+Tab from it leaves the page (Firefox doesn't Tab back in), so Tab away and back.
 await p.focus('#bdef a'); await p.keyboard.press('Tab'); await p.keyboard.press('Shift+Tab');

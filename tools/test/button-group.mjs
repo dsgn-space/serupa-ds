@@ -58,7 +58,7 @@ t('attached={false}: 8px apart, own corners', sr[1].l - sr[0].r === 8 && (await 
 const vr = await rects('#gv');
 const vr2 = await p.evaluate(() => { const e = document.getElementById('gv'), c = e.children; return [e.dataset.orientation, getComputedStyle(c[0]).borderBottomLeftRadius, getComputedStyle(c[1]).borderTopRightRadius, Math.round(c[0].getBoundingClientRect().width) === Math.round(c[1].getBoundingClientRect().width)].join(); });
 t('vertical: stacked, overlapping by 1px, the same width, data-orientation="vertical"', vr[1].t - vr[0].b === -1 && vr[0].l === vr[1].l && vr2 === 'vertical,0px,0px,true', JSON.stringify([vr, vr2]));
-const tg = await p.evaluate(() => { const e = document.getElementById('tbold'); return { tag: e.tagName, type: e.type, pressed: e.getAttribute('aria-pressed'), label: e.getAttribute('aria-label'), cls: e.className, comp: e.dataset.component, ref: window.tr.current === e, icon: e.textContent }; });
+const tg = await p.evaluate(() => { const e = document.getElementById('tbold'); return { tag: e.tagName, type: e.type, pressed: e.getAttribute('aria-pressed'), label: e.getAttribute('aria-label'), cls: e.className, comp: e.dataset.component, ref: window.tr.current === e, icon: e.querySelector('.dk-icon')?.dataset.icon }; });
 t('ToggleButton: a button with aria-pressed="false", outline by default, icon-only with aria-label; ref and className reach it', tg.tag === 'BUTTON' && tg.type === 'button' && tg.pressed === 'false' && tg.label === 'Bold' && /dk-btn--outline/.test(tg.cls) && /dk-toggle-button extra/.test(tg.cls) && tg.comp === 'button' && tg.ref && tg.icon === 'format_bold', JSON.stringify(tg));
 await p.click('#tbold');
 const on = await st('#tbold', ['backgroundColor', 'color', 'borderTopColor']);

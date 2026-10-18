@@ -4,7 +4,7 @@ import { config } from "../../internal/config";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
-import { asIcon } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
@@ -19,11 +19,11 @@ interface ButtonOwnProps {
   /** Height: sm 24px, md 32px, lg 44px (the control-height tokens). Default: 'md'. */
   size?: ButtonSize;
   /** Icon before the label: an icon name (custom or Material Symbols, "add") or any element. */
-  leftIcon?: React.ReactNode;
+  leftIcon?: IconSource;
   /** Icon after the label: an icon name (custom or Material Symbols, "arrow_forward") or any element. */
-  rightIcon?: React.ReactNode;
+  rightIcon?: IconSource;
   /** Icon-only button: an icon name (custom or Material Symbols) or element, in a square at the size's height. Ignores children, leftIcon and rightIcon; needs an aria-label. */
-  icon?: React.ReactNode;
+  icon?: IconSource;
   /** Shows a centered Loader (ring) and blocks clicks, keys and Enter-key form submission while an action runs, so a request can't be sent twice. Keeps size, colors and keyboard focus; sets aria-busy, aria-disabled and data-loading. Default: false. */
   loading?: boolean;
   /** Announced to screen readers (polite status region) when loading starts. Default: 'Loading'. Pass '' to stay silent. */
@@ -65,8 +65,8 @@ export function buttonClass(opts?: { variant?: ButtonVariant; destructive?: bool
   return cn("dk-btn", "dk-btn--" + v, opts.destructive && "dk-btn--destructive", "dk-btn--size-" + s, iconOnly && "dk-btn--icon-only", !iconOnly && (pos === "left" || pos === "right") && "dk-btn--icon-" + pos, opts.className);
 }
 
-function slot(node: React.ReactNode, side: string): React.ReactNode {
-  node = asIcon(node);
+function slot(source: IconSource, side: string): React.ReactNode {
+  const node = asIcon(source);
   return node == null || node === false ? null : <span className={"dk-btn__icon dk-btn__icon--" + side} aria-hidden key={side}>{node}</span>;
 }
 

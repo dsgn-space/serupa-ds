@@ -42,11 +42,6 @@ async function open(e, theme) {
   await page.goto(`${base}/iframe.html?id=${e.id}&viewMode=${e.type === 'docs' ? 'docs' : 'story'}&globals=brand:${brand};mode:${mode};a11y.manual:!true`);
   const drawn = await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0 || document.querySelector('#storybook-docs')?.children.length > 0, null, { timeout: 15000 }).then(() => true, () => false);
   if (!drawn) return 'did not render in 15 s';
-  // The icon font uses font-display: swap, so until it loads an icon's ligature ("close") is visible text and
-  // axe compares it with the button's name. document.fonts.ready doesn't wait for a font that hasn't started
-  // loading yet, so load it by name and check it.
-  const font = await page.evaluate(() => document.fonts.load('24px "Material Symbols Rounded"').then(() => document.fonts.check('24px "Material Symbols Rounded"'), () => false));
-  if (!font) return 'icon font not loaded';
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await page.waitForTimeout(150);
   return '';

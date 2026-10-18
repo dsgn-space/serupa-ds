@@ -1,4 +1,5 @@
 import * as React from "react";
+import type { IconSource } from "../Icon/Icon";
 import { cn } from "../../internal/cn";
 import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from "../Button/Button";
 
@@ -6,7 +7,7 @@ type Without<T> = T extends unknown ? Omit<T, 'icon' | 'leftIcon' | 'rightIcon' 
 
 interface IconButtonOwnProps {
   /** The icon: a custom or Material Symbols name ("more_vert") or any element. */
-  icon: React.ReactNode;
+  icon: IconSource;
   /** What the button does, for screen readers (its aria-label) and as a tooltip (title). Required: an icon alone has no name. */
   label: string;
   /** 'square' (default, the Button's corners) or 'round'. */

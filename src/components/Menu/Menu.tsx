@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
-import { asIcon } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -131,7 +131,7 @@ export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLElement>, '
   /** Called when the item is chosen (click, Enter or Space). The menu then closes, unless you call event.preventDefault(). */
   onSelect?: (event: React.SyntheticEvent) => void;
   /** An icon before the label: an icon name or any element. */
-  icon?: React.ReactNode;
+  icon?: IconSource;
   /** A keyboard shortcut shown at the end, such as "⌘K". Only a hint: wire the shortcut yourself. */
   shortcut?: string;
   /** Danger colors, for deleting. */

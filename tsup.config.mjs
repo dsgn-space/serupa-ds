@@ -21,7 +21,8 @@ const only = process.env.SERUPA_BUILD;
 
 export default defineConfig([
   ...(only === 'iife' ? [] : [{
-    entry: { index: 'src/index.ts' },
+    entry: { index: 'src/index.ts', icons: 'src/material/index.ts' },
+    splitting: false,   // index.js carries only the everyday icons; icons.js has them all
     format: ['esm'],
     outExtension: () => ({ js: '.js' }),
     target: 'es2019',
@@ -31,8 +32,8 @@ export default defineConfig([
     external: ['react', 'react-dom'],
     define,
   }]),
-  {
-    entry: { 'serupa.iife': 'src/browser.ts' },
+  ...[['serupa.iife', 'src/browser.ts'], ['serupa-icons.iife', 'src/browser-icons.ts']].map(([name, file]) => ({
+    entry: { [name]: file },
     format: ['iife'],
     outExtension: () => ({ js: '.js' }),
     target: 'es2019',
@@ -40,8 +41,9 @@ export default defineConfig([
     clean: false,
     define,
     esbuildPlugins: [windowReact],
+    minify: name !== 'serupa.iife',
     banner: {
-      js: `/*! Serupa v${version} by Diki · components (needs React 18 or 19) · CHANGELOG.md */`,
+      js: name === 'serupa.iife' ? `/*! Serupa v${version} by Diki · components (needs React 18 or 19) · CHANGELOG.md */` : `/*! Serupa v${version} · every Material Symbol by name (load after serupa.iife.js) · Apache 2.0 */`,
     },
-  },
+  })),
 ]);

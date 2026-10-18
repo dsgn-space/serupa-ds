@@ -44,12 +44,12 @@ const it = await p.evaluate(() => { const li = document.getElementById('iada'), 
 t('an item: leading avatar, a text-sm font-medium title over a text-sm description, trailing meta at the end; 12px padding', it.main === 'DIV' && it.pad === '12px 12px' && it.tfs === '14px' && it.tfw === '500' && it.dfs === '14px' && it.avatar && it.trEnd === 12 && it.order[0] < it.order[1] && it.order[1] < it.order[2], JSON.stringify(it));
 const lines = await p.evaluate(() => [...document.querySelectorAll('#ldef > li')].map((li) => getComputedStyle(li).borderTopWidth).join());
 t('divided: a 1px line between items, none above the first', lines === '0px,1px,1px', lines);
-const ic = await p.evaluate(() => { const i = document.querySelector('#iicon .dk-list__leading .dk-icon'); return i && [i.textContent, getComputedStyle(i).fontSize].join(); });
+const ic = await p.evaluate(() => { const i = document.querySelector('#iicon .dk-list__leading .dk-icon'); return i && [i.dataset.icon, getComputedStyle(i).fontSize].join(); });
 t('an icon name as leading: a 20px muted icon', ic === 'description,20px', ic);
 const card = await p.evaluate(() => { const l = document.getElementById('lcard'), s = getComputedStyle(l); return { tag: l.tagName, b: s.borderTopWidth, r: s.borderTopLeftRadius, pad: getComputedStyle(l.querySelector('.dk-list__main')).paddingLeft }; });
 t('variant card, as ol: a bordered frame with 8px corners and 16px side padding', card.tag === 'OL' && card.b === '1px' && card.r === '8px' && card.pad === '16px', JSON.stringify(card));
-const lk = await p.evaluate(() => { const li = document.getElementById('ilink'), m = li.querySelector('.dk-list__main'), more = document.getElementById('more'); return { tag: m.tagName, href: m.getAttribute('href'), moreInside: m.contains(more), title: m.textContent }; });
-t('href: the main area is a link; trailing actions stay outside it (no nested controls)', lk.tag === 'A' && lk.href === '#files' && !lk.moreInside && lk.title === 'folderFilesAll your files', JSON.stringify(lk));
+const lk = await p.evaluate(() => { const li = document.getElementById('ilink'), m = li.querySelector('.dk-list__main'), more = document.getElementById('more'); return { tag: m.tagName, href: m.getAttribute('href'), moreInside: m.contains(more), title: m.textContent, icon: m.querySelector('.dk-icon')?.dataset.icon }; });
+t('href: the main area is a link; trailing actions stay outside it (no nested controls)', lk.tag === 'A' && lk.href === '#files' && !lk.moreInside && lk.title === 'FilesAll your files' && lk.icon === 'folder', JSON.stringify(lk));
 const h0 = await st('#ilink', ['backgroundColor']);
 await p.hover('#ilink .dk-list__title'); const h1 = await st('#ilink', ['backgroundColor']);
 await p.hover('#iada'); const h2 = await st('#iada', ['backgroundColor']);

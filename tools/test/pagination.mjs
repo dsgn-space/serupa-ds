@@ -72,7 +72,7 @@ const dis = await st('#pbad [aria-label="Previous page"]', ['opacity', 'cursor']
 t('arrows with nowhere to go fade to 50%', dis.opacity === '0.5' && dis.cursor === 'not-allowed', JSON.stringify(dis));
 const bad = await shown('#pbad');
 t('a bad count, page, size and siblings fall back: no pages, both arrows disabled', bad === '(<) (>)' && await p.evaluate(() => document.getElementById('pbad').className === 'dk-pagination'), bad);
-const rtl = await p.evaluate(() => [...document.querySelectorAll('#prtl .dk-pagination__arrow')].map((a) => [...a.querySelectorAll('.dk-icon')].filter((i) => getComputedStyle(i).display !== 'none').map((i) => i.textContent).join()).join());
+const rtl = await p.evaluate(() => [...document.querySelectorAll('#prtl .dk-pagination__arrow')].map((a) => [...a.querySelectorAll('.dk-icon')].filter((i) => getComputedStyle(i).display !== 'none').map((i) => i.dataset.icon).join()).join());
 t('right to left: the arrows point the other way', rtl === 'chevron_right,chevron_left', rtl);
 const tk = await p.evaluate(() => { const e = document.querySelector('#ptok [aria-current]'), r = e.getBoundingClientRect(); return [getComputedStyle(e).backgroundColor, r.height].join(); });
 t('Pagination tokens (--pagination-current-bg, --pagination-size) override one pagination', tk === 'rgb(1, 2, 3),40', tk);

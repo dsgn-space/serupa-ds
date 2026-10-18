@@ -10,10 +10,10 @@
 .dk-text--base { font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-text--lg { font-size: var(--text-lg); line-height: var(--text-lg--line-height); }
 .dk-text--xl { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
-.dk-text--default { color: var(--text-tone-default, var(--text-color, var(--text))); }
-.dk-text--muted { color: var(--text-tone-muted, var(--text-color-muted, var(--text-muted))); }
-.dk-text--primary { color: var(--text-tone-primary, var(--text-color-primary, var(--primary))); }
-.dk-text--danger { color: var(--text-tone-danger, var(--text-color-danger, var(--danger-text))); }
+.dk-text--default { color: var(--text-color, var(--text)); }
+.dk-text--muted { color: var(--text-color-muted, var(--text-muted)); }
+.dk-text--primary { color: var(--text-color-primary, var(--primary)); }
+.dk-text--danger { color: var(--text-color-danger, var(--danger-text)); }
 .dk-text--normal { font-weight: var(--font-normal); }
 .dk-text--medium { font-weight: var(--font-medium); }
 .dk-text--semibold { font-weight: var(--font-semibold); }

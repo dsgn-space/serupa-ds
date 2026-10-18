@@ -54,7 +54,7 @@ for (const c of comps) {
       await page.goto(url);
       await page.evaluate((th) => { document.documentElement.setAttribute('data-theme', th); const b = document.body; b.style.display = 'none'; void b.offsetHeight; b.style.display = ''; }, th);   // rebuild the boxes: Chromium doesn't repaint still currentColor gradients (the paused skeleton) on a theme change
       // Load every font face up front: React renders after the load event, so document.fonts.ready alone can
-      // resolve before any icon is on the page, and the icon font (font-display: block) then draws blank or late.
+      // resolve before any text is on the page, and a font then draws late.
       await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
       await page.waitForTimeout(150);   // previews that open a popover do it on a 50 ms timer
       if (state !== 'rest') {

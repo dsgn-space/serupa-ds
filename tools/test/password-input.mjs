@@ -36,13 +36,13 @@ await p.waitForTimeout(300);
 const st = (sel, props) => p.evaluate(([s, ps]) => { const c = getComputedStyle(document.querySelector(s)); return Object.fromEntries(ps.map((k) => [k, c[k]])); }, [sel, props]);
 const tg = (id) => `#${id} + .dk-password-input__toggle`;
 
-const d = await p.evaluate(() => { const i = document.getElementById('pw'), box = i.parentElement, btn = box.querySelector('button'); return { type: i.type, ac: i.getAttribute('autocomplete'), ref: window.pr.current === i, box: box.className, comp: box.dataset.component, mt: box.style.marginTop, h: box.getBoundingClientRect().height, ph: i.placeholder, label: i.labels[0] && i.labels[0].textContent, btn: btn.type, bl: btn.getAttribute('aria-label'), bp: btn.getAttribute('aria-pressed'), bc: btn.getAttribute('aria-controls'), icon: btn.textContent, left: box.querySelector('.dk-input__icon--left').textContent, spell: i.spellcheck }; });
+const d = await p.evaluate(() => { const i = document.getElementById('pw'), box = i.parentElement, btn = box.querySelector('button'); return { type: i.type, ac: i.getAttribute('autocomplete'), ref: window.pr.current === i, box: box.className, comp: box.dataset.component, mt: box.style.marginTop, h: box.getBoundingClientRect().height, ph: i.placeholder, label: i.labels[0] && i.labels[0].textContent, btn: btn.type, bl: btn.getAttribute('aria-label'), bp: btn.getAttribute('aria-pressed'), bc: btn.getAttribute('aria-controls'), icon: btn.querySelector('.dk-icon')?.dataset.icon, left: box.querySelector('.dk-input__icon--left .dk-icon')?.dataset.icon, spell: i.spellcheck }; });
 t('PasswordInput: Input\'s box (32px, md) around a type="password" field, autocomplete current-password, no spellcheck; ref to the input, className and style to the box', d.type === 'password' && d.ac === 'current-password' && d.ref && d.box === 'dk-input dk-password-input dk-input--size-md extra' && d.comp === 'password-input' && d.mt === '2px' && d.h === 32 && d.ph === 'Your password' && d.label === 'Password' && d.left === 'lock' && d.spell === false, JSON.stringify(d));
 t('the show/hide button: type button, "Show password", aria-pressed="false", controls the field, an eye icon', d.btn === 'button' && d.bl === 'Show password' && d.bp === 'false' && d.bc === 'pw' && d.icon === 'visibility', JSON.stringify(d));
 await p.fill('#pw', 'hunter2');
 await p.focus('#pw');
 await p.click(tg('pw'));
-const s1 = await p.evaluate(() => { const i = document.getElementById('pw'); return [i.type, i.value, i.nextElementSibling.getAttribute('aria-pressed'), i.nextElementSibling.textContent, document.activeElement === i].join(); });
+const s1 = await p.evaluate(() => { const i = document.getElementById('pw'); return [i.type, i.value, i.nextElementSibling.getAttribute('aria-pressed'), i.nextElementSibling.querySelector('.dk-icon')?.dataset.icon, document.activeElement === i].join(); });
 t('pressing it shows the text (type text, aria-pressed true, eye crossed out) and the field keeps focus', s1 === 'text,hunter2,true,visibility_off,true', s1);
 await p.focus(tg('pw')); await p.keyboard.press('Enter');
 const s2 = await p.evaluate(() => document.getElementById('pw').type);

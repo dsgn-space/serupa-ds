@@ -36,7 +36,7 @@ await p.waitForTimeout(300);
 const box = (id) => p.evaluate((id) => { const r = document.getElementById(id).getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); }, id);
 const st = (sel, props) => p.evaluate(([s, ps]) => { const c = getComputedStyle(document.querySelector(s)); return Object.fromEntries(ps.map((k) => [k, c[k]])); }, [sel, props]);
 
-const ib = await p.evaluate(() => { const e = document.getElementById('ib'); return { tag: e.tagName, type: e.type, name: e.getAttribute('aria-label'), title: e.title, v: e.dataset.variant, shape: e.dataset.shape, only: e.hasAttribute('data-icon-only'), cls: e.className, ref: window.r.current === e, icon: e.querySelector('.dk-icon').textContent }; });
+const ib = await p.evaluate(() => { const e = document.getElementById('ib'); return { tag: e.tagName, type: e.type, name: e.getAttribute('aria-label'), title: e.title, v: e.dataset.variant, shape: e.dataset.shape, only: e.hasAttribute('data-icon-only'), cls: e.className, ref: window.r.current === e, icon: e.querySelector('.dk-icon').dataset.icon }; });
 t('IconButton: a ghost icon-only <button>, named by label (aria-label and title); ref and className reach it', ib.tag === 'BUTTON' && ib.type === 'button' && ib.name === 'More actions' && ib.title === 'More actions' && ib.v === 'ghost' && ib.shape === 'square' && ib.only && /dk-icon-btn/.test(ib.cls) && /extra/.test(ib.cls) && ib.ref && ib.icon === 'more_vert', JSON.stringify(ib));
 const sq = await box('ib');
 t('IconButton md: a 32px square', sq[2] === 32 && sq[3] === 32, sq.join());

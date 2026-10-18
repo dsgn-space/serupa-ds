@@ -1,13 +1,13 @@
 import * as React from "react";
 import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { asIcon } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 
 export interface SegmentedControlOption {
   value: string;
   /** The segment's text. With only an icon, pass aria-label instead. */
   label?: React.ReactNode;
   /** An icon name or element before the label. */
-  icon?: React.ReactNode;
+  icon?: IconSource;
   /** The segment's name when it shows only an icon. */
   "aria-label"?: string;
   disabled?: boolean;

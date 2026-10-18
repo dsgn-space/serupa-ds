@@ -1,6 +1,6 @@
 # Icon
 
-Shows one icon: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon name straight to Button's `leftIcon`, `rightIcon` or `icon`.
+Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon straight to Button's `leftIcon`, `rightIcon` or `icon`.
 
 ```jsx
 const { Icon, Button } = window.Serupa;
@@ -10,6 +10,11 @@ const { Icon, Button } = window.Serupa;
 <Icon name="error" aria-label="Error" />   // meaningful: announced as "Error"
 <Button leftIcon="add">New project</Button>
 <Button variant="ghost" icon="settings" aria-label="Settings" />
+
+// any other Material Symbol: import it (only what you import ships)
+import { RocketLaunch } from "serupa-ds/icons";
+<Icon icon={RocketLaunch} />
+<Button leftIcon={RocketLaunch}>Launch</Button>
 ```
 
 ## When to use
@@ -26,15 +31,24 @@ const { Icon, Button } = window.Serupa;
 
 ## Usage
 
-Find names in the Material Symbols catalog (Rounded style) at fonts.google.com/icons; the font is already here, only the names come from the catalog. Names are lowercase with underscores: `arrow_forward`, `more_vert`.
+Find icons in the Material Symbols catalog (Rounded style) at fonts.google.com/icons. Names are lowercase with underscores (`arrow_forward`, `more_vert`); the import for a name is the same words in PascalCase (`ArrowForward`, `MoreVert`; a name starting with a digit gets `Icon` in front: `Icon10k`).
 
 - Use Material Symbols Rounded, filled, and custom icons drawn to the same rules. Don't mix in other icon sets or the Outlined/Sharp styles.
 - Before drawing a custom icon, check that Material Symbols doesn't already have one for that meaning.
 - One icon per meaning across the product: `delete`, not `delete` in one place and `remove` in another.
 
-### Setup
+### Setup: by name or by import
 
-Nothing to load: the font ships with the system as `fonts/MaterialSymbolsRounded-Filled.woff2`, and `tokens.css` declares it. It holds only the filled, weight-400 Rounded style, with optical sizes from 20 to 48, about 1 MB.
+There's no font to load. Every icon is an SVG drawn in the page, so it shows at once and nothing flashes while a file loads.
+
+- **By name** (`name="add"`, `leftIcon="add"`): works for the **everyday icons**, about 270 of them. These are every icon on the Foundations → Icons page and every icon the components use. They ship with the components.
+- **By import** (`icon={Add}`, `leftIcon={Add}`): works for all ~3,800 Material Symbols. `import { Add } from "serupa-ds/icons"` adds only the icons you import to your bundle.
+- **Register a name once** to use any other icon by name across your app: `registerIcons(RocketLaunch, Pets)` at startup, then `name="rocket_launch"` works everywhere. `registerIcons(await import("serupa-ds/icons"))` registers them all.
+- **On a plain page** (`serupa.iife.js`), the everyday icons work by name. Add `<script src="…/serupa-ds/dist/serupa-icons.iife.js">` after it and every name works (that script is about 3 MB).
+
+A name that's neither everyday nor registered draws an empty 1em box and logs a console warning saying how to add it.
+
+The everyday set is `docs/icon-names.json` plus the names used in the source. To add or remove an everyday icon, edit that file and run `python3 tools/icons/material.py`. The icon test fails until you do.
 
 ### Custom icons
 
@@ -66,15 +80,15 @@ The build keeps only the shapes and removes editor leftovers (ids, classes, size
 
 The same for Material Symbols and custom icons.
 
-| Size | Use | Optical size |
-| --- | --- | --- |
-| 14px | Inside `sm` buttons | 20 |
-| 16px | Inside `md` buttons, inline with `text-sm` | 20 |
-| 20px | Inside `lg` buttons, list rows, inputs | 20 |
-| 24px | Default: toolbars, navigation, standalone | 24 |
-| 40px+ | Empty states, illustrations | 40–48 |
+| Size | Use |
+| --- | --- |
+| 14px | Inside `sm` buttons |
+| 16px | Inside `md` buttons, inline with `text-sm` |
+| 20px | Inside `lg` buttons, list rows, inputs |
+| 24px | Default: toolbars, navigation, standalone |
+| 40px+ | Empty states, illustrations |
 
-The optical size is the font's own: the browser picks it from the icon's size (`font-optical-sizing: auto`), so small icons get slightly bolder strokes and large ones finer detail. Nothing in the system overrides it.
+Every icon is the 24px design (Material Symbols' optical size 24), scaled.
 
 ### Color
 
@@ -101,17 +115,20 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 - **Next to text:** leave it decorative; the text already says what it means.
 - **Icon-only buttons:** the button needs the name, not the icon: pass `aria-label` to the Button, or use [IconButton](../IconButton/README.md), which requires a `label`.
 - **Contrast:** icons that carry meaning need 3:1 against their background (see Color, under Usage).
-- **Translation:** a Material Symbols icon is its name written in the icon font, so it has `translate="no"` to keep translation tools from changing the name and breaking the icon.
+- **Translation:** icons are SVGs with no text, so translation tools and screen readers never see an icon's name.
 
 ## Props
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `name` | `IconName`: a custom icon's name or any Material Symbols name | | Required. A custom icon with the same name as a Material Symbol wins. Custom names autocomplete. |
+| `name` | `IconName`: a custom icon's name, an everyday Material Symbol, or a name you registered | | Give `name` or `icon`. A custom icon with the same name as a Material Symbol wins. Custom and everyday names autocomplete. |
+| `icon` | `IconData`: a Material Symbol imported from `serupa-ds/icons` | | Give `name` or `icon`: `icon={ArrowForward}`. |
 | `size` | `number \| string` | 24px, or the button's icon size inside a Button | Pixels as a number, or any CSS length. Sets the font size; the icon is 1em square. |
 | `aria-label` | `string` | | Makes the icon meaningful: `role="img"` with this name. Without it (or `aria-labelledby`) the icon is `aria-hidden`. |
 
-`className`, `style`, `ref` and other `<span>` props go to the outer `<span>`. Custom icons have `data-icon` with their name.
+`className`, `style`, `ref` and other `<span>` props go to the outer `<span>`, which has `data-icon` with the icon's name.
+
+Also exported: `registerIcons(...icons)` makes Material Symbols work by name, and `getIcon(name)` returns the one registered under a name. Every icon prop in the system (Button's `leftIcon`, `rightIcon` and `icon`, IconButton and Fab's `icon`, Input's icons, and the rest) takes a name, an imported icon or any element (`IconSource`).
 
 ## Component tokens
 

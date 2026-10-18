@@ -55,7 +55,7 @@ await p.mouse.move(0, 400);
 t('underline="hover": no underline until hovered', h0 === 'none' && h1 === 'underline', [h0, h1].join());
 const lb = await p.evaluate(() => document.getElementById('lbad').className);
 t('Link: unknown tone and underline fall back to primary and always', lb === 'dk-link', lb);
-const le = await p.evaluate(() => { const e = document.getElementById('lext'), i = e.querySelector('.dk-link__icon'), v = e.querySelector('.dk-visually-hidden'); return { target: e.target, rel: e.rel, icon: i && i.textContent, hidden: i && i.getAttribute('aria-hidden'), note: v && v.textContent, noteW: v && v.getBoundingClientRect().width, fs: i && getComputedStyle(i).fontSize }; });
+const le = await p.evaluate(() => { const e = document.getElementById('lext'), i = e.querySelector('.dk-link__icon'), v = e.querySelector('.dk-visually-hidden'); return { target: e.target, rel: e.rel, icon: i && i.dataset.icon, hidden: i && i.getAttribute('aria-hidden'), note: v && v.textContent, noteW: v && v.getBoundingClientRect().width, fs: i && getComputedStyle(i).fontSize }; });
 t('external: target _blank, rel keeps yours and adds noopener noreferrer, a 1em hidden new-tab icon and "(opens in a new tab)" for screen readers', le.target === '_blank' && le.rel === 'me noopener noreferrer' && le.icon === 'open_in_new' && le.hidden === 'true' && le.note === ' (opens in a new tab)' && le.noteW <= 1 && le.fs === '16px', JSON.stringify(le));
 const name = await p.locator('#lext').evaluate((e) => e.textContent);
 t('external: the link\'s text reads "Example (opens in a new tab)" plus the hidden icon name', name.replace('open_in_new', '') === 'Example (opens in a new tab)', name);

@@ -146,7 +146,7 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 | `font-serif` | Georgia | Editorial or long-form accents. |
 | `font-mono` | Courier New | Code, IDs, tabular figures. |
 
-Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900) and the icon font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
+Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
 **Sizes** — each size carries its own line height. Both are tokens in the `fontSize` group (`var(--text-sm)`, `var(--text-sm--line-height)`) that the `text-*` classes and the components read. A `text-*` class sets only size and line height.
 
@@ -230,18 +230,16 @@ Text rules of thumb:
 
 ## Iconography
 
-Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. The font ships in `fonts/` (`MaterialSymbolsRounded-Filled.woff2`, cut down to this one style) and `tokens.css` declares it, so there's nothing to load.
+Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. Each icon is an inline SVG, so there's nothing to load and nothing flashes.
 
-Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Icon names are listed on the Foundations/Icons page in Storybook.
+Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Names work for the everyday icons, which are the ones on the Foundations/Icons page in Storybook plus the ones the components use. Any other Material Symbol is an import, `import { RocketLaunch } from "serupa-ds/icons"` then `icon={RocketLaunch}`, and only the icons you import ship. `registerIcons(RocketLaunch)` makes its name work too. Details are in the Icon guidelines.
 
 - **Sizes:** 14px (`sm` buttons), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows), 24px (default, toolbars and navigation), 40px+ (empty states).
 - **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `success`, `warning`, `danger` or `info` for status.
 - **Meaning:** icons are decorative by default. Add an `aria-label` only when the icon carries meaning alone, and give icon-only buttons an `aria-label`.
 - **Consistency:** one icon per meaning across the product (always `delete`, never `delete` in one place and `remove` in another).
 
-**Custom icons.** For what Material Symbols doesn't have, draw your own on the same 24×24 grid, in one color, and put the SVGs in `assets/Icons/` (`serupa-sparkle.svg`). `python3 tools/icons/build.py` cleans them and builds them into the components, so `<Icon name="serupa-sparkle" />` and `leftIcon="serupa-sparkle"` work with the same sizes, colors and accessibility as the font icons. The build refuses anything unsafe or off-system with the reason. Drawing rules and details are in the Icon guidelines.
-
-The font family is also a token: `font-icon` (`var(--font-icon)`).
+**Custom icons.** For what Material Symbols doesn't have, draw your own on the same 24×24 grid, in one color, and put the SVGs in `assets/Icons/` (`serupa-sparkle.svg`). `python3 tools/icons/build.py` cleans them and builds them into the components, so `<Icon name="serupa-sparkle" />` and `leftIcon="serupa-sparkle"` work with the same sizes, colors and accessibility as Material Symbols. The build refuses anything unsafe or off-system with the reason. Drawing rules and details are in the Icon guidelines.
 
 ## Backgrounds
 
@@ -672,7 +670,7 @@ Rules of thumb:
 - Inline icons and logos: `fill-current` (or `stroke-current` for outline art) so they take the text color, then color the parent with `text-*` aliases. That keeps them in step with the theme.
 - Use alias colors (`fill-primary`, `stroke-border`, `fill-success`) for meaning; palette colors are for illustrations and charts.
 - Outline drawings: `fill-none stroke-current stroke-2`. Because the width is in the SVG's units, a 24-unit icon drawn at 48px gets a 4px line; add `vector-effect="non-scaling-stroke"` on the shapes for a fixed width.
-- The system's icons are Material Symbols, which are a font: color them with `text-*`, not `fill-*`.
+- The system's icons (Material Symbols and custom icons) already fill with `currentColor`: color them with `text-*` on the icon or its parent.
 
 ## Interactivity
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { asIcon, Icon, type IconName } from "../Icon/Icon";
+import { asIcon, Icon, type IconSource } from "../Icon/Icon";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   /** BreadcrumbItems, from the top level down to the current page (the last one). */
@@ -19,7 +19,7 @@ export interface BreadcrumbItemProps extends React.AnchorHTMLAttributes<HTMLAnch
   /** Where it goes. The last item is the current page: it's text, not a link, whatever href says. */
   href?: string;
   /** An icon before the label: a Material Symbols or custom name, or an element. */
-  icon?: IconName | React.ReactElement;
+  icon?: IconSource;
   /** What renders the link: 'a' (default), or your router's link component. */
   as?: React.ElementType;
   /** Set by Breadcrumb on the last item. */

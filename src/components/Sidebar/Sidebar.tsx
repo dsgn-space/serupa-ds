@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
-import { asIcon, Icon, type IconName } from "../Icon/Icon";
+import { asIcon, Icon, type IconSource } from "../Icon/Icon";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Menu, MenuItem } from "../Menu/Menu";
 
@@ -28,7 +28,7 @@ export interface SidebarItemProps extends Omit<React.AnchorHTMLAttributes<HTMLAn
   /** The item's text. */
   label: React.ReactNode;
   /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
-  icon?: IconName | React.ReactElement;
+  icon?: IconSource;
   /** The current page: shaded, with aria-current="page". Default: false. */
   active?: boolean;
   /** Something at the end, such as a count Badge. Hidden when collapsed. */

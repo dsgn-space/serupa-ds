@@ -8674,17 +8674,6 @@
           "cssVar": "--font-mono"
         }
       }
-    },
-    "icon": {
-      "$type": "fontFamily",
-      "$value": [
-        "Material Symbols Rounded"
-      ],
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--font-icon"
-        }
-      }
     }
   },
   "type": {

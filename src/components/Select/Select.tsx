@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn, isInvalid, oneOf, omit, SIZES } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
-import { Icon, asIcon } from "../Icon/Icon";
+import { Icon, asIcon, type IconSource } from "../Icon/Icon";
 
 export type SelectOption = string | number | { value: string | number; label?: React.ReactNode; disabled?: boolean };
 export interface SelectOptionGroup { label: string; options: SelectOption[]; disabled?: boolean }
@@ -11,7 +11,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
   /** A danger border and focus ring, and aria-invalid. */
   invalid?: boolean;
   /** A decorative icon before the text: an icon name or an element. */
-  leftIcon?: React.ReactNode;
+  leftIcon?: IconSource;
   /** A first, empty option shown in the placeholder color until something is picked (it can't be picked back). An uncontrolled Select starts on it. */
   placeholder?: string;
   /** The options: strings, { value, label, disabled }, or groups { label, options }. Or pass <option> and <optgroup> children (after these). */

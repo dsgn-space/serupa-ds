@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { Icon } from "../Icon/Icon";
+import { Icon, asIcon, type IconSource } from "../Icon/Icon";
 import { Button } from "../Button/Button";
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -11,7 +11,7 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   /** A short bold first line. */
   title?: React.ReactNode;
   /** The icon before the content: an icon name or element, or false for none. Default: each tone's own (info, check_circle, warning, error). */
-  icon?: React.ReactNode | false;
+  icon?: IconSource | false;
   /** Buttons or links under the message. */
   actions?: React.ReactNode;
   /** Shows a close button that calls this. Hide or remove the alert yourself. */
@@ -33,7 +33,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert
   const tone = oneOf(TONES, props.tone, "info");
   const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
   if (rest.role == null) rest.role = tone === "warning" || tone === "danger" ? "alert" : "status";
-  const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon name={ICONS[tone]} /> : typeof props.icon === "string" ? <Icon name={props.icon} /> : props.icon;
+  const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon name={ICONS[tone]} /> : asIcon(props.icon);
   return (
     <div {...rest} ref={ref} className={cn("dk-alert", "dk-alert--" + tone, props.className)} data-component="alert" data-tone={tone}>
       {icon ? <span className="dk-alert__icon" aria-hidden="true">{icon}</span> : null}

@@ -1,5 +1,5 @@
 // Custom icons in the browser: builds two sample SVGs with tools/icons/build.py into a scratch copy of
-// the source and bundles it, then checks Icon and Button draw them like the font icons (size, color, alignment,
+// the source and bundles it, then checks Icon and Button draw them like the Material Symbols (size, color, alignment,
 // accessibility, loading) and that every other name still comes from Material Symbols.
 //   node tools/test/icons.mjs
 import fs from 'node:fs';
@@ -65,7 +65,7 @@ const info = await p.evaluate(() => {
     decoHidden: q('#deco').getAttribute('aria-hidden'), lRole: q('#labelled').getAttribute('role'), lLabel: q('#labelled').getAttribute('aria-label'), lHidden: q('#labelled').getAttribute('aria-hidden'),
     ringStroke: getComputedStyle(q('#labelled circle')).stroke, ringFill: getComputedStyle(q('#labelled circle')).fill,
     themedStroke: getComputedStyle(q('#themed circle')).stroke, themedColor: getComputedStyle(q('#themed')).color,
-    font: [q('#font').textContent, !!q('#font svg'), q('#font').getAttribute('translate')], proto: [q('#proto').textContent, !!q('#proto svg')],
+    font: [q('#font').dataset.icon, q('#font svg')?.getAttribute('viewBox'), q('#font').className], proto: [q('#proto').className, !!q('#proto svg')],
     btnIcon: box('#btn .dk-btn__icon .dk-icon'), btnFontIcon: box('#btnf .dk-btn__icon .dk-icon'), btnH: box('#btn')[1], btnfH: box('#btnf')[1],
     onlyIcon: box('#only .dk-icon'), only: box('#only'),
     busyIconOpacity: getComputedStyle(q('#busy .dk-btn__icon')).opacity, busySpinner: !!q('#busy .dk-btn__spinner'),
@@ -73,18 +73,18 @@ const info = await p.evaluate(() => {
 });
 t('a custom name renders an inline SVG (no ligature text) in a .dk-icon span', info.tag === 'SPAN' && /dk-icon--custom/.test(info.cls) && info.text === '' , JSON.stringify([info.cls, info.text]));
 t('the SVG is hidden from assistive tech and not focusable', info.svgHidden === 'true' && info.focusable === 'false');
-t('sized like the font icons: 24px by default, the SVG fills the box', info.deco.join() === '24,24' && info.svgBox.join() === '24,24', JSON.stringify([info.deco, info.svgBox]));
+t('sized like the Material Symbols: 24px by default, the SVG fills the box', info.deco.join() === '24,24' && info.svgBox.join() === '24,24', JSON.stringify([info.deco, info.svgBox]));
 t('size={40} makes it 40px', info.big.join() === '40,40', JSON.stringify(info.big));
 t('drawn in the text color (currentColor)', info.fill === info.color, JSON.stringify([info.fill, info.color]));
 t('inline in text: takes the paragraph color', info.lineFill === info.lineColor, JSON.stringify([info.lineFill, info.lineColor]));
-t('inline in text: same box and line position as a font icon', info.inline[0] === info.inline[1] && info.inline[2] === info.inline[3], JSON.stringify(info.inline));
+t('inline in text: same box and line position as a Material Symbol', info.inline[0] === info.inline[1] && info.inline[2] === info.inline[3], JSON.stringify(info.inline));
 t('decorative by default (aria-hidden)', info.decoHidden === 'true');
 t('aria-label makes it an image with that name', info.lRole === 'img' && info.lLabel === 'Status' && info.lHidden === null);
 t('outlined icons: strokes in the text color, no fill', info.ringFill === 'none' && info.ringStroke === info.color, JSON.stringify([info.ringStroke, info.ringFill]));
 t('inside a nested theme it follows that theme\'s colors', info.themedStroke === info.themedColor && info.themedColor !== info.color, JSON.stringify([info.themedStroke, info.themedColor]));
-t('other names still come from Material Symbols', info.font[0] === 'add' && !info.font[1] && info.font[2] === 'no');
-t('names like "constructor" are not mistaken for custom icons', info.proto[0] === 'constructor' && !info.proto[1]);
-t('Button leftIcon: same size as a font icon (16px in md), same button height', info.btnIcon.join() === info.btnFontIcon.join() && info.btnIcon.join() === '16,16' && info.btnH === info.btnfH, JSON.stringify([info.btnIcon, info.btnFontIcon, info.btnH, info.btnfH]));
+t('other names still come from Material Symbols (an SVG on the 960 grid)', info.font[0] === 'add' && info.font[1] === '0 -960 960 960' && info.font[2] === 'dk-icon', JSON.stringify(info.font));
+t('names like "constructor" are not mistaken for custom icons or Material Symbols (an empty box)', info.proto[0] === 'dk-icon' && !info.proto[1], JSON.stringify(info.proto));
+t('Button leftIcon: same size as a Material Symbol (16px in md), same button height', info.btnIcon.join() === info.btnFontIcon.join() && info.btnIcon.join() === '16,16' && info.btnH === info.btnfH, JSON.stringify([info.btnIcon, info.btnFontIcon, info.btnH, info.btnfH]));
 t('Button icon-only (lg): 20px icon in a 44px square', info.onlyIcon.join() === '20,20' && info.only.join() === '44,44', JSON.stringify([info.onlyIcon, info.only]));
 t('Button loading: the custom icon hides behind the centered spinner', info.busyIconOpacity === '0' && info.busySpinner, info.busyIconOpacity);
 // pixels: the square really paints, in the text color (read back the screenshot's center pixel)

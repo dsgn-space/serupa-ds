@@ -41,7 +41,7 @@ const im = await p.evaluate(() => { const e = document.getElementById('img'), i 
 t('picture: a 40px circle (role img, named by name), the <img> covers it and is decorative; ref, className and props reach it', im.tag === 'SPAN' && im.role === 'img' && im.name === 'Ada Lovelace' && im.alt === '' && im.loaded && im.fit === 'cover' && im.size.join() === '40,40' && im.ref && /extra/.test(im.cls) && im.x === 'y' && im.comp === 'avatar' && parseFloat(im.radius) >= 20, JSON.stringify(im));
 const ini = await p.evaluate(() => ['ini', 'one', 'broken'].map((id) => { const e = document.getElementById(id), s = e.querySelector('.dk-avatar__initials'); return [s && s.textContent, s && s.getAttribute('aria-hidden'), !!e.querySelector('img')].join(':'); }));
 t('initials: first and last words ("GH"), one word gives one letter, and a picture that fails to load falls back to initials', ini.join() === 'GH:true:false,L:true:false,AT:true:false', ini.join());
-const nn = await p.evaluate(() => { const e = document.getElementById('none'); return [e.getAttribute('aria-hidden'), e.getAttribute('role'), e.querySelector('.dk-icon').textContent].join(); });
+const nn = await p.evaluate(() => { const e = document.getElementById('none'); return [e.getAttribute('aria-hidden'), e.getAttribute('role'), e.querySelector('.dk-icon').dataset.icon].join(); });
 t('no picture and no name: the person icon, hidden from screen readers', nn === 'true,,person', nn);
 const al = await p.evaluate(() => [document.getElementById('alt').getAttribute('aria-hidden'), document.getElementById('alt').getAttribute('role'), document.getElementById('alt2').getAttribute('aria-label')].join());
 t('alt="" hides it (the name is written beside it); alt replaces the name', al === 'true,,Atlas project', al);

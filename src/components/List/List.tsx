@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { asIcon, type IconName } from "../Icon/Icon";
+import { asIcon, type IconSource } from "../Icon/Icon";
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -19,7 +19,7 @@ export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement
   /** A second, muted line. */
   description?: React.ReactNode;
   /** Before the text: an Avatar, an icon name or an image. */
-  leading?: IconName | React.ReactNode;
+  leading?: IconSource;
   /** After the text: meta (a date, a Badge) or actions (an IconButton, a Menu). Stays outside the link or button. */
   trailing?: React.ReactNode;
   /** Makes the item's main area a link. */

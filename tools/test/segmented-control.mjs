@@ -61,7 +61,7 @@ t('a click selects, and the selection moves to it', (await checked('per')) === '
 await p.click('#per [data-value="year"]', { force: true });
 t('a disabled segment can\'t be chosen', (await checked('per')) === 'month');
 await p.click('#ctl [data-value="board"]'); await p.click('#ctl [data-value="board"]');
-const c = await p.evaluate(() => ({ calls: window.calls.join(), view: window.view, input: document.querySelector('#ctl input[type=hidden]').name + '=' + document.querySelector('#ctl input[type=hidden]').value, icon: document.querySelector('#ctl [data-value="board"] .dk-segmented__icon').textContent }));
+const c = await p.evaluate(() => ({ calls: window.calls.join(), view: window.view, input: document.querySelector('#ctl input[type=hidden]').name + '=' + document.querySelector('#ctl input[type=hidden]').value, icon: document.querySelector('#ctl [data-value="board"] .dk-segmented__icon .dk-icon')?.dataset.icon }));
 t('controlled: onValueChange once (not again for the same segment); the hidden input follows; icons show before labels', c.calls === 'board' && c.view === 'board' && c.input === 'view=board' && c.icon === 'view_kanban', JSON.stringify(c));
 await p.evaluate(() => window.setView('list')); await p.waitForTimeout(50);
 t('controlled: a new value from outside moves the selection', (await checked('ctl')) === 'list' && (await ind('ctl')).dx === 0);

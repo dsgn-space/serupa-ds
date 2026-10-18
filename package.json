@@ -22,6 +22,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.js"
+    },
     "./tokens.css": "./tokens.css",
     "./tokens.json": "./tokens.json",
     "./base.css": "./dist/base.css",
@@ -30,6 +34,7 @@
     "./utilities.css": "./dist/utilities.css",
     "./bundle.js": "./dist/bundle.js",
     "./serupa.iife.js": "./dist/serupa.iife.js",
+    "./serupa-icons.iife.js": "./dist/serupa-icons.iife.js",
     "./theme.js": "./dist/theme.js",
     "./design-tokens/*": "./design-tokens/*",
     "./fonts/*": "./fonts/*",
@@ -49,6 +54,7 @@
     "*.css",
     "./dist/theme.js",
     "./dist/serupa.iife.js",
+    "./dist/serupa-icons.iife.js",
     "./dist/bundle.js"
   ],
   "scripts": {

@@ -1,27 +1,13 @@
-/* Icons: Material Symbols Rounded, filled. The font ships in fonts/ and tokens.css declares it. */
+/* Icons: an inline SVG (Material Symbols Rounded, filled, or a custom icon) in a 1em box, drawn in the text color. */
 @layer dk.components {
 .dk-icon {
-  font-family: var(--font-icon);
-  font-weight: normal;
-  font-style: normal;
   font-size: var(--spacing-6);            /* 24px default */
   line-height: var(--leading-none);
-  letter-spacing: normal;
-  text-transform: none;
   display: inline-block;
   width: 1em;
   height: 1em;
-  overflow: hidden;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
   flex-shrink: 0;
   user-select: none;
-  -webkit-font-smoothing: antialiased;
-  font-feature-settings: "liga";
-  font-optical-sizing: auto;   /* the font's own optical size (opsz 20–48) follows the icon size */
 }
-
-/* Custom icons (tools/icons/build.py): an inline SVG filling the same 1em box, in the text color. */
-.dk-icon--custom > svg { display: block; width: var(--sizing-full); height: var(--sizing-full); fill: currentColor; }
+.dk-icon > svg { display: block; width: var(--sizing-full); height: var(--sizing-full); fill: currentColor; }
 }
