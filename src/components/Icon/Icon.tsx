@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
-import { ICONS, hasIcon, getIcon, isIconData, type CustomIconName } from "../../icons";
+import { ICONS, hasIcon, getIcon, isIconData, loadAllIcons, type CustomIconName } from "../../icons";
 import type { MaterialIconName } from "../../material/icons";
 import type { IconData } from "../../material/types";
 
@@ -26,6 +26,21 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
    one of your custom icons (tools/icons/build.py). */
 /** An icon: Material Symbols Rounded (filled) or one of your custom SVG icons. Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
 export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(props, ref) {
+  const [, loadedAll] = React.useReducer((n: number) => n + 1, 0);
+  const custom = !props.icon && hasIcon(props.name);
+  const data = props.icon || (custom || props.name == null ? undefined : getIcon(props.name));
+  const missing = !custom && !data && props.name != null;
+  // A name outside the built-in icons: load the full set once, then draw it (or warn if it isn't a Material Symbol).
+  React.useEffect(() => {
+    if (!missing) return;
+    let live = true;
+    loadAllIcons().then(() => {
+      if (!live) return;
+      if (getIcon(props.name as string)) loadedAll();
+      else warnOnce("icon:" + props.name, `Icon: "${props.name}" isn't a Material Symbol or one of your icons. Check the name on the Icons page (Foundations/Icons).`);
+    }, () => { /* the chunk failed to load: the box stays empty */ });
+    return () => { live = false; };
+  }, [missing, props.name]);
   const rest = omit(props, { name: 1, icon: 1, size: 1, className: 1, style: 1 } as const);
   const labelled = rest["aria-label"] || rest["aria-labelledby"];
   if (!labelled) rest["aria-hidden"] = true; else rest.role = "img";
@@ -33,15 +48,13 @@ export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(p
   if (props.size != null) style.fontSize = typeof props.size === "number" ? props.size + "px" : props.size;
   const name = props.icon ? props.icon.name : props.name;
   if (name != null) rest["data-icon"] = name;
-  if (!props.icon && hasIcon(props.name)) {
+  if (custom) {
     return (
       <span {...rest} ref={ref} className={cn("dk-icon dk-icon--custom", props.className)} style={style}>
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false" dangerouslySetInnerHTML={{ __html: ICONS[props.name] }} />
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false" dangerouslySetInnerHTML={{ __html: ICONS[props.name as string] }} />
       </span>
     );
   }
-  const data = props.icon || (props.name != null ? getIcon(props.name) : undefined);
-  if (!data) warnOnce("icon:" + name, `Icon: "${name}" isn't a Material Symbol or one of your icons. Check the name on the Icons page (Foundations/Icons).`);
   return (
     <span {...rest} ref={ref} className={cn("dk-icon", props.className)} style={style}>
       {data && <svg viewBox="0 -960 960 960" fill="currentColor" aria-hidden focusable="false"><path d={data.d} /></svg>}

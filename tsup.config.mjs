@@ -22,7 +22,9 @@ const only = process.env.SERUPA_BUILD;
 export default defineConfig([
   ...(only === 'iife' ? [] : [{
     entry: { index: 'src/index.ts', icons: 'src/material/index.ts' },
-    splitting: false,
+    // The full icon set is one chunk shared by icons.js and index.js, which loads it only when a page draws a
+    // name outside the built-in icons.
+    splitting: true,
     format: ['esm'],
     outExtension: () => ({ js: '.js' }),
     target: 'es2019',

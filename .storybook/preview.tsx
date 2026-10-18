@@ -6,6 +6,11 @@ import '../src/styles/base.css';
 import '../src/styles/index.css';
 import './docs.css';
 import tokens from '../tokens.json';
+import * as ALL_ICONS from '../src/material/icons';
+import { registerIcons } from '../src/icons';
+
+// Every icon name draws at once in Storybook (apps load the full set the first time they need it).
+registerIcons(ALL_ICONS);
 
 // The brands come from tokens.json's themes ("<brand>-<mode>"), the one list every theme name is made from,
 // so a brand added there shows up here with no edit (ADR-0003).

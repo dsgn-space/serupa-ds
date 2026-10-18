@@ -37,9 +37,10 @@ Find icons in the Material Symbols catalog (Rounded style) at fonts.google.com/i
 
 There's no font to load. Every icon is an SVG drawn in the page, so it shows at once and nothing flashes while a file loads.
 
-- **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations → Icons page in Storybook: search, then click to copy its name. They all ship with the package (about 520 KB gzipped).
+- **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations → Icons page in Storybook: search, then click to copy its name. The icons the components use are built in. The full set is a separate file that loads the first time a page draws another name, so that icon appears a moment later the first time, and apps that don't use other names never download it.
 - **An imported icon works too** (`icon={Category}` with `import { Category } from "serupa-ds/icons"`), the same icon either way.
 - **On a plain page** (`serupa.iife.js`), every name works. `serupa-icons.iife.js` is no longer needed; it's kept, empty, for pages that still include it.
+- **Server rendering:** built-in icons render on the server; other names show their empty box until the page loads in the browser. To render them on the server too, call `registerIcons(await import("serupa-ds/icons"))` before rendering.
 - `registerIcons({ name, d })` adds an icon of your own in Material's shape (`d` on the 960-unit grid) under a name.
 
 A name that isn't a Material Symbol or one of your icons draws an empty 1em box and logs a console warning.
