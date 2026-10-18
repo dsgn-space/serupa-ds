@@ -4,6 +4,12 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [7.1.2] - 2026-10-18
+
+### Fixed
+
+- Tooling: `eslint`, `@eslint/js` and `eslint-plugin-react-hooks` are pinned to exact versions in package.json, like every other dev dependency. Nothing in the published package changes.
+
 ## [7.1.1] - 2026-10-18
 
 ### Fixed
