@@ -48,8 +48,9 @@ describe('Input', () => {
     }
     await render(<App />);
     await page.getByRole('textbox', { name: 'Name' }).click();
+    await expect.poll(() => document.activeElement).toBe(field('c'));
     await userEvent.keyboard('Kim');
-    expect(field('c').value).toBe('Kim');
+    await expect.poll(() => field('c').value).toBe('Kim');
     expect(changes).toEqual(['K', 'Ki', 'Kim']);
   });
 
