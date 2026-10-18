@@ -102,5 +102,14 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "overrides": {
+    "js-yaml@3": {
+      "argparse": "2.0.1"
+    }
+  },
+  "allowScripts": {
+    "esbuild": false,
+    "fsevents": false
   }
 }
