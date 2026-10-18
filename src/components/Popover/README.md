@@ -44,7 +44,7 @@ const { Popover, Button, Field, Input } = window.Serupa;
 - The panel is a `role="dialog"` named by its title (or `aria-label`); the trigger has `aria-expanded` and `aria-controls`.
 - Opening moves focus inside; Escape and `close()` return it to the trigger. It sits right after the trigger in the tab order, so Tab moves from the trigger into it.
 - A click outside or focus moving elsewhere closes it, without moving focus.
-- Text and the title keep 4.5:1 on the panel in all six themes (`tools/test/popover.mjs`). With reduced motion it appears without growing in.
+- Text and the title keep 4.5:1 on the panel in all six themes (`Popover.test.tsx`). With reduced motion it appears without growing in.
 
 ## Props
 

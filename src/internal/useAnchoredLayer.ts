@@ -2,17 +2,37 @@ import * as React from "react";
 import { useIsoLayoutEffect } from "./cn";
 import { cssLength, hideLayer, place, showLayer, type Placement } from "./position";
 
+type Ref = React.RefObject<HTMLElement | null>;
+
+export interface AnchoredLayerOptions {
+  /** Where the layer goes; an unknown or missing value becomes `fallback`. */
+  placement?: Placement;
+  /** The placement when `placement` is missing (default "bottom"). */
+  fallback?: Placement;
+  /** The custom property holding the gap between anchor and layer, such as "--dk-menu-offset". */
+  offsetVar: string;
+  /** Called on a press outside the layer and `inside`. */
+  onOutside?: () => void;
+  /** An element a press on doesn't count as outside, such as the button that opens the layer. */
+  inside?: Ref;
+  /** A value that changes the layer's size when it changes (a tooltip's text): it is placed again. */
+  watch?: unknown;
+}
+
 /** Shows `layer` in the top layer next to `anchor` while open, following scrolls, resizes and size changes;
-    a press outside both (and `inside`, such as the button that opens it) calls onOutside. */
-export function useAnchoredLayer(open: boolean, layer: React.RefObject<HTMLElement | null>, anchor: React.RefObject<HTMLElement | null>, opts: { placement: Placement; offsetVar: string; onOutside: () => void; inside?: React.RefObject<HTMLElement | null> }): void {
-  const outside = React.useRef(opts.onOutside); outside.current = opts.onOutside;
+    a press outside the layer (and `inside`) calls onOutside. Focus is the caller's: do it in a layout effect
+    declared after this hook, which runs once the layer is shown and placed. */
+export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: AnchoredLayerOptions): void {
+  const { placement, fallback = "bottom", offsetVar, inside, watch } = opts;
+  const outside = React.useRef(opts.onOutside);
+  useIsoLayoutEffect(() => { outside.current = opts.onOutside; });
   useIsoLayoutEffect(() => {
     const p = layer.current, a = anchor.current;
     if (!p) return;
     if (!open || !a) { hideLayer(p); return; }
     showLayer(p);
     const update = () => {
-      const r = place(a.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, opts.placement, cssLength(p, opts.offsetVar), "bottom");
+      const r = place(a.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, placement, cssLength(p, offsetVar), fallback);
       p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
     };
     update();
@@ -20,16 +40,15 @@ export function useAnchoredLayer(open: boolean, layer: React.RefObject<HTMLEleme
     if (ro) { ro.observe(p); ro.observe(a); }
     window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
     return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
-  }, [open]);
+  }, [open, layer, anchor, placement, fallback, offsetVar, watch]);
   React.useEffect(() => {
     if (!open) return;
     const down = (e: PointerEvent) => {
       const t = e.target as Node;
-      if (layer.current && layer.current.contains(t)) return;
-      if (opts.inside && opts.inside.current && opts.inside.current.contains(t)) return;
-      outside.current();
+      for (const r of [layer, inside]) if (r && r.current && r.current.contains(t)) return;
+      if (outside.current) outside.current();
     };
     document.addEventListener("pointerdown", down, true);
     return () => document.removeEventListener("pointerdown", down, true);
-  }, [open]);
+  }, [open, layer, inside]);
 }

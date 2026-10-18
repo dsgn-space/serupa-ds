@@ -44,7 +44,6 @@ const steps = [
   ['PasswordInput', 'node', [path.join(HERE, 'password-input.mjs')]],
   ['List', 'node', [path.join(HERE, 'list.mjs')]],
   ['EmptyState', 'node', [path.join(HERE, 'empty-state.mjs')]],
-  ['Popover', 'node', [path.join(HERE, 'popover.mjs')]],
   ['Drawer', 'node', [path.join(HERE, 'drawer.mjs')]],
   ['Progress', 'node', [path.join(HERE, 'progress.mjs')]],
   ['SearchInput', 'node', [path.join(HERE, 'search-input.mjs')]],
