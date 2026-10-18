@@ -12,6 +12,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   update:
@@ -40,6 +41,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Update test baselines on the CI runner"
           git push
+          # A push made with the workflow's token starts no workflows, so start CI on the branch: its checks
+          # land on the new head commit, which the pull request's required checks look at.
+          gh workflow run ci.yml --repo ${{ github.repository }} --ref ${{ github.event.pull_request.head.ref }}
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Remove the label
         if: always()
         env:
