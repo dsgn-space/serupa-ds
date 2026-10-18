@@ -118,6 +118,7 @@ A Button with `href` renders a link (`<a>`) with the button's look, because navi
   ```
 
 - **New tabs.** `target="_blank"` gets `rel="noopener noreferrer"` unless you pass `rel`.
+- **Addresses from people.** Check any `href` that comes from people, such as a profile's website: allow only `https:`, `http:`, `mailto:` or your own paths. React still renders a `javascript:` link, which runs code when clicked.
 - **Disabled.** Links have no disabled state in HTML, so a disabled link Button renders without `href`, with `role="link"` and `aria-disabled`: it can't be followed or focused and isn't listed as a link.
 - **Loading** works as on a button: clicks do nothing until it ends.
 - **Anything else** (a `<label>` for a file input, a `<summary>`): style it with `buttonClass({ variant, size, destructive })`.

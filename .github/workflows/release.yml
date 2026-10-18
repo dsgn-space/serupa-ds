@@ -35,7 +35,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm ci
-      - uses: changesets/action@v1
+      # Pinned to a commit: this step runs with write access to the repository, so a moved tag can't change it.
+      - uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         id: changesets
         with:
           version: npm run version-packages

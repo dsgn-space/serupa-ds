@@ -8,6 +8,10 @@ on:
   # request that a workflow opened or updated, and main needs these checks to merge it.
   workflow_dispatch:
 
+# CI only reads the repository, so a bad test dependency can't push or change pull requests.
+permissions:
+  contents: read
+
 jobs:
   suite:
     # The suite runs as parallel jobs, one per group (tools/test/run.mjs --group), so a run takes as long as
