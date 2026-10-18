@@ -3,17 +3,19 @@
    a muted icon at the field's icon size, shaded on hover, with its own focus ring. The browser's own clear
    button and decoration are hidden so there's only one.
    --------------------------------------------------------------- */
-.dk-search-input:has(.dk-search-input__clear) { padding-inline-end: var(--search-input-clear-padding, var(--spacing-1, 0.25rem)); }
-.dk-search-input__icon { color: var(--search-input-icon-color, var(--search-input-icon, var(--text-muted))); }
+@layer dk.components {
+.dk-search-input:has(.dk-search-input__clear) { padding-inline-end: var(--search-input-clear-padding, var(--spacing-1)); }
+.dk-search-input__icon { color: var(--search-input-icon-color, var(--text-muted)); }
 .dk-search-input__icon .dk-loader { --dk-loader-size: var(--dk-input-icon); }
 .dk-search-input .dk-input__field::-webkit-search-cancel-button, .dk-search-input .dk-input__field::-webkit-search-decoration { appearance: none; }
 .dk-search-input__clear {
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--search-input-clear-padding, var(--spacing-1, 0.25rem));
-  border: var(--spacing-0, 0px); border-radius: var(--search-input-clear-radius, var(--rounded-sm, 0.25rem)); background: transparent;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--search-input-clear-padding, var(--spacing-1));
+  border: var(--spacing-0); border-radius: var(--search-input-clear-radius, var(--rounded-sm)); background: transparent;
   color: var(--search-input-clear, var(--text-muted)); cursor: pointer;
-  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
 .dk-search-input__clear .dk-icon { font-size: var(--dk-input-icon); }
 .dk-search-input__clear:hover { background: var(--search-input-clear-bg-hover, var(--secondary)); color: var(--search-input-clear-hover, var(--text)); }
-.dk-search-input__clear:focus-visible { outline: var(--outline-width-2, 2px) solid var(--search-input-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0, 0px); }
+.dk-search-input__clear:focus-visible { outline: var(--outline-width-2) solid var(--search-input-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 @media (prefers-reduced-motion: reduce) { .dk-search-input__clear { transition: none; } }
+}

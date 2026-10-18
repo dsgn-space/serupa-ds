@@ -1,6 +1,6 @@
 {
   "empty-state": {
-    "$description": "EmptyState's component tokens. Each one is an optional override: set the CSS variable (--empty-state-<name>) on the page, a container or one empty state, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "EmptyState's component tokens. Each one is an optional override: set the CSS variable (--empty-state-<name>) on the page, a container or one empty state, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "icon": {
         "$type": "color",
@@ -8,8 +8,7 @@
         "$description": "The icon (3:1 on icon-bg).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--empty-state-icon-color",
-            "deprecatedCssVar": "--empty-state-icon"
+            "cssVar": "--empty-state-icon-color"
           }
         }
       },
@@ -29,8 +28,7 @@
         "$description": "The title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--empty-state-title-color",
-            "deprecatedCssVar": "--empty-state-title"
+            "cssVar": "--empty-state-title-color"
           }
         }
       },
@@ -40,8 +38,7 @@
         "$description": "The description (4.5:1 on surface).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--empty-state-description-color",
-            "deprecatedCssVar": "--empty-state-description"
+            "cssVar": "--empty-state-description-color"
           }
         }
       },

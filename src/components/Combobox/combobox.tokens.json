@@ -1,6 +1,6 @@
 {
   "combobox": {
-    "$description": "Combobox's component tokens. Each one is an optional override: set the CSS variable (--combobox-<name>) on the page, a container or one combobox, and every Combobox inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The field itself uses Input's tokens.",
+    "$description": "Combobox's component tokens. Each one is an optional override: set the CSS variable (--combobox-<name>) on the page, a container or one combobox, and every Combobox inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The field itself uses Input's tokens.",
     "color": {
       "chevron": {
         "$type": "color",

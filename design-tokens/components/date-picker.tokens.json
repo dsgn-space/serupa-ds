@@ -1,6 +1,6 @@
 {
   "date-picker": {
-    "$description": "DatePicker's component tokens. Each one is an optional override: set the CSS variable (--date-picker-<name>) on the page, a container or one picker, and every DatePicker inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The field uses Input's tokens and the calendar Calendar's.",
+    "$description": "DatePicker's component tokens. Each one is an optional override: set the CSS variable (--date-picker-<name>) on the page, a container or one picker, and every DatePicker inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The field uses Input's tokens and the calendar Calendar's.",
     "color": {
       "button": {
         "$type": "color",

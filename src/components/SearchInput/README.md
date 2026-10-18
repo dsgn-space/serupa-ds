@@ -59,7 +59,7 @@ Each is an optional override: set it on the page, a container or one field. The 
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--search-input-icon-color` (was `--search-input-icon`, which still works until 5.0.0) | `text-muted` | The search icon (3:1 on the field). |
+| `--search-input-icon-color` | `text-muted` | The search icon (3:1 on the field). |
 | `--search-input-clear` | `text-muted` | The clear button's icon. |
 | `--search-input-clear-hover` | `text` | The clear button's icon on hover. |
 | `--search-input-clear-bg-hover` | `secondary` | The clear button's background on hover. |

@@ -1,6 +1,6 @@
 {
   "card": {
-    "$description": "Card's component tokens. Each one is an optional override: set the CSS variable (--card-<name>) on the page, a container or one card, and every Card inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Card's component tokens. Each one is an optional override: set the CSS variable (--card-<name>) on the page, a container or one card, and every Card inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",
@@ -28,8 +28,7 @@
         "$description": "The border of an outline card.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--card-border",
-            "deprecatedCssVar": "--card-border-color"
+            "cssVar": "--card-border"
           }
         }
       },
@@ -59,8 +58,7 @@
         "$description": "The border of an interactive card while hovered.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--card-border-hover",
-            "deprecatedCssVar": "--card-hover-border-color"
+            "cssVar": "--card-border-hover"
           }
         }
       }

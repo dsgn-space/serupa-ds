@@ -56,8 +56,8 @@ its own `<Name>.test.tsx`; the contract check fails without one.
 | Test | What it checks |
 | --- | --- |
 | `package.mjs` | The package as a project installs it: every file in `exports` exists, React is a peer dependency, `dist/index.js` imports in Node and every component renders on the server with no browser globals or React warnings, `dist/index.d.ts` declares every component, and `bundle.css` is exactly `components.css` + `utilities.css` |
-| `foundation.py` | Contrast of 21 text, control and focus pairs in all six themes (WCAG 2.2) · responsive variants switch at the `screen-*` values · `base.css` reads tokens only · `tokens.json` fits the design system page's limits (12 extra groups, 60 tokens a group, names, values) · `bundle.css` under 2 MB · every `var()` names a real token and its fallback equals the token · no utility class writes out a value a token holds · Button and Icon use only tokens · every component token (Button, Spinner) refers to a shared token, and the CSS uses each one with exactly the default its tokens file gives · nothing loads from another server · `tokens.css` is in step with `tokens.json` |
-| `design_tokens.py` | `design-tokens/` is in step with `tokens.json`; every token has a standard `$type` and a value of the right shape (DTCG 2025.10); every reference resolves; every token in `tokens.json` is exported somewhere |
+| `foundation.mjs` | Contrast of 24 text, control and focus pairs in all six themes (WCAG 2.2) · responsive variants switch at the `screen-*` values · `base.css` reads tokens only · `tokens.json` names are unique and valid · `bundle.css` under 2 MB · every `var()` names a real token, with no fallback value · every stylesheet keeps its rules in its `dk.*` cascade layer · no utility class writes out a value a token holds · Button and Icon use only tokens · every component token (Button, Spinner) refers to a shared token, and the CSS uses each one with exactly the default its tokens file gives · nothing loads from another server · `tokens.css` is in step with `tokens.json` |
+| `design-tokens.mjs` | `design-tokens/` is in step with `tokens.json`; every token has a standard `$type` and a value of the right shape (DTCG 2025.10); every reference resolves; every token in `tokens.json` is exported somewhere |
 | `style_dictionary.mjs` | Builds `design-tokens/` with Style Dictionary 5 through `tools/tokens/style-dictionary.config.mjs` together with the component tokens, and checks every variable it outputs equals the token, in every theme (skipped if Style Dictionary isn't installed) |
 | `utilities.mjs` | All 25,561 utility classes (including the `sm:` … `2xl:` versions), each rendered on its own and compared with `baseline-utilities.json` (computed styles on the element and its children, plus the system's `--dk-*` variables and `::placeholder`) |
 | `badge.mjs` | Badge: defaults and fallbacks, the one size (20px, text-xs, 12px icons; the removed size prop is ignored with a warning), the outline border, contrast of all 23 tones × 3 styles in all six themes (4.5:1 text, 3:1 outline borders), the subtle style's outline (text color at 20%, its token turns it off), status tones mapped to their palette families, palette steps following the nearest theme (nested light in dark), primary following the brand; the dot, the icon (replacing the dot), count (round pill, tabular digits, "99+", max, nothing at 0, showZero), ping (the system's ping animation on a dot in a label or the indicator, off by default, ignored without a dot, off under reduced motion); optical balance (2px more on the text side with an icon on one side only, mirrored in right-to-left); the remove button (the × spaced like a leading icon, a 24×24 target and focus ring, a real button named "Remove <label>", removeLabel, click and Enter call onRemove); clickable badges (a button with onClick, a link with href, hover 10% and pressed 15% layers, the focus ring, disabled, onRemove ignored with a warning) and contrast in hover and pressed for every tone and style in all six themes; loading (a centered ring at the icon size, width kept, aria-busy, announced, clicks blocked with focus kept); micro-interactions like Button's (press to 97% by pointer and Enter, the ripple under the label and its removal, the loading cross-fade, each token turning its interaction off, none on plain, disabled or loading badges, reduced motion); ref and attributes pass through |
@@ -98,11 +98,11 @@ By hand, without GitHub: write the notes under `## [Unreleased]` and run `python
 ```sh
 npm run tokens                                       # after changing tokens.json: tokens.css and design-tokens/
 node tools/tokens/build.mjs                          # tokens.css only (--check: exit 1 if it's out of date)
-python3 tools/tokens/export.py                       # design-tokens/ only
+node tools/tokens/export.mjs                         # design-tokens/ only (--check: exit 1 if it's out of date)
 node tools/tokens/style-dictionary.config.mjs out/   # build them into CSS with Style Dictionary (one file per theme)
 ```
 
-`export.py` writes the W3C Design Tokens files (see the README). The Style Dictionary config adds two things Style Dictionary 5.6 lacks: converting the format's duration objects (`{ "value": 150, "unit": "ms" }`), and using the system's own variable names (from `$extensions["com.diki"].cssVar`). Add platforms to it for iOS, Android or Sass.
+`export.mjs` writes the W3C Design Tokens files (see the README). The Style Dictionary config adds two things Style Dictionary 5.6 lacks: converting the format's duration objects (`{ "value": 150, "unit": "ms" }`), and using the system's own variable names (from `$extensions["com.diki"].cssVar`). Add platforms to it for iOS, Android or Sass.
 
 ## Custom icons
 
@@ -134,6 +134,7 @@ Storybook is the system's documentation. `.storybook/` holds its setup (the bran
 ## Rules the tests enforce
 
 - Components and utilities read tokens; no value is written out when a token holds it. The documented exceptions are breakpoints inside `@media`, shadow shapes (so color classes can recolor them) and `rounded-full` (9999px).
-- Every `var(--token, fallback)` carries the token's exact value as its fallback.
+- Shared tokens are read as `var(--token)`, with no fallback value: `tokens.css` always loads first. Component tokens keep their default: `var(--button-bg, var(--primary))`.
+- Tokens, page defaults, components and utilities each sit in their cascade layer (`dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`), declared in that order at the top of every file.
 - Utility classes keep the same names and effects; a change is deliberate and goes with an updated baseline.
 - The system loads nothing from other servers.

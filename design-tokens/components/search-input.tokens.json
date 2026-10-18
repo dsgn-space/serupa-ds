@@ -1,6 +1,6 @@
 {
   "search-input": {
-    "$description": "SearchInput's component tokens. Each one is an optional override: set the CSS variable (--search-input-<name>) on the page, a container or one field, and every SearchInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults. The box itself uses Input's tokens.",
+    "$description": "SearchInput's component tokens. Each one is an optional override: set the CSS variable (--search-input-<name>) on the page, a container or one field, and every SearchInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The box itself uses Input's tokens.",
     "color": {
       "icon": {
         "$type": "color",
@@ -8,8 +8,7 @@
         "$description": "The search icon (3:1 on the field).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--search-input-icon-color",
-            "deprecatedCssVar": "--search-input-icon"
+            "cssVar": "--search-input-icon-color"
           }
         }
       },

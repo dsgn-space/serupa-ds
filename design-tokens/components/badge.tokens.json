@@ -1,6 +1,6 @@
 {
   "badge": {
-    "$description": "Badge's component tokens. Each one is an optional override: set the CSS variable (--badge-<name>) on the page, a container or one badge, and every Badge inside follows. Unset, it uses the shared token it references here. Badge colors come from the alias colors (neutral, primary) and the palette (every other tone), with contrast checked in every theme; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Badge's component tokens. Each one is an optional override: set the CSS variable (--badge-<name>) on the page, a container or one badge, and every Badge inside follows. Unset, it uses the shared token it references here. Badge colors come from the alias colors (neutral, primary) and the palette (every other tone), with contrast checked in every theme; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "sizing": {
       "height": {
         "$type": "dimension",

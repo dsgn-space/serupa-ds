@@ -1,6 +1,6 @@
 {
   "calendar": {
-    "$description": "Calendar's component tokens (also used by DatePicker). Each one is an optional override: set the CSS variable (--calendar-<name>) on the page, a container or one calendar, and every Calendar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Calendar's component tokens (also used by DatePicker). Each one is an optional override: set the CSS variable (--calendar-<name>) on the page, a container or one calendar, and every Calendar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "title-color": {
         "$type": "color",

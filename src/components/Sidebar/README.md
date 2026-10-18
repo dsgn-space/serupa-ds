@@ -101,7 +101,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-text-active` | `text` | The current page's item. |
 | `--sidebar-item-bg-hover` | `secondary` | An item's background on hover. |
 | `--sidebar-item-bg-active` | `secondary` | The current page's item background. |
-| `--sidebar-section-title-color` (was `--sidebar-section-title`, which still works until 5.0.0) | `text-muted` | A section's title (4.5:1 on bg). |
+| `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--sidebar-item-size` | `text-sm` | Item text (14px). |
 | `--sidebar-item-weight` | `font-medium` | Item weight (500). |

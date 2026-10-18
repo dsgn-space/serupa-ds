@@ -3,20 +3,22 @@
    16px padding, 8px from its trigger, in the top layer. An optional text-sm semibold title sits over the body.
    It fades and grows in from 95%.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-popover {
-  --dk-popover-offset: var(--popover-offset, var(--spacing-2, 0.5rem));
-  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--popover-z-index, var(--z-50, 50));
-  width: var(--popover-width, var(--container-3xs, 16rem)); max-width: calc(var(--sizing-full, 100%) - var(--spacing-4, 1rem)); max-height: calc(var(--sizing-dvh, 100dvh) - var(--spacing-4, 1rem));
-  margin: var(--spacing-0, 0px); padding: var(--popover-padding, var(--spacing-4, 1rem)); overflow-y: auto;
-  border: var(--popover-border-width, var(--border-width-1, 1px)) solid var(--popover-border, var(--border)); border-radius: var(--popover-radius, var(--rounded-lg, 0.5rem));
+  --dk-popover-offset: var(--popover-offset, var(--spacing-2));
+  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--popover-z-index, var(--z-50));
+  width: var(--popover-width, var(--container-3xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4));
+  margin: var(--spacing-0); padding: var(--popover-padding, var(--spacing-4)); overflow-y: auto;
+  border: var(--popover-border-width, var(--border-width-1)) solid var(--popover-border, var(--border)); border-radius: var(--popover-radius, var(--rounded-lg));
   background: var(--popover-bg, var(--surface)); color: var(--popover-text, var(--text));
-  box-shadow: var(--popover-shadow, var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)));
-  font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem); text-align: start;
-  animation: dk-popover-in var(--duration-150, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+  box-shadow: var(--popover-shadow, var(--shadow-lg));
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
+  animation: dk-popover-in var(--duration-150) var(--ease-out);
 }
 .dk-popover[hidden] { display: none; }
 .dk-popover:focus { outline: none; }
-.dk-popover:focus-visible { outline: var(--outline-width-2, 2px) solid var(--popover-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
-@keyframes dk-popover-in { from { opacity: var(--opacity-0, 0%); scale: var(--scale-95, 95%); } }
-.dk-popover__title { margin-bottom: var(--popover-gap, var(--spacing-2, 0.5rem)); color: var(--popover-title-color, var(--popover-title, var(--text))); font-size: var(--popover-title-size, var(--text-sm, 0.875rem)); font-weight: var(--popover-title-weight, var(--font-semibold, 600)); }
+.dk-popover:focus-visible { outline: var(--outline-width-2) solid var(--popover-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
+@keyframes dk-popover-in { from { opacity: var(--opacity-0); scale: var(--scale-95); } }
+.dk-popover__title { margin-bottom: var(--popover-gap, var(--spacing-2)); color: var(--popover-title-color, var(--text)); font-size: var(--popover-title-size, var(--text-sm)); font-weight: var(--popover-title-weight, var(--font-semibold)); }
 @media (prefers-reduced-motion: reduce) { .dk-popover { animation: none; } }
+}

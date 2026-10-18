@@ -3,31 +3,33 @@
    text-sm font-medium button with a chevron that turns over when open, and an underline on hover. Content
    (muted text-sm) opens and closes by animating the row height from 0fr to 1fr; closed, it's hidden.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-accordion { --dk-accordion-turn: 180deg; font-family: var(--font-sans); }
-.dk-accordion__item { border-bottom: var(--accordion-border-width, var(--border-width-1, 1px)) solid var(--accordion-border, var(--border)); }
-.dk-accordion--card { overflow: hidden; border: var(--accordion-border-width, var(--border-width-1, 1px)) solid var(--accordion-border, var(--border)); border-radius: var(--accordion-radius, var(--rounded-lg, 0.5rem)); background: var(--accordion-bg, var(--surface)); }
-.dk-accordion--card > .dk-accordion__item:last-child { border-bottom: var(--spacing-0, 0px); }
-.dk-accordion__heading { margin: var(--spacing-0, 0px); font: inherit; }
+.dk-accordion__item { border-bottom: var(--accordion-border-width, var(--border-width-1)) solid var(--accordion-border, var(--border)); }
+.dk-accordion--card { overflow: hidden; border: var(--accordion-border-width, var(--border-width-1)) solid var(--accordion-border, var(--border)); border-radius: var(--accordion-radius, var(--rounded-lg)); background: var(--accordion-bg, var(--surface)); }
+.dk-accordion--card > .dk-accordion__item:last-child { border-bottom: var(--spacing-0); }
+.dk-accordion__heading { margin: var(--spacing-0); font: inherit; }
 .dk-accordion__trigger {
-  box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4, 1rem); width: var(--sizing-full, 100%);
-  padding: var(--accordion-padding-y, var(--spacing-4, 1rem)) var(--spacing-0, 0px); border: var(--spacing-0, 0px); background: transparent; cursor: pointer;
-  color: var(--accordion-title-color, var(--accordion-title, var(--text))); font-family: inherit; font-size: var(--accordion-title-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); font-weight: var(--accordion-title-weight, var(--font-medium, 500)); text-align: start;
-  border-radius: var(--rounded-sm, 0.25rem);
+  box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4); width: var(--sizing-full);
+  padding: var(--accordion-padding-y, var(--spacing-4)) var(--spacing-0); border: var(--spacing-0); background: transparent; cursor: pointer;
+  color: var(--accordion-title-color, var(--text)); font-family: inherit; font-size: var(--accordion-title-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--accordion-title-weight, var(--font-medium)); text-align: start;
+  border-radius: var(--rounded-sm);
 }
-.dk-accordion--card .dk-accordion__trigger { padding-inline: var(--accordion-padding-x, var(--spacing-4, 1rem)); border-radius: var(--spacing-0, 0px); }
-.dk-accordion__trigger:hover:not(:disabled) .dk-accordion__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2, 2px); }
-.dk-accordion__trigger:focus-visible { outline: var(--outline-width-2, 2px) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
-.dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0, 0px) - var(--outline-width-2, 2px)); }
-.dk-accordion__trigger:disabled { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+.dk-accordion--card .dk-accordion__trigger { padding-inline: var(--accordion-padding-x, var(--spacing-4)); border-radius: var(--spacing-0); }
+.dk-accordion__trigger:hover:not(:disabled) .dk-accordion__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); }
+.dk-accordion__trigger:focus-visible { outline: var(--outline-width-2) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
+.dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
+.dk-accordion__trigger:disabled { opacity: var(--opacity-50); cursor: not-allowed; }
 .dk-accordion__trigger[aria-disabled="true"] { cursor: default; }
-.dk-accordion__icon.dk-icon { flex-shrink: 0; color: var(--accordion-icon-color, var(--accordion-icon, var(--text-muted))); font-size: var(--accordion-icon-size, var(--spacing-5, 1.25rem)); transition: rotate var(--accordion-duration, var(--duration-200, 200ms)) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)); }
+.dk-accordion__icon.dk-icon { flex-shrink: 0; color: var(--accordion-icon-color, var(--text-muted)); font-size: var(--accordion-icon-size, var(--spacing-5)); transition: rotate var(--accordion-duration, var(--duration-200)) var(--ease-in-out); }
 .dk-accordion__item--open > .dk-accordion__heading .dk-accordion__icon { rotate: var(--dk-accordion-turn); }
 .dk-accordion__panel {
   display: grid; grid-template-rows: 0fr; visibility: hidden;
-  transition: grid-template-rows var(--accordion-duration, var(--duration-200, 200ms)) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), visibility var(--accordion-duration, var(--duration-200, 200ms));
+  transition: grid-template-rows var(--accordion-duration, var(--duration-200)) var(--ease-in-out), visibility var(--accordion-duration, var(--duration-200));
 }
 .dk-accordion__item--open > .dk-accordion__panel { grid-template-rows: 1fr; visibility: visible; }
-.dk-accordion__clip { min-height: var(--spacing-0, 0px); overflow: hidden; }
-.dk-accordion__content { padding-bottom: var(--accordion-padding-y, var(--spacing-4, 1rem)); color: var(--accordion-content-color, var(--accordion-content, var(--text-muted))); font-size: var(--accordion-content-size, var(--text-sm, 0.875rem)); line-height: var(--text-sm--line-height, 1.25rem); }
-.dk-accordion--card .dk-accordion__content { padding-inline: var(--accordion-padding-x, var(--spacing-4, 1rem)); }
+.dk-accordion__clip { min-height: var(--spacing-0); overflow: hidden; }
+.dk-accordion__content { padding-bottom: var(--accordion-padding-y, var(--spacing-4)); color: var(--accordion-content-color, var(--text-muted)); font-size: var(--accordion-content-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
+.dk-accordion--card .dk-accordion__content { padding-inline: var(--accordion-padding-x, var(--spacing-4)); }
 @media (prefers-reduced-motion: reduce) { .dk-accordion__panel, .dk-accordion__icon.dk-icon { transition: none; } }
+}

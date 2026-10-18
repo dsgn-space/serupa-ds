@@ -1,6 +1,6 @@
 {
   "heading": {
-    "$description": "Heading's component tokens. Each one is an optional override: set the CSS variable (--heading-<name>) on the page, a container or one element, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Heading's component tokens. Each one is an optional override: set the CSS variable (--heading-<name>) on the page, a container or one element, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "color": {
         "$type": "color",
@@ -8,8 +8,7 @@
         "$description": "The heading's color.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--heading-text",
-            "deprecatedCssVar": "--heading-color"
+            "cssVar": "--heading-text"
           }
         }
       }

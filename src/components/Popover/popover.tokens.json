@@ -1,6 +1,6 @@
 {
   "popover": {
-    "$description": "Popover's component tokens. Each one is an optional override: set the CSS variable (--popover-<name>) on the page, a container or one popover, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Popover's component tokens. Each one is an optional override: set the CSS variable (--popover-<name>) on the page, a container or one popover, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",
@@ -38,8 +38,7 @@
         "$description": "The title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--popover-title-color",
-            "deprecatedCssVar": "--popover-title"
+            "cssVar": "--popover-title-color"
           }
         }
       },

@@ -13,7 +13,7 @@ function App() {
     h(D.Heading, { id: 'hbad', level: 9, size: 'huge' }, 'Bad'),
     h(D.Heading, { id: 'hsize', level: 1, size: 'lg' }, 'Small h1'),
     h(D.Heading, { id: 'hbig', level: 4, size: '4xl' }, 'Big h4'),
-    h(D.Heading, { id: 'htok', level: 3, style: { '--heading-size-3': '11px', '--heading-color': 'rgb(1, 2, 3)' } }, 'Tokens'),
+    h(D.Heading, { id: 'htok', level: 3, style: { '--heading-size-3': '11px', '--heading-text': 'rgb(1, 2, 3)' } }, 'Tokens'),
     h(D.Text, { id: 'tdef', ref: window.tr = React.createRef(), className: 'extra' }, 'Default'),
     h('div', { id: 'parent', style: { fontSize: '13px', lineHeight: '17px', color: 'rgb(9, 8, 7)', fontWeight: 300 } }, h(D.Text, { as: 'span', id: 'tinh' }, 'Inherits')),
     ['xs', 'sm', 'base', 'lg', 'xl'].map(function (s) { return h(D.Text, { key: s, 'data-s': s, size: s }, s); }),
@@ -47,7 +47,7 @@ t('Heading: an unknown level falls back to h2, an unknown size is ignored', hb =
 const hs = await st('#hsize', ['fontSize', 'lineHeight', 'letterSpacing']), hg = await st('#hbig', ['fontSize', 'lineHeight', 'letterSpacing']);
 t('Heading size: an h1 can look lg (and loses the tight tracking), an h4 can look 4xl', hs.fontSize === '18px' && hs.lineHeight === '28px' && hs.letterSpacing === 'normal' && hg.fontSize === '36px' && hg.lineHeight === '40px' && hg.letterSpacing === '-0.9px' && await p.evaluate(() => document.getElementById('hsize').tagName === 'H1'), JSON.stringify([hs, hg]));
 const ht = await st('#htok', ['fontSize', 'color']);
-t('Heading tokens (--heading-size-3, --heading-color) override one heading', ht.fontSize === '11px' && ht.color === 'rgb(1, 2, 3)', JSON.stringify(ht));
+t('Heading tokens (--heading-size-3, --heading-text) override one heading', ht.fontSize === '11px' && ht.color === 'rgb(1, 2, 3)', JSON.stringify(ht));
 
 const td = await p.evaluate(() => { const e = document.getElementById('tdef'); return { tag: e.tagName, cls: e.className, ref: window.tr.current === e, m: getComputedStyle(e).marginTop }; });
 t('Text defaults: a <p> with no margins; ref and className reach it', td.tag === 'P' && td.cls === 'dk-text extra' && td.ref && td.m === '0px', JSON.stringify(td));

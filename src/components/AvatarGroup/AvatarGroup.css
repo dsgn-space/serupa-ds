@@ -3,16 +3,18 @@
    and set in a 2px surface ring so the edges stay clear. The "+N" avatar at the end is secondary with text,
    like initials ("99+" past 99, "9+" at xs). Earlier avatars sit on top, so each status dot shows. Every value goes through --avatar-group-* tokens.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-avatar-group {
-  --dk-avatar-group-overlap: var(--avatar-group-overlap-md, var(--spacing-3, 0.75rem));
+  --dk-avatar-group-overlap: var(--avatar-group-overlap-md, var(--spacing-3));
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
 }
-.dk-avatar-group--xs, .dk-avatar-group--sm { --dk-avatar-group-overlap: var(--avatar-group-overlap-sm, var(--spacing-2, 0.5rem)); }
-.dk-avatar-group--xl { --dk-avatar-group-overlap: var(--avatar-group-overlap-lg, var(--spacing-4, 1rem)); }
+.dk-avatar-group--xs, .dk-avatar-group--sm { --dk-avatar-group-overlap: var(--avatar-group-overlap-sm, var(--spacing-2)); }
+.dk-avatar-group--xl { --dk-avatar-group-overlap: var(--avatar-group-overlap-lg, var(--spacing-4)); }
 .dk-avatar-group__item { position: relative; display: inline-flex; }
-.dk-avatar-group__item + .dk-avatar-group__item { margin-inline-start: calc(var(--spacing-0, 0px) - var(--dk-avatar-group-overlap)); }
-.dk-avatar-group .dk-avatar__frame { box-shadow: 0 0 0 var(--avatar-group-ring-width, var(--border-width-2, 2px)) var(--avatar-group-ring, var(--surface)); }
-.dk-avatar-group__more > .dk-avatar__frame { background: var(--avatar-group-more-bg, var(--secondary)); color: var(--avatar-group-more-color, var(--text)); letter-spacing: var(--tracking-tight, -0.025em); }
+.dk-avatar-group__item + .dk-avatar-group__item { margin-inline-start: calc(var(--spacing-0) - var(--dk-avatar-group-overlap)); }
+.dk-avatar-group .dk-avatar__frame { box-shadow: 0 0 0 var(--avatar-group-ring-width, var(--border-width-2)) var(--avatar-group-ring, var(--surface)); }
+.dk-avatar-group__more > .dk-avatar__frame { background: var(--avatar-group-more-bg, var(--secondary)); color: var(--avatar-group-more-color, var(--text)); letter-spacing: var(--tracking-tight); }
 @media (forced-colors: active) { .dk-avatar-group .dk-avatar__frame { box-shadow: none; } }
+}

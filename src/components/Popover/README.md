@@ -68,7 +68,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-bg` | `surface` | The panel's background. |
 | `--popover-text` | `text` | The panel's text. |
 | `--popover-border` | `border` | The panel's border. |
-| `--popover-title-color` (was `--popover-title`, which still works until 5.0.0) | `text` | The title. |
+| `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
 | `--popover-shadow` | `shadow-lg` | The panel's shadow. |
 | `--popover-radius` | `rounded-lg` | The panel's corners (8px). |

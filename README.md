@@ -45,6 +45,8 @@ export function SignUp() {
 
 React 18 or later is a peer dependency, so the components use your app's React, and they render on the server too. Types ship with the package.
 
+Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, dk, app;` (the `dk.*` layers sit inside `dk`).
+
 On a plain page without a bundler:
 
 ```html
@@ -151,7 +153,7 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
 
-Each token keeps its CSS variable in `$extensions["com.diki"].cssVar`. The files are generated from `tokens.json` (`python3 tools/tokens/export.py`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
+Each token keeps its CSS variable in `$extensions["com.diki"].cssVar`. The files are generated from `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
 
 ## Browser support
 

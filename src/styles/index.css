@@ -2,6 +2,7 @@
    bundle.css is these files joined; components.css is the component ones, utilities.css the last.
    A component that styles another one (Loader inside Button) comes after it, so add new components
    at the end of the component list unless they must win over an earlier one. */
+@layer dk.tokens, dk.base, dk.components, dk.utilities;
 @import "../components/Icon/Icon.css";
 @import "../components/Heading/Heading.css";
 @import "../components/Text/Text.css";

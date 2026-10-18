@@ -1,6 +1,6 @@
 {
   "file-upload": {
-    "$description": "FileUpload's component tokens. Each one is an optional override: set the CSS variable (--file-upload-<name>) on the page, a container or one upload, and every FileUpload inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "FileUpload's component tokens. Each one is an optional override: set the CSS variable (--file-upload-<name>) on the page, a container or one upload, and every FileUpload inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "zone-bg": {
         "$type": "color",
@@ -48,8 +48,7 @@
         "$description": "The upload icon and file icons (3:1).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--file-upload-icon-color",
-            "deprecatedCssVar": "--file-upload-icon"
+            "cssVar": "--file-upload-icon-color"
           }
         }
       },

@@ -78,9 +78,9 @@ Each is an optional override: set it on the page, a container or one accordion. 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--accordion-border` | `border` | The lines between items, and the frame of variant="card". |
-| `--accordion-title-color` (was `--accordion-title`, which still works until 5.0.0) | `text` | An item's title. |
-| `--accordion-content-color` (was `--accordion-content`, which still works until 5.0.0) | `text-muted` | An item's content (4.5:1 on surface). |
-| `--accordion-icon-color` (was `--accordion-icon`, which still works until 5.0.0) | `text-muted` | The chevron. |
+| `--accordion-title-color` | `text` | An item's title. |
+| `--accordion-content-color` | `text-muted` | An item's content (4.5:1 on surface). |
+| `--accordion-icon-color` | `text-muted` | The chevron. |
 | `--accordion-bg` | `surface` | The background of variant="card". |
 | `--accordion-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--accordion-title-size` | `text-sm` | Title text (14px). |

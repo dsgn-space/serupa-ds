@@ -1,6 +1,6 @@
 {
   "alert": {
-    "$description": "Alert's component tokens. Each one is an optional override: set the CSS variable (--alert-<name>) on the page, a container or one alert, and every Alert inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Alert's component tokens. Each one is an optional override: set the CSS variable (--alert-<name>) on the page, a container or one alert, and every Alert inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg-info": {
         "$type": "color",
@@ -118,8 +118,7 @@
         "$description": "The message (4.5:1 on every tone's background).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--alert-text",
-            "deprecatedCssVar": "--alert-text-color"
+            "cssVar": "--alert-text"
           }
         }
       }

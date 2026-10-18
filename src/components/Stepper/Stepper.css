@@ -4,57 +4,59 @@
    ring 2px out. Complete: primary with a check, and the line after it primary. Error: danger. Horizontal: the
    lines stretch between steps, level with the circles' middle. Vertical: the lines run down from each circle.
    --------------------------------------------------------------- */
+@layer dk.components {
 .dk-stepper {
-  --dk-step-size: var(--stepper-indicator-size-md, var(--spacing-8, 2rem));
-  --dk-step-line: var(--stepper-connector-width, var(--border-width-2, 2px));
+  --dk-step-size: var(--stepper-indicator-size-md, var(--spacing-8));
+  --dk-step-line: var(--stepper-connector-width, var(--border-width-2));
   --dk-step-line-top: calc((var(--dk-step-size) - var(--dk-step-line)) / 2);
   --dk-step-line-start: calc((var(--dk-step-size) - var(--dk-step-line)) / 2);
-  color: var(--stepper-title-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--text-sm--line-height, 1.25rem);
+  color: var(--stepper-title-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-stepper--size-sm { --dk-step-size: var(--stepper-indicator-size-sm, var(--spacing-6, 1.5rem)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
-.dk-stepper__list { display: flex; margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); list-style: none; }
+.dk-stepper--size-sm { --dk-step-size: var(--stepper-indicator-size-sm, var(--spacing-6)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-stepper__list { display: flex; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-stepper--vertical .dk-stepper__list { flex-direction: column; }
-.dk-stepper__step { position: relative; display: flex; min-width: var(--spacing-0, 0px); }
+.dk-stepper__step { position: relative; display: flex; min-width: var(--spacing-0); }
 .dk-stepper--horizontal .dk-stepper__step:not(:last-child) { flex: auto; }
-.dk-stepper--vertical .dk-stepper__step:not(:last-child) { padding-bottom: var(--spacing-6, 1.5rem); }
+.dk-stepper--vertical .dk-stepper__step:not(:last-child) { padding-bottom: var(--spacing-6); }
 .dk-stepper__head {
-  display: flex; align-items: flex-start; gap: var(--stepper-gap, var(--spacing-3, 0.75rem)); min-width: var(--spacing-0, 0px);
-  margin: var(--spacing-0, 0px); padding: var(--spacing-0, 0px); border: var(--spacing-0, 0px); background: transparent; color: inherit; font: inherit; text-align: start;
+  display: flex; align-items: flex-start; gap: var(--stepper-gap, var(--spacing-3)); min-width: var(--spacing-0);
+  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: inherit; font: inherit; text-align: start;
 }
-button.dk-stepper__head { cursor: pointer; border-radius: var(--rounded-md, 0.375rem); }
-button.dk-stepper__head:hover .dk-stepper__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2, 2px); }
+button.dk-stepper__head { cursor: pointer; border-radius: var(--rounded-md); }
+button.dk-stepper__head:hover .dk-stepper__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); }
 button.dk-stepper__head:focus { outline: none; }
-button.dk-stepper__head:focus-visible { outline: var(--outline-width-2, 2px) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2, 2px); }
+button.dk-stepper__head:focus-visible { outline: var(--outline-width-2) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
 .dk-stepper__indicator {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--dk-step-size); height: var(--dk-step-size);
-  border: var(--border-width-2, 2px) solid var(--stepper-indicator-border, var(--field-border)); border-radius: var(--stepper-radius, var(--rounded-full, 9999px));
+  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--field-border)); border-radius: var(--stepper-radius, var(--rounded-full));
   background: var(--stepper-indicator-bg, var(--surface)); color: var(--stepper-indicator-text, var(--text-muted));
-  font-weight: var(--font-semibold, 600); font-variant-numeric: tabular-nums;
+  font-weight: var(--font-semibold); font-variant-numeric: tabular-nums;
 }
-.dk-stepper__indicator .dk-icon { font-size: var(--spacing-4, 1rem); }
-.dk-stepper--size-sm .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5, 0.875rem); }
+.dk-stepper__indicator .dk-icon { font-size: var(--spacing-4); }
+.dk-stepper--size-sm .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5); }
 .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator {
   border-color: var(--stepper-active-bg, var(--primary)); background: var(--stepper-active-bg, var(--primary)); color: var(--stepper-active-text, var(--on-primary));
 }
-.dk-stepper__step--current .dk-stepper__indicator { outline: var(--outline-width-2, 2px) solid var(--stepper-active-bg, var(--primary)); outline-offset: var(--outline-offset-2, 2px); }
+.dk-stepper__step--current .dk-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-active-bg, var(--primary)); outline-offset: var(--outline-offset-2); }
 .dk-stepper__step--error .dk-stepper__indicator { border-color: var(--stepper-error-bg, var(--danger)); background: var(--stepper-error-bg, var(--danger)); color: var(--stepper-error-text, var(--on-danger)); }
-.dk-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0, 0px); padding-top: var(--dk-step-text-pad); }
-.dk-stepper { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-sm--line-height, 1.25rem)) / 2); }
-.dk-stepper--size-sm { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-xs--line-height, 1rem)) / 2); }
-.dk-stepper__title { font-weight: var(--stepper-title-weight, var(--font-medium, 500)); }
-.dk-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs, 0.75rem); line-height: var(--text-xs--line-height, 1rem); }
+.dk-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0); padding-top: var(--dk-step-text-pad); }
+.dk-stepper { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-sm--line-height)) / 2); }
+.dk-stepper--size-sm { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-xs--line-height)) / 2); }
+.dk-stepper__title { font-weight: var(--stepper-title-weight, var(--font-medium)); }
+.dk-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-stepper__connector { flex: auto; background: var(--stepper-connector, var(--field-border)); }
 .dk-stepper__step--done .dk-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
 .dk-stepper--horizontal .dk-stepper__connector {
-  align-self: flex-start; min-width: var(--spacing-4, 1rem); height: var(--dk-step-line);
-  margin: var(--dk-step-line-top) var(--stepper-connector-gap, var(--spacing-2, 0.5rem)) var(--spacing-0, 0px);
+  align-self: flex-start; min-width: var(--spacing-4); height: var(--dk-step-line);
+  margin: var(--dk-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);
 }
-.dk-stepper--horizontal .dk-stepper__head { flex-shrink: 0; max-width: calc(var(--sizing-full, 100%) - var(--spacing-8, 2rem)); }
+.dk-stepper--horizontal .dk-stepper__head { flex-shrink: 0; max-width: calc(var(--sizing-full) - var(--spacing-8)); }
 .dk-stepper--vertical .dk-stepper__connector {
   position: absolute; inset-inline-start: var(--dk-step-line-start); width: var(--dk-step-line);
-  top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2, 0.5rem))); bottom: var(--stepper-connector-gap, var(--spacing-2, 0.5rem));
+  top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
 }
 @media (forced-colors: active) {
   .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; }
   .dk-stepper__connector { background: CanvasText; }
+}
 }

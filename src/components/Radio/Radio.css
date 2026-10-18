@@ -4,19 +4,20 @@
    .dk-radio__control (.dk-radio__input, .dk-radio__dot), .dk-radio__text (.dk-radio__label,
    .dk-radio__description). Every value goes through --radio-* tokens.
    --------------------------------------------------------------- */
-.dk-radio-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--radio-group-gap, var(--spacing-2, 0.5rem)); }
-.dk-radio-group--horizontal { flex-direction: row; flex-wrap: wrap; column-gap: var(--radio-group-gap-horizontal, var(--spacing-4, 1rem)); }
+@layer dk.components {
+.dk-radio-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--radio-group-gap, var(--spacing-2)); }
+.dk-radio-group--horizontal { flex-direction: row; flex-wrap: wrap; column-gap: var(--radio-group-gap-horizontal, var(--spacing-4)); }
 .dk-radio {
-  --dk-radio-box: var(--radio-size-md, var(--spacing-4, 1rem));
-  --dk-radio-dot: var(--radio-dot-size-md, var(--spacing-1\.5, 0.375rem));
-  --dk-radio-lh: var(--text-sm--line-height, 1.25rem);
-  display: inline-flex; align-items: flex-start; gap: var(--radio-gap, var(--spacing-2, 0.5rem));
+  --dk-radio-box: var(--radio-size-md, var(--spacing-4));
+  --dk-radio-dot: var(--radio-dot-size-md, var(--spacing-1\.5));
+  --dk-radio-lh: var(--text-sm--line-height);
+  display: inline-flex; align-items: flex-start; gap: var(--radio-gap, var(--spacing-2));
   vertical-align: top; color: var(--radio-label-color, var(--text));
-  font-family: var(--font-sans); font-size: var(--text-sm, 0.875rem); line-height: var(--dk-radio-lh);
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--dk-radio-lh);
   cursor: pointer;
 }
-.dk-radio--size-sm { --dk-radio-box: var(--radio-size-sm, var(--spacing-3\.5, 0.875rem)); --dk-radio-dot: var(--radio-dot-size-sm, var(--spacing-1\.5, 0.375rem)); --dk-radio-lh: var(--text-xs--line-height, 1rem); font-size: var(--text-xs, 0.75rem); }
-.dk-radio--size-lg { --dk-radio-box: var(--radio-size-lg, var(--spacing-5, 1.25rem)); --dk-radio-dot: var(--radio-dot-size-lg, var(--spacing-2, 0.5rem)); --dk-radio-lh: var(--text-base--line-height, 1.5rem); font-size: var(--text-base, 1rem); }
+.dk-radio--size-sm { --dk-radio-box: var(--radio-size-sm, var(--spacing-3\.5)); --dk-radio-dot: var(--radio-dot-size-sm, var(--spacing-1\.5)); --dk-radio-lh: var(--text-xs--line-height); font-size: var(--text-xs); }
+.dk-radio--size-lg { --dk-radio-box: var(--radio-size-lg, var(--spacing-5)); --dk-radio-dot: var(--radio-dot-size-lg, var(--spacing-2)); --dk-radio-lh: var(--text-base--line-height); font-size: var(--text-base); }
 .dk-radio__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; height: var(--dk-radio-lh); }
 .dk-radio--bare .dk-radio__control { height: var(--dk-radio-box); }
 .dk-radio__input {
@@ -24,28 +25,28 @@
   --dk-radio-fill: var(--radio-bg-checked, var(--primary));
   --dk-radio-ring: var(--radio-focus-ring, var(--focus-ring));
   appearance: none; -webkit-appearance: none;
-  box-sizing: border-box; flex-shrink: 0; width: var(--dk-radio-box); height: var(--dk-radio-box); margin: var(--spacing-0, 0px);
+  box-sizing: border-box; flex-shrink: 0; width: var(--dk-radio-box); height: var(--dk-radio-box); margin: var(--spacing-0);
   background: var(--radio-bg, var(--field));
-  border: var(--radio-border-width, var(--border-width-1, 1px)) solid var(--dk-radio-bd);
-  border-radius: var(--rounded-full, 9999px);
+  border: var(--radio-border-width, var(--border-width-1)) solid var(--dk-radio-bd);
+  border-radius: var(--rounded-full);
   cursor: inherit;
-  transition: background-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1)), border-color var(--duration-150, 150ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--duration-150) var(--ease-in-out), border-color var(--duration-150) var(--ease-in-out);
 }
 .dk-radio:hover .dk-radio__input:not(:disabled) { --dk-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --dk-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); }
 .dk-radio__input:checked { background: var(--dk-radio-fill); border-color: var(--dk-radio-fill); }
-.dk-radio__dot { position: absolute; inset: var(--spacing-0, 0px); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full, 9999px); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
+.dk-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-radio__input:checked + .dk-radio__dot { visibility: visible; }
 /* Focus: a 2px ring outside a 2px surface gap, like Button; the transparent outline is drawn in forced-colors mode. */
 .dk-radio__input:focus-visible {
-  box-shadow: 0 0 0 var(--outline-offset-2, 2px) var(--surface), 0 0 0 calc(var(--outline-offset-2, 2px) + var(--outline-width-2, 2px)) var(--dk-radio-ring);
-  outline: var(--outline-width-2, 2px) solid transparent; outline-offset: var(--outline-offset-2, 2px);
+  box-shadow: 0 0 0 var(--outline-offset-2) var(--surface), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-radio-ring);
+  outline: var(--outline-width-2) solid transparent; outline-offset: var(--outline-offset-2);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
 .dk-radio--invalid .dk-radio__input, .dk-radio--invalid:hover .dk-radio__input:not(:disabled) { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); }
-.dk-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0, 0px); }
+.dk-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); }
 .dk-radio__description { color: var(--radio-description-color, var(--text-muted)); }
 /* Disabled, by its own prop, the group's or a disabled fieldset (Field group). */
-.dk-radio:has(.dk-radio__input:disabled) { opacity: var(--opacity-50, 50%); cursor: not-allowed; }
+.dk-radio:has(.dk-radio__input:disabled) { opacity: var(--opacity-50); cursor: not-allowed; }
 .dk-radio__input:disabled:not(:checked) { background: var(--radio-bg-disabled, var(--surface-muted)); }
 @media (forced-colors: active) { .dk-radio__dot { background: CanvasText; } }
-
+}

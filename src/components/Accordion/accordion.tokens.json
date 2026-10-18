@@ -1,6 +1,6 @@
 {
   "accordion": {
-    "$description": "Accordion's component tokens. Each one is an optional override: set the CSS variable (--accordion-<name>) on the page, a container or one accordion, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Accordion's component tokens. Each one is an optional override: set the CSS variable (--accordion-<name>) on the page, a container or one accordion, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "border": {
         "$type": "color",
@@ -18,8 +18,7 @@
         "$description": "An item's title.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--accordion-title-color",
-            "deprecatedCssVar": "--accordion-title"
+            "cssVar": "--accordion-title-color"
           }
         }
       },
@@ -29,8 +28,7 @@
         "$description": "An item's content (4.5:1 on surface).",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--accordion-content-color",
-            "deprecatedCssVar": "--accordion-content"
+            "cssVar": "--accordion-content-color"
           }
         }
       },
@@ -40,8 +38,7 @@
         "$description": "The chevron.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--accordion-icon-color",
-            "deprecatedCssVar": "--accordion-icon"
+            "cssVar": "--accordion-icon-color"
           }
         }
       },

@@ -1,6 +1,6 @@
 {
   "toast": {
-    "$description": "Toast's component tokens. Each one is an optional override: set the CSS variable (--toast-<name>) on the page or the Toaster, and every toast follows. Unset, it uses the shared token it references here; tools/test/foundation.py checks that bundle.css uses exactly these defaults.",
+    "$description": "Toast's component tokens. Each one is an optional override: set the CSS variable (--toast-<name>) on the page or the Toaster, and every toast follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "bg": {
         "$type": "color",
@@ -18,8 +18,7 @@
         "$description": "A toast's border.",
         "$extensions": {
           "com.diki": {
-            "cssVar": "--toast-border",
-            "deprecatedCssVar": "--toast-border-color"
+            "cssVar": "--toast-border"
           }
         }
       },

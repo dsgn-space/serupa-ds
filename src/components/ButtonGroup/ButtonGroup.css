@@ -2,12 +2,14 @@
    ButtonGroup: buttons in a row (or column), 8px apart; attached, they touch with one shared border line and
    only the group's outer corners rounded. A hovered or focused button comes to the front.
    --------------------------------------------------------------- */
-.dk-button-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--button-group-gap, var(--spacing-2, 0.5rem)); }
+@layer dk.components {
+.dk-button-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--button-group-gap, var(--spacing-2)); }
 .dk-button-group--vertical { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
-.dk-button-group--attached { flex-wrap: nowrap; gap: var(--spacing-0, 0px); }
+.dk-button-group--attached { flex-wrap: nowrap; gap: var(--spacing-0); }
 .dk-button-group--attached > .dk-btn { position: relative; }
-.dk-button-group--attached > .dk-btn:hover, .dk-button-group--attached > .dk-btn:focus-visible, .dk-button-group--attached > .dk-btn[aria-pressed="true"] { z-index: var(--z-10, 10); }
-.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn:not(:first-child) { margin-inline-start: calc(var(--spacing-0, 0px) - var(--button-group-overlap, var(--border-width-1, 1px))); border-start-start-radius: var(--spacing-0, 0px); border-end-start-radius: var(--spacing-0, 0px); }
-.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn:not(:last-child) { border-start-end-radius: var(--spacing-0, 0px); border-end-end-radius: var(--spacing-0, 0px); }
-.dk-button-group--attached.dk-button-group--vertical > .dk-btn:not(:first-child) { margin-top: calc(var(--spacing-0, 0px) - var(--button-group-overlap, var(--border-width-1, 1px))); border-start-start-radius: var(--spacing-0, 0px); border-start-end-radius: var(--spacing-0, 0px); }
-.dk-button-group--attached.dk-button-group--vertical > .dk-btn:not(:last-child) { border-end-start-radius: var(--spacing-0, 0px); border-end-end-radius: var(--spacing-0, 0px); }
+.dk-button-group--attached > .dk-btn:hover, .dk-button-group--attached > .dk-btn:focus-visible, .dk-button-group--attached > .dk-btn[aria-pressed="true"] { z-index: var(--z-10); }
+.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn:not(:first-child) { margin-inline-start: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
+.dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn:not(:last-child) { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+.dk-button-group--attached.dk-button-group--vertical > .dk-btn:not(:first-child) { margin-top: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-start-end-radius: var(--spacing-0); }
+.dk-button-group--attached.dk-button-group--vertical > .dk-btn:not(:last-child) { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+}
