@@ -1,4 +1,4 @@
-import * as MATERIAL from "./material/icons";
+import { BUILTIN_ICONS } from "./material/builtin";
 import type { IconData } from "./material/types";
 
 /* Custom icons: your own SVGs, built in by tools/icons/build.py. Each is the inner markup of a
@@ -19,12 +19,22 @@ export function hasIcon(name: unknown): name is string {
   return typeof name === "string" && Object.prototype.hasOwnProperty.call(ICONS, name);
 }
 
-/* Material Symbols by name: every icon in src/material/icons.ts, and any icon a project registers. */
+/* Material Symbols by name. The icons the components use are built in; the full set (src/material/icons.ts, a
+   separate chunk) loads the first time another name is drawn. Names a project registers win over both. */
 const NAMED = new Map<string, IconData>();
-for (const v of Object.values(MATERIAL)) if (isIconData(v)) NAMED.set(v.name, v);
+for (const v of BUILTIN_ICONS) NAMED.set(v.name, v);
+let loading: Promise<void> | undefined;
+
+/** Loads every Material Symbol so its name works (once; Icon calls it when it meets a name it doesn't know yet). */
+export function loadAllIcons(): Promise<void> {
+  return loading || (loading = import("./material/icons").then((all) => {
+    for (const v of Object.values(all)) if (isIconData(v) && !NAMED.has(v.name)) NAMED.set(v.name, v);
+  }));
+}
 
 /** Adds icons that work by name. Every Material Symbol already does; use this for an icon of your own in the same shape
- * (`{ name, d }`, drawn on Material's 960-unit grid): `registerIcons(MyIcon)` or a whole module. */
+ * (`{ name, d }`, drawn on Material's 960-unit grid): `registerIcons(MyIcon)` or a whole module. To draw every icon on
+ * the first render (server rendering, say), register the full set first: `registerIcons(await import("serupa-ds/icons"))`. */
 export function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void {
   for (const x of icons) {
     if (isIconData(x)) NAMED.set(x.name, x);
@@ -32,7 +42,7 @@ export function registerIcons(...icons: Array<IconData | Readonly<Record<string,
   }
 }
 
-/** The Material Symbol registered under a name, if any. */
+/** The Material Symbol for a name, if it is built in, registered or already loaded. */
 export function getIcon(name: string): IconData | undefined {
   return NAMED.get(name);
 }

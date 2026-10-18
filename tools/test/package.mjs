@@ -4,6 +4,7 @@
 //   node tools/test/package.mjs
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { pathToFileURL } from 'node:url';
 import { PROJECT, read, report } from './lib.mjs';
 
@@ -111,6 +112,11 @@ if (D) {
   [console.error, console.warn] = keep;
   t('no React warnings while rendering on the server', !warnings.length, warnings.slice(0, 3).join(' | '));
   t('version matches package.json', D.version === pkg.version, D.version);
+  // Icons: the ones the components use are in index.js and draw on the server; the full set is a separate chunk.
+  const iconHtml = (name) => renderToString(h(D.Icon, { name }));
+  t('a built-in icon ("close") draws on the server; another name ("sports_cricket") keeps its empty box until the full set loads', /<path d="/.test(iconHtml('close')) && !/<svg/.test(iconHtml('sports_cricket')), iconHtml('sports_cricket'));
+  const indexJs = read('dist/index.js');
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 150 KB gzipped', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 150 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   t('buttonClass and configure are exported', D.buttonClass({ variant: 'outline' }) === 'dk-btn dk-btn--outline dk-btn--size-md' && typeof D.configure === 'function');
 }
 
