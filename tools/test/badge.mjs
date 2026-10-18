@@ -203,6 +203,9 @@ const w0 = await box('ld');
 await p.evaluate(() => { document.querySelector('[data-dk-announcer]').textContent = ''; window.setLoading(true); }); await p.waitForTimeout(250);
 await p.focus('#ld'); const c0 = await p.evaluate(() => window.clicks);
 await p.click('#ld', { force: true }); await p.keyboard.press('Enter');
+// The cross-fade can start late on a busy runner, so wait for it to finish rather than for a fixed time.
+await p.waitForFunction(() => { const e = document.getElementById('ld'), sp = e.querySelector('.dk-badge__loader');
+  return !!sp && [sp, ...[...e.children].filter((c) => c !== sp && !c.classList.contains('dk-badge__ripples'))].every((el) => el.getAnimations().every((a) => a.playState === 'finished')); }, null, { timeout: 3000 });
 const ld = await p.evaluate(() => { const e = document.getElementById('ld'), sp = e.querySelector('.dk-badge__loader'), art = sp && sp.querySelector('.dk-loader__art'), r = e.getBoundingClientRect(), a = art.getBoundingClientRect();
   return { busy: e.getAttribute('aria-busy'), dis: e.getAttribute('aria-disabled'), focus: document.activeElement === e, hid: [...e.children].filter((c) => c !== sp && !c.classList.contains('dk-badge__ripples')).map((c) => getComputedStyle(c).opacity).join(), sz: Math.round(a.width), cx: Math.abs((a.left + a.width / 2) - (r.left + r.width / 2)) < 1, cy: Math.abs((a.top + a.height / 2) - (r.top + r.height / 2)) < 1, ring: !!sp.querySelector('.dk-loader--ring'), ann: document.querySelector('[data-dk-announcer]').textContent, cur: getComputedStyle(e).cursor, name: e.textContent }; });
 const w1 = await box('ld');
