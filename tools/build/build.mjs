@@ -2,7 +2,7 @@
 //   index.js, index.d.ts   the components as ES modules, with types (React is a peer dependency)
 //   serupa.iife.js           the browser script: reads window.React, sets window.Serupa (bundle.js is the same file)
 //   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
-//   utilities.css          the utility classes, from src/styles/utilities.css
+//   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
 //   lib/                   React 18 for plain pages (react and react-dom UMD builds)
@@ -12,6 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { buildUtilities } from '../utilities/build.mjs';
 
 const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
 const D = path.join(P, 'dist');
@@ -34,7 +35,7 @@ if (!process.argv.includes('--css')) {
 const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !IMPORTS.includes(n));
 if (missing.length) { console.error(`Add ${missing.join(', ')} to the @import list in src/styles/index.css`); process.exit(1); }
 const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join('');
-const utilities = read('src/styles/utilities.css');
+const utilities = buildUtilities(P);
 // Each file declares the system's cascade layers in one order (dk.tokens, dk.base, dk.components, dk.utilities),
 // so page styles outside the layers win over them whatever loads first.
 const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;

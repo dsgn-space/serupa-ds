@@ -21,7 +21,7 @@ npm run typecheck   # tsc over src/
 npm run lint        # ESLint (TypeScript, React hooks rules, the tools) and Stylelint (the CSS)
 ```
 
-`dist/` is build output: never edit it, and it isn't committed. A new component's CSS joins `components.css` in the order of the `@import` list in `src/styles/index.css`.
+`dist/` is build output: never edit it, and it isn't committed. The utility classes come from `src/styles/utilities.template.css`: `tools/utilities/build.mjs` expands its `@each` loops over the tokens in `tokens.json` (so a new color or spacing token gets its classes) and its `@responsive` list into the `sm:` … `2xl:` variants, writing `src/styles/utilities.css` (not committed). The build, `npm run lint`, Storybook and Vitest run it first; `tools/utilities/template.mjs` describes the syntax. A new component's CSS joins `components.css` in the order of the `@import` list in `src/styles/index.css`.
 
 ## Test suite
 

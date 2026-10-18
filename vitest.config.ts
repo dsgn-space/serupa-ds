@@ -4,8 +4,11 @@
 import fs from 'node:fs';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
+import { buildUtilities } from './tools/utilities/build.mjs';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
+// src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
+buildUtilities(new URL('.', import.meta.url).pathname);
 
 export default defineConfig({
   define: { __VERSION__: JSON.stringify(version) },
