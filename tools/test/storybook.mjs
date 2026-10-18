@@ -90,7 +90,7 @@ for (const e of docs) {
     }
     return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
-  t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(3, 7, 18)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark));
+  t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(9, 9, 11)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark));
 }
 for (const e of stories) {
   const problems = [];
