@@ -2,7 +2,7 @@
 // Release workflow runs it on main and opens a pull request with the result.
 //   1. Each changeset's lines go under "## [Unreleased]" in CHANGELOG.md, in its Keep a Changelog
 //      sections (Added, Changed, Deprecated, Removed, Fixed, Security), with what's already there.
-//   2. The changesets are deleted, and tools/release.py makes the release: the biggest bump among them
+//   2. The changesets are deleted, and tools/release.mjs makes the release: the biggest bump among them
 //      (major, minor or patch), the notes under the new version, and the version in every file.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -55,5 +55,5 @@ const merged = order.map((s) => [s, [...(have[s] || []), ...(notes[s] || [])]]).
 fs.writeFileSync(logPath, log.slice(0, u.index) + `## [Unreleased]\n\n${merged}\n\n` + log.slice(u.index + u[0].length));
 for (const f of files) fs.rmSync(path.join(DIR, f));
 
-execFileSync('python3', [path.join(P, 'tools', 'release.py'), bump], { stdio: 'inherit' });
+execFileSync(process.execPath, [path.join(P, 'tools', 'release.mjs'), bump], { stdio: 'inherit' });
 execFileSync('npm', ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: P, stdio: 'inherit' });

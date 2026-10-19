@@ -46,7 +46,7 @@ jobs:
         run: node tools/tokens/build.mjs --check
       - name: Every file carries the same version
         if: matrix.group == 'checks'
-        run: python3 tools/release.py --check
+        run: node tools/release.mjs --check
       - name: Type check
         if: matrix.group == 'checks'
         run: npm run typecheck

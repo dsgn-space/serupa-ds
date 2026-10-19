@@ -15,7 +15,7 @@
 //   8. Text, control and focus colors pass WCAG contrast in every theme.
 //   9. Responsive variants switch at the screen-* breakpoints.
 //  10. base.css reads tokens only.
-//  11. One version everywhere (tools/release.py --check).
+//  11. One version everywhere (tools/release.mjs --check).
 //  12. Every stylesheet puts its rules in the dk.* cascade layers, declared in one order.
 //  13. Every width in a media query in src/ (CSS and matchMedia) is a screen-* value (max-width may be value - 0.02px or - 1px).
 //  14. One brand list: theme.js, the ThemeBrand type, Storybook's toolbar and the tests' theme lists follow tokens.json.
@@ -225,7 +225,7 @@ if (fs.existsSync(path.join(P, 'src', 'styles', 'base.css'))) {
 }
 
 // 11. one version everywhere (package.json, file headers, the version export, CHANGELOG)
-const rv = spawnSync('python3', ['-I', path.join(HERE, '..', 'release.py'), '--check'], { encoding: 'utf8' });
+const rv = spawnSync(process.execPath, [path.join(HERE, '..', 'release.mjs'), '--check'], { encoding: 'utf8' });
 check('version: package.json, file headers, the version export and CHANGELOG agree', rv.status === 0, (rv.stdout || '').trim().replace(/\n/g, '; '));
 
 // 7. tokens.css is generated from tokens.json (tools/tokens/build.mjs --check compares it byte for byte)

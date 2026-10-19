@@ -41,10 +41,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - if: steps.head.outputs.current
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - if: steps.head.outputs.current
         run: npm ci
       # Releases the version in package.json if it has no tag yet, before new changesets turn into the next
       # Release pull request. Otherwise a merge that lands right after a Release pull request would skip
