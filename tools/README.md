@@ -48,7 +48,7 @@ render the components from `src/` with `vitest-browser-react`, find things the w
 says which one broke, with the expected and received values and a screenshot. Shared helpers (resolved
 colors, WCAG contrast in all six themes) are in `tools/test/vitest/helpers.ts`.
 
-Checkbox, Combobox, Container, Divider, EmptyState, Field, Grid, Heading, Image, Input, Kbd, Link, List, Menu, Pagination, PasswordInput, Popover, Progress, Radio, SearchInput, SegmentedControl, Select, Stack, Text, Tooltip and VisuallyHidden have moved; the other components are still tested by the scripts in
+Checkbox, Combobox, Container, Divider, EmptyState, Field, Grid, Heading, Image, Input, Kbd, Link, List, Menu, Navbar, Pagination, PasswordInput, Popover, Progress, Radio, SearchInput, SegmentedControl, Select, Stack, Text, Tooltip and VisuallyHidden have moved; the other components are still tested by the scripts in
 the table below, listed in `SCRIPT_TESTED` in `contract.mjs`. Move them one at a time: write the test file,
 delete the script, take the component off `SCRIPT_TESTED`. A new component needs
 its own `<Name>.test.tsx`; the contract check fails without one.
