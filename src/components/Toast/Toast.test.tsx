@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle } from '../../../tools/test/vitest/helpers';
+import { Button } from '../Button/Button';
+import { Dialog } from '../Dialog/Dialog';
+import { Drawer } from '../Drawer/Drawer';
 import { toast, Toaster, type ToasterPosition } from './Toast';
 
 const toasts = () => [...document.querySelectorAll<HTMLElement>('.dk-toast')];
@@ -161,5 +164,61 @@ describe('Toast', () => {
     await settle(250);   // 550ms since the first: the replacement's own 400ms keeps it
     expect(titles()).toEqual(['Saved']);
     await expect.poll(() => titles().length, { timeout: 1500 }).toBe(0);
+  });
+});
+
+// While a Dialog or Drawer is open the page behind it is inert: the toasts and the live regions move into it.
+describe('Toast with a Dialog open', () => {
+  let setOpen: (o: boolean) => void = () => {};
+  function Modal({ drawer }: { drawer?: boolean }) {
+    const [open, set] = React.useState(false); setOpen = set;
+    const Box = drawer ? Drawer : Dialog;
+    return <>
+      <Toaster />
+      <Box open={open} onOpenChange={set} title="Edit">
+        <Button id="save" onClick={() => toast({ title: 'Couldn\'t save', tone: 'danger', action: { label: 'Retry', onClick: () => {} }, duration: 0 })}>Save</Button>
+      </Box>
+    </>;
+  }
+
+  test.each([['Dialog', false], ['Drawer', true]])('%s: a toast fired inside it can be seen and clicked, and the live regions sit inside it; they move back when it closes', async (_n, drawer) => {
+    await render(<Modal drawer={drawer} />);
+    React.act(() => setOpen(true));
+    const modal = q('dialog[open]');
+    await userEvent.click(q('#save'));
+    await expect.poll(() => toasts().length).toBe(1);
+    await landed();
+    const r = q('.dk-toast__action, .dk-toast button').getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    expect([modal.contains(q('.dk-toaster')), !!hit && q('.dk-toast').contains(hit)]).toEqual([true, true]);
+    // A danger toast interrupts: the assertive region, inside the dialog.
+    await expect.poll(() => q('[data-dk-announcer-assertive]')?.textContent).toBe('Couldn\'t save');
+    expect([modal.contains(q('[data-dk-announcer-assertive]')), modal.contains(q('[data-dk-announcer]')), q('[data-dk-announcer-assertive]').getAttribute('aria-live')]).toEqual([true, true, 'assertive']);
+    React.act(() => setOpen(false));
+    await expect.poll(() => q('.dk-toaster').parentElement === modal).toBe(false);
+    expect([modal.contains(q('[data-dk-announcer]')), modal.contains(q('[data-dk-announcer-assertive]'))]).toEqual([false, false]);
+  });
+
+  test('a Button loading inside a Dialog is announced from inside it', async () => {
+    function Loading() {
+      const [busy, setBusy] = React.useState(false);
+      return <Dialog open onOpenChange={() => {}} title="Upload"><Button id="up" loading={busy} onClick={() => setBusy(true)}>Upload</Button></Dialog>;
+    }
+    await render(<Loading />);
+    const modal = q('dialog[open]');
+    await userEvent.click(q('#up'));
+    await expect.poll(() => q('[data-dk-announcer]').textContent).toBe('Loading');
+    expect(modal.contains(q('[data-dk-announcer]'))).toBe(true);
+  });
+
+  test('two quick announcements are both said, in turn', async () => {
+    await render(<Toaster />);
+    const seen = new Set<string>();
+    const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) seen.add(t); });
+    watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
+    React.act(() => { toast('First'); toast('Second'); });
+    // Said in turn, or together when another message was just said; never only the second.
+    await expect.poll(() => [...seen].join(' | ')).toMatch(/First(\. | \| )Second/);
+    watch.disconnect();
   });
 });

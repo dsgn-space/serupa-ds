@@ -184,7 +184,8 @@ describe('Button', () => {
       await userEvent.click(el('link'), { force: true });
       expect(take()).toEqual([]);
       expect(location.hash).toBe(h0);
-      await expect.poll(() => announcer().textContent).toBe('Loading');
+      // Every button that started loading at once is said, in one message.
+      await expect.poll(() => announcer().textContent).toMatch(/(^|\. )Loading$/);
       await expect.element(page.getByRole('button', { name: 'Save', exact: true })).toBeInTheDocument();
       setLoading(false);
       await expect.poll(() => el('sub').hasAttribute('data-loading')).toBe(false);
