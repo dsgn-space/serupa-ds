@@ -7,12 +7,12 @@ import { defineConfig } from 'tsup';
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 const define = { __VERSION__: JSON.stringify(version) };
 
-// In the browser script, react comes from the page: window.React.
+// In the browser script, react and react-dom come from the page: window.React and window.ReactDOM.
 const windowReact = {
   name: 'window-react',
   setup(build) {
-    build.onResolve({ filter: /^react$/ }, () => ({ path: 'react', namespace: 'window-react' }));
-    build.onLoad({ filter: /.*/, namespace: 'window-react' }, () => ({ contents: 'module.exports = window.React;', loader: 'js' }));
+    build.onResolve({ filter: /^react(-dom)?$/ }, (a) => ({ path: a.path, namespace: 'window-react' }));
+    build.onLoad({ filter: /.*/, namespace: 'window-react' }, (a) => ({ contents: a.path === 'react-dom' ? 'module.exports = window.ReactDOM;' : 'module.exports = window.React;', loader: 'js' }));
   },
 };
 
