@@ -28,7 +28,8 @@ if (tokens.status !== 0) process.exit(tokens.status || 1);
 
 fs.mkdirSync(D, { recursive: true });
 if (!process.argv.includes('--css')) {
-  const r = spawnSync(process.execPath, [path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: 'inherit' });
+  // tsup reads tsconfig.json and bundles index.d.ts with TypeScript's compiler API: TypeScript 6's (tools/typescript/api.mjs).
+  const r = spawnSync(process.execPath, ['--import', path.join(P, 'tools', 'typescript', 'api.mjs'), path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: 'inherit' });
   if (r.status !== 0) process.exit(r.status || 1);
 }
 

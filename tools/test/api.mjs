@@ -6,7 +6,8 @@
 // (major); a new one is minor; any other change needs a look: narrowing a type breaks projects, widening doesn't.
 import fs from 'node:fs';
 import path from 'node:path';
-import ts from 'typescript';
+// TypeScript 7 has no compiler API yet, so this reads the types with TypeScript 6's (see tools/typescript/api.mjs).
+import ts from '@typescript/typescript6';
 import { HERE, read, report } from './lib.mjs';
 
 const BASE = path.join(HERE, 'baseline-api.d.ts');
