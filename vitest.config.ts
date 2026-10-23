@@ -36,7 +36,9 @@ export default defineConfig({
     browser: {
       enabled: true,
       headless: true,
-      provider: playwright(),
+      // Firefox moves the pointer again by itself after each layout change (here, in the test frame, to the wrong
+      // place), which threw a drag off as the thumb moved under it. Other browsers ignore Firefox's settings.
+      provider: playwright({ launchOptions: { firefoxUserPrefs: { 'layout.reflow.synthMouseMove': false } } }),
       // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
       instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
       viewport: { width: 900, height: 700 },

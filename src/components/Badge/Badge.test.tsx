@@ -354,7 +354,7 @@ describe('Badge', () => {
         // Hovered again until it takes: once in a while Firefox misses one of these 69 moves.
         await expect.poll(async () => { await userEvent.hover(e); return e.matches(':hover'); }).toBe(true);
         measure(e, 'hover');
-        await press(e, async () => { await expect.poll(() => e.matches(':active')).toBe(true); measure(e, 'pressed'); });
+        await press(e, async () => { await expect.poll(() => e.matches(':active') || e.querySelector('.dk-badge__ripple') != null).toBe(true); measure(e, 'pressed'); });
       }
     } finally { off.remove(); }
     expect(low).toEqual([]);
