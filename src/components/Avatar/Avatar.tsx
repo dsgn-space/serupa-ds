@@ -1,7 +1,11 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { initials } from "./initials";
+
+export { initials };
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
@@ -34,14 +38,6 @@ const SIZES = AVATAR_SIZES;
 export const AvatarGroupSize = /* @__PURE__ */ React.createContext<AvatarSize | null>(null);
 const STATUSES: readonly AvatarStatus[] = ["online", "busy", "away", "offline"];
 
-/** The initials of a name: the first letters of the first and last words ("Ada Lovelace" → "AL"), or one letter. */
-export function initials(name?: string): string {
-  const words = (name || "").trim().split(/\s+/).filter(Boolean);
-  if (!words.length) return "";
-  const first = Array.from(words[0])[0] || "";
-  const last = words.length > 1 ? Array.from(words[words.length - 1])[0] || "" : "";
-  return (first + last).toUpperCase();
-}
 
 /** A picture of a person, team or project, with initials or an icon when there's no picture. */
 export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>("Avatar", function Avatar(props, ref) {

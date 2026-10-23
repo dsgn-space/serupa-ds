@@ -55,6 +55,7 @@ interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">
     dismissLabel?: string;
 }
 declare const Alert: React.ForwardRefExoticComponent<AlertProps & React.RefAttributes<HTMLDivElement>>;
+declare function initials(name?: string): string;
 type AvatarSize = "lg" | "md" | "sm" | "xl" | "xs";
 type AvatarStatus = "away" | "busy" | "offline" | "online";
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -66,7 +67,6 @@ interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
     status?: AvatarStatus;
     statusLabel?: string;
 }
-declare function initials(name?: string): string;
 declare const Avatar: React.ForwardRefExoticComponent<AvatarProps & React.RefAttributes<HTMLSpanElement>>;
 interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -116,6 +116,14 @@ interface BreadcrumbItemProps extends React.AnchorHTMLAttributes<HTMLAnchorEleme
 }
 declare const BreadcrumbItem: React.ForwardRefExoticComponent<BreadcrumbItemProps & React.RefAttributes<HTMLAnchorElement>>;
 declare const Breadcrumb: React.ForwardRefExoticComponent<BreadcrumbProps & React.RefAttributes<HTMLElement>>;
+declare function buttonClass(opts?: {
+    variant?: ButtonVariant;
+    destructive?: boolean;
+    size?: ButtonSize;
+    iconOnly?: boolean;
+    iconPosition?: "left" | "right";
+    className?: string;
+}): string;
 type ButtonVariant = "ghost" | "link" | "outline" | "primary" | "secondary";
 type ButtonSize = "lg" | "md" | "sm";
 interface ButtonOwnProps {
@@ -141,14 +149,6 @@ interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTMLAttribu
     disabled?: boolean;
 }
 type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
-declare function buttonClass(opts?: {
-    variant?: ButtonVariant;
-    destructive?: boolean;
-    size?: ButtonSize;
-    iconOnly?: boolean;
-    iconPosition?: "left" | "right";
-    className?: string;
-}): string;
 declare const Button: {
     (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): null | React.ReactElement;
     (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): null | React.ReactElement;
@@ -371,6 +371,7 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">
 declare const Field: ((props: FieldProps) => React.ReactElement) & {
     displayName: string;
 };
+declare function formatFileSize(bytes: number): string;
 type FileRejection = {
     file: File;
     reason: "count" | "size" | "type";
@@ -391,7 +392,6 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "de
     hint?: React.ReactNode;
     removeLabel?: (name: string) => string;
 }
-declare function formatFileSize(bytes: number): string;
 declare const FileUpload: React.ForwardRefExoticComponent<FileUploadProps & React.RefAttributes<HTMLDivElement>>;
 type Space = 0 | 0.5 | 1 | 1.5 | 10 | 11 | 12 | 14 | 16 | 2 | 2.5 | 20 | 24 | 3 | 3.5 | 4 | 5 | 6 | 7 | 8 | 9;
 interface GridProps extends React.HTMLAttributes<HTMLElement> {
@@ -540,6 +540,8 @@ interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "mi
     incrementLabel?: string;
 }
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;
+type Entry = "end-ellipsis" | "start-ellipsis" | number;
+declare function paginationRange(page: number, count: number, siblings?: number, boundaries?: number): Entry[];
 interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
     count: number;
     page?: number;
@@ -554,8 +556,6 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     nextLabel?: string;
     pageLabel?: (page: number) => string;
 }
-type Entry = "end-ellipsis" | "start-ellipsis" | number;
-declare function paginationRange(page: number, count: number, siblings?: number, boundaries?: number): Entry[];
 declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<HTMLElement>>;
 interface PasswordInputProps extends Omit<InputProps, "rightIcon" | "type"> {
     visible?: boolean;

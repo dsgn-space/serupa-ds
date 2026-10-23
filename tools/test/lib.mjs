@@ -52,17 +52,39 @@ export const suffix = ENGINE === 'chromium' ? '' : '-' + ENGINE;
 export async function browser() {
   /** @type {Record<string, import('playwright').BrowserType>} */
   let pw;
-  try { pw = /** @type {any} */ (await import('playwright')); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
-  if (!pw[ENGINE]) { console.error(`Unknown SERUPA_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
+  try { pw = /** @type {any} */ (await import('playwright')); } catch { fail(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); }
+  if (!pw[ENGINE]) fail(`Unknown SERUPA_BROWSER "${ENGINE}" (chromium, firefox or webkit)`);
   // Headless Firefox finds no pointing device and reports (hover: none), so hover styles behind
   // @media (hover: hover) never apply. Give it a desktop's fine, hovering pointer (2 | 4).
   const opts = ENGINE === 'firefox' ? { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } : {};
-  try { return await pw[ENGINE].launch(opts); } catch (e) { console.error(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); process.exit(2); }
+  try { return await pw[ENGINE].launch(opts); } catch (e) { fail(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); }
 }
 
+// Under Vitest (npm run test:checks) each result is a test of its own, so the reporter lists it with the component
+// tests and -t picks one out; run with node, a suite prints its results and exits with whether they passed.
+const vt = process.env.VITEST ? await import('vitest') : null;
+
 export function report(name, results) {
+  if (vt) {
+    vt.describe(name, () => { for (const r of results) vt.test(r.name, () => { if (!r.ok) throw new Error(r.detail || 'failed'); }); });
+    return true;
+  }
   const failed = results.filter((r) => !r.ok);
   for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${r.name}${r.ok || !r.detail ? '' : '\n      ' + r.detail}`);
   console.log(`\n${name}: ${results.length - failed.length}/${results.length} passed`);
   return failed.length === 0;
 }
+
+// The end of a suite run with node: exit 0 if it passed. Under Vitest, which owns the process, a failed result is
+// already a failed test.
+export function done(ok) { if (!vt) process.exit(ok ? 0 : 1); }
+
+// A suite that can't run at all (nothing built, a tool missing): a failed test under Vitest, else exit 1.
+export function fail(message) {
+  if (vt) throw new Error(message);
+  console.log('FAIL  ' + message);
+  process.exit(1);
+}
+
+// The project a suite checks: the folder given after the script (node tools/test/foundation.mjs <dir>), or this one.
+export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT);

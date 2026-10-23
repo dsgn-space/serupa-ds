@@ -6,7 +6,7 @@
 import path from 'node:path';
 // TypeScript 7 has no compiler API yet, so this reads the types with TypeScript 6's (see tools/typescript/api.mjs).
 import ts from '@typescript/typescript6';
-import { PROJECT, report } from './lib.mjs';
+import { PROJECT, done, report } from './lib.mjs';
 
 const config = ts.getParsedCommandLineOfConfigFile(path.join(PROJECT, 'tsconfig.json'), {}, { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} });
 const program = ts.createProgram(config.fileNames, config.options);
@@ -49,4 +49,4 @@ for (const file of program.getSourceFiles()) {
   visit(file);
 }
 R.unshift({ name: `React's DOM attribute list was read (${DOM.size} names) and omit() calls were found (${calls})`, ok: DOM.size > 500 && calls > 40, detail: '' });
-process.exit(report('Props', R) ? 0 : 1);
+done(report('Props', R));

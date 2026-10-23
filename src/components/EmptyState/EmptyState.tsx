@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { asIcon, type IconSource } from "../Icon/Icon";
+import { type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 
 export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {

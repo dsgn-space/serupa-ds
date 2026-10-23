@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
