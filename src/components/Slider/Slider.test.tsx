@@ -13,6 +13,12 @@ const track = (id: string) => rect(el(id).querySelector('.dk-slider__track')!);
 const center = (e: Element) => { const r = rect(e); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; };
 // A point on the track at a share of its width, relative to the slider root (as Playwright's positions are).
 const at = (id: string, share: number) => { const t = track(id), r = rect(el(id)); return { x: t.left - r.left + t.width * share, y: r.height / 2 }; };
+// The pointer events a slider gets, with where they land, for the message when a drag test fails.
+const traced = (id: string) => {
+  const seen: string[] = [], t = track(id), log = (e: PointerEvent) => { seen.push(`${e.type.replace('pointer', '')}@${Math.round(e.clientX)}`); };
+  for (const k of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'lostpointercapture'] as const) el(id).addEventListener(k, log);
+  return () => `track ${Math.round(t.left)}..${Math.round(t.right)}: ${seen.join(' ')}`;
+};
 const press = (id: string, share: number) => userEvent.click(el(id), { position: at(id, share) });
 
 let calls: number[] = [], commits: string[] = [];
@@ -66,8 +72,9 @@ describe('Slider', () => {
 
   test('pointer: a press on the track jumps there (30) and dragging follows (60), with one commit at the end; the thumb takes focus', async () => {
     await setup();
+    const trace = traced('one');
     await drag(el('one'), at('one', 0.3), at('one', 0.6));
-    expect([calls[0], now('one'), commits.join(), document.activeElement === thumb('one')]).toEqual([30, 60, '60', true]);
+    expect([calls[0], now('one'), commits.join(), document.activeElement === thumb('one')], trace()).toEqual([30, 60, '60', true]);
     expect(calls.length).toBeGreaterThanOrEqual(2);
   });
 
@@ -76,8 +83,9 @@ describe('Slider', () => {
     const t = track('one'), r = rect(el('one'));
     // past the end, but inside the viewport: Firefox mangles mouse events outside it
     const beyond = { x: Math.min(t.right + 80, innerWidth - 10) - r.left, y: r.height / 2 };
+    const trace = traced('one');
     await drag(el('one'), at('one', 0.3), beyond);
-    expect([calls[0], now('one'), commits.join()]).toEqual([30, 100, '100']);
+    expect([calls[0], now('one'), commits.join()], trace()).toEqual([30, 100, '100']);
     expect(calls.length).toBeGreaterThanOrEqual(3);
   });
 

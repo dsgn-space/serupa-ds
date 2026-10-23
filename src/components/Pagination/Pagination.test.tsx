@@ -52,8 +52,10 @@ describe('Pagination', () => {
     await userEvent.click(named('pdef', 'Page 5'));
     expect(shown('pdef')).toBe('< 1 … 4 [5] 6 … 10 >');
     await userEvent.click(named('pdef', 'Next page'));
+    // Settled before the second click: in Firefox, one that lands mid-update can be lost.
+    await expect.poll(() => shown('pdef')).toBe('< 1 … 5 [6] 7 … 10 >');
     await userEvent.click(named('pdef', 'Next page'));
-    expect(shown('pdef')).toBe('< 1 … 6 [7] 8 9 10 >');
+    await expect.poll(() => shown('pdef')).toBe('< 1 … 6 [7] 8 9 10 >');
   });
 
   test('controlled: onPageChange gets the page and the parent sets it; clicking the current page does nothing; without updating it stays on its page', async () => {
