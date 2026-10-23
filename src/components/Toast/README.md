@@ -45,7 +45,7 @@ toast.dismiss(id);   // or toast.dismiss() for all
 - Each new toast is read out through the shared polite live region, so it doesn't interrupt.
 - The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1). Use `duration: 0` for anything people must act on, or better, an Alert or a Dialog.
 - Each toast has a close button; the Toaster is a named region people can find.
-- Titles and descriptions keep 4.5:1 and icons 3:1 in all six themes (`tools/test/toast.mjs`). Toasts slide in over 200ms, and appear at once with `prefers-reduced-motion`.
+- Titles and descriptions keep 4.5:1 and icons 3:1 in all six themes (`Toast.test.tsx`). Toasts slide in over 200ms, and appear at once with `prefers-reduced-motion`.
 
 ## Props
 
