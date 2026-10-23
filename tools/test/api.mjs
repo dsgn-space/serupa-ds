@@ -14,7 +14,20 @@ const update = process.argv.includes('--update');
 
 // The declarations as TypeScript prints them without comments: one stable text per release.
 const src = ts.createSourceFile('index.d.ts', read('dist/index.d.ts'), ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
-const now = ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed }).printFile(src);
+const printer = ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed });
+// A union's members come out in the order the compiler met them, which can change from one build to the next
+// (HTMLButtonElement | HTMLAnchorElement, then the other way round): sorted, the same API prints the same.
+const text = (n) => printer.printNode(ts.EmitHint.Unspecified, n, src);
+const sortUnions = (ctx) => (root) => {
+  const visit = (n) => {
+    n = ts.visitEachChild(n, visit, ctx);
+    if (!ts.isUnionTypeNode(n)) return n;
+    const types = [...n.types].sort((x, y) => text(x).localeCompare(text(y), 'en'));
+    return ctx.factory.updateUnionTypeNode(n, ctx.factory.createNodeArray(types));
+  };
+  return ts.visitNode(root, visit);
+};
+const now = printer.printFile(ts.transform(src, [sortUnions]).transformed[0]);
 
 if (update || !fs.existsSync(BASE)) {
   fs.writeFileSync(BASE, now);

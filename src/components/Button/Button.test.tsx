@@ -91,7 +91,7 @@ function App({ linkRef }: { linkRef?: React.Ref<HTMLAnchorElement> }) {
   </div>;
 }
 /** Renders App with links going through RouterLink (configure({ link })), and puts the default back afterwards. */
-async function withRouter(run: (linkRef: React.RefObject<HTMLAnchorElement>) => Promise<void>) {
+async function withRouter(run: (linkRef: React.RefObject<HTMLAnchorElement | null>) => Promise<void>) {
   const was = config.link;
   configure({ link: RouterLink });
   try {
