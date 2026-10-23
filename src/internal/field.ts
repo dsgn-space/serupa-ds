@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 /* What a Field hands the control inside it, at any depth: wrapped in a Tooltip, your own <EmailInput> or a form

@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { type IconSource } from "../Icon/Icon";
