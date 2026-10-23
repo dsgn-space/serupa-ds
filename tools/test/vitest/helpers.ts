@@ -1,4 +1,11 @@
 import { afterAll, beforeAll } from 'vitest';
+import { commands } from 'vitest/browser';
+
+declare module 'vitest/browser' {
+  interface BrowserCommands {
+    pointerDrag: (from: { x: number; y: number }, to: { x: number; y: number }, steps?: number) => Promise<void>;
+  }
+}
 
 // Helpers for the component tests: resolved colors, WCAG contrast, and the six themes.
 export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'] as const;
@@ -71,4 +78,11 @@ export function keepMotion(): void {
   const still = () => document.getElementById('serupa-still') as HTMLStyleElement | null;
   beforeAll(() => { const s = still(); if (s) s.disabled = true; });
   afterAll(() => { const s = still(); if (s) s.disabled = false; });
+}
+
+/** Drags with the real mouse from one point to another, each relative to the element's top-left corner, in `steps`
+ *  moves (commands.ts says why not userEvent.dragAndDrop). */
+export function drag(el: Element, from: { x: number; y: number }, to: { x: number; y: number }, steps = 5): Promise<void> {
+  const r = el.getBoundingClientRect();
+  return commands.pointerDrag({ x: r.left + from.x, y: r.top + from.y }, { x: r.left + to.x, y: r.top + to.y }, steps);
 }

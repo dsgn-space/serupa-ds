@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
+import { pointerDrag } from './tools/test/vitest/commands';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
@@ -39,6 +40,7 @@ export default defineConfig({
       // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
       instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
       viewport: { width: 900, height: 700 },
+      commands: { pointerDrag },
     },
     // npm run test:coverage: which lines of src/ the component tests run (V8, in Chromium), written to coverage/
     // (index.html to browse, coverage-summary.json for CI). Only the components with a <Name>.test.tsx count yet.
