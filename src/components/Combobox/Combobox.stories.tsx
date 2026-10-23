@@ -41,3 +41,28 @@ export const FromAServer: Story = {
     return <Field label="Country"><Combobox options={results} filter={false} loading={loading} onInputChange={setQ} placeholder="Start typing" emptyText={q ? 'No countries found' : 'Type to search'} /></Field>;
   },
 };
+
+const Col = ({ children }: { children: React.ReactNode }) => <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-3)' }}>{children}</div>;
+
+export const Sizes: Story = {
+  render: () => <Col>
+    <Combobox aria-label="Small" size="sm" options={COUNTRIES} defaultValue="Kenya" />
+    <Combobox aria-label="Medium" options={COUNTRIES} defaultValue="Kenya" />
+    <Combobox aria-label="Large" size="lg" options={COUNTRIES} defaultValue="Kenya" />
+  </Col>,
+};
+
+export const States: Story = {
+  render: () => <Col>
+    <Combobox aria-label="Empty" options={COUNTRIES} placeholder="Pick a country" />
+    <Combobox aria-label="Chosen, clearable" options={COUNTRIES} defaultValue="Japan" clearable />
+    <Combobox aria-label="With an icon" options={COUNTRIES} defaultValue="Peru" leftIcon="public" />
+    <Combobox aria-label="Invalid" options={COUNTRIES} defaultValue="Norway" invalid />
+    <Combobox aria-label="Disabled" options={COUNTRIES} defaultValue="Egypt" disabled />
+  </Col>,
+};
+
+export const InAFieldWithAnError: Story = {
+  name: 'In a field, with an error',
+  render: () => <Field label="Country" error="Pick the country on your passport." required><Combobox options={COUNTRIES} placeholder="Pick a country" /></Field>,
+};

@@ -26,6 +26,7 @@ const GROUPS = {
     ['Page groundwork', 'page.mjs'],
     ['Usage guides', 'guides.mjs'],
     ['Public API', 'api.mjs', ...update],
+    ['Own props off the DOM', 'props.mjs'],
   ],
   visual: [['Visual snapshots', 'visual.mjs', ...update]],
   storybook: [['Storybook', 'storybook.mjs']],

@@ -218,6 +218,18 @@ describe('Button', () => {
     expect(bt).toEqual([['loader', 'ring', 'true', 16, true, true, 'spin'], ['loader', 'ring', 'true', 20, true, true, 'spin']]);
   });
 
+  test('the text side gets the extra 4px in both directions: after a left icon on the right in LTR, on the left in RTL (and the reverse for a right icon)', async () => {
+    await render(<>
+      <div dir="ltr"><Button id="l-ltr" leftIcon="save">Save</Button><Button id="r-ltr" rightIcon="arrow_forward">Next</Button></div>
+      <div dir="rtl"><Button id="l-rtl" leftIcon="save">Save</Button><Button id="r-rtl" rightIcon="arrow_forward">Next</Button></div>
+    </>);
+    const pad = (id: string) => { const cs = getComputedStyle(el(id)); return [cs.paddingLeft, cs.paddingRight]; };
+    expect(pad('l-ltr')).toEqual(['12px', '16px']);
+    expect(pad('r-ltr')).toEqual(['16px', '12px']);
+    expect(pad('l-rtl')).toEqual(['16px', '12px']);
+    expect(pad('r-rtl')).toEqual(['12px', '16px']);
+  });
+
   test('no warnings for correct use; it warns on an icon-only button without a label', async () => {
     expect(warnings).toEqual([]);
     await render(<Button icon="close" />);

@@ -28,3 +28,20 @@ export const Collapsed: Story = {
     children: ['Home', 'Acme', 'Design', 'Projects', 'Website redesign', 'Settings'].map((l, i, a) => <BreadcrumbItem key={l} href={i < a.length - 1 ? '#' : undefined}>{l}</BreadcrumbItem>),
   },
 };
+
+export const LongLabels: Story = {
+  name: 'Long labels',
+  args: {
+    children: [
+      <BreadcrumbItem key="h" href="#" icon="home">Home</BreadcrumbItem>,
+      <BreadcrumbItem key="c" href="#">Customer research and interviews, autumn</BreadcrumbItem>,
+      <BreadcrumbItem key="n">Notes from the session with the support team about the new onboarding</BreadcrumbItem>,
+    ],
+  },
+  decorators: [(Story) => <div style={{ maxWidth: 'var(--container-sm)' }}><Story /></div>],
+};
+
+export const TwoLevels: Story = {
+  name: 'Two levels',
+  args: { children: [<BreadcrumbItem key="p" href="#">Projects</BreadcrumbItem>, <BreadcrumbItem key="w">Website redesign</BreadcrumbItem>] },
+};

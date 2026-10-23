@@ -31,7 +31,7 @@ export default defineConfig([
     entry: { [name]: file },
     format: ['iife'],
     outExtension: () => ({ js: '.js' }),
-    target: 'es2019',
+    target: 'es2022',
     platform: 'browser',
     clean: false,
     define,
