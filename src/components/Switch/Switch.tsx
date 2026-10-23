@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, SIZES } from "../../internal/cn";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 
 export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'role'> {
   /** 'sm' (28 by 16px track, text-xs), 'md' (36 by 20px, text-sm, default) or 'lg' (44 by 24px, text-base). */
@@ -24,6 +25,7 @@ const OWN = { size: 1, invalid: 1, description: 1, labelPosition: 1, children: 1
 
 /** An on/off setting that applies at once: a native checkbox with role="switch" (ref, checked, onChange and every input attribute go to it), drawn as a track and thumb; className and style go to the <label> around it. */
 export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>("Switch", function Switch(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);

@@ -3,6 +3,7 @@ import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { asIcon, Icon } from "../Icon/Icon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -35,6 +36,7 @@ const decimals = (n: number) => { const s = String(n); const i = s.indexOf(".");
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
 export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>("NumberInput", function NumberInput(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);

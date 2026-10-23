@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 
 export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'> {
   /** 'sm' (text-xs), 'md' (text-sm, default) or 'lg' (text-base): Input's text sizes and side padding. */
@@ -29,6 +30,7 @@ const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1
 
 /** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box that holds the count; className and style go to the box. Label it with <label htmlFor> or aria-label. */
 export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaProps>("Textarea", function Textarea(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);

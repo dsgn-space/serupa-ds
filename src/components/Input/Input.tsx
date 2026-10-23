@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** 'sm' (24px, text-xs), 'md' (32px, text-sm, default) or 'lg' (44px, text-base): the control heights, like Button. */
@@ -20,6 +21,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
    prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
 /** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */
 export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>("Input", function Input(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, className: 1, style: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);

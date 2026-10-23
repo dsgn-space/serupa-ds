@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { named } from "../../internal/component";
+import { FieldContext, type FieldControl } from "../../internal/field";
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
@@ -25,7 +26,7 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
 }
 
 /* Field: a label, an optional hint and an error message around one form control. It gives the control an id
-   (unless it has one), links the label to it, adds the hint and error to its aria-describedby, and passes
+   (unless it has one), at any depth (through FieldContext), links the label to it, adds the hint and error to its aria-describedby, and passes
    invalid (with error), aria-required (with required) and disabled. group renders a <fieldset> with a <legend>
    instead, for a set of checkboxes or radios, and puts the hint and error on the fieldset. */
 /** The props Field reads from and hands to its control (a component like Input, or a DOM element). */
@@ -47,14 +48,16 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
     !props.required && props.optional ? <span className="dk-field__optional" key="opt">{typeof props.optional === "string" ? props.optional : "(optional)"}</span> : null];
   const label = props.label == null ? null : group
     ? React.createElement("legend", { className: "dk-field__label", key: "label" }, ...labelKids)
-    : React.createElement("label", { className: "dk-field__label", htmlFor: controlId, key: "label" }, ...labelKids);
+    : React.createElement("label", { className: "dk-field__label", htmlFor: controlId, id: base + "-label", key: "label" }, ...labelKids);
   const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
   const error = hasError ? <div className="dk-field__error" key="error"><Icon name="error" className="dk-field__error-icon" /><span id={errorId as string}>{props.error}</span></div> : null;
   const described = cn(hintId, errorId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
     if (!React.isValidElement(el)) return el;
-    const p = el.props as ControlProps;
+    const p = el.props as ControlProps & { children?: React.ReactNode };
     const add: ControlProps = {}, dom = typeof el.type === "string";
+    // A plain element holding other elements is a wrapper, not the control: the control inside reads FieldContext.
+    if (isControl && dom && React.Children.toArray(p.children).some(React.isValidElement)) return el;
     if (isControl) {
       if (!p.id) add.id = controlId;
       if (described) add["aria-describedby"] = cn(p["aria-describedby"], described);
@@ -70,16 +73,22 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
       <fieldset {...rest} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
         {label}
         {hint}
-        <div className="dk-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
+        <FieldContext.Provider value={null}>
+          <div className="dk-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
+        </FieldContext.Provider>
         {error}
       </fieldset>
     );
   }
+  // The control can be any depth down (in a Tooltip, a wrapper component): it reads this.
+  const control: FieldControl = { id: controlId, labelId: props.label == null ? undefined : base + "-label", describedBy: described || undefined, required: props.required || undefined, invalid: hasError || undefined, disabled: props.disabled || undefined };
   return (
     <div {...rest} className={cls} data-component="field">
       {label}
       {hint}
-      <div className="dk-field__control" key="control">{child ? pass(child, true) : props.children}</div>
+      <FieldContext.Provider value={control}>
+        <div className="dk-field__control" key="control">{child ? pass(child, true) : props.children}</div>
+      </FieldContext.Provider>
       {error}
     </div>
   );
