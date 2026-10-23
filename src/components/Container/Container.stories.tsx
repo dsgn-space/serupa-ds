@@ -25,3 +25,13 @@ export const Sizes: Story = {
 export const Prose: Story = {
   args: { size: 'prose', children: <p className="text-base text-text">Long text reads best at around 65 to 75 characters a line. The prose size keeps an article to that width on a wide screen, and the side padding keeps it off the edges on a phone.</p> },
 };
+
+export const FullWidth: Story = {
+  name: 'Full width',
+  args: { size: 'full', children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text">size="full" spans the page, keeping only the side padding.</div> },
+};
+
+export const NotPadded: Story = {
+  name: 'No side padding',
+  args: { size: 'md', padded: false, children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text">padded={'{false}'}: no padding at the sides, for content that brings its own.</div> },
+};

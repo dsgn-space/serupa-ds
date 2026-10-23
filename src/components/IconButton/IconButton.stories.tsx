@@ -38,3 +38,22 @@ export const SizesAndShapes: Story = {
     <IconButton icon="edit" label="Edit" variant="secondary" size="lg" shape="round" />
   </div>,
 };
+
+export const States: Story = {
+  render: () => <div className="flex gap-3 items-center">
+    <IconButton icon="edit" label="Edit" variant="secondary" />
+    <IconButton icon="edit" label="Edit (disabled)" variant="secondary" disabled />
+    <IconButton icon="sync" label="Syncing" variant="secondary" loading />
+    <IconButton icon="add" label="Add (disabled)" variant="primary" disabled />
+    <IconButton icon="refresh" label="Refreshing" variant="primary" loading />
+    <IconButton icon="delete" label="Delete (disabled)" destructive disabled />
+  </div>,
+};
+
+export const AsALink: Story = {
+  name: 'As a link',
+  render: () => <div className="flex gap-3 items-center">
+    <IconButton icon="open_in_new" label="Open the docs" variant="outline" href="#docs" />
+    <IconButton icon="help" label="Help" href="#help" shape="round" />
+  </div>,
+};

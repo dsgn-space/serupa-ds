@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
-import { pointerDown, pointerDrag, pointerUp } from './tools/test/vitest/commands';
+import { pointerDown, pointerDrag, pointerUp } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
@@ -40,13 +40,13 @@ export default defineConfig({
         name: 'components',
         include: ['src/**/*.test.tsx'],
         setupFiles: ['./tools/test/vitest/setup.ts'],
+        // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
+        // one file landed in the middle of a drag in another. One file at a time there.
+        fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
         browser: {
           enabled: true,
           headless: true,
           provider: playwright(),
-          // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
-          // one file landed in the middle of a drag in another. One file at a time there.
-          fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
           // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
           instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
           viewport: { width: 900, height: 700 },

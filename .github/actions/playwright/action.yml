@@ -1,11 +1,13 @@
 name: Playwright Chromium
-description: Chromium for the test suite, cached per Playwright version so only the system packages install each run.
+description: Chromium and the system packages the runner lacks for it, both cached, so a run downloads neither.
 runs:
   using: composite
   steps:
     - id: version
       shell: bash
-      run: echo "playwright=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      run: |
+        echo "playwright=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+        echo "image=${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
     - id: cache
       uses: actions/cache@v6
       with:
@@ -13,7 +15,16 @@ runs:
         key: playwright-chromium-${{ runner.os }}-${{ steps.version.outputs.playwright }}
     - if: steps.cache.outputs.cache-hit != 'true'
       shell: bash
-      run: npx playwright install --with-deps chromium
-    - if: steps.cache.outputs.cache-hit == 'true'
-      shell: bash
-      run: npx playwright install-deps chromium
+      run: npx playwright install chromium
+    # The system packages (fonts, xvfb, libnss3…) come from Ubuntu's mirror, which is sometimes very slow: a
+    # shard could spend 10 minutes downloading 25 MB. Their .deb files are cached per runner image and
+    # Playwright version, so apt installs them from disk and only reads the package lists.
+    - id: apt-cache
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/playwright-debs
+        key: playwright-debs-${{ runner.os }}-${{ steps.version.outputs.image }}-${{ steps.version.outputs.playwright }}
+        # A new runner image (weekly) starts from the last folder: apt downloads only what changed.
+        restore-keys: playwright-debs-${{ runner.os }}-
+    - shell: bash
+      run: node "$GITHUB_ACTION_PATH/install-deps.mjs" chromium "$HOME/.cache/playwright-debs"

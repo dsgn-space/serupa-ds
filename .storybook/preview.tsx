@@ -23,6 +23,7 @@ const DEFAULT_BRAND = BRANDS[0];
 const apply = (g: Record<string, unknown> | undefined) => {
   if (!g) return;
   document.documentElement.setAttribute('data-theme', `${g.brand || DEFAULT_BRAND}-${g.mode || 'light'}`);
+  document.documentElement.setAttribute('dir', g.dir === 'rtl' ? 'rtl' : 'ltr');
 };
 const channel = addons.getChannel();
 channel.on('setGlobals', (e: { globals?: Record<string, unknown> }) => apply(e.globals));   // already merged, with a story's own globals on top
@@ -30,9 +31,11 @@ channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply
 
 const WithTheme: Decorator = (Story, context) => {
   const theme = `${context.globals.brand || DEFAULT_BRAND}-${context.globals.mode || 'light'}`;
+  const dir = context.globals.dir === 'rtl' ? 'rtl' : 'ltr';
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    document.documentElement.setAttribute('dir', dir);
+  }, [theme, dir]);
   return <Story />;
 };
 
@@ -48,8 +51,14 @@ const preview: Preview = {
       toolbar: { title: 'Mode', icon: 'contrast', dynamicTitle: true, items: [
         { value: 'light', title: 'Light', icon: 'sun' }, { value: 'dark', title: 'Dark', icon: 'moon' }] },
     },
+    // Right-to-left (Arabic, Hebrew…): the whole page's dir, so every story can be checked mirrored.
+    dir: {
+      description: 'Text direction',
+      toolbar: { title: 'Direction', icon: 'transfer', dynamicTitle: true, items: [
+        { value: 'ltr', title: 'Left to right' }, { value: 'rtl', title: 'Right to left' }] },
+    },
   },
-  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light' },
+  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr' },
   decorators: [WithTheme],
   parameters: {
     layout: 'padded',

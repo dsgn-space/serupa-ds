@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 // Trim Serupa's bundle.css to the classes a product actually uses.
 //
-// usage:  npx serupa-purge <source files or folders...> [-o out.css] [--css path/to/bundle.css] [--keep class ... | --keep @file]
+// usage:  npx serupa-purge <source files or folders...> [-o out.css] [--css path/to/bundle.css] [--components] [--keep class ... | --keep @file]
 //
 // Scans the sources (HTML, JSX/TSX, JS/TS, Vue, Svelte, templates…) for anything that looks like a class name
 // and writes a copy of bundle.css (by default the one in this package) with only the rules those classes need.
-// Kept always: the component styles (dk-*, which components add at runtime), @keyframes, @property,
+// Kept always: the component styles (dk-*, which components add at runtime), the few utility classes components
+// add themselves (sr-only on the screen-reader announcer; dist/components.json lists them), @keyframes, @property,
 // @font-face and rules that select no class. Responsive variants are matched by their full name ("md:flex").
+//
+// --components also drops the styles of components the sources never name. A component counts as used when one
+// of its exports appears as a word (<Button, Serupa.Button, import { Button }), and it keeps the components it
+// needs (IconButton keeps Button and Icon), from dist/components.json. Use it when the sources name every
+// component the product renders.
 //
 // Class names must appear whole in the source: "md:grid-cols-3" is found, but a name built at runtime
 // ("grid-cols-" + n) is not. List those with --keep, or a safelist file with --keep @file.
@@ -60,8 +66,19 @@ function blocks(s) {
 const unescape = (c) => c.replace(/\\([0-9a-fA-F]{1,6}) ?/g, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/\\(.)/g, '$1');
 const classesIn = (sel) => [...sel.matchAll(/\.((?:[A-Za-z0-9_-]|\\[0-9a-fA-F]{1,6} ?|\\.)+)/g)].map((m) => unescape(m[1]));
 
-export function purge(css, used) {
-  const keepSelector = (sel) => classesIn(sel).every((c) => c.startsWith('dk-') || used.has(c));
+// The dk-* classes to drop: those of the components in the manifest (dist/components.json) that the sources never
+// name, nor any component they name needs.
+export function unusedComponentClasses(manifest, used) {
+  const words = new Set([...used].flatMap((w) => w.split(/[./:]/)));
+  const all = manifest.components, keep = new Set();
+  const add = (n) => { if (keep.has(n) || !all[n]) return; keep.add(n); all[n].uses.forEach(add); };
+  for (const [n, c] of Object.entries(all)) if (c.exports.some((e) => words.has(e))) add(n);
+  const kept = new Set([...keep].flatMap((n) => all[n].classes));
+  return new Set(Object.values(all).flatMap((c) => c.classes).filter((c) => !kept.has(c)));
+}
+
+export function purge(css, used, drop = new Set()) {
+  const keepSelector = (sel) => classesIn(sel).every((c) => (c.startsWith('dk-') && !drop.has(c)) || used.has(c));
   const walk = (s) => {
     const out = [];
     for (const { kind, pre, body } of blocks(s)) {
@@ -96,19 +113,23 @@ export function usedClasses(sources, keep = []) {
 
 function main(argv) {
   const sources = [], keep = [];
-  let out = 'bundle.min.css', css = path.join(HERE, '..', 'dist', 'bundle.css'), mode = 'src';
+  let out = 'bundle.min.css', css = path.join(HERE, '..', 'dist', 'bundle.css'), mode = 'src', components = false;
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '-h' || a === '--help') { console.log(fs.readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\nimport ')[0].replace(/^#!.*\n/, '').replace(/^\/\/ ?/gm, '')); return; }
     if (a === '-o' || a === '--out') { out = argv[++i]; mode = 'src'; }
     else if (a === '--css') { css = argv[++i]; mode = 'src'; }
     else if (a === '--keep') mode = 'keep';
+    else if (a === '--components') components = true;
     else if (mode === 'keep' && !a.startsWith('-')) keep.push(a);
     else sources.push(a);
   }
-  if (!sources.length) { console.error('usage: serupa-purge <source files or folders...> [-o out.css] [--css bundle.css] [--keep class ...]'); process.exit(2); }
+  if (!sources.length) { console.error('usage: serupa-purge <source files or folders...> [-o out.css] [--css bundle.css] [--components] [--keep class ...]'); process.exit(2); }
   const full = fs.readFileSync(css, 'utf8');
-  const result = purge(full, usedClasses(sources, keep));
+  const manifest = JSON.parse(fs.readFileSync(path.join(HERE, '..', 'dist', 'components.json'), 'utf8'));
+  const used = usedClasses(sources, [...keep, ...manifest.runtimeUtilities]);
+  const drop = components ? unusedComponentClasses(manifest, used) : new Set();
+  const result = purge(full, used, drop);
   fs.writeFileSync(out, result + '\n');
   console.log(`${out}: ${(result.length / 1024).toFixed(1)} KB (from ${Math.round(full.replace(/\/\*[\s\S]*?\*\//g, '').length / 1024)} KB)`);
 }
