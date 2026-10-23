@@ -16,7 +16,9 @@ const tag = `v${pkg.version}`;
 
 if (run('git', ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`])) { console.log(`${tag} is already released.`); process.exit(0); }
 const log = fs.readFileSync(path.join(P, 'CHANGELOG.md'), 'utf8');
-const m = new RegExp(`^## \\[${pkg.version.replace(/\./g, '\\.')}\\][^\\n]*\\n([\\s\\S]*?)(?=^## \\[)`, 'm').exec(log);
+// Every regex character in the version escaped, not just the dots (a build suffix like 1.0.0+abc has a +).
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const m = new RegExp(`^## \\[${escape(pkg.version)}\\][^\\n]*\\n([\\s\\S]*?)(?=^## \\[)`, 'm').exec(log);
 if (!m) { console.log(`CHANGELOG.md has no ${pkg.version} section yet: nothing to release.`); process.exit(0); }
 
 run('npm', ['run', 'build'], { stdio: 'inherit' });
