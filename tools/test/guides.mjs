@@ -4,7 +4,7 @@
 //   node tools/test/guides.mjs
 import fs from 'node:fs';
 import path from 'node:path';
-import { PROJECT, report } from './lib.mjs';
+import { PROJECT, report, done } from './lib.mjs';
 
 const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'Props', 'Component tokens'];
 const DIR = path.join(PROJECT, 'src', 'components');
@@ -24,4 +24,4 @@ for (const name of fs.readdirSync(DIR).sort()) {
   const inOrder = order.every((v, i) => !i || v > order[i - 1]);
   t(`${name}: the guide has ${REQUIRED.join(', ')}, in that order`, !missing.length && inOrder, missing.length ? `missing: ${missing.join(', ')}` : `order: ${headings.join(' · ')}`);
 }
-process.exit(report('Usage guides', R) ? 0 : 1);
+done(report('Usage guides', R));

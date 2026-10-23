@@ -8,7 +8,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { publint } from 'publint';
 import { formatMessage } from 'publint/utils';
-import { PROJECT, report } from './lib.mjs';
+import { PROJECT, report, done, fail } from './lib.mjs';
 
 // The package exactly as a release ships it (tools/publish.mjs): the files package.json lists, and a package.json
 // without scripts or devDependencies. Packed from a copy, so npm doesn't run the build again.
@@ -22,7 +22,7 @@ delete shipped.devDependencies;
 fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(shipped, null, 2) + '\n');
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const packed = spawnSync(npm, ['pack', '--json', '--pack-destination', tmp], { cwd: dir, encoding: 'utf8' });
-if (packed.status !== 0) { console.error(packed.stderr); process.exit(1); }
+if (packed.status !== 0) fail('npm pack: ' + packed.stderr);
 const tarball = path.join(tmp, JSON.parse(packed.stdout)[0].filename);
 const R = [];
 
@@ -41,4 +41,4 @@ const attw = spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', '@a
 R.push({ name: 'Are the Types Wrong: every export\'s types resolve in Node 16+ (ESM) and bundlers', ok: attw.status === 0, detail: (attw.stdout + attw.stderr).split('\n').filter((l) => /💀|❌|⚠️|Error/.test(l) && !/ignored/.test(l)).slice(0, 10).join(' | ') });
 
 fs.rmSync(tmp, { recursive: true, force: true });
-process.exit(report('Package lint', R) ? 0 : 1);
+done(report('Package lint', R));

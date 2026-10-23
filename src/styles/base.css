@@ -9,7 +9,8 @@
 :where(*, *::before, *::after) { box-sizing: border-box; }
 
 /* Native controls, scrollbars and form fields follow the theme's light or dark mode. */
-:where(:root) { color-scheme: light; }
+/* With the data-brand / data-mode axes, tokens.css sets it (light dark for auto), so the root is left alone. */
+:where(:root:not([data-brand], [data-mode])), :where([data-theme$="-light"]) { color-scheme: light; }
 :where([data-theme$="-dark"]) { color-scheme: dark; }
 
 :where(html) {

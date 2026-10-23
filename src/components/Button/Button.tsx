@@ -1,12 +1,17 @@
+"use client";
 import * as React from "react";
 import { cn, type DataAttributes, omit, oneOf, SIZES } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
-import { asIcon, type IconSource } from "../Icon/Icon";
+import { type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
 import { component } from "../../internal/component";
+import { BUTTON_VARIANTS, buttonClass } from "./buttonClass";
+
+export { buttonClass };
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -54,17 +59,8 @@ export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTML
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
-const VARIANTS: readonly ButtonVariant[] = ["primary", "secondary", "outline", "ghost", "link"];
 const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingText: 1 } as const;
 
-/** The button's class names, for styling any other element as a button. iconPosition adds the optical padding for one icon beside a label. */
-export function buttonClass(opts?: { variant?: ButtonVariant; destructive?: boolean; size?: ButtonSize; iconOnly?: boolean; iconPosition?: 'left' | 'right'; className?: string }): string {
-  opts = opts || {};
-  const v = oneOf(VARIANTS, opts.variant, "primary");
-  const s = oneOf(SIZES, opts.size, "md");
-  const iconOnly = !!opts.iconOnly, pos = opts.iconPosition;
-  return cn("dk-btn", "dk-btn--" + v, opts.destructive && "dk-btn--destructive", "dk-btn--size-" + s, iconOnly && "dk-btn--icon-only", !iconOnly && (pos === "left" || pos === "right") && "dk-btn--icon-" + pos, opts.className);
-}
 
 function slot(source: IconSource, side: string): React.ReactNode {
   const node = asIcon(source);
@@ -79,7 +75,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
   const isLink = rest.href != null;
   const iconOnly = props.icon != null;
   const pos = props.leftIcon != null && props.rightIcon == null ? "left" : props.rightIcon != null && props.leftIcon == null ? "right" : undefined;
-  const variant = oneOf(VARIANTS, props.variant, "primary");
+  const variant = oneOf(BUTTON_VARIANTS, props.variant, "primary");
   const size = oneOf(SIZES, props.size, "md");
   let classes = buttonClass({ variant: variant, size: size, destructive: props.destructive, iconOnly: iconOnly, iconPosition: pos, className: props.className });
   if (iconOnly && !rest["aria-label"] && !rest["aria-labelledby"] && !rest.title) {

@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { HERE, read, writePage, browser, cleanup, suffix, ENGINE } from './lib.mjs';
+import { HERE, read, writePage, browser, cleanup, suffix, ENGINE, report, done } from './lib.mjs';
 
 const BASE = path.join(HERE, `baseline-utilities${suffix}.json`);
 const update = process.argv.includes('--update');
@@ -73,4 +73,7 @@ for (const c of noEffect) console.log('NO EFFECT .' + c);
 const ok = !changed.length && !missing.length;
 console.log(`\nUtilities (${ENGINE}): ${classes.length} classes, ${changed.length} changed, ${added.length} new, ${missing.length} missing${ok ? ' — all match the baseline' : ''}`);
 if (!ok) console.log('If the changes are intended, run with --update to accept them.');
-process.exit(ok ? 0 : 1);
+done(report('Utility classes', [
+  { name: `${classes.length} classes do what the baseline says`, ok: !changed.length, detail: 'changed: ' + changed.join(' ') + ' (run node tools/test/utilities.mjs --update if intended)' },
+  { name: 'No class is gone (removing or renaming one is breaking)', ok: !missing.length, detail: 'missing: ' + missing.join(' ') },
+]));

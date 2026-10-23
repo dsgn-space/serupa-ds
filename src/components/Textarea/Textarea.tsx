@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";

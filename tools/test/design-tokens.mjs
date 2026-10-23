@@ -5,25 +5,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { HERE, projectArg, report, done, fail } from './lib.mjs';
 
-const HERE = path.dirname(new URL(import.meta.url).pathname);
-const P = path.resolve(process.argv[2] || path.join(HERE, '..', '..'));
+const P = projectArg();
 const D = path.join(P, 'design-tokens');
 const BASE_FILE = 'serupa.tokens.json';
 const NS = 'com.serupa';
 const R = [];
-const check = (name, ok, detail = '') => R.push([name, !!ok, detail]);
-const report = () => {
-  for (const [n, ok, d] of R) console.log(`${ok ? 'PASS' : 'FAIL'}  ${n}` + (ok || !d ? '' : `\n      ${d}`));
-  const failed = R.filter((x) => !x[1]);
-  console.log(`\nDesign tokens: ${R.length - failed.length}/${R.length} passed`);
-  process.exit(failed.length ? 1 : 0);
-};
+const check = (name, ok, detail = '') => R.push({ name, ok: !!ok, detail });
 const load = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
 
 const r = spawnSync(process.execPath, [path.join(HERE, '..', 'tokens', 'export.mjs'), '--check'], { cwd: P, encoding: 'utf8' });
 check('design-tokens/ is in step with tokens.json', r.status === 0, (r.stdout || '').trim());
-if (r.status !== 0 && !fs.existsSync(path.join(D, BASE_FILE))) report();
+if (r.status !== 0 && !fs.existsSync(path.join(D, BASE_FILE))) fail(`design-tokens/${BASE_FILE} is missing: ${(r.stdout || '').trim()}`);
 
 const base = load(path.join(D, BASE_FILE));
 const themes = Object.fromEntries(fs.readdirSync(path.join(D, 'themes')).sort().map((f) => [f.slice(0, -'.tokens.json'.length), load(path.join(D, 'themes', f))]));
@@ -88,4 +82,4 @@ const missing = Object.values(src).filter((g) => isObj(g) && Array.isArray(g.tok
 check('every token in tokens.json is exported (typed, as an alias, or as a CSS value)', !missing.length, missing.slice(0, 10).join(', '));
 const nAlias = new Set(Object.values(themes).map((t) => Object.keys(t.color || {}).length));
 check(`each of the ${Object.keys(themes).length} theme files has the same aliases`, nAlias.size === 1, [...nAlias].join(', '));
-report();
+done(report('Design tokens', R));

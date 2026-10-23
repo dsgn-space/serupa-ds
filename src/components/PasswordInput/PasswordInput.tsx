@@ -1,6 +1,8 @@
+"use client";
 import * as React from "react";
 import { cn, isInvalid, omit, oneOf } from "../../internal/cn";
-import { asIcon, Icon } from "../Icon/Icon";
+import { Icon } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";

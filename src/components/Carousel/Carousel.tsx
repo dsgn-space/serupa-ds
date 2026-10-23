@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";

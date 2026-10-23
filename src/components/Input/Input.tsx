@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
-import { asIcon, type IconSource } from "../Icon/Icon";
+import { type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";
 

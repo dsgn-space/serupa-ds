@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { compare, datePattern, day, formatDate, isoDate, isValid, parseDate } from "../../internal/dates";
@@ -6,6 +7,7 @@ import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";
+import { useFormReset } from "../../internal/useFormReset";
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> {
   /** The chosen day (controlled), or null. Use with onValueChange. */
@@ -54,6 +56,11 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const box = React.useRef<HTMLSpanElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
   const shown = React.useRef(value ? value.getTime() : null);
+  useFormReset(field, () => {
+    if (controlled) return;
+    const d = isValid(props.defaultValue) ? day(props.defaultValue) : null;
+    shown.current = d ? d.getTime() : null; setOwn(d); setText(d ? formatDate(d, locale) : ""); setOpen(false);
+  });
   // A new value from outside rewrites the text.
   if ((value ? value.getTime() : null) !== shown.current) { shown.current = value ? value.getTime() : null; const t = value ? formatDate(value, locale) : ""; if (t !== text) setText(t); }
 

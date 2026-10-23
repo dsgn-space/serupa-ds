@@ -5,7 +5,7 @@
 // preview.html, a test next to it (<Name>.test.tsx, Vitest), and a visual baseline in every theme.
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PROJECT, tokensCss, report } from './lib.mjs';
+import { HERE, PROJECT, tokensCss, report, done } from './lib.mjs';
 
 const SKIP = [];
 // Parts a component doesn't need, and why. Keep the reason: an exemption without one is a gap.
@@ -57,4 +57,4 @@ t('components are made with component() or named() (internal/component.ts), so u
 
 
 console.log(`(${comps.length} components)`);
-process.exit(report('Contract', R) ? 0 : 1);
+done(report('Contract', R));

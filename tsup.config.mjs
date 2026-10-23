@@ -1,18 +1,18 @@
-// Builds the components (src/) into dist/: index.js (ESM, React as a peer dependency), index.d.ts and
-// serupa.iife.js (the browser script that reads window.React and sets window.Serupa). The CSS and the other
-// files come from tools/build/build.mjs, which runs this first: npm run build.
+// Builds dist/index.d.ts and dist/icons.d.ts, and serupa.iife.js (the browser script that reads window.React and
+// sets window.Serupa). The ES modules (dist/js/, one file per source file) and the CSS come from
+// tools/build/build.mjs, which runs this first: npm run build.
 import fs from 'node:fs';
 import { defineConfig } from 'tsup';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 const define = { __VERSION__: JSON.stringify(version) };
 
-// In the browser script, react comes from the page: window.React.
+// In the browser script, react and react-dom come from the page: window.React and window.ReactDOM.
 const windowReact = {
   name: 'window-react',
   setup(build) {
-    build.onResolve({ filter: /^react$/ }, () => ({ path: 'react', namespace: 'window-react' }));
-    build.onLoad({ filter: /.*/, namespace: 'window-react' }, () => ({ contents: 'module.exports = window.React;', loader: 'js' }));
+    build.onResolve({ filter: /^react(-dom)?$/ }, (a) => ({ path: a.path, namespace: 'window-react' }));
+    build.onLoad({ filter: /.*/, namespace: 'window-react' }, (a) => ({ contents: a.path === 'react-dom' ? 'module.exports = window.ReactDOM;' : 'module.exports = window.React;', loader: 'js' }));
   },
 };
 
@@ -22,17 +22,10 @@ const only = process.env.SERUPA_BUILD;
 export default defineConfig([
   ...(only === 'iife' ? [] : [{
     entry: { index: 'src/index.ts', icons: 'src/material/index.ts' },
-    // The full icon set is one chunk shared by icons.js and index.js, which loads it only when a page draws a
-    // name outside the built-in icons.
-    splitting: true,
     format: ['esm'],
-    outExtension: () => ({ js: '.js' }),
-    target: 'es2022',
-    dts: true,
-    sourcemap: true,
+    dts: { only: true },
     clean: false,
     external: ['react', 'react-dom'],
-    define,
   }]),
   ...[['serupa.iife', 'src/browser.ts'], ['serupa-icons.iife', 'src/browser-icons.ts']].map(([name, file]) => ({
     entry: { [name]: file },

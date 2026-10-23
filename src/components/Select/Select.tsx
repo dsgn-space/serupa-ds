@@ -1,7 +1,9 @@
+"use client";
 import * as React from "react";
 import { cn, isInvalid, oneOf, omit, SIZES } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
-import { Icon, asIcon, type IconSource } from "../Icon/Icon";
+import { Icon, type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";
 

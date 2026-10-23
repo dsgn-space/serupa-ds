@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../internal/times";
@@ -5,6 +6,7 @@ import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";
+import { useFormReset } from "../../internal/useFormReset";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -60,6 +62,11 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const id = domId("dk-tp", React.useId());
   const box = React.useRef<HTMLSpanElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
+  useFormReset(field, () => {
+    if (controlled) return;
+    const n = toMinutes(props.defaultValue);
+    shown.current = n; setOwn(n); setText(fmt(n)); setOpen(false);
+  });
   const list = React.useRef<HTMLUListElement | null>(null);
   const typed = React.useRef(false);   // text typed since the list opened or the active time last moved
 
