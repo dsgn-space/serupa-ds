@@ -24,6 +24,7 @@ const GROUPS = {
     ['Custom icons', 'icons.mjs'],
     ['Page groundwork', 'page.mjs'],
     ['Usage guides', 'guides.mjs'],
+    ['Public API', 'api.mjs', ...update],
   ],
   visual: [['Visual snapshots', 'visual.mjs', ...update]],
   storybook: [['Storybook', 'storybook.mjs']],
