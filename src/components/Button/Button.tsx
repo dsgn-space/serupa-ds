@@ -6,6 +6,7 @@ import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal
 import { warnOnce } from "../../internal/warn";
 import { asIcon, type IconSource } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
+import { component } from "../../internal/component";
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -72,7 +73,7 @@ function slot(source: IconSource, side: string): React.ReactNode {
 
 /* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
 /** Button without the overloads, for components built on it (IconButton, Fab) that pass either shape through. */
-export const ButtonBase = React.forwardRef<HTMLElement, ButtonProps>(function Button(props, ref) {
+export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("Button", function Button(props, ref) {
   // Both shapes (button and link) are HTML attributes; which ones apply depends on href below.
   const rest: React.AllHTMLAttributes<HTMLElement> & DataAttributes = omit(props as ButtonOwnProps & React.AllHTMLAttributes<HTMLElement>, OWN);
   const isLink = rest.href != null;
@@ -89,8 +90,11 @@ export const ButtonBase = React.forwardRef<HTMLElement, ButtonProps>(function Bu
   const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   const wasLoading = React.useRef(false);
+  // Announced when loading starts, with the text it has then (a later loadingText change isn't announced again).
+  const latestText = React.useRef(loadingText);
+  React.useEffect(function () { latestText.current = loadingText; });
   React.useEffect(function () {
-    if (loading && !wasLoading.current && loadingText) announce(loadingText);
+    if (loading && !wasLoading.current && latestText.current) announce(latestText.current);
     wasLoading.current = loading;
   }, [loading]);
 
@@ -142,7 +146,6 @@ export const ButtonBase = React.forwardRef<HTMLElement, ButtonProps>(function Bu
   if (rest.type === undefined) rest.type = "button";   // never submits a form by accident; pass type="submit" to submit
   return React.createElement("button", Object.assign({}, rest, { ref: ref, className: classes }), ...content);
 });
-ButtonBase.displayName = "Button";
 
 /** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press, ripple and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
 export const Button = ButtonBase as unknown as {

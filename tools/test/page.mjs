@@ -1,9 +1,9 @@
-// Page groundwork: responsive variants, base.css, theme.js (automatic dark mode) and tools/purge.py.
+// Page groundwork: responsive variants, base.css, theme.js (automatic dark mode) and the CSS trimmer (bin/serupa-purge.mjs).
 //   node tools/test/page.mjs
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { HERE, PROJECT, writePage, browser, cleanup, report } from './lib.mjs';
+import { PROJECT, writePage, browser, cleanup, report } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -88,21 +88,21 @@ for (const scheme of ['light', 'dark']) {
   await ctx.close();
 }
 
-// 4. purge.py keeps exactly what a page needs
+// 4. serupa-purge keeps exactly what a page needs
 {
   const dir = path.join(PROJECT, '.test-tmp');
   fs.mkdirSync(dir, { recursive: true });
   const SAMPLE = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-surface-muted"><div class="rounded-lg shadow-md p-4 bg-surface text-sm md:text-base divide-y divide-border"><p class="py-2">a</p><p class="py-2">b</p></div><input class="h-control-md px-3 border border-field-border bg-field rounded-md placeholder-placeholder" placeholder="Name"><div class="bg-linear-to-r from-blue-500 to-violet-500 h-4 -translate-x-1/2 ring-2 ring-focus-ring ring-offset-2 animate-spin"></div><p class="hidden lg:block text-primary">x</p></div>';
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
   const out = path.join(dir, 'min.css');
-  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
+  execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), path.join(dir, 'sample.html'), '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
   // Component styles (dk-*) are always kept and grow with every component, so the size check trims utilities.css,
   // the part purge decides on.
   const full = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size, small = fs.statSync(out).size;
   const outU = path.join(dir, 'min-utilities.css');
-  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', outU, '--css', path.join(PROJECT, 'dist', 'utilities.css')], { stdio: 'ignore' });
+  execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), path.join(dir, 'sample.html'), '-o', outU, '--css', path.join(PROJECT, 'dist', 'utilities.css')], { stdio: 'ignore' });
   const fullU = fs.statSync(path.join(PROJECT, 'dist', 'utilities.css')).size, smallU = fs.statSync(outU).size;
-  t(`purge.py: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB (utilities: ${(smallU / 1024).toFixed(0)} KB of ${(fullU / 1024).toFixed(0)} KB)`, smallU > 0 && smallU < fullU / 20 && full - small > (fullU - smallU) * 0.9);   // the bundle sheds what the utilities shed
+  t(`serupa-purge: ${(small / 1024).toFixed(0)} KB instead of ${(full / 1024).toFixed(0)} KB (utilities: ${(smallU / 1024).toFixed(0)} KB of ${(fullU / 1024).toFixed(0)} KB)`, smallU > 0 && smallU < fullU / 20 && full - small > (fullU - smallU) * 0.9);   // the bundle sheds what the utilities shed
   const snap = async (bundle, w) => {
     const p = await b.newPage({ viewport: { width: w, height: 500 } });
     await p.goto(writePage(`purge-${w}.html`, SAMPLE, { bundle, extraHead: '<style>*{animation-play-state:paused!important;animation-delay:0s!important}</style>' }));   // a spinning element would be caught mid-turn
@@ -110,11 +110,11 @@ for (const scheme of ['light', 'dark']) {
     const r = await p.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e); const o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return o.sort().join(';'); }));
     await p.close(); return r;
   };
-  t('purge.py: keeps the keyframes the page animates with', /@keyframes spin\b/.test(fs.readFileSync(out, 'utf8')));
+  t('serupa-purge: keeps the keyframes the page animates with', /@keyframes spin\b/.test(fs.readFileSync(out, 'utf8')));
   for (const w of [390, 1280]) {
     const a = await snap('../dist/bundle.css', w), c = await snap('min.css', w);
     const d = []; a.forEach((x, i) => { if (x !== c[i]) { const A = x.split(';'), C = c[i].split(';'); A.forEach((y, j) => { if (y !== C[j]) d.push(i + ' ' + y + ' ≠ ' + C[j]); }); } });
-    t(`purge.py: the page renders identically with the trimmed CSS (${w}px)`, !d.length, d.slice(0, 4).join(' | '));
+    t(`serupa-purge: the page renders identically with the trimmed CSS (${w}px)`, !d.length, d.slice(0, 4).join(' | '));
   }
 }
 

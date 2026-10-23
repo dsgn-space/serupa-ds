@@ -36,7 +36,7 @@ const { Avatar } = window.Serupa;
 
 - With a name, the avatar is one image (`role="img"`) named by it; the picture inside is decorative. Next to the written name, pass `alt=""` so it isn't read twice.
 - The status is part of the name, so it isn't told by color alone.
-- Initials and the person icon keep 4.5:1 on their background in all six themes (`tools/test/avatar.mjs`).
+- Initials and the person icon keep 4.5:1 on their background in all six themes (`Avatar.test.tsx`).
 - In forced-colors mode the frame gets a border.
 
 ## Props

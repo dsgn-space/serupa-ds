@@ -1,0 +1,132 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { Image, type ImageProps } from './Image';
+
+const PIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect width="400" height="200" fill="#3b82f6"/></svg>');
+// A path the test server doesn't have: the picture fails to load.
+const BROKEN = '/__no-such-picture__/none.png';
+const frame = (id: string) => document.querySelector(`[data-testid=${id}]`) as HTMLElement;
+const box = (id: string) => {
+  const f = frame(id), r = f.getBoundingClientRect(), i = f.querySelector('img');
+  return { w: Math.round(r.width), h: Math.round(r.height), state: f.dataset.state, fit: i && css(i).objectFit, radius: css(f).borderTopLeftRadius };
+};
+const Pic = ({ id, frameStyle, frameClass, imgRef, ...p }: Partial<ImageProps> & { id: string; frameStyle?: React.CSSProperties; frameClass?: string; imgRef?: React.Ref<HTMLImageElement> }) =>
+  <Image src={PIC} alt="" {...p} ref={imgRef} frameProps={{ 'data-testid': id, className: frameClass, style: { width: 200, ...frameStyle } } as React.HTMLAttributes<HTMLSpanElement>} />;
+const Row = ({ children }: { children: React.ReactNode }) => <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: '16px', width: '900px' }}>{children}</div>;
+
+function Viewer({ removed }: { removed: () => void }) {
+  return <Pic id="view" fullSrc={PIC + '#full'} alt="Harbor at dusk" ratio="video" viewable onRemove={removed} />;
+}
+const dialog = () => frame('view').querySelector('dialog') as HTMLDialogElement;
+const viewBtn = () => frame('view').querySelector('.dk-image__view') as HTMLButtonElement;
+const finished = () => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined)));
+
+describe('Image', () => {
+  test('an <img> with alt and loading="lazy" in a frame; ref and className go to the img, frameProps to the frame', async () => {
+    const r = React.createRef<HTMLImageElement>();
+    await render(<Pic id="auto" frameClass="frame-extra" alt="A blue banner" className="extra" imgRef={r} />);
+    const f = frame('auto'), i = f.querySelector('img')!;
+    expect([r.current === i, /extra/.test(i.className), /frame-extra/.test(f.className), i.alt, i.loading, f.dataset.component]).toEqual([true, true, true, 'A blue banner', 'lazy', 'image']);
+  });
+
+  test('ratio: auto keeps the picture\'s shape (200×100), square 200×200, 4:3 200×150, video 200×113, 2 → 200×100; cover by default, contain when asked; rounded 8px unless rounded={false}', async () => {
+    await render(<Row>
+      <Pic id="auto" alt="A blue banner" />
+      <Pic id="square" alt="Square" ratio="square" />
+      <Pic id="four" alt="Four by three" ratio="4:3" fit="contain" />
+      <Pic id="video" alt="Wide" ratio="video" rounded={false} />
+      <Pic id="num" alt="Two to one" ratio={2} />
+    </Row>);
+    const ids = ['auto', 'square', 'four', 'video', 'num'];
+    await expect.poll(() => ids.map((id) => frame(id).dataset.state)).toEqual(ids.map(() => 'loaded'));
+    const s = Object.fromEntries(ids.map((id) => [id, box(id)]));
+    expect(ids.map((id) => s[id]!.h)).toEqual([100, 200, 150, 113, 100]);
+    expect(ids.every((id) => s[id]!.w === 200)).toBe(true);
+    expect([s.square!.fit, s.four!.fit]).toEqual(['cover', 'contain']);
+    expect([s.square!.radius, s.video!.radius]).toEqual(['8px', '0px']);
+  });
+
+  test('while loading: the picture is hidden and the frame shows the placeholder fill; then it appears', async () => {
+    // The test server sends this picture after a second (vitest.config.ts), so it is still loading at first.
+    await render(<Pic id="slow" alt="Slow" ratio="square" src={`/__slow-picture__.svg?${Date.now()}`} />);
+    const f = frame('slow');
+    expect([f.dataset.state, css(f.querySelector('img')).opacity, css(f).backgroundColor]).toEqual(['loading', '0', color('var(--surface-muted)')]);
+    await expect.poll(() => box('slow').state, { timeout: 5000 }).toBe('loaded');
+    await expect.poll(() => css(f.querySelector('img')).opacity).toBe('1');
+  });
+
+  test('on error: a broken-image icon named by the alt text (role="img") keeps the frame; fallback replaces the icon', async () => {
+    await render(<Row>
+      <Pic id="broken" src={BROKEN} alt="Team photo" ratio="square" />
+      <Pic id="custom" src={BROKEN} alt="Logo" ratio="square" fallback={<span className="my-fallback">No logo</span>} />
+    </Row>);
+    await expect.poll(() => [frame('broken').dataset.state, frame('custom').dataset.state]).toEqual(['error', 'error']);
+    const f = frame('broken'), fb = f.querySelector('.dk-image__fallback')!;
+    expect([!!f.querySelector('img'), fb.getAttribute('role'), fb.getAttribute('aria-label'), fb.querySelector<HTMLElement>('.dk-icon')?.dataset.icon, Math.round(f.getBoundingClientRect().height)])
+      .toEqual([false, 'img', 'Team photo', 'broken_image', 200]);
+    expect(frame('custom').querySelector('.dk-image__fallback')!.textContent).toBe('No logo');
+  });
+
+  test('viewable: the picture is a button named "View image: <alt>" with a zoom-in cursor; the remove button is "Remove image: <alt>"', async () => {
+    await render(<Viewer removed={() => {}} />);
+    const b = viewBtn();
+    expect([b.getAttribute('aria-label'), b.getAttribute('aria-haspopup'), css(b).cursor, frame('view').querySelector('.dk-image__remove')!.getAttribute('aria-label')])
+      .toEqual(['View image: Harbor at dusk', 'dialog', 'zoom-in', 'Remove image: Harbor at dusk']);
+  });
+
+  test('Enter opens a Dialog titled with the alt text, showing fullSrc, with focus inside; Escape closes it and focus returns to the picture', async () => {
+    await render(<Viewer removed={() => {}} />);
+    viewBtn().focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => dialog().open).toBe(true);
+    await finished();
+    const d = dialog(), full = d.querySelector<HTMLImageElement>('.dk-image__full')!;
+    expect([d.querySelector('.dk-dialog__title')!.textContent, full.getAttribute('src')!.endsWith('#full'), full.alt, d.contains(document.activeElement)]).toEqual(['Harbor at dusk', true, 'Harbor at dusk', true]);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => dialog().open).toBe(false);
+    expect(document.activeElement).toBe(viewBtn());
+  });
+
+  test('a click opens it too, and the × closes it', async () => {
+    await render(<Viewer removed={() => {}} />);
+    await userEvent.click(viewBtn());
+    await expect.poll(() => dialog().open).toBe(true);
+    await finished();
+    await userEvent.click(dialog().querySelector('.dk-dialog__close')!);
+    await expect.poll(() => dialog().open).toBe(false);
+  });
+
+  test('onRemove: the remove button calls it without opening the viewer, 8px from the top end corner', async () => {
+    let removed = 0;
+    await render(<Viewer removed={() => { removed++; }} />);
+    const rm = frame('view').querySelector('.dk-image__remove')!;
+    await userEvent.click(rm);
+    expect([removed, dialog().open]).toEqual([1, false]);
+    const f = frame('view').getBoundingClientRect(), r = rm.getBoundingClientRect();
+    expect([Math.round(r.top - f.top), Math.round(f.right - r.right)]).toEqual([8, 8]);
+  });
+
+  test('contrast: the fallback icon and the remove button\'s icon keep 3:1 in all six themes', async () => {
+    await render(<Row><Pic id="broken" src={BROKEN} alt="Team photo" ratio="square" /><Viewer removed={() => {}} /></Row>);
+    await expect.poll(() => frame('broken').dataset.state).toBe('error');
+    const f = frame('broken'), fb = f.querySelector('.dk-image__fallback')!, rm = frame('view').querySelector('.dk-image__remove')!, low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      // The remove button's colors transition into the new theme: read them once that's done.
+      await finished();
+      for (const [name, fg, bg] of [['fallback icon', css(fb).color, css(f).backgroundColor], ['remove icon', css(rm).color, css(rm).backgroundColor]] as const) {
+        const r = contrast(fg, bg);
+        if (r < 3) low.push(`${th} ${name} ${r.toFixed(2)}`);
+      }
+    }
+    expect(low).toEqual([]);
+  });
+
+  test('--image-radius overrides one image', async () => {
+    await render(<Pic id="tok" alt="Token" ratio="square" frameStyle={{ '--image-radius': '3px' } as React.CSSProperties} />);
+    expect(box('tok').radius).toBe('3px');
+  });
+});

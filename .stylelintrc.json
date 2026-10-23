@@ -1,8 +1,35 @@
 {
   "extends": "stylelint-config-recommended",
-  "ignoreFiles": ["dist/**", "storybook-static/**", "node_modules/**", "tokens.css"],
+  "ignoreFiles": [
+    "dist/**",
+    "storybook-static/**",
+    "node_modules/**",
+    "tokens.css",
+    "src/styles/utilities.template.css"
+  ],
   "rules": {
     "no-descending-specificity": null,
-    "no-duplicate-selectors": null
+    "no-duplicate-selectors": null,
+    "property-no-deprecated": [
+      true,
+      {
+        "ignoreProperties": [
+          "-webkit-box-orient"
+        ]
+      }
+    ],
+    "declaration-property-value-no-unknown": [
+      true,
+      {
+        "ignoreProperties": {
+          "mix-blend-mode": [
+            "plus-darker"
+          ],
+          "justify-content": [
+            "baseline"
+          ]
+        }
+      }
+    ]
   }
 }

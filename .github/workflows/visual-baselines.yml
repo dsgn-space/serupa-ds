@@ -12,21 +12,22 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   update:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - uses: ./.github/actions/playwright
       - name: Render the baselines
         run: |
           npm run build
@@ -40,6 +41,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Update test baselines on the CI runner"
           git push
+          # A push made with the workflow's token starts no workflows, so start CI on the branch: its checks
+          # land on the new head commit, which the pull request's required checks look at.
+          gh workflow run ci.yml --repo ${{ github.repository }} --ref ${{ github.event.pull_request.head.ref }}
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Remove the label
         if: always()
         env:

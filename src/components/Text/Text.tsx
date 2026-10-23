@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, oneOf } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 export type TextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
 export type TextTone = 'default' | 'muted' | 'primary' | 'danger';
@@ -29,7 +30,7 @@ const WEIGHTS: readonly TextWeight[] = ["normal", "medium", "semibold", "bold"];
 const pick = <T extends string>(list: readonly T[], v: unknown): T | null => (list.indexOf(v as T) < 0 ? null : (v as T));
 
 /** Body text in the system's type: size, tone and weight, each inherited when unset. */
-export const Text = React.forwardRef<HTMLElement, TextProps>(function Text(props, ref) {
+export const Text = /* @__PURE__ */ component<HTMLElement, TextProps>("Text", function Text(props, ref) {
   const { as, size, tone, weight, truncate, className, ...rest } = props;
   const s = pick(SIZES, size), t = pick(TONES, tone), w = pick(WEIGHTS, weight);
   return React.createElement(oneOf(TAGS, as, "p"), Object.assign(rest, {
@@ -37,4 +38,3 @@ export const Text = React.forwardRef<HTMLElement, TextProps>(function Text(props
     className: cn("dk-text", s && "dk-text--" + s, t && "dk-text--" + t, w && "dk-text--" + w, truncate && "dk-text--truncate", className),
   }));
 });
-Text.displayName = "Text";

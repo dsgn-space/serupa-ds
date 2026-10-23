@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 export interface VisuallyHiddenProps extends React.HTMLAttributes<HTMLElement> {
   /** Shows it while it (or something in it) has keyboard focus: for a "Skip to content" link. Default: false. */
@@ -14,11 +15,10 @@ const TAGS = ["span", "div", "h1", "h2", "h3", "h4", "h5", "h6", "p", "label", "
    heading for a section that's obvious by sight. focusable shows it while it has focus (skip links).
    className and every other prop go to the element. */
 /** Content for screen readers only: hidden on screen, still announced. focusable shows it on keyboard focus. */
-export const VisuallyHidden = React.forwardRef<HTMLElement, VisuallyHiddenProps>(function VisuallyHidden(props, ref) {
+export const VisuallyHidden = /* @__PURE__ */ component<HTMLElement, VisuallyHiddenProps>("VisuallyHidden", function VisuallyHidden(props, ref) {
   const rest = omit(props, { focusable: 1, as: 1, className: 1 });
   return React.createElement(oneOf(TAGS, props.as, "span"), Object.assign(rest, {
     ref: ref, "data-component": "visually-hidden",
     className: cn("dk-visually-hidden", props.focusable && "dk-visually-hidden--focusable", props.className),
   }));
 });
-VisuallyHidden.displayName = "VisuallyHidden";

@@ -13,7 +13,8 @@ const TOKENS = path.join(HERE, '..', '..', 'design-tokens');
 const OUT = process.argv[2] || 'build/tokens';
 const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
 
-// The format's duration object ({ value: 150, unit: 'ms' }) isn't converted by Style Dictionary 5.6 yet.
+// Writes the format's duration object ({ value: 150, unit: 'ms' }) in its own unit, as tokens.css does. Style
+// Dictionary's time/seconds (left out below) would turn it into 0.15s.
 StyleDictionary.registerTransform({
   name: 'serupa/duration', type: 'value', transitive: true,
   filter: (t) => (t.$type ?? t.type) === 'duration' && typeof (t.$value ?? t.value) === 'object',
@@ -32,7 +33,7 @@ for (const theme of THEMES) {
     log: { verbosity: 'silent', warnings: 'disabled' },
     platforms: {
       css: {
-        transforms: [...StyleDictionary.hooks.transformGroups.css.filter((x) => x !== 'name/kebab'), 'serupa/duration', 'serupa/name'],
+        transforms: [...StyleDictionary.hooks.transformGroups.css.filter((x) => x !== 'name/kebab' && x !== 'time/seconds'), 'serupa/duration', 'serupa/name'],
         buildPath: OUT.endsWith('/') ? OUT : OUT + '/',
         files: [{ destination: `${theme}.css`, format: 'css/variables', options: { selector: `[data-theme="${theme}"]`, outputReferences: false } }],
       },

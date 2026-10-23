@@ -1,0 +1,36 @@
+// Commands the component tests run in Node, on the Playwright page (vitest.config.ts lists them; helpers.ts types them).
+// They drive Playwright's real mouse. userEvent.dragAndDrop lost the moves after a pointer capture in Firefox, and a
+// userEvent.click with a delay can be over before a test sees the press.
+import type { BrowserCommand, BrowserCommandContext } from 'vitest/node';
+import type { FrameLocator, Page } from 'playwright';
+
+type Point = { x: number; y: number };
+
+const playwright = (ctx: BrowserCommandContext) => {
+  if (ctx.provider.name !== 'playwright') throw new Error('these commands need the Playwright provider');
+  return ctx as unknown as { page: Page; iframe: FrameLocator };
+};
+// A point relative to the top-left corner of the element `selector` finds in the test frame (it can lie outside
+// it), in the page's coordinates: Playwright's box already takes in the frame's offset and scaling.
+const onPage = async (ctx: BrowserCommandContext, selector: string, p: Point) => {
+  const box = (await playwright(ctx).iframe.locator(selector).boundingBox())!;
+  return [box.x + p.x, box.y + p.y] as const;
+};
+
+/** Press at `from`, move to `to` in `steps` moves and release. */
+export const pointerDrag: BrowserCommand<[selector: string, from: Point, to: Point, steps?: number]> = async (ctx, selector, from, to, steps = 5) => {
+  const { page } = playwright(ctx), [a, b] = [await onPage(ctx, selector, from), await onPage(ctx, selector, to)];
+  await page.mouse.move(...a);
+  await page.mouse.down();
+  await page.mouse.move(...b, { steps });
+  await page.mouse.up();
+};
+
+/** Move to a point and press the button; it stays down until pointerUp. */
+export const pointerDown: BrowserCommand<[selector: string, at: Point]> = async (ctx, selector, at) => {
+  const { page } = playwright(ctx);
+  await page.mouse.move(...(await onPage(ctx, selector, at)));
+  await page.mouse.down();
+};
+
+export const pointerUp: BrowserCommand<[]> = async (ctx) => { await playwright(ctx).page.mouse.up(); };

@@ -2,6 +2,8 @@
 // at rest, hovered and focused, and compares it with the saved image in baseline-visual/.
 //   node tools/test/visual.mjs            check
 //   node tools/test/visual.mjs --update   accept the current look as the new baseline
+//   SERUPA_SHARD=2/3 node tools/test/visual.mjs   every third component, starting with the second (CI runs
+//                                                the shards in parallel)
 // A component without a baseline fails the check; --update is the only way to write one.
 // Hover and focus act on the element a preview marks with data-visual-target (both states), or
 // data-visual-target="hover" / ="focus" (one each); without one, on the first enabled .dk-btn.
@@ -15,7 +17,10 @@ const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
 fs.mkdirSync(DIR, { recursive: true });
 
-const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')));
+const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
+const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).sort()
+  .filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')))
+  .filter((_, i) => i % shards === shard - 1);
 const { themes } = tokensCss();
 const b = await browser();
 const page = await b.newPage({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** A picture of what's missing: an icon name ('inbox', 'search_off') or an element (an illustration). */
@@ -23,7 +24,7 @@ export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElemen
    circle, a title, a short description and the action that fills it. Centered. className and every other prop
    go to the wrapper. */
 /** What to show when there's nothing yet: an icon, a title, a description and the action that fills it. */
-export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(function EmptyState(props, ref) {
+export const EmptyState = /* @__PURE__ */ component<HTMLDivElement, EmptyStateProps>("EmptyState", function EmptyState(props, ref) {
   const rest = omit(props, { icon: 1, title: 1, description: 1, actions: 1, size: 1, variant: 1, headingLevel: 1, className: 1 });
   const size = oneOf(["sm", "md"] as const, props.size, "md");
   const variant = oneOf(["plain", "dashed"] as const, props.variant, "plain");
@@ -41,4 +42,3 @@ export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(func
     </div>
   );
 });
-EmptyState.displayName = "EmptyState";

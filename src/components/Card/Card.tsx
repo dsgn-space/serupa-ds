@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { config } from "../../internal/config";
+import { component } from "../../internal/component";
 
 export type CardVariant = 'outline' | 'elevated' | 'filled';
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
@@ -27,7 +28,7 @@ const PADDINGS: readonly CardPadding[] = ["none", "sm", "md", "lg"];
 const TAGS = ["div", "section", "article", "li"] as const;
 
 /** A surface that groups related content and actions: CardHeader, CardBody and CardFooter inside. With href, the whole card is a link. */
-export const Card = React.forwardRef<HTMLElement, CardProps>(function Card(props, ref) {
+export const Card = /* @__PURE__ */ component<HTMLElement, CardProps>("Card", function Card(props, ref) {
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, "outline");
   const padding = oneOf(PADDINGS, props.padding, "md");
@@ -37,7 +38,6 @@ export const Card = React.forwardRef<HTMLElement, CardProps>(function Card(props
   return React.createElement(isLink ? config.link : oneOf(TAGS, props.as, "div"),
     Object.assign(rest, { ref: ref, className: cls, "data-component": "card", "data-variant": variant }));
 });
-Card.displayName = "Card";
 
 export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** The card's title, as a heading. */
@@ -51,7 +51,7 @@ export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 }
 
 /** The card's title, an optional description and an optional action at the end. Any children come after the description. */
-export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(function CardHeader(props, ref) {
+export const CardHeader = /* @__PURE__ */ component<HTMLDivElement, CardHeaderProps>("CardHeader", function CardHeader(props, ref) {
   const rest = omit(props, { title: 1, description: 1, action: 1, headingLevel: 1, className: 1, children: 1 });
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 3 : (props.headingLevel as number);
   const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
@@ -66,15 +66,13 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(func
     </div>
   );
 });
-CardHeader.displayName = "CardHeader";
 
 export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The card's main content. */
-export const CardBody = React.forwardRef<HTMLDivElement, CardBodyProps>(function CardBody(props, ref) {
+export const CardBody = /* @__PURE__ */ component<HTMLDivElement, CardBodyProps>("CardBody", function CardBody(props, ref) {
   return <div {...props} ref={ref} className={cn("dk-card__body", props.className)} />;
 });
-CardBody.displayName = "CardBody";
 
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Where the actions sit: 'end' (default), 'start' or 'between' (the first at the start, the rest at the end: give them a wrapper). */
@@ -82,9 +80,8 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** The card's actions, in a wrapping row at the end. */
-export const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(function CardFooter(props, ref) {
+export const CardFooter = /* @__PURE__ */ component<HTMLDivElement, CardFooterProps>("CardFooter", function CardFooter(props, ref) {
   const rest = omit(props, { justify: 1, className: 1 });
   const j = oneOf(["start", "end", "between"] as const, props.justify, "end");
   return <div {...rest} ref={ref} className={cn("dk-card__footer", j !== "end" && "dk-card__footer--" + j, props.className)} />;
 });
-CardFooter.displayName = "CardFooter";

@@ -80,6 +80,65 @@
         }
       }
     },
+    "field": {
+      "$type": "color",
+      "$value": "{color.zinc-900}",
+      "$description": "Alias. Background of text inputs, selects and other form fields.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field"
+        }
+      }
+    },
+    "field-border": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border"
+        }
+      }
+    },
+    "field-border-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Field border on hover.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-border-hover"
+        }
+      }
+    },
+    "placeholder": {
+      "$type": "color",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--placeholder"
+        }
+      }
+    },
+    "overlay": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0353,
+          0.0353,
+          0.0431
+        ],
+        "hex": "#09090b",
+        "alpha": 0.702
+      },
+      "$description": "Alias. The dimmed backdrop behind dialogs and drawers (zinc-900 at 50% in light themes, zinc-950 at 70% in dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--overlay"
+        }
+      }
+    },
     "surface-inverse": {
       "$type": "color",
       "$value": "{color.zinc-50}",
@@ -277,65 +336,6 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--info-subtle"
-        }
-      }
-    },
-    "field": {
-      "$type": "color",
-      "$value": "{color.zinc-900}",
-      "$description": "Alias. Background of text inputs, selects and other form fields.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--field"
-        }
-      }
-    },
-    "field-border": {
-      "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--field-border"
-        }
-      }
-    },
-    "field-border-hover": {
-      "$type": "color",
-      "$value": "{color.zinc-400}",
-      "$description": "Alias. Field border on hover.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--field-border-hover"
-        }
-      }
-    },
-    "placeholder": {
-      "$type": "color",
-      "$value": "{color.zinc-400}",
-      "$description": "Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--placeholder"
-        }
-      }
-    },
-    "overlay": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.0353,
-          0.0353,
-          0.0431
-        ],
-        "hex": "#09090b",
-        "alpha": 0.702
-      },
-      "$description": "Alias. The dimmed backdrop behind dialogs and drawers (zinc-900 at 50% in light themes, zinc-950 at 70% in dark).",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--overlay"
         }
       }
     }

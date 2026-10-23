@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { space, type Space } from "../../internal/space";
+import { component } from "../../internal/component";
 
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   /** 'column' (default): items one under another. 'row': side by side. */
@@ -22,7 +23,7 @@ const TAGS = ["div", "section", "ul", "ol", "nav", "header", "footer", "form", "
 /* Stack: lays its children out in a column (or a row) with even space between them, from the spacing scale.
    className, style and every other prop go to the element. */
 /** Lays children out in a column or a row, with even space from the spacing scale between them. */
-export const Stack = React.forwardRef<HTMLElement, StackProps>(function Stack(props, ref) {
+export const Stack = /* @__PURE__ */ component<HTMLElement, StackProps>("Stack", function Stack(props, ref) {
   const rest = omit(props, { direction: 1, gap: 1, align: 1, justify: 1, wrap: 1, as: 1, className: 1, style: 1 });
   const row = props.direction === "row";
   const align = oneOf(["stretch", "start", "center", "end", "baseline"] as const, props.align, row ? "center" : "stretch");
@@ -34,4 +35,3 @@ export const Stack = React.forwardRef<HTMLElement, StackProps>(function Stack(pr
     style: gap ? Object.assign({ "--dk-stack-gap": gap }, props.style) : props.style,
   }));
 });
-Stack.displayName = "Stack";

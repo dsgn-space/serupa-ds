@@ -1,6 +1,8 @@
 import * as React from "react";
 import { cn, domId, elementRef, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { cssLength, hideLayer, place, showLayer, type Placement } from "../../internal/position";
+import { type Placement } from "../../internal/position";
+import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
+import { named } from "../../internal/component";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -32,7 +34,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
    returns focus to the trigger; a click outside, or focus moving elsewhere, closes it too. It sits in the top
    layer, right after the trigger in the tab order. For a hint, use Tooltip; for a list of actions, Menu. */
 /** A small non-modal dialog next to its trigger, for interactive content: a form, filters, details. */
-export function Popover(props: PopoverProps): React.ReactElement {
+export const Popover = /* @__PURE__ */ named("Popover", function Popover(props: PopoverProps): React.ReactElement {
   const id = domId("dk-pop", React.useId());
   const [inner, setInner] = React.useState(false);
   const controlled = props.open !== undefined;
@@ -44,36 +46,14 @@ export function Popover(props: PopoverProps): React.ReactElement {
   const close = React.useCallback((focusTrigger = true) => { set(false); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
   const focusFirst = props.initialFocus !== "panel";
 
+  useAnchoredLayer(open, panelRef, triggerRef, { placement: props.placement, offsetVar: "--dk-popover-offset", onOutside: () => close(false), inside: triggerRef });
+  // On open, focus moves inside (a press outside the panel and its trigger closes it; focus stays where the press put it).
   useIsoLayoutEffect(() => {
-    const panel = panelRef.current, trigger = triggerRef.current;
-    if (!panel) return;
-    if (!open || !trigger) { hideLayer(panel); return; }
-    showLayer(panel);
-    const update = () => {
-      const r = place(trigger.getBoundingClientRect(), { width: panel.offsetWidth, height: panel.offsetHeight }, props.placement || "bottom", cssLength(panel, "--dk-popover-offset"), "bottom");
-      panel.style.left = r.x + "px"; panel.style.top = r.y + "px"; panel.dataset.side = r.side;
-    };
-    update();
+    const panel = panelRef.current;
+    if (!open || !panel) return;
     const first = focusFirst ? panel.querySelector<HTMLElement>(FOCUSABLE) : null;
     (first || panel).focus();
-    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
-    if (ro) { ro.observe(panel); ro.observe(trigger); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
-  }, [open, props.placement]);
-
-  // A press outside the panel and its trigger closes it (focus stays where the press put it).
-  React.useEffect(() => {
-    if (!open) return;
-    const down = (e: PointerEvent) => {
-      const t = e.target as Node;
-      if (panelRef.current && panelRef.current.contains(t)) return;
-      if (triggerRef.current && triggerRef.current.contains(t)) return;
-      close(false);
-    };
-    document.addEventListener("pointerdown", down, true);
-    return () => document.removeEventListener("pointerdown", down, true);
-  }, [open, close]);
+  }, [open]);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); }
@@ -113,5 +93,4 @@ export function Popover(props: PopoverProps): React.ReactElement {
       </div>
     </>
   );
-}
-Popover.displayName = "Popover";
+});

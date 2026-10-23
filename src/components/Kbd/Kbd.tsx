@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
+import { component } from "../../internal/component";
 
 export interface KbdProps extends React.HTMLAttributes<HTMLElement> {
   /** A combination, one key each: ['mod', 'K'], ['shift', 'enter']. Names below show as symbols on Apple devices. Or pass one key as children. */
@@ -47,7 +48,7 @@ function Key({ k, apple }: { k: string; apple: boolean }) {
    for screen readers; "mod" is ⌘ on Apple devices and Ctrl elsewhere. A combination is one <kbd> holding a
    <kbd> per key, as HTML recommends. */
 /** A keyboard key or shortcut, drawn as keycaps; "mod" follows the platform (⌘ or Ctrl). */
-export const Kbd = React.forwardRef<HTMLElement, KbdProps>(function Kbd(props, ref) {
+export const Kbd = /* @__PURE__ */ component<HTMLElement, KbdProps>("Kbd", function Kbd(props, ref) {
   const rest = omit(props, { keys: 1, size: 1, className: 1, children: 1 } as const);
   const [apple, setApple] = React.useState(false);   // false on the server; the device decides after mount
   React.useEffect(() => { setApple(isApple()); }, []);
@@ -66,4 +67,3 @@ export const Kbd = React.forwardRef<HTMLElement, KbdProps>(function Kbd(props, r
     </kbd>
   );
 });
-Kbd.displayName = "Kbd";

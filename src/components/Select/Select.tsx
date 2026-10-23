@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, isInvalid, oneOf, omit, SIZES } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
 import { Icon, asIcon, type IconSource } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export type SelectOption = string | number | { value: string | number; label?: React.ReactNode; disabled?: boolean };
 export interface SelectOptionGroup { label: string; options: SelectOption[]; disabled?: boolean }
@@ -34,7 +35,7 @@ function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined):
 }
 
 /** A native <select> styled like Input (ref, value, onChange and every select attribute go to it), with a chevron; className and style go to the box. Label it with <label htmlFor>, aria-label or Field. multiple isn't supported. */
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(props, ref) {
+export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>("Select", function Select(props, ref) {
   const rest = omit(props, OWN);
   if ((props as { multiple?: boolean }).multiple) warnOnce("select-multiple", "Serupa.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
   const size = oneOf(SIZES, props.size, "md");
@@ -60,4 +61,3 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     </span>
   );
 });
-Select.displayName = "Select";

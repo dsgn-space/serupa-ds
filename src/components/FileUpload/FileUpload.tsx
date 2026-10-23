@@ -3,6 +3,7 @@ import { cn, domId, omit } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export type FileRejection = { file: File; reason: 'type' | 'size' | 'count'; message: string };
 export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'title'> {
@@ -58,7 +59,7 @@ const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.t
    submits the files with a form), and files dropped in are put into it too. Uploading is up to you: read the
    files from onFilesChange. */
 /** A drop area and a button for choosing files, with the chosen files listed under it. */
-export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(function FileUpload(props, ref) {
+export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadProps>("FileUpload", function FileUpload(props, ref) {
   const rest = omit(props, OWN);
   const base = domId("dk-fu", React.useId());
   const inputId = props.id || base + "-input";
@@ -149,4 +150,3 @@ export const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(func
     </div>
   );
 });
-FileUpload.displayName = "FileUpload";

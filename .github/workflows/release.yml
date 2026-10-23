@@ -24,7 +24,7 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
@@ -36,7 +36,7 @@ jobs:
         env:
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
       - if: steps.head.outputs.current
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -51,19 +51,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Pinned to a commit: this step runs with write access to the repository, so a moved tag can't change it.
       - if: steps.head.outputs.current
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         id: changesets
         with:
-          version: npm run version-packages
-          publish: npm run release
-          title: 'Release: next version'
-          commit: 'Release: next version'
+          version-script: npm run version-packages
+          publish-script: npm run release
+          pr-title: 'Release: next version'
+          commit-message: 'Release: next version'
+          # npm run release makes the tag and the GitHub release itself.
+          create-github-releases: false
+          push-git-tags: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # A pull request this workflow opens or updates gets no CI of its own, so start CI on its branch;
       # the checks land on its head commit, which is what main's required checks look at.
-      - if: steps.head.outputs.current && steps.changesets.outputs.pullRequestNumber
+      - if: steps.head.outputs.current && steps.changesets.outputs.pr-number
         run: gh workflow run ci.yml --ref changeset-release/main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

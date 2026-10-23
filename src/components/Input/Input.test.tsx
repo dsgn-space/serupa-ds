@@ -48,17 +48,19 @@ describe('Input', () => {
     }
     await render(<App />);
     await page.getByRole('textbox', { name: 'Name' }).click();
+    await expect.poll(() => document.activeElement).toBe(field('c'));
     await userEvent.keyboard('Kim');
-    expect(field('c').value).toBe('Kim');
+    await expect.poll(() => field('c').value).toBe('Kim');
     expect(changes).toEqual(['K', 'Ki', 'Kim']);
   });
 
   test('focus: the border and a 1px ring take the focus color; a transparent outline for forced-colors mode', async () => {
     await render(<Input id="f" aria-label="Focus" />);
     field('f').focus();
-    await settle(250);
-    const s = css(box('f')), ring = color('var(--focus-ring)');
-    expect(s.borderTopColor).toBe(ring);
+    const ring = color('var(--focus-ring)');
+    // the border eases to the focus color; Firefox and WebKit can take longer than the 150ms to finish
+    await expect.poll(() => css(box('f')).borderTopColor).toBe(ring);
+    const s = css(box('f'));
     expect(s.boxShadow).toContain(ring);
     expect(s.boxShadow).toMatch(/0px 0px 0px 1px/);
     expect([s.outlineWidth, s.outlineColor]).toEqual(['2px', 'rgba(0, 0, 0, 0)']);
@@ -67,8 +69,7 @@ describe('Input', () => {
   test('hover changes the border', async () => {
     await render(<><Input id="h" aria-label="Hover" /><Input id="r" aria-label="Rest" /></>);
     await page.getByRole('textbox', { name: 'Hover' }).hover();
-    await settle(250);
-    expect(css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
+    await expect.poll(() => css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
   });
 
   test('invalid: aria-invalid, a danger border and a danger focus ring', async () => {

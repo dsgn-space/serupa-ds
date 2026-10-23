@@ -4,6 +4,7 @@ import { addMonths, compare, datePattern, day, formatDate, isoDate, isValid, par
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
@@ -53,7 +54,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
    can't be used puts back the last good day, and a start after the end clears the end. The popup opens on the
    button or Alt+ArrowDown, and closes when the range is complete, on Escape or a click outside. */
 /** Two date fields for a start and end, with a two-month calendar popup to pick the range. */
-export const DateRangePicker = React.forwardRef<HTMLSpanElement, DateRangePickerProps>(function DateRangePicker(props, ref) {
+export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>("DateRangePicker", function DateRangePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, className, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -160,4 +161,3 @@ export const DateRangePicker = React.forwardRef<HTMLSpanElement, DateRangePicker
     </span>
   );
 });
-DateRangePicker.displayName = "DateRangePicker";

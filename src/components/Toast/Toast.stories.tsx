@@ -27,7 +27,9 @@ export const Playground: Story = {};
 
 // Shows the given toasts while the story is open (they stay until closed), and clears them when it closes.
 function Showing(props: { position?: React.ComponentProps<typeof Toaster>['position']; toasts: Parameters<typeof toast>[0][] }) {
-  React.useEffect(() => { props.toasts.forEach((o) => toast(typeof o === 'string' ? { title: o, duration: 0 } : { duration: 0, ...o })); return () => toast.dismiss(); }, []);
+  // The toasts it opened with: shown once on mount, not again when a re-render passes a new array.
+  const toasts = React.useRef(props.toasts);
+  React.useEffect(() => { toasts.current.forEach((o) => toast(typeof o === 'string' ? { title: o, duration: 0 } : { duration: 0, ...o })); return () => toast.dismiss(); }, []);
   return <Toaster position={props.position} />;
 }
 

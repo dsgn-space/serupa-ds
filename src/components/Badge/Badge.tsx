@@ -6,6 +6,7 @@ import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal
 import { warnOnce } from "../../internal/warn";
 import { Icon, asIcon, type IconSource } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
+import { component } from "../../internal/component";
 
 export type BadgeVariant = 'subtle' | 'solid' | 'outline';
 export type BadgeTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
@@ -62,7 +63,7 @@ const TONES: readonly BadgeTone[] = ["neutral", "primary", "success", "warning",
 const OWN = { variant: 1, tone: 1, size: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingText: 1, className: 1, children: 1 } as const;
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
-export const Badge = React.forwardRef<HTMLElement, BadgeProps>(function Badge(props, ref) {
+export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge", function Badge(props, ref) {
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, "subtle");
   const tone = oneOf(TONES, props.tone, "neutral");
@@ -71,11 +72,12 @@ export const Badge = React.forwardRef<HTMLElement, BadgeProps>(function Badge(pr
   const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
   // Hooks first: a count of 0 renders nothing below, and hooks must run on every render.
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
+  // Announces only when loading starts: a new loadingText while it loads re-runs this but announces nothing.
   const wasLoading = React.useRef(false);
   React.useEffect(function () {
     if (loading && !wasLoading.current && loadingText) announce(loadingText);
     wasLoading.current = loading;
-  }, [loading]);
+  }, [loading, loadingText]);
   const isCount = props.count != null;
   let label: React.ReactNode = props.children;
   if (isCount) {
@@ -143,4 +145,3 @@ export const Badge = React.forwardRef<HTMLElement, BadgeProps>(function Badge(pr
   if (interactive && rest.type === undefined) rest.type = "button";   // never submits a form by accident
   return React.createElement(interactive ? "button" : "span", Object.assign(rest, { ref: ref, className: classes }), ...content);
 });
-Badge.displayName = "Badge";

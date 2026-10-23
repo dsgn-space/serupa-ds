@@ -9,12 +9,12 @@ size (24) on its 960-unit grid and written as one SVG path for viewBox "0 -960 9
 
 src/material/icons.ts  every icon as a named export: `add` is Add, `arrow_forward` ArrowForward, `10k` Icon10k, and the
                        MaterialIconName type. Published as serupa-ds/icons; src/icons.ts loads it on demand so every name works.
-src/material/builtin.ts the icons the components draw themselves (every icon name written as a string in src/, outside
-                       stories and tests), as data in the main bundle, so they render at once and on the server.
 
-Needs fontTools and brotli (python3 -m pip install fonttools brotli). Run it after a component starts using a new icon.
+The font doesn't change, so this only needs running to rebuild icons.ts from scratch; the icons the components draw
+themselves (src/material/builtin.ts) come from icons.ts with node tools/icons/builtin.mjs, which needs no Python.
+Needs fontTools and brotli (python3 -m pip install fonttools brotli).
 """
-import glob, os, re, sys
+import os, re, sys
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
@@ -106,16 +106,6 @@ def paths(font):
 
 
 
-def builtin_names(icons):
-    keep = set()
-    for f in glob.glob(os.path.join(P, 'src', '**', '*.ts*'), recursive=True):
-        if os.sep + 'material' + os.sep in f or re.search(r'\.(stories|test)\.', f):
-            continue
-        for m in re.finditer(r'''["'`]([a-z][a-z0-9_]{1,40})["'`]''', open(f, encoding='utf-8').read()):
-            if m.group(1) in icons:
-                keep.add(m.group(1))
-    return sorted(keep)
-
 
 def main():
     icons = paths(TTFont(FONT))
@@ -130,23 +120,18 @@ def main():
     material = head + 'import type { IconData } from "./types";\n\n' + ''.join(
         f'export const {export_name(n)}: IconData = {{ name: "{n}", d: "{icons[n]}" }};\n' for n in names) + (
         '\n/** Every Material Symbol name, for autocomplete. */\nexport type MaterialIconName =\n' + ''.join(f'  | "{n}"\n' for n in names)[:-1] + ';\n')
-    builtin = builtin_names(icons)
-    builtin_ts = (head + 'import type { IconData } from "./types";\n\n'
-                  '/** The icons the components draw themselves, in the main bundle so they render at once and on the server.\n'
-                  ' * Every other name loads with the full set (src/material/icons.ts) the first time it is drawn. */\n'
-                  'export const BUILTIN_ICONS: readonly IconData[] = [\n' + ''.join(f'  {{ name: "{n}", d: "{icons[n]}" }},\n' for n in builtin) + '];\n')
-    out = {'src/material/icons.ts': material, 'src/material/builtin.ts': builtin_ts}
+    out = {'src/material/icons.ts': material}
     if '--check' in sys.argv:
         stale = [f for f, s in out.items() if not os.path.exists(os.path.join(P, f)) or open(os.path.join(P, f)).read() != s]
         if stale:
             sys.exit('Out of date: ' + ', '.join(stale) + '. Run python3 tools/icons/material.py')
-        print(f'Material icons are up to date ({len(names)} icons, {len(builtin)} built in)')
+        print(f'Material icons are up to date ({len(names)} icons)')
         return
     os.makedirs(os.path.join(P, 'src', 'material'), exist_ok=True)
     for f, s in out.items():
         open(os.path.join(P, f), 'w').write(s)
-    print(f'Wrote src/material/icons.ts ({len(names)} icons, {os.path.getsize(os.path.join(P, "src/material/icons.ts")) // 1024} KB) '
-          f'and src/material/builtin.ts ({len(builtin)} built in)')
+    print(f'Wrote src/material/icons.ts ({len(names)} icons, {os.path.getsize(os.path.join(P, "src/material/icons.ts")) // 1024} KB); '
+          'now run node tools/icons/builtin.mjs')
 
 
 if __name__ == '__main__':

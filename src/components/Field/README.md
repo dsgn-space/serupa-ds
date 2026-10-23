@@ -47,7 +47,7 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). The 
 - Say what went wrong and how to fix it, not just "Invalid". The error icon is decorative; the words carry the meaning.
 - The `*` is hidden from screen readers, which hear `aria-required` instead. Explain it once at the top of a long form ("Fields marked * are required"), or when most fields are required, mark the optional ones instead.
 - For radios and checkboxes use `group`: screen readers announce the legend when focus enters the set.
-- Label, hint, error and `*` keep 4.5:1 on `surface` in all six themes (`tools/test/field.mjs`).
+- Label, hint, error and `*` keep 4.5:1 on `surface` in all six themes (`Field.test.tsx`).
 
 ## Props
 

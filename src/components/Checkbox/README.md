@@ -56,7 +56,7 @@ const { Checkbox, Field } = window.Serupa;
 - The label names it. With a description, the checkbox is named by the label alone (`aria-labelledby`) and the description is read after it (`aria-describedby`).
 - The check and dash are decorative (`aria-hidden`).
 - For a set, use `Field group`: a `<fieldset>` and `<legend>`, so the question is read with each option.
-- The label and description keep 4.5:1, the border, checked fill, focus ring and invalid border 3:1, and the check 4.5:1 on its fill, in all six themes (`tools/test/checkbox.mjs`).
+- The label and description keep 4.5:1, the border, checked fill, focus ring and invalid border 3:1, and the check 4.5:1 on its fill, in all six themes (`Checkbox.test.tsx`).
 
 ## Props
 

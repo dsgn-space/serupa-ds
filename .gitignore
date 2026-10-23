@@ -12,3 +12,5 @@ storybook-static/
 *.tgz
 __screenshots__/
 .vitest-attachments/
+src/styles/utilities.css
+coverage/

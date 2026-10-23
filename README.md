@@ -5,7 +5,7 @@ A design system by **Diki**. Tokens, themes, utility classes and accessible Reac
 - **Token-driven.** Every color, size, space, radius, shadow, motion and type value is a design token. Components never hardcode a value.
 - **Six themes.** Blue, Violet and Emerald, each light and dark, switched with one attribute and no component changes.
 - **Accessible by default.** WCAG 2.1 AA contrast in every theme, full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
-- **Works anywhere.** ES modules for React apps (React 18 or 19), or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
+- **Works anywhere.** ES modules for React 19 apps, or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
 
 The documentation is Storybook: run `npm run storybook` in this repo and open http://localhost:6006. The foundations (colors, themes, type, spacing, motion and the utility classes) are written in `docs/foundations.md`; each component's guide is `src/components/<Name>/README.md`.
 
@@ -41,7 +41,7 @@ export function SignUp() {
 }
 ```
 
-React 18 or 19 is a peer dependency (CI tests both), so the components use your app's React, and they render on the server too. Types ship with the package.
+React 19 is a peer dependency, so the components use your app's React, and they render on the server too. Types ship with the package.
 
 Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, dk, app;` (the `dk.*` layers sit inside `dk`).
 
@@ -77,13 +77,15 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. See Founda
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses with `tools/purge.py`. The script isn't in the installed package, so run it from a clone of this repo, pointing at your project's source and the installed CSS:
+`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses with `serupa-purge`, which comes with the package. From your project's folder:
 
 ```sh
-python3 tools/purge.py ../my-app/src --css ../my-app/node_modules/serupa-ds/dist/bundle.css -o ../my-app/public/bundle.min.css
+npx serupa-purge src -o public/bundle.min.css
 ```
 
-That keeps the component styles and usually gives a few dozen KB.
+It reads the installed `bundle.css` (or `--css <file>`); name classes your code builds at runtime with `--keep`.
+
+That keeps the component styles (about 220 KB) and only the utility classes your code uses.
 
 ### What's in the package
 
@@ -95,7 +97,7 @@ That keeps the component styles and usually gives a few dozen KB.
 | `dist/utilities.css` | Every utility class. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
 | `dist/index.js`, `dist/index.d.ts` | The components as ES modules, with types. |
-| `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). `dist/bundle.js` is the same file under its old name. |
+| `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). |
 | `dist/theme.js` | Automatic dark mode and the theme switcher API. |
 | `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. |
 
@@ -169,9 +171,9 @@ Popover and command buttons (`popoverTarget`, `command`) and `text-wrap: balance
 
 ## Maintaining the system
 
-The source is in `src/`: one folder per component in `src/components/<Name>/` (the component in TypeScript, its CSS, its component tokens, its guidelines and its preview), the utility classes in `src/styles/utilities.css`, and `base.css` and `theme.js`. `npm run build` makes `dist/`, which is never edited or committed: `index.js` and `index.d.ts` (ES modules and types), `serupa.iife.js` (the browser script), `components.css`, `utilities.css`, `bundle.css`, `base.css`, `theme.js` and `lib/`. `npm run typecheck` checks the types.
+The source is in `src/`: one folder per component in `src/components/<Name>/` (the component in TypeScript, its CSS, its component tokens, its guidelines and its preview), the utility classes in `src/styles/utilities.template.css` (expanded over the tokens by `tools/utilities/build.mjs`), and `base.css` and `theme.js`. `npm run build` makes `dist/`, which is never edited or committed: `index.js` and `index.d.ts` (ES modules and types), `serupa.iife.js` (the browser script), `components.css`, `utilities.css`, `bundle.css`, `base.css`, `theme.js` and `lib/`. `npm run typecheck` checks the types.
 
-`tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,561 utility classes and the component previews with saved baselines, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.1 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
+`tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and the component previews with saved baselines, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.1 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
 
@@ -184,4 +186,4 @@ The system is self-contained: every file it needs is in it, and nothing loads fr
 | Tailwind CSS (Tailwind Labs) | The naming and values of the utility classes, the palette and the scales, checked against its compiler (v4.3.3) | MIT — `licenses/TailwindCSS-MIT.txt` |
 | Inter (Rasmus Andersson) | `font-sans` — `fonts/InterVariable.woff2`, `fonts/InterVariable-Italic.woff2` | SIL Open Font License 1.1 — `licenses/Inter-OFL-1.1.txt` |
 | Material Symbols (Google) | Icons, as SVG in the components and `serupa-ds/icons`: the Rounded, filled, weight-400 style | Apache 2.0 — `licenses/MaterialSymbols-Apache-2.0.txt` |
-| React 18.3.1 (Meta) | Running the components on plain pages — `dist/lib/`, copied from the `react` and `react-dom` packages by the build | MIT — `licenses/React-MIT.txt` |
+| React 19.3.1 (Meta) | Running the components on plain pages — `dist/lib/`, built from the `react` and `react-dom` packages by the build | MIT — `licenses/React-MIT.txt` |

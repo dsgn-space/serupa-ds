@@ -1,3 +1,14 @@
+import { afterAll, beforeAll } from 'vitest';
+import { commands } from 'vitest/browser';
+
+declare module 'vitest/browser' {
+  interface BrowserCommands {
+    pointerDrag: (selector: string, from: { x: number; y: number }, to: { x: number; y: number }, steps?: number) => Promise<void>;
+    pointerDown: (selector: string, at: { x: number; y: number }) => Promise<void>;
+    pointerUp: () => Promise<void>;
+  }
+}
+
 // Helpers for the component tests: resolved colors, WCAG contrast, and the six themes.
 export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'] as const;
 
@@ -48,3 +59,48 @@ export function css(el: Element | null): CSSStyleDeclaration {
 
 /** Waits for transitions to settle (the components animate colors for 150ms). */
 export const settle = (ms = 200) => new Promise((ok) => setTimeout(ok, ms));
+
+/**
+ * Runs fn with the page's motion back on (setup.ts turns transitions and animations off), for a test that reads
+ * which animation a part runs or watches it move. fn may be async; motion goes off again once it settles.
+ */
+export function withMotion<T>(fn: () => T): T {
+  const still = document.getElementById('serupa-still') as HTMLStyleElement | null;
+  const off = (on: boolean) => { if (still) still.disabled = on; };
+  off(true);
+  let r: T;
+  try { r = fn(); } catch (e) { off(false); throw e; }
+  if (r instanceof Promise) return r.finally(() => off(false)) as T;
+  off(false);
+  return r;
+}
+
+/** For a whole test file about motion (ripples, spinners, slides): keeps transitions and animations on throughout. */
+export function keepMotion(): void {
+  const still = () => document.getElementById('serupa-still') as HTMLStyleElement | null;
+  beforeAll(() => { const s = still(); if (s) s.disabled = true; });
+  afterAll(() => { const s = still(); if (s) s.disabled = false; });
+}
+
+const selector = (el: Element) => {
+  if (!el.id) el.id = 'serupa-target-' + Math.random().toString(36).slice(2);
+  return `#${CSS.escape(el.id)}`;
+};
+
+/** Drags with the real mouse from one point to another, each relative to the element's top-left corner, in `steps`
+ *  moves (commands.ts says why not userEvent.dragAndDrop). */
+export function drag(el: Element, from: { x: number; y: number }, to: { x: number; y: number }, steps = 5): Promise<void> {
+  return commands.pointerDrag(selector(el), from, to, steps);
+}
+
+/** Holds the real mouse button down on an element (at a point relative to its top-left corner, its center by
+ *  default) and runs `during` once it is pressed, then lets go. */
+export async function press<T>(el: Element, during: () => Promise<T> | T, at?: { x: number; y: number }): Promise<T> {
+  const r = el.getBoundingClientRect();
+  await commands.pointerDown(selector(el), at || { x: r.width / 2, y: r.height / 2 });
+  try {
+    return await during();
+  } finally {
+    await commands.pointerUp();
+  }
+}

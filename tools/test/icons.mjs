@@ -1,4 +1,4 @@
-// Custom icons in the browser: builds two sample SVGs with tools/icons/build.py into a scratch copy of
+// Custom icons in the browser: builds two sample SVGs with tools/icons/build.mjs into a scratch copy of
 // the source and bundles it, then checks Icon and Button draw them like the Material Symbols (size, color, alignment,
 // accessibility, loading) and that every other name still comes from Material Symbols.
 //   node tools/test/icons.mjs
@@ -18,7 +18,7 @@ for (const f of ['package.json', 'tsup.config.mjs']) fs.copyFileSync(path.join(P
 // a filled icon as Figma exports it, and an outlined one
 fs.writeFileSync(path.join(src, 'test-square.svg'), '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2H22V22H2Z" fill="#1E1E1E"/></svg>');
 fs.writeFileSync(path.join(src, 'test-ring.svg'), '<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/></svg>');
-const built = spawnSync('python3', ['-I', path.join(PROJECT, 'tools', 'icons', 'build.py'), '--project', proj, src], { encoding: 'utf8' });
+const built = spawnSync(process.execPath, [path.join(PROJECT, 'tools', 'icons', 'build.mjs'), '--project', proj, src], { encoding: 'utf8' });
 // then the browser script, as npm run build makes it
 const bundled = spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: proj, encoding: 'utf8', env: { ...process.env, SERUPA_BUILD: 'iife' } });
 
@@ -49,7 +49,7 @@ await p.waitForTimeout(500);
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 
-t('build.py builds the two sample icons', built.status === 0, built.stdout + built.stderr);
+t('build.mjs builds the two sample icons', built.status === 0, built.stdout + built.stderr);
 t('npm run build bundles them into the browser script', bundled.status === 0, bundled.stdout + bundled.stderr);
 t('Serupa.customIcons lists them', JSON.stringify(await p.evaluate(() => window.Serupa.customIcons)) === '["test-ring","test-square"]');
 const info = await p.evaluate(() => {

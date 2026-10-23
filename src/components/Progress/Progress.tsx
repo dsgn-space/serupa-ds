@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit, SIZES } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 export type ProgressTone = 'primary' | 'success' | 'warning' | 'danger';
 export interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -31,7 +32,7 @@ const pct = (v: number, max: number) => Math.round((v / max) * 100) + "%";
    segment (or turning arc) for when you can't tell; Loader is the lighter choice for that. Renders
    role="progressbar" with aria-valuenow / min / max and aria-valuetext. */
 /** How far along a task is: a bar or a ring with role="progressbar"; leave value out when you can't tell. */
-export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(function Progress(props, ref) {
+export const Progress = /* @__PURE__ */ component<HTMLDivElement, ProgressProps>("Progress", function Progress(props, ref) {
   const rest = omit(props, OWN);
   const base = domId("dk-prg", React.useId());
   const variant = props.variant === "circle" ? "circle" : "bar";
@@ -76,4 +77,3 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(function
     </div>
   );
 });
-Progress.displayName = "Progress";

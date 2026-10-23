@@ -18,7 +18,7 @@ export function tokensCss(t = tokens()) {
   let root = '';
   for (const [, g] of Object.entries(t)) {
     if (!g || !Array.isArray(g.tokens)) continue;
-    for (const x of g.tokens) root += `--${x.name.replace(/\./g, '\\.')}:${ref(first(x.value))};`;
+    for (const x of g.tokens) root += `--${x.name.replace(/[\\.]/g, '\\$&')}:${ref(first(x.value))};`;
   }
   for (const [k, v] of Object.entries(t.type.families)) root += `--font-${k}:${v};`;
   let css = (t.type.fonts || []).map((f) => `@font-face{font-family:"${f.family}";src:url("${path.join(PROJECT, f.file)}") format("woff2");font-weight:${f.weight};font-style:${f.style};font-display:block}`).join('');
@@ -29,13 +29,13 @@ export function tokensCss(t = tokens()) {
   return { css, themes };
 }
 
-// A page with the tokens, bundle.css and (optionally) React + bundle.js, written next to the
+// A page with the tokens, bundle.css and (optionally) React + serupa.iife.js, written next to the
 // project so file:// URLs to fonts and libraries resolve.
 export function writePage(name, body, { react = false, extraHead = '', base = false, theme = false, htmlAttrs = null, bundle = '../dist/bundle.css' } = {}) {
   const dir = path.join(PROJECT, '.test-tmp');
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'tokens.test.css'), tokensCss().css);
-  const libs = react ? ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js', 'dist/bundle.js'].map((s) => `<script src="../${s}"></script>`).join('') : '';
+  const libs = react ? ['dist/lib/react.production.min.js', 'dist/lib/react-dom.production.min.js', 'dist/serupa.iife.js'].map((s) => `<script src="../${s}"></script>`).join('') : '';
   const attrs = htmlAttrs ?? `data-theme="${tokensCss().themes[0]}"`;
   const head = (theme ? '<script src="../dist/theme.js"></script>' : '') + '<link rel="stylesheet" href="tokens.test.css">' + (base ? '<link rel="stylesheet" href="../dist/base.css">' : '') + `<link rel="stylesheet" href="${bundle}">`;
   const html = `<!doctype html><html ${attrs}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${head}${libs}${extraHead}</head><body>${body}</body></html>`;
@@ -50,8 +50,9 @@ export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursi
 export const ENGINE = process.env.SERUPA_BROWSER || 'chromium';
 export const suffix = ENGINE === 'chromium' ? '' : '-' + ENGINE;
 export async function browser() {
+  /** @type {Record<string, import('playwright').BrowserType>} */
   let pw;
-  try { pw = await import('playwright'); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
+  try { pw = /** @type {any} */ (await import('playwright')); } catch { console.error(`Install Playwright first: npm i -D playwright && npx playwright install ${ENGINE}`); process.exit(2); }
   if (!pw[ENGINE]) { console.error(`Unknown SERUPA_BROWSER "${ENGINE}" (chromium, firefox or webkit)`); process.exit(2); }
   // Headless Firefox finds no pointing device and reports (hover: none), so hover styles behind
   // @media (hover: hover) never apply. Give it a desktop's fine, hovering pointer (2 | 4).

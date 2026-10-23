@@ -1,9 +1,10 @@
 import * as React from "react";
-import { cn, domId, isInvalid, omit, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
-import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
+import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
+import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { asIcon, Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
+import { component } from "../../internal/component";
 
 export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
 export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
@@ -43,7 +44,7 @@ const plain = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
    the same (emptying it clears the selection). Only listed options can be picked. It uses Input's box and
    tokens: className and style go to the box; ref and every other prop to the <input>. */
 /** A text field with a list of options that narrows as you type; picks one listed option. */
-export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(function Combobox(props, ref) {
+export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProps>("Combobox", function Combobox(props, ref) {
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -63,7 +64,14 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
   const pop = React.useRef<HTMLDivElement | null>(null);
   const locked = !!rest.disabled || !!rest.readOnly;
 
-  React.useEffect(() => { if (!open || !typed) setText(selected ? selected.label : ""); }, [value, selected && selected.label]);
+  // A new value (or a new label for it) puts its label in the field, unless the person is typing. Done while
+  // rendering, not in an effect, so the field never shows the old label for a frame.
+  const label = selected ? selected.label : "";
+  const [shownFor, setShownFor] = React.useState<[string | null, string]>([value, label]);
+  if (shownFor[0] !== value || shownFor[1] !== label) {
+    setShownFor([value, label]);
+    if (!open || !typed) setText(label);
+  }
 
   const matches = (o: Opt) => {
     if (!typed || props.filter === false) return true;
@@ -129,27 +137,12 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
   };
 
   // Place the list under the field, in the top layer, as wide as the field at least.
-  useIsoLayoutEffect(() => {
-    const p = pop.current, b = box.current;
-    if (!p) return;
-    if (!open || !b) { hideLayer(p); return; }
-    showLayer(p);
-    const update = () => {
-      p.style.minWidth = b.offsetWidth + "px";
-      const r = place(b.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, "bottom-start", cssLength(p, "--dk-combobox-offset"), "bottom-start");
-      p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
-    };
-    update();
-    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
-    if (ro) { ro.observe(p); ro.observe(b); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
-  }, [open]);
+  useAnchoredLayer(open, pop, box, { placement: "bottom-start", offsetVar: "--dk-combobox-offset", matchWidth: true });
   React.useEffect(() => {
     if (!open || active < 0 || !pop.current) return;
     const el = pop.current.querySelector<HTMLElement>("#" + base + "-opt-" + active);
     if (el && typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest" });
-  }, [active, open]);
+  }, [active, open, base]);
 
   const left = asIcon(props.leftIcon);
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
@@ -195,4 +188,3 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
     </span>
   );
 });
-Combobox.displayName = "Combobox";

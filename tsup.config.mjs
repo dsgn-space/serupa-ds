@@ -45,7 +45,7 @@ export default defineConfig([
     esbuildPlugins: [windowReact],
     minify: name !== 'serupa.iife',
     banner: {
-      js: name === 'serupa.iife' ? `/*! Serupa v${version} by Diki · components (needs React 18 or 19) · CHANGELOG.md */` : `/*! Serupa v${version} · every Material Symbol by name (load after serupa.iife.js) · Apache 2.0 */`,
+      js: name === 'serupa.iife' ? `/*! Serupa v${version} by Diki · components (needs React 19) · CHANGELOG.md */` : `/*! Serupa v${version} · every Material Symbol by name (load after serupa.iife.js) · Apache 2.0 */`,
     },
   })),
 ]);

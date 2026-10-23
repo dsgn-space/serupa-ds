@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
+import { component } from "../../internal/component";
 
 export type SliderValue = number | [number, number];
 /** V is a number for one thumb or [low, high] for a range, inferred from value, defaultValue or the callbacks. */
@@ -39,7 +40,7 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min
    go to the ends. A press anywhere on the track moves the nearest thumb there; range thumbs can't cross.
    onValueChange fires as it moves, onValueCommit once when a drag or key press ends. */
 /** Picks a number, or a range with two thumbs, on a track. */
-export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
+export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Slider", function Slider(props, ref) {
   const rest = omit(props, OWN);
   const min = isFinite(Number(props.min)) && props.min != null ? Number(props.min) : 0;
   const maxIn = isFinite(Number(props.max)) && props.max != null ? Number(props.max) : 100;
@@ -137,4 +138,3 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Sli
     </div>
   );
 }) as (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
-Slider.displayName = "Slider";

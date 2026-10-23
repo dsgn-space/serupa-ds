@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
+import { component } from "../../internal/component";
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   /** The slides, one per child (pictures, cards, anything). */
@@ -37,7 +38,7 @@ const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1
 const SWIPE = 40; // px a swipe must travel to change the slide
 
 /** One slide at a time, with previous and next buttons, dots and swipe. */
-export const Carousel = React.forwardRef<HTMLElement, CarouselProps>(function Carousel(props, ref) {
+export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("Carousel", function Carousel(props, ref) {
   const rest = omit(props, OWN);
   const slides = React.Children.toArray(props.children);
   const count = slides.length;
@@ -161,4 +162,3 @@ export const Carousel = React.forwardRef<HTMLElement, CarouselProps>(function Ca
     </section>
   );
 });
-Carousel.displayName = "Carousel";

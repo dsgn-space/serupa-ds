@@ -8,11 +8,11 @@
 //    within 1px (text is measured slightly differently by each engine). Values a browser doesn't
 //    support are listed in KNOWN with the reason; anything else that differs fails.
 // 2. Behaviour in the engine: responsive classes at each breakpoint, base.css, theme.js, Button
-//    (submit, type default, loading blocks clicks and Enter, link Buttons, announcement), purge.py output.
+//    (submit, type default, loading blocks clicks and Enter, link Buttons, announcement), serupa-purge output.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { HERE, PROJECT, read, writePage, browser, cleanup, report } from './lib.mjs';
+import { PROJECT, read, writePage, browser, cleanup, report } from './lib.mjs';
 import { ENGINES, startDriver, session, KEY } from './webdriver.mjs';
 
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : d; };
@@ -217,14 +217,14 @@ try {
   t('Loader: the spokes tick round, fading behind the lead spoke', sp.spk[0] === 8 && sp.spk[1] === 'dk-loader-tick' && /step-end|steps\(1(, (jump-)?end)?\)/.test(sp.spk[2]) && sp.spk[3] === '0.25', JSON.stringify(sp.spk));
   t('Loader: the dots pulse', sp.dots.length === 3 && sp.dots.every((n) => n === 'dk-loader-dot'), JSON.stringify(sp.dots));
 
-  // purge.py output renders the same in this engine
+  // serupa-purge output renders the same in this engine
   const dir = path.join(PROJECT, '.test-tmp'); fs.mkdirSync(dir, { recursive: true });
   const SAMPLE = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-surface-muted"><div class="rounded-lg shadow-md p-4 bg-surface text-sm md:text-base divide-y divide-border"><p class="py-2">a</p><p class="py-2">b</p></div><input class="h-control-md px-3 border border-field-border bg-field rounded-md" placeholder="Name"><p class="hidden lg:block text-primary">x</p></div>';
   fs.writeFileSync(path.join(dir, 'sample.html'), SAMPLE);
-  execFileSync('python3', ['-I', path.join(HERE, '..', 'purge.py'), path.join(dir, 'sample.html'), '-o', path.join(dir, 'min.css'), '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
+  execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), path.join(dir, 'sample.html'), '-o', path.join(dir, 'min.css'), '--css', path.join(PROJECT, 'dist', 'bundle.css')], { stdio: 'ignore' });
   const snap = async (bundle) => { await wd.goto(writePage('compat-purge.html', SAMPLE, { bundle })); await wd.evaluate(() => document.fonts.ready);
     return wd.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e), o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return o.sort().join(';'); }).join('\n')); };
-  t('purge.py: trimmed CSS renders identically in this engine', (await snap('../dist/bundle.css')) === (await snap('min.css')));
+  t('serupa-purge: trimmed CSS renders identically in this engine', (await snap('../dist/bundle.css')) === (await snap('min.css')));
 } finally {
   await wd.quit().catch(() => {});
   if (drv) drv.stop();

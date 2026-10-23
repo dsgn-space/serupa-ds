@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit, SIZES } from "../../internal/cn";
 import { announce, ensureAnnouncer } from "../../internal/announce";
+import { component } from "../../internal/component";
 
 export type LoaderVariant = 'ring' | 'spokes' | 'dots' | 'pixel' | 'text' | 'skeleton';
 export type LoaderShape = 'text' | 'circle' | 'rect';
@@ -54,7 +55,7 @@ const PIXEL_STEPS: Record<string, number[]> = {
 const OWN = { variant: 1, size: 1, tone: 1, label: 1, delay: 1, shape: 1, lines: 1, pattern: 1, glow: 1, className: 1 } as const;
 
 /** Shows that something is loading when you can't say how far along it is. Mark the area that's loading with aria-busy while it shows. */
-export const Loader = React.forwardRef<HTMLSpanElement, LoaderProps>(function Loader(props, ref) {
+export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>("Loader", function Loader(props, ref) {
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, "ring");
   const size = oneOf(SIZES, props.size, "md");
@@ -67,13 +68,17 @@ export const Loader = React.forwardRef<HTMLSpanElement, LoaderProps>(function Lo
   const words = label || "Loading";   // the text variant always shows words; label="" only makes it decorative
   const delay = props.delay == null ? 300 : Math.max(0, Number(props.delay) || 0);
   const [shown, setShown] = React.useState(delay === 0);
+  const [wait] = React.useState(delay);   // the delay it mounted with: a later change doesn't restart the wait
   React.useEffect(function () {
     if (shown) return;
-    const t = setTimeout(function () { setShown(true); }, delay);
+    const t = setTimeout(function () { setShown(true); }, wait);
     return function () { clearTimeout(t); };
-  }, []);
+  }, [shown, wait]);
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
-  React.useEffect(function () { if (shown && label) announce(label); }, [shown]);
+  // Announced once, when it shows, with the label it has then (a later label change isn't announced again).
+  const latestLabel = React.useRef(label);
+  React.useEffect(function () { latestLabel.current = label; });
+  React.useEffect(function () { if (shown && latestLabel.current) announce(latestLabel.current); }, [shown]);
 
   rest["data-component"] = "loader";
   rest["data-variant"] = variant;
@@ -134,4 +139,3 @@ export const Loader = React.forwardRef<HTMLSpanElement, LoaderProps>(function Lo
     </span>
   );
 });
-Loader.displayName = "Loader";

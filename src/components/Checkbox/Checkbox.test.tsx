@@ -82,8 +82,9 @@ describe('Checkbox', () => {
     expect(css(icon).color).toBe(color('var(--on-primary)'));
     expect(icon.getAttribute('aria-hidden')).toBe('true');
     input('c').focus();
-    await userEvent.keyboard(' ');
-    expect(input('c').checked).toBe(false);
+    await userEvent.keyboard('[Space]');
+    // Firefox and WebKit can report back before React has re-rendered the controlled checkbox
+    await expect.poll(() => input('c').checked).toBe(false);
   });
 
   test('indeterminate: a dash on the primary fill (the native mixed state); it follows the prop after a click', async () => {

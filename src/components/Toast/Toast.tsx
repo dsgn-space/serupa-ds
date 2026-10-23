@@ -4,6 +4,7 @@ import { announce, ensureAnnouncer } from "../../internal/announce";
 import { Icon } from "../Icon/Icon";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
+import { named } from "../../internal/component";
 
 export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
@@ -35,7 +36,7 @@ const text = (n: React.ReactNode) => (typeof n === "string" || typeof n === "num
 const TONES: readonly ToastTone[] = ["neutral", "info", "success", "warning", "danger"];
 
 /** Shows a toast in the page's <Toaster> and returns its id. */
-export function toast(options: ToastOptions | string): string {
+function show(options: ToastOptions | string): string {
   const o: ToastOptions = typeof options === "string" ? { title: options } : options;
   const id = o.id || "dk-toast-" + ++next;
   const item: Item = Object.assign({}, o, { id: id, tone: oneOf(TONES, o.tone, "neutral") });
@@ -47,10 +48,12 @@ export function toast(options: ToastOptions | string): string {
   return id;
 }
 /** Closes one toast, or every toast with no id. */
-toast.dismiss = function dismiss(id?: string): void {
+function dismiss(id?: string): void {
   items = id == null ? [] : items.filter((x) => x.id !== id);
   emit();
-};
+}
+/** Shows a toast in the page's <Toaster> and returns its id; toast.dismiss(id) closes it. */
+export const toast = /* @__PURE__ */ Object.assign(show, { dismiss });
 
 export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
   /** Where toasts appear: 'bottom-end' (default), 'bottom-start', 'bottom-center', 'top-start', 'top-center' or 'top-end'. Start and end follow the text direction. */
@@ -68,7 +71,7 @@ const ICONS: Record<ToastTone, string | null> = { neutral: null, info: "info", s
    description, tone icon, action and close button, and goes after its duration; the time stops while it's
    hovered or focused. New toasts are announced through the shared polite live region. */
 /** The place toast() messages appear: render one, once, near the root of the app. */
-export function Toaster(props: ToasterProps): React.ReactElement {
+export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: ToasterProps): React.ReactElement {
   const { position, label, dismissLabel, className, ...rest } = props;
   const [list, setList] = React.useState<Item[]>(items);
   React.useEffect(() => { ensureAnnouncer(); listeners.add(setList); setList(items); return () => { listeners.delete(setList); }; }, []);
@@ -81,8 +84,7 @@ export function Toaster(props: ToasterProps): React.ReactElement {
       </ol>
     </section>
   );
-}
-Toaster.displayName = "Toaster";
+});
 
 function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElement {
   const t = props.item;
@@ -93,7 +95,7 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
   const [hidden, setHidden] = React.useState(false);
   const paused = hovered || focused || hidden;
   const left = React.useRef(duration);
-  React.useEffect(() => { left.current = duration; }, [t]);   // a replaced toast starts its time again
+  React.useEffect(() => { left.current = duration; }, [t, duration]);   // a replaced toast starts its time again
   React.useEffect(() => {
     if (!duration || paused) return;
     const start = Date.now();

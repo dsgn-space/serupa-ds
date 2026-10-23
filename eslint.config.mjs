@@ -1,11 +1,12 @@
 // npm run lint: ESLint for the TypeScript, the stories and the tools (Stylelint checks the CSS).
+import './tools/typescript/api.mjs';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/'] },
+  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api.d.ts', '.claude/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -26,12 +27,12 @@ export default tseslint.config(
     languageOptions: { globals: globals.browser },
     // The two classic hook rules only. Plugin 7's recommended set also turns on the React Compiler rules
     // (refs, immutability and others), which flag patterns the components use on purpose.
-    rules: { 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'warn' },
+    rules: { 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'error' },
   },
   {
     // The tests are Node scripts, but much of their code runs in the page (page.evaluate), where React,
     // ReactDOM and the system's own globals exist; TypeScript-style undefined checks don't apply there.
-    files: ['tools/**/*.mjs', '*.mjs'],
+    files: ['tools/**/*.mjs', 'bin/**/*.mjs', '*.mjs'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
     rules: { 'no-undef': 'off' },
   },

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
@@ -30,7 +31,7 @@ const OWN = { src: 1, name: 1, alt: 1, size: 1, shape: 1, status: 1, statusLabel
 export const AVATAR_SIZES: readonly AvatarSize[] = ["xs", "sm", "md", "lg", "xl"];
 const SIZES = AVATAR_SIZES;
 /** The size an AvatarGroup sets for every Avatar inside it, however deep (inside a Tooltip or a link too). */
-export const AvatarGroupSize = React.createContext<AvatarSize | null>(null);
+export const AvatarGroupSize = /* @__PURE__ */ React.createContext<AvatarSize | null>(null);
 const STATUSES: readonly AvatarStatus[] = ["online", "busy", "away", "offline"];
 
 /** The initials of a name: the first letters of the first and last words ("Ada Lovelace" → "AL"), or one letter. */
@@ -43,7 +44,7 @@ export function initials(name?: string): string {
 }
 
 /** A picture of a person, team or project, with initials or an icon when there's no picture. */
-export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(props, ref) {
+export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>("Avatar", function Avatar(props, ref) {
   const rest = omit(props, OWN);
   const size = React.useContext(AvatarGroupSize) || oneOf(SIZES, props.size, "md");
   const square = props.shape === "square";
@@ -69,4 +70,3 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(function Av
     </span>
   );
 });
-Avatar.displayName = "Avatar";

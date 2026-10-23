@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
+import { component } from "../../internal/component";
 
 export type TabsVariant = 'line' | 'pill';
 
@@ -20,7 +21,7 @@ export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'o
 }
 
 interface Ctx { base: string; value: string | null; select: (v: string) => void; manual: boolean; panels: Record<string, number>; register: (v: string, d: number) => void }
-const TabsContext = React.createContext<Ctx | null>(null);
+const TabsContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 const useTabs = (who: string): Ctx => {
   const c = React.useContext(TabsContext);
   if (!c) throw new Error("Serupa: " + who + " must be inside <Tabs>.");
@@ -33,7 +34,7 @@ const safe = (v: string) => String(v).replace(/[^A-Za-z0-9_-]/g, "_");
    Arrow keys move between tabs (following the text direction), Home and End jump to the ends; with activation
    "auto" moving also selects. Only the selected tab is in the Tab order, and the selected panel follows it. */
 /** Switches between panels in one place: Tabs > TabList > Tab, and a TabPanel for each tab. */
-export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(function Tabs(props, ref) {
+export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>("Tabs", function Tabs(props, ref) {
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, variant: 1, size: 1, activation: 1, className: 1 });
   const base = domId("dk-tabs", React.useId());
   const controlled = props.value !== undefined;
@@ -61,10 +62,9 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(function Tabs(pr
     </TabsContext.Provider>
   );
 });
-Tabs.displayName = "Tabs";
 
 /** The row of tabs. Give it an aria-label when the page doesn't already say what the tabs are for. */
-export const TabList = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(function TabList(props, ref) {
+export const TabList = /* @__PURE__ */ component<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>("TabList", function TabList(props, ref) {
   const ctx = useTabs("TabList");
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (props.onKeyDown) props.onKeyDown(e);
@@ -85,7 +85,6 @@ export const TabList = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
   };
   return <div {...props} ref={ref} role="tablist" aria-orientation="horizontal" className={cn("dk-tabs__list", props.className)} onKeyDown={onKeyDown} />;
 });
-TabList.displayName = "TabList";
 
 export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {
   /** Ties the tab to the TabPanel with the same value. */
@@ -95,7 +94,7 @@ export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElem
 }
 
 /** One tab: a button that selects its panel. */
-export const Tab = React.forwardRef<HTMLButtonElement, TabProps>(function Tab(props, ref) {
+export const Tab = /* @__PURE__ */ component<HTMLButtonElement, TabProps>("Tab", function Tab(props, ref) {
   const ctx = useTabs("Tab");
   const rest = omit(props, { value: 1, icon: 1, className: 1, children: 1 });
   const selected = ctx.value === props.value;
@@ -109,7 +108,6 @@ export const Tab = React.forwardRef<HTMLButtonElement, TabProps>(function Tab(pr
     </button>
   );
 });
-Tab.displayName = "Tab";
 
 export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The value of the Tab that shows this panel. */
@@ -119,7 +117,7 @@ export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** The content for one tab, shown while its tab is selected. */
-export const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(props, ref) {
+export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>("TabPanel", function TabPanel(props, ref) {
   const ctx = useTabs("TabPanel");
   const rest = omit(props, { value: 1, keepMounted: 1, className: 1, children: 1 });
   const selected = ctx.value === props.value;
@@ -133,4 +131,3 @@ export const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(function
     </div>
   );
 });
-TabPanel.displayName = "TabPanel";

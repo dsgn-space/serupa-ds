@@ -41,7 +41,7 @@ const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.
 ## Accessibility
 
 - `role="menu"` with `menuitem`s, `group`s and `separator`s; only the highlighted item takes focus.
-- Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in all six themes (`tools/test/menu.mjs`).
+- Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in all six themes (`Menu.test.tsx`).
 
 ### Keyboard
 

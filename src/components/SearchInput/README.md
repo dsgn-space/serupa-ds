@@ -37,7 +37,7 @@ const [q, setQ] = React.useState("");
 ## Accessibility
 
 - `type="search"` (a searchbox) with `enterkeyhint="search"`. Name it with a `<label>` or `aria-label`; a placeholder isn't a name.
-- The icon and × keep 3:1 and the text 4.5:1 on the field in all six themes (`tools/test/search-input.mjs`).
+- The icon and × keep 3:1 and the text 4.5:1 on the field in all six themes (`SearchInput.test.tsx`).
 
 ## Props
 

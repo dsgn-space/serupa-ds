@@ -1,4 +1,4 @@
-// The browser script (serupa.iife.js, also shipped as bundle.js): reads React from window.React and puts
+// The browser script (serupa.iife.js): reads React from window.React and puts
 // the components on window.Serupa, for plain pages without a bundler.
 import * as Serupa from "./index";
 

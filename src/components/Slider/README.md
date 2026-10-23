@@ -37,7 +37,7 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 ## Accessibility
 
 - Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
-- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`tools/test/slider.mjs`). In forced-colors mode it uses system colors.
+- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
 
 ### Keyboard
 

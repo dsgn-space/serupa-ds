@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
+import { component } from "../../internal/component";
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -35,7 +36,7 @@ const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, lab
    vertical. A <nav> around an <ol>; the current step has aria-current="step", and completed or error steps say
    so to screen readers. With onStepClick, completed steps are buttons that go back to them. */
 /** Where people are in a task split into steps: numbered circles joined by lines. */
-export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Stepper(props, ref) {
+export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Stepper", function Stepper(props, ref) {
   const rest = omit(props, OWN);
   const steps = props.steps || [];
   const current = Math.max(0, Math.min(steps.length, Math.floor(Number(props.current)) || 0));
@@ -75,4 +76,3 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
     </nav>
   );
 });
-Stepper.displayName = "Stepper";

@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { asIcon, Icon } from "../Icon/Icon";
 import type { InputProps } from "../Input/Input";
+import { component } from "../../internal/component";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -33,7 +34,7 @@ const decimals = (n: number) => { const s = String(n); const i = s.indexOf(".");
    rounded to the step's decimals. It uses Input's box and tokens: className and style go to the box; ref and
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
-export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(function NumberInput(props, ref) {
+export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>("NumberInput", function NumberInput(props, ref) {
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -132,4 +133,3 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     </span>
   );
 });
-NumberInput.displayName = "NumberInput";
