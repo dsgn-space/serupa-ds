@@ -22,11 +22,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { HERE, projectArg, report, done } from './lib.mjs';
 
-const HERE = path.dirname(new URL(import.meta.url).pathname);
-const P = path.resolve(process.argv[2] || path.join(HERE, '..', '..'));
+const P = projectArg();
 const results = [];
-const check = (name, ok, detail = '') => results.push([name, !!ok, detail]);
+const check = (name, ok, detail = '') => results.push({ name, ok: !!ok, detail });
 const read = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -320,7 +320,4 @@ for (const f of testFiles(path.join('tools', 'test'))) {
 }
 check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
 
-for (const [name, ok, detail] of results) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}` + (ok || !detail ? '' : `\n      ${detail}`));
-const failed = results.filter((r) => !r[1]);
-console.log(`\nFoundation: ${results.length - failed.length}/${results.length} passed`);
-process.exit(failed.length ? 1 : 0);
+done(report('Foundation', results));

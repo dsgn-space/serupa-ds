@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from "../../internal/dates";

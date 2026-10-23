@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf } from "../../internal/cn";
 import { announce, ensureAnnouncer } from "../../internal/announce";

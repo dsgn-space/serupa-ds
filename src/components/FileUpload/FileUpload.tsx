@@ -1,9 +1,13 @@
+"use client";
 import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { formatFileSize } from "./formatFileSize";
+
+export { formatFileSize };
 
 export type FileRejection = { file: File; reason: 'type' | 'size' | 'count'; message: string };
 export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'title'> {
@@ -36,14 +40,6 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, className: 1, id: 1 } as const;
 
-/** A file size for people: 1.5 MB, 820 KB, 12 B. */
-export function formatFileSize(bytes: number): string {
-  if (!(bytes >= 0)) return "";
-  const units = ["B", "KB", "MB", "GB", "TB"];
-  let i = 0, n = bytes;
-  while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
-  return (i === 0 ? String(n) : n >= 10 ? String(Math.round(n)) : String(Math.round(n * 10) / 10)) + " " + units[i];
-}
 function accepts(file: File, accept?: string) {
   if (!accept) return true;
   const name = file.name.toLowerCase(), type = (file.type || "").toLowerCase();

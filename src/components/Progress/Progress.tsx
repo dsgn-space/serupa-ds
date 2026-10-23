@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, oneOf, omit, SIZES } from "../../internal/cn";
 import { component } from "../../internal/component";

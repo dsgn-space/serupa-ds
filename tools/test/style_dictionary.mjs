@@ -7,16 +7,16 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { HERE, tokens, report } from './lib.mjs';
+import { HERE, tokens, report, done, fail } from './lib.mjs';
 
 try { await import('style-dictionary'); } catch {
   // In CI a missing install is a failure, not a skip, so the check can't pass by accident.
-  if (process.env.CI) { console.log('FAIL  Style Dictionary is not installed (npm ci should install it)'); process.exit(1); }
+  if (process.env.CI || process.env.VITEST) fail('Style Dictionary is not installed (npm ci should install it)');
   console.log('SKIP  Style Dictionary is not installed (npm i -D style-dictionary@5)'); process.exit(0);
 }
 const out = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-sd-'));
 const r = spawnSync('node', [path.join(HERE, '..', 'tokens', 'style-dictionary.config.mjs'), out], { encoding: 'utf8' });
-if (r.status !== 0) { console.log('FAIL  Style Dictionary build\n' + r.stderr); process.exit(1); }
+if (r.status !== 0) fail('Style Dictionary build\n' + r.stderr);
 
 const t = tokens();
 const first = (v) => (v && typeof v === 'object' ? Object.values(v)[0] : v);
@@ -62,4 +62,4 @@ for (const f of files) {
 }
 fs.rmSync(out, { recursive: true, force: true });
 console.log(`(${compared} values compared across ${files.length} themes)`);
-process.exit(report('Style Dictionary', R) ? 0 : 1);
+done(report('Style Dictionary', R));
