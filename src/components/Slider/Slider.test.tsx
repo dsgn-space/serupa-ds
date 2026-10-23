@@ -1,0 +1,160 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { Slider } from './Slider';
+
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const thumb = (id: string, i = 0) => el(id).querySelectorAll<HTMLElement>('[role=slider]')[i];
+const now = (id: string, i = 0) => Number(thumb(id, i).getAttribute('aria-valuenow'));
+const rect = (e: Element) => e.getBoundingClientRect();
+const track = (id: string) => rect(el(id).querySelector('.dk-slider__track')!);
+const center = (e: Element) => { const r = rect(e); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; };
+// A point on the track at a share of its width, relative to the slider root (as Playwright's positions are).
+const at = (id: string, share: number) => { const t = track(id), r = rect(el(id)); return { x: t.left - r.left + t.width * share, y: r.height / 2 }; };
+const press = (id: string, share: number) => userEvent.click(el(id), { position: at(id, share) });
+
+let calls: number[] = [], commits: string[] = [];
+function Range() {
+  const [v, set] = React.useState<[number, number]>([20, 80]);
+  return <Slider id="rng" aria-label="Price" value={v} onValueChange={set} onValueCommit={(n) => { commits.push(n.join('-')); }} formatValue={(n) => '$' + n} name="price" />;
+}
+function App(props: { sref?: React.Ref<HTMLDivElement> }) {
+  return <div style={{ width: '420px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <span id="vlab">Volume</span>
+    <Slider id="one" aria-labelledby="vlab" defaultValue={50} ref={props.sref} className="extra" onValueChange={(v) => { calls.push(v); }} onValueCommit={(v) => { commits.push(String(v)); }} />
+    <Range />
+    <Slider id="stp" aria-label="Step" defaultValue={0.5} min={0} max={1} step={0.1} />
+    <Slider id="dis" aria-label="Dis" defaultValue={30} disabled />
+    <Slider id="sm" aria-label="Small" size="sm" defaultValue={0} />
+    <div dir="rtl"><Slider id="rtl" aria-label="RTL" defaultValue={25} /></div>
+    <Slider id="tok" aria-label="Tok" defaultValue={40} style={{ '--slider-fill': 'rgb(1, 2, 3)' } as React.CSSProperties} />
+  </div>;
+}
+const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits = []; await render(<App sref={sref} />); };
+
+describe('Slider', () => {
+  test('one thumb: a role="slider" at 50 of 0..100, labelled by aria-labelledby, in the Tab order; ref and className reach the root; md is 20px tall', async () => {
+    const ref = React.createRef<HTMLDivElement>();
+    await setup(ref);
+    const root = el('one'), th = thumb('one');
+    expect([root.querySelectorAll('[role=slider]').length, th.getAttribute('aria-valuenow'), th.getAttribute('aria-valuemin'), th.getAttribute('aria-valuemax')]).toEqual([1, '50', '0', '100']);
+    expect([th.getAttribute('aria-labelledby'), th.tabIndex, th.getAttribute('aria-orientation'), root.getAttribute('role')]).toEqual(['vlab', 0, 'horizontal', null]);
+    expect([ref.current === root, root.dataset.component, rect(root).height]).toEqual([true, 'slider', 20]);
+    expect(root.className).toMatch(/extra/);
+  });
+
+  test('the thumb is centered on 50% of the track, vertically on the track; the fill covers half', async () => {
+    await setup();
+    const t = track('one'), c = center(thumb('one')), f = rect(el('one').querySelector('.dk-slider__fill')!);
+    expect(Math.abs(c.x - (t.left + t.width / 2))).toBeLessThanOrEqual(1);
+    expect(Math.abs(c.y - (t.top + t.height / 2))).toBeLessThanOrEqual(1);
+    expect(Math.round(f.width / t.width * 100)).toBe(50);
+  });
+
+  test('keys: Right/Up +1, Left/Down −1, Shift+arrow ±10, PageDown −10, End/Home to the ends, clamped; onValueCommit once per press that changed the value (not at the ends)', async () => {
+    await setup();
+    thumb('one').focus();
+    const seq: number[] = [];
+    for (const k of ['{ArrowRight}', '{ArrowUp}', '{ArrowLeft}', '{ArrowDown}', '{ArrowDown}', '{Shift>}{ArrowUp}{/Shift}', '{PageDown}', '{PageDown}', '{End}', '{ArrowRight}', '{Home}', '{ArrowLeft}']) {
+      await userEvent.keyboard(k); seq.push(now('one'));
+    }
+    expect(seq.join()).toBe('51,52,51,50,49,59,49,39,100,100,0,0');
+    expect(commits.join()).toBe('51,52,51,50,49,59,49,39,100,0');
+  });
+
+  test('pointer: a press on the track jumps there (30) and dragging follows (60), with one commit at the end; the thumb takes focus', async () => {
+    await setup();
+    await userEvent.dragAndDrop(el('one'), el('one'), { sourcePosition: at('one', 0.3), targetPosition: at('one', 0.6), steps: 5 });
+    expect([calls[0], now('one'), commits.join(), document.activeElement === thumb('one')]).toEqual([30, 60, '60', true]);
+    expect(calls.length).toBeGreaterThanOrEqual(2);
+  });
+
+  test('pointer: dragging past the end clamps (100), changing as it goes, with one commit at the end', async () => {
+    await setup();
+    const t = track('one'), b = rect(document.body);
+    // past the end, but inside the viewport: Firefox mangles synthetic mouse events outside it
+    const beyond = { x: Math.min(t.right + 80, innerWidth - 10) - b.left, y: t.top + t.height / 2 - b.top };
+    await userEvent.dragAndDrop(el('one'), document.body, { sourcePosition: at('one', 0.3), targetPosition: beyond, steps: 5 });
+    expect([calls[0], now('one'), commits.join()]).toEqual([30, 100, '100']);
+    expect(calls.length).toBeGreaterThanOrEqual(3);
+  });
+
+  test('range: a group named "Price" with thumbs "Minimum" (20, 0..80) and "Maximum" (80, 20..100), valuetext "$20"/"$80", and two hidden inputs', async () => {
+    await setup();
+    const root = el('rng'), th = [...root.querySelectorAll('[role=slider]')];
+    expect([root.getAttribute('role'), root.getAttribute('aria-label')]).toEqual(['group', 'Price']);
+    expect(th.map((x) => x.getAttribute('aria-label'))).toEqual(['Minimum', 'Maximum']);
+    expect(th.map((x) => x.getAttribute('aria-valuenow'))).toEqual(['20', '80']);
+    expect(th.map((x) => x.getAttribute('aria-valuemin') + '..' + x.getAttribute('aria-valuemax'))).toEqual(['0..80', '20..100']);
+    expect(th.map((x) => x.getAttribute('aria-valuetext'))).toEqual(['$20', '$80']);
+    expect([...root.querySelectorAll<HTMLInputElement>('input[type=hidden]')].map((i) => i.name + '=' + i.value)).toEqual(['price=20', 'price=80']);
+  });
+
+  test('range: a press moves the nearest thumb (90 → the high one, 10 → the low one); the low thumb\'s End goes up to the high thumb, and it can\'t pass it', async () => {
+    await setup();
+    await press('rng', 0.9);
+    expect([now('rng', 0), now('rng', 1)]).toEqual([20, 90]);
+    await press('rng', 0.1);
+    expect([now('rng', 0), now('rng', 1)]).toEqual([10, 90]);
+    thumb('rng', 0).focus();
+    await userEvent.keyboard('{End}');
+    expect([now('rng', 0), now('rng', 1)]).toEqual([90, 90]);
+    await userEvent.keyboard('{ArrowRight}');
+    expect([now('rng', 0), now('rng', 1)]).toEqual([90, 90]);
+  });
+
+  test('step 0.1: 0.5 → 0.8 with no floating-point noise; a press snaps to the nearest step (23.4% → 0.2)', async () => {
+    await setup();
+    thumb('stp').focus();
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}{ArrowRight}');
+    expect(now('stp')).toBe(0.8);
+    await press('stp', 0.234);
+    expect(now('stp')).toBe(0.2);
+  });
+
+  test('disabled: out of the Tab order, aria-disabled, faded, and presses do nothing', async () => {
+    await setup();
+    const th = thumb('dis');
+    expect([th.tabIndex, th.getAttribute('aria-disabled'), css(el('dis')).opacity]).toEqual([-1, 'true', '0.5']);
+    await press('dis', 0.9);
+    expect(now('dis')).toBe(30);
+  });
+
+  test('sm: 16px thumb on a 4px track; at 0 the thumb is centered on the track\'s start and stays inside the slider', async () => {
+    await setup();
+    const t = track('sm'), c = center(thumb('sm'));
+    expect([rect(el('sm')).height, t.height, c.w]).toEqual([16, 4, 16]);
+    expect(Math.abs(c.x - t.left)).toBeLessThanOrEqual(1);
+    expect(c.x - 8).toBeGreaterThanOrEqual(rect(el('sm')).left - 1);
+  });
+
+  test('right-to-left: 25 sits a quarter in from the right, ArrowLeft raises it, and a press near the left edge is near max', async () => {
+    await setup();
+    const t = track('rtl'), c = center(thumb('rtl'));
+    expect(Math.abs(c.x - (t.right - t.width * 0.25))).toBeLessThanOrEqual(1);
+    thumb('rtl').focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(now('rtl')).toBe(26);
+    await press('rtl', 0.1);
+    expect(now('rtl')).toBe(90);
+  });
+
+  test('contrast: the track, fill and thumb ring keep 3:1 on the page in all six themes', async () => {
+    await setup();
+    const low: string[] = []; let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const page = css(document.body).backgroundColor, q = (s: string) => css(el('one').querySelector(s));
+      const parts = { track: q('.dk-slider__track').backgroundColor, fill: q('.dk-slider__fill').backgroundColor, thumb: q('.dk-slider__thumb').borderTopColor };
+      for (const [k, c] of Object.entries(parts)) { const r = contrast(c, page); n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
+    }
+    expect([low, n]).toEqual([[], 18]);
+  });
+
+  test('--slider-fill overrides one slider', async () => {
+    await setup();
+    expect(css(el('tok').querySelector('.dk-slider__fill')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+});

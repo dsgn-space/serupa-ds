@@ -18,7 +18,7 @@ const GAPS = {};
 
 // Still tested by a script in tools/test/ instead of <Name>.test.tsx. They move over one at a time; when one
 // gets its own test file, take it off this list (the check fails until you do). Nothing new joins it.
-const SCRIPT_TESTED = ['Accordion', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'Button', 'ButtonGroup', 'Card', 'Carousel', 'Fab', 'IconButton', 'Loader', 'Slider', 'Stepper', 'Switch', 'Table', 'Tabs', 'Textarea', 'Toast', 'ToggleButton'];
+const SCRIPT_TESTED = ['Accordion', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'Button', 'ButtonGroup', 'Card', 'Carousel', 'Fab', 'IconButton', 'Loader', 'Stepper', 'Switch', 'Table', 'Tabs', 'Textarea', 'Toast', 'ToggleButton'];
 
 const COMP = path.join(PROJECT, 'src', 'components');
 const comps = fs.readdirSync(COMP).filter((c) => fs.statSync(path.join(COMP, c)).isDirectory() && !SKIP.includes(c)).sort();
