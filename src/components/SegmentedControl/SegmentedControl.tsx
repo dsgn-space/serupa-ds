@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { asIcon, type IconSource } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFormReset } from "../../internal/useFormReset";
 
 export interface SegmentedControlOption {
   value: string;
@@ -48,6 +49,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const [own, setOwn] = React.useState<string | undefined>(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value);
   const value = controlled ? props.value : own;
   const root = React.useRef<HTMLDivElement | null>(null);
+  useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value); });
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
   const size = props.size === "sm" ? "sm" : "md";

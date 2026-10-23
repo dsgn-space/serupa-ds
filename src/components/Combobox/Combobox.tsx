@@ -5,6 +5,7 @@ import { asIcon, Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { useFormReset } from "../../internal/useFormReset";
 
 export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
 export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
@@ -63,6 +64,11 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const input = React.useRef<HTMLInputElement | null>(null);
   const pop = React.useRef<HTMLDivElement | null>(null);
   const locked = !!rest.disabled || !!rest.readOnly;
+  useFormReset(input, () => {
+    if (controlled) return;
+    const v = props.defaultValue ?? null, o = opts.find((x) => x.value === v);
+    setOwnValue(v); setText(o ? o.label : ""); setTyped(false); setOpen(false);
+  });
 
   // A new value (or a new label for it) puts its label in the field, unless the person is typing. Done while
   // rendering, not in an effect, so the field never shows the old label for a frame.
