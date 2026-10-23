@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IconData, MaterialIconName } from "./icons.js";
-type ThemeBrand = "blue" | "violet" | "emerald";
-type ThemeMode = "auto" | "light" | "dark";
+type ThemeBrand = "blue" | "emerald" | "violet";
+type ThemeMode = "auto" | "dark" | "light";
 interface ThemeInfo {
     brand: ThemeBrand;
     mode: ThemeMode;
@@ -17,12 +17,12 @@ interface SerupaTheme {
     onChange(fn: (info: ThemeInfo) => void): () => void;
 }
 interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
-    type?: "single" | "multiple";
+    type?: "multiple" | "single";
     value?: string[];
     defaultValue?: string[];
     onValueChange?: (value: string[]) => void;
     collapsible?: boolean;
-    variant?: "plain" | "card";
+    variant?: "card" | "plain";
     headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
@@ -37,26 +37,26 @@ type CustomIconName = never;
 declare const customIcons: readonly CustomIconName[];
 declare function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void;
 declare function getIcon(name: string): IconData | undefined;
-type IconName = CustomIconName | MaterialIconName | (string & {});
-type IconSource = IconName | IconData | React.ReactNode;
+type IconName = (string & {}) | CustomIconName | MaterialIconName;
+type IconSource = IconData | IconName | React.ReactNode;
 interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
     name?: IconName;
     icon?: IconData;
     size?: number | string;
 }
 declare const Icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<HTMLSpanElement>>;
-type AlertTone = "info" | "success" | "warning" | "danger" | "neutral";
+type AlertTone = "danger" | "info" | "neutral" | "success" | "warning";
 interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
     tone?: AlertTone;
     title?: React.ReactNode;
-    icon?: IconSource | false;
+    icon?: false | IconSource;
     actions?: React.ReactNode;
     onDismiss?: () => void;
     dismissLabel?: string;
 }
 declare const Alert: React.ForwardRefExoticComponent<AlertProps & React.RefAttributes<HTMLDivElement>>;
-type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
-type AvatarStatus = "online" | "busy" | "away" | "offline";
+type AvatarSize = "lg" | "md" | "sm" | "xl" | "xs";
+type AvatarStatus = "away" | "busy" | "offline" | "online";
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
     src?: string;
     name?: string;
@@ -77,8 +77,8 @@ interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     label?: string;
 }
 declare const AvatarGroup: React.ForwardRefExoticComponent<AvatarGroupProps & React.RefAttributes<HTMLDivElement>>;
-type BadgeVariant = "subtle" | "solid" | "outline";
-type BadgeTone = "neutral" | "primary" | "success" | "warning" | "danger" | "info" | "red" | "orange" | "amber" | "yellow" | "lime" | "green" | "emerald" | "teal" | "cyan" | "sky" | "blue" | "indigo" | "violet" | "purple" | "fuchsia" | "pink" | "rose";
+type BadgeVariant = "outline" | "solid" | "subtle";
+type BadgeTone = "amber" | "blue" | "cyan" | "danger" | "emerald" | "fuchsia" | "green" | "indigo" | "info" | "lime" | "neutral" | "orange" | "pink" | "primary" | "purple" | "red" | "rose" | "sky" | "success" | "teal" | "violet" | "warning" | "yellow";
 interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, "onClick"> {
     variant?: BadgeVariant;
     tone?: BadgeTone;
@@ -96,7 +96,7 @@ interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, "onClick"> 
     target?: string;
     rel?: string;
     disabled?: boolean;
-    type?: "button" | "submit" | "reset";
+    type?: "button" | "reset" | "submit";
     loading?: boolean;
     loadingText?: string;
 }
@@ -116,8 +116,8 @@ interface BreadcrumbItemProps extends React.AnchorHTMLAttributes<HTMLAnchorEleme
 }
 declare const BreadcrumbItem: React.ForwardRefExoticComponent<BreadcrumbItemProps & React.RefAttributes<HTMLAnchorElement>>;
 declare const Breadcrumb: React.ForwardRefExoticComponent<BreadcrumbProps & React.RefAttributes<HTMLElement>>;
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "link";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonVariant = "ghost" | "link" | "outline" | "primary" | "secondary";
+type ButtonSize = "lg" | "md" | "sm";
 interface ButtonOwnProps {
     variant?: ButtonVariant;
     destructive?: boolean;
@@ -130,9 +130,9 @@ interface ButtonOwnProps {
 }
 interface ButtonAsButtonProps extends ButtonOwnProps, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type"> {
     href?: undefined;
-    type?: "button" | "submit" | "reset";
+    type?: "button" | "reset" | "submit";
     popoverTarget?: string;
-    popoverTargetAction?: "show" | "hide" | "toggle";
+    popoverTargetAction?: "hide" | "show" | "toggle";
     commandfor?: string;
     command?: string;
 }
@@ -150,8 +150,8 @@ declare function buttonClass(opts?: {
     className?: string;
 }): string;
 declare const Button: {
-    (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
-    (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;
+    (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): null | React.ReactElement;
+    (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): null | React.ReactElement;
     displayName?: string;
 };
 interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -175,7 +175,7 @@ interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChang
     slideLabel?: (index: number, count: number) => string;
 }
 declare const Carousel: React.ForwardRefExoticComponent<CarouselProps & React.RefAttributes<HTMLElement>>;
-interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue"> {
+interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: Date | null;
     defaultValue?: Date | null;
     onValueChange?: (value: Date) => void;
@@ -196,12 +196,12 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCh
     hideOutside?: boolean;
 }
 declare const Calendar: React.ForwardRefExoticComponent<CalendarProps & React.RefAttributes<HTMLDivElement>>;
-type CardVariant = "outline" | "elevated" | "filled";
-type CardPadding = "none" | "sm" | "md" | "lg";
+type CardVariant = "elevated" | "filled" | "outline";
+type CardPadding = "lg" | "md" | "none" | "sm";
 interface CardProps extends React.HTMLAttributes<HTMLElement> {
     variant?: CardVariant;
     padding?: CardPadding;
-    as?: "div" | "section" | "article" | "li";
+    as?: "article" | "div" | "li" | "section";
     href?: string;
     target?: string;
     rel?: string;
@@ -217,11 +217,11 @@ declare const CardHeader: React.ForwardRefExoticComponent<CardHeaderProps & Reac
 type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 declare const CardBody: React.ForwardRefExoticComponent<CardBodyProps & React.RefAttributes<HTMLDivElement>>;
 interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
-    justify?: "start" | "end" | "between";
+    justify?: "between" | "end" | "start";
 }
 declare const CardFooter: React.ForwardRefExoticComponent<CardFooterProps & React.RefAttributes<HTMLDivElement>>;
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     children?: React.ReactNode;
     description?: React.ReactNode;
     indeterminate?: boolean;
@@ -229,28 +229,28 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
 }
 declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     invalid?: boolean;
     leftIcon?: IconSource;
     rightIcon?: IconSource;
 }
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
-type ComboboxOption = string | {
+type ComboboxOption = {
     value: string;
     label: string;
     description?: React.ReactNode;
     disabled?: boolean;
-};
-interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
+} | string;
+interface ComboboxProps extends Omit<InputProps, "defaultValue" | "onChange" | "rightIcon" | "type" | "value"> {
     options: ComboboxOption[];
-    value?: string | null;
-    defaultValue?: string | null;
-    onValueChange?: (value: string | null) => void;
+    value?: null | string;
+    defaultValue?: null | string;
+    onValueChange?: (value: null | string) => void;
     onInputChange?: (text: string) => void;
-    filter?: false | ((option: {
+    filter?: ((option: {
         value: string;
         label: string;
-    }, text: string) => boolean);
+    }, text: string) => boolean) | false;
     clearable?: boolean;
     loading?: boolean;
     emptyText?: React.ReactNode;
@@ -259,14 +259,14 @@ interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValu
     clearLabel?: string;
 }
 declare const Combobox: React.ForwardRefExoticComponent<ComboboxProps & React.RefAttributes<HTMLInputElement>>;
-type ContainerSize = "prose" | "md" | "lg" | "xl" | "2xl" | "full";
+type ContainerSize = "2xl" | "full" | "lg" | "md" | "prose" | "xl";
 interface ContainerProps extends React.HTMLAttributes<HTMLElement> {
     size?: ContainerSize;
     padded?: boolean;
-    as?: "div" | "main" | "section" | "header" | "footer" | "article";
+    as?: "article" | "div" | "footer" | "header" | "main" | "section";
 }
 declare const Container: React.ForwardRefExoticComponent<ContainerProps & React.RefAttributes<HTMLElement>>;
-interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "value" | "defaultValue" | "onChange" | "min" | "max"> {
+interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "defaultValue" | "max" | "min" | "onChange" | "size" | "value"> {
     value?: Date | null;
     defaultValue?: Date | null;
     onValueChange?: (value: Date | null) => void;
@@ -275,7 +275,7 @@ interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     isDateDisabled?: (date: Date) => boolean;
     locale?: string;
     weekStartsOn?: number;
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     invalid?: boolean;
     buttonLabel?: string;
 }
@@ -293,7 +293,7 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     isDateDisabled?: (date: Date) => boolean;
     locale?: string;
     weekStartsOn?: number;
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     invalid?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
@@ -306,13 +306,13 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     months?: 1 | 2;
 }
 declare const DateRangePicker: React.ForwardRefExoticComponent<DateRangePickerProps & React.RefAttributes<HTMLSpanElement>>;
-interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "title" | "open"> {
+interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "open" | "title"> {
     open: boolean;
     onOpenChange?: (open: boolean) => void;
     title?: React.ReactNode;
     description?: React.ReactNode;
     footer?: React.ReactNode;
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     alert?: boolean;
     closeButton?: boolean;
     closeLabel?: string;
@@ -325,11 +325,11 @@ interface DividerProps extends React.HTMLAttributes<HTMLElement> {
     decorative?: boolean;
 }
 declare const Divider: React.ForwardRefExoticComponent<DividerProps & React.RefAttributes<HTMLElement>>;
-interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "title" | "open"> {
+interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "open" | "title"> {
     open: boolean;
     onOpenChange?: (open: boolean) => void;
-    side?: "right" | "left" | "top" | "bottom";
-    size?: "sm" | "md" | "lg";
+    side?: "bottom" | "left" | "right" | "top";
+    size?: "lg" | "md" | "sm";
     title?: React.ReactNode;
     description?: React.ReactNode;
     footer?: React.ReactNode;
@@ -343,17 +343,17 @@ interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ti
     title: React.ReactNode;
     description?: React.ReactNode;
     actions?: React.ReactNode;
-    size?: "sm" | "md";
-    variant?: "plain" | "dashed";
+    size?: "md" | "sm";
+    variant?: "dashed" | "plain";
     headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 declare const EmptyState: React.ForwardRefExoticComponent<EmptyStateProps & React.RefAttributes<HTMLDivElement>>;
-type FabPosition = "bottom-end" | "bottom-start" | "top-end" | "top-start" | "static";
-interface FabProps extends Omit<ButtonAsButtonProps, "icon" | "leftIcon" | "rightIcon" | "children" | "variant" | "size" | "aria-label"> {
+type FabPosition = "bottom-end" | "bottom-start" | "static" | "top-end" | "top-start";
+interface FabProps extends Omit<ButtonAsButtonProps, "aria-label" | "children" | "icon" | "leftIcon" | "rightIcon" | "size" | "variant"> {
     icon: IconSource;
     label: string;
     extended?: boolean;
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     position?: FabPosition;
 }
 declare const Fab: React.ForwardRefExoticComponent<FabProps & React.RefAttributes<HTMLButtonElement>>;
@@ -373,10 +373,10 @@ declare const Field: ((props: FieldProps) => React.ReactElement) & {
 };
 type FileRejection = {
     file: File;
-    reason: "type" | "size" | "count";
+    reason: "count" | "size" | "type";
     message: string;
 };
-interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue" | "title"> {
+interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange" | "title"> {
     files?: File[];
     onFilesChange?: (files: File[]) => void;
     onReject?: (rejections: FileRejection[]) => void;
@@ -393,36 +393,36 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "on
 }
 declare function formatFileSize(bytes: number): string;
 declare const FileUpload: React.ForwardRefExoticComponent<FileUploadProps & React.RefAttributes<HTMLDivElement>>;
-type Space = 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 14 | 16 | 20 | 24;
+type Space = 0 | 0.5 | 1 | 1.5 | 10 | 11 | 12 | 14 | 16 | 2 | 2.5 | 20 | 24 | 3 | 3.5 | 4 | 5 | 6 | 7 | 8 | 9;
 interface GridProps extends React.HTMLAttributes<HTMLElement> {
-    columns?: number | "auto";
+    columns?: "auto" | number;
     minColumnWidth?: string;
     gap?: Space;
-    as?: "div" | "section" | "ul" | "ol";
+    as?: "div" | "ol" | "section" | "ul";
 }
 declare const Grid: React.ForwardRefExoticComponent<GridProps & React.RefAttributes<HTMLElement>>;
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-type HeadingSize = "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+type HeadingSize = "2xl" | "3xl" | "4xl" | "5xl" | "base" | "lg" | "sm" | "xl";
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
     level?: HeadingLevel;
     size?: HeadingSize;
 }
 declare const Heading: React.ForwardRefExoticComponent<HeadingProps & React.RefAttributes<HTMLHeadingElement>>;
-type Without<T> = T extends unknown ? Omit<T, "icon" | "leftIcon" | "rightIcon" | "children" | "aria-label"> : never;
+type Without<T> = T extends unknown ? Omit<T, "aria-label" | "children" | "icon" | "leftIcon" | "rightIcon"> : never;
 interface IconButtonOwnProps {
     icon: IconSource;
     label: string;
-    shape?: "square" | "round";
+    shape?: "round" | "square";
     noTitle?: boolean;
 }
-type IconButtonProps = Without<ButtonAsButtonProps> & IconButtonOwnProps | Without<ButtonAsLinkProps> & IconButtonOwnProps;
+type IconButtonProps = (Without<ButtonAsButtonProps> & IconButtonOwnProps) | (Without<ButtonAsLinkProps> & IconButtonOwnProps);
 declare const IconButton: React.ForwardRefExoticComponent<IconButtonProps & React.RefAttributes<HTMLAnchorElement | HTMLButtonElement>>;
-type ImageRatio = "auto" | "square" | "4:3" | "video" | number;
-interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "alt" | "src" | "placeholder"> {
+type ImageRatio = "4:3" | "auto" | "square" | "video" | number;
+interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "alt" | "placeholder" | "src"> {
     src: string;
     alt: string;
     ratio?: ImageRatio;
-    fit?: "cover" | "contain";
+    fit?: "contain" | "cover";
     rounded?: boolean;
     fallback?: React.ReactNode;
     viewable?: boolean;
@@ -435,11 +435,11 @@ interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "al
 declare const Image: React.ForwardRefExoticComponent<ImageProps & React.RefAttributes<HTMLImageElement>>;
 interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     children?: React.ReactNode;
-    variant?: "plain" | "card";
+    variant?: "card" | "plain";
     divided?: boolean;
-    as?: "ul" | "ol";
+    as?: "ol" | "ul";
 }
-interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "title" | "onClick"> {
+interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "onClick" | "title"> {
     title: React.ReactNode;
     description?: React.ReactNode;
     leading?: IconSource;
@@ -453,13 +453,13 @@ interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "tit
 }
 declare const List: React.ForwardRefExoticComponent<ListProps & React.RefAttributes<HTMLUListElement>>;
 declare const ListItem: React.ForwardRefExoticComponent<ListItemProps & React.RefAttributes<HTMLLIElement>>;
-type LoaderVariant = "ring" | "spokes" | "dots" | "pixel" | "text" | "skeleton";
-type LoaderShape = "text" | "circle" | "rect";
-type LoaderPattern = "wave" | "random" | "sweep" | "fall" | "rise" | "snake" | "spiral" | "cross" | "checker";
-type LoaderTone = "neutral" | "primary" | "muted" | "inverse";
+type LoaderVariant = "dots" | "pixel" | "ring" | "skeleton" | "spokes" | "text";
+type LoaderShape = "circle" | "rect" | "text";
+type LoaderPattern = "checker" | "cross" | "fall" | "random" | "rise" | "snake" | "spiral" | "sweep" | "wave";
+type LoaderTone = "inverse" | "muted" | "neutral" | "primary";
 interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
     variant?: LoaderVariant;
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     tone?: LoaderTone;
     label?: string;
     shape?: LoaderShape;
@@ -471,18 +471,18 @@ interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
 declare const Loader: React.ForwardRefExoticComponent<LoaderProps & React.RefAttributes<HTMLSpanElement>>;
 interface KbdProps extends React.HTMLAttributes<HTMLElement> {
     keys?: string[];
-    size?: "sm" | "md";
+    size?: "md" | "sm";
 }
 declare const Kbd: React.ForwardRefExoticComponent<KbdProps & React.RefAttributes<HTMLElement>>;
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-    tone?: "primary" | "neutral";
+    tone?: "neutral" | "primary";
     underline?: "always" | "hover";
     external?: boolean;
     as?: React.ElementType;
 }
 declare const Link: React.ForwardRefExoticComponent<LinkProps & React.RefAttributes<HTMLAnchorElement>>;
-type Side = "top" | "bottom" | "left" | "right";
-type Placement = Side | `${Side}-${"start" | "end"}`;
+type Side = "bottom" | "left" | "right" | "top";
+type Placement = `${Side}-${"end" | "start"}` | Side;
 interface MenuProps {
     trigger: React.ReactElement;
     children: React.ReactNode;
@@ -527,10 +527,10 @@ interface NavbarLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> 
 }
 declare const Navbar: React.ForwardRefExoticComponent<NavbarProps & React.RefAttributes<HTMLElement>>;
 declare const NavbarLink: React.ForwardRefExoticComponent<NavbarLinkProps & React.RefAttributes<HTMLAnchorElement>>;
-interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
-    value?: number | null;
-    defaultValue?: number | null;
-    onValueChange?: (value: number | null) => void;
+interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "min" | "rightIcon" | "step" | "type" | "value"> {
+    value?: null | number;
+    defaultValue?: null | number;
+    onValueChange?: (value: null | number) => void;
     min?: number;
     max?: number;
     step?: number;
@@ -548,16 +548,16 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     getHref?: (page: number) => string;
     siblings?: number;
     boundaries?: number;
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     "aria-label"?: string;
     previousLabel?: string;
     nextLabel?: string;
     pageLabel?: (page: number) => string;
 }
-type Entry = number | "start-ellipsis" | "end-ellipsis";
+type Entry = "end-ellipsis" | "start-ellipsis" | number;
 declare function paginationRange(page: number, count: number, siblings?: number, boundaries?: number): Entry[];
 declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<HTMLElement>>;
-interface PasswordInputProps extends Omit<InputProps, "type" | "rightIcon"> {
+interface PasswordInputProps extends Omit<InputProps, "rightIcon" | "type"> {
     visible?: boolean;
     defaultVisible?: boolean;
     onVisibleChange?: (visible: boolean) => void;
@@ -566,7 +566,7 @@ interface PasswordInputProps extends Omit<InputProps, "type" | "rightIcon"> {
 declare const PasswordInput: React.ForwardRefExoticComponent<PasswordInputProps & React.RefAttributes<HTMLInputElement>>;
 interface PopoverProps {
     trigger: React.ReactElement;
-    children: React.ReactNode | ((close: () => void) => React.ReactNode);
+    children: ((close: () => void) => React.ReactNode) | React.ReactNode;
     title?: React.ReactNode;
     placement?: Placement;
     open?: boolean;
@@ -579,41 +579,41 @@ interface PopoverProps {
 declare const Popover: ((props: PopoverProps) => React.ReactElement) & {
     displayName: string;
 };
-type ProgressTone = "primary" | "success" | "warning" | "danger";
+type ProgressTone = "danger" | "primary" | "success" | "warning";
 interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
-    value?: number | null;
+    value?: null | number;
     max?: number;
     variant?: "bar" | "circle";
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     tone?: ProgressTone;
     label?: React.ReactNode;
     showValue?: boolean;
     formatValue?: (value: number, max: number) => string;
 }
 declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
-interface RadioGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue"> {
+interface RadioGroupProps<V extends number | string = number | string> extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     name?: string;
-    value?: V | null;
+    value?: null | V;
     defaultValue?: V;
     onChange?: (value: V, event: React.ChangeEvent<HTMLInputElement>) => void;
-    orientation?: "vertical" | "horizontal";
-    size?: "sm" | "md" | "lg";
+    orientation?: "horizontal" | "vertical";
+    size?: "lg" | "md" | "sm";
     invalid?: boolean;
     disabled?: boolean;
     required?: boolean;
     children?: React.ReactNode;
 }
 interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     children?: React.ReactNode;
     description?: React.ReactNode;
     invalid?: boolean;
 }
-declare const RadioGroup: (<V extends string | number = string | number>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & {
+declare const RadioGroup: (<V extends number | string = number | string>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
 };
 declare const Radio: React.ForwardRefExoticComponent<RadioProps & React.RefAttributes<HTMLInputElement>>;
-interface SearchInputProps extends Omit<InputProps, "type" | "leftIcon" | "rightIcon"> {
+interface SearchInputProps extends Omit<InputProps, "leftIcon" | "rightIcon" | "type"> {
     onSearch?: (value: string) => void;
     onClear?: () => void;
     clearLabel?: string;
@@ -628,29 +628,29 @@ interface SegmentedControlOption {
     "aria-label"?: string;
     disabled?: boolean;
 }
-interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue"> {
+interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     options: SegmentedControlOption[];
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     fullWidth?: boolean;
     disabled?: boolean;
     name?: string;
 }
 declare const SegmentedControl: React.ForwardRefExoticComponent<SegmentedControlProps & React.RefAttributes<HTMLDivElement>>;
-type SelectOption = string | number | {
-    value: string | number;
+type SelectOption = {
+    value: number | string;
     label?: React.ReactNode;
     disabled?: boolean;
-};
+} | number | string;
 interface SelectOptionGroup {
     label: string;
     options: SelectOption[];
     disabled?: boolean;
 }
-interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size" | "multiple"> {
-    size?: "sm" | "md" | "lg";
+interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "multiple" | "size"> {
+    size?: "lg" | "md" | "sm";
     invalid?: boolean;
     leftIcon?: IconSource;
     placeholder?: string;
@@ -680,10 +680,10 @@ interface SidebarItemProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorEle
 declare const Sidebar: React.ForwardRefExoticComponent<SidebarProps & React.RefAttributes<HTMLElement>>;
 declare const SidebarSection: React.ForwardRefExoticComponent<SidebarSectionProps & React.RefAttributes<HTMLDivElement>>;
 declare const SidebarItem: React.ForwardRefExoticComponent<SidebarItemProps & React.RefAttributes<HTMLAnchorElement>>;
-type SliderValue = number | [
+type SliderValue = [
     number,
     number
-];
+] | number;
 interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: V;
     defaultValue?: V;
@@ -693,7 +693,7 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
     max?: number;
     step?: number;
     largeStep?: number;
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     disabled?: boolean;
     formatValue?: (value: number) => string;
     thumbLabels?: [
@@ -702,21 +702,21 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
     ];
     name?: string;
 }
-declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & {
+declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
 };
 interface StackProps extends React.HTMLAttributes<HTMLElement> {
     direction?: "column" | "row";
     gap?: Space;
-    align?: "stretch" | "start" | "center" | "end" | "baseline";
-    justify?: "start" | "center" | "end" | "between";
+    align?: "baseline" | "center" | "end" | "start" | "stretch";
+    justify?: "between" | "center" | "end" | "start";
     wrap?: boolean;
-    as?: "div" | "section" | "ul" | "ol" | "nav" | "header" | "footer" | "form" | "fieldset" | "span";
+    as?: "div" | "fieldset" | "footer" | "form" | "header" | "nav" | "ol" | "section" | "span" | "ul";
 }
 declare const Stack: React.ForwardRefExoticComponent<StackProps & React.RefAttributes<HTMLElement>>;
 interface VisuallyHiddenProps extends React.HTMLAttributes<HTMLElement> {
     focusable?: boolean;
-    as?: "span" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "label" | "legend";
+    as?: "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "label" | "legend" | "p" | "span";
 }
 declare const VisuallyHidden: React.ForwardRefExoticComponent<VisuallyHiddenProps & React.RefAttributes<HTMLElement>>;
 interface StepperStep {
@@ -729,7 +729,7 @@ interface StepperProps extends React.HTMLAttributes<HTMLElement> {
     steps: StepperStep[];
     current: number;
     orientation?: "horizontal" | "vertical";
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     onStepClick?: (index: number) => void;
     labels?: {
         completed?: string;
@@ -738,16 +738,16 @@ interface StepperProps extends React.HTMLAttributes<HTMLElement> {
     };
 }
 declare const Stepper: React.ForwardRefExoticComponent<StepperProps & React.RefAttributes<HTMLElement>>;
-interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type" | "role"> {
-    size?: "sm" | "md" | "lg";
+interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "role" | "size" | "type"> {
+    size?: "lg" | "md" | "sm";
     children?: React.ReactNode;
     description?: React.ReactNode;
-    labelPosition?: "start" | "end";
+    labelPosition?: "end" | "start";
     invalid?: boolean;
 }
 declare const Switch: React.ForwardRefExoticComponent<SwitchProps & React.RefAttributes<HTMLInputElement>>;
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     striped?: boolean;
     stickyHeader?: boolean;
     caption?: React.ReactNode;
@@ -759,12 +759,12 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 }
 type SortDirection = "ascending" | "descending" | "none";
 interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, "align"> {
-    align?: "start" | "center" | "end";
+    align?: "center" | "end" | "start";
     sort?: SortDirection;
     onSort?: () => void;
 }
 interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, "align"> {
-    align?: "start" | "center" | "end";
+    align?: "center" | "end" | "start";
 }
 declare const Table: React.ForwardRefExoticComponent<TableProps & React.RefAttributes<HTMLTableElement>>;
 declare const TableHead: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
@@ -774,12 +774,12 @@ declare const TableRow: React.ForwardRefExoticComponent<TableRowProps & React.Re
 declare const TableHeaderCell: React.ForwardRefExoticComponent<TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableCell: React.ForwardRefExoticComponent<TableCellProps & React.RefAttributes<HTMLTableCellElement>>;
 type TabsVariant = "line" | "pill";
-interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue"> {
+interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     variant?: TabsVariant;
-    size?: "sm" | "md";
+    size?: "md" | "sm";
     activation?: "auto" | "manual";
 }
 declare const Tabs: React.ForwardRefExoticComponent<TabsProps & React.RefAttributes<HTMLDivElement>>;
@@ -794,11 +794,11 @@ interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
     keepMounted?: boolean;
 }
 declare const TabPanel: React.ForwardRefExoticComponent<TabPanelProps & React.RefAttributes<HTMLDivElement>>;
-type TextSize = "xs" | "sm" | "base" | "lg" | "xl";
-type TextTone = "default" | "muted" | "primary" | "danger";
-type TextWeight = "normal" | "medium" | "semibold" | "bold";
+type TextSize = "base" | "lg" | "sm" | "xl" | "xs";
+type TextTone = "danger" | "default" | "muted" | "primary";
+type TextWeight = "bold" | "medium" | "normal" | "semibold";
 interface TextProps extends React.HTMLAttributes<HTMLElement> {
-    as?: "p" | "span" | "div" | "label" | "strong" | "em" | "small" | "li" | "figcaption";
+    as?: "div" | "em" | "figcaption" | "label" | "li" | "p" | "small" | "span" | "strong";
     size?: TextSize;
     tone?: TextTone;
     weight?: TextWeight;
@@ -807,31 +807,31 @@ interface TextProps extends React.HTMLAttributes<HTMLElement> {
 }
 declare const Text: React.ForwardRefExoticComponent<TextProps & React.RefAttributes<HTMLElement>>;
 interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "rows"> {
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     rows?: number;
     autoResize?: boolean;
     maxRows?: number;
-    resize?: "vertical" | "none";
+    resize?: "none" | "vertical";
     invalid?: boolean;
     showCount?: boolean;
 }
 declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
-interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "value" | "defaultValue" | "onChange" | "min" | "max" | "step"> {
-    value?: string | null;
-    defaultValue?: string | null;
-    onValueChange?: (value: string | null) => void;
+interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "defaultValue" | "max" | "min" | "onChange" | "size" | "step" | "value"> {
+    value?: null | string;
+    defaultValue?: null | string;
+    onValueChange?: (value: null | string) => void;
     min?: string;
     max?: string;
     step?: number;
     locale?: string;
     hour12?: boolean;
-    size?: "sm" | "md" | "lg";
+    size?: "lg" | "md" | "sm";
     invalid?: boolean;
     listLabel?: string;
 }
 declare const TimePicker: React.ForwardRefExoticComponent<TimePickerProps & React.RefAttributes<HTMLInputElement>>;
-type ToastTone = "neutral" | "info" | "success" | "warning" | "danger";
-type ToasterPosition = "top-start" | "top-center" | "top-end" | "bottom-start" | "bottom-center" | "bottom-end";
+type ToastTone = "danger" | "info" | "neutral" | "success" | "warning";
+type ToasterPosition = "bottom-center" | "bottom-end" | "bottom-start" | "top-center" | "top-end" | "top-start";
 interface ToastOptions {
     title: React.ReactNode;
     description?: React.ReactNode;
@@ -844,7 +844,7 @@ interface ToastOptions {
     announcement?: string;
     id?: string;
 }
-declare function show(options: ToastOptions | string): string;
+declare function show(options: string | ToastOptions): string;
 declare function dismiss(id?: string): void;
 declare const toast: typeof show & {
     dismiss: typeof dismiss;
@@ -857,11 +857,11 @@ interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
 declare const Toaster: ((props: ToasterProps) => React.ReactElement) & {
     displayName: string;
 };
-interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "variant" | "destructive" | "loading" | "loadingText"> {
+interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "destructive" | "loading" | "loadingText" | "variant"> {
     pressed?: boolean;
     defaultPressed?: boolean;
     onPressedChange?: (pressed: boolean) => void;
-    variant?: "outline" | "ghost";
+    variant?: "ghost" | "outline";
 }
 declare const ToggleButton: React.ForwardRefExoticComponent<ToggleButtonProps & React.RefAttributes<HTMLButtonElement>>;
 interface TooltipProps {
