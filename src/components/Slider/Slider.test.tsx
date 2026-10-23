@@ -73,10 +73,11 @@ describe('Slider', () => {
 
   test('pointer: dragging past the end clamps (100), changing as it goes, with one commit at the end', async () => {
     await setup();
-    const t = track('one'), b = rect(document.body);
-    // past the end, but inside the viewport: Firefox mangles synthetic mouse events outside it
-    const beyond = { x: Math.min(t.right + 80, innerWidth - 10) - b.left, y: t.top + t.height / 2 - b.top };
-    await userEvent.dragAndDrop(el('one'), document.body, { sourcePosition: at('one', 0.3), targetPosition: beyond, steps: 5 });
+    // Past the end of the track, but still over the slider (its padding is half a thumb): in a test frame, Firefox
+    // sends synthetic moves to the element under the pointer and not to the one that captured it.
+    const r = rect(el('one')), beyond = { x: r.width - 2, y: r.height / 2 };
+    expect(r.left + beyond.x).toBeGreaterThan(track('one').right);
+    await userEvent.dragAndDrop(el('one'), el('one'), { sourcePosition: at('one', 0.3), targetPosition: beyond, steps: 5 });
     expect([calls[0], now('one'), commits.join()]).toEqual([30, 100, '100']);
     expect(calls.length).toBeGreaterThanOrEqual(3);
   });
