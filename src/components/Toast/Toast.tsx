@@ -6,6 +6,7 @@ import { Icon } from "../Icon/Icon";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { named } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
@@ -73,15 +74,16 @@ const ICONS: Record<ToastTone, string | null> = { neutral: null, info: "info", s
    hovered or focused. New toasts are announced through the shared polite live region. */
 /** The place toast() messages appear: render one, once, near the root of the app. */
 export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: ToasterProps): React.ReactElement {
+  const sds = useSerupa();
   const { position, label, dismissLabel, className, ...rest } = props;
   const [list, setList] = React.useState<Item[]>(items);
   React.useEffect(() => { ensureAnnouncer(); listeners.add(setList); setList(items); return () => { listeners.delete(setList); }; }, []);
   const pos = oneOf(POSITIONS, position, "bottom-end");
   const ordered = pos.startsWith("top") ? list.slice().reverse() : list;   // newest nearest the edge
   return (
-    <section {...rest} aria-label={label || "Notifications"} className={cn("dk-toaster", "dk-toaster--" + pos, className)} data-component="toaster" data-position={pos}>
+    <section {...rest} aria-label={label || sds.labels.notifications} className={cn("dk-toaster", "dk-toaster--" + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="dk-toaster__list">
-        {ordered.map((t) => <ToastView key={t.id} item={t} dismissLabel={dismissLabel || "Dismiss"} />)}
+        {ordered.map((t) => <ToastView key={t.id} item={t} dismissLabel={dismissLabel || sds.labels.dismiss} />)}
       </ol>
     </section>
   );
