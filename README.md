@@ -5,7 +5,7 @@ A design system by **Diki**. Tokens, themes, utility classes and accessible Reac
 - **Token-driven.** Every color, size, space, radius, shadow, motion and type value is a design token. Components never hardcode a value.
 - **Six themes.** Blue, Violet and Emerald, each light and dark, switched with one attribute and no component changes.
 - **Accessible by default.** WCAG 2.1 AA contrast in every theme, full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
-- **Works anywhere.** ES modules for React apps (React 18 or 19), or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
+- **Works anywhere.** ES modules for React 19 apps, or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
 
 The documentation is Storybook: run `npm run storybook` in this repo and open http://localhost:6006. The foundations (colors, themes, type, spacing, motion and the utility classes) are written in `docs/foundations.md`; each component's guide is `src/components/<Name>/README.md`.
 
@@ -41,7 +41,7 @@ export function SignUp() {
 }
 ```
 
-React 18 or 19 is a peer dependency (CI tests both), so the components use your app's React, and they render on the server too. Types ship with the package.
+React 19 is a peer dependency, so the components use your app's React, and they render on the server too. Types ship with the package.
 
 Load `tokens.css` first: the styles read every value from it. The styles sit in cascade layers, in this order: `dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`. Your own CSS outside a layer always wins over them, whatever order the files load in, so overriding a component needs no `!important` or extra specificity. If your app uses layers too, place the system's where you want them, such as `@layer reset, dk, app;` (the `dk.*` layers sit inside `dk`).
 
