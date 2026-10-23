@@ -4,6 +4,8 @@ import { commands } from 'vitest/browser';
 declare module 'vitest/browser' {
   interface BrowserCommands {
     pointerDrag: (selector: string, from: { x: number; y: number }, to: { x: number; y: number }, steps?: number) => Promise<void>;
+    pointerDown: (selector: string, at: { x: number; y: number }) => Promise<void>;
+    pointerUp: () => Promise<void>;
   }
 }
 
@@ -80,8 +82,25 @@ export function keepMotion(): void {
   afterAll(() => { const s = still(); if (s) s.disabled = false; });
 }
 
+const selector = (el: Element) => {
+  if (!el.id) el.id = 'serupa-target-' + Math.random().toString(36).slice(2);
+  return `#${CSS.escape(el.id)}`;
+};
+
 /** Drags with the real mouse from one point to another, each relative to the element's top-left corner, in `steps`
- *  moves (commands.ts says why not userEvent.dragAndDrop). The element needs an id. */
+ *  moves (commands.ts says why not userEvent.dragAndDrop). */
 export function drag(el: Element, from: { x: number; y: number }, to: { x: number; y: number }, steps = 5): Promise<void> {
-  return commands.pointerDrag(`#${CSS.escape(el.id)}`, from, to, steps);
+  return commands.pointerDrag(selector(el), from, to, steps);
+}
+
+/** Holds the real mouse button down on an element (at a point relative to its top-left corner, its center by
+ *  default) and runs `during` once it is pressed, then lets go. */
+export async function press<T>(el: Element, during: () => Promise<T> | T, at?: { x: number; y: number }): Promise<T> {
+  const r = el.getBoundingClientRect();
+  await commands.pointerDown(selector(el), at || { x: r.width / 2, y: r.height / 2 });
+  try {
+    return await during();
+  } finally {
+    await commands.pointerUp();
+  }
 }
