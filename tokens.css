@@ -473,7 +473,7 @@
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
 }
-:where(:root:is([data-brand], [data-mode])):not([data-theme]) {
+:where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
   color-scheme: light dark;
   --primary: light-dark(var(--blue-600), var(--blue-400));
   --primary-hover: light-dark(var(--blue-700), var(--blue-300));
@@ -520,6 +520,27 @@
   --focus-ring: light-dark(var(--violet-500), var(--violet-400));
 }
 :root[data-brand="emerald"]:not([data-theme]), [data-brand="emerald"]:not([data-theme]) {
+  --primary: light-dark(var(--emerald-700), var(--emerald-400));
+  --primary-hover: light-dark(var(--emerald-800), var(--emerald-300));
+  --primary-subtle: light-dark(var(--emerald-50), var(--emerald-950));
+  --on-primary: light-dark(var(--white), var(--emerald-950));
+  --focus-ring: light-dark(var(--emerald-600), var(--emerald-400));
+}
+:is([data-theme^="blue-"], [data-brand="blue"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--blue-600), var(--blue-400));
+  --primary-hover: light-dark(var(--blue-700), var(--blue-300));
+  --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
+  --on-primary: light-dark(var(--white), var(--blue-950));
+  --focus-ring: light-dark(var(--blue-500), var(--blue-400));
+}
+:is([data-theme^="violet-"], [data-brand="violet"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--violet-600), var(--violet-400));
+  --primary-hover: light-dark(var(--violet-700), var(--violet-300));
+  --primary-subtle: light-dark(var(--violet-50), var(--violet-950));
+  --on-primary: light-dark(var(--white), var(--violet-950));
+  --focus-ring: light-dark(var(--violet-500), var(--violet-400));
+}
+:is([data-theme^="emerald-"], [data-brand="emerald"]) [data-mode]:not([data-theme], [data-brand]) {
   --primary: light-dark(var(--emerald-700), var(--emerald-400));
   --primary-hover: light-dark(var(--emerald-800), var(--emerald-300));
   --primary-subtle: light-dark(var(--emerald-50), var(--emerald-950));
@@ -948,7 +969,7 @@
 }
 [data-theme$="-light"] { color-scheme: light; }
 [data-theme$="-dark"] { color-scheme: dark; }
-[data-contrast="more"] {
+[data-contrast="more"], [data-contrast="more"] [data-mode] {
   --field-border: light-dark(var(--zinc-700), var(--zinc-300));
   --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
   --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
@@ -958,7 +979,7 @@
   --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
 }
 @media (prefers-contrast: more) {
-:root:not([data-contrast="normal"]) {
+:root:not([data-contrast="normal"]), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *) {
   --field-border: light-dark(var(--zinc-700), var(--zinc-300));
   --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
   --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
