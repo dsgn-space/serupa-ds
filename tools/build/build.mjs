@@ -59,7 +59,7 @@ const libs = [
   { file: 'react-dom.production.min.js', contents: "window.ReactDOM = Object.assign({}, require('react-dom'), require('react-dom/client'));", plugins: [windowReact] },
 ];
 for (const { file, contents, plugins } of libs) await build({
-  stdin: { contents, resolveDir: P, loader: 'js' }, bundle: true, format: 'iife', platform: 'browser', target: 'es2019',
+  stdin: { contents, resolveDir: P, loader: 'js' }, bundle: true, format: 'iife', platform: 'browser', target: 'es2022',
   minify: true, legalComments: 'inline', define: { 'process.env.NODE_ENV': '"production"' }, plugins, outfile: path.join(D, 'lib', file), logLevel: 'warning',
 });
 console.log(`Built dist/ (v${version})`);
