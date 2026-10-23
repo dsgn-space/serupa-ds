@@ -33,7 +33,7 @@ const { PasswordInput, Field } = window.Serupa;
 - The button is named "Show password" and has `aria-pressed`, so screen readers say whether the password is shown. Its `aria-controls` points at the field when the field has an `id` (Field gives it one).
 - Clicking it keeps focus in the field, so typing carries on. It's also reachable with Tab, and Enter or Space press it.
 - Spell check and auto-capitalization are off, so a shown password isn't underlined or changed.
-- The text keeps 4.5:1 and the eye icon 3:1 on the field in all six themes (`tools/test/password-input.mjs`).
+- The text keeps 4.5:1 and the eye icon 3:1 on the field in all six themes (`PasswordInput.test.tsx`).
 
 ## Props
 
