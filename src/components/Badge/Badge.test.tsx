@@ -392,7 +392,8 @@ describe('Badge', () => {
     expect(Math.abs((art.top + art.height / 2) - (r.top + r.height / 2))).toBeLessThan(1);
     await expect.poll(() => content().map((c) => css(c).opacity).join()).toBe('0,0');
     expect([Math.round(r.width), Math.round(r.height)]).toEqual([Math.round(w0.width), Math.round(w0.height)]);
-    await expect.poll(() => announcer.textContent).toBe('Loading');
+    // Every badge that started loading at once is said, in one message.
+    await expect.poll(() => announcer.textContent).toMatch(/(^|\. )Loading$/);
     expect([css(ld).cursor, ld.textContent!.endsWith('Approve request')]).toEqual(['progress', true]);
     expect([ld.getAttribute('aria-disabled'), document.activeElement === ld, clicks]).toEqual(['true', true, c0]);
     setLoading(false);

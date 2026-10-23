@@ -1,10 +1,12 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { cn, oneOf } from "../../internal/cn";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { Icon } from "../Icon/Icon";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { named } from "../../internal/component";
+import { onModalChange, topModal } from "../../internal/layers";
 
 export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
@@ -44,7 +46,7 @@ function show(options: ToastOptions | string): string {
   items = at >= 0 ? items.map((x, i) => (i === at ? item : x)) : items.concat(item);
   emit();
   const say = o.announcement != null ? o.announcement : [text(o.title), text(o.description)].filter(Boolean).join(". ");
-  if (say) announce(say);
+  if (say) announce(say, { assertive: item.tone === "danger" });   // an error interrupts; the rest wait their turn
   return id;
 }
 /** Closes one toast, or every toast with no id. */
@@ -77,13 +79,17 @@ export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: 
   React.useEffect(() => { ensureAnnouncer(); listeners.add(setList); setList(items); return () => { listeners.delete(setList); }; }, []);
   const pos = oneOf(POSITIONS, position, "bottom-end");
   const ordered = pos.startsWith("top") ? list.slice().reverse() : list;   // newest nearest the edge
-  return (
+  // While a Dialog or Drawer is open the page behind it is inert and under it, so the toasts move into it: a
+  // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
+  const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
+  const region = (
     <section {...rest} aria-label={label || "Notifications"} className={cn("dk-toaster", "dk-toaster--" + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="dk-toaster__list">
         {ordered.map((t) => <ToastView key={t.id} item={t} dismissLabel={dismissLabel || "Dismiss"} />)}
       </ol>
     </section>
   );
+  return modal ? createPortal(region, modal) : region;
 });
 
 function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElement {

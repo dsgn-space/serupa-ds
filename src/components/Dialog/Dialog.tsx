@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
+import { modalClosed, modalOpened } from "../../internal/layers";
 
 export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -52,14 +53,16 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
     if (props.open && !d.open) {
       back.current = document.activeElement as HTMLElement | null;
       if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+      modalOpened(d);
     } else if (!props.open && d.open) {
       if (typeof d.close === "function") d.close(); else d.removeAttribute("open");
+      modalClosed(d);
       const b = back.current; back.current = null;
       if (b && b.isConnected && typeof b.focus === "function") b.focus();
     }
   }, [props.open]);
   // Closed while unmounting: give focus back too.
-  React.useEffect(() => () => { const b = back.current; if (b && b.isConnected) b.focus(); }, []);
+  React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const b = back.current; if (b && b.isConnected) b.focus(); }; }, []);
 
   // Escape fires "cancel": ask instead of closing, so open stays the truth.
   const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
@@ -68,6 +71,7 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
   const openNow = React.useRef(props.open); openNow.current = props.open;
   const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
     if (rest.onClose) rest.onClose(e);
+    if (!e.currentTarget.open) modalClosed(e.currentTarget);
     if (!openNow.current || e.currentTarget.open) return;
     const b = back.current; back.current = null;
     if (b && b.isConnected && typeof b.focus === "function") b.focus();
