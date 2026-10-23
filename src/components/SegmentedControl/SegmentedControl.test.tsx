@@ -14,7 +14,7 @@ const focused = () => (document.activeElement as HTMLElement).dataset.value;
 // How far the sliding selection is from the checked segment: [left, width] differences in px.
 const off = (id: string) => {
   const i = el(id).querySelector('.dk-segmented__indicator')!.getBoundingClientRect(), c = el(id).querySelector('[aria-checked=true]')!.getBoundingClientRect();
-  return [Math.round(i.left - c.left), Math.round(i.width - c.width)];
+  return [Math.round(i.left - c.left) || 0, Math.round(i.width - c.width) || 0]; // || 0: no -0
 };
 // Transitions still running (a theme change can cancel one and start another, so poll rather than await .finished).
 const settled = () => expect.poll(() => document.getAnimations().length).toBe(0);
@@ -67,7 +67,7 @@ describe('SegmentedControl', () => {
   test('a click selects, and the selection moves to it; a disabled segment can\'t be chosen', async () => {
     await render(<Col><Period /></Col>);
     await userEvent.click(seg('per', 'month'));
-    expect(checked('per')).toBe('month');
+    await expect.poll(() => checked('per')).toBe('month');
     // The selection slides over 200ms.
     await expect.poll(() => off('per')).toEqual([0, 0]);
     await userEvent.click(seg('per', 'year'), { force: true });

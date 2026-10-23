@@ -15,15 +15,17 @@ const st = (id: string) => {
   return { v: i.value, open: !l.hidden, exp: i.getAttribute('aria-expanded'), active: act ? time(document.getElementById(act)) : null, n: l.children.length, first: time(l.children[0]), last: time(l.children[l.children.length - 1]),
     hidden: [...l.querySelectorAll('.dk-icon')].every((x) => x.closest('[aria-hidden=true]')), sel: [...l.querySelectorAll<HTMLElement>('[aria-selected=true]')].map((o) => o.dataset.value).join() };
 };
+// Tab moves on to the "Next" button after each field: with nothing left to tab to, Firefox sends focus out of the
+// test frame without a blur, and the typed text is read on blur.
 const fill = async (id: string, text: string, key = '{Tab}') => { await userEvent.fill(el(id), text); await userEvent.keyboard(key); };
 
 function Meeting(props: { tref?: React.Ref<HTMLInputElement> }) {
-  return <div style={{ width: '240px' }}><Field label="Meeting"><TimePicker id="tp" locale="en-US" className="extra" ref={props.tref} /></Field></div>;
+  return <div style={{ width: '240px' }}><Field label="Meeting"><TimePicker id="tp" locale="en-US" className="extra" ref={props.tref} /></Field><button id="next">Next</button></div>;
 }
 function Ctl(props: { changes: string[]; setRef?: { set?: (v: string | null) => void } }) {
   const [v, setV] = React.useState<string | null>('09:00');
   if (props.setRef) props.setRef.set = setV;
-  return <TimePicker id="ctl" aria-label="Start" value={v} onValueChange={(n) => { props.changes.push(String(n)); setV(n); }} min="08:00" max="18:00" step={15} name="start" locale="en-US" />;
+  return <><TimePicker id="ctl" aria-label="Start" value={v} onValueChange={(n) => { props.changes.push(String(n)); setV(n); }} min="08:00" max="18:00" step={15} name="start" locale="en-US" /><button id="next">Next</button></>;
 }
 const openTp = async () => { el('tp').focus(); await userEvent.keyboard('{ArrowDown}'); };
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, css, keepMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, css, keepMotion, press } from '../../../tools/test/vitest/helpers';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
 
 // About motion: transitions and animations stay on for this file (setup.ts turns them off elsewhere).
@@ -351,10 +351,10 @@ describe('Badge', () => {
     try {
       for (const t of TONES) for (const v of VARIANTS) {
         const e = q(`[data-it="${t}"][data-v="${v}"]`);
-        await userEvent.hover(e);
-        await expect.poll(() => e.matches(':hover')).toBe(true);
+        // Hovered again until it takes: once in a while Firefox misses one of these 69 moves.
+        await expect.poll(async () => { await userEvent.hover(e); return e.matches(':hover'); }).toBe(true);
         measure(e, 'hover');
-        await hold(e, () => measure(e, 'pressed'), { ms: 150 });
+        await press(e, async () => { await expect.poll(() => e.matches(':active') || e.querySelector('.dk-badge__ripple') != null).toBe(true); measure(e, 'pressed'); });
       }
     } finally { off.remove(); }
     expect(low).toEqual([]);
