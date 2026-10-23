@@ -2,6 +2,7 @@
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { component } from "../../internal/component";
+import { useFormReset } from "../../internal/useFormReset";
 
 export type SliderValue = number | [number, number];
 /** V is a number for one thumb or [low, high] for a range, inferred from value, defaultValue or the callbacks. */
@@ -57,6 +58,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   const vals: number[] = isRange ? [snap((raw as number[])[0]), snap((raw as number[])[1])].sort((a, b) => a - b) : [snap(raw as number)];
   const latest = React.useRef(vals); latest.current = vals;
   const root = React.useRef<HTMLDivElement | null>(null);
+  useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? min); });
   const thumbs = React.useRef<(HTMLSpanElement | null)[]>([]);
   const drag = React.useRef<number | null>(null);
   const disabled = !!props.disabled;

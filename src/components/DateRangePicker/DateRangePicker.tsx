@@ -6,6 +6,7 @@ import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFormReset } from "../../internal/useFormReset";
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
@@ -79,6 +80,11 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const popId = domId("dk-drp", React.useId());
   const box = React.useRef<HTMLSpanElement | null>(null);
   const startField = React.useRef<HTMLInputElement | null>(null);
+  useFormReset(startField, () => {
+    if (controlled) return;
+    const r = norm(props.defaultValue);
+    shown.current = { start: key(r.start), end: key(r.end) }; setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false); setPicking("start");
+  });
   const button = React.useRef<HTMLButtonElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
   const two = props.months !== 1;
