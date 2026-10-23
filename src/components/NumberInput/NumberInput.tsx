@@ -59,9 +59,11 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   // What the shown number is multiplied by: 100 for the percent style, 1 otherwise.
   const scale = formatOptions ? parseNumber(formatNumber(1, locale, formatOptions), locale) || 1 : 1;
   const show = (v: number | null) => (v == null ? "" : formatNumber(v, locale, formatOptions));
-  const [text, setText] = React.useState(show(value));
+  const shown = show(value);
+  const [text, setText] = React.useState(shown);
   const focused = React.useRef(false);
-  React.useEffect(() => { if (!focused.current) setText(show(value)); }, [value]);
+  // A new value, locale or format from outside rewrites the field, unless people are typing in it.
+  React.useEffect(() => { if (!focused.current) setText(shown); }, [shown]);
   const el = React.useRef<HTMLInputElement | null>(null);
   const locked = !!rest.disabled || !!rest.readOnly;
 
