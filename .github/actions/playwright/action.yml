@@ -1,11 +1,13 @@
 name: Playwright Chromium
-description: Chromium and its system packages for the test suite, both cached, so a run downloads neither.
+description: Chromium and the system packages the runner lacks for it, both cached, so a run downloads neither.
 runs:
   using: composite
   steps:
     - id: version
       shell: bash
-      run: echo "playwright=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      run: |
+        echo "playwright=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+        echo "image=${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
     - id: cache
       uses: actions/cache@v6
       with:
@@ -21,7 +23,7 @@ runs:
       uses: actions/cache@v6
       with:
         path: ~/.cache/playwright-debs
-        key: playwright-debs-${{ runner.os }}-${{ env.ImageVersion }}-${{ steps.version.outputs.playwright }}
+        key: playwright-debs-${{ runner.os }}-${{ steps.version.outputs.image }}-${{ steps.version.outputs.playwright }}
         # A new runner image (weekly) starts from the last folder: apt downloads only what changed.
         restore-keys: playwright-debs-${{ runner.os }}-
     - shell: bash
