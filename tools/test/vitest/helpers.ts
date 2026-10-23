@@ -49,9 +49,17 @@ export function css(el: Element | null): CSSStyleDeclaration {
 /** Waits for transitions to settle (the components animate colors for 150ms). */
 export const settle = (ms = 200) => new Promise((ok) => setTimeout(ok, ms));
 
-/** Runs fn with the page's motion back on (setup.ts turns transitions and animations off), to read which animation a part runs. */
+/**
+ * Runs fn with the page's motion back on (setup.ts turns transitions and animations off), for a test that reads
+ * which animation a part runs or watches it move. fn may be async; motion goes off again once it settles.
+ */
 export function withMotion<T>(fn: () => T): T {
   const still = document.getElementById('serupa-still') as HTMLStyleElement | null;
-  if (still) still.disabled = true;
-  try { return fn(); } finally { if (still) still.disabled = false; }
+  const off = (on: boolean) => { if (still) still.disabled = on; };
+  off(true);
+  let r: T;
+  try { r = fn(); } catch (e) { off(false); throw e; }
+  if (r instanceof Promise) return r.finally(() => off(false)) as T;
+  off(false);
+  return r;
 }
