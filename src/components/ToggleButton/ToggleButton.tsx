@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf } from "../../internal/cn";
 import { Button, type ButtonAsButtonProps } from "../Button/Button";

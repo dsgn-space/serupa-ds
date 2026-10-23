@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf, setRef } from "../../internal/cn";
 import { Dialog } from "../Dialog/Dialog";

@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";

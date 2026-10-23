@@ -49,6 +49,16 @@ Six themes share **one set of foundations**: the same palette, type, spacing, ra
 
 Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
+**Brand and mode without JavaScript** — `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
+
+```html
+<html data-brand="violet" data-mode="auto">           <!-- follows the operating system from the first paint -->
+<section data-mode="dark">…</section>                 <!-- a dark section inside a light page -->
+<div data-brand="emerald">…</div>                     <!-- another brand for one part of the page -->
+```
+
+Each color that changes between themes is a `light-dark()` pair, and `data-mode` sets `color-scheme` (`auto` is `light dark`), so the light or dark value is chosen where the color is used. Server-rendered and React apps get dark mode with nothing to inject and no flash. A page with neither attribute stays light. An element with `data-theme` keeps that flat theme, so it still wins; inside such a page, give a section both `data-brand` and `data-mode` to switch it. Needs `light-dark()`: Chrome and Edge 123, Safari 17.5, Firefox 120.
+
 **Automatic dark mode** — `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
 ```html

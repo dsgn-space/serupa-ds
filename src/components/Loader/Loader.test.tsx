@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { color, css, settle, keepMotion } from '../../../tools/test/vitest/helpers';
 import { Loader } from './Loader';
+import { announcerIdle } from '../../internal/announce';
 
 // About motion: transitions and animations stay on for this file (setup.ts turns them off elsewhere).
 keepMotion();
@@ -515,7 +516,7 @@ describe('Loader', () => {
       </div>;
     }
     await render(<App />);
-    await settle(300);   // earlier announcements land 50ms after they start
+    await expect.poll(announcerIdle, { timeout: 3000 }).toBe(true);   // earlier tests' announcements have all been said
     if (announcer()) announcer().textContent = '';
     const t0 = performance.now();
     show();
