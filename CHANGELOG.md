@@ -4,6 +4,49 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [8.0.0] - 2026-10-23
+
+### Added
+
+- `npx serupa-purge src -o public/bundle.min.css` trims `bundle.css` to the classes your code uses, straight from the installed package. It replaces `tools/purge.py`, which only ran from a clone with Python, and gives the same output.
+
+### Changed
+
+- Combobox places its list with the shared anchored-layer helper, like Popover, Menu and Tooltip. Nothing changes for people using it.
+- React 19 is required. The peer dependency is `react` and `react-dom` `^19.0.0` (was `^18.0.0 || ^19.0.0`). To upgrade a project on React 18, move it to React 19 first (`npm install react@19 react-dom@19 @types/react@19 @types/react-dom@19`) and follow React's upgrade guide; the components themselves need no change.
+- Node 26 or later is required (`engines.node` is `>=26`, was `>=20`). It applies to installing the package and running `serupa-purge`. Move the project's Node, its CI and its `.nvmrc` to 26.
+- Menu places itself with the shared anchored-layer helper, like Popover, TimePicker and DateRangePicker. Nothing changes for people using it, except that changing `placement` while a Menu is open no longer moves focus back to its first item.
+- the custom icon build is `node tools/icons/build.mjs` (it was `python3 tools/icons/build.py`), with the same rules and output; `node tools/icons/builtin.mjs` keeps the built-in icons in step. Building, testing and releasing no longer need Python.
+- plain pages get React 19.3.1 instead of 18.3.1. `dist/lib/react.production.min.js` and `dist/lib/react-dom.production.min.js` keep their names and still set `window.React` and `window.ReactDOM`, so a page set up as the README shows needs no change. A page whose own code calls APIs React 19 removed, such as `ReactDOM.render` or `ReactDOM.hydrate`, should switch to `ReactDOM.createRoot(el).render(…)` and `ReactDOM.hydrateRoot(el, …)`. Projects with a bundler use their own React.
+- Popover places itself with the shared anchored-layer helper that TimePicker and DateRangePicker use, so all of them follow the same rules for placing, flipping and closing on an outside press. Nothing changes for people using it, except that changing `placement` while a Popover is open no longer moves focus back to its first control.
+- Tooltip places itself with the shared anchored-layer helper, like Popover and Menu. Nothing changes for people using it.
+- the utility classes are generated from the tokens. `src/styles/utilities.template.css` (347 KB, 5,900 lines) replaces the 1.8 MB hand-kept `utilities.css`; its `@each` loops repeat each color, spacing and other token-scaled class once per token, and `@responsive` makes the `sm:` … `2xl:` variants from the `screen-*` tokens. A new token now gets its classes without editing the CSS. `dist/utilities.css` has the same 25,560 classes with the same declarations, one rule per line.
+- the color tokens `field`, `field-border`, `field-border-hover`, `placeholder` and `overlay` sit after `surface-muted` in `tokens.json`, the order the utility classes already had. No token changed name or value.
+
+### Removed
+
+- `dist/bundle.js` and the `serupa-ds/bundle.js` export, the old name of the browser script. Load `dist/serupa.iife.js` (`serupa-ds/serupa.iife.js`) instead; it is the same file.
+- the `.justify-baseline` utility. `justify-content: baseline` does nothing in flex or grid layouts, so no page changes; delete the class where it's used, or use `items-baseline` to line items up on their text.
+
+### Fixed
+
+- Badge: no visible change; the loading announcement's effect now lists loadingText as a dependency, so it always reads the current text (it still announces only when loading starts).
+- Button: no visible change; it still announces loadingText once, when loading starts, and its effect now declares everything it reads.
+- Calendar: no visible change; when the shown month changes, the keyboard focus target moves into the new month in the same render instead of one render later. Clears Calendar's React hook lint warnings.
+- Combobox's tests moved next to it, into `Combobox.test.tsx` (Vitest).
+- Fixed (Combobox): when the value changes from outside, the field shows the new label in the same frame instead of one frame later. Clears Combobox's two React hook lint warnings.
+- the Checkbox, Field and Input guides named test scripts that no longer exist; they now point to each component's `.test.tsx`. The usage-guide check now fails when a guide names a file that isn't there.
+- Loader: no visible change; its show-after delay and its announcement now declare everything they read, so it still waits the delay it mounted with and announces its label once, when it appears.
+- Menu's tests moved next to it, into `Menu.test.tsx` (Vitest).
+- Popover's tests moved next to it, into `Popover.test.tsx` (Vitest).
+- Changed (tooling): `node tools/test/run.mjs` finds the component suites in `tools/test/` itself, so a new suite runs without a line in `run.mjs`. `--list` prints the steps it would run.
+- TimePicker: no visible change; the list's scroll on opening and while moving is handled in one effect that sees the current highlighted time. Clears TimePicker's React hook lint warning.
+- Toast: no visible change; a replaced toast still starts its time again. Clears Toast's React hook lint warnings (in the component and its stories).
+- Tooltip's tests moved next to it, into `Tooltip.test.tsx` (Vitest), with a new check that new text while open is placed again.
+- a bundler now keeps only the components a project imports. Before, `import { Divider } from "serupa-ds"` brought every component along (about 48 KB gzipped); now it's under 1 KB, and Button with its icons and loader is about 11 KB. Components are made with a pure-marked helper instead of a separate `displayName` statement, and the icon list, contexts and the toast store no longer run code when the module loads. Display names in React DevTools are unchanged.
+- Changed (tooling): CI runs the visual snapshots as three parallel shards, so they no longer set how long a run takes. `SERUPA_SHARD=2/3 node tools/test/visual.mjs` checks one shard locally.
+- VisuallyHidden, the FileUpload input and Sidebar's hidden label hide with `clip-path: inset(var(--sizing-1-2))` (50%) instead of the deprecated `clip`, as the `sr-only` class already did. Nothing changes on screen or for screen readers.
+
 ## [7.1.3] - 2026-10-19
 
 ### Changed
