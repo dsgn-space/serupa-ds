@@ -12,6 +12,11 @@ buildUtilities(new URL('.', import.meta.url).pathname);
 
 export default defineConfig({
   define: { __VERSION__: JSON.stringify(version) },
+  // The modern JSX runtime, as apps build with. tsconfig's "jsx": "react" (classic, for the package build) would
+  // make React 19 warn "outdated JSX transform" in dev, which the tests that fail on a console warning catch.
+  oxc: { jsx: { runtime: 'automatic' } },
+  // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
+  optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime'] },
   test: {
     include: ['src/**/*.test.tsx'],
     setupFiles: ['./tools/test/vitest/setup.ts'],
