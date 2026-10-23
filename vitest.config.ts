@@ -36,9 +36,10 @@ export default defineConfig({
     browser: {
       enabled: true,
       headless: true,
-      // Firefox moves the pointer again by itself after each layout change (here, in the test frame, to the wrong
-      // place), which threw a drag off as the thumb moved under it. Other browsers ignore Firefox's settings.
-      provider: playwright({ launchOptions: { firefoxUserPrefs: { 'layout.reflow.synthMouseMove': false } } }),
+      provider: playwright(),
+      // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
+      // one file landed in the middle of a drag in another. One file at a time there.
+      fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
       // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
       instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
       viewport: { width: 900, height: 700 },
