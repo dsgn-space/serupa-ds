@@ -9,6 +9,7 @@ document.documentElement.setAttribute('data-theme', 'blue-light');
 // No transitions or animations: a test reads the end state, which Firefox and WebKit can otherwise still be
 // easing towards. Motion itself is tested by the suites in tools/test/ (button-motion.mjs and others).
 const still = document.createElement('style');
+still.id = 'serupa-still';
 still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
 document.head.appendChild(still);
 // The pointer rests at the top-left corner between tests; padding keeps it off the component under test.
