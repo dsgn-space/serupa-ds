@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import * as esbuild from 'esbuild';
-import { PROJECT, report } from './lib.mjs';
+import { PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
@@ -41,8 +41,8 @@ const rows = Object.entries(BUDGET).map(([name, budget]) => ({ name, now: size[n
 if (process.env.GITHUB_STEP_SUMMARY) {
   fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Size (gzipped)\n\n| | Size | Budget | |\n| --- | ---: | ---: | --- |\n${rows.map((r) => `| ${r.name} | ${kib(r.now)} KiB | ${r.budget} KiB | ${r.now <= r.budget * 1024 ? 'ok' : '**over**'} |`).join('\n')}\n`);
 }
-process.exit(report('Size', rows.map((r) => ({
+done(report('Size', rows.map((r) => ({
   name: `${r.name}: ${kib(r.now)} KiB gzipped, within ${r.budget} KiB`,
   ok: r.now <= r.budget * 1024,
   detail: `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
-}))) ? 0 : 1);
+}))));

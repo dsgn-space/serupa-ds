@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { PROJECT, writePage, browser, cleanup, report } from './lib.mjs';
+import { PROJECT, writePage, browser, cleanup, report, done } from './lib.mjs';
 
 const TMP = path.join(PROJECT, '.test-tmp');
 const proj = path.join(TMP, 'iconproj');
@@ -101,4 +101,4 @@ t('no page errors', errors.length === 0, errors.join('; '));
 
 await b.close();
 cleanup();
-process.exit(report('Custom icons', R) ? 0 : 1);
+done(report('Custom icons', R));
