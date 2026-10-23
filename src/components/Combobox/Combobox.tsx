@@ -8,6 +8,7 @@ import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { isComposing } from "../../internal/ime";
 
 export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
 export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
@@ -126,7 +127,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e);
-    if (e.defaultPrevented || locked) return;
+    if (e.defaultPrevented || locked || isComposing(e)) return;
     if (e.key === "ArrowDown") { e.preventDefault(); if (!open) show(e.altKey ? "selected" : "first"); else move(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); if (!open) show("last"); else move(-1); }
     else if (e.key === "Enter" && open) { e.preventDefault(); const o = opts[active]; if (o && shown.includes(o)) pick(o); else hide(); }

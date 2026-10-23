@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -95,7 +96,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e);
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || isComposing(e)) return;
     const k = e.key, big = e.shiftKey ? large : 1;
     if (k === "ArrowUp") nudge(big);
     else if (k === "ArrowDown") nudge(-big);

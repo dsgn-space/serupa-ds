@@ -6,6 +6,7 @@ import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { isComposing } from "../../internal/ime";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -107,7 +108,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const pick = (n: number) => { commit(n); setOpen(false); if (field.current) field.current.focus(); };
   const keys = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onKeyDown) onKeyDown(e);
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || isComposing(e)) return;
     const last = times.length - 1, page = 4;
     const move = (i: number) => { e.preventDefault(); typed.current = false; setActive(i); };
     if (!open) {
