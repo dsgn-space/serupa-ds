@@ -113,9 +113,12 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const first = startOfWeek(month, ws);
   const weeks: Date[][] = [];
   for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
-  const title = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
+  // The grid is Gregorian with Latin digits, so the title and day labels are too (a Thai or Persian title would
+  // otherwise name another month and year). Month and weekday names stay localized.
+  const greg = { calendar: "gregory", numberingSystem: "latn" } as const;
+  const title = new Intl.DateTimeFormat(locale, { ...greg, month: "long", year: "numeric" }).format(month);
   const short = new Intl.DateTimeFormat(locale, { weekday: "short" }), long = new Intl.DateTimeFormat(locale, { weekday: "long" });
-  const full = new Intl.DateTimeFormat(locale, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  const full = new Intl.DateTimeFormat(locale, { ...greg, weekday: "long", year: "numeric", month: "long", day: "numeric" });
   const titleId = domId("dk-cal", React.useId()) + "-title";
   const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   return (
