@@ -1,0 +1,99 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { color, css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { Link } from './Link';
+
+const el = (id: string) => document.getElementById(id) as HTMLAnchorElement;
+const underline = (id: string) => { const s = css(el(id)); return { color: s.color, line: s.textDecorationLine, thickness: s.textDecorationThickness, offset: s.textUnderlineOffset }; };
+const away = () => userEvent.hover(document.body, { position: { x: 5, y: 600 } });
+const RouterLink = React.forwardRef<HTMLAnchorElement, { to: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>>(function RouterLink({ to, ...p }, ref) {
+  return <a {...p} ref={ref} href={'#router' + to} data-router="" />;
+});
+
+function Para({ r }: { r?: React.Ref<HTMLAnchorElement> }) {
+  return <div style={{ maxWidth: '480px', fontSize: '16px' }}>
+    <p style={{ color: 'rgb(9, 8, 7)' }}>Read <Link id="ldef" href="#a" ref={r} className="extra" data-x="y">the guide</Link> or <Link id="lneu" href="#b" tone="neutral">the notes</Link>.</p>
+    <button id="after">after</button>
+  </div>;
+}
+
+describe('Link', () => {
+  test('defaults: an inline <a>; ref, className and props reach it', async () => {
+    const r = React.createRef<HTMLAnchorElement>();
+    await render(<Para r={r} />);
+    const e = el('ldef');
+    expect([e.tagName, e.getAttribute('href'), e.className, e.dataset.component, r.current === e, e.dataset.x, e.target, css(e).display]).toEqual(['A', '#a', 'dk-link extra', 'link', true, 'y', '', 'inline']);
+  });
+
+  test('primary, underlined 1px, 2px below the text; on hover primary-hover and the underline thickens to 2px', async () => {
+    await render(<Para />);
+    const primary = color('var(--primary)');
+    expect(underline('ldef')).toEqual({ color: primary, line: 'underline', thickness: '1px', offset: '2px' });
+    await userEvent.hover(el('ldef'));
+    await expect.poll(() => underline('ldef').color).toBe(color('var(--primary-hover)'));
+    expect(underline('ldef').color).not.toBe(primary);
+    expect(underline('ldef').thickness).toBe('2px');
+    await away();
+  });
+
+  test('tone="neutral": the surrounding text\'s color, still underlined', async () => {
+    await render(<Para />);
+    const s = underline('lneu');
+    expect([s.color, s.line]).toEqual(['rgb(9, 8, 7)', 'underline']);
+  });
+
+  test('underline="hover": no underline until hovered', async () => {
+    await render(<Link id="lhov" href="#c" underline="hover">Pricing</Link>);
+    const before = underline('lhov').line;
+    await userEvent.hover(el('lhov'));
+    await expect.poll(() => underline('lhov').line).toBe('underline');
+    expect(before).toBe('none');
+    await away();
+  });
+
+  test('unknown tone and underline fall back to primary and always', async () => {
+    await render(<Link id="lbad" href="#d" tone={'gold' as never} underline={'never' as never}>Bad</Link>);
+    expect(el('lbad').className).toBe('dk-link');
+  });
+
+  test('external: target _blank, rel keeps yours and adds noopener noreferrer, a 1em hidden new-tab icon and "(opens in a new tab)" for screen readers', async () => {
+    await render(<div style={{ fontSize: '16px' }}><Link id="lext" href="https://example.com" external rel="me">Example</Link></div>);
+    const e = el('lext'), i = e.querySelector<HTMLElement>('.dk-link__icon')!, v = e.querySelector('.dk-visually-hidden')!;
+    expect([e.target, e.rel, i.dataset.icon, i.getAttribute('aria-hidden'), v.textContent, css(i).fontSize]).toEqual(['_blank', 'me noopener noreferrer', 'open_in_new', 'true', ' (opens in a new tab)', '16px']);
+    expect(v.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    // The link's text: its words, the note, and the hidden icon's ligature name.
+    expect(e.textContent!.replace('open_in_new', '')).toBe('Example (opens in a new tab)');
+  });
+
+  test('as: renders your router link with className and the rest', async () => {
+    await render(<Link id="lrouter" as={RouterLink} {...{ to: '/settings' }}>Settings</Link>);
+    const e = el('lrouter');
+    expect([e.hasAttribute('data-router'), e.getAttribute('href'), e.className]).toEqual([true, '#router/settings', 'dk-link']);
+  });
+
+  test('tokens (--link-text, --link-thickness, --link-offset) override one link', async () => {
+    await render(<Link id="ltok" href="#e" style={{ '--link-text': 'rgb(1, 2, 3)', '--link-thickness': '3px', '--link-offset': '5px' } as React.CSSProperties}>Tokens</Link>);
+    const s = underline('ltok');
+    expect([s.color, s.thickness, s.offset]).toEqual(['rgb(1, 2, 3)', '3px', '5px']);
+  });
+
+  test('keyboard focus: a 2px ring, 2px out', async () => {
+    await render(<Para />);
+    // Arrive by keyboard (Tab away and back) so the link matches :focus-visible.
+    el('ldef').focus();
+    await userEvent.keyboard('{Tab}');
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    const s = css(el('ldef'));
+    expect([document.activeElement === el('ldef'), s.outlineStyle, s.outlineWidth, s.outlineOffset]).toEqual([true, 'solid', '2px', '2px']);
+  });
+
+  test('contrast: link text (4.5:1), on hover, and its focus ring (3:1) on surface in all six themes', () => {
+    expect(lowContrast([
+      ['link', 'var(--link-text, var(--primary))', 'var(--surface)', 4.5],
+      ['hover', 'var(--link-text-hover, var(--primary-hover))', 'var(--surface)', 4.5],
+      ['focus ring', 'var(--link-focus-ring, var(--focus-ring))', 'var(--surface)', 3],
+    ])).toEqual([]);
+  });
+});
