@@ -1,0 +1,14 @@
+/* ---------------------------------------------------------------
+   DateRangePicker: an Input box (dk-input) with two date fields split by a muted dash and DatePicker's calendar
+   button; the popup (DatePicker's) holds two Calendars 24px apart (stacked when the screen is narrow) and a
+   muted line saying which end to pick. Days between the ends take the --calendar-range-* fill.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-date-range-picker { --dk-drp-offset: var(--date-picker-offset, var(--spacing-1)); width: auto; max-width: var(--sizing-full); padding-inline-end: var(--spacing-1); }
+.dk-date-range-picker__field { flex: none; width: var(--date-range-picker-field-width, var(--spacing-24)); }
+.dk-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--text-muted)); }
+.dk-date-range-picker__months { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--date-range-picker-months-gap, var(--spacing-6)); }
+.dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: hidden; }
+@media (max-width: 639.98px) { .dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: visible; } }
+.dk-date-range-picker__status { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--date-range-picker-status-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+}

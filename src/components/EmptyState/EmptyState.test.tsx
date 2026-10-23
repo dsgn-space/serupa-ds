@@ -1,0 +1,82 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { Button } from '../Button/Button';
+import { EmptyState } from './EmptyState';
+
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const part = (id: string, name: string) => el(id).querySelector(`.dk-empty-state__${name}`) as HTMLElement | null;
+const rect = (e: Element) => e.getBoundingClientRect();
+const near = (a: number, b: number) => Math.abs(a - b) <= 1;
+
+function Projects({ r }: { r?: React.Ref<HTMLDivElement> }) {
+  return <EmptyState id="edef" ref={r} className="extra" data-x="y" icon="folder_open" title="No projects yet" description="Create a project to start tracking your work."
+    actions={[<Button key="n" id="act">New project</Button>, <Button key="i" variant="outline">Import</Button>]} />;
+}
+
+describe('EmptyState', () => {
+  test('centered, 48px padding; ref, className and attributes reach it', async () => {
+    const r = React.createRef<HTMLDivElement>();
+    await render(<div style={{ width: '600px' }}><Projects r={r} /></div>);
+    const e = el('edef'), i = part('edef', 'icon')!, s = css(e);
+    expect([e.className, e.dataset.component, r.current === e, e.dataset.x]).toEqual(['dk-empty-state extra', 'empty-state', true, 'y']);
+    expect([s.paddingTop, s.textAlign]).toEqual(['48px', 'center']);
+    expect(near((rect(i).left + rect(i).right) / 2, (rect(e).left + rect(e).right) / 2)).toBe(true);
+  });
+
+  test('a 24px icon in a 48px circle, hidden from screen readers', async () => {
+    await render(<Projects />);
+    const i = part('edef', 'icon')!;
+    expect([i.getAttribute('aria-hidden'), i.offsetWidth, i.offsetHeight, css(i).borderRadius, css(i.querySelector('.dk-icon')).fontSize]).toEqual(['true', 48, 48, '9999px', '24px']);
+  });
+
+  test('an <h3> title (text-base, semibold), a <p> description (text-sm, at most 384px), then the actions, stacked 16px apart', async () => {
+    await render(<Projects />);
+    const t = part('edef', 'title')!, d = part('edef', 'description')!;
+    expect([t.tagName, css(t).fontSize, css(t).fontWeight, d.tagName, css(d).fontSize, css(part('edef', 'text')).maxWidth]).toEqual(['H3', '16px', '600', 'P', '14px', '384px']);
+    expect(el('edef').querySelectorAll('.dk-empty-state__actions button').length).toBe(2);
+    const top = ['icon', 'title', 'description', 'actions'].map((n) => rect(part('edef', n)!).top);
+    expect(top[0]! < top[1]! && top[1]! < top[2]! && top[2]! < top[3]!).toBe(true);
+    expect(near(top[1]! - (top[0]! + 48), 16)).toBe(true);
+  });
+
+  test('size sm, dashed, headingLevel 4: 24px padding, a 40px circle, a text-sm <h4>, a 1px dashed frame with 8px corners; nothing for missing parts', async () => {
+    await render(<EmptyState id="esm" size="sm" variant="dashed" icon="search_off" title="No results" headingLevel={4} />);
+    const s = css(el('esm')), t = part('esm', 'title')!;
+    expect([s.paddingTop, part('esm', 'icon')!.offsetWidth, t.tagName, css(t).fontSize]).toEqual(['24px', 40, 'H4', '14px']);
+    expect([s.borderTopStyle, s.borderTopWidth, s.borderTopLeftRadius]).toEqual(['dashed', '1px', '8px']);
+    expect([part('esm', 'description'), part('esm', 'actions')]).toEqual([null, null]);
+  });
+
+  test('an element as the icon (an illustration) shows at its own size, without the circle', async () => {
+    await render(<EmptyState id="ecustom" icon={<svg width={80} height={60} />} title="Custom art" />);
+    const i = part('ecustom', 'icon')!;
+    expect([rect(i).width, rect(i).height, css(i).backgroundColor]).toEqual([80, 60, 'rgba(0, 0, 0, 0)']);
+  });
+
+  test('unknown size, variant and headingLevel fall back to md, plain and h3; no icon when none is given', async () => {
+    await render(<EmptyState id="ebad" size={'xl' as never} variant={'boxed' as never} headingLevel={9 as never} title="Bad" />);
+    expect([el('ebad').className, !!el('ebad').querySelector('h3'), part('ebad', 'icon')]).toEqual(['dk-empty-state', true, null]);
+  });
+
+  test('tokens (--empty-state-icon-box, --empty-state-title-color) override one empty state; the actions are reachable with the keyboard', async () => {
+    await render(<><EmptyState id="etok" title="T" icon="inbox" style={{ '--empty-state-icon-box': '64px', '--empty-state-title-color': 'rgb(1, 2, 3)' } as React.CSSProperties} /><Projects /></>);
+    expect([part('etok', 'icon')!.offsetWidth, css(part('etok', 'title')).color]).toEqual([64, 'rgb(1, 2, 3)']);
+    el('act').focus();
+    expect(document.activeElement).toBe(el('act'));
+  });
+
+  test('contrast: title and description 4.5:1 on surface, the icon 3:1 on its circle, in all six themes', async () => {
+    await render(<Projects />);
+    const i = part('edef', 'icon')!, low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const [name, fg, bg, need] of [['title', css(part('edef', 'title')).color, 'var(--surface)', 4.5], ['description', css(part('edef', 'description')).color, 'var(--surface)', 4.5], ['icon', css(i).color, css(i).backgroundColor, 3]] as const) {
+        const r = contrast(fg, bg);
+        if (r < need) low.push(`${th} ${name} ${r.toFixed(2)}`);
+      }
+    }
+    expect(low).toEqual([]);
+  });
+});

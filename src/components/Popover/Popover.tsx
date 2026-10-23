@@ -1,0 +1,96 @@
+import * as React from "react";
+import { cn, domId, elementRef, setRef, useIsoLayoutEffect } from "../../internal/cn";
+import { type Placement } from "../../internal/position";
+import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
+import { named } from "../../internal/component";
+
+/** The trigger element's props this component reads and adds to. */
+type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
+
+export interface PopoverProps {
+  /** The element that opens it: one element that can take focus, such as a Button. It gets aria-expanded and aria-controls. */
+  trigger: React.ReactElement;
+  /** What's inside: text, a form, links, buttons. A function gets close(), for a Cancel or Done button. */
+  children: React.ReactNode | ((close: () => void) => React.ReactNode);
+  /** A heading at the top that names the popover. */
+  title?: React.ReactNode;
+  /** Where it goes: 'bottom' (default), 'top', 'left', 'right', with '-start' or '-end'. It flips when there's no room. */
+  placement?: Placement;
+  /** Open it yourself (controlled), with onOpenChange. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Its name for screen readers when it has no title. */
+  "aria-label"?: string;
+  /** Where focus goes when it opens: 'first' (default: the first control inside, or the panel) or 'panel'. */
+  initialFocus?: 'first' | 'panel';
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/* Popover: a small non-modal dialog next to its trigger, for content people interact with (a form, filters,
+   details with links): role="dialog", named by its title. Opening moves focus inside; Escape closes it and
+   returns focus to the trigger; a click outside, or focus moving elsewhere, closes it too. It sits in the top
+   layer, right after the trigger in the tab order. For a hint, use Tooltip; for a list of actions, Menu. */
+/** A small non-modal dialog next to its trigger, for interactive content: a form, filters, details. */
+export const Popover = /* @__PURE__ */ named("Popover", function Popover(props: PopoverProps): React.ReactElement {
+  const id = domId("dk-pop", React.useId());
+  const [inner, setInner] = React.useState(false);
+  const controlled = props.open !== undefined;
+  const open = controlled ? !!props.open : inner;
+  const panelRef = React.useRef<HTMLDivElement | null>(null);
+  const triggerRef = React.useRef<HTMLElement | null>(null);
+  const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
+  const set = React.useCallback((v: boolean) => { if (!controlled) setInner(v); if (ask.current) ask.current(v); }, [controlled]);
+  const close = React.useCallback((focusTrigger = true) => { set(false); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
+  const focusFirst = props.initialFocus !== "panel";
+
+  useAnchoredLayer(open, panelRef, triggerRef, { placement: props.placement, offsetVar: "--dk-popover-offset", onOutside: () => close(false), inside: triggerRef });
+  // On open, focus moves inside (a press outside the panel and its trigger closes it; focus stays where the press put it).
+  useIsoLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!open || !panel) return;
+    const first = focusFirst ? panel.querySelector<HTMLElement>(FOCUSABLE) : null;
+    (first || panel).focus();
+  }, [open]);
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); }
+  };
+  // Focus leaving for somewhere other than the trigger closes it.
+  const onBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const to = e.relatedTarget as Node | null;
+    if (!to) return;
+    if (panelRef.current && panelRef.current.contains(to)) return;
+    if (triggerRef.current && triggerRef.current.contains(to)) return;
+    close(false);
+  };
+
+  const child = React.Children.only(props.trigger) as React.ReactElement<TriggerProps>;
+  const cp = child.props;
+  const childRef = elementRef<HTMLElement>(child);
+  const trigger = React.cloneElement(child, {
+    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
+    "aria-haspopup": "dialog",
+    "aria-expanded": open,
+    "aria-controls": open ? id : undefined,
+    onClick: (e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented) return; set(!open); },
+  });
+  const titled = props.title != null && props.title !== false && props.title !== "";
+  const content = typeof props.children === "function" ? (props.children as (c: () => void) => React.ReactNode)(() => close(true)) : props.children;
+  return (
+    <>
+      {trigger}
+      <div ref={panelRef} id={id} role="dialog" tabIndex={-1} {...{ popover: "manual" }} hidden={!open || undefined}
+        aria-labelledby={titled ? id + "-title" : undefined} aria-label={titled ? undefined : props["aria-label"]}
+        className={cn("dk-popover", props.className)} style={props.style} data-component="popover" data-state={open ? "open" : "closed"}
+        onKeyDown={onKeyDown} onBlur={onBlur}>
+        {open ? <>
+          {titled ? <div id={id + "-title"} className="dk-popover__title">{props.title}</div> : null}
+          <div className="dk-popover__body">{content}</div>
+        </> : null}
+      </div>
+    </>
+  );
+});

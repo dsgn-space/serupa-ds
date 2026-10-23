@@ -1,0 +1,110 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { Calendar, type CalendarProps } from './Calendar';
+
+const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
+const cal = <T extends HTMLElement = HTMLElement>(sel: string) => q<T>(`[data-testid=cal] ${sel}`);
+const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.id || a.tagName; };
+const title = () => cal('.dk-calendar__title').textContent;
+
+// The script's main calendar: March 2025, Sunday weeks, min Feb 3, max Jun 20, March Sundays refused.
+function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTMLDivElement> } & Partial<CalendarProps>) {
+  const { picks = [], months = [], cref, ...rest } = props;
+  return <Calendar data-testid="cal" locale="en-US" weekStartsOn={0} defaultMonth={new Date(2025, 2, 10)} defaultValue={new Date(2025, 2, 10)} className="extra" ref={cref}
+    min={new Date(2025, 1, 3)} max={new Date(2025, 5, 20)} isDateDisabled={(d) => d.getDay() === 0 && d.getMonth() === 2}
+    onValueChange={(d) => { picks.push(d.toDateString()); }} onMonthChange={(m) => { months.push(m.toDateString()); }} {...rest} />;
+}
+
+describe('Calendar', () => {
+  test('a grid named by the "March 2025" title (aria-live), six weeks of 7 days from Sun Feb 23, weekday headers with full names, one Tab stop on the selected day; ref and className', async () => {
+    const ref = React.createRef<HTMLDivElement>();
+    await render(<Cal cref={ref} />);
+    const el = q('[data-testid=cal]'), grid = el.querySelector('[role=grid]')!, t = el.querySelector('.dk-calendar__title')!;
+    expect(ref.current).toBe(el);
+    expect(el.className).toMatch(/extra/);
+    expect([t.textContent, t.getAttribute('aria-live'), document.getElementById(grid.getAttribute('aria-labelledby')!)!.textContent]).toEqual(['March 2025', 'polite', 'March 2025']);
+    expect([grid.querySelectorAll('tbody tr').length, grid.querySelectorAll('tbody button').length]).toEqual([6, 42]);
+    expect([...grid.querySelectorAll('th')].map((x) => x.textContent).join()).toBe('Sun,Mon,Tue,Wed,Thu,Fri,Sat');
+    expect(grid.querySelector('th')!.getAttribute('abbr')).toBe('Sunday');
+    expect(grid.querySelector<HTMLElement>('tbody button')!.dataset.date).toBe('2025-02-23');
+    expect([...grid.querySelectorAll<HTMLElement>('button[tabindex="0"]')].map((x) => x.dataset.date).join()).toBe('2025-03-10');
+    expect(grid.querySelector('[data-date="2025-02-23"]')!.className).toMatch(/outside/);
+  });
+
+  test('each day is named by its full date and the chosen one is aria-selected', async () => {
+    await render(<Cal />);
+    const d = cal('[data-date="2025-03-10"]');
+    expect([d.getAttribute('aria-label'), d.parentElement!.getAttribute('aria-selected')]).toEqual(['Monday, March 10, 2025', 'true']);
+  });
+
+  test('de-DE: German names and weeks starting on Monday', async () => {
+    await render(<Calendar data-testid="de" locale="de-DE" defaultMonth={new Date(2025, 2, 1)} />);
+    const de = [...document.querySelectorAll('[data-testid=de] th')].map((x) => x.textContent).join() + ' ' + q('[data-testid=de] .dk-calendar__title').textContent;
+    expect(de).toMatch(/^Mo\.?,Di\.?,Mi\.?,Do\.?,Fr\.?,Sa\.?,So\.? März 2025$/);
+  });
+
+  test('without Intl.Locale week info: weeks start by region (US Sunday, DE Monday, EG Saturday, MV Friday, BR Sunday)', async () => {
+    // Firefox has no week info; take it away here so the region fallback runs in every engine.
+    const proto = Intl.Locale.prototype as unknown as Record<string, unknown>;
+    const saved = ['getWeekInfo', 'weekInfo'].map((k) => [k, Object.getOwnPropertyDescriptor(proto, k)] as const);
+    for (const [k] of saved) delete proto[k];
+    try {
+      await render(<div>{['en-US', 'de-DE', 'de', 'ar-EG', 'dv-MV', 'pt-BR'].map((l) => <Calendar key={l} data-l={l} locale={l} defaultMonth={new Date(2025, 2, 1)} />)}</div>);
+      const starts = [...document.querySelectorAll<HTMLElement>('[data-l]')].map((c) => c.dataset.l + ':' + c.querySelector<HTMLElement>('[role=grid] [data-date]')!.dataset.date).join();
+      expect(starts).toBe('en-US:2025-02-23,de-DE:2025-02-24,de:2025-02-24,ar-EG:2025-03-01,dv-MV:2025-02-28,pt-BR:2025-02-23');
+    } finally {
+      for (const [k, d] of saved) if (d) Object.defineProperty(proto, k, d);
+    }
+  });
+
+  test('today is aria-current="date" and the Tab stop when nothing is chosen', async () => {
+    await render(<Calendar data-testid="today" />);
+    const b = q('[data-testid=today] [aria-current=date]');
+    expect([b.textContent, b.getAttribute('tabindex'), /today/.test(b.className)]).toEqual([String(new Date().getDate()), '0', true]);
+  });
+
+  test('arrows move a day or week, Home/End to the week\'s ends, PageUp/PageDown a month, Shift+PageUp a year; moving past the month shows the next one and keeps focus on the day; onMonthChange gets the first of each month shown', async () => {
+    const months: string[] = [];
+    await render(<Cal months={months} />);
+    cal('[data-date="2025-03-10"]').focus();
+    const seen: string[] = [];
+    for (const k of ['{ArrowRight}', '{ArrowDown}', '{ArrowLeft}', '{ArrowUp}', '{End}', '{Home}', '{PageDown}', '{PageUp}', '{Shift>}{PageUp}{/Shift}']) { await userEvent.keyboard(k); seen.push(focused()); }
+    expect(seen).toEqual(['2025-03-11', '2025-03-18', '2025-03-17', '2025-03-10', '2025-03-15', '2025-03-09', '2025-04-09', '2025-03-09', '2024-03-09']);
+    await userEvent.keyboard('{Shift>}{PageDown}{/Shift}{ArrowUp}{ArrowUp}');
+    expect([focused(), title()]).toEqual(['2025-02-23', 'February 2025']);
+    await userEvent.keyboard('{PageDown}{PageDown}');
+    expect(months.slice(-2).join('|')).toBe('Sat Mar 01 2025|Tue Apr 01 2025');
+  });
+
+  test('Enter and a click pick a day: onValueChange, aria-selected moves', async () => {
+    const picks: string[] = [];
+    await render(<Cal picks={picks} defaultMonth={new Date(2025, 3, 1)} />);
+    cal('[data-date="2025-04-08"]').focus();
+    await userEvent.keyboard('{Enter}');
+    await userEvent.click(cal('[data-date="2025-04-17"]'));
+    expect(picks.join('|')).toBe('Tue Apr 08 2025|Thu Apr 17 2025');
+    expect([...document.querySelectorAll<HTMLElement>('[data-testid=cal] [aria-selected=true] button')].map((b) => b.dataset.date).join()).toBe('2025-04-17');
+  });
+
+  test('min: days before it are aria-disabled and the previous button stops at its month; isDateDisabled: refused days are aria-disabled, faded and can\'t be picked; max: the next button stops at its month', async () => {
+    const picks: string[] = [];
+    await render(<Cal picks={picks} defaultMonth={new Date(2025, 3, 1)} />);
+    await userEvent.click(cal('.dk-calendar__nav--prev'));
+    await userEvent.click(cal('.dk-calendar__nav--prev'));
+    expect([title(), cal<HTMLButtonElement>('.dk-calendar__nav--prev').disabled]).toEqual(['February 2025', true]);
+    expect([cal('[data-date="2025-02-02"]').getAttribute('aria-disabled'), cal('[data-date="2025-02-03"]').getAttribute('aria-disabled')]).toEqual(['true', null]);
+    await userEvent.click(cal('.dk-calendar__nav--next'));
+    await userEvent.click(cal('[data-date="2025-03-16"]'), { force: true });
+    expect([cal('[data-date="2025-03-16"]').getAttribute('aria-disabled'), picks.length]).toEqual(['true', 0]);
+    await expect.poll(() => getComputedStyle(cal('[data-date="2025-03-16"]')).opacity).toBe('0.5');
+    for (let i = 0; i < 3; i++) await userEvent.click(cal('.dk-calendar__nav--next'));
+    expect([title(), cal<HTMLButtonElement>('.dk-calendar__nav--next').disabled]).toEqual(['June 2025', true]);
+  });
+
+  test('--calendar-selected-bg overrides one calendar', async () => {
+    await render(<Calendar data-testid="tok" style={{ '--calendar-selected-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />);
+    await expect.poll(() => getComputedStyle(q('[data-testid=tok] .dk-calendar__day--selected')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+});

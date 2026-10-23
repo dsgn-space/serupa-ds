@@ -1,0 +1,13 @@
+/* Icons: an inline SVG (Material Symbols Rounded, filled, or a custom icon) in a 1em box, drawn in the text color. */
+@layer dk.components {
+.dk-icon {
+  font-size: var(--spacing-6);            /* 24px default */
+  line-height: var(--leading-none);
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  user-select: none;
+}
+.dk-icon > svg { display: block; width: var(--sizing-full); height: var(--sizing-full); fill: currentColor; }
+}

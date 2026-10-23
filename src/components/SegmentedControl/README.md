@@ -1,0 +1,85 @@
+# SegmentedControl
+
+Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). It's a radio group drawn as segments, with the selection sliding between them.
+
+```tsx
+import { SegmentedControl } from "serupa-ds";
+
+<SegmentedControl aria-label="Period" defaultValue="week"
+  options={[{ value: "day", label: "Day" }, { value: "week", label: "Week" }, { value: "month", label: "Month" }]} />
+
+<SegmentedControl aria-label="View" value={view} onValueChange={setView}
+  options={[{ value: "list", icon: "list", label: "List" }, { value: "board", icon: "view_kanban", label: "Board" }]} />
+
+<SegmentedControl aria-label="Text alignment" size="sm" options={[
+  { value: "left", icon: "format_align_left", "aria-label": "Left" },
+  { value: "center", icon: "format_align_center", "aria-label": "Center" },
+]} />
+```
+
+## When to use
+
+- Switching how the same content is shown, such as List and Board.
+- One choice from 2 to about 5 short options that applies right away, such as Day, Week, Month.
+
+## When not to use
+
+- Switching panels of content: use [Tabs](../Tabs/README.md).
+- Independent on/off buttons: use [ButtonGroup](../ButtonGroup/README.md) with [ToggleButton](../ToggleButton/README.md).
+- More than about five options: use [RadioGroup](../Radio/README.md) or [Select](../Select/README.md).
+
+## Usage
+
+- Keep labels to one or two words, so the segments stay short and even.
+- Give an icon-only segment an `aria-label`, and use icons alone only when they're widely understood.
+- Use `fullWidth` in narrow spaces such as a panel or a phone layout, and match the `size` to the controls beside it.
+
+## Accessibility
+
+- `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
+- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced-colors mode the selection uses Highlight.
+- The selection slides over 200ms, and jumps with `prefers-reduced-motion`.
+
+### Keyboard
+
+It's one Tab stop, on the selected segment. Arrow keys move and select at once, skipping disabled segments and wrapping (left and right swap in right-to-left pages). Home and End go to the first and last.
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `options` | `{ value, label?, icon?, 'aria-label'?, disabled? }[]` | | The segments, in order. An icon-only segment needs `aria-label`. |
+| `value` | `string` | | Controlled. |
+| `defaultValue` | `string` | the first enabled option | Uncontrolled. |
+| `onValueChange` | `(value: string) => void` | | When a different segment is chosen. |
+| `size` | `'sm' \| 'md'` | `'md'` | 24 or 32px tall, like the control heights. |
+| `fullWidth` | `boolean` | `false` | Fills its container with equal segments. |
+| `disabled` | `boolean` | `false` | |
+| `name` | `string` | | Sends the value with a form, in a hidden input. |
+
+Name it with `aria-label` or `aria-labelledby`. `className`, `ref` and other props go to the root `<div>`.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one control. The list lives in `src/components/SegmentedControl/segmented-control.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--segmented-control-bg` | `surface-muted` | The control's background. |
+| `--segmented-control-border` | `field-border` | The control's outline (3:1 on the surface, so it can be seen). |
+| `--segmented-control-indicator` | `surface` | The selected segment's background. |
+| `--segmented-control-indicator-border` | `field-border` | The selected segment's outline. |
+| `--segmented-control-text` | `text-muted` | The other segments' labels (4.5:1 on bg). |
+| `--segmented-control-text-selected` | `text` | The selected segment's label. |
+| `--segmented-control-text-hover` | `text` | A segment's label on hover. |
+| `--segmented-control-focus-ring` | `focus-ring` | A segment's keyboard focus ring. |
+| `--segmented-control-indicator-shadow` | `shadow-sm` | The selected segment's shadow. |
+| `--segmented-control-radius` | `rounded-md` | The control's corners (6px). |
+| `--segmented-control-indicator-radius` | `rounded-sm` | The selected segment's corners (4px). |
+| `--segmented-control-height-sm` | `control-height-sm` | size="sm" (24px). |
+| `--segmented-control-height-md` | `control-height-md` | size="md", the default (32px). |
+| `--segmented-control-padding` | `spacing-0_5` | Space between the outline and the segments (2px). |
+| `--segmented-control-padding-x` | `spacing-3` | Space on each side of a segment's label (12px). |
+| `--segmented-control-gap` | `spacing-1_5` | Space between a segment's icon and label (6px). |
+| `--segmented-control-weight` | `font-medium` | The labels' weight (500). |
+| `--segmented-control-duration` | `duration-200` | How long the selection takes to slide to a new segment. |

@@ -1,0 +1,169 @@
+{
+  "popover": {
+    "$description": "Popover's component tokens. Each one is an optional override: set the CSS variable (--popover-<name>) on the page, a container or one popover, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The panel's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The panel's text.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-text"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The panel's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-border"
+          }
+        }
+      },
+      "title": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-title-color"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The panel's focus ring, when it takes focus itself.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-focus-ring"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "The panel's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The panel's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The panel's border (1px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-border-width"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The title (14px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-title-size"
+          }
+        }
+      },
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-title-weight"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-3xs}",
+        "$description": "The panel's width (256px; it never gets wider than the screen).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space inside the panel (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space under the title (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-gap"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The gap between the panel and its trigger (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-50}",
+        "$description": "The stacking level where the browser has no top layer (popover).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-z-index"
+          }
+        }
+      }
+    }
+  }
+}
