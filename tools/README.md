@@ -97,7 +97,7 @@ node tools/tokens/export.mjs                         # design-tokens/ only (--ch
 node tools/tokens/style-dictionary.config.mjs out/   # build them into CSS with Style Dictionary (one file per theme)
 ```
 
-`export.mjs` writes the W3C Design Tokens files (see the README). The Style Dictionary config adds two things Style Dictionary 5.6 lacks: converting the format's duration objects (`{ "value": 150, "unit": "ms" }`), and using the system's own variable names (from `$extensions["com.serupa"].cssVar`). Add platforms to it for iOS, Android or Sass.
+`export.mjs` writes the W3C Design Tokens files (see the README). The Style Dictionary config changes two of Style Dictionary's defaults so its output matches `tokens.css`: it writes the format's duration objects (`{ "value": 150, "unit": "ms" }`) in their own unit instead of seconds, and it uses the system's own variable names (from `$extensions["com.serupa"].cssVar`). Add platforms to it for iOS, Android or Sass.
 
 ## Custom icons
 
