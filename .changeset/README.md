@@ -14,6 +14,7 @@ or write the file yourself:
 ```
 
 Start each line with Added, Changed, Deprecated, Removed, Fixed or Security, the sections of `CHANGELOG.md`.
+To name what a line is about, add it in brackets: `Fixed (Combobox): …` files under Fixed as `Combobox: …`.
 A line without one goes under Added (minor), Changed (major) or Fixed (patch).
 
 Which bump (the README's Versioning section has the rules): **major** when something that worked stops
