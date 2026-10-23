@@ -1,3 +1,5 @@
+import { afterAll, beforeAll } from 'vitest';
+
 // Helpers for the component tests: resolved colors, WCAG contrast, and the six themes.
 export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'] as const;
 
@@ -62,4 +64,11 @@ export function withMotion<T>(fn: () => T): T {
   if (r instanceof Promise) return r.finally(() => off(false)) as T;
   off(false);
   return r;
+}
+
+/** For a whole test file about motion (ripples, spinners, slides): keeps transitions and animations on throughout. */
+export function keepMotion(): void {
+  const still = () => document.getElementById('serupa-still') as HTMLStyleElement | null;
+  beforeAll(() => { const s = still(); if (s) s.disabled = true; });
+  afterAll(() => { const s = still(); if (s) s.disabled = false; });
 }

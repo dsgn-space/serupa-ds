@@ -101,7 +101,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 
 ## Accessibility
 
-- Every tone and style keeps 4.5:1 text, and outline borders 3:1, in all six themes; `tools/test/badge.mjs` checks all 69 combinations in each theme.
+- Every tone and style keeps 4.5:1 text, and outline borders 3:1, in all six themes; `Badge.test.tsx` checks all 69 combinations in each theme.
 - Don't rely on color alone: say the status in the label ("Failed", not just a red badge). The dot and icons are decorative and hidden from screen readers.
 - An indicator dot is hidden from screen readers. Say what it means on the control it sits on ("Notifications, new"), or give the dot an `aria-label` (it then becomes `role="img"`).
 - A number alone means little to a screen reader. Name the control the count sits on ("Notifications, 5 unread") and hide the badge with `aria-hidden`, or give the badge an `aria-label`.

@@ -72,11 +72,12 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
   const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
   // Hooks first: a count of 0 renders nothing below, and hooks must run on every render.
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
+  // Announces only when loading starts: a new loadingText while it loads re-runs this but announces nothing.
   const wasLoading = React.useRef(false);
   React.useEffect(function () {
     if (loading && !wasLoading.current && loadingText) announce(loadingText);
     wasLoading.current = loading;
-  }, [loading]);
+  }, [loading, loadingText]);
   const isCount = props.count != null;
   let label: React.ReactNode = props.children;
   if (isCount) {
