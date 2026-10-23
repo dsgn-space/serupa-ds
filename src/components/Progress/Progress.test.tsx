@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { Progress } from './Progress';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -59,7 +59,7 @@ describe('Progress', () => {
   test('no value: indeterminate, without valuenow or valuetext, a sliding segment', async () => {
     await render(<Wrap><Progress id="ind" label="Preparing" /></Wrap>);
     expect([pb('ind').hasAttribute('aria-valuenow'), pb('ind').hasAttribute('aria-valuetext'), el('ind').dataset.state]).toEqual([false, false, 'indeterminate']);
-    expect(css(el('ind').querySelector('.dk-progress__fill')).animationName).toBe('dk-progress-slide');
+    expect(withMotion(() => css(el('ind').querySelector('.dk-progress__fill')).animationName)).toBe('dk-progress-slide');
   });
 
   test('sizes: sm 4px, lg 12px', async () => {
@@ -78,7 +78,7 @@ describe('Progress', () => {
     expect([Math.round(r('c1').width), Math.round(r('c1').height), Math.round(r('csm').width), Math.round(r('clg').width)]).toEqual([40, 40, 24, 64]);
     expect([el('c1').getAttribute('role'), el('c1').getAttribute('aria-valuenow'), el('c1').getAttribute('aria-label'), dash('c1')]).toEqual(['progressbar', '30', 'Storage', '30 100']);
     expect([value('c1'), value('clg'), value('csm')]).toEqual(['30%', '30%', null]);
-    expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), css(el('cind').querySelector('.dk-progress__ring')).animationName]).toEqual([null, '25 100', 'dk-progress-turn']);
+    expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), withMotion(() => css(el('cind').querySelector('.dk-progress__ring')).animationName)]).toEqual([null, '25 100', 'dk-progress-turn']);
   });
 
   test('contrast: every tone\'s fill keeps 3:1 on the page, and the label and values 4.5:1, in all six themes', async () => {
