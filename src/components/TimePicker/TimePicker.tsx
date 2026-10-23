@@ -3,7 +3,6 @@ import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from "
 import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../internal/times";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -35,7 +34,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    text that isn't a time, or one outside min..max, puts back the last good value. Values are "HH:mm", the form
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
-export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
+export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(function TimePicker(props, ref) {
   const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -84,18 +83,18 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   // The list is at least as wide as the field.
   useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + "px"; }, [open]);
   useAnchoredLayer(open, list, box, { placement: "bottom-start", offsetVar: "--dk-tp-offset", onOutside: () => setOpen(false), inside: box });
-  // Keep the active time in view.
+  // On open, the active time sits near the top; after that, moving keeps it in view.
+  const wasOpen = React.useRef(false);
   React.useEffect(() => {
-    if (!open || !list.current) return;
-    const o = list.current.children[active] as HTMLElement | undefined;
-    if (o) { const l = list.current; if (o.offsetTop < l.scrollTop) l.scrollTop = o.offsetTop; else if (o.offsetTop + o.offsetHeight > l.scrollTop + l.clientHeight) l.scrollTop = o.offsetTop + o.offsetHeight - l.clientHeight; }
+    if (!open) { wasOpen.current = false; return; }
+    const opening = !wasOpen.current;
+    wasOpen.current = true;
+    const l = list.current, o = l ? (l.children[active] as HTMLElement | undefined) : undefined;
+    if (!l || !o) return;
+    if (opening) l.scrollTop = Math.max(0, o.offsetTop - o.offsetHeight);
+    else if (o.offsetTop < l.scrollTop) l.scrollTop = o.offsetTop;
+    else if (o.offsetTop + o.offsetHeight > l.scrollTop + l.clientHeight) l.scrollTop = o.offsetTop + o.offsetHeight - l.clientHeight;
   }, [open, active]);
-  // On open, the active time sits near the top.
-  React.useEffect(() => {
-    if (!open || !list.current) return;
-    const o = list.current.children[active] as HTMLElement | undefined;
-    if (o) list.current.scrollTop = Math.max(0, o.offsetTop - o.offsetHeight);
-  }, [open]);
 
   const pick = (n: number) => { commit(n); setOpen(false); if (field.current) field.current.focus(); };
   const keys = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -149,3 +148,4 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     </span>
   );
 });
+TimePicker.displayName = "TimePicker";
