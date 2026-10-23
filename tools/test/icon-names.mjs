@@ -6,7 +6,7 @@
 //   node tools/test/icon-names.mjs
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { read, writePage, browser, cleanup, report, PROJECT } from './lib.mjs';
+import { read, writePage, browser, cleanup, report, done, PROJECT } from './lib.mjs';
 
 const all = new Map([...read('src/material/icons.ts').matchAll(/name: "([a-z0-9_]+)", d: "([^"]+)"/g)].map((m) => [m[1], m[2]]));
 const names = [...all.keys()];
@@ -72,4 +72,4 @@ await q.waitForTimeout(300);
 t(`on a plain page any of the ${all.size} names works ("sports_cricket"), with serupa-icons.iife.js loaded or not`, await q.evaluate(() => !!document.querySelector('#r svg path')));
 await b.close();
 cleanup();
-process.exit(report('Icon names', R) ? 0 : 1);
+done(report('Icon names', R));

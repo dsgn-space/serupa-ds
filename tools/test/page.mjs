@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { PROJECT, writePage, browser, cleanup, report } from './lib.mjs';
+import { PROJECT, writePage, browser, cleanup, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -120,4 +120,4 @@ for (const scheme of ['light', 'dark']) {
 
 await b.close();
 cleanup();
-process.exit(report('Page groundwork', R) ? 0 : 1);
+done(report('Page groundwork', R));

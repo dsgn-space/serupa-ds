@@ -36,6 +36,9 @@ npm run test:unit                         # only the component tests (Vitest), s
 npm run test:watch                        # the same, re-running as you edit
 npm run test:coverage                     # the same, and which lines they run (coverage/index.html)
 npx vitest run src/components/Checkbox    # one component's tests
+npm run test:checks                       # the checks below (all but visual and Storybook), in Vitest; build first
+npx vitest run tools/test/foundation.mjs  # one of them (or node tools/test/foundation.mjs, which prints its results)
+npx vitest run --project checks -t contrast  # the checks whose name says contrast
 ```
 
 ### Component tests
@@ -53,6 +56,12 @@ without it. setup.ts turns transitions and animations off, so a test reads end s
 turns them back on with `withMotion()` (one read or one test) or `keepMotion()` (the whole file).
 
 ### Suite scripts
+
+Vitest runs every script in `tools/test/` as its checks project (vitest.config.ts), except the shared code, the
+cross-browser comparison and the visual and Storybook steps, which `run.mjs` shards across CI jobs. Each result a
+script passes to `report()` is one test, so the checks share the component tests' reporter, `-t` filter and watch
+mode, and a new script is picked up with no entry anywhere. Run with `node`, a script prints its results and exits
+1 on a failure, as before.
 
 | Test | What it checks |
 | --- | --- |

@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 // TypeScript 7 has no compiler API yet, so this reads the types with TypeScript 6's (see tools/typescript/api.mjs).
 import ts from '@typescript/typescript6';
-import { HERE, read, report } from './lib.mjs';
+import { HERE, read, report, done } from './lib.mjs';
 
 const BASE = path.join(HERE, 'baseline-api.d.ts');
 const update = process.argv.includes('--update');
@@ -51,4 +51,4 @@ const R = [
   { name: 'no export was added without updating the baseline (minor)', ok: !added.length, detail: `added: ${added.join(', ')}; ${fix}` },
   { name: 'the exported types match baseline-api.d.ts', ok: base === now, detail: `${changed.length ? `changed lines (first ${changed.length}):\n        ${changed.map((l) => l.trim().slice(0, 160)).join('\n        ')}` : 'only the export lists differ'}\n      ${fix}` },
 ];
-process.exit(report('Public API', R) ? 0 : 1);
+done(report('Public API', R));
