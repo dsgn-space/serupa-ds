@@ -48,10 +48,9 @@ render the components from `src/` with `vitest-browser-react`, find things the w
 says which one broke, with the expected and received values and a screenshot. Shared helpers (resolved
 colors, WCAG contrast in all six themes) are in `tools/test/vitest/helpers.ts`.
 
-Accordion, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, Button, ButtonGroup, Calendar, Card, Carousel, Checkbox, Combobox, Container, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, IconButton, Image, Input, Kbd, Link, List, Loader, Menu, Navbar, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, SearchInput, SegmentedControl, Select, Sidebar, Slider, Stack, Stepper, Switch, Table, Tabs, Text, Textarea, TimePicker, Toast, ToggleButton, Tooltip and VisuallyHidden have moved; the other components are still tested by the scripts in
-the table below, listed in `SCRIPT_TESTED` in `contract.mjs`. Move them one at a time: write the test file,
-delete the script, take the component off `SCRIPT_TESTED`. A new component needs
-its own `<Name>.test.tsx`; the contract check fails without one.
+Every component has its own `<Name>.test.tsx`, and a new component needs one: the contract check fails
+without it. setup.ts turns transitions and animations off, so a test reads end states; a test about motion
+turns them back on with `withMotion()` (one read or one test) or `keepMotion()` (the whole file).
 
 ### Suite scripts
 
