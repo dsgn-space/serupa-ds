@@ -52,7 +52,7 @@ const { Radio, RadioGroup, Field } = window.Serupa;
 - They're real radios: Tab moves to the group (to the picked one), arrow keys move the choice, and screen readers announce the position ("2 of 3").
 - Name the group: wrap it in `Field group` (a `<fieldset>` and `<legend>`, with the hint and error describing it), or give the RadioGroup an `aria-label` or `aria-labelledby`.
 - A radio's label names it; a description is read after it. The dot is decorative.
-- The label and description keep 4.5:1, and the border, checked fill, dot, focus ring and invalid border 3:1, in all six themes (`tools/test/radio.mjs`).
+- The label and description keep 4.5:1, and the border, checked fill, dot, focus ring and invalid border 3:1, in all six themes (`Radio.test.tsx`).
 
 ## Props
 
