@@ -1,0 +1,111 @@
+import * as React from 'react';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { PasswordInput } from './PasswordInput';
+
+const field = (id: string) => document.getElementById(id) as HTMLInputElement;
+const box = (id: string) => field(id).parentElement as HTMLElement;
+const toggle = (id: string) => field(id).nextElementSibling as HTMLButtonElement;
+const eye = (id: string) => (toggle(id).querySelector('.dk-icon') as HTMLElement | null)?.dataset.icon;
+// Transitions still running (a theme change can cancel one and start another, so poll rather than await .finished).
+const settled = () => expect.poll(() => document.getAnimations().length).toBe(0);
+
+let errors: ReturnType<typeof vi.spyOn>;
+beforeEach(() => { errors = vi.spyOn(console, 'error'); });
+afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); });
+
+const Wrap = ({ children }: { children: React.ReactNode }) => <div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '12px' }}>{children}</div>;
+const Main = ({ pref }: { pref?: React.Ref<HTMLInputElement> }) => <>
+  <label htmlFor="pw">Password</label>
+  <PasswordInput id="pw" ref={pref} className="extra" style={{ marginTop: '2px' }} placeholder="Your password" leftIcon="lock" />
+</>;
+
+describe('PasswordInput', () => {
+  test('Input\'s box (32px, md) around a type="password" field, autocomplete current-password, no spellcheck; ref to the input, className and style to the box', async () => {
+    const ref = React.createRef<HTMLInputElement>();
+    await render(<Wrap><Main pref={ref} /></Wrap>);
+    const i = field('pw'), b = box('pw');
+    expect([i.type, i.getAttribute('autocomplete'), ref.current === i, i.spellcheck, i.placeholder, i.labels![0].textContent]).toEqual(['password', 'current-password', true, false, 'Your password', 'Password']);
+    expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['dk-input dk-password-input dk-input--size-md extra', 'password-input', '2px', 32]);
+    expect((b.querySelector('.dk-input__icon--left .dk-icon') as HTMLElement).dataset.icon).toBe('lock');
+  });
+
+  test('the show/hide button: type button, "Show password", aria-pressed="false", controls the field, an eye icon', async () => {
+    await render(<Wrap><Main /></Wrap>);
+    const t = toggle('pw');
+    expect([t.type, t.getAttribute('aria-label'), t.getAttribute('aria-pressed'), t.getAttribute('aria-controls'), eye('pw')]).toEqual(['button', 'Show password', 'false', 'pw', 'visibility']);
+  });
+
+  test('pressing it shows the text (type text, aria-pressed true, eye crossed out) and the field keeps focus; Enter and Space on the button toggle it; it shows a 2px focus ring', async () => {
+    await render(<Wrap><Main /></Wrap>);
+    await userEvent.fill(field('pw'), 'hunter2');
+    field('pw').focus();
+    await userEvent.click(toggle('pw'));
+    expect([field('pw').type, field('pw').value, toggle('pw').getAttribute('aria-pressed'), eye('pw'), document.activeElement === field('pw')]).toEqual(['text', 'hunter2', 'true', 'visibility_off', true]);
+    toggle('pw').focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => field('pw').type).toBe('password');
+    await userEvent.keyboard('[Space]');
+    await expect.poll(() => field('pw').type).toBe('text');
+    expect([css(toggle('pw')).outlineStyle, css(toggle('pw')).outlineWidth]).toEqual(['solid', '2px']);
+  });
+
+  test('defaultVisible starts shown; autoComplete and toggleLabel are yours; size lg is 44px', async () => {
+    await render(<Wrap><PasswordInput id="pnew" aria-label="New" autoComplete="new-password" defaultVisible size="lg" toggleLabel="Show the new password" /></Wrap>);
+    expect([field('pnew').type, field('pnew').getAttribute('autocomplete'), toggle('pnew').getAttribute('aria-label'), Math.round(box('pnew').getBoundingClientRect().height)])
+      .toEqual(['text', 'new-password', 'Show the new password', 44]);
+  });
+
+  test('controlled: onVisibleChange gets the new state, the parent sets it', async () => {
+    const calls: boolean[] = [];
+    function Controlled() {
+      const [v, setV] = React.useState(true);
+      return <PasswordInput id="pctl" aria-label="Ctl" visible={v} onVisibleChange={(x) => { calls.push(x); setV(x); }} />;
+    }
+    await render(<Wrap><Controlled /></Wrap>);
+    await userEvent.click(toggle('pctl'));
+    expect([field('pctl').type, calls.join()]).toEqual(['password', 'false']);
+  });
+
+  test('invalid: aria-invalid and the danger border; size sm is 24px; disabled: the field and the button; an unknown size falls back to md', async () => {
+    await render(<Wrap>
+      <PasswordInput id="pinv" aria-label="Inv" invalid size="sm" />
+      {/* @ts-expect-error: an unknown size, as plain JavaScript could pass */}
+      <PasswordInput id="pdis" aria-label="Dis" disabled size="huge" />
+    </Wrap>);
+    expect([field('pinv').getAttribute('aria-invalid'), box('pinv').className.includes('dk-input--invalid'), Math.round(box('pinv').getBoundingClientRect().height)]).toEqual(['true', true, 24]);
+    expect([field('pdis').disabled, toggle('pdis').disabled, box('pdis').className.includes('dk-input--disabled'), box('pdis').dataset.size]).toEqual([true, true, true, 'md']);
+  });
+
+  test('the token --password-input-toggle overrides one field; the eye icon follows the field\'s icon size: 14, 16, 20px', async () => {
+    await render(<Wrap>
+      <PasswordInput id="ptok" aria-label="Tok" style={{ '--password-input-toggle': 'rgb(1, 2, 3)' } as React.CSSProperties} />
+      <PasswordInput id="pinv" aria-label="Inv" invalid size="sm" />
+      <PasswordInput id="pw" aria-label="Md" />
+      <PasswordInput id="pnew" aria-label="New" size="lg" />
+    </Wrap>);
+    await expect.poll(() => css(toggle('ptok')).color).toBe('rgb(1, 2, 3)');
+    expect(['pinv', 'pw', 'pnew'].map((id) => css(toggle(id).querySelector('.dk-icon')).fontSize)).toEqual(['14px', '16px', '20px']);
+  });
+
+  test('contrast: the text 4.5:1 and the eye icon 3:1 on the field in all six themes', async () => {
+    await render(<Wrap><PasswordInput id="pnew" aria-label="New" defaultVisible size="lg" /></Wrap>);
+    const low: string[] = [];
+    let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      // Colors ease after a theme change; read the end state.
+      void css(box('pnew')).backgroundColor; void css(toggle('pnew')).color;
+      await settled();
+      const bg = css(box('pnew')).backgroundColor;
+      for (const [name, fg, min] of [['text', css(field('pnew')).color, 4.5], ['eye icon', css(toggle('pnew')).color, 3]] as const) {
+        const r = contrast(fg, bg); n++;
+        if (r < min) low.push(`${th} ${name} ${r.toFixed(2)}`);
+      }
+    }
+    expect(low).toEqual([]);
+    expect(n).toBe(12);
+  });
+});

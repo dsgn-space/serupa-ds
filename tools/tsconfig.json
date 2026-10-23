@@ -1,0 +1,36 @@
+{
+  // The build, test and release scripts are plain JavaScript (.mjs, no build step); TypeScript checks them from
+  // their JSDoc and what it infers (npm run typecheck). Not strict, since most values are untyped JSON and pages.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  // Every script, except the suites in test/ that drive a browser (their page.evaluate code runs in the page, where
+  // window.Serupa and the test hooks live); those are moving to typed Vitest tests next to each component.
+  "include": [
+    "**/*.mjs",
+    "../bin/*.mjs"
+  ],
+  "exclude": ["test/*.mjs"],
+  "files": [
+    "test/lib.mjs",
+    "test/run.mjs",
+    "test/contract.mjs",
+    "test/package.mjs",
+    "test/package-lint.mjs",
+    "test/api.mjs",
+    "test/guides.mjs",
+    "test/design-tokens.mjs",
+    "test/style_dictionary.mjs",
+    "test/icon-builder.mjs",
+    "test/foundation.mjs"
+  ]
+}

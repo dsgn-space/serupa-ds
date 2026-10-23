@@ -1,0 +1,179 @@
+{
+  "drawer": {
+    "$description": "Drawer's component tokens. Each one is an optional override: set the CSS variable (--drawer-<name>) on the page, a container or one drawer, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The panel's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The panel's text: the body and the footer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-text"
+          }
+        }
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": "{color.overlay}",
+        "$description": "The dimmed backdrop over the page.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-overlay"
+          }
+        }
+      },
+      "title-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-title-color"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The description under the title (4.5:1 on surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-description-color"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line above the footer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-border"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-xl}",
+        "$description": "The panel's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-shadow"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.container-xs}",
+        "$description": "size=\"sm\" (320px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-width-sm"
+          }
+        }
+      },
+      "width-md": {
+        "$type": "dimension",
+        "$value": "{sizing.container-sm}",
+        "$description": "size=\"md\", the default (384px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-width-md"
+          }
+        }
+      },
+      "width-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.container-lg}",
+        "$description": "size=\"lg\" (512px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-width-lg"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Padding inside the panel (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space between the header and the body (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-gap"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The line above the footer (1px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-border-width"
+          }
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xl}",
+        "$description": "The corners on the open side of a top or bottom drawer (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-radius"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The title's weight (600).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-title-weight"
+          }
+        }
+      }
+    },
+    "motion": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-300}",
+        "$description": "Sliding in (300ms).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-duration"
+          }
+        }
+      }
+    }
+  }
+}

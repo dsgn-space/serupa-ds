@@ -1,0 +1,165 @@
+import * as React from 'react';
+import { beforeEach, describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css, settle } from '../../../tools/test/vitest/helpers';
+import { toast, Toaster, type ToasterPosition } from './Toast';
+
+const toasts = () => [...document.querySelectorAll<HTMLElement>('.dk-toast')];
+const titles = () => toasts().map((x) => x.querySelector('.dk-toast__title')!.textContent);
+const q = (sel: string) => document.querySelector(sel) as HTMLElement;
+const away = () => userEvent.hover(document.body, { position: { x: 5, y: 5 } });
+// Toasts slide in for 200ms: measure once that has finished.
+const landed = () => Promise.all(document.getAnimations().map((a) => a.finished));
+
+let setPos: (p: ToasterPosition) => void = () => {};
+function App() {
+  const [pos, set] = React.useState<ToasterPosition>('bottom-end'); setPos = set;
+  return <Toaster position={pos} className="extra" />;
+}
+beforeEach(() => { React.act(() => toast.dismiss()); });
+
+describe('Toast', () => {
+  test('the Toaster is a <section> named "Notifications" holding a list, and the shared live region exists', async () => {
+    await render(<App />);
+    const s = q('.dk-toaster');
+    expect([s.tagName, s.getAttribute('aria-label'), s.firstElementChild!.tagName, !!document.querySelector('[data-dk-announcer]')]).toEqual(['SECTION', 'Notifications', 'OL', true]);
+    expect(s.className).toMatch(/extra/);
+  });
+
+  test('toast() shows it at the bottom end, 16px in, 384px wide: labelled by its title, described by its description, a tone icon, a Dismiss button; announced politely', async () => {
+    await render(<App />);
+    let id = '';
+    React.act(() => { id = toast({ title: 'Changes saved', description: 'All files are up to date.', tone: 'success', duration: 0 }); });
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')!.textContent).toBe('Changes saved. All files are up to date.');
+    await landed();
+    const x = toasts()[0], r = x.getBoundingClientRect();
+    expect(typeof id).toBe('string');
+    expect([document.getElementById(x.getAttribute('aria-labelledby')!)!.textContent, document.getElementById(x.getAttribute('aria-describedby')!)!.textContent]).toEqual(['Changes saved', 'All files are up to date.']);
+    expect([x.querySelector<HTMLElement>('.dk-toast__icon .dk-icon')?.dataset.icon, x.querySelector('.dk-toast__close')!.getAttribute('aria-label')]).toEqual(['check_circle', 'Dismiss']);
+    expect([r.width, Math.round(innerWidth - r.right), Math.round(innerHeight - r.bottom)]).toEqual([384, 16, 16]);
+  });
+
+  test('a string is a neutral toast with no icon, newest at the bottom for bottom positions; the same id replaces a toast in place; the close button dismisses it', async () => {
+    await render(<App />);
+    let id = '';
+    React.act(() => { id = toast({ title: 'Changes saved', tone: 'success', duration: 0 }); toast('Plain message'); });
+    expect(toasts().map((x) => x.dataset.tone + ':' + !!x.querySelector('.dk-toast__icon'))).toEqual(['success:true', 'neutral:false']);
+    React.act(() => { toast({ id, title: 'Saved again', tone: 'info', duration: 0 }); });
+    expect(titles()).toEqual(['Saved again', 'Plain message']);
+    await userEvent.click(q('.dk-toast:first-child .dk-toast__close'));
+    expect(titles()).toEqual(['Plain message']);
+  });
+
+  test('the action runs and closes the toast', async () => {
+    await render(<App />);
+    let undos = 0;
+    React.act(() => { toast({ title: 'Moved to trash', action: { label: 'Undo', onClick: () => { undos++; } }, duration: 0 }); });
+    await userEvent.click(q('.dk-toast__action'));
+    expect([undos, titles().length]).toEqual([1, 0]);
+  });
+
+  test('it goes after its duration, and the time stops while it\'s hovered', async () => {
+    await render(<App />);
+    React.act(() => { toast({ title: 'Quick', duration: 400 }); });
+    await settle(250);
+    await userEvent.hover(q('.dk-toast'));
+    await settle(500);   // past its 400ms: only the hover keeps it
+    expect(titles().length).toBe(1);
+    await away();
+    await expect.poll(() => titles().length, { timeout: 1500 }).toBe(0);
+  });
+
+  test('and while something in it has focus', async () => {
+    await render(<App />);
+    React.act(() => { toast({ title: 'Focus me', duration: 300, action: { label: 'Open', onClick: () => {} } }); });
+    await settle(100);
+    q('.dk-toast__action').focus();
+    await settle(500);
+    expect(titles().length).toBe(1);
+    (document.activeElement as HTMLElement).blur();
+    await expect.poll(() => titles().length, { timeout: 1500 }).toBe(0);
+  });
+
+  test('with focus inside, moving the mouse over and off the toast doesn\'t restart its time', async () => {
+    await render(<App />);
+    React.act(() => { toast({ title: 'Keep me', duration: 300, action: { label: 'Open', onClick: () => {} } }); });
+    await settle(100);
+    q('.dk-toast__action').focus();
+    await userEvent.hover(q('.dk-toast'));
+    await away();
+    await settle(600);
+    expect(titles().length).toBe(1);
+    (document.activeElement as HTMLElement).blur();
+    await expect.poll(() => titles().length, { timeout: 1500 }).toBe(0);
+  });
+
+  test('keyboard: Tab reaches the action button, then Dismiss; Enter on the action runs it and closes the toast', async () => {
+    await render(<App />);
+    let undos = 0;
+    React.act(() => { toast({ title: 'Archived', action: { label: 'Undo', onClick: () => { undos++; } }, duration: 0 }); });
+    (document.activeElement as HTMLElement | null)?.blur();
+    let toAction = false;
+    for (let i = 0; i < 10 && !toAction; i++) { await userEvent.keyboard('{Tab}'); toAction = document.activeElement!.classList.contains('dk-toast__action'); }
+    await userEvent.keyboard('{Tab}');
+    expect([toAction, document.activeElement!.classList.contains('dk-toast__close')]).toEqual([true, true]);
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}{Enter}');
+    await expect.poll(() => titles().length).toBe(0);
+    expect(undos).toBe(1);
+  });
+
+  test('keyboard: Space on Dismiss closes the toast', async () => {
+    await render(<App />);
+    React.act(() => { toast({ title: 'Saved', duration: 0 }); });
+    q('.dk-toast__close').focus();
+    await userEvent.keyboard(' ');
+    await expect.poll(() => titles().length).toBe(0);
+  });
+
+  test('top-center: 16px from the top, centered, newest on top; bottom-start: 16px from the start edge', async () => {
+    await render(<App />);
+    React.act(() => { setPos('top-center'); toast({ title: 'First', duration: 0 }); toast({ title: 'Second', duration: 0 }); });
+    await landed();
+    const s = q('.dk-toaster').getBoundingClientRect();
+    expect([Math.round(s.top), Math.round(s.left + s.width / 2), titles().join()]).toEqual([16, Math.round(innerWidth / 2), 'Second,First']);
+    React.act(() => { toast.dismiss(); setPos('bottom-start'); toast({ title: 'info', duration: 0 }); });
+    await landed();
+    expect(Math.round(q('.dk-toaster').getBoundingClientRect().left)).toBe(16);
+  });
+
+  test('contrast: title and description 4.5:1, icons 3:1, for every tone in all six themes', async () => {
+    await render(<App />);
+    React.act(() => { (['info', 'success', 'warning', 'danger'] as const).forEach((k) => toast({ title: k, description: 'Details', tone: k, duration: 0 })); });
+    const still = document.createElement('style'); still.textContent = '* { animation: none !important; }'; document.head.appendChild(still);
+    const low: string[] = []; let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const x of toasts()) {
+        const bg = css(x).backgroundColor;
+        for (const [sel, min] of [['.dk-toast__title', 4.5], ['.dk-toast__description', 4.5], ['.dk-toast__icon', 3]] as const) { const r = contrast(css(x.querySelector(sel)).color, bg); n++; if (r < min) low.push(`${th} ${x.dataset.tone} ${sel}: ${r.toFixed(2)}`); }
+      }
+    }
+    still.remove();
+    expect([low, n]).toEqual([[], 72]);
+  });
+
+  test('look: 16px padding, 8px corners, a 1px border, shadow-lg; --toast-bg on the Toaster overrides every toast', async () => {
+    await render(<App />);
+    React.act(() => { toast({ title: 'Look', duration: 0 }); toast({ title: 'Again', duration: 0 }); });
+    const s = css(q('.dk-toast'));
+    expect([s.paddingTop, s.borderTopLeftRadius, s.borderTopWidth]).toEqual(['16px', '8px', '1px']);
+    expect(s.boxShadow).toMatch(/10px 15px -3px/);
+    q('.dk-toaster').style.setProperty('--toast-bg', 'rgb(1, 2, 3)');
+    expect(toasts().map((x) => css(x).backgroundColor)).toEqual(['rgb(1, 2, 3)', 'rgb(1, 2, 3)']);
+  });
+
+  test('a replaced toast starts its time again', async () => {
+    await render(<App />);
+    React.act(() => { toast({ id: 'r', title: 'Saving…', duration: 400 }); });
+    await settle(300);
+    React.act(() => { toast({ id: 'r', title: 'Saved', duration: 400 }); });
+    await settle(250);   // 550ms since the first: the replacement's own 400ms keeps it
+    expect(titles()).toEqual(['Saved']);
+    await expect.poll(() => titles().length, { timeout: 1500 }).toBe(0);
+  });
+});

@@ -1,0 +1,38 @@
+# Weekly update pull requests, grouped so they arrive as a few PRs instead of dozens.
+# Versions in package.json are exact, so each update is one reviewed bump; CI (and the visual baselines) decide
+# whether it lands. Majors come one per PR, since they can need code changes.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      # React stays on 18 here: the package supports 18 and 19, and the React 19 CI job covers 19.
+      storybook:
+        patterns: ["storybook", "@storybook/*"]
+      vitest:
+        patterns: ["vitest", "@vitest/*", "vitest-browser-react", "vite"]
+      lint:
+        patterns: ["eslint", "@eslint/*", "eslint-plugin-*", "typescript-eslint", "globals", "stylelint", "stylelint-*"]
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directories: ["/", "/.github/actions/*"]
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]

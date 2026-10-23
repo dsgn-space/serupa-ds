@@ -1,0 +1,104 @@
+# Tabs
+
+Switches between related panels in one place, such as a project's Overview, Activity and Settings. It follows the WAI-ARIA tabs pattern: `Tabs` holds the state, `TabList` the row of `Tab`s, and each `TabPanel` the content for the tab with the same `value`.
+
+```jsx
+const { Tabs, TabList, Tab, TabPanel } = window.Serupa;
+
+<Tabs defaultValue="overview">
+  <TabList aria-label="Project">
+    <Tab value="overview">Overview</Tab>
+    <Tab value="activity" icon="history">Activity</Tab>
+    <Tab value="settings" disabled>Settings</Tab>
+  </TabList>
+  <TabPanel value="overview">…</TabPanel>
+  <TabPanel value="activity">…</TabPanel>
+  <TabPanel value="settings">…</TabPanel>
+</Tabs>
+
+// controlled, as pills
+<Tabs value={view} onValueChange={setView} variant="pill" size="sm">…</Tabs>
+```
+
+## When to use
+
+- Several views of the same thing that people switch between, one at a time: a project's Overview, Activity and Settings.
+- A page with more content than fits, where each part stands on its own and people know which one they want.
+- Panels that should keep their state while people look elsewhere, such as a half-filled form: hidden panels stay in the page.
+
+## When not to use
+
+- Choosing a value, such as a period (Day, Week, Month) for the same content: use [SegmentedControl](../SegmentedControl/README.md) instead. It's a radio group, not a set of panels.
+- Steps people go through in order: use [Stepper](../Stepper/README.md) instead.
+- Moving between pages that each have their own URL: use links, in a [Navbar](../Navbar/README.md) or a [Sidebar](../Sidebar/README.md).
+- Sections people may want open side by side, or read one after another: use [Accordion](../Accordion/README.md) instead.
+
+## Usage
+
+- Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways, and tabs out of view are easy to miss.
+- Set `activation="manual"` when a panel is slow to show, so arrowing past a tab doesn't select it.
+- Hidden panels keep their state. Set `keepMounted={false}` on a panel that doesn't need to, so it renders only while it's selected.
+- Show a tab people can't use yet as `disabled` rather than leaving it out, when knowing it exists helps them.
+
+## Accessibility
+
+- `role="tablist"`, `"tab"` and `"tabpanel"`, with `aria-selected`, `aria-controls` and `aria-labelledby` set for you.
+- Only the selected tab is in the Tab order, and the panel itself can take focus, so keyboard users always reach the content.
+- Tab labels keep 4.5:1, and the selected line and pill 3:1 against `surface`, in all six themes (`Tabs.test.tsx`). The focus ring sits inside the tab so the scrolling row can't clip it.
+- In forced-colors mode the selected tab is marked in `Highlight`.
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | Into the tab list (on the selected tab), then to the selected panel |
+| ← → | The previous or next tab, wrapping, following the text direction; disabled tabs are skipped. Also selects it unless `activation="manual"` |
+| Home, End | The first or last tab |
+| Enter, Space | Selects the focused tab |
+
+## Props
+
+### Tabs
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `value` | string | | The selected tab (controlled), with `onValueChange` |
+| `defaultValue` | string | the first enabled tab | The tab selected at first (uncontrolled) |
+| `onValueChange` | `(value) => void` | | Called when a tab is chosen |
+| `variant` | `'line'` \| `'pill'` | `'line'` | A line under the selected tab, or the selected tab filled in `primary` |
+| `size` | `'sm'` \| `'md'` | `'md'` | 32px or 36px tabs |
+| `activation` | `'auto'` \| `'manual'` | `'auto'` | Whether arrow keys also select, or only move (then Enter or Space selects). Use manual when a panel is slow to show |
+
+### TabList, Tab and TabPanel
+
+- `TabList`: the row. Give it an `aria-label` when nothing on the page says what the tabs are for. It scrolls sideways when the tabs don't fit.
+- `Tab`: `value` (required), `icon` (a name or element), `disabled`, and every `<button>` prop.
+- `TabPanel`: `value` (required). Hidden panels stay in the page and keep their state; `keepMounted={false}` renders a panel only while it's selected.
+
+Each part takes `className`, `style`, `ref` and other props. `Tabs` has `data-component="tabs"` and `data-variant`; tabs and panels have `data-state="active"` or `"inactive"`.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one set of tabs. The list lives in `src/components/Tabs/tabs.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--tabs-text` | `text-muted` | A tab's label (4.5:1 on surface). |
+| `--tabs-text-hover` | `text` | A tab's label on hover. |
+| `--tabs-text-selected` | `text` | The selected tab's label (line). |
+| `--tabs-indicator` | `primary` | The line under the selected tab (3:1 on surface). |
+| `--tabs-border` | `border` | The line under the whole tab list (line). |
+| `--tabs-pill-bg-hover` | `secondary` | A pill tab's background on hover. |
+| `--tabs-pill-bg-selected` | `primary` | The selected pill tab's background. |
+| `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
+| `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
+| `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
+| `--tabs-height-sm` | `control-height-md` | A tab's height with size="sm" (32px). |
+| `--tabs-height-md` | `spacing-9` | A tab's height with size="md", the default (36px). |
+| `--tabs-indicator-width` | `border-width-2` | The thickness of the selected tab's line (2px). |
+| `--tabs-radius` | `rounded-md` | A tab's corners (6px): the focus ring, and the pills. |
+| `--tabs-padding-x` | `spacing-3` | Padding at a tab's sides (12px). |
+| `--tabs-gap` | `spacing-1` | Space between tabs (4px). |
+| `--tabs-icon-gap` | `spacing-2` | Space between a tab's icon and label (8px). |
+| `--tabs-panel-gap` | `spacing-4` | Space above a panel (16px). |
+| `--tabs-weight` | `font-medium` | A tab's label weight (500). |

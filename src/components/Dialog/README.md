@@ -1,0 +1,89 @@
+# Dialog
+
+A modal window over a dimmed page, for a task or a decision that needs attention before people go on: inviting someone, confirming a delete, editing a few fields. It's built on the native `<dialog>`, so the browser keeps focus inside it, makes the page behind unreachable, and puts it above everything.
+
+```jsx
+const { Dialog, Button, Input, Field } = window.Serupa;
+
+const [open, setOpen] = React.useState(false);
+
+<Button onClick={() => setOpen(true)}>Invite people</Button>
+<Dialog open={open} onOpenChange={setOpen} title="Invite people" description="They'll get an email with a link."
+  footer={<><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={send}>Send invite</Button></>}>
+  <Field label="Email"><Input type="email" /></Field>
+</Dialog>
+
+// a confirmation
+<Dialog alert size="sm" open={confirm} onOpenChange={setConfirm} title="Delete Atlas?" description="This can't be undone."
+  footer={<><Button variant="secondary" onClick={() => setConfirm(false)}>Keep</Button><Button destructive onClick={remove}>Delete</Button></>} />
+```
+
+## When to use
+
+- A short task that needs people's full attention before they go back to the page: inviting someone, renaming an item, editing a few fields.
+- Confirming an action that can't be undone, such as a delete (with `alert`).
+- A decision the product can't go on without.
+
+## When not to use
+
+- A long form, filters, or details people check while looking at the page: use a [Drawer](../Drawer/README.md) instead.
+- A few controls or details next to the button that opens them, where the page should stay usable: use a [Popover](../Popover/README.md) instead.
+- A confirmation that something happened: use a [Toast](../Toast/README.md) instead.
+- A message about the page that doesn't need an answer: use an [Alert](../Alert/README.md) instead.
+
+## Usage
+
+- Use a `title` that says what the dialog is for; for a confirmation, ask the question: "Delete Atlas?".
+- Name the buttons in `footer` after what they do ("Delete", "Keep"), not "OK" and "Cancel" alone, and put the main action last.
+- Use `alert` only for decisions people must make. It hides the × and stops a backdrop click from closing it.
+- Keep the body short. Pick `size="sm"` for a confirmation and `lg` only when the content needs the width.
+
+## Behavior
+
+- Opening moves focus to the first thing in it that takes focus (put `autoFocus` on another to choose); closing moves it back to where it was.
+- Tab and Shift+Tab stay inside. The page behind can't be clicked or reached, and doesn't scroll.
+- It fades and grows in over 200ms, and appears at once with `prefers-reduced-motion`.
+
+## Accessibility
+
+- `aria-modal`, named by the title (`aria-labelledby`) and described by the description. Without a title, give it an `aria-label`.
+- Use `alert` only for decisions people must make; Escape still cancels.
+- The title and description keep 4.5:1 on the panel in all six themes (`Dialog.test.tsx`). In forced-colors mode the panel gets a border.
+
+## Props
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `open` | boolean | required | Whether it's open |
+| `onOpenChange` | `(open) => void` | | Called with `false` on Escape, the ×, or a click on the backdrop. Close it by setting `open` |
+| `title` | node | | The heading (`text-lg`, `font-semibold`), which also names the dialog |
+| `description` | node | | A muted line under the title, read when it opens |
+| `footer` | node | | Buttons at the end, the main action last |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 384, 512 or 672px wide; never more than the screen less 16px a side |
+| `alert` | boolean | `false` | `role="alertdialog"` for a decision: no ×, and the backdrop doesn't close it |
+| `closeButton` | boolean | `true` (`false` for alert) | The × in the corner |
+| `closeLabel` | string | `'Close'` | The ×'s name |
+| `closeOnBackdrop` | boolean | `true` (`false` for alert) | Whether a click on the dimmed page closes it |
+
+`children` is the body, which scrolls when it's taller than the screen. `className`, `style`, `ref` and everything else go to the `<dialog>`, which has `data-component="dialog"` and `data-size`.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one dialog. The list lives in `src/components/Dialog/dialog.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--dialog-bg` | `surface` | The panel's background. |
+| `--dialog-text` | `text` | The panel's text: the body and the footer. |
+| `--dialog-overlay` | `overlay` | The dimmed backdrop over the page. |
+| `--dialog-title-color` | `text` | The title. |
+| `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
+| `--dialog-shadow` | `shadow-xl` | The panel's shadow. |
+| `--dialog-radius` | `rounded-xl` | The panel's corners (12px). |
+| `--dialog-width-sm` | `container-sm` | size="sm" (384px). |
+| `--dialog-width-md` | `container-lg` | size="md", the default (512px). |
+| `--dialog-width-lg` | `container-2xl` | size="lg" (672px). |
+| `--dialog-padding` | `spacing-6` | Padding inside the panel (24px). |
+| `--dialog-gap` | `spacing-4` | Space between the header, body and footer (16px). |
+| `--dialog-margin` | `spacing-4` | The least space between the panel and the edge of the screen (16px). |
+| `--dialog-title-weight` | `font-semibold` | The title's weight (600). |

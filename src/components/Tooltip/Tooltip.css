@@ -1,0 +1,33 @@
+/* ---------------------------------------------------------------
+   Tooltip: a short hint on the inverse surface (dark in light themes, light in dark ones), text-xs, 6px corners,
+   up to 240px wide, 6px from what it describes. Shown in the top layer (popover="manual") at fixed coordinates
+   set by the component, with a short fade. Every value goes through --tooltip-* tokens.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-tooltip {
+  --dk-tooltip-offset: var(--tooltip-offset, var(--spacing-1\.5));
+  position: fixed;
+  inset: auto;
+  z-index: var(--tooltip-z-index, var(--z-50));
+  max-width: var(--tooltip-max-width, var(--spacing-60));
+  margin: var(--spacing-0);
+  padding: var(--tooltip-padding-y, var(--spacing-1)) var(--tooltip-padding-x, var(--spacing-2));
+  overflow: visible;
+  border: var(--spacing-0);
+  border-radius: var(--tooltip-radius, var(--rounded-md));
+  background: var(--tooltip-bg, var(--surface-inverse));
+  color: var(--tooltip-text, var(--text-inverse));
+  box-shadow: var(--tooltip-shadow, var(--shadow-md));
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: var(--font-normal);
+  text-align: start;
+  overflow-wrap: break-word;
+  animation: dk-tooltip-in var(--duration-150) var(--ease-out);
+}
+.dk-tooltip[hidden] { display: none; }
+@keyframes dk-tooltip-in { from { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: reduce) { .dk-tooltip { animation: none; } }
+@media (forced-colors: active) { .dk-tooltip { border: var(--border-width-1) solid CanvasText; } }
+}
