@@ -4,6 +4,16 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [7.1.3] - 2026-10-19
+
+### Changed
+
+- the release script is Node (`node tools/release.mjs`), so releasing no longer needs Python.
+
+### Fixed
+
+- the README and Getting Started install line pinned v5.0.0; it now names the latest release, and every release updates it.
+
 ## [7.1.2] - 2026-10-18
 
 ### Fixed
