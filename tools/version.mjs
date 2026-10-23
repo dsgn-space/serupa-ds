@@ -23,7 +23,7 @@ const notes = Object.fromEntries(SECTIONS.map((s) => [s, []]));
 for (const f of files) {
   const m = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(fs.readFileSync(path.join(DIR, f), 'utf8'));
   if (!m) throw new Error(`.changeset/${f}: no front matter`);
-  const kind = (new RegExp(`["']?${name.replace('/', '\\/')}["']?\\s*:\\s*(major|minor|patch)`).exec(m[1]) || [])[1];
+  const kind = (new RegExp(`["']?${name.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}["']?\\s*:\\s*(major|minor|patch)`).exec(m[1]) || [])[1];
   if (!kind) throw new Error(`.changeset/${f}: no bump for ${name}`);
   if (RANK[kind] > RANK[bump]) bump = kind;
   // Each "- " line is one entry (its indented lines go with it); text with no bullets is one entry.
