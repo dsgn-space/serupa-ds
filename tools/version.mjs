@@ -30,8 +30,10 @@ for (const f of files) {
   const body = m[2].trim();
   const entries = /^- /m.test(body) ? body.split(/\n(?=- )/).map((e) => e.replace(/^- /, '')) : [body.replace(/\n+/g, ' ')];
   for (const e of entries) {
-    const s = /^(Added|Changed|Deprecated|Removed|Fixed|Security):\s*/.exec(e);
-    notes[s ? s[1] : DEFAULT[kind]].push(s ? e.slice(s[0].length) : e);
+    // "Fixed: …", or with a scope, "Fixed (Combobox): …", which files under Fixed as "Combobox: …".
+    const s = /^(Added|Changed|Deprecated|Removed|Fixed|Security)(?:\s*\(([^)]+)\))?:\s*/.exec(e);
+    const text = s ? (s[2] ? `${s[2]}: ` : '') + e.slice(s[0].length) : e;
+    notes[s ? s[1] : DEFAULT[kind]].push(text.charAt(0).toUpperCase() + text.slice(1));
   }
 }
 
