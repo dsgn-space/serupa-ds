@@ -17,6 +17,18 @@ export default defineConfig({
   oxc: { jsx: { runtime: 'automatic' } },
   // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
   optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime'] },
+  plugins: [{
+    // /__slow-picture__.svg answers after a second, so a test can see a picture while it loads in every engine
+    // (lazy loading below the fold can't do that: each engine starts lazy pictures at its own distance).
+    name: 'slow-picture',
+    configureServer(server) {
+      server.middlewares.use('/__slow-picture__.svg', (_req, res) => setTimeout(() => {
+        res.setHeader('Content-Type', 'image/svg+xml');
+        res.setHeader('Cache-Control', 'no-store');
+        res.end('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#3b82f6"/></svg>');
+      }, 1000));
+    },
+  }],
   test: {
     include: ['src/**/*.test.tsx'],
     setupFiles: ['./tools/test/vitest/setup.ts'],

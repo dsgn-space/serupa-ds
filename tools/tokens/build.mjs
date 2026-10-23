@@ -19,7 +19,7 @@ const OUT = path.join(P, 'tokens.css');
 export function buildTokensCss(t) {
   const themes = t.color.themes.map((x) => x.id);
   const themed = (x) => x.value && typeof x.value === 'object';
-  const name = (n) => n.replace(/\./g, '\\.');
+  const name = (n) => n.replace(/[\\.]/g, '\\$&');
   const ref = (v) => String(v).replace(/\{([^}]+)\}/g, (_, n) => `var(--${name(n)})`);
   const line = (n, v, usage) => `  --${name(n)}: ${ref(v)};${usage ? ` /* ${usage} */` : ''}\n`;
   const groups = Object.values(t).filter((g) => g && Array.isArray(g.tokens));

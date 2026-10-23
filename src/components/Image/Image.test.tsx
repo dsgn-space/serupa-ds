@@ -50,13 +50,12 @@ describe('Image', () => {
   });
 
   test('while loading: the picture is hidden and the frame shows the placeholder fill; then it appears', async () => {
-    // Below the fold, a lazy picture doesn't load until it's scrolled into view.
-    await render(<div><div style={{ height: '4000px' }} /><Pic id="slow" alt="Slow" ratio="square" src={PIC + '#slow'} /></div>);
+    // The test server sends this picture after a second (vitest.config.ts), so it is still loading at first.
+    await render(<Pic id="slow" alt="Slow" ratio="square" src={`/__slow-picture__.svg?${Date.now()}`} />);
     const f = frame('slow');
     expect([f.dataset.state, css(f.querySelector('img')).opacity, css(f).backgroundColor]).toEqual(['loading', '0', color('var(--surface-muted)')]);
-    f.scrollIntoView();
-    await expect.poll(() => box('slow').state).toBe('loaded');
-    window.scrollTo(0, 0);
+    await expect.poll(() => box('slow').state, { timeout: 5000 }).toBe('loaded');
+    await expect.poll(() => css(f.querySelector('img')).opacity).toBe('1');
   });
 
   test('on error: a broken-image icon named by the alt text (role="img") keeps the frame; fallback replaces the icon', async () => {

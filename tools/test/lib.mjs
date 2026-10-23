@@ -18,7 +18,7 @@ export function tokensCss(t = tokens()) {
   let root = '';
   for (const [, g] of Object.entries(t)) {
     if (!g || !Array.isArray(g.tokens)) continue;
-    for (const x of g.tokens) root += `--${x.name.replace(/\./g, '\\.')}:${ref(first(x.value))};`;
+    for (const x of g.tokens) root += `--${x.name.replace(/[\\.]/g, '\\$&')}:${ref(first(x.value))};`;
   }
   for (const [k, v] of Object.entries(t.type.families)) root += `--font-${k}:${v};`;
   let css = (t.type.fonts || []).map((f) => `@font-face{font-family:"${f.family}";src:url("${path.join(PROJECT, f.file)}") format("woff2");font-weight:${f.weight};font-style:${f.style};font-display:block}`).join('');

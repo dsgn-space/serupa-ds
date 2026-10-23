@@ -84,7 +84,7 @@ function compDefault(tok) {
   if (grp === 'color') return ALIASES.has(name) || TV.has(name) ? `var(--${name})` : null;
   const node = (DT_BASE[grp] || {})[name];
   if (!node) return null;
-  return `var(--${node.$extensions['com.serupa'].cssVar.slice(2).replace(/\./g, '\\.')})`;
+  return `var(--${node.$extensions['com.serupa'].cssVar.slice(2).replace(/[\\.]/g, '\\$&')})`;
 }
 const norm = (v) => v.trim().replace(/^"|"$/g, '').replace(/"/g, "'").replace(/\s+/g, ' ');
 
