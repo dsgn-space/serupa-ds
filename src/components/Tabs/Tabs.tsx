@@ -20,7 +20,7 @@ export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'o
   activation?: 'auto' | 'manual';
 }
 
-interface Ctx { base: string; value: string | null; select: (v: string) => void; manual: boolean }
+interface Ctx { base: string; value: string | null; select: (v: string) => void; manual: boolean; panels: Record<string, number>; register: (v: string, d: number) => void }
 const TabsContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 const useTabs = (who: string): Ctx => {
   const c = React.useContext(TabsContext);
@@ -57,7 +57,11 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>("Tabs",
   const select = React.useCallback((v: string) => { if (!controlled) setInner(v); if (onChange.current) onChange.current(v); }, [controlled]);
   const variant = oneOf(["line", "pill"] as const, props.variant, "line");
   const size = oneOf(["sm", "md"] as const, props.size, "md");
-  const ctx = React.useMemo(() => ({ base, value, select, manual: props.activation === "manual" }), [base, value, select, props.activation]);
+  // Which values have a TabPanel, so a tab only points (aria-controls) at a panel that exists: a tab row can
+  // drive content of its own (a filter, say) with no TabPanel at all.
+  const [panels, setPanels] = React.useState<Record<string, number>>({});
+  const register = React.useCallback((v: string, d: number) => setPanels((p) => Object.assign({}, p, { [v]: (p[v] || 0) + d })), []);
+  const ctx = React.useMemo(() => ({ base, value, select, manual: props.activation === "manual", panels, register }), [base, value, select, props.activation, panels, register]);
   // Uncontrolled with no defaultValue, and the tabs out of firstTab's sight: the first enabled tab, after mount.
   const self = React.useRef<HTMLDivElement | null>(null);
   useIsoLayoutEffect(() => {
@@ -111,7 +115,7 @@ export const Tab = /* @__PURE__ */ component<HTMLButtonElement, TabProps>("Tab",
   const id = ctx.base + "-tab-" + safe(props.value), panel = ctx.base + "-panel-" + safe(props.value);
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => { if (props.onClick) props.onClick(e); if (!e.defaultPrevented) ctx.select(props.value); };
   return (
-    <button {...rest} ref={ref} type="button" role="tab" id={id} aria-controls={panel} aria-selected={selected} tabIndex={selected ? 0 : -1}
+    <button {...rest} ref={ref} type="button" role="tab" id={id} aria-controls={ctx.panels[props.value] ? panel : undefined} aria-selected={selected} tabIndex={selected ? 0 : -1}
       data-value={props.value} data-state={selected ? "active" : "inactive"} className={cn("dk-tabs__tab", props.className)} onClick={onClick}>
       {props.icon != null ? <span className="dk-tabs__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null}
       <span className="dk-tabs__label">{props.children}</span>
@@ -132,6 +136,8 @@ export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>
   const rest = omit(props, { value: 1, keepMounted: 1, className: 1, children: 1 });
   const selected = ctx.value === props.value;
   const keep = props.keepMounted !== false;
+  const register = ctx.register;
+  useIsoLayoutEffect(() => { register(props.value, 1); return () => register(props.value, -1); }, [props.value, register]);
   return (
     <div tabIndex={0} {...rest} ref={ref} role="tabpanel" id={ctx.base + "-panel-" + safe(props.value)} aria-labelledby={ctx.base + "-tab-" + safe(props.value)}
       hidden={!selected} data-state={selected ? "active" : "inactive"} className={cn("dk-tabs__panel", props.className)}>

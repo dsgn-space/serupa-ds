@@ -160,7 +160,8 @@ describe('Tabs', () => {
 });
 
 // Server rendering: without defaultValue the first enabled tab is picked while rendering, so the HTML already
-// has a selected tab in the Tab order, its panel visible, and every tab pointing at its panel.
+// has a selected tab in the Tab order and its panel visible. (aria-controls comes after mount, once the panels
+// are known, since a tab row may have no TabPanel at all.)
 describe('Tabs on the server', () => {
   test('uncontrolled with no defaultValue: the first enabled tab is selected in the HTML', () => {
     const html = renderToString(
@@ -176,8 +177,8 @@ describe('Tabs on the server', () => {
     );
     const box = document.createElement('div');
     box.innerHTML = html;
-    const tabs = [...box.querySelectorAll('[role="tab"]')].map((t) => [t.getAttribute('aria-selected'), t.getAttribute('tabindex'), !!t.getAttribute('aria-controls')]);
-    expect(tabs).toEqual([['false', '-1', true], ['true', '0', true], ['false', '-1', true]]);
+    const tabs = [...box.querySelectorAll('[role="tab"]')].map((t) => [t.getAttribute('aria-selected'), t.getAttribute('tabindex')]);
+    expect(tabs).toEqual([['false', '-1'], ['true', '0'], ['false', '-1']]);
     expect([...box.querySelectorAll('[role="tabpanel"]')].map((p) => (p as HTMLElement).hidden)).toEqual([false, true]);
   });
 });
