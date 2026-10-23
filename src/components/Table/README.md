@@ -52,7 +52,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - It's a real `<table>`, so screen readers announce rows, columns and headers. Give it a `caption` (or `aria-label`) so people know what it holds.
 - When it's too wide and scrolls, the frame becomes a focusable region named by the caption, so keyboard users can scroll it with the arrow keys. When it fits, it adds no tab stop.
 - A sortable header is a button, and its `<th>` has `aria-sort` once sorted. After sorting, the button keeps focus.
-- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `tools/test/table.mjs`). Selection isn't shown by color alone: the bar and `aria-selected` say it too.
+- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `Table.test.tsx`). Selection isn't shown by color alone: the bar and `aria-selected` say it too.
 
 ## Props
 

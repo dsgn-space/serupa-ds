@@ -37,8 +37,7 @@ function hexcolor(h) {
 function rgbfn(s) {   // rgb(0 0 0 / 0.05)
   const m = full(/rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)\s*(?:[/,]\s*([\d.]+%?))?\s*\)/, s.trim());
   const [r, g, b] = [1, 2, 3].map((i) => parseFloat(m[i]));
-  let a = m[4];
-  a = a == null ? 1 : a.endsWith('%') ? parseFloat(a) / 100 : parseFloat(a);
+  const a = m[4] == null ? 1 : m[4].endsWith('%') ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
   const hx = (n) => Math.trunc(n).toString(16).padStart(2, '0');
   const v = { colorSpace: 'srgb', components: [r, g, b].map((c) => round(c / 255, 4)), hex: '#' + hx(r) + hx(g) + hx(b) };
   if (a !== 1) v.alpha = round(a, 3);

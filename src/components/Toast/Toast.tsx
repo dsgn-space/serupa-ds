@@ -95,7 +95,7 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
   const [hidden, setHidden] = React.useState(false);
   const paused = hovered || focused || hidden;
   const left = React.useRef(duration);
-  React.useEffect(() => { left.current = duration; }, [t]);   // a replaced toast starts its time again
+  React.useEffect(() => { left.current = duration; }, [t, duration]);   // a replaced toast starts its time again
   React.useEffect(() => {
     if (!duration || paused) return;
     const start = Date.now();

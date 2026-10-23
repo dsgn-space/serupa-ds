@@ -1,0 +1,135 @@
+import * as React from 'react';
+import { describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { Breadcrumb, BreadcrumbItem } from './Breadcrumb';
+
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const q = (sel: string) => document.querySelector(sel) as HTMLElement;
+// The trail as written: each item's text, ">" for a separator.
+const trail = (id: string) => [...el(id).querySelectorAll('li')].map((li) => (li.classList.contains('dk-breadcrumb__separator') ? '>' : li.textContent)).join(' ');
+const shownIcons = (e: Element) => [...e.querySelectorAll<HTMLElement>('.dk-icon')].filter((i) => css(i).display !== 'none');
+
+const RouterLink = React.forwardRef<HTMLAnchorElement, { to: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>>(function RouterLink({ to, ...p }, ref) {
+  return <a {...p} ref={ref} href={'#router' + to} data-router="" />;
+});
+
+function Home({ r }: { r?: React.Ref<HTMLElement> }) {
+  return <Breadcrumb id="bdef" ref={r} className="extra" data-x="y">
+    <BreadcrumbItem href="#home" icon="home">Home</BreadcrumbItem>
+    <BreadcrumbItem href="#projects">Projects</BreadcrumbItem>
+    <BreadcrumbItem href="#ignored">Website</BreadcrumbItem>
+  </Breadcrumb>;
+}
+const Slash = () => <Breadcrumb id="bslash" separator="slash" aria-label="You are here">
+  <BreadcrumbItem href="#a">A</BreadcrumbItem>
+  <BreadcrumbItem as={RouterLink} {...{ to: '/b' }}>B</BreadcrumbItem>
+  <BreadcrumbItem>C</BreadcrumbItem>
+</Breadcrumb>;
+
+describe('Breadcrumb', () => {
+  test('a <nav aria-label="Breadcrumb"> holding an <ol>; ref, className and props reach the nav', async () => {
+    const r = React.createRef<HTMLElement>();
+    await render(<Home r={r} />);
+    const n = el('bdef'), ol = n.firstElementChild!;
+    expect([n.tagName, n.getAttribute('aria-label'), n.className, n.dataset.component, r.current === n, n.dataset.x, ol.tagName, ol.children.length])
+      .toEqual(['NAV', 'Breadcrumb', 'dk-breadcrumb extra', 'breadcrumb', true, 'y', 'OL', 5]);
+  });
+
+  test('items are links; the last is the current page: text with aria-current="page" and no href', async () => {
+    await render(<Home />);
+    expect([...el('bdef').querySelectorAll('.dk-breadcrumb__item')].map((e) => [e.tagName, e.getAttribute('href'), e.getAttribute('aria-current')].join(' ')))
+      .toEqual(['A #home ', 'A #projects ', 'SPAN  page']);
+  });
+
+  test('separators: a 16px chevron_right, hidden from screen readers; an item can have a 16px icon', async () => {
+    await render(<Home />);
+    const s = q('#bdef .dk-breadcrumb__separator'), vis = shownIcons(s);
+    expect([s.getAttribute('aria-hidden'), vis.map((i) => i.dataset.icon).join(), css(vis[0]!).fontSize]).toEqual(['true', 'chevron_right', '16px']);
+    const i = q('#bdef .dk-breadcrumb__icon .dk-icon');
+    expect([i.dataset.icon, css(i).fontSize]).toEqual(['home', '16px']);
+  });
+
+  test('links are muted text-sm, text-colored and underlined on hover; the current page is text, font-medium', async () => {
+    await render(<Home />);
+    const a = q('#bdef a'), muted = color('var(--text-muted)'), text = color('var(--text)');
+    expect([css(a).color, css(a).textDecorationLine, css(a).fontSize]).toEqual([muted, 'none', '14px']);
+    await userEvent.hover(a);
+    await expect.poll(() => [css(a).color, css(a).textDecorationLine]).toEqual([text, 'underline']);
+    await userEvent.unhover(a);
+    const c = css(q('#bdef [aria-current]'));
+    expect([c.color, c.fontWeight]).toEqual([text, '500']);
+  });
+
+  test('separator="slash", a custom aria-label, and a router link through as', async () => {
+    await render(<Slash />);
+    const n = el('bslash'), r = n.querySelector('[data-router]')!;
+    expect([n.getAttribute('aria-label'), n.querySelector('.dk-breadcrumb__separator')!.textContent, r.getAttribute('href'), r.className])
+      .toEqual(['You are here', '/', '#router/b', 'dk-breadcrumb__item dk-breadcrumb__link']);
+  });
+
+  test('maxItems={3}: the first, "…" (a button named by expandLabel), then the last two; pressing it shows every item and moves focus to the first one it showed', async () => {
+    await render(<Breadcrumb id="bmax" maxItems={3} expandLabel="Show all">
+      {['Home', 'Org', 'Team', 'Projects', 'Website', 'Settings'].map((l) => <BreadcrumbItem key={l} href={'#' + l}>{l}</BreadcrumbItem>)}
+    </Breadcrumb>);
+    expect(trail('bmax')).toBe('Home > … > Website > Settings');
+    const b = q('#bmax .dk-breadcrumb__more') as HTMLButtonElement;
+    expect([b.tagName, b.type, b.getAttribute('aria-label')]).toEqual(['BUTTON', 'button', 'Show all']);
+    b.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => trail('bmax')).toBe('Home > Org > Team > Projects > Website > Settings');
+    await expect.poll(() => document.activeElement!.textContent).toBe('Org');
+  });
+
+  test('unknown separator falls back to the chevron; maxItems below 2 is ignored; right to left: the chevron points left', async () => {
+    await render(<>
+      {/* @ts-expect-error: an unknown separator, as plain JavaScript could pass */}
+      <Breadcrumb id="bbad" separator="arrow" maxItems={1}><BreadcrumbItem href="#a">A</BreadcrumbItem><BreadcrumbItem href="#b">B</BreadcrumbItem><BreadcrumbItem href="#c">C</BreadcrumbItem></Breadcrumb>
+      <div dir="rtl"><Breadcrumb id="brtl"><BreadcrumbItem href="#a">A</BreadcrumbItem><BreadcrumbItem>B</BreadcrumbItem></Breadcrumb></div>
+    </>);
+    expect([el('bbad').querySelectorAll('.dk-breadcrumb__item').length, (q('#bbad .dk-breadcrumb__separator .dk-icon')).dataset.icon]).toEqual([3, 'chevron_right']);
+    expect([...el('brtl').querySelectorAll('.dk-breadcrumb__separator')].flatMap(shownIcons).map((i) => i.dataset.icon).join()).toBe('chevron_left');
+  });
+
+  test('keyboard focus: a 2px ring on the link', async () => {
+    await render(<Home />);
+    const a = q('#bdef a');
+    a.focus();
+    await userEvent.tab();
+    await userEvent.tab({ shift: true });
+    expect(document.activeElement).toBe(a);
+    expect([css(a).outlineStyle, css(a).outlineWidth]).toEqual(['solid', '2px']);
+  });
+
+  test('Breadcrumb tokens (--breadcrumb-text, --breadcrumb-gap) override one breadcrumb', async () => {
+    await render(<Breadcrumb id="btok" style={{ '--breadcrumb-text': 'rgb(1, 2, 3)', '--breadcrumb-gap': '11px' } as React.CSSProperties}><BreadcrumbItem href="#a">A</BreadcrumbItem><BreadcrumbItem>B</BreadcrumbItem></Breadcrumb>);
+    expect([css(q('#btok a')).color, css(q('#btok ol')).columnGap]).toEqual(['rgb(1, 2, 3)', '11px']);
+  });
+
+  test('contrast: links, the current page and separators keep 4.5:1 on surface in all six themes', async () => {
+    await render(<><Home /><Slash /></>);
+    // Colors transition: read each theme's own, not a mid-transition blend of the last one.
+    const still = document.createElement('style');
+    still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+    document.head.appendChild(still);
+    const low: string[] = [];
+    let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const sel of ['#bdef a', '#bdef [aria-current]', '#bslash .dk-breadcrumb__separator']) {
+        const r = contrast(css(q(sel)).color, 'var(--surface)'); n++;
+        if (r < 4.5) low.push(`${th} ${sel}: ${r.toFixed(2)}`);
+      }
+    }
+    still.remove();
+    expect([low, n]).toEqual([[], 18]);
+  });
+
+  test('no errors or React warnings', async () => {
+    const error = vi.spyOn(console, 'error');
+    await render(<><Home /><Slash /></>);
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
+});

@@ -1,0 +1,185 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { Text } from '../Text/Text';
+import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, type SortDirection } from './Table';
+
+const ROWS: Array<[string, string, number]> = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const q = (sel: string) => document.querySelector(sel) as HTMLElement;
+const bg = (v: string) => { const d = document.createElement('div'); d.style.background = v; document.body.appendChild(d); const c = getComputedStyle(d).backgroundColor; d.remove(); return c; };
+const away = () => userEvent.hover(document.body, { position: { x: 880, y: 5 } });
+const NONE = 'rgba(0, 0, 0, 0)';
+
+function Sortable() {
+  const [s, set] = React.useState<SortDirection>('none');
+  const sorted = ROWS.slice().sort((a, b) => (s === 'none' ? 0 : (s === 'ascending' ? 1 : -1) * (a[2] - b[2])));
+  return <Table id="tsort" caption="Usage" captionHidden>
+    <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell id="hsort" align="end" sort={s} onSort={() => set(s === 'ascending' ? 'descending' : 'ascending')}>Calls</TableHeaderCell></TableRow></TableHead>
+    <TableBody>{sorted.map((r) => <TableRow key={r[0]}><TableCell>{r[0]}</TableCell><TableCell align="end">{r[2]}</TableCell></TableRow>)}</TableBody>
+  </Table>;
+}
+const body = (sel?: boolean) => <TableBody>{ROWS.map((r, i) => <TableRow key={r[0]} selected={sel ? i === 1 : undefined} data-i={i}><TableCell>{r[0]}</TableCell><TableCell><Text as="span" tone="muted">{r[1]}</Text></TableCell><TableCell align="end">{r[2]}</TableCell></TableRow>)}</TableBody>;
+const head = () => <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell><TableHeaderCell align="end">Calls</TableHeaderCell></TableRow></TableHead>;
+
+function App(props: { tref?: React.Ref<HTMLTableElement> }) {
+  return <div style={{ width: '600px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <Table id="tdef" ref={props.tref} className="extra" caption="Team members" containerProps={{ 'data-frame': 'f' } as React.HTMLAttributes<HTMLDivElement>}>
+      {head()}{body(true)}
+      <TableFoot><TableRow><TableCell colSpan={2}>Total</TableCell><TableCell align="end">1680</TableCell></TableRow></TableFoot>
+    </Table>
+    <Table id="tsm" size="sm" striped>{head()}{body()}</Table>
+    <Sortable />
+    <div style={{ width: '200px' }}><Table id="twide" caption="Wide" style={{ minWidth: '500px' }}>{head()}{body()}</Table></div>
+    <Table id="tsticky" stickyHeader containerProps={{ style: { maxHeight: '120px' }, 'aria-label': 'Sticky' }}>
+      {head()}<TableBody>{[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <TableRow key={i}><TableCell>{'Row ' + i}</TableCell><TableCell>x</TableCell><TableCell>{i}</TableCell></TableRow>)}</TableBody>
+    </Table>
+    {/* @ts-expect-error: an unknown size and align, as plain JavaScript could pass */}
+    <Table id="tbad" size="xl"><TableBody><TableRow><TableCell align="middle">x</TableCell></TableRow></TableBody></Table>
+    <Table id="ttok" style={{}} containerProps={{ style: { '--table-header-bg': 'rgb(1, 2, 3)', '--table-padding-x': '20px' } as React.CSSProperties }}>{head()}{body()}</Table>
+  </div>;
+}
+const setup = async (tref?: React.Ref<HTMLTableElement>) => {
+  await render(<App tref={tref} />);
+  // the frame turns into a region once its ResizeObserver has measured it
+  await expect.poll(() => el('twide').parentElement!.getAttribute('role')).toBe('region');
+};
+
+describe('Table', () => {
+  test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {
+    const ref = React.createRef<HTMLTableElement>();
+    await setup(ref);
+    const t = el('tdef') as HTMLTableElement, f = t.parentElement!;
+    expect([t.tagName, t.className, ref.current === t, f.className, f.dataset.component, f.dataset.frame, t.caption?.textContent]).toEqual(['TABLE', 'dk-table__table extra', true, 'dk-table', 'table', 'f', 'Team members']);
+    expect([...t.querySelectorAll('th')].map((x) => x.scope)).toEqual(['col', 'col', 'col']);
+    expect([f.getAttribute('tabindex'), f.getAttribute('role')]).toEqual([null, null]);
+  });
+
+  test('the frame: a 1px border, 8px corners, scrolls on overflow; the table fills it', async () => {
+    await setup();
+    const s = css(el('tdef').parentElement);
+    expect([s.borderTopWidth, s.borderTopStyle, s.borderTopLeftRadius, s.overflowX, css(el('tdef')).width]).toEqual(['1px', 'solid', '8px', 'auto', '598px']);
+  });
+
+  test('cells: 12px padding, text-sm, a 1px line below; no double line at the bottom of the body', async () => {
+    await setup();
+    const c = css(q('#tdef td'));
+    expect([c.paddingTop, c.paddingLeft, c.fontSize, c.borderBottomWidth]).toEqual(['12px', '12px', '14px', '1px']);
+    expect(css(q('#tdef tbody tr:last-child td')).borderBottomWidth).toBe('0px');
+  });
+
+  test('header: surface-muted, muted text, font-medium; align="end": right-aligned, tabular digits', async () => {
+    await setup();
+    const h = css(q('#tdef th')), e = css(q('#tdef td.dk-table__cell--end'));
+    expect([h.backgroundColor, h.color, h.fontWeight]).toEqual([bg('var(--surface-muted)'), color('var(--text-muted)'), '500']);
+    expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
+  });
+
+  test('selected: aria-selected, shaded, a 2px primary bar at its start; other rows aria-selected="false"', async () => {
+    await setup();
+    const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
+    expect([r.getAttribute('aria-selected'), q('#tdef [data-i="0"]').getAttribute('aria-selected')]).toEqual(['true', 'false']);
+    await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
+    expect(bar).toMatch(/2px 0px 0px 0px inset$/);
+    expect(bar).toContain(color('var(--primary)'));
+  });
+
+  test('a body row shades on hover', async () => {
+    await setup();
+    const r = q('#tdef [data-i="2"]');
+    expect(css(r).backgroundColor).toBe(NONE);
+    await userEvent.hover(r.querySelector('td')!);
+    await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
+    await away();
+  });
+
+  test('footer: a line above, font-medium', async () => {
+    await setup();
+    const f = css(q('#tdef tfoot td'));
+    expect([f.borderTopWidth, f.fontWeight]).toEqual(['1px', '500']);
+  });
+
+  test('size sm: 8px top and bottom; striped: every other row shaded, unchanged on hover; no aria-selected without selected', async () => {
+    await setup();
+    const rows = [...el('tsm').querySelectorAll('tbody tr')];
+    expect(css(q('#tsm td')).paddingTop).toBe('8px');
+    await expect.poll(() => rows.map((x) => css(x).backgroundColor)).toEqual([NONE, bg('var(--surface-muted)'), NONE]);
+    expect(rows[0].hasAttribute('aria-selected')).toBe(false);
+    await userEvent.hover(rows[0].querySelector('td')!);
+    await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
+    await Promise.all(rows[0].getAnimations().map((a) => a.finished));
+    expect(css(rows[0]).backgroundColor).toBe(NONE);
+    await away();
+  });
+
+  test('sortable header: a button inside the th, no aria-sort until sorted; a hidden caption still names the table', async () => {
+    await setup();
+    const th = el('hsort'), b = th.querySelector('button')!;
+    expect([th.getAttribute('aria-sort'), b.type, b.textContent, b.querySelector<HTMLElement>('.dk-icon')?.dataset.icon]).toEqual([null, 'button', 'Calls', 'unfold_more']);
+    expect(q('#tsort caption').getBoundingClientRect().width).toBeLessThanOrEqual(1);
+  });
+
+  test('pressing it calls onSort: aria-sort and the arrow follow the order', async () => {
+    await setup();
+    const state = () => [el('hsort').getAttribute('aria-sort'), [...el('tsort').querySelectorAll('tbody tr td:first-child')].map((x) => x.textContent).join(), q('#hsort .dk-icon').dataset.icon];
+    q('#hsort button').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(state()).toEqual(['ascending', 'Grace,Linus,Ada', 'arrow_upward']);
+    await userEvent.keyboard(' ');
+    expect(state()).toEqual(['descending', 'Ada,Linus,Grace', 'arrow_downward']);
+  });
+
+  test('the sort button fills the header, lines up with align="end", and shows a focus ring', async () => {
+    await setup();
+    q('#hsort button').focus();
+    await userEvent.keyboard('{Enter}');
+    const b = q('#hsort button'), s = css(b);
+    expect(Math.round(b.getBoundingClientRect().width)).toBe(Math.round(b.parentElement!.getBoundingClientRect().width));
+    expect([s.justifyContent, s.outlineStyle]).toEqual(['flex-end', 'solid']);
+  });
+
+  test('a table too wide for its frame scrolls, and the frame becomes a focusable region named by the caption', async () => {
+    await setup();
+    const f = el('twide').parentElement!;
+    expect([f.getAttribute('tabindex'), f.getAttribute('role'), f.getAttribute('aria-labelledby') === q('#twide caption').id, f.scrollWidth > f.clientWidth]).toEqual(['0', 'region', true, true]);
+  });
+
+  test('stickyHeader: the header stays at the top while the frame scrolls; the region takes its name from containerProps', async () => {
+    await setup();
+    const f = el('tsticky').parentElement!, th = f.querySelector('th')!;
+    f.scrollTop = 80;
+    await expect.poll(() => f.scrollTop).toBe(80);
+    expect(Math.round(th.getBoundingClientRect().top - f.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+    expect([css(th).position, f.getAttribute('aria-label'), f.getAttribute('tabindex')]).toEqual(['sticky', 'Sticky', '0']);
+  });
+
+  test('unknown size and align fall back to md and start', async () => {
+    await setup();
+    expect([el('tbad').parentElement!.className, q('#tbad td').className]).toEqual(['dk-table', 'dk-table__cell']);
+  });
+
+  test('Table tokens (--table-header-bg, --table-padding-x) override one table', async () => {
+    await setup();
+    const c = css(q('#ttok th'));
+    expect([c.backgroundColor, c.paddingLeft]).toEqual(['rgb(1, 2, 3)', '20px']);
+  });
+
+  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar 3:1; all six themes', async () => {
+    await setup();
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
+    const low: string[] = []; let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const surf = bg('var(--surface)'), muted = bg('var(--surface-muted)');
+      const text = css(q('#tdef td')).color, mt = css(q('#tdef td .dk-text')).color, hd = css(q('#tdef th')).color;
+      const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, muted], ['muted text on a shaded row', mt, muted], ['header', hd, muted]];
+      for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
+      const bar = contrast('var(--primary)', muted); n++;
+      if (bar < 3) low.push(`${th} selected bar: ${bar.toFixed(2)}`);
+    }
+    still.remove();
+    expect([low, n]).toEqual([[], 36]);
+  });
+});

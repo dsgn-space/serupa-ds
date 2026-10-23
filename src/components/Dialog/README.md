@@ -48,7 +48,7 @@ const [open, setOpen] = React.useState(false);
 
 - `aria-modal`, named by the title (`aria-labelledby`) and described by the description. Without a title, give it an `aria-label`.
 - Use `alert` only for decisions people must make; Escape still cancels.
-- The title and description keep 4.5:1 on the panel in all six themes (`tools/test/dialog.mjs`). In forced-colors mode the panel gets a border.
+- The title and description keep 4.5:1 on the panel in all six themes (`Dialog.test.tsx`). In forced-colors mode the panel gets a border.
 
 ## Props
 

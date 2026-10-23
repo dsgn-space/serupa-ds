@@ -39,7 +39,7 @@ const [day, setDay] = React.useState<Date | null>(null);
 - A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
 - Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
 - Weekday headers show the short name and carry the full name in `abbr`.
-- Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`tools/test/date-picker.mjs`).
+- Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`Calendar.test.tsx`).
 
 ### Keyboard
 

@@ -46,7 +46,7 @@ import { Stepper } from "serupa-ds";
 ## Accessibility
 
 - An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed or error steps add ", completed" or ", has an error" for screen readers, so the state isn't shown by color alone.
-- Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`tools/test/stepper.mjs`).
+- Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`Stepper.test.tsx`).
 
 ## Props
 

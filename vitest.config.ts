@@ -12,6 +12,11 @@ buildUtilities(new URL('.', import.meta.url).pathname);
 
 export default defineConfig({
   define: { __VERSION__: JSON.stringify(version) },
+  // The modern JSX runtime, as apps build with. tsconfig's "jsx": "react" (classic, for the package build) would
+  // make React 19 warn "outdated JSX transform" in dev, which the tests that fail on a console warning catch.
+  oxc: { jsx: { runtime: 'automatic' } },
+  // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
+  optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime'] },
   test: {
     include: ['src/**/*.test.tsx'],
     setupFiles: ['./tools/test/vitest/setup.ts'],
@@ -22,6 +27,15 @@ export default defineConfig({
       // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
       instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
       viewport: { width: 900, height: 700 },
+    },
+    // npm run test:coverage: which lines of src/ the component tests run (V8, in Chromium), written to coverage/
+    // (index.html to browse, coverage-summary.json for CI). Only the components with a <Name>.test.tsx count yet.
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts'],
+      reporter: ['text-summary', 'html', 'json-summary'],
+      reportsDirectory: 'coverage',
     },
   },
 });

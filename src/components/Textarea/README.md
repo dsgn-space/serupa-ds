@@ -51,7 +51,7 @@ const { Textarea } = window.Serupa;
 - `invalid` sets `aria-invalid`, but color alone doesn't explain the problem: put the message in text and link it with `aria-describedby`.
 - The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. It isn't announced on every keystroke, which would drown out the typing.
 - `maxLength` stops typing at the limit. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
-- Text, the placeholder and the count keep 4.5:1 on `field`, and the border 3:1, in all six themes (`tools/test/textarea.mjs`).
+- Text, the placeholder and the count keep 4.5:1 on `field`, and the border 3:1, in all six themes (`Textarea.test.tsx`).
 
 ## Props
 

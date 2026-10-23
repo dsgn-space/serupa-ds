@@ -67,8 +67,14 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
 
   const disabled = (d: Date) => (props.min && compare(d, props.min) < 0) || (props.max && compare(d, props.max) > 0) || (props.isDateDisabled ? props.isDateDisabled(d) : false);
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
-  // Keep the focused day inside the shown month when the month changes from outside or by the buttons.
-  React.useEffect(() => { if (!sameMonth(focus, month)) setFocus(value && sameMonth(value, month) ? value : sameMonth(today, month) ? today : month); }, [month.getTime()]);
+  // Keep the focused day inside the shown month when the month changes from outside or by the buttons
+  // (adjusted during render, so the new month never draws without its Tab stop).
+  const monthTime = month.getTime();
+  const [focusMonth, setFocusMonth] = React.useState(monthTime);
+  if (focusMonth !== monthTime) {
+    setFocusMonth(monthTime);
+    if (!sameMonth(focus, month)) setFocus(value && sameMonth(value, month) ? value : sameMonth(today, month) ? today : month);
+  }
   React.useEffect(() => {
     if (!wantFocus.current || !grid.current) return;
     wantFocus.current = false;

@@ -14,6 +14,7 @@ if (arg('--browser')) process.env.SERUPA_BROWSER = arg('--browser');
 const GROUPS = {
   checks: [
     ['Package', 'package.mjs'],
+    ['Package lint', 'package-lint.mjs'],
     ['Component contract', 'contract.mjs'],
     ['Foundation audit', 'foundation.mjs', PROJECT],
     ['Design tokens export', 'design-tokens.mjs', PROJECT],
@@ -38,7 +39,7 @@ const suites = fs.readdirSync(HERE).filter((f) => f.endsWith('.mjs') && !HELPERS
 const node = (g) => ([name, f, ...args]) => [name, 'node', [path.join(HERE, f), ...args], g];
 const steps = [
   // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in Vitest.
-  ['Component tests (Vitest)', process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run'], 'components'],
+  ['Component tests (Vitest)', process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : [])], 'components'],
   ...suites.map(node('components')),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];

@@ -39,7 +39,7 @@ const { Navbar, NavbarLink, Button, Avatar } = window.Serupa;
 - It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.
 - The current page has `aria-current="page"` and a shaded background, not just a color change.
 - On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button.
-- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`tools/test/navbar.mjs`).
+- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`Navbar.test.tsx`).
 
 ## Props
 

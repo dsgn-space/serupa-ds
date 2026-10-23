@@ -63,7 +63,7 @@ The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `p
 - The title is a real heading, so screen reader users can jump between cards. Set `headingLevel` to fit the page.
 - A linked card is one link: its name is all the text inside it. Keep it short (a title and a line), and keep buttons and other links out of it, since a link can't hold them.
 - In forced-colors mode every card gets a visible border.
-- The title, description and body text keep 4.5:1 on every variant, in all six themes (`tools/test/card.mjs`).
+- The title, description and body text keep 4.5:1 on every variant, in all six themes (`Card.test.tsx`).
 
 ## Props
 

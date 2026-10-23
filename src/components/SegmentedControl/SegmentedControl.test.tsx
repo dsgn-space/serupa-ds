@@ -1,0 +1,145 @@
+import * as React from 'react';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
+
+const PERIODS: SegmentedControlOption[] = [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }, { value: 'year', label: 'Year', disabled: true }];
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const seg = (id: string, v: string) => el(id).querySelector<HTMLButtonElement>(`[data-value="${v}"]`)!;
+const items = (id: string) => [...el(id).querySelectorAll('button')];
+const checked = (id: string) => el(id).querySelector<HTMLElement>('[aria-checked=true]')?.dataset.value ?? null;
+const focused = () => (document.activeElement as HTMLElement).dataset.value;
+// How far the sliding selection is from the checked segment: [left, width] differences in px.
+const off = (id: string) => {
+  const i = el(id).querySelector('.dk-segmented__indicator')!.getBoundingClientRect(), c = el(id).querySelector('[aria-checked=true]')!.getBoundingClientRect();
+  return [Math.round(i.left - c.left), Math.round(i.width - c.width)];
+};
+// Transitions still running (a theme change can cancel one and start another, so poll rather than await .finished).
+const settled = () => expect.poll(() => document.getAnimations().length).toBe(0);
+
+let errors: ReturnType<typeof vi.spyOn>;
+beforeEach(() => { errors = vi.spyOn(console, 'error'); });
+afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); });
+
+const Col = ({ children }: { children: React.ReactNode }) => <div style={{ width: '480px', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'flex-start' }}>{children}</div>;
+const Period = ({ sref }: { sref?: React.Ref<HTMLDivElement> }) => <>
+  <button id="before">Before</button>
+  <SegmentedControl id="per" aria-label="Period" options={PERIODS} ref={sref} className="extra" />
+  <button id="after">After</button>
+</>;
+function Controlled({ calls, api }: { calls: string[]; api: { set?: (v: string) => void; view?: string } }) {
+  const [v, setV] = React.useState('list');
+  api.set = setV; api.view = v;
+  return <SegmentedControl id="ctl" aria-label="View" value={v} onValueChange={(x) => { calls.push(x); setV(x); }} name="view"
+    options={[{ value: 'list', icon: 'list', label: 'List' }, { value: 'board', icon: 'view_kanban', label: 'Board' }]} />;
+}
+
+describe('SegmentedControl', () => {
+  test('a radiogroup of role="radio" buttons, the first checked by default and the only Tab stop; ref and className reach the root; md is 32px; the selection sits exactly on the checked segment', async () => {
+    const ref = React.createRef<HTMLDivElement>();
+    await render(<Col><Period sref={ref} /></Col>);
+    const e = el('per'), it = items('per');
+    expect([e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.dataset.component, e.getBoundingClientRect().height]).toEqual(['radiogroup', 'Period', true, 'segmented-control', 32]);
+    expect(e.className).toMatch(/extra/);
+    expect([it.map((x) => x.getAttribute('role')).join(), it.map((x) => x.getAttribute('aria-checked')).join(), it.map((x) => x.tabIndex).join(), it[3].disabled])
+      .toEqual(['radio,radio,radio,radio', 'true,false,false,false', '0,-1,-1,-1', true]);
+    await expect.poll(() => off('per')).toEqual([0, 0]);
+  });
+
+  test('keys: Tab lands on the checked segment; ArrowRight selects and focuses the next, skips disabled ones and wraps; ArrowLeft back; End and Home; one Tab stop: Tab leaves from the newly checked segment', async () => {
+    await render(<Col><Period /></Col>);
+    el('before').focus();
+    await userEvent.keyboard('{Tab}');
+    const seen: Array<string | null | undefined> = [focused()];
+    await userEvent.keyboard('{ArrowRight}'); seen.push(checked('per'), focused());
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}'); seen.push(checked('per'));
+    await userEvent.keyboard('{ArrowLeft}'); seen.push(checked('per'));
+    await userEvent.keyboard('{End}'); seen.push(checked('per'));
+    await userEvent.keyboard('{Home}'); seen.push(checked('per'));
+    expect(seen).toEqual(['day', 'week', 'week', 'day', 'month', 'month', 'day']);
+    await userEvent.keyboard('{ArrowRight}{Tab}');
+    expect(document.activeElement!.id).toBe('after');
+    expect(items('per').map((x) => x.tabIndex).join()).toBe('-1,0,-1,-1');
+  });
+
+  test('a click selects, and the selection moves to it; a disabled segment can\'t be chosen', async () => {
+    await render(<Col><Period /></Col>);
+    await userEvent.click(seg('per', 'month'));
+    expect(checked('per')).toBe('month');
+    // The selection slides over 200ms.
+    await expect.poll(() => off('per')).toEqual([0, 0]);
+    await userEvent.click(seg('per', 'year'), { force: true });
+    expect(checked('per')).toBe('month');
+  });
+
+  test('controlled: onValueChange once (not again for the same segment); the hidden input follows; icons show before labels; a new value from outside moves the selection', async () => {
+    const calls: string[] = [], api: { set?: (v: string) => void; view?: string } = {};
+    await render(<Col><Controlled calls={calls} api={api} /></Col>);
+    await userEvent.click(seg('ctl', 'board'));
+    await userEvent.click(seg('ctl', 'board'));
+    const hidden = el('ctl').querySelector<HTMLInputElement>('input[type=hidden]')!;
+    expect([calls.join(), api.view, hidden.name + '=' + hidden.value, (seg('ctl', 'board').querySelector('.dk-segmented__icon .dk-icon') as HTMLElement | null)?.dataset.icon])
+      .toEqual(['board', 'board', 'view=board', 'view_kanban']);
+    api.set!('list');
+    await expect.poll(() => checked('ctl')).toBe('list');
+    await expect.poll(() => off('ctl')[0]).toBe(0);
+  });
+
+  test('icon-only, sm: 24px tall, square 18px segments named by aria-label, defaultValue chosen', async () => {
+    await render(<Col><SegmentedControl id="ico" aria-label="Align" size="sm" defaultValue="c" options={[
+      { value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'c', icon: 'format_align_center', 'aria-label': 'Center' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' },
+    ]} /></Col>);
+    const it = items('ico');
+    expect([el('ico').getBoundingClientRect().height, it.map((x) => x.getAttribute('aria-label')).join(), it.map((x) => Math.round(x.getBoundingClientRect().width)).join(), Math.round(it[0].getBoundingClientRect().height), checked('ico')])
+      .toEqual([24, 'Left,Center,Right', '18,18,18', 18, 'c']);
+  });
+
+  test('fullWidth: fills its container with equal segments; disabled: every segment disabled and out of the Tab order, faded', async () => {
+    await render(<Col>
+      <div style={{ width: '300px' }}><SegmentedControl id="full" aria-label="Full" fullWidth options={PERIODS.slice(0, 3)} /></div>
+      <SegmentedControl id="dis" aria-label="Dis" disabled options={PERIODS.slice(0, 2)} />
+    </Col>);
+    expect(el('full').getBoundingClientRect().width).toBe(300);
+    expect(new Set(items('full').map((x) => Math.round(x.getBoundingClientRect().width))).size).toBe(1);
+    expect([el('dis').getAttribute('aria-disabled'), items('dis').every((x) => x.disabled && x.tabIndex === -1), css(el('dis')).opacity]).toEqual(['true', true, '0.5']);
+  });
+
+  test('right-to-left: segments run right to left and ArrowLeft goes to the next one', async () => {
+    await render(<Col><div dir="rtl"><SegmentedControl id="rtl" aria-label="RTL" options={PERIODS.slice(0, 3)} /></div></Col>);
+    seg('rtl', 'day').focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(seg('rtl', 'day').getBoundingClientRect().left).toBeGreaterThan(seg('rtl', 'week').getBoundingClientRect().left);
+    expect(checked('rtl')).toBe('week');
+    await expect.poll(() => off('rtl')[0]).toBe(0);
+  });
+
+  test('contrast: the outline keeps 3:1 on the page, labels 4.5:1 (the selection\'s outline 2:1), in all six themes', async () => {
+    await render(<Col><Period /></Col>);
+    const e = el('per'), indi = e.querySelector('.dk-segmented__indicator')!;
+    const low: string[] = [];
+    let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      // Colors ease after a theme change; read the end state.
+      for (const x of [e, ...e.querySelectorAll('*')]) void css(x).color;
+      await settled();
+      const bg = css(e).backgroundColor;
+      const pairs: Array<[string, string, string, number]> = [
+        ['outline on page', css(e).borderTopColor, 'var(--surface)', 3],
+        ['label on bg', css(seg('per', 'day')).color, bg, 4.5],
+        ['selected label', css(e.querySelector('[aria-checked=true]')).color, css(indi).backgroundColor, 4.5],
+        ['selection outline on bg', css(indi).borderTopColor, bg, 2],
+      ];
+      for (const [k, fg, on, min] of pairs) { const r = contrast(fg, on); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
+    }
+    expect(low).toEqual([]);
+    expect(n).toBe(24);
+  });
+
+  test('--segmented-control-bg overrides one control', async () => {
+    await render(<SegmentedControl id="tok" aria-label="Tok" options={PERIODS.slice(0, 2)} style={{ '--segmented-control-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} />);
+    expect(css(el('tok')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+});

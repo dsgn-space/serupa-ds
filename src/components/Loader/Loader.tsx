@@ -68,13 +68,17 @@ export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>("L
   const words = label || "Loading";   // the text variant always shows words; label="" only makes it decorative
   const delay = props.delay == null ? 300 : Math.max(0, Number(props.delay) || 0);
   const [shown, setShown] = React.useState(delay === 0);
+  const [wait] = React.useState(delay);   // the delay it mounted with: a later change doesn't restart the wait
   React.useEffect(function () {
     if (shown) return;
-    const t = setTimeout(function () { setShown(true); }, delay);
+    const t = setTimeout(function () { setShown(true); }, wait);
     return function () { clearTimeout(t); };
-  }, []);
+  }, [shown, wait]);
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
-  React.useEffect(function () { if (shown && label) announce(label); }, [shown]);
+  // Announced once, when it shows, with the label it has then (a later label change isn't announced again).
+  const latestLabel = React.useRef(label);
+  React.useEffect(function () { latestLabel.current = label; });
+  React.useEffect(function () { if (shown && latestLabel.current) announce(latestLabel.current); }, [shown]);
 
   rest["data-component"] = "loader";
   rest["data-variant"] = variant;

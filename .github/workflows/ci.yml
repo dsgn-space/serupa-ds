@@ -8,6 +8,12 @@ on:
   # request that a workflow opened or updated, and main needs these checks to merge it.
   workflow_dispatch:
 
+# A new push to a pull request cancels the run for the push before it, which nothing would read; runs on main
+# all finish, so every commit there keeps its result.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 # CI only reads the repository, so a bad test dependency can't push or change pull requests.
 permissions:
   contents: read
@@ -95,9 +101,14 @@ jobs:
         shell: bash
         env:
           SERUPA_SHARD: ${{ matrix.shard }}
+          # The component tests also measure coverage (coverage/, summed up on the run's summary page).
+          SERUPA_COVERAGE: ${{ matrix.group == 'components' && '1' || '' }}
         run: |
           set -o pipefail
           node tools/test/run.mjs --group ${{ matrix.group }} 2>&1 | tee test-output.txt
+      - name: Coverage summary
+        if: always() && matrix.group == 'components'
+        run: node tools/test/vitest/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
       - name: Show failures on the pull request
         if: failure()
         shell: bash

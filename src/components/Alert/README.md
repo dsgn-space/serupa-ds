@@ -41,7 +41,7 @@ const { Alert, Button } = window.Serupa;
 - The icon is decorative: the title or message must say what happened. Don't rely on the color alone.
 - The close button is a real button with a name, 24×24px.
 - In forced-colors mode the box gets a visible border and the icon a system color.
-- The title and message keep 4.5:1 and the icon 3:1 on every tone, in all six themes (`tools/test/alert.mjs`).
+- The title and message keep 4.5:1 and the icon 3:1 on every tone, in all six themes (`Alert.test.tsx`).
 
 ## Props
 

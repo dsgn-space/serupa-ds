@@ -16,15 +16,9 @@ const EXEMPT = {
 // Known gaps, to be fixed. The check fails when one is fixed, so the entry gets removed and can't come back.
 const GAPS = {};
 
-// Still tested by a script in tools/test/ instead of <Name>.test.tsx. They move over one at a time; when one
-// gets its own test file, take it off this list (the check fails until you do). Nothing new joins it.
-const SCRIPT_TESTED = ['Accordion', 'Alert', 'Avatar', 'AvatarGroup', 'Badge', 'Breadcrumb', 'Button', 'ButtonGroup', 'Calendar', 'Card', 'Carousel', 'Container', 'DatePicker', 'DateRangePicker', 'Dialog', 'Divider', 'Drawer', 'EmptyState', 'Fab', 'FileUpload', 'Grid', 'Heading', 'IconButton', 'Image', 'Kbd', 'Link', 'List', 'Loader', 'Navbar', 'NumberInput', 'Pagination', 'PasswordInput', 'Progress', 'Radio', 'SearchInput', 'SegmentedControl', 'Select', 'Sidebar', 'Slider', 'Stack', 'Stepper', 'Switch', 'Table', 'Tabs', 'Text', 'Textarea', 'TimePicker', 'Toast', 'ToggleButton', 'VisuallyHidden'];
-
 const COMP = path.join(PROJECT, 'src', 'components');
 const comps = fs.readdirSync(COMP).filter((c) => fs.statSync(path.join(COMP, c)).isDirectory() && !SKIP.includes(c)).sort();
 const kebab = (c) => c.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-const tests = fs.readdirSync(HERE).filter((f) => f.endsWith('.mjs'));
-const testSrc = tests.map((f) => fs.readFileSync(path.join(HERE, f), 'utf8')).join('\n');
 const { themes } = tokensCss();
 const baselines = new Set(fs.existsSync(path.join(HERE, 'baseline-visual')) ? fs.readdirSync(path.join(HERE, 'baseline-visual')) : []);
 
@@ -41,9 +35,7 @@ for (const c of comps) {
     docs: has(`${c}.mdx`),
     guide: has('README.md'),
     preview: has('preview.html'),
-    // Its own test file; components on the SCRIPT_TESTED list instead need a script that renders it (D.Name /
-    // Serupa.Name) or checks its classes (dk-name).
-    test: SCRIPT_TESTED.includes(c) ? new RegExp(`\\b(?:D|Serupa)\\.${c}\\b|\\bdk-${kebab(c)}\\b`).test(testSrc) : has(`${c}.test.tsx`),
+    test: has(`${c}.test.tsx`),
     visual: themes.every((th) => baselines.has(`${c}-${th}-rest.png`)),
   };
   const missing = [], fixed = [];
@@ -52,7 +44,7 @@ for (const c of comps) {
     if (GAPS[c]?.[part]) { if (ok) fixed.push(part); continue; }
     if (!ok) missing.push(part);
   }
-  const what = { code: `${c}.tsx`, css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: SCRIPT_TESTED.includes(c) ? 'a test in tools/test/ that renders it' : `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes (add the "update-visual-baselines" label)` };
+  const what = { code: `${c}.tsx`, css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes (add the "update-visual-baselines" label)` };
   t(`${c} has everything a component ships with`, !missing.length && !fixed.length,
     [missing.length && `missing: ${missing.map((p) => what[p]).join(', ')}`, fixed.length && `known gap now fixed, remove it from GAPS in contract.mjs: ${fixed.join(', ')}`].filter(Boolean).join('; '));
 }
@@ -63,8 +55,6 @@ const unshakeable = comps.flatMap((c) => fs.readdirSync(path.join(COMP, c)).filt
   .filter((f) => /^\w+\.displayName = |= React\.forwardRef\b/m.test(fs.readFileSync(path.join(COMP, c, f), 'utf8'))).map((f) => `${c}/${f}`));
 t('components are made with component() or named() (internal/component.ts), so unused ones drop out of a bundle', !unshakeable.length, unshakeable.join(', '));
 
-const moved = SCRIPT_TESTED.filter((c) => fs.existsSync(path.join(COMP, c, `${c}.test.tsx`)));
-t('components with their own test file are off the SCRIPT_TESTED list', !moved.length, `remove from SCRIPT_TESTED in contract.mjs: ${moved.join(', ')}`);
 
 console.log(`(${comps.length} components)`);
 process.exit(report('Contract', R) ? 0 : 1);

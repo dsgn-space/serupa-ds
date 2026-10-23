@@ -34,7 +34,7 @@ const { IconButton } = window.Serupa;
 
 - The label is the button's name: say what it does ("Delete file"), not what it shows ("Trash can").
 - Every size is at least 24×24px, the WCAG 2.2 target size.
-- The rest is Button's: focus ring, contrast, forced colors and reduced motion (`tools/test/button.mjs`); IconButton's own checks are in `tools/test/icon-button.mjs`.
+- The rest is Button's: focus ring, contrast, forced colors and reduced motion (checked in Button's tests); IconButton's own checks are in `IconButton.test.tsx`.
 
 ## Props
 

@@ -49,7 +49,7 @@ import { Avatar, AvatarGroup } from "serupa-ds";
 
 - **Role and name:** `role="group"`, named by `label`. Each avatar keeps its own name (and status), so a screen reader reads every person shown, then "N more".
 - **Keyboard:** nothing of its own. Avatars inside links or Tooltips are reached by Tab as usual.
-- **Contrast:** the "+N" text keeps 4.5:1 on its background in all six themes (`tools/test/avatar-group.mjs`).
+- **Contrast:** the "+N" text keeps 4.5:1 on its background in all six themes (`AvatarGroup.test.tsx`).
 - **What's still yours:** a `label` for the group, and a `name` on every Avatar.
 
 ## Props

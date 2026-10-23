@@ -84,18 +84,18 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   // The list is at least as wide as the field.
   useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + "px"; }, [open]);
   useAnchoredLayer(open, list, box, { placement: "bottom-start", offsetVar: "--dk-tp-offset", onOutside: () => setOpen(false), inside: box });
-  // Keep the active time in view.
+  // On open, the active time sits near the top; after that, moving keeps it in view.
+  const wasOpen = React.useRef(false);
   React.useEffect(() => {
-    if (!open || !list.current) return;
-    const o = list.current.children[active] as HTMLElement | undefined;
-    if (o) { const l = list.current; if (o.offsetTop < l.scrollTop) l.scrollTop = o.offsetTop; else if (o.offsetTop + o.offsetHeight > l.scrollTop + l.clientHeight) l.scrollTop = o.offsetTop + o.offsetHeight - l.clientHeight; }
+    if (!open) { wasOpen.current = false; return; }
+    const opening = !wasOpen.current;
+    wasOpen.current = true;
+    const l = list.current, o = l ? (l.children[active] as HTMLElement | undefined) : undefined;
+    if (!l || !o) return;
+    if (opening) l.scrollTop = Math.max(0, o.offsetTop - o.offsetHeight);
+    else if (o.offsetTop < l.scrollTop) l.scrollTop = o.offsetTop;
+    else if (o.offsetTop + o.offsetHeight > l.scrollTop + l.clientHeight) l.scrollTop = o.offsetTop + o.offsetHeight - l.clientHeight;
   }, [open, active]);
-  // On open, the active time sits near the top.
-  React.useEffect(() => {
-    if (!open || !list.current) return;
-    const o = list.current.children[active] as HTMLElement | undefined;
-    if (o) list.current.scrollTop = Math.max(0, o.offsetTop - o.offsetHeight);
-  }, [open]);
 
   const pick = (n: number) => { commit(n); setOpen(false); if (field.current) field.current.focus(); };
   const keys = (e: React.KeyboardEvent<HTMLInputElement>) => {

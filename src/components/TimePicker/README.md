@@ -40,7 +40,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 
 - The field is an ARIA combobox (`aria-haspopup="listbox"`, `aria-expanded`, `aria-activedescendant`) and the list a `role="listbox"` with `aria-selected` on the chosen time. The check is decorative.
 - The clock button is out of the tab order, since ↓ in the field does the same.
-- Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in all six themes (`tools/test/time-picker.mjs`).
+- Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in all six themes (`TimePicker.test.tsx`).
 
 ## Props
 

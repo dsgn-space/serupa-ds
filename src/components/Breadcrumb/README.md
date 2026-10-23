@@ -39,7 +39,7 @@ const { Breadcrumb, BreadcrumbItem } = window.Serupa;
 
 - It's a `<nav>` landmark named "Breadcrumb" holding an ordered list, so screen readers say how many levels there are. Give it another name if the page has two.
 - The current page has `aria-current="page"`. Separators are hidden from screen readers.
-- Links, the current page and separators keep 4.5:1 on `surface` in all six themes (`tools/test/breadcrumb.mjs`).
+- Links, the current page and separators keep 4.5:1 on `surface` in all six themes (`Breadcrumb.test.tsx`).
 - Links are underlined on hover only: their place in the trail and the chevrons already say they're links.
 
 ## Props

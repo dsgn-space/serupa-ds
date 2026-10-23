@@ -36,7 +36,7 @@ const [price, setPrice] = React.useState<number | null>(9.5);
 ## Accessibility
 
 - `role="spinbutton"` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. It's `type="text"` with `inputMode` numeric or decimal, which avoids the native number field's scroll-wheel and locale problems.
-- The − and + keep 3:1 and the number 4.5:1 on the field in all six themes (`tools/test/number-input.mjs`).
+- The − and + keep 3:1 and the number 4.5:1 on the field in all six themes (`NumberInput.test.tsx`).
 
 ### Keyboard
 

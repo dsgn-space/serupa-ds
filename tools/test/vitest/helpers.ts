@@ -1,3 +1,5 @@
+import { afterAll, beforeAll } from 'vitest';
+
 // Helpers for the component tests: resolved colors, WCAG contrast, and the six themes.
 export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'] as const;
 
@@ -48,3 +50,25 @@ export function css(el: Element | null): CSSStyleDeclaration {
 
 /** Waits for transitions to settle (the components animate colors for 150ms). */
 export const settle = (ms = 200) => new Promise((ok) => setTimeout(ok, ms));
+
+/**
+ * Runs fn with the page's motion back on (setup.ts turns transitions and animations off), for a test that reads
+ * which animation a part runs or watches it move. fn may be async; motion goes off again once it settles.
+ */
+export function withMotion<T>(fn: () => T): T {
+  const still = document.getElementById('serupa-still') as HTMLStyleElement | null;
+  const off = (on: boolean) => { if (still) still.disabled = on; };
+  off(true);
+  let r: T;
+  try { r = fn(); } catch (e) { off(false); throw e; }
+  if (r instanceof Promise) return r.finally(() => off(false)) as T;
+  off(false);
+  return r;
+}
+
+/** For a whole test file about motion (ripples, spinners, slides): keeps transitions and animations on throughout. */
+export function keepMotion(): void {
+  const still = () => document.getElementById('serupa-still') as HTMLStyleElement | null;
+  beforeAll(() => { const s = still(); if (s) s.disabled = true; });
+  afterAll(() => { const s = still(); if (s) s.disabled = false; });
+}

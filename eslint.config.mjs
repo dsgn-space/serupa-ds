@@ -26,7 +26,7 @@ export default tseslint.config(
     languageOptions: { globals: globals.browser },
     // The two classic hook rules only. Plugin 7's recommended set also turns on the React Compiler rules
     // (refs, immutability and others), which flag patterns the components use on purpose.
-    rules: { 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'warn' },
+    rules: { 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'error' },
   },
   {
     // The tests are Node scripts, but much of their code runs in the page (page.evaluate), where React,

@@ -42,7 +42,7 @@ const { Accordion, AccordionItem } = window.Serupa;
 - Up and Down move between titles (wrapping, skipping disabled ones), Home and End go to the first and last; Enter and Space open and close.
 - Closed content is hidden from everyone (`visibility: hidden`), so it's out of the tab order and screen readers skip it.
 - With `collapsible={false}` the open item's button has `aria-disabled`, since pressing it does nothing.
-- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in all six themes (`tools/test/accordion.mjs`). With reduced motion it opens without animating.
+- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in all six themes (`Accordion.test.tsx`). With reduced motion it opens without animating.
 
 ## Props
 

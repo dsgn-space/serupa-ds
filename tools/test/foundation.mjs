@@ -117,6 +117,7 @@ if (COMP.size) {
 // token's default (var(--card-text, var(--text))), so every color can be overridden per component. The few
 // documented exceptions are listed here, by file and token, with the reason.
 const PALETTE = new Set(groups.color.tokens.filter((x) => !ALIASES.has(x.name)).map((x) => x.name));
+/** @type {Array<[string, (name: string) => boolean, string]>} */
 const COLOR_DIRECT_ALLOWED = [
   ['Badge/Badge.css', (n) => PALETTE.has(n), 'status and palette tones use fixed palette steps checked for contrast (tools/test/badge.mjs), and the state layer is black or white'],
   ['Loader/Loader.css', (n) => n === 'secondary', "the skeleton's fill where color-mix() is missing (the fill is the text color at --loader-skeleton-fill)"],
@@ -190,6 +191,7 @@ const lum = (h) => {
   return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
 };
 const ratio = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
+/** @type {Array<[string, string, number]>} */
 const PAIRS = [['text', 'surface', 4.5], ['text', 'surface-muted', 4.5], ['text-muted', 'surface', 4.5], ['text-muted', 'surface-muted', 4.5],
   ['text-inverse', 'surface-inverse', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['on-danger', 'danger', 4.5], ['on-danger', 'danger-hover', 4.5], ['danger-text', 'surface', 4.5], ['danger-text', 'danger-subtle', 4.5],
