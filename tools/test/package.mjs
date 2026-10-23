@@ -8,7 +8,7 @@ import zlib from 'node:zlib';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import * as esbuild from 'esbuild';
-import { HERE, PROJECT, read, report } from './lib.mjs';
+import { HERE, PROJECT, done, read, report } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -150,4 +150,4 @@ t('bundle.css = components.css + utilities.css', body('dist/bundle.css') === bod
 t('components.css holds no utility classes (only dk-* and the keyframes they use)', !/^\.(?!dk-)[a-z]/m.test(body('dist/components.css').replace(/\/\*[\s\S]*?\*\//g, '')));
 t('the old bundle.js alias is gone (removed in 8.0.0)', !fs.existsSync(path.join(PROJECT, 'dist', 'bundle.js')));
 
-process.exit(report('Package', R) ? 0 : 1);
+done(report('Package', R));
