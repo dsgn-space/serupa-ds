@@ -1,11 +1,14 @@
-// npm run test:unit (once) or npm run test:watch: the component tests next to each component
-// (src/components/<Name>/<Name>.test.tsx), run in a real Chromium through Playwright so computed styles,
-// focus and keyboard behave as they do for people.
+// Two projects:
+// - components (npm run test:unit, or npm run test:watch): the tests next to each component
+//   (src/components/<Name>/<Name>.test.tsx), run in a real Chromium through Playwright so computed styles,
+//   focus and keyboard behave as they do for people.
+// - checks (npm run test:checks): the scripts in tools/test/ that check the package, tokens, icons, guides and
+//   API in Node, each result a test. Build first (npm run build). Each still runs alone with node, too.
 import fs from 'node:fs';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
-import { pointerDown, pointerDrag, pointerUp } from './tools/test/vitest/commands';
+import { pointerDown, pointerDrag, pointerUp } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
@@ -31,20 +34,37 @@ export default defineConfig({
     },
   }],
   test: {
-    include: ['src/**/*.test.tsx'],
-    setupFiles: ['./tools/test/vitest/setup.ts'],
-    browser: {
-      enabled: true,
-      headless: true,
-      provider: playwright(),
-      // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
-      // one file landed in the middle of a drag in another. One file at a time there.
-      fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
-      // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
-      instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
-      viewport: { width: 900, height: 700 },
-      commands: { pointerDrag, pointerDown, pointerUp },
-    },
+    projects: [{
+      extends: true,
+      test: {
+        name: 'components',
+        include: ['src/**/*.test.tsx'],
+        setupFiles: ['./tools/test/vitest/setup.ts'],
+        // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
+        // one file landed in the middle of a drag in another. One file at a time there.
+        fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
+        browser: {
+          enabled: true,
+          headless: true,
+          provider: playwright(),
+          // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
+          instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
+          viewport: { width: 900, height: 700 },
+          commands: { pointerDrag, pointerDown, pointerUp },
+        },
+      },
+    }, {
+      test: {
+        name: 'checks',
+        include: ['tools/test/*.mjs'],
+        // Shared code, the cross-browser comparison (npm run test:safari) and the visual and Storybook steps, which
+        // run.mjs shards across CI jobs.
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook}.mjs'],
+        environment: 'node',
+        // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
+        fileParallelism: false,
+      },
+    }],
     // npm run test:coverage: which lines of src/ the component tests run (V8, in Chromium), written to coverage/
     // (index.html to browse, coverage-summary.json for CI). Only the components with a <Name>.test.tsx count yet.
     coverage: {

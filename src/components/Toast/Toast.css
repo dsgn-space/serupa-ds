@@ -17,7 +17,7 @@
 .dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end { inset-block-end: var(--dk-toast-offset); }
 .dk-toaster--top-start, .dk-toaster--bottom-start { inset-inline-start: var(--dk-toast-offset); }
 .dk-toaster--top-end, .dk-toaster--bottom-end { inset-inline-end: var(--dk-toast-offset); }
-.dk-toaster--top-center, .dk-toaster--bottom-center { left: var(--spacing-0); right: var(--spacing-0); margin-inline: auto; }
+.dk-toaster--top-center, .dk-toaster--bottom-center { inset-inline: var(--spacing-0); margin-inline: auto; }
 .dk-toaster__list { display: flex; flex-direction: column; gap: var(--toast-stack-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-toast {
   box-sizing: border-box;

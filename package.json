@@ -35,6 +35,7 @@
     "./serupa.iife.js": "./dist/serupa.iife.js",
     "./serupa-icons.iife.js": "./dist/serupa-icons.iife.js",
     "./theme.js": "./dist/theme.js",
+    "./components.json": "./dist/components.json",
     "./design-tokens/*": "./design-tokens/*",
     "./fonts/*": "./fonts/*",
     "./package.json": "./package.json"
@@ -75,9 +76,10 @@
     "version-packages": "node tools/version.mjs",
     "release": "node tools/publish.mjs",
     "lint": "node tools/utilities/build.mjs && eslint . && stylelint \"src/**/*.css\" \".storybook/**/*.css\"",
-    "test:coverage": "vitest run --coverage",
-    "test:unit": "vitest run",
-    "test:watch": "vitest"
+    "test:coverage": "vitest run --project components --coverage",
+    "test:unit": "vitest run --project components",
+    "test:checks": "vitest run --project checks",
+    "test:watch": "vitest --project components"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -96,7 +98,7 @@
     "@typescript/typescript6": "6.0.2",
     "@vitest/browser-playwright": "5.0.5",
     "@vitest/coverage-v8": "5.0.5",
-    "esbuild": "^0.28.2",
+    "esbuild": "0.28.2",
     "eslint": "10.13.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.13.0",

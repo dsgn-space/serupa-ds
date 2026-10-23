@@ -9,15 +9,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { projectArg, report, done } from './lib.mjs';
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const P = path.resolve(process.argv[2] || path.join(HERE, '..', '..'));
+const P = projectArg();
 const BUILD = path.join(P, 'tools', 'icons', 'build.mjs');
 const B = await import(BUILD);
 
 const results = [];
-const check = (name, ok, detail = '') => results.push([name, !!ok, detail]);
+const check = (name, ok, detail = '') => results.push({ name, ok: !!ok, detail });
 const svg = (inner, attrs = 'viewBox="0 0 24 24"') => `<svg xmlns="http://www.w3.org/2000/svg" ${attrs}>${inner}</svg>`;
 const accepts = (src, name = 'test-icon') => {
   try { return [B.clean(src, name), null]; } catch (e) { if (e instanceof B.IconError) return [null, e.message]; throw e; }
@@ -139,7 +138,4 @@ if (fs.existsSync(src)) {
   check('assets/Icons and the components are in step', r.status === 0, r.stdout + r.stderr);
 }
 
-const failed = results.filter(([, ok]) => !ok);
-for (const [name, ok, detail] of results) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${ok || !detail ? '' : `\n      ${detail}`}`);
-console.log(`\nIcon builder: ${results.length - failed.length}/${results.length} passed`);
-process.exit(failed.length ? 1 : 0);
+done(report('Icon builder', results));

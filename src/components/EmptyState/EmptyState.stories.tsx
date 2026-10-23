@@ -30,3 +30,15 @@ export const NoResults: Story = {
 };
 
 export const Dashed: Story = { args: { variant: 'dashed', icon: 'upload', title: 'Drop files here', description: 'PNG, JPG or PDF, up to 10 MB.', actions: <Button variant="outline">Choose files</Button> } };
+
+export const Small: Story = { args: { size: 'sm' } };
+
+export const TextOnly: Story = {
+  name: 'Text only',
+  args: { icon: undefined, actions: undefined, title: 'Nothing here', description: 'Items you archive show up here.' },
+};
+
+export const DashedSmall: Story = {
+  name: 'Dashed, small',
+  args: { variant: 'dashed', size: 'sm', icon: 'add_photo_alternate', title: 'Add a cover image', description: undefined, actions: <Button variant="outline" size="sm">Upload</Button> },
+};

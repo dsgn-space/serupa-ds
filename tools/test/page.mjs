@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { PROJECT, writePage, browser, cleanup, report } from './lib.mjs';
+import { PROJECT, writePage, browser, cleanup, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -118,6 +118,38 @@ for (const scheme of ['light', 'dark']) {
   }
 }
 
+// 5. serupa-purge --components: each component's preview, named as its only source, renders identically with the
+// styles of every component it doesn't name dropped (components.json says which ones it needs)
+{
+  const dir = path.join(PROJECT, '.test-tmp');
+  const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((c) => fs.existsSync(path.join(PROJECT, 'src', 'components', c, 'preview.html')));
+  const styles = async (url) => {
+    const p = await b.newPage({ viewport: { width: 1000, height: 700 } });
+    await p.goto(url);
+    await p.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+    await p.waitForTimeout(150);   // previews that open a popover do it on a 50 ms timer
+    const r = await p.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e); const o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return e.className + ' ' + o.sort().join(';'); }));
+    await p.close(); return r;
+  };
+  let full = 0, small = 0;
+  for (const c of comps) {
+    const src = path.join(PROJECT, 'src', 'components', c, 'preview.html');
+    const html = fs.readFileSync(src, 'utf8');
+    const head = (html.match(/<style>[\s\S]*?<\/style>/) || [''])[0] + '<style>*{animation:none!important;transition:none!important}</style>';
+    const body = html.slice(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
+    const out = path.join(dir, `purge-${c}.css`);
+    execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), src, '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css'), '--components'], { stdio: 'ignore' });
+    const keptOnly = execFileSync(process.execPath, ['-e', `process.stdout.write(String(require('fs').statSync(${JSON.stringify(out)}).size))`]).toString();
+    const a = await styles(writePage(`pc-full-${c}.html`, body, { react: true, extraHead: head }));
+    const z = await styles(writePage(`pc-min-${c}.html`, body, { react: true, extraHead: head, bundle: `purge-${c}.css` }));
+    const d = []; a.forEach((x, i) => { if (x !== z[i]) { const A = x.split(';'), Z = (z[i] || '').split(';'); A.forEach((y, j) => { if (y !== Z[j]) d.push(`${i} ${y} ≠ ${Z[j]}`); }); } });
+    if (a.length !== z.length) d.unshift(`${a.length} elements with the full CSS, ${z.length} with the trimmed`);
+    full += fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size; small += Number(keptOnly);
+    t(`serupa-purge --components: ${c}'s preview renders identically`, !d.length, d.slice(0, 3).join(' | '));
+  }
+  t(`serupa-purge --components: ${comps.length} previews average ${(small / comps.length / 1024).toFixed(0)} KB of CSS`, small < full);
+}
+
 await b.close();
 cleanup();
-process.exit(report('Page groundwork', R) ? 0 : 1);
+done(report('Page groundwork', R));

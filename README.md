@@ -85,7 +85,11 @@ npx serupa-purge src -o public/bundle.min.css
 
 It reads the installed `bundle.css` (or `--css <file>`); name classes your code builds at runtime with `--keep`.
 
-That keeps the component styles (about 220 KB) and only the utility classes your code uses.
+That keeps the component styles (about 220 KB) and only the utility classes your code uses. Add `--components` to also drop the styles of components your code never names: an app that only uses Button gets about 48 KB instead of 189 KB. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
+
+```sh
+npx serupa-purge src -o public/bundle.min.css --components
+```
 
 ### What's in the package
 

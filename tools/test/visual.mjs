@@ -9,8 +9,8 @@
 // Left out: the Playground stories (the default story with Storybook's controls, which another story shows), the
 // components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file).
 // Hover and focus act on the element a story marks with data-visual-target (both states), or
-// data-visual-target="hover" / ="focus" (one each); without one, on the story's first enabled button, link or
-// field. Focus comes from pressing Tab until it lands there, so :focus-visible applies.
+// data-visual-target="hover" / ="focus" (one each); without one, hover is on the story's first enabled button, link
+// or field, and focus wherever the first Tab lands. Focus comes from pressing Tab, so :focus-visible applies.
 // Small anti-aliasing differences between machines are tolerated (TOLERANCE of pixels may differ).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -102,11 +102,14 @@ for (const e of stories) {
       if (notReady) { R.push({ name, ok: false, detail: notReady }); continue; }
       if (state !== 'rest') {
         // What to hover and focus: the element marked data-visual-target="hover" / ="focus" for this state, else the one
-        // marked data-visual-target, else the story's first enabled control. A story with none gets no hover or focus shot.
+        // marked data-visual-target, else the story's first enabled control (for focus, wherever the first Tab lands in
+        // the story, since a radio group or tab list puts its Tab stop on the checked item). A story with none gets no
+        // hover or focus shot.
         let el = page.locator(`#storybook-root [data-visual-target="${state}"]`).first();
         if (!(await el.count())) el = page.locator('#storybook-root [data-visual-target]:not([data-visual-target="hover"], [data-visual-target="focus"])').first();
         if (!(await el.count())) el = page.locator('#storybook-root :is(button, a[href], input, select, textarea, [tabindex="0"]):not(:disabled, [aria-disabled="true"]):visible').first();
         if (!(await el.count())) continue;
+        if (state === 'focus' && !(await el.evaluate((n) => n.closest('[data-visual-target]')))) el = page.locator('#storybook-root');
         if (state === 'hover') await el.hover({ timeout: 5000 }).catch(() => {});
         else if (!(await tabTo(el))) {
           R.push({ name, ok: false, detail: 'Tab never reaches the element to focus; mark one that takes keyboard focus with data-visual-target, or tag the story "!visual"' });
