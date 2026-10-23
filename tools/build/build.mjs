@@ -5,6 +5,7 @@
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
+//   components.json        each component's exports, CSS classes and the components it needs (for serupa-purge --components)
 //   lib/                   React for plain pages: react.production.min.js sets window.React, and
 //                          react-dom.production.min.js sets window.ReactDOM (react-dom and react-dom/client)
 //   node tools/build/build.mjs [--css]     --css skips the JavaScript (tsup) step
@@ -44,6 +45,33 @@ fs.writeFileSync(path.join(D, 'components.css'), banner('components') + componen
 fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + utilities);
 fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + components + utilities);
 fs.copyFileSync(path.join(P, 'src', 'styles', 'base.css'), path.join(D, 'base.css'));
+
+// components.json: for each component, the names it exports, the dk-* classes its CSS uses and the components it
+// needs (the ones it imports, and the ones whose classes it writes out). serupa-purge --components reads it to
+// drop the styles of components a project never uses.
+const cssOf = Object.fromEntries(IMPORTS.map((n) => [n, read(`src/components/${n}/${n}.css`)]));
+const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(dk-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
+const tsxOf = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
+const manifest = {};
+for (const n of IMPORTS) {
+  const code = tsxOf(n);
+  const exports = [...new Set([...code.matchAll(/^export (?:const|function|class) (\w+)/gm)].map((m) => m[1]))].sort();
+  const imported = [...code.matchAll(/from ["']\.\.\/(\w+)\//g)].map((m) => m[1]);
+  // A class written out in the code ("dk-btn", or a "dk-btn--" prefix) belongs to the first component in the cascade
+  // whose CSS has it: a component's own styles come before the ones that style it in context (index.css).
+  const written = [...new Set([...code.matchAll(/dk-[a-z0-9_-]+/g)].map((m) => m[0]))];
+  const owners = written.flatMap((w) => IMPORTS.filter((o) => classesOf[o].some((c) => c === w || (w.endsWith('-') && c.startsWith(w)))).slice(0, 1));
+  manifest[n] = { exports, uses: [...new Set([...imported, ...owners])].filter((u) => u !== n && IMPORTS.includes(u)).sort(), classes: classesOf[n] };
+}
+// Utility classes the components put on elements themselves (the announcer's sr-only): serupa-purge keeps them
+// whatever the sources use. Any word in a string in src/ that names a utility class counts, which keeps a few extra
+// ("hidden" from type="hidden"), never too few.
+const code = [];
+const scan = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) scan(f); else if (/\.tsx?$/.test(e.name) && !/\.(test|stories)\.tsx?$/.test(e.name)) code.push(fs.readFileSync(f, 'utf8')); } };
+scan(path.join(P, 'src'));
+const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')));
+const runtimeUtilities = [...new Set(code.join('\n').match(/["'`][^"'`\n]*["'`]/g)?.flatMap((q) => q.slice(1, -1).split(/\s+/)) || [])].filter((w) => /^[a-z]/.test(w) && utilityNames.has(w)).sort();
+fs.writeFileSync(path.join(D, 'components.json'), JSON.stringify({ version, runtimeUtilities, components: manifest }, null, 1) + '\n');
 fs.copyFileSync(path.join(P, 'src', 'theme.js'), path.join(D, 'theme.js'));
 
 // React 19 ships no browser builds (React 18's umd/ folder), so they're built here, under the names and globals
