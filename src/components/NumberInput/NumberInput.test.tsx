@@ -105,6 +105,37 @@ describe('NumberInput', () => {
     expect([up, field('dec').value, field('dec').inputMode]).toEqual(['1.75', '2.33', 'decimal']);
   });
 
+  test('locale: 1.500 is 1500 in id-ID and 1,500 is 1500 in en-US; "9,5" shows as 9,5 in de-DE and 9.5 in en-US after blur; 1 000 is read in fr-FR', async () => {
+    const calls: string[] = [];
+    await render(<Col>{(['id-ID', 'en-US', 'de-DE', 'fr-FR'] as const).map((l) => <NumberInput key={l} id={l} aria-label={l} locale={l} step={0.1} onValueChange={(n) => calls.push(l + ' ' + n)} />)}</Col>);
+    await fill('id-ID', '1.500'); await blur('id-ID');
+    await fill('en-US', '1,500'); await blur('en-US');
+    expect([field('id-ID').value, field('en-US').value, field('id-ID').getAttribute('aria-valuenow')]).toEqual(['1500', '1500', '1500']);
+    await fill('de-DE', '9.5'); await blur('de-DE');
+    await fill('en-US', '9,5'); await blur('en-US');
+    await fill('fr-FR', '1 000,5'); await blur('fr-FR');
+    expect([field('de-DE').value, field('en-US').value, field('fr-FR').value]).toEqual(['9,5', '9.5', '1000,5']);
+    expect(calls.at(-1)).toBe('fr-FR 1000.5');
+  });
+
+  test('formatOptions: IDR currency shows "Rp 1.500" with an aria-valuetext, reads "2.000" back, and ArrowUp steps from it; percent shows 15% for 0.15', async () => {
+    const calls: Array<number | null> = [];
+    await render(<Col>
+      <NumberInput id="price" aria-label="Price" locale="id-ID" step={500} defaultValue={1500} formatOptions={{ style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="rate" aria-label="Rate" locale="en-US" step={0.01} defaultValue={0.15} formatOptions={{ style: 'percent' }} onValueChange={(n) => calls.push(n)} />
+    </Col>);
+    const rp = (t: string) => t.replace(/\s/g, ' ');
+    expect(rp(field('price').value)).toBe('Rp 1.500');
+    expect(rp(field('price').getAttribute('aria-valuetext')!)).toBe('Rp 1.500');
+    await fill('price', '2.000'); await blur('price');
+    expect(rp(field('price').value)).toBe('Rp 2.000');
+    await userEvent.click(field('price')); await userEvent.keyboard('{ArrowUp}');
+    expect(rp(field('price').value)).toBe('Rp 2.500');
+    expect(field('rate').value).toBe('15%');
+    await fill('rate', '20'); await blur('rate');
+    expect([field('rate').value, calls.at(-1)]).toEqual(['20%', 0.2]);
+  });
+
   test('steppers={false}: no buttons', async () => {
     await render(<NumberInput id="bare" aria-label="Bare" steppers={false} />);
     expect(field('bare').parentElement!.querySelector('.dk-number-input__steppers')).toBe(null);

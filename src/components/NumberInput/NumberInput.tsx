@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { formatNumber, parseNumber } from "../../internal/numbers";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -26,18 +27,23 @@ export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "d
   /** The buttons' names. Default: "Decrease" and "Increase". */
   decrementLabel?: string;
   incrementLabel?: string;
+  /** The locale whose decimal and group marks are read and written ("1.500,25" in id-ID). Default: the browser's. */
+  locale?: string;
+  /** How the number is shown, as Intl.NumberFormat options: `{ style: "currency", currency: "IDR" }`, `{ useGrouping: true }`,
+      or the percent style (the value is the fraction: 0.15 shows 15%). Default: no grouping and every decimal the value has. */
+  formatOptions?: Intl.NumberFormatOptions;
 }
 
 const decimals = (n: number) => { const s = String(n); const i = s.indexOf("."); return i < 0 ? 0 : s.length - i - 1; };
 
 /* NumberInput: a field for a number, with − and + buttons at the end. role="spinbutton" with aria-valuenow,
    min and max. ArrowUp and ArrowDown change it by step, PageUp, PageDown and Shift+arrows by largeStep steps,
-   Home and End go to min and max. People can type freely; on blur the text is parsed, clamped to min..max and
-   rounded to the step's decimals. It uses Input's box and tokens: className and style go to the box; ref and
+   Home and End go to min and max. People can type freely, in the locale's marks ("1.500" is 1500 in id-ID); on blur
+   the text is parsed, clamped to min..max, rounded to the step's decimals and written back in the locale's form. It uses Input's box and tokens: className and style go to the box; ref and
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
 export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>("NumberInput", function NumberInput(props, ref) {
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
@@ -49,7 +55,10 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const controlled = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<number | null>(props.defaultValue ?? null);
   const value = controlled ? (props.value ?? null) : ownValue;
-  const show = (v: number | null) => (v == null ? "" : String(v));
+  const { locale, formatOptions } = props;
+  // What the shown number is multiplied by: 100 for the percent style, 1 otherwise.
+  const scale = formatOptions ? parseNumber(formatNumber(1, locale, formatOptions), locale) || 1 : 1;
+  const show = (v: number | null) => (v == null ? "" : formatNumber(v, locale, formatOptions));
   const [text, setText] = React.useState(show(value));
   const focused = React.useRef(false);
   React.useEffect(() => { if (!focused.current) setText(show(value)); }, [value]);
@@ -63,10 +72,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     return n;
   };
   const parse = (s: string): number | null | undefined => {   // undefined: not a number (yet)
-    const t = s.trim().replace(/−/g, "-").replace(",", ".");
-    if (t === "") return null;
-    const n = Number(t);
-    return t !== "-" && t !== "." && isFinite(n) ? n : undefined;
+    const n = parseNumber(s, locale);
+    return n != null && scale !== 1 ? n / scale : n;
   };
   const commit = (v: number | null) => {
     if (!controlled) setOwnValue(v);
@@ -117,7 +124,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
       {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
       <input {...rest} ref={(n) => { el.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
         type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? "decimal" : "numeric")}
-        role="spinbutton" aria-valuenow={now ?? undefined} aria-valuemin={min} aria-valuemax={max}
+        role="spinbutton" aria-valuenow={now ?? undefined} aria-valuetext={formatOptions && now != null ? formatNumber(now, locale, formatOptions) : undefined} aria-valuemin={min} aria-valuemax={max}
         autoComplete={rest.autoComplete || "off"} className="dk-input__field" value={text}
         onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} onFocus={(e) => { focused.current = true; if (rest.onFocus) rest.onFocus(e); }} />
       {props.steppers !== false ? (
