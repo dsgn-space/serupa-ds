@@ -29,7 +29,7 @@ const { Fab } = window.Serupa;
 ## Accessibility
 
 - It's a real `<button>` named by `label`. Put it where it comes in the reading order (often after the main content), since it's fixed but still focused in source order.
-- `shadow-lg` at rest and `shadow-xl` on hover lift it off the page; the colors and focus ring are Button's primary (`Button.test.tsx`, `Fab.test.tsx`).
+- `shadow-lg` at rest and `shadow-xl` on hover lift it off the page; the colors and focus ring are Button's primary (checked in Button's tests and `Fab.test.tsx`).
 
 ## Props
 
