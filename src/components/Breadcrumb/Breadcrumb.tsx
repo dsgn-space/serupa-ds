@@ -1,6 +1,8 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { asIcon, Icon, type IconSource } from "../Icon/Icon";
+import { Icon, type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {

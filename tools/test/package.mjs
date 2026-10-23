@@ -5,9 +5,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import * as esbuild from 'esbuild';
-import { PROJECT, read, report } from './lib.mjs';
+import { HERE, PROJECT, read, report } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -116,13 +117,25 @@ if (D) {
   // Icons: the ones the components use are in index.js and draw on the server; the full set is a separate chunk.
   const iconHtml = (name) => renderToString(h(D.Icon, { name }));
   t('a built-in icon ("close") draws on the server; another name ("sports_cricket") keeps its empty box until the full set loads', /<path d="/.test(iconHtml('close')) && !/<svg/.test(iconHtml('sports_cricket')), iconHtml('sports_cricket'));
-  const indexJs = read('dist/index.js');
+  // index.js and every module it imports (dist/js/), as a bundler puts them together, without the full icon set.
+  const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js'], logLevel: 'silent' }).outputFiles[0].text;
   t('index.js leaves the full icon set out (loaded on demand) and stays under 150 KB gzipped', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 150 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by component() or named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
-  const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './icons-*'], logLevel: 'silent' }).outputFiles[0].contents).length;
+  const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
   const shaken = { Divider: alone('Divider'), toast: alone('toast') };
   t('a bundler drops the components a project doesn\'t import (Divider or toast alone: under 2 KB gzipped)', shaken.Divider < 2048 && shaken.toast < 2048, JSON.stringify(shaken));
+  // React Server Components: the interactive components are client modules ("use client"), the rest render on the
+  // server, and the helpers run there (tools/test/server-components/render.mjs).
+  const rsc = spawnSync(process.execPath, ['--conditions=react-server', path.join(HERE, 'server-components', 'render.mjs'), path.join(PROJECT, 'dist')], { encoding: 'utf8' });
+  let sc = null;
+  try { sc = JSON.parse(rsc.stdout); } catch { /* reported below */ }
+  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 KB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
+  // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
+  const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\bon[A-Z]\w*=\{/;
+  const unmarked = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
+    .filter((f) => { const src = read(`src/components/${f}`); return clientOnly.test(src) && !/^"use client";/.test(src); });
+  t('every component module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));
   t('buttonClass and configure are exported', D.buttonClass({ variant: 'outline' }) === 'dk-btn dk-btn--outline dk-btn--size-md' && typeof D.configure === 'function');
 }
 

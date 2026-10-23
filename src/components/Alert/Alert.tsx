@@ -1,6 +1,8 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
-import { Icon, asIcon, type IconSource } from "../Icon/Icon";
+import { Icon, type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { Button } from "../Button/Button";
 import { component } from "../../internal/component";
 
