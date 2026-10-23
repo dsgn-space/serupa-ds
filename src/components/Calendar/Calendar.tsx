@@ -3,7 +3,6 @@ import { cn, domId, omit } from "../../internal/cn";
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from "../../internal/dates";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
-import { component } from "../../internal/component";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. */
@@ -50,7 +49,7 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMont
    Shift, a year), Enter or Space picks. Moving past the month shows the next one. Days outside min..max or
    refused by isDateDisabled are aria-disabled and can't be picked. Month and weekday names follow the locale. */
 /** A month of days to pick one from, with keyboard navigation; used by DatePicker. */
-export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>("Calendar", function Calendar(props, ref) {
+export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(function Calendar(props, ref) {
   const rest = omit(props, OWN);
   const locale = props.locale;
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
@@ -67,8 +66,14 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
 
   const disabled = (d: Date) => (props.min && compare(d, props.min) < 0) || (props.max && compare(d, props.max) > 0) || (props.isDateDisabled ? props.isDateDisabled(d) : false);
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
-  // Keep the focused day inside the shown month when the month changes from outside or by the buttons.
-  React.useEffect(() => { if (!sameMonth(focus, month)) setFocus(value && sameMonth(value, month) ? value : sameMonth(today, month) ? today : month); }, [month.getTime()]);
+  // Keep the focused day inside the shown month when the month changes from outside or by the buttons
+  // (adjusted during render, so the new month never draws without its Tab stop).
+  const monthTime = month.getTime();
+  const [focusMonth, setFocusMonth] = React.useState(monthTime);
+  if (focusMonth !== monthTime) {
+    setFocusMonth(monthTime);
+    if (!sameMonth(focus, month)) setFocus(value && sameMonth(value, month) ? value : sameMonth(today, month) ? today : month);
+  }
   React.useEffect(() => {
     if (!wantFocus.current || !grid.current) return;
     wantFocus.current = false;
@@ -149,3 +154,4 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
     </div>
   );
 });
+Calendar.displayName = "Calendar";

@@ -52,7 +52,7 @@ const [due, setDue] = React.useState<Date | null>(null);
   | Escape | Closes the calendar and returns focus to the field. |
 
 - **ARIA states:** the button has `aria-haspopup="dialog"` and `aria-expanded`; the popup is a `role="dialog"` in the top layer holding a Calendar.
-- **Contrast:** the calendar icon keeps 3:1 on the field in all six themes (`tools/test/date-picker.mjs`).
+- **Contrast:** the calendar icon keeps 3:1 on the field in all six themes (`DatePicker.test.tsx`).
 - **What's still yours:** the label, and the format in the hint.
 
 ## Props
