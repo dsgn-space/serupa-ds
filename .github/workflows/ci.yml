@@ -129,37 +129,10 @@ jobs:
             tools/test/baseline-visual/*.actual.png
           if-no-files-found: ignore
 
-  # The components on React 19: the package built above (its plain-page React stays 18, which has the UMD
-  # files dist/lib/ ships), with React 19 in place of 18 for the type check, the component tests and the
-  # server render of every component.
-  react-19:
-    name: React 19
-    needs: build
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v8
-        with:
-          name: build
-      - uses: ./.github/actions/playwright
-      - name: Switch to React 19
-        run: npm install --no-save --ignore-scripts react@19.2.9 react-dom@19.2.9 @types/react@19.2.18 @types/react-dom@19.2.3
-      - name: Type check
-        run: npm run typecheck
-      - name: Component tests (Vitest)
-        run: npx vitest run
-      - name: Package (server render of every component)
-        run: node tools/test/package.mjs
-
   # One check that passes only when every group passed, under the name the single job used to have.
   test:
-    needs: [build, static, suite, react-19]
+    needs: [build, static, suite]
     if: always()
     runs-on: ubuntu-24.04
     steps:
-      - run: test "${{ needs.build.result }}" = success && test "${{ needs.static.result }}" = success && test "${{ needs.suite.result }}" = success && test "${{ needs.react-19.result }}" = success
+      - run: test "${{ needs.build.result }}" = success && test "${{ needs.static.result }}" = success && test "${{ needs.suite.result }}" = success

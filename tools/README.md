@@ -11,7 +11,7 @@ npm install                       # the build (tsup, TypeScript), React, Playwri
 npx playwright install chromium   # add firefox webkit to run the suite in those too
 ```
 
-Node 24 (`.nvmrc`; 22.18 or later works). Dependencies are pinned to exact versions; Dependabot (`.github/dependabot.yml`) opens grouped update pull requests every Monday, for npm and the GitHub Actions, and CI decides whether each one lands. CodeQL (`.github/workflows/codeql.yml`) scans the code and the workflows on every pull request and weekly. Nothing else: Python is only needed to rebuild the Material Symbols from the font (`tools/icons/material.py`), which the font never changing makes rare.
+Node 26 (`.nvmrc`), which the package also requires (`engines`). TypeScript 7 type-checks the code (`npm run typecheck`). It has no compiler API yet, so the tools that load TypeScript as a library (typescript-eslint, tsup's `index.d.ts` bundling, the Public API check) get TypeScript 6's from `@typescript/typescript6`, the TypeScript team's package for this: `tools/typescript/api.mjs` points their `typescript` imports there. Drop it once they support TypeScript 7. Dependencies are pinned to exact versions; Dependabot (`.github/dependabot.yml`) opens grouped update pull requests every Monday, for npm and the GitHub Actions, and CI decides whether each one lands. CodeQL (`.github/workflows/codeql.yml`) scans the code and the workflows on every pull request and weekly. Nothing else: Python is only needed to rebuild the Material Symbols from the font (`tools/icons/material.py`), which the font never changing makes rare.
 
 ## Build
 

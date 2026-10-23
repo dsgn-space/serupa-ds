@@ -1,4 +1,5 @@
 // npm run lint: ESLint for the TypeScript, the stories and the tools (Stylelint checks the CSS).
+import './tools/typescript/api.mjs';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
