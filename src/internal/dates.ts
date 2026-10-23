@@ -1,3 +1,5 @@
+import { latinDigits } from "./digits";
+
 // Calendar dates without times: local midnight, so days compare and step reliably across daylight saving.
 
 export const day = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -45,17 +47,6 @@ function numeric(locale?: string): Intl.DateTimeFormat {
   if (!f) numericFormats.set(key, f = new Intl.DateTimeFormat(locale, { year: "numeric", month: "2-digit", day: "2-digit", calendar: "gregory", numberingSystem: "latn" }));
   return f;
 }
-/** Any decimal digits (Arabic-Indic ٢٢, Persian ۲۲, Bengali ২২, Thai ๒๒, full-width ２２) as ASCII. */
-export function latinDigits(text: string): string {
-  return text.replace(/\p{Nd}/gu, (c) => {
-    const cp = c.codePointAt(0)!;
-    if (cp < 128) return c;
-    let zero = cp;
-    while (/\p{Nd}/u.test(String.fromCodePoint(zero - 1))) zero--;
-    return String((cp - zero) % 10);
-  });
-}
-
 /** The order and separators of a short numeric date in the locale: ["month", "day", "year"] for en-US. */
 export function dateOrder(locale?: string): ("day" | "month" | "year")[] {
   const parts = numeric(locale).formatToParts(new Date(2001, 10, 22));

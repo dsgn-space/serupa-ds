@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { datePattern, formatDate, latinDigits, parseDate } from './dates';
+import { datePattern, formatDate, parseDate } from './dates';
+import { latinDigits } from './digits';
 
 const LOCALES = ['th', 'th-TH-u-nu-thai', 'ja-u-ca-japanese', 'fa', 'ar-EG', 'ar-SA', 'bn', 'hi-IN-u-nu-deva', 'id', 'de', 'en-US', 'en-GB', 'ko', 'zh-CN'];
 const DAYS = [new Date(2001, 10, 22), new Date(2025, 0, 5), new Date(2024, 1, 29), new Date(1999, 11, 31)];
