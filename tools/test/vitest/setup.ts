@@ -7,7 +7,7 @@ import { afterEach } from 'vitest';
 afterEach(() => { document.documentElement.setAttribute('data-theme', 'blue-light'); });
 document.documentElement.setAttribute('data-theme', 'blue-light');
 // No transitions or animations: a test reads the end state, which Firefox and WebKit can otherwise still be
-// easing towards. Motion itself is tested by the suites in tools/test/ (button-motion.mjs and others).
+// easing towards. Tests about motion turn it back on with keepMotion() or withMotion() (helpers.ts).
 const still = document.createElement('style');
 still.id = 'serupa-still';
 still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';

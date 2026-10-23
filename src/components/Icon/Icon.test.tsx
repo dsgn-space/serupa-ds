@@ -28,4 +28,10 @@ describe('Icon', () => {
     expect(document.querySelector('#unknown svg')).toBeNull();
     warn.mockRestore();
   });
+
+  test('a decorative Icon is aria-hidden; with aria-label it is role="img"', async () => {
+    await render(<><Icon id="deco" name="home" /><Icon id="meaning" name="error" aria-label="Error" /></>);
+    expect(document.getElementById('deco')!.getAttribute('aria-hidden')).toBe('true');
+    expect(document.getElementById('meaning')!.getAttribute('role')).toBe('img');
+  });
 });

@@ -90,8 +90,11 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
   const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   const wasLoading = React.useRef(false);
+  // Announced when loading starts, with the text it has then (a later loadingText change isn't announced again).
+  const latestText = React.useRef(loadingText);
+  React.useEffect(function () { latestText.current = loadingText; });
   React.useEffect(function () {
-    if (loading && !wasLoading.current && loadingText) announce(loadingText);
+    if (loading && !wasLoading.current && latestText.current) announce(latestText.current);
     wasLoading.current = loading;
   }, [loading]);
 
