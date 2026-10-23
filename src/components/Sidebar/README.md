@@ -51,7 +51,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 - A group is a button with `aria-expanded` and `aria-controls`.
 - Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus. Use a string `label` so the tooltip can show it.
 - In a collapsed rail, a group's menu shows its items as plain links (`href`); a router `as` there falls back to a normal page load.
-- Items, the current page, hovered items and section titles keep 4.5:1 in all six themes (`tools/test/sidebar.mjs`).
+- Items, the current page, hovered items and section titles keep 4.5:1 in all six themes (`Sidebar.test.tsx`).
 
 ## Props
 
