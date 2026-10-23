@@ -1,9 +1,11 @@
+"use client";
 import * as React from "react";
 import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { type Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { asIcon, type IconSource } from "../Icon/Icon";
+import { type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { component, named } from "../../internal/component";
 
 /** The trigger element's props this component reads and adds to. */

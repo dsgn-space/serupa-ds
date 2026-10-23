@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, SIZES } from "../../internal/cn";
 import { addMonths, compare, datePattern, day, formatDate, isoDate, isValid, parseDate, sameDay, startOfMonth } from "../../internal/dates";

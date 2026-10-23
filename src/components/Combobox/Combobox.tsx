@@ -1,7 +1,9 @@
+"use client";
 import * as React from "react";
 import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { asIcon, Icon } from "../Icon/Icon";
+import { Icon } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";

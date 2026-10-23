@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../internal/times";

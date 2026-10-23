@@ -1,10 +1,12 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
-import { Icon, asIcon, type IconSource } from "../Icon/Icon";
+import { Icon, type IconSource } from "../Icon/Icon";
+import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
 import { component } from "../../internal/component";
 

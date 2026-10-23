@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { config } from "../../internal/config";

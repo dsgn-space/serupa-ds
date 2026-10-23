@@ -1,5 +1,7 @@
 // npm run build: everything a project installs, into dist/ (never edited or committed).
-//   index.js, index.d.ts   the components as ES modules, with types (React is a peer dependency)
+//   index.js, index.d.ts   the components as ES modules, with types (React is a peer dependency): index.js and
+//                          icons.js re-export js/, which has one module per source file, so each interactive
+//                          component keeps its "use client" and works from React Server Components
 //   serupa.iife.js           the browser script: reads window.React, sets window.Serupa
 //   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
@@ -32,6 +34,7 @@ if (!process.argv.includes('--css')) {
   // tsup reads tsconfig.json and bundles index.d.ts with TypeScript's compiler API: TypeScript 6's (tools/typescript/api.mjs).
   const r = spawnSync(process.execPath, ['--import', path.join(P, 'tools', 'typescript', 'api.mjs'), path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: 'inherit' });
   if (r.status !== 0) process.exit(r.status || 1);
+  await buildModules();
 }
 
 const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !IMPORTS.includes(n));
@@ -91,3 +94,34 @@ for (const { file, contents, plugins } of libs) await build({
   minify: true, legalComments: 'inline', define: { 'process.env.NODE_ENV': '"production"' }, plugins, outfile: path.join(D, 'lib', file), logLevel: 'warning',
 });
 console.log(`Built dist/ (v${version})`);
+
+// dist/js/: every source file as its own ES module (src/components/Button/Button.tsx → js/components/Button/Button.js),
+// imports kept as imports. Bundled into one file, React Server Components would see one module: either all of it a
+// client module, so buttonClass() and paginationRange() couldn't run on the server, or none of it, so no
+// interactive component could be used there. Kept apart, each file carries its own "use client" (or none), and a
+// project's bundler still drops the components it doesn't import.
+async function buildModules() {
+  const SRC = path.join(P, 'src');
+  const entries = fs.readdirSync(SRC, { recursive: true }).map(String)
+    .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$|\.d\.ts$|^browser(-icons)?\.ts$|^theme-types\.ts$/.test(f))
+    .map((f) => path.join(SRC, f));
+  /** @type {import('esbuild').Plugin} */
+  const keepImports = { name: 'keep-imports', setup(b) {
+    b.onResolve({ filter: /.*/ }, async (a) => {
+      if (a.kind === 'entry-point' || a.pluginData === 'resolving') return undefined;
+      if (!a.path.startsWith('.')) return { path: a.path, external: true };   // react, react-dom
+      const r = await b.resolve(a.path, { kind: a.kind, resolveDir: a.resolveDir, pluginData: 'resolving' });
+      if (r.errors.length) return { errors: r.errors };
+      const rel = path.relative(path.dirname(a.importer), r.path).replace(/\.tsx?$/, '.js');
+      return { path: rel.startsWith('.') ? rel : './' + rel, external: true };
+    });
+  } };
+  for (const f of fs.readdirSync(D)) if (/^(chunk|icons)-[A-Z0-9]+\.js(\.map)?$|^(index|icons)\.js\.map$/.test(f) || f === 'js') fs.rmSync(path.join(D, f), { recursive: true });
+  await build({
+    entryPoints: entries, outdir: path.join(D, 'js'), outbase: SRC, bundle: true, plugins: [keepImports],
+    format: 'esm', target: 'es2022', platform: 'neutral', sourcemap: true, jsx: 'transform', logLevel: 'warning',
+    define: { __VERSION__: JSON.stringify(version) },
+  });
+  fs.writeFileSync(path.join(D, 'index.js'), 'export * from "./js/index.js";\n');
+  fs.writeFileSync(path.join(D, 'icons.js'), 'export * from "./js/material/index.js";\n');
+}

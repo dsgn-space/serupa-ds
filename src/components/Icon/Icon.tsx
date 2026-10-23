@@ -1,7 +1,8 @@
+"use client";
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
-import { ICONS, hasIcon, getIcon, isIconData, loadAllIcons, type CustomIconName } from "../../icons";
+import { ICONS, hasIcon, getIcon, loadAllIcons, type CustomIconName } from "../../icons";
 import type { MaterialIconName } from "../../material/icons";
 import type { IconData } from "../../material/types";
 import { component } from "../../internal/component";
@@ -62,10 +63,3 @@ export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>("Icon"
     </span>
   );
 });
-
-/** An icon name or an icon from serupa-ds/icons becomes an <Icon>; elements pass through. */
-export function asIcon(node: React.ReactNode | IconData): React.ReactNode {
-  if (typeof node === "string") return <Icon name={node} />;
-  if (isIconData(node)) return <Icon icon={node} />;
-  return node as React.ReactNode;
-}
