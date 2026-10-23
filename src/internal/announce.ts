@@ -1,21 +1,64 @@
-// One shared, visually hidden polite live region (WAI-ARIA status). It's created when the first Button
-// mounts, so it already exists when a button starts loading, and screen readers announce the change.
-let announcer: HTMLDivElement | null = null;
+import { onModalChange, topModal } from "./layers";
 
-export function ensureAnnouncer(): HTMLDivElement | null {
-  if (announcer || typeof document === "undefined") return announcer;
-  announcer = document.createElement("div");
-  announcer.setAttribute("role", "status");
-  announcer.setAttribute("aria-live", "polite");
-  announcer.setAttribute("data-dk-announcer", "");
-  announcer.className = "sr-only";   // the foundation's screen-reader-only utility (Accessibility)
-  document.body.appendChild(announcer);
-  return announcer;
+// Two shared, visually hidden live regions: a polite one (WAI-ARIA status) for Button and Badge loading, Loader
+// and toasts, and an assertive one for danger toasts. The polite one is created when the first Button mounts, so
+// it already exists when a button starts loading, and screen readers announce the change. They live in the
+// innermost open modal (Dialog, Drawer), since the page behind one is inert and isn't read, and on <body> otherwise.
+type Channel = { el: HTMLDivElement | null; queue: string[]; since: number; timer: ReturnType<typeof setTimeout> | null };
+const polite: Channel = { el: null, queue: [], since: 0, timer: null };
+const assertive: Channel = { el: null, queue: [], since: 0, timer: null };
+const HOLD = 500;   // each message stays this long before the next one replaces it, so a quick second one doesn't drop the first
+
+const home = () => topModal() || document.body;
+let watching = false;
+function region(ch: Channel, live: "polite" | "assertive"): HTMLDivElement | null {
+  if (ch.el || typeof document === "undefined") return ch.el;
+  const el = document.createElement("div");
+  el.setAttribute("role", live === "polite" ? "status" : "alert");
+  el.setAttribute("aria-live", live);
+  el.setAttribute(live === "polite" ? "data-dk-announcer" : "data-dk-announcer-assertive", "");
+  el.className = "sr-only";   // the foundation's screen-reader-only utility (Accessibility)
+  home().appendChild(el);
+  ch.el = el;
+  if (!watching) {
+    watching = true;
+    onModalChange(() => { for (const c of [polite, assertive]) if (c.el && c.el.parentNode !== home()) home().appendChild(c.el); });
+  }
+  return el;
 }
 
-export function announce(text: string): void {
-  const el = ensureAnnouncer();
-  if (!el) return;
-  el.textContent = "";
-  setTimeout(function () { el.textContent = text; }, 50);   // clear first so the same text is announced again
+export function ensureAnnouncer(): HTMLDivElement | null {
+  return region(polite, "polite");
+}
+
+function pump(ch: Channel): void {
+  if (ch.timer || !ch.queue.length || !ch.el) return;
+  const el = ch.el;
+  const wait = Math.max(0, ch.since + HOLD - Date.now());
+  ch.timer = setTimeout(function () {
+    el.textContent = "";
+    // Cleared first so the same text is announced again.
+    ch.timer = setTimeout(function () {
+      ch.timer = null;
+      if (!el.isConnected) home().appendChild(el);
+      el.textContent = ch.queue.shift() || "";
+      ch.since = Date.now();
+      pump(ch);
+    }, 50);
+  }, wait);
+}
+
+/** Says text to screen readers. assertive interrupts what's being read: only for errors. */
+export function announce(text: string, options?: { assertive?: boolean }): void {
+  const ch = options && options.assertive ? assertive : polite;
+  if (!region(ch, options && options.assertive ? "assertive" : "polite")) return;
+  // At most one message waits: a burst is said as one, so nothing is dropped and nothing is said late.
+  if (!ch.queue.length) ch.queue.push(text);
+  else if (!ch.queue[0].split(". ").includes(text)) ch.queue[0] += ". " + text;
+  pump(ch);
+}
+
+/** True when nothing waits to be said (tests wait for this before checking what a component announces). */
+export function announcerIdle(): boolean {
+  return !polite.timer && !polite.queue.length && !assertive.timer && !assertive.queue.length;
 }
