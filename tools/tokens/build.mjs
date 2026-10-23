@@ -6,6 +6,9 @@
 // tokens.css, in order:
 //   :root, [data-theme="<first theme>"]   every themed token (the colors and the shadows) at its first theme's value
 //   [data-theme="<theme>"]                each other theme: the tokens with a value per theme (the alias colors)
+//   theme axes (ADR-0011)                 data-brand / data-mode on an element without data-theme: the colors that
+//                                         differ between themes as light-dark() pairs, so the operating system's
+//                                         light or dark setting applies from the first paint, with no JavaScript
 //   :root                                 every other token, the font families, and the type-* shorthands
 //   .type-*                               one class per complete text style
 //   @font-face                            the fonts in fonts/
@@ -36,6 +39,8 @@ export function buildTokensCss(t) {
     css += '}\n';
   }
 
+  css += axes(t, all.filter((x) => themed(x) && new Set(Object.values(x.value)).size > 1), line);
+
   const styles = t.type.groups.flatMap((g) => g.styles.map((s) => ({ ...s, family: s.family || g.family })));
   css += ':root {\n';
   for (const x of all.filter((x) => !themed(x))) css += line(x.name, x.value, x.usage);
@@ -51,6 +56,32 @@ export function buildTokensCss(t) {
   css += '}\n';
   for (const f of t.type.fonts || [])
     css += `@font-face {\n  font-family: "${f.family}";\n  src: url("${f.file}") format("woff2");\n  font-weight: ${f.weight};\n  font-style: ${f.style};\n  font-display: swap;\n}\n`;
+  return css;
+}
+
+// Theme axes (ADR-0011). Themes are "<brand>-<mode>" ids; data-brand and data-mode pick them separately. Each color
+// that differs between themes is written once per brand as light-dark(light, dark), and the element's color-scheme
+// (set by data-mode, "light dark" for auto) chooses, wherever the color is used: so a data-mode="dark" section works
+// inside a light page. An element with data-theme keeps the flat theme above (theme.js sets it), so nothing changes
+// for pages that use it. The root without either attribute stays light, as before.
+function axes(t, varying, line) {
+  const themes = t.color.themes.map((x) => x.id);
+  const brands = [...new Set(themes.map((id) => id.split('-')[0]))];
+  const pair = (x, b) => `light-dark(${x.value[b + '-light']}, ${x.value[b + '-dark']})`;
+  const byBrand = varying.filter((x) => new Set(brands.map((b) => pair(x, b))).size > 1);
+  let css = `:root:is([data-brand], [data-mode]):not([data-theme]) {
+  color-scheme: light dark;
+`;
+  for (const x of varying) css += line(x.name, pair(x, brands[0]));
+  css += '}\n';
+  for (const b of brands) {
+    css += `:root[data-brand="${b}"]:not([data-theme]), [data-brand="${b}"]:not([data-theme]) {\n`;
+    for (const x of byBrand) css += line(x.name, pair(x, b));
+    css += '}\n';
+  }
+  css += `:root[data-mode="auto"]:not([data-theme]), [data-mode="auto"]:not([data-theme]) { color-scheme: light dark; }\n`;
+  css += `:root[data-mode="light"]:not([data-theme]), [data-mode="light"]:not([data-theme]) { color-scheme: light; }\n`;
+  css += `:root[data-mode="dark"]:not([data-theme]), [data-mode="dark"]:not([data-theme]) { color-scheme: dark; }\n`;
   return css;
 }
 

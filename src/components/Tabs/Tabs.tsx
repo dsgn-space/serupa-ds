@@ -30,6 +30,19 @@ const useTabs = (who: string): Ctx => {
   return c;
 };
 const safe = (v: string) => String(v).replace(/[^A-Za-z0-9_-]/g, "_");
+// The first enabled Tab's value, found in the children while rendering (so the server's HTML already has a
+// selected tab and a visible panel). Tabs inside a component of your own aren't seen: the effect in Tabs
+// picks the first one after mount then.
+function firstTab(children: React.ReactNode): string | null {
+  let found: string | null = null;
+  React.Children.forEach(children, (c) => {
+    if (found != null || !React.isValidElement(c)) return;
+    const p = c.props as { value?: string; disabled?: boolean; children?: React.ReactNode };
+    if (c.type === Tab) { if (!p.disabled && p.value != null) found = p.value; return; }
+    found = firstTab(p.children);
+  });
+  return found;
+}
 
 /* Tabs: switches between panels in one place, following the WAI-ARIA tabs pattern. <Tabs> holds the state
    (value or defaultValue, onValueChange), <TabList> the row of <Tab value>, and each <TabPanel value> the content.
@@ -40,17 +53,18 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>("Tabs",
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, variant: 1, size: 1, activation: 1, className: 1 });
   const base = domId("dk-tabs", React.useId());
   const controlled = props.value !== undefined;
-  const [inner, setInner] = React.useState<string | null>(props.defaultValue != null ? props.defaultValue : null);
+  const [inner, setInner] = React.useState<string | null>(() => (props.defaultValue != null ? props.defaultValue : firstTab(props.children)));
   const value = controlled ? (props.value as string) : inner;
   const onChange = React.useRef(props.onValueChange); onChange.current = props.onValueChange;
   const select = React.useCallback((v: string) => { if (!controlled) setInner(v); if (onChange.current) onChange.current(v); }, [controlled]);
   const variant = oneOf(["line", "pill"] as const, props.variant, "line");
   const size = oneOf(["sm", "md"] as const, props.size, "md");
-  // Which values have a TabPanel, so a tab only points (aria-controls) at a panel that exists.
+  // Which values have a TabPanel, so a tab only points (aria-controls) at a panel that exists: a tab row can
+  // drive content of its own (a filter, say) with no TabPanel at all.
   const [panels, setPanels] = React.useState<Record<string, number>>({});
   const register = React.useCallback((v: string, d: number) => setPanels((p) => Object.assign({}, p, { [v]: (p[v] || 0) + d })), []);
   const ctx = React.useMemo(() => ({ base, value, select, manual: props.activation === "manual", panels, register }), [base, value, select, props.activation, panels, register]);
-  // Uncontrolled with no defaultValue: the first enabled tab.
+  // Uncontrolled with no defaultValue, and the tabs out of firstTab's sight: the first enabled tab, after mount.
   const self = React.useRef<HTMLDivElement | null>(null);
   useIsoLayoutEffect(() => {
     if (value != null || controlled || !self.current) return;
