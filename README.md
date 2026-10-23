@@ -186,4 +186,4 @@ The system is self-contained: every file it needs is in it, and nothing loads fr
 | Tailwind CSS (Tailwind Labs) | The naming and values of the utility classes, the palette and the scales, checked against its compiler (v4.3.3) | MIT — `licenses/TailwindCSS-MIT.txt` |
 | Inter (Rasmus Andersson) | `font-sans` — `fonts/InterVariable.woff2`, `fonts/InterVariable-Italic.woff2` | SIL Open Font License 1.1 — `licenses/Inter-OFL-1.1.txt` |
 | Material Symbols (Google) | Icons, as SVG in the components and `serupa-ds/icons`: the Rounded, filled, weight-400 style | Apache 2.0 — `licenses/MaterialSymbols-Apache-2.0.txt` |
-| React 18.3.1 (Meta) | Running the components on plain pages — `dist/lib/`, copied from the `react` and `react-dom` packages by the build | MIT — `licenses/React-MIT.txt` |
+| React 19.3.1 (Meta) | Running the components on plain pages — `dist/lib/`, built from the `react` and `react-dom` packages by the build | MIT — `licenses/React-MIT.txt` |

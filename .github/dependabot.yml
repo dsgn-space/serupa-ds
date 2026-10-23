@@ -10,7 +10,6 @@ updates:
       day: monday
     open-pull-requests-limit: 10
     groups:
-      # React stays on 18 here: the package supports 18 and 19, and the React 19 CI job covers 19.
       storybook:
         patterns: ["storybook", "@storybook/*"]
       vitest:
@@ -19,15 +18,6 @@ updates:
         patterns: ["eslint", "@eslint/*", "eslint-plugin-*", "typescript-eslint", "globals", "stylelint", "stylelint-*"]
       minor-and-patch:
         update-types: ["minor", "patch"]
-    ignore:
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@types/react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@types/react-dom"
-        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directories: ["/", "/.github/actions/*"]
     schedule:
