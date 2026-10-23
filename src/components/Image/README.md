@@ -40,7 +40,7 @@ import { Image } from "serupa-ds";
 
 - `alt` is required by the types. A failed picture's fallback is a `role="img"` named by the alt text.
 - The view button is named "View image: <alt>" and has `aria-haspopup="dialog"`; the remove button is named "Remove image: <alt>". Both work with the keyboard and show a focus ring.
-- The fallback icon and the remove button keep 3:1 in all six themes (`tools/test/image.mjs`).
+- The fallback icon and the remove button keep 3:1 in all six themes (`Image.test.tsx`).
 
 ## Props
 
