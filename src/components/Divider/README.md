@@ -35,7 +35,7 @@ const { Divider, Stack } = window.Serupa;
 ## Accessibility
 
 - It's a separator to screen readers (an `<hr>`, or `role="separator"` with `aria-orientation`). When it only decorates, such as between items that are already grouped, use `decorative`.
-- The label keeps 4.5:1 on `surface` in all six themes (`tools/test/layout.mjs`). The line itself is decoration, so it doesn't need 3:1.
+- The label keeps 4.5:1 on `surface` in all six themes (`Divider.test.tsx`). The line itself is decoration, so it doesn't need 3:1.
 - In Windows high-contrast mode the line uses the text color.
 
 ## Props
