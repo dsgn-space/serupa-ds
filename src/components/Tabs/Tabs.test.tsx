@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
@@ -155,5 +156,28 @@ describe('Tabs', () => {
     }
     still.remove();
     expect([low, n]).toEqual([[], 30]);
+  });
+});
+
+// Server rendering: without defaultValue the first enabled tab is picked while rendering, so the HTML already
+// has a selected tab in the Tab order, its panel visible, and every tab pointing at its panel.
+describe('Tabs on the server', () => {
+  test('uncontrolled with no defaultValue: the first enabled tab is selected in the HTML', () => {
+    const html = renderToString(
+      <Tabs>
+        <TabList aria-label="Sections">
+          <Tab value="a" disabled>A</Tab>
+          <Tab value="b">B</Tab>
+          <Tab value="c">C</Tab>
+        </TabList>
+        <TabPanel value="b">Panel B</TabPanel>
+        <TabPanel value="c">Panel C</TabPanel>
+      </Tabs>,
+    );
+    const box = document.createElement('div');
+    box.innerHTML = html;
+    const tabs = [...box.querySelectorAll('[role="tab"]')].map((t) => [t.getAttribute('aria-selected'), t.getAttribute('tabindex'), !!t.getAttribute('aria-controls')]);
+    expect(tabs).toEqual([['false', '-1', true], ['true', '0', true], ['false', '-1', true]]);
+    expect([...box.querySelectorAll('[role="tabpanel"]')].map((p) => (p as HTMLElement).hidden)).toEqual([false, true]);
   });
 });
