@@ -106,13 +106,14 @@
 .dk-btn--icon-only.dk-btn--size-sm { width: var(--button-height-sm, var(--control-height-sm)); }
 .dk-btn--icon-only.dk-btn--size-lg { width: var(--button-height-lg, var(--control-height-lg)); }
 
-/* Optical balance: an icon looks lighter than text, so the text side gets icon-offset (4px) more padding */
-.dk-btn--icon-left { padding-right: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }    /* 16px */
-.dk-btn--icon-right { padding-left: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }
-.dk-btn--size-sm.dk-btn--icon-left { padding-right: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }   /* 12px */
-.dk-btn--size-sm.dk-btn--icon-right { padding-left: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }
-.dk-btn--size-lg.dk-btn--icon-left { padding-right: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }  /* 24px */
-.dk-btn--size-lg.dk-btn--icon-right { padding-left: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
+/* Optical balance: an icon looks lighter than text, so the text side gets icon-offset (4px) more padding.
+   Inline start and end, so in right-to-left text the extra space is still on the text side. */
+.dk-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }    /* 16px */
+.dk-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-md, var(--spacing-3)) + var(--button-icon-offset, var(--spacing-1))); }
+.dk-btn--size-sm.dk-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }   /* 12px */
+.dk-btn--size-sm.dk-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-sm, var(--spacing-2)) + var(--button-icon-offset, var(--spacing-1))); }
+.dk-btn--size-lg.dk-btn--icon-left { padding-inline-end: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }  /* 24px */
+.dk-btn--size-lg.dk-btn--icon-right { padding-inline-start: calc(var(--button-padding-x-lg, var(--spacing-5)) + var(--button-icon-offset, var(--spacing-1))); }
 
 /* Loading: full color (not faded), not clickable, keeps keyboard focus and its width */
 .dk-btn--loading { cursor: progress; }   /* arrow + spinner: busy, but the page still works */
