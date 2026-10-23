@@ -50,7 +50,7 @@ The thumb slides in 150ms (`duration-150`, `ease-in-out`) and jumps with `prefer
 - A native checkbox with `role="switch"`: Space flips it, forms submit it (as a checkbox), and screen readers say "on" or "off".
 - The label names it; a description is read after it. The thumb is decorative.
 - In forced-colors mode the track gets a border and the thumb and on track use system colors.
-- The label and description keep 4.5:1; the tracks on the page, each thumb on its track (at rest and on hover) and the focus ring 3:1, in all six themes (`tools/test/switch.mjs`).
+- The label and description keep 4.5:1; the tracks on the page, each thumb on its track (at rest and on hover) and the focus ring 3:1, in all six themes (`Switch.test.tsx`).
 
 ## Props
 

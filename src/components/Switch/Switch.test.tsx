@@ -1,0 +1,188 @@
+import * as React from 'react';
+import { describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { cdp, page, server, userEvent } from 'vitest/browser';
+import { THEMES, color, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
+import { Switch } from './Switch';
+
+const el = (id: string) => document.getElementById(id) as HTMLInputElement;
+// The input (track), its label and thumb, measured.
+const box = (id: string) => {
+  const i = el(id), w = i.closest('.dk-switch') as HTMLElement, c = css(i), lc = css(w), ir = i.getBoundingClientRect(), th = w.querySelector('.dk-switch__thumb')!, tr = th.getBoundingClientRect(), tx = w.querySelector('.dk-switch__label'), xr = tx && tx.getBoundingClientRect();
+  return {
+    tag: i.tagName + ':' + i.type + ':' + i.getAttribute('role'), root: w.tagName, wrap: w.className, w: ir.width, h: ir.height, app: c.appearance, bg: c.backgroundColor, r: c.borderTopLeftRadius, bs: c.boxShadow,
+    fs: lc.fontSize, op: lc.opacity, cur: lc.cursor, size: w.dataset.size, comp: w.dataset.component, checked: i.checked, disabled: i.matches(':disabled'), thumb: tr.width, thumbBg: css(th).backgroundColor,
+    startGap: Math.round((tr.left - ir.left) * 10) / 10, endGap: Math.round((ir.right - tr.right) * 10) / 10, vGap: Math.abs((tr.top + tr.height / 2) - (ir.top + ir.height / 2)),
+    mid: xr ? Math.abs((ir.top + ir.height / 2) - (xr.top + Math.min(xr.height, parseFloat(lc.lineHeight)) / 2)) : 0, labelLeft: xr ? xr.left < ir.left : null,
+  };
+};
+const away = () => userEvent.hover(document.body, { position: { x: 800, y: 650 } });
+const still = () => { const s = document.createElement('style'); s.textContent = '.dk-switch * { transition: none !important; }'; document.head.appendChild(s); return s; };
+
+let changes: boolean[] = [];
+function App(props: { iref?: React.Ref<HTMLInputElement> }) {
+  const [v, set] = React.useState(false);
+  return <div style={{ display: 'grid', gap: '12px', width: '380px', justifyItems: 'start' }}>
+    {/* @ts-expect-error: type and role, which plain JavaScript could pass, can't be changed */}
+    <Switch id="md" ref={props.iref} checked={v} onChange={(e) => { changes.push(e.target.checked); set(e.target.checked); }} name="wifi" className="extra" data-x="y" type="radio" role="button">Wi-Fi</Switch>
+    <Switch id="sm" size="sm">Small</Switch>
+    <Switch id="lg" size="lg" defaultChecked>Large</Switch>
+    {/* @ts-expect-error: an unknown size, as plain JavaScript could pass */}
+    <Switch id="bad" size="xl">Bad size</Switch>
+    <Switch id="desc" description="Pause notifications at night.">Quiet hours</Switch>
+    <Switch id="start" labelPosition="start">Autoplay</Switch>
+    <Switch id="bare" aria-label="Enable row" />
+    <Switch id="inv" invalid>Two-step sign-in</Switch>
+    <Switch id="dis" disabled>Disabled</Switch>
+    <div dir="rtl"><Switch id="rtl" defaultChecked>RTL</Switch></div>
+    <Field label="Backups" hint="Every night at 2 am."><Switch id="fld">Back up automatically</Switch></Field>
+  </div>;
+}
+const setup = async (iref?: React.Ref<HTMLInputElement>) => { changes = []; await render(<App iref={iref} />); await document.fonts.ready; };
+
+describe('Switch', () => {
+  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="dk-switch">; md: a 36 by 20px round track in field-border, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
+    await setup();
+    const s = still(), md = box('md');
+    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--field-border)'), 16, color('var(--field)'), 2, '14px']);
+    expect(parseFloat(md.r)).toBeGreaterThanOrEqual(10);
+    expect(md.vGap).toBeLessThan(0.5);
+    expect(md.mid).toBeLessThan(1);
+    s.remove();
+  });
+
+  test('sizes: sm 28 by 16 with a 12px thumb and text-xs, lg 44 by 24 with a 20px thumb and text-base, each centered on the first line; an unknown size falls back to md', async () => {
+    await setup();
+    const sm = box('sm'), lg = box('lg');
+    expect([sm.w, sm.h, sm.thumb, sm.fs]).toEqual([28, 16, 12, '12px']);
+    expect([lg.w, lg.h, lg.thumb, lg.fs]).toEqual([44, 24, 20, '16px']);
+    expect([sm.mid < 1, lg.mid < 1, box('bad').size]).toEqual([true, true, 'md']);
+  });
+
+  test('ref, name and attributes go to the <input>, className to the label; named by its label alone (not the description), or aria-label', async () => {
+    const ref = React.createRef<HTMLInputElement>();
+    await setup(ref);
+    const i = el('md');
+    expect([ref.current === i, i.closest('label')!.classList.contains('extra'), i.dataset.x, i.name]).toEqual([true, true, 'y', 'wifi']);
+    expect(page.getByRole('switch', { name: 'Wi-Fi', exact: true }).elements().length).toBe(1);
+    expect(page.getByRole('switch', { name: 'Quiet hours', exact: true }).elements().length).toBe(1);
+    expect(page.getByRole('switch', { name: 'Enable row', exact: true }).elements().length).toBe(1);
+  });
+
+  test('a click on the label turns a controlled switch on through onChange; on: a primary track and the thumb at the end (2px in) in on-primary', async () => {
+    await setup();
+    await userEvent.click(document.querySelector('label.extra .dk-switch__label')!);
+    await away();
+    expect([changes.join(), el('md').checked]).toEqual(['true', true]);
+    await expect.poll(() => { const b = box('md'); return [b.bg, b.endGap, b.thumbBg]; }).toEqual([color('var(--primary)'), 2, color('var(--on-primary)')]);
+  });
+
+  test('Space flips it from the keyboard; it is announced as a checked switch', async () => {
+    await setup();
+    el('sm').focus();
+    await userEvent.keyboard(' ');
+    expect(el('sm').checked).toBe(true);
+    await expect.element(page.getByRole('switch', { name: 'Small', checked: true })).toBeInTheDocument();
+  });
+
+  test('description: a muted second line in aria-describedby', async () => {
+    await setup();
+    const i = el('desc'), d = i.closest('label')!.querySelector('.dk-switch__description')!;
+    expect([i.getAttribute('aria-describedby'), css(d).color]).toEqual([d.id, color('var(--text-muted)')]);
+  });
+
+  test('labelPosition="start" puts the label before the track; without a label, just the track (20px tall)', async () => {
+    await setup();
+    const st = box('start'), bare = box('bare');
+    expect([st.labelLeft, box('md').labelLeft]).toEqual([true, false]);
+    expect(st.wrap).toMatch(/dk-switch--label-start/);
+    expect(bare.wrap).toMatch(/dk-switch--bare/);
+    expect(el('bare').closest('label')!.getBoundingClientRect().height).toBe(20);
+  });
+
+  test('right-to-left: the thumb starts on the right and ends on the left', async () => {
+    await setup();
+    const i = el('rtl'), t = i.nextElementSibling!;
+    await expect.poll(() => t.getBoundingClientRect().left - i.getBoundingClientRect().left).toBe(2);
+    expect(i.checked).toBe(true);
+  });
+
+  test('hover: field-border-hover while off, primary-hover while on', async () => {
+    await setup();
+    await userEvent.hover(el('bad'));
+    await expect.poll(() => box('bad').bg).toBe(color('var(--field-border-hover)'));
+    await away();
+    await userEvent.hover(el('lg'));
+    await expect.poll(() => box('lg').bg).toBe(color('var(--primary-hover)'));
+    await away();
+  });
+
+  test('keyboard focus: a 2px focus-ring ring outside a 2px gap, like Button; a transparent outline for forced-colors mode', async () => {
+    await setup();
+    el('bad').focus();
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}{Tab}');
+    const ring = color('var(--focus-ring)');
+    await expect.poll(() => box('bad').bs).toContain(ring);
+    expect(box('bad').bs).toMatch(/0px 0px 0px 4px/);
+    const a = document.activeElement!, c = css(a);
+    expect([a.id, c.outlineColor, c.outlineWidth, c.outlineOffset]).toEqual(['bad', 'rgba(0, 0, 0, 0)', '2px', '2px']);
+  });
+
+  test('invalid: aria-invalid and a danger track while off', async () => {
+    await setup();
+    await expect.poll(() => box('inv').bg).toBe(color('var(--danger)'));
+    expect(el('inv').getAttribute('aria-invalid')).toBe('true');
+  });
+
+  test('disabled: native disabled, 50%, not-allowed; clicks do nothing', async () => {
+    await setup();
+    await userEvent.click(el('dis'), { force: true });
+    const d = box('dis');
+    expect([d.disabled, d.op, d.cur, d.checked]).toEqual([true, '0.5', 'not-allowed', false]);
+  });
+
+  test('in a Field: labelled and described by the hint', async () => {
+    await setup();
+    const i = el('fld');
+    expect([...i.labels!].map((l) => l.textContent).join('|')).toMatch(/Back up automatically/);
+    expect(document.getElementById(i.getAttribute('aria-describedby')!)!.textContent).toBe('Every night at 2 am.');
+  });
+
+  test('the thumb slides in 150ms, and doesn\'t animate with reduced motion', async () => {
+    await setup();
+    const dur = () => withMotion(() => css(document.querySelector('.dk-switch__thumb')).transitionDuration + '|' + css(document.querySelector('.dk-switch__input')).transitionDuration);
+    expect(dur()).toBe('0.15s, 0.15s|0.15s');
+    if (server.browser === 'chromium') {
+      const session = cdp() as unknown as { send: (method: string, params: object) => Promise<unknown> };
+      await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+      try { expect(dur()).toBe('0s|0s'); } finally { await session.send('Emulation.setEmulatedMedia', { features: [] }); }
+    } else {
+      // No media emulation outside Chromium: apply the reduced-motion rules as written, unconditionally.
+      const rules = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules]; } catch { return []; } });
+      const flat = (rs: CSSRule[]): CSSRule[] => rs.flatMap((r) => ('cssRules' in r ? [r, ...flat([...(r as CSSGroupingRule).cssRules])] : [r]));
+      const rm = flat(rules).filter((r): r is CSSMediaRule => r instanceof CSSMediaRule && /prefers-reduced-motion:\s*reduce/.test(r.conditionText) && /dk-switch/.test(r.cssText));
+      const s = document.createElement('style'); s.textContent = '@layer dk.components {' + rm.map((r) => [...r.cssRules].map((x) => x.cssText).join('')).join('') + '}'; document.head.appendChild(s);
+      try { expect([rm.length, dur()]).toEqual([1, '0s|0s']); } finally { s.remove(); }
+    }
+  });
+
+  test('contrast in all six themes: label and description 4.5:1; tracks on the page, thumbs on their tracks (rest and hover) and the focus ring 3:1', () => {
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--field-border)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--field-border)', 3], ['off thumb, hover', 'var(--field)', 'var(--field-border-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid track', 'var(--danger)', 'var(--surface)', 3], ['thumb on invalid track', 'var(--field)', 'var(--danger)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
+    }
+    expect(low).toEqual([]);
+  });
+
+  test('no React warnings', async () => {
+    const error = vi.spyOn(console, 'error'), warn = vi.spyOn(console, 'warn');
+    await setup();
+    await userEvent.click(document.querySelector('label.extra .dk-switch__label')!);
+    expect(error).not.toHaveBeenCalled();
+    expect(warn).not.toHaveBeenCalled();
+    error.mockRestore(); warn.mockRestore();
+  });
+});
