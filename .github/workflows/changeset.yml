@@ -1,0 +1,28 @@
+name: Changeset
+
+# Every pull request that changes what a project installs carries a changeset (.changeset/README.md):
+# tools/changeset-check.mjs says which files need one. A pull request that ships nothing new despite touching
+# those files (a comment, a refactor with identical output) takes the "no-changeset" label. Its own workflow, so
+# adding or removing the label re-runs this check alone, not the whole of CI.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  changeset:
+    name: changeset
+    runs-on: ubuntu-24.04
+    # The Release pull request is the one that removes the changesets.
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-changeset') && !startsWith(github.head_ref, 'changeset-release/') }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: A changeset for every change to what the package ships
+        run: node tools/changeset-check.mjs "${{ github.event.pull_request.base.sha }}"
