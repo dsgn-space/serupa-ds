@@ -14,10 +14,10 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v8.0.0
+npm install github:diki-stwn/serupa-ds#v9.0.0
 ```
 
-Always pin a tag (`#v8.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v9.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
 
@@ -124,7 +124,7 @@ React components, styled only with this system's tokens. Each one's guide (when 
 | Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Meter`, `Badge`, `EmptyState` |
 | Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
 | Navigation | `Navbar`, `Sidebar`, `Tabs`, `Breadcrumb`, `Pagination`, `Stepper` |
-| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd`, `RelativeTime` |
+| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd`, `RelativeTime`, `SortableList` |
 | Layout and type | `Stack`, `Grid`, `Container`, `Divider`, `Heading`, `Text`, `VisuallyHidden` |
 
 Shared conventions, so learning one component teaches the rest:

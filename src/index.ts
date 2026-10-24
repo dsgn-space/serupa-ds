@@ -98,6 +98,8 @@ export type { SelectOption, SelectOptionGroup, SelectProps } from "./components/
 import { Sidebar, SidebarItem, SidebarSection } from "./components/Sidebar/Sidebar";
 export type { SidebarItemProps, SidebarProps, SidebarSectionProps } from "./components/Sidebar/Sidebar";
 import { Slider } from "./components/Slider/Slider";
+import { SortableList } from "./components/SortableList/SortableList";
+export type { SortableListProps } from "./components/SortableList/SortableList";
 export type { SliderProps, SliderValue } from "./components/Slider/Slider";
 import { Stack } from "./components/Stack/Stack";
 export type { StackProps } from "./components/Stack/Stack";
@@ -137,7 +139,7 @@ export type { IconData } from "./material/types";
 export type { MaterialIconName } from "./material/icons";
 export type { SerupaTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, enLabels, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, idLabels, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, meterState, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, relativeTime, RelativeTime, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, useSerupa, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, enLabels, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, idLabels, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, meterState, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, relativeTime, RelativeTime, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, SortableList, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, useSerupa, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -159,7 +161,7 @@ declare global {
       NumberInput: typeof NumberInput; Pagination: typeof Pagination; paginationRange: typeof paginationRange; PasswordInput: typeof PasswordInput;
       Popover: typeof Popover; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; RelativeTime: typeof RelativeTime; relativeTime: typeof relativeTime; SearchInput: typeof SearchInput;
       SegmentedControl: typeof SegmentedControl; Select: typeof Select; SerupaProvider: typeof SerupaProvider; useSerupa: typeof useSerupa; Sidebar: typeof Sidebar; SidebarItem: typeof SidebarItem;
-      SidebarSection: typeof SidebarSection; Slider: typeof Slider; Stack: typeof Stack; Stepper: typeof Stepper; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
+      SidebarSection: typeof SidebarSection; Slider: typeof Slider; SortableList: typeof SortableList; Stack: typeof Stack; Stepper: typeof Stepper; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
       TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead;
       TableHeaderCell: typeof TableHeaderCell; TableRow: typeof TableRow; TableSelectCell: typeof TableSelectCell; TabList: typeof TabList; TabPanel: typeof TabPanel; Tabs: typeof Tabs;
       Text: typeof Text; Textarea: typeof Textarea; TimePicker: typeof TimePicker; toast: typeof toast; Toaster: typeof Toaster; ToggleButton: typeof ToggleButton;
