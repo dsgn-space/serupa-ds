@@ -80,6 +80,7 @@ if (D) {
     NumberInput: h(D.NumberInput, { 'aria-label': 'Quantity', defaultValue: 2, min: 0 }),
     Pagination: h(D.Pagination, { count: 20, page: 5, onPageChange() {} }),
     PasswordInput: h(D.PasswordInput, { 'aria-label': 'Password' }),
+    PhoneInput: h(D.PhoneInput, { 'aria-label': 'Phone', defaultValue: '+6281234567890' }),
     Popover: h(D.Popover, { trigger: h(D.Button, null, 'Share'), title: 'Share' }, 'Body'),
     Progress: h(D.Progress, { value: 40, label: 'Uploading' }),
     Meter: h(D.Meter, { value: 7, max: 10, high: 8, optimum: 0, label: 'Storage' }),

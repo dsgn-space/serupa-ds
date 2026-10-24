@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>PhoneInput — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; flex-direction: column; gap: 12px; max-width: 320px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var D = window.Serupa, h = React.createElement, P = D.PhoneInput;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(P, { 'aria-label': 'Empty', defaultCountry: 'ID' }),
+    h(P, { 'aria-label': 'Indonesia', defaultValue: '+6281234567890' }),
+    h(P, { 'aria-label': 'Invalid', defaultValue: '+12015550123', invalid: true, size: 'sm' })
+  ));
+</script>
+</body>
+</html>
