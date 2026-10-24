@@ -15,7 +15,7 @@
   transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
 .dk-search-input__clear .dk-icon { font-size: var(--dk-input-icon); }
-.dk-search-input__clear:hover { background: var(--search-input-clear-bg-hover, var(--secondary)); color: var(--search-input-clear-hover, var(--text)); }
+@media (hover: hover) { .dk-search-input__clear:hover { background: var(--search-input-clear-bg-hover, var(--secondary)); color: var(--search-input-clear-hover, var(--text)); } }
 .dk-search-input__clear:focus-visible { outline: var(--focus-ring-width) solid var(--search-input-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 @media (prefers-reduced-motion: reduce) { .dk-search-input__clear { transition: none; } }
 }

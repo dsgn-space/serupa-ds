@@ -15,7 +15,8 @@
 }
 .dk-list__item:not(:has(.dk-list__trailing)) .dk-list__main { margin-inline-end: calc(var(--spacing-0) - var(--dk-list-px)); padding-inline-end: var(--dk-list-px); }
 .dk-list__item--interactive .dk-list__main { cursor: pointer; }
-.dk-list__item--interactive:hover:not(.dk-list__item--disabled), .dk-list__item--selected { background: var(--list-bg-hover, var(--surface-muted)); }
+.dk-list__item--selected { background: var(--list-bg-hover, var(--surface-muted)); }
+@media (hover: hover) { .dk-list__item--interactive:hover:not(.dk-list__item--disabled) { background: var(--list-bg-hover, var(--surface-muted)); } }
 .dk-list__item--selected { box-shadow: inset var(--list-indicator-width, var(--border-width-2)) 0 0 var(--list-indicator-selected, var(--primary)); }
 [dir="rtl"] .dk-list__item--selected { box-shadow: inset calc(var(--spacing-0) - var(--list-indicator-width, var(--border-width-2))) 0 0 var(--list-indicator-selected, var(--primary)); }
 .dk-list__main:focus-visible { outline: var(--focus-ring-width) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }

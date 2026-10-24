@@ -166,6 +166,7 @@ Small motion that confirms what happened, all built in:
 
 - They animate only `scale`, `translate` and `opacity`, so nothing around the button reflows, and they never change its size, name or behaviour: clicks, keys, forms and your own `onPointerDown`, `onKeyDown` and `onKeyUp` work as before. If your `onPointerDown` calls `preventDefault()`, there's no ripple.
 - No press or ripple on disabled, loading or `link`-variant buttons (the link variant reads as text).
+- Hover colors apply only on devices that hover (a mouse or trackpad). A phone keeps hover on the last button tapped, so on touch screens a tapped button goes straight back to its resting color, and the press and ripple are the feedback. This holds for every component's hover styles (`tools/test/touch-hover.mjs`).
 - With reduced motion turned on (an operating-system setting), there's no press, nudge or ripple, and loading only fades.
 - `buttonClass()` on another element gets the press, nudge and loading fade (they're CSS); the ripple needs the Button component.
 - To turn the icon nudge on for a flow of "next" buttons:
