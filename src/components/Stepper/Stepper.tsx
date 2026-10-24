@@ -1,8 +1,10 @@
+"use client";
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -37,14 +39,15 @@ const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, lab
    so to screen readers. With onStepClick, completed steps are buttons that go back to them. */
 /** Where people are in a task split into steps: numbered circles joined by lines. */
 export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Stepper", function Stepper(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
   const steps = props.steps || [];
   const current = Math.max(0, Math.min(steps.length, Math.floor(Number(props.current)) || 0));
   const vertical = props.orientation === "vertical";
   const size = props.size === "sm" ? "sm" : "md";
-  const L = { completed: "completed", error: "has an error", optional: "Optional", ...(props.labels || {}) };
+  const L = { completed: sds.labels.completed, error: sds.labels.hasError, optional: sds.labels.optional, ...(props.labels || {}) };
   return (
-    <nav {...rest} ref={ref} aria-label={rest["aria-label"] || (rest["aria-labelledby"] ? undefined : "Progress")}
+    <nav {...rest} ref={ref} aria-label={rest["aria-label"] || (rest["aria-labelledby"] ? undefined : sds.labels.progress)}
       className={cn("dk-stepper", vertical ? "dk-stepper--vertical" : "dk-stepper--horizontal", "dk-stepper--size-" + size, props.className)}
       data-component="stepper" data-orientation={vertical ? "vertical" : "horizontal"} data-size={size}>
       <ol className="dk-stepper__list">
