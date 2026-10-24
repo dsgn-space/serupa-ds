@@ -87,13 +87,20 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('ctl')[0]).toBe(0);
   });
 
-  test('icon-only, sm: 24px tall, square 18px segments named by aria-label, defaultValue chosen', async () => {
+  test('icon-only, sm: 24px tall, 24px-wide segments (centers 24px apart, WCAG 2.5.8) named by aria-label, defaultValue chosen; md stays square at 26px', async () => {
     await render(<Col><SegmentedControl id="ico" aria-label="Align" size="sm" defaultValue="c" options={[
       { value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'c', icon: 'format_align_center', 'aria-label': 'Center' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' },
     ]} /></Col>);
     const it = items('ico');
     expect([el('ico').getBoundingClientRect().height, it.map((x) => x.getAttribute('aria-label')).join(), it.map((x) => Math.round(x.getBoundingClientRect().width)).join(), Math.round(it[0].getBoundingClientRect().height), checked('ico')])
-      .toEqual([24, 'Left,Center,Right', '18,18,18', 18, 'c']);
+      .toEqual([24, 'Left,Center,Right', '24,24,24', 18, 'c']);
+    const centers = it.map((x) => { const r = x.getBoundingClientRect(); return r.left + r.width / 2; });
+    expect(Math.round(centers[1] - centers[0])).toBeGreaterThanOrEqual(24);
+    // The selection sits exactly on the checked segment.
+    const ind = el('ico').querySelector('.dk-segmented__indicator')!.getBoundingClientRect(), c = it[1].getBoundingClientRect();
+    expect([Math.round(ind.left), Math.round(ind.width)]).toEqual([Math.round(c.left), Math.round(c.width)]);
+    await render(<SegmentedControl id="icomd" aria-label="Align" options={[{ value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' }]} />);
+    expect(items('icomd').map((x) => Math.round(x.getBoundingClientRect().width)).join()).toBe('26,26');
   });
 
   test('fullWidth: fills its container with equal segments; disabled: every segment disabled and out of the Tab order, faded', async () => {
