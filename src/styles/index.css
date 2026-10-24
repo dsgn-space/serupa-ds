@@ -48,6 +48,7 @@
 @import "../components/Drawer/Drawer.css";
 @import "../components/Progress/Progress.css";
 @import "../components/RelativeTime/RelativeTime.css";
+@import "../components/Meter/Meter.css";
 @import "../components/SearchInput/SearchInput.css";
 @import "../components/NumberInput/NumberInput.css";
 @import "../components/Slider/Slider.css";

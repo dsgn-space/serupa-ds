@@ -1,0 +1,28 @@
+/* ---------------------------------------------------------------
+   Meter: a full-width bar (4, 8 or 12px thick, rounded ends) filled to the value on a secondary track, in primary,
+   or with low/high zones in success (best), warning or danger (worst). An optional label row above it: the label,
+   and the value at the end. The fill moves to a new value over 300ms.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-meter {
+  --dk-meter-fill: var(--meter-fill, var(--primary));
+  --dk-meter-h: var(--meter-height-md, var(--spacing-2));
+  display: flex; flex-direction: column; gap: var(--meter-gap, var(--spacing-1\.5)); width: var(--sizing-full);
+  color: var(--meter-label-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+}
+.dk-meter--size-sm { --dk-meter-h: var(--meter-height-sm, var(--spacing-1)); }
+.dk-meter--size-lg { --dk-meter-h: var(--meter-height-lg, var(--spacing-3)); }
+.dk-meter--success { --dk-meter-fill: var(--meter-fill-optimum, var(--success)); }
+.dk-meter--warning { --dk-meter-fill: var(--meter-fill-suboptimal, var(--warning)); }
+.dk-meter--danger { --dk-meter-fill: var(--meter-fill-poor, var(--danger)); }
+.dk-meter__header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--spacing-3); }
+.dk-meter__label { font-weight: var(--meter-label-weight, var(--font-medium)); min-width: var(--spacing-0); }
+.dk-meter__value { margin-inline-start: auto; color: var(--meter-value-color, var(--text-muted)); font-variant-numeric: tabular-nums; }
+.dk-meter__track { position: relative; overflow: hidden; height: var(--dk-meter-h); border-radius: var(--meter-radius, var(--rounded-full)); background: var(--meter-track, var(--secondary)); }
+.dk-meter__fill { height: var(--sizing-full); border-radius: inherit; background: var(--dk-meter-fill); transition: inline-size var(--meter-duration, var(--duration-300)) var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .dk-meter__fill { transition: none; } }
+@media (forced-colors: active) {
+  .dk-meter__track { border: var(--border-width-1) solid CanvasText; }
+  .dk-meter__fill { background: Highlight; }
+}
+}
