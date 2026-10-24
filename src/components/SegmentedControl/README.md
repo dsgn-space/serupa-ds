@@ -60,7 +60,7 @@ Your `onKeyDown` runs before the control's own keys, so `e.preventDefault()` in 
 | `disabled` | `boolean` | `false` | |
 | `name` | `string` | | Sends the value with a form, in a hidden input. |
 
-Name it with `aria-label` or `aria-labelledby`. `className`, `ref` and other props go to the root `<div>`.
+Name it with `aria-label` or `aria-labelledby`. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the selected segment, or else the first one that isn't disabled, so a form library that focuses the first invalid field after a failed submit lands on it.
 
 ## Component tokens
 
