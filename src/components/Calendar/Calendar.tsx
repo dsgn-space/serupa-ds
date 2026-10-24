@@ -5,6 +5,7 @@ import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sam
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. */
@@ -25,7 +26,7 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   max?: Date;
   /** Days that can't be picked, such as weekends. */
   isDateDisabled?: (date: Date) => boolean;
-  /** A BCP 47 locale for month and weekday names and the first day of the week. Default: the browser's. */
+  /** A BCP 47 locale for month and weekday names and the first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
   weekStartsOn?: number;
@@ -52,8 +53,9 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMont
    refused by isDateDisabled are aria-disabled and can't be picked. Month and weekday names follow the locale. */
 /** A month of days to pick one from, with keyboard navigation; used by DatePicker. */
 export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>("Calendar", function Calendar(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
-  const locale = props.locale;
+  const locale = props.locale || sds.locale;
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const controlledValue = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<Date | null>(isValid(props.defaultValue) ? day(props.defaultValue) : null);
@@ -124,10 +126,10 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   return (
     <div {...rest} ref={ref} className={cn("dk-calendar", props.className)} data-component="calendar">
       <div className="dk-calendar__header">
-        <IconButton icon={<><Icon name="chevron_left" className="dk-calendar__ltr" /><Icon name="chevron_right" className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || "Previous month"} size="sm" variant="ghost" noTitle
+        <IconButton icon={<><Icon name="chevron_left" className="dk-calendar__ltr" /><Icon name="chevron_right" className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" noTitle
           disabled={!!props.min && compare(addDays(month, -1), props.min) < 0} onClick={() => showMonth(addMonths(month, -1))} />
         <h2 className="dk-calendar__title" id={titleId} aria-live="polite">{title}</h2>
-        <IconButton icon={<><Icon name="chevron_right" className="dk-calendar__ltr" /><Icon name="chevron_left" className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || "Next month"} size="sm" variant="ghost" noTitle
+        <IconButton icon={<><Icon name="chevron_right" className="dk-calendar__ltr" /><Icon name="chevron_left" className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" noTitle
           disabled={!!props.max && compare(addMonths(month, 1), props.max) > 0} onClick={() => showMonth(addMonths(month, 1))} />
       </div>
       <table ref={grid} className="dk-calendar__grid" role="grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>

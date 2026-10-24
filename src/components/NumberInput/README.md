@@ -30,7 +30,7 @@ const [price, setPrice] = React.useState<number | null>(9.5);
 ## Behavior
 
 - On blur the text is parsed in the locale's marks, clamped, rounded to the step's decimals and written back in the locale's form. The locale's group mark counts as grouping only when the digits are grouped in threes, so `1.500` is 1500 in `id-ID` and `de-DE`, and `9.5` or `9,5` is 9.5 in any locale. Spaces, a currency symbol or %, a typographic minus and digits in other scripts are accepted. Text that isn't a number goes back to the last number.
-- Leave `locale` unset in most products so it follows the visitor's browser.
+- Leave `locale` unset in most products so it follows the `SerupaProvider` locale, or the visitor's browser without one.
 - A typed number outside the limits isn't reported until blur, so a half-typed number never jumps.
 - The buttons are out of the Tab order, since the arrow keys do the same, and are disabled at the limits.
 
@@ -62,7 +62,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `largeStep` | `number` | `10` | Steps moved by PageUp, PageDown and Shift with an arrow. |
 | `steppers` | `boolean` | `true` | The − and + buttons. |
 | `decrementLabel`, `incrementLabel` | `string` | `'Decrease'`, `'Increase'` | The buttons' names. |
-| `locale` | `string` | the browser's | Whose decimal and group marks are read and written: `1.500,25` in `id-ID`, `1,500.25` in `en-US`. |
+| `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's | Whose decimal and group marks are read and written: `1.500,25` in `id-ID`, `1,500.25` in `en-US`. |
 | `formatOptions` | `Intl.NumberFormatOptions` | no grouping | How the number is shown: `{ style: 'currency', currency: 'IDR' }`, `{ useGrouping: true }`, `{ style: 'percent' }` (the value is the fraction, so 0.15 shows 15%). Sets `aria-valuetext` too. |
 
 `className` and `style` go to the box; `ref` and every other prop go to the `<input>`.

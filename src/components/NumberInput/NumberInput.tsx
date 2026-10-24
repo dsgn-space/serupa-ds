@@ -6,6 +6,7 @@ import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { formatNumber, parseNumber } from "../../internal/numbers";
+import { useSerupa } from "../../internal/provider";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -27,7 +28,7 @@ export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "d
   /** The buttons' names. Default: "Decrease" and "Increase". */
   decrementLabel?: string;
   incrementLabel?: string;
-  /** The locale whose decimal and group marks are read and written ("1.500,25" in id-ID). Default: the browser's. */
+  /** The locale whose decimal and group marks are read and written ("1.500,25" in id-ID). Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string;
   /** How the number is shown, as Intl.NumberFormat options: `{ style: "currency", currency: "IDR" }`, `{ useGrouping: true }`,
       or the percent style (the value is the fraction: 0.15 shows 15%). Default: no grouping and every decimal the value has. */
@@ -43,6 +44,7 @@ const decimals = (n: number) => { const s = String(n); const i = s.indexOf(".");
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
 export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>("NumberInput", function NumberInput(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -55,7 +57,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const controlled = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<number | null>(props.defaultValue ?? null);
   const value = controlled ? (props.value ?? null) : ownValue;
-  const { locale, formatOptions } = props;
+  const { formatOptions } = props;
+  const locale = props.locale || sds.locale;
   // What the shown number is multiplied by: 100 for the percent style, 1 otherwise.
   const scale = formatOptions ? parseNumber(formatNumber(1, locale, formatOptions), locale) || 1 : 1;
   const show = (v: number | null) => (v == null ? "" : formatNumber(v, locale, formatOptions));
@@ -131,11 +134,11 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
         onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} onFocus={(e) => { focused.current = true; if (rest.onFocus) rest.onFocus(e); }} />
       {props.steppers !== false ? (
         <span className="dk-number-input__steppers">
-          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || "Decrease"} aria-controls={rest.id}
+          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
             disabled={locked || (min !== undefined && now != null && now <= min)} onClick={press(-1)} onMouseDown={(e) => e.preventDefault()}>
             <Icon name="remove" />
           </button>
-          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.incrementLabel || "Increase"} aria-controls={rest.id}
+          <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
             disabled={locked || (max !== undefined && now != null && now >= max)} onClick={press(1)} onMouseDown={(e) => e.preventDefault()}>
             <Icon name="add" />
           </button>

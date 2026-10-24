@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { NumberInput } from './NumberInput';
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -116,6 +117,11 @@ describe('NumberInput', () => {
     await fill('fr-FR', '1 000,5'); await blur('fr-FR');
     expect([field('de-DE').value, field('en-US').value, field('fr-FR').value]).toEqual(['9,5', '9.5', '1000,5']);
     expect(calls.at(-1)).toBe('fr-FR 1000.5');
+  });
+
+  test('locale: the nearest SerupaProvider sets it, and the prop wins', async () => {
+    await render(<SerupaProvider locale="id-ID"><Col><NumberInput id="a" aria-label="A" defaultValue={1500.25} step={0.01} /><NumberInput id="b" aria-label="B" locale="en-US" defaultValue={1500.25} step={0.01} /></Col></SerupaProvider>);
+    expect([field('a').value, field('b').value]).toEqual(['1500,25', '1500.25']);
   });
 
   test('formatOptions: IDR currency shows "Rp 1.500" with an aria-valuetext, reads "2.000" back, and ArrowUp steps from it; percent shows 15% for 0.15', async () => {
