@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { named } from "../../internal/component";
+import { FieldContext, type FieldControl } from "../../internal/field";
 import * as icons from "../../material/builtin";
 import { FieldLabelProvider } from "../../internal/fieldLabel";
 
@@ -28,7 +29,7 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
 }
 
 /* Field: a label, an optional hint and an error message around one form control. It gives the control an id
-   (unless it has one), links the label to it, adds the hint and error to its aria-describedby, and passes
+   (unless it has one), at any depth (through FieldContext), links the label to it, adds the hint and error to its aria-describedby, and passes
    invalid (with error), aria-required (with required) and disabled. group renders a <fieldset> with a <legend>
    instead, for a set of checkboxes or radios, and puts the hint and error on the fieldset. */
 /** The props Field reads from and hands to its control (a component like Input, or a DOM element). */
@@ -56,8 +57,10 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
   const described = cn(hintId, errorId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
     if (!React.isValidElement(el)) return el;
-    const p = el.props as ControlProps;
+    const p = el.props as ControlProps & { children?: React.ReactNode };
     const add: ControlProps = {}, dom = typeof el.type === "string";
+    // A plain element holding other elements is a wrapper, not the control: the control inside reads FieldContext.
+    if (isControl && dom && React.Children.toArray(p.children).some(React.isValidElement)) return el;
     if (isControl) {
       if (!p.id) add.id = controlId;
       if (described) add["aria-describedby"] = cn(p["aria-describedby"], described);
@@ -73,18 +76,24 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
       <fieldset {...rest} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
         {label}
         {hint}
-        <div className="dk-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
+        <FieldContext.Provider value={null}>
+          <div className="dk-field__control" key="control">{React.Children.map(props.children, function (c) { return pass(c, false); })}</div>
+        </FieldContext.Provider>
         {error}
       </fieldset>
     );
   }
+  // The control can be any depth down (in a Tooltip, a wrapper component): it reads this.
+  const control: FieldControl = { id: controlId, labelId: props.label == null ? undefined : base + "-label", describedBy: described || undefined, required: props.required || undefined, invalid: hasError || undefined, disabled: props.disabled || undefined };
   return (
     <div {...rest} className={cls} data-component="field">
       {label}
       {hint}
-      <div className="dk-field__control" key="control">
-        <FieldLabelProvider value={label ? { control: controlId, label: base + "-label" } : null}>{child ? pass(child, true) : props.children}</FieldLabelProvider>
-      </div>
+      <FieldContext.Provider value={control}>
+        <div className="dk-field__control" key="control">
+          <FieldLabelProvider value={label ? { control: controlId, label: base + "-label" } : null}>{child ? pass(child, true) : props.children}</FieldLabelProvider>
+        </div>
+      </FieldContext.Provider>
       {error}
     </div>
   );

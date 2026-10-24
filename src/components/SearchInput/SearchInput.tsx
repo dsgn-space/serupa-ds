@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 import { isComposing } from "../../internal/ime";
 import { useSerupa } from "../../internal/provider";
 import * as icons from "../../material/builtin";
@@ -29,6 +30,7 @@ export interface SearchInputProps extends Omit<InputProps, "type" | "leftIcon" |
    <input>. */
 /** A search field: a search icon, a clear button once something is typed, Escape to clear and Enter to search. */
 export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInputProps>("SearchInput", function SearchInput(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
   const rest = omit(props, { size: 1, invalid: 1, className: 1, style: 1, onSearch: 1, onClear: 1, clearLabel: 1, loading: 1, loadingLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");

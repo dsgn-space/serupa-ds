@@ -6,6 +6,7 @@ import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import * as icons from "../../material/builtin";
@@ -61,6 +62,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
    button or Alt+ArrowDown, and closes when the range is complete, on Escape or a click outside. */
 /** Two date fields for a start and end, with a two-month calendar popup to pick the range. */
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>("DateRangePicker", function DateRangePicker(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
