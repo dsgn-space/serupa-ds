@@ -14,7 +14,7 @@
 // Small anti-aliasing differences between machines are tolerated (TOLERANCE of pixels may differ).
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PROJECT, browser, report, serve, suffix } from './lib.mjs';
+import { HERE, PROJECT, browser, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
@@ -32,7 +32,9 @@ const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Numbe
 const all = Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
   .filter((e) => e.type === 'story' && e.exportName !== 'Playground' && !(e.tags || []).includes('!visual') && !SKIP.includes(component(e)))
   .sort((a, b) => a.id.localeCompare(b.id));
-const stories = all.filter((_, i) => i % shards === shard - 1);
+// SERUPA_ONLY (run.mjs --since on a pull request): only the stories of the components the change touches.
+const only = onlyComponents();
+const stories = all.filter((e) => !only || only.has(component(e))).filter((_, i) => i % shards === shard - 1);
 // Every baseline a story can have, to find the ones whose story is gone.
 const expected = new Set(all.flatMap((e) => THEMES.flatMap((th) => ['rest', 'hover', 'focus'].map((s) => `${component(e)}/${e.exportName}-${th}-${s}.png`))));
 const saved = () => fs.readdirSync(DIR, { recursive: true }).map((f) => String(f).split(path.sep).join('/')).filter((f) => f.endsWith('.png') && !f.endsWith('.actual.png'));
@@ -135,7 +137,7 @@ for (const e of stories) {
 await b.close();
 close();
 // A baseline whose story is gone: --update (run whole, not sharded) removes it, and the check fails on it.
-const orphans = saved().filter((f) => !expected.has(f));
+const orphans = saved().filter((f) => !expected.has(f) && (!only || only.has(f.split('/')[0])));
 if (update) {
   if (shards === 1) for (const f of orphans) fs.rmSync(path.join(DIR, f));
   console.log(`Visual baseline saved: ${stories.length} stories.`);
