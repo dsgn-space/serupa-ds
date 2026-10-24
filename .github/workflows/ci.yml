@@ -63,6 +63,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --ignore-scripts
+      # Every installed package's registry signature and provenance attestation checks out, so a tampered
+      # tarball in the lockfile or the cache fails here.
+      - name: Dependencies are signed by the registry
+        run: npm audit signatures
       - name: Every file carries the same version
         run: node tools/release.mjs --check
       - name: Type check
@@ -76,7 +80,9 @@ jobs:
     name: suite (${{ matrix.group }}${{ matrix.shard && format(' {0}', matrix.shard) || '' }})
     needs: build
     strategy:
-      fail-fast: false
+      # On a pull request, the first failing group cancels the others, so the runners go to the next run sooner
+      # (the failure is already enough to fix). Main runs every group to the end, so each failure there shows.
+      fail-fast: ${{ github.event_name == 'pull_request' }}
       matrix:
         # The visual snapshots and Storybook's check (every preview or story in six themes) are the slowest, so
         # they run as shards (SERUPA_SHARD).

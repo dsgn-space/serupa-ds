@@ -2,6 +2,22 @@
 interface PhoneInputLabels {
     country: string;
 }
+interface PhoneCountry {
+    code: string;
+    dial: string;
+    trunk: string;
+    pattern: string;
+    patterns?: Record<string, string>;
+    areas?: string[];
+    min: number;
+    max: number;
+}
+interface ParsedPhone {
+    country: PhoneCountry;
+    national: string;
+}
+declare function parsePhone(value: string, prefer?: string, countries?: readonly PhoneCountry[]): ParsedPhone | undefined;
+declare function formatPhone(e164: string, prefer?: string): string;
 interface PhoneValueDetails {
     country: string;
     national: string;
@@ -14,22 +30,8 @@ interface PhoneInputProps extends Omit<InputProps, "defaultValue" | "leftIcon" |
     country?: string;
     defaultCountry?: string;
     onCountryChange?: (country: string) => void;
-    countries?: string[];
+    countries?: Array<PhoneCountry | string>;
     countryLabel?: string;
     name?: string;
 }
 declare const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps & React.RefAttributes<HTMLInputElement>>;
-interface PhoneCountry {
-    code: string;
-    dial: string;
-    trunk: string;
-    pattern: string;
-    min: number;
-    max: number;
-}
-interface ParsedPhone {
-    country: PhoneCountry;
-    national: string;
-}
-declare function parsePhone(value: string, prefer?: string): ParsedPhone | undefined;
-declare function formatPhone(e164: string, prefer?: string): string;

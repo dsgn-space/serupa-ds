@@ -1,4 +1,8 @@
 // exports: Meter, type MeterProps, meterState, type MeterState
+type MeterZone = "high" | "low" | "medium";
+interface MeterLabels {
+    meterZone: (value: string, zone: MeterZone) => string;
+}
 type MeterState = "none" | "optimum" | "poor" | "suboptimal";
 interface MeterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     value: number;
