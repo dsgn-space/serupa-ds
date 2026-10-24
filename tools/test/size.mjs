@@ -12,7 +12,7 @@ import { PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
-  'All components (index.js)': 49,
+  'All components (index.js)': 52,   // NumberInput's locale parsing and formatting (internal/numbers.ts)
   'Button alone': 12,
   'Dialog alone': 13,
   'components.css': 38,

@@ -327,10 +327,10 @@ describe('Loader', () => {
     expect(css(q('#tok .dk-loader__track')).opacity).toBe('0');
   });
 
-  test('named: role="progressbar" (indeterminate: no value) with aria-label "Loading"; label sets the name; label="" makes it decorative', async () => {
+  test('named: role="progressbar" (indeterminate: no value) with aria-label "Loading…"; label sets the name; label="" makes it decorative', async () => {
     await render(<><Loader id="ring" delay={0} /><Loader id="named" label="Loading projects" delay={0} /><Loader id="deco" label="" delay={0} /></>);
     const r = el('ring'), d = el('deco');
-    expect([r.getAttribute('role'), r.getAttribute('aria-label'), r.hasAttribute('aria-valuenow'), r.hasAttribute('aria-hidden')]).toEqual(['progressbar', 'Loading', false, false]);
+    expect([r.getAttribute('role'), r.getAttribute('aria-label'), r.hasAttribute('aria-valuenow'), r.hasAttribute('aria-hidden')]).toEqual(['progressbar', 'Loading…', false, false]);
     expect(el('named').getAttribute('aria-label')).toBe('Loading projects');
     expect([d.getAttribute('aria-hidden'), d.hasAttribute('role'), d.hasAttribute('aria-label')]).toEqual(['true', false, false]);
     await expect.element(page.getByRole('progressbar', { name: 'Loading projects' })).toBeInTheDocument();
@@ -415,7 +415,7 @@ describe('Loader', () => {
     expect([css(q('#labsm .dk-loader__label')).fontSize, css(q('#lablg .dk-loader__label')).fontSize]).toEqual(['12px', '16px']);
   });
 
-  test('text variant: with label="" it still shows "Loading", decorative; without a label it shows and says "Loading"; ring and dots have no words', async () => {
+  test('text variant: with label="" it still shows "Loading…", decorative; without a label it shows and says "Loading…"; ring and dots have no words', async () => {
     await render(<>
       <Loader id="labempty" variant="text" label="" delay={0} />
       <Loader id="labdefault" variant="text" delay={0} />
@@ -423,8 +423,8 @@ describe('Loader', () => {
       <Loader id="dots" variant="dots" delay={0} />
     </>);
     const e = el('labempty'), d = el('labdefault');
-    expect([e.querySelector('.dk-loader__label')!.textContent, e.getAttribute('aria-hidden'), e.getAttribute('role')]).toEqual(['Loading', 'true', null]);
-    expect([d.querySelector('.dk-loader__label')!.textContent, d.getAttribute('aria-label')]).toEqual(['Loading', 'Loading']);
+    expect([e.querySelector('.dk-loader__label')!.textContent, e.getAttribute('aria-hidden'), e.getAttribute('role')]).toEqual(['Loading…', 'true', null]);
+    expect([d.querySelector('.dk-loader__label')!.textContent, d.getAttribute('aria-label')]).toEqual(['Loading…', 'Loading…']);
     expect([!!q('#ring .dk-loader__label'), !!q('#dots .dk-loader__label')]).toEqual([false, false]);
     expect(box('ring')).toEqual([24, 24]);
   });
@@ -484,9 +484,9 @@ describe('Loader', () => {
     expect([el('skbad').dataset.shape, lines('skbad')]).toEqual(['text', 20]);
   });
 
-  test('skeleton: named like the others (progressbar "Loading"); label="" makes it decorative; tone primary is ignored, inverse is white', async () => {
+  test('skeleton: named like the others (progressbar "Loading…"); label="" makes it decorative; tone primary is ignored, inverse is white', async () => {
     await render(<><Skeletons /><div style={{ background: '#000', width: '200px' }}><Loader id="skinv" variant="skeleton" tone="inverse" label="" delay={0} /></div></>);
-    expect([el('sk1').getAttribute('role'), el('sk1').getAttribute('aria-label')]).toEqual(['progressbar', 'Loading']);
+    expect([el('sk1').getAttribute('role'), el('sk1').getAttribute('aria-label')]).toEqual(['progressbar', 'Loading…']);
     expect([el('sk3').getAttribute('aria-hidden'), el('sk3').getAttribute('role')]).toEqual(['true', null]);
     expect([css(el('skp')).color, css(el('skinv')).color]).toEqual(['rgb(15, 23, 42)', 'rgb(255, 255, 255)']);
   });
