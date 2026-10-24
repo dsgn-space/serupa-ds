@@ -7,7 +7,6 @@ import { Field } from '../Field/Field';
 import { DateRangePicker, type DateRange } from './DateRangePicker';
 
 const box = (tid: string) => document.querySelector(`[data-testid=${tid}]`) as HTMLElement;
-const announcerA = () => document.querySelector('[data-dk-announcer-assertive]') as HTMLElement | null;
 const fields = (tid: string) => [...box(tid).querySelectorAll<HTMLInputElement>('.dk-date-range-picker__field')];
 const vals = (tid: string) => fields(tid).map((x) => x.value).join(' – ');
 const pop = (tid: string) => box(tid).querySelector('.dk-date-range-picker__popup') as HTMLElement;
