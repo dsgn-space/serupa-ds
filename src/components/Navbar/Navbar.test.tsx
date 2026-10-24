@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Navbar, NavbarLink } from './Navbar';
 
@@ -63,6 +63,13 @@ describe('Navbar', () => {
     await userEvent.hover(el('lp'));
     await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color]).toEqual([active.bg, active.color]);
     await away();
+  });
+
+  test('forced colors: the current page keeps a 2px CanvasText outline, since the shading is dropped; other links have none', async () => {
+    await render(<Main />);
+    const cur = q('#nav [aria-current]');
+    const r = await forcedColors(async (active) => (active ? [css(cur).outlineStyle, css(cur).outlineWidth, css(el('lp')).outlineStyle] : null));
+    if (r) expect(r).toEqual(['solid', '2px', 'none']);
   });
 
   test('as: a router link with the link styles', async () => {
@@ -160,6 +167,17 @@ describe('Navbar', () => {
     el('lp').focus();
     await userEvent.keyboard('{Escape}');
     expect([toggle().getAttribute('aria-expanded'), document.activeElement === toggle(), vis('#nav nav')]).toEqual(['false', true, false]);
+  });
+
+  test('a press outside the bar closes it; a press inside it does not', async () => {
+    await render(<Main />);
+    await resize(500);
+    await userEvent.click(toggle());
+    await expect.poll(() => vis('#nav nav')).toBe(true);
+    el('brand').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    expect(vis('#nav nav')).toBe(true);
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    await expect.poll(() => [toggle().getAttribute('aria-expanded'), vis('#nav nav')]).toEqual(['false', false]);
   });
 
   test('following a link closes it', async () => {
