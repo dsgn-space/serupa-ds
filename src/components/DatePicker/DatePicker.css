@@ -13,7 +13,7 @@
 .dk-date-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 .dk-date-picker__button:hover:not(:disabled) { background: var(--date-picker-button-bg-hover, var(--surface-muted)); color: var(--date-picker-button-hover, var(--text)); }
 .dk-date-picker__button:focus { outline: none; }
-.dk-date-picker__button:focus-visible { outline: var(--outline-width-2) solid var(--date-picker-focus-ring, var(--focus-ring)); }
+.dk-date-picker__button:focus-visible { outline: var(--focus-ring-width) solid var(--date-picker-focus-ring, var(--focus-ring)); }
 .dk-date-picker__button:disabled { cursor: not-allowed; }
 .dk-date-picker__popup {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--date-picker-z-index, var(--z-50));

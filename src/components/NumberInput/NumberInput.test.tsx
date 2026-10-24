@@ -142,6 +142,15 @@ describe('NumberInput', () => {
     expect([field('rate').value, calls.at(-1)]).toEqual(['20%', 0.2]);
   });
 
+  test('min with decimals the step doesn\'t have (min 0.5, step 1): ArrowUp from 2.5 is 3.5, and from Home (0.5) is 1.5', async () => {
+    await render(<NumberInput id="half" aria-label="Half" min={0.5} max={5.5} step={1} defaultValue={2.5} />);
+    await userEvent.click(field('half'));
+    await userEvent.keyboard('{ArrowUp}');
+    expect(field('half').value).toBe('3.5');
+    await userEvent.keyboard('{Home}{ArrowUp}');
+    expect(field('half').value).toBe('1.5');
+  });
+
   test('steppers={false}: no buttons', async () => {
     await render(<NumberInput id="bare" aria-label="Bare" steppers={false} />);
     expect(field('bare').parentElement!.querySelector('.dk-number-input__steppers')).toBe(null);
