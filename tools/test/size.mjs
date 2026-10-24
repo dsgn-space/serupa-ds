@@ -14,7 +14,7 @@ import { PROJECT, done, report } from './lib.mjs';
 // KiB, gzipped. About 3 to 5% above the size when each line was last set. [KiB, KiB more per component past AT].
 const AT = 66;
 const RAW = {
-  'All components (index.js)': [60, 2],   // 46.8 once each component imports only its own icons (R7); 52.2 with R21–R28, Meter and CopyButton; 58.7 with RelativeTime, FormattedNumber, InlineEdit, ColorPicker and PhoneInput
+  'All components (index.js)': [63, 2],   // 46.8 once each component imports only its own icons (R7); 52.2 with R21–R28, Meter and CopyButton; 58.7 with RelativeTime, FormattedNumber, InlineEdit, ColorPicker and PhoneInput; 61.9 with every country's calling code in PhoneInput (K2, 2.7 KiB)
   'Button alone': 5.7,   // 5.1, without any icon data (R7); 5.5 once each component's words came from its own labels.ts
   'Dialog alone': 7,   // 6.2, with only its close icon (R7); 6.5 with every label the new components added
   'components.css': [43.5, 1],   // 38.2 after R11 put the hover rules in @media (hover: hover); 40.7 with InlineEdit, ColorPicker and PhoneInput; 42.7 with the long-word wrapping (R31)
