@@ -19,7 +19,7 @@ function Ctl(props: { calls: string[]; setRef?: { set?: (d: Date | null) => void
 }
 
 describe('DatePicker', () => {
-  test('a dk-input field with a "Choose date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
+  test('a dk-input field with a "Choose a date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<>
       <DatePicker id="dp" aria-label="Start" locale="en-US" ref={ref} />
@@ -27,7 +27,7 @@ describe('DatePicker', () => {
     </>);
     const i = el('dp'), b = button('dp');
     expect(ref.current).toBe(i);
-    expect([i.placeholder, i.inputMode, b.getAttribute('aria-label'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')]).toEqual(['mm/dd/yyyy', 'numeric', 'Choose date', 'dialog', 'false']);
+    expect([i.placeholder, i.inputMode, b.getAttribute('aria-label'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')]).toEqual(['mm/dd/yyyy', 'numeric', 'Choose a date', 'dialog', 'false']);
     expect(i.parentElement!.className).toMatch(/dk-input/);
     expect(el('dpde').value + ' ' + el('dpde').placeholder).toBe('22.11.2025 dd.mm.yyyy');
   });
@@ -63,7 +63,7 @@ describe('DatePicker', () => {
     await render(<DatePicker id="dp" aria-label="Start" locale="en-US" defaultValue={new Date(2024, 11, 31)} />);
     await userEvent.click(button('dp'));
     const d = popup('dp');
-    expect([!d.hidden, d.getAttribute('role'), d.getAttribute('aria-label'), focused(), button('dp').getAttribute('aria-expanded'), d.matches(':popover-open')]).toEqual([true, 'dialog', 'Choose date', '2024-12-31', 'true', true]);
+    expect([!d.hidden, d.getAttribute('role'), d.getAttribute('aria-label'), focused(), button('dp').getAttribute('aria-expanded'), d.matches(':popover-open')]).toEqual([true, 'dialog', 'Choose a date', '2024-12-31', 'true', true]);
     await userEvent.keyboard('{ArrowRight}{Enter}');
     expect([el('dp').value, !popup('dp').hidden, focused()]).toEqual(['01/01/2025', false, 'dp']);
   });

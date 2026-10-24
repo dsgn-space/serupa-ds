@@ -7,6 +7,7 @@ import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component, named } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -63,6 +64,7 @@ export const Menu = /* @__PURE__ */ named("Menu", function Menu(props: MenuProps
   }, [open]);
 
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (isComposing(e)) return;
     const list = items(), i = list.indexOf(document.activeElement as HTMLElement);
     const go = (n: number) => { e.preventDefault(); if (list.length) list[(n + list.length) % list.length].focus(); };
     if (e.key === "ArrowDown") go(i + 1);

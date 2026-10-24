@@ -82,6 +82,13 @@ describe('Breadcrumb', () => {
     await expect.poll(() => document.activeElement!.textContent).toBe('Org');
   });
 
+  test('the "…" button is named "Show all pages" by default', async () => {
+    await render(<Breadcrumb id="bdef" maxItems={2}>
+      {['Home', 'Org', 'Team'].map((l) => <BreadcrumbItem key={l} href={'#' + l}>{l}</BreadcrumbItem>)}
+    </Breadcrumb>);
+    expect(q('#bdef .dk-breadcrumb__more')!.getAttribute('aria-label')).toBe('Show all pages');
+  });
+
   test('unknown separator falls back to the chevron; maxItems below 2 is ignored; right to left: the chevron points left', async () => {
     await render(<>
       {/* @ts-expect-error: an unknown separator, as plain JavaScript could pass */}

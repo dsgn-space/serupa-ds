@@ -44,6 +44,7 @@
   user-select: none;
 }
 .dk-menu__item:focus { outline: none; background: var(--menu-item-bg-active, var(--secondary)); }
+.dk-menu__item:active:not([aria-disabled="true"], .dk-menu__item--destructive) { background: var(--menu-item-bg-pressed, var(--pressed)); }
 .dk-menu__item:focus-visible { outline: var(--focus-ring-width) solid transparent; }   /* shows in forced colors */
 .dk-menu__icon { display: inline-flex; flex-shrink: 0; color: var(--menu-muted, var(--text-muted)); }
 .dk-menu__icon .dk-icon { font-size: var(--spacing-4); }
