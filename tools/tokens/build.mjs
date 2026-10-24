@@ -50,6 +50,7 @@ export function buildTokensCss(t) {
   for (const s of styles) {
     css += `.${s.name} {\n  font-family: var(--font-${s.family});\n  font-size: ${s.fontSize};\n  line-height: ${s.lineHeight};\n  font-weight: ${s.fontWeight};\n  letter-spacing: ${s.letterSpacing};\n`;
     if (s.fontStyle && s.fontStyle !== 'normal') css += `  font-style: ${s.fontStyle};\n`;
+    if (s.textTransform) css += `  text-transform: ${s.textTransform};\n`;
     if (s.opticalSize != null) css += `  font-variation-settings: "opsz" ${s.opticalSize};\n`;
     css += '}\n';
   }
