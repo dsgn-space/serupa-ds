@@ -5,6 +5,7 @@ import { warnOnce } from "../../internal/warn";
 import { Icon, type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
+import * as icons from "../../material/builtin";
 
 export type SelectOption = string | number | { value: string | number; label?: React.ReactNode; disabled?: boolean };
 export interface SelectOptionGroup { label: string; options: SelectOption[]; disabled?: boolean }
@@ -59,7 +60,7 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
         {optionNodes(props.options)}
         {props.children}
       </select>
-      <span className="dk-select__icon dk-select__icon--chevron" aria-hidden key="chevron"><Icon name="expand_more" /></span>
+      <span className="dk-select__icon dk-select__icon--chevron" aria-hidden key="chevron"><Icon icon={icons.ExpandMore} /></span>
     </span>
   );
 });

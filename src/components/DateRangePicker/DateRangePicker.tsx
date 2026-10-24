@@ -8,6 +8,7 @@ import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
+import * as icons from "../../material/builtin";
 import { isComposing } from "../../internal/ime";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
@@ -163,7 +164,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       {field("end")}
       <button ref={button} type="button" className="dk-date-picker__button dk-date-range-picker__button" aria-label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
         disabled={off} onClick={() => { if (open) close(false); else { read("start"); show(); } }}>
-        <Icon name="date_range" />
+        <Icon icon={icons.DateRange} />
       </button>
       {startName ? <input type="hidden" name={startName} value={value.start ? isoDate(value.start) : ""} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} value={value.end ? isoDate(value.end) : ""} disabled={disabled} /> : null}

@@ -4,6 +4,8 @@ import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
+import type { IconData } from "../../material/types";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
@@ -98,7 +100,7 @@ export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowP
   return <tr {...rest} ref={ref} aria-selected={props.selected === undefined ? undefined : !!props.selected} className={cn("dk-table__row", props.selected && "dk-table__row--selected", props.className)} />;
 });
 
-const NEXT_ICON: Record<SortDirection, string> = { ascending: "arrow_upward", descending: "arrow_downward", none: "unfold_more" };
+const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
 
 /** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. */
 export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>("TableHeaderCell", function TableHeaderCell(props, ref) {
@@ -111,7 +113,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
       {sort ? (
         <button type="button" className="dk-table__sort" onClick={props.onSort}>
           <span>{props.children}</span>
-          <Icon name={NEXT_ICON[sort]} className={cn("dk-table__sort-icon", sort === "none" && "dk-table__sort-icon--idle")} />
+          <Icon icon={NEXT_ICON[sort]} className={cn("dk-table__sort-icon", sort === "none" && "dk-table__sort-icon--idle")} />
         </button>
       ) : props.children}
     </th>

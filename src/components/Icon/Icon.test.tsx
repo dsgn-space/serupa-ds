@@ -2,20 +2,35 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { settle } from '../../../tools/test/vitest/helpers';
-import { BUILTIN_ICONS } from '../../material/builtin';
+import { renderToString } from 'react-dom/server';
+import { Close } from '../../material/builtin';
+import { NAMED_ICONS } from '../../material/named';
+import { Checkbox } from '../Checkbox/Checkbox';
 import { Icon } from './Icon';
 
 const path = (id: string) => document.querySelector(`#${id} svg path`);
 
 describe('Icon', () => {
-  test('a built-in icon (one the components use) draws on the first render', async () => {
-    expect(BUILTIN_ICONS.some((d) => d.name === 'close')).toBe(true);
+  test('an imported icon draws on the first render, on the server too', async () => {
+    expect(renderToString(<Icon icon={Close} />)).toContain(`d="${Close.d}"`);
+    await render(<Icon id="imported" icon={Close} />);
+    expect(path('imported')).not.toBeNull();
+  });
+
+  test("a component's own icons draw on the first render, on the server too", async () => {
+    expect(renderToString(<Checkbox defaultChecked aria-label="Done" />)).toContain('<path d="');
+    await render(<Checkbox id="done" defaultChecked aria-label="Done" />);
+    expect(document.querySelector('.dk-checkbox__icon svg path')).not.toBeNull();
+  });
+
+  test("a component icon's name loads from the small chunk, then draws", async () => {
+    expect(NAMED_ICONS.some((d) => d.name === 'close')).toBe(true);
     await render(<Icon id="close" name="close" />);
-    expect(path('close')).not.toBeNull();
+    await vi.waitFor(() => expect(path('close')).not.toBeNull());
   });
 
   test('any other Material Symbol loads the full set once, then draws', async () => {
-    expect(BUILTIN_ICONS.some((d) => d.name === 'sports_cricket')).toBe(false);
+    expect(NAMED_ICONS.some((d) => d.name === 'sports_cricket')).toBe(false);
     await render(<Icon id="cricket" name="sports_cricket" />);
     await vi.waitFor(() => expect(path('cricket')).not.toBeNull());
   });

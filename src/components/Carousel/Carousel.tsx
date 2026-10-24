@@ -6,6 +6,7 @@ import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
 import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   /** The slides, one per child (pictures, cards, anything). */
@@ -148,10 +149,10 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
         </div>
         {props.arrows !== false && count > 1 ? <>
           <IconButton className="dk-carousel__arrow dk-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="round" noTitle
-            icon={<><Icon name="chevron_left" className="dk-carousel__ltr" /><Icon name="chevron_right" className="dk-carousel__rtl" /></>}
+            icon={<><Icon icon={icons.ChevronLeft} className="dk-carousel__ltr" /><Icon icon={icons.ChevronRight} className="dk-carousel__rtl" /></>}
             ref={prevBtn} disabled={prevOff} onClick={() => arrow(-1)} />
           <IconButton className="dk-carousel__arrow dk-carousel__arrow--next" label={props.nextLabel || sds.labels.nextSlide} size="sm" variant="secondary" shape="round" noTitle
-            icon={<><Icon name="chevron_right" className="dk-carousel__ltr" /><Icon name="chevron_left" className="dk-carousel__rtl" /></>}
+            icon={<><Icon icon={icons.ChevronRight} className="dk-carousel__ltr" /><Icon icon={icons.ChevronLeft} className="dk-carousel__rtl" /></>}
             ref={nextBtn} disabled={nextOff} onClick={() => arrow(1)} />
         </> : null}
       </div>

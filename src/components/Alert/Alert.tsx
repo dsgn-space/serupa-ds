@@ -6,6 +6,8 @@ import { asIcon } from "../Icon/asIcon";
 import { Button } from "../Button/Button";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
+import type { IconData } from "../../material/types";
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -29,7 +31,7 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
    others; pass role to change it. className and every other prop go to the box. */
 const OWN = { tone: 1, title: 1, icon: 1, actions: 1, onDismiss: 1, dismissLabel: 1, className: 1, children: 1 } as const;
 const TONES: readonly AlertTone[] = ["info", "success", "warning", "danger", "neutral"];
-const ICONS: Record<AlertTone, string> = { info: "info", success: "check_circle", warning: "warning", danger: "error", neutral: "info" };
+const ICONS: Record<AlertTone, IconData> = { info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error, neutral: icons.Info };
 
 /** A message about the page or a task: a tinted box with an icon, an optional title, actions and a close button. */
 export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Alert", function Alert(props, ref) {
@@ -38,7 +40,7 @@ export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Aler
   const tone = oneOf(TONES, props.tone, "info");
   const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
   if (rest.role == null) rest.role = tone === "warning" || tone === "danger" ? "alert" : "status";
-  const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon name={ICONS[tone]} /> : asIcon(props.icon);
+  const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon icon={ICONS[tone]} /> : asIcon(props.icon);
   return (
     <div {...rest} ref={ref} className={cn("dk-alert", "dk-alert--" + tone, props.className)} data-component="alert" data-tone={tone}>
       {icon ? <span className="dk-alert__icon" aria-hidden="true">{icon}</span> : null}
@@ -47,7 +49,7 @@ export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Aler
         {has(props.children) ? <div className="dk-alert__message">{props.children}</div> : null}
         {has(props.actions) ? <div className="dk-alert__actions">{props.actions}</div> : null}
       </div>
-      {props.onDismiss ? <Button className="dk-alert__dismiss" variant="ghost" size="sm" icon="close" aria-label={props.dismissLabel || sds.labels.dismiss} onClick={props.onDismiss} /> : null}
+      {props.onDismiss ? <Button className="dk-alert__dismiss" variant="ghost" size="sm" icon={icons.Close} aria-label={props.dismissLabel || sds.labels.dismiss} onClick={props.onDismiss} /> : null}
     </div>
   );
 });

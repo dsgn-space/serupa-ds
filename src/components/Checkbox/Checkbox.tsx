@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import * as icons from "../../material/builtin";
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** 'sm' (14px box, text-xs), 'md' (16px, text-sm, default) or 'lg' (20px, text-base). */
@@ -47,7 +48,7 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
     <label className={cn("dk-checkbox", "dk-checkbox--size-" + size, invalid && "dk-checkbox--invalid", rest.disabled && "dk-checkbox--disabled", !hasLabel && !hasDesc && "dk-checkbox--bare", props.className)} style={props.style} data-component="checkbox" data-size={size}>
       <span className="dk-checkbox__control" key="control">
         <input {...rest} ref={setRefs} type="checkbox" className="dk-checkbox__input" key="input" />
-        <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon name={mixed ? "remove" : "check"} /></span>
+        <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>
       </span>
       {hasLabel || hasDesc ? <span className="dk-checkbox__text" key="text">
         {hasLabel ? <span className="dk-checkbox__label" id={labelId} key="label">{props.children}</span> : null}
