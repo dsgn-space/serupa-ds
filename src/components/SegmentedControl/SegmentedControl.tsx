@@ -5,6 +5,7 @@ import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { useFieldLabel } from "../../internal/fieldLabel";
 
 export interface SegmentedControlOption {
   value: string;
@@ -55,6 +56,8 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
   const size = props.size === "sm" ? "sm" : "md";
+  // In a Field, its label names the group (Field's <label for> can't reach a radiogroup); its own name wins.
+  const fieldLabel = useFieldLabel(props.id);
 
   const choose = (v: string, focus?: boolean) => {
     if (focus) { const b = buttons.current[v]; if (b) b.focus(); }
@@ -98,6 +101,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   return (
     <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }}
       role="radiogroup" aria-disabled={disabled || undefined}
+      aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : fieldLabel)}
       className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", props.className)}
       data-component="segmented-control" data-size={size}>
       {box ? <span className="dk-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}

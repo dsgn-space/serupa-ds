@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 
 const PERIODS: SegmentedControlOption[] = [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }, { value: 'year', label: 'Year', disabled: true }];
@@ -72,6 +73,17 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('per')).toEqual([0, 0]);
     await userEvent.click(seg('per', 'year'), { force: true });
     expect(checked('per')).toBe('month');
+  });
+
+  test('in a Field: the label names the radiogroup and the hint describes it; its own aria-label still wins', async () => {
+    await render(<>
+      <Field label="Period" hint="Shown on the chart"><SegmentedControl data-testid="sg1" options={PERIODS} /></Field>
+      <Field label="Period"><SegmentedControl data-testid="sg2" aria-label="Chart period" options={PERIODS} /></Field>
+    </>);
+    const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    expect([text(root('sg1').getAttribute('aria-labelledby')), text(root('sg1').getAttribute('aria-describedby'))]).toEqual(['Period', 'Shown on the chart']);
+    expect([root('sg2').getAttribute('aria-label'), root('sg2').getAttribute('aria-labelledby')]).toEqual(['Chart period', null]);
   });
 
   test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it)', async () => {
