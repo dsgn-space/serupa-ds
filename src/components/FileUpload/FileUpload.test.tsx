@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 
 const file = (name: string, type: string, size: number) => new File([new Uint8Array(size).fill(1)], name, { type });
@@ -88,6 +89,19 @@ describe('FileUpload', () => {
     expect([changes.join(';'), list(el).length]).toEqual(['one.png;two.png', 1]);
     React.act(() => setRef.set!([]));
     await expect.poll(() => list(el).length).toBe(0);
+  });
+
+  test('in a Field: the button is named "Due date, Choose a file" and described by the Field\'s hint, then its own; outside a Field it keeps its own name', async () => {
+    await render(<>
+      <Field label="Due date" hint="The signed form"><FileUpload data-testid="fu1" hint="PDF, up to 5 MB" /></Field>
+      <FileUpload data-testid="fu2" />
+    </>);
+    const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    const b = choose(root('fu1'));
+    expect([text(b.getAttribute('aria-labelledby')), text(b.getAttribute('aria-describedby')), root('fu1').getAttribute('aria-describedby')])
+      .toEqual(['Due date / Choose a file', 'The signed form / PDF, up to 5 MB', null]);
+    expect([choose(root('fu2')).getAttribute('aria-labelledby'), choose(root('fu2')).textContent]).toEqual([null, 'Choose a file']);
   });
 
   test('ref.current.focus() and autoFocus land on the choose button, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
