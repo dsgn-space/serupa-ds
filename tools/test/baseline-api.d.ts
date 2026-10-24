@@ -703,6 +703,9 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
         string
     ];
     name?: string;
+    invalid?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
 }
 declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;

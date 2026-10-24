@@ -38,6 +38,9 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 
 - Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
 - The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
+- `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in all six themes). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
+- `readOnly` keeps the thumbs in the Tab order with `aria-readonly`, so people can still hear the value, but keys and presses don't change it. With `name`, the value is still sent with the form, which `disabled` doesn't do.
+- A slider always has a value, so `required` has nothing to check. It's accepted, so Field's `required` doesn't reach the DOM, and has no effect.
 - `disabled`, or a disabled `<fieldset>` around it, takes the thumbs out of the Tab order, sets `aria-disabled` and ignores keys and presses, as native inputs do.
 
 ### Keyboard
@@ -64,6 +67,8 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `largeStep` | `number` | `10` | Steps moved by PageUp, PageDown and Shift with an arrow. |
 | `size` | `'sm' \| 'md'` | `'md'` | 4px track and 16px thumb, or 6px and 20px. |
 | `disabled` | `boolean` | `false` | |
+| `invalid` | `boolean` | `false` | A danger fill and ring, and `aria-invalid` on the thumbs. Field's `error` sets it. |
+| `readOnly` | `boolean` | `false` | Focusable and read out, but it doesn't move; the value is still submitted. |
 | `formatValue` | `(value: number) => string` | | The words read out for a value (`aria-valuetext`), such as "$40". |
 | `thumbLabels` | `[string, string]` | `['Minimum', 'Maximum']` | A range's thumb names. |
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
@@ -81,6 +86,7 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-thumb-bg` | `field` | The thumb's inside. |
 | `--slider-thumb-border` | `primary` | The thumb's ring (3:1 on the surface). |
 | `--slider-focus-ring` | `focus-ring` | The thumb's keyboard focus ring. |
+| `--slider-invalid` | `danger` | The fill and the thumb's ring when invalid. |
 | `--slider-track-height-sm` | `spacing-1` | The track's thickness, size="sm" (4px). |
 | `--slider-track-height-md` | `spacing-1_5` | The track's thickness, size="md", the default (6px). |
 | `--slider-thumb-size-sm` | `spacing-4` | The thumb, size="sm" (16px). |

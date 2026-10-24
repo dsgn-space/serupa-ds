@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { cn, omit } from "../../internal/cn";
+import { cn, isInvalid, omit } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
 import { useFieldsetDisabled } from "../../internal/useFieldsetDisabled";
@@ -35,9 +35,15 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   thumbLabels?: [string, string];
   /** Submits the value with a form: one hidden input, or two with the same name for a range. */
   name?: string;
+  /** A danger fill and thumb ring, and aria-invalid on the thumbs. Say what's wrong in text next to it (Field's error does). */
+  invalid?: boolean;
+  /** Focusable and read out, but keys and presses don't change it; the value is still submitted. */
+  readOnly?: boolean;
+  /** Accepted so Field's required doesn't reach the DOM. A slider always has a value, so it has no effect. */
+  required?: boolean;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, invalid: 1, readOnly: 1, required: 1, "aria-required": 1, "aria-invalid": 1, "aria-readonly": 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const;
 
 /* Slider: picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Each thumb
    is role="slider" with aria-valuenow, min, max and valuetext. Arrows change it by step (Right and Up raise it;
@@ -66,6 +72,9 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   // A disabled <fieldset> around it disables it too, as it does native inputs.
   const inDisabledFieldset = useFieldsetDisabled(root);
   const disabled = !!props.disabled || inDisabledFieldset;
+  const invalid = isInvalid(props.invalid, props["aria-invalid"]);
+  const readOnly = !!props.readOnly || props["aria-readonly"] === true || props["aria-readonly"] === "true";
+  const still = disabled || readOnly;   // nothing moves the value
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
   const out = (vs: number[]): SliderValue => (isRange ? [vs[0], vs[1]] : vs[0]);
   const text = (v: number) => (props.formatValue ? props.formatValue(v) : String(v));
@@ -99,6 +108,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
     const v = fromPoint(e.clientX), vs = latest.current;
     let i = 0;
     if (isRange) { const d0 = Math.abs(v - vs[0]), d1 = Math.abs(v - vs[1]); i = d1 < d0 || (d1 === d0 && v > vs[1]) ? 1 : 0; }
+    // Read-only: a press focuses the nearest thumb, as it would a read-only input, and moves nothing.
+    if (readOnly) { thumbs.current[i]?.focus({ preventScroll: true }); return; }
     drag.current = i;
     e.currentTarget.setPointerCapture(e.pointerId);
     set(i, v);
@@ -109,7 +120,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   // Your onKeyDown runs first, so preventDefault() in it keeps the slider's own handling of that key from running.
   const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e as unknown as React.KeyboardEvent<HTMLDivElement>);
-    if (disabled || e.defaultPrevented) return;
+    if (still || e.defaultPrevented) return;
     const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
     const by = (e.shiftKey ? large : 1) * step, v = latest.current[i];
     let n: number;
@@ -139,8 +150,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
       role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? props["aria-labelledby"] : undefined}
-      className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", props.className)}
-      data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined}
+      className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", readOnly && "dk-slider--readonly", invalid && "dk-slider--invalid", props.className)}
+      data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined} data-readonly={readOnly ? "" : undefined} data-invalid={invalid ? "" : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
       onKeyDown={undefined} onFocus={onFocus} onBlur={onBlur}>
       <div className="dk-slider__track">
@@ -148,7 +159,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
         {vals.map((v, i) => (
           <span key={i} ref={(n) => { thumbs.current[i] = n; }} className="dk-slider__thumb" style={{ insetInlineStart: pct(v) + "%" }}
             role="slider" tabIndex={disabled ? -1 : 0} aria-valuenow={v} aria-valuemin={isRange && i === 1 ? vals[0] : min} aria-valuemax={isRange && i === 0 ? vals[1] : max}
-            aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation="horizontal" aria-disabled={disabled || undefined}
+            aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation="horizontal" aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
             aria-label={isRange ? names[i] : props["aria-label"]} aria-labelledby={isRange ? undefined : props["aria-labelledby"]}
             onKeyDown={onKeyDown(i)} />
         ))}
