@@ -48,6 +48,7 @@ const [open, setOpen] = React.useState(false);
 
 - `aria-modal`, named by the title (`aria-labelledby`) and described by the description. Without a title, give it an `aria-label`.
 - Use `alert` only for decisions people must make; Escape still cancels.
+- Stacked: a Dialog or Drawer opened from inside another takes focus, and Escape, its × and its backdrop close only it. The next Escape closes the one underneath.
 - The title and description keep 4.5:1 on the panel in all six themes (`Dialog.test.tsx`). In forced-colors mode the panel gets a border.
 
 ## Props

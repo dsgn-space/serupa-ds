@@ -83,6 +83,8 @@ import { PasswordInput } from "./components/PasswordInput/PasswordInput";
 export type { PasswordInputProps } from "./components/PasswordInput/PasswordInput";
 import { Popover } from "./components/Popover/Popover";
 export type { PopoverProps } from "./components/Popover/Popover";
+import { CopyButton } from "./components/CopyButton/CopyButton";
+export type { CopyButtonProps } from "./components/CopyButton/CopyButton";
 import { Meter, meterState } from "./components/Meter/Meter";
 export type { MeterProps, MeterState } from "./components/Meter/Meter";
 import { Progress } from "./components/Progress/Progress";
@@ -139,7 +141,7 @@ export type { IconData } from "./material/types";
 export type { MaterialIconName } from "./material/icons";
 export type { SerupaTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, ColorPicker, Combobox, configure, Container, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, enLabels, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, idLabels, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, meterState, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, SortableList, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, useSerupa, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, ColorPicker, Combobox, configure, Container, CopyButton, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, enLabels, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, idLabels, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, meterState, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, SortableList, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, useSerupa, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -153,7 +155,7 @@ declare global {
       Accordion: typeof Accordion; AccordionItem: typeof AccordionItem; Alert: typeof Alert; Avatar: typeof Avatar; AvatarGroup: typeof AvatarGroup; Badge: typeof Badge;
       Breadcrumb: typeof Breadcrumb; BreadcrumbItem: typeof BreadcrumbItem; Button: typeof Button; buttonClass: typeof buttonClass;
       ButtonGroup: typeof ButtonGroup; Card: typeof Card; CardBody: typeof CardBody; CardFooter: typeof CardFooter; CardHeader: typeof CardHeader;
-      Calendar: typeof Calendar; Carousel: typeof Carousel; Checkbox: typeof Checkbox; ColorPicker: typeof ColorPicker; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; customIcons: typeof customIcons; registerIcons: typeof registerIcons; getIcon: typeof getIcon;
+      Calendar: typeof Calendar; Carousel: typeof Carousel; Checkbox: typeof Checkbox; ColorPicker: typeof ColorPicker; Combobox: typeof Combobox; configure: typeof configure; Container: typeof Container; CopyButton: typeof CopyButton; customIcons: typeof customIcons; registerIcons: typeof registerIcons; getIcon: typeof getIcon;
       DatePicker: typeof DatePicker; DateRangePicker: typeof DateRangePicker; Dialog: typeof Dialog; Divider: typeof Divider; Drawer: typeof Drawer; EmptyState: typeof EmptyState; enLabels: typeof enLabels; idLabels: typeof idLabels; Fab: typeof Fab; Field: typeof Field; FileUpload: typeof FileUpload; formatFileSize: typeof formatFileSize;
       Grid: typeof Grid; Heading: typeof Heading; Icon: typeof Icon; IconButton: typeof IconButton; Image: typeof Image; initials: typeof initials; Input: typeof Input; Kbd: typeof Kbd;
       Link: typeof Link; List: typeof List; ListItem: typeof ListItem; Loader: typeof Loader; Menu: typeof Menu; MenuGroup: typeof MenuGroup;

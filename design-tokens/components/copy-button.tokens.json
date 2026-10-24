@@ -1,0 +1,17 @@
+{
+  "copy-button": {
+    "$description": "CopyButton's component tokens. Each one is an optional override: set the CSS variable (--copy-button-<name>) on the page, a container or one button, and every CopyButton inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The rest of its look comes from Button's tokens.",
+    "color": {
+      "done-color": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "The check icon once it has copied (3:1 on the button).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--copy-button-done-color"
+          }
+        }
+      }
+    }
+  }
+}
