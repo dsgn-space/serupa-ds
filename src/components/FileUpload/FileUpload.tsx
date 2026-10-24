@@ -7,6 +7,7 @@ import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
+import { useFieldLabel } from "../../internal/fieldLabel";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export { formatFileSize };
@@ -40,7 +41,7 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   removeLabel?: (name: string) => string;
 }
 
-const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1 } as const;
+const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1 } as const;
 
 function accepts(file: File, accept?: string) {
   if (!accept) return true;
@@ -139,14 +140,18 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     onDrop: (e: React.DragEvent) => { if (disabled) return; e.preventDefault(); depth.current = 0; setOver(false); add(e.dataTransfer.files); },
   };
   const hasHint = props.hint != null && props.hint !== "";
+  // In a Field (whose <label for> reaches only the hidden input), the button is named "Due date, Choose a file" and
+  // described by the Field's hint and error, then its own hint.
+  const fieldLabel = useFieldLabel(inputId);
   return (
     <div {...rest} ref={(n) => { delegateFocus(n, choose); setRef(ref, n); }} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
       <div className={cn("dk-file-upload__zone", over && "dk-file-upload__zone--over")} data-dragging={over ? "" : undefined} aria-disabled={disabled || undefined} {...drag}
         onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
         <Icon name="upload_file" className="dk-file-upload__icon" />
         <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
-        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()} aria-describedby={hasHint ? base + "-hint" : undefined}>
-          {props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}
+        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()}
+          aria-labelledby={fieldLabel ? fieldLabel + " " + base + "-choose" : undefined} aria-describedby={cn(props["aria-describedby"], hasHint && base + "-hint") || undefined}>
+          <span id={base + "-choose"}>{props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}</span>
         </Button>
         {hasHint ? <p className="dk-file-upload__hint" id={base + "-hint"}>{props.hint}</p> : null}
         <input ref={input} id={inputId} type="file" className="dk-file-upload__input" tabIndex={-1} aria-hidden name={props.name} accept={props.accept} multiple={multiple} disabled={disabled}
