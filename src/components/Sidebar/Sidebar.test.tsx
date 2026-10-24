@@ -142,6 +142,8 @@ describe('Sidebar', () => {
     await render(<App />);
     React.act(() => setCollapsed(true));
     await expect.poll(() => Math.round(rect(el('sb')).width)).toBe(64);
+    // A key first: after a test that clicked, a script's focus() isn't :focus-visible, and the tooltip waits for that.
+    await userEvent.keyboard('{Shift}');
     el('ihome').focus();
     const tip = () => document.getElementById(el('ihome').getAttribute('aria-labelledby') || '');
     await expect.poll(() => tip()?.matches(':popover-open')).toBe(true);
