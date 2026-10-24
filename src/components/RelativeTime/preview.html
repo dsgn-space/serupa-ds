@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>RelativeTime — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement, m = function (n) { return Date.now() - n * 60000; };
+  ReactDOM.createRoot(document.getElementById('root')).render(h('p', { style: { margin: 0 } },
+    'Edited ', h(T.RelativeTime, { date: m(3), locale: 'en-US' }), '. Created ', h(T.RelativeTime, { date: m(60 * 26), locale: 'en-US' }), '. Next sync ', h(T.RelativeTime, { date: m(-15), locale: 'en-US' }), '.'));
+</script>
+</body>
+</html>

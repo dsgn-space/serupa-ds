@@ -1,0 +1,75 @@
+"use client";
+import * as React from "react";
+import { cn, omit } from "../../internal/cn";
+import { component } from "../../internal/component";
+import { useLocale } from "../../internal/provider";
+
+export interface RelativeTimeProps extends Omit<React.TimeHTMLAttributes<HTMLTimeElement>, 'children' | 'dateTime'> {
+  /** The moment: a Date, a timestamp in ms, or a string Date can read ("2026-10-24T09:30:00Z"). */
+  date: Date | number | string;
+  /** 'long' ("3 minutes ago", default), 'short' ("3 min. ago") or 'narrow' ("3m ago"), as Intl.RelativeTimeFormat writes them. */
+  format?: 'long' | 'short' | 'narrow';
+  /** 'auto' (default): "yesterday", "now", "next week" where the language has a word. 'always': "1 day ago". */
+  numeric?: 'auto' | 'always';
+  /** How the exact date in the tooltip (title) is written. Default: { dateStyle: "long", timeStyle: "short" }. false: no tooltip. */
+  titleFormat?: Intl.DateTimeFormatOptions | false;
+  /** A locale for this one; otherwise the SerupaProvider's, else the browser's. */
+  locale?: string;
+}
+
+/* One clock for every RelativeTime on the page: it ticks every 15 seconds while any is mounted (and at once when
+   the tab comes back into view), so a page of timestamps re-renders together rather than each on its own timer. */
+const TICK = 15000;
+let now = Date.now();
+const listeners = new Set<() => void>();
+let timer: ReturnType<typeof setInterval> | null = null;
+const tick = () => { now = Date.now(); listeners.forEach((l) => l()); };
+const onVisible = () => { if (document.visibilityState === "visible") tick(); };
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  if (!timer) {
+    timer = setInterval(tick, TICK);
+    document.addEventListener("visibilitychange", onVisible);
+    if (Date.now() - now > 1000) tick();   // the clock stood still while nothing was mounted
+  }
+  return () => {
+    listeners.delete(cb);
+    if (!listeners.size && timer) { clearInterval(timer); timer = null; document.removeEventListener("visibilitychange", onVisible); }
+  };
+}
+const getNow = () => { if (!timer && Date.now() - now > TICK) now = Date.now(); return now; };
+// The server's moment is used for hydration too, so the first client render matches the HTML; the browser's clock
+// takes over right after (useSyncExternalStore's server snapshot).
+let serverNow: number | null = null;
+const getServerNow = () => (serverNow ??= Date.now());
+
+const UNITS: Array<[Intl.RelativeTimeFormatUnit, number, number]> = [
+  // [unit, its length in seconds, use it while the gap is under this many seconds]
+  ["second", 1, 45], ["minute", 60, 45 * 60], ["hour", 3600, 22 * 3600], ["day", 86400, 26 * 86400], ["month", 2629800, 320 * 86400], ["year", 31557600, Infinity],
+];
+
+/** The words for a moment relative to now, as RelativeTime writes them: "3 minutes ago", "in 2 days", "now". */
+export function relativeTime(date: Date | number | string, now: number, locale?: string, options?: { format?: 'long' | 'short' | 'narrow'; numeric?: 'auto' | 'always' }): string {
+  const t = new Date(date).getTime();
+  if (!isFinite(t)) return "";
+  const secs = (t - now) / 1000, abs = Math.abs(secs);
+  const rtf = new Intl.RelativeTimeFormat(locale, { style: options?.format || "long", numeric: options?.numeric || "auto" });
+  const [unit, size] = UNITS.find(([, , under]) => abs < under)!;
+  // Under 45 seconds is "now" ("0 seconds ago" with numeric always): a timer every 15s can't keep seconds honest.
+  return unit === "second" ? rtf.format(0, "second") : rtf.format(Math.round(secs / size), unit);
+}
+
+/* RelativeTime: a <time datetime> that says how long ago (or how far ahead) a moment is, in the locale's words:
+   "3 minutes ago", "yesterday", "in 2 hours". It updates on one shared 15-second clock, and the exact date is its
+   tooltip (title). format "long" (default), "short" or "narrow"; numeric "auto" (default) or "always". */
+/** How long ago a moment was, in words ("3 minutes ago"), kept up to date; the exact date in its tooltip. */
+export const RelativeTime = /* @__PURE__ */ component<HTMLTimeElement, RelativeTimeProps>("RelativeTime", function RelativeTime(props, ref) {
+  const rest = omit(props, { date: 1, format: 1, numeric: 1, titleFormat: 1, locale: 1, className: 1 });
+  const locale = useLocale(props.locale);
+  const current = React.useSyncExternalStore(subscribe, getNow, getServerNow);
+  const d = new Date(props.date), valid = isFinite(d.getTime());
+  const text = valid ? relativeTime(d, current, locale, { format: props.format, numeric: props.numeric }) : "";
+  const title = !valid || props.titleFormat === false ? undefined : new Intl.DateTimeFormat(locale, props.titleFormat || { dateStyle: "long", timeStyle: "short" }).format(d);
+  return <time {...rest} ref={ref} dateTime={valid ? d.toISOString() : undefined} title={rest.title ?? title} className={cn("dk-relative-time", props.className)}
+    data-component="relative-time" suppressHydrationWarning>{text}</time>;
+});

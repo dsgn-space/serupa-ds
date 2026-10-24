@@ -20,7 +20,7 @@ const BUDGET = {
   'bundle.css': 212,   // 206.2 with InlineEdit, ColorPicker and PhoneInput
   'base.css': 1.85,   // 1.74 with the print styles (R12)
   'theme.js': 2,
-  'serupa.iife.js': 600,
+  'serupa.iife.js': 610,   // 601.5 with InlineEdit and ColorPicker; PhoneInput's country table adds a few KiB
 };
 
 const gz = (buf) => zlib.gzipSync(buf, { level: 9 }).length;

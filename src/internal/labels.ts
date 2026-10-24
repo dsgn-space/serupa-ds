@@ -47,6 +47,8 @@ export interface SerupaLabels {
   /** NumberInput step buttons. */
   decrease: string;
   increase: string;
+  /** InlineEdit: after the text in its button's name ("Project name: Apollo, Edit"). */
+  edit: string;
   /** DatePicker, DateRangePicker and TimePicker. */
   chooseDate: string;
   chooseDates: string;
@@ -126,6 +128,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   slideOf: (slide, total) => slide + " of " + total,
   decrease: "Decrease",
   increase: "Increase",
+  edit: "Edit",
   chooseDate: "Choose a date",
   chooseDates: "Choose dates",
   chooseTime: "Choose a time",
@@ -193,6 +196,7 @@ export const idLabels: SerupaLabels = {
   slideOf: (slide, total) => slide + " dari " + total,
   decrease: "Kurangi",
   increase: "Tambah",
+  edit: "Ubah",
   chooseDate: "Pilih tanggal",
   chooseDates: "Pilih rentang tanggal",
   chooseTime: "Pilih waktu",
