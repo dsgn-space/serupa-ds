@@ -6,7 +6,7 @@ import { Field } from '../Field/Field';
 const meta = {
   title: 'Components/Forms/Slider',
   component: Slider,
-  args: { 'aria-label': 'Volume', defaultValue: 50, min: 0, max: 100, step: 1, size: 'md', disabled: false },
+  args: { 'aria-label': 'Volume', defaultValue: 50, min: 0, max: 100, step: 1, size: 'md', disabled: false, invalid: false, readOnly: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },
   decorators: [(Story) => <div style={{ maxWidth: 'var(--container-sm)' }}><Story /></div>],
 } satisfies Meta<typeof Slider>;
@@ -24,3 +24,7 @@ export const Range: Story = {
 };
 export const Small: Story = { args: { size: 'sm', defaultValue: 30 } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 70 } };
+export const ReadOnly: Story = { args: { readOnly: true, defaultValue: 40 } };
+export const Invalid: Story = {
+  render: (args) => <Field label="Volume" error="Keep it under 80 for hearing safety"><Slider {...args} defaultValue={90} /></Field>,
+};

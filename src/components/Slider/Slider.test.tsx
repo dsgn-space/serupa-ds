@@ -266,4 +266,41 @@ describe('Slider', () => {
     await userEvent.keyboard('{ArrowRight}');
     expect(Number(t.getAttribute('aria-valuenow'))).toBe(4e-7);
   });
+
+  test('readOnly: the thumb takes focus and says aria-readonly, but keys and presses leave the value, and a form still gets it', async () => {
+    const changed: number[] = [];
+    await render(<form id="ro-form" style={{ width: '420px' }}><Slider id="ro" aria-label="Locked" readOnly defaultValue={30} name="v" onValueChange={(v) => { changed.push(v); }} /></form>);
+    const t = thumb('ro');
+    expect([t.tabIndex, t.getAttribute('aria-readonly'), el('ro').hasAttribute('readonly')]).toEqual([0, 'true', false]);
+    t.focus();
+    await userEvent.keyboard('{ArrowRight}{End}{PageUp}');
+    await press('ro', 0.9);
+    expect([now('ro'), changed, document.activeElement === t]).toEqual([30, [], true]);
+    expect(new FormData(el('ro-form') as HTMLFormElement).get('v')).toBe('30');
+  });
+
+  test('invalid: aria-invalid on each thumb, and a danger fill and ring that keep 3:1 on the page in all six themes', async () => {
+    await render(<div style={{ width: '420px' }}><Slider id="bad" aria-label="Bad" invalid defaultValue={[20, 60]} /></div>);
+    expect([...el('bad').querySelectorAll('[role=slider]')].map((t) => t.getAttribute('aria-invalid'))).toEqual(['true', 'true']);
+    expect(el('bad').hasAttribute('aria-invalid')).toBe(false);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const page = css(document.body).backgroundColor, danger = css(el('bad').querySelector('.dk-slider__fill')).backgroundColor;
+      expect(css(el('bad').querySelector('.dk-slider__thumb')).borderTopColor).toBe(danger);
+      const r = contrast(danger, page); if (r < 3) low.push(`${th}: ${r.toFixed(2)}`);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+
+  test('in a Field with required and an error: the thumb is invalid, and neither invalid nor aria-required lands on the root <div>', async () => {
+    const warned: unknown[] = [], warn = console.error;
+    console.error = (...a: unknown[]) => { warned.push(a[0]); };
+    try {
+      await render(<div style={{ width: '420px' }}><Field label="Volume" required error="Too loud"><Slider id="fv" aria-label="Volume" defaultValue={90} /></Field></div>);
+    } finally { console.error = warn; }
+    expect([thumb('fv').getAttribute('aria-invalid'), el('fv').hasAttribute('invalid'), el('fv').hasAttribute('aria-required'), el('fv').hasAttribute('aria-invalid')]).toEqual(['true', false, false, false]);
+    expect(warned.filter((w) => /invalid|required/i.test(String(w)))).toEqual([]);
+  });
 });
