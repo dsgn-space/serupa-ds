@@ -88,7 +88,7 @@ if (D) {
     Slider: h(D.Slider, { 'aria-label': 'Price', defaultValue: [20, 80] }),
     SerupaProvider: h(D.SerupaProvider, { locale: 'id-ID', labels: D.idLabels }, h(D.Pagination, { count: 3 })),
     Stepper: h(D.Stepper, { current: 1, steps: [{ title: 'Account' }, { title: 'Plan' }, { title: 'Pay' }] }),
-    Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
+    Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableSelectCell, { label: 'Select Ada' }), h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
     Tabs: h(D.Tabs, { defaultValue: 'a' }, h(D.TabList, { 'aria-label': 'Sections' }, h(D.Tab, { value: 'a' }, 'A'), h(D.Tab, { value: 'b' }, 'B')), h(D.TabPanel, { value: 'a' }, 'Panel')),
     TimePicker: h(D.TimePicker, { 'aria-label': 'Time', defaultValue: '14:30', name: 'time' }),
     Toaster: h(D.Toaster),

@@ -1,13 +1,14 @@
 # Table
 
-A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Rows shade on hover (or every other one with `striped`), can be selected, and columns can be sorted.
+A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Rows shade on hover (or every other one with `striped`), can be selected with a checkbox column (`TableSelectCell`), and columns can be sorted.
 
 ```jsx
-const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell } = window.Serupa;
+const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell, TableSelectCell } = window.Serupa;
 
 <Table caption="Team members">
   <TableHead>
     <TableRow>
+      <TableSelectCell header label="Select all rows" checked={all} indeterminate={some} onChange={toggleAll} />
       <TableHeaderCell>Name</TableHeaderCell>
       <TableHeaderCell>Role</TableHeaderCell>
       <TableHeaderCell align="end" sort={sort} onSort={() => setSort(sort === 'ascending' ? 'descending' : 'ascending')}>Calls</TableHeaderCell>
@@ -15,7 +16,8 @@ const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, Table
   </TableHead>
   <TableBody>
     {people.map((p) => (
-      <TableRow key={p.id} selected={p.id === selectedId}>
+      <TableRow key={p.id} selected={picked.has(p.id)}>
+        <TableSelectCell label={'Select ' + p.name} checked={picked.has(p.id)} onChange={() => toggle(p.id)} />
         <TableCell>{p.name}</TableCell>
         <TableCell><Text as="span" tone="muted">{p.role}</Text></TableCell>
         <TableCell align="end">{p.calls}</TableCell>
@@ -52,7 +54,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - It's a real `<table>`, so screen readers announce rows, columns and headers. Give it a `caption` (or `aria-label`) so people know what it holds.
 - When it's too wide and scrolls, the frame becomes a focusable region named by the caption, so keyboard users can scroll it with the arrow keys. When it fits, it adds no tab stop.
 - A sortable header is a button, and its `<th>` has `aria-sort` once sorted. After sorting, the button keeps focus.
-- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `Table.test.tsx`). Selection isn't shown by color alone: the bar and `aria-selected` say it too.
+- Text and muted text keep 4.5:1 on plain, hovered, striped and selected rows, and the header text on its background; the selected bar keeps 3:1 (all six themes, `Table.test.tsx`). Selection isn't shown by color alone: the bar shows it, and a `TableSelectCell`'s checkbox ("Select Ada, checked") says it to screen readers. Browsers ignore `aria-selected` on a plain table's rows, so `selected` doesn't set it; give selectable rows a `TableSelectCell`. The checkbox outline keeps 3:1 on a shaded row.
 
 ## Props
 
@@ -74,7 +76,8 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 | Part | Element | Props |
 | --- | --- | --- |
 | `TableHead`, `TableBody`, `TableFoot` | `<thead>`, `<tbody>`, `<tfoot>` | everything goes to the element |
-| `TableRow` | `<tr>` | `selected`: shaded, a primary bar at its start, `aria-selected` |
+| `TableRow` | `<tr>` | `selected`: shaded, with a primary bar at its start |
+| `TableSelectCell` | `<td>`, or `<th scope="col">` with `header` | `label` (required, the checkbox's name: "Select Ada", "Select all rows"); `checked`, `defaultChecked`, `indeterminate`, `onChange`, `disabled`, `name`, `value` and `ref` go to the [Checkbox](../Checkbox/README.md); `cellProps` to the cell. A row whose checkbox is checked is shaded like a selected one |
 | `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button. Pass `scope="row"` for a row header |
 | `TableCell` | `<td>` | `align`; `'end'` also gives tabular digits, for numbers |
 
