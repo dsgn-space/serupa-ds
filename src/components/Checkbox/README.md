@@ -46,7 +46,7 @@ const { Checkbox, Field } = window.Serupa;
 | Checked | `primary` fill and border, a check in `on-primary` |
 | Indeterminate | `primary` fill and border, a dash in `on-primary` |
 | Hover | `field-border-hover`; a checked or indeterminate box turns `primary-hover` |
-| Focus | From the keyboard: a 2px `focus-ring` ring outside a 2px `surface` gap, like Button; a visible outline in forced-colors mode |
+| Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` box; also when a parent fieldset (`Field group disabled`) is disabled |
 
@@ -86,7 +86,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-label-color` | `text` | The label |
 | `--checkbox-description-color` | `text-muted` | The description |
 | `--checkbox-focus-ring` | `focus-ring` | The focus ring |
-| `--checkbox-focus-gap-color` | `surface` | The 2px gap between the box and the focus ring |
+| `--checkbox-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
 | `--checkbox-invalid` | `danger` | Border and focus ring when invalid |
 | `--checkbox-size-sm` / `-md` / `-lg` | `spacing-3.5` / `spacing-4` / `spacing-5` | Box sizes (14, 16, 20px) |
 | `--checkbox-icon-size-sm` / `-md` / `-lg` | `spacing-3` / `spacing-3.5` / `spacing-4` | Check sizes (12, 14, 16px) |

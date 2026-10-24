@@ -352,7 +352,7 @@ Width classes draw a solid line on the sides they set, so `border` alone draws a
 Rules of thumb:
 
 - Borders: `border border-border` for cards and dividers, `border-field-border` for form fields (`border-danger` when invalid, with the message in `danger-text`), `border-danger-border` for destructive outline buttons.
-- Focus: `outline-2 outline-offset-2 outline-focus-ring` on `:focus-visible`. Never remove a focus style without replacing it; prefer `outline-hidden` over `outline-none`.
+- Focus: one recipe everywhere, `outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset)` on `:focus-visible` (the utilities `outline-2 outline-offset-2 outline-focus-ring` give the same). An outline follows the corner radius and its gap is transparent, so the ring reads on tinted backgrounds such as an Alert, Card or Navbar, and forced-colors mode draws it. Use an inset ring only where an outline would be clipped, as in Tabs. Never remove a focus style without replacing it; prefer `outline-hidden` over `outline-none`.
 - Lists and tables: `divide-y divide-border` instead of a border on each row.
 
 ## Effects
@@ -388,7 +388,7 @@ Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
 - Shadows barely show in dark themes: separate surfaces with `border` or `surface-muted` there, or add `ring-1 ring-border`.
-- Focus: a ring is fine for focus styles (`ring-2 ring-focus-ring ring-offset-2 ring-offset-surface`), but keep the outline approach from Borders for anything that must show in forced-colors mode.
+- Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
 - `opacity-50` for disabled controls; don't lower the opacity of text to make it secondary — use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
