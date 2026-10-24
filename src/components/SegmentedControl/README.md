@@ -38,7 +38,7 @@ import { SegmentedControl } from "serupa-ds";
 ## Accessibility
 
 - `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
-- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced colors (Windows high contrast) the selection is Highlight and its label HighlightText, exactly as set, so the browser's text backplate can't hide the label.
+- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced colors (Windows high contrast) the selection is Highlight and its label HighlightText, exactly as set, so the browser's text backplate can't hide the label, and hovering the selected segment keeps it HighlightText.
 - The selection slides over 200ms, and jumps with `prefers-reduced-motion`.
 
 ### Keyboard
