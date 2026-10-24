@@ -4,7 +4,7 @@ import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../intern
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
-import { modalClosed, modalOpened } from "../../internal/layers";
+import { modalClosed, modalOpened, modalOpening } from "../../internal/layers";
 
 export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -55,6 +55,7 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
     if (!d) return;
     if (props.open && !d.open) {
       back.current = document.activeElement as HTMLElement | null;
+      modalOpening();
       if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
       modalOpened(d);
     } else if (!props.open && d.open) {
