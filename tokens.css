@@ -982,7 +982,7 @@
   --text-9xl--line-height: 1; /* The line height that goes with `text-9xl`. */
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: "Courier New", Courier, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   --text-type-xs: 400 0.75rem/1rem var(--font-sans); /* `type-xs`: the whole 12px style in one class (Inter 400, line height 1rem). Same size as `text-xs`. */
   --text-type-sm: 400 0.875rem/1.25rem var(--font-sans); /* `type-sm`: the whole 14px style in one class (Inter 400, line height 1.25rem). Same size as `text-sm`. */
   --text-type-base: 400 1rem/1.5rem var(--font-sans); /* `type-base`: the whole 16px style in one class (Inter 400, line height 1.5rem). Same size as `text-base`. */
