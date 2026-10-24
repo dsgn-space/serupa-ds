@@ -63,6 +63,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --ignore-scripts
+      # Every installed package's registry signature and provenance attestation checks out, so a tampered
+      # tarball in the lockfile or the cache fails here.
+      - name: Dependencies are signed by the registry
+        run: npm audit signatures
       - name: Every file carries the same version
         run: node tools/release.mjs --check
       - name: Type check
