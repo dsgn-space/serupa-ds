@@ -87,6 +87,7 @@ if (D) {
     SegmentedControl: h(D.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }] }),
     Sidebar: h(D.Sidebar, null, h(D.SidebarSection, { title: 'Workspace' }, h(D.SidebarItem, { href: '/', icon: 'home', label: 'Home', active: true }))),
     Slider: h(D.Slider, { 'aria-label': 'Price', defaultValue: [20, 80] }),
+    SortableList: h(D.SortableList, { 'aria-label': 'Tasks', items: ['A', 'B'], getKey: (i) => i, getLabel: (i) => i, renderItem: (i) => i, onReorder: () => {} }),
     SerupaProvider: h(D.SerupaProvider, { locale: 'id-ID', labels: D.idLabels }, h(D.Pagination, { count: 3 })),
     Stepper: h(D.Stepper, { current: 1, steps: [{ title: 'Account' }, { title: 'Plan' }, { title: 'Pay' }] }),
     Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableSelectCell, { label: 'Select Ada' }), h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),

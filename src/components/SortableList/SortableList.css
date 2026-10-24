@@ -1,0 +1,39 @@
+/* ---------------------------------------------------------------
+   SortableList: rows with a drag handle at the start. The row being moved is raised (a shadow and the primary
+   border) and, while dragged, follows the pointer; the others move out of its way. Structure: .dk-sortable-list
+   (the <ul>) > .dk-sortable-list__item (<li>) > .dk-sortable-list__handle (button), .dk-sortable-list__content.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-sortable-list {
+  display: flex; flex-direction: column; gap: var(--sortable-list-gap, var(--spacing-2));
+  margin: var(--spacing-0); padding: var(--spacing-0); list-style: none;
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--sortable-list-text, var(--text));
+}
+.dk-sortable-list__item {
+  position: relative; display: flex; align-items: center; gap: var(--sortable-list-item-gap, var(--spacing-2));
+  padding: var(--sortable-list-item-padding-y, var(--spacing-2)) var(--sortable-list-item-padding-x, var(--spacing-3));
+  padding-inline-start: var(--sortable-list-item-padding-start, var(--spacing-1));
+  background: var(--sortable-list-item-bg, var(--surface));
+  border: var(--border-width-1) solid var(--sortable-list-item-border, var(--border)); border-radius: var(--sortable-list-item-radius, var(--rounded-md));
+  transition: box-shadow var(--duration-150) var(--ease-in-out), border-color var(--duration-150) var(--ease-in-out);
+}
+.dk-sortable-list--disabled .dk-sortable-list__item { padding-inline-start: var(--sortable-list-item-padding-x, var(--spacing-3)); }
+.dk-sortable-list__item--dragging {
+  z-index: var(--z-10); border-color: var(--sortable-list-item-border-active, var(--primary));
+  box-shadow: var(--sortable-list-item-shadow-active, var(--shadow-md));
+}
+.dk-sortable-list__handle {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  min-width: var(--sortable-list-handle-size, var(--spacing-6)); min-height: var(--sortable-list-handle-size, var(--spacing-6));
+  margin: var(--spacing-0); padding: var(--spacing-0); border: 0; border-radius: var(--rounded-sm);
+  background: transparent; color: var(--sortable-list-handle, var(--text-muted)); cursor: grab; touch-action: none;
+}
+.dk-sortable-list__handle .dk-icon { font-size: var(--spacing-5); }
+.dk-sortable-list__item--dragging .dk-sortable-list__handle { cursor: grabbing; color: var(--sortable-list-handle-active, var(--text)); }
+@media (hover: hover) { .dk-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
+.dk-sortable-list__handle:focus-visible { outline: var(--focus-ring-width) solid var(--sortable-list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-sortable-list--sorting { cursor: grabbing; user-select: none; }
+.dk-sortable-list__content { flex: auto; min-width: var(--spacing-0); }
+@media (prefers-reduced-motion: reduce) { .dk-sortable-list__item { transition: none; } }
+@media (forced-colors: active) { .dk-sortable-list__item--dragging { outline: var(--border-width-2) solid Highlight; } }
+}
