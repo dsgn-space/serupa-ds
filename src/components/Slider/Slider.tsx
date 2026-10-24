@@ -5,6 +5,7 @@ import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
 import { useFieldsetDisabled } from "../../internal/useFieldsetDisabled";
 import { snap as snapToGrid } from "../../internal/step";
+import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export type SliderValue = number | [number, number];
 /** V is a number for one thumb or [low, high] for a range, inferred from value, defaultValue or the callbacks. */
@@ -36,7 +37,7 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   name?: string;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const;
 
 /* Slider: picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Each thumb
    is role="slider" with aria-valuenow, min, max and valuetext. Arrows change it by step (Right and Up raise it;
@@ -68,6 +69,10 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
   const out = (vs: number[]): SliderValue => (isRange ? [vs[0], vs[1]] : vs[0]);
   const text = (v: number) => (props.formatValue ? props.formatValue(v) : String(v));
+  // ref.current.focus() and autoFocus land on the first thumb, as they would on an <input type="range">.
+  const live = React.useRef(disabled); live.current = disabled;
+  const first = () => (live.current ? null : thumbs.current[0]);
+  useAutoFocus(props.autoFocus, first);
 
   const set = (i: number, v: number) => {
     const vs = latest.current.slice();
@@ -132,7 +137,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   const names = props.thumbLabels || ["Minimum", "Maximum"];
   const lo = isRange ? pct(vals[0]) : 0, hi = pct(vals[vals.length - 1]);
   return (
-    <div {...rest} ref={(n) => { root.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
+    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
       role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? props["aria-labelledby"] : undefined}
       className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", props.className)}
       data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined}

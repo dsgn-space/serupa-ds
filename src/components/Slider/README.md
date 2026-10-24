@@ -68,7 +68,7 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `thumbLabels` | `[string, string]` | `['Minimum', 'Maximum']` | A range's thumb names. |
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
 
-Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`.
+Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the first thumb (none when disabled), so a form library that focuses the first invalid field after a failed submit lands on the slider.
 
 ## Component tokens
 

@@ -172,6 +172,25 @@ describe('Slider', () => {
     expect([now('fs'), calls, thumb('fs').getAttribute('aria-disabled'), new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], null, '31']);
   });
 
+  test('ref.current.focus() and autoFocus land on the first thumb, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const one = React.createRef<HTMLDivElement>(), two = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    await render(<>
+      <Slider id="sfa" aria-label="Volume" autoFocus />
+      <Slider id="sfr" ref={one} aria-label="Volume" />
+      <Slider id="sfg" ref={two} aria-label="Price" defaultValue={[20, 80]} />
+      <Slider id="sfd" ref={off} aria-label="Volume" disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(thumb('sfa'));
+    expect(el('sfa').hasAttribute('autofocus')).toBe(false);
+    one.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfr'));
+    two.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfg', 0));
+    off.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfg', 0));
+    expect(one.current).toBe(el('sfr'));
+  });
+
   test('sm: 16px thumb on a 4px track; at 0 the thumb is centered on the track\'s start and stays inside the slider', async () => {
     await setup();
     const t = track('sm'), c = center(thumb('sm'));
