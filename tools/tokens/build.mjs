@@ -71,14 +71,22 @@ function axes(t, varying, line) {
   const brands = [...new Set(themes.map((id) => id.split('-')[0]))];
   const pair = (x, b) => `light-dark(${x.value[b + '-light']}, ${x.value[b + '-dark']})`;
   const byBrand = varying.filter((x) => new Set(brands.map((b) => pair(x, b))).size > 1);
-  // :where() keeps it at one attribute's weight: it still beats :root (it comes later), and data-contrast beats it.
-  let css = `:where(:root:is([data-brand], [data-mode])):not([data-theme]) {
+  // The full set goes on the root when it has an axis, and on any nested data-mode element, so a dark section works
+  // inside a page with no axes or with data-theme (whose flat values can't flip). :where() keeps it at one
+  // attribute's weight: it still beats :root (it comes later), and data-contrast beats it.
+  let css = `:where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
   color-scheme: light dark;
 `;
   for (const x of varying) css += line(x.name, pair(x, brands[0]));
   css += '}\n';
   for (const b of brands) {
     css += `:root[data-brand="${b}"]:not([data-theme]), [data-brand="${b}"]:not([data-theme]) {\n`;
+    for (const x of byBrand) css += line(x.name, pair(x, b));
+    css += '}\n';
+  }
+  // A nested data-mode element keeps the brand of the page or section around it.
+  for (const b of brands) {
+    css += `:is([data-theme^="${b}-"], [data-brand="${b}"]) [data-mode]:not([data-theme], [data-brand]) {\n`;
     for (const x of byBrand) css += line(x.name, pair(x, b));
     css += '}\n';
   }
@@ -96,8 +104,9 @@ function contrastAndDensity(all, line) {
   const more = all.filter((x) => x.contrastMore);
   const pairs = more.map((x) => line(x.name, `light-dark(${x.contrastMore.light}, ${x.contrastMore.dark})`)).join('');
   let css = `[data-theme$="-light"] { color-scheme: light; }\n[data-theme$="-dark"] { color-scheme: dark; }\n`;
-  css += `[data-contrast="more"] {\n${pairs}}\n`;
-  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]) {\n${pairs}}\n}\n`;
+  // Also on nested data-mode elements, which redeclare the normal colors.
+  css += `[data-contrast="more"], [data-contrast="more"] [data-mode] {\n${pairs}}\n`;
+  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *) {\n${pairs}}\n}\n`;
   const compact = all.filter((x) => x.compact != null);
   css += `[data-density="compact"] {\n${compact.map((x) => line(x.name, x.compact)).join('')}}\n`;
   css += `[data-density="comfortable"] {\n${compact.map((x) => line(x.name, x.value)).join('')}}\n`;
