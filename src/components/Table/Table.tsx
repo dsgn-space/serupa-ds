@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
@@ -47,6 +48,7 @@ const ALIGN = ["start", "center", "end"] as const;
    className and every other prop go to the <table>; containerProps go to the frame. */
 /** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
 export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>("Table", function Table(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { size: 1, striped: 1, stickyHeader: 1, caption: 1, captionHidden: 1, containerProps: 1, className: 1, children: 1 });
   const size = oneOf(["sm", "md"] as const, props.size, "md");
   const frame = React.useRef<HTMLDivElement>(null);
@@ -64,7 +66,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>("Ta
   }, []);
   const cp = props.containerProps || {};
   const hasCaption = props.caption != null && props.caption !== false && props.caption !== "";
-  const region = scrolls ? { tabIndex: 0, role: "region", "aria-labelledby": hasCaption ? cid : undefined, "aria-label": hasCaption ? undefined : cp["aria-label"] || "Table" } : {};
+  const region = scrolls ? { tabIndex: 0, role: "region", "aria-labelledby": hasCaption ? cid : undefined, "aria-label": hasCaption ? undefined : cp["aria-label"] || sds.labels.table } : {};
   return (
     <div {...cp} {...region} ref={frame} data-component="table" className={cn("dk-table", size === "sm" && "dk-table--sm", props.striped && "dk-table--striped", props.stickyHeader && "dk-table--sticky", cp.className)}>
       <table {...rest} ref={ref} className={cn("dk-table__table", props.className)}>

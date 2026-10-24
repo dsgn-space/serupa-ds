@@ -1,0 +1,38 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as Stories from '../src/internal/provider.stories';
+
+<Meta title="Guides/Localization" />
+
+# Localization and app settings
+
+`<SerupaProvider>` gives every component inside it a locale, the words the components say on their own, and extra icons. It's React context, so it reaches client components from a server layout, differs between concurrent server requests, and can change for one part of a page (ADR-0010).
+
+```tsx
+import { SerupaProvider, idLabels } from 'serupa-ds';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="id">
+      <body>
+        <SerupaProvider locale="id-ID" labels={idLabels}>{children}</SerupaProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+| Prop | What it changes |
+|---|---|
+| `locale` | Calendar, DatePicker, DateRangePicker and TimePicker: how dates and times are written and typed, month and weekday names, the first day of the week. Default: the browser's. |
+| `labels` | The built-in words: close and dismiss buttons, loading text, pagination, date and time buttons, file upload text and so on (the `SerupaLabels` type lists every key). Pass `idLabels` for Indonesian, or only the keys you want to change. |
+| `icons` | Icons that work by name inside it, in the shape `registerIcons` takes. |
+
+What wins, in order: the component's own prop (`dismissLabel`, `locale`, …), the nearest provider, an outer provider, then the defaults. A nested provider changes only the keys it sets.
+
+<Canvas of={Stories.Indonesian} />
+
+<Canvas of={Stories.Nested} />
+
+## Accessibility
+
+Set `lang` on `<html>` (or on the element around a provider with another language) to match the words, so screen readers pronounce them correctly. The provider doesn't set it, because it renders no element.
