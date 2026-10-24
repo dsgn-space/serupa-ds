@@ -32,6 +32,6 @@
 .dk-file-upload__file { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); }
 .dk-file-upload__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
-.dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-disabled); cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .dk-file-upload__zone { transition: none; } }
 }

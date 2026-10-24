@@ -193,6 +193,8 @@ const lum = (h) => {
 const ratio = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
 /** @type {Array<[string, string, number]>} */
 const PAIRS = [['text', 'surface', 4.5], ['text', 'surface-muted', 4.5], ['text-muted', 'surface', 4.5], ['text-muted', 'surface-muted', 4.5],
+  ['text', 'surface-raised', 4.5], ['text-muted', 'surface-raised', 4.5], ['text', 'surface-overlay', 4.5], ['text-muted', 'surface-overlay', 4.5],
+  ['primary', 'surface-overlay', 3], ['focus-ring', 'surface-overlay', 3], ['danger-text', 'surface-overlay', 4.5],
   ['text-inverse', 'surface-inverse', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['on-danger', 'danger', 4.5], ['on-danger', 'danger-hover', 4.5], ['danger-text', 'surface', 4.5], ['danger-text', 'danger-subtle', 4.5],
   ['danger-text', 'surface-muted', 4.5], ['success-text', 'surface', 4.5], ['success-text', 'surface-muted', 4.5], ['success-text', 'success-subtle', 4.5],

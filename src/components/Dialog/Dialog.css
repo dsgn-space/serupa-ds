@@ -29,6 +29,8 @@
 .dk-dialog--lg { --dk-dialog-width: var(--dialog-width-lg, var(--container-2xl)); }
 .dk-dialog::backdrop { background: var(--dialog-overlay, var(--overlay)); }
 :root:has(.dk-dialog[open]) { overflow: hidden; }
+/* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-dk-gutter). */
+:root[data-dk-gutter]:has(.dk-dialog[open]) { scrollbar-gutter: stable; }
 .dk-dialog__panel {
   box-sizing: border-box;
   display: flex;
@@ -38,7 +40,7 @@
   max-width: var(--sizing-full);
   max-height: var(--sizing-full);
   padding: var(--dialog-padding, var(--spacing-6));
-  background: var(--dialog-bg, var(--surface));
+  background: var(--dialog-bg, var(--surface-overlay));
   border-radius: var(--dialog-radius, var(--rounded-xl));
   box-shadow: var(--dialog-shadow, var(--shadow-xl));
   animation: dk-dialog-in var(--duration-200) var(--ease-out);
