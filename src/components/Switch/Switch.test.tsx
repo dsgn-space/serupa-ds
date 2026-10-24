@@ -118,15 +118,15 @@ describe('Switch', () => {
     await away();
   });
 
-  test('keyboard focus: a 2px focus-ring ring outside a 2px gap, like Button; a transparent outline for forced-colors mode', async () => {
+  test('keyboard focus: a 2px focus-ring outline 2px out, like Button, with a transparent gap', async () => {
     await setup();
     el('bad').focus();
     await userEvent.keyboard('{Shift>}{Tab}{/Shift}{Tab}');
     const ring = color('var(--focus-ring)');
-    await expect.poll(() => box('bad').bs).toContain(ring);
-    expect(box('bad').bs).toMatch(/0px 0px 0px 4px/);
-    const a = document.activeElement!, c = css(a);
-    expect([a.id, c.outlineColor, c.outlineWidth, c.outlineOffset]).toEqual(['bad', 'rgba(0, 0, 0, 0)', '2px', '2px']);
+    const a = document.activeElement!;
+    await expect.poll(() => css(a).outlineColor).toBe(ring);
+    const c = css(a);
+    expect([a.id, c.outlineStyle, c.outlineWidth, c.outlineOffset, box('bad').bs]).toEqual(['bad', 'solid', '2px', '2px', 'none']);
   });
 
   test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {

@@ -39,7 +39,7 @@ const { Switch } = window.Serupa;
 | Off | A `field-border` track, the thumb in `field` at the start |
 | On | A `primary` track, the thumb in `on-primary` at the end |
 | Hover | `field-border-hover` off, `primary-hover` on |
-| Focus | From the keyboard: a 2px `focus-ring` ring outside a 2px `surface` gap, like Button; a visible outline in forced-colors mode |
+| Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
 | Disabled | 50% opacity and a `not-allowed` cursor; also inside a disabled fieldset |
 
@@ -79,7 +79,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
-| `--switch-focus-gap-color` | `surface` | The 2px gap between the track and the focus ring |
+| `--switch-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
 | `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
 | `--switch-width-sm` / `-md` / `-lg` | `spacing-7` / `spacing-9` / `spacing-11` | Track widths (28, 36, 44px) |
 | `--switch-height-sm` / `-md` / `-lg` | `spacing-4` / `spacing-5` / `spacing-6` | Track heights (16, 20, 24px) |

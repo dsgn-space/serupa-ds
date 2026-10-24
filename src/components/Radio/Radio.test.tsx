@@ -138,7 +138,7 @@ describe('Radio', () => {
     expect([input('p').checked, input('q').checked, document.getElementById('dis')!.getAttribute('aria-disabled')]).toEqual([true, false, 'true']);
   });
 
-  test('on its own: name and defaultChecked as usual; an unknown size falls back to md; keyboard focus: a 2px focus-ring ring outside a 2px gap, like Button, and a transparent outline for forced-colors mode', async () => {
+  test('on its own: name and defaultChecked as usual; an unknown size falls back to md; keyboard focus: a 2px focus-ring outline 2px out, like Button, with a transparent gap', async () => {
     await render(<Grid><button id="before">Before</button><Solo /></Grid>);
     expect([input('s1').checked, input('s1').name, wrap('s2').dataset.size]).toEqual([true, 'solo', 'md']);
     await userEvent.click(input('s2'));
@@ -149,10 +149,9 @@ describe('Radio', () => {
     await userEvent.keyboard('{Shift>}{Tab}{/Shift}{Tab}');
     expect(document.activeElement!.id).toBe('s2');
     const ring = color('var(--focus-ring)');
-    await expect.poll(() => css(input('s2')).boxShadow).toContain(ring);
+    await expect.poll(() => css(input('s2')).outlineColor).toBe(ring);
     const s = css(input('s2'));
-    expect(s.boxShadow).toMatch(/0px 0px 0px 4px/);
-    expect(`${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset}`).toBe('rgba(0, 0, 0, 0) 2px 2px');
+    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`).toBe('solid 2px 2px none');
   });
 
   test('hover: field-border-hover; invalid keeps the danger border', async () => {
