@@ -39,10 +39,11 @@ toast.dismiss(id);   // or toast.dismiss() for all
 - Use one `action` at most, for something quick such as Undo; the toast may go before people reach it.
 - For work that takes a while, show a toast with `duration: 0` and replace it by `id` when the work is done, as above.
 - Render one `<Toaster>` for the whole app, and keep its `position` the same on every page.
+- A burst can't bury the page: at most `limit` toasts show (3), and the same message again (same words and tone, with no `id` or `action`) adds a count to the toast that's showing ("Network error ×12") and starts its time over, rather than stacking. The stack stays clear of a phone's notch and home indicator.
 
 ## Accessibility
 
-- Each new toast is read out through the shared polite live region, so it doesn't interrupt.
+- Each new toast is read out through the shared polite live region, so it doesn't interrupt. A repeat that only adds to a toast's count isn't read again.
 - The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1). A toast with an `action` stays until it's closed, unless you give it a `duration`, so there's time to reach the button. For anything people must act on, an Alert or a Dialog is still better.
 - F8 moves focus to the newest toast (a screen reader reads it, and Tab reaches its buttons), and F8 or Escape takes focus back to where it was. The first toast with an action adds "Press F8 to reach it." to what's announced (`labels.toastShortcut`).
 - Each toast has a close button; the Toaster is a named region people can find.
@@ -71,6 +72,7 @@ It returns the toast's id. `toast.dismiss(id)` closes one, `toast.dismiss()` all
 | `position` | `'bottom-end'` \| `'bottom-start'` \| `'bottom-center'` \| `'top-start'` \| `'top-center'` \| `'top-end'` | `'bottom-end'` | Where toasts appear, 16px from the edges; start and end follow the text direction. The newest is nearest the edge |
 | `label` | string | `'Notifications'` | The region's name |
 | `dismissLabel` | string | `'Dismiss'` | The close buttons' name |
+| `limit` | number | `3` | The most toasts shown at once. The newest show; older ones wait under a "+2 more" line, with their time not yet started, and come back as others close |
 
 `className`, `style` and other props go to the `<section>`, which has `data-component="toaster"` and `data-position`.
 

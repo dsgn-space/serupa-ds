@@ -32,7 +32,7 @@ export interface ToastOptions {
   id?: string;
 }
 
-interface Item extends ToastOptions { id: string; tone: ToastTone }
+interface Item extends ToastOptions { id: string; tone: ToastTone; count: number }
 type Listener = (items: Item[]) => void;
 let items: Item[] = [];
 const listeners = new Set<Listener>();
@@ -48,8 +48,17 @@ let hint = "", hinted = false;
 /** Shows a toast in the page's <Toaster> and returns its id. */
 function show(options: ToastOptions | string): string {
   const o: ToastOptions = typeof options === "string" ? { title: options } : options;
+  const tone = oneOf(TONES, o.tone, "neutral");
+  // The same message again (same words and tone, no id, no action), such as "Network error" in a burst: one toast
+  // with a count ("×12") whose time starts over, said once.
+  const same = o.id || o.action ? -1 : items.findIndex((x) => !x.action && x.tone === tone && text(x.title) !== "" && text(x.title) === text(o.title) && text(x.description) === text(o.description));
+  if (same >= 0) {
+    items = items.map((x, i) => (i === same ? Object.assign({}, x, { count: x.count + 1 }) : x));
+    emit();
+    return items[same].id;
+  }
   const id = o.id || "dk-toast-" + ++next;
-  const item: Item = Object.assign({}, o, { id: id, tone: oneOf(TONES, o.tone, "neutral") });
+  const item: Item = Object.assign({}, o, { id: id, tone: tone, count: 1 });
   const at = items.findIndex((x) => x.id === id);
   items = at >= 0 ? items.map((x, i) => (i === at ? item : x)) : items.concat(item);
   emit();
@@ -73,6 +82,8 @@ export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
   label?: string;
   /** The close button's name. Default: 'Dismiss'. */
   dismissLabel?: string;
+  /** The most toasts shown at once; the newest show, and older ones wait under a "+2 more" line until there's room. Default: 3. */
+  limit?: number;
 }
 
 const POSITIONS: readonly ToasterPosition[] = ["top-start", "top-center", "top-end", "bottom-start", "bottom-center", "bottom-end"];
@@ -85,7 +96,7 @@ const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.I
 /** The place toast() messages appear: render one, once, near the root of the app. */
 export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: ToasterProps): React.ReactElement {
   const sds = useSerupa();
-  const { position, label, dismissLabel, className, ...rest } = props;
+  const { position, label, dismissLabel, limit, className, ...rest } = props;
   const [list, setList] = React.useState<Item[]>(items);
   React.useEffect(() => { ensureAnnouncer(); hinted = false; listeners.add(setList); setList(items); return () => { listeners.delete(setList); }; }, []);
   const pos = oneOf(POSITIONS, position, "bottom-end");
@@ -111,14 +122,21 @@ export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: 
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [pos]);
-  const ordered = pos.startsWith("top") ? list.slice().reverse() : list;   // newest nearest the edge
+  // The newest few show; the rest wait (their time hasn't started) and come back as those close. A burst can't
+  // push the stack past the screen's edge.
+  const max = Math.max(1, Math.floor(limit != null && limit > 0 ? limit : 3));
+  const shown = list.slice(-max), waiting = list.length - shown.length;
+  const more = waiting > 0 ? <li key="more" className="dk-toaster__more">{sds.labels.moreToasts(waiting)}</li> : null;
+  const ordered = pos.startsWith("top") ? shown.slice().reverse() : shown;   // newest nearest the edge, the waiting line farthest
   // While a Dialog or Drawer is open the page behind it is inert and under it, so the toasts move into it: a
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
   const region = (
     <section {...rest} ref={self} aria-label={label || sds.labels.notifications} className={cn("dk-toaster", "dk-toaster--" + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="dk-toaster__list">
+        {pos.startsWith("top") ? null : more}
         {ordered.map((t) => <ToastView key={t.id} item={t} dismissLabel={dismissLabel || sds.labels.dismiss} />)}
+        {pos.startsWith("top") ? more : null}
       </ol>
     </section>
   );
@@ -154,7 +172,7 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
       onFocus={() => setFocused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false); }}>
       {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
       <div className="dk-toast__content">
-        <p className="dk-toast__title" id={titleId}>{t.title}</p>
+        <p className="dk-toast__title" id={titleId}>{t.title}{t.count > 1 ? <span className="dk-toast__count">{"×" + t.count}</span> : null}</p>
         {t.description != null ? <p className="dk-toast__description" id={descId}>{t.description}</p> : null}
       </div>
       {t.action ? <Button className="dk-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); toast.dismiss(t.id); }}>{t.action.label}</Button> : null}

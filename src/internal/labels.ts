@@ -68,6 +68,8 @@ export interface SerupaLabels {
   notifications: string;
   /** Toaster: said once, after the first toast with an action, so keyboard and screen reader users know how to reach it. */
   toastShortcut: (key: string) => string;
+  /** Toaster: the line for toasts waiting past the limit. */
+  moreToasts: (count: number) => string;
   /** Sidebar and Navbar nav, and the Navbar menu button. */
   mainNavigation: string;
   menu: string;
@@ -145,6 +147,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   stepOf: (step, total) => "Step " + step + " of " + total,
   notifications: "Notifications",
   toastShortcut: (key) => "Press " + key + " to reach it.",
+  moreToasts: (n) => "+" + n + " more",
   mainNavigation: "Main",
   menu: "Menu",
   reorder: "Reorder",
@@ -214,6 +217,7 @@ export const idLabels: SerupaLabels = {
   stepOf: (step, total) => "Langkah " + step + " dari " + total,
   notifications: "Notifikasi",
   toastShortcut: (key) => "Tekan " + key + " untuk menjangkaunya.",
+  moreToasts: (n) => "+" + n + " lainnya",
   mainNavigation: "Utama",
   menu: "Menu",
   reorder: "Ubah urutan",
