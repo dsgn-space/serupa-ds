@@ -3,6 +3,7 @@ import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, css, keepMotion, press } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
 
 // About motion: transitions and animations stay on for this file (setup.ts turns them off elsewhere).
@@ -205,6 +206,15 @@ describe('Badge', () => {
     const e = el('icon'), i = e.querySelector('.dk-badge__icon') as HTMLElement;
     expect([(i.querySelector('.dk-icon') as HTMLElement).dataset.icon, i.getAttribute('aria-hidden'), css(i.querySelector('.dk-icon')).fontSize, !!e.querySelector('.dk-badge__dot')])
       .toEqual(['schedule', 'true', '12px', false]);
+  });
+
+  test('count: written in the digits of the locale, as Calendar writes its days: ٧ and ٩٩+ in ar-EG, ۱۲ in fa', async () => {
+    await render(<>
+      <SerupaProvider locale="ar-EG"><Badge id="car7" count={7} /><Badge id="car120" count={120} /></SerupaProvider>
+      <SerupaProvider locale="fa"><Badge id="cfa12" count={12} /></SerupaProvider>
+      <SerupaProvider locale="en-US"><Badge id="cen1500" count={1500} max={9999} /></SerupaProvider>
+    </>);
+    expect(['car7', 'car120', 'cfa12', 'cen1500'].map((id) => document.getElementById(id)!.textContent)).toEqual(['٧', '٩٩+', '۱۲', '1500']);
   });
 
   test('count: a round pill (20px for one digit), "99+" past the default max, "max+" past a given max; nothing at 0, unless showZero', async () => {

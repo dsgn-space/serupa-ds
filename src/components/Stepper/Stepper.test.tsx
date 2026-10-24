@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Stepper, type StepperStep } from './Stepper';
 
 const STEPS: StepperStep[] = [{ title: 'Account', description: 'Email and password' }, { title: 'Profile', optional: true }, { title: 'Billing' }, { title: 'Review' }];
@@ -30,6 +31,12 @@ function App(props: { sref?: React.Ref<HTMLElement> }) {
 const setup = async (sref?: React.Ref<HTMLElement>) => { clicks = []; await render(<App sref={sref} />); };
 
 describe('Stepper', () => {
+  test('step numbers are written in the digits of the locale, as Calendar writes its days: ٣ ٤ in ar-EG', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Stepper id="sar" current={1} steps={[{ title: 'One' }, { title: 'Two' }, { title: 'Three' }, { title: 'Four' }]} /></SerupaProvider>);
+    const shown = [...document.querySelectorAll('#sar .dk-stepper__indicator')].map((e) => e.textContent);
+    expect(shown.slice(2)).toEqual(['٣', '٤']);
+  });
+
   test('a <nav aria-label="Progress"> around an <ol> of 4 steps, 3 lines between them; description and "Optional"; ref and className reach the nav', async () => {
     const ref = React.createRef<HTMLElement>();
     await setup(ref);

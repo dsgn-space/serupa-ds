@@ -2,7 +2,7 @@
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { compare, datePattern, day, formatDate, isoDate, isValid, parseDate } from "../../internal/dates";
-import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
+import { cssLength, hideLayer, placeLayer, showLayer } from "../../internal/position";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
@@ -90,15 +90,14 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
     if (!p) return;
     if (!open || !anchor) { hideLayer(p); return; }
     showLayer(p);
-    const update = () => {
-      const r = place(anchor.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, "bottom-start", cssLength(p, "--dk-dp-offset"), "bottom");
-      p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
-    };
+    const update = () => placeLayer(p, anchor, "bottom-start", cssLength(p, "--dk-dp-offset"), "bottom");
+    // Scrolling inside the calendar (when it's taller than the room it has) doesn't move it.
+    const scrolled = (e: Event) => { if (!(e.target instanceof Node && p.contains(e.target))) update(); };
     update();
     const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
     if (ro) { ro.observe(p); ro.observe(anchor); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+    window.addEventListener("scroll", scrolled, true); window.addEventListener("resize", update);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", update); };
   }, [open]);
   React.useEffect(() => {
     if (!open) return;
