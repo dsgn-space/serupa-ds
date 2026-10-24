@@ -65,7 +65,7 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
   // The label points at the control by id: say so when nothing on the page has it.
   React.useEffect(function () {
     if (!group && props.label != null && !document.getElementById(controlId)) {
-      warnOnce("field-control", "Field: no element has the id \"" + controlId + "\", so the label names nothing. Put the control inside the Field, or pass its id.");
+      warnOnce("field-control:" + controlId, "Field: no element has the id \"" + controlId + "\", so the label names nothing. Put the control inside the Field, or pass its id.");
     }
   });
   const labelKids = [props.label,
