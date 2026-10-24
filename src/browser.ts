@@ -86,6 +86,7 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   SearchInput: Serupa.SearchInput,
   SegmentedControl: Serupa.SegmentedControl,
   Slider: Serupa.Slider,
+  SortableList: Serupa.SortableList,
   Select: Serupa.Select,
   Stack: Serupa.Stack,
   Stepper: Serupa.Stepper,
