@@ -30,7 +30,7 @@ const bundled = async (code) => gz((await esbuild.build({ stdin: { contents: cod
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));
 
 const size = {
-  'All components (index.js)': 52,   // 46.8 once each component imports only its own icons (R7); about 51 with R21–R28, Meter, CopyButton and RelativeTime
+  'All components (index.js)': await bundled("export * from './dist/index.js';"),
   'Button alone': await bundled("export { Button } from './dist/index.js';"),
   'Dialog alone': await bundled("export { Dialog } from './dist/index.js';"),
 };
@@ -43,6 +43,7 @@ if (process.env.GITHUB_STEP_SUMMARY) {
 }
 done(report('Size', rows.map((r) => ({
   name: `${r.name}: ${kib(r.now)} KiB gzipped, within ${r.budget} KiB`,
-  ok: r.now <= r.budget * 1024,
-  detail: `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
+  // Under 1 KiB means it wasn't measured (a budget number pasted in place of the measurement), not that it's tiny.
+  ok: r.now <= r.budget * 1024 && r.now >= 1024,
+  detail: r.now < 1024 ? 'not measured: its line in `size` must measure the build, not repeat the budget' : `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
 }))));
