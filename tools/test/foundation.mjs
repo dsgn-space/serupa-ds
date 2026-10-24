@@ -354,8 +354,8 @@ check('hover styles apply only with a pointer that hovers: every :hover rule is 
 // rule for that class.
 const PRINTS = new Set(['Dialog', 'Drawer']);
 const baseCss = stripComments(read('src/styles/base.css'));
-const printBlock = (baseCss.match(/@media print\s*\{([\s\S]*?)\n\}/) || [, ''])[1];
-const printHidden = new Set([...(printBlock.match(/:where\(([^)]*)\)\s*\{\s*display:\s*none/) || [, ''])[1].matchAll(/\.(dk-[\w-]+)/g)].map((m) => m[1]));
+const printBlock = (baseCss.match(/@media print\s*\{([\s\S]*?)\n\}/) || ['', ''])[1];
+const printHidden = new Set([...(printBlock.match(/:where\(([^)]*)\)\s*\{\s*display:\s*none/) || ['', ''])[1].matchAll(/\.(dk-[\w-]+)/g)].map((m) => m[1]));
 const floating = [], fadesInForcedColors = [];
 for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   const f = path.join('src', 'components', n, `${n}.css`);
