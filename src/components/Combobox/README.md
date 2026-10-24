@@ -89,7 +89,8 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-listbox-bg` | `surface-overlay` | The list's background. |
 | `--combobox-listbox-border` | `border-overlay` | The list's outline. |
 | `--combobox-option-color` | `text` | An option's label. |
-| `--combobox-option-bg-active` | `surface-muted` | The highlighted option (hover or arrow keys), so muted text keeps 4.5:1 on it. |
+| `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
+| `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
 | `--combobox-description-color` | `text-muted` | An option's second line, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
 | `--combobox-listbox-shadow` | `shadow-lg` | The list's shadow. |

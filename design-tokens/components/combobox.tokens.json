@@ -64,11 +64,21 @@
       },
       "option-bg-active": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The highlighted option (hover or arrow keys), so muted text keeps 4.5:1 on it.",
+        "$value": "{color.highlight}",
+        "$description": "The highlighted option (hover or arrow keys); its muted second line turns to text on it.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--combobox-option-bg-active"
+          }
+        }
+      },
+      "option-indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The 2px bar at the highlighted option's start (3:1 on highlight).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--combobox-option-indicator"
           }
         }
       },
