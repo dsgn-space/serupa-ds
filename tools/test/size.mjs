@@ -13,7 +13,7 @@ import { PROJECT, done, report } from './lib.mjs';
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
   'All components (index.js)': 52,   // NumberInput's locale parsing and formatting (internal/numbers.ts)
-  'Button alone': 12,
+  'Button alone': 12.5,   // 12.1 with the 74th built-in icon (Progress's "percent" style reads as an icon name); R7 drops the built-in set
   'Dialog alone': 13.5,   // 13.01 after the scroll lock gutter and the shared locale hook; most of it is the 73 built-in icons, which R7 drops
   'components.css': 38,
   'utilities.css': 168,
