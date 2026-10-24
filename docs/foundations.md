@@ -181,6 +181,25 @@ Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (
 | `text-4xl` | 36px | 40px |
 | `text-5xl` – `text-9xl` | 48, 60, 72, 96, 128px | 1 (tight) |
 
+**Type roles** — styles named for what the text is for, built from the same sizes, weights and tracking. Prefer a role to a size style: it carries the weight and tracking the system uses for that job, so a page title set with a class matches a `<Heading level={1}>`.
+
+| Class | Size / line height | Weight | Tracking | Use |
+| --- | --- | --- | --- | --- |
+| `type-display` | 48px / 1.1 | 600 | tight | Hero and marketing headlines. Two lines don't touch, unlike `type-5xl` (line height 1). |
+| `type-heading-1` | 30px / 36px | 600 | tight | Page title; `<Heading level={1}>` |
+| `type-heading-2` | 24px / 32px | 600 | tight | Section title; `<Heading level={2}>` |
+| `type-heading-3` | 20px / 28px | 600 | normal | Subsection; `<Heading level={3}>` |
+| `type-heading-4` | 18px / 28px | 600 | normal | Group title; `<Heading level={4}>`, Dialog and Drawer titles |
+| `type-title` | 16px / 24px | 600 | normal | Card, list and EmptyState titles |
+| `type-body` | 16px / 24px | 400 | normal | Running text |
+| `type-body-sm` | 14px / 20px | 400 | normal | UI text: controls, cells, menus, descriptions |
+| `type-label` | 14px / 20px | 500 | normal | Field labels, table headers, tabs |
+| `type-caption` | 12px / 16px | 400 | normal | Hints, timestamps, footnotes (with `text-muted`) |
+| `type-overline` | 12px / 16px, uppercase | 600 | widest | An eyebrow above a title |
+| `type-code` | 14px / 20px, `font-mono` | 400 | normal | Inline code and code blocks |
+
+Each role is also a `font` shorthand token (`var(--text-type-label)`) and a typography token in `design-tokens/`.
+
 **Weights** — three defaults:
 
 | Token | Weight | Use |
