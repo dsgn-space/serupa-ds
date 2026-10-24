@@ -730,6 +730,74 @@ Rules of thumb:
 - `touch-manipulation` on buttons removes the double-tap zoom delay; `touch-none` on canvases and sliders that handle gestures themselves.
 - Use `will-change-transform` only while an animation runs, then remove it.
 
+## Content and voice
+
+How the words in a product built with the system should read: labels, hints, errors, empty states and the words the components say on their own. Write plainly, for someone who is busy and may be using a screen reader, a translation tool or a small screen.
+
+**Voice**
+
+- Plain and direct. Short sentences, everyday words, one idea per sentence.
+- Say "you" to the person and talk about what they can do, not about the system.
+- No "please", no "sorry" for routine things, no exclamation marks, no jokes in errors.
+- Never blame the person. "That date is before the start date", not "You entered an invalid date".
+
+**Capitalization and punctuation**
+
+- Sentence case everywhere: titles, buttons, labels, menu items, tabs and column headings. "Save changes", not "Save Changes". Proper nouns keep their capitals.
+- No full stop on a label, button, heading or single-line hint. Use one when a message has more than one sentence, and on Alert and Toast bodies.
+- The ellipsis character (…), not three dots. Use it for something in progress ("Loading…", "Saving…") and on a menu item or button that asks for more before it acts ("Rename…").
+- Avoid ampersands, slashes and abbreviations people have to decode: "and", "or", "for example".
+
+**Buttons and links**
+
+- Start with a verb that says what happens: "Save", "Send invite", "Delete project". Avoid "OK", "Yes", "Submit" and "Click here".
+- Use the same verb in the title and the button: a dialog titled "Delete project?" has a "Delete" button, not "Confirm".
+- A link says where it goes: "Billing settings", not "Learn more" on its own. If several links on a page would read the same, give each a distinct name.
+- Icon-only buttons need a name (`aria-label`) that is the same verb you'd write on a text button.
+
+**Labels and hints**
+
+- A field label is a noun phrase: "Email", "Start date", "Project name". Don't use the placeholder as the label; it disappears as soon as someone types.
+- A hint says what's expected before someone gets it wrong: "At least 12 characters", "As shown on your ID".
+- Mark the exception, not the rule: if most fields are required, mark the optional ones (Field's `optional`).
+
+**Errors**
+
+Say what happened and how to fix it, in that order, next to the thing that needs fixing.
+
+| Instead of | Write |
+| --- | --- |
+| Invalid input | Enter a date after 1 Jan 2026 |
+| Error 413 | report.pdf is larger than 10 MB |
+| This field is required | Enter your email |
+| Something went wrong | We couldn't save your changes. Try again. |
+| photo.heic: this type of file isn't accepted. | photo.heic isn't a PNG or JPG. |
+
+- Put a field's error in Field's `error`, so it's tied to the control and read with it.
+- If nothing the person does will fix it, say so and say what happens next: "We couldn't reach the server. Your changes are kept and will be sent when you're back online."
+- Don't show an error while someone is still typing. Check on blur or on submit.
+
+**Empty states and confirmations**
+
+- An empty state says what will be here and how to add the first one: "No projects yet" and a "Create project" button.
+- A confirmation names the thing and the consequence: "Delete Website redesign? Its 12 tasks are deleted too." Keep destructive confirmations for actions that can't be undone; for the rest, act and offer Undo in a Toast.
+
+**Numbers, dates and units**
+
+- Let the locale write them. `SerupaProvider`'s `locale` sets how the date and time components show and read dates; use `Intl.NumberFormat` and `Intl.DateTimeFormat` with the same locale for your own text.
+- In English, write dates with the month as a word, "24 Oct 2026", so they can't be read as day-month or month-day. Use relative dates ("2 hours ago", "Yesterday") only where the exact time doesn't matter, and give the exact one in a tooltip or title.
+- Numerals for every number, "3 files", not "three files". Group thousands ("12,400").
+- A space between a number and its unit, "12 MB", "30 s", except % and °. `formatFileSize()` writes file sizes this way.
+- Ranges with an en dash and no spaces: "1–5", "Mon–Fri".
+
+**The words the components say**
+
+Close buttons, loading text, pagination and the other built-in words come from one set, below. `<SerupaProvider labels>` replaces any of them for a subtree, and each component's own prop (`closeLabel`, `dismissLabel`, `loadingText`, …) still wins for one instance. `idLabels` is the full Indonesian set.
+
+- Overlays close with "Close" (Dialog, Drawer); notices go away with "Dismiss" (Alert, Toast).
+- Loading is "Loading…" everywhere; give a specific one when you can: `loadingText="Saving…"`.
+- When you change one, keep the patterns above: a verb for a button, sentence case, no full stop.
+
 ## Accessibility
 
 Accessibility utilities, as classes in `bundle.css`. They add no tokens.
