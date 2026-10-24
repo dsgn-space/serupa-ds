@@ -4,6 +4,7 @@ import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon, type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   /** BreadcrumbItems, from the top level down to the current page (the last one). */
@@ -46,6 +47,7 @@ export const BreadcrumbItem = /* @__PURE__ */ component<HTMLAnchorElement, Bread
    other prop go to the <nav>. */
 /** Where the current page sits: links to the pages above it, separated by chevrons. maxItems collapses the middle. */
 export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps>("Breadcrumb", function Breadcrumb(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { separator: 1, maxItems: 1, expandLabel: 1, className: 1, children: 1 });
   const separator = oneOf(["chevron", "slash"] as const, props.separator, "chevron");
   const [expanded, setExpanded] = React.useState(false);
@@ -69,7 +71,7 @@ export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps
     if (n > 0) out.push(sep("s" + i));
     if (collapse && n === 1) {
       out.push(<li key="more" className="dk-breadcrumb__li">
-        <button type="button" className="dk-breadcrumb__item dk-breadcrumb__more" aria-label={props.expandLabel || "Show the hidden pages"}
+        <button type="button" className="dk-breadcrumb__item dk-breadcrumb__more" aria-label={props.expandLabel || sds.labels.showHiddenPages}
           onClick={() => { focusAfter.current = true; setExpanded(true); }}>…</button>
       </li>, sep("s-more"));
     }
@@ -79,7 +81,7 @@ export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps
     </li>);
   });
   return (
-    <nav aria-label="Breadcrumb" {...rest} ref={ref} data-component="breadcrumb" className={cn("dk-breadcrumb", props.className)}>
+    <nav aria-label={sds.labels.breadcrumb} {...rest} ref={ref} data-component="breadcrumb" className={cn("dk-breadcrumb", props.className)}>
       <ol className="dk-breadcrumb__list">{out}</ol>
     </nav>
   );

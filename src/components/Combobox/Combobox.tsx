@@ -7,6 +7,7 @@ import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import { isComposing } from "../../internal/ime";
 
@@ -49,6 +50,7 @@ const plain = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
    tokens: className and style go to the box; ref and every other prop to the <input>. */
 /** A text field with a list of options that narrows as you type; picks one listed option. */
 export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProps>("Combobox", function Combobox(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -177,7 +179,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         <Icon name="expand_more" />
       </button>
       <div ref={pop} className="dk-combobox__popup" {...{ popover: "manual" }} hidden={!open || undefined} onMouseDown={keep}>
-        {props.loading ? <div className="dk-combobox__message" role="status"><Loader size="sm" delay={0} label="" />{props.loadingText || "Loading…"}</div> : null}
+        {props.loading ? <div className="dk-combobox__message" role="status"><Loader size="sm" delay={0} label="" />{props.loadingText || sds.labels.loadingResults}</div> : null}
         <div id={listId} role="listbox" className="dk-combobox__listbox" aria-labelledby={rest["aria-labelledby"]} aria-label={rest["aria-labelledby"] ? undefined : rest["aria-label"]}>
           {shown.map((o) => (
             <div key={o.value} id={base + "-opt-" + o.i} role="option" aria-selected={o.value === value} aria-disabled={o.disabled || undefined}
@@ -191,7 +193,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
             </div>
           ))}
         </div>
-        {!props.loading && shown.length === 0 ? <div className="dk-combobox__message" role="status">{props.emptyText ?? "No results"}</div> : null}
+        {!props.loading && shown.length === 0 ? <div className="dk-combobox__message" role="status">{props.emptyText ?? sds.labels.noResults}</div> : null}
       </div>
       {props.name ? <input type="hidden" name={props.name} value={value ?? ""} disabled={rest.disabled} /> : null}
     </span>

@@ -59,6 +59,10 @@ Switch themes with the `data-theme` attribute on any element, e.g. `<html data-t
 
 Each color that changes between themes is a `light-dark()` pair, and `data-mode` sets `color-scheme` (`auto` is `light dark`), so the light or dark value is chosen where the color is used. Server-rendered and React apps get dark mode with nothing to inject and no flash. A page with neither attribute stays light. An element with `data-theme` keeps that flat theme, so it still wins; inside such a page, give a section both `data-brand` and `data-mode` to switch it. Needs `light-dark()`: Chrome and Edge 123, Safari 17.5, Firefox 120.
 
+**More contrast** — `data-contrast="more"` gives 7:1 text (muted text and placeholders included) and stronger borders and field outlines, in every theme. It also applies on its own when the visitor's system asks for more contrast (`prefers-contrast: more`); a page can opt out with `data-contrast="normal"` on `<html>`.
+
+**Density** — `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
+
 **Automatic dark mode** — `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
 ```html
@@ -99,10 +103,12 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `border` | `zinc-200` | `zinc-800` | Default borders and dividers. |
 | `border-strong` | `zinc-300` | `zinc-700` | Emphasised dividers and outlines. Form fields use `field-border`. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
-| `success` | `green-600` | `green-500` | Success icons and fills. For success text on light surfaces use `green-700`. |
+| `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
-| `warning` | `amber-600` | `amber-500` | Warning icons and fills; put dark text on it. For warning text on light surfaces use `amber-700`. |
+| `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
+| `warning` | `amber-600` | `amber-500` | Warning icons and fills; put dark text on it. Not for text: use `warning-text`. |
 | `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
+| `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
 | `danger` | `red-600` | `red-600` | Errors, destructive buttons; white text on it. |
 | `danger-hover` | `red-700` | `red-700` | Hover / pressed state of `danger`. |
 | `on-danger` | `white` | `white` | Text and icons on `danger` fills. |
@@ -112,6 +118,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `danger-border` | `red-300` | `red-800` | Border of a destructive outline button. |
 | `info` | `sky-700` | `sky-400` | Informational icons and text. |
 | `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
+| `info-text` | `sky-700` | `sky-300` | Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+). Class `text-info-text`. |
 | `field` | `white` | `zinc-900` | Background of text inputs, selects and other form fields. |
 | `field-border` | `zinc-500` | `zinc-500` | Border of form fields: 3:1+ on `field` and `surface` (WCAG 1.4.11, a control's boundary). |
 | `field-border-hover` | `zinc-600` | `zinc-400` | Field border on hover. |

@@ -5,6 +5,7 @@ import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../interna
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import { isComposing } from "../../internal/ime";
 
@@ -20,7 +21,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   max?: string;
   /** Minutes between the times in the list. Default: 30. Typed times don't have to fall on a step. */
   step?: number;
-  /** A BCP 47 locale for how times are written. Default: the browser's. */
+  /** A BCP 47 locale for how times are written. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string;
   /** 12-hour (AM/PM) or 24-hour. Default: the locale's. */
   hour12?: boolean;
@@ -39,7 +40,9 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
 export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
-  const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const sds = useSerupa();
+  const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const locale = localeProp || sds.locale;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const h12 = props.hour12 ?? uses12h(locale);
@@ -128,7 +131,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
       case "Tab": setOpen(false); break;
     }
   };
-  const label = listLabel || "Choose time";
+  const label = listLabel || sds.labels.chooseTime;
   return (
     <span ref={box} className={cn("dk-input", "dk-input--size-" + size, "dk-time-picker", invalid && "dk-input--invalid", disabled && "dk-input--disabled", readOnly && "dk-input--readonly", className)} style={style} data-component="time-picker" data-size={size}>
       <input {...rest} ref={(n) => { field.current = n; setRef(ref, n); }}

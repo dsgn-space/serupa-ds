@@ -6,6 +6,7 @@ import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { isComposing } from "../../internal/ime";
+import { useSerupa } from "../../internal/provider";
 
 export interface SearchInputProps extends Omit<InputProps, "type" | "leftIcon" | "rightIcon"> {
   /** Called with the text when Enter is pressed. */
@@ -27,6 +28,7 @@ export interface SearchInputProps extends Omit<InputProps, "type" | "leftIcon" |
    <input>. */
 /** A search field: a search icon, a clear button once something is typed, Escape to clear and Enter to search. */
 export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInputProps>("SearchInput", function SearchInput(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { size: 1, invalid: 1, className: 1, style: 1, onSearch: 1, onClear: 1, clearLabel: 1, loading: 1, loadingLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -58,12 +60,12 @@ export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInp
     <span className={cn("dk-input dk-search-input", "dk-input--size-" + size, invalid && "dk-input--invalid", rest.disabled && "dk-input--disabled", rest.readOnly && "dk-input--readonly", props.className)}
       style={props.style} data-component="search-input" data-size={size}>
       <span className="dk-input__icon dk-input__icon--left dk-search-input__icon" aria-hidden={props.loading ? undefined : true}>
-        {props.loading ? <Loader size="sm" delay={0} label={props.loadingLabel ?? "Searching"} /> : <Icon name="search" />}
+        {props.loading ? <Loader size="sm" delay={0} label={props.loadingLabel ?? sds.labels.searching} /> : <Icon name="search" />}
       </span>
       <input {...rest} ref={(n) => { el.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
         type="search" enterKeyHint={rest.enterKeyHint || "search"} className="dk-input__field" onChange={onChange} onKeyDown={onKeyDown} />
       {text !== "" && !locked ? (
-        <button type="button" className="dk-search-input__clear" aria-label={props.clearLabel || "Clear search"} aria-controls={rest.id}
+        <button type="button" className="dk-search-input__clear" aria-label={props.clearLabel || sds.labels.clearSearch} aria-controls={rest.id}
           onClick={clear} onMouseDown={(e) => e.preventDefault()}>
           <Icon name="close" />
         </button>
