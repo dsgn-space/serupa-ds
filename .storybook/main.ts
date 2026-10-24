@@ -1,8 +1,11 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { buildUtilities } from '../tools/utilities/build.mjs';
+import { buildRegistry } from '../tools/build/registry.mjs';
 
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
 buildUtilities(new URL('..', import.meta.url).pathname);
+// …and the export, style and label lists from the component folders (src/generated/).
+buildRegistry(new URL('..', import.meta.url).pathname);
 
 // Storybook is the system's documentation: npm run storybook (on your computer), npm run build-storybook (CI).
 const config: StorybookConfig = {

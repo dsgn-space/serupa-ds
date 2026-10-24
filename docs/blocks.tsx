@@ -12,6 +12,8 @@ import { SearchInput } from '../src/components/SearchInput/SearchInput';
 import { customIcons, isIconData } from '../src/icons';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
+// Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
+const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -167,7 +169,7 @@ export function IconSizes() {
 const labelUse: Record<string, string> = {};
 {
   let use = '';
-  for (const line of labelsSource.slice(labelsSource.indexOf('export interface SerupaLabels'), labelsSource.indexOf('\n}\n')).split('\n').slice(1)) {
+  for (const source of [labelsSource, ...componentLabelSources]) for (const line of source.slice(source.indexOf('export interface '), source.indexOf('\n}\n')).split('\n').slice(1)) {
     const doc = /^\s*\/\*\*\s*(.*?)\s*\*\/$/.exec(line), key = /^\s*(\w+):/.exec(line);
     if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
   }

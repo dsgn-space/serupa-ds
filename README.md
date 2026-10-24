@@ -117,15 +117,7 @@ The palette has 22 color families with 11 shades each (`50`–`950`) plus `white
 
 React components, styled only with this system's tokens. Each one's guide (when to use it, when not to, props, keyboard and accessibility notes, component tokens) is on its Storybook page and in `src/components/<Name>/README.md`.
 
-| Group | Components |
-| --- | --- |
-| Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `CopyButton`, `Link` |
-| Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `ColorPicker`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `PhoneInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload`, `InlineEdit` |
-| Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Meter`, `Badge`, `EmptyState` |
-| Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
-| Navigation | `Navbar`, `Sidebar`, `Tabs`, `Breadcrumb`, `Pagination`, `Stepper` |
-| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd`, `FormattedNumber`, `SortableList`, `RelativeTime` |
-| Layout and type | `Stack`, `Grid`, `Container`, `Divider`, `Heading`, `Text`, `VisuallyHidden` |
+Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Navigation, Content, and Layout and type (each component's stories file names its group in its `title`). The folders are in [`src/components/`](src/components/).
 
 Shared conventions, so learning one component teaches the rest:
 
@@ -178,6 +170,8 @@ Popover and command buttons (`popoverTarget`, `command`) and `text-wrap: balance
 ## Maintaining the system
 
 The source is in `src/`: one folder per component in `src/components/<Name>/` (the component in TypeScript, its CSS, its component tokens, its guidelines and its preview), the utility classes in `src/styles/utilities.template.css` (expanded over the tokens by `tools/utilities/build.mjs`), and `base.css` and `theme.js`. `npm run build` makes `dist/`, which is never edited or committed: `index.js` and `index.d.ts` (ES modules and types), `serupa.iife.js` (the browser script), `components.css`, `utilities.css`, `bundle.css`, `base.css`, `theme.js` and `lib/`. `npm run typecheck` checks the types.
+
+A new component lives in its own folder and nothing else needs a line for it: its `index.ts` says what the package exports, its words go in its `labels.ts` (with the Indonesian), and `tools/build/registry.mjs` builds the export list, the CSS import list and the label sets from the folders into `src/generated/` (not committed). Its stylesheet joins `components.css` after the ones listed in `src/styles/cascade.txt`; list it there only when it must come before another component's styles. Its server-render case is `tools/test/ssr/<Name>.mjs`, and `node tools/test/api.mjs --update` writes its `tools/test/baseline-api/<Name>.d.ts`. So two pull requests that add or change different components don't conflict.
 
 `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and the component previews with saved baselines, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
