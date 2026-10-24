@@ -221,4 +221,12 @@ describe('Textarea', () => {
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
   });
+
+  test('a form reset puts the count back to the default (P2)', async () => {
+    await render(<form id="tf"><Textarea id="trs" showCount maxLength={10} defaultValue="ab" aria-label="Reset" /></form>);
+    await userEvent.type(el('trs'), 'cdef');
+    expect(count('trs').textContent).toBe('6 / 10');
+    (document.getElementById('tf') as HTMLFormElement).reset();
+    await expect.poll(() => [el('trs').value, count('trs').textContent]).toEqual(['ab', '2 / 10']);
+  });
 });
