@@ -34,7 +34,7 @@
 .dk-input:hover:not(.dk-input--disabled, .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-border-hover, var(--field-border-hover)); }
 /* Focus: the border and a ring hugging it take the focus color (2px in all), and a transparent outline that
    forced-colors mode draws, since box-shadow rings disappear there. */
-.dk-input:focus-within { --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-ring); outline: var(--outline-width-2) solid transparent; outline-offset: var(--spacing-0); }
+.dk-input:focus-within { --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
 .dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--danger)); --dk-input-ring: var(--input-invalid, var(--danger)); }
 .dk-input--invalid:hover:not(.dk-input--disabled, .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--danger)); }
 .dk-input--readonly { background: var(--input-bg-readonly, var(--surface-muted)); }

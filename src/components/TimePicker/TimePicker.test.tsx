@@ -114,6 +114,19 @@ describe('TimePicker', () => {
     expect([d.v, d.first, d.last, el('de').placeholder]).toEqual(['14:30', '00:00', '23:30', 'hh:mm']);
   });
 
+  test('ko, ar-EG, fa: a time in the locale\'s own form is read on blur (오후 2:05, ٢:٠٥ م, ۱۴:۰۵), and a blur on the written time keeps it', async () => {
+    const changes: string[] = [];
+    await render(<div style={{ width: '240px' }}>{['ko', 'ar-EG', 'fa'].map((l, i) => <TimePicker key={l} id={`t${i}`} aria-label={l} locale={l} onValueChange={(v) => changes.push(l + ' ' + v)} />)}<button id="next">Next</button></div>);
+    await fill('t0', '오후 2:05');
+    await fill('t1', '٢:٠٥ م');
+    await fill('t2', '۱۴:۰۵');
+    expect(changes).toEqual(['ko 14:05', 'ar-EG 14:05', 'fa 14:05']);
+    const written = [0, 1, 2].map((i) => el(`t${i}`).value);
+    for (const i of [0, 1, 2]) { await userEvent.click(el(`t${i}`)); await userEvent.keyboard('{Escape}{Tab}'); }
+    expect([0, 1, 2].map((i) => el(`t${i}`).value)).toEqual(written);
+    expect(changes.length).toBe(3);
+  });
+
   test('disabled: the field and button are disabled and faded', async () => {
     await render(<TimePicker id="dis" aria-label="Off" disabled defaultValue="10:00" />);
     expect([el('dis').disabled, el('dis').parentElement!.querySelector('button')!.disabled]).toEqual([true, true]);

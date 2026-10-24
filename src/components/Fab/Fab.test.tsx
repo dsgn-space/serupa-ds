@@ -71,7 +71,7 @@ describe('Fab', () => {
     await expect.poll(() => css(el('fst')).boxShadow).toMatch(/20px 25px -5px/);
   });
 
-  test('keyboard: Tab reaches the Fab, Enter and Space press it, and it shows its focus ring (focus-visible, the ring color, a 2px outline for forced-colors mode)', async () => {
+  test('keyboard: Tab reaches the Fab, Enter and Space press it, and it shows its focus ring (focus-visible, a 2px outline in the ring color, 2px out)', async () => {
     await render(<Fabs />);
     (document.activeElement as HTMLElement | null)?.blur();
     const order: string[] = [];
@@ -90,8 +90,7 @@ describe('Fab', () => {
     probe.remove();
     const s = css(e);
     expect(e.matches(':focus-visible')).toBe(true);
-    expect(s.boxShadow).toContain(ring);
-    expect([s.outlineStyle, s.outlineWidth]).toEqual(['solid', '2px']);
+    expect([s.outlineStyle, s.outlineWidth, s.outlineOffset, s.outlineColor]).toEqual(['solid', '2px', '2px', ring]);
   });
 
   test('no warnings about missing labels', () => {

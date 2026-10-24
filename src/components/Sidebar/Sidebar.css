@@ -28,7 +28,7 @@
 .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--secondary)); color: var(--sidebar-item-text-hover, var(--text)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 .dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--secondary)); }
-.dk-sidebar__item:focus-visible { outline: var(--outline-width-2) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
+.dk-sidebar__item:focus-visible { outline: var(--focus-ring-width) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11)); }
 .dk-sidebar__icon { display: inline-flex; flex-shrink: 0; }
 .dk-sidebar__icon .dk-icon { font-size: var(--sidebar-icon-size, var(--spacing-5)); }

@@ -1,3 +1,5 @@
+import { latinDigits } from "./digits";
+
 // Calendar dates without times: local midnight, so days compare and step reliably across daylight saving.
 
 export const day = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -35,14 +37,24 @@ export function firstDayOfWeek(locale?: string): number {
   return 0;
 }
 
+// The typed date is always Gregorian with Latin digits, so it reads back as the same day: Thai (Buddhist years),
+// ja-u-ca-japanese (era years) and fa (Persian calendar and digits) would otherwise drift on the way back in.
+// Month names in the calendar grid stay localized.
+const numericFormats = new Map<string, Intl.DateTimeFormat>();
+function numeric(locale?: string): Intl.DateTimeFormat {
+  const key = locale || "";
+  let f = numericFormats.get(key);
+  if (!f) numericFormats.set(key, f = new Intl.DateTimeFormat(locale, { year: "numeric", month: "2-digit", day: "2-digit", calendar: "gregory", numberingSystem: "latn" }));
+  return f;
+}
 /** The order and separators of a short numeric date in the locale: ["month", "day", "year"] for en-US. */
 export function dateOrder(locale?: string): ("day" | "month" | "year")[] {
-  const parts = new Intl.DateTimeFormat(locale, { year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(2001, 10, 22));
+  const parts = numeric(locale).formatToParts(new Date(2001, 10, 22));
   return parts.filter((p) => p.type === "day" || p.type === "month" || p.type === "year").map((p) => p.type as "day" | "month" | "year");
 }
 /** A typed date in the locale's numeric order (11/22/2001, 22.11.2001, 2001-11-22), or null. Two-digit years are 20xx. */
 export function parseDate(text: string, locale?: string): Date | null {
-  const nums = text.trim().split(/[^0-9]+/).filter(Boolean);
+  const nums = latinDigits(text).trim().split(/[^0-9]+/).filter(Boolean);
   if (nums.length !== 3) return null;
   const order = /^\d{4}$/.test(nums[0]) ? (["year", "month", "day"] as const) : dateOrder(locale);
   const v: Record<string, number> = {};
@@ -52,9 +64,9 @@ export function parseDate(text: string, locale?: string): Date | null {
   return d.getFullYear() === v.year && d.getMonth() === v.month - 1 && d.getDate() === v.day ? d : null;
 }
 /** A date in the locale's short numeric form, as people type it: 11/22/2001. */
-export const formatDate = (d: Date, locale?: string) => new Intl.DateTimeFormat(locale, { year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+export const formatDate = (d: Date, locale?: string) => numeric(locale).format(d);
 /** What to type, in the locale's order: mm/dd/yyyy, dd.mm.yyyy. */
 export function datePattern(locale?: string): string {
-  const parts = new Intl.DateTimeFormat(locale, { year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(2001, 10, 22));
+  const parts = numeric(locale).formatToParts(new Date(2001, 10, 22));
   return parts.map((p) => (p.type === "day" ? "dd" : p.type === "month" ? "mm" : p.type === "year" ? "yyyy" : p.value)).join("");
 }

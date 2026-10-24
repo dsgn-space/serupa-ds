@@ -165,4 +165,27 @@ describe('Slider', () => {
     await setup();
     expect(css(el('tok').querySelector('.dk-slider__fill')).backgroundColor).toBe('rgb(1, 2, 3)');
   });
+
+  test('min with decimals the step doesn\'t have (min 0.5, max 5.5, step 1): the value stays on 0.5, 1.5, 2.5…', async () => {
+    await render(<Slider id="half" aria-label="Half" min={0.5} max={5.5} step={1} defaultValue={2.5} />);
+    const t = thumb('half'), now = () => t.getAttribute('aria-valuenow');
+    expect(now()).toBe('2.5');
+    t.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(now()).toBe('3.5');
+    await userEvent.keyboard('{Home}');
+    expect(now()).toBe('0.5');
+    await userEvent.keyboard('{ArrowRight}');
+    expect(now()).toBe('1.5');
+    await userEvent.keyboard('{End}{ArrowLeft}');
+    expect(now()).toBe('4.5');
+  });
+
+  test('a step in exponent form (1e-7) keeps its decimals', async () => {
+    await render(<Slider id="tiny" aria-label="Tiny" min={0} max={1e-6} step={1e-7} defaultValue={3e-7} />);
+    const t = thumb('tiny');
+    t.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(Number(t.getAttribute('aria-valuenow'))).toBe(4e-7);
+  });
 });
