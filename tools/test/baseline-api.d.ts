@@ -388,6 +388,9 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "de
     maxSize?: number;
     maxFiles?: number;
     disabled?: boolean;
+    invalid?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
     name?: string;
     title?: React.ReactNode;
     buttonLabel?: string;
@@ -942,6 +945,7 @@ interface SerupaLabels {
     chooseFile: string;
     chosenFiles: string;
     chosenFile: string;
+    required: string;
     showPassword: string;
     table: string;
 }
