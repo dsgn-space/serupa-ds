@@ -107,10 +107,18 @@ describe('SegmentedControl', () => {
     expect(sel.current).toBe(el('sfr'));
   });
 
-  test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it)', async () => {
+  test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it), also on hover', async () => {
     await render(<SegmentedControl id="hc" aria-label="Period" options={PERIODS} />);
-    const r = await forcedColors((active) => active && [css(seg('hc', 'day')).forcedColorAdjust, css(seg('hc', 'week')).forcedColorAdjust]);
-    if (r) expect(r).toEqual(['none', 'auto']);
+    const day = seg('hc', 'day');
+    const r = await forcedColors(async (active) => {
+      if (!active) return null;
+      const label = css(day).color;
+      // The segment paints nothing itself, so its label sits on the Highlight indicator; hovering it keeps HighlightText.
+      await userEvent.hover(day);
+      await new Promise((go) => setTimeout(go, 200));
+      return [css(day).forcedColorAdjust, css(seg('hc', 'week')).forcedColorAdjust, css(day).backgroundColor, css(day).color === label];
+    });
+    if (r) expect(r).toEqual(['none', 'auto', 'rgba(0, 0, 0, 0)', true]);
   });
 
   test('controlled: onValueChange once (not again for the same segment); the hidden input follows; icons show before labels; a new value from outside moves the selection', async () => {

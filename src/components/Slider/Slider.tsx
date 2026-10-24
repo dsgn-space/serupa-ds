@@ -5,6 +5,7 @@ import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
 import { useFieldsetDisabled } from "../../internal/useFieldsetDisabled";
 import { snap as snapToGrid } from "../../internal/step";
+import { useFieldLabel } from "../../internal/fieldLabel";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export type SliderValue = number | [number, number];
@@ -43,7 +44,7 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   required?: boolean;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, invalid: 1, readOnly: 1, required: 1, "aria-required": 1, "aria-invalid": 1, "aria-readonly": 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, invalid: 1, readOnly: 1, required: 1, "aria-required": 1, "aria-invalid": 1, "aria-readonly": 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1, "aria-describedby": 1 } as const;
 
 /* Slider: picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Each thumb
    is role="slider" with aria-valuenow, min, max and valuetext. Arrows change it by step (Right and Up raise it;
@@ -146,10 +147,14 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   const onBlur = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onBlur && crossing(e)) rest.onBlur(e); };
 
   const names = props.thumbLabels || ["Minimum", "Maximum"];
+  // In a Field, its label names the slider (or a range's group) and its hint and error describe the thumb (or the group).
+  const fieldLabel = useFieldLabel(props.id);
+  const labelledBy = props["aria-labelledby"] ?? (props["aria-label"] ? undefined : fieldLabel);
   const lo = isRange ? pct(vals[0]) : 0, hi = pct(vals[vals.length - 1]);
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
-      role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? props["aria-labelledby"] : undefined}
+      role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
+      aria-describedby={isRange ? props["aria-describedby"] : undefined}
       className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", readOnly && "dk-slider--readonly", invalid && "dk-slider--invalid", props.className)}
       data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined} data-readonly={readOnly ? "" : undefined} data-invalid={invalid ? "" : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
@@ -160,7 +165,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
           <span key={i} ref={(n) => { thumbs.current[i] = n; }} className="dk-slider__thumb" style={{ insetInlineStart: pct(v) + "%" }}
             role="slider" tabIndex={disabled ? -1 : 0} aria-valuenow={v} aria-valuemin={isRange && i === 1 ? vals[0] : min} aria-valuemax={isRange && i === 0 ? vals[1] : max}
             aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation="horizontal" aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
-            aria-label={isRange ? names[i] : props["aria-label"]} aria-labelledby={isRange ? undefined : props["aria-labelledby"]}
+            aria-label={isRange ? names[i] : props["aria-label"]} aria-labelledby={isRange ? undefined : labelledBy}
+            aria-describedby={isRange ? undefined : props["aria-describedby"]}
             onKeyDown={onKeyDown(i)} />
         ))}
       </div>
