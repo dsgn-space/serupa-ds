@@ -4,6 +4,7 @@ import { cn, oneOf, omit } from "../../internal/cn";
 import { AVATAR_SIZES, AvatarGroupSize } from "../Avatar/Avatar";
 import type { AvatarSize } from "../Avatar/Avatar";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
 
 export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The avatars: <Avatar> elements, or elements around them such as a Tooltip or a link. */
@@ -26,22 +27,11 @@ export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
    avatar's own). The group is role="group"; label names it. className and every other prop go to the <div>. */
 const OWN = { children: 1, max: 1, total: 1, size: 1, moreLabel: 1, label: 1, className: 1 } as const;
 
-/** The children as a flat list, with fragments opened up. */
-function items(children: React.ReactNode): React.ReactElement[] {
-  const out: React.ReactElement[] = [];
-  React.Children.forEach(children, (c) => {
-    if (!React.isValidElement(c)) return;
-    if (c.type === React.Fragment) out.push(...items((c.props as { children?: React.ReactNode }).children));
-    else out.push(c);
-  });
-  return out;
-}
-
 /** Avatars in an overlapping row, with "+N" for the rest. */
 export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroupProps>("AvatarGroup", function AvatarGroup(props, ref) {
   const rest = omit(props, OWN);
   const size = oneOf(AVATAR_SIZES, props.size, "md");
-  const all = items(props.children);
+  const all = flattenChildren(props.children).filter(React.isValidElement);
   const max = props.max != null && props.max >= 0 ? Math.floor(props.max) : Infinity;
   const total = Math.max(all.length, props.total != null && props.total > 0 ? Math.floor(props.total) : 0);
   const shown = all.slice(0, max);

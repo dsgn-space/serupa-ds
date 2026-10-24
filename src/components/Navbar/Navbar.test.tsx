@@ -168,4 +168,9 @@ describe('Navbar', () => {
     }
     expect(low).toEqual([]);
   });
+
+  test('links inside a Fragment each get their own list item', async () => {
+    await render(<Navbar id="nfrag" brand="Acme"><NavbarLink href="/">Home</NavbarLink><><NavbarLink href="/a">A</NavbarLink><NavbarLink href="/b">B</NavbarLink></>{false}</Navbar>);
+    expect([...el('nfrag').querySelectorAll('.dk-navbar__links > li')].map((li) => li.textContent)).toEqual(['Home', 'A', 'B']);
+  });
 });

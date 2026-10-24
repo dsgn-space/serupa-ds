@@ -22,10 +22,12 @@
   --border: var(--zinc-200); /* Alias. Default borders and dividers. */
   --border-strong: var(--zinc-300); /* Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs. */
   --focus-ring: var(--blue-500); /* Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme). */
-  --success: var(--green-600); /* Alias. Success icons and fills. For success text on light surfaces use `green-700`. */
+  --success: var(--green-600); /* Alias. Success icons and fills (3:1). For success text use `success-text`. */
   --success-subtle: var(--green-50); /* Alias. Success alert / badge background. */
-  --warning: var(--amber-600); /* Alias. Warning icons and fills; put dark text on it. For warning text on light surfaces use `amber-700`. */
+  --success-text: var(--green-700); /* Alias. Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+ in every theme). */
+  --warning: var(--amber-600); /* Alias. Warning icons and fills; put dark text on it. For warning text use `warning-text`. */
   --warning-subtle: var(--amber-50); /* Alias. Warning alert / badge background. */
+  --warning-text: var(--amber-700); /* Alias. Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+ in every theme). */
   --danger: var(--red-600); /* Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`. */
   --danger-hover: var(--red-700); /* Alias. Hover / pressed state of `danger`. */
   --on-danger: var(--white); /* Alias. Text and icons on `danger` fills. */
@@ -35,6 +37,7 @@
   --danger-border: var(--red-300); /* Alias. Border of a destructive outline button. */
   --info: var(--sky-700); /* Alias. Informational icons and text. */
   --info-subtle: var(--sky-50); /* Alias. Info alert / badge background. */
+  --info-text: var(--sky-700); /* Alias. Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+ in every theme). */
   --white: #ffffff; /* Pure white. */
   --black: #000000; /* Pure black. */
   --slate-50: #f8fafc; /* Tints, subtle backgrounds. Use dark text on it (black 20.1:1). */
@@ -321,8 +324,10 @@
   --focus-ring: var(--blue-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
+  --success-text: var(--green-300);
   --warning: var(--amber-500);
   --warning-subtle: var(--amber-950);
+  --warning-text: var(--amber-300);
   --danger: var(--red-600);
   --danger-hover: var(--red-700);
   --on-danger: var(--white);
@@ -332,6 +337,7 @@
   --danger-border: var(--red-800);
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
+  --info-text: var(--sky-300);
 }
 [data-theme="violet-light"] {
   --primary: var(--violet-600);
@@ -356,8 +362,10 @@
   --focus-ring: var(--violet-500);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
+  --success-text: var(--green-700);
   --warning: var(--amber-600);
   --warning-subtle: var(--amber-50);
+  --warning-text: var(--amber-700);
   --danger: var(--red-600);
   --danger-hover: var(--red-700);
   --on-danger: var(--white);
@@ -367,6 +375,7 @@
   --danger-border: var(--red-300);
   --info: var(--sky-700);
   --info-subtle: var(--sky-50);
+  --info-text: var(--sky-700);
 }
 [data-theme="violet-dark"] {
   --primary: var(--violet-400);
@@ -391,8 +400,10 @@
   --focus-ring: var(--violet-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
+  --success-text: var(--green-300);
   --warning: var(--amber-500);
   --warning-subtle: var(--amber-950);
+  --warning-text: var(--amber-300);
   --danger: var(--red-600);
   --danger-hover: var(--red-700);
   --on-danger: var(--white);
@@ -402,6 +413,7 @@
   --danger-border: var(--red-800);
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
+  --info-text: var(--sky-300);
 }
 [data-theme="emerald-light"] {
   --primary: var(--emerald-700);
@@ -426,8 +438,10 @@
   --focus-ring: var(--emerald-600);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
+  --success-text: var(--green-700);
   --warning: var(--amber-600);
   --warning-subtle: var(--amber-50);
+  --warning-text: var(--amber-700);
   --danger: var(--red-600);
   --danger-hover: var(--red-700);
   --on-danger: var(--white);
@@ -437,6 +451,7 @@
   --danger-border: var(--red-300);
   --info: var(--sky-700);
   --info-subtle: var(--sky-50);
+  --info-text: var(--sky-700);
 }
 [data-theme="emerald-dark"] {
   --primary: var(--emerald-400);
@@ -461,8 +476,10 @@
   --focus-ring: var(--emerald-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
+  --success-text: var(--green-300);
   --warning: var(--amber-500);
   --warning-subtle: var(--amber-950);
+  --warning-text: var(--amber-300);
   --danger: var(--red-600);
   --danger-hover: var(--red-700);
   --on-danger: var(--white);
@@ -472,8 +489,9 @@
   --danger-border: var(--red-800);
   --info: var(--sky-400);
   --info-subtle: var(--sky-950);
+  --info-text: var(--sky-300);
 }
-:root:is([data-brand], [data-mode]):not([data-theme]) {
+:where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
   color-scheme: light dark;
   --primary: light-dark(var(--blue-600), var(--blue-400));
   --primary-hover: light-dark(var(--blue-700), var(--blue-300));
@@ -496,14 +514,17 @@
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --success: light-dark(var(--green-600), var(--green-500));
   --success-subtle: light-dark(var(--green-50), var(--green-950));
+  --success-text: light-dark(var(--green-700), var(--green-300));
   --warning: light-dark(var(--amber-600), var(--amber-500));
   --warning-subtle: light-dark(var(--amber-50), var(--amber-950));
+  --warning-text: light-dark(var(--amber-700), var(--amber-300));
   --danger-subtle: light-dark(var(--red-50), var(--red-950));
   --danger-text: light-dark(var(--red-700), var(--red-300));
   --danger-subtle-hover: light-dark(var(--red-100), var(--red-900));
   --danger-border: light-dark(var(--red-300), var(--red-800));
   --info: light-dark(var(--sky-700), var(--sky-400));
   --info-subtle: light-dark(var(--sky-50), var(--sky-950));
+  --info-text: light-dark(var(--sky-700), var(--sky-300));
 }
 :root[data-brand="blue"]:not([data-theme]), [data-brand="blue"]:not([data-theme]) {
   --primary: light-dark(var(--blue-600), var(--blue-400));
@@ -520,6 +541,27 @@
   --focus-ring: light-dark(var(--violet-500), var(--violet-400));
 }
 :root[data-brand="emerald"]:not([data-theme]), [data-brand="emerald"]:not([data-theme]) {
+  --primary: light-dark(var(--emerald-700), var(--emerald-400));
+  --primary-hover: light-dark(var(--emerald-800), var(--emerald-300));
+  --primary-subtle: light-dark(var(--emerald-50), var(--emerald-950));
+  --on-primary: light-dark(var(--white), var(--emerald-950));
+  --focus-ring: light-dark(var(--emerald-600), var(--emerald-400));
+}
+:is([data-theme^="blue-"], [data-brand="blue"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--blue-600), var(--blue-400));
+  --primary-hover: light-dark(var(--blue-700), var(--blue-300));
+  --primary-subtle: light-dark(var(--blue-50), var(--blue-950));
+  --on-primary: light-dark(var(--white), var(--blue-950));
+  --focus-ring: light-dark(var(--blue-500), var(--blue-400));
+}
+:is([data-theme^="violet-"], [data-brand="violet"]) [data-mode]:not([data-theme], [data-brand]) {
+  --primary: light-dark(var(--violet-600), var(--violet-400));
+  --primary-hover: light-dark(var(--violet-700), var(--violet-300));
+  --primary-subtle: light-dark(var(--violet-50), var(--violet-950));
+  --on-primary: light-dark(var(--white), var(--violet-950));
+  --focus-ring: light-dark(var(--violet-500), var(--violet-400));
+}
+:is([data-theme^="emerald-"], [data-brand="emerald"]) [data-mode]:not([data-theme], [data-brand]) {
   --primary: light-dark(var(--emerald-700), var(--emerald-400));
   --primary-hover: light-dark(var(--emerald-800), var(--emerald-300));
   --primary-subtle: light-dark(var(--emerald-50), var(--emerald-950));
@@ -591,6 +633,8 @@
   --outline-offset-2: 2px; /* `outline-offset-2`. Gap between an element and its focus outline. */
   --outline-offset-4: 4px; /* `outline-offset-4`. */
   --outline-offset-8: 8px; /* `outline-offset-8`. */
+  --focus-ring-width: var(--outline-width-2); /* The focus ring's width: `outline: var(--focus-ring-width) solid var(--focus-ring)`. Every component's focus ring uses it. */
+  --focus-ring-offset: var(--outline-offset-2); /* The transparent gap between an element and its focus ring (`outline-offset`). Inset rings, where an outline would be clipped, use 0. */
   --stroke-width-0: 0; /* `stroke-0`. No stroke. */
   --stroke-width-1: 1; /* `stroke-1`. Hairline outlines and dividers in illustrations. */
   --stroke-width-2: 2; /* `stroke-2`. The usual weight for outline icons (as in Lucide/Heroicons). */
@@ -931,7 +975,7 @@
   --text-9xl--line-height: 1; /* The line height that goes with `text-9xl`. */
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: "Courier New", Courier, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   --text-type-xs: 400 0.75rem/1rem var(--font-sans); /* `type-xs`: the whole 12px style in one class (Inter 400, line height 1rem). Same size as `text-xs`. */
   --text-type-sm: 400 0.875rem/1.25rem var(--font-sans); /* `type-sm`: the whole 14px style in one class (Inter 400, line height 1.25rem). Same size as `text-sm`. */
   --text-type-base: 400 1rem/1.5rem var(--font-sans); /* `type-base`: the whole 16px style in one class (Inter 400, line height 1.5rem). Same size as `text-base`. */
@@ -945,6 +989,50 @@
   --text-type-7xl: 400 4.5rem/1 var(--font-sans); /* `type-7xl`: the whole 72px style in one class (Inter 400, line height 1). Same size as `text-7xl`. */
   --text-type-8xl: 400 6rem/1 var(--font-sans); /* `type-8xl`: the whole 96px style in one class (Inter 400, line height 1). Same size as `text-8xl`. */
   --text-type-9xl: 400 8rem/1 var(--font-sans); /* `type-9xl`: the whole 128px style in one class (Inter 400, line height 1). Same size as `text-9xl`. */
+  --text-type-display: 600 3rem/1.1 var(--font-sans); /* `type-display`: hero and marketing headlines (48px, 600, tracked tight, line height 1.1 so two lines don't touch). */
+  --text-type-heading-1: 600 1.875rem/2.25rem var(--font-sans); /* `type-heading-1`: a page title. What a level 1 `Heading` renders. */
+  --text-type-heading-2: 600 1.5rem/2rem var(--font-sans); /* `type-heading-2`: a section title. What a level 2 `Heading` renders. */
+  --text-type-heading-3: 600 1.25rem/1.75rem var(--font-sans); /* `type-heading-3`: a subsection title. What a level 3 `Heading` renders. */
+  --text-type-heading-4: 600 1.125rem/1.75rem var(--font-sans); /* `type-heading-4`: a group title, and Dialog and Drawer titles. What a level 4 `Heading` renders. */
+  --text-type-title: 600 1rem/1.5rem var(--font-sans); /* `type-title`: a card or list title, and Card and EmptyState titles. */
+  --text-type-body: 400 1rem/1.5rem var(--font-sans); /* `type-body`: running text. */
+  --text-type-body-sm: 400 0.875rem/1.25rem var(--font-sans); /* `type-body-sm`: UI text: controls, table cells, menus, descriptions. */
+  --text-type-label: 500 0.875rem/1.25rem var(--font-sans); /* `type-label`: a form label (Field), table headers, tabs. */
+  --text-type-caption: 400 0.75rem/1rem var(--font-sans); /* `type-caption`: hints, timestamps, footnotes. Pair with `text-muted`. */
+  --text-type-overline: 600 0.75rem/1rem var(--font-sans); /* `type-overline`: an eyebrow above a title. Uppercase and tracked widest. */
+  --text-type-code: 400 0.875rem/1.25rem var(--font-mono); /* `type-code`: inline code and code blocks, in `font-mono`. */
+}
+[data-theme$="-light"] { color-scheme: light; }
+[data-theme$="-dark"] { color-scheme: dark; }
+[data-contrast="more"], [data-contrast="more"] [data-mode] {
+  --field-border: light-dark(var(--zinc-700), var(--zinc-300));
+  --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
+  --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
+  --text: light-dark(var(--zinc-950), var(--white));
+  --text-muted: light-dark(var(--zinc-700), var(--zinc-300));
+  --border: light-dark(var(--zinc-500), var(--zinc-400));
+  --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast="normal"]), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *) {
+  --field-border: light-dark(var(--zinc-700), var(--zinc-300));
+  --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
+  --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
+  --text: light-dark(var(--zinc-950), var(--white));
+  --text-muted: light-dark(var(--zinc-700), var(--zinc-300));
+  --border: light-dark(var(--zinc-500), var(--zinc-400));
+  --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
+}
+}
+[data-density="compact"] {
+  --control-height-sm: 1.5rem;
+  --control-height-md: 1.75rem;
+  --control-height-lg: 2.25rem;
+}
+[data-density="comfortable"] {
+  --control-height-sm: 1.5rem;
+  --control-height-md: 2rem;
+  --control-height-lg: 2.75rem;
 }
 .type-xs {
   font-family: var(--font-sans);
@@ -1034,6 +1122,91 @@
   font-family: var(--font-sans);
   font-size: 8rem;
   line-height: 1;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.type-display {
+  font-family: var(--font-sans);
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.type-heading-1 {
+  font-family: var(--font-sans);
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.type-heading-2 {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.type-heading-3 {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.type-heading-4 {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.type-title {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.type-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.type-body-sm {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.type-label {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.type-caption {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.type-overline {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.type-code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 400;
   letter-spacing: 0;
 }

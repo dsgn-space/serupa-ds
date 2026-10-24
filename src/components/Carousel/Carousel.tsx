@@ -4,6 +4,8 @@ import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
+import { useSerupa } from "../../internal/provider";
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   /** The slides, one per child (pictures, cards, anything). */
@@ -40,8 +42,9 @@ const SWIPE = 40; // px a swipe must travel to change the slide
 
 /** One slide at a time, with previous and next buttons, dots and swipe. */
 export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("Carousel", function Carousel(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
-  const slides = React.Children.toArray(props.children);
+  const slides = flattenChildren(props.children);
   const count = slides.length;
   const clamp = (i: number) => Math.min(Math.max(0, Math.floor(i) || 0), Math.max(0, count - 1));
   const [own, setOwn] = React.useState(() => props.defaultIndex || 0);
@@ -144,10 +147,10 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
           ))}
         </div>
         {props.arrows !== false && count > 1 ? <>
-          <IconButton className="dk-carousel__arrow dk-carousel__arrow--prev" label={props.previousLabel || "Previous slide"} size="sm" variant="secondary" shape="round" noTitle
+          <IconButton className="dk-carousel__arrow dk-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="round" noTitle
             icon={<><Icon name="chevron_left" className="dk-carousel__ltr" /><Icon name="chevron_right" className="dk-carousel__rtl" /></>}
             ref={prevBtn} disabled={prevOff} onClick={() => arrow(-1)} />
-          <IconButton className="dk-carousel__arrow dk-carousel__arrow--next" label={props.nextLabel || "Next slide"} size="sm" variant="secondary" shape="round" noTitle
+          <IconButton className="dk-carousel__arrow dk-carousel__arrow--next" label={props.nextLabel || sds.labels.nextSlide} size="sm" variant="secondary" shape="round" noTitle
             icon={<><Icon name="chevron_right" className="dk-carousel__ltr" /><Icon name="chevron_left" className="dk-carousel__rtl" /></>}
             ref={nextBtn} disabled={nextOff} onClick={() => arrow(1)} />
         </> : null}

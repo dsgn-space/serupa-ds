@@ -6,6 +6,8 @@ import { asIcon } from "../Icon/asIcon";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Menu, MenuItem } from "../Menu/Menu";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
+import { useSerupa } from "../../internal/provider";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -55,17 +57,18 @@ function isSection(c: React.ReactNode): boolean {
    its parent's height; className and every other prop go to the <nav>. */
 /** A vertical nav for an app's pages: sections of items with icons, badges and nested groups; collapses to an icon rail. */
 export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sidebar", function Sidebar(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { header: 1, footer: 1, collapsed: 1, className: 1, children: 1, "aria-label": 1 });
   const collapsed = !!props.collapsed;
   // runs of loose items get their own list
   const body: React.ReactNode[] = [];
   let run: React.ReactNode[] = [];
   const flush = () => { if (run.length) { body.push(<ul key={"l" + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
-  React.Children.forEach(props.children, (c) => { if (isSection(c)) { flush(); body.push(c); } else if (c != null && c !== false) run.push(c); });
+  flattenChildren(props.children).forEach((c) => { if (isSection(c)) { flush(); body.push(c); } else run.push(c); });
   flush();
   return (
     <SidebarContext.Provider value={{ collapsed, depth: 0 }}>
-      <nav {...rest} aria-label={props["aria-label"] || "Main"} ref={ref} data-component="sidebar" data-collapsed={collapsed ? "" : undefined}
+      <nav {...rest} aria-label={props["aria-label"] || sds.labels.mainNavigation} ref={ref} data-component="sidebar" data-collapsed={collapsed ? "" : undefined}
         className={cn("dk-sidebar", collapsed && "dk-sidebar--collapsed", props.className)}>
         {props.header != null ? <div className="dk-sidebar__header">{props.header}</div> : null}
         <div className="dk-sidebar__body">{body}</div>
@@ -94,7 +97,7 @@ export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarS
 export const SidebarItem = /* @__PURE__ */ component<HTMLAnchorElement, SidebarItemProps>("SidebarItem", function SidebarItem(props, ref) {
   const ctx = React.useContext(SidebarContext);
   const rest = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
-  const kids = React.Children.toArray(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
+  const kids = flattenChildren(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
   const group = kids.length > 0;
   const childActive = kids.some((k) => k.props.active);
   const [open, setOpen] = React.useState(props.defaultOpen != null ? !!props.defaultOpen : childActive);
