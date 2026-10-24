@@ -104,6 +104,26 @@ describe('Combobox', () => {
     expect([el('cb').value, !!popOf('cb').querySelector('[aria-selected=true]')]).toEqual(['', false]);
   });
 
+  test('a typed full label picks that option when focus leaves ("brazil" then Tab, "cote d’ivoire" without accents then a click elsewhere); onValueChange gets it; a disabled option\'s label doesn\'t pick it', async () => {
+    const calls: Array<string | null> = [];
+    await render(<div style={{ width: '320px' }}><button id="before">Before</button>
+      <Combobox id="cb" aria-label="Country" options={COUNTRIES} onValueChange={(v) => calls.push(v)} /></div>);
+    el('cb').focus();
+    await userEvent.keyboard('brazil{Tab}');
+    await settle(50);
+    expect([el('cb').value, calls]).toEqual(['Brazil', ['Brazil']]);
+    el('cb').focus();
+    await selectAll(); await userEvent.keyboard('cote d’ivoire');
+    await userEvent.click(el('before'));
+    await settle(50);
+    expect([el('cb').value, calls]).toEqual(['Côte d’Ivoire', ['Brazil', 'ci']]);
+    el('cb').focus();
+    await selectAll(); await userEvent.keyboard('denmark');
+    el('before').focus();
+    await settle(50);
+    expect([el('cb').value, calls]).toEqual(['Côte d’Ivoire', ['Brazil', 'ci']]);
+  });
+
   test('a click on the field opens it (all options); a click on an option picks it and keeps focus in the field', async () => {
     await render(<Countries />);
     await userEvent.click(el('cb'));
