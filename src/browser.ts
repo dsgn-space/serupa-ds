@@ -74,6 +74,8 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   MenuGroup: Serupa.MenuGroup,
   MenuItem: Serupa.MenuItem,
   MenuSeparator: Serupa.MenuSeparator,
+  Meter: Serupa.Meter,
+  meterState: Serupa.meterState,
   Progress: Serupa.Progress,
   Radio: Serupa.Radio,
   RadioGroup: Serupa.RadioGroup,
