@@ -95,6 +95,16 @@ describe('DateRangePicker', () => {
     expect(isOpen('trip')).toBe(false);
   });
 
+  test('Tab past the popup closes it, leaving focus on the next control', async () => {
+    await render(<><DateRangePicker id="tab" aria-label="Stay" locale="en-US" /><button id="after">After</button></>);
+    const btn = document.querySelector('.dk-date-range-picker__button') as HTMLButtonElement;
+    await userEvent.click(btn);
+    const pop = document.querySelector('.dk-date-range-picker__popup') as HTMLElement;
+    expect(pop.hidden).toBe(false);
+    for (let i = 0; i < 12 && document.activeElement !== document.getElementById('after'); i++) await userEvent.keyboard('{Tab}');
+    expect([(document.activeElement as HTMLElement).id, pop.hidden]).toEqual(['after', true]);
+  });
+
   test('typing the end (yyyy-mm-dd works anywhere) is read on blur; text that isn\'t a date puts back the last good one; a start after the end clears the end', async () => {
     await render(<Trip value={{ start: new Date(2025, 2, 19), end: new Date(2025, 2, 26) }} />);
     await fill('trip', 1, '2025-04-30');
