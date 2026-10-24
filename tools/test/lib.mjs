@@ -119,17 +119,21 @@ export function affectedComponents(files) {
 }
 // SERUPA_ONLY=Button,Dialog (set by run.mjs --since): the components to test, or null for all of them.
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));
-// The components plus every component that uses one of them (imports from its folder, directly or through another),
-// since a change to Button can change how ButtonGroup looks.
+// The components plus every component that uses one of them, since a change to Button can change how ButtonGroup
+// looks: its code imports from that folder (directly or through another component), or its stories or tests show one
+// (Field's stories show an Input).
 export function withDependents(names) {
   const COMP = path.join(PROJECT, 'src', 'components');
-  const uses = new Map(fs.readdirSync(COMP).filter((n) => fs.statSync(path.join(COMP, n)).isDirectory()).map((n) => [n, new Set(
-    fs.readdirSync(path.join(COMP, n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
-      .flatMap((f) => [...fs.readFileSync(path.join(COMP, n, f), 'utf8').matchAll(/from "\.\.\/([A-Z]\w*)/g)].map((m) => m[1])))]));
+  const imports = (n, test) => new Set(fs.readdirSync(path.join(COMP, n)).filter((f) => /\.tsx?$/.test(f) && test(f))
+    .flatMap((f) => [...fs.readFileSync(path.join(COMP, n, f), 'utf8').matchAll(/from ["']\.\.\/([A-Z]\w*)/g)].map((m) => m[1])));
+  const folders = fs.readdirSync(COMP).filter((n) => fs.statSync(path.join(COMP, n)).isDirectory());
+  const code = new Map(folders.map((n) => [n, imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f))]));
+  const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));
   const all = new Set(names);
   for (let grew = true; grew;) {
     grew = false;
-    for (const [n, deps] of uses) if (!all.has(n) && [...deps].some((d) => all.has(d))) { all.add(n); grew = true; }
+    for (const [n, deps] of code) if (!all.has(n) && [...deps].some((d) => all.has(d))) { all.add(n); grew = true; }
   }
+  for (const [n, deps] of shown) if ([...deps].some((d) => all.has(d))) all.add(n);
   return all;
 }
