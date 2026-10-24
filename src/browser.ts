@@ -63,6 +63,7 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   TableHead: Serupa.TableHead,
   TableHeaderCell: Serupa.TableHeaderCell,
   TableRow: Serupa.TableRow,
+  TableSelectCell: Serupa.TableSelectCell,
   paginationRange: Serupa.paginationRange,
   VisuallyHidden: Serupa.VisuallyHidden,
   Heading: Serupa.Heading,

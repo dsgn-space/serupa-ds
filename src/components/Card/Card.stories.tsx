@@ -55,6 +55,15 @@ export const AsLink: Story = {
   </ul>,
 };
 
+export const LinkWithActions: Story = {
+  name: 'As a link, with actions',
+  render: () => <Card href="#atlas" style={{ maxWidth: 360 }}>
+    <CardHeader title="Atlas" description="Updated 2 hours ago" />
+    <CardBody>Six open tasks, two due this week.</CardBody>
+    <CardFooter><Button variant="secondary" size="sm">Star</Button><Button size="sm">Open board</Button></CardFooter>
+  </Card>,
+};
+
 export const FooterLayouts: Story = {
   name: 'Footer layouts',
   render: () => <div className="flex flex-col gap-4" style={{ maxWidth: 400 }}>

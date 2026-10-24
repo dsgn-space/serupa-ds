@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
 import { Text } from '../Text/Text';
-import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, type SortDirection } from './Table';
+import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from './Table';
 
 const ROWS: Array<[string, string, number]> = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -77,13 +77,41 @@ describe('Table', () => {
     expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
   });
 
-  test('selected: aria-selected, shaded, a 2px primary bar at its start; other rows aria-selected="false"', async () => {
+  test('selected: shaded, a 2px primary bar at its start; no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
-    expect([r.getAttribute('aria-selected'), q('#tdef [data-i="0"]').getAttribute('aria-selected')]).toEqual(['true', 'false']);
+    expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
     expect(bar).toMatch(/2px 0px 0px 0px inset$/);
     expect(bar).toContain(color('var(--primary)'));
+  });
+
+  test('TableSelectCell: a narrow cell with a checkbox named by label (a <th scope="col"> with header); checked, indeterminate, onChange, name and ref reach it; a checked row is shaded with the bar, uncontrolled too', async () => {
+    const r = React.createRef<HTMLInputElement>(), picks: string[] = [];
+    function Pick() {
+      const [sel, set] = React.useState<string[]>(['Grace']);
+      const all = sel.length === ROWS.length;
+      return <Table id="tsel" caption="Pick">
+        <TableHead><TableRow><TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && sel.length > 0} onChange={() => set(all ? [] : ROWS.map((x) => x[0]))} /><TableHeaderCell>Name</TableHeaderCell></TableRow></TableHead>
+        <TableBody>{ROWS.map((x, i) => <TableRow key={x[0]} data-i={i} selected={sel.includes(x[0])}>
+          <TableSelectCell label={'Select ' + x[0]} name="who" value={x[0]} ref={i === 0 ? r : undefined} cellProps={{ 'data-c': 'c' } as React.TdHTMLAttributes<HTMLTableCellElement>} checked={sel.includes(x[0])}
+            onChange={(e) => { picks.push(x[0]); set(e.target.checked ? [...sel, x[0]] : sel.filter((n) => n !== x[0])); }} />
+          <TableCell>{x[0]}</TableCell></TableRow>)}</TableBody>
+      </Table>;
+    }
+    await render(<><Pick /><Table id="tun"><TableBody><TableRow data-i="u"><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table></>);
+    const boxes = [...el('tsel').querySelectorAll<HTMLInputElement>('input[type=checkbox]')], head = q('#tsel thead .dk-table__select');
+    expect([head.tagName, head.getAttribute('scope'), boxes.map((b) => b.getAttribute('aria-label')).join('|'), boxes.map((b) => b.checked).join(), boxes[0].indeterminate, r.current === boxes[1], boxes[1].name, boxes[1].value, (boxes[1].closest('td') as HTMLElement).dataset.c])
+      .toEqual(['TH', 'col', 'Select all rows|Select Ada|Select Grace|Select Linus', 'false,false,true,false', true, true, 'who', 'Ada', 'c']);
+    expect(Math.round(head.getBoundingClientRect().width) < 48).toBe(true);
+    await userEvent.click(boxes[1]);
+    expect([picks, boxes.map((b) => b.checked).join(), q('#tsel [data-i="0"]').classList.contains('dk-table__row--selected')]).toEqual([['Ada'], 'false,true,true,false', true]);
+    await userEvent.click(boxes[0]);
+    expect([boxes.map((b) => b.checked).join(), boxes[0].indeterminate]).toEqual(['true,true,true,true', false]);
+    const u = q('#tun [data-i="u"]');
+    await userEvent.click(u.querySelector('input')!);
+    await expect.poll(() => css(u).backgroundColor).toBe(bg('var(--surface-muted)'));
+    expect(css(u.firstElementChild).boxShadow).toMatch(/2px 0px 0px 0px inset$/);
   });
 
   test('a body row shades on hover', async () => {
@@ -101,7 +129,7 @@ describe('Table', () => {
     expect([f.borderTopWidth, f.fontWeight]).toEqual(['1px', '500']);
   });
 
-  test('size sm: 8px top and bottom; striped: every other row shaded, unchanged on hover; no aria-selected without selected', async () => {
+  test('size sm: 8px top and bottom; striped: every other row shaded, unchanged on hover; no aria-selected', async () => {
     await setup();
     const rows = [...el('tsm').querySelectorAll('tbody tr')];
     expect(css(q('#tsm td')).paddingTop).toBe('8px');
@@ -166,7 +194,7 @@ describe('Table', () => {
     expect([c.backgroundColor, c.paddingLeft]).toEqual(['rgb(1, 2, 3)', '20px']);
   });
 
-  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar 3:1; all six themes', async () => {
+  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar and the select checkbox outline 3:1; all six themes', async () => {
     await setup();
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
@@ -178,8 +206,10 @@ describe('Table', () => {
       for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
       const bar = contrast('var(--primary)', muted); n++;
       if (bar < 3) low.push(`${th} selected bar: ${bar.toFixed(2)}`);
+      const box = contrast('var(--field-border)', muted); n++;   // a TableSelectCell's unchecked box, on a shaded row
+      if (box < 3) low.push(`${th} checkbox outline on a shaded row: ${box.toFixed(2)}`);
     }
     still.remove();
-    expect([low, n]).toEqual([[], 36]);
+    expect([low, n]).toEqual([[], 42]);
   });
 });
