@@ -61,7 +61,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
    months side by side: the first pick is the start, the second the end (a day before the start moves the start
    instead), and the days between preview under the pointer. Typed text is read on blur and Enter; text that
    can't be used puts back the last good day, and a start after the end clears the end. The popup opens on the
-   button or Alt+ArrowDown, and closes when the range is complete, on Escape or a click outside. */
+   button or Alt+ArrowDown, and closes when the range is complete, on Escape, a click outside or focus moving past it. */
 /** Two date fields for a start and end, with a two-month calendar popup to pick the range. */
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>("DateRangePicker", function DateRangePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
@@ -126,7 +126,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
     setPicking(value.start && !value.end ? "end" : "start");
     setOpen(true);
   };
-  useAnchoredLayer(open, panel, box, { placement: "bottom-start", offsetVar: "--dk-drp-offset", onOutside: () => close(false), inside: button });
+  useAnchoredLayer(open, panel, box, { placement: "bottom-start", offsetVar: "--dk-drp-offset", onOutside: () => close(false), onFocusOutside: () => close(false), inside: button });
 
   const pick = (d: Date) => {
     if (picking === "start" || !value.start || compare(d, value.start) < 0) { commit({ start: d, end: null }); setPicking("end"); return; }

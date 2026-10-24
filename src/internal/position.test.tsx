@@ -24,6 +24,19 @@ describe('place', () => {
     expect(place(at(250, 276), { width: 200, height: 374 }, 'bottom-start', 4)).toEqual({ x: 20, y: 8, side: 'top', maxHeight: 238 });
   });
 
+  test('a phone keyboard shrinks the visual viewport: a list under a field near its bottom flips above; pinch-zoom offsets keep it on the visible part', () => {
+    const fake = (offsetLeft: number, offsetTop: number, width: number, height: number) => Object.defineProperty(window, 'visualViewport', { configurable: true, value: { offsetLeft, offsetTop, width, height } });
+    try {
+      // The keyboard covers the bottom 190px: 200px of page show. Below the field (150–176) there are 200 - 8 - 176 - 4 = 12px.
+      fake(0, 0, 400, 200);
+      expect(place(at(150, 176), { width: 200, height: 100 }, 'bottom-start', 4)).toEqual({ x: 20, y: 46, side: 'top' });
+      // Zoomed in on the right half (x 200–400, y 100–300): the layer is kept inside it, 8px from its left edge.
+      fake(200, 100, 200, 200);
+      expect(place(at(150, 176), { width: 100, height: 50 }, 'bottom-start', 4)).toEqual({ x: 208, y: 180, side: 'bottom' });
+    } finally { delete (window as { visualViewport?: unknown }).visualViewport; }
+    expect(place(at(20, 46), { width: 200, height: 200 }, 'bottom-start', 4)).toEqual({ x: 20, y: 50, side: 'bottom' });
+  });
+
   test('a side placement taller than the screen: the screen\'s height less the margins, from the top margin', () => {
     expect(place(at(100, 126), { width: 100, height: 500 }, 'right', 4)).toEqual({ x: 124, y: 8, side: 'right', maxHeight: 374 });
   });
