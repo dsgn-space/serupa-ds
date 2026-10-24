@@ -161,6 +161,26 @@ describe('Checkbox', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  test('readOnly: focusable with aria-readonly; a click on the box or label and Space leave it as it was (checked or not), onClick still runs, and a checked box is submitted', async () => {
+    const onChange = vi.fn(), onClick = vi.fn();
+    await render(<form id="ro-form"><Checkbox id="ro" name="a" readOnly defaultChecked onChange={onChange} onClick={onClick}>Agreed</Checkbox><Checkbox id="ro2" readOnly>Not yet</Checkbox></form>);
+    expect([input('ro').getAttribute('aria-readonly'), label('ro').className.includes('dk-checkbox--readonly'), css(label('ro')).cursor]).toEqual(['true', true, 'default']);
+    await userEvent.click(label('ro'));
+    await userEvent.click(input('ro2'));
+    input('ro').focus();
+    await userEvent.keyboard(' ');
+    expect([input('ro').checked, input('ro2').checked, document.activeElement === input('ro'), onChange.mock.calls.length, onClick.mock.calls.length]).toEqual([true, false, true, 0, 2]);
+    expect(new FormData(document.getElementById('ro-form') as HTMLFormElement).get('a')).toBe('on');
+  });
+
+  test('readOnly and controlled (checked without onChange): no React warning, and it stays checked', async () => {
+    const warned: unknown[] = [], warn = console.error;
+    console.error = (...a: unknown[]) => { warned.push(a[0]); };
+    try { await render(<Checkbox id="roc" checked readOnly>Locked</Checkbox>); } finally { console.error = warn; }
+    await userEvent.click(label('roc'));
+    expect([input('roc').checked, warned]).toEqual([true, []]);
+  });
+
   test('in a Field: described and invalid with the error; in a disabled Field group every checkbox is disabled and dimmed', async () => {
     await render(<>
       <Field label="Agreement" error="Accept the terms to go on."><Checkbox id="fld">I accept the terms</Checkbox></Field>

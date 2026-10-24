@@ -2,7 +2,9 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { Combobox } from '../Combobox/Combobox';
 import { Input } from '../Input/Input';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { Textarea } from '../Textarea/Textarea';
 import { Field } from './Field';
 
@@ -107,5 +109,34 @@ describe('Field', () => {
       ['error on muted', 'var(--danger-text)', 'var(--surface-muted)', 4.5],
       ['required', 'var(--danger-text)', 'var(--surface)', 4.5],
     ])).toEqual([]);
+  });
+
+  // The control can sit inside a Tooltip, your own wrapper or a form library's component: Field still wires it.
+  test('a control at any depth gets the id, the hint and error, required and invalid, and its label names it', async () => {
+    function EmailInput(p: React.ComponentProps<typeof Input>) { return <div className="wrap"><Input type="email" {...p} /></div>; }
+    await render(<>
+      <Field label="Email" hint="Work address" error="Required" required><Tooltip content="We never share it"><EmailInput /></Tooltip></Field>
+      <Field id="deep" label="Phone" hint="Mobile"><div><span><Input /></span></div></Field>
+    </>);
+    const input = document.querySelector('.wrap input') as HTMLInputElement;
+    expect([input.labels?.[0]?.textContent?.replace(/\*/g, ''), input.getAttribute('aria-required'), input.getAttribute('aria-invalid')]).toEqual(['Email', 'true', 'true']);
+    const ids = (input.getAttribute('aria-describedby') || '').split(' ').filter(Boolean);
+    expect(ids.map((i) => document.getElementById(i)?.textContent)).toEqual(expect.arrayContaining(['Work address', 'Required']));
+    expect([el('deep').labels?.[0]?.textContent, document.getElementById(described('deep')[0])?.textContent]).toEqual(['Phone', 'Mobile']);
+  });
+
+  test('a direct child component isn\'t described twice; a group Field inside a Field doesn\'t take its id', async () => {
+    await render(<>
+      <Field id="once" label="Name" hint="As on your ID"><Input /></Field>
+      <Field id="outer" label="Outer" hint="Outer hint"><div><Field group label="Inner"><Input id="inner" /></Field></div></Field>
+    </>);
+    expect(described('once')).toHaveLength(1);
+    expect([el('inner').id, el('inner').getAttribute('aria-describedby')]).toEqual(['inner', null]);
+  });
+
+  test('a Combobox\'s listbox is named by the Field label', async () => {
+    await render(<Field label="Country"><Combobox options={['Indonesia', 'Japan']} /></Field>);
+    const list = document.querySelector('[role="listbox"]') as HTMLElement;
+    expect(document.getElementById(list.getAttribute('aria-labelledby') || '')?.textContent).toBe('Country');
   });
 });

@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 import { isComposing } from "../../internal/ime";
 import { formatNumber, parseNumber } from "../../internal/numbers";
 import { gridPlaces, roundTo } from "../../internal/step";
@@ -45,6 +46,7 @@ export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "d
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
 export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>("NumberInput", function NumberInput(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");

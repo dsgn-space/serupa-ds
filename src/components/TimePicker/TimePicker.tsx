@@ -5,6 +5,7 @@ import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../interna
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import * as icons from "../../material/builtin";
@@ -41,6 +42,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
 export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
   const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp);

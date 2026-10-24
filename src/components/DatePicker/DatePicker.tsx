@@ -6,6 +6,7 @@ import { cssLength, hideLayer, placeLayer, showLayer } from "../../internal/posi
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import * as icons from "../../material/builtin";
@@ -43,6 +44,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    yyyy-mm-dd. ref goes to the text field. */
 /** A date field: type a date or pick one from a calendar popover. */
 export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePickerProps>("DatePicker", function DatePicker(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, buttonLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp);

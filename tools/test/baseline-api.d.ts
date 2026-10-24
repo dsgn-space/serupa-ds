@@ -226,6 +226,7 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     description?: React.ReactNode;
     indeterminate?: boolean;
     invalid?: boolean;
+    readOnly?: boolean;
 }
 declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -297,6 +298,7 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     invalid?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
+    required?: boolean;
     id?: string;
     startLabel?: string;
     endLabel?: string;
@@ -753,6 +755,7 @@ interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     description?: React.ReactNode;
     labelPosition?: "end" | "start";
     invalid?: boolean;
+    readOnly?: boolean;
 }
 declare const Switch: React.ForwardRefExoticComponent<SwitchProps & React.RefAttributes<HTMLInputElement>>;
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {

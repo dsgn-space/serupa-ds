@@ -24,6 +24,7 @@ export const States: Story = {
   render: () => <Col>
     <Switch defaultChecked>On</Switch>
     <Switch invalid>Required setting</Switch>
+    <Switch readOnly defaultChecked>Read-only and on</Switch>
     <Switch disabled>Disabled</Switch>
     <Switch disabled defaultChecked>Disabled and on</Switch>
     <div style={{ maxWidth: 320 }}><Switch labelPosition="start" className="w-full justify-between">Label first</Switch></div>

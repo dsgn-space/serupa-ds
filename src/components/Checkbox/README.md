@@ -48,6 +48,7 @@ const { Checkbox, Field } = window.Serupa;
 | Hover | `field-border-hover`; a checked or indeterminate box turns `primary-hover` |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
+| Read-only | Looks as it is, with a default cursor and no hover change |
 | Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` box; also when a parent fieldset (`Field group disabled`) is disabled |
 
 ## Accessibility
@@ -55,6 +56,7 @@ const { Checkbox, Field } = window.Serupa;
 - It's a real checkbox: Space toggles it, forms submit it, and screen readers announce checked, unchecked and mixed.
 - The label names it. With a description, the checkbox is named by the label alone (`aria-labelledby`) and the description is read after it (`aria-describedby`).
 - The check and dash are decorative (`aria-hidden`).
+- `readOnly` keeps it focusable and read out with `aria-readonly`, but a click or Space doesn't change it, and `onChange` doesn't run (your `onClick` does). The browser's own `readonly` does nothing on a checkbox, so Checkbox cancels the click. A checked read-only box is still submitted, which `disabled` isn't.
 - For a set, use `Field group`: a `<fieldset>` and `<legend>`, so the question is read with each option.
 - The label and description keep 4.5:1, the border, checked fill, focus ring and invalid border 3:1, and the check 4.5:1 on its fill, in all six themes (`Checkbox.test.tsx`).
 
@@ -67,6 +69,7 @@ const { Checkbox, Field } = window.Serupa;
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `indeterminate` | boolean | `false` | A dash, announced as "mixed". Set it from your state: a click clears it natively, and the next render puts it back if the prop is still true |
 | `invalid` | boolean | `false` | A danger border (while unchecked) and focus ring, and `aria-invalid` |
+| `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't change it; a checked box is still submitted |
 
 Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `required`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox">`. `className` and `style` go to the `<label>` around it, which has `data-component="checkbox"` and `data-size`.
 
