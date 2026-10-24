@@ -4,6 +4,7 @@ import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
@@ -43,7 +44,7 @@ const SWIPE = 40; // px a swipe must travel to change the slide
 export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("Carousel", function Carousel(props, ref) {
   const sds = useSerupa();
   const rest = omit(props, OWN);
-  const slides = React.Children.toArray(props.children);
+  const slides = flattenChildren(props.children);
   const count = slides.length;
   const clamp = (i: number) => Math.min(Math.max(0, Math.floor(i) || 0), Math.max(0, count - 1));
   const [own, setOwn] = React.useState(() => props.defaultIndex || 0);

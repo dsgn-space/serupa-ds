@@ -4,6 +4,7 @@ import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon, type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
@@ -53,7 +54,7 @@ export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps
   const [expanded, setExpanded] = React.useState(false);
   const firstHidden = React.useRef<HTMLLIElement>(null);
   const focusAfter = React.useRef(false);
-  const items = React.Children.toArray(props.children).filter(React.isValidElement) as React.ReactElement<BreadcrumbItemProps>[];
+  const items = flattenChildren(props.children).filter(React.isValidElement) as React.ReactElement<BreadcrumbItemProps>[];
   const max = typeof props.maxItems === "number" && props.maxItems >= 2 ? Math.floor(props.maxItems) : 0;
   const collapse = !expanded && max > 0 && items.length > max;
   // collapsed: the first item, "…", then the last max - 1
