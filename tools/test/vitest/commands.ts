@@ -34,3 +34,9 @@ export const pointerDown: BrowserCommand<[selector: string, at: Point]> = async 
 };
 
 export const pointerUp: BrowserCommand<[]> = async (ctx) => { await playwright(ctx).page.mouse.up(); };
+
+/** Turns forced colors (Windows high contrast) on or off for the page, as the browser itself applies them: system
+ *  colors, and a backplate behind text. Chromium only; elsewhere it throws. */
+export const forcedColors: BrowserCommand<[on: boolean]> = async (ctx, on) => {
+  await playwright(ctx).page.emulateMedia({ forcedColors: on ? 'active' : 'none' });
+};

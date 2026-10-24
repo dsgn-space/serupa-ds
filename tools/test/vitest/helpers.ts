@@ -6,6 +6,7 @@ declare module 'vitest/browser' {
     pointerDrag: (selector: string, from: { x: number; y: number }, to: { x: number; y: number }, steps?: number) => Promise<void>;
     pointerDown: (selector: string, at: { x: number; y: number }) => Promise<void>;
     pointerUp: () => Promise<void>;
+    forcedColors: (on: boolean) => Promise<void>;
   }
 }
 
@@ -102,5 +103,16 @@ export async function press<T>(el: Element, during: () => Promise<T> | T, at?: {
     return await during();
   } finally {
     await commands.pointerUp();
+  }
+}
+
+/** Runs `during` with forced colors (Windows high contrast) on, as the browser applies them (system colors, and a
+ *  backplate behind text), then turns them off. `active` is false where the engine can't emulate them. */
+export async function forcedColors<T>(during: (active: boolean) => Promise<T> | T): Promise<T> {
+  await commands.forcedColors(true);
+  try {
+    return await during(matchMedia('(forced-colors: active)').matches);
+  } finally {
+    await commands.forcedColors(false);
   }
 }
