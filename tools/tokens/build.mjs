@@ -10,6 +10,7 @@
 //                                         differ between themes as light-dark() pairs, so the operating system's
 //                                         light or dark setting applies from the first paint, with no JavaScript
 //   :root                                 every other token, the font families, and the type-* shorthands
+//   contrast and density axes             data-contrast="more" (and prefers-contrast: more) and data-density="compact"
 //   .type-*                               one class per complete text style
 //   @font-face                            the fonts in fonts/
 // Everything but the @font-face rules sits in the dk.tokens cascade layer, the first of the system's layers.
@@ -47,6 +48,7 @@ export function buildTokensCss(t) {
   for (const [k, v] of Object.entries(t.type.families)) css += `  --font-${k}: ${v};\n`;
   for (const s of styles) css += line(`text-${s.name}`, `${s.fontWeight} ${s.fontSize}/${s.lineHeight} var(--font-${s.family})`, s.usage);
   css += '}\n';
+  css += contrastAndDensity(all, line);   // after :root, so data-density on the root wins over it
   for (const s of styles) {
     css += `.${s.name} {\n  font-family: var(--font-${s.family});\n  font-size: ${s.fontSize};\n  line-height: ${s.lineHeight};\n  font-weight: ${s.fontWeight};\n  letter-spacing: ${s.letterSpacing};\n`;
     if (s.fontStyle && s.fontStyle !== 'normal') css += `  font-style: ${s.fontStyle};\n`;
@@ -69,7 +71,8 @@ function axes(t, varying, line) {
   const brands = [...new Set(themes.map((id) => id.split('-')[0]))];
   const pair = (x, b) => `light-dark(${x.value[b + '-light']}, ${x.value[b + '-dark']})`;
   const byBrand = varying.filter((x) => new Set(brands.map((b) => pair(x, b))).size > 1);
-  let css = `:root:is([data-brand], [data-mode]):not([data-theme]) {
+  // :where() keeps it at one attribute's weight: it still beats :root (it comes later), and data-contrast beats it.
+  let css = `:where(:root:is([data-brand], [data-mode])):not([data-theme]) {
   color-scheme: light dark;
 `;
   for (const x of varying) css += line(x.name, pair(x, brands[0]));
@@ -82,6 +85,22 @@ function axes(t, varying, line) {
   css += `:root[data-mode="auto"]:not([data-theme]), [data-mode="auto"]:not([data-theme]) { color-scheme: light dark; }\n`;
   css += `:root[data-mode="light"]:not([data-theme]), [data-mode="light"]:not([data-theme]) { color-scheme: light; }\n`;
   css += `:root[data-mode="dark"]:not([data-theme]), [data-mode="dark"]:not([data-theme]) { color-scheme: dark; }\n`;
+  return css;
+}
+
+// Contrast and density (ADR-0011). A color token's contrastMore { light, dark } is its stronger pair, used for
+// data-contrast="more" and, unless the page says data-contrast="normal", when the system asks for more contrast.
+// The pairs are light-dark(), so data-theme sets color-scheme here too, not only in base.css. A token's compact
+// value is its size under data-density="compact"; data-density="comfortable" puts the defaults back in a section.
+function contrastAndDensity(all, line) {
+  const more = all.filter((x) => x.contrastMore);
+  const pairs = more.map((x) => line(x.name, `light-dark(${x.contrastMore.light}, ${x.contrastMore.dark})`)).join('');
+  let css = `[data-theme$="-light"] { color-scheme: light; }\n[data-theme$="-dark"] { color-scheme: dark; }\n`;
+  css += `[data-contrast="more"] {\n${pairs}}\n`;
+  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]) {\n${pairs}}\n}\n`;
+  const compact = all.filter((x) => x.compact != null);
+  css += `[data-density="compact"] {\n${compact.map((x) => line(x.name, x.compact)).join('')}}\n`;
+  css += `[data-density="comfortable"] {\n${compact.map((x) => line(x.name, x.value)).join('')}}\n`;
   return css;
 }
 

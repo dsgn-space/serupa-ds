@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export interface PasswordInputProps extends Omit<InputProps, "type" | "rightIcon"> {
   /** Shows the password as text (controlled). Use with onVisibleChange. */
@@ -24,6 +25,7 @@ const SIZES = ["sm", "md", "lg"] as const;
    className and style go to the box; ref and every other prop to the <input>. */
 /** A password field with a button that shows and hides what was typed. */
 export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, PasswordInputProps>("PasswordInput", function PasswordInput(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1 } as const);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -42,7 +44,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
       style={props.style} data-component="password-input" data-size={size}>
       {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
       <input {...rest} ref={ref} type={shown ? "text" : "password"} className="dk-input__field" spellCheck={false} autoCapitalize="off" />
-      <button type="button" className="dk-password-input__toggle" aria-label={props.toggleLabel || "Show password"} aria-pressed={shown}
+      <button type="button" className="dk-password-input__toggle" aria-label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
         aria-controls={rest.id} disabled={rest.disabled} onClick={toggle} onMouseDown={(e) => e.preventDefault()}>
         <Icon name={shown ? "visibility_off" : "visibility"} />
       </button>
