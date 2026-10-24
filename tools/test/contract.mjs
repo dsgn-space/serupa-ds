@@ -10,7 +10,9 @@ import { HERE, PROJECT, tokensCss, report, done } from './lib.mjs';
 const SKIP = [];
 // Parts a component doesn't need, and why. Keep the reason: an exemption without one is a gap.
 const EXEMPT = {
+  FormattedNumber: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },
   Icon: { tokens: 'draws in currentColor at 1em; no visual values of its own' },
+  RelativeTime: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },
   VisuallyHidden: { tokens: 'no visual values', preview: 'nothing to see', visual: 'nothing to see' },
 };
 // Known gaps, to be fixed. The check fails when one is fixed, so the entry gets removed and can't come back.

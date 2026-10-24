@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>InlineEdit — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { display: 'grid', gap: '8px', maxWidth: '320px' } },
+    h(T.InlineEdit, { label: 'Project name', defaultValue: 'Apollo launch plan' }),
+    h(T.InlineEdit, { label: 'Description', placeholder: 'Add a description' }),
+    h(T.InlineEdit, { label: 'Owner', defaultValue: 'Ada Lovelace', readOnly: true })));
+</script>
+</body>
+</html>

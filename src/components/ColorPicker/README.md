@@ -1,0 +1,83 @@
+# ColorPicker
+
+Picks a color from a set of swatches, or any color by its hex code or with the browser's own picker. With `contrastWith`, it shows the contrast between the picked color and the one it goes on, and warns when text would be hard to read.
+
+```tsx
+import { ColorPicker } from "serupa-ds";
+
+const SWATCHES = [{ value: "#1d4ed8", label: "Blue" }, { value: "#047857", label: "Emerald" }, { value: "#b91c1c", label: "Red" }];
+
+<Field label="Label color">
+  <ColorPicker swatches={SWATCHES} value={color} onValueChange={setColor} />
+</Field>
+
+<ColorPicker aria-label="Text color" swatches={SWATCHES} defaultValue="#1d4ed8" contrastWith="#ffffff" />  // "Contrast 6.7:1"
+<ColorPicker aria-label="Tag" swatches={SWATCHES} custom={false} size="sm" />
+```
+
+## When to use
+
+- Picking a color for something people make: a label, a tag, a calendar, a chart series, a brand color.
+- A short set of colors that work in your product, with a way out for any other.
+
+## When not to use
+
+- Choosing between a few named options that happen to be colors ("Red", "Green" as statuses): use a [SegmentedControl](../SegmentedControl/README.md) or [Select](../Select/README.md) with the names.
+- Theming the whole product: use the themes and tokens.
+
+## Usage
+
+- Name every swatch in words with `label` ("Ocean", "Sunset"). Screen readers say the name; a bare hex string is read as its code.
+- Pick swatches that pass contrast where they'll be used, and set `contrastWith` to the background (or the text color) when people can pick freely, so they see the ratio. `minContrast` is 4.5 by default (body text); use 3 for large text and icons.
+- Turn off `custom` when only the swatches are allowed.
+- Colors come out as lowercase `#rrggbb`, whatever case or short form people type.
+
+## Behavior
+
+- The swatches are one radio group: Tab reaches the picked swatch (or the first), the arrow keys move and pick (wrapping), and Home and End go to the ends.
+- The hex field picks the color as soon as six digits are typed, and a three-digit code (`f0a`) on Enter or blur. A code that isn't a color is marked invalid while typed and goes back to the picked color on blur. The `#` is optional.
+- The browser's color picker (the square before the field) picks any color too; when the picked color isn't a swatch, no swatch is checked.
+- The contrast ratio is rounded down to one decimal, so 4.49 shows as 4.4 and never looks like a pass. It's written in the locale's numbers ("4,5:1" in Indonesian).
+
+## Accessibility
+
+- `role="radiogroup"` named by `aria-label`, `aria-labelledby` or a surrounding [Field](../Field/README.md)'s label, with a `role="radio"` swatch for each color and `aria-checked` on the picked one.
+- The picked swatch shows a ring (3:1 on the page in all six themes) and a check in white or black, whichever stands out more on that color, so the choice doesn't rely on seeing the color.
+- Every swatch has a thin inset border, so white shows on white. In forced-colors mode the swatches keep their real colors and the ring uses Highlight.
+- The contrast line is a polite live region, so a change is read out. The warning has an icon and words, not just a color.
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `swatches` | `Array<{ value, label } \| string>` | | The colors, as hex. |
+| `value` | `string \| null` | | Controlled, as hex. |
+| `defaultValue` | `string \| null` | | Uncontrolled. |
+| `onValueChange` | `(value: string) => void` | | With lowercase `#rrggbb`. |
+| `custom` | `boolean` | `true` | The browser's picker and a hex field. |
+| `contrastWith` | `string` | | A hex color to check the picked one against. |
+| `minContrast` | `number` | `4.5` | Below this ratio it warns. |
+| `size` | `'sm' \| 'md'` | `'md'` | 24 or 32px swatches. |
+| `disabled` | `boolean` | `false` | |
+| `name` | `string` | | Submits the color with a form. |
+
+Every other prop, `className` and `ref` go to the outer `<div>`, which has `data-component="color-picker"`; `focus()` on it focuses the picked swatch. `aria-label` and `aria-labelledby` name the radio group.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one picker. The hex field uses Input's tokens. The list lives in `src/components/ColorPicker/color-picker.tokens.json` (also in `design-tokens/components/`).
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--color-picker-text` | `text` | The picker's text. |
+| `--color-picker-swatch-border` | `border` | The thin inset border on every swatch. |
+| `--color-picker-ring` | `primary` | The ring around the picked swatch (3:1). |
+| `--color-picker-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--color-picker-contrast` | `text-muted` | The contrast line (4.5:1). |
+| `--color-picker-contrast-low` | `warning-text` | The contrast line below `minContrast` (4.5:1). |
+| `--color-picker-swatch-radius` | `rounded-full` | A swatch's shape. |
+| `--color-picker-gap` | `spacing-3` | Space between the swatches, the custom row and the contrast line (12px). |
+| `--color-picker-swatch-gap` | `spacing-2` | Space between swatches (8px). |
+| `--color-picker-swatch-size-sm` | `spacing-6` | A swatch at `size="sm"` (24px). |
+| `--color-picker-swatch-size-md` | `spacing-8` | A swatch at `size="md"` (32px). |
+| `--color-picker-hex-width` | `spacing-28` | The hex field's width (112px). |
