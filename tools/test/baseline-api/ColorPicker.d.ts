@@ -1,5 +1,6 @@
 // exports: ColorPicker, type ColorPickerProps, type ColorSwatch
 interface ColorPickerLabels {
+    colorName: (hue: ColorHue, tone: ColorTone) => string;
     customColor: string;
     hexCode: string;
     contrast: (ratio: string) => string;
@@ -14,6 +15,7 @@ interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "d
     value?: null | string;
     defaultValue?: null | string;
     onValueChange?: (value: string) => void;
+    onValueCommit?: (value: string) => void;
     custom?: boolean;
     contrastWith?: string;
     minContrast?: number;
