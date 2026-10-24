@@ -38,7 +38,7 @@
 .dk-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); }
 .dk-segmented__item--selected { color: var(--segmented-control-text-selected, var(--text)); }
 .dk-segmented__item:focus { outline: none; }
-.dk-segmented__item:focus-visible { outline: var(--outline-width-2) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.dk-segmented__item:focus-visible { outline: var(--focus-ring-width) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-segmented__item:disabled { cursor: not-allowed; opacity: var(--opacity-50); }
 .dk-segmented--disabled { opacity: var(--opacity-50); }
 .dk-segmented--disabled .dk-segmented__item:disabled { opacity: var(--opacity-100); }
