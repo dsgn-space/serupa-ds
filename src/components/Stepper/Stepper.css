@@ -56,7 +56,7 @@ button.dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid v
   top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
 }
 @media (forced-colors: active) {
-  .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; }
+  .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
   .dk-stepper__connector { background: CanvasText; }
 }
 }

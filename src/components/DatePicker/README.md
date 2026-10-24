@@ -63,7 +63,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 | `value` / `defaultValue` | `Date \| null` | | The chosen day, controlled or not. |
 | `onValueChange` | `(date: Date \| null) => void` | | Called with the new day, or `null` when the field is cleared. |
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. |
-| `locale` | `string` | the browser's | The typed format and the calendar's names and first day. |
+| `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Like Input. |
 | `invalid` | `boolean` | `false` | Like Input. |

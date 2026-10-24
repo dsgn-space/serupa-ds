@@ -81,6 +81,16 @@
             "cssVar": "--toast-icon-danger"
           }
         }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a toast that F8 moved focus to.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--toast-focus-ring"
+          }
+        }
       }
     },
     "shadow": {

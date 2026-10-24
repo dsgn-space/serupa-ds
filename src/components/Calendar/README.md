@@ -40,6 +40,7 @@ const [day, setDay] = React.useState<Date | null>(null);
 - Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
 - Weekday headers show the short name and carry the full name in `abbr`.
 - Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`Calendar.test.tsx`).
+- In forced colors (Windows high contrast) the selected day is drawn in Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide its number. The same goes for DatePicker's and DateRangePicker's pop-ups.
 
 ### Keyboard
 
@@ -63,7 +64,7 @@ Moving past the shown month shows the next one.
 | `onMonthChange` | `(month: Date) => void` | | Called with the first of the newly shown month. |
 | `min`, `max` | `Date` | | Days outside can't be picked, and the month buttons stop there. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days to refuse, such as weekends or holidays. |
-| `locale` | `string` | the browser's | Month and weekday names, and the first day of the week. |
+| `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
 | `autoFocus` | `boolean` | `false` | Focus the selected day (or today) when it appears. |
 | `previousLabel`, `nextLabel` | `string` | `"Previous month"`, `"Next month"` | The month buttons' names. |

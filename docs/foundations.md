@@ -413,7 +413,7 @@ Rules of thumb:
 - Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border-raised` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-50` for disabled controls; don't lower the opacity of text to make it secondary — use `text-muted`.
+- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary — use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 

@@ -41,7 +41,7 @@ const [open, setOpen] = React.useState(false);
 ## Behavior
 
 - Opening moves focus to the first thing in it that takes focus (put `autoFocus` on another to choose); closing moves it back to where it was.
-- Tab and Shift+Tab stay inside. The page behind can't be clicked or reached, and doesn't scroll.
+- Tab and Shift+Tab stay inside. The page behind can't be clicked or reached, and doesn't scroll. It doesn't shift either: with classic scrollbars (Windows, Linux) the page keeps the scrollbar's space while it's hidden (`tools/test/scroll-lock.mjs`).
 - It fades and grows in over 200ms, and appears at once with `prefers-reduced-motion`.
 
 ## Accessibility
