@@ -195,7 +195,7 @@ const ratio = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, l
 const PAIRS = [['text', 'surface', 4.5], ['text', 'surface-muted', 4.5], ['text-muted', 'surface', 4.5], ['text-muted', 'surface-muted', 4.5],
   ['text-inverse', 'surface-inverse', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['on-danger', 'danger', 4.5], ['on-danger', 'danger-hover', 4.5], ['danger-text', 'surface', 4.5], ['danger-text', 'danger-subtle', 4.5],
-  ['primary', 'surface', 3], ['focus-ring', 'surface', 3], ['text', 'secondary', 4.5], ['text', 'secondary-hover', 4.5],
+  ['primary', 'surface', 3], ['focus-ring', 'surface', 3], ['text', 'secondary', 4.5], ['text', 'secondary-hover', 4.5], ['text', 'pressed', 4.5],
   ['text', 'field', 4.5], ['placeholder', 'field', 4.5], ['field-border', 'field', 3], ['field-border', 'surface', 3],
   ['info', 'surface', 4.5], ['text', 'primary-subtle', 4.5],
   ['primary', 'surface', 4.5], ['primary-hover', 'primary-subtle', 4.5], ['danger', 'surface', 3]];   // secondary button: brand text and border on surface, hover tint; destructive secondary border

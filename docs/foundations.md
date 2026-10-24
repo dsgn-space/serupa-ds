@@ -90,6 +90,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `on-primary` | `white` | `‹brand›-950` | Text and icons on `primary` fills. |
 | `secondary` | `zinc-100` | `zinc-800` | Secondary button fill; hover fill for outline and ghost buttons. |
 | `secondary-hover` | `zinc-200` | `zinc-700` | Hover state of `secondary`. |
+| `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface` | `white` | `zinc-950` | Page and card background. |
 | `surface-muted` | `zinc-50` | `zinc-900` | Secondary panels, sidebars, table headers. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
@@ -681,6 +682,22 @@ Rules of thumb:
 - Use alias colors (`fill-primary`, `stroke-border`, `fill-success`) for meaning; palette colors are for illustrations and charts.
 - Outline drawings: `fill-none stroke-current stroke-2`. Because the width is in the SVG's units, a 24-unit icon drawn at 48px gets a 4px line; add `vector-effect="non-scaling-stroke"` on the shapes for a fixed width.
 - The system's icons (Material Symbols and custom icons) already fill with `currentColor`: color them with `text-*` on the icon or its parent.
+
+## States
+
+Every interactive component moves through the same seven states, in this order of precedence (a later one wins):
+
+| State | When | How it looks | Tokens |
+| --- | --- | --- | --- |
+| Rest | Nothing is happening | The component's own colors | — |
+| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-muted` or `highlight`), or darker text | `secondary`, `surface-muted`, `highlight` |
+| Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
+| Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
+| Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
+| Disabled | It can't be used (`disabled`, `aria-disabled`) | The whole thing at `opacity-disabled`, with a `not-allowed` cursor and no hover or pressed | `opacity-disabled` |
+| Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
+
+Focus shows on top of every other state, and disabled turns hover and pressed off. A component's README lists its own values under "States".
 
 ## Interactivity
 
