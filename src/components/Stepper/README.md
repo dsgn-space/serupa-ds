@@ -40,7 +40,7 @@ import { Stepper } from "serupa-ds";
 
 ## Behavior
 
-- Upcoming steps have an outlined circle with their number. The current step is filled in primary with a ring around it. Completed steps are filled with a check, and the line after them turns primary. Error steps are filled in danger.
+- Upcoming steps have an outlined circle with their number, in the digits of the locale from `SerupaProvider` (or the browser), as Calendar writes its days: ٣ in Egyptian Arabic. The current step is filled in primary with a ring around it. Completed steps are filled with a check, and the line after them turns primary. Error steps are filled in danger.
 - Horizontal lines stretch between steps, level with the middle of the circles.
 - When a horizontal Stepper is too narrow for its titles side by side (a phone, or 400% zoom), it keeps the circles and lines and shows one line under them: "Step 2 of 4: Profile". It switches back as soon as the titles fit, and the page never scrolls sideways. For descriptions people need to read on a phone, use `orientation="vertical"`.
 
