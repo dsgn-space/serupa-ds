@@ -45,8 +45,9 @@
 .dk-switch__input:focus-visible {
   outline: var(--focus-ring-width) solid var(--dk-switch-ring); outline-offset: var(--focus-ring-offset);
 }
-/* Invalid: a danger track while off, and a danger focus ring. */
-.dk-switch--invalid .dk-switch__input, .dk-switch--invalid:hover .dk-switch__input:not(:disabled) { --dk-switch-track: var(--switch-invalid, var(--danger)); --dk-switch-ring: var(--switch-invalid, var(--danger)); }
+/* Invalid: a 2px danger edge inside the track, on or off, like Checkbox's danger border; the track keeps its
+   color, so an off switch still reads as off. Focused, the focus ring outside it turns danger too. */
+.dk-switch--invalid .dk-switch__input { --dk-switch-ring: var(--switch-invalid, var(--danger)); box-shadow: inset 0 0 0 var(--border-width-2) var(--switch-invalid, var(--danger)); }
 .dk-switch__text { display: flex; flex-direction: column; min-width: var(--spacing-0); }
 .dk-switch__description { color: var(--switch-description-color, var(--text-muted)); }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */

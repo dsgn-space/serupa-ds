@@ -41,12 +41,14 @@ import { Stepper } from "serupa-ds";
 ## Behavior
 
 - Upcoming steps have an outlined circle with their number. The current step is filled in primary with a ring around it. Completed steps are filled with a check, and the line after them turns primary. Error steps are filled in danger.
-- Horizontal lines stretch between steps, level with the middle of the circles. On narrow screens, use `orientation="vertical"` or `size="sm"`.
+- Horizontal lines stretch between steps, level with the middle of the circles.
+- When a horizontal Stepper is too narrow for its titles side by side (a phone, or 400% zoom), it keeps the circles and lines and shows one line under them: "Step 2 of 4: Profile". It switches back as soon as the titles fit, and the page never scrolls sideways. For descriptions people need to read on a phone, use `orientation="vertical"`.
 
 ## Accessibility
 
 - An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed or error steps add ", completed" or ", has an error" for screen readers, so the state isn't shown by color alone.
 - Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`Stepper.test.tsx`).
+- When it's too narrow and shows only the current step, the other titles stay in the list, clipped, so screen readers still read every step. The "Step 2 of 4" line is hidden from them, since the list already says it. This keeps it within reflow (WCAG 1.4.10) at 320px.
 - In forced colors (Windows high contrast) the current and completed circles are Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide the number or check.
 
 ## Props
@@ -58,7 +60,7 @@ import { Stepper } from "serupa-ds";
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | |
 | `size` | `'sm' \| 'md'` | `'md'` | 24px circles with `text-xs`, or 32px with `text-sm`. |
 | `onStepClick` | `(index: number) => void` | | Makes completed steps buttons that go back to them. |
-| `labels` | `{ completed?, error?, optional? }` | `'completed'`, `'has an error'`, `'Optional'` | Words read out after a step's title, and the optional tag. |
+| `labels` | `{ completed?, error?, optional?, stepOf? }` | `'completed'`, `'has an error'`, `'Optional'`, "Step 2 of 4" | Words read out after a step's title, the optional tag, and the line shown when it's too narrow for every title. |
 
 It renders a `<nav>`; name it with `aria-label` (default `'Progress'`). `className`, `ref` and other props go to the `<nav>`.
 

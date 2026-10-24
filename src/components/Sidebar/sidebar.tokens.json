@@ -62,6 +62,16 @@
           }
         }
       },
+      "item-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An item's background while it's pressed, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-item-bg-pressed"
+          }
+        }
+      },
       "item-bg-active": {
         "$type": "color",
         "$value": "{color.secondary}",

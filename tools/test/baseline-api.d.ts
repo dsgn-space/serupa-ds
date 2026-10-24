@@ -737,6 +737,7 @@ interface StepperProps extends React.HTMLAttributes<HTMLElement> {
         completed?: string;
         error?: string;
         optional?: string;
+        stepOf?: (step: number, total: number) => string;
     };
 }
 declare const Stepper: React.ForwardRefExoticComponent<StepperProps & React.RefAttributes<HTMLElement>>;
@@ -920,6 +921,7 @@ interface SerupaLabels {
     completed: string;
     hasError: string;
     optional: string;
+    stepOf: (step: number, total: number) => string;
     notifications: string;
     toastShortcut: (key: string) => string;
     mainNavigation: string;

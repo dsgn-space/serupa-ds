@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 import { IconButton } from '../IconButton/IconButton';
@@ -171,4 +171,12 @@ describe('List', () => {
     }
     expect(low).toEqual([]);
   });
+
+  test('pressed: a link row held down fills with pressed; holding its trailing action doesn\'t', async () => {
+    await render(<><People /><Card clicks={[]} /></>);
+    const row = el('ilink');
+    await press(q('#ilink .dk-list__title'), () => expect.poll(() => css(row).backgroundColor).toBe(color('var(--pressed)')));
+    await press(el('more'), () => expect.poll(() => css(row).backgroundColor).not.toBe(color('var(--pressed)')));
+  });
+
 });
