@@ -1,0 +1,12 @@
+/* ---------------------------------------------------------------
+   CopyButton: a Button (outline, sm by default) with a copy icon and "Copy". Once it has copied, the icon is a check
+   in the success color and the label reads "Copied", for 2 seconds. Both labels share one grid cell, so the
+   button keeps one width.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-copy-btn__labels { display: inline-grid; grid-template-areas: "label"; }
+.dk-copy-btn__label { grid-area: label; }
+.dk-copy-btn__label--off { visibility: hidden; }
+.dk-copy-btn__icon--done { color: var(--copy-button-done-color, var(--success-text)); }
+@media (forced-colors: active) { .dk-copy-btn__icon--done { color: inherit; } }
+}

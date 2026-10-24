@@ -18,6 +18,10 @@ export interface SerupaLabels {
   searching: string;
   /** SearchInput clear button. */
   clearSearch: string;
+  /** CopyButton: its label, what it says once it has copied, and when copying fails. */
+  copy: string;
+  copied: string;
+  copyFailed: string;
   /** Before the name on a remove button: Badge ("Remove Design"), FileUpload ("Remove report.pdf"). */
   remove: string;
   /** Image view and remove buttons, and the viewer's name when the image has no alt text. */
@@ -99,6 +103,9 @@ export const DEFAULT_LABELS: SerupaLabels = {
   noResults: "No results",
   searching: "Searching",
   clearSearch: "Clear search",
+  copy: "Copy",
+  copied: "Copied",
+  copyFailed: "Couldn't copy. Select the text and copy it yourself.",
   remove: "Remove",
   viewImage: "View image",
   removeImage: "Remove image",
@@ -160,6 +167,9 @@ export const idLabels: SerupaLabels = {
   noResults: "Tidak ada hasil",
   searching: "Mencari",
   clearSearch: "Hapus pencarian",
+  copy: "Salin",
+  copied: "Disalin",
+  copyFailed: "Gagal menyalin. Pilih teksnya lalu salin sendiri.",
   remove: "Hapus",
   viewImage: "Lihat gambar",
   removeImage: "Hapus gambar",

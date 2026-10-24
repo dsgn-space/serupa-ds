@@ -70,12 +70,15 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
   React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const b = back.current; if (b && b.isConnected) b.focus(); }; }, []);
 
   // Escape fires "cancel": ask instead of closing, so open stays the truth.
-  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
+  // React passes a nested dialog's cancel and close up to this one, though the browser doesn't bubble them: only
+  // this dialog's own count, or Escape in a Dialog or Drawer opened from inside it would close this one too.
+  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); if (e.target !== e.currentTarget) return; e.preventDefault(); close(); };
   // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
   // cancel): if open is still true, ask to close so open and the screen agree again.
   const openNow = React.useRef(props.open); openNow.current = props.open;
   const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
     if (rest.onClose) rest.onClose(e);
+    if (e.target !== e.currentTarget) return;
     if (!e.currentTarget.open) modalClosed(e.currentTarget);
     if (!openNow.current || e.currentTarget.open) return;
     const b = back.current; back.current = null;

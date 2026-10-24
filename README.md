@@ -122,6 +122,7 @@ React components, styled only with this system's tokens. Each one's guide (when 
 | Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `Link` |
 | Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload`, `InlineEdit` |
 | Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Badge`, `EmptyState` |
+| Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `CopyButton`, `Link` |
 | Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload` |
 | Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Meter`, `Badge`, `EmptyState` |
 | Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
