@@ -129,6 +129,22 @@ describe('DateRangePicker', () => {
     expect(pop('one').querySelectorAll('.dk-calendar__day--outside').length).toBeGreaterThan(0);
   });
 
+  test('ref.current.focus() and autoFocus land on the start field, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const on = React.createRef<HTMLSpanElement>(), off = React.createRef<HTMLSpanElement>();
+    await render(<>
+      <DateRangePicker data-testid="dfa" aria-label="Stay" autoFocus />
+      <DateRangePicker data-testid="dfr" ref={on} aria-label="Stay" />
+      <DateRangePicker data-testid="dfd" ref={off} aria-label="Stay" disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(fields('dfa')[0]);
+    expect(box('dfa').hasAttribute('autofocus')).toBe(false);
+    on.current!.focus();
+    expect(document.activeElement).toBe(fields('dfr')[0]);
+    off.current!.focus();
+    expect(document.activeElement).toBe(fields('dfr')[0]);
+    expect(on.current).toBe(box('dfr'));
+  });
+
   test('disabled: both fields and the button are disabled and faded', async () => {
     await render(<DateRangePicker data-testid="dis" aria-label="Off" disabled />);
     expect([...box('dis').querySelectorAll<HTMLInputElement | HTMLButtonElement>('input, button')].every((x) => x.disabled)).toBe(true);

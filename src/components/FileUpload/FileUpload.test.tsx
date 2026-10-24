@@ -104,6 +104,22 @@ describe('FileUpload', () => {
     expect([choose(root('fu2')).getAttribute('aria-labelledby'), choose(root('fu2')).textContent]).toEqual([null, 'Choose a file']);
   });
 
+  test('ref.current.focus() and autoFocus land on the choose button, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const on = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    await render(<>
+      <FileUpload id="ffa" autoFocus />
+      <FileUpload id="ffr" ref={on} />
+      <FileUpload id="ffd" ref={off} disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(choose(rootOf('ffa')));
+    expect(rootOf('ffa').hasAttribute('autofocus')).toBe(false);
+    on.current!.focus();
+    expect(document.activeElement).toBe(choose(rootOf('ffr')));
+    off.current!.focus();
+    expect(document.activeElement).toBe(choose(rootOf('ffr')));
+    expect(on.current).toBe(rootOf('ffr'));
+  });
+
   test('disabled: the button and input are disabled, the area faded', async () => {
     await render(<FileUpload id="dis" disabled />);
     const el = rootOf('dis');
