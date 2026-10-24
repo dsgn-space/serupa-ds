@@ -79,6 +79,38 @@ describe('Theme axes', () => {
     section.remove();
   });
 
+  test('a data-mode section switches in any page: with no axes on the root, or inside each data-theme, keeping that theme\'s brand; with data-brand too it takes that brand', () => {
+    const flat: Record<string, Record<string, string>> = {};
+    for (const th of THEMES) { root.setAttribute('data-theme', th); flat[th] = read(document.body); }
+    const section = document.createElement('section');
+    document.body.appendChild(section);
+    const cases: Array<[string | null, string, string | null, string]> = [[null, 'dark', null, 'blue-dark'], [null, 'dark', 'emerald', 'emerald-dark']];
+    for (const th of THEMES) {
+      const [brand, mode] = th.split('-'), other = mode === 'light' ? 'dark' : 'light';
+      cases.push([th, other, null, `${brand}-${other}`], [th, mode, null, th], [th, other, 'violet', `violet-${other}`]);
+    }
+    for (const [page, mode, brand, want] of cases) {
+      if (page) root.setAttribute('data-theme', page); else axes();
+      section.setAttribute('data-mode', mode);
+      if (brand) section.setAttribute('data-brand', brand); else section.removeAttribute('data-brand');
+      expect(read(section), `page ${page} section ${brand || ''} ${mode}`).toEqual(flat[want]);
+      expect(getComputedStyle(section).colorScheme).toBe(mode);
+    }
+    section.remove();
+  });
+
+  test('data-contrast="more" on the page reaches a data-mode section', () => {
+    root.setAttribute('data-theme', 'blue-dark');
+    root.setAttribute('data-contrast', 'more');
+    const strong = read(document.body);
+    root.setAttribute('data-theme', 'blue-light');
+    const section = document.createElement('section');
+    section.setAttribute('data-mode', 'dark');
+    document.body.appendChild(section);
+    expect(read(section)).toEqual(strong);
+    section.remove();
+  });
+
   test('a root with neither attribute stays light, as before', () => {
     root.setAttribute('data-theme', 'blue-light');
     const flat = read(document.body);

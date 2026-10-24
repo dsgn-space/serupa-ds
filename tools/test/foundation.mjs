@@ -105,7 +105,7 @@ for (const [n, [, tok]] of COMP) {
   const d = compDefault(tok);
   if (d == null) { badRef.push(`${n} → ${JSON.stringify(tok.$value)}`); continue; }
   const uses = [...css.matchAll(new RegExp(String.raw`var\(--${esc(n)}(?:,\s*((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*))?\)`, 'g'))].map((m) => m[1]);
-  if (!uses.length) unused.push(n);
+  if (!uses.length && !tok.$deprecated) unused.push(n);   // a deprecated token may have no effect until it's removed
   for (const fb of uses) if (fb == null || norm(fb) !== norm(d)) wrong.push(`${n}: CSS default ${String(fb).trim().slice(0, 50)} ≠ ${d}`);
 }
 if (COMP.size) {

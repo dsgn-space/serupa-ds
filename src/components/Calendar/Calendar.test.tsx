@@ -45,6 +45,17 @@ describe('Calendar', () => {
     expect(de).toMatch(/^Mo\.?,Di\.?,Mi\.?,Do\.?,Fr\.?,Sa\.?,So\.? März 2025$/);
   });
 
+  test('th, fa, ja-u-ca-japanese, ar-EG: the title and day labels name the Gregorian month shown in the grid, with localized month names', async () => {
+    await render(<>{['th', 'fa', 'ja-u-ca-japanese', 'ar-EG'].map((l) => <Calendar key={l} data-testid={l} locale={l} defaultMonth={new Date(2025, 10, 1)} />)}</>);
+    for (const l of ['th', 'fa', 'ja-u-ca-japanese', 'ar-EG']) {
+      const t = q(`[data-testid="${l}"] .dk-calendar__title`).textContent!;
+      const label = q(`[data-testid="${l}"] [data-date="2025-11-22"]`).getAttribute('aria-label')!;
+      expect(t, l).toContain('2025');
+      expect(t, l).toContain(new Intl.DateTimeFormat(l, { calendar: 'gregory', month: 'long' }).format(new Date(2025, 10, 1)));
+      expect(label, l).toMatch(/22.*2025|2025.*22/);
+    }
+  });
+
   test('without Intl.Locale week info: weeks start by region (US Sunday, DE Monday, EG Saturday, MV Friday, BR Sunday)', async () => {
     // Firefox has no week info; take it away here so the region fallback runs in every engine.
     const proto = Intl.Locale.prototype as unknown as Record<string, unknown>;
