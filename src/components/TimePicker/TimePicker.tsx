@@ -26,7 +26,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   /** 'sm', 'md' (default) or 'lg', like Input. */
   size?: 'sm' | 'md' | 'lg';
   invalid?: boolean;
-  /** The list's name, and the button's. Default: "Choose time". */
+  /** The list's name, and the button's. Default: "Choose a time". */
   listLabel?: string;
 }
 
@@ -127,7 +127,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
       case "Tab": setOpen(false); break;
     }
   };
-  const label = listLabel || "Choose time";
+  const label = listLabel || "Choose a time";
   return (
     <span ref={box} className={cn("dk-input", "dk-input--size-" + size, "dk-time-picker", invalid && "dk-input--invalid", disabled && "dk-input--disabled", readOnly && "dk-input--readonly", className)} style={style} data-component="time-picker" data-size={size}>
       <input {...rest} ref={(n) => { field.current = n; setRef(ref, n); }}
