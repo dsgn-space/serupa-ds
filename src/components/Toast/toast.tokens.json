@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface}",
+        "$value": "{color.surface-overlay}",
         "$description": "A toast's background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "border-color": {
         "$type": "color",
-        "$value": "{color.border}",
+        "$value": "{color.border-overlay}",
         "$description": "A toast's border.",
         "$extensions": {
           "com.serupa": {
@@ -79,6 +79,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--toast-icon-danger"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a toast that F8 moved focus to.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--toast-focus-ring"
           }
         }
       }

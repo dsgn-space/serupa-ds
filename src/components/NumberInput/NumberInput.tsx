@@ -7,7 +7,7 @@ import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { formatNumber, parseNumber } from "../../internal/numbers";
 import { gridPlaces, roundTo } from "../../internal/step";
-import { useSerupa } from "../../internal/provider";
+import { useLocale, useSerupa } from "../../internal/provider";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -57,7 +57,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const [ownValue, setOwnValue] = React.useState<number | null>(props.defaultValue ?? null);
   const value = controlled ? (props.value ?? null) : ownValue;
   const { formatOptions } = props;
-  const locale = props.locale || sds.locale;
+  // Without a locale from the prop or a provider: en-US on the server and while hydrating, then the browser's.
+  const locale = useLocale(props.locale);
   // What the shown number is multiplied by: 100 for the percent style, 1 otherwise.
   const scale = formatOptions ? parseNumber(formatNumber(1, locale, formatOptions), locale) || 1 : 1;
   const show = (v: number | null) => (v == null ? "" : formatNumber(v, locale, formatOptions));

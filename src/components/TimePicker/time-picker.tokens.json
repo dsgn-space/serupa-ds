@@ -34,7 +34,7 @@
       },
       "list-bg": {
         "$type": "color",
-        "$value": "{color.surface}",
+        "$value": "{color.surface-overlay}",
         "$description": "The list's background.",
         "$extensions": {
           "com.serupa": {
@@ -44,7 +44,7 @@
       },
       "list-border": {
         "$type": "color",
-        "$value": "{color.border}",
+        "$value": "{color.border-overlay}",
         "$description": "The list's outline.",
         "$extensions": {
           "com.serupa": {

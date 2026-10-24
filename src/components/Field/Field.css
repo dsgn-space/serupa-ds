@@ -15,5 +15,5 @@
 .dk-field__control { display: flex; flex-direction: column; gap: var(--spacing-2); min-width: var(--spacing-0); }
 .dk-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--danger-text)); }
 .dk-field__error .dk-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }   /* centered on the first line */
-.dk-field--disabled > .dk-field__label, .dk-field--disabled > .dk-field__hint { opacity: var(--opacity-50); }
+.dk-field--disabled > .dk-field__label, .dk-field--disabled > .dk-field__hint { opacity: var(--opacity-disabled); }
 }
