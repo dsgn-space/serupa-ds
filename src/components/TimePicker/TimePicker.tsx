@@ -87,10 +87,10 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   };
   const read = () => {
     if (text.trim() === "") return commit(null);
-    const n = parseTime(text);
+    const n = parseTime(text, locale);
     commit(n != null && n >= lo && n <= hi ? n : value);
   };
-  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
+  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text, locale); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
   // The list is at least as wide as the field.
   useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + "px"; }, [open]);
   useAnchoredLayer(open, list, box, { placement: "bottom-start", offsetVar: "--dk-tp-offset", onOutside: () => setOpen(false), inside: box });
@@ -139,7 +139,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
         onChange={(e) => {
           setText(e.target.value);
-          if (open) { typed.current = true; const n = parseTime(e.target.value); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
+          if (open) { typed.current = true; const n = parseTime(e.target.value, locale); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
         }} onBlur={(e) => { read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
         onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false); else show(); if (field.current) field.current.focus(); }}>
