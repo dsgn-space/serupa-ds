@@ -2,7 +2,8 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Pagination, paginationRange } from './Pagination';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -33,6 +34,17 @@ describe('Pagination', () => {
       f(paginationRange(2, 1)), f(paginationRange(1, 0)), f(paginationRange(10, 20, 2, 2))]).toEqual([
       '1 2 3 4 5 … 10', '1 … 4 5 6 … 10', '1 … 6 7 8 9 10', '1 2 3 4 5 … 10', '1 2 3 4 5', '1', '', '1 2 … 8 9 10 11 12 … 19 20',
     ]);
+  });
+
+  test('page numbers are written in the digits of the locale, as Calendar writes its days; the buttons keep their names', async () => {
+    await render(<>
+      <SerupaProvider locale="ar-EG"><Pagination id="par" count={10} page={5} /></SerupaProvider>
+      <SerupaProvider locale="fa"><Pagination id="pfa" count={3} page={2} /></SerupaProvider>
+    </>);
+    const d = (l: string, n: number) => new Intl.NumberFormat(l).format(n);
+    expect(shown('par')).toBe(`< ${d('ar-EG', 1)} … ${d('ar-EG', 4)} [${d('ar-EG', 5)}] ${d('ar-EG', 6)} … ${d('ar-EG', 10)} >`);
+    expect([shown('par').includes('٥'), shown('pfa')]).toEqual([true, '< ۱ [۲] ۳ >']);
+    expect(named('par', 'Page 5').getAttribute('aria-current')).toBe('page');
   });
 
   test('a <nav aria-label="Pagination"> with a list; ref, className and props reach the nav; buttons are named and the ellipsis is hidden', async () => {
@@ -150,4 +162,11 @@ describe('Pagination', () => {
     expect(low).toEqual([]);
     expect(n).toBe(24);
   });
+
+  test('pressed: a page held down fills with pressed, one step past hover', async () => {
+    await render(<Pagination id="pprs" count={10} defaultPage={7} />);
+    const pg = named('pprs', 'Page 1');
+    await press(pg, () => expect.poll(() => css(pg).backgroundColor).toBe(color('var(--pressed)')));
+  });
+
 });

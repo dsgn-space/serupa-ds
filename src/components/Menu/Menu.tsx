@@ -3,10 +3,12 @@ import * as React from "react";
 import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { type Placement } from "../../internal/position";
+import { typeahead, type Typed } from "../../internal/typeahead";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component, named } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -32,9 +34,9 @@ const MenuContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 const ITEMS = '[role="menuitem"]';
 
 /* Menu: a list of actions behind a button, following the WAI-ARIA menu button pattern. Enter, Space or ↓ on the
-   button opens it on the first item (↑ on the last); ↑ ↓ move (wrapping), Home and End jump, typing a letter
-   goes to the next item starting with it, Enter or Space chooses, Escape closes, and focus goes back to the
-   button. Tab, a click outside or choosing an item closes it. It sits in the top layer next to the button. */
+   button opens it on the first item (↑ on the last); ↑ ↓ move (wrapping), Home and End jump, typing goes to the
+   next item starting with what was typed (internal/typeahead.ts), Enter or Space chooses, Escape closes, and focus
+   goes back to the button. Tab, a click outside or choosing an item closes it. It sits in the top layer next to the button. */
 /** A list of actions behind a button: MenuItem, MenuGroup and MenuSeparator inside. */
 export const Menu = /* @__PURE__ */ named("Menu", function Menu(props: MenuProps): React.ReactElement {
   const id = domId("dk-menu", React.useId());
@@ -44,6 +46,7 @@ export const Menu = /* @__PURE__ */ named("Menu", function Menu(props: MenuProps
   const menuRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const focusOn = React.useRef<"first" | "last" | null>(null);
+  const typed = React.useRef<Typed>({ text: "", at: 0 });
   const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
   const set = React.useCallback((v: boolean) => { if (!controlled) setInner(v); if (ask.current) ask.current(v); }, [controlled]);
   const close = React.useCallback((focusTrigger: boolean) => { set(false); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
@@ -63,6 +66,7 @@ export const Menu = /* @__PURE__ */ named("Menu", function Menu(props: MenuProps
   }, [open]);
 
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (isComposing(e)) return;
     const list = items(), i = list.indexOf(document.activeElement as HTMLElement);
     const go = (n: number) => { e.preventDefault(); if (list.length) list[(n + list.length) % list.length].focus(); };
     if (e.key === "ArrowDown") go(i + 1);
@@ -72,12 +76,8 @@ export const Menu = /* @__PURE__ */ named("Menu", function Menu(props: MenuProps
     else if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); }
     else if (e.key === "Tab") close(false);
     else if (e.key.length === 1 && /\S/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      const k = e.key.toLowerCase();
-      for (let s = 1; s <= list.length; s++) {
-        const it = list[(i + s) % list.length];
-        const label = it.querySelector(".dk-menu__label") || it;
-        if ((label.textContent || "").trim().toLowerCase().startsWith(k)) { it.focus(); break; }
-      }
+      const n = typeahead(typed.current, e.key, list.map((it) => (it.querySelector(".dk-menu__label") || it).textContent || ""), i);
+      if (n >= 0) list[n].focus();
     }
   };
 

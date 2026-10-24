@@ -60,19 +60,19 @@
 
 /* Variants */
 .dk-btn--primary { background: var(--button-primary-bg, var(--primary)); color: var(--button-primary-text, var(--on-primary)); }
-.dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-primary-bg-hover, var(--primary-hover)); }
+@media (hover: hover) { .dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-primary-bg-hover, var(--primary-hover)); } }
 
 .dk-btn--outline { background: var(--button-outline-bg, var(--surface)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border)); }
-.dk-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-outline-bg-hover, var(--secondary)); }
+@media (hover: hover) { .dk-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-outline-bg-hover, var(--secondary)); } }
 
 .dk-btn--secondary { background: var(--button-secondary-bg, var(--surface)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */
-.dk-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); }
+@media (hover: hover) { .dk-btn--secondary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-secondary-bg-hover, var(--primary-subtle)); color: var(--button-secondary-text-hover, var(--primary-hover)); border-color: var(--button-secondary-border-hover, var(--primary-hover)); } }
 
 .dk-btn--ghost { background: var(--button-ghost-bg, transparent); color: var(--button-ghost-text, var(--text)); }
-.dk-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-ghost-bg-hover, var(--secondary)); }
+@media (hover: hover) { .dk-btn--ghost:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-ghost-bg-hover, var(--secondary)); } }
 
 .dk-btn--link { background: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4); }
-.dk-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; }
+@media (hover: hover) { .dk-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
 
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
 .dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--shadow-xs); }
@@ -81,13 +81,13 @@
 /* Destructive: a modifier on every variant (destructive prop) */
 .dk-btn--destructive { --dk-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
 .dk-btn--primary.dk-btn--destructive { background: var(--button-destructive-primary-bg, var(--danger)); color: var(--button-destructive-primary-text, var(--on-danger)); }
-.dk-btn--primary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-primary-bg-hover, var(--danger-hover)); }
+@media (hover: hover) { .dk-btn--primary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-primary-bg-hover, var(--danger-hover)); } }
 .dk-btn--secondary.dk-btn--destructive { background: var(--button-destructive-secondary-bg, var(--surface)); color: var(--button-destructive-secondary-text, var(--danger-text)); border-color: var(--button-destructive-secondary-border, var(--danger)); }
-.dk-btn--secondary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-secondary-bg-hover, var(--danger-subtle)); }
+@media (hover: hover) { .dk-btn--secondary.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-secondary-bg-hover, var(--danger-subtle)); } }
 .dk-btn--outline.dk-btn--destructive { background: var(--button-destructive-outline-bg, var(--surface)); color: var(--button-destructive-outline-text, var(--danger-text)); border-color: var(--button-destructive-outline-border, var(--danger-border)); }
-.dk-btn--outline.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-outline-bg-hover, var(--danger-subtle)); }
+@media (hover: hover) { .dk-btn--outline.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-outline-bg-hover, var(--danger-subtle)); } }
 .dk-btn--ghost.dk-btn--destructive { color: var(--button-destructive-ghost-text, var(--danger-text)); }
-.dk-btn--ghost.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); }
+@media (hover: hover) { .dk-btn--ghost.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); } }
 .dk-btn--link.dk-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
 
 /* Sizes: sm 24px, md 32px, lg 44px */

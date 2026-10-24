@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
 import { Calendar } from '../Calendar/Calendar';
 import { DatePicker } from './DatePicker';
@@ -19,7 +19,21 @@ function Ctl(props: { calls: string[]; setRef?: { set?: (d: Date | null) => void
 }
 
 describe('DatePicker', () => {
-  test('a dk-input field with a "Choose date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
+  test('in a 500px tall window with the field at mid-height, the calendar stays on screen and scrolls inside, so its last week can be reached', async () => {
+    await page.viewport(900, 500);
+    try {
+      await render(<div style={{ position: 'fixed', top: '230px', left: '20px' }}><DatePicker id="mid" aria-label="Date" defaultValue={new Date(2026, 2, 1)} /></div>);
+      await userEvent.click(button('mid'));
+      const p = popup('mid'), r = p.getBoundingClientRect();
+      expect([r.top >= 8, r.bottom <= 500 - 8, p.scrollHeight > p.clientHeight, getComputedStyle(p).overflowY]).toEqual([true, true, true, 'auto']);
+      const last = [...p.querySelectorAll<HTMLElement>('[data-date]')].pop()!;
+      last.scrollIntoView({ block: 'nearest' });
+      const lr = last.getBoundingClientRect();
+      expect(lr.bottom <= r.bottom + 1 && lr.top >= r.top - 1).toBe(true);
+    } finally { await page.viewport(900, 700); }
+  });
+
+  test('a dk-input field with a "Choose a date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<>
       <DatePicker id="dp" aria-label="Start" locale="en-US" ref={ref} />
@@ -27,7 +41,7 @@ describe('DatePicker', () => {
     </>);
     const i = el('dp'), b = button('dp');
     expect(ref.current).toBe(i);
-    expect([i.placeholder, i.inputMode, b.getAttribute('aria-label'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')]).toEqual(['mm/dd/yyyy', 'numeric', 'Choose date', 'dialog', 'false']);
+    expect([i.placeholder, i.inputMode, b.getAttribute('aria-label'), b.getAttribute('aria-haspopup'), b.getAttribute('aria-expanded')]).toEqual(['mm/dd/yyyy', 'numeric', 'Choose a date', 'dialog', 'false']);
     expect(i.parentElement!.className).toMatch(/dk-input/);
     expect(el('dpde').value + ' ' + el('dpde').placeholder).toBe('22.11.2025 dd.mm.yyyy');
   });
@@ -63,7 +77,7 @@ describe('DatePicker', () => {
     await render(<DatePicker id="dp" aria-label="Start" locale="en-US" defaultValue={new Date(2024, 11, 31)} />);
     await userEvent.click(button('dp'));
     const d = popup('dp');
-    expect([!d.hidden, d.getAttribute('role'), d.getAttribute('aria-label'), focused(), button('dp').getAttribute('aria-expanded'), d.matches(':popover-open')]).toEqual([true, 'dialog', 'Choose date', '2024-12-31', 'true', true]);
+    expect([!d.hidden, d.getAttribute('role'), d.getAttribute('aria-label'), focused(), button('dp').getAttribute('aria-expanded'), d.matches(':popover-open')]).toEqual([true, 'dialog', 'Choose a date', '2024-12-31', 'true', true]);
     await userEvent.keyboard('{ArrowRight}{Enter}');
     expect([el('dp').value, !popup('dp').hidden, focused()]).toEqual(['01/01/2025', false, 'dp']);
   });

@@ -38,6 +38,8 @@ export interface SerupaLabels {
   /** Carousel arrows. */
   previousSlide: string;
   nextSlide: string;
+  /** Carousel: each slide's name, and its dot's ("2 of 5"). */
+  slideOf: (slide: number, total: number) => string;
   /** NumberInput step buttons. */
   decrease: string;
   increase: string;
@@ -54,6 +56,8 @@ export interface SerupaLabels {
   completed: string;
   hasError: string;
   optional: string;
+  /** Stepper, when the steps don't fit side by side and it shows only the current step's title: "Step 2 of 4". */
+  stepOf: (step: number, total: number) => string;
   /** Toaster region. */
   notifications: string;
   /** Toaster: said once, after the first toast with an action, so keyboard and screen reader users know how to reach it. */
@@ -92,16 +96,17 @@ export const DEFAULT_LABELS: SerupaLabels = {
   nextPage: "Next page",
   page: (n) => "Page " + n,
   breadcrumb: "Breadcrumb",
-  showHiddenPages: "Show the hidden pages",
+  showHiddenPages: "Show all pages",
   previousMonth: "Previous month",
   nextMonth: "Next month",
   previousSlide: "Previous slide",
   nextSlide: "Next slide",
+  slideOf: (slide, total) => slide + " of " + total,
   decrease: "Decrease",
   increase: "Increase",
-  chooseDate: "Choose date",
+  chooseDate: "Choose a date",
   chooseDates: "Choose dates",
-  chooseTime: "Choose time",
+  chooseTime: "Choose a time",
   startDate: "Start date",
   endDate: "End date",
   chooseStartDate: "Choose the start date",
@@ -110,6 +115,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   completed: "completed",
   hasError: "has an error",
   optional: "Optional",
+  stepOf: (step, total) => "Step " + step + " of " + total,
   notifications: "Notifications",
   toastShortcut: (key) => "Press " + key + " to reach it.",
   mainNavigation: "Main",
@@ -143,11 +149,12 @@ export const idLabels: SerupaLabels = {
   nextPage: "Halaman berikutnya",
   page: (n) => "Halaman " + n,
   breadcrumb: "Navigasi jejak",
-  showHiddenPages: "Tampilkan halaman tersembunyi",
+  showHiddenPages: "Tampilkan semua halaman",
   previousMonth: "Bulan sebelumnya",
   nextMonth: "Bulan berikutnya",
   previousSlide: "Slide sebelumnya",
   nextSlide: "Slide berikutnya",
+  slideOf: (slide, total) => slide + " dari " + total,
   decrease: "Kurangi",
   increase: "Tambah",
   chooseDate: "Pilih tanggal",
@@ -161,6 +168,7 @@ export const idLabels: SerupaLabels = {
   completed: "selesai",
   hasError: "ada kesalahan",
   optional: "Opsional",
+  stepOf: (step, total) => "Langkah " + step + " dari " + total,
   notifications: "Notifikasi",
   toastShortcut: (key) => "Tekan " + key + " untuk menjangkaunya.",
   mainNavigation: "Utama",

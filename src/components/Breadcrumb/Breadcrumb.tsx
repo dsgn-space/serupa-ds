@@ -16,7 +16,7 @@ export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   maxItems?: number;
   /** The nav's accessible name. Default: "Breadcrumb". */
   "aria-label"?: string;
-  /** The "…" button's accessible name. Default: "Show the hidden pages". */
+  /** The "…" button's accessible name. Default: "Show all pages". */
   expandLabel?: string;
 }
 

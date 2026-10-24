@@ -4,6 +4,7 @@ import { cn, domId, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { named } from "../../internal/component";
 import { FieldContext, type FieldControl } from "../../internal/field";
+import { FieldLabelProvider } from "../../internal/fieldLabel";
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
@@ -88,7 +89,9 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
       {label}
       {hint}
       <FieldContext.Provider value={control}>
-        <div className="dk-field__control" key="control">{child ? pass(child, true) : props.children}</div>
+        <div className="dk-field__control" key="control">
+          <FieldLabelProvider value={label ? { control: controlId, label: base + "-label" } : null}>{child ? pass(child, true) : props.children}</FieldLabelProvider>
+        </div>
       </FieldContext.Provider>
       {error}
     </div>

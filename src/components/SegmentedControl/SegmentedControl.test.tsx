@@ -37,6 +37,19 @@ function Controlled({ calls, api }: { calls: string[]; api: { set?: (v: string) 
 }
 
 describe('SegmentedControl', () => {
+  test('your onKeyDown runs first: preventDefault() on a key keeps the selection; onFocus and onBlur fire only entering and leaving, not while arrowing between segments', async () => {
+    const seen: string[] = [];
+    await render(<><SegmentedControl id="ev" aria-label="Period" options={PERIODS} defaultValue="day"
+      onValueChange={(v) => seen.push('change ' + v)} onFocus={() => seen.push('focus')} onBlur={() => seen.push('blur')}
+      onKeyDown={(e) => { if (e.key === 'End') e.preventDefault(); }} /><button id="after">After</button></>);
+    seg('ev', 'day').focus();
+    await userEvent.keyboard('{End}');
+    expect(seg('ev', 'day').getAttribute('aria-checked')).toBe('true');
+    await userEvent.keyboard('{ArrowRight}');
+    await userEvent.tab();
+    expect([document.activeElement!.id, seen]).toEqual(['after', ['focus', 'change week', 'blur']]);
+  });
+
   test('a radiogroup of role="radio" buttons, the first checked by default and the only Tab stop; ref and className reach the root; md is 32px; the selection sits exactly on the checked segment', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Col><Period sref={ref} /></Col>);
@@ -74,10 +87,38 @@ describe('SegmentedControl', () => {
     expect(checked('per')).toBe('month');
   });
 
-  test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it)', async () => {
+  test('ref.current.focus() and autoFocus land on the selected segment, or else the first one that isn\'t disabled; all disabled, nothing is focused', async () => {
+    const sel = React.createRef<HTMLDivElement>(), none = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    const later: SegmentedControlOption[] = [{ value: 'a', label: 'A', disabled: true }, { value: 'b', label: 'B' }];
+    await render(<>
+      <SegmentedControl id="sfa" aria-label="Period" options={PERIODS} defaultValue="week" autoFocus />
+      <SegmentedControl id="sfr" ref={sel} aria-label="Period" options={PERIODS} defaultValue="month" />
+      <SegmentedControl id="sfn" ref={none} aria-label="Period" options={later} defaultValue="a" />
+      <SegmentedControl id="sfd" ref={off} aria-label="Period" options={PERIODS} disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(seg('sfa', 'week'));
+    expect(el('sfa').hasAttribute('autofocus')).toBe(false);
+    sel.current!.focus();
+    expect(document.activeElement).toBe(seg('sfr', 'month'));
+    none.current!.focus();
+    expect(document.activeElement).toBe(seg('sfn', 'b'));
+    off.current!.focus();
+    expect(document.activeElement).toBe(seg('sfn', 'b'));
+    expect(sel.current).toBe(el('sfr'));
+  });
+
+  test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it), also on hover', async () => {
     await render(<SegmentedControl id="hc" aria-label="Period" options={PERIODS} />);
-    const r = await forcedColors((active) => active && [css(seg('hc', 'day')).forcedColorAdjust, css(seg('hc', 'week')).forcedColorAdjust]);
-    if (r) expect(r).toEqual(['none', 'auto']);
+    const day = seg('hc', 'day');
+    const r = await forcedColors(async (active) => {
+      if (!active) return null;
+      const label = css(day).color;
+      // The segment paints nothing itself, so its label sits on the Highlight indicator; hovering it keeps HighlightText.
+      await userEvent.hover(day);
+      await new Promise((go) => setTimeout(go, 200));
+      return [css(day).forcedColorAdjust, css(seg('hc', 'week')).forcedColorAdjust, css(day).backgroundColor, css(day).color === label];
+    });
+    if (r) expect(r).toEqual(['none', 'auto', 'rgba(0, 0, 0, 0)', true]);
   });
 
   test('controlled: onValueChange once (not again for the same segment); the hidden input follows; icons show before labels; a new value from outside moves the selection', async () => {

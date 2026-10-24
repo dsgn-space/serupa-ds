@@ -4,6 +4,7 @@ import { cn, domId, elementRef, setRef } from "../../internal/cn";
 import { type Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { named } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 
 export interface TooltipProps {
   /** What the tooltip says: a short line of text. Keep links and buttons out (people can't reach them). */
@@ -53,7 +54,7 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   // layer, so it takes that Escape: caught first (capture) and stopped, so a Dialog or Menu around it stays open.
   React.useEffect(() => {
     if (!open) return;
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); set(false); } };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); set(false); } };
     document.addEventListener("keydown", esc, true);
     return () => document.removeEventListener("keydown", esc, true);
   }, [open, set]);

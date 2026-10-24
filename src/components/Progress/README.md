@@ -28,6 +28,9 @@ import { Progress } from "serupa-ds";
 
 - Give every bar a `label` that says what's in progress ("Uploading report.pdf"), or an `aria-label` for the ring.
 - Use `formatValue` when a percentage isn't the clearest words: "3 of 8 steps", "4.6 of 5 GB".
+- The percentage follows the locale from `SerupaProvider` (or the browser): "45%" in English, "%45" in Turkish,
+  "45 %" in French, "٤٥٪" in Egyptian Arabic, the same digits Calendar uses for its days. A `formatValue` of your
+  own should do the same, for example with `Intl.NumberFormat(locale)`.
 - Keep `tone="primary"` for ordinary progress; switch to `warning` or `danger` when a quota is nearly full, and say so in the label or nearby text too.
 - When the task finishes, replace the bar with the result or a confirmation, such as a [Toast](../Toast/README.md).
 
@@ -53,7 +56,7 @@ import { Progress } from "serupa-ds";
 | `tone` | `'primary' \| 'success' \| 'warning' \| 'danger'` | `'primary'` | The fill color. Say what the color means in text too. |
 | `label` | `ReactNode` | | Bar only: a visible name above the bar. Otherwise pass `aria-label`. |
 | `showValue` | `boolean` | `false` | The value at the end of the label row, or inside the ring (md and lg). |
-| `formatValue` | `(value, max) => string` | the percentage | The value's words, shown and read out. |
+| `formatValue` | `(value, max) => string` | the percentage, as the locale writes it | The value's words, shown and read out. |
 
 Every other prop, `className` and `ref` go to the outer `<div>`. It has `data-component="progress"`, `data-variant`, `data-size`, `data-tone` and `data-state` (`loading`, `complete` or `indeterminate`).
 

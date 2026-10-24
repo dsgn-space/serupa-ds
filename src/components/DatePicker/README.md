@@ -1,6 +1,6 @@
 # DatePicker
 
-A date field: people type a date, or pick one from a calendar that opens under the field.
+A date field: people type a date, or pick one from a calendar that opens under the field. The calendar flips above the field when there's no room below; with no room on either side (a short window, a phone held sideways) it takes the roomier side and scrolls inside, so its last week can still be reached.
 
 ```tsx
 import { DatePicker, Field } from "serupa-ds";
@@ -41,7 +41,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 
 ## Accessibility
 
-- **Role and name:** the field is a text input; label it with Field, `<label htmlFor>` or `aria-label`. The calendar button is named by `buttonLabel` ("Choose date").
+- **Role and name:** the field is a text input; label it with Field, `<label htmlFor>` or `aria-label`. The calendar button is named by `buttonLabel` ("Choose a date").
 - **Keyboard:**
 
   | Key | Does |
@@ -69,7 +69,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 | `invalid` | `boolean` | `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `yyyy-mm-dd`. |
 | `placeholder` | `string` | the locale's pattern, such as `mm/dd/yyyy` | |
-| `buttonLabel` | `string` | `"Choose date"` | The calendar button's name, and the popup's. |
+| `buttonLabel` | `string` | `"Choose a date"` | The calendar button's name, and the popup's. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 

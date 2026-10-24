@@ -52,11 +52,15 @@ export function dateOrder(locale?: string): ("day" | "month" | "year")[] {
   const parts = numeric(locale).formatToParts(new Date(2001, 10, 22));
   return parts.filter((p) => p.type === "day" || p.type === "month" || p.type === "year").map((p) => p.type as "day" | "month" | "year");
 }
-/** A typed date in the locale's numeric order (11/22/2001, 22.11.2001, 2001-11-22), or null. Two-digit years are 20xx. */
+/** A typed date in the locale's numeric order (11/22/2001, 22.11.2001, 2001-11-22), or null. Two-digit years are 20xx.
+ * A leading 4-digit year reads as ISO year-month-day unless the locale writes its year first. */
 export function parseDate(text: string, locale?: string): Date | null {
   const nums = latinDigits(text).trim().split(/[^0-9]+/).filter(Boolean);
   if (nums.length !== 3) return null;
-  const order = /^\d{4}$/.test(nums[0]) ? (["year", "month", "day"] as const) : dateOrder(locale);
+  // A leading 4-digit year is ISO (2001-11-22), unless the locale itself writes the year first in another order
+  // (Kyrgyz: year-day-month).
+  const own = dateOrder(locale);
+  const order = /^\d{4}$/.test(nums[0]) && own[0] !== "year" ? (["year", "month", "day"] as const) : own;
   const v: Record<string, number> = {};
   order.forEach((k, i) => { v[k] = Number(nums[i]); });
   if (v.year < 100) v.year += 2000;

@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { Tab, TabList, TabPanel, Tabs } from './Tabs';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -215,4 +215,11 @@ describe('Tabs on the server', () => {
     expect(tabs).toEqual([['false', '-1'], ['true', '0'], ['false', '-1']]);
     expect([...box.querySelectorAll('[role="tabpanel"]')].map((p) => (p as HTMLElement).hidden)).toEqual([false, true]);
   });
+
+  test('pressed: an unselected pill tab held down fills with pressed until it is selected', async () => {
+    await setup();
+    const t = el('dv').querySelector<HTMLElement>('[role="tab"][aria-selected="false"]')!;
+    await press(t, () => expect.poll(() => css(t).backgroundColor).toBe(color('var(--pressed)')));
+  });
+
 });

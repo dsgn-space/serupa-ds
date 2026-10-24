@@ -55,7 +55,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 | `size`, `invalid` | | `'md'`, `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `"HH:mm"`. |
 | `placeholder` | `string` | `"hh:mm am"` or `"hh:mm"` | |
-| `listLabel` | `string` | `"Choose time"` | The list's name, and the clock button's. |
+| `listLabel` | `string` | `"Choose a time"` | The list's name, and the clock button's. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 
