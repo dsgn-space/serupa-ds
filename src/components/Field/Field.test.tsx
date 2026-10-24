@@ -65,6 +65,12 @@ describe('Field', () => {
     expect(el('native-bad').hasAttribute('invalid')).toBe(false);
   });
 
+  test('a native <select> as the direct child is the control, options and all: the label names it, the hint and error describe it, aria-invalid and aria-required', async () => {
+    await render(<Field label="Size" hint="Pick one" error="Required" required><select><option value="">Choose</option><option>S</option></select></Field>);
+    const s = document.querySelector('select')!;
+    expect([s.labels?.[0].textContent?.replace('*', ''), s.getAttribute('aria-invalid'), s.getAttribute('aria-required'), (s.getAttribute('aria-describedby') || '').split(' ').length]).toEqual(['Size', 'true', 'true', 2]);
+  });
+
   test('disabled disables the control and dims the label', async () => {
     await render(<Field label="Locked" disabled><Input id="locked" /></Field>);
     expect(el('locked').disabled).toBe(true);

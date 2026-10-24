@@ -7,6 +7,8 @@ import { FieldContext, type FieldControl } from "../../internal/field";
 import * as icons from "../../material/builtin";
 import { FieldLabelProvider } from "../../internal/fieldLabel";
 
+const LABELABLE = new Set(["select", "button", "meter", "output", "progress", "textarea"]);
+
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
   label?: React.ReactNode;
@@ -60,7 +62,8 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
     const p = el.props as ControlProps & { children?: React.ReactNode };
     const add: ControlProps = {}, dom = typeof el.type === "string";
     // A plain element holding other elements is a wrapper, not the control: the control inside reads FieldContext.
-    if (isControl && dom && React.Children.toArray(p.children).some(React.isValidElement)) return el;
+    // A labelable element is the control even with element children (a <select>'s options, a <button>'s icon).
+    if (isControl && dom && !LABELABLE.has(el.type as string) && React.Children.toArray(p.children).some(React.isValidElement)) return el;
     if (isControl) {
       if (!p.id) add.id = controlId;
       if (described) add["aria-describedby"] = cn(p["aria-describedby"], described);
