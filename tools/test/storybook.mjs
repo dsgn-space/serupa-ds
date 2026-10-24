@@ -1,5 +1,5 @@
 // Storybook (npm run build-storybook first): every story and docs page renders without errors, and every
-// story passes axe's WCAG 2.1 AA checks in all six themes (text in a disabled control is exempt from
+// story passes axe's WCAG 2.2 AA checks in all six themes (text in a disabled control is exempt from
 // contrast, as WCAG 1.4.3 says).
 //   node tools/test/storybook.mjs
 import fs from 'node:fs';
