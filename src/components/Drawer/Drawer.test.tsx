@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, withMotion } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
+import { Dialog } from '../Dialog/Dialog';
 import { Drawer, type DrawerProps } from './Drawer';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -63,6 +64,26 @@ describe('Drawer', () => {
     expect(getComputedStyle(document.documentElement).overflow).toBe('hidden');
     const r = el('behind').getBoundingClientRect(), hit = document.elementFromPoint(r.left + 2, r.top + 2);
     expect(hit && hit.id).not.toBe('behind');
+  });
+
+  test('a Dialog opened from inside it: Escape closes only the Dialog, and the next Escape the Drawer', async () => {
+    const asks: string[] = [];
+    function Stack() {
+      const [d, setD] = React.useState(true), [inner, setInner] = React.useState(false);
+      return <Drawer id="drw" open={d} onOpenChange={(v) => { asks.push('drawer:' + v); setD(v); }} title="Filters">
+        <Button id="more" onClick={() => setInner(true)}>Save as…</Button>
+        <Dialog id="inner" open={inner} onOpenChange={(v) => { asks.push('dialog:' + v); setInner(v); }} title="Name"><Input aria-label="Name" /></Dialog>
+      </Drawer>;
+    }
+    await render(<Stack />);
+    await userEvent.click(el('more'));
+    await expect.poll(() => (el('inner') as HTMLDialogElement).open).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => (el('inner') as HTMLDialogElement).open).toBe(false);
+    expect([isOpen(), asks.join()]).toEqual([true, 'dialog:false']);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(isOpen).toBe(false);
+    expect(asks.join()).toBe('dialog:false,drawer:false');
   });
 
   test('long content scrolls in the body; the footer is pinned to the bottom, edge to edge, under a 1px line', async () => {
