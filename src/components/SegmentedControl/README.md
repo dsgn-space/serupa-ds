@@ -32,12 +32,13 @@ import { SegmentedControl } from "serupa-ds";
 
 - Keep labels to one or two words, so the segments stay short and even.
 - Give an icon-only segment an `aria-label`, and use icons alone only when they're widely understood.
+- Icon-only segments are at least 24px wide, so even in `sm` their centers are 24px apart, which meets WCAG 2.2's target size (2.5.8).
 - Use `fullWidth` in narrow spaces such as a panel or a phone layout, and match the `size` to the controls beside it.
 
 ## Accessibility
 
 - `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
-- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced-colors mode the selection uses Highlight.
+- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced colors (Windows high contrast) the selection is Highlight and its label HighlightText, exactly as set, so the browser's text backplate can't hide the label.
 - The selection slides over 200ms, and jumps with `prefers-reduced-motion`.
 
 ### Keyboard

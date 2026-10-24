@@ -39,14 +39,11 @@
 }
 .dk-btn__label { display: inline-flex; }
 .dk-btn:focus-visible {
-  /* a 2px focus ring outside a 2px surface gap; the transparent outline is invisible
-     normally but drawn in forced-colors mode, where box-shadow rings disappear */
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--button-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--dk-btn-ring), var(--dk-btn-shadow);
-  outline: var(--outline-width-2) solid transparent;
-  outline-offset: var(--outline-offset-2);
+  /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
+  outline: var(--focus-ring-width) solid var(--dk-btn-ring); outline-offset: var(--focus-ring-offset);
 }
 .dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) {
-  opacity: var(--opacity-50);
+  opacity: var(--opacity-disabled);
   cursor: not-allowed;          /* no hover change; disabled buttons ignore clicks */
 }
 .dk-btn__icon {

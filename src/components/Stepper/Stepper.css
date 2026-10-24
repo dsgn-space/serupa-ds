@@ -25,7 +25,7 @@
 button.dk-stepper__head { cursor: pointer; border-radius: var(--rounded-md); }
 button.dk-stepper__head:hover .dk-stepper__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); }
 button.dk-stepper__head:focus { outline: none; }
-button.dk-stepper__head:focus-visible { outline: var(--outline-width-2) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
+button.dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-stepper__indicator {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--dk-step-size); height: var(--dk-step-size);
   border: var(--border-width-2) solid var(--stepper-indicator-border, var(--field-border)); border-radius: var(--stepper-radius, var(--rounded-full));
@@ -56,7 +56,7 @@ button.dk-stepper__head:focus-visible { outline: var(--outline-width-2) solid va
   top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
 }
 @media (forced-colors: active) {
-  .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; }
+  .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
   .dk-stepper__connector { background: CanvasText; }
 }
 }

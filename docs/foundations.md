@@ -96,12 +96,16 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `secondary-hover` | `zinc-200` | `zinc-700` | Hover state of `secondary`. |
 | `surface` | `white` | `zinc-950` | Page and card background. |
 | `surface-muted` | `zinc-50` | `zinc-900` | Secondary panels, sidebars, table headers. |
+| `surface-raised` | `white` | `zinc-900` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
+| `surface-overlay` | `white` | `zinc-900` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
 | `text` | `zinc-900` | `zinc-50` | Body text and headings on `surface`. |
 | `text-muted` | `zinc-500` | `zinc-400` | Secondary text, captions, placeholders. |
 | `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
 | `border` | `zinc-200` | `zinc-800` | Default borders and dividers. |
 | `border-strong` | `zinc-300` | `zinc-700` | Emphasised dividers and outlines. Form fields use `field-border`. |
+| `border-raised` | `white` | `zinc-800` | A raised card's edge: invisible in light, a 1px lighter edge in dark. |
+| `border-overlay` | `zinc-200` | `zinc-700` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
 | `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
@@ -161,7 +165,7 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 | --- | --- | --- |
 | `font-sans` | Inter | Default for UI and body text. |
 | `font-serif` | Georgia | Editorial or long-form accents. |
-| `font-mono` | Courier New | Code, IDs, tabular figures. |
+| `font-mono` | The system's monospace: SF Mono, Menlo, Consolas or Liberation Mono | Code, IDs, tabular figures. A bare `<kbd>` uses `font-sans`, like `<Kbd>`. |
 
 Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
@@ -180,6 +184,25 @@ Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (
 | `text-3xl` | 30px | 36px |
 | `text-4xl` | 36px | 40px |
 | `text-5xl` – `text-9xl` | 48, 60, 72, 96, 128px | 1 (tight) |
+
+**Type roles** — styles named for what the text is for, built from the same sizes, weights and tracking. Prefer a role to a size style: it carries the weight and tracking the system uses for that job, so a page title set with a class matches a `<Heading level={1}>`.
+
+| Class | Size / line height | Weight | Tracking | Use |
+| --- | --- | --- | --- | --- |
+| `type-display` | 48px / 1.1 | 600 | tight | Hero and marketing headlines. Two lines don't touch, unlike `type-5xl` (line height 1). |
+| `type-heading-1` | 30px / 36px | 600 | tight | Page title; `<Heading level={1}>` |
+| `type-heading-2` | 24px / 32px | 600 | tight | Section title; `<Heading level={2}>` |
+| `type-heading-3` | 20px / 28px | 600 | normal | Subsection; `<Heading level={3}>` |
+| `type-heading-4` | 18px / 28px | 600 | normal | Group title; `<Heading level={4}>`, Dialog and Drawer titles |
+| `type-title` | 16px / 24px | 600 | normal | Card, list and EmptyState titles |
+| `type-body` | 16px / 24px | 400 | normal | Running text |
+| `type-body-sm` | 14px / 20px | 400 | normal | UI text: controls, cells, menus, descriptions |
+| `type-label` | 14px / 20px | 500 | normal | Field labels, table headers, tabs |
+| `type-caption` | 12px / 16px | 400 | normal | Hints, timestamps, footnotes (with `text-muted`) |
+| `type-overline` | 12px / 16px, uppercase | 600 | widest | An eyebrow above a title |
+| `type-code` | 14px / 20px, `font-mono` | 400 | normal | Inline code and code blocks |
+
+Each role is also a `font` shorthand token (`var(--text-type-label)`) and a typography token in `design-tokens/`.
 
 **Weights** — three defaults:
 
@@ -352,7 +375,7 @@ Width classes draw a solid line on the sides they set, so `border` alone draws a
 Rules of thumb:
 
 - Borders: `border border-border` for cards and dividers, `border-field-border` for form fields (`border-danger` when invalid, with the message in `danger-text`), `border-danger-border` for destructive outline buttons.
-- Focus: `outline-2 outline-offset-2 outline-focus-ring` on `:focus-visible`. Never remove a focus style without replacing it; prefer `outline-hidden` over `outline-none`.
+- Focus: one recipe everywhere, `outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset)` on `:focus-visible` (the utilities `outline-2 outline-offset-2 outline-focus-ring` give the same). An outline follows the corner radius and its gap is transparent, so the ring reads on tinted backgrounds such as an Alert, Card or Navbar, and forced-colors mode draws it. Use an inset ring only where an outline would be clipped, as in Tabs. Never remove a focus style without replacing it; prefer `outline-hidden` over `outline-none`.
 - Lists and tables: `divide-y divide-border` instead of a border on each row.
 
 ## Effects
@@ -387,10 +410,10 @@ Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are to
 Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
-- Shadows barely show in dark themes: separate surfaces with `border` or `surface-muted` there, or add `ring-1 ring-border`.
-- Focus: a ring is fine for focus styles (`ring-2 ring-focus-ring ring-offset-2 ring-offset-surface`), but keep the outline approach from Borders for anything that must show in forced-colors mode.
+- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border-raised` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
+- Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-50` for disabled controls; don't lower the opacity of text to make it secondary — use `text-muted`.
+- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary — use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 

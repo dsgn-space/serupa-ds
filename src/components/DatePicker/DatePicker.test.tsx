@@ -44,6 +44,21 @@ describe('DatePicker', () => {
     expect(el('dp').value).toBe('');
   });
 
+  test('non-Gregorian and non-Latin locales (th, ja-u-ca-japanese, fa, ar-EG): the field shows Gregorian years in Latin digits, and a blur keeps the same day; typed local digits are read', async () => {
+    const d = new Date(2025, 10, 22), seen: string[] = [];
+    await render(<>{['th', 'ja-u-ca-japanese', 'fa', 'ar-EG'].map((l, i) => <DatePicker key={l} id={`l${i}`} aria-label={l} locale={l} defaultValue={d} onValueChange={(v) => seen.push(l + ' ' + (v ? v.toDateString() : 'null'))} />)}</>);
+    for (const i of [0, 1, 2, 3]) {
+      expect(el(`l${i}`).value).toContain('2025');
+      const before = el(`l${i}`).value;
+      await userEvent.click(el(`l${i}`));
+      await userEvent.keyboard('{Tab}');
+      expect(el(`l${i}`).value).toBe(before);
+    }
+    expect(seen).toEqual([]);
+    await type('l3', '٠٣/٠١/٢٠٢٦');
+    expect(seen).toEqual(['ar-EG ' + new Date(2026, 0, 3).toDateString()]);
+  });
+
   test('the button opens a dialog in the top layer with focus on the chosen day; picking a day fills the field, closes the popup and returns focus to the field', async () => {
     await render(<DatePicker id="dp" aria-label="Start" locale="en-US" defaultValue={new Date(2024, 11, 31)} />);
     await userEvent.click(button('dp'));

@@ -131,15 +131,13 @@ describe('Checkbox', () => {
     expect(css(input('h')).borderTopColor).toBe(color('var(--field-border-hover)'));
   });
 
-  test('keyboard focus: a 2px focus-ring ring outside a 2px gap, like Button, and a transparent outline for forced-colors mode', async () => {
+  test('keyboard focus: a 2px focus-ring outline 2px out, like Button; the gap is transparent, with no box-shadow ring', async () => {
     await render(<><button type="button">Before</button><Checkbox id="f">Focus me</Checkbox></>);
     await page.getByRole('button', { name: 'Before' }).click();
     await userEvent.tab();
     await settle(250);
     const s = css(input('f'));
-    expect(s.boxShadow).toContain(color('var(--focus-ring)'));
-    expect(s.boxShadow).toMatch(/0px 0px 0px 4px/);
-    expect(`${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset}`).toBe('rgba(0, 0, 0, 0) 2px 2px');
+    expect(`${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
   });
 
   test('invalid: aria-invalid and a danger border', async () => {

@@ -35,6 +35,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 ## Behavior
 
 - People type in the locale's numeric order (11/22/2025 in en-US, 22.11.2025 in de-DE) or as `2025-11-22` anywhere. Two-digit years are read as 20xx.
+- The field always uses Gregorian years and Latin digits, so a date reads back as the same day in every locale: Thai shows 22/11/2025 rather than the Buddhist year 2568, and Persian shows 2025/11/22 rather than ۱۴۰۴/۰۹/۰۱. Digits typed in another script (٢٢/١١/٢٠٢٥) are read too. The calendar's month and weekday names stay in the locale.
 - The text is read on blur and on Enter. A date that can't be read, or one that can't be chosen, puts back the last good value. An empty field clears it.
 - The calendar opens from the button or Alt+↓ in the field, showing the typed or chosen month with focus on that day. Picking a day, Escape or a click outside closes it and returns focus to the field.
 
@@ -62,7 +63,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 | `value` / `defaultValue` | `Date \| null` | | The chosen day, controlled or not. |
 | `onValueChange` | `(date: Date \| null) => void` | | Called with the new day, or `null` when the field is cleared. |
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. |
-| `locale` | `string` | the browser's | The typed format and the calendar's names and first day. |
+| `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Like Input. |
 | `invalid` | `boolean` | `false` | Like Input. |
@@ -82,9 +83,9 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-button-hover` | `text` | The calendar button's icon on hover. |
 | `--date-picker-button-bg-hover` | `surface-muted` | The calendar button's background on hover. |
 | `--date-picker-focus-ring` | `focus-ring` | The calendar button's keyboard focus ring. |
-| `--date-picker-popup-bg` | `surface` | The calendar panel's background. |
+| `--date-picker-popup-bg` | `surface-overlay` | The calendar panel's background. |
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
-| `--date-picker-popup-border` | `border` | Its outline. |
+| `--date-picker-popup-border` | `border-overlay` | Its outline. |
 | `--date-picker-popup-shadow` | `shadow-lg` | Its shadow. |
 | `--date-picker-popup-radius` | `rounded-lg` | Its corners (8px). |
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |

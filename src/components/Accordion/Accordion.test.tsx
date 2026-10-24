@@ -157,4 +157,14 @@ describe('Accordion', () => {
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
   });
+
+  test('items inside a Fragment are items of their own: unique ids, and each opens alone', async () => {
+    const admin = true;
+    await render(<Accordion id="afrag"><AccordionItem title="One">1</AccordionItem>{admin && <><AccordionItem title="Two">2</AccordionItem><AccordionItem title="Three">3</AccordionItem></>}</Accordion>);
+    const ids = items('afrag').map((i) => i.querySelector('.dk-accordion__trigger')!.id);
+    expect(new Set(ids).size).toBe(3);
+    await userEvent.click(trigger('afrag', 2));
+    expect(state('afrag')).toBe('010');
+    expect(document.getElementById(trigger('afrag', 2).getAttribute('aria-controls')!)!.textContent).toBe('2');
+  });
 });

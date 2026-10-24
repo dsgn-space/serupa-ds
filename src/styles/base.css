@@ -48,7 +48,8 @@
 
 :where(hr) { border: var(--border-width-0); border-top: var(--border-width-1) solid var(--border); margin: var(--spacing-0); }
 
-:where(code, kbd, samp, pre) { font-family: var(--font-mono); }
+:where(code, samp, pre) { font-family: var(--font-mono); }
+:where(kbd) { font-family: var(--font-sans); }   /* keys read as keycaps, like <Kbd> */
 
 ::selection { background-color: var(--primary-subtle); color: var(--text); }   /* pseudo-elements can't go inside :where(); a utility on the element still wins */
 
@@ -56,8 +57,8 @@
 
 /* One visible focus style for every focusable element (WCAG 2.4.7); components may draw their own. */
 :where(:focus-visible) {
-  outline: var(--outline-width-2) solid var(--focus-ring);
-  outline-offset: var(--outline-offset-2);
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Hidden means hidden, even on elements that set their own display. */

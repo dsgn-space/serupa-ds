@@ -47,6 +47,25 @@ function accepts(file: File, accept?: string) {
   return accept.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean).some((a) =>
     a.startsWith(".") ? name.endsWith(a) : a.endsWith("/*") ? type.startsWith(a.slice(0, -1)) : type === a);
 }
+// accept in words, for the message on a refused file: "image/*,.pdf" is "an image or PDF", ".png,.jpg,.jpeg"
+// is "a PNG or JPG". null when a type has no short name (application/vnd.ms-excel), so the message stays general.
+const KINDS: Record<string, string> = { image: "image", video: "video", audio: "audio file", text: "text file" };
+const SUBTYPES: Record<string, string> = { jpeg: "JPG", "svg+xml": "SVG", plain: "TXT", "x-icon": "ICO" };
+function acceptedTypes(accept: string): string | null {
+  const names: string[] = [];
+  for (const a of accept.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean)) {
+    const [main, sub] = a.split("/");
+    const name = a.startsWith(".") ? (a === ".jpeg" ? "JPG" : a.slice(1).toUpperCase())
+      : sub === "*" ? KINDS[main] : SUBTYPES[sub] || (/^[a-z0-9]{2,5}$/.test(sub || "") ? sub.toUpperCase() : undefined);
+    if (!name) return null;
+    if (!names.includes(name)) names.push(name);
+  }
+  if (!names.length) return null;
+  const first = names[0];   // "an" before a vowel sound: "an image", "an SVG" (said "ess"), "an MP4"
+  const an = first === first.toUpperCase() ? /^[AEFHILMNORSX]/.test(first) : /^[aeiou]/.test(first);
+  const list = names.length === 1 ? first : names.slice(0, -1).join(", ") + " or " + names[names.length - 1];
+  return (an ? "an " : "a ") + list;
+}
 const iconFor = (f: File) => /^image\//.test(f.type) ? "image" : f.type === "application/pdf" ? "picture_as_pdf" : /^video\//.test(f.type) ? "movie" : /^audio\//.test(f.type) ? "audio_file" : /zip|compressed|tar/.test(f.type) ? "folder_zip" : "draft";
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
@@ -78,7 +97,10 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     const incoming = Array.from(list), ok: File[] = [], bad: FileRejection[] = [];
     const limit = props.maxSize != null ? formatFileSize(props.maxSize) : "";
     for (const f of incoming) {
-      if (!accepts(f, props.accept)) bad.push({ file: f, reason: "type", message: `${f.name}: this type of file isn't accepted.` });
+      if (!accepts(f, props.accept)) {
+        const types = acceptedTypes(props.accept || "");
+        bad.push({ file: f, reason: "type", message: types ? `${f.name} isn't ${types}.` : `${f.name}: this type of file isn't accepted.` });
+      }
       else if (props.maxSize != null && f.size > props.maxSize) bad.push({ file: f, reason: "size", message: `${f.name} is larger than ${limit}.` });
       else ok.push(f);
     }

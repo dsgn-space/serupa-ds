@@ -53,7 +53,7 @@ describe('FileUpload', () => {
     expect(list(el)).toEqual(['photo.png 2 KB image', 'report.pdf 768 KB picture_as_pdf']);
     await expect.poll(() => [...input(el).files!].map((f) => f.name).join()).toBe('photo.png,report.pdf');
     await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2 * 1024 * 1024), file('photo.png', 'image/png', 2048)]);
-    expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt: this type of file isn\'t accepted. / huge.png is larger than 1 MB.', 'type,size']);
+    expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn\'t an image or PDF. / huge.png is larger than 1 MB.', 'type,size']);
     await userEvent.upload(input(el), [file('a.jpg', 'image/jpeg', 100), file('b.jpg', 'image/jpeg', 100)]);
     expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn\'t added: up to 3 files.']);
   });
@@ -149,5 +149,20 @@ describe('FileUpload', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => el.querySelectorAll('.dk-file-upload__item').length).toBe(1);
     expect(document.activeElement).toBe(choose(el));
+  });
+
+  test('a refused type says what is accepted, in words from accept: "a PNG or JPG", "an SVG", "an audio file or MP4"; a type with no short name keeps the general message', async () => {
+    await render(<>
+      <FileUpload id="fa" accept=".png,.jpg,.jpeg" />
+      <FileUpload id="fb" accept="image/svg+xml" />
+      <FileUpload id="fc" accept="audio/*,video/mp4" />
+      <FileUpload id="fd" accept=".csv,application/vnd.ms-excel" />
+    </>);
+    const msgs: string[] = [];
+    for (const id of ['fa', 'fb', 'fc', 'fd']) {
+      await userEvent.upload(input(rootOf(id)), [file('photo.heic', 'image/heic', 10)]);
+      msgs.push(errs(rootOf(id))!);
+    }
+    expect(msgs).toEqual(['alert: photo.heic isn\'t a PNG or JPG.', 'alert: photo.heic isn\'t an SVG.', 'alert: photo.heic isn\'t an audio file or MP4.', 'alert: photo.heic: this type of file isn\'t accepted.']);
   });
 });
