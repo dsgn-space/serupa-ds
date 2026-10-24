@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    List: rows with 12px padding and lines between them (card: in a bordered, rounded frame with 16px side
    padding). A row: leading avatar or 20px icon, a text-sm font-medium title over a muted description, then
-   trailing meta or actions. Link and button rows shade on hover; a selected row is shaded with a primary bar.
+   trailing meta or actions. Link and button rows shade on hover and a step darker while pressed; a selected row is shaded with a primary bar.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-list { --dk-list-px: var(--list-padding-x, var(--spacing-3)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; font-family: var(--font-sans); }
@@ -16,6 +16,7 @@
 .dk-list__item:not(:has(.dk-list__trailing)) .dk-list__main { margin-inline-end: calc(var(--spacing-0) - var(--dk-list-px)); padding-inline-end: var(--dk-list-px); }
 .dk-list__item--interactive .dk-list__main { cursor: pointer; }
 .dk-list__item--interactive:hover:not(.dk-list__item--disabled), .dk-list__item--selected { background: var(--list-bg-hover, var(--surface-muted)); }
+.dk-list__item--interactive:not(.dk-list__item--disabled):has(.dk-list__main:active) { background: var(--list-bg-pressed, var(--pressed)); }   /* the row, not its trailing action */
 .dk-list__item--selected { box-shadow: inset var(--list-indicator-width, var(--border-width-2)) 0 0 var(--list-indicator-selected, var(--primary)); }
 [dir="rtl"] .dk-list__item--selected { box-shadow: inset calc(var(--spacing-0) - var(--list-indicator-width, var(--border-width-2))) 0 0 var(--list-indicator-selected, var(--primary)); }
 .dk-list__main:focus-visible { outline: var(--outline-width-2) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
