@@ -87,8 +87,8 @@ Each is an optional override: set it on the page, a container or one menu. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--menu-bg` | `surface` | The menu's background. |
-| `--menu-border` | `border` | The menu's border. |
+| `--menu-bg` | `surface-overlay` | The menu's background. |
+| `--menu-border` | `border-overlay` | The menu's border. |
 | `--menu-item-text` | `text` | An item's label. |
 | `--menu-item-bg-active` | `secondary` | The highlighted item's background (hover and keyboard). |
 | `--menu-muted` | `text-muted` | Icons, shortcuts and group labels (4.5:1 on surface; the highlighted item's shortcut turns to item-color). |

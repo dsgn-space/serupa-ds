@@ -17,9 +17,9 @@
   margin: var(--spacing-0);
   padding: var(--menu-padding, var(--spacing-1));
   overflow-y: auto;
-  border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border));
+  border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border-overlay));
   border-radius: var(--menu-radius, var(--rounded-lg));
-  background: var(--menu-bg, var(--surface));
+  background: var(--menu-bg, var(--surface-overlay));
   color: var(--menu-item-text, var(--text));
   box-shadow: var(--menu-shadow, var(--shadow-lg));
   font-family: var(--font-sans);

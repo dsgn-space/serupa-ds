@@ -18,8 +18,8 @@
 .dk-date-picker__popup {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--date-picker-z-index, var(--z-50));
   margin: var(--spacing-0); padding: var(--date-picker-popup-padding, var(--spacing-3));
-  border: var(--border-width-1) solid var(--date-picker-popup-border, var(--border)); border-radius: var(--date-picker-popup-radius, var(--rounded-lg));
-  background: var(--date-picker-popup-bg, var(--surface)); color: var(--date-picker-popup-text, var(--text));
+  border: var(--border-width-1) solid var(--date-picker-popup-border, var(--border-overlay)); border-radius: var(--date-picker-popup-radius, var(--rounded-lg));
+  background: var(--date-picker-popup-bg, var(--surface-overlay)); color: var(--date-picker-popup-text, var(--text));
   box-shadow: var(--date-picker-popup-shadow, var(--shadow-lg));
   cursor: default; animation: dk-dp-in var(--duration-150) var(--ease-out);
 }

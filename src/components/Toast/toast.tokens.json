@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface}",
+        "$value": "{color.surface-overlay}",
         "$description": "A toast's background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "border-color": {
         "$type": "color",
-        "$value": "{color.border}",
+        "$value": "{color.border-overlay}",
         "$description": "A toast's border.",
         "$extensions": {
           "com.serupa": {

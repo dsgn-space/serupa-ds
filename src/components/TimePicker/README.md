@@ -68,8 +68,8 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-button` | `text-muted` | The clock button's icon (3:1 on the field). |
 | `--time-picker-button-hover` | `text` | The clock button's icon on hover. |
 | `--time-picker-button-bg-hover` | `surface-muted` | The clock button's background on hover. |
-| `--time-picker-list-bg` | `surface` | The list's background. |
-| `--time-picker-list-border` | `border` | The list's outline. |
+| `--time-picker-list-bg` | `surface-overlay` | The list's background. |
+| `--time-picker-list-border` | `border-overlay` | The list's outline. |
 | `--time-picker-option-color` | `text` | A time in the list. |
 | `--time-picker-option-bg-active` | `surface-muted` | The highlighted time (pointer or keyboard). |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
