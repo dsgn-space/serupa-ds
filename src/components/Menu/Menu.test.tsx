@@ -57,6 +57,18 @@ describe('Menu', () => {
     expect(seen).toEqual(['Duplicate', 'Archive', 'Delete', 'Edit', 'Delete', 'Edit', 'Share link', 'Delete', 'Duplicate']);
   });
 
+  test('typing a word goes to the item starting with it: "de" passes Duplicate for Delete; after a pause a letter starts again', async () => {
+    await render(<Actions chosen={[]} />);
+    await userEvent.click(el('mb'));
+    await userEvent.keyboard('de');
+    expect(focus()).toBe('Delete');
+    await userEvent.keyboard('du');
+    expect(focus()).toBe('Duplicate');
+    await new Promise((r) => setTimeout(r, 600));
+    await userEvent.keyboard('e');
+    expect(focus()).toBe('Edit');
+  });
+
   test('Enter on a disabled item does nothing; Enter on an item chooses it, closes the menu and returns focus to the button', async () => {
     const chosen: string[] = [];
     await render(<Actions chosen={chosen} />);

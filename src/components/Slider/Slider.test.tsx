@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
 import { Slider } from './Slider';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -41,6 +42,27 @@ function App(props: { sref?: React.Ref<HTMLDivElement> }) {
 const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits = []; await render(<App sref={sref} />); };
 
 describe('Slider', () => {
+  test('your onKeyDown runs first: preventDefault() on a key keeps the slider from changing; other keys still work', async () => {
+    const changes: number[] = [];
+    await render(<Slider id="kd" aria-label="Volume" defaultValue={50} onValueChange={(v) => changes.push(v as number)}
+      onKeyDown={(e) => { if (e.key === 'ArrowRight') e.preventDefault(); }} />);
+    thumb('kd').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([now('kd'), changes]).toEqual([50, []]);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([now('kd'), changes.length > 0]).toEqual([49, true]);
+  });
+
+  test('a range: onFocus and onBlur fire once each, entering and leaving the slider, not when Tab moves between its thumbs', async () => {
+    const seen: string[] = [];
+    await render(<><button id="before">Before</button>
+      <Slider id="fb" aria-label="Price" defaultValue={[20, 80]} onFocus={() => seen.push('focus')} onBlur={() => seen.push('blur')} />
+      <button id="after">After</button></>);
+    el('before').focus();
+    await userEvent.tab(); await userEvent.tab(); await userEvent.tab();
+    expect([document.activeElement!.id, seen]).toEqual(['after', ['focus', 'blur']]);
+  });
+
   test('one thumb: a role="slider" at 50 of 0..100, labelled by aria-labelledby, in the Tab order; ref and className reach the root; md is 20px tall', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await setup(ref);
@@ -149,6 +171,41 @@ describe('Slider', () => {
     thumb('fs').focus();
     await userEvent.keyboard('{ArrowRight}');
     expect([now('fs'), calls, thumb('fs').getAttribute('aria-disabled'), new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], null, '31']);
+  });
+
+  test('in a Field: the label names the thumb (or a range\'s group) and the hint describes it; its own aria-label still wins', async () => {
+    await render(<>
+      <Field label="Volume" hint="0 is muted"><Slider data-testid="sf1" /></Field>
+      <Field label="Price" hint="In dollars"><Slider data-testid="sf2" defaultValue={[20, 80]} /></Field>
+      <Field label="Volume"><Slider data-testid="sf3" aria-label="Music volume" /></Field>
+    </>);
+    const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    const one = root('sf1').querySelector('[role=slider]')!, two = root('sf2');
+    expect([text(one.getAttribute('aria-labelledby')), text(one.getAttribute('aria-describedby')), root('sf1').getAttribute('aria-describedby')])
+      .toEqual(['Volume', '0 is muted', null]);
+    expect([two.getAttribute('role'), text(two.getAttribute('aria-labelledby')), text(two.getAttribute('aria-describedby'))]).toEqual(['group', 'Price', 'In dollars']);
+    const own = root('sf3').querySelector('[role=slider]')!;
+    expect([own.getAttribute('aria-label'), own.getAttribute('aria-labelledby')]).toEqual(['Music volume', null]);
+  });
+
+  test('ref.current.focus() and autoFocus land on the first thumb, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const one = React.createRef<HTMLDivElement>(), two = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    await render(<>
+      <Slider id="sfa" aria-label="Volume" autoFocus />
+      <Slider id="sfr" ref={one} aria-label="Volume" />
+      <Slider id="sfg" ref={two} aria-label="Price" defaultValue={[20, 80]} />
+      <Slider id="sfd" ref={off} aria-label="Volume" disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(thumb('sfa'));
+    expect(el('sfa').hasAttribute('autofocus')).toBe(false);
+    one.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfr'));
+    two.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfg', 0));
+    off.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfg', 0));
+    expect(one.current).toBe(el('sfr'));
   });
 
   test('sm: 16px thumb on a 4px track; at 0 the thumb is centered on the track\'s start and stays inside the slider', async () => {
