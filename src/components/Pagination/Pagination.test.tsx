@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { Pagination, paginationRange } from './Pagination';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -150,4 +150,11 @@ describe('Pagination', () => {
     expect(low).toEqual([]);
     expect(n).toBe(24);
   });
+
+  test('pressed: a page held down fills with pressed, one step past hover', async () => {
+    await render(<Pagination id="pprs" count={10} defaultPage={7} />);
+    const pg = named('pprs', 'Page 1');
+    await press(pg, () => expect.poll(() => css(pg).backgroundColor).toBe(color('var(--pressed)')));
+  });
+
 });

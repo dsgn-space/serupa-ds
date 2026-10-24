@@ -67,6 +67,7 @@ Each is an optional override: set it on the page, a container or one pagination.
 | --- | --- | --- |
 | `--pagination-text` | `text` | A page number and the arrows. |
 | `--pagination-bg-hover` | `secondary` | A page or arrow on hover. |
+| `--pagination-bg-pressed` | `pressed` | A page or arrow while it's pressed, one step past hover. |
 | `--pagination-current-bg` | `primary` | The current page's background. |
 | `--pagination-current-text` | `on-primary` | The current page's number (4.5:1 on current-bg). |
 | `--pagination-ellipsis` | `text-muted` | The … between page ranges (4.5:1 on surface). |

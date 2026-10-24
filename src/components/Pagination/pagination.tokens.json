@@ -22,6 +22,16 @@
           }
         }
       },
+      "bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "A page or arrow while it's pressed, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-bg-pressed"
+          }
+        }
+      },
       "current-bg": {
         "$type": "color",
         "$value": "{color.primary}",
