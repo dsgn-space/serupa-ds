@@ -5,8 +5,11 @@ import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../interna
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
+import * as icons from "../../material/builtin";
+import { isComposing } from "../../internal/ime";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -27,7 +30,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   /** 'sm', 'md' (default) or 'lg', like Input. */
   size?: 'sm' | 'md' | 'lg';
   invalid?: boolean;
-  /** The list's name, and the button's. Default: "Choose time". */
+  /** The list's name, and the button's. Default: "Choose a time". */
   listLabel?: string;
 }
 
@@ -39,6 +42,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
 export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
   const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp);
@@ -110,7 +114,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const pick = (n: number) => { commit(n); setOpen(false); if (field.current) field.current.focus(); };
   const keys = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onKeyDown) onKeyDown(e);
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || isComposing(e)) return;
     const last = times.length - 1, page = 4;
     const move = (i: number) => { e.preventDefault(); typed.current = false; setActive(i); };
     if (!open) {
@@ -143,7 +147,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
         }} onBlur={(e) => { read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
         onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false); else show(); if (field.current) field.current.focus(); }}>
-        <Icon name="schedule" />
+        <Icon icon={icons.Schedule} />
       </button>
       {name ? <input type="hidden" name={name} value={value == null ? "" : toHHmm(value)} disabled={disabled} /> : null}
       <ul ref={list} id={id} role="listbox" aria-label={label} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-time-picker__list">
@@ -152,7 +156,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
             className={cn("dk-time-picker__option", i === active && "dk-time-picker__option--active", n === value && "dk-time-picker__option--selected")}
             onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
             <span className="dk-time-picker__time">{fmt(n)}</span>
-            {n === value ? <Icon name="check" className="dk-time-picker__check" /> : null}
+            {n === value ? <Icon icon={icons.Check} className="dk-time-picker__check" /> : null}
           </li>
         )) : null}
       </ul>

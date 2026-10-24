@@ -2,8 +2,11 @@
 import * as React from "react";
 import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
+import { Checkbox, type CheckboxProps } from "../Checkbox/Checkbox";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
+import type { IconData } from "../../material/types";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
@@ -21,8 +24,18 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
 }
 
 export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  /** Marks a row as selected: a shaded background, a primary bar at its start and aria-selected. */
+  /** Marks a row as selected: a shaded background and a primary bar at its start. Screen readers can't tell from
+      the shading (and ignore aria-selected in a table), so give the row a TableSelectCell, whose checkbox says it. */
   selected?: boolean;
+}
+
+export interface TableSelectCellProps extends Omit<CheckboxProps, 'children' | 'description' | 'size'> {
+  /** The checkbox's name for screen readers, such as "Select Alpha", or "Select all rows" in the header. */
+  label: string;
+  /** In the header row: renders a <th>, for a select-all checkbox (with indeterminate while some rows are). Default: false. */
+  header?: boolean;
+  /** Props for the cell around the checkbox. */
+  cellProps?: React.TdHTMLAttributes<HTMLTableCellElement>;
 }
 
 export type SortDirection = 'ascending' | 'descending' | 'none';
@@ -92,13 +105,26 @@ export const TableFoot = /* @__PURE__ */ component<HTMLTableSectionElement, Reac
   return <tfoot {...props} ref={ref} className={cn("dk-table__foot", props.className)} />;
 });
 
-/** A row (<tr>). selected shades it and sets aria-selected. */
+/** A row (<tr>). selected shades it, with a bar at its start; a TableSelectCell in it says so to screen readers. */
 export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowProps>("TableRow", function TableRow(props, ref) {
   const rest = omit(props, { selected: 1, className: 1 });
-  return <tr {...rest} ref={ref} aria-selected={props.selected === undefined ? undefined : !!props.selected} className={cn("dk-table__row", props.selected && "dk-table__row--selected", props.className)} />;
+  return <tr {...rest} ref={ref} className={cn("dk-table__row", props.selected && "dk-table__row--selected", props.className)} />;
 });
 
-const NEXT_ICON: Record<SortDirection, string> = { ascending: "arrow_upward", descending: "arrow_downward", none: "unfold_more" };
+/* TableSelectCell: a narrow cell holding a checkbox named by label, for picking rows ("Select Alpha") or, with
+   header, all of them. checked, onChange, indeterminate, disabled, name, value and ref go to the checkbox, and
+   cellProps to the cell. A row whose checkbox is checked is shaded like a selected row, so an uncontrolled one
+   works too; set the row's selected as well when you keep the selection yourself. */
+/** A cell with a checkbox for selecting its row (or, with header, every row); the checkbox carries the selected state for screen readers. */
+export const TableSelectCell = /* @__PURE__ */ component<HTMLInputElement, TableSelectCellProps>("TableSelectCell", function TableSelectCell(props, ref) {
+  const { label, header, cellProps, ...rest } = props;   // the rest is the Checkbox's
+  const cp = cellProps || {};
+  const box = <Checkbox {...rest} ref={ref} aria-label={label} />;
+  const cls = cn("dk-table__cell dk-table__select", cp.className);
+  return header ? <th scope="col" {...cp} className={cn(cls, "dk-table__header")}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
+});
+
+const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
 
 /** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. */
 export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>("TableHeaderCell", function TableHeaderCell(props, ref) {
@@ -111,7 +137,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
       {sort ? (
         <button type="button" className="dk-table__sort" onClick={props.onSort}>
           <span>{props.children}</span>
-          <Icon name={NEXT_ICON[sort]} className={cn("dk-table__sort-icon", sort === "none" && "dk-table__sort-icon--idle")} />
+          <Icon icon={NEXT_ICON[sort]} className={cn("dk-table__sort-icon", sort === "none" && "dk-table__sort-icon--idle")} />
         </button>
       ) : props.children}
     </th>

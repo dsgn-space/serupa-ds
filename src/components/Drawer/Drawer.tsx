@@ -5,6 +5,7 @@ import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { modalClosed, modalOpened, modalOpening } from "../../internal/layers";
+import * as icons from "../../material/builtin";
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -67,12 +68,15 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   }, [props.open]);
   React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const b = back.current; if (b && b.isConnected) b.focus(); }; }, []);
 
-  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); e.preventDefault(); close(); };
+  // React passes a nested dialog's cancel and close up to this one, though the browser doesn't bubble them: only
+  // this dialog's own count, or Escape in a Dialog or Drawer opened from inside it would close this one too.
+  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); if (e.target !== e.currentTarget) return; e.preventDefault(); close(); };
   // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
   // cancel): if open is still true, ask to close so open and the screen agree again.
   const openNow = React.useRef(props.open); openNow.current = props.open;
   const onClose = (e: React.SyntheticEvent<HTMLDialogElement>) => {
     if (rest.onClose) rest.onClose(e);
+    if (e.target !== e.currentTarget) return;
     if (!e.currentTarget.open) modalClosed(e.currentTarget);
     if (!openNow.current || e.currentTarget.open) return;
     const b = back.current; back.current = null;
@@ -98,7 +102,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
               {has(props.title) ? <h2 className="dk-drawer__title" id={base + "-title"}>{props.title}</h2> : null}
               {has(props.description) ? <p className="dk-drawer__description" id={base + "-desc"}>{props.description}</p> : null}
             </div>
-            {showClose ? <IconButton className="dk-drawer__close" icon="close" label={props.closeLabel || sds.labels.close} size="sm" noTitle onClick={close} /> : null}
+            {showClose ? <IconButton className="dk-drawer__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" noTitle onClick={close} /> : null}
           </div>
         ) : null}
         {has(props.children) ? <div className="dk-drawer__body">{props.children}</div> : null}

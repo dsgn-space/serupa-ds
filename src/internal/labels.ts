@@ -18,6 +18,10 @@ export interface SerupaLabels {
   searching: string;
   /** SearchInput clear button. */
   clearSearch: string;
+  /** CopyButton: its label, what it says once it has copied, and when copying fails. */
+  copy: string;
+  copied: string;
+  copyFailed: string;
   /** Before the name on a remove button: Badge ("Remove Design"), FileUpload ("Remove report.pdf"). */
   remove: string;
   /** Image view and remove buttons, and the viewer's name when the image has no alt text. */
@@ -38,6 +42,8 @@ export interface SerupaLabels {
   /** Carousel arrows. */
   previousSlide: string;
   nextSlide: string;
+  /** Carousel: each slide's name, and its dot's ("2 of 5"). */
+  slideOf: (slide: number, total: number) => string;
   /** NumberInput step buttons. */
   decrease: string;
   increase: string;
@@ -54,6 +60,8 @@ export interface SerupaLabels {
   completed: string;
   hasError: string;
   optional: string;
+  /** Stepper, when the steps don't fit side by side and it shows only the current step's title: "Step 2 of 4". */
+  stepOf: (step: number, total: number) => string;
   /** Toaster region. */
   notifications: string;
   /** Toaster: said once, after the first toast with an action, so keyboard and screen reader users know how to reach it. */
@@ -61,6 +69,14 @@ export interface SerupaLabels {
   /** Sidebar and Navbar nav, and the Navbar menu button. */
   mainNavigation: string;
   menu: string;
+  /** SortableList: before an item's name on its handle ("Reorder Apollo"), the handle's instructions, and what it
+      says as an item is picked up, moved, dropped or put back ("Apollo, position 2 of 5"). */
+  reorder: string;
+  reorderInstructions: string;
+  reorderGrabbed: (item: string, position: number, total: number) => string;
+  reorderMoved: (item: string, position: number, total: number) => string;
+  reorderDropped: (item: string, position: number, total: number) => string;
+  reorderCancelled: (item: string, position: number, total: number) => string;
   /** FileUpload. */
   dragFiles: string;
   dragFile: string;
@@ -68,6 +84,8 @@ export interface SerupaLabels {
   chooseFile: string;
   chosenFiles: string;
   chosenFile: string;
+  /** FileUpload: read out with the choose button when the upload is required (a button can't carry aria-required). */
+  required: string;
   /** PasswordInput show/hide button. */
   showPassword: string;
   /** Table's scroll region when it has no caption. */
@@ -83,6 +101,9 @@ export const DEFAULT_LABELS: SerupaLabels = {
   noResults: "No results",
   searching: "Searching",
   clearSearch: "Clear search",
+  copy: "Copy",
+  copied: "Copied",
+  copyFailed: "Couldn't copy. Select the text and copy it yourself.",
   remove: "Remove",
   viewImage: "View image",
   removeImage: "Remove image",
@@ -92,16 +113,17 @@ export const DEFAULT_LABELS: SerupaLabels = {
   nextPage: "Next page",
   page: (n) => "Page " + n,
   breadcrumb: "Breadcrumb",
-  showHiddenPages: "Show the hidden pages",
+  showHiddenPages: "Show all pages",
   previousMonth: "Previous month",
   nextMonth: "Next month",
   previousSlide: "Previous slide",
   nextSlide: "Next slide",
+  slideOf: (slide, total) => slide + " of " + total,
   decrease: "Decrease",
   increase: "Increase",
-  chooseDate: "Choose date",
+  chooseDate: "Choose a date",
   chooseDates: "Choose dates",
-  chooseTime: "Choose time",
+  chooseTime: "Choose a time",
   startDate: "Start date",
   endDate: "End date",
   chooseStartDate: "Choose the start date",
@@ -110,16 +132,24 @@ export const DEFAULT_LABELS: SerupaLabels = {
   completed: "completed",
   hasError: "has an error",
   optional: "Optional",
+  stepOf: (step, total) => "Step " + step + " of " + total,
   notifications: "Notifications",
   toastShortcut: (key) => "Press " + key + " to reach it.",
   mainNavigation: "Main",
   menu: "Menu",
+  reorder: "Reorder",
+  reorderInstructions: "Press Space to pick it up, the arrow keys to move it, Space again to drop it, or Escape to cancel.",
+  reorderGrabbed: (item, p, n) => "Picked up " + item + ", position " + p + " of " + n + ".",
+  reorderMoved: (item, p, n) => item + ", position " + p + " of " + n + ".",
+  reorderDropped: (item, p, n) => "Dropped " + item + " at position " + p + " of " + n + ".",
+  reorderCancelled: (item, p, n) => "Cancelled. " + item + " is back at position " + p + " of " + n + ".",
   dragFiles: "Drag files here",
   dragFile: "Drag a file here",
   chooseFiles: "Choose files",
   chooseFile: "Choose a file",
   chosenFiles: "Chosen files",
   chosenFile: "Chosen file",
+  required: "Required",
   showPassword: "Show password",
   table: "Table",
 };
@@ -134,6 +164,9 @@ export const idLabels: SerupaLabels = {
   noResults: "Tidak ada hasil",
   searching: "Mencari",
   clearSearch: "Hapus pencarian",
+  copy: "Salin",
+  copied: "Disalin",
+  copyFailed: "Gagal menyalin. Pilih teksnya lalu salin sendiri.",
   remove: "Hapus",
   viewImage: "Lihat gambar",
   removeImage: "Hapus gambar",
@@ -143,11 +176,12 @@ export const idLabels: SerupaLabels = {
   nextPage: "Halaman berikutnya",
   page: (n) => "Halaman " + n,
   breadcrumb: "Navigasi jejak",
-  showHiddenPages: "Tampilkan halaman tersembunyi",
+  showHiddenPages: "Tampilkan semua halaman",
   previousMonth: "Bulan sebelumnya",
   nextMonth: "Bulan berikutnya",
   previousSlide: "Slide sebelumnya",
   nextSlide: "Slide berikutnya",
+  slideOf: (slide, total) => slide + " dari " + total,
   decrease: "Kurangi",
   increase: "Tambah",
   chooseDate: "Pilih tanggal",
@@ -161,16 +195,24 @@ export const idLabels: SerupaLabels = {
   completed: "selesai",
   hasError: "ada kesalahan",
   optional: "Opsional",
+  stepOf: (step, total) => "Langkah " + step + " dari " + total,
   notifications: "Notifikasi",
   toastShortcut: (key) => "Tekan " + key + " untuk menjangkaunya.",
   mainNavigation: "Utama",
   menu: "Menu",
+  reorder: "Ubah urutan",
+  reorderInstructions: "Tekan Spasi untuk mengangkatnya, tombol panah untuk memindahkannya, Spasi lagi untuk meletakkannya, atau Escape untuk batal.",
+  reorderGrabbed: (item, p, n) => item + " diangkat, posisi " + p + " dari " + n + ".",
+  reorderMoved: (item, p, n) => item + ", posisi " + p + " dari " + n + ".",
+  reorderDropped: (item, p, n) => item + " diletakkan di posisi " + p + " dari " + n + ".",
+  reorderCancelled: (item, p, n) => "Batal. " + item + " kembali ke posisi " + p + " dari " + n + ".",
   dragFiles: "Seret file ke sini",
   dragFile: "Seret file ke sini",
   chooseFiles: "Pilih file",
   chooseFile: "Pilih file",
   chosenFiles: "File yang dipilih",
   chosenFile: "File yang dipilih",
+  required: "Wajib diisi",
   showPassword: "Tampilkan kata sandi",
   table: "Tabel",
 };

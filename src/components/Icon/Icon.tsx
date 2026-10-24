@@ -2,7 +2,7 @@
 import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { warnOnce } from "../../internal/warn";
-import { ICONS, hasIcon, getIcon, loadAllIcons, type CustomIconName } from "../../icons";
+import { ICONS, hasIcon, getIcon, loadIcon, type CustomIconName } from "../../icons";
 import type { MaterialIconName } from "../../material/icons";
 import type { IconData } from "../../material/types";
 import { component } from "../../internal/component";
@@ -34,13 +34,14 @@ export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>("Icon"
   const custom = !props.icon && hasIcon(props.name);
   const data = props.icon || (custom || props.name == null ? undefined : own.get(props.name) || getIcon(props.name));
   const missing = !custom && !data && props.name != null;
-  // A name outside the built-in icons: load the full set once, then draw it (or warn if it isn't a Material Symbol).
+  // A name not loaded yet: load it, then draw it (or warn if it isn't a Material Symbol). Until then, and on the
+  // server, the box is empty: pass `icon={…}` or register the icon to draw it on the first render.
   React.useEffect(() => {
     if (!missing) return;
     let live = true;
-    loadAllIcons().then(() => {
+    loadIcon(props.name as string).then((found) => {
       if (!live) return;
-      if (getIcon(props.name as string)) loadedAll();
+      if (found) loadedAll();
       else warnOnce("icon:" + props.name, `Icon: "${props.name}" isn't a Material Symbol or one of your icons. Check the name on the Icons page (Foundations/Icons).`);
     }, () => { /* the chunk failed to load: the box stays empty */ });
     return () => { live = false; };

@@ -120,7 +120,7 @@ node tools/tokens/style-dictionary.config.mjs out/   # build them into CSS with 
 node tools/icons/build.mjs                    # build assets/Icons/*.svg into src/icons.ts (then npm run build)
 node tools/icons/build.mjs path/to/svgs       # from another folder
 node tools/icons/build.mjs --check            # exit 1 if the components are out of step (for CI)
-node tools/icons/builtin.mjs                  # after a component names a new icon: src/material/builtin.ts
+node tools/icons/builtin.mjs                  # after a component imports a new icon: src/material/builtin.ts and named.ts
 python3 tools/icons/material.py               # rebuild src/material/icons.ts from the font in tools/icons/source/ (needs fonttools, brotli)
 ```
 

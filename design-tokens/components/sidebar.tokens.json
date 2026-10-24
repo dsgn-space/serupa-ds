@@ -54,7 +54,7 @@
       },
       "item-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.highlight}",
         "$description": "An item's background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -62,9 +62,19 @@
           }
         }
       },
+      "item-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An item's background while it's pressed, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-item-bg-pressed"
+          }
+        }
+      },
       "item-bg-active": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.highlight}",
         "$description": "The current page's item background.",
         "$extensions": {
           "com.serupa": {

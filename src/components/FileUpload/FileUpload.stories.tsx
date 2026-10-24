@@ -20,3 +20,5 @@ export const WithFiles: Story = {
   },
 };
 export const Disabled: Story = { args: { disabled: true } };
+export const Invalid: Story = { args: { invalid: true, required: true, hint: 'Add at least one image or PDF' } };
+export const ReadOnly: Story = { ...WithFiles, args: { readOnly: true } };

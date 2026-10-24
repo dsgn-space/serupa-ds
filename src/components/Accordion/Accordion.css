@@ -16,7 +16,7 @@
   border-radius: var(--rounded-sm);
 }
 .dk-accordion--card .dk-accordion__trigger { padding-inline: var(--accordion-padding-x, var(--spacing-4)); border-radius: var(--spacing-0); }
-.dk-accordion__trigger:hover:not(:disabled) .dk-accordion__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); }
+@media (hover: hover) { .dk-accordion__trigger:hover:not(:disabled) .dk-accordion__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); } }
 .dk-accordion__trigger:focus-visible { outline: var(--focus-ring-width) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-accordion__trigger:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }

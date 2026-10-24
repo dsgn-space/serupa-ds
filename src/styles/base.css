@@ -1,4 +1,4 @@
-/*! Serupa v8.0.0 by Diki · base.css */
+/*! Serupa v9.0.0 by Diki · base.css */
 /* Serupa base: page defaults. Optional — load it after tokens.css and before bundle.css on pages
    built with the system; leave it out when the system is dropped into an existing app.
    Every value is a token. It sets defaults only (all selectors are :where(), so any class wins). */
@@ -44,7 +44,7 @@
 :where(p) { text-wrap: pretty; }
 
 :where(a) { color: var(--primary); text-underline-offset: var(--underline-offset-2); }
-:where(a:hover) { color: var(--primary-hover); }
+@media (hover: hover) { :where(a:hover) { color: var(--primary-hover); } }
 
 :where(hr) { border: var(--border-width-0); border-top: var(--border-width-1) solid var(--border); margin: var(--spacing-0); }
 
@@ -63,6 +63,13 @@
 
 /* Hidden means hidden, even on elements that set their own display. */
 :where([hidden]:not([hidden="until-found"])) { display: none !important; }
+
+/* Print: filled controls keep their colors, on-screen layers don't print, and data-print-urls shows link addresses. */
+@media print {
+  :where(.dk-btn, .dk-badge, .dk-progress, .dk-switch, .dk-checkbox__input, .dk-radio__input, .dk-avatar, .dk-stepper__indicator, .dk-segmented, .dk-alert, .dk-slider, .dk-calendar, .dk-pagination, .dk-tabs) { print-color-adjust: exact; }
+  :where(.dk-toaster, .dk-tooltip, .dk-menu, .dk-popover, .dk-combobox__popup, .dk-date-picker__popup, .dk-time-picker__list) { display: none !important; }
+  :where([data-print-urls] a[href^="http"])::after { content: " (" attr(href) ")"; font-size: var(--text-xs); overflow-wrap: anywhere; }
+}
 
 /* Respect reduced motion across the page: no smooth scrolling, near-instant transitions. */
 @media (prefers-reduced-motion: reduce) {

@@ -37,7 +37,7 @@ const [owner, setOwner] = React.useState<string | null>(null);
 
 - Opening with a click, the chevron or an arrow shows every option; typing narrows them and highlights the first match.
 - Leaving the field closes the list and puts back the picked label. Leaving it empty clears the selection.
-- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room.
+- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room. With no room above or below either, it takes the roomier side and gets shorter, scrolling inside.
 
 ## Accessibility
 
@@ -67,7 +67,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `defaultValue` | `string \| null` | | Uncontrolled. |
 | `onValueChange` | `(value: string \| null) => void` | | When an option is picked, or `null` when the field is emptied or cleared. |
 | `onInputChange` | `(text: string) => void` | | The text as it's typed, for loading options. |
-| `filter` | `false \| (option, text) => boolean` | contains, ignoring case and accents | `false` shows every option you pass. |
+| `filter` | `false \| (option, text) => boolean` | contains, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo") | `false` shows every option you pass. |
 | `clearable` | `boolean` | `false` | A × that clears the selection. |
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results'` | |
@@ -89,7 +89,8 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-listbox-bg` | `surface-overlay` | The list's background. |
 | `--combobox-listbox-border` | `border-overlay` | The list's outline. |
 | `--combobox-option-color` | `text` | An option's label. |
-| `--combobox-option-bg-active` | `surface-muted` | The highlighted option (hover or arrow keys), so muted text keeps 4.5:1 on it. |
+| `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
+| `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
 | `--combobox-description-color` | `text-muted` | An option's second line, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
 | `--combobox-listbox-shadow` | `shadow-lg` | The list's shadow. |

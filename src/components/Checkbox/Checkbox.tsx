@@ -3,6 +3,8 @@ import * as React from "react";
 import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useFieldControl } from "../../internal/field";
+import * as icons from "../../material/builtin";
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** 'sm' (14px box, text-xs), 'md' (16px, text-sm, default) or 'lg' (20px, text-base). */
@@ -15,6 +17,8 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
   indeterminate?: boolean;
   /** A danger border (while unchecked) and focus ring, and aria-invalid. */
   invalid?: boolean;
+  /** Focusable and read out (aria-readonly), but a click or Space doesn't change it; a checked box is still submitted. */
+  readOnly?: boolean;
 }
 
 /* Checkbox: a native checkbox and its label. size "sm", "md" (default) or "lg"; children (the label);
@@ -26,11 +30,21 @@ const OWN = { size: 1, invalid: 1, indeterminate: 1, description: 1, children: 1
 
 /** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
 export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>("Checkbox", function Checkbox(props, ref) {
+  props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
   const mixed = !!props.indeterminate;
+  // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
+  // puts the box back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
+  const readOnly = !!rest.readOnly;
+  if (readOnly) {
+    rest["aria-readonly"] = true;
+    delete rest.onChange;
+    const onClick = rest.onClick;
+    rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
+  }
   const own = React.useRef<HTMLInputElement | null>(null);
   const setRefs = React.useCallback(function (node: HTMLInputElement | null) {
     own.current = node;
@@ -44,10 +58,10 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   // the description sits inside the <label> (so it's clickable too); naming by the label text alone keeps it out of the name
   if (hasDesc && hasLabel && rest["aria-label"] == null && rest["aria-labelledby"] == null) rest["aria-labelledby"] = labelId;
   return (
-    <label className={cn("dk-checkbox", "dk-checkbox--size-" + size, invalid && "dk-checkbox--invalid", rest.disabled && "dk-checkbox--disabled", !hasLabel && !hasDesc && "dk-checkbox--bare", props.className)} style={props.style} data-component="checkbox" data-size={size}>
+    <label className={cn("dk-checkbox", "dk-checkbox--size-" + size, invalid && "dk-checkbox--invalid", rest.disabled && "dk-checkbox--disabled", readOnly && "dk-checkbox--readonly", !hasLabel && !hasDesc && "dk-checkbox--bare", props.className)} style={props.style} data-component="checkbox" data-size={size}>
       <span className="dk-checkbox__control" key="control">
         <input {...rest} ref={setRefs} type="checkbox" className="dk-checkbox__input" key="input" />
-        <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon name={mixed ? "remove" : "check"} /></span>
+        <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>
       </span>
       {hasLabel || hasDesc ? <span className="dk-checkbox__text" key="text">
         {hasLabel ? <span className="dk-checkbox__label" id={labelId} key="label">{props.children}</span> : null}

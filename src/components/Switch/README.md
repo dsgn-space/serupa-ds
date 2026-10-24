@@ -41,6 +41,7 @@ const { Switch } = window.Serupa;
 | Hover | `field-border-hover` off, `primary-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
+| Read-only | Looks as it is, with a default cursor and no hover change |
 | Disabled | 50% opacity and a `not-allowed` cursor; also inside a disabled fieldset |
 
 The thumb slides in 150ms (`duration-150`, `ease-in-out`) and jumps with `prefers-reduced-motion`. It follows the text direction: in right-to-left pages it starts on the right.
@@ -49,6 +50,7 @@ The thumb slides in 150ms (`duration-150`, `ease-in-out`) and jumps with `prefer
 
 - A native checkbox with `role="switch"`: Space flips it, forms submit it (as a checkbox), and screen readers say "on" or "off".
 - The label names it; a description is read after it. The thumb is decorative.
+- `readOnly` keeps it focusable and read out with `aria-readonly`, but a click or Space doesn't flip it, and `onChange` doesn't run (your `onClick` does). The browser's own `readonly` does nothing on a checkbox, so Switch cancels the click. An on read-only switch is still submitted, which `disabled` isn't.
 - In forced-colors mode the track gets a border and the thumb and on track use system colors.
 - The label and description keep 4.5:1; the tracks on the page, each thumb on its track (at rest and on hover) and the focus ring 3:1, in all six themes (`Switch.test.tsx`).
 
@@ -60,7 +62,8 @@ The thumb slides in 150ms (`duration-150`, `ease-in-out`) and jumps with `prefer
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | A 28×16px track and 12px thumb with `text-xs`; 36×20 and 16 with `text-sm`; 44×24 and 20 with `text-base` |
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `labelPosition` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
-| `invalid` | boolean | `false` | A danger track while off, a danger focus ring, and `aria-invalid` |
+| `invalid` | boolean | `false` | A 2px danger edge on the track (on or off), a danger focus ring, and `aria-invalid` |
+| `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't flip it; an on switch is still submitted |
 
 Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox" role="switch">` (`type` and `role` can't be changed). `className` and `style` go to the `<label>` around it, which has `data-component="switch"` and `data-size`.
 
@@ -80,7 +83,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
 | `--switch-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
-| `--switch-invalid` | `danger` | The track while off, and the focus ring, when invalid |
+| `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
 | `--switch-width-sm` / `-md` / `-lg` | `spacing-7` / `spacing-9` / `spacing-11` | Track widths (28, 36, 44px) |
 | `--switch-height-sm` / `-md` / `-lg` | `spacing-4` / `spacing-5` / `spacing-6` | Track heights (16, 20, 24px) |
 | `--switch-thumb-size-sm` / `-md` / `-lg` | `spacing-3` / `spacing-4` / `spacing-5` | Thumb sizes (12, 16, 20px) |

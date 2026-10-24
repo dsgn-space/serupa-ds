@@ -12,19 +12,19 @@ import { PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
-  'All components (index.js)': 52,   // NumberInput's locale parsing and formatting (internal/numbers.ts)
-  'Button alone': 12,
-  'Dialog alone': 13.5,   // 13.01 after the scroll lock gutter and the shared locale hook; most of it is the 73 built-in icons, which R7 drops
-  'components.css': 38,
+  'All components (index.js)': 55,   // 46.8 once each component imports only its own icons (R7); 52.2 with R21–R28, Meter and CopyButton
+  'Button alone': 5.5,   // 5.1, without any icon data (R7)
+  'Dialog alone': 6.5,   // 6.2, with only its close icon (R7)
+  'components.css': 40.5,   // 38.2 after R11 put the hover rules in @media (hover: hover); about 39.6 with Meter, CopyButton and RelativeTime
   'utilities.css': 168,
   'bundle.css': 206,
-  'base.css': 1.5,
+  'base.css': 1.85,   // 1.74 with the print styles (R12)
   'theme.js': 2,
   'serupa.iife.js': 600,
 };
 
 const gz = (buf) => zlib.gzipSync(buf, { level: 9 }).length;
-// The full icon set is a dynamic import(): a project loads it only when a page draws a name outside the built-in icons.
+// Icons drawn by name are a dynamic import(): a project loads them only when a page draws an icon by its name.
 const lazy = { name: 'lazy', setup(b) { b.onResolve({ filter: /.*/ }, (a) => a.kind === 'dynamic-import' ? { path: a.path, external: true } : undefined); } };
 const bundled = async (code) => gz((await esbuild.build({ stdin: { contents: code, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom'], plugins: [lazy], logLevel: 'silent' })).outputFiles[0].contents);
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));
@@ -43,6 +43,7 @@ if (process.env.GITHUB_STEP_SUMMARY) {
 }
 done(report('Size', rows.map((r) => ({
   name: `${r.name}: ${kib(r.now)} KiB gzipped, within ${r.budget} KiB`,
-  ok: r.now <= r.budget * 1024,
-  detail: `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
+  // Under 1 KiB means it wasn't measured (a budget number pasted in place of the measurement), not that it's tiny.
+  ok: r.now <= r.budget * 1024 && r.now >= 1024,
+  detail: r.now < 1024 ? 'not measured: its line in `size` must measure the build, not repeat the budget' : `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
 }))));

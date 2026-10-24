@@ -55,7 +55,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 | `size`, `invalid` | | `'md'`, `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `"HH:mm"`. |
 | `placeholder` | `string` | `"hh:mm am"` or `"hh:mm"` | |
-| `listLabel` | `string` | `"Choose time"` | The list's name, and the clock button's. |
+| `listLabel` | `string` | `"Choose a time"` | The list's name, and the clock button's. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 
@@ -71,7 +71,8 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-list-bg` | `surface-overlay` | The list's background. |
 | `--time-picker-list-border` | `border-overlay` | The list's outline. |
 | `--time-picker-option-color` | `text` | A time in the list. |
-| `--time-picker-option-bg-active` | `surface-muted` | The highlighted time (pointer or keyboard). |
+| `--time-picker-option-bg-active` | `highlight` | The highlighted time (pointer or keyboard). |
+| `--time-picker-option-indicator` | `primary` | The 2px bar at the highlighted time's start. |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
 | `--time-picker-list-shadow` | `shadow-lg` | The list's shadow. |
 | `--time-picker-list-radius` | `rounded-lg` | The list's corners (8px). |

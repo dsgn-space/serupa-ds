@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Slider: a rounded track (field-border, 3:1 on the surface) with the selected part in primary, and one or two
    round thumbs (field inside, a 2px primary ring, shadow-sm) centered on their values. sm: 4px track, 16px
-   thumb; md: 6px, 20px. The whole thumb-high strip takes presses. Disabled: faded.
+   thumb; md: 6px, 20px. The whole thumb-high strip takes presses. Invalid: the fill and ring turn danger. Read-only: no grab cursor, and presses and keys do nothing. Disabled: faded.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-slider {
@@ -27,7 +27,10 @@
 }
 .dk-slider__thumb:focus { outline: none; }
 .dk-slider__thumb:focus-visible { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:active { cursor: grabbing; scale: var(--scale-110); }
+.dk-slider:not(.dk-slider--disabled, .dk-slider--readonly) .dk-slider__thumb:active { cursor: grabbing; scale: var(--scale-110); }
+.dk-slider--invalid .dk-slider__fill { background: var(--slider-invalid, var(--danger)); }
+.dk-slider--invalid .dk-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
+.dk-slider--readonly, .dk-slider--readonly .dk-slider__thumb { cursor: default; }
 .dk-slider--disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-slider--disabled .dk-slider__thumb { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .dk-slider__thumb { transition: none; } }

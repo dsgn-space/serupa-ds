@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    TimePicker: an Input box (dk-input) with a muted clock button at the end, and a list of times under it: surface,
    a 1px border, 8px corners, shadow-lg, 4px padding, at most 240px tall and as wide as the field (at least
-   160px). Options are 32px; the highlighted one gets surface-muted, the chosen one a primary check.
+   160px). Options are 32px; the highlighted one gets highlight with a 2px primary bar at its start, the chosen one a primary check.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1)); padding-inline-end: var(--spacing-1); }
@@ -11,7 +11,7 @@
   border: var(--spacing-0); border-radius: var(--rounded-sm); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: pointer;
 }
 .dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
-.dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--surface-muted)); color: var(--time-picker-button-hover, var(--text)); }
+@media (hover: hover) { .dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--surface-muted)); color: var(--time-picker-button-hover, var(--text)); } }
 .dk-time-picker__button:disabled { cursor: not-allowed; }
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-50));
@@ -28,7 +28,9 @@
   min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-0) var(--spacing-2);
   border-radius: var(--rounded-md); font-variant-numeric: tabular-nums; cursor: pointer; user-select: none;
 }
-.dk-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--surface-muted)); }
+.dk-time-picker__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
+.dk-time-picker__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-time-picker__option--active { background: var(--time-picker-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--time-picker-option-indicator, var(--primary)); }
 .dk-time-picker__option--selected { font-weight: var(--font-medium); }
 .dk-time-picker__check { color: var(--time-picker-check, var(--primary)); font-size: var(--spacing-4); }
 @media (forced-colors: active) { .dk-time-picker__option--active { outline: var(--border-width-1) solid Highlight; } .dk-time-picker__list { border-color: CanvasText; } }

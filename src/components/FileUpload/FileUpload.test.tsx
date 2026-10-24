@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 
 const file = (name: string, type: string, size: number) => new File([new Uint8Array(size).fill(1)], name, { type });
@@ -90,6 +91,35 @@ describe('FileUpload', () => {
     await expect.poll(() => list(el).length).toBe(0);
   });
 
+  test('in a Field: the button is named "Due date, Choose a file" and described by the Field\'s hint, then its own; outside a Field it keeps its own name', async () => {
+    await render(<>
+      <Field label="Due date" hint="The signed form"><FileUpload data-testid="fu1" hint="PDF, up to 5 MB" /></Field>
+      <FileUpload data-testid="fu2" />
+    </>);
+    const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    const b = choose(root('fu1'));
+    expect([text(b.getAttribute('aria-labelledby')), text(b.getAttribute('aria-describedby')), root('fu1').getAttribute('aria-describedby')])
+      .toEqual(['Due date / Choose a file', 'The signed form / PDF, up to 5 MB', null]);
+    expect([choose(root('fu2')).getAttribute('aria-labelledby'), choose(root('fu2')).textContent]).toEqual([null, 'Choose a file']);
+  });
+
+  test('ref.current.focus() and autoFocus land on the choose button, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const on = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    await render(<>
+      <FileUpload id="ffa" autoFocus />
+      <FileUpload id="ffr" ref={on} />
+      <FileUpload id="ffd" ref={off} disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(choose(rootOf('ffa')));
+    expect(rootOf('ffa').hasAttribute('autofocus')).toBe(false);
+    on.current!.focus();
+    expect(document.activeElement).toBe(choose(rootOf('ffr')));
+    off.current!.focus();
+    expect(document.activeElement).toBe(choose(rootOf('ffr')));
+    expect(on.current).toBe(rootOf('ffr'));
+  });
+
   test('disabled: the button and input are disabled, the area faded', async () => {
     await render(<FileUpload id="dis" disabled />);
     const el = rootOf('dis');
@@ -97,11 +127,48 @@ describe('FileUpload', () => {
     await expect.poll(() => getComputedStyle(el.querySelector('.dk-file-upload__zone')!).opacity).toBe('0.5');
   });
 
+  test('in a Field with an error and required: the button is aria-invalid and described by "Required" first, the native input required, the area outlined in danger; nothing leaks onto the wrapper and React doesn\'t warn', async () => {
+    const seen: string[] = [], orig = console.error;
+    console.error = (...a: unknown[]) => { seen.push(a.map(String).join(' ')); };
+    try {
+      await render(<>
+        <Field label="Contract" error="Add the signed contract" required><FileUpload data-testid="fi1" required /></Field>
+        <FileUpload id="fi2" invalid readOnly={false} />
+        <FileUpload id="fi3" />
+      </>);
+    } finally { console.error = orig; }
+    const root = document.querySelector<HTMLElement>('[data-testid=fi1]')!, b = choose(root);
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    expect([b.getAttribute('aria-invalid'), b.hasAttribute('aria-required'), text(b.getAttribute('aria-describedby')), input(root).required])
+      .toEqual(['true', false, 'Required / Add the signed contract', true]);
+    expect(['invalid', 'required', 'readonly', 'aria-invalid', 'aria-required', 'aria-readonly'].filter((a) => root.hasAttribute(a))).toEqual([]);
+    expect(seen.filter((m) => /invalid|required|readOnly/i.test(m))).toEqual([]);
+    const zone = (id: string) => getComputedStyle(rootOf(id).querySelector('.dk-file-upload__zone')!);
+    expect([rootOf('fi2').className, zone('fi2').borderTopStyle, zone('fi2').borderTopColor === zone('fi3').borderTopColor, choose(rootOf('fi3')).hasAttribute('aria-invalid')])
+      .toEqual(['dk-file-upload dk-file-upload--invalid', 'solid', false, false]);
+  });
+
+  test('readOnly: the files are listed (and submitted) without remove buttons; the button stays focusable (aria-disabled) but opens no picker; dropped files are ignored', async () => {
+    const changes: string[] = [];
+    await render(<form id="rof"><FileUpload id="ro" name="doc" readOnly files={[file('a.pdf', 'application/pdf', 10)]} onFilesChange={(f) => { changes.push(f.map((x) => x.name).join()); }} /></form>);
+    const el = rootOf('ro'), w = watchPicker(el), b = choose(el);
+    await expect.poll(() => input(el).files?.length).toBe(1);
+    expect([names(el), el.querySelector('.dk-file-upload__item button'), b.disabled, b.getAttribute('aria-disabled'), input(el).disabled, el.className])
+      .toEqual(['a.pdf', null, false, 'true', false, 'dk-file-upload dk-file-upload--readonly']);
+    b.focus();
+    expect(document.activeElement).toBe(b);
+    await userEvent.keyboard('{Enter}');
+    await userEvent.click(el.querySelector('.dk-file-upload__zone')!, { position: { x: 4, y: 4 } });
+    const dt = new DataTransfer(); dt.items.add(file('b.pdf', 'application/pdf', 10));
+    el.querySelector('.dk-file-upload__zone')!.dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
+    expect([w.opened, changes, names(el), new FormData(document.getElementById('rof') as HTMLFormElement).getAll('doc').length]).toEqual([0, [], 'a.pdf', 1]);
+  });
+
   test('formatFileSize: 0 B, 12 B, 1023 B, 1 KB, 1.5 KB, 10 MB, 3.3 GB', () => {
     expect([0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map(formatFileSize).join('|')).toBe('0 B|12 B|1023 B|1 KB|1.5 KB|10 MB|3.3 GB');
   });
 
-  test('contrast: text 4.5:1 (also while dragging), the icon and outline 3:1, in all six themes', async () => {
+  test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in all six themes', async () => {
     await render(<Many />);
     const el = q(many);
     await userEvent.upload(input(el), file('photo.png', 'image/png', 10));
@@ -118,11 +185,14 @@ describe('FileUpload', () => {
       const zo = getComputedStyle(zone).backgroundColor;
       pairs.push(['hint while dragging', c('.dk-file-upload__hint'), zo, 4.5], ['title while dragging', c('.dk-file-upload__title'), zo, 4.5]);
       zone.classList.remove('dk-file-upload__zone--over');
+      el.classList.add('dk-file-upload--invalid');
+      pairs.push(['invalid outline', getComputedStyle(zone).borderTopColor, pg, 3]);
+      el.classList.remove('dk-file-upload--invalid');
       for (const [k, fg, bg, min] of pairs) { const r = contrast(fg, bg); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove(); document.body.style.background = prevBg;
     expect(low).toEqual([]);
-    expect(n).toBe(54);
+    expect(n).toBe(60);
   });
 
   test('--file-upload-zone-bg overrides one upload', async () => {

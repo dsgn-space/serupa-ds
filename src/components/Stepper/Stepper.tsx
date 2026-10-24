@@ -1,10 +1,12 @@
 "use client";
 import * as React from "react";
-import { cn, omit } from "../../internal/cn";
+import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { displayNumber } from "../../internal/numbers";
+import { useLocale, useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -26,8 +28,8 @@ export interface StepperProps extends React.HTMLAttributes<HTMLElement> {
   size?: 'sm' | 'md';
   /** Makes completed steps buttons that go back to them. */
   onStepClick?: (index: number) => void;
-  /** Words read out or shown: { completed: 'completed', error: 'has an error', optional: 'Optional' }. */
-  labels?: { completed?: string; error?: string; optional?: string };
+  /** Words read out or shown: { completed: 'completed', error: 'has an error', optional: 'Optional', stepOf: (step, total) => `Step ${step} of ${total}` }. */
+  labels?: { completed?: string; error?: string; optional?: string; stepOf?: (step: number, total: number) => string };
 }
 
 const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, labels: 1, className: 1 } as const;
@@ -36,19 +38,41 @@ const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, lab
    circle, a title and an optional description; completed steps show a check and fill in primary, the current
    one is filled and ringed, a step with status "error" turns danger. Horizontal (default), joined by lines, or
    vertical. A <nav> around an <ol>; the current step has aria-current="step", and completed or error steps say
-   so to screen readers. With onStepClick, completed steps are buttons that go back to them. */
+   so to screen readers. With onStepClick, completed steps are buttons that go back to them. When a horizontal
+   Stepper is too narrow for its titles side by side (a phone, 400% zoom), it keeps the circles and shows one line
+   under them, "Step 2 of 4: Profile"; the titles stay in the list for screen readers. */
 /** Where people are in a task split into steps: numbered circles joined by lines. */
 export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Stepper", function Stepper(props, ref) {
   const sds = useSerupa();
+  const locale = useLocale();
   const rest = omit(props, OWN);
   const steps = props.steps || [];
   const current = Math.max(0, Math.min(steps.length, Math.floor(Number(props.current)) || 0));
   const vertical = props.orientation === "vertical";
   const size = props.size === "sm" ? "sm" : "md";
-  const L = { completed: sds.labels.completed, error: sds.labels.hasError, optional: sds.labels.optional, ...(props.labels || {}) };
+  const L = { completed: sds.labels.completed, error: sds.labels.hasError, optional: sds.labels.optional, stepOf: sds.labels.stepOf, ...(props.labels || {}) };
+  const nav = React.useRef<HTMLElement | null>(null);
+  const [compact, setCompact] = React.useState(false);
+  // Measure the titles side by side (at their full width, with the shortest lines) against the width there is.
+  useIsoLayoutEffect(() => {
+    const el = nav.current;
+    if (!el || vertical) { setCompact(false); return; }
+    const fit = () => {
+      el.classList.add("dk-stepper--measure");
+      const need = (el.firstElementChild as HTMLElement).scrollWidth;
+      el.classList.remove("dk-stepper--measure");
+      setCompact(need > el.clientWidth);
+    };
+    fit();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [vertical, steps]);
+  const shown = Math.min(current, steps.length - 1);
   return (
-    <nav {...rest} ref={ref} aria-label={rest["aria-label"] || (rest["aria-labelledby"] ? undefined : sds.labels.progress)}
-      className={cn("dk-stepper", vertical ? "dk-stepper--vertical" : "dk-stepper--horizontal", "dk-stepper--size-" + size, props.className)}
+    <nav {...rest} ref={(node) => { nav.current = node; setRef(ref, node); }} aria-label={rest["aria-label"] || (rest["aria-labelledby"] ? undefined : sds.labels.progress)}
+      className={cn("dk-stepper", vertical ? "dk-stepper--vertical" : "dk-stepper--horizontal", compact && "dk-stepper--compact", "dk-stepper--size-" + size, props.className)}
       data-component="stepper" data-orientation={vertical ? "vertical" : "horizontal"} data-size={size}>
       <ol className="dk-stepper__list">
         {steps.map((s, i) => {
@@ -60,7 +84,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
             <li key={i} className={cn("dk-stepper__step", "dk-stepper__step--" + state, i < current && "dk-stepper__step--done")} data-state={state} aria-current={i === current ? "step" : undefined}>
               <Head className="dk-stepper__head" {...(clickable ? { type: "button", onClick: () => props.onStepClick!(i) } : {})}>
                 <span className="dk-stepper__indicator" aria-hidden>
-                  {state === "complete" ? <Icon name="check" /> : state === "error" ? <Icon name="priority_high" /> : i + 1}
+                  {state === "complete" ? <Icon icon={icons.Check} /> : state === "error" ? <Icon icon={icons.PriorityHigh} /> : displayNumber(i + 1, locale)}
                 </span>
                 <span className="dk-stepper__text">
                   <span className="dk-stepper__title">
@@ -76,6 +100,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
           );
         })}
       </ol>
+      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length) + ": "}<span className="dk-stepper__title">{steps[shown].title}</span></p> : null}
     </nav>
   );
 });

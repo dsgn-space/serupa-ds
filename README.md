@@ -14,10 +14,10 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v8.0.0
+npm install github:diki-stwn/serupa-ds#v9.0.0
 ```
 
-Always pin a tag (`#v8.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v9.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
 
@@ -98,7 +98,7 @@ npx serupa-purge src -o public/bundle.min.css --components
 | File | What it is |
 | --- | --- |
 | `tokens.css` | Every token as a CSS variable, the six themes, and the fonts. Load it first. |
-| `dist/base.css` | Page defaults (font, colors, focus style, reduced motion), all inside `:where()` so any class wins. |
+| `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, and `data-print-urls` on a container prints each outside link's address after it. |
 | `dist/components.css` | The component styles (`dk-*`), about 90 KB. |
 | `dist/utilities.css` | Every utility class. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
@@ -119,12 +119,12 @@ React components, styled only with this system's tokens. Each one's guide (when 
 
 | Group | Components |
 | --- | --- |
-| Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `Link` |
+| Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `CopyButton`, `Link` |
 | Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload` |
-| Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Badge`, `EmptyState` |
+| Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Meter`, `Badge`, `EmptyState` |
 | Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
 | Navigation | `Navbar`, `Sidebar`, `Tabs`, `Breadcrumb`, `Pagination`, `Stepper` |
-| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd` |
+| Content | `Card`, `Table`, `List`, `SortableList`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd` |
 | Layout and type | `Stack`, `Grid`, `Container`, `Divider`, `Heading`, `Text`, `VisuallyHidden` |
 
 Shared conventions, so learning one component teaches the rest:

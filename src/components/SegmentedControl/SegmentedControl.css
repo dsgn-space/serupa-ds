@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    SegmentedControl: segments side by side in a muted, outlined box (24 or 32px tall, 2px inside it). Labels are
    text-muted and medium; the selected one is text, on a raised surface (outline, shadow-sm) that slides from
-   segment to segment. Equal segments when fullWidth. Disabled: faded.
+   segment to segment. Equal segments when fullWidth. Invalid: a danger outline. Read-only: no pointer cursor or hover. Disabled: faded.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-segmented {
@@ -36,13 +36,18 @@
 .dk-segmented__icon { display: inline-flex; }
 .dk-segmented__icon .dk-icon { font-size: var(--spacing-4); }
 .dk-segmented--size-sm .dk-segmented__icon .dk-icon { font-size: var(--spacing-3\.5); }
-.dk-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); }
+@media (hover: hover) { .dk-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); } }
 .dk-segmented__item--selected { color: var(--segmented-control-text-selected, var(--text)); }
 .dk-segmented__item:focus { outline: none; }
 .dk-segmented__item:focus-visible { outline: var(--focus-ring-width) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-segmented__item:disabled { cursor: not-allowed; opacity: var(--opacity-disabled); }
+.dk-segmented--invalid { border-color: var(--segmented-control-invalid, var(--danger)); }
+.dk-segmented--readonly .dk-segmented__item { cursor: default; }
+/* Read-only: hovering an unselected segment doesn't brighten it, since a click won't choose it. */
+@media (hover: hover) { .dk-segmented--readonly .dk-segmented__item:not(.dk-segmented__item--selected):hover { color: var(--segmented-control-text, var(--text-muted)); } }
 .dk-segmented--disabled { opacity: var(--opacity-disabled); }
 .dk-segmented--disabled .dk-segmented__item:disabled { opacity: var(--opacity-100); }
 @media (prefers-reduced-motion: reduce) { .dk-segmented__indicator, .dk-segmented__item { transition: none; } }
-@media (forced-colors: active) { .dk-segmented__indicator { background: Highlight; border-color: Highlight; } .dk-segmented__item--selected { color: HighlightText; forced-color-adjust: none; } }
+/* The selected label keeps HighlightText on hover too: the hover color, kept as is, was dark on the dark Highlight. */
+@media (forced-colors: active) { .dk-segmented__indicator { background: Highlight; border-color: Highlight; } .dk-segmented__item--selected { color: HighlightText; forced-color-adjust: none; } @media (hover: hover) { .dk-segmented__item--selected:hover:not(:disabled) { color: HighlightText; } } }
 }

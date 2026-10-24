@@ -6,6 +6,7 @@ import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   /** BreadcrumbItems, from the top level down to the current page (the last one). */
@@ -16,7 +17,7 @@ export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   maxItems?: number;
   /** The nav's accessible name. Default: "Breadcrumb". */
   "aria-label"?: string;
-  /** The "…" button's accessible name. Default: "Show the hidden pages". */
+  /** The "…" button's accessible name. Default: "Show all pages". */
   expandLabel?: string;
 }
 
@@ -66,7 +67,7 @@ export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps
       if (a) a.focus();
     }
   }, [expanded]);
-  const sep = (key: string) => <li key={key} className="dk-breadcrumb__separator" aria-hidden="true">{separator === "slash" ? "/" : <><Icon name="chevron_right" className="dk-breadcrumb__ltr" /><Icon name="chevron_left" className="dk-breadcrumb__rtl" /></>}</li>;
+  const sep = (key: string) => <li key={key} className="dk-breadcrumb__separator" aria-hidden="true">{separator === "slash" ? "/" : <><Icon icon={icons.ChevronRight} className="dk-breadcrumb__ltr" /><Icon icon={icons.ChevronLeft} className="dk-breadcrumb__rtl" /></>}</li>;
   const out: React.ReactNode[] = [];
   shown.forEach(({ el, i }, n) => {
     if (n > 0) out.push(sep("s" + i));

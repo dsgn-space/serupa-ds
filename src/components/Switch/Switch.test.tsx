@@ -129,9 +129,10 @@ describe('Switch', () => {
     expect([a.id, c.outlineStyle, c.outlineWidth, c.outlineOffset, box('bad').bs]).toEqual(['bad', 'solid', '2px', '2px', 'none']);
   });
 
-  test('invalid: aria-invalid and a danger track while off', async () => {
+  test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
-    await expect.poll(() => box('inv').bg).toBe(color('var(--danger)'));
+    await expect.poll(() => box('inv').bg).toBe(color('var(--field-border)'));
+    expect(css(el('inv')).boxShadow).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
 
@@ -140,6 +141,27 @@ describe('Switch', () => {
     await userEvent.click(el('dis'), { force: true });
     const d = box('dis');
     expect([d.disabled, d.op, d.cur, d.checked]).toEqual([true, '0.5', 'not-allowed', false]);
+  });
+
+  test('readOnly: focusable with aria-readonly; a click on the label or track and Space leave it as it was, onClick still runs, onChange doesn\'t, and an on switch is submitted', async () => {
+    const onChange = vi.fn(), onClick = vi.fn();
+    await render(<form id="ro-form"><Switch id="ro" name="wifi" readOnly defaultChecked onChange={onChange} onClick={onClick}>Wi-Fi</Switch><Switch id="ro2" readOnly>Bluetooth</Switch></form>);
+    const lab = (id: string) => el(id).closest('.dk-switch') as HTMLElement;
+    expect([el('ro').getAttribute('aria-readonly'), lab('ro').className.includes('dk-switch--readonly'), css(lab('ro')).cursor]).toEqual(['true', true, 'default']);
+    await userEvent.click(lab('ro'));
+    await userEvent.click(el('ro2'));
+    el('ro').focus();
+    await userEvent.keyboard(' ');
+    expect([el('ro').checked, el('ro2').checked, document.activeElement === el('ro'), onChange.mock.calls.length, onClick.mock.calls.length]).toEqual([true, false, true, 0, 2]);
+    expect(new FormData(document.getElementById('ro-form') as HTMLFormElement).get('wifi')).toBe('on');
+  });
+
+  test('readOnly and controlled (checked without onChange): no React warning, and it stays on', async () => {
+    const warned: unknown[] = [], warn = console.error;
+    console.error = (...a: unknown[]) => { warned.push(a[0]); };
+    try { await render(<Switch id="roc" checked readOnly>Locked</Switch>); } finally { console.error = warn; }
+    await userEvent.click(el('roc').closest('.dk-switch') as HTMLElement);
+    expect([el('roc').checked, warned]).toEqual([true, []]);
   });
 
   test('in a Field: labelled and described by the hint', async () => {
@@ -171,7 +193,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--field-border)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--field-border)', 3], ['off thumb, hover', 'var(--field)', 'var(--field-border-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid track', 'var(--danger)', 'var(--surface)', 3], ['thumb on invalid track', 'var(--field)', 'var(--danger)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--field-border)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--field-border)', 3], ['off thumb, hover', 'var(--field)', 'var(--field-border-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);

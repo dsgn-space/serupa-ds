@@ -10,6 +10,8 @@ import { Icon } from '../src/components/Icon/Icon';
 import { Button } from '../src/components/Button/Button';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
 import { customIcons, isIconData } from '../src/icons';
+import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
+import labelsSource from '../src/internal/labels.ts?raw';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -157,6 +159,40 @@ export function IconSizes() {
   return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
     {sizes.map(([s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
       <Icon name="favorite" size={s} /><strong>{s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+    </div>)}
+  </div>;
+}
+
+// Which components say each label: the doc comment above its key (or group of keys) in SerupaLabels.
+const labelUse: Record<string, string> = {};
+{
+  let use = '';
+  for (const line of labelsSource.slice(labelsSource.indexOf('export interface SerupaLabels'), labelsSource.indexOf('\n}\n')).split('\n').slice(1)) {
+    const doc = /^\s*\/\*\*\s*(.*?)\s*\*\/$/.exec(line), key = /^\s*(\w+):/.exec(line);
+    if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
+  }
+}
+const word = (v: SerupaLabels[keyof SerupaLabels]) => (typeof v === 'function' ? v('n' as unknown as number) : v);
+/** Every word the components say on their own, in English and Indonesian, with where it's used. */
+export function LabelTable() {
+  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <thead><tr><th style={cell}>Key</th><th style={cell}>English</th><th style={cell}>Indonesian (<code>idLabels</code>)</th><th style={cell}>Where</th></tr></thead>
+    <tbody>{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k}>
+      <td style={cell}><code>{k}</code></td><td style={cell}>{word(DEFAULT_LABELS[k])}</td><td style={cell}>{word(idLabels[k])}</td><td style={cell}>{labelUse[k]}</td></tr>)}</tbody>
+  </table>;
+}
+
+const LEVELS: [string, string, string, string][] = [
+  ['Page', 'surface', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border-raised', 'shadow-md'],
+  ['Floating', 'surface-overlay', 'border-overlay', 'shadow-lg'], ['Modal', 'surface-overlay', 'border-overlay', 'shadow-xl'],
+];
+/** The elevation levels drawn with their tokens, on a light and a dark page side by side. */
+export function ElevationLevels() {
+  return <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, margin: '16px 0 24px' }}>
+    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--surface)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
+      {LEVELS.map(([name, bg, edge, shadow]) => <div key={name} style={{ background: `var(--${bg})`, border: `1px solid ${edge === 'transparent' ? 'transparent' : `var(--${edge})`}`, boxShadow: shadow === 'none' ? 'none' : `var(--${shadow})`, borderRadius: 8, padding: '12px 16px', fontSize: 14 }}>
+        <strong>{name}</strong> <span style={{ color: 'var(--text-muted)' }}>{mode}: <code>{bg}</code>{shadow !== 'none' && <>, <code>{shadow}</code></>}</span>
+      </div>)}
     </div>)}
   </div>;
 }

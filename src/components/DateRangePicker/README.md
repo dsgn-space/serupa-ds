@@ -54,12 +54,13 @@ const [stay, setStay] = React.useState<DateRange>({ start: null, end: null });
 | `months` | `1 \| 2` | `2` | Months side by side in the popup (stacked below 640px). |
 | `locale`, `weekStartsOn` | | the browser's | As in DatePicker. |
 | `size`, `invalid`, `disabled`, `readOnly` | | | Like Input. |
+| `required` | `boolean` | `false` | Both fields are required (and `aria-required`), so a form won't submit until each end has a date. Field's `required` sets `aria-required` on both. |
 | `id` | `string` | | The start field's id, so Field or `<label htmlFor>` focuses it. |
 | `startLabel`, `endLabel` | `string` | `"Start date"`, `"End date"` | The fields' names. |
 | `startName`, `endName` | `string` | | Hidden inputs that send each end as `yyyy-mm-dd`. |
 | `buttonLabel` | `string` | `"Choose dates"` | The calendar button's name, and the popup's. |
 
-`className`, `ref`, `aria-label` and other props go to the box (`role="group"`); `aria-describedby` and `aria-required` (which Field passes) go to both fields.
+`className`, `ref`, `aria-label` and other props go to the box (`role="group"`); `aria-describedby` and `aria-required` (which Field passes) go to both fields. Its `focus()` and `autoFocus` move focus to the start field, so a form library that focuses the first invalid field after a failed submit lands on it.
 
 ## Component tokens
 

@@ -30,7 +30,7 @@
   cursor: inherit;
   transition: background-color var(--duration-150) var(--ease-in-out), border-color var(--duration-150) var(--ease-in-out);
 }
-.dk-checkbox:hover .dk-checkbox__input:not(:disabled) { --dk-checkbox-bd: var(--checkbox-border-hover, var(--field-border-hover)); --dk-checkbox-fill: var(--checkbox-bg-checked-hover, var(--primary-hover)); }
+@media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input:not(:disabled, [readonly]) { --dk-checkbox-bd: var(--checkbox-border-hover, var(--field-border-hover)); --dk-checkbox-fill: var(--checkbox-bg-checked-hover, var(--primary-hover)); } }
 .dk-checkbox__input:checked, .dk-checkbox__input:indeterminate { background: var(--dk-checkbox-fill); border-color: var(--dk-checkbox-fill); }
 .dk-checkbox__icon { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--checkbox-icon-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-checkbox__icon .dk-icon { font-size: var(--dk-checkbox-icon); }
@@ -40,9 +40,12 @@
   outline: var(--focus-ring-width) solid var(--dk-checkbox-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid: a danger border while unchecked, and a danger focus ring. A checked box keeps its fill. */
-.dk-checkbox--invalid .dk-checkbox__input, .dk-checkbox--invalid:hover .dk-checkbox__input:not(:disabled) { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); }
+.dk-checkbox--invalid .dk-checkbox__input { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); }
+@media (hover: hover) { .dk-checkbox--invalid:hover .dk-checkbox__input:not(:disabled, [readonly]) { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); } }
 .dk-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0); }
 .dk-checkbox__description { color: var(--checkbox-description-color, var(--text-muted)); }
+/* Read-only: no pointer cursor or hover, since a click won't change it. */
+.dk-checkbox--readonly { cursor: default; }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-checkbox__input:disabled:not(:checked, :indeterminate) { background: var(--checkbox-bg-disabled, var(--surface-muted)); }

@@ -82,13 +82,16 @@ if (D) {
     PasswordInput: h(D.PasswordInput, { 'aria-label': 'Password' }),
     Popover: h(D.Popover, { trigger: h(D.Button, null, 'Share'), title: 'Share' }, 'Body'),
     Progress: h(D.Progress, { value: 40, label: 'Uploading' }),
+    CopyButton: h(D.CopyButton, { value: 'x' }),
+    Meter: h(D.Meter, { value: 7, max: 10, high: 8, optimum: 0, label: 'Storage' }),
     SearchInput: h(D.SearchInput, { 'aria-label': 'Search', defaultValue: 'tokens' }),
     SegmentedControl: h(D.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }] }),
     Sidebar: h(D.Sidebar, null, h(D.SidebarSection, { title: 'Workspace' }, h(D.SidebarItem, { href: '/', icon: 'home', label: 'Home', active: true }))),
     Slider: h(D.Slider, { 'aria-label': 'Price', defaultValue: [20, 80] }),
+    SortableList: h(D.SortableList, { 'aria-label': 'Tasks', items: ['A', 'B'], getKey: (i) => i, getLabel: (i) => i, renderItem: (i) => i, onReorder: () => {} }),
     SerupaProvider: h(D.SerupaProvider, { locale: 'id-ID', labels: D.idLabels }, h(D.Pagination, { count: 3 })),
     Stepper: h(D.Stepper, { current: 1, steps: [{ title: 'Account' }, { title: 'Plan' }, { title: 'Pay' }] }),
-    Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
+    Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableSelectCell, { label: 'Select Ada' }), h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
     Tabs: h(D.Tabs, { defaultValue: 'a' }, h(D.TabList, { 'aria-label': 'Sections' }, h(D.Tab, { value: 'a' }, 'A'), h(D.Tab, { value: 'b' }, 'B')), h(D.TabPanel, { value: 'a' }, 'Panel')),
     TimePicker: h(D.TimePicker, { 'aria-label': 'Time', defaultValue: '14:30', name: 'time' }),
     Toaster: h(D.Toaster),
@@ -115,17 +118,24 @@ if (D) {
   [console.error, console.warn] = keep;
   t('no React warnings while rendering on the server', !warnings.length, warnings.slice(0, 3).join(' | '));
   t('version matches package.json', D.version === pkg.version, D.version);
-  // Icons: the ones the components use are in index.js and draw on the server; the full set is a separate chunk.
-  const iconHtml = (name) => renderToString(h(D.Icon, { name }));
-  t('a built-in icon ("close") draws on the server; another name ("sports_cricket") keeps its empty box until the full set loads', /<path d="/.test(iconHtml('close')) && !/<svg/.test(iconHtml('sports_cricket')), iconHtml('sports_cricket'));
+  // Icons: each component imports the icons it draws, so they draw on the server. A name drawn as a string loads in
+  // the browser (the components' icons from a small chunk, the rest from the full set), so on the server it's an empty box.
+  const iconHtml = (props) => renderToString(h(D.Icon, props));
+  t('a component draws its own icons on the server (Checkbox\'s check)', /<path d="/.test(renderToString(h(D.Checkbox, { defaultChecked: true, 'aria-label': 'Done' }))));
+  t('a name ("close", "sports_cricket") keeps its empty box on the server until it loads in the browser', !/<svg/.test(iconHtml({ name: 'close' })) && !/<svg/.test(iconHtml({ name: 'sports_cricket' })), iconHtml({ name: 'close' }));
   // index.js and every module it imports (dist/js/), as a bundler puts them together, without the full icon set.
-  const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js'], logLevel: 'silent' }).outputFiles[0].text;
+  const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js'], logLevel: 'silent' }).outputFiles[0].text;
   t('index.js leaves the full icon set out (loaded on demand) and stays under 150 KB gzipped', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 150 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by component() or named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
-  const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
+  const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
   const shaken = { Divider: alone('Divider'), toast: alone('toast') };
   t('a bundler drops the components a project doesn\'t import (Divider or toast alone: under 2 KB gzipped)', shaken.Divider < 2048 && shaken.toast < 2048, JSON.stringify(shaken));
+  // …and the icons they don't draw: Dialog keeps its close icon, Button keeps none.
+  const code = (name) => esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js'], logLevel: 'silent' }).outputFiles[0].text;
+  const drawn = (js) => [...js.matchAll(/name: "([a-z0-9_]+)",\s*d: "/g)].map((m) => m[1]);
+  const icons = { Button: drawn(code('Button')), Dialog: drawn(code('Dialog')) };
+  t('a bundler keeps only the icons a component draws (Button: none, Dialog: close)', !icons.Button.length && icons.Dialog.join() === 'close', JSON.stringify(icons));
   // React Server Components: the interactive components are client modules ("use client"), the rest render on the
   // server, and the helpers run there (tools/test/server-components/render.mjs).
   const rsc = spawnSync(process.execPath, ['--conditions=react-server', path.join(HERE, 'server-components', 'render.mjs'), path.join(PROJECT, 'dist')], { encoding: 'utf8' });
@@ -133,7 +143,7 @@ if (D) {
   try { sc = JSON.parse(rsc.stdout); } catch { /* reported below */ }
   t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 KB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
   // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
-  const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseSerupa\(|\buseLocale\(|\bon[A-Z]\w*=\{/;
+  const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\buseSerupa\(|\buseLocale\(|\bon[A-Z]\w*=\{/;
   const unmarked = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
     .filter((f) => { const src = read(`src/components/${f}`); return clientOnly.test(src) && !/^"use client";/.test(src); });
   t('every component module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));

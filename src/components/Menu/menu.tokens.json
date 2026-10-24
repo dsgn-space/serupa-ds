@@ -34,11 +34,31 @@
       },
       "item-bg-active": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.highlight}",
         "$description": "The highlighted item's background (hover and keyboard).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--menu-item-bg-active"
+          }
+        }
+      },
+      "item-indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "From the keyboard: the 2px bar at the highlighted item's start (3:1 on highlight). A destructive item uses its danger color.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menu-item-indicator"
+          }
+        }
+      },
+      "item-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menu-item-bg-pressed"
           }
         }
       },

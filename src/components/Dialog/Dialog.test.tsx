@@ -148,6 +148,36 @@ describe('Dialog', () => {
     await expect.poll(() => isOpen('alert')).toBe(false);
   });
 
+  test('stacked: a Dialog opened from inside another takes focus, and Escape, the × and its backdrop close only it; the next Escape closes the outer one', async () => {
+    const asks: string[] = [];
+    function Stack() {
+      const [outer, setOuter] = React.useState(true), [inner, setInner] = React.useState(false);
+      const ask = (k: string, set: (v: boolean) => void) => (v: boolean) => { asks.push(k + ':' + v); set(v); };
+      return <Dialog id="outer" open={outer} onOpenChange={ask('outer', setOuter)} title="Settings">
+        <Button id="more" onClick={() => setInner(true)}>More</Button>
+        <Dialog id="inner" open={inner} onOpenChange={ask('inner', setInner)} title="Advanced"><Input id="deep" aria-label="Deep" /></Dialog>
+      </Dialog>;
+    }
+    await render(<Stack />);
+    await expect.poll(() => isOpen('outer')).toBe(true);
+    for (const how of ['escape', 'close', 'backdrop'] as const) {
+      await userEvent.click(el('more'));
+      await expect.poll(() => isOpen('inner')).toBe(true);
+      await settled();
+      expect(dlg('inner').contains(document.activeElement)).toBe(true);
+      if (how === 'escape') await userEvent.keyboard('{Escape}');
+      else if (how === 'close') await userEvent.click(el('inner').querySelector('.dk-dialog__close')!);
+      else await userEvent.click(el('inner'), { position: { x: 5, y: 5 } });
+      await expect.poll(() => isOpen('inner')).toBe(false);
+      expect([how, isOpen('outer'), asks.join()]).toEqual([how, true, 'inner:false']);
+      expect(document.activeElement).toBe(el('more'));
+      asks.length = 0;
+    }
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => isOpen('outer')).toBe(false);
+    expect(asks.join()).toBe('outer:false');
+  });
+
   test('look: 24px padding, 12px corners, shadow-xl, 16px between parts, a text-lg semibold title, actions at the end; contrast: title and description 4.5:1 on the panel in all six themes; closed again, the page scrolls', async () => {
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);

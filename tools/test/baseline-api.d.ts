@@ -226,6 +226,7 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     description?: React.ReactNode;
     indeterminate?: boolean;
     invalid?: boolean;
+    readOnly?: boolean;
 }
 declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -297,6 +298,7 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     invalid?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
+    required?: boolean;
     id?: string;
     startLabel?: string;
     endLabel?: string;
@@ -386,6 +388,9 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "de
     maxSize?: number;
     maxFiles?: number;
     disabled?: boolean;
+    invalid?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
     name?: string;
     title?: React.ReactNode;
     buttonLabel?: string;
@@ -430,6 +435,7 @@ interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "al
     viewLabel?: string;
     onRemove?: () => void;
     removeLabel?: string;
+    priority?: boolean;
     frameProps?: React.HTMLAttributes<HTMLSpanElement>;
 }
 declare const Image: React.ForwardRefExoticComponent<ImageProps & React.RefAttributes<HTMLImageElement>>;
@@ -540,6 +546,8 @@ interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "mi
     incrementLabel?: string;
     locale?: string;
     formatOptions?: Intl.NumberFormatOptions;
+    currency?: string;
+    minorUnits?: boolean;
 }
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;
 type Entry = "end-ellipsis" | "start-ellipsis" | number;
@@ -581,6 +589,31 @@ interface PopoverProps {
 declare const Popover: ((props: PopoverProps) => React.ReactElement) & {
     displayName: string;
 };
+interface CopyButtonProps extends Omit<ButtonAsButtonProps, "icon" | "leftIcon" | "loading" | "loadingText" | "onCopy" | "rightIcon" | "value"> {
+    value: (() => Promise<string> | string) | string;
+    children?: React.ReactNode;
+    copiedLabel?: string;
+    iconOnly?: boolean;
+    timeout?: number;
+    onCopy?: (text: string) => void;
+    onCopyError?: (error: unknown) => void;
+}
+declare const CopyButton: React.ForwardRefExoticComponent<CopyButtonProps & React.RefAttributes<HTMLButtonElement>>;
+type MeterState = "none" | "optimum" | "poor" | "suboptimal";
+interface MeterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+    value: number;
+    min?: number;
+    max?: number;
+    low?: number;
+    high?: number;
+    optimum?: number;
+    size?: "lg" | "md" | "sm";
+    label?: React.ReactNode;
+    showValue?: boolean;
+    formatValue?: (value: number, min: number, max: number) => string;
+}
+declare function meterState(value: number, min: number, max: number, low?: number, high?: number, optimum?: number): MeterState;
+declare const Meter: React.ForwardRefExoticComponent<MeterProps & React.RefAttributes<HTMLDivElement>>;
 type ProgressTone = "danger" | "primary" | "success" | "warning";
 interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     value?: null | number;
@@ -639,6 +672,9 @@ interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDivElement
     fullWidth?: boolean;
     disabled?: boolean;
     name?: string;
+    invalid?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
 }
 declare const SegmentedControl: React.ForwardRefExoticComponent<SegmentedControlProps & React.RefAttributes<HTMLDivElement>>;
 type SelectOption = {
@@ -703,10 +739,31 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
         string
     ];
     name?: string;
+    invalid?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
 }
 declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
 };
+interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLUListElement>, "children" | "onChange"> {
+    items: readonly T[];
+    getKey: (item: T) => number | string;
+    getLabel: (item: T) => string;
+    renderItem: (item: T, state: {
+        index: number;
+        dragging: boolean;
+    }) => React.ReactNode;
+    onReorder: (items: T[], move: {
+        from: number;
+        to: number;
+    }) => void;
+    disabled?: boolean;
+    reorderLabel?: string;
+}
+declare const SortableList: <T>(props: SortableListProps<T> & {
+    ref?: React.Ref<HTMLUListElement>;
+}) => React.ReactElement;
 interface StackProps extends React.HTMLAttributes<HTMLElement> {
     direction?: "column" | "row";
     gap?: Space;
@@ -737,6 +794,7 @@ interface StepperProps extends React.HTMLAttributes<HTMLElement> {
         completed?: string;
         error?: string;
         optional?: string;
+        stepOf?: (step: number, total: number) => string;
     };
 }
 declare const Stepper: React.ForwardRefExoticComponent<StepperProps & React.RefAttributes<HTMLElement>>;
@@ -746,6 +804,7 @@ interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     description?: React.ReactNode;
     labelPosition?: "end" | "start";
     invalid?: boolean;
+    readOnly?: boolean;
 }
 declare const Switch: React.ForwardRefExoticComponent<SwitchProps & React.RefAttributes<HTMLInputElement>>;
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
@@ -758,6 +817,11 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
 }
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     selected?: boolean;
+}
+interface TableSelectCellProps extends Omit<CheckboxProps, "children" | "description" | "size"> {
+    label: string;
+    header?: boolean;
+    cellProps?: React.TdHTMLAttributes<HTMLTableCellElement>;
 }
 type SortDirection = "ascending" | "descending" | "none";
 interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, "align"> {
@@ -773,6 +837,7 @@ declare const TableHead: React.ForwardRefExoticComponent<React.HTMLAttributes<HT
 declare const TableBody: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableFoot: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableRow: React.ForwardRefExoticComponent<TableRowProps & React.RefAttributes<HTMLTableRowElement>>;
+declare const TableSelectCell: React.ForwardRefExoticComponent<TableSelectCellProps & React.RefAttributes<HTMLInputElement>>;
 declare const TableHeaderCell: React.ForwardRefExoticComponent<TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableCell: React.ForwardRefExoticComponent<TableCellProps & React.RefAttributes<HTMLTableCellElement>>;
 type TabsVariant = "line" | "pill";
@@ -893,6 +958,9 @@ interface SerupaLabels {
     noResults: string;
     searching: string;
     clearSearch: string;
+    copy: string;
+    copied: string;
+    copyFailed: string;
     remove: string;
     viewImage: string;
     removeImage: string;
@@ -907,6 +975,7 @@ interface SerupaLabels {
     nextMonth: string;
     previousSlide: string;
     nextSlide: string;
+    slideOf: (slide: number, total: number) => string;
     decrease: string;
     increase: string;
     chooseDate: string;
@@ -920,16 +989,24 @@ interface SerupaLabels {
     completed: string;
     hasError: string;
     optional: string;
+    stepOf: (step: number, total: number) => string;
     notifications: string;
     toastShortcut: (key: string) => string;
     mainNavigation: string;
     menu: string;
+    reorder: string;
+    reorderInstructions: string;
+    reorderGrabbed: (item: string, position: number, total: number) => string;
+    reorderMoved: (item: string, position: number, total: number) => string;
+    reorderDropped: (item: string, position: number, total: number) => string;
+    reorderCancelled: (item: string, position: number, total: number) => string;
     dragFiles: string;
     dragFile: string;
     chooseFiles: string;
     chooseFile: string;
     chosenFiles: string;
     chosenFile: string;
+    required: string;
     showPassword: string;
     table: string;
 }
@@ -978,6 +1055,7 @@ declare global {
             Combobox: typeof Combobox;
             configure: typeof configure;
             Container: typeof Container;
+            CopyButton: typeof CopyButton;
             customIcons: typeof customIcons;
             registerIcons: typeof registerIcons;
             getIcon: typeof getIcon;
@@ -1009,6 +1087,8 @@ declare global {
             MenuGroup: typeof MenuGroup;
             MenuItem: typeof MenuItem;
             MenuSeparator: typeof MenuSeparator;
+            Meter: typeof Meter;
+            meterState: typeof meterState;
             Navbar: typeof Navbar;
             NavbarLink: typeof NavbarLink;
             NumberInput: typeof NumberInput;
@@ -1028,6 +1108,7 @@ declare global {
             SidebarItem: typeof SidebarItem;
             SidebarSection: typeof SidebarSection;
             Slider: typeof Slider;
+            SortableList: typeof SortableList;
             Stack: typeof Stack;
             Stepper: typeof Stepper;
             Switch: typeof Switch;
@@ -1039,6 +1120,7 @@ declare global {
             TableHead: typeof TableHead;
             TableHeaderCell: typeof TableHeaderCell;
             TableRow: typeof TableRow;
+            TableSelectCell: typeof TableSelectCell;
             TabList: typeof TabList;
             TabPanel: typeof TabPanel;
             Tabs: typeof Tabs;
@@ -1054,5 +1136,5 @@ declare global {
         };
     }
 }
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, Container, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, Icon, IconButton, IconData, Image, Input, Kbd, Link, List, ListItem, Loader, MaterialIconName, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, TabList, TabPanel, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, Tabs, Text, Textarea, TimePicker, Toaster, ToggleButton, Tooltip, VisuallyHidden, buttonClass, configure, customIcons, DEFAULT_LABELS as enLabels, formatFileSize, getIcon, idLabels, initials, paginationRange, registerIcons, toast, useSerupa, version };
-export type { AccordionItemProps, AccordionProps, AlertProps, AlertTone, AvatarGroupProps, AvatarProps, AvatarSize, AvatarStatus, BadgeProps, BadgeTone, BadgeVariant, BreadcrumbItemProps, BreadcrumbProps, ButtonAsButtonProps, ButtonAsLinkProps, ButtonGroupProps, ButtonProps, ButtonSize, ButtonVariant, CalendarProps, CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant, CarouselProps, CheckboxProps, ComboboxOption, ComboboxProps, ContainerProps, ContainerSize, CustomIconName, DatePickerProps, DateRange, DateRangePickerProps, DialogProps, DividerProps, DrawerProps, EmptyStateProps, FabPosition, FabProps, FieldProps, FileRejection, FileUploadProps, GridProps, HeadingLevel, HeadingProps, HeadingSize, IconButtonProps, IconName, IconProps, IconSource, ImageProps, ImageRatio, InputProps, KbdProps, LinkProps, ListItemProps, ListProps, LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant, MenuGroupProps, MenuItemProps, MenuProps, NavbarLinkProps, NavbarProps, NumberInputProps, PaginationProps, PasswordInputProps, Placement, PopoverProps, ProgressProps, ProgressTone, RadioGroupProps, RadioProps, SearchInputProps, SegmentedControlOption, SegmentedControlProps, SelectOption, SelectOptionGroup, SelectProps, SerupaConfig, SerupaLabels, SerupaProviderProps, SerupaSettings, SerupaTheme, SidebarItemProps, SidebarProps, SidebarSectionProps, SliderProps, SliderValue, SortDirection, Space, StackProps, StepperProps, StepperStep, SwitchProps, TabPanelProps, TabProps, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps, TabsProps, TabsVariant, TextProps, TextSize, TextTone, TextWeight, TextareaProps, ThemeBrand, ThemeInfo, ThemeMode, TimePickerProps, ToastOptions, ToastTone, ToasterPosition, ToasterProps, ToggleButtonProps, TooltipProps, VisuallyHiddenProps };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, Container, CopyButton, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, Icon, IconButton, IconData, Image, Input, Kbd, Link, List, ListItem, Loader, MaterialIconName, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, Navbar, NavbarLink, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, SortableList, Stack, Stepper, Switch, Tab, TabList, TabPanel, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, Tabs, Text, Textarea, TimePicker, Toaster, ToggleButton, Tooltip, VisuallyHidden, buttonClass, configure, customIcons, DEFAULT_LABELS as enLabels, formatFileSize, getIcon, idLabels, initials, meterState, paginationRange, registerIcons, toast, useSerupa, version };
+export type { AccordionItemProps, AccordionProps, AlertProps, AlertTone, AvatarGroupProps, AvatarProps, AvatarSize, AvatarStatus, BadgeProps, BadgeTone, BadgeVariant, BreadcrumbItemProps, BreadcrumbProps, ButtonAsButtonProps, ButtonAsLinkProps, ButtonGroupProps, ButtonProps, ButtonSize, ButtonVariant, CalendarProps, CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant, CarouselProps, CheckboxProps, ComboboxOption, ComboboxProps, ContainerProps, ContainerSize, CopyButtonProps, CustomIconName, DatePickerProps, DateRange, DateRangePickerProps, DialogProps, DividerProps, DrawerProps, EmptyStateProps, FabPosition, FabProps, FieldProps, FileRejection, FileUploadProps, GridProps, HeadingLevel, HeadingProps, HeadingSize, IconButtonProps, IconName, IconProps, IconSource, ImageProps, ImageRatio, InputProps, KbdProps, LinkProps, ListItemProps, ListProps, LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant, MenuGroupProps, MenuItemProps, MenuProps, MeterProps, MeterState, NavbarLinkProps, NavbarProps, NumberInputProps, PaginationProps, PasswordInputProps, Placement, PopoverProps, ProgressProps, ProgressTone, RadioGroupProps, RadioProps, SearchInputProps, SegmentedControlOption, SegmentedControlProps, SelectOption, SelectOptionGroup, SelectProps, SerupaConfig, SerupaLabels, SerupaProviderProps, SerupaSettings, SerupaTheme, SidebarItemProps, SidebarProps, SidebarSectionProps, SliderProps, SliderValue, SortDirection, SortableListProps, Space, StackProps, StepperProps, StepperStep, SwitchProps, TabPanelProps, TabProps, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps, TableSelectCellProps, TabsProps, TabsVariant, TextProps, TextSize, TextTone, TextWeight, TextareaProps, ThemeBrand, ThemeInfo, ThemeMode, TimePickerProps, ToastOptions, ToastTone, ToasterPosition, ToasterProps, ToggleButtonProps, TooltipProps, VisuallyHiddenProps };

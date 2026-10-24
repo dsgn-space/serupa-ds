@@ -129,6 +129,33 @@ describe('DateRangePicker', () => {
     expect(pop('one').querySelectorAll('.dk-calendar__day--outside').length).toBeGreaterThan(0);
   });
 
+  test('ref.current.focus() and autoFocus land on the start field, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const on = React.createRef<HTMLSpanElement>(), off = React.createRef<HTMLSpanElement>();
+    await render(<>
+      <DateRangePicker data-testid="dfa" aria-label="Stay" autoFocus />
+      <DateRangePicker data-testid="dfr" ref={on} aria-label="Stay" />
+      <DateRangePicker data-testid="dfd" ref={off} aria-label="Stay" disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(fields('dfa')[0]);
+    expect(box('dfa').hasAttribute('autofocus')).toBe(false);
+    on.current!.focus();
+    expect(document.activeElement).toBe(fields('dfr')[0]);
+    off.current!.focus();
+    expect(document.activeElement).toBe(fields('dfr')[0]);
+    expect(on.current).toBe(box('dfr'));
+  });
+
+  test('required: both fields are required, so a form won\'t submit until each end has a date; Field\'s required does the same; the root <span> gets neither', async () => {
+    await render(<>
+      <form id="rq-form"><DateRangePicker data-testid="rq" required defaultValue={{ start: new Date(2025, 2, 10), end: null }} /></form>
+      <Field label="Stay" required><DateRangePicker data-testid="rqf" /></Field>
+    </>);
+    expect(fields('rq').map((x) => [x.required, x.getAttribute('aria-required')])).toEqual([[true, 'true'], [true, 'true']]);
+    expect([box('rq').hasAttribute('required'), box('rq').hasAttribute('aria-required')]).toEqual([false, false]);
+    expect([(document.getElementById('rq-form') as HTMLFormElement).checkValidity(), fields('rq')[0].validity.valid, fields('rq')[1].validity.valueMissing]).toEqual([false, true, true]);
+    expect(fields('rqf').map((x) => x.getAttribute('aria-required'))).toEqual(['true', 'true']);
+  });
+
   test('disabled: both fields and the button are disabled and faded', async () => {
     await render(<DateRangePicker data-testid="dis" aria-label="Off" disabled />);
     expect([...box('dis').querySelectorAll<HTMLInputElement | HTMLButtonElement>('input, button')].every((x) => x.disabled)).toBe(true);

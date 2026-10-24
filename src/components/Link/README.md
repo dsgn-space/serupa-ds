@@ -39,6 +39,7 @@ const { Link, Text } = window.Serupa;
 - The primary color keeps 4.5:1 on `surface`, on hover too, and the focus ring 3:1, in all six themes (`Link.test.tsx`).
 - Write link text that makes sense on its own ("Read the pricing guide", not "click here"): screen reader users often move from link to link.
 - The keyboard focus ring follows the text when a link wraps onto two lines.
+- `autoFocus` focuses the link once it mounts, also through `as` (React's own `autoFocus` works only on form controls). Use it sparingly, such as for the one way on from a confirmation page.
 
 ## Props
 

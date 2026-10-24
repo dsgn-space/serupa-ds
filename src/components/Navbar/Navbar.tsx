@@ -4,8 +4,10 @@ import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
 import type { ContainerSize } from "../Container/Container";
 import { component } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
@@ -39,7 +41,7 @@ const NavbarContext = /* @__PURE__ */ React.createContext<{ close: () => void } 
 /** The bar across the top: brand, main links and actions. On small screens the links fold into a menu button. */
 export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navbar", function Navbar(props, ref) {
   const sds = useSerupa();
-  const rest = omit(props, { brand: 1, children: 1, actions: 1, sticky: 1, size: 1, menuLabel: 1, className: 1, "aria-label": 1, onKeyDown: 1 });
+  const rest = omit(props, { brand: 1, children: 1, actions: 1, sticky: 1, size: 1, menuLabel: 1, className: 1, "aria-label": 1, onKeyDown: 1, onBlur: 1 });
   const [open, setOpen] = React.useState(false);
   const toggle = React.useRef<HTMLButtonElement>(null);
   const id = domId("dk-nav", React.useId());
@@ -57,23 +59,33 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
   }, [open]);
   function onKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (props.onKeyDown) props.onKeyDown(e);
-    if (!e.defaultPrevented && e.key === "Escape" && open) { e.preventDefault(); setOpen(false); if (toggle.current) toggle.current.focus(); }
+    if (!e.defaultPrevented && e.key === "Escape" && open && !isComposing(e)) { e.preventDefault(); setOpen(false); if (toggle.current) toggle.current.focus(); }
   }
+  // Focus leaving the header (Tab past the last link, or into the page) closes the menu, as a Popover does.
+  function onBlur(e: React.FocusEvent<HTMLElement>) {
+    if (props.onBlur) props.onBlur(e);
+    if (open && e.relatedTarget instanceof Node && !e.currentTarget.contains(e.relatedTarget)) setOpen(false);
+  }
+  // While the small-screen menu is open, the links come after the menu button in the DOM, as they do on screen
+  // (the panel opens under the bar), so Tab goes from the button into them. Closed, and on wide screens, they sit
+  // between the brand and the actions.
+  const nav = hasLinks ? (
+    <nav id={id} aria-label={props["aria-label"] || sds.labels.mainNavigation} className="dk-navbar__nav">
+      <ul className="dk-navbar__links">{links.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
+    </nav>
+  ) : null;
   return (
     <NavbarContext.Provider value={{ close }}>
-      <header {...rest} ref={ref} onKeyDown={onKeyDown} data-component="navbar" data-state={open ? "open" : "closed"} className={cn("dk-navbar", props.sticky && "dk-navbar--sticky", props.className)}>
+      <header {...rest} ref={ref} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? "open" : "closed"} className={cn("dk-navbar", props.sticky && "dk-navbar--sticky", props.className)}>
         <div className={cn("dk-navbar__inner dk-container dk-container--padded", "dk-container--" + size)}>
           {props.brand != null ? <div className="dk-navbar__brand">{props.brand}</div> : null}
-          {hasLinks ? (
-            <nav id={id} aria-label={props["aria-label"] || sds.labels.mainNavigation} className="dk-navbar__nav">
-              <ul className="dk-navbar__links">{links.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
-            </nav>
-          ) : null}
+          {open ? null : nav}
           {props.actions != null ? <div className="dk-navbar__actions">{props.actions}</div> : null}
           {hasLinks ? (
-            <IconButton ref={toggle} className="dk-navbar__toggle" icon={open ? "close" : "menu"} label={props.menuLabel || sds.labels.menu} noTitle
+            <IconButton ref={toggle} className="dk-navbar__toggle" icon={open ? icons.Close : icons.Menu} label={props.menuLabel || sds.labels.menu} noTitle
               aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)} />
           ) : null}
+          {open ? nav : null}
         </div>
       </header>
     </NavbarContext.Provider>

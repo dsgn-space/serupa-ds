@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Sidebar: a 256px column (collapsed: a 64px icon rail) with a 1px line on its inner edge, the parent's height:
    header, the scrolling items, then the footer at the bottom. Items are muted text-sm font-medium with a 20px
-   icon, shaded on hover; the current page is shaded and text-colored. Nested items line up with their parent's
+   icon, shaded on hover and a step darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
 @layer dk.components {
@@ -25,9 +25,10 @@
   text-align: start; text-decoration: none; cursor: pointer;
   transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
-.dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--secondary)); color: var(--sidebar-item-text-hover, var(--text)); }
+@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--highlight)); color: var(--sidebar-item-text-hover, var(--text)); } }
+.dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
-.dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--secondary)); }
+.dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); }
 .dk-sidebar__item:focus-visible { outline: var(--focus-ring-width) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11)); }
 .dk-sidebar__icon { display: inline-flex; flex-shrink: 0; }

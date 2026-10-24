@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Navbar: a 64px bar with a 1px line under it: brand, links (muted text-sm font-medium, shaded on hover; the
    current page shaded and text-colored), then actions. Sticky keeps it at the top. Below 768px the links hide
-   behind a menu button and open as a full-width panel under the bar.
+   behind a menu button and open as a full-width panel under the bar (after the button in the DOM, so Tab goes into them).
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-navbar { position: relative; background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
@@ -16,7 +16,7 @@
   font-size: var(--navbar-link-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--navbar-link-weight, var(--font-medium)); text-decoration: none; white-space: nowrap;
   transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
-.dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); color: var(--navbar-link-text-hover, var(--text)); }
+@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); color: var(--navbar-link-text-hover, var(--text)); } }
 .dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); }
 .dk-navbar__link:focus-visible { outline: var(--focus-ring-width) solid var(--navbar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-navbar__actions { display: flex; align-items: center; gap: var(--spacing-2); flex-shrink: 0; margin-inline-start: auto; }
@@ -26,7 +26,7 @@
   .dk-navbar[data-state="open"] .dk-navbar__nav { display: block; }
   .dk-navbar__links { flex-direction: column; align-items: stretch; }
   .dk-navbar__toggle.dk-btn { display: inline-flex; flex-shrink: 0; }
-  .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__nav + .dk-navbar__toggle { margin-inline-start: auto; }
+  .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__toggle, .dk-navbar__toggle:first-child { margin-inline-start: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .dk-navbar__link { transition: none; } }
 }

@@ -4,6 +4,7 @@ import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { flattenChildren } from "../../internal/children";
+import * as icons from "../../material/builtin";
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
   /** 'single' (default): opening one closes the others. 'multiple': any number can be open. */
@@ -98,7 +99,7 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
         <button type="button" id={id + "-t"} className="dk-accordion__trigger" aria-expanded={open} aria-controls={id + "-p"} disabled={props.disabled}
           aria-disabled={locked ? true : undefined} onClick={() => { if (ctx && !locked) ctx.toggle(value); }}>
           <span className="dk-accordion__title">{props.title}</span>
-          <Icon name="expand_more" className="dk-accordion__icon" />
+          <Icon icon={icons.ExpandMore} className="dk-accordion__icon" />
         </button>
       </H>
       <div id={id + "-p"} role="region" aria-labelledby={id + "-t"} className="dk-accordion__panel">
