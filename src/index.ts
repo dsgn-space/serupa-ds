@@ -86,6 +86,8 @@ export type { CopyButtonProps } from "./components/CopyButton/CopyButton";
 import { Meter, meterState } from "./components/Meter/Meter";
 export type { MeterProps, MeterState } from "./components/Meter/Meter";
 import { Progress } from "./components/Progress/Progress";
+import { RelativeTime, relativeTime } from "./components/RelativeTime/RelativeTime";
+export type { RelativeTimeProps } from "./components/RelativeTime/RelativeTime";
 export type { ProgressProps, ProgressTone } from "./components/Progress/Progress";
 import { Radio, RadioGroup } from "./components/Radio/Radio";
 export type { RadioGroupProps, RadioProps } from "./components/Radio/Radio";
@@ -139,7 +141,7 @@ export type { IconData } from "./material/types";
 export type { MaterialIconName } from "./material/icons";
 export type { SerupaTheme, ThemeBrand, ThemeInfo, ThemeMode } from "./theme-types";
 
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, CopyButton, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, enLabels, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, idLabels, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, meterState, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, SortableList, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, useSerupa, VisuallyHidden };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, buttonClass, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, configure, Container, CopyButton, customIcons, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, enLabels, Fab, Field, FileUpload, formatFileSize, getIcon, Grid, Heading, Icon, IconButton, idLabels, Image, initials, Input, Kbd, Link, List, ListItem, Loader, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, meterState, Navbar, NavbarLink, NumberInput, Pagination, paginationRange, PasswordInput, Popover, Progress, Radio, RadioGroup, registerIcons, relativeTime, RelativeTime, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, SortableList, Stack, Stepper, Switch, Tab, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TabList, TabPanel, Tabs, Text, Textarea, TimePicker, toast, Toaster, ToggleButton, Tooltip, useSerupa, VisuallyHidden };
 
 /** The system's version, e.g. "4.8.0" (semver). */
 export const version: string = __VERSION__;
@@ -159,7 +161,7 @@ declare global {
       Link: typeof Link; List: typeof List; ListItem: typeof ListItem; Loader: typeof Loader; Menu: typeof Menu; MenuGroup: typeof MenuGroup;
       MenuItem: typeof MenuItem; MenuSeparator: typeof MenuSeparator; Meter: typeof Meter; meterState: typeof meterState; Navbar: typeof Navbar; NavbarLink: typeof NavbarLink;
       NumberInput: typeof NumberInput; Pagination: typeof Pagination; paginationRange: typeof paginationRange; PasswordInput: typeof PasswordInput;
-      Popover: typeof Popover; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; SearchInput: typeof SearchInput;
+      Popover: typeof Popover; Progress: typeof Progress; Radio: typeof Radio; RadioGroup: typeof RadioGroup; RelativeTime: typeof RelativeTime; relativeTime: typeof relativeTime; SearchInput: typeof SearchInput;
       SegmentedControl: typeof SegmentedControl; Select: typeof Select; SerupaProvider: typeof SerupaProvider; useSerupa: typeof useSerupa; Sidebar: typeof Sidebar; SidebarItem: typeof SidebarItem;
       SidebarSection: typeof SidebarSection; Slider: typeof Slider; SortableList: typeof SortableList; Stack: typeof Stack; Stepper: typeof Stepper; Switch: typeof Switch; Tab: typeof Tab; Table: typeof Table;
       TableBody: typeof TableBody; TableCell: typeof TableCell; TableFoot: typeof TableFoot; TableHead: typeof TableHead;

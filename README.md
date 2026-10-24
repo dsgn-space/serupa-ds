@@ -124,7 +124,7 @@ React components, styled only with this system's tokens. Each one's guide (when 
 | Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Meter`, `Badge`, `EmptyState` |
 | Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
 | Navigation | `Navbar`, `Sidebar`, `Tabs`, `Breadcrumb`, `Pagination`, `Stepper` |
-| Content | `Card`, `Table`, `List`, `SortableList`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd` |
+| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd`, `RelativeTime`, `SortableList` |
 | Layout and type | `Stack`, `Grid`, `Container`, `Divider`, `Heading`, `Text`, `VisuallyHidden` |
 
 Shared conventions, so learning one component teaches the rest:
