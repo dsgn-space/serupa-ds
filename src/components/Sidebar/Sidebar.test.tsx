@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
 import { Sidebar, SidebarItem as I, SidebarSection as S } from './Sidebar';
 
@@ -173,4 +173,12 @@ describe('Sidebar', () => {
     still.remove();
     expect([low, n]).toEqual([[], 18]);
   });
+
+  test('pressed: an item held down fills with pressed, one step past hover', async () => {
+    await render(<App />);
+    const i = el('iinbox');
+    await press(i, () => expect.poll(() => css(i).backgroundColor).toBe(color('var(--pressed)')));
+    await away();
+  });
+
 });
