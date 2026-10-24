@@ -62,6 +62,16 @@
           }
         }
       },
+      "pill-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "A pill tab's background while it's pressed, before it's selected, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-pill-bg-pressed"
+          }
+        }
+      },
       "pill-bg-selected": {
         "$type": "color",
         "$value": "{color.primary}",
