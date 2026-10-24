@@ -5,6 +5,7 @@ import { IconButton } from "../IconButton/IconButton";
 import type { ContainerSize } from "../Container/Container";
 import { component } from "../../internal/component";
 import { isComposing } from "../../internal/ime";
+import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
@@ -44,7 +45,8 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
   const toggle = React.useRef<HTMLButtonElement>(null);
   const id = domId("dk-nav", React.useId());
   const size = oneOf(["prose", "md", "lg", "xl", "2xl", "full"] as const, props.size, "xl");
-  const hasLinks = React.Children.count(props.children) > 0;
+  const links = flattenChildren(props.children);
+  const hasLinks = links.length > 0;
   const close = React.useCallback(() => setOpen(false), []);
   // closes when the screen grows past the breakpoint, so it isn't open the next time it shrinks
   React.useEffect(() => {
@@ -65,7 +67,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
           {props.brand != null ? <div className="dk-navbar__brand">{props.brand}</div> : null}
           {hasLinks ? (
             <nav id={id} aria-label={props["aria-label"] || sds.labels.mainNavigation} className="dk-navbar__nav">
-              <ul className="dk-navbar__links">{React.Children.map(props.children, (c) => c == null || c === false ? null : <li>{c}</li>)}</ul>
+              <ul className="dk-navbar__links">{links.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
             </nav>
           ) : null}
           {props.actions != null ? <div className="dk-navbar__actions">{props.actions}</div> : null}

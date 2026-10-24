@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Card: a surface that groups related content and actions. Variants outline (default: a border and a hairline
-   shadow), elevated (a raised shadow, no visible border) and filled (surface-muted, flat); padding none, sm, md
+   shadow), elevated (a raised shadow, no visible border in light; a lighter surface and edge in dark) and filled (surface-muted, flat); padding none, sm, md
    (default) or lg. Structure: .dk-card > .dk-card__header (.dk-card__heading > .dk-card__title, .dk-card__description;
    .dk-card__action), .dk-card__body, .dk-card__footer. With href the whole card is a link, with a hover border and a
    focus ring. Every value goes through --card-* tokens.
@@ -22,7 +22,7 @@
   line-height: var(--text-sm--line-height);
   text-align: start;
 }
-.dk-card--elevated { border-color: transparent; box-shadow: var(--card-shadow-elevated, var(--shadow-md)); }   /* the transparent border keeps the size, and shows in forced-colors mode */
+.dk-card--elevated { background: var(--card-bg-elevated, var(--surface-raised)); border-color: var(--card-border-elevated, var(--border-raised)); box-shadow: var(--card-shadow-elevated, var(--shadow-md)); }   /* in dark the shadow barely shows, so the lighter surface and edge carry the lift */
 .dk-card--filled { background: var(--card-bg-filled, var(--surface-muted)); border-color: transparent; box-shadow: var(--shadow-none); }
 .dk-card--padding-none { padding: var(--spacing-0); }
 .dk-card--padding-sm { padding: var(--card-padding-sm, var(--spacing-3)); }

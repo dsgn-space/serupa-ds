@@ -28,7 +28,7 @@
 .dk-slider__thumb:focus { outline: none; }
 .dk-slider__thumb:focus-visible { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:active { cursor: grabbing; scale: var(--scale-110); }
-.dk-slider--disabled { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-slider--disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-slider--disabled .dk-slider__thumb { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .dk-slider__thumb { transition: none; } }
 @media (forced-colors: active) {

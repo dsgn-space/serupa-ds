@@ -6,7 +6,7 @@ import { cssLength, hideLayer, place, showLayer } from "../../internal/position"
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import { isComposing } from "../../internal/ime";
 
@@ -44,7 +44,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePickerProps>("DatePicker", function DatePicker(props, ref) {
   const sds = useSerupa();
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, buttonLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
-  const locale = localeProp || sds.locale;
+  const locale = useLocale(localeProp);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const controlled = props.value !== undefined;
@@ -63,8 +63,12 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
     const d = isValid(props.defaultValue) ? day(props.defaultValue) : null;
     shown.current = d ? d.getTime() : null; setOwn(d); setText(d ? formatDate(d, locale) : ""); setOpen(false);
   });
-  // A new value from outside rewrites the text.
-  if ((value ? value.getTime() : null) !== shown.current) { shown.current = value ? value.getTime() : null; const t = value ? formatDate(value, locale) : ""; if (t !== text) setText(t); }
+  // A new value from outside, or a new locale (the browser's, once a server-rendered page hydrates), rewrites the text.
+  const shownLocale = React.useRef(locale);
+  if ((value ? value.getTime() : null) !== shown.current || locale !== shownLocale.current) {
+    shown.current = value ? value.getTime() : null; shownLocale.current = locale;
+    const t = value ? formatDate(value, locale) : ""; if (t !== text) setText(t);
+  }
 
   const allowed = (d: Date) => !(min && compare(d, min) < 0) && !(max && compare(d, max) > 0) && !(isDateDisabled && isDateDisabled(d));
   const commit = (d: Date | null) => {

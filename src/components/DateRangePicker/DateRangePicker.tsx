@@ -6,7 +6,7 @@ import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import { isComposing } from "../../internal/ime";
 
@@ -61,7 +61,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>("DateRangePicker", function DateRangePicker(props, ref) {
   const sds = useSerupa();
   const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, className, ...rest } = props;
-  const locale = localeProp || sds.locale;
+  const locale = useLocale(localeProp);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const describedBy = rest["aria-describedby"], required = rest["aria-required"];
@@ -72,8 +72,9 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const fmt = (d: Date | null) => (d ? formatDate(d, locale) : "");
   const [text, setText] = React.useState({ start: fmt(value.start), end: fmt(value.end) });
   const shown = React.useRef({ start: key(value.start), end: key(value.end) });
-  if (key(value.start) !== shown.current.start || key(value.end) !== shown.current.end) {
-    shown.current = { start: key(value.start), end: key(value.end) };
+  const shownLocale = React.useRef(locale);   // a new locale (the browser's, after hydration) rewrites the text too
+  if (key(value.start) !== shown.current.start || key(value.end) !== shown.current.end || locale !== shownLocale.current) {
+    shown.current = { start: key(value.start), end: key(value.end) }; shownLocale.current = locale;
     const t = { start: fmt(value.start), end: fmt(value.end) };
     if (t.start !== text.start || t.end !== text.end) setText(t);
   }

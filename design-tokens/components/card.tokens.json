@@ -22,6 +22,26 @@
           }
         }
       },
+      "bg-elevated": {
+        "$type": "color",
+        "$value": "{color.surface-raised}",
+        "$description": "The background of an elevated card: one step up from the page in dark.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-bg-elevated"
+          }
+        }
+      },
+      "border-elevated": {
+        "$type": "color",
+        "$value": "{color.border-raised}",
+        "$description": "An elevated card's edge: invisible in light, a 1px lighter edge in dark, where the shadow doesn't show.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-border-elevated"
+          }
+        }
+      },
       "border-color": {
         "$type": "color",
         "$value": "{color.border}",
