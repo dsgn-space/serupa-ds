@@ -76,7 +76,7 @@ export interface SerupaLabels {
 export const DEFAULT_LABELS: SerupaLabels = {
   close: "Close",
   dismiss: "Dismiss",
-  loading: "Loading",
+  loading: "Loading…",
   loadingResults: "Loading…",
   noResults: "No results",
   searching: "Searching",
@@ -126,7 +126,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
 export const idLabels: SerupaLabels = {
   close: "Tutup",
   dismiss: "Abaikan",
-  loading: "Memuat",
+  loading: "Memuat…",
   loadingResults: "Memuat…",
   noResults: "Tidak ada hasil",
   searching: "Mencari",
