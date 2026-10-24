@@ -5,7 +5,7 @@ import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sam
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { useLocale, useSerupa } from "../../internal/provider";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. */
@@ -55,7 +55,7 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMont
 export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>("Calendar", function Calendar(props, ref) {
   const sds = useSerupa();
   const rest = omit(props, OWN);
-  const locale = props.locale || sds.locale;
+  const locale = useLocale(props.locale);
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const controlledValue = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<Date | null>(isValid(props.defaultValue) ? day(props.defaultValue) : null);
