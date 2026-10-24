@@ -52,7 +52,6 @@ const { Textarea } = window.Serupa;
 - The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. It isn't announced on every keystroke, which would drown out the typing.
 - `maxLength` stops typing at the limit, counted in characters as people see them, the same way as the count: an emoji such as 👨‍👩‍👧 or 🇮🇩 is one, where the browser's own `maxlength` would count it as up to 8. Textarea applies the limit itself, so the `<textarea>` has no `maxlength` attribute. Text pasted past the limit is cut at the end of the paste (what comes after it stays), and an input method's text is cut once it's confirmed. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
 - Text, the placeholder and the count keep 4.5:1 on `field`, and the border 3:1, in all six themes (`Textarea.test.tsx`).
-- A form reset puts `defaultValue` back and the count follows it. A controlled Textarea shows its `value` again.
 
 ## Props
 

@@ -6,7 +6,6 @@ import { useFieldControl } from "../../internal/field";
 import { graphemeCount, limitEdit } from "../../internal/graphemes";
 import { displayNumber } from "../../internal/numbers";
 import { useLocale } from "../../internal/provider";
-import { useFormReset } from "../../internal/useFormReset";
 
 const PLAIN = { useGrouping: false } as const;
 
@@ -57,14 +56,6 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
   const last = React.useRef(String(controlled ? rest.value : rest.defaultValue != null ? rest.defaultValue : ""));
   const composing = React.useRef(false);
   if (controlled && !composing.current) last.current = String(rest.value);   // the value the parent holds now
-  // A form reset puts the default text back in the field; the count follows it (and a controlled field shows its value again).
-  const [, rerender] = React.useState(0);
-  useFormReset(own, function () {
-    const text = String(controlled ? rest.value : rest.defaultValue != null ? rest.defaultValue : "");
-    last.current = text;
-    setLen(graphemeCount(text));
-    rerender(function (n) { return n + 1; });
-  });
   const countId = domId("dk-ta", React.useId());
   const locale = useLocale();
   const num = (n: number) => displayNumber(n, locale, PLAIN);   // the locale's digits, as Calendar's
