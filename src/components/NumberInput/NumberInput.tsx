@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { gridPlaces, roundTo } from "../../internal/step";
 import { useSerupa } from "../../internal/provider";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
@@ -29,8 +30,6 @@ export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "d
   incrementLabel?: string;
 }
 
-const decimals = (n: number) => { const s = String(n); const i = s.indexOf("."); return i < 0 ? 0 : s.length - i - 1; };
-
 /* NumberInput: a field for a number, with − and + buttons at the end. role="spinbutton" with aria-valuenow,
    min and max. ArrowUp and ArrowDown change it by step, PageUp, PageDown and Shift+arrows by largeStep steps,
    Home and End go to min and max. People can type freely; on blur the text is parsed, clamped to min..max and
@@ -47,7 +46,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
   const min = props.min != null && isFinite(props.min) ? props.min : undefined;
   const max = props.max != null && isFinite(props.max) ? props.max : undefined;
-  const places = decimals(step);
+  const places = gridPlaces(props.min != null && isFinite(props.min) ? props.min : undefined, step);
   const controlled = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<number | null>(props.defaultValue ?? null);
   const value = controlled ? (props.value ?? null) : ownValue;
@@ -59,7 +58,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const locked = !!rest.disabled || !!rest.readOnly;
 
   const fit = (v: number) => {
-    let n = Number(v.toFixed(places));
+    let n = roundTo(v, places);
     if (min !== undefined && n < min) n = min;
     if (max !== undefined && n > max) n = max;
     return n;
