@@ -130,4 +130,28 @@ describe('Stepper', () => {
     await setup();
     expect(css(el('tok').querySelector('.dk-stepper__indicator')).backgroundColor).toBe('rgb(1, 2, 3)');
   });
+  test('too narrow for the titles side by side (320px): circles only, "Step 3 of 4: Billing" under them, no sideways scroll; wide again: titles back', async () => {
+    let setW: (w: number) => void = () => {};
+    function Narrow() {
+      const [w, set] = React.useState(320); setW = set;
+      return <div id="box" style={{ width: w + 'px' }}><Stepper id="nar" steps={STEPS} current={2} /><Stepper id="nv" orientation="vertical" steps={STEPS} current={2} /></div>;
+    }
+    await render(<Narrow />);
+    const n = el('nar');
+    expect(n.className).toMatch(/dk-stepper--compact/);
+    expect(n.scrollWidth).toBeLessThanOrEqual(320);
+    const circles = [...n.querySelectorAll('.dk-stepper__indicator')].map(rect);
+    for (let i = 1; i < circles.length; i++) expect(circles[i].left).toBeGreaterThanOrEqual(circles[i - 1].right);
+    const summary = n.querySelector('.dk-stepper__summary') as HTMLElement;
+    expect([summary.textContent, summary.getAttribute('aria-hidden')]).toEqual(['Step 3 of 4: Billing', 'true']);
+    // The titles stay in the list for screen readers: clipped to 1px, not removed.
+    const title = lis('nar')[0].querySelector('.dk-stepper__text') as HTMLElement;
+    expect([title.textContent, rect(title).width <= 1, css(title).display !== 'none']).toEqual(['Account, completedEmail and password', true, true]);
+    expect(el('nv').className).not.toMatch(/compact/);
+    setW(720);
+    await expect.poll(() => n.className).not.toMatch(/compact/);
+    expect(n.querySelector('.dk-stepper__summary')).toBeNull();
+    setW(320);
+    await expect.poll(() => n.className).toMatch(/compact/);
+  });
 });
