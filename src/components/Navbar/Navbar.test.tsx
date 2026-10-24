@@ -169,6 +169,17 @@ describe('Navbar', () => {
     expect([toggle().getAttribute('aria-expanded'), document.activeElement === toggle(), vis('#nav nav')]).toEqual(['false', true, false]);
   });
 
+  test('a press outside the bar closes it; a press inside it does not', async () => {
+    await render(<Main />);
+    await resize(500);
+    await userEvent.click(toggle());
+    await expect.poll(() => vis('#nav nav')).toBe(true);
+    el('brand').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    expect(vis('#nav nav')).toBe(true);
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    await expect.poll(() => [toggle().getAttribute('aria-expanded'), vis('#nav nav')]).toEqual(['false', false]);
+  });
+
   test('following a link closes it', async () => {
     await render(<Main />);
     await resize(500);
