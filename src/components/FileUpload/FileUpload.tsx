@@ -7,6 +7,7 @@ import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
+import * as icons from "../../material/builtin";
 
 export { formatFileSize };
 
@@ -66,7 +67,7 @@ function acceptedTypes(accept: string): string | null {
   const list = names.length === 1 ? first : names.slice(0, -1).join(", ") + " or " + names[names.length - 1];
   return (an ? "an " : "a ") + list;
 }
-const iconFor = (f: File) => /^image\//.test(f.type) ? "image" : f.type === "application/pdf" ? "picture_as_pdf" : /^video\//.test(f.type) ? "movie" : /^audio\//.test(f.type) ? "audio_file" : /zip|compressed|tar/.test(f.type) ? "folder_zip" : "draft";
+const iconFor = (f: File) => /^image\//.test(f.type) ? icons.Image : f.type === "application/pdf" ? icons.PictureAsPdf : /^video\//.test(f.type) ? icons.Movie : /^audio\//.test(f.type) ? icons.AudioFile : /zip|compressed|tar/.test(f.type) ? icons.FolderZip : icons.Draft;
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
 /* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size
@@ -139,7 +140,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     <div {...rest} ref={ref} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
       <div className={cn("dk-file-upload__zone", over && "dk-file-upload__zone--over")} data-dragging={over ? "" : undefined} aria-disabled={disabled || undefined} {...drag}
         onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
-        <Icon name="upload_file" className="dk-file-upload__icon" />
+        <Icon icon={icons.UploadFile} className="dk-file-upload__icon" />
         <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
         <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()} aria-describedby={hasHint ? base + "-hint" : undefined}>
           {props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}
@@ -150,19 +151,19 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       </div>
       {rejected.length ? (
         <div className="dk-file-upload__errors" role="alert">
-          {rejected.map((r, i) => <p key={i} className="dk-file-upload__error"><Icon name="error" />{r.message}</p>)}
+          {rejected.map((r, i) => <p key={i} className="dk-file-upload__error"><Icon icon={icons.Error} />{r.message}</p>)}
         </div>
       ) : null}
       {files.length ? (
         <ul className="dk-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
           {files.map((f, i) => (
             <li key={f.name + f.size + f.lastModified + i} className="dk-file-upload__item">
-              <Icon name={iconFor(f)} className="dk-file-upload__file-icon" />
+              <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />
               <span className="dk-file-upload__file">
                 <span className="dk-file-upload__name">{f.name}</span>
                 <span className="dk-file-upload__size">{formatFileSize(f.size)}</span>
               </span>
-              <IconButton icon="close" label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />
+              <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />
             </li>
           ))}
         </ul>

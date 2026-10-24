@@ -6,6 +6,7 @@ import type { ContainerSize } from "../Container/Container";
 import { component } from "../../internal/component";
 import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
@@ -71,7 +72,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
           ) : null}
           {props.actions != null ? <div className="dk-navbar__actions">{props.actions}</div> : null}
           {hasLinks ? (
-            <IconButton ref={toggle} className="dk-navbar__toggle" icon={open ? "close" : "menu"} label={props.menuLabel || sds.labels.menu} noTitle
+            <IconButton ref={toggle} className="dk-navbar__toggle" icon={open ? icons.Close : icons.Menu} label={props.menuLabel || sds.labels.menu} noTitle
               aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)} />
           ) : null}
         </div>

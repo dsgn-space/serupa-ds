@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { named } from "../../internal/component";
+import * as icons from "../../material/builtin";
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
@@ -50,7 +51,7 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
     ? React.createElement("legend", { className: "dk-field__label", key: "label" }, ...labelKids)
     : React.createElement("label", { className: "dk-field__label", htmlFor: controlId, key: "label" }, ...labelKids);
   const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
-  const error = hasError ? <div className="dk-field__error" key="error"><Icon name="error" className="dk-field__error-icon" /><span id={errorId as string}>{props.error}</span></div> : null;
+  const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string}>{props.error}</span></div> : null;
   const described = cn(hintId, errorId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
     if (!React.isValidElement(el)) return el;

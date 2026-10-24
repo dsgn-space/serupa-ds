@@ -12,9 +12,9 @@ import { PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
-  'All components (index.js)': 52,   // NumberInput's locale parsing and formatting (internal/numbers.ts)
-  'Button alone': 12,
-  'Dialog alone': 13.5,   // 13.01 after the scroll lock gutter and the shared locale hook; most of it is the 73 built-in icons, which R7 drops
+  'All components (index.js)': 49,   // 46.8 once each component imports only its own icons (R7)
+  'Button alone': 5.5,   // 5.1, without any icon data (R7)
+  'Dialog alone': 6.5,   // 6.2, with only its close icon (R7)
   'components.css': 38,
   'utilities.css': 168,
   'bundle.css': 206,
@@ -24,7 +24,7 @@ const BUDGET = {
 };
 
 const gz = (buf) => zlib.gzipSync(buf, { level: 9 }).length;
-// The full icon set is a dynamic import(): a project loads it only when a page draws a name outside the built-in icons.
+// Icons drawn by name are a dynamic import(): a project loads them only when a page draws an icon by its name.
 const lazy = { name: 'lazy', setup(b) { b.onResolve({ filter: /.*/ }, (a) => a.kind === 'dynamic-import' ? { path: a.path, external: true } : undefined); } };
 const bundled = async (code) => gz((await esbuild.build({ stdin: { contents: code, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom'], plugins: [lazy], logLevel: 'silent' })).outputFiles[0].contents);
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));

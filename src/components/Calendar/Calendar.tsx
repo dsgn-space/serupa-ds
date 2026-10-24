@@ -6,6 +6,7 @@ import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. */
@@ -126,10 +127,10 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   return (
     <div {...rest} ref={ref} className={cn("dk-calendar", props.className)} data-component="calendar">
       <div className="dk-calendar__header">
-        <IconButton icon={<><Icon name="chevron_left" className="dk-calendar__ltr" /><Icon name="chevron_right" className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" noTitle
+        <IconButton icon={<><Icon icon={icons.ChevronLeft} className="dk-calendar__ltr" /><Icon icon={icons.ChevronRight} className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" noTitle
           disabled={!!props.min && compare(addDays(month, -1), props.min) < 0} onClick={() => showMonth(addMonths(month, -1))} />
         <h2 className="dk-calendar__title" id={titleId} aria-live="polite">{title}</h2>
-        <IconButton icon={<><Icon name="chevron_right" className="dk-calendar__ltr" /><Icon name="chevron_left" className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" noTitle
+        <IconButton icon={<><Icon icon={icons.ChevronRight} className="dk-calendar__ltr" /><Icon icon={icons.ChevronLeft} className="dk-calendar__rtl" /></>} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" noTitle
           disabled={!!props.max && compare(addMonths(month, 1), props.max) > 0} onClick={() => showMonth(addMonths(month, 1))} />
       </div>
       <table ref={grid} className="dk-calendar__grid" role="grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>

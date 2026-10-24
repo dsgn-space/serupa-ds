@@ -1,4 +1,3 @@
-import { BUILTIN_ICONS } from "./material/builtin";
 import type { IconData } from "./material/types";
 
 /* Custom icons: your own SVGs, built in by tools/icons/build.mjs. Each is the inner markup of a
@@ -18,17 +17,27 @@ export function hasIcon(name: unknown): name is string {
   return typeof name === "string" && Object.prototype.hasOwnProperty.call(ICONS, name);
 }
 
-/* Material Symbols by name. The icons the components use are built in; the full set (src/material/icons.ts, a
-   separate chunk) loads the first time another name is drawn. Names a project registers win over both. */
-// Made on first use, so a page that draws no icon doesn't keep the built-in ones.
-let NAMED: Map<string, IconData> | undefined;
-const named = (): Map<string, IconData> => NAMED || (NAMED = new Map(BUILTIN_ICONS.map((v) => [v.name, v])));
+/* Material Symbols by name. Components import the icons they draw (src/material/builtin.ts), so a bundle keeps only
+   those. A name drawn as a string loads on first use: the components' icons from a small chunk (src/material/named.ts),
+   any other from the full set (src/material/icons.ts). Names a project registers win over both. */
+const NAMED = new Map<string, IconData>();
 let loading: Promise<void> | undefined;
+let loadingNamed: Promise<void> | undefined;
+
+/** Loads the icon for a name (Icon calls it when it meets a name it doesn't know yet): the components' own icons first,
+ * from a small chunk, then every Material Symbol. Resolves to the icon, or undefined if no icon has that name. */
+export function loadIcon(name: string): Promise<IconData | undefined> {
+  const found = () => NAMED.get(name);
+  if (!loadingNamed) loadingNamed = import("./material/named").then((m) => {
+    for (const v of m.NAMED_ICONS) if (!NAMED.has(v.name)) NAMED.set(v.name, v);
+  });
+  return loadingNamed.then(() => found() || loadAllIcons().then(found));
+}
 
 /** Loads every Material Symbol so its name works (once; Icon calls it when it meets a name it doesn't know yet). */
 export function loadAllIcons(): Promise<void> {
   return loading || (loading = import("./material/icons").then((all) => {
-    for (const v of Object.values(all)) if (isIconData(v) && !named().has(v.name)) named().set(v.name, v);
+    for (const v of Object.values(all)) if (isIconData(v) && !NAMED.has(v.name)) NAMED.set(v.name, v);
   }));
 }
 
@@ -37,14 +46,14 @@ export function loadAllIcons(): Promise<void> {
  * the first render (server rendering, say), register the full set first: `registerIcons(await import("serupa-ds/icons"))`. */
 export function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void {
   for (const x of icons) {
-    if (isIconData(x)) named().set(x.name, x);
-    else for (const v of Object.values(x)) if (isIconData(v)) named().set(v.name, v);
+    if (isIconData(x)) NAMED.set(x.name, x);
+    else for (const v of Object.values(x)) if (isIconData(v)) NAMED.set(v.name, v);
   }
 }
 
-/** The Material Symbol for a name, if it is built in, registered or already loaded. */
+/** The Material Symbol for a name, if it is registered or already loaded. */
 export function getIcon(name: string): IconData | undefined {
-  return named().get(name);
+  return NAMED.get(name);
 }
 
 export function isIconData(x: unknown): x is IconData {

@@ -8,6 +8,7 @@ import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
+import * as icons from "../../material/builtin";
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> {
   /** The chosen day (controlled), or null. Use with onValueChange. */
@@ -127,7 +128,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
         }} />
       <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
         disabled={off} onClick={() => { if (!open) read(); setOpen(!open); }}>
-        <Icon name="calendar_today" />
+        <Icon icon={icons.CalendarToday} />
       </button>
       {name ? <input type="hidden" name={name} value={value ? isoDate(value) : ""} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"

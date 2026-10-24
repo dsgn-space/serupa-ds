@@ -10,6 +10,7 @@ import { Icon, type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
 import { component } from "../../internal/component";
+import * as icons from "../../material/builtin";
 
 export type BadgeVariant = 'subtle' | 'solid' | 'outline';
 export type BadgeTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
@@ -127,7 +128,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
   const named = typeof label === "string" || typeof label === "number";
   const remove = removable
     ? <button type="button" className="dk-badge__remove" key="remove" onClick={props.onRemove} disabled={loading || undefined}
-        aria-label={(props.removeLabel || sds.labels.remove) + (named ? " " + label : "")}><Icon name="close" /></button>
+        aria-label={(props.removeLabel || sds.labels.remove) + (named ? " " + label : "")}><Icon icon={icons.Close} /></button>
     : null;
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingText)
   const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><Loader label="" delay={0} /></span> : null;

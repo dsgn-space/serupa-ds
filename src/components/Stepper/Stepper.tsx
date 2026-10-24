@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -60,7 +61,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
             <li key={i} className={cn("dk-stepper__step", "dk-stepper__step--" + state, i < current && "dk-stepper__step--done")} data-state={state} aria-current={i === current ? "step" : undefined}>
               <Head className="dk-stepper__head" {...(clickable ? { type: "button", onClick: () => props.onStepClick!(i) } : {})}>
                 <span className="dk-stepper__indicator" aria-hidden>
-                  {state === "complete" ? <Icon name="check" /> : state === "error" ? <Icon name="priority_high" /> : i + 1}
+                  {state === "complete" ? <Icon icon={icons.Check} /> : state === "error" ? <Icon icon={icons.PriorityHigh} /> : i + 1}
                 </span>
                 <span className="dk-stepper__text">
                   <span className="dk-stepper__title">
