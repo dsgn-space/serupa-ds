@@ -56,6 +56,8 @@ export interface SerupaLabels {
   optional: string;
   /** Toaster region. */
   notifications: string;
+  /** Toaster: said once, after the first toast with an action, so keyboard and screen reader users know how to reach it. */
+  toastShortcut: (key: string) => string;
   /** Sidebar and Navbar nav, and the Navbar menu button. */
   mainNavigation: string;
   menu: string;
@@ -76,7 +78,7 @@ export interface SerupaLabels {
 export const DEFAULT_LABELS: SerupaLabels = {
   close: "Close",
   dismiss: "Dismiss",
-  loading: "Loading",
+  loading: "Loading…",
   loadingResults: "Loading…",
   noResults: "No results",
   searching: "Searching",
@@ -109,6 +111,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   hasError: "has an error",
   optional: "Optional",
   notifications: "Notifications",
+  toastShortcut: (key) => "Press " + key + " to reach it.",
   mainNavigation: "Main",
   menu: "Menu",
   dragFiles: "Drag files here",
@@ -126,7 +129,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
 export const idLabels: SerupaLabels = {
   close: "Tutup",
   dismiss: "Abaikan",
-  loading: "Memuat",
+  loading: "Memuat…",
   loadingResults: "Memuat…",
   noResults: "Tidak ada hasil",
   searching: "Mencari",
@@ -159,6 +162,7 @@ export const idLabels: SerupaLabels = {
   hasError: "ada kesalahan",
   optional: "Opsional",
   notifications: "Notifikasi",
+  toastShortcut: (key) => "Tekan " + key + " untuk menjangkaunya.",
   mainNavigation: "Utama",
   menu: "Menu",
   dragFiles: "Seret file ke sini",

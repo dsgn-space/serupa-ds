@@ -19,11 +19,13 @@
 .dk-drawer--lg { --dk-drawer-width: var(--drawer-width-lg, var(--container-lg)); }
 .dk-drawer::backdrop { background: var(--drawer-overlay, var(--overlay)); }
 :root:has(.dk-drawer[open]) { overflow: hidden; }
+/* …keeping a classic scrollbar's space, so the page behind doesn't shift (internal/layers.ts sets data-dk-gutter). */
+:root[data-dk-gutter]:has(.dk-drawer[open]) { scrollbar-gutter: stable; }
 .dk-drawer__panel {
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
   width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
   padding: var(--drawer-padding, var(--spacing-6));
-  background: var(--drawer-bg, var(--surface));
+  background: var(--drawer-bg, var(--surface-overlay));
   box-shadow: var(--drawer-shadow, var(--shadow-xl));
   animation: dk-drawer-in var(--drawer-duration, var(--duration-300)) var(--ease-out);
 }

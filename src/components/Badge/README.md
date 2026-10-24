@@ -84,7 +84,7 @@ Only a clickable badge (`onClick` or `href`) has hover, focus and active states,
 | --- | --- |
 | Hover | A layer over the fill at 10%: the text color on subtle and outline (and the text moves 30% toward black in light themes, white in dark), black (light) or white (dark) on solid. The layer always moves away from the text, so every tone and style keeps 4.5:1 |
 | Active (pressed) | The same layer at 15% |
-| Focus | Keyboard focus only: a 2px focus ring outside a 2px gap in the surface color, like Button; a visible outline in forced-colors mode |
+| Focus | Keyboard focus only: a 2px `focus-ring` outline 2px out, like Button. The gap is transparent, and forced-colors mode draws it too |
 | Loading | Any badge: a 12px ring in the text color, centered over the hidden content; the badge keeps its width and colors |
 | Disabled | A disabled clickable badge: 50% opacity, `not-allowed` cursor, no layer |
 
@@ -128,7 +128,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `href` | string | | Renders a link (the component set with `Serupa.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
 | `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
 | `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile |
-| `loadingText` | string | `'Loading'` | Announced to screen readers when loading starts ("" announces nothing) |
+| `loadingText` | string | `'Loading…'` | Announced to screen readers when loading starts ("" announces nothing) |
 
 Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `data-*`, `ref`) goes to the outer element: a `<span>`, or the `<button>` or link when clickable. Every badge has `data-component="badge"`, `data-variant`, `data-tone` and `data-size` for tests, plus `data-interactive` when clickable and `data-loading` while loading.
 
@@ -166,7 +166,7 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | `--badge-active-layer` | `opacity-15` | Clickable badges: the layer while pressed (15%) |
 | `--badge-state-text` | `opacity-30` | Clickable subtle and outline badges: how far the text moves toward black (light) or white (dark) on hover and press (30%) |
 | `--badge-focus-ring` | `focus-ring` | Clickable badges: the keyboard focus ring |
-| `--badge-focus-gap-color` | `surface` | Clickable badges: the 2px gap between the badge and its focus ring |
+| `--badge-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
 | `--badge-press-scale` | `scale-97` | Clickable badges: size while pressed (97%); `100%` turns it off |
 | `--badge-press-duration` | `duration-100` | How fast the press scales (100ms) |
 | `--badge-ripple-opacity` | `opacity-20` | Ripple strength, in the text color (20%); `0` turns it off |

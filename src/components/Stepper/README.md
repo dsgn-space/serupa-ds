@@ -47,6 +47,7 @@ import { Stepper } from "serupa-ds";
 
 - An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed or error steps add ", completed" or ", has an error" for screen readers, so the state isn't shown by color alone.
 - Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`Stepper.test.tsx`).
+- In forced colors (Windows high contrast) the current and completed circles are Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide the number or check.
 
 ## Props
 
