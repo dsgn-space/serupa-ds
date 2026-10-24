@@ -21,10 +21,11 @@ export const Playground: Story = {};
 export const ContrastCheck: Story = {
   name: 'Contrast check',
   render: function Render() {
-    const [color, setColor] = React.useState<string>('#fde047');
+    // Amber passes AA (5:1 on white), so the sample text stays readable, and still shows the warning against 7:1.
+    const [color, setColor] = React.useState<string>('#b45309');
     return <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>
-      <Field label="Text color" hint="Checked against the white card it goes on">
-        <ColorPicker swatches={SWATCHES} value={color} onValueChange={setColor} contrastWith="#ffffff" />
+      <Field label="Text color" hint="Checked for 7:1 (AAA) against the white card it goes on">
+        <ColorPicker swatches={SWATCHES} value={color} onValueChange={setColor} contrastWith="#ffffff" minContrast={7} />
       </Field>
       <p style={{ margin: 0, padding: 'var(--spacing-3)', background: '#ffffff', color, border: '1px solid var(--border)', borderRadius: 'var(--rounded-md)' }}>The quick brown fox</p>
     </div>;
