@@ -52,7 +52,7 @@
 .dk-menu__item:focus-visible { outline: var(--focus-ring-width) solid transparent; }   /* shows in forced colors */
 .dk-menu__icon { display: inline-flex; flex-shrink: 0; color: var(--menu-muted, var(--text-muted)); }
 .dk-menu__icon .dk-icon { font-size: var(--spacing-4); }
-.dk-menu__label { flex: auto; min-width: var(--spacing-0); }
+.dk-menu__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-menu__shortcut { margin-inline-start: auto; padding-inline-start: var(--spacing-4); color: var(--menu-muted, var(--text-muted)); font-family: var(--font-sans); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); }
 .dk-menu__item:focus .dk-menu__shortcut { color: var(--menu-item-text, var(--text)); }
 .dk-menu__item--destructive, .dk-menu__item--destructive .dk-menu__icon { color: var(--menu-danger, var(--danger-text)); }

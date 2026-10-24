@@ -35,6 +35,7 @@ const { Button, buttonClass } = window.Serupa;
 
 ## Usage
 
+- A button is never wider than its container. A label that doesn't fit ends in an ellipsis, and the whole label is still its accessible name, so keep labels short enough to read in full.
 - One `primary` button per view or dialog; everything else is `secondary`, `outline` or `ghost`.
 - Label with a verb: "Save changes", not "OK".
 - Use `destructive` only for actions that delete or can't be undone, and only one solid (`primary`) destructive button per view, usually in the confirmation step.

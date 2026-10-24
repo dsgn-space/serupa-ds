@@ -48,7 +48,7 @@
 .dk-toast--success .dk-toast__icon { color: var(--toast-icon-success, var(--success)); }
 .dk-toast--warning .dk-toast__icon { color: var(--toast-icon-warning, var(--warning)); }
 .dk-toast--danger .dk-toast__icon { color: var(--toast-icon-danger, var(--danger)); }
-.dk-toast__content { display: flex; flex-direction: column; gap: var(--spacing-0\.5); flex: auto; min-width: var(--spacing-0); }
+.dk-toast__content { overflow-wrap: anywhere; display: flex; flex-direction: column; gap: var(--spacing-0\.5); flex: auto; min-width: var(--spacing-0); }
 .dk-toast__title { margin: var(--spacing-0); font-weight: var(--toast-title-weight, var(--font-semibold)); }
 .dk-toast__description { margin: var(--spacing-0); color: var(--toast-description-color, var(--text-muted)); }
 .dk-toast__action, .dk-toast__close { flex-shrink: 0; }
