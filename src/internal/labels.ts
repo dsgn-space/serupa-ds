@@ -54,6 +54,8 @@ export interface SerupaLabels {
   completed: string;
   hasError: string;
   optional: string;
+  /** Stepper, when the steps don't fit side by side and it shows only the current step's title: "Step 2 of 4". */
+  stepOf: (step: number, total: number) => string;
   /** Toaster region. */
   notifications: string;
   /** Toaster: said once, after the first toast with an action, so keyboard and screen reader users know how to reach it. */
@@ -110,6 +112,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   completed: "completed",
   hasError: "has an error",
   optional: "Optional",
+  stepOf: (step, total) => "Step " + step + " of " + total,
   notifications: "Notifications",
   toastShortcut: (key) => "Press " + key + " to reach it.",
   mainNavigation: "Main",
@@ -161,6 +164,7 @@ export const idLabels: SerupaLabels = {
   completed: "selesai",
   hasError: "ada kesalahan",
   optional: "Opsional",
+  stepOf: (step, total) => "Langkah " + step + " dari " + total,
   notifications: "Notifikasi",
   toastShortcut: (key) => "Tekan " + key + " untuk menjangkaunya.",
   mainNavigation: "Utama",

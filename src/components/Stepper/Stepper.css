@@ -55,6 +55,18 @@ button.dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid v
   position: absolute; inset-inline-start: var(--dk-step-line-start); width: var(--dk-step-line);
   top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
 }
+/* Too narrow for the titles side by side: the circles and lines only, and one line under them for the current
+   step. The titles stay in the list, clipped, for screen readers. --measure lays the titles out at full width for a
+   moment, so the script can tell whether they fit. */
+.dk-stepper--measure .dk-stepper__list { width: max-content; }
+.dk-stepper--measure .dk-stepper__head { max-width: none; }
+.dk-stepper--compact:not(.dk-stepper--measure) .dk-stepper__text {
+  position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0);
+  overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;
+}
+.dk-stepper--compact:not(.dk-stepper--measure) .dk-stepper__connector { min-width: var(--spacing-2); margin-inline: var(--spacing-1); }
+.dk-stepper__summary { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--stepper-description-color, var(--text-muted)); }
+.dk-stepper__summary .dk-stepper__title { color: var(--stepper-title-color, var(--text)); }
 @media (forced-colors: active) {
   .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }
   .dk-stepper__connector { background: CanvasText; }
