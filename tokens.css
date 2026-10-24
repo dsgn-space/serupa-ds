@@ -10,6 +10,8 @@
   --secondary-hover: var(--zinc-200); /* Alias. Hover state of `secondary`. */
   --surface: var(--white); /* Alias. Page and card background (white light, zinc-950 dark). */
   --surface-muted: var(--zinc-50); /* Alias. Secondary panels, sidebars, table headers. */
+  --surface-raised: var(--white); /* Alias. A raised card (Card `elevated`). One step up from `surface` in dark, where a shadow doesn't show. */
+  --surface-overlay: var(--white); /* Alias. Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast and the Combobox, DatePicker and TimePicker lists. */
   --field: var(--white); /* Alias. Background of text inputs, selects and other form fields. */
   --field-border: var(--zinc-500); /* Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary. */
   --field-border-hover: var(--zinc-600); /* Alias. Field border on hover. */
@@ -21,6 +23,8 @@
   --text-inverse: var(--white); /* Alias. Text on `surface-inverse`. */
   --border: var(--zinc-200); /* Alias. Default borders and dividers. */
   --border-strong: var(--zinc-300); /* Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs. */
+  --border-raised: var(--white); /* Alias. A raised card's edge: invisible in light (white on white), a 1px lighter edge in dark. */
+  --border-overlay: var(--zinc-200); /* Alias. The edge of a top-layer surface. In dark it is one step stronger than `border`, so a menu stands off the page. */
   --focus-ring: var(--blue-500); /* Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme). */
   --success: var(--green-600); /* Alias. Success icons and fills. For success text on light surfaces use `green-700`. */
   --success-subtle: var(--green-50); /* Alias. Success alert / badge background. */
@@ -307,6 +311,8 @@
   --secondary-hover: var(--zinc-700);
   --surface: var(--zinc-950);
   --surface-muted: var(--zinc-900);
+  --surface-raised: var(--zinc-900);
+  --surface-overlay: var(--zinc-900);
   --field: var(--zinc-900);
   --field-border: var(--zinc-500);
   --field-border-hover: var(--zinc-400);
@@ -318,6 +324,8 @@
   --text-inverse: var(--zinc-900);
   --border: var(--zinc-800);
   --border-strong: var(--zinc-700);
+  --border-raised: var(--zinc-800);
+  --border-overlay: var(--zinc-700);
   --focus-ring: var(--blue-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -342,6 +350,8 @@
   --secondary-hover: var(--zinc-200);
   --surface: var(--white);
   --surface-muted: var(--zinc-50);
+  --surface-raised: var(--white);
+  --surface-overlay: var(--white);
   --field: var(--white);
   --field-border: var(--zinc-500);
   --field-border-hover: var(--zinc-600);
@@ -353,6 +363,8 @@
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
+  --border-raised: var(--white);
+  --border-overlay: var(--zinc-200);
   --focus-ring: var(--violet-500);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
@@ -377,6 +389,8 @@
   --secondary-hover: var(--zinc-700);
   --surface: var(--zinc-950);
   --surface-muted: var(--zinc-900);
+  --surface-raised: var(--zinc-900);
+  --surface-overlay: var(--zinc-900);
   --field: var(--zinc-900);
   --field-border: var(--zinc-500);
   --field-border-hover: var(--zinc-400);
@@ -388,6 +402,8 @@
   --text-inverse: var(--zinc-900);
   --border: var(--zinc-800);
   --border-strong: var(--zinc-700);
+  --border-raised: var(--zinc-800);
+  --border-overlay: var(--zinc-700);
   --focus-ring: var(--violet-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -412,6 +428,8 @@
   --secondary-hover: var(--zinc-200);
   --surface: var(--white);
   --surface-muted: var(--zinc-50);
+  --surface-raised: var(--white);
+  --surface-overlay: var(--white);
   --field: var(--white);
   --field-border: var(--zinc-500);
   --field-border-hover: var(--zinc-600);
@@ -423,6 +441,8 @@
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
+  --border-raised: var(--white);
+  --border-overlay: var(--zinc-200);
   --focus-ring: var(--emerald-600);
   --success: var(--green-600);
   --success-subtle: var(--green-50);
@@ -447,6 +467,8 @@
   --secondary-hover: var(--zinc-700);
   --surface: var(--zinc-950);
   --surface-muted: var(--zinc-900);
+  --surface-raised: var(--zinc-900);
+  --surface-overlay: var(--zinc-900);
   --field: var(--zinc-900);
   --field-border: var(--zinc-500);
   --field-border-hover: var(--zinc-400);
@@ -458,6 +480,8 @@
   --text-inverse: var(--zinc-900);
   --border: var(--zinc-800);
   --border-strong: var(--zinc-700);
+  --border-raised: var(--zinc-800);
+  --border-overlay: var(--zinc-700);
   --focus-ring: var(--emerald-400);
   --success: var(--green-500);
   --success-subtle: var(--green-950);
@@ -483,6 +507,8 @@
   --secondary-hover: light-dark(var(--zinc-200), var(--zinc-700));
   --surface: light-dark(var(--white), var(--zinc-950));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-900));
+  --surface-raised: light-dark(var(--white), var(--zinc-900));
+  --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --field: light-dark(var(--white), var(--zinc-900));
   --field-border-hover: light-dark(var(--zinc-600), var(--zinc-400));
   --placeholder: light-dark(var(--zinc-500), var(--zinc-400));
@@ -493,6 +519,8 @@
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-700));
+  --border-raised: light-dark(var(--white), var(--zinc-800));
+  --border-overlay: light-dark(var(--zinc-200), var(--zinc-700));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --success: light-dark(var(--green-600), var(--green-500));
   --success-subtle: light-dark(var(--green-50), var(--green-950));

@@ -44,7 +44,7 @@
       },
       "popup-bg": {
         "$type": "color",
-        "$value": "{color.surface}",
+        "$value": "{color.surface-overlay}",
         "$description": "The calendar panel's background.",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "popup-border": {
         "$type": "color",
-        "$value": "{color.border}",
+        "$value": "{color.border-overlay}",
         "$description": "Its outline.",
         "$extensions": {
           "com.serupa": {

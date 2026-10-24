@@ -22,8 +22,8 @@
   max-width: calc(var(--sizing-full) - var(--spacing-4));
   max-height: var(--combobox-listbox-max-height, var(--spacing-60)); overflow-y: auto; overscroll-behavior: contain;
   margin: var(--spacing-0); padding: var(--combobox-listbox-padding, var(--spacing-1));
-  border: var(--border-width-1) solid var(--combobox-listbox-border, var(--border));
-  border-radius: var(--combobox-listbox-radius, var(--rounded-lg)); background: var(--combobox-listbox-bg, var(--surface));
+  border: var(--border-width-1) solid var(--combobox-listbox-border, var(--border-overlay));
+  border-radius: var(--combobox-listbox-radius, var(--rounded-lg)); background: var(--combobox-listbox-bg, var(--surface-overlay));
   box-shadow: var(--combobox-listbox-shadow, var(--shadow-lg));
   color: var(--combobox-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
 }

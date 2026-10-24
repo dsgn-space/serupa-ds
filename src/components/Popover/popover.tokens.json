@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface}",
+        "$value": "{color.surface-overlay}",
         "$description": "The panel's background.",
         "$extensions": {
           "com.serupa": {
@@ -24,7 +24,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border}",
+        "$value": "{color.border-overlay}",
         "$description": "The panel's border.",
         "$extensions": {
           "com.serupa": {

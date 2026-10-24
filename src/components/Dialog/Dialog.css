@@ -38,7 +38,7 @@
   max-width: var(--sizing-full);
   max-height: var(--sizing-full);
   padding: var(--dialog-padding, var(--spacing-6));
-  background: var(--dialog-bg, var(--surface));
+  background: var(--dialog-bg, var(--surface-overlay));
   border-radius: var(--dialog-radius, var(--rounded-xl));
   box-shadow: var(--dialog-shadow, var(--shadow-xl));
   animation: dk-dialog-in var(--duration-200) var(--ease-out);

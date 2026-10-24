@@ -79,8 +79,8 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--toast-bg` | `surface` | A toast's background. |
-| `--toast-border` | `border` | A toast's border. |
+| `--toast-bg` | `surface-overlay` | A toast's background. |
+| `--toast-border` | `border-overlay` | A toast's border. |
 | `--toast-title-color` | `text` | The title. |
 | `--toast-description-color` | `text-muted` | The description (4.5:1 on surface). |
 | `--toast-icon-info` | `info` | The icon of an info toast (3:1 on surface). |

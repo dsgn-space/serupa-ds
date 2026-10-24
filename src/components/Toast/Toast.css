@@ -25,9 +25,9 @@
   align-items: flex-start;
   gap: var(--toast-gap, var(--spacing-3));
   padding: var(--toast-padding, var(--spacing-4));
-  border: var(--toast-border-width, var(--border-width-1)) solid var(--toast-border, var(--border));
+  border: var(--toast-border-width, var(--border-width-1)) solid var(--toast-border, var(--border-overlay));
   border-radius: var(--toast-radius, var(--rounded-lg));
-  background: var(--toast-bg, var(--surface));
+  background: var(--toast-bg, var(--surface-overlay));
   color: var(--toast-title-color, var(--text));
   box-shadow: var(--toast-shadow, var(--shadow-lg));
   font-family: var(--font-sans);
