@@ -43,6 +43,7 @@ const [open, setOpen] = React.useState(false);
 
 - `aria-modal`, named by the title (`aria-labelledby`) and described by the description.
 - The title, description and body text keep 4.5:1 on the panel in all six themes (`Drawer.test.tsx`). In forced-colors mode the panel gets a border.
+- A Dialog opened from inside it closes on its own: Escape closes the Dialog first, and the next Escape the Drawer.
 
 ## Props
 
