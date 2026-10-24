@@ -50,7 +50,7 @@ const { Textarea } = window.Serupa;
 - Every textarea needs a name: a visible `<label htmlFor>` (best) or `aria-label`. A placeholder isn't a label: it disappears as soon as someone types.
 - `invalid` sets `aria-invalid`, but color alone doesn't explain the problem: put the message in text and link it with `aria-describedby`.
 - The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. It isn't announced on every keystroke, which would drown out the typing.
-- `maxLength` stops typing at the limit. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
+- `maxLength` stops typing at the limit, counted in characters as people see them, the same way as the count: an emoji such as 👨‍👩‍👧 or 🇮🇩 is one, where the browser's own `maxlength` would count it as up to 8. Textarea applies the limit itself, so the `<textarea>` has no `maxlength` attribute. Text pasted past the limit is cut at the end of the paste (what comes after it stays), and an input method's text is cut once it's confirmed. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
 - Text, the placeholder and the count keep 4.5:1 on `field`, and the border 3:1, in all six themes (`Textarea.test.tsx`).
 
 ## Props
@@ -63,9 +63,9 @@ const { Textarea } = window.Serupa;
 | `maxRows` | number | | With `autoResize`: the most lines it grows to; past that the text scrolls. Unset: no limit |
 | `resize` | `'vertical'` \| `'none'` | `'vertical'` | A handle to drag the height, or a fixed height |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
-| `showCount` | boolean | `false` | A character count under the text: "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached. The numbers are in the locale's digits, as Calendar's days are: "٣٢ / ٢٨٠" in Egyptian Arabic |
+| `showCount` | boolean | `false` | A character count under the text, in characters as people see them (an emoji is one): "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached. The numbers are in the locale's digits, as Calendar's days are: "٣٢ / ٢٨٠" in Egyptian Arabic |
 
-Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `maxLength`, `disabled`, `readOnly`, `required`, `name`, `id`, `aria-*`) and `ref` go to the `<textarea>`. `className` and `style` go to the box, so `className="w-96"` sets its width (full width by default). The box has `data-component="textarea"` and `data-size`.
+Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `disabled`, `readOnly`, `required`, `name`, `id`, `aria-*`) and `ref` go to the `<textarea>`. `className` and `style` go to the box, so `className="w-96"` sets its width (full width by default). The box has `data-component="textarea"` and `data-size`.
 
 ## Component tokens
 
