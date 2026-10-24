@@ -5,6 +5,7 @@ import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { useFieldLabel } from "../../internal/fieldLabel";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export interface SegmentedControlOption {
@@ -66,6 +67,8 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
   const size = props.size === "sm" ? "sm" : "md";
+  // In a Field, its label names the group (Field's <label for> can't reach a radiogroup); its own name wins.
+  const fieldLabel = useFieldLabel(props.id);
   // ref.current.focus() and autoFocus land on the segment in the Tab order: the selected one, or else the first
   // that isn't disabled (none when all are).
   const tabStop = () => root.current && root.current.querySelector<HTMLElement>('[role=radio][tabindex="0"]');
@@ -122,6 +125,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, tabStop); setRef(ref, n); }}
       role="radiogroup" aria-disabled={disabled || undefined}
       aria-invalid={invalid || undefined} aria-required={required || undefined} aria-readonly={readOnly || undefined}
+      aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : fieldLabel)}
       className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", invalid && "dk-segmented--invalid", readOnly && "dk-segmented--readonly", props.className)}
       data-component="segmented-control" data-size={size} onKeyDown={undefined} onFocus={onFocus} onBlur={onBlur}>
       {box ? <span className="dk-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
