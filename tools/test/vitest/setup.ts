@@ -27,6 +27,9 @@ afterEach(async () => {
 });
 // The tests run in a frame, and Firefox gives a frame keyboard focus only once something clicks into it: until then
 // el.focus() leaves focus on the body and keys go nowhere. So a click in the empty corner first, when it's needed.
+// A key press before each test, so a script's focus() is :focus-visible as on a page nobody has clicked yet: after a
+// test that clicked, Chromium would otherwise draw no focus ring and a test that reads one would depend on the order.
+beforeEach(() => userEvent.keyboard('{Shift}'));
 beforeEach(async () => {
   if (document.hasFocus()) return;
   window.focus();
