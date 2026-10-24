@@ -8,6 +8,7 @@ import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
+import { isComposing } from "../../internal/ime";
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> {
   /** The chosen day (controlled), or null. Use with onValueChange. */
@@ -121,7 +122,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
         onBlur={(e) => { read(); if (onBlur) onBlur(e); }}
         onKeyDown={(e) => {
           if (onKeyDown) onKeyDown(e);
-          if (e.defaultPrevented) return;
+          if (e.defaultPrevented || isComposing(e)) return;
           if (e.key === "Enter") read();
           else if (e.key === "ArrowDown" && e.altKey && !off) { e.preventDefault(); read(); setOpen(true); }
         }} />
@@ -131,7 +132,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
       </button>
       {name ? <input type="hidden" name={name} value={value ? isoDate(value) : ""} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"
-        onKeyDown={(e) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); } }}>
+        onKeyDown={(e) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}>
         {open ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus
           onValueChange={(d) => { commit(d); close(true); }} /> : null}
       </div>
