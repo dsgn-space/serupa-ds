@@ -226,6 +226,7 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     description?: React.ReactNode;
     indeterminate?: boolean;
     invalid?: boolean;
+    readOnly?: boolean;
 }
 declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
