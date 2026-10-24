@@ -14,6 +14,11 @@ const box = (id: string) => {
 const count = (id: string) => el(id).parentElement!.querySelector('.dk-textarea__count') as HTMLElement;
 const away = () => userEvent.hover(document.body, { position: { x: 800, y: 5 } });
 
+function Ctrl(props: { onValue: (v: string) => void }) {
+  const [v, set] = React.useState('xy');
+  return <Textarea id="emoc" showCount maxLength={4} value={v} onChange={(e) => { props.onValue(e.target.value); set(e.target.value); }} aria-label="Emoji, controlled" />;
+}
+
 let changes: string[] = [], setCtrl: (v: string) => void = () => {};
 function App(props: { tref?: React.Ref<HTMLTextAreaElement> }) {
   const [v, set] = React.useState(''), [cv, setC] = React.useState('abc'); setCtrl = setC;
@@ -134,6 +139,43 @@ describe('Textarea', () => {
     await userEvent.keyboard('{End}cdefg');
     expect([count('cnt').textContent, count('cnt').classList.contains('dk-textarea__count--full')]).toEqual(['5 / 5', true]);
     expect(css(count('cnt')).color).not.toBe(col0);
+  });
+
+  test('showCount and maxLength count the characters people see: an emoji family and a flag are one each (R32)', async () => {
+    const seen: string[] = [];
+    await render(<>
+      <Textarea id="emo" showCount maxLength={4} defaultValue="👨‍👩‍👧🇮🇩" aria-label="Emoji" />
+      <Ctrl onValue={(v) => seen.push(v)} />
+    </>);
+    expect([count('emo').textContent, el('emo').hasAttribute('maxlength')]).toEqual(['2 / 4', false]);
+    await userEvent.click(el('emo'));
+    await userEvent.keyboard('{End}abc');
+    // Typing stops at the limit the count shows (the browser's maxlength would have stopped at 12 code units).
+    expect([el('emo').value, count('emo').textContent]).toEqual(['👨‍👩‍👧🇮🇩ab', '4 / 4']);
+    // Controlled: a paste in the middle is cut to fit, the text after it stays, and onChange gets the cut value.
+    const c = el('emoc');
+    // What a paste of three flags between x and y does to the field: the new value, then an input event.
+    React.act(() => {
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(c, 'x🇮🇩🇮🇩🇮🇩y');
+      c.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    expect([c.value, seen.at(-1), count('emoc').textContent, c.selectionStart]).toEqual(['x🇮🇩🇮🇩y', 'x🇮🇩🇮🇩y', '4 / 4', 9]);
+  });
+
+  test('maxLength with an input method: the text is cut once the composition is confirmed, not while it\'s being typed', async () => {
+    const seen: string[] = [];
+    await render(<Textarea id="ime" showCount maxLength={3} defaultValue="あ" onChange={(e) => seen.push(e.target.value)} aria-label="IME" />);
+    const t = el('ime'), set = (v: string) => { Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(t, v); t.dispatchEvent(new Event('input', { bubbles: true })); };
+    t.focus();
+    React.act(() => {
+      t.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+      set('あかんじ');
+      set('あ漢字です');
+    });
+    // Mid-composition the half-typed text is left alone.
+    expect(t.value).toBe('あ漢字です');
+    React.act(() => { t.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '漢字です' })); });
+    expect([t.value, seen.at(-1), count('ime').textContent]).toEqual(['あ漢字', 'あ漢字', '3 / 3']);
   });
 
   test('showCount without maxLength: the plain count, following a controlled value', async () => {

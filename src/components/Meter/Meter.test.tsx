@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
+import { idLabels } from '../../internal/labels';
 import { Meter, meterState } from './Meter';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -64,6 +65,22 @@ describe('Meter', () => {
     const tone: Record<string, string> = { optimum: color('var(--success)'), suboptimal: color('var(--warning)'), poor: color('var(--danger)') };
     expect(cases.map(([id]) => el(id).dataset.state)).toEqual(cases.map((c) => c[2]));
     expect(cases.map(([id]) => fill(id))).toEqual(cases.map((c) => tone[c[2]]));
+  });
+
+  test('outside the best zone the read-out value says where it falls ("92%, high"), the shown value stays "92%"; in the best zone, without zones, or with formatValue, it is the value alone; Indonesian words from the provider', async () => {
+    await render(<Wrap>
+      <Meter id="z-high" value={92} high={80} optimum={10} showValue aria-label="Storage" />
+      <Meter id="z-low" value={12} low={20} high={60} optimum={100} aria-label="Battery" />
+      <Meter id="z-mid" value={45} low={20} high={60} optimum={100} aria-label="Battery" />
+      <Meter id="z-best" value={85} low={20} high={60} optimum={100} aria-label="Battery" />
+      <Meter id="z-none" value={92} aria-label="Plain" />
+      <Meter id="z-own" value={92} high={80} optimum={10} formatValue={() => 'Almost full'} aria-label="Own" />
+      <SerupaProvider locale="id-ID" labels={idLabels}><Meter id="z-id" value={92} high={80} optimum={10} aria-label="Penyimpanan" /></SerupaProvider>
+    </Wrap>);
+    const pct = (l: string) => new Intl.NumberFormat(l, { style: 'percent' }).format(0.92);
+    expect(['z-high', 'z-low', 'z-mid', 'z-best', 'z-none', 'z-own', 'z-id'].map((id) => mt(id).getAttribute('aria-valuetext')))
+      .toEqual([pct('en-US') + ', high', '12%, low', '45%, medium', '85%', pct('en-US'), 'Almost full', pct('id-ID') + ', tinggi']);
+    expect(value('z-high')).toBe(pct('en-US'));
   });
 
   test('meterState: no zones without low and high; edges as the HTML spec sets them (low and high clamped into min..max, high never under low, optimum clamped)', () => {

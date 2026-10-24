@@ -14,6 +14,9 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const pkg = JSON.parse(read('package.json'));
 
+// 0. Nothing publishes to a registry until Diki picks the final name: projects install releases from GitHub.
+t('package.json is private and has no publishConfig, so npm publish refuses', pkg.private === true && !('publishConfig' in pkg), `private: ${pkg.private}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
+
 // 1. exports
 const targets = [];
 for (const [k, v] of Object.entries(pkg.exports)) for (const f of typeof v === 'string' ? [v] : Object.values(v)) if (!f.includes('*')) targets.push([k, f]);
@@ -65,6 +68,12 @@ if (D) {
   }
   [console.error, console.warn] = keep;
   t('no React warnings while rendering on the server', !warnings.length, warnings.slice(0, 3).join(' | '));
+  // RelativeTime on a long-running server: each request says how long ago it is then, not when the process started.
+  const realNow = Date.now, start = realNow(), stamp = start - 5 * 60e3;
+  const ago = () => renderToString(h(D.RelativeTime, { date: stamp, locale: 'en-US' })).replace(/<[^>]*>/g, '');
+  let first = '', later = '';
+  try { first = ago(); Date.now = () => start + 2 * 3600e3; later = ago(); } finally { Date.now = realNow; }
+  t('RelativeTime on the server: a request two hours later says "2 hours ago", not the first request\'s words', first === '5 minutes ago' && later === '2 hours ago', `${first} | ${later}`);
   t('version matches package.json', D.version === pkg.version, D.version);
   // Icons: each component imports the icons it draws, so they draw on the server. A name drawn as a string loads in
   // the browser (the components' icons from a small chunk, the rest from the full set), so on the server it's an empty box.
