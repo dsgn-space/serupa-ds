@@ -1,0 +1,138 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
+import { idLabels } from '../../internal/labels';
+import { SortableList } from './SortableList';
+
+type Item = { id: string; name: string };
+const ITEMS: Item[] = ['Apollo', 'Gemini', 'Mercury', 'Artemis'].map((name) => ({ id: name.toLowerCase(), name }));
+const names = () => [...document.querySelectorAll('#sl .dk-sortable-list__content')].map((n) => n.textContent);
+const handle = (name: string) => document.querySelector(`#sl button[aria-label$=" ${name}"]`) as HTMLButtonElement;
+const announcer = () => document.querySelector('[data-dk-announcer]') as HTMLElement | null;
+const said = (text: string | RegExp) => expect.poll(() => announcer()?.textContent || '', { timeout: 3000 }).toMatch(text);
+
+function List({ moves, disabled }: { moves?: Array<{ from: number; to: number }>; disabled?: boolean }) {
+  const [items, setItems] = React.useState(ITEMS);
+  return <div style={{ width: '320px' }}><SortableList id="sl" aria-label="Missions" items={items} getKey={(i) => i.id} getLabel={(i) => i.name} disabled={disabled}
+    renderItem={(i, s) => <span data-index={s.index} data-dragging={s.dragging || undefined}>{i.name}</span>}
+    onReorder={(next, m) => { moves?.push(m); setItems(next); }} /><button id="after">After</button></div>;
+}
+
+describe('SortableList', () => {
+  test('a <ul> of <li> rows, each with a handle named "Reorder <name>", described by the instructions; renderItem gets the index; ref and props reach the <ul>', async () => {
+    const ref = React.createRef<HTMLUListElement>();
+    await render(<SortableList ref={ref} id="sl" className="extra" aria-label="Missions" items={ITEMS} getKey={(i) => i.id} getLabel={(i) => i.name}
+      renderItem={(i, s) => `${s.index}:${i.name}`} onReorder={() => undefined} />);
+    const ul = document.getElementById('sl')!, h = handle('Apollo');
+    expect([ul.tagName, ref.current === ul, ul.className, ul.getAttribute('aria-label'), ul.dataset.component, ul.children.length, names()])
+      .toEqual(['UL', true, 'dk-sortable-list extra', 'Missions', 'sortable-list', 4, ['0:Apollo', '1:Gemini', '2:Mercury', '3:Artemis']]);
+    expect([h.getAttribute('type'), h.getAttribute('aria-pressed'), document.getElementById(h.getAttribute('aria-describedby')!)!.textContent])
+      .toEqual(['button', 'false', 'Press Space to pick it up, the arrow keys to move it, Space again to drop it, or Escape to cancel.']);
+  });
+
+  test('keyboard: Space picks up, the arrows move (focus stays on the handle), Space drops and reports the move once; each step is announced', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    await render(<List moves={moves} />);
+    handle('Gemini').focus();
+    await userEvent.keyboard(' ');
+    expect(handle('Gemini').getAttribute('aria-pressed')).toBe('true');
+    await said('Picked up Gemini, position 2 of 4.');
+    await userEvent.keyboard('{ArrowDown}');
+    await said('Gemini, position 3 of 4.');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    expect([names(), document.activeElement === handle('Gemini'), moves]).toEqual([['Apollo', 'Mercury', 'Artemis', 'Gemini'], true, []]);
+    await userEvent.keyboard(' ');
+    await said('Dropped Gemini at position 4 of 4.');
+    expect([names(), moves, handle('Gemini').getAttribute('aria-pressed'), document.activeElement === handle('Gemini')])
+      .toEqual([['Apollo', 'Mercury', 'Artemis', 'Gemini'], [{ from: 1, to: 3 }], 'false', true]);
+  });
+
+  test('Enter works like Space; Home and End move to the ends; Escape puts it back without reporting a move', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    await render(<List moves={moves} />);
+    handle('Mercury').focus();
+    await userEvent.keyboard('{Enter}{Home}');
+    expect(names()).toEqual(['Mercury', 'Apollo', 'Gemini', 'Artemis']);
+    await userEvent.keyboard('{End}');
+    expect(names()).toEqual(['Apollo', 'Gemini', 'Artemis', 'Mercury']);
+    await userEvent.keyboard('{Escape}');
+    await said('Cancelled. Mercury is back at position 3 of 4.');
+    expect([names(), moves, document.activeElement === handle('Mercury')]).toEqual([['Apollo', 'Gemini', 'Mercury', 'Artemis'], [], true]);
+    await userEvent.keyboard('{Enter}{Home}{Enter}');
+    expect([names(), moves]).toEqual([['Mercury', 'Apollo', 'Gemini', 'Artemis'], [{ from: 2, to: 0 }]]);
+  });
+
+  test('Tab or a click elsewhere while an item is picked up puts it back', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    await render(<List moves={moves} />);
+    handle('Apollo').focus();
+    await userEvent.keyboard(' {ArrowDown}');
+    await userEvent.tab();
+    expect([names(), moves, handle('Apollo').getAttribute('aria-pressed')]).toEqual([['Apollo', 'Gemini', 'Mercury', 'Artemis'], [], 'false']);
+    handle('Apollo').focus();
+    await userEvent.keyboard(' {ArrowDown}');
+    await userEvent.click(document.getElementById('after')!);
+    await expect.poll(() => names()).toEqual(['Apollo', 'Gemini', 'Mercury', 'Artemis']);
+    expect(moves).toEqual([]);
+  });
+
+  test('pointer: dragging a handle moves the row under the pointer, the others make room, and dropping reports the move', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    await render(<List moves={moves} />);
+    const rows = [...document.querySelectorAll('#sl > li')] as HTMLElement[];
+    const step = rows[1].getBoundingClientRect().top - rows[0].getBoundingClientRect().top;
+    const h = handle('Apollo'), c = { x: h.offsetWidth / 2, y: h.offsetHeight / 2 };
+    await drag(h, c, { x: c.x, y: c.y + step * 2 + 4 }, 8);
+    expect([names(), moves]).toEqual([['Gemini', 'Mercury', 'Apollo', 'Artemis'], [{ from: 0, to: 2 }]]);
+    await said('Dropped Apollo at position 3 of 4.');
+    expect(([...document.querySelectorAll('#sl > li')] as HTMLElement[]).map((r) => r.style.transform)).toEqual(['', '', '', '']);
+  });
+
+  test('a press without moving does nothing; a drag back to where it started reports nothing', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    await render(<List moves={moves} />);
+    await userEvent.click(handle('Gemini'));
+    expect([handle('Gemini').getAttribute('aria-pressed'), names()]).toEqual(['false', ['Apollo', 'Gemini', 'Mercury', 'Artemis']]);
+    const h = handle('Gemini'), c = { x: h.offsetWidth / 2, y: h.offsetHeight / 2 };
+    await drag(h, c, { x: c.x, y: c.y + 6 }, 4);
+    expect([names(), moves]).toEqual([['Apollo', 'Gemini', 'Mercury', 'Artemis'], []]);
+  });
+
+  test('disabled: no handles and no instructions; the rows stay', async () => {
+    await render(<List disabled />);
+    expect([document.querySelectorAll('#sl button').length, names().length, document.getElementById('sl')!.classList.contains('dk-sortable-list--disabled')]).toEqual([0, 4, true]);
+  });
+
+  test('words from SerupaProvider labels (Indonesian)', async () => {
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><SortableList id="sl" items={ITEMS.slice(0, 2)} getKey={(i) => i.id} getLabel={(i) => i.name} renderItem={(i) => i.name} onReorder={() => undefined} /></SerupaProvider>);
+    expect(handle('Apollo').getAttribute('aria-label')).toBe('Ubah urutan Apollo');
+    handle('Apollo').focus();
+    await userEvent.keyboard(' ');
+    await said('Apollo diangkat, posisi 1 dari 2.');
+    await userEvent.keyboard('{Escape}');
+  });
+
+  test('reorderLabel names the handles', async () => {
+    await render(<SortableList id="sl" reorderLabel="Move" items={ITEMS.slice(0, 1)} getKey={(i) => i.id} getLabel={(i) => i.name} renderItem={(i) => i.name} onReorder={() => undefined} />);
+    expect(handle('Apollo').getAttribute('aria-label')).toBe('Move Apollo');
+  });
+
+  test('contrast: the handle keeps 3:1 and the text 4.5:1 on the row, in all six themes', async () => {
+    await render(<List />);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      await Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined)));
+      const row = document.querySelector('#sl > li')!, bg = css(row).backgroundColor;
+      for (const [el, need] of [[row.querySelector('.dk-sortable-list__handle'), 3], [row.querySelector('.dk-sortable-list__content'), 4.5]] as const) {
+        const r = contrast(css(el).color, bg);
+        if (r < need) low.push(`${th} ${(el as Element).className} ${r.toFixed(2)}`);
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+});
