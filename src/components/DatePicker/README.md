@@ -40,7 +40,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 
 ## Accessibility
 
-- **Role and name:** the field is a text input; label it with Field, `<label htmlFor>` or `aria-label`. The calendar button is named by `buttonLabel` ("Choose date").
+- **Role and name:** the field is a text input; label it with Field, `<label htmlFor>` or `aria-label`. The calendar button is named by `buttonLabel` ("Choose a date").
 - **Keyboard:**
 
   | Key | Does |
@@ -68,7 +68,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 | `invalid` | `boolean` | `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `yyyy-mm-dd`. |
 | `placeholder` | `string` | the locale's pattern, such as `mm/dd/yyyy` | |
-| `buttonLabel` | `string` | `"Choose date"` | The calendar button's name, and the popup's. |
+| `buttonLabel` | `string` | `"Choose a date"` | The calendar button's name, and the popup's. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 

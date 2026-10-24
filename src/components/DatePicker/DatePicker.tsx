@@ -28,7 +28,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   size?: 'sm' | 'md' | 'lg';
   /** A danger border and aria-invalid, like Input. */
   invalid?: boolean;
-  /** The calendar button's name. Default: "Choose date". */
+  /** The calendar button's name. Default: "Choose a date". */
   buttonLabel?: string;
 }
 
@@ -118,12 +118,12 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
           if (e.key === "Enter") read();
           else if (e.key === "ArrowDown" && e.altKey && !off) { e.preventDefault(); read(); setOpen(true); }
         }} />
-      <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || "Choose date"} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
+      <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || "Choose a date"} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
         disabled={off} onClick={() => { if (!open) read(); setOpen(!open); }}>
         <Icon name="calendar_today" />
       </button>
       {name ? <input type="hidden" name={name} value={value ? isoDate(value) : ""} disabled={disabled} /> : null}
-      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || "Choose date"} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"
+      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || "Choose a date"} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"
         onKeyDown={(e) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); } }}>
         {open ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus
           onValueChange={(d) => { commit(d); close(true); }} /> : null}
