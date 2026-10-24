@@ -2,6 +2,7 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { config } from "../../internal/config";
+import { useSerupa } from "../../internal/provider";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
@@ -66,12 +67,13 @@ const OWN = { variant: 1, tone: 1, size: 1, dot: 1, ping: 1, leftIcon: 1, count:
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
 export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge", function Badge(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, "subtle");
   const tone = oneOf(TONES, props.tone, "neutral");
   if (props.size != null) warnOnce("badge-size", "Badge: size was removed in 4.0.0; badges have one size (20px, text-xs). Remove the size prop.");   // still swallowed, so it never reaches the DOM
   const loading = !!props.loading;
-  const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
+  const loadingText = props.loadingText == null ? sds.labels.loading : props.loadingText;
   // Hooks first: a count of 0 renders nothing below, and hooks must run on every render.
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   // Announces only when loading starts: a new loadingText while it loads re-runs this but announces nothing.
@@ -125,7 +127,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
   const named = typeof label === "string" || typeof label === "number";
   const remove = removable
     ? <button type="button" className="dk-badge__remove" key="remove" onClick={props.onRemove} disabled={loading || undefined}
-        aria-label={(props.removeLabel || "Remove") + (named ? " " + label : "")}><Icon name="close" /></button>
+        aria-label={(props.removeLabel || sds.labels.remove) + (named ? " " + label : "")}><Icon name="close" /></button>
     : null;
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingText)
   const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><Loader label="" delay={0} /></span> : null;
