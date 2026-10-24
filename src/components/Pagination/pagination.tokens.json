@@ -144,7 +144,7 @@
     "opacity": {
       "disabled": {
         "$type": "number",
-        "$value": "{opacity.opacity-50}",
+        "$value": "{opacity.opacity-disabled}",
         "$description": "Previous or next when there's no page that way.",
         "$extensions": {
           "com.serupa": {
