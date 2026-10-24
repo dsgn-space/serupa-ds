@@ -52,6 +52,16 @@
           }
         }
       },
+      "bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "A link or button item while it's pressed (not while its trailing action is), one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--list-bg-pressed"
+          }
+        }
+      },
       "indicator-selected": {
         "$type": "color",
         "$value": "{color.primary}",
