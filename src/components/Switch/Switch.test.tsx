@@ -129,9 +129,10 @@ describe('Switch', () => {
     expect([a.id, c.outlineColor, c.outlineWidth, c.outlineOffset]).toEqual(['bad', 'rgba(0, 0, 0, 0)', '2px', '2px']);
   });
 
-  test('invalid: aria-invalid and a danger track while off', async () => {
+  test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
-    await expect.poll(() => box('inv').bg).toBe(color('var(--danger)'));
+    await expect.poll(() => box('inv').bg).toBe(color('var(--field-border)'));
+    expect(css(el('inv')).boxShadow).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
 
@@ -171,7 +172,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--field-border)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--field-border)', 3], ['off thumb, hover', 'var(--field)', 'var(--field-border-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid track', 'var(--danger)', 'var(--surface)', 3], ['thumb on invalid track', 'var(--field)', 'var(--danger)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--field-border)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--field-border)', 3], ['off thumb, hover', 'var(--field)', 'var(--field-border-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);
