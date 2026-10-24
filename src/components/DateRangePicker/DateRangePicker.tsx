@@ -37,6 +37,8 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   invalid?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
+  /** Both fields are required: a form won't submit until each end has a date, as with a required <input>. */
+  required?: boolean;
   /** The start field's id, so a Field or <label htmlFor> focuses it. */
   id?: string;
   /** Names for the two fields. Default: "Start date" and "End date". */
@@ -64,11 +66,11 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>("DateRangePicker", function DateRangePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSerupa();
-  const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, autoFocus, className, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  const describedBy = rest["aria-describedby"], required = rest["aria-required"];
+  const describedBy = rest["aria-describedby"], required = rest["aria-required"] ?? (requiredProp || undefined);
   delete rest["aria-describedby"]; delete rest["aria-required"];
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<DateRange>(norm(props.defaultValue));
@@ -144,7 +146,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
     <input type="text" inputMode="numeric" autoComplete="off" className="dk-input__field dk-date-range-picker__field"
       ref={which === "start" ? startField : undefined} id={which === "start" ? id : undefined}
       aria-label={which === "start" ? startLabel || sds.labels.startDate : endLabel || sds.labels.endDate} aria-describedby={describedBy} aria-required={required} aria-invalid={invalid || undefined}
-      value={text[which]} placeholder={datePattern(locale)} disabled={disabled} readOnly={readOnly}
+      value={text[which]} placeholder={datePattern(locale)} disabled={disabled} readOnly={readOnly} required={requiredProp}
       onChange={(e) => setText({ ...text, [which]: e.target.value })} onBlur={() => read(which)}
       onKeyDown={(e) => {
         if (isComposing(e)) return;
