@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, type SortDirection } from './Table';
+import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from './Table';
 import { Text } from '../Text/Text';
 import { Badge } from '../Badge/Badge';
 
@@ -46,6 +46,24 @@ export const Playground: Story = {};
 export const Striped: Story = { args: { striped: true, size: 'sm' } };
 
 export const Selected: Story = { render: (args) => <Table {...args}><Rows selected={1} /></Table> };
+
+export const SelectableRows: Story = {
+  render: function Render(args) {
+    const [picked, setPicked] = React.useState<string[]>([people[1].name]);
+    const all = picked.length === people.length;
+    const toggle = (n: string) => setPicked(picked.includes(n) ? picked.filter((x) => x !== n) : [...picked, n]);
+    return <Table {...args}>
+      <TableHead><TableRow>
+        <TableSelectCell header label="Select all rows" checked={all} indeterminate={!all && picked.length > 0} onChange={() => setPicked(all ? [] : people.map((p) => p.name))} />
+        <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell><TableHeaderCell align="end">Calls</TableHeaderCell>
+      </TableRow></TableHead>
+      <TableBody>{people.map((p) => <TableRow key={p.name} selected={picked.includes(p.name)}>
+        <TableSelectCell label={'Select ' + p.name} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
+        <TableCell>{p.name}</TableCell><TableCell><Text as="span" tone="muted">{p.role}</Text></TableCell><TableCell align="end">{p.calls.toLocaleString('en')}</TableCell>
+      </TableRow>)}</TableBody>
+    </Table>;
+  },
+};
 
 export const Sortable: Story = {
   render: function Render(args) {

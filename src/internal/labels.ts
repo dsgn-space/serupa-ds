@@ -72,6 +72,8 @@ export interface SerupaLabels {
   chooseFile: string;
   chosenFiles: string;
   chosenFile: string;
+  /** FileUpload: read out with the choose button when the upload is required (a button can't carry aria-required). */
+  required: string;
   /** PasswordInput show/hide button. */
   showPassword: string;
   /** Table's scroll region when it has no caption. */
@@ -126,6 +128,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   chooseFile: "Choose a file",
   chosenFiles: "Chosen files",
   chosenFile: "Chosen file",
+  required: "Required",
   showPassword: "Show password",
   table: "Table",
 };
@@ -179,6 +182,7 @@ export const idLabels: SerupaLabels = {
   chooseFile: "Pilih file",
   chosenFiles: "File yang dipilih",
   chosenFile: "File yang dipilih",
+  required: "Wajib diisi",
   showPassword: "Tampilkan kata sandi",
   table: "Tabel",
 };

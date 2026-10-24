@@ -388,6 +388,9 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "de
     maxSize?: number;
     maxFiles?: number;
     disabled?: boolean;
+    invalid?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
     name?: string;
     title?: React.ReactNode;
     buttonLabel?: string;
@@ -432,6 +435,7 @@ interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "al
     viewLabel?: string;
     onRemove?: () => void;
     removeLabel?: string;
+    priority?: boolean;
     frameProps?: React.HTMLAttributes<HTMLSpanElement>;
 }
 declare const Image: React.ForwardRefExoticComponent<ImageProps & React.RefAttributes<HTMLImageElement>>;
@@ -542,6 +546,8 @@ interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "mi
     incrementLabel?: string;
     locale?: string;
     formatOptions?: Intl.NumberFormatOptions;
+    currency?: string;
+    minorUnits?: boolean;
 }
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;
 type Entry = "end-ellipsis" | "start-ellipsis" | number;
@@ -583,6 +589,21 @@ interface PopoverProps {
 declare const Popover: ((props: PopoverProps) => React.ReactElement) & {
     displayName: string;
 };
+type MeterState = "none" | "optimum" | "poor" | "suboptimal";
+interface MeterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+    value: number;
+    min?: number;
+    max?: number;
+    low?: number;
+    high?: number;
+    optimum?: number;
+    size?: "lg" | "md" | "sm";
+    label?: React.ReactNode;
+    showValue?: boolean;
+    formatValue?: (value: number, min: number, max: number) => string;
+}
+declare function meterState(value: number, min: number, max: number, low?: number, high?: number, optimum?: number): MeterState;
+declare const Meter: React.ForwardRefExoticComponent<MeterProps & React.RefAttributes<HTMLDivElement>>;
 type ProgressTone = "danger" | "primary" | "success" | "warning";
 interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     value?: null | number;
@@ -769,6 +790,11 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     selected?: boolean;
 }
+interface TableSelectCellProps extends Omit<CheckboxProps, "children" | "description" | "size"> {
+    label: string;
+    header?: boolean;
+    cellProps?: React.TdHTMLAttributes<HTMLTableCellElement>;
+}
 type SortDirection = "ascending" | "descending" | "none";
 interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, "align"> {
     align?: "center" | "end" | "start";
@@ -783,6 +809,7 @@ declare const TableHead: React.ForwardRefExoticComponent<React.HTMLAttributes<HT
 declare const TableBody: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableFoot: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLTableSectionElement> & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableRow: React.ForwardRefExoticComponent<TableRowProps & React.RefAttributes<HTMLTableRowElement>>;
+declare const TableSelectCell: React.ForwardRefExoticComponent<TableSelectCellProps & React.RefAttributes<HTMLInputElement>>;
 declare const TableHeaderCell: React.ForwardRefExoticComponent<TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableCell: React.ForwardRefExoticComponent<TableCellProps & React.RefAttributes<HTMLTableCellElement>>;
 type TabsVariant = "line" | "pill";
@@ -942,6 +969,7 @@ interface SerupaLabels {
     chooseFile: string;
     chosenFiles: string;
     chosenFile: string;
+    required: string;
     showPassword: string;
     table: string;
 }
@@ -1021,6 +1049,8 @@ declare global {
             MenuGroup: typeof MenuGroup;
             MenuItem: typeof MenuItem;
             MenuSeparator: typeof MenuSeparator;
+            Meter: typeof Meter;
+            meterState: typeof meterState;
             Navbar: typeof Navbar;
             NavbarLink: typeof NavbarLink;
             NumberInput: typeof NumberInput;
@@ -1051,6 +1081,7 @@ declare global {
             TableHead: typeof TableHead;
             TableHeaderCell: typeof TableHeaderCell;
             TableRow: typeof TableRow;
+            TableSelectCell: typeof TableSelectCell;
             TabList: typeof TabList;
             TabPanel: typeof TabPanel;
             Tabs: typeof Tabs;
@@ -1066,5 +1097,5 @@ declare global {
         };
     }
 }
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, Container, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, Icon, IconButton, IconData, Image, Input, Kbd, Link, List, ListItem, Loader, MaterialIconName, Menu, MenuGroup, MenuItem, MenuSeparator, Navbar, NavbarLink, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, TabList, TabPanel, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, Tabs, Text, Textarea, TimePicker, Toaster, ToggleButton, Tooltip, VisuallyHidden, buttonClass, configure, customIcons, DEFAULT_LABELS as enLabels, formatFileSize, getIcon, idLabels, initials, paginationRange, registerIcons, toast, useSerupa, version };
-export type { AccordionItemProps, AccordionProps, AlertProps, AlertTone, AvatarGroupProps, AvatarProps, AvatarSize, AvatarStatus, BadgeProps, BadgeTone, BadgeVariant, BreadcrumbItemProps, BreadcrumbProps, ButtonAsButtonProps, ButtonAsLinkProps, ButtonGroupProps, ButtonProps, ButtonSize, ButtonVariant, CalendarProps, CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant, CarouselProps, CheckboxProps, ComboboxOption, ComboboxProps, ContainerProps, ContainerSize, CustomIconName, DatePickerProps, DateRange, DateRangePickerProps, DialogProps, DividerProps, DrawerProps, EmptyStateProps, FabPosition, FabProps, FieldProps, FileRejection, FileUploadProps, GridProps, HeadingLevel, HeadingProps, HeadingSize, IconButtonProps, IconName, IconProps, IconSource, ImageProps, ImageRatio, InputProps, KbdProps, LinkProps, ListItemProps, ListProps, LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant, MenuGroupProps, MenuItemProps, MenuProps, NavbarLinkProps, NavbarProps, NumberInputProps, PaginationProps, PasswordInputProps, Placement, PopoverProps, ProgressProps, ProgressTone, RadioGroupProps, RadioProps, SearchInputProps, SegmentedControlOption, SegmentedControlProps, SelectOption, SelectOptionGroup, SelectProps, SerupaConfig, SerupaLabels, SerupaProviderProps, SerupaSettings, SerupaTheme, SidebarItemProps, SidebarProps, SidebarSectionProps, SliderProps, SliderValue, SortDirection, Space, StackProps, StepperProps, StepperStep, SwitchProps, TabPanelProps, TabProps, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps, TabsProps, TabsVariant, TextProps, TextSize, TextTone, TextWeight, TextareaProps, ThemeBrand, ThemeInfo, ThemeMode, TimePickerProps, ToastOptions, ToastTone, ToasterPosition, ToasterProps, ToggleButtonProps, TooltipProps, VisuallyHiddenProps };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, Container, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, Icon, IconButton, IconData, Image, Input, Kbd, Link, List, ListItem, Loader, MaterialIconName, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, Navbar, NavbarLink, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, TabList, TabPanel, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, Tabs, Text, Textarea, TimePicker, Toaster, ToggleButton, Tooltip, VisuallyHidden, buttonClass, configure, customIcons, DEFAULT_LABELS as enLabels, formatFileSize, getIcon, idLabels, initials, meterState, paginationRange, registerIcons, toast, useSerupa, version };
+export type { AccordionItemProps, AccordionProps, AlertProps, AlertTone, AvatarGroupProps, AvatarProps, AvatarSize, AvatarStatus, BadgeProps, BadgeTone, BadgeVariant, BreadcrumbItemProps, BreadcrumbProps, ButtonAsButtonProps, ButtonAsLinkProps, ButtonGroupProps, ButtonProps, ButtonSize, ButtonVariant, CalendarProps, CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant, CarouselProps, CheckboxProps, ComboboxOption, ComboboxProps, ContainerProps, ContainerSize, CustomIconName, DatePickerProps, DateRange, DateRangePickerProps, DialogProps, DividerProps, DrawerProps, EmptyStateProps, FabPosition, FabProps, FieldProps, FileRejection, FileUploadProps, GridProps, HeadingLevel, HeadingProps, HeadingSize, IconButtonProps, IconName, IconProps, IconSource, ImageProps, ImageRatio, InputProps, KbdProps, LinkProps, ListItemProps, ListProps, LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant, MenuGroupProps, MenuItemProps, MenuProps, MeterProps, MeterState, NavbarLinkProps, NavbarProps, NumberInputProps, PaginationProps, PasswordInputProps, Placement, PopoverProps, ProgressProps, ProgressTone, RadioGroupProps, RadioProps, SearchInputProps, SegmentedControlOption, SegmentedControlProps, SelectOption, SelectOptionGroup, SelectProps, SerupaConfig, SerupaLabels, SerupaProviderProps, SerupaSettings, SerupaTheme, SidebarItemProps, SidebarProps, SidebarSectionProps, SliderProps, SliderValue, SortDirection, Space, StackProps, StepperProps, StepperStep, SwitchProps, TabPanelProps, TabProps, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps, TableSelectCellProps, TabsProps, TabsVariant, TextProps, TextSize, TextTone, TextWeight, TextareaProps, ThemeBrand, ThemeInfo, ThemeMode, TimePickerProps, ToastOptions, ToastTone, ToasterPosition, ToasterProps, ToggleButtonProps, TooltipProps, VisuallyHiddenProps };

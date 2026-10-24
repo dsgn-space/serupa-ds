@@ -3,7 +3,7 @@
    icon, a title, an outline button and a muted hint, centered. While files are dragged over it, it turns
    primary-subtle with a primary outline. Under it: messages about files that weren't added (danger), and the
    chosen files as rows (surface, outline, 6px corners) with a type icon, the name, the size and a remove
-   button. Disabled: faded.
+   button. Disabled: faded. Invalid: a solid danger outline. Read-only: the files are listed without remove buttons.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-file-upload { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--file-upload-title-color, var(--text)); }
@@ -19,7 +19,7 @@
 .dk-file-upload__icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-8); pointer-events: none; }
 .dk-file-upload__title { margin: var(--spacing-0); font-weight: var(--font-medium); pointer-events: none; }
 .dk-file-upload__hint { margin: var(--spacing-0); color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: none; }
-.dk-file-upload__input { position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: var(--spacing-0); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap; border: var(--spacing-0); opacity: var(--opacity-0); }
+.dk-file-upload__input, .dk-file-upload__required { position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: var(--spacing-0); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap; border: var(--spacing-0); opacity: var(--opacity-0); }
 .dk-file-upload__errors { display: flex; flex-direction: column; gap: var(--spacing-1); }
 .dk-file-upload__error { display: flex; align-items: flex-start; gap: var(--spacing-1\.5); margin: var(--spacing-0); color: var(--file-upload-error-color, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-file-upload__error .dk-icon { font-size: var(--spacing-4); }
@@ -33,5 +33,7 @@
 .dk-file-upload__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
 .dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-file-upload--invalid .dk-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
+.dk-file-upload--readonly .dk-file-upload__zone { cursor: default; }
 @media (prefers-reduced-motion: reduce) { .dk-file-upload__zone { transition: none; } }
 }

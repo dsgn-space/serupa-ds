@@ -31,7 +31,8 @@ import { Image } from "serupa-ds";
 
 ## Behavior
 
-- It loads lazily by default (`loading="lazy"`); pass `loading="eager"` for a picture at the top of the page.
+- It loads lazily (`loading="lazy"`) and decodes off the main thread (`decoding="async"`) by default. For the main picture at the top of a page, pass `priority`: it loads at once with `fetchpriority="high"`, so it shows sooner (Largest Contentful Paint).
+- With `ratio="auto"`, pass the picture's `width` and `height`: the frame takes their shape before the picture arrives (at most as wide as its container), so the page doesn't jump when it loads. Without them, or a fixed ratio, the frame has no height until then, and Image warns in the console once.
 - While loading, the frame shows a pulsing placeholder fill (still with reduced motion). A frame with `ratio="auto"` is at least 48px until the picture arrives, so give it a width and set `width` and `height` on the `<img>` to avoid a jump.
 - The viewer is a large Dialog titled with the alt text: Escape, the × or a click on the backdrop close it, and focus goes back to the picture.
 - The remove button only calls `onRemove`; ask for confirmation yourself if removing can't be undone.
@@ -50,6 +51,7 @@ import { Image } from "serupa-ds";
 | `alt` | `string` | | Required. What the picture shows; `""` only for a decorative picture. |
 | `ratio` | `'auto' \| 'square' \| '4:3' \| 'video' \| number` | `'auto'` | The frame's shape. A number is width / height. `auto` keeps the picture's own shape. |
 | `fit` | `'cover' \| 'contain'` | `'cover'` | With a fixed ratio: fill and crop, or fit whole. |
+| `priority` | `boolean` | `false` | The main picture at the top of a page: `loading="eager"` and `fetchpriority="high"` instead of lazy. |
 | `rounded` | `boolean` | `true` | Corners from `--image-radius`. |
 | `fallback` | `ReactNode` | a broken-image icon | Shown if the picture fails to load. |
 | `viewable` | `boolean` | `false` | Makes the picture a button that opens it full size in a Dialog. |

@@ -49,6 +49,29 @@ describe('Image', () => {
     expect([s.square!.radius, s.video!.radius]).toEqual(['8px', '0px']);
   });
 
+  test('ratio auto with width and height: the frame has their shape while the picture loads, so the text under it doesn\'t move; it shrinks to a narrower container', async () => {
+    const slow = `/__slow-picture__.svg?${Date.now()}`;
+    await render(<div style={{ width: '300px' }}>
+      <Image src={slow} alt="Slow" width={800} height={600} frameProps={{ 'data-testid': 'sized' } as React.HTMLAttributes<HTMLSpanElement>} />
+      <p id="after-pic">Below</p>
+    </div>);
+    const before = Math.round(document.getElementById('after-pic')!.getBoundingClientRect().top);
+    expect([frame('sized').dataset.state, box('sized').w, box('sized').h]).toEqual(['loading', 300, 225]);
+    await expect.poll(() => frame('sized').dataset.state, { timeout: 5000 }).toBe('loaded');
+    expect([box('sized').w, box('sized').h, Math.round(document.getElementById('after-pic')!.getBoundingClientRect().top)]).toEqual([300, 225, before]);
+  });
+
+  test('loading and decoding: lazy and async by default; priority loads at once with fetchpriority="high"; your own props win', async () => {
+    await render(<Row>
+      <Pic id="lazy" alt="Lazy" ratio="square" />
+      <Pic id="hero" alt="Hero" ratio="video" priority />
+      <Pic id="own" alt="Own" ratio="square" priority loading="lazy" decoding="sync" />
+    </Row>);
+    const img = (id: string) => frame(id).querySelector('img')!;
+    const at = (id: string) => [img(id).getAttribute('loading'), img(id).getAttribute('decoding'), img(id).getAttribute('fetchpriority')];
+    expect([at('lazy'), at('hero'), at('own')]).toEqual([['lazy', 'async', null], ['eager', 'async', 'high'], ['lazy', 'sync', 'high']]);
+  });
+
   test('while loading: the picture is hidden and the frame shows the placeholder fill; then it appears', async () => {
     // The test server sends this picture after a second (vitest.config.ts), so it is still loading at first.
     await render(<Pic id="slow" alt="Slow" ratio="square" src={`/__slow-picture__.svg?${Date.now()}`} />);
