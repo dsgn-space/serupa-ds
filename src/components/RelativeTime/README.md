@@ -31,7 +31,7 @@ import { RelativeTime } from "serupa-ds";
 
 - Under 45 seconds it says "now", then minutes (under 45), hours (under 22), days (under 26), months (under 11) and years, rounded.
 - Every RelativeTime on the page updates on one shared clock every 15 seconds, and at once when the tab comes back into view. The clock stops when none is mounted.
-- Rendered on the server, it shows the server's words, hydrates without a mismatch, and switches to the browser's clock straight after.
+- Rendered on the server, it shows the server's words at the time of the request (one moment for every RelativeTime rendered in the same second), hydrates without a mismatch, and switches to the browser's clock straight after.
 
 ## Accessibility
 

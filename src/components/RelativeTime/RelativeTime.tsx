@@ -39,9 +39,11 @@ function subscribe(cb: () => void) {
 }
 const getNow = () => { if (!timer && Date.now() - now > TICK) now = Date.now(); return now; };
 // The server's moment is used for hydration too, so the first client render matches the HTML; the browser's clock
-// takes over right after (useSyncExternalStore's server snapshot).
-let serverNow: number | null = null;
-const getServerNow = () => (serverNow ??= Date.now());
+// takes over right after (useSyncExternalStore's server snapshot). It's the same moment for every render within a
+// second (one page's times agree, and React reads the snapshot twice), and a new one after that: a long-running
+// server would otherwise write the time it started for every request.
+let serverNow = -Infinity;
+const getServerNow = () => { const t = Date.now(); if (t - serverNow > 1000 || t < serverNow) serverNow = t; return serverNow; };
 
 const UNITS: Array<[Intl.RelativeTimeFormatUnit, number, number]> = [
   // [unit, its length in seconds, use it while the gap is under this many seconds]
