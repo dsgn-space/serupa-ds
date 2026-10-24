@@ -5,7 +5,7 @@ import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sam
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { useLocale, useSerupa } from "../../internal/provider";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. */
@@ -55,7 +55,7 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMont
 export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>("Calendar", function Calendar(props, ref) {
   const sds = useSerupa();
   const rest = omit(props, OWN);
-  const locale = props.locale || sds.locale;
+  const locale = useLocale(props.locale);
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const controlledValue = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<Date | null>(isValid(props.defaultValue) ? day(props.defaultValue) : null);
@@ -115,9 +115,12 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const first = startOfWeek(month, ws);
   const weeks: Date[][] = [];
   for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
-  const title = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
+  // The grid is Gregorian with Latin digits, so the title and day labels are too (a Thai or Persian title would
+  // otherwise name another month and year). Month and weekday names stay localized.
+  const greg = { calendar: "gregory", numberingSystem: "latn" } as const;
+  const title = new Intl.DateTimeFormat(locale, { ...greg, month: "long", year: "numeric" }).format(month);
   const short = new Intl.DateTimeFormat(locale, { weekday: "short" }), long = new Intl.DateTimeFormat(locale, { weekday: "long" });
-  const full = new Intl.DateTimeFormat(locale, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  const full = new Intl.DateTimeFormat(locale, { ...greg, weekday: "long", year: "numeric", month: "long", day: "numeric" });
   const titleId = domId("dk-cal", React.useId()) + "-title";
   const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   return (

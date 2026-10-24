@@ -12,7 +12,7 @@
 .dk-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); }
 .dk-link--neutral, .dk-link--neutral:hover { color: inherit; }
 .dk-link--hover-underline:not(:hover, :focus-visible) { text-decoration-line: none; }
-.dk-link:focus-visible { outline: var(--outline-width-2) solid var(--link-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
+.dk-link:focus-visible { outline: var(--focus-ring-width) solid var(--link-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-link__icon.dk-icon { margin-inline-start: var(--link-icon-gap, var(--spacing-0\.5)); font-size: 1em; vertical-align: text-bottom; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) { .dk-link { transition: none; } }
 }

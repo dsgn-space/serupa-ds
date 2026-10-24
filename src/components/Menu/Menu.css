@@ -17,9 +17,9 @@
   margin: var(--spacing-0);
   padding: var(--menu-padding, var(--spacing-1));
   overflow-y: auto;
-  border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border));
+  border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border-overlay));
   border-radius: var(--menu-radius, var(--rounded-lg));
-  background: var(--menu-bg, var(--surface));
+  background: var(--menu-bg, var(--surface-overlay));
   color: var(--menu-item-text, var(--text));
   box-shadow: var(--menu-shadow, var(--shadow-lg));
   font-family: var(--font-sans);
@@ -44,7 +44,7 @@
   user-select: none;
 }
 .dk-menu__item:focus { outline: none; background: var(--menu-item-bg-active, var(--secondary)); }
-.dk-menu__item:focus-visible { outline: var(--outline-width-2) solid transparent; }   /* shows in forced colors */
+.dk-menu__item:focus-visible { outline: var(--focus-ring-width) solid transparent; }   /* shows in forced colors */
 .dk-menu__icon { display: inline-flex; flex-shrink: 0; color: var(--menu-muted, var(--text-muted)); }
 .dk-menu__icon .dk-icon { font-size: var(--spacing-4); }
 .dk-menu__label { flex: auto; min-width: var(--spacing-0); }
@@ -52,7 +52,7 @@
 .dk-menu__item:focus .dk-menu__shortcut { color: var(--menu-item-text, var(--text)); }
 .dk-menu__item--destructive, .dk-menu__item--destructive .dk-menu__icon { color: var(--menu-danger, var(--danger-text)); }
 .dk-menu__item--destructive:focus { background: var(--menu-danger-bg-active, var(--danger-subtle)); }
-.dk-menu__item[aria-disabled="true"] { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-menu__item[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-menu__group-label { padding: var(--spacing-1\.5) var(--menu-item-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--menu-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
 .dk-menu__separator { height: var(--border-width-1); margin: var(--spacing-1) var(--spacing-0); background: var(--menu-separator, var(--border)); }
 @media (prefers-reduced-motion: reduce) { .dk-menu { animation: none; } }

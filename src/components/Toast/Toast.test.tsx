@@ -62,6 +62,43 @@ describe('Toast', () => {
     expect([undos, titles().length]).toEqual([1, 0]);
   });
 
+  test('with an action and no duration it stays (past the usual 5s), so there\'s time to reach the button; the first one tells screen readers about F8, once', async () => {
+    await render(<App />);
+    const said = new Set<string>();
+    const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) said.add(t); });
+    watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
+    React.act(() => { toast({ title: 'Message deleted', action: { label: 'Undo', onClick: () => {} } }); });
+    await expect.poll(() => [...said].join(' | ')).toMatch(/Message deleted\. Press F8 to reach it\./);
+    React.act(() => { toast({ title: 'Another deleted', action: { label: 'Undo', onClick: () => {} } }); });
+    await expect.poll(() => [...said].join(' | ')).toMatch(/Another deleted/);
+    expect([...said].some((t) => /Another deleted\. Press F8/.test(t))).toBe(false);
+    watch.disconnect();
+    await settle(5300);
+    expect(titles()).toEqual(['Message deleted', 'Another deleted']);
+  });
+
+  test('F8 moves focus to the newest toast (Tab then reaches its action) and F8 again goes back; Escape goes back too; with no toasts F8 does nothing', async () => {
+    await render(<div><App /><button id="before">Before</button></div>);
+    q('#before').focus();
+    await userEvent.keyboard('{F8}');
+    expect(document.activeElement).toBe(q('#before'));
+    React.act(() => { toast({ title: 'Old', duration: 0 }); toast({ title: 'Archived', action: { label: 'Undo', onClick: () => {} } }); });
+    await userEvent.keyboard('{F8}');
+    expect(document.activeElement).toBe(toasts()[1]);
+    expect(css(toasts()[1]).outlineStyle).toBe('solid');
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement!.textContent).toBe('Undo');
+    await userEvent.keyboard('{F8}');
+    expect(document.activeElement).toBe(q('#before'));
+    await userEvent.keyboard('{F8}');
+    await userEvent.keyboard('{Escape}');
+    expect([document.activeElement, titles().length]).toEqual([q('#before'), 2]);
+    React.act(() => setPos('top-end'));   // newest on top: F8 lands on the first one
+    await userEvent.keyboard('{F8}');
+    expect(document.activeElement).toBe(toasts()[0]);
+    expect(toasts()[0].textContent).toMatch(/Archived/);
+  });
+
   test('it goes after its duration, and the time stops while it\'s hovered', async () => {
     await render(<App />);
     React.act(() => { toast({ title: 'Quick', duration: 400 }); });
@@ -192,7 +229,7 @@ describe('Toast with a Dialog open', () => {
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
     expect([modal.contains(q('.dk-toaster')), !!hit && q('.dk-toast').contains(hit)]).toEqual([true, true]);
     // A danger toast interrupts: the assertive region, inside the dialog.
-    await expect.poll(() => q('[data-dk-announcer-assertive]')?.textContent).toBe('Couldn\'t save');
+    await expect.poll(() => q('[data-dk-announcer-assertive]')?.textContent).toBe('Couldn\'t save. Press F8 to reach it.');
     expect([modal.contains(q('[data-dk-announcer-assertive]')), modal.contains(q('[data-dk-announcer]')), q('[data-dk-announcer-assertive]').getAttribute('aria-live')]).toEqual([true, true, 'assertive']);
     React.act(() => setOpen(false));
     await expect.poll(() => q('.dk-toaster').parentElement === modal).toBe(false);
@@ -207,7 +244,7 @@ describe('Toast with a Dialog open', () => {
     await render(<Loading />);
     const modal = q('dialog[open]');
     await userEvent.click(q('#up'));
-    await expect.poll(() => q('[data-dk-announcer]').textContent).toBe('Loading');
+    await expect.poll(() => q('[data-dk-announcer]').textContent).toBe('Loading…');
     expect(modal.contains(q('[data-dk-announcer]'))).toBe(true);
   });
 
