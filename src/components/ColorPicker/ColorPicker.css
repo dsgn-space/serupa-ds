@@ -26,9 +26,9 @@
 /* With contrastWith: a swatch under minContrast is struck through (in its check color), so it's seen before it's picked. */
 .dk-color-picker__swatch--low:not(.dk-color-picker__swatch--checked)::after {
   content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none;
-  background: linear-gradient(to top right, transparent calc(50% - var(--border-width-1)), var(--dk-swatch-ink) calc(50% - var(--border-width-1)), var(--dk-swatch-ink) calc(50% + var(--border-width-1)), transparent calc(50% + var(--border-width-1)));
+  background: linear-gradient(to top right, transparent calc(var(--sizing-1-2) - var(--border-width-1)), var(--dk-swatch-ink) calc(var(--sizing-1-2) - var(--border-width-1)), var(--dk-swatch-ink) calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1)));
 }
-@media (forced-colors: active) { .dk-color-picker__swatch--low:not(.dk-color-picker__swatch--checked)::after { background: linear-gradient(to top right, transparent calc(50% - var(--border-width-1)), CanvasText calc(50% - var(--border-width-1)), CanvasText calc(50% + var(--border-width-1)), transparent calc(50% + var(--border-width-1))); forced-color-adjust: none; } }
+@media (forced-colors: active) { .dk-color-picker__swatch--low:not(.dk-color-picker__swatch--checked)::after { background: linear-gradient(to top right, transparent calc(var(--sizing-1-2) - var(--border-width-1)), CanvasText calc(var(--sizing-1-2) - var(--border-width-1)), CanvasText calc(var(--sizing-1-2) + var(--border-width-1)), transparent calc(var(--sizing-1-2) + var(--border-width-1))); forced-color-adjust: none; } }
 .dk-color-picker__swatch:disabled { cursor: not-allowed; }
 .dk-color-picker--disabled { opacity: var(--opacity-disabled); }
 .dk-color-picker__custom { display: flex; align-items: center; gap: var(--spacing-2); }

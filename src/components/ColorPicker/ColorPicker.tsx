@@ -39,9 +39,11 @@ export interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   disabled?: boolean;
   /** Submits the color with a form, in a hidden input. */
   name?: string;
+  /** The id of the form the color submits with, when the picker sits outside it (like an input's form attribute). */
+  form?: string;
 }
 
-const OWN = { "aria-label": 1, "aria-labelledby": 1, swatches: 1, value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, custom: 1, contrastWith: 1, minContrast: 1, size: 1, disabled: 1, name: 1, className: 1 } as const;
+const OWN = { "aria-label": 1, "aria-labelledby": 1, swatches: 1, value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, custom: 1, contrastWith: 1, minContrast: 1, size: 1, disabled: 1, name: 1, className: 1, form: 1 } as const;
 type Swatch = ColorSwatch & { named: boolean };
 // The check on a swatch: white or black, whichever stands out more on it.
 const ink = (hex: string) => ((contrastRatio(hex, "#ffffff") || 0) >= (contrastRatio(hex, "#000000") || 0) ? "#ffffff" : "#000000");
@@ -86,7 +88,9 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   const commitRef = React.useRef(commit);
   commitRef.current = commit;
   // A form reset puts the first color back (uncontrolled), as a native input does.
-  useFormReset(root, () => { if (!controlled) { const d = normalizeHex(props.defaultValue || ""); setOwn(d); committed.current = d; } });
+  const hidden = React.useRef<HTMLInputElement>(null);
+  // The hidden input knows its form even through the form attribute; without a name, the picker's own form.
+  useFormReset(props.name ? hidden : root, () => { if (!controlled) { const d = normalizeHex(props.defaultValue || ""); setOwn(d); committed.current = d; } });
   // React's onChange on <input type="color"> fires on every step of a drag; the native change event fires once the
   // picker closes, which is the commit.
   const native = React.useRef<HTMLInputElement | null>(null);
@@ -172,7 +176,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
           {ratio != null ? <>{low ? <Icon icon={icons.Warning} className="dk-color-picker__warning" /> : null}<span>{sds.labels.contrast(fmt(ratio))}{low ? ", " + sds.labels.lowContrast(fmt(min)) : ""}</span></> : null}
         </div>
       ) : null}
-      {props.name ? <input type="hidden" name={props.name} value={value || ""} disabled={disabled} /> : null}
+      {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value || ""} disabled={disabled} /> : null}
     </div>
   );
 });

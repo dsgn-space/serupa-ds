@@ -100,6 +100,16 @@ describe('ColorPicker', () => {
     expect(new FormData(el('rf') as HTMLFormElement).get('color')).toBe('#1d4ed8');
   });
 
+  test('form: outside its form, the color still submits with it and its reset puts the first color back', async () => {
+    await render(<><form id="ff" /><ColorPicker aria-label="C" swatches={SW} defaultValue="#1d4ed8" name="color" form="ff" /></>);
+    const f = el('ff') as HTMLFormElement;
+    await userEvent.click(swatch('Black'));
+    expect(new FormData(f).get('color')).toBe('#18181b');
+    f.reset();
+    await expect.poll(() => swatch('Blue').getAttribute('aria-checked')).toBe('true');
+    expect(new FormData(f).get('color')).toBe('#1d4ed8');
+  });
+
   test('contrastWith: the WCAG ratio, rounded down, in a polite live region; below minContrast it warns', async () => {
     const calls: string[] = [];
     await render(<Controlled calls={calls} />);
