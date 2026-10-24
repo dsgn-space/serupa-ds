@@ -33,6 +33,8 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   Field: Serupa.Field,
   FileUpload: Serupa.FileUpload,
   formatFileSize: Serupa.formatFileSize,
+  FormattedNumber: Serupa.FormattedNumber,
+  formatNumber: Serupa.formatNumber,
   Grid: Serupa.Grid,
   Drawer: Serupa.Drawer,
   EmptyState: Serupa.EmptyState,

@@ -69,6 +69,7 @@ if (D) {
     EmptyState: h(D.EmptyState, { icon: 'folder_open', title: 'No projects yet', description: 'Create one to start.' }),
     Fab: h(D.Fab, { icon: 'add', label: 'New' }),
     FileUpload: h(D.FileUpload, { accept: 'image/*', multiple: true }),
+    FormattedNumber: h(D.FormattedNumber, { value: 1234.5, locale: 'en-US' }),
     Image: h(D.Image, { src: '/a.png', alt: 'A lake', ratio: '16/9', viewable: true }),
     IconButton: h(D.IconButton, { icon: 'close', label: 'Close' }),
     Kbd: h(D.Kbd, null, 'mod+k'),
