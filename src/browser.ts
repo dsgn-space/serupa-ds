@@ -27,6 +27,7 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   DatePicker: Serupa.DatePicker,
   DateRangePicker: Serupa.DateRangePicker,
   Container: Serupa.Container,
+  CopyButton: Serupa.CopyButton,
   Dialog: Serupa.Dialog,
   Divider: Serupa.Divider,
   Fab: Serupa.Fab,
