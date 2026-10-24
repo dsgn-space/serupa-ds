@@ -14,7 +14,7 @@ export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   maxItems?: number;
   /** The nav's accessible name. Default: "Breadcrumb". */
   "aria-label"?: string;
-  /** The "…" button's accessible name. Default: "Show the hidden pages". */
+  /** The "…" button's accessible name. Default: "Show all pages". */
   expandLabel?: string;
 }
 
@@ -69,7 +69,7 @@ export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps
     if (n > 0) out.push(sep("s" + i));
     if (collapse && n === 1) {
       out.push(<li key="more" className="dk-breadcrumb__li">
-        <button type="button" className="dk-breadcrumb__item dk-breadcrumb__more" aria-label={props.expandLabel || "Show the hidden pages"}
+        <button type="button" className="dk-breadcrumb__item dk-breadcrumb__more" aria-label={props.expandLabel || "Show all pages"}
           onClick={() => { focusAfter.current = true; setExpanded(true); }}>…</button>
       </li>, sep("s-more"));
     }
