@@ -8665,8 +8665,7 @@
     "mono": {
       "$type": "fontFamily",
       "$value": [
-        "Courier New",
-        "Courier",
+        "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono",
         "monospace"
       ],
       "$extensions": {

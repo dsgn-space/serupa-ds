@@ -154,7 +154,7 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 | --- | --- | --- |
 | `font-sans` | Inter | Default for UI and body text. |
 | `font-serif` | Georgia | Editorial or long-form accents. |
-| `font-mono` | Courier New | Code, IDs, tabular figures. |
+| `font-mono` | The system's monospace: SF Mono, Menlo, Consolas or Liberation Mono | Code, IDs, tabular figures. A bare `<kbd>` uses `font-sans`, like `<Kbd>`. |
 
 Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
