@@ -1,5 +1,6 @@
 // Shared helpers for the Serupa test suite.
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -75,6 +76,19 @@ export function report(name, results) {
   return failed.length === 0;
 }
 
+// Serves a built folder (storybook-static/) over http on a free port: Storybook's iframe loads its modules with
+// fetch, which file:// URLs refuse. Returns the base URL and close().
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png' };
+export function serve(dir) {
+  const server = http.createServer((req, res) => {
+    const f = path.join(dir, decodeURIComponent(new URL(req.url, 'http://x').pathname));
+    if (!f.startsWith(dir) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end(); return; }
+    res.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream' });
+    fs.createReadStream(f).pipe(res);
+  }).listen(0);
+  return { base: `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`, close: () => server.close() };
+}
+
 // The end of a suite run with node: exit 0 if it passed. Under Vitest, which owns the process, a failed result is
 // already a failed test.
 export function done(ok) { if (!vt) process.exit(ok ? 0 : 1); }
@@ -88,3 +102,34 @@ export function fail(message) {
 
 // The project a suite checks: the folder given after the script (node tools/test/foundation.mjs <dir>), or this one.
 export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT);
+
+// Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
+// The components a list of changed files touches, or null when a file outside the component folders (shared code,
+// tokens, tooling, Storybook's setup) could change any of them. Their tests, visual baselines, API baseline and
+// server-render case count as theirs; a changeset or a guide outside src/ touches none.
+export function affectedComponents(files) {
+  const names = new Set();
+  for (const f of files) {
+    const m = /^src\/components\/([A-Z]\w*)\//.exec(f) || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
+      || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
+    if (m) names.add(m[1]);
+    else if (!/^\.changeset\/[\w-]+\.md$/.test(f)) return null;
+  }
+  return names;
+}
+// SERUPA_ONLY=Button,Dialog (set by run.mjs --since): the components to test, or null for all of them.
+export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));
+// The components plus every component that uses one of them (imports from its folder, directly or through another),
+// since a change to Button can change how ButtonGroup looks.
+export function withDependents(names) {
+  const COMP = path.join(PROJECT, 'src', 'components');
+  const uses = new Map(fs.readdirSync(COMP).filter((n) => fs.statSync(path.join(COMP, n)).isDirectory()).map((n) => [n, new Set(
+    fs.readdirSync(path.join(COMP, n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
+      .flatMap((f) => [...fs.readFileSync(path.join(COMP, n, f), 'utf8').matchAll(/from "\.\.\/([A-Z]\w*)/g)].map((m) => m[1])))]));
+  const all = new Set(names);
+  for (let grew = true; grew;) {
+    grew = false;
+    for (const [n, deps] of uses) if (!all.has(n) && [...deps].some((d) => all.has(d))) { all.add(n); grew = true; }
+  }
+  return all;
+}

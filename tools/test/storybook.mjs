@@ -3,10 +3,9 @@
 // contrast, as WCAG 1.4.3 says).
 //   node tools/test/storybook.mjs
 import fs from 'node:fs';
-import http from 'node:http';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { PROJECT, browser, report } from './lib.mjs';
+import { PROJECT, browser, report, serve, onlyComponents } from './lib.mjs';
 
 const DIR = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(DIR, 'index.json'))) {
@@ -14,14 +13,7 @@ if (!fs.existsSync(path.join(DIR, 'index.json'))) {
   if (process.env.CI) { console.log('FAIL  storybook-static/ is missing (npm run build-storybook)'); process.exit(1); }
   console.log('SKIP  Storybook is not built (npm run build-storybook)'); process.exit(0);
 }
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png' };
-const server = http.createServer((req, res) => {
-  const f = path.join(DIR, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-  if (!f.startsWith(DIR) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end(); return; }
-  res.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream' });
-  fs.createReadStream(f).pipe(res);
-}).listen(0);
-const base = `http://127.0.0.1:${server.address().port}`;
+const { base, close } = serve(DIR);
 const { entries } = JSON.parse(fs.readFileSync(path.join(DIR, 'index.json'), 'utf8'));
 const axe = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
 const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
@@ -50,8 +42,11 @@ async function open(e, theme) {
 // SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
 // the docs pages are checked in the first shard.
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
-const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs') : [];
-const stories = Object.values(entries).filter((e) => e.type === 'story').filter((_, i) => i % shards === shard - 1);
+// SERUPA_ONLY (run.mjs --since on a pull request): only the stories and docs pages of the components it touches.
+const only = onlyComponents();
+const mine = (e) => !only || only.has(e.importPath.split('/')[3]);   // ./src/components/<Name>/…
+const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
+const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
 for (const e of docs) {
   const notReady = await open(e, 'blue-light');
   const ok = !notReady && await page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
@@ -97,8 +92,8 @@ for (const e of stories) {
     await page.addScriptTag({ content: axe });
     const v = await page.evaluate(async () => {
       const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
-      // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint.
-      const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, :disabled, [aria-disabled="true"]');
+      // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
+      const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
       return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
         .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
     });
@@ -107,6 +102,6 @@ for (const e of stories) {
   t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in all six themes`, !problems.length, problems.slice(0, 3).join('\n      '));
 }
 await b.close();
-server.close();
+close();
 console.log(`(${docs.length} docs pages, ${stories.length} stories × ${THEMES.length} themes)`);
 process.exit(report('Storybook', R) ? 0 : 1);

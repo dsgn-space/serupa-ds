@@ -1,6 +1,6 @@
 {
   "name": "serupa-ds",
-  "version": "9.0.0",
+  "version": "9.1.1",
   "private": true,
   "type": "module",
   "description": "Serupa, a design system by Diki: tokens, utility classes, page defaults, automatic dark mode and React components. Import the components as ES modules (React 19 is a peer dependency), or load dist/serupa.iife.js on a plain page, where it reads window.React (React 19 ships in dist/lib/).",
@@ -62,7 +62,7 @@
   ],
   "scripts": {
     "build": "node tools/build/build.mjs",
-    "typecheck": "node node_modules/typescript/bin/tsc -p . && node node_modules/typescript/bin/tsc -p tools",
+    "typecheck": "node tools/build/registry.mjs && node node_modules/typescript/bin/tsc -p . && node node_modules/typescript/bin/tsc -p tools",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
     "prepare": "node tools/build/build.mjs",
@@ -75,7 +75,7 @@
     "changeset": "changeset",
     "version-packages": "node tools/version.mjs",
     "release": "node tools/publish.mjs",
-    "lint": "node tools/utilities/build.mjs && eslint . && stylelint \"src/**/*.css\" \".storybook/**/*.css\"",
+    "lint": "node tools/utilities/build.mjs && node tools/build/registry.mjs && eslint . && stylelint \"src/**/*.css\" \".storybook/**/*.css\"",
     "test:coverage": "vitest run --project components --coverage",
     "test:unit": "vitest run --project components",
     "test:checks": "vitest run --project checks",

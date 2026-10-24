@@ -161,9 +161,13 @@ describe('Table', () => {
 
   test('the sort button fills the header, lines up with align="end", and shows a focus ring', async () => {
     await setup();
+    // Firefox shows a ring after script focus only once the keyboard has moved focus, so Tab away and back.
     q('#hsort button').focus();
     await userEvent.keyboard('{Enter}');
+    await userEvent.tab();
+    await userEvent.tab({ shift: true });
     const b = q('#hsort button'), s = css(b);
+    expect(document.activeElement).toBe(b);
     expect(Math.round(b.getBoundingClientRect().width)).toBe(Math.round(b.parentElement!.getBoundingClientRect().width));
     expect([s.justifyContent, s.outlineStyle]).toEqual(['flex-end', 'solid']);
   });

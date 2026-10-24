@@ -1,7 +1,8 @@
-// Runs the whole suite: node tools/test/run.mjs   (add --update to accept new baselines, --list to see the steps)
+// Runs the whole suite: node tools/test/run.mjs   (add --update to accept new baselines, --list to see the steps,
+// --since <ref> to test only the components changed since then)
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { HERE, PROJECT } from './lib.mjs';
+import { HERE, PROJECT, affectedComponents, onlyComponents, withDependents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -14,11 +15,21 @@ const GROUPS = {
   visual: [['Visual snapshots', 'visual.mjs', ...update]],
   storybook: [['Storybook', 'storybook.mjs']],
 };
+// --since <ref> (CI on a pull request): when every changed file belongs to a component folder, the component tests,
+// visual snapshots and Storybook checks cover only those components and the ones that use them (SERUPA_ONLY). The checks always run whole.
+if (arg('--since')) {
+  const diff = spawnSync('git', ['diff', '--name-only', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
+  const changed = diff.status === 0 ? affectedComponents(diff.stdout.split('\n').filter(Boolean)) : null;
+  const names = changed && withDependents(changed);
+  if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
+  console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
+}
+const only = onlyComponents();
 const node = (g) => ([name, f, ...args]) => [name, 'node', [path.join(HERE, f), ...args], g];
 const vitest = (name, project, g, ...args) => [name, process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run', '--project', project, ...args], g];
 const steps = [
   // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in a browser.
-  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : [])),
+  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : []), ...(only ? [...only].map((n) => `src/components/${n}/`) : [])),
   // --update first accepts the current API and utility classes as the baselines the checks compare with.
   ...(update.length ? [['Public API', 'api.mjs', ...update], ['Utility classes', 'utilities.mjs', ...update]].map(node('checks')) : []),
   // Every other script in tools/test/ is a check (package, tokens, icons, guides, …), run by Vitest's checks project
@@ -31,6 +42,8 @@ if (arg('--group')) {
   if (!steps.some((step) => step[3] === g)) { console.error(`Unknown --group "${g}" (checks, components, visual or storybook)`); process.exit(2); }
   steps.splice(0, steps.length, ...steps.filter((step) => step[3] === g));
 }
+// No component changed (a changeset alone): nothing for the component, visual or Storybook steps to cover.
+if (only && !only.size) steps.splice(0, steps.length, ...steps.filter((step) => step[3] === 'checks'));
 if (arg('--compat')) steps.push([`Cross-browser (${arg('--compat')})`, 'node', [path.join(HERE, 'compat.mjs'), '--engine', arg('--compat'), ...(arg('--driver') ? ['--driver', arg('--driver')] : [])]]);
 // --list prints the steps (of the --group, if one is given) without running them.
 if (process.argv.includes('--list')) { for (const [name, , args, g] of steps) console.log(`${g}\t${name}\t${path.basename(args[0])}`); process.exit(0); }

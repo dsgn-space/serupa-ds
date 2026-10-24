@@ -4,6 +4,40 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [9.1.1] - 2026-10-24
+
+### Changed
+
+- Each component's words now come from its own folder (`src/components/<Name>/labels.ts`), and the package's export list, CSS imports and label sets are built from the component folders. `SerupaLabels`, `enLabels`, `idLabels`, `window.Serupa` and the CSS order are unchanged, and projects that import only some components still don't ship the Indonesian words.
+
+## [9.1.0] - 2026-10-24
+
+### Added
+
+- ColorPicker, a radio group of named swatches (arrow keys, Home and End move and pick), then a hex field and the browser's color picker for any other color. With `contrastWith` it shows the WCAG contrast ratio against that color, rounded down and in the locale's numbers, and warns below `minContrast` (4.5 by default) in a polite live region. The picked swatch has a ring and a white or black check, whichever stands out. It takes `swatches`, `value`/`defaultValue`/`onValueChange`, `custom`, `size`, `disabled` and `name`, with 12 `--color-picker-*` tokens.
+- The labels `customColor`, `hexCode`, `contrast` and `lowContrast`, in English and Indonesian.
+- CopyButton, a Button that copies `value` (text, or a function that returns it) to the clipboard. It then shows a check and "Copied" for two seconds without changing width, and says "Copied" to screen readers. If the browser refuses, it says "Couldn't copy…" and calls `onCopyError`. It has `iconOnly`, `copiedLabel`, `timeout` and `onCopy`, falls back to `execCommand("copy")` where the Clipboard API isn't available, and has the token `--copy-button-done-color`. New labels `copy`, `copied` and `copyFailed`, in English and Indonesian.
+- FormattedNumber, a `<data value>` that writes a number the way the locale does, with its digits: plain (`1.234,5` in Indonesian), compact (`1.2K`, with the full number as its tooltip), percent, currency, bytes (`1.5 MB`, in steps of 1024 like `formatFileSize`) and units (`50 km/h`). `options` takes any other `Intl.NumberFormat` option, and `formatNumber(value, locale, options)` gives the same words outside React and in Server Components.
+- InlineEdit, text that opens into a field in place. A click, Enter or Space opens it with the text selected; Enter or leaving the field saves, Escape cancels (without closing a surrounding Dialog), and keyboard saves and cancels put focus back. It has `value`/`defaultValue`/`onValueChange`, `validate` (a message keeps it open and describes the field), `placeholder`, `size`, `editing`/`onEditingChange`, `disabled`, `readOnly` and `inputProps`, with 8 `--inline-edit-*` tokens. Both modes share Input's height and padding, so opening it moves nothing.
+- The `edit` label ("Edit", "Ubah" in `idLabels`).
+- `PhoneInput`, a phone number field with a country menu. It groups the number the way the country writes it as people type, drops a typed trunk `0`, picks the country from a pasted `+…` number, and reports E.164 through `onValueChange` (with `complete` for the length check). `name` submits E.164. 51 countries, named in the locale's words.
+- `formatPhone` and `parsePhone`, for showing and reading E.164 numbers outside the field.
+- The `country` label ("Country" / "Negara").
+- RelativeTime, a `<time datetime>` that says how long ago or how far ahead a moment is, in the locale's words ("3 minutes ago", "yesterday", "in 2 hours"), with the exact date as its tooltip. Every RelativeTime on a page updates on one shared 15-second clock, and server-rendered ones hydrate without a mismatch. It has `format`, `numeric`, `titleFormat` and `locale`, and `relativeTime(date, now, locale)` gives the same words outside React.
+- SortableList, a list people reorder by dragging a handle or from the keyboard (Space or Enter to pick up, the arrow keys, Home and End to move, Space or Enter to drop, Escape to put back). Each step is announced ("Gemini, position 3 of 4"), focus stays on the handle, and `onReorder(items, { from, to })` is called once, on drop. It takes `items`, `getKey`, `getLabel`, `renderItem`, `disabled` and `reorderLabel`, with 16 `--sortable-list-*` tokens.
+- The labels `reorder`, `reorderInstructions`, `reorderGrabbed`, `reorderMoved`, `reorderDropped` and `reorderCancelled`, in English and Indonesian.
+- `limit` on Toaster (default 3). The newest toasts show, and older ones wait under a "+2 more" line until there's room (`labels.moreToasts`).
+
+### Changed
+
+- The same message again (same words and tone, with no `id` or `action`) adds a count to the toast that's showing ("Network error ×12") and starts its time over, instead of adding a toast. It isn't announced again.
+
+### Fixed
+
+- With a Dialog or Drawer opened from inside another, Escape also asked the outer one to close, so the page closed underneath the dialog people were looking at. Now only the top one closes, and the next Escape closes the one below (R29).
+- A burst of toasts stacked past the edge of the screen, where they couldn't be read or closed (12 in a row put the first at -80px). At most 3 show now (R30).
+- The Toaster stays clear of a phone's notch and home indicator (the safe area).
+
 ## [9.0.0] - 2026-10-24
 
 ### Added

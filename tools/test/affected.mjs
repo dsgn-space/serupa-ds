@@ -1,0 +1,22 @@
+// Which components a pull request's CI covers (run.mjs --since): only changes inside component folders narrow it,
+// and a component brings the ones that use it. No browser needed.
+//   node tools/test/affected.mjs
+import { affectedComponents, withDependents, report, done } from './lib.mjs';
+
+const R = [];
+const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
+const list = (s) => (s ? [...s].sort().join(', ') : 'everything');
+
+const one = affectedComponents(['src/components/Meter/Meter.tsx', 'src/components/Meter/Meter.css', 'tools/test/baseline-visual/Meter/Default-blue-light-rest.png', '.changeset/meter.md']);
+t('a change inside one component folder (with its baselines and changeset) covers that component', list(one) === 'Meter', list(one));
+const two = affectedComponents(['src/components/Tabs/Tabs.tsx', 'tools/test/baseline-api/Kbd.d.ts', 'tools/test/ssr/Kbd.mjs']);
+t('its API baseline and server-render case count as the component\'s', list(two) === 'Kbd, Tabs', list(two));
+for (const f of ['src/internal/labels.ts', 'tokens.json', 'src/styles/cascade.txt', 'tools/test/visual.mjs', '.storybook/preview.tsx', 'package.json', 'docs/Localization.mdx']) {
+  t(`a change to ${f} tests everything`, affectedComponents(['src/components/Meter/Meter.tsx', f]) === null, list(affectedComponents([f])));
+}
+t('a changeset alone covers no component', affectedComponents(['.changeset/x.md'])?.size === 0);
+const deps = withDependents(new Set(['Button']));
+t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Badge'), list(deps));
+t('a component nothing uses brings only itself', list(withDependents(new Set(['Meter']))) === 'Meter', list(withDependents(new Set(['Meter']))));
+
+done(report('Affected components', R));

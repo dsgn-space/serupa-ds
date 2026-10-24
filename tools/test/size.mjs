@@ -2,26 +2,30 @@
 //   node tools/test/size.mjs
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand): everything, and Button or Dialog alone. Over budget fails. When a change is worth the bytes, raise
-// its line here in the same pull request, so the growth is a decision someone reviews. CI writes the table to the
-// run's summary page.
+// its line here in the same pull request, so the growth is a decision someone reviews. The lines that grow with every
+// component (a number and `per`) allow that much more for each component folder past the count they were set at, so
+// a pull request that adds a typical component doesn't edit this file. CI writes the table to the run's summary page.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import * as esbuild from 'esbuild';
 import { PROJECT, done, report } from './lib.mjs';
 
-// KiB, gzipped. About 3 to 5% above the size when each line was last set.
-const BUDGET = {
-  'All components (index.js)': 52,   // 46.8 once each component imports only its own icons (R7); about 51 with R21–R28, Meter, CopyButton and RelativeTime
-  'Button alone': 5.5,   // 5.1, without any icon data (R7)
-  'Dialog alone': 6.5,   // 6.2, with only its close icon (R7)
-  'components.css': 40.5,   // 38.2 after R11 put the hover rules in @media (hover: hover); about 39.6 with Meter, CopyButton and RelativeTime
+// KiB, gzipped. About 3 to 5% above the size when each line was last set. [KiB, KiB more per component past AT].
+const AT = 66;
+const RAW = {
+  'All components (index.js)': [60, 2],   // 46.8 once each component imports only its own icons (R7); 52.2 with R21–R28, Meter and CopyButton; 58.7 with RelativeTime, FormattedNumber, InlineEdit, ColorPicker and PhoneInput
+  'Button alone': 5.7,   // 5.1, without any icon data (R7); 5.5 once each component's words came from its own labels.ts
+  'Dialog alone': 7,   // 6.2, with only its close icon (R7); 6.5 with every label the new components added
+  'components.css': [42.5, 1],   // 38.2 after R11 put the hover rules in @media (hover: hover); 40.7 with InlineEdit, ColorPicker and PhoneInput
   'utilities.css': 168,
-  'bundle.css': 206,
+  'bundle.css': [212, 1],   // 206.2 with InlineEdit, ColorPicker and PhoneInput
   'base.css': 1.85,   // 1.74 with the print styles (R12)
   'theme.js': 2,
-  'serupa.iife.js': 600,
+  'serupa.iife.js': [610, 10],   // 601.5 with InlineEdit and ColorPicker; PhoneInput's country table adds a few KiB
 };
+const count = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((n) => fs.statSync(path.join(PROJECT, 'src', 'components', n)).isDirectory()).length;
+const BUDGET = Object.fromEntries(Object.entries(RAW).map(([k, v]) => [k, Array.isArray(v) ? +(v[0] + Math.max(0, count - AT) * v[1]).toFixed(1) : v]));
 
 const gz = (buf) => zlib.gzipSync(buf, { level: 9 }).length;
 // Icons drawn by name are a dynamic import(): a project loads them only when a page draws an icon by its name.
@@ -30,7 +34,7 @@ const bundled = async (code) => gz((await esbuild.build({ stdin: { contents: cod
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));
 
 const size = {
-  'All components (index.js)': 52,   // 46.8 once each component imports only its own icons (R7); about 51 with R21–R28, Meter, CopyButton and RelativeTime
+  'All components (index.js)': await bundled("export * from './dist/index.js';"),
   'Button alone': await bundled("export { Button } from './dist/index.js';"),
   'Dialog alone': await bundled("export { Dialog } from './dist/index.js';"),
 };
@@ -43,6 +47,7 @@ if (process.env.GITHUB_STEP_SUMMARY) {
 }
 done(report('Size', rows.map((r) => ({
   name: `${r.name}: ${kib(r.now)} KiB gzipped, within ${r.budget} KiB`,
-  ok: r.now <= r.budget * 1024,
-  detail: `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
+  // Under 1 KiB means it wasn't measured (a budget number pasted in place of the measurement), not that it's tiny.
+  ok: r.now <= r.budget * 1024 && r.now >= 1024,
+  detail: r.now < 1024 ? 'not measured: its line in `size` must measure the build, not repeat the budget' : `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
 }))));

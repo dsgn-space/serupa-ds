@@ -20,11 +20,14 @@ for (const [k, v] of Object.entries(pkg.exports)) for (const f of typeof v === '
 const absent = targets.filter(([, f]) => !fs.existsSync(path.join(PROJECT, f)));
 t('every file package.json exports exists', !absent.length, absent.map(([k, f]) => `${k} → ${f}`).join(', '));
 const index = read('src/index.ts');
-const exported = /export \{ ([^}]*) \};/.exec(index)[1].split(', ');
-const typed = new Set([...index.matchAll(/(\w+): typeof \w+;/g)].map((m) => m[1]));
+// The package's own exports, and every component folder's (src/generated/globals.ts, built from their index.ts files).
+const exported = [...index.matchAll(/^export \{ ([^}]*) \};/gm), ...read('src/generated/globals.ts').matchAll(/^import \{ ([^}]*) \}/gm)].flatMap((m) => m[1].split(', '));
+const typed = new Set([...index.matchAll(/(\w+): typeof \w+;/g), ...read('src/generated/globals.ts').matchAll(/(\w+): typeof \w+;/g)].map((m) => m[1]));
 const browserTs = read('src/browser.ts');
-const untyped = exported.filter((n) => !typed.has(n)), unbundled = exported.filter((n) => !new RegExp(`\\b${n}: Serupa\\.${n}\\b`).test(browserTs));
-t('every export is on window.Serupa (src/browser.ts) and in its type (src/index.ts)', !untyped.length && !unbundled.length, `not typed: ${untyped.join(', ')}; not in browser.ts: ${unbundled.join(', ')}`);
+// browser.ts puts the whole package on window.Serupa, so nothing can be left out of it by hand.
+const bundlesAll = /import \* as Serupa from "\.\/index";/.test(browserTs) && /Object\.assign\(window\.Serupa \|\| \{\}, Serupa\)/.test(browserTs);
+const untyped = exported.filter((n) => !typed.has(n));
+t('every export is on window.Serupa (src/browser.ts) and in its type (src/index.ts)', !untyped.length && bundlesAll, `not typed: ${untyped.join(', ')}; ${bundlesAll ? '' : 'browser.ts must assign everything from ./index to window.Serupa'}`);
 t('react and react-dom are peer dependencies (one React in the app)', pkg.peerDependencies && pkg.peerDependencies.react && pkg.peerDependencies['react-dom'] && !(pkg.dependencies || {}).react);
 
 // 2. server rendering: no window, document or navigator while importing and rendering
@@ -39,66 +42,11 @@ if (D) {
   const warnings = [];
   const keep = [console.error, console.warn];
   console.error = console.warn = (...a) => warnings.push(a.map(String).join(' ').split('\n')[0]);
-  const cases = {
-    Badge: h(D.Badge, { tone: 'success', dot: true }, 'Live'),
-    Button: h(D.Button, { leftIcon: 'add', loading: true }, 'Save'),
-    'Button (link)': h(D.Button, { href: '/docs', variant: 'link' }, 'Docs'),
-    Checkbox: h(D.Checkbox, { defaultChecked: true, description: 'Weekly' }, 'Email me'),
-    Field: h(D.Field, { label: 'Name', hint: 'As on your ID', error: 'Required', required: true }, h(D.Input, {})),
-    Icon: h(D.Icon, { name: 'home', 'aria-label': 'Home' }),
-    Input: h(D.Input, { leftIcon: 'search', placeholder: 'Search' }),
-    Loader: h(D.Loader, { variant: 'pixel', delay: 0 }),
-    RadioGroup: h(D.RadioGroup, { defaultValue: 'a', 'aria-label': 'Plan' }, h(D.Radio, { value: 'a' }, 'A'), h(D.Radio, { value: 'b' }, 'B')),
-    Select: h(D.Select, { placeholder: 'Pick one', options: ['One', 'Two'] }),
-    Switch: h(D.Switch, { defaultChecked: true }, 'Wi-Fi'),
-    Textarea: h(D.Textarea, { autoResize: true, showCount: true, maxLength: 200 }),
-    Accordion: h(D.Accordion, { defaultValue: 'a' }, h(D.AccordionItem, { value: 'a', title: 'Shipping' }, 'Free over $50')),
-    Alert: h(D.Alert, { tone: 'warning', title: 'Heads up', onClose() {} }, 'Check your details.'),
-    Avatar: h(D.Avatar, { name: 'Ada Lovelace', status: 'online' }),
-    AvatarGroup: h(D.AvatarGroup, { max: 2 }, h(D.Avatar, { name: 'Ada Lovelace' }), h(D.Avatar, { name: 'Alan Turing' }), h(D.Avatar, { name: 'Grace Hopper' })),
-    Breadcrumb: h(D.Breadcrumb, null, h(D.BreadcrumbItem, { href: '/' }, 'Home'), h(D.BreadcrumbItem, null, 'Settings')),
-    ButtonGroup: h(D.ButtonGroup, { attached: true }, h(D.Button, null, 'Day'), h(D.ToggleButton, { pressed: true }, 'Week')),
-    Calendar: h(D.Calendar, { defaultValue: '2026-10-18', locale: 'en-GB' }),
-    Card: h(D.Card, null, h(D.CardHeader, null, 'Title'), h(D.CardBody, null, 'Body'), h(D.CardFooter, null, 'Footer')),
-    Carousel: h(D.Carousel, { label: 'Photos' }, h('div', null, 'One'), h('div', null, 'Two')),
-    Combobox: h(D.Combobox, { 'aria-label': 'Country', options: ['France', { value: 'de', label: 'Germany' }] }),
-    DatePicker: h(D.DatePicker, { 'aria-label': 'Date', defaultValue: '2026-10-18', name: 'date' }),
-    DateRangePicker: h(D.DateRangePicker, { 'aria-label': 'Dates' }),
-    Dialog: h(D.Dialog, { open: true, title: 'Invite', onOpenChange() {}, footer: h(D.Button, null, 'Send') }, 'Body'),
-    Drawer: h(D.Drawer, { open: true, title: 'Filters', onOpenChange() {} }, 'Body'),
-    EmptyState: h(D.EmptyState, { icon: 'folder_open', title: 'No projects yet', description: 'Create one to start.' }),
-    Fab: h(D.Fab, { icon: 'add', label: 'New' }),
-    FileUpload: h(D.FileUpload, { accept: 'image/*', multiple: true }),
-    Image: h(D.Image, { src: '/a.png', alt: 'A lake', ratio: '16/9', viewable: true }),
-    IconButton: h(D.IconButton, { icon: 'close', label: 'Close' }),
-    Kbd: h(D.Kbd, null, 'mod+k'),
-    Layout: h(D.Container, null, h(D.Stack, { gap: 4 }, h(D.Heading, { level: 2 }, 'Title'), h(D.Divider), h(D.Grid, { columns: 2 }, h(D.Text, { tone: 'muted' }, 'a'), h(D.Text, null, 'b')))),
-    Link: h(D.Link, { href: 'https://example.com', external: true }, 'Docs'),
-    List: h(D.List, null, h(D.ListItem, { title: 'Inbox', description: '3 new' })),
-    Menu: h(D.Menu, { trigger: h(D.Button, null, 'Actions') }, h(D.MenuGroup, { label: 'File' }, h(D.MenuItem, null, 'Rename')), h(D.MenuSeparator), h(D.MenuItem, null, 'Delete')),
-    Navbar: h(D.Navbar, { brand: 'Serupa' }, h(D.NavbarLink, { href: '/', active: true }, 'Home')),
-    NumberInput: h(D.NumberInput, { 'aria-label': 'Quantity', defaultValue: 2, min: 0 }),
-    Pagination: h(D.Pagination, { count: 20, page: 5, onPageChange() {} }),
-    PasswordInput: h(D.PasswordInput, { 'aria-label': 'Password' }),
-    Popover: h(D.Popover, { trigger: h(D.Button, null, 'Share'), title: 'Share' }, 'Body'),
-    Progress: h(D.Progress, { value: 40, label: 'Uploading' }),
-    CopyButton: h(D.CopyButton, { value: 'x' }),
-    Meter: h(D.Meter, { value: 7, max: 10, high: 8, optimum: 0, label: 'Storage' }),
-    SearchInput: h(D.SearchInput, { 'aria-label': 'Search', defaultValue: 'tokens' }),
-    SegmentedControl: h(D.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }] }),
-    Sidebar: h(D.Sidebar, null, h(D.SidebarSection, { title: 'Workspace' }, h(D.SidebarItem, { href: '/', icon: 'home', label: 'Home', active: true }))),
-    Slider: h(D.Slider, { 'aria-label': 'Price', defaultValue: [20, 80] }),
-    SortableList: h(D.SortableList, { 'aria-label': 'Tasks', items: ['A', 'B'], getKey: (i) => i, getLabel: (i) => i, renderItem: (i) => i, onReorder: () => {} }),
-    SerupaProvider: h(D.SerupaProvider, { locale: 'id-ID', labels: D.idLabels }, h(D.Pagination, { count: 3 })),
-    Stepper: h(D.Stepper, { current: 1, steps: [{ title: 'Account' }, { title: 'Plan' }, { title: 'Pay' }] }),
-    Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableSelectCell, { label: 'Select Ada' }), h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
-    Tabs: h(D.Tabs, { defaultValue: 'a' }, h(D.TabList, { 'aria-label': 'Sections' }, h(D.Tab, { value: 'a' }, 'A'), h(D.Tab, { value: 'b' }, 'B')), h(D.TabPanel, { value: 'a' }, 'Panel')),
-    TimePicker: h(D.TimePicker, { 'aria-label': 'Time', defaultValue: '14:30', name: 'time' }),
-    Toaster: h(D.Toaster),
-    Tooltip: h(D.Tooltip, { content: 'Copy link' }, h(D.Button, null, 'Copy')),
-    VisuallyHidden: h(D.VisuallyHidden, null, 'Skip'),
-  };
-  // Every component the package exports renders in one of the cases above (as the case or a part inside it), so a
+  // One file per component in tools/test/ssr/, so a pull request that adds a component adds a file, not a line here.
+  const SSR = path.join(HERE, 'ssr');
+  const cases = {};
+  for (const f of fs.readdirSync(SSR).filter((f) => f.endsWith('.mjs')).sort()) Object.assign(cases, (await import(pathToFileURL(path.join(SSR, f)).href)).default({ h, D }));
+  // Every component the package exports renders in one of the cases in tools/test/ssr/ (as the case or a part inside it), so a
   // new component can't skip this check.
   const seen = new Set();
   const walk = (el) => {
@@ -109,7 +57,7 @@ if (D) {
   };
   Object.values(cases).forEach(walk);
   const unrendered = Object.keys(D).filter((k) => /^[A-Z]/.test(k) && !seen.has(k));
-  t('every component the package exports is server-rendered here', !unrendered.length, `add a case for: ${unrendered.join(', ')}`);
+  t('every component the package exports is server-rendered here', !unrendered.length, `add tools/test/ssr/<Name>.mjs for: ${unrendered.join(', ')}`);
   for (const [name, el] of Object.entries(cases)) {
     let html = '', e = null;
     try { html = renderToString(el); } catch (x) { e = x; }

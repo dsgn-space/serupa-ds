@@ -26,15 +26,15 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 // Shows the given toasts while the story is open (they stay until closed), and clears them when it closes.
-function Showing(props: { position?: React.ComponentProps<typeof Toaster>['position']; toasts: Parameters<typeof toast>[0][] }) {
+function Showing(props: { position?: React.ComponentProps<typeof Toaster>['position']; limit?: number; toasts: Parameters<typeof toast>[0][] }) {
   // The toasts it opened with: shown once on mount, not again when a re-render passes a new array.
   const toasts = React.useRef(props.toasts);
   React.useEffect(() => { toasts.current.forEach((o) => toast(typeof o === 'string' ? { title: o, duration: 0 } : { duration: 0, ...o })); return () => toast.dismiss(); }, []);
-  return <Toaster position={props.position} />;
+  return <Toaster position={props.position} limit={props.limit} />;
 }
 
 export const Tones: Story = {
-  render: (args) => <Showing position={args.position} toasts={[
+  render: (args) => <Showing position={args.position} limit={5} toasts={[
     'Link copied',
     { title: 'New version available', description: 'Reload to update.', tone: 'info' },
     { title: 'Changes saved', tone: 'success' },
@@ -48,4 +48,11 @@ export const WithAction: Story = {
 export const TopCenter: Story = {
   args: { position: 'top-center' },
   render: (args) => <Showing position={args.position} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
+};
+/** A burst: the same error three times is one toast with a count, and past the limit (3) the rest wait under "+2 more". */
+export const Burst: Story = {
+  render: (args) => <Showing position={args.position} toasts={[
+    'Photo 1 uploaded', 'Photo 2 uploaded', 'Photo 3 uploaded', 'Photo 4 uploaded',
+    { title: 'Network error', tone: 'danger' }, { title: 'Network error', tone: 'danger' }, { title: 'Network error', tone: 'danger' },
+  ]} />,
 };

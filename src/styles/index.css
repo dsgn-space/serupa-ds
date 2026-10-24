@@ -1,67 +1,7 @@
-/* Every stylesheet in the order it cascades, the one list the build and Storybook both read.
+/* Every stylesheet in the order it cascades, the one file the build and Storybook both read.
    bundle.css is these files joined; components.css is the component ones, utilities.css the last.
-   A component that styles another one (Loader inside Button) comes after it, so add new components
-   at the end of the component list unless they must win over an earlier one. */
+   The component list is generated from the folders (tools/build/registry.mjs): the order is
+   src/styles/cascade.txt, then any component it doesn't list, A to Z. */
 @layer dk.tokens, dk.base, dk.components, dk.utilities;
-@import "../components/Icon/Icon.css";
-@import "../components/Heading/Heading.css";
-@import "../components/Text/Text.css";
-@import "../components/Button/Button.css";
-@import "../components/Loader/Loader.css";
-@import "../components/Badge/Badge.css";
-@import "../components/Input/Input.css";
-@import "../components/Textarea/Textarea.css";
-@import "../components/Field/Field.css";
-@import "../components/Select/Select.css";
-@import "../components/Checkbox/Checkbox.css";
-@import "../components/Radio/Radio.css";
-@import "../components/Switch/Switch.css";
-@import "../components/Card/Card.css";
-@import "../components/Alert/Alert.css";
-@import "../components/IconButton/IconButton.css";
-@import "../components/Fab/Fab.css";
-@import "../components/Avatar/Avatar.css";
-@import "../components/AvatarGroup/AvatarGroup.css";
-@import "../components/Tabs/Tabs.css";
-@import "../components/Tooltip/Tooltip.css";
-@import "../components/Dialog/Dialog.css";
-@import "../components/Menu/Menu.css";
-@import "../components/Toast/Toast.css";
-@import "../components/Stack/Stack.css";
-@import "../components/Grid/Grid.css";
-@import "../components/Container/Container.css";
-@import "../components/Divider/Divider.css";
-@import "../components/VisuallyHidden/VisuallyHidden.css";
-@import "../components/Link/Link.css";
-@import "../components/Breadcrumb/Breadcrumb.css";
-@import "../components/Pagination/Pagination.css";
-@import "../components/Table/Table.css";
-@import "../components/Accordion/Accordion.css";
-@import "../components/Navbar/Navbar.css";
-@import "../components/Sidebar/Sidebar.css";
-@import "../components/ToggleButton/ToggleButton.css";
-@import "../components/ButtonGroup/ButtonGroup.css";
-@import "../components/PasswordInput/PasswordInput.css";
-@import "../components/List/List.css";
-@import "../components/EmptyState/EmptyState.css";
-@import "../components/Popover/Popover.css";
-@import "../components/Drawer/Drawer.css";
-@import "../components/Progress/Progress.css";
-@import "../components/CopyButton/CopyButton.css";
-@import "../components/Meter/Meter.css";
-@import "../components/SearchInput/SearchInput.css";
-@import "../components/NumberInput/NumberInput.css";
-@import "../components/Slider/Slider.css";
-@import "../components/SortableList/SortableList.css";
-@import "../components/SegmentedControl/SegmentedControl.css";
-@import "../components/Combobox/Combobox.css";
-@import "../components/Stepper/Stepper.css";
-@import "../components/Kbd/Kbd.css";
-@import "../components/FileUpload/FileUpload.css";
-@import "../components/Calendar/Calendar.css";
-@import "../components/DatePicker/DatePicker.css";
-@import "../components/DateRangePicker/DateRangePicker.css";
-@import "../components/Image/Image.css";
-@import "../components/TimePicker/TimePicker.css";
-@import "../components/Carousel/Carousel.css";
+@import "../generated/components.css";
 @import "./utilities.css";

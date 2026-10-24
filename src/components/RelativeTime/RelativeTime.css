@@ -1,0 +1,7 @@
+/* ---------------------------------------------------------------
+   RelativeTime: inline text in the surrounding font and color ("3 minutes ago"), kept on one line, with tabular
+   digits so a ticking value doesn't shift the text after it.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-relative-time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+}

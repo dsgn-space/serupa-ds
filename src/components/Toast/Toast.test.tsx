@@ -168,7 +168,7 @@ describe('Toast', () => {
   });
 
   test('contrast: title and description 4.5:1, icons 3:1, for every tone in all six themes', async () => {
-    await render(<App />);
+    await render(<Toaster limit={4} />);
     React.act(() => { (['info', 'success', 'warning', 'danger'] as const).forEach((k) => toast({ title: k, description: 'Details', tone: k, duration: 0 })); });
     const still = document.createElement('style'); still.textContent = '* { animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
@@ -191,6 +191,53 @@ describe('Toast', () => {
     expect(s.boxShadow).toMatch(/10px 15px -3px/);
     q('.dk-toaster').style.setProperty('--toast-bg', 'rgb(1, 2, 3)');
     expect(toasts().map((x) => css(x).backgroundColor)).toEqual(['rgb(1, 2, 3)', 'rgb(1, 2, 3)']);
+  });
+
+  test('a burst of the same message is one toast with a count ("×12"), said once; one with an id or an action is never merged', async () => {
+    await render(<App />);
+    React.act(() => { for (let i = 0; i < 12; i++) toast({ title: 'Network error', tone: 'danger', duration: 0 }); });
+    expect([toasts().length, titles()[0], q('.dk-toast__count').textContent]).toEqual([1, 'Network error×12', '×12']);
+    React.act(() => { toast({ title: 'Network error', tone: 'warning', duration: 0 }); toast({ title: 'Network error', tone: 'danger', id: 'mine', duration: 0 }); toast({ title: 'Network error', tone: 'danger', duration: 0, action: { label: 'Retry', onClick: () => {} } }); });
+    expect(toasts().length).toBe(3);   // the warning and the one with an id; the third waits past the limit
+    expect(q('.dk-toaster__more').textContent).toBe('+1 more');
+  });
+
+  test('at most 3 show (newest nearest the edge), the rest wait under "+9 more", and none goes off screen; closing one brings the next back; limit sets the number', async () => {
+    await render(<App />);
+    React.act(() => { for (let i = 1; i <= 12; i++) toast({ title: 'Upload ' + i + ' failed', duration: 0 }); });
+    await landed();
+    expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['Upload 10 failed', 'Upload 11 failed', 'Upload 12 failed'], '+9 more']);
+    expect(Math.min(...toasts().map((x) => x.getBoundingClientRect().top), q('.dk-toaster__more').getBoundingClientRect().top)).toBeGreaterThanOrEqual(0);
+    await userEvent.click(toasts()[2].querySelector('.dk-toast__close')!);
+    await expect.poll(titles).toEqual(['Upload 9 failed', 'Upload 10 failed', 'Upload 11 failed']);
+    expect(q('.dk-toaster__more').textContent).toBe('+8 more');
+    setPos('top-center');
+    await expect.poll(() => q('.dk-toaster__list').lastElementChild!.className).toBe('dk-toaster__more');
+    expect(titles()[0]).toBe('Upload 11 failed');
+  });
+
+  test('limit={1} shows only the newest; Indonesian words for the waiting line', async () => {
+    const { idLabels } = await import('../../internal/labels');
+    const { SerupaProvider } = await import('../../internal/provider');
+    await render(<SerupaProvider labels={idLabels}><Toaster limit={1} /></SerupaProvider>);
+    React.act(() => { toast({ title: 'A', duration: 0 }); toast({ title: 'B', duration: 0 }); toast({ title: 'C', duration: 0 }); });
+    expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['C'], '+2 lainnya']);
+  });
+
+  test('contrast: the count and the waiting line 4.5:1 in all six themes', async () => {
+    await render(<App />);
+    React.act(() => { for (const t of ['B', 'C', 'D']) toast({ title: t, duration: 0 }); toast({ title: 'Same', duration: 0 }); toast({ title: 'Same', duration: 0 }); });
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      await settle();
+      const more = q('.dk-toaster__more'), count = q('.dk-toast__count');
+      for (const [name, el, bg] of [['waiting line', more, css(more).backgroundColor], ['count', count, css(count.closest('.dk-toast')).backgroundColor]] as const) {
+        const r = contrast(css(el).color, bg);
+        if (r < 4.5) low.push(`${th} ${name} ${r.toFixed(2)}`);
+      }
+    }
+    expect(low).toEqual([]);
   });
 
   test('a replaced toast starts its time again', async () => {
