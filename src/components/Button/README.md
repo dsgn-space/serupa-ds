@@ -183,7 +183,7 @@ Small motion that confirms what happened, all built in:
 | Default | Variant colors, `shadow-xs` on filled and outline buttons | `pointer` |
 | Hover | `primary` darkens one step (`primary-hover`); secondary gains a `primary-subtle` tint and its text and border darken to `primary-hover`; outline and ghost gain a `secondary` fill; link underlines; a right icon slides 2px forward | `pointer` |
 | Pressed | Hover colors, shrinks to 97% (`scale-97`); a ripple spreads from the press point | `pointer` |
-| Focus (keyboard) | 2px `focus-ring` outside a 2px `surface` gap (`danger` ring when destructive); in forced-colors (high-contrast) mode, a 2px system-color outline instead | `pointer` |
+| Focus (keyboard) | A 2px `focus-ring` outline 2px out (`danger` when destructive). The gap is transparent, so it reads on tinted backgrounds; forced-colors (high-contrast) mode draws it in the system color | `pointer` |
 | Disabled | 50% opacity, no shadow, no hover change, ignores clicks | `not-allowed` |
 | Loading | Full color, the content fades into a spinner, no hover change, no press, ignores clicks, keeps focus | `progress` |
 
@@ -197,7 +197,7 @@ Button's behaviour follows web standards; its look comes only from this design s
 | --- | --- |
 | Renders a real `<button>` (Space and Enter press it, it's in the tab order, `disabled` works); `type` defaults to `"button"` because a `<button>` in a form otherwise submits it | [HTML Standard: the button element](https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element), [MDN: `<button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) |
 | Actions use `<button>`; navigation uses a real link (`href`), never an `onClick` that changes the URL | [WAI-ARIA APG: Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), [MDN: button role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role) |
-| Loading blocks clicks and Enter-key implicit submission, but keeps focus (`aria-disabled`, not `disabled`), keeps the button's accessible name, and announces "Loading" (`loadingText`) through a polite `role="status"` region | [HTML Standard: implicit submission](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#implicit-submission), [APG: focusability of disabled controls](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols), [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) |
+| Loading blocks clicks and Enter-key implicit submission, but keeps focus (`aria-disabled`, not `disabled`), keeps the button's accessible name, and announces "Loading…" (`loadingText`) through a polite `role="status"` region | [HTML Standard: implicit submission](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#implicit-submission), [APG: focusability of disabled controls](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols), [WCAG 4.1.3 Status Messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) |
 | A disabled link has no `href` (so it isn't a link, can't be focused or followed), with `role="link"` and `aria-disabled`; `target="_blank"` gets `rel="noopener noreferrer"` | [HTML Standard: the a element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element), [MDN: aria-disabled](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-disabled), [MDN: rel=noopener](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noopener) |
 | Icon-only buttons need an `aria-label` (warns without one); icons are `aria-hidden` | [WCAG 4.1.2 Name, Role, Value](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html), [WCAG 1.1.1 Non-text Content](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html) |
 | An `aria-label` on a button with visible text should start with that text ("Delete project", not "Remove") | [WCAG 2.5.3 Label in Name](https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html) |
@@ -208,7 +208,7 @@ Button's behaviour follows web standards; its look comes only from this design s
 
 ## Props
 
-Button's own props are `variant` (`primary`), `destructive`, `size` (`md`), `leftIcon`, `rightIcon`, `icon`, `loading` and `loadingText` (what screen readers hear when loading starts; default "Loading", `""` for silence). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through.
+Button's own props are `variant` (`primary`), `destructive`, `size` (`md`), `leftIcon`, `rightIcon`, `icon`, `loading` and `loadingText` (what screen readers hear when loading starts; default "Loading…", `""` for silence). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through.
 
 `buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Serupa.configure({ link })` sets the component that renders link Buttons.
 
@@ -266,7 +266,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-destructive-link-text` | `danger-text` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
 | `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
-| `--button-focus-gap-color` | `surface` | The 2px gap between the button and its focus ring; set it to the color the button sits on. |
+| `--button-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
 
 **Spacing**
 
@@ -322,8 +322,8 @@ Every value comes from a token. Colors, spacing, sizes, borders and micro-intera
 | Padding, gap, icon size | `spacing-2` / `spacing-3` / `spacing-5`; `spacing-1`, `spacing-1.5`, `spacing-2`; `spacing-3.5`, `spacing-4`, `spacing-5` |
 | Type | `font-sans`, `font-medium`, `tracking-normal`, `text-xs`, `text-sm`, `text-base` (each with its `--line-height`) |
 | Shape | `rounded-md`, `border-width-1`, `shadow-xs`, `shadow-none` |
-| Focus ring | `outline-offset-2` (the gap), `outline-width-2` (the ring) |
-| States | `opacity-50` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
+| Focus ring | `focus-ring-width` (the ring), `focus-ring-offset` (the gap), `focus-ring` (the color) |
+| States | `opacity-disabled` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
 | Motion | `duration-150` and `ease-in-out` for colors and the focus ring; `scale-97`, `duration-100`, `spacing-0.5`, `duration-150`, `opacity-20`, `duration-500`, `duration-300`, `ease-out` for the micro-interactions; `scale-50`, `scale-100`, `scale-0`, `spacing-0` and `rounded-full` inside them |
 | Components and utilities it reuses | the Loader (ring) while loading, `sr-only` on the loading announcement |
 | Icons | `leading-none`, `spacing-6` (Icon's default size) |

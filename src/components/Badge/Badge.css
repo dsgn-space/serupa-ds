@@ -99,7 +99,7 @@
 }
 .dk-badge__remove:hover { opacity: var(--opacity-100); }
 .dk-badge__remove:focus-visible { opacity: var(--opacity-100); }
-.dk-badge__remove:focus-visible::after { outline: var(--outline-width-2) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }   /* the ring goes round the whole 24×24 target */
+.dk-badge__remove:focus-visible::after { outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }   /* the ring goes round the whole 24×24 target */
 /* Interactive (onClick: a <button>; href: a link): a state layer (hover, then stronger while pressed) in the text
    color on subtle and outline, and black (light themes) or white (dark) on solid, a 2px focus ring outside a 2px surface gap, and a 50% fade when disabled. The layer sits above the
    fill and below the content, so every style and tone gets the same treatment. */
@@ -118,12 +118,10 @@
 .dk-badge--interactive.dk-badge--subtle:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-sfg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); }
 .dk-badge--interactive.dk-badge--outline:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-ofg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); }
 .dk-badge--interactive:focus-visible {
-  /* the transparent outline is invisible normally but drawn in forced-colors mode, where box-shadow rings disappear */
-  box-shadow: 0 0 0 var(--outline-offset-2) var(--badge-focus-gap-color, var(--surface)), 0 0 0 calc(var(--outline-offset-2) + var(--outline-width-2)) var(--badge-focus-ring, var(--focus-ring));
-  outline: var(--outline-width-2) solid transparent;
-  outline-offset: var(--outline-offset-2);
+  /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
+  outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset);
 }
-.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-disabled); cursor: not-allowed; }
 /* Loading: the content fades out under a centered ring at the icon size; the badge keeps its width and colors. */
 .dk-badge--loading { cursor: progress; }
 .dk-badge--loading > :not(.dk-badge__loader) { opacity: var(--opacity-0); }

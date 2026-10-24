@@ -173,4 +173,10 @@ describe('Sidebar', () => {
     still.remove();
     expect([low, n]).toEqual([[], 18]);
   });
+
+  test('nested items inside a Fragment count: a group with the current page inside opens on its own', async () => {
+    await render(<Sidebar id="sfrag"><I href="/" icon="home" label="Home" /><I label="Teams" icon="group"><><I href="/t1" label="One" /><I href="/t2" label="Two" active /></></I></Sidebar>);
+    const group = [...el('sfrag').querySelectorAll<HTMLElement>('[aria-expanded]')].find((b) => b.textContent!.includes('Teams'))!;
+    expect(group.getAttribute('aria-expanded')).toBe('true');
+  });
 });

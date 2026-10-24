@@ -65,9 +65,9 @@ Each is an optional override: set it on the page, a container or one popover. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--popover-bg` | `surface` | The panel's background. |
+| `--popover-bg` | `surface-overlay` | The panel's background. |
 | `--popover-text` | `text` | The panel's text. |
-| `--popover-border` | `border` | The panel's border. |
+| `--popover-border` | `border-overlay` | The panel's border. |
 | `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
 | `--popover-shadow` | `shadow-lg` | The panel's shadow. |

@@ -51,7 +51,7 @@ const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
 
 | State | Look |
 | --- | --- |
-| Rest | `surface` with a `border` border and `shadow-xs` (outline); `shadow-md` (elevated); `surface-muted` (filled) |
+| Rest | `surface` with a `border` border and `shadow-xs` (outline); `surface-raised` with `shadow-md` and a `border-raised` edge (elevated: the edge only shows in dark); `surface-muted` (filled) |
 | Hover (a linked card) | A `border-strong` border |
 | Focus (a linked card) | From the keyboard: a 2px `focus-ring` outline, 2px outside the card |
 
@@ -99,7 +99,9 @@ Each is an optional override: set it on the page, a container or one card. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--card-bg` | `surface` | The background (outline and elevated) |
+| `--card-bg` | `surface` | The background of an outline card |
+| `--card-bg-elevated` | `surface-raised` | The background of an elevated card (one step up from the page in dark). |
+| `--card-border-elevated` | `border-raised` | An elevated card's edge: invisible in light, a 1px lighter edge in dark |
 | `--card-bg-filled` | `surface-muted` | The background of a filled card |
 | `--card-border` | `border` | The border of an outline card |
 | `--card-title-color` | `text` | The title |

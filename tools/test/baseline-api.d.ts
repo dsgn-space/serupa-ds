@@ -538,6 +538,8 @@ interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "mi
     steppers?: boolean;
     decrementLabel?: string;
     incrementLabel?: string;
+    locale?: string;
+    formatOptions?: Intl.NumberFormatOptions;
 }
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;
 type Entry = "end-ellipsis" | "start-ellipsis" | number;
@@ -919,6 +921,7 @@ interface SerupaLabels {
     hasError: string;
     optional: string;
     notifications: string;
+    toastShortcut: (key: string) => string;
     mainNavigation: string;
     menu: string;
     dragFiles: string;
