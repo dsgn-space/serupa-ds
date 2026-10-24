@@ -18,15 +18,19 @@ export function parsePlacement(p: string | undefined, fallback: Placement): [Sid
 /** Where to put the floating element (left, top in viewport px), the side it ended up on, and a maxHeight when it's
     taller than the room it has: then it takes that height and scrolls inside, so all of it stays on screen. */
 export function place(anchor: DOMRect, floating: { width: number; height: number }, placement: string | undefined, offset: number, fallback: Placement = "top", margin = 8): { x: number; y: number; side: Side; maxHeight?: number } {
-  const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+  // The part of the page on screen: the visual viewport where there is one, which a phone's on-screen keyboard
+  // shrinks and pinch-zoom moves; anchor and result are in layout-viewport px, as getBoundingClientRect gives them.
+  const vv = typeof window !== "undefined" ? window.visualViewport : null;
+  const L = vv ? vv.offsetLeft : 0, T = vv ? vv.offsetTop : 0;
+  const R = vv ? L + vv.width : document.documentElement.clientWidth, B = vv ? T + vv.height : document.documentElement.clientHeight;
   const parsed = parsePlacement(placement, fallback), align = parsed[1];
   let side = parsed[0];
   const rtl = getComputedStyle(document.documentElement).direction === "rtl";
   // The room on each side, between the anchor (and the gap) and the screen's margin.
-  const space = (s: Side) => s === "top" ? anchor.top - offset - margin
-    : s === "bottom" ? vh - margin - anchor.bottom - offset
-    : s === "left" ? anchor.left - offset - margin
-    : vw - margin - anchor.right - offset;
+  const space = (s: Side) => s === "top" ? anchor.top - offset - margin - T
+    : s === "bottom" ? B - margin - anchor.bottom - offset
+    : s === "left" ? anchor.left - offset - margin - L
+    : R - margin - anchor.right - offset;
   const need = (s: Side) => s === "top" || s === "bottom" ? floating.height : floating.width;
   // Flip when only the other side fits; when neither does, take the side with more room.
   const other = OPPOSITE[side];
@@ -37,12 +41,12 @@ export function place(anchor: DOMRect, floating: { width: number; height: number
     y = side === "top" ? anchor.top - offset - height : anchor.bottom + offset;
     const start = rtl ? anchor.right - floating.width : anchor.left, end = rtl ? anchor.left : anchor.right - floating.width;
     x = align === "start" ? start : align === "end" ? end : anchor.left + (anchor.width - floating.width) / 2;
-    x = Math.min(Math.max(x, margin), Math.max(margin, vw - margin - floating.width));
+    x = Math.min(Math.max(x, L + margin), Math.max(L + margin, R - margin - floating.width));
   } else {
-    if (height > vh - 2 * margin) height = maxHeight = Math.max(0, Math.floor(vh - 2 * margin));
+    if (height > B - T - 2 * margin) height = maxHeight = Math.max(0, Math.floor(B - T - 2 * margin));
     x = side === "left" ? anchor.left - offset - floating.width : anchor.right + offset;
     y = align === "start" ? anchor.top : align === "end" ? anchor.bottom - height : anchor.top + (anchor.height - height) / 2;
-    y = Math.min(Math.max(y, margin), Math.max(margin, vh - margin - height));
+    y = Math.min(Math.max(y, T + margin), Math.max(T + margin, B - margin - height));
   }
   return maxHeight === undefined ? { x: Math.round(x), y: Math.round(y), side } : { x: Math.round(x), y: Math.round(y), side, maxHeight };
 }
