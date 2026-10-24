@@ -4,6 +4,7 @@ import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
 import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
+import { warnOnce } from "../../internal/warn";
 
 export type TabsVariant = 'line' | 'pill';
 
@@ -64,12 +65,26 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>("Tabs",
   const [panels, setPanels] = React.useState<Record<string, number>>({});
   const register = React.useCallback((v: string, d: number) => setPanels((p) => Object.assign({}, p, { [v]: (p[v] || 0) + d })), []);
   const ctx = React.useMemo(() => ({ base, value, select, manual: props.activation === "manual", panels, register }), [base, value, select, props.activation, panels, register]);
-  // Uncontrolled with no defaultValue, and the tabs out of firstTab's sight: the first enabled tab, after mount.
+  // After each render: uncontrolled with no defaultValue, and the tabs out of firstTab's sight, the first enabled tab.
+  // When the selected tab is removed (a closable tab), the nearest enabled one: the next, or else the previous. So a
+  // tab is always selected and the tab list stays in the Tab order. Controlled Tabs leave it to you, with a warning.
   const self = React.useRef<HTMLDivElement | null>(null);
+  const order = React.useRef<string[]>([]);
   useIsoLayoutEffect(() => {
-    if (value != null || controlled || !self.current) return;
-    const first = self.current.querySelector<HTMLElement>('[role="tab"]:not([disabled])');
-    if (first && first.dataset.value != null) setInner(first.dataset.value);
+    if (!self.current) return;
+    const tabs = Array.from(self.current.querySelectorAll<HTMLElement>('[role="tab"]')).filter((t) => t.id.startsWith(base + "-tab-"));
+    const all = tabs.map((t) => t.dataset.value as string), enabled = tabs.filter((t) => !t.hasAttribute("disabled")).map((t) => t.dataset.value as string);
+    const before = order.current;
+    order.current = all;
+    if (!enabled.length || (value != null && all.includes(value))) return;
+    if (controlled) {
+      if (value != null && before.includes(value)) warnOnce("tabs-removed", `Tabs: the selected tab "${value}" was removed, so no tab is selected. Set value to another tab when you remove it.`);
+      return;
+    }
+    const at = value != null ? before.indexOf(value) : -1;
+    if (at < 0) { setInner(enabled[0]); return; }   // nothing chosen yet (or a defaultValue with no tab): no onValueChange
+    const after = before.slice(at + 1).find((v) => enabled.includes(v)), prev = before.slice(0, at).reverse().find((v) => enabled.includes(v));
+    select(after ?? prev ?? enabled[0]);
   });
   return (
     <TabsContext.Provider value={ctx}>
