@@ -59,8 +59,8 @@ describe('Radio', () => {
 
   test('form reset: the first choice is checked again and the group follows it (uncontrolled); a controlled group shows its value again', async () => {
     await render(<form id="rr">
-      <RadioGroup aria-label="Plan" name="plan" defaultValue="free"><Radio id="rr-free" value="free" label="Free" /><Radio id="rr-pro" value="pro" label="Pro" /></RadioGroup>
-      <RadioGroup aria-label="Ship" value="air" onChange={() => {}}><Radio id="rr-air" value="air" label="Air" /><Radio id="rr-sea" value="sea" label="Sea" /></RadioGroup>
+      <RadioGroup aria-label="Plan" name="plan" defaultValue="free"><Radio id="rr-free" value="free">Free</Radio><Radio id="rr-pro" value="pro">Pro</Radio></RadioGroup>
+      <RadioGroup aria-label="Ship" value="air" onChange={() => {}}><Radio id="rr-air" value="air">Air</Radio><Radio id="rr-sea" value="sea">Sea</Radio></RadioGroup>
     </form>);
     await userEvent.click(input('rr-pro'));
     expect(input('rr-pro').checked).toBe(true);
