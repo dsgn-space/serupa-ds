@@ -25,7 +25,7 @@
   text-align: start; text-decoration: none; cursor: pointer;
   transition: background-color var(--duration-150) var(--ease-in-out), color var(--duration-150) var(--ease-in-out);
 }
-.dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--secondary)); color: var(--sidebar-item-text-hover, var(--text)); }
+@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--secondary)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 .dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--secondary)); }

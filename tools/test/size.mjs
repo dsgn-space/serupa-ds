@@ -15,7 +15,7 @@ const BUDGET = {
   'All components (index.js)': 52,   // NumberInput's locale parsing and formatting (internal/numbers.ts)
   'Button alone': 12,
   'Dialog alone': 13.5,   // 13.01 after the scroll lock gutter and the shared locale hook; most of it is the 73 built-in icons, which R7 drops
-  'components.css': 38,
+  'components.css': 39.5,   // 38.2 after R11 put the hover rules in @media (hover: hover)
   'utilities.css': 168,
   'bundle.css': 206,
   'base.css': 1.5,

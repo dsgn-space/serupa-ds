@@ -325,4 +325,21 @@ for (const f of testFiles(path.join('tools', 'test'))) {
 }
 check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
 
+// 15. hover only where there is hover: on a touch screen the browser keeps :hover on the last element tapped, so a
+// hover color would stick ("still selected"). Every :hover rule sits inside @media (hover: hover); :active still
+// gives a tap its feedback.
+const sticky = [];
+for (const f of ['dist/base.css', 'dist/components.css']) {
+  const body = stripComments(read(f)), stack = [];
+  let prelude = '';
+  for (const ch of body) {
+    if (ch === '{') { stack.push(prelude.trim()); prelude = ''; }
+    else if (ch === '}') { stack.pop(); prelude = ''; }
+    else if (ch === ';') prelude = '';
+    else prelude += ch;
+    if (ch === '{' && /:hover/.test(stack[stack.length - 1]) && !stack.some((p) => /^@media[^{]*\(hover:\s*hover\)/.test(p))) sticky.push(`${f}: ${stack[stack.length - 1].slice(0, 80)}`);
+  }
+}
+check('hover styles apply only with a pointer that hovers: every :hover rule is inside @media (hover: hover)', !sticky.length, sticky.slice(0, 6).join('; '));
+
 done(report('Foundation', results));
