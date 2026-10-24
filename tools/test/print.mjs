@@ -32,7 +32,7 @@ const print = await read();
 t('on screen nothing changes: the toast shows, no link addresses', screen.toaster !== 'none' && screen.out === 'none', JSON.stringify(screen));
 t('printed, a primary Button and a filled Badge keep their colors (print-color-adjust: exact)', print.btn === 'exact' && print.badge === 'exact', JSON.stringify(print));
 t('printed, the toast stack is left out', print.toaster === 'none', print.toaster);
-t('printed, data-print-urls adds an outside link\'s address after it; same-page links and links outside it get none', print.out === '" (" attr(href) ")"' || print.out.includes('https://example.com/terms'), JSON.stringify([print.out, print.inner, print.plain]));
+t('printed, data-print-urls adds an outside link\'s address after it; same-page links and links outside it get none', print.out === '" (" attr(href) ")"' || print.out === '" (https://example.com/terms)"', JSON.stringify([print.out, print.inner, print.plain]));
 t('…and only there', print.inner === 'none' && print.plain === 'none', JSON.stringify([print.inner, print.plain]));
 await b.close();
 cleanup();
