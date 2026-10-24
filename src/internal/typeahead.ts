@@ -9,7 +9,7 @@ export interface Typed { text: string; at: number }
 /** Half a second between letters starts a new word, as in native lists. */
 export const TYPEAHEAD_PAUSE = 500;
 
-/** The index of the item to go to after `key`, or -1 when none matches. `current` is the focused item (-1 for none). */
+/** The index of the item to go to after the key typed, or -1 when none matches. `current` is the focused item (-1 for none). */
 export function typeahead(typed: Typed, key: string, labels: readonly string[], current: number, now = Date.now()): number {
   const k = fold(key);
   typed.text = (now - typed.at > TYPEAHEAD_PAUSE ? "" : typed.text) + k;
