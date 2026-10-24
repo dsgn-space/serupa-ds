@@ -18,7 +18,7 @@ const BUDGET = {
   'components.css': 38,
   'utilities.css': 168,
   'bundle.css': 206,
-  'base.css': 1.5,
+  'base.css': 1.85,   // 1.74 with the print styles (R12)
   'theme.js': 2,
   'serupa.iife.js': 600,
 };
