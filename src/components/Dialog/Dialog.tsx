@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 import { modalClosed, modalOpened } from "../../internal/layers";
 
 export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
@@ -36,6 +37,7 @@ const OWN = { open: 1, onOpenChange: 1, title: 1, description: 1, footer: 1, siz
 
 /** A modal dialog on the native <dialog>: a title, content and actions, over a dimmed page. */
 export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>("Dialog", function Dialog(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
   const base = domId("dk-dlg", React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
@@ -98,7 +100,7 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
               {has(props.title) ? <h2 className="dk-dialog__title" id={base + "-title"}>{props.title}</h2> : null}
               {has(props.description) ? <p className="dk-dialog__description" id={base + "-desc"}>{props.description}</p> : null}
             </div>
-            {showClose ? <IconButton className="dk-dialog__close" icon="close" label={props.closeLabel || "Close"} size="sm" noTitle onClick={close} /> : null}
+            {showClose ? <IconButton className="dk-dialog__close" icon="close" label={props.closeLabel || sds.labels.close} size="sm" noTitle onClick={close} /> : null}
           </div>
         ) : null}
         {has(props.children) ? <div className="dk-dialog__body">{props.children}</div> : null}
