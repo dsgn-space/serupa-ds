@@ -921,6 +921,7 @@ interface SerupaLabels {
     hasError: string;
     optional: string;
     notifications: string;
+    toastShortcut: (key: string) => string;
     mainNavigation: string;
     menu: string;
     dragFiles: string;

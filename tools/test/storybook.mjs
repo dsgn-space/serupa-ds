@@ -88,7 +88,7 @@ for (const e of stories) {
     if (!shown || errors.length) { problems.push(`${th}: ${errors[0] || 'did not render'}`); continue; }
     await page.addScriptTag({ content: axe });
     const v = await page.evaluate(async () => {
-      const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } });
+      const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
       // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint.
       const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, :disabled, [aria-disabled="true"]');
       return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
@@ -96,7 +96,7 @@ for (const e of stories) {
     });
     if (v.length) problems.push(`${th}: ${v.join('; ')}`);
   }
-  t(`${e.title} · ${e.name}: renders and passes WCAG 2.1 AA in all six themes`, !problems.length, problems.slice(0, 3).join('\n      '));
+  t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in all six themes`, !problems.length, problems.slice(0, 3).join('\n      '));
 }
 await b.close();
 close();

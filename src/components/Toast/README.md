@@ -43,7 +43,8 @@ toast.dismiss(id);   // or toast.dismiss() for all
 ## Accessibility
 
 - Each new toast is read out through the shared polite live region, so it doesn't interrupt.
-- The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1). Use `duration: 0` for anything people must act on, or better, an Alert or a Dialog.
+- The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1). A toast with an `action` stays until it's closed, unless you give it a `duration`, so there's time to reach the button. For anything people must act on, an Alert or a Dialog is still better.
+- F8 moves focus to the newest toast (a screen reader reads it, and Tab reaches its buttons), and F8 or Escape takes focus back to where it was. The first toast with an action adds "Press F8 to reach it." to what's announced (`labels.toastShortcut`).
 - Each toast has a close button; the Toaster is a named region people can find.
 - Titles and descriptions keep 4.5:1 and icons 3:1 in all six themes (`Toast.test.tsx`). Toasts slide in over 200ms, and appear at once with `prefers-reduced-motion`.
 
@@ -57,7 +58,7 @@ toast.dismiss(id);   // or toast.dismiss() for all
 | `description` | node | | A muted line under it |
 | `tone` | `'neutral'` \| `'info'` \| `'success'` \| `'warning'` \| `'danger'` | `'neutral'` | An icon in the tone's color; neutral has none |
 | `action` | `{ label, onClick }` | | One button, such as Undo. Choosing it also closes the toast |
-| `duration` | number | `5000` | Milliseconds before it goes; `0` keeps it until it's closed |
+| `duration` | number | `5000`, or `0` with an `action` | Milliseconds before it goes; `0` keeps it until it's closed |
 | `announcement` | string | title and description | What screen readers hear, when the title isn't plain text |
 | `id` | string | new | Reuse one to replace a toast that's showing |
 
@@ -79,8 +80,8 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--toast-bg` | `surface` | A toast's background. |
-| `--toast-border` | `border` | A toast's border. |
+| `--toast-bg` | `surface-overlay` | A toast's background. |
+| `--toast-border` | `border-overlay` | A toast's border. |
 | `--toast-title-color` | `text` | The title. |
 | `--toast-description-color` | `text-muted` | The description (4.5:1 on surface). |
 | `--toast-icon-info` | `info` | The icon of an info toast (3:1 on surface). |
@@ -97,3 +98,4 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 | `--toast-offset` | `spacing-4` | The distance from the edges of the screen (16px). |
 | `--toast-title-weight` | `font-semibold` | The title's weight (600). |
 | `--toast-z-index` | `z-50` | The stacking level: above the page and the FAB. |
+| `--toast-focus-ring` | `focus-ring` | The ring around a toast that F8 moved focus to. |
