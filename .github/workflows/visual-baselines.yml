@@ -5,6 +5,9 @@ name: Update baselines
 # runner CI uses. Add the "update-visual-baselines" label to a pull request to re-render them on
 # its branch; the new baselines are committed back to the branch. Review them in
 # the pull request's Files changed tab before merging.
+# Only the components the pull request changes (and the ones that use them) are re-rendered, as in CI, and a
+# picture is rewritten only when it differs past the check's tolerance, so the commit holds only real changes and
+# two pull requests that change different components don't conflict over each other's pictures.
 on:
   pull_request:
     types: [labeled]
@@ -22,18 +25,23 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          # The base branch's history too, to find where the pull request started (git merge-base).
+          fetch-depth: 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
+      # --ignore-scripts: npm ci would otherwise run the "prepare" build, and the next step builds.
+      - run: npm ci --ignore-scripts
       - uses: ./.github/actions/playwright
       - name: Render the baselines
         run: |
           npm run build
           npm run build-storybook
-          node tools/test/visual.mjs --update
+          node tools/test/run.mjs --group visual --update --since "$(git merge-base "origin/$BASE_REF" HEAD)"
           node tools/test/utilities.mjs --update
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
       - name: Commit them to the branch
         run: |
           git add tools/test/baseline-visual tools/test/baseline-utilities.json
