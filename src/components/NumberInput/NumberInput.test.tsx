@@ -142,6 +142,60 @@ describe('NumberInput', () => {
     expect([field('rate').value, calls.at(-1)]).toEqual(['20%', 0.2]);
   });
 
+  test('currency: the symbol where the locale puts it, and the currency\'s decimals kept with a step of 1 (12.5 is $12.50, not 13); formatOptions still wins', async () => {
+    const calls: Array<number | null> = [];
+    const nf = (l: string, o: Intl.NumberFormatOptions, v: number) => new Intl.NumberFormat(l, { numberingSystem: 'latn', ...o }).format(v);
+    await render(<Col>
+      <NumberInput id="usd" aria-label="Price" locale="en-US" currency="USD" defaultValue={19.99} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="eur" aria-label="Preis" locale="de-DE" currency="EUR" defaultValue={19.99} />
+      <NumberInput id="code" aria-label="Price" locale="en-US" currency="USD" formatOptions={{ currencyDisplay: 'code' }} defaultValue={5} />
+    </Col>);
+    expect([field('usd').value, field('usd').getAttribute('aria-valuetext'), field('eur').value, field('code').value])
+      .toEqual(['$19.99', '$19.99', nf('de-DE', { style: 'currency', currency: 'EUR' }, 19.99), nf('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'code' }, 5)]);
+    await fill('usd', '12.5'); await blur('usd');
+    expect([field('usd').value, calls.at(-1)]).toEqual(['$12.50', 12.5]);
+    await fill('usd', '24.999'); await blur('usd');
+    expect([field('usd').value, calls.at(-1)]).toEqual(['$25.00', 25]);
+    await userEvent.click(field('usd')); await userEvent.keyboard('{ArrowUp}');
+    expect([field('usd').value, calls.at(-1)]).toEqual(['$26.00', 26]);
+  });
+
+  test('minorUnits: value, min, max, step and onValueChange are whole cents (1999 is $19.99); JPY has none, KWD has three', async () => {
+    const calls: Array<number | null> = [];
+    const nf = (c: string, v: number) => new Intl.NumberFormat('en-US', { numberingSystem: 'latn', style: 'currency', currency: c }).format(v);
+    await render(<Col>
+      <NumberInput id="c1" aria-label="Price" locale="en-US" currency="USD" minorUnits defaultValue={1999} min={100} max={5000} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="c2" aria-label="Tip" locale="en-US" currency="USD" minorUnits defaultValue={250} step={5} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="c3" aria-label="Yen" locale="en-US" currency="JPY" minorUnits defaultValue={1999} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="c4" aria-label="Dinar" locale="en-US" currency="KWD" minorUnits defaultValue={1500} />
+    </Col>);
+    expect([field('c1').value, field('c1').getAttribute('aria-valuenow'), field('c1').getAttribute('aria-valuemin'), field('c1').getAttribute('aria-valuemax'), field('c2').value, field('c3').value, field('c4').value])
+      .toEqual(['$19.99', '19.99', '1', '50', '$2.50', nf('JPY', 1999), nf('KWD', 1.5)]);
+    await userEvent.click(field('c1')); await userEvent.keyboard('{ArrowUp}');
+    expect([field('c1').value, calls.at(-1)]).toEqual(['$20.99', 2099]);
+    await userEvent.keyboard('{Home}');
+    expect(calls.at(-1)).toBe(100);
+    await fill('c1', '33.335'); await blur('c1');
+    expect([field('c1').value, calls.at(-1)]).toEqual(['$33.34', 3334]);
+    await userEvent.click(field('c2')); await userEvent.keyboard('{ArrowUp}');
+    expect([field('c2').value, calls.at(-1)]).toEqual(['$2.55', 255]);
+    await userEvent.click(field('c3')); await userEvent.keyboard('{ArrowUp}');
+    expect(calls.at(-1)).toBe(2000);
+  });
+
+  function Cents() {
+    const [v, setV] = React.useState<number | null>(1050);
+    return <><NumberInput id="cc" aria-label="Amount" locale="en-US" currency="USD" minorUnits value={v} onValueChange={setV} /><output id="cc-out">{String(v)}</output></>;
+  }
+  test('minorUnits, controlled: typing a sum in dollars stores whole cents, and emptying it stores null', async () => {
+    await render(<Cents />);
+    expect(field('cc').value).toBe('$10.50');
+    await fill('cc', '0.1'); await blur('cc');
+    expect([field('cc').value, document.getElementById('cc-out')!.textContent]).toEqual(['$0.10', '10']);
+    await fill('cc', ''); await blur('cc');
+    expect([field('cc').value, document.getElementById('cc-out')!.textContent]).toEqual(['', 'null']);
+  });
+
   test('min with decimals the step doesn\'t have (min 0.5, step 1): ArrowUp from 2.5 is 3.5, and from Home (0.5) is 1.5', async () => {
     await render(<NumberInput id="half" aria-label="Half" min={0.5} max={5.5} step={1} defaultValue={2.5} />);
     await userEvent.click(field('half'));
