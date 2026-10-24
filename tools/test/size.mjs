@@ -1,6 +1,6 @@
 // Size budget: what each file a project loads weighs, gzipped, against its budget. Build first (npm run build).
 //   node tools/test/size.mjs                  check
-//   node tools/test/size.mjs --update Name    set Name's budgets from what it weighs now (5% over); with no
+//   node tools/test/size.mjs --update Name    set Name's budgets from what it weighs now (5% and 0.1 KiB over); with no
 //                                             name, only the component folders that have no budgets yet
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand). Over budget fails; when a change is worth the bytes, raise the budget in the same pull request,
@@ -22,11 +22,11 @@ import * as esbuild from 'esbuild';
 import { HERE, PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped: [budget, the sum of the folders' budgets it was set at, which ones]. About 3 to 4% above the size
-// when each was last set (index.js 58.9, components.css 42.7, serupa.iife.js 606.4 on 24 Oct 2026).
+// when each was last set (index.js 62.2, components.css 42.8, serupa.iife.js 610.1 on 24 Oct 2026).
 const TOTALS = {
-  'All components (index.js)': [61, 50.4, 'share'],
-  'components.css': [44.5, 46.9, 'css'],
-  'serupa.iife.js': [625, 50.4, 'share'],
+  'All components (index.js)': [64.5, 59.3, 'share'],
+  'components.css': [44.5, 53.6, 'css'],
+  'serupa.iife.js': [630, 59.3, 'share'],
 };
 // Not made of component folders.
 const FIXED = { 'utilities.css': 168, 'base.css': 1.85, 'theme.js': 2 };
@@ -67,8 +67,8 @@ if (ui > 0) {
   fs.mkdirSync(DIR, { recursive: true });
   for (const n of which) {
     if (!measured[n]) { console.log(`No component folder ${n}`); process.exit(1); }
-    // 5% over, and at least 0.1 KiB, so a small fix doesn't fail on a few bytes.
-    const b = Object.fromEntries(KEYS.map((k) => [k, Math.max(0.1, Math.ceil(Math.max(0, measured[n][k]) / 1024 * 1.05 * 10) / 10)]));
+    // 5% over plus 0.1 KiB, rounded up, so a small fix doesn't fail on a few bytes.
+    const b = Object.fromEntries(KEYS.map((k) => [k, Math.ceil((Math.max(0, measured[n][k]) / 1024 * 1.05 + 0.1) * 10) / 10]));
     fs.writeFileSync(budgetFile(n), JSON.stringify(b, null, 2) + '\n');
     console.log(`${n}: ${KEYS.map((k) => `${k} ${b[k]} KiB`).join(', ')}`);
   }

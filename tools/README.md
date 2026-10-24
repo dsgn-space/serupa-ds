@@ -88,7 +88,7 @@ mode, and a new script is picked up with no entry anywhere. Run with `node`, a s
 
 When a test fails, it names what changed. If the change is intended, run with `--update` and commit the new baselines with the change.
 
-**Baselines belong to CI.** Screenshots and computed styles differ a little between machines (fonts, anti-aliasing), so `baseline-visual/` and `baseline-utilities.json` are rendered on GitHub's runner: add the `update-visual-baselines` label to a pull request and the Update baselines workflow commits new ones to its branch. Locally, Visual snapshots and Utility classes can fail for that reason alone.
+**Baselines belong to CI.** Screenshots and computed styles differ a little between machines (fonts, anti-aliasing), so `baseline-visual/` and `baseline-utilities.json` are rendered on GitHub's runner: add the `update-visual-baselines` label to a pull request and the Update baselines workflow commits new ones to its branch. Locally, Visual snapshots can fail for that reason alone. Utility classes don't depend on the installed fonts (the page's line height is fixed), and a CHANGED class prints what changed, property by property, or what it does now when its effect is too long to keep as text.
 
 **When `tokens.css` is reported out of date:** it's generated from `tokens.json` by `tools/tokens/build.mjs`. Run `npm run tokens` (or `npm run build`, which runs it first) and commit the new `tokens.css` with the `tokens.json` change. CI checks they match.
 
