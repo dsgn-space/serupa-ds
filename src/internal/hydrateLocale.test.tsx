@@ -1,0 +1,54 @@
+import * as React from 'react';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot, type Root } from 'react-dom/client';
+import { flushSync } from 'react-dom';
+import { describe, expect, test } from 'vitest';
+import { Calendar } from '../components/Calendar/Calendar';
+import { DatePicker } from '../components/DatePicker/DatePicker';
+import { DateRangePicker } from '../components/DateRangePicker/DateRangePicker';
+import { TimePicker } from '../components/TimePicker/TimePicker';
+
+// A server in en-US and a browser in id-ID: the server HTML is made with the real Intl, then Intl's default locale
+// becomes id-ID for the hydration, the way a visitor's browser would differ from the server.
+async function hydrateIn(browser: string, ui: React.ReactElement) {
+  const host = document.createElement('div');
+  host.innerHTML = renderToString(ui);
+  document.body.appendChild(host);
+  const Real = Intl.DateTimeFormat;
+  const Fake = function (locales?: string | string[], options?: Intl.DateTimeFormatOptions) { return new Real(locales ?? browser, options); } as unknown as typeof Intl.DateTimeFormat;
+  Object.assign(Fake, { supportedLocalesOf: Real.supportedLocalesOf, prototype: Real.prototype });
+  const errors: string[] = [], logError = console.error;
+  console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+  let root: Root | undefined;
+  try {
+    Intl.DateTimeFormat = Fake;
+    flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+    await new Promise((r) => setTimeout(r, 50));
+    return { host, errors, done: () => { root?.unmount(); host.remove(); } };
+  } finally {
+    Intl.DateTimeFormat = Real;
+    console.error = logError;
+  }
+}
+
+describe('hydration without a locale', () => {
+  test('the server HTML hydrates without a mismatch, then the fields switch to the browser\'s locale', async () => {
+    const day = new Date(2026, 9, 23);
+    const { host, errors, done } = await hydrateIn('id-ID', <div>
+      <DatePicker id="dp" aria-label="Date" defaultValue={day} />
+      <DateRangePicker id="drp" startLabel="From" endLabel="To" defaultValue={{ start: day, end: new Date(2026, 9, 25) }} />
+      <TimePicker id="tp" aria-label="Time" defaultValue="14:30" />
+      <Calendar id="cal" defaultValue={day} />
+    </div>);
+    try {
+      expect(errors).toEqual([]);
+      const dp = host.querySelector<HTMLInputElement>('#dp')!;
+      // Placeholder and value agree, in the browser's day-month order.
+      expect([dp.value, dp.placeholder]).toEqual(['23/10/2026', 'dd/mm/yyyy']);
+      const ends = [...host.querySelectorAll<HTMLInputElement>('[data-component="date-range-picker"] input:not([type=hidden])')];
+      expect(ends.map((e) => [e.value, e.placeholder])).toEqual([['23/10/2026', 'dd/mm/yyyy'], ['25/10/2026', 'dd/mm/yyyy']]);
+      expect(host.querySelector<HTMLInputElement>('#tp')!.value).toBe('14.30');
+      expect(host.querySelector('#cal')!.textContent).toContain('Oktober 2026');
+    } finally { done(); }
+  });
+});

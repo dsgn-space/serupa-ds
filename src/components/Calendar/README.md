@@ -63,7 +63,7 @@ Moving past the shown month shows the next one.
 | `onMonthChange` | `(month: Date) => void` | | Called with the first of the newly shown month. |
 | `min`, `max` | `Date` | | Days outside can't be picked, and the month buttons stop there. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days to refuse, such as weekends or holidays. |
-| `locale` | `string` | the browser's | Month and weekday names, and the first day of the week. |
+| `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
 | `autoFocus` | `boolean` | `false` | Focus the selected day (or today) when it appears. |
 | `previousLabel`, `nextLabel` | `string` | `"Previous month"`, `"Next month"` | The month buttons' names. |
