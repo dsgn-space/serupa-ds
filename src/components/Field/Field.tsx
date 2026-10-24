@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { named } from "../../internal/component";
+import { FieldLabelProvider } from "../../internal/fieldLabel";
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
@@ -48,7 +49,7 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
     !props.required && props.optional ? <span className="dk-field__optional" key="opt">{typeof props.optional === "string" ? props.optional : "(optional)"}</span> : null];
   const label = props.label == null ? null : group
     ? React.createElement("legend", { className: "dk-field__label", key: "label" }, ...labelKids)
-    : React.createElement("label", { className: "dk-field__label", htmlFor: controlId, key: "label" }, ...labelKids);
+    : React.createElement("label", { className: "dk-field__label", htmlFor: controlId, id: base + "-label", key: "label" }, ...labelKids);
   const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
   const error = hasError ? <div className="dk-field__error" key="error"><Icon name="error" className="dk-field__error-icon" /><span id={errorId as string}>{props.error}</span></div> : null;
   const described = cn(hintId, errorId);
@@ -80,7 +81,9 @@ export const Field = /* @__PURE__ */ named("Field", function Field(props: FieldP
     <div {...rest} className={cls} data-component="field">
       {label}
       {hint}
-      <div className="dk-field__control" key="control">{child ? pass(child, true) : props.children}</div>
+      <div className="dk-field__control" key="control">
+        <FieldLabelProvider value={label ? { control: controlId, label: base + "-label" } : null}>{child ? pass(child, true) : props.children}</FieldLabelProvider>
+      </div>
       {error}
     </div>
   );
