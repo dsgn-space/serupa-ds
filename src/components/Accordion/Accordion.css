@@ -17,9 +17,9 @@
 }
 .dk-accordion--card .dk-accordion__trigger { padding-inline: var(--accordion-padding-x, var(--spacing-4)); border-radius: var(--spacing-0); }
 .dk-accordion__trigger:hover:not(:disabled) .dk-accordion__title { text-decoration: underline; text-underline-offset: var(--underline-offset-2); }
-.dk-accordion__trigger:focus-visible { outline: var(--outline-width-2) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
-.dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
-.dk-accordion__trigger:disabled { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-accordion__trigger:focus-visible { outline: var(--focus-ring-width) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-accordion__trigger:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-accordion__trigger[aria-disabled="true"] { cursor: default; }
 .dk-accordion__icon.dk-icon { flex-shrink: 0; color: var(--accordion-icon-color, var(--text-muted)); font-size: var(--accordion-icon-size, var(--spacing-5)); transition: rotate var(--accordion-duration, var(--duration-200)) var(--ease-in-out); }
 .dk-accordion__item--open > .dk-accordion__heading .dk-accordion__icon { rotate: var(--dk-accordion-turn); }

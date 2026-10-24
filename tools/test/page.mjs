@@ -39,7 +39,7 @@ for (const [w, cols, disp, fs_] of expect) {
   t('base.css: no default heading margins, links in primary, border-box sizing', r.h1Margin === '0px' && r.link === r.primary && r.boxSizing === 'border-box');
   t('base.css: form fields use the page font and the placeholder color', /Inter/.test(r.inputFont) && r.ph === r.placeholder, `${r.inputFont} ${r.ph} vs ${r.placeholder}`);
   t('base.css: images never overflow their container', r.imgW <= r.vw, `${r.imgW} > ${r.vw}`);
-  t('base.css: utility classes win over the defaults', r.utilMargin === '16px' && /Courier/.test(r.utilFont));
+  t('base.css: utility classes win over the defaults', r.utilMargin === '16px' && /ui-monospace/.test(r.utilFont));
   t('base.css: light themes use color-scheme light', r.scheme === 'light', r.scheme);
   await p.evaluate(() => document.documentElement.setAttribute('data-theme', 'violet-dark'));
   t('base.css: dark themes use color-scheme dark (native controls, scrollbars)', (await p.evaluate(() => getComputedStyle(document.documentElement).colorScheme)) === 'dark');

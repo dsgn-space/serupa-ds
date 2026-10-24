@@ -316,18 +316,16 @@ describe('Badge', () => {
     expect([css(el('dis')).opacity, css(el('dis')).cursor]).toEqual(['0.5', 'not-allowed']);
   });
 
-  test('focus: keyboard focus draws the focus ring (2px, outside a 2px surface gap) and a transparent outline for forced-colors mode', async () => {
+  test('focus: keyboard focus draws the focus ring, a 2px outline 2px out with a transparent gap (also drawn in forced-colors mode)', async () => {
     await show();
     el('btn').focus();
     await userEvent.tab();
     await userEvent.tab({ shift: true });
     expect(document.activeElement).toBe(el('btn'));
     const ring = color('var(--focus-ring)');
-    await expect.poll(() => css(el('btn')).boxShadow).toContain(ring);
+    await expect.poll(() => css(el('btn')).outlineColor).toBe(ring);
     const s = css(el('btn'));
-    expect(s.boxShadow).toMatch(/0px 0px 0px 4px/);
-    expect(s.boxShadow).toMatch(/0px 0px 0px 2px/);
-    expect([s.outlineWidth, s.outlineColor]).toEqual(['2px', 'rgba(0, 0, 0, 0)']);
+    expect([s.outlineStyle, s.outlineWidth, s.outlineOffset, s.boxShadow]).toEqual(['solid', '2px', '2px', 'none']);
   });
 
   test(`hover and pressed keep 4.5:1 text: ${TONES.length} tones × 3 styles × 2 states in all six themes`, async () => {
@@ -393,7 +391,7 @@ describe('Badge', () => {
     await expect.poll(() => content().map((c) => css(c).opacity).join()).toBe('0,0');
     expect([Math.round(r.width), Math.round(r.height)]).toEqual([Math.round(w0.width), Math.round(w0.height)]);
     // Every badge that started loading at once is said, in one message.
-    await expect.poll(() => announcer.textContent).toMatch(/(^|\. )Loading$/);
+    await expect.poll(() => announcer.textContent).toMatch(/(^|\. )Loading…$/);
     expect([css(ld).cursor, ld.textContent!.endsWith('Approve request')]).toEqual(['progress', true]);
     expect([ld.getAttribute('aria-disabled'), document.activeElement === ld, clicks]).toEqual(['true', true, c0]);
     setLoading(false);

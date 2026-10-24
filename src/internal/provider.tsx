@@ -5,8 +5,8 @@ import { isIconData } from "../icons";
 import { DEFAULT_LABELS, type SerupaLabels } from "./labels";
 
 export interface SerupaProviderProps {
-  /** A BCP 47 locale (such as "id-ID") for Calendar, DatePicker, DateRangePicker and TimePicker: how dates and
-   *  times are written and typed, month and weekday names, and the first day of the week. Default: the browser's. */
+  /** A BCP 47 locale (such as "id-ID") for Calendar, DatePicker, DateRangePicker, TimePicker and NumberInput: how dates, times and numbers
+   *  are written and typed, month and weekday names, and the first day of the week. Default: the browser's. */
   locale?: string;
   /** Replaces some or all of the words the components say on their own, such as { close: "Tutup" }, or a whole
    *  set (idLabels). Keys left out keep the outer provider's words, else English. */
@@ -57,4 +57,17 @@ SerupaProvider.displayName = "SerupaProvider";
 /** The nearest SerupaProvider's settings, or the defaults (browser locale, English words) without one. */
 export function useSerupa(): SerupaSettings {
   return React.useContext(Context);
+}
+
+/* With no locale from a prop or a provider, a component follows the browser's. The server can't know it, so
+   server HTML and the first client render use SERVER_LOCALE, and React switches to the browser's right after
+   hydration (useSyncExternalStore's server snapshot). A client-only render uses the browser's from the start. */
+const SERVER_LOCALE = "en-US";
+const browserLocale = () => new Intl.DateTimeFormat().resolvedOptions().locale;
+const onLanguageChange = (cb: () => void) => { window.addEventListener("languagechange", cb); return () => window.removeEventListener("languagechange", cb); };
+/** The locale a component uses: its own prop, else the nearest SerupaProvider's, else the browser's (en-US until hydrated). */
+export function useLocale(own?: string): string {
+  const fromProvider = React.useContext(Context).locale;
+  const browser = React.useSyncExternalStore(onLanguageChange, browserLocale, () => SERVER_LOCALE);
+  return own || fromProvider || browser;
 }

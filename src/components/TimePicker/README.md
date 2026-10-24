@@ -32,7 +32,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 
 ## Behavior
 
-- People type `2:30 pm`, `2:30p`, `2pm`, `14:30`, `1430` or `9`. Without AM or PM, 13–23 are afternoon and 0–11 morning. The text is read on blur and Enter; text that isn't a time, or a time outside `min`–`max`, puts back the last good value.
+- People type `2:30 pm`, `2:30p`, `2pm`, `14:30`, `1430` or `9`. Without AM or PM, 13–23 are afternoon and 0–11 morning. The locale's own form is read too, as the field writes it: `오후 2:05` in Korean, `٢:٠٥ م` in Egyptian Arabic, `۱۴:۰۵` in Persian, with digits in any script. The text is read on blur and Enter; text that isn't a time, or a time outside `min`–`max`, puts back the last good value.
 - The list opens on ↓ or ↑ in the field, or the clock button, with the chosen time (or the one nearest the typed text) highlighted and near the top.
 - In the list: ↑ ↓ move one time, PageUp and PageDown four, Ctrl+Home and Ctrl+End to the ends, Enter picks, Escape closes, Tab closes and moves on. Typing while the list is open moves the highlight to the nearest time, and Enter then keeps what was typed. Focus stays in the field throughout, the clock button included.
 
@@ -50,7 +50,7 @@ const [start, setStart] = React.useState<string | null>("09:00");
 | `onValueChange` | `(value: string \| null) => void` | | Called with `"HH:mm"`, or `null` when the field is cleared. |
 | `min`, `max` | `string` | `"00:00"`, `"23:59"` | The earliest and latest times, typed or picked. |
 | `step` | `number` | `30` | Minutes between the times in the list, counted from `min` (or midnight), like `<input type="time">`. Under 1, it's 30. Typed times don't have to fall on a step. |
-| `locale` | `string` | the browser's | How times are written. |
+| `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | How times are written. |
 | `hour12` | `boolean` | the locale's | 12-hour (2:30 PM) or 24-hour (14:30). |
 | `size`, `invalid` | | `'md'`, `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `"HH:mm"`. |
@@ -68,8 +68,8 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-button` | `text-muted` | The clock button's icon (3:1 on the field). |
 | `--time-picker-button-hover` | `text` | The clock button's icon on hover. |
 | `--time-picker-button-bg-hover` | `surface-muted` | The clock button's background on hover. |
-| `--time-picker-list-bg` | `surface` | The list's background. |
-| `--time-picker-list-border` | `border` | The list's outline. |
+| `--time-picker-list-bg` | `surface-overlay` | The list's background. |
+| `--time-picker-list-border` | `border-overlay` | The list's outline. |
 | `--time-picker-option-color` | `text` | A time in the list. |
 | `--time-picker-option-bg-active` | `surface-muted` | The highlighted time (pointer or keyboard). |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |

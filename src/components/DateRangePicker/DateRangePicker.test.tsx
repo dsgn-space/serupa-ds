@@ -42,6 +42,18 @@ describe('DateRangePicker', () => {
     expect(vals('trip')).toBe('03/10/2025 – 03/14/2025');
   });
 
+  test('th and fa: both fields show Gregorian years in Latin digits and a blur keeps the range', async () => {
+    const changes: string[] = [];
+    await render(<>{['th', 'fa'].map((l) => <DateRangePicker key={l} data-testid={l} aria-label={l} locale={l} defaultValue={{ start: new Date(2025, 10, 22), end: new Date(2025, 11, 3) }} onValueChange={(r) => changes.push(str(r))} />)}</>);
+    for (const l of ['th', 'fa']) {
+      const before = vals(l);
+      expect(before).toMatch(/2025.*2025/);
+      for (const f of fields(l)) { await userEvent.click(f); await userEvent.keyboard('{Tab}'); }
+      expect(vals(l)).toBe(before);
+    }
+    expect(changes).toEqual([]);
+  });
+
   test('the button opens a dialog in the top layer with March and April 2025, other months\' days blank, only the outer month buttons, focus on the start; both ends are selected and the days between filled', async () => {
     await render(<Trip />);
     await userEvent.click(btn('trip'));

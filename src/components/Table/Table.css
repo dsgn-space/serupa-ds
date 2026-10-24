@@ -9,7 +9,7 @@
   border: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--rounded-lg));
   background: var(--table-bg, var(--surface));
 }
-.dk-table:focus-visible { outline: var(--outline-width-2) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
+.dk-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-table__table { width: var(--sizing-full); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
 .dk-table__caption { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
 .dk-table__cell { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
@@ -38,7 +38,7 @@
 .dk-table__cell--center .dk-table__sort { justify-content: center; }
 .dk-table__cell--end .dk-table__sort { justify-content: flex-end; }
 .dk-table__sort:hover { color: var(--table-text, var(--text)); }
-.dk-table__sort:focus-visible { outline: var(--outline-width-2) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
+.dk-table__sort:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-table__sort-icon.dk-icon { font-size: var(--spacing-4); }
 .dk-table__sort-icon--idle { opacity: var(--opacity-50); }
 .dk-table__sort:hover .dk-table__sort-icon--idle { opacity: var(--opacity-100); }
