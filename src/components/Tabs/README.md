@@ -89,6 +89,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-indicator` | `primary` | The line under the selected tab (3:1 on surface). |
 | `--tabs-border` | `border` | The line under the whole tab list (line). |
 | `--tabs-pill-bg-hover` | `secondary` | A pill tab's background on hover. |
+| `--tabs-pill-bg-pressed` | `pressed` | A pill tab's background while it's pressed, before it's selected, one step past hover. |
 | `--tabs-pill-bg-selected` | `primary` | The selected pill tab's background. |
 | `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
 | `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
