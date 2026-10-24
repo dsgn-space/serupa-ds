@@ -81,6 +81,16 @@
             "cssVar": "--segmented-control-focus-ring"
           }
         }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The outline when invalid (3:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--segmented-control-invalid"
+          }
+        }
       }
     },
     "shadow": {

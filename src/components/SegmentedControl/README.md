@@ -38,7 +38,10 @@ import { SegmentedControl } from "serupa-ds";
 ## Accessibility
 
 - `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
+- In a [Field](../Field/README.md), the label names the radiogroup through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
 - The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced colors (Windows high contrast) the selection is Highlight and its label HighlightText, exactly as set, so the browser's text backplate can't hide the label, and hovering the selected segment keeps it HighlightText.
+- `invalid` sets `aria-invalid` on the group and turns its outline danger (3:1 on the page in all six themes); `required` sets `aria-required`. Put the reason in text next to it: inside a [Field](../Field/README.md), its `error` and `required` do all of this.
+- `readOnly` sets `aria-readonly`. Segments stay focusable and the arrow keys move focus between them, so people can hear every option, but neither a click nor a key changes the selection. With `name`, the value is still sent with the form, which `disabled` doesn't do.
 - The selection slides over 200ms, and jumps with `prefers-reduced-motion`.
 
 ### Keyboard
@@ -58,6 +61,9 @@ Your `onKeyDown` runs before the control's own keys, so `e.preventDefault()` in 
 | `size` | `'sm' \| 'md'` | `'md'` | 24 or 32px tall, like the control heights. |
 | `fullWidth` | `boolean` | `false` | Fills its container with equal segments. |
 | `disabled` | `boolean` | `false` | |
+| `invalid` | `boolean` | `false` | A danger outline and `aria-invalid`. Field's `error` sets it. |
+| `required` | `boolean` | `false` | `aria-required` on the group. Field's `required` sets it. |
+| `readOnly` | `boolean` | `false` | Focusable and read out, but the selection doesn't change; the value is still submitted. |
 | `name` | `string` | | Sends the value with a form, in a hidden input. |
 
 Name it with `aria-label` or `aria-labelledby`. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the selected segment, or else the first one that isn't disabled, so a form library that focuses the first invalid field after a failed submit lands on it.
@@ -76,6 +82,7 @@ Each is an optional override: set it on the page, a container or one control. Th
 | `--segmented-control-text-selected` | `text` | The selected segment's label. |
 | `--segmented-control-text-hover` | `text` | A segment's label on hover. |
 | `--segmented-control-focus-ring` | `focus-ring` | A segment's keyboard focus ring. |
+| `--segmented-control-invalid` | `danger` | The outline when invalid (3:1 on the surface). |
 | `--segmented-control-indicator-shadow` | `shadow-sm` | The selected segment's shadow. |
 | `--segmented-control-radius` | `rounded-md` | The control's corners (6px). |
 | `--segmented-control-indicator-radius` | `rounded-sm` | The selected segment's corners (4px). |

@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 
 const PERIODS: SegmentedControlOption[] = [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }, { value: 'year', label: 'Year', disabled: true }];
@@ -85,6 +86,17 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('per')).toEqual([0, 0]);
     await userEvent.click(seg('per', 'year'), { force: true });
     expect(checked('per')).toBe('month');
+  });
+
+  test('in a Field: the label names the radiogroup and the hint describes it; its own aria-label still wins', async () => {
+    await render(<>
+      <Field label="Period" hint="Shown on the chart"><SegmentedControl data-testid="sg1" options={PERIODS} /></Field>
+      <Field label="Period"><SegmentedControl data-testid="sg2" aria-label="Chart period" options={PERIODS} /></Field>
+    </>);
+    const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    expect([text(root('sg1').getAttribute('aria-labelledby')), text(root('sg1').getAttribute('aria-describedby'))]).toEqual(['Period', 'Shown on the chart']);
+    expect([root('sg2').getAttribute('aria-label'), root('sg2').getAttribute('aria-labelledby')]).toEqual(['Chart period', null]);
   });
 
   test('ref.current.focus() and autoFocus land on the selected segment, or else the first one that isn\'t disabled; all disabled, nothing is focused', async () => {
@@ -195,5 +207,41 @@ describe('SegmentedControl', () => {
   test('--segmented-control-bg overrides one control', async () => {
     await render(<SegmentedControl id="tok" aria-label="Tok" options={PERIODS.slice(0, 2)} style={{ '--segmented-control-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} />);
     expect(css(el('tok')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+
+  test('readOnly: aria-readonly on the group; a click and the arrows move focus but not the selection; the form still gets the value', async () => {
+    const calls: string[] = [];
+    await render(<form id="ro-form"><SegmentedControl id="ro" aria-label="Period" options={PERIODS} defaultValue="week" readOnly name="p" onValueChange={(v) => { calls.push(v); }} /></form>);
+    expect([el('ro').getAttribute('aria-readonly'), el('ro').hasAttribute('readonly'), items('ro').map((b) => b.tabIndex)]).toEqual(['true', false, [-1, 0, -1, -1]]);
+    await userEvent.click(seg('ro', 'day'));
+    expect([checked('ro'), focused()]).toEqual(['week', 'day']);
+    seg('ro', 'week').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([checked('ro'), focused()]).toEqual(['week', 'month']);
+    await userEvent.keyboard('{ArrowRight}{End}');
+    expect([checked('ro'), focused(), calls]).toEqual(['week', 'month', []]);
+    expect(new FormData(el('ro-form') as HTMLFormElement).get('p')).toBe('week');
+  });
+
+  test('invalid and required: aria-invalid and aria-required on the group, and a danger outline that keeps 3:1 on the page in all six themes', async () => {
+    await render(<SegmentedControl id="bad" aria-label="Period" options={PERIODS} invalid required />);
+    expect([el('bad').getAttribute('aria-invalid'), el('bad').getAttribute('aria-required'), el('bad').hasAttribute('invalid'), el('bad').hasAttribute('required')]).toEqual(['true', 'true', false, false]);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const r = contrast(css(el('bad')).borderTopColor, 'var(--surface)'); if (r < 3) low.push(`${th}: ${r.toFixed(2)}`);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+
+  test('in a Field with required and an error: aria-invalid and aria-required on the group, and no invalid attribute or React warning', async () => {
+    const warned: unknown[] = [], warn = console.error;
+    console.error = (...a: unknown[]) => { warned.push(a[0]); };
+    try {
+      await render(<Field label="Period" required error="Pick one"><SegmentedControl id="fs" aria-label="Period" options={PERIODS} /></Field>);
+    } finally { console.error = warn; }
+    expect([el('fs').getAttribute('aria-invalid'), el('fs').getAttribute('aria-required'), el('fs').hasAttribute('invalid')]).toEqual(['true', 'true', false]);
+    expect(warned.filter((w) => /invalid|required/i.test(String(w)))).toEqual([]);
   });
 });

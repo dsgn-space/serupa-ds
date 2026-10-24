@@ -1,10 +1,11 @@
 "use client";
 import * as React from "react";
-import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
+import { cn, isInvalid, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { useFieldLabel } from "../../internal/fieldLabel";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export interface SegmentedControlOption {
@@ -33,9 +34,15 @@ export interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDiv
   disabled?: boolean;
   /** Submits the value with a form, in a hidden input. */
   name?: string;
+  /** A danger outline, and aria-invalid on the group. Say what's wrong in text next to it (Field's error does). */
+  invalid?: boolean;
+  /** Sets aria-required on the group. */
+  required?: boolean;
+  /** Focusable and read out, and arrows move focus, but nothing changes the selection; the value is still submitted. */
+  readOnly?: boolean;
 }
 
-const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, autoFocus: 1, className: 1 } as const;
+const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1, autoFocus: 1, className: 1 } as const;
 
 /* SegmentedControl: picks one of a few options shown side by side, such as a view (List, Board) or a period
    (Day, Week, Month). It's a radio group: one Tab stop, arrow keys move and select (Home and End too), and
@@ -47,6 +54,10 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const rest = omit(props, OWN);
   const options = props.options || [];
   const disabled = !!props.disabled;
+  const invalid = isInvalid(props.invalid, props["aria-invalid"]);
+  const truthy = (a: unknown) => a === true || a === "true";
+  const readOnly = !!props.readOnly || truthy(props["aria-readonly"]);
+  const required = !!props.required || truthy(props["aria-required"]);
   const usable = options.filter((o) => !o.disabled && !disabled);
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<string | undefined>(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value);
@@ -56,6 +67,8 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
   const size = props.size === "sm" ? "sm" : "md";
+  // In a Field, its label names the group (Field's <label for> can't reach a radiogroup); its own name wins.
+  const fieldLabel = useFieldLabel(props.id);
   // ref.current.focus() and autoFocus land on the segment in the Tab order: the selected one, or else the first
   // that isn't disabled (none when all are).
   const tabStop = () => root.current && root.current.querySelector<HTMLElement>('[role=radio][tabindex="0"]');
@@ -63,7 +76,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
 
   const choose = (v: string, focus?: boolean) => {
     if (focus) { const b = buttons.current[v]; if (b) b.focus(); }
-    if (v === value) return;
+    if (v === value || readOnly) return;
     if (!controlled) setOwn(v);
     if (props.onValueChange) props.onValueChange(v);
   };
@@ -87,7 +100,9 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
     if (rest.onKeyDown) rest.onKeyDown(e as unknown as React.KeyboardEvent<HTMLDivElement>);
     if (!usable.length || e.defaultPrevented) return;
     const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
-    const i = usable.findIndex((o) => o.value === value);
+    // Read-only, the arrows move focus from the focused segment and leave the selection where it is.
+    const from = readOnly ? e.currentTarget.dataset.value : value;
+    const i = usable.findIndex((o) => o.value === from);
     let n: number;
     switch (e.key) {
       case "ArrowRight": n = i + (rtl ? -1 : 1); break;
@@ -109,7 +124,9 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, tabStop); setRef(ref, n); }}
       role="radiogroup" aria-disabled={disabled || undefined}
-      className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", props.className)}
+      aria-invalid={invalid || undefined} aria-required={required || undefined} aria-readonly={readOnly || undefined}
+      aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : fieldLabel)}
+      className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", invalid && "dk-segmented--invalid", readOnly && "dk-segmented--readonly", props.className)}
       data-component="segmented-control" data-size={size} onKeyDown={undefined} onFocus={onFocus} onBlur={onBlur}>
       {box ? <span className="dk-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
       {options.map((o) => {
