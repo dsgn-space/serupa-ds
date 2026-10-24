@@ -43,6 +43,6 @@
 .dk-textarea--invalid { --dk-ta-bd: var(--textarea-invalid, var(--danger)); --dk-ta-ring: var(--textarea-invalid, var(--danger)); }
 .dk-textarea--invalid:hover:not(.dk-textarea--disabled, .dk-textarea--readonly, :focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--danger)); }
 .dk-textarea--readonly { background: var(--textarea-bg-readonly, var(--surface-muted)); }
-.dk-textarea--disabled { background: var(--textarea-bg-readonly, var(--surface-muted)); opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-textarea--disabled { background: var(--textarea-bg-readonly, var(--surface-muted)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-textarea--disabled .dk-textarea__field { cursor: not-allowed; }
 }

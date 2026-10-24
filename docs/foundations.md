@@ -383,7 +383,7 @@ Rules of thumb:
 - Shadows barely show in dark themes: separate surfaces with `border` or `surface-muted` there, or add `ring-1 ring-border`.
 - Focus: a ring is fine for focus styles (`ring-2 ring-focus-ring ring-offset-2 ring-offset-surface`), but keep the outline approach from Borders for anything that must show in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-50` for disabled controls; don't lower the opacity of text to make it secondary — use `text-muted`.
+- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary — use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 

@@ -323,7 +323,7 @@ Every value comes from a token. Colors, spacing, sizes, borders and micro-intera
 | Type | `font-sans`, `font-medium`, `tracking-normal`, `text-xs`, `text-sm`, `text-base` (each with its `--line-height`) |
 | Shape | `rounded-md`, `border-width-1`, `shadow-xs`, `shadow-none` |
 | Focus ring | `outline-offset-2` (the gap), `outline-width-2` (the ring) |
-| States | `opacity-50` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
+| States | `opacity-disabled` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
 | Motion | `duration-150` and `ease-in-out` for colors and the focus ring; `scale-97`, `duration-100`, `spacing-0.5`, `duration-150`, `opacity-20`, `duration-500`, `duration-300`, `ease-out` for the micro-interactions; `scale-50`, `scale-100`, `scale-0`, `spacing-0` and `rounded-full` inside them |
 | Components and utilities it reuses | the Loader (ring) while loading, `sr-only` on the loading announcement |
 | Icons | `leading-none`, `spacing-6` (Icon's default size) |

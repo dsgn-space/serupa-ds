@@ -46,7 +46,7 @@
   outline-offset: var(--outline-offset-2);
 }
 .dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) {
-  opacity: var(--opacity-50);
+  opacity: var(--opacity-disabled);
   cursor: not-allowed;          /* no hover change; disabled buttons ignore clicks */
 }
 .dk-btn__icon {

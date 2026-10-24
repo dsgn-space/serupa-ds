@@ -38,6 +38,6 @@
 .dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--danger)); --dk-input-ring: var(--input-invalid, var(--danger)); }
 .dk-input--invalid:hover:not(.dk-input--disabled, .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--danger)); }
 .dk-input--readonly { background: var(--input-bg-readonly, var(--surface-muted)); }
-.dk-input--disabled { background: var(--input-bg-readonly, var(--surface-muted)); opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-input--disabled { background: var(--input-bg-readonly, var(--surface-muted)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-input--disabled .dk-input__field { cursor: not-allowed; }
 }
