@@ -45,6 +45,8 @@ import { SegmentedControl } from "serupa-ds";
 
 It's one Tab stop, on the selected segment. Arrow keys move and select at once, skipping disabled segments and wrapping (left and right swap in right-to-left pages). Home and End go to the first and last.
 
+Your `onKeyDown` runs before the control's own keys, so `e.preventDefault()` in it overrides one. `onFocus` and `onBlur` fire when focus enters or leaves the control, not as the arrow keys move between segments, so a form library's "touched on blur" waits until people leave it.
+
 ## Props
 
 | Prop | Type | Default | Notes |
