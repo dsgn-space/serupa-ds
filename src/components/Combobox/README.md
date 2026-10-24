@@ -67,7 +67,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `defaultValue` | `string \| null` | | Uncontrolled. |
 | `onValueChange` | `(value: string \| null) => void` | | When an option is picked, or `null` when the field is emptied or cleared. |
 | `onInputChange` | `(text: string) => void` | | The text as it's typed, for loading options. |
-| `filter` | `false \| (option, text) => boolean` | contains, ignoring case and accents | `false` shows every option you pass. |
+| `filter` | `false \| (option, text) => boolean` | contains, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo") | `false` shows every option you pass. |
 | `clearable` | `boolean` | `false` | A × that clears the selection. |
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results'` | |
