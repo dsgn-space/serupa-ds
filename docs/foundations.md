@@ -730,6 +730,40 @@ Rules of thumb:
 - `touch-manipulation` on buttons removes the double-tap zoom delay; `touch-none` on canvases and sliders that handle gestures themselves.
 - Use `will-change-transform` only while an animation runs, then remove it.
 
+## Accessibility standard
+
+The target is **WCAG 2.2 level AA**, in all six themes, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
+
+**What the system guarantees**
+
+- **Contrast.** Text, placeholder, icon, control-border and focus-ring colors meet 4.5:1 or 3:1 in every theme; the foundation check measures every pair on every change. `data-contrast="more"` (or the system's "increase contrast" setting) raises text to 7:1.
+- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. Each README has a Keyboard table.
+- **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
+- **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
+- **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
+- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
+- **Reflow and zoom.** Components fit a 320px-wide screen and wrap instead of clipping, and sizes are in `rem`, so text zoom works.
+- **Motion.** Under `prefers-reduced-motion`, components stop their animations, and `base.css` makes every transition near-instant. Nothing flashes.
+- **Forced colors and RTL.** Borders, focus and selected states stay visible in forced colors, and layouts use logical properties, so right-to-left languages mirror correctly.
+- **Dragging.** Anything you can drag also works without dragging (2.5.7): Slider takes arrow keys and clicks on the track, and FileUpload has a Choose button.
+
+These are checked on every change: axe on every Storybook story in every theme, the contrast pairs, and component tests for keyboard, focus, names and announcements.
+
+**What the app must do**
+
+The system can't know your content, your page structure or your flows. For a page to meet WCAG 2.2 AA, the app must:
+
+- **Page.** Set `<html lang>`, a unique `<title>` per page, and landmarks: one `main` (Container `as="main"`), a `nav` per navigation (Navbar and Sidebar render one), a header and a footer. Add a "Skip to content" link.
+- **Headings.** One `h1` per page and no skipped levels. Heading's `level` sets the element; its look can differ.
+- **Names.** Give every field a visible label (Field), every IconButton an `aria-label`, every meaningful Image `alt` text (and `alt=""` for decoration), and every link text that says where it goes.
+- **Errors.** Write errors that say what's wrong and how to fix it, next to the field; on submit, move focus to the first error or a summary. Don't ask people to re-enter what they already gave in the same flow (3.3.7), and don't make sign-in depend on a memory or puzzle test (3.3.8).
+- **Color.** Don't use color alone to carry meaning in your own content: charts, status dots and links in text need a second cue.
+- **Focus in single-page apps.** After a route change, move focus to the new page's heading or `main`, and announce it. After deleting an item, move focus to the next item or the list.
+- **Your own CSS.** Keep the focus ring (never `outline: none` alone), keep targets at 24px, and keep sticky headers from covering the focused element (`scroll-padding-top`).
+- **Media and time.** Captions and transcripts for audio and video; a way to pause anything that moves for more than 5 seconds; a warning and a way to extend before a session times out.
+- **Help.** Put help links and contact details in the same place on every page (3.2.6).
+- **Test.** Use the keyboard alone through each flow, try a screen reader (VoiceOver, NVDA), zoom to 400%, and turn on forced colors. Automated checks find about a third of problems.
+
 ## Accessibility
 
 Accessibility utilities, as classes in `bundle.css`. They add no tokens.
