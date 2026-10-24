@@ -12,7 +12,7 @@ import { PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
-  'All components (index.js)': 49,   // 46.8 once each component imports only its own icons (R7)
+  'All components (index.js)': 50,   // 46.8 once each component imports only its own icons (R7); 49.1 with R21–R27
   'Button alone': 5.5,   // 5.1, without any icon data (R7)
   'Dialog alone': 6.5,   // 6.2, with only its close icon (R7)
   'components.css': 39.5,   // 38.2 after R11 put the hover rules in @media (hover: hover)

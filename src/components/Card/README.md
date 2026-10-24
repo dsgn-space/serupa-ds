@@ -1,6 +1,6 @@
 # Card
 
-A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. It's built from parts (`CardHeader`, `CardBody`, `CardFooter`) that you can mix with any content, and with `href` the whole card becomes one link.
+A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. It's built from parts (`CardHeader`, `CardBody`, `CardFooter`) that you can mix with any content, and with `href` the whole card is clickable through one link on its title.
 
 ```jsx
 const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
@@ -14,12 +14,11 @@ const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
   </CardFooter>
 </Card>
 
-// a whole card as a link, in a list (as is ignored with href, so wrap it in the <li>)
-<li>
-  <Card href="/projects/atlas">
-    <CardHeader title="Atlas" description="Updated 2 hours ago" />
-  </Card>
-</li>
+// a whole card as a link: the title is the link, and its area covers the card; buttons inside still work
+<Card as="li" href="/projects/atlas">
+  <CardHeader title="Atlas" description="Updated 2 hours ago" />
+  <CardFooter><Button variant="secondary" size="sm" onClick={star}>Star</Button></CardFooter>
+</Card>
 
 // full-bleed media: no padding on the card, pad the parts yourself
 <Card padding="none" className="overflow-hidden">
@@ -43,8 +42,9 @@ const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
 ## Usage
 
 - Use `outline` for most cards, `elevated` for content over the page, and `filled` for a panel inside another surface.
-- Keep a linked card to a title and a line. When a card needs buttons, don't link it: put them in `CardFooter`.
-- Wrap linked cards in a list's `<li>` yourself, since `as` is ignored with `href`.
+- Give a linked card a `CardHeader` with a `title`: the title is the link and names it ("Atlas"), so screen reader users don't hear the whole card read out as one link.
+- Buttons and other links can go inside a linked card. They sit above the card's link, so they work on their own and pressing them doesn't follow it.
+- Use `as="li"` for linked cards in a list.
 - For full-bleed media, set `padding="none"` and pad the parts yourself.
 
 ## States
@@ -61,7 +61,8 @@ The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `p
 
 - A card is a plain container: give it `as="section"` with a title when it's a landmark-worthy region, or `as="article"` for a self-contained item.
 - The title is a real heading, so screen reader users can jump between cards. Set `headingLevel` to fit the page.
-- A linked card is one link: its name is all the text inside it. Keep it short (a title and a line), and keep buttons and other links out of it, since a link can't hold them.
+- A linked card has one link, around its `CardHeader` title (the "stretched link" pattern): it's named by the title, it's the card's first tab stop, and its clickable area covers the card. The card shows its focus ring. Without a direct `CardHeader` title, the link is empty, laid over the card and named by the card's text (or the card's `aria-label`).
+- The card itself stays a `<div>` (or `as`), so buttons and links inside are never nested in a link, which is invalid HTML.
 - In forced-colors mode every card gets a visible border.
 - The title, description and body text keep 4.5:1 on every variant, in all six themes (`Card.test.tsx`).
 
@@ -74,9 +75,10 @@ The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `p
 | `variant` | `'outline'` \| `'elevated'` \| `'filled'` | `'outline'` | A border and a hairline shadow; a raised shadow (for content over the page); or `surface-muted` and flat (a panel inside another surface) |
 | `padding` | `'none'` \| `'sm'` \| `'md'` \| `'lg'` | `'md'` | 0, 12px, 20px or 24px inside, and the parts sit 16px apart |
 | `as` | `'div'` \| `'section'` \| `'article'` \| `'li'` | `'div'` | The element. Use `article` for a self-contained item, `li` inside a list |
-| `href` | string | | Makes the whole card a link (the link component set with `configure({ link })`, `<a>` by default). `target="_blank"` adds `rel="noopener noreferrer"` |
+| `href` | string | | Makes the whole card clickable through one link around the `CardHeader` title (the link component set with `configure({ link })`, `<a>` by default) |
+| `target`, `rel` | string | | Go to the link. `target="_blank"` adds `rel="noopener noreferrer"` |
 
-`className`, `style`, `ref` and everything else go to the card element, which has `data-component="card"` and `data-variant`.
+`className`, `style`, `ref` and everything else go to the card element (`aria-label` goes to the link of a linked card), which has `data-component="card"` and `data-variant`.
 
 ### CardHeader
 
@@ -123,3 +125,12 @@ Each is an optional override: set it on the page, a container or one card. The l
 ## Related
 
 - [Grid](../Grid/README.md): lays out a set of cards in columns that fit the screen.
+
+## Migrating from 8.x
+
+In 9.0.0 a linked card (`href`) is no longer one `<a>`:
+
+- The card element is a `<div>` (or `as`, which `href` no longer ignores). `ref` points at it, not at a link. To reach the link, use `ref.current.querySelector('.dk-card__link')`.
+- `href`, `target`, `rel` and `aria-label` go to the link, which wraps the `CardHeader` title. Other props, including `onClick`, stay on the card; a click on the link still bubbles to it.
+- CSS that styled `a.dk-card` or `.dk-card--link:focus-visible` should target `.dk-card--link` and `.dk-card--link:has(.dk-card__link:focus-visible)`.
+- A linked card without a `CardHeader` title still works (an empty link named by the card's text), but adding a title gives the link a short name.
