@@ -22,7 +22,7 @@ const RAW = {
   'bundle.css': [212, 1],   // 206.2 with InlineEdit, ColorPicker and PhoneInput
   'base.css': 1.85,   // 1.74 with the print styles (R12)
   'theme.js': 2,
-  'serupa.iife.js': [610, 10],   // 601.5 with InlineEdit and ColorPicker; PhoneInput's country table adds a few KiB
+  'serupa.iife.js': [616, 10],   // 601.5 with InlineEdit and ColorPicker; PhoneInput's country table adds a few KiB; 610.2 with the ideas of rounds 19–25 so far
 };
 const count = fs.readdirSync(path.join(PROJECT, 'src', 'components')).filter((n) => fs.statSync(path.join(PROJECT, 'src', 'components', n)).isDirectory()).length;
 const BUDGET = Object.fromEntries(Object.entries(RAW).map(([k, v]) => [k, Array.isArray(v) ? +(v[0] + Math.max(0, count - AT) * v[1]).toFixed(1) : v]));
