@@ -3,7 +3,8 @@ import * as React from "react";
 import { cn, domId, oneOf, omit, SIZES } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { displayNumber } from "../../internal/numbers";
-import { useLocale } from "../../internal/provider";
+import { useLocale, useSerupa } from "../../internal/provider";
+import type { MeterZone } from "./labels";
 
 export type MeterState = 'optimum' | 'suboptimal' | 'poor' | 'none';
 export interface MeterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -46,6 +47,12 @@ export function meterState(value: number, min: number, max: number, low?: number
   return value >= lo && value <= hi ? "optimum" : "suboptimal";
 }
 
+/** Where value falls against low and high (clamped the way meterState clamps them). */
+function zone(value: number, min: number, max: number, low?: number, high?: number): MeterZone {
+  const lo = Math.min(Math.max(low ?? min, min), max), hi = Math.min(Math.max(high ?? max, lo), max);
+  return value < lo ? "low" : value > hi ? "high" : "medium";
+}
+
 const TONE: Record<MeterState, string | null> = { optimum: "success", suboptimal: "warning", poor: "danger", none: null };
 
 /* Meter: a measurement within a known range, such as storage used, a password's strength or a battery level. It's
@@ -65,7 +72,10 @@ export const Meter = /* @__PURE__ */ component<HTMLDivElement, MeterProps>("Mete
   const share = max > min ? (value - min) / (max - min) : 0;
   const state = meterState(value, min, max, num(props.low), num(props.high), num(props.optimum));
   const tone = TONE[state];
+  const labels = useSerupa().labels;
   const text = props.formatValue ? props.formatValue(value, min, max) : displayNumber(share, locale, PERCENT);
+  // Outside the best zone, the default words say where the value falls, so the warning isn't only a color.
+  const spoken = props.formatValue || state === "none" || state === "optimum" ? text : labels.meterZone(text, zone(value, min, max, num(props.low), num(props.high)));
   const hasLabel = props.label != null && props.label !== false && props.label !== "";
   const showValue = !!props.showValue;
   const outer = omit(rest, { "aria-label": 1, "aria-labelledby": 1 } as const);
@@ -78,7 +88,7 @@ export const Meter = /* @__PURE__ */ component<HTMLDivElement, MeterProps>("Mete
           {showValue ? <span className="dk-meter__value" aria-hidden>{text}</span> : null}
         </div>
       ) : null}
-      <div className="dk-meter__track" role="meter" aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} aria-valuetext={text}
+      <div className="dk-meter__track" role="meter" aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} aria-valuetext={spoken}
         aria-label={rest["aria-label"]} aria-labelledby={rest["aria-labelledby"] || (hasLabel && !rest["aria-label"] ? base + "-label" : undefined)}>
         <div className="dk-meter__fill" style={{ inlineSize: share * 100 + "%" }} />
       </div>
