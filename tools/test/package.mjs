@@ -71,6 +71,7 @@ if (D) {
     FileUpload: h(D.FileUpload, { accept: 'image/*', multiple: true }),
     FormattedNumber: h(D.FormattedNumber, { value: 1234.5, locale: 'en-US' }),
     Image: h(D.Image, { src: '/a.png', alt: 'A lake', ratio: '16/9', viewable: true }),
+    InlineEdit: h(D.InlineEdit, { label: 'Project name', defaultValue: 'Apollo' }),
     IconButton: h(D.IconButton, { icon: 'close', label: 'Close' }),
     Kbd: h(D.Kbd, null, 'mod+k'),
     Layout: h(D.Container, null, h(D.Stack, { gap: 4 }, h(D.Heading, { level: 2 }, 'Title'), h(D.Divider), h(D.Grid, { columns: 2 }, h(D.Text, { tone: 'muted' }, 'a'), h(D.Text, null, 'b')))),

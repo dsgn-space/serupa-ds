@@ -72,6 +72,7 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   Icon: Serupa.Icon,
   IconButton: Serupa.IconButton,
   Image: Serupa.Image,
+  InlineEdit: Serupa.InlineEdit,
   Input: Serupa.Input,
   Loader: Serupa.Loader,
   Menu: Serupa.Menu,

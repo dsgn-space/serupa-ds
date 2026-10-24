@@ -64,6 +64,7 @@
 @import "../components/DatePicker/DatePicker.css";
 @import "../components/DateRangePicker/DateRangePicker.css";
 @import "../components/Image/Image.css";
+@import "../components/InlineEdit/InlineEdit.css";
 @import "../components/TimePicker/TimePicker.css";
 @import "../components/Carousel/Carousel.css";
 @import "./utilities.css";
