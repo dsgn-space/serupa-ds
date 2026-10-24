@@ -29,7 +29,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   size?: 'sm' | 'md' | 'lg';
   /** A danger border and aria-invalid, like Input. */
   invalid?: boolean;
-  /** The calendar button's name. Default: "Choose date". */
+  /** The calendar button's name. Default: "Choose a date". */
   buttonLabel?: string;
 }
 

@@ -99,7 +99,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   nextSlide: "Next slide",
   decrease: "Decrease",
   increase: "Increase",
-  chooseDate: "Choose date",
+  chooseDate: "Choose a date",
   chooseDates: "Choose dates",
   chooseTime: "Choose time",
   startDate: "Start date",
