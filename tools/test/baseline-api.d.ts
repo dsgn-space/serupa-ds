@@ -892,6 +892,7 @@ interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
     position?: ToasterPosition;
     label?: string;
     dismissLabel?: string;
+    limit?: number;
 }
 declare const Toaster: ((props: ToasterProps) => React.ReactElement) & {
     displayName: string;
@@ -961,6 +962,7 @@ interface SerupaLabels {
     stepOf: (step: number, total: number) => string;
     notifications: string;
     toastShortcut: (key: string) => string;
+    moreToasts: (count: number) => string;
     mainNavigation: string;
     menu: string;
     dragFiles: string;
