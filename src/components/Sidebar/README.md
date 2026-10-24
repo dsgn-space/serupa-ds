@@ -100,6 +100,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-text-hover` | `text` | An item on hover. |
 | `--sidebar-item-text-active` | `text` | The current page's item. |
 | `--sidebar-item-bg-hover` | `highlight` | An item's background on hover. |
+| `--sidebar-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past hover. |
 | `--sidebar-item-bg-active` | `highlight` | The current page's item background. |
 | `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |

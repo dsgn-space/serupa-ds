@@ -97,7 +97,7 @@
   inset-inline: calc(var(--spacing-0) - var(--dk-badge-rm-reach));
   border-radius: var(--badge-radius, var(--rounded-md));
 }
-.dk-badge__remove:hover { opacity: var(--opacity-100); }
+@media (hover: hover) { .dk-badge__remove:hover { opacity: var(--opacity-100); } }
 .dk-badge__remove:focus-visible { opacity: var(--opacity-100); }
 .dk-badge__remove:focus-visible::after { outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }   /* the ring goes round the whole 24×24 target */
 /* Interactive (onClick: a <button>; href: a link): a state layer (hover, then stronger while pressed) in the text
@@ -112,11 +112,11 @@
   transition: opacity var(--duration-150) var(--ease-in-out);
 }
 .dk-badge--interactive > :not(.dk-badge__ripples, .dk-badge__loader) { position: relative; }   /* positioned, so the content paints above the layer and the ripple (which come first) */
-.dk-badge--interactive:hover:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-hover-layer, var(--opacity-10)); }
+@media (hover: hover) { .dk-badge--interactive:hover:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-hover-layer, var(--opacity-10)); } }
 .dk-badge--interactive:active:not(:disabled, [aria-disabled="true"])::before { opacity: var(--badge-active-layer, var(--opacity-15)); }
 /* …and on subtle and outline the text moves away from the layer (darker in light themes, lighter in dark), so it keeps 4.5:1 */
-.dk-badge--interactive.dk-badge--subtle:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-sfg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); }
-.dk-badge--interactive.dk-badge--outline:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-ofg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); }
+@media (hover: hover) { .dk-badge--interactive.dk-badge--subtle:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-sfg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); } }
+@media (hover: hover) { .dk-badge--interactive.dk-badge--outline:is(:hover, :active):not(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--dk-badge-ofg), var(--dk-bdg-xlayer) var(--badge-state-text, var(--opacity-30))); } }
 .dk-badge--interactive:focus-visible {
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
   outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset);

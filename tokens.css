@@ -9,6 +9,7 @@
   --secondary: var(--zinc-100); /* Alias. Secondary button fill; hover fill for outline and ghost buttons. */
   --secondary-hover: var(--zinc-200); /* Alias. Hover state of `secondary`. */
   --highlight: var(--zinc-200); /* The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. One step stronger than `secondary` (about 1.3:1 on `surface` in light, 2:1 in dark), paired with a 2px `primary` bar at the item's start. Text on it keeps 4.5:1. */
+  --pressed: var(--zinc-300); /* Alias. The fill while a row, tab, day or page button is held down (`:active`): one step past its hover. `text` keeps 7:1+ on it. */
   --surface: var(--white); /* Alias. Page and card background (white light, zinc-950 dark). */
   --surface-muted: var(--zinc-50); /* Alias. Secondary panels, sidebars, table headers. */
   --surface-raised: var(--white); /* Alias. A raised card (Card `elevated`). One step up from `surface` in dark, where a shadow doesn't show. */
@@ -314,6 +315,7 @@
   --secondary: var(--zinc-800);
   --secondary-hover: var(--zinc-700);
   --highlight: var(--zinc-700);
+  --pressed: var(--zinc-600);
   --surface: var(--zinc-950);
   --surface-muted: var(--zinc-900);
   --surface-raised: var(--zinc-900);
@@ -357,6 +359,7 @@
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
   --highlight: var(--zinc-200);
+  --pressed: var(--zinc-300);
   --surface: var(--white);
   --surface-muted: var(--zinc-50);
   --surface-raised: var(--white);
@@ -400,6 +403,7 @@
   --secondary: var(--zinc-800);
   --secondary-hover: var(--zinc-700);
   --highlight: var(--zinc-700);
+  --pressed: var(--zinc-600);
   --surface: var(--zinc-950);
   --surface-muted: var(--zinc-900);
   --surface-raised: var(--zinc-900);
@@ -443,6 +447,7 @@
   --secondary: var(--zinc-100);
   --secondary-hover: var(--zinc-200);
   --highlight: var(--zinc-200);
+  --pressed: var(--zinc-300);
   --surface: var(--white);
   --surface-muted: var(--zinc-50);
   --surface-raised: var(--white);
@@ -486,6 +491,7 @@
   --secondary: var(--zinc-800);
   --secondary-hover: var(--zinc-700);
   --highlight: var(--zinc-700);
+  --pressed: var(--zinc-600);
   --surface: var(--zinc-950);
   --surface-muted: var(--zinc-900);
   --surface-raised: var(--zinc-900);
@@ -530,6 +536,7 @@
   --secondary: light-dark(var(--zinc-100), var(--zinc-800));
   --secondary-hover: light-dark(var(--zinc-200), var(--zinc-700));
   --highlight: light-dark(var(--zinc-200), var(--zinc-700));
+  --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-950));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-900));
   --surface-raised: light-dark(var(--white), var(--zinc-900));

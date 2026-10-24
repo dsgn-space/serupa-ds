@@ -52,7 +52,7 @@ const { Breadcrumb, BreadcrumbItem } = window.Serupa;
 | `separator` | `'chevron'` \| `'slash'` | `'chevron'` | What goes between items. The chevron points left in right-to-left pages |
 | `maxItems` | number (2 or more) | no limit | Shows the first item, "…", then the last `maxItems - 1`. Pressing "…" shows them all and moves focus to the first one it showed |
 | `aria-label` | string | `"Breadcrumb"` | The nav's name |
-| `expandLabel` | string | `"Show the hidden pages"` | The "…" button's name |
+| `expandLabel` | string | `"Show all pages"` | The "…" button's name |
 
 `className`, `style`, `ref` and everything else go to the `<nav>`, which has `data-component="breadcrumb"`.
 

@@ -11,7 +11,7 @@
   border: var(--spacing-0); border-radius: var(--rounded-sm); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: pointer;
 }
 .dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
-.dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--surface-muted)); color: var(--time-picker-button-hover, var(--text)); }
+@media (hover: hover) { .dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--surface-muted)); color: var(--time-picker-button-hover, var(--text)); } }
 .dk-time-picker__button:disabled { cursor: not-allowed; }
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-50));

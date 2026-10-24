@@ -32,7 +32,7 @@ import { Carousel, Image } from "serupa-ds";
 - Keep it to a handful of slides (about 3 to 7). With more, people lose track and the dots get small to hit.
 - Give every slide the same size and ratio (Image's `ratio` helps), so the controls don't jump.
 - Put what matters most on the first slide; that's the one everyone sees.
-- Write a `label` that says what the slides are ("Product photos"). Pass `slideLabel` when "2 of 5" isn't the best name, such as each photo's subject.
+- Write a `label` that says what the slides are ("Product photos"). Pass `slideLabel` when "2 of 5" isn't the best name, such as each photo's subject. The default comes from the `slideOf` label, so `SerupaProvider labels` translates it ("2 dari 5" with `idLabels`).
 - Use `loop` for photos with no natural order, and leave it off when the slides have a start and an end.
 - Turn off `dots` for 2 slides or when the arrows are enough, and `arrows` only when swiping or your own controls (`index` and `onIndexChange`) replace them.
 
@@ -75,7 +75,7 @@ import { Carousel, Image } from "serupa-ds";
 | `dots` | `boolean` | `true` | A dot for each slide, under the carousel. |
 | `previousLabel` | `string` | `"Previous slide"` | The previous button's name. |
 | `nextLabel` | `string` | `"Next slide"` | The next button's name. |
-| `slideLabel` | `(index, count) => string` | `"2 of 5"` | Each slide's name, and its dot's. |
+| `slideLabel` | `(index, count) => string` | the `slideOf` label, `"2 of 5"` | Each slide's name, and its dot's. |
 
 `ref`, `className`, `style` and other props go to the outer `<section>`.
 

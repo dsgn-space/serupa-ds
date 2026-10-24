@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 import { formatNumber, parseNumber } from "../../internal/numbers";
 import { gridPlaces, roundTo } from "../../internal/step";
 import { useLocale, useSerupa } from "../../internal/provider";
@@ -107,7 +108,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e);
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || isComposing(e)) return;
     const k = e.key, big = e.shiftKey ? large : 1;
     if (k === "ArrowUp") nudge(big);
     else if (k === "ArrowDown") nudge(-big);

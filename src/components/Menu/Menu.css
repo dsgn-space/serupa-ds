@@ -48,6 +48,7 @@
 .dk-menu__item { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .dk-menu__item:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-menu__item:focus-visible { box-shadow: inset var(--dk-bar) 0 0 var(--menu-item-indicator, var(--primary)); }
+.dk-menu__item:active:not([aria-disabled="true"], .dk-menu__item--destructive) { background: var(--menu-item-bg-pressed, var(--pressed)); }
 .dk-menu__item:focus-visible { outline: var(--focus-ring-width) solid transparent; }   /* shows in forced colors */
 .dk-menu__icon { display: inline-flex; flex-shrink: 0; color: var(--menu-muted, var(--text-muted)); }
 .dk-menu__icon .dk-icon { font-size: var(--spacing-4); }

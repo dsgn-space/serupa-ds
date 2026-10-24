@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, settle } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, press, settle } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuGroup, MenuItem, MenuSeparator } from './Menu';
@@ -55,6 +55,18 @@ describe('Menu', () => {
     const seen: string[] = [];
     for (const k of ['{ArrowDown}', '{ArrowDown}', '{End}', '{ArrowDown}', '{ArrowUp}', '{Home}', 's', 'd', 'd']) { await userEvent.keyboard(k); seen.push(focus()!); }
     expect(seen).toEqual(['Duplicate', 'Archive', 'Delete', 'Edit', 'Delete', 'Edit', 'Share link', 'Delete', 'Duplicate']);
+  });
+
+  test('typing a word goes to the item starting with it: "de" passes Duplicate for Delete; after a pause a letter starts again', async () => {
+    await render(<Actions chosen={[]} />);
+    await userEvent.click(el('mb'));
+    await userEvent.keyboard('de');
+    expect(focus()).toBe('Delete');
+    await userEvent.keyboard('du');
+    expect(focus()).toBe('Duplicate');
+    await new Promise((r) => setTimeout(r, 600));
+    await userEvent.keyboard('e');
+    expect(focus()).toBe('Edit');
   });
 
   test('Enter on a disabled item does nothing; Enter on an item chooses it, closes the menu and returns focus to the button', async () => {
@@ -174,4 +186,12 @@ describe('Menu', () => {
     still.remove();
     expect(low).toEqual([]);
   });
+
+  test('pressed: an item held down fills with pressed, one step past the highlight', async () => {
+    await render(<Actions chosen={[]} />);
+    await userEvent.click(el('mb'));
+    const item = menuOf('mb').querySelectorAll<HTMLElement>('[role="menuitem"]')[1];
+    await press(item, () => expect.poll(() => getComputedStyle(item).backgroundColor).toBe(color('var(--pressed)')));
+  });
+
 });

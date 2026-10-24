@@ -50,7 +50,7 @@ const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.
 | Enter, Space | Opens it on the first item | Chooses the item |
 | ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
 | Home, End | | The first or last item |
-| A letter | | The next item starting with it |
+| Letters | | The next item starting with them. Letters typed within half a second make one word ("de" finds Delete past Duplicate), the same letter again steps through the items starting with it, and accents and case don't matter ("e" finds "Éditer") |
 | Escape | | Closes it; focus goes back to the button |
 | Tab | | Closes it and moves on |
 
@@ -64,7 +64,7 @@ Hovering an item highlights it, and a press outside closes the menu.
 | --- | --- | --- | --- |
 | `trigger` | one element | required | The button that opens it. It gets `aria-haspopup`, `aria-expanded`, `aria-controls` and the keys, and keeps its own handlers and ref |
 | `children` | nodes | required | `MenuItem`, `MenuGroup` and `MenuSeparator` |
-| `placement` | as Tooltip | `'bottom-start'` | Where it opens; it flips when there's no room and slides to stay on screen |
+| `placement` | as Tooltip | `'bottom-start'` | Where it opens; it flips when there's no room and slides to stay on screen. With no room on either side it opens on the roomier one and scrolls inside, so every item can be reached |
 | `open`, `onOpenChange` | boolean, function | | Control it yourself |
 | `aria-label` | string | | The menu's name. Without it, the button's text names it |
 
@@ -92,6 +92,7 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | `--menu-item-text` | `text` | An item's label. |
 | `--menu-item-bg-active` | `highlight` | The highlighted item's background (hover and keyboard). |
 | `--menu-item-indicator` | `primary` | From the keyboard: the 2px bar at the highlighted item's start. A destructive item uses its danger color. |
+| `--menu-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint. |
 | `--menu-muted` | `text-muted` | Icons, shortcuts and group labels (4.5:1 on surface; the highlighted item's shortcut turns to item-color). |
 | `--menu-danger` | `danger-text` | A destructive item's label and icon. |
 | `--menu-danger-bg-active` | `danger-subtle` | A highlighted destructive item's background. |

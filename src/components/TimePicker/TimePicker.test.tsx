@@ -30,14 +30,14 @@ function Ctl(props: { changes: string[]; setRef?: { set?: (v: string | null) => 
 const openTp = async () => { el('tp').focus(); await userEvent.keyboard('{ArrowDown}'); };
 
 describe('TimePicker', () => {
-  test('a role="combobox" field (aria-haspopup="listbox", collapsed) in a dk-input box, labelled by Field; a "Choose time" clock button out of the tab order; ref and className', async () => {
+  test('a role="combobox" field (aria-haspopup="listbox", collapsed) in a dk-input box, labelled by Field; a "Choose a time" clock button out of the tab order; ref and className', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<Meeting tref={ref} />);
     const i = el('tp'), l = listOf('tp'), b = button('tp');
     expect(ref.current).toBe(i);
     expect(i.parentElement!.className).toMatch(/dk-input.*extra/);
     expect([i.getAttribute('role'), i.getAttribute('aria-haspopup'), i.getAttribute('aria-expanded'), i.placeholder]).toEqual(['combobox', 'listbox', 'false', 'hh:mm am']);
-    expect([l.getAttribute('role'), l.getAttribute('aria-label'), b.getAttribute('aria-label'), b.tabIndex]).toEqual(['listbox', 'Choose time', 'Choose time', -1]);
+    expect([l.getAttribute('role'), l.getAttribute('aria-label'), b.getAttribute('aria-label'), b.tabIndex]).toEqual(['listbox', 'Choose a time', 'Choose a time', -1]);
     expect(document.querySelector('label')!.htmlFor).toBe('tp');
   });
 

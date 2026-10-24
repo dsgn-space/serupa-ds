@@ -95,6 +95,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `secondary` | `zinc-100` | `zinc-800` | Secondary button fill; hover fill for outline and ghost buttons. |
 | `secondary-hover` | `zinc-200` | `zinc-700` | Hover state of `secondary`. |
 | `highlight` | `zinc-200` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text, icons and a primary bar keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. |
+| `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface` | `white` | `zinc-950` | Page and card background. |
 | `surface-muted` | `zinc-50` | `zinc-900` | Secondary panels, sidebars, table headers. |
 | `surface-raised` | `white` | `zinc-900` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
@@ -418,6 +419,39 @@ Rules of thumb:
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 
+## Elevation and layers
+
+How things sit above one another: the page, raised cards, floating menus and dialogs. Elevation is shown three ways at once, so it reads in every theme: the surface color, an edge, and a shadow.
+
+**The levels**
+
+| Level | What sits there | Surface | Edge | Shadow |
+| --- | --- | --- | --- | --- |
+| 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
+| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted` | none | none, or `inset-shadow-xs` for an input well |
+| 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
+| 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border-raised` | `shadow-md` |
+| 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
+| 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-overlay` | `border-overlay` | `shadow-xl` |
+| Inverse | Tooltip | `surface-inverse` | none | `shadow-md` |
+
+- Higher means bigger shadow and, in dark themes, a lighter surface. Don't skip the surface and edge and rely on the shadow alone.
+- Keep to one raised level per region. A card inside a card stays at level 1; give the inner one `filled` or no border instead of a second shadow.
+- Elevation means "this is above the page", not "this is important". Use color and type for emphasis.
+
+**Light and dark**
+
+In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, and `border-raised` is invisible. In dark themes, shadows hardly show against a near-black page, so the surface steps up to `zinc-900` and the edge to `zinc-800` or `zinc-700`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in all six themes.
+
+In forced-colors mode, backgrounds and shadows are replaced, so only the edge survives. Every floating surface has a real border for that reason; keep it if you restyle one.
+
+**Layers and z-index**
+
+- The floating components (Menu, Popover, Tooltip, the Combobox, DatePicker, DateRangePicker and TimePicker lists) and the modal ones (Dialog, Drawer) open in the browser's **top layer** (`popover` and `showModal()`). The top layer is above every z-index on the page, so they can't be hidden by a parent's `overflow: hidden` or a high z-index, and you never need to raise them. Toasts move into an open Dialog or Drawer so they stay visible and clickable there.
+- Your own fixed and sticky elements use the named layers (`z-sticky`, `z-dropdown`, `z-overlay`, `z-modal`, `z-popover`, `z-toast`, `z-tooltip`, listed in Layout under Utility classes), so they stack in the same order as the components.
+- Use the numbered steps (`z-10`, `z-20`) only inside one component, such as a badge over an avatar. Wrap that component in `isolate` so its z-indexes can't compete with the page's.
+- A new stacking context traps z-index: `transform`, `filter`, `opacity` below 1, `isolation: isolate` and `position: sticky` with a z-index all create one. If something won't come to the front, look for one of these on an ancestor before raising a number.
+
 ## Filters
 
 Filter and backdrop-filter utilities, as classes in `bundle.css`. Scales are tokens in the `filters` group (backdrop opacity uses the `opacity` group); grayscale, invert and sepia need none. Filter classes combine on one element (`blur-sm grayscale`), and so do backdrop classes.
@@ -497,6 +531,75 @@ Rules of thumb:
 - Rotate disclosure chevrons with `rotate-180` (or `-rotate-90`) instead of swapping icons.
 - Animate `translate` and `scale`, not `top` or `width`: they don't trigger layout. Don't use `zoom` for animation.
 - Respect reduced motion: drop large movements and 3D flips when the viewer prefers reduced motion.
+
+## Page layout
+
+How to lay out a page: the breakpoints it adapts at, the containers that hold its content, and the spacing between its parts. The tokens and classes are in Layout under Utility classes; this is how to use them together.
+
+**Breakpoints**
+
+Design for a phone first, then add what changes on wider screens. The five breakpoints are minimum widths:
+
+| Breakpoint | From | Layout it usually gets |
+| --- | --- | --- |
+| (none) | 0 | One column. Navigation behind Navbar's menu button. 16px side padding. |
+| `sm` | 640px | Still one column; forms and cards can sit two to a row. 24px side padding. |
+| `md` | 768px | Two columns. Navbar shows its links. |
+| `lg` | 1024px | A Sidebar beside the content, or three columns of cards. 32px side padding. |
+| `xl` | 1280px | Content reaches its container's width; extra space goes to the margins. |
+| `2xl` | 1536px | Only for dense data: wide tables, dashboards. |
+
+- Change the layout where the content needs it, not at every breakpoint. Two or three changes are usually enough.
+- Test at 320px wide. WCAG 1.4.10 asks that content reflows without scrolling sideways at that width (400% zoom on a 1280px screen); only data tables, maps and diagrams may scroll.
+- For a component that sits in places of different widths (a card in a sidebar and in the main column), let its width decide, not the screen's: Grid's `columns="auto"` and `minColumnWidth`, or a container query (`@container`).
+
+**Containers**
+
+Wrap each band of the page (header, main content, footer) in a Container of the same `size`, so their edges line up.
+
+| Content | Container | Max width |
+| --- | --- | --- |
+| Articles, help pages, settings forms | `size="prose"` | 672px, about 70 characters a line |
+| A page of cards or a form with a side panel | `size="lg"` | 1024px |
+| Most app pages (the default) | `size="xl"` | 1280px |
+| Dashboards and wide tables | `size="2xl"` | 1536px |
+| A layout that brings its own margins, such as a full-bleed hero | `size="full"` | none |
+
+- Keep reading text within `prose` width even on a wide page: put a long description in its own `prose` block.
+- Don't nest Containers. Inside one, lay things out with Stack and Grid.
+- An app shell (Sidebar and Navbar) fills the window; put a Container inside the content area, not around the shell.
+
+**Spacing rhythm**
+
+Use spacing to show what belongs together: the closer two things are, the more related they look. Pick from a few steps of the spacing scale and use them the same way on every page.
+
+| Between | Step | Size |
+| --- | --- | --- |
+| An icon and its label; a label and its control | `1` to `2` | 4–8px |
+| Fields in a form; items in a list; lines of a card | `3` to `4` | 12–16px |
+| Groups inside a section; cards in a grid | `6` | 24px |
+| A section's heading and the groups under it | `4` to `6` | 16–24px |
+| Sections of a page | `8` to `12` | 32–48px |
+| The page header and the content; bands on a marketing page | `12` to `16` | 48–64px |
+
+- Space inside a group is always smaller than the space between groups. If two gaps are equal, the groups stop reading as groups.
+- Pad the container and gap its children: a Card has `p-6`, and its contents sit in a Stack with `gap={3}` or `gap={4}`. Don't add margins to each child.
+- On small screens, step the big gaps down one step: `gap-8 md:gap-12`.
+- Compact density (`data-density="compact"`) shrinks controls, not the page's spacing. For a denser table or list, choose smaller gaps on purpose.
+
+**A typical app page**
+
+```jsx
+<div style={{ display: 'flex', minHeight: '100vh' }}>
+  <Sidebar header={<Logo />}>…</Sidebar>
+  <Container as="main" size="xl" className="py-8">
+    <Stack gap={8}>
+      <Stack gap={2}><Heading level={1}>Projects</Heading><Text tone="muted">12 active</Text></Stack>
+      <Grid columns="auto" gap={6}>{cards}</Grid>
+    </Stack>
+  </Container>
+</div>
+```
 
 ## Layout
 
@@ -713,6 +816,22 @@ Rules of thumb:
 - Outline drawings: `fill-none stroke-current stroke-2`. Because the width is in the SVG's units, a 24-unit icon drawn at 48px gets a 4px line; add `vector-effect="non-scaling-stroke"` on the shapes for a fixed width.
 - The system's icons (Material Symbols and custom icons) already fill with `currentColor`: color them with `text-*` on the icon or its parent.
 
+## States
+
+Every interactive component moves through the same seven states, in this order of precedence (a later one wins):
+
+| State | When | How it looks | Tokens |
+| --- | --- | --- | --- |
+| Rest | Nothing is happening | The component's own colors | — |
+| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-muted` or `highlight`), or darker text | `secondary`, `surface-muted`, `highlight` |
+| Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
+| Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
+| Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
+| Disabled | It can't be used (`disabled`, `aria-disabled`) | The whole thing at `opacity-disabled`, with a `not-allowed` cursor and no hover or pressed | `opacity-disabled` |
+| Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
+
+Focus shows on top of every other state, and disabled turns hover and pressed off. A component's README lists its own values under "States".
+
 ## Interactivity
 
 Interactivity utilities, as classes in `bundle.css`. They add no tokens: colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, and the rest are keywords.
@@ -753,6 +872,40 @@ Rules of thumb:
 - `select-none` on drag handles and buttons, `select-all` on codes and IDs people copy.
 - `touch-manipulation` on buttons removes the double-tap zoom delay; `touch-none` on canvases and sliders that handle gestures themselves.
 - Use `will-change-transform` only while an animation runs, then remove it.
+
+## Accessibility standard
+
+The target is **WCAG 2.2 level AA**, in all six themes, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
+
+**What the system guarantees**
+
+- **Contrast.** Text, placeholder, icon, control-border and focus-ring colors meet 4.5:1 or 3:1 in every theme; the foundation check measures every pair on every change. `data-contrast="more"` (or the system's "increase contrast" setting) raises text to 7:1.
+- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. Each README has a Keyboard table.
+- **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
+- **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
+- **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
+- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
+- **Reflow and zoom.** Components fit a 320px-wide screen and wrap instead of clipping, and sizes are in `rem`, so text zoom works.
+- **Motion.** Under `prefers-reduced-motion`, components stop their animations, and `base.css` makes every transition near-instant. Nothing flashes.
+- **Forced colors and RTL.** Borders, focus and selected states stay visible in forced colors, and layouts use logical properties, so right-to-left languages mirror correctly.
+- **Dragging.** Anything you can drag also works without dragging (2.5.7): Slider takes arrow keys and clicks on the track, and FileUpload has a Choose button.
+
+These are checked on every change: axe on every Storybook story in every theme, the contrast pairs, and component tests for keyboard, focus, names and announcements.
+
+**What the app must do**
+
+The system can't know your content, your page structure or your flows. For a page to meet WCAG 2.2 AA, the app must:
+
+- **Page.** Set `<html lang>`, a unique `<title>` per page, and landmarks: one `main` (Container `as="main"`), a `nav` per navigation (Navbar and Sidebar render one), a header and a footer. Add a "Skip to content" link.
+- **Headings.** One `h1` per page and no skipped levels. Heading's `level` sets the element; its look can differ.
+- **Names.** Give every field a visible label (Field), every IconButton an `aria-label`, every meaningful Image `alt` text (and `alt=""` for decoration), and every link text that says where it goes.
+- **Errors.** Write errors that say what's wrong and how to fix it, next to the field; on submit, move focus to the first error or a summary. Don't ask people to re-enter what they already gave in the same flow (3.3.7), and don't make sign-in depend on a memory or puzzle test (3.3.8).
+- **Color.** Don't use color alone to carry meaning in your own content: charts, status dots and links in text need a second cue.
+- **Focus in single-page apps.** After a route change, move focus to the new page's heading or `main`, and announce it. After deleting an item, move focus to the next item or the list.
+- **Your own CSS.** Keep the focus ring (never `outline: none` alone), keep targets at 24px, and keep sticky headers from covering the focused element (`scroll-padding-top`).
+- **Media and time.** Captions and transcripts for audio and video; a way to pause anything that moves for more than 5 seconds; a warning and a way to extend before a session times out.
+- **Help.** Put help links and contact details in the same place on every page (3.2.6).
+- **Test.** Use the keyboard alone through each flow, try a screen reader (VoiceOver, NVDA), zoom to 400%, and turn on forced colors. Automated checks find about a third of problems.
 
 ## Accessibility
 

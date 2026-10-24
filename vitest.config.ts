@@ -46,7 +46,9 @@ export default defineConfig({
         browser: {
           enabled: true,
           headless: true,
-          provider: playwright(),
+          // Headless Firefox finds no pointing device and reports (hover: none), so hover styles (all behind
+          // @media (hover: hover)) would never apply. Give it a desktop's fine, hovering pointer, as lib.mjs does.
+          provider: playwright(process.env.SERUPA_BROWSER === 'firefox' ? { launchOptions: { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } } : {}),
           // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
           instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
           viewport: { width: 900, height: 700 },

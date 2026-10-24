@@ -43,7 +43,7 @@
   transition: width var(--duration-150) var(--ease-out);
 }
 .dk-carousel__dot[aria-current="true"]::before { width: var(--carousel-dot-active-width, var(--spacing-6)); background: var(--carousel-dot-active, var(--primary)); }
-.dk-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--text-muted)); }
+@media (hover: hover) { .dk-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--text-muted)); } }
 .dk-carousel__dot:focus { outline: none; }
 .dk-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }
 @media (prefers-reduced-motion: reduce) { .dk-carousel__track, .dk-carousel__dot::before { transition: none; } }

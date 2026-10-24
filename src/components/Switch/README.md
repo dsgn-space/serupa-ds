@@ -60,7 +60,7 @@ The thumb slides in 150ms (`duration-150`, `ease-in-out`) and jumps with `prefer
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | A 28×16px track and 12px thumb with `text-xs`; 36×20 and 16 with `text-sm`; 44×24 and 20 with `text-base` |
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `labelPosition` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
-| `invalid` | boolean | `false` | A danger track while off, a danger focus ring, and `aria-invalid` |
+| `invalid` | boolean | `false` | A 2px danger edge on the track (on or off), a danger focus ring, and `aria-invalid` |
 
 Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disabled`, `id`, `aria-*`) and `ref` go to the `<input type="checkbox" role="switch">` (`type` and `role` can't be changed). `className` and `style` go to the `<label>` around it, which has `data-component="switch"` and `data-size`.
 
@@ -80,7 +80,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |
 | `--switch-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
-| `--switch-invalid` | `danger` | The track while off, and the focus ring, when invalid |
+| `--switch-invalid` | `danger` | The track's edge and the focus ring, when invalid |
 | `--switch-width-sm` / `-md` / `-lg` | `spacing-7` / `spacing-9` / `spacing-11` | Track widths (28, 36, 44px) |
 | `--switch-height-sm` / `-md` / `-lg` | `spacing-4` / `spacing-5` / `spacing-6` | Track heights (16, 20, 24px) |
 | `--switch-thumb-size-sm` / `-md` / `-lg` | `spacing-3` / `spacing-4` / `spacing-5` | Thumb sizes (12, 16, 20px) |

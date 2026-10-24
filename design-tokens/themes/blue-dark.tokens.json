@@ -70,6 +70,16 @@
         }
       }
     },
+    "pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-600}",
+      "$description": "Alias. The fill while a row, tab, day or page button is held down (`:active`): one step past its hover. `text` keeps 7:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--pressed"
+        }
+      }
+    },
     "surface": {
       "$type": "color",
       "$value": "{color.zinc-950}",

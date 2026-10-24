@@ -52,6 +52,16 @@
           }
         }
       },
+      "item-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menu-item-bg-pressed"
+          }
+        }
+      },
       "muted": {
         "$type": "color",
         "$value": "{color.text-muted}",
