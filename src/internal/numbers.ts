@@ -73,7 +73,7 @@ export function formatNumber(n: number, locale?: string, options?: Intl.NumberFo
 
 const shown = new Map<string, Intl.NumberFormat>();
 /** A number to show, not to type: in the locale's own digits and signs, as Calendar shows its days ("٤٥٪" in ar-EG,
-    "%45" in tr-TR, "45 %" in fr-FR with style "percent"). formatNumber is for what a field reads back. */
+    "%45" in tr-TR, "45 %" in fr-FR as a percentage). formatNumber is for what a field reads back. */
 export function displayNumber(n: number, locale?: string, options?: Intl.NumberFormatOptions): string {
   const key = (locale || "") + "|" + (options ? JSON.stringify(options) : "");
   let f = shown.get(key);
