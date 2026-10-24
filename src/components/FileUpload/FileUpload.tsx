@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { cn, domId, omit } from "../../internal/cn";
+import { cn, domId, omit, setRef } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
@@ -8,6 +8,7 @@ import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
 import * as icons from "../../material/builtin";
+import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export { formatFileSize };
 
@@ -40,7 +41,7 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   removeLabel?: (name: string) => string;
 }
 
-const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, className: 1, id: 1 } as const;
+const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1 } as const;
 
 function accepts(file: File, accept?: string) {
   if (!accept) return true;
@@ -83,6 +84,9 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const inputId = props.id || base + "-input";
   const input = React.useRef<HTMLInputElement | null>(null);
   const chooser = React.useRef<HTMLButtonElement | null>(null);
+  // ref.current.focus() and autoFocus land on the button that opens the file picker.
+  const choose = () => chooser.current;
+  useAutoFocus(props.autoFocus, choose);
   const controlled = props.files !== undefined;
   const [own, setOwn] = React.useState<File[]>([]);
   const files = controlled ? props.files! : own;
@@ -137,7 +141,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   };
   const hasHint = props.hint != null && props.hint !== "";
   return (
-    <div {...rest} ref={ref} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
+    <div {...rest} ref={(n) => { delegateFocus(n, choose); setRef(ref, n); }} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
       <div className={cn("dk-file-upload__zone", over && "dk-file-upload__zone--over")} data-dragging={over ? "" : undefined} aria-disabled={disabled || undefined} {...drag}
         onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
         <Icon icon={icons.UploadFile} className="dk-file-upload__icon" />
