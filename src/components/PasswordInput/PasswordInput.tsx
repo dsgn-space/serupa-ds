@@ -7,6 +7,7 @@ import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface PasswordInputProps extends Omit<InputProps, "type" | "rightIcon"> {
   /** Shows the password as text (controlled). Use with onVisibleChange. */
@@ -48,7 +49,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
       <input {...rest} ref={ref} type={shown ? "text" : "password"} className="dk-input__field" spellCheck={false} autoCapitalize="off" />
       <button type="button" className="dk-password-input__toggle" aria-label={props.toggleLabel || sds.labels.showPassword} aria-pressed={shown}
         aria-controls={rest.id} disabled={rest.disabled} onClick={toggle} onMouseDown={(e) => e.preventDefault()}>
-        <Icon name={shown ? "visibility_off" : "visibility"} />
+        <Icon icon={shown ? icons.VisibilityOff : icons.Visibility} />
       </button>
     </span>
   );

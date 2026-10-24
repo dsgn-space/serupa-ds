@@ -12,6 +12,7 @@ import { useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import { isComposing } from "../../internal/ime";
 import { fieldName } from "../../internal/fieldName";
+import * as icons from "../../material/builtin";
 import { fold } from "../../internal/fold";
 
 export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
@@ -178,12 +179,12 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show("selected"); }} />
       {showClear ? (
         <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || (name ? "Clear " + name : "Clear")} onMouseDown={keep} onClick={clear}>
-          <Icon name="close" />
+          <Icon icon={icons.Close} />
         </button>
       ) : null}
       <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" aria-label={props.toggleLabel || "Show options"} aria-expanded={open} aria-controls={listId}
         disabled={locked} onMouseDown={keep} onClick={() => { if (open) hide(); else show("selected"); if (input.current) input.current.focus(); }}>
-        <Icon name="expand_more" />
+        <Icon icon={icons.ExpandMore} />
       </button>
       <div ref={pop} className="dk-combobox__popup" {...{ popover: "manual" }} hidden={!open || undefined} onMouseDown={keep}>
         {props.loading ? <div className="dk-combobox__message" role="status"><Loader size="sm" delay={0} label="" />{props.loadingText || sds.labels.loadingResults}</div> : null}
@@ -196,7 +197,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
                 <span className="dk-combobox__label">{o.label}</span>
                 {o.description != null && o.description !== "" ? <span className="dk-combobox__description">{o.description}</span> : null}
               </span>
-              {o.value === value ? <Icon name="check" className="dk-combobox__check" /> : null}
+              {o.value === value ? <Icon icon={icons.Check} className="dk-combobox__check" /> : null}
             </div>
           ))}
         </div>

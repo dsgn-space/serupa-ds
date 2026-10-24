@@ -115,17 +115,24 @@ if (D) {
   [console.error, console.warn] = keep;
   t('no React warnings while rendering on the server', !warnings.length, warnings.slice(0, 3).join(' | '));
   t('version matches package.json', D.version === pkg.version, D.version);
-  // Icons: the ones the components use are in index.js and draw on the server; the full set is a separate chunk.
-  const iconHtml = (name) => renderToString(h(D.Icon, { name }));
-  t('a built-in icon ("close") draws on the server; another name ("sports_cricket") keeps its empty box until the full set loads', /<path d="/.test(iconHtml('close')) && !/<svg/.test(iconHtml('sports_cricket')), iconHtml('sports_cricket'));
+  // Icons: each component imports the icons it draws, so they draw on the server. A name drawn as a string loads in
+  // the browser (the components' icons from a small chunk, the rest from the full set), so on the server it's an empty box.
+  const iconHtml = (props) => renderToString(h(D.Icon, props));
+  t('a component draws its own icons on the server (Checkbox\'s check)', /<path d="/.test(renderToString(h(D.Checkbox, { defaultChecked: true, 'aria-label': 'Done' }))));
+  t('a name ("close", "sports_cricket") keeps its empty box on the server until it loads in the browser', !/<svg/.test(iconHtml({ name: 'close' })) && !/<svg/.test(iconHtml({ name: 'sports_cricket' })), iconHtml({ name: 'close' }));
   // index.js and every module it imports (dist/js/), as a bundler puts them together, without the full icon set.
-  const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js'], logLevel: 'silent' }).outputFiles[0].text;
+  const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js'], logLevel: 'silent' }).outputFiles[0].text;
   t('index.js leaves the full icon set out (loaded on demand) and stays under 150 KB gzipped', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 150 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by component() or named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
-  const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
+  const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
   const shaken = { Divider: alone('Divider'), toast: alone('toast') };
   t('a bundler drops the components a project doesn\'t import (Divider or toast alone: under 2 KB gzipped)', shaken.Divider < 2048 && shaken.toast < 2048, JSON.stringify(shaken));
+  // …and the icons they don't draw: Dialog keeps its close icon, Button keeps none.
+  const code = (name) => esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js'], logLevel: 'silent' }).outputFiles[0].text;
+  const drawn = (js) => [...js.matchAll(/name: "([a-z0-9_]+)",\s*d: "/g)].map((m) => m[1]);
+  const icons = { Button: drawn(code('Button')), Dialog: drawn(code('Dialog')) };
+  t('a bundler keeps only the icons a component draws (Button: none, Dialog: close)', !icons.Button.length && icons.Dialog.join() === 'close', JSON.stringify(icons));
   // React Server Components: the interactive components are client modules ("use client"), the rest render on the
   // server, and the helpers run there (tools/test/server-components/render.mjs).
   const rsc = spawnSync(process.execPath, ['--conditions=react-server', path.join(HERE, 'server-components', 'render.mjs'), path.join(PROJECT, 'dist')], { encoding: 'utf8' });

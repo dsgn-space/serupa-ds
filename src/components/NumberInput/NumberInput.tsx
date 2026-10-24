@@ -10,6 +10,7 @@ import { isComposing } from "../../internal/ime";
 import { formatNumber, parseNumber } from "../../internal/numbers";
 import { gridPlaces, roundTo } from "../../internal/step";
 import { useLocale, useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
@@ -139,11 +140,11 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
         <span className="dk-number-input__steppers">
           <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
             disabled={locked || (min !== undefined && now != null && now <= min)} onClick={press(-1)} onMouseDown={(e) => e.preventDefault()}>
-            <Icon name="remove" />
+            <Icon icon={icons.Remove} />
           </button>
           <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.incrementLabel || sds.labels.increase} aria-controls={rest.id}
             disabled={locked || (max !== undefined && now != null && now >= max)} onClick={press(1)} onMouseDown={(e) => e.preventDefault()}>
-            <Icon name="add" />
+            <Icon icon={icons.Add} />
           </button>
         </span>
       ) : null}

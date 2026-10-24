@@ -6,6 +6,7 @@ import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export type ImageRatio = 'auto' | 'square' | '4:3' | 'video' | number;
 
@@ -59,7 +60,7 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Im
   const named = (base: string) => (alt ? base + ": " + alt : base);
   const frameStyle = typeof ratio === "number" ? { ...(frameProps && frameProps.style), "--dk-image-ratio": String(ratio) } as React.CSSProperties : frameProps && frameProps.style;
   const picture = state === "error"
-    ? <span className="dk-image__fallback" role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon name="broken_image" />}</span>
+    ? <span className="dk-image__fallback" role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
     : <img {...rest} ref={(n) => { img.current = n; setRef(ref, n); }} src={src} alt={alt} loading={loading || "lazy"}
         className={cn("dk-image__img", className)} onLoad={(e) => { setState("loaded"); if (onLoad) onLoad(e); }} onError={(e) => { setState("error"); if (onError) onError(e); }} />;
   return (
@@ -69,7 +70,7 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Im
       {viewable && state !== "error"
         ? <button type="button" className="dk-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => setOpen(true)}>{picture}</button>
         : picture}
-      {onRemove ? <IconButton className="dk-image__remove" icon="close" label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" noTitle onClick={onRemove} /> : null}
+      {onRemove ? <IconButton className="dk-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" noTitle onClick={onRemove} /> : null}
       {viewable ? (
         <Dialog open={open} onOpenChange={setOpen} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="dk-image__viewer">
           {open ? <img src={fullSrc || src} alt={alt} className="dk-image__full" /> : null}

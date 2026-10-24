@@ -3,6 +3,7 @@ import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
 import { component } from "../../internal/component";
+import * as icons from "../../material/builtin";
 
 export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   /** 'primary' (default): the primary color. 'neutral': the surrounding text's color, still underlined. */
@@ -30,7 +31,7 @@ export const Link = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>("Lin
     ref: ref, "data-component": "link",
     className: cn("dk-link", tone === "neutral" && "dk-link--neutral", underline === "hover" && "dk-link--hover-underline", props.className),
   }), props.children, props.external ? <>
-    <Icon name="open_in_new" className="dk-link__icon" />
+    <Icon icon={icons.OpenInNew} className="dk-link__icon" />
     <VisuallyHidden> (opens in a new tab)</VisuallyHidden>
   </> : null);
 });

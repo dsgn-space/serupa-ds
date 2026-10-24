@@ -40,6 +40,7 @@ import { FileUpload } from "serupa-ds";
 ## Accessibility
 
 - The button is the keyboard and screen-reader way in; dragging is an extra. Messages about refused files are `role="alert"`, so they're announced.
+- In a [Field](../Field/README.md), the button is named by the label and its own text ("Due date, Choose a file") and described by the Field's hint and error, then the `hint`. `aria-describedby` goes to the button too.
 - Text keeps 4.5:1 (also while dragging), and the icons and dashed outline 3:1, in all six themes (`FileUpload.test.tsx`).
 
 ## Props
@@ -61,7 +62,7 @@ import { FileUpload } from "serupa-ds";
 | `hint` | `ReactNode` | | A muted line such as "PNG or JPG, up to 5 MB". The button is described by it. |
 | `removeLabel` | `(name) => string` | `` `Remove ${name}` `` | The remove buttons' names. |
 
-`formatFileSize(bytes)` is exported too (`1.5 MB`). `className`, `ref` and other props go to the root `<div>`.
+`formatFileSize(bytes)` is exported too (`1.5 MB`). `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the choose button, so a form library that focuses the first invalid field after a failed submit lands on it.
 
 ## Component tokens
 
