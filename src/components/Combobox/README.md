@@ -37,7 +37,7 @@ const [owner, setOwner] = React.useState<string | null>(null);
 
 - Opening with a click, the chevron or an arrow shows every option; typing narrows them and highlights the first match.
 - Leaving the field closes the list and puts back the picked label. Leaving it empty clears the selection.
-- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room.
+- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room. With no room above or below either, it takes the roomier side and gets shorter, scrolling inside.
 
 ## Accessibility
 
