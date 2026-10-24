@@ -44,5 +44,6 @@
 .dk-segmented--disabled { opacity: var(--opacity-disabled); }
 .dk-segmented--disabled .dk-segmented__item:disabled { opacity: var(--opacity-100); }
 @media (prefers-reduced-motion: reduce) { .dk-segmented__indicator, .dk-segmented__item { transition: none; } }
-@media (forced-colors: active) { .dk-segmented__indicator { background: Highlight; border-color: Highlight; } .dk-segmented__item--selected { color: HighlightText; forced-color-adjust: none; } }
+/* The selected label keeps HighlightText on hover too: the hover color, kept as is, was dark on the dark Highlight. */
+@media (forced-colors: active) { .dk-segmented__indicator { background: Highlight; border-color: Highlight; } .dk-segmented__item--selected, .dk-segmented__item--selected:hover:not(:disabled) { color: HighlightText; forced-color-adjust: none; } }
 }
