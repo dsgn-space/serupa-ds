@@ -8962,6 +8962,270 @@
           "class": "type-9xl"
         }
       }
+    },
+    "type-display": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 3,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.1
+      },
+      "$description": "`type-display`: hero and marketing headlines (48px, 600, tracked tight, line height 1.1 so two lines don't touch).",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-display"
+        }
+      }
+    },
+    "type-heading-1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 1.875,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.2
+      },
+      "$description": "`type-heading-1`: a page title. What a level 1 `Heading` renders.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-heading-1"
+        }
+      }
+    },
+    "type-heading-2": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 1.5,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "`type-heading-2`: a section title. What a level 2 `Heading` renders.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-heading-2"
+        }
+      }
+    },
+    "type-heading-3": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 1.25,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.4
+      },
+      "$description": "`type-heading-3`: a subsection title. What a level 3 `Heading` renders.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-heading-3"
+        }
+      }
+    },
+    "type-heading-4": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 1.125,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.5556
+      },
+      "$description": "`type-heading-4`: a group title, and Dialog and Drawer titles. What a level 4 `Heading` renders.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-heading-4"
+        }
+      }
+    },
+    "type-title": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 1,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.5
+      },
+      "$description": "`type-title`: a card or list title, and Card and EmptyState titles.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-title"
+        }
+      }
+    },
+    "type-body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 1,
+          "unit": "rem"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.5
+      },
+      "$description": "`type-body`: running text.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-body"
+        }
+      }
+    },
+    "type-body-sm": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.4286
+      },
+      "$description": "`type-body-sm`: UI text: controls, table cells, menus, descriptions.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-body-sm"
+        }
+      }
+    },
+    "type-label": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "fontWeight": 500,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.4286
+      },
+      "$description": "`type-label`: a form label (Field), table headers, tabs.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-label"
+        }
+      }
+    },
+    "type-caption": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 0.75,
+          "unit": "rem"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "`type-caption`: hints, timestamps, footnotes. Pair with `text-muted`.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-caption"
+        }
+      }
+    },
+    "type-overline": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.sans}",
+        "fontSize": {
+          "value": 0.75,
+          "unit": "rem"
+        },
+        "fontWeight": 600,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.3333
+      },
+      "$description": "`type-overline`: an eyebrow above a title. Uppercase and tracked widest.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-overline"
+        }
+      }
+    },
+    "type-code": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.mono}",
+        "fontSize": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "fontWeight": 400,
+        "letterSpacing": {
+          "value": 0,
+          "unit": "px"
+        },
+        "lineHeight": 1.4286
+      },
+      "$description": "`type-code`: inline code and code blocks, in `font-mono`.",
+      "$extensions": {
+        "com.serupa": {
+          "class": "type-code"
+        }
+      }
     }
   }
 }

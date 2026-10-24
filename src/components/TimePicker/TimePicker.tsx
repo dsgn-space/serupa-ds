@@ -5,6 +5,7 @@ import { formatTime, parseTime, toHHmm, toMinutes, uses12h } from "../../interna
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
@@ -19,7 +20,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   max?: string;
   /** Minutes between the times in the list. Default: 30. Typed times don't have to fall on a step. */
   step?: number;
-  /** A BCP 47 locale for how times are written. Default: the browser's. */
+  /** A BCP 47 locale for how times are written. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string;
   /** 12-hour (AM/PM) or 24-hour. Default: the locale's. */
   hour12?: boolean;
@@ -38,7 +39,9 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
 export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
-  const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const sds = useSerupa();
+  const { value: _v, defaultValue: _d, onValueChange, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const locale = localeProp || sds.locale;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const h12 = props.hour12 ?? uses12h(locale);
@@ -84,10 +87,10 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   };
   const read = () => {
     if (text.trim() === "") return commit(null);
-    const n = parseTime(text);
+    const n = parseTime(text, locale);
     commit(n != null && n >= lo && n <= hi ? n : value);
   };
-  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
+  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text, locale); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
   // The list is at least as wide as the field.
   useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + "px"; }, [open]);
   useAnchoredLayer(open, list, box, { placement: "bottom-start", offsetVar: "--dk-tp-offset", onOutside: () => setOpen(false), inside: box });
@@ -127,7 +130,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
       case "Tab": setOpen(false); break;
     }
   };
-  const label = listLabel || "Choose time";
+  const label = listLabel || sds.labels.chooseTime;
   return (
     <span ref={box} className={cn("dk-input", "dk-input--size-" + size, "dk-time-picker", invalid && "dk-input--invalid", disabled && "dk-input--disabled", readOnly && "dk-input--readonly", className)} style={style} data-component="time-picker" data-size={size}>
       <input {...rest} ref={(n) => { field.current = n; setRef(ref, n); }}
@@ -136,7 +139,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
         onChange={(e) => {
           setText(e.target.value);
-          if (open) { typed.current = true; const n = parseTime(e.target.value); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
+          if (open) { typed.current = true; const n = parseTime(e.target.value, locale); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
         }} onBlur={(e) => { read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
         onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false); else show(); if (field.current) field.current.focus(); }}>

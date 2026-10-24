@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, oneOf, omit, SIZES } from "../../internal/cn";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export type LoaderVariant = 'ring' | 'spokes' | 'dots' | 'pixel' | 'text' | 'skeleton';
 export type LoaderShape = 'text' | 'circle' | 'rect';
@@ -57,16 +58,17 @@ const OWN = { variant: 1, size: 1, tone: 1, label: 1, delay: 1, shape: 1, lines:
 
 /** Shows that something is loading when you can't say how far along it is. Mark the area that's loading with aria-busy while it shows. */
 export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>("Loader", function Loader(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, "ring");
   const size = oneOf(SIZES, props.size, "md");
   const tone = oneOf(TONES, props.tone, "neutral");
-  const label = props.label == null ? "Loading" : String(props.label);
+  const label = props.label == null ? sds.labels.loading : String(props.label);
   const isText = variant === "text", isSkeleton = variant === "skeleton";
   const shape = oneOf(SHAPES, props.shape, "text");
   const pattern = oneOf(PATTERNS, props.pattern, "wave");   // pixel only
   const lines = Math.min(20, Math.max(1, Math.floor(Number(props.lines)) || 1));   // text shape: 1 to 20 lines
-  const words = label || "Loading";   // the text variant always shows words; label="" only makes it decorative
+  const words = label || sds.labels.loading;   // the text variant always shows words; label="" only makes it decorative
   const delay = props.delay == null ? 300 : Math.max(0, Number(props.delay) || 0);
   const [shown, setShown] = React.useState(delay === 0);
   const [wait] = React.useState(delay);   // the delay it mounted with: a later change doesn't restart the wait
