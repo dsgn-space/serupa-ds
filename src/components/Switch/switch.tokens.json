@@ -106,7 +106,7 @@
       "invalid": {
         "$type": "color",
         "$value": "{color.danger}",
-        "$description": "The track while off and the focus ring when invalid.",
+        "$description": "The track's 2px edge and the focus ring when invalid.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--switch-invalid"

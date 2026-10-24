@@ -21,8 +21,10 @@
 .dk-table__cell--center { text-align: center; }
 .dk-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
 .dk-table__body .dk-table__row { transition: background-color var(--duration-150) var(--ease-in-out); }
-.dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover,
 .dk-table--striped .dk-table__body .dk-table__row:nth-child(even) { background: var(--table-row-bg-hover, var(--surface-muted)); }
+@media (hover: hover) {
+  .dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover { background: var(--table-row-bg-hover, var(--surface-muted)); }
+}
 .dk-table__row--selected, .dk-table .dk-table__body .dk-table__row--selected { background: var(--table-row-bg-selected, var(--surface-muted)); }
 .dk-table__row--selected > :first-child { box-shadow: inset var(--table-indicator-width, var(--border-width-2)) 0 0 var(--table-row-indicator-selected, var(--primary)); }
 [dir="rtl"] .dk-table__row--selected > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--border-width-2))) 0 0 var(--table-row-indicator-selected, var(--primary)); }
@@ -37,11 +39,11 @@
 .dk-table--sm .dk-table__sort { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
 .dk-table__cell--center .dk-table__sort { justify-content: center; }
 .dk-table__cell--end .dk-table__sort { justify-content: flex-end; }
-.dk-table__sort:hover { color: var(--table-text, var(--text)); }
+@media (hover: hover) { .dk-table__sort:hover { color: var(--table-text, var(--text)); } }
 .dk-table__sort:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-table__sort-icon.dk-icon { font-size: var(--spacing-4); }
 .dk-table__sort-icon--idle { opacity: var(--opacity-50); }
-.dk-table__sort:hover .dk-table__sort-icon--idle { opacity: var(--opacity-100); }
+@media (hover: hover) { .dk-table__sort:hover .dk-table__sort-icon--idle { opacity: var(--opacity-100); } }
 @media (forced-colors: active) { .dk-table__row--selected > :first-child { border-inline-start: var(--table-indicator-width, var(--border-width-2)) solid Highlight; } }
 @media (prefers-reduced-motion: reduce) { .dk-table__body .dk-table__row { transition: none; } }
 }

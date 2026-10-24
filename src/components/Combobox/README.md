@@ -37,7 +37,7 @@ const [owner, setOwner] = React.useState<string | null>(null);
 
 - Opening with a click, the chevron or an arrow shows every option; typing narrows them and highlights the first match.
 - Leaving the field closes the list and puts back the picked label. Leaving it empty clears the selection.
-- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room.
+- The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room. With no room above or below either, it takes the roomier side and gets shorter, scrolling inside.
 
 ## Accessibility
 
@@ -67,7 +67,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `defaultValue` | `string \| null` | | Uncontrolled. |
 | `onValueChange` | `(value: string \| null) => void` | | When an option is picked, or `null` when the field is emptied or cleared. |
 | `onInputChange` | `(text: string) => void` | | The text as it's typed, for loading options. |
-| `filter` | `false \| (option, text) => boolean` | contains, ignoring case and accents | `false` shows every option you pass. |
+| `filter` | `false \| (option, text) => boolean` | contains, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo") | `false` shows every option you pass. |
 | `clearable` | `boolean` | `false` | A × that clears the selection. |
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results'` | |

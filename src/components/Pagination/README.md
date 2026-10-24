@@ -30,6 +30,9 @@ const [page, setPage] = React.useState(1);
 - Put it under the list or table it pages through.
 - When pages have URLs, pass `getHref` so every page is a link; clicks still call `onPageChange`.
 - Where space is tight, use `size="sm"` and fewer `siblings`. The number of slots stays the same, so the arrows don't move.
+- Page numbers are written in the digits of the locale from `SerupaProvider` (or the browser), as Calendar writes its
+  days: ١ ٢ ٣ in Egyptian Arabic, ۱ ۲ ۳ in Persian. A page's name comes from `pageLabel`, so translate it with the
+  other labels.
 
 `paginationRange(page, count, siblings, boundaries)` returns the same list of pages and ellipses, for building your own.
 
@@ -67,6 +70,7 @@ Each is an optional override: set it on the page, a container or one pagination.
 | --- | --- | --- |
 | `--pagination-text` | `text` | A page number and the arrows. |
 | `--pagination-bg-hover` | `secondary` | A page or arrow on hover. |
+| `--pagination-bg-pressed` | `pressed` | A page or arrow while it's pressed, one step past hover. |
 | `--pagination-current-bg` | `primary` | The current page's background. |
 | `--pagination-current-text` | `on-primary` | The current page's number (4.5:1 on current-bg). |
 | `--pagination-ellipsis` | `text-muted` | The … between page ranges (4.5:1 on surface). |

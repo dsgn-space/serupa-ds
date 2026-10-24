@@ -63,7 +63,7 @@ const { Textarea } = window.Serupa;
 | `maxRows` | number | | With `autoResize`: the most lines it grows to; past that the text scrolls. Unset: no limit |
 | `resize` | `'vertical'` \| `'none'` | `'vertical'` | A handle to drag the height, or a fixed height |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
-| `showCount` | boolean | `false` | A character count under the text: "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached |
+| `showCount` | boolean | `false` | A character count under the text: "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached. The numbers are in the locale's digits, as Calendar's days are: "٣٢ / ٢٨٠" in Egyptian Arabic |
 
 Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `maxLength`, `disabled`, `readOnly`, `required`, `name`, `id`, `aria-*`) and `ref` go to the `<textarea>`. `className` and `style` go to the box, so `className="w-96"` sets its width (full width by default). The box has `data-component="textarea"` and `data-size`.
 

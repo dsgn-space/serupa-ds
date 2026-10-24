@@ -200,7 +200,7 @@ const PAIRS = [['text', 'surface', 4.5], ['text', 'surface-muted', 4.5], ['text-
   ['danger-text', 'surface-muted', 4.5], ['success-text', 'surface', 4.5], ['success-text', 'surface-muted', 4.5], ['success-text', 'success-subtle', 4.5],
   ['warning-text', 'surface', 4.5], ['warning-text', 'surface-muted', 4.5], ['warning-text', 'warning-subtle', 4.5],
   ['info-text', 'surface', 4.5], ['info-text', 'surface-muted', 4.5], ['info-text', 'info-subtle', 4.5],
-  ['primary', 'surface', 3], ['focus-ring', 'surface', 3], ['text', 'secondary', 4.5], ['text', 'secondary-hover', 4.5],
+  ['primary', 'surface', 3], ['focus-ring', 'surface', 3], ['text', 'secondary', 4.5], ['text', 'secondary-hover', 4.5], ['text', 'pressed', 4.5],
   ['text', 'field', 4.5], ['placeholder', 'field', 4.5], ['field-border', 'field', 3], ['field-border', 'surface', 3],
   ['info', 'surface', 4.5], ['text', 'primary-subtle', 4.5],
   ['primary', 'surface', 4.5], ['primary-hover', 'primary-subtle', 4.5], ['danger', 'surface', 3]];   // secondary button: brand text and border on surface, hover tint; destructive secondary border
@@ -324,5 +324,22 @@ for (const f of testFiles(path.join('tools', 'test'))) {
   }
 }
 check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
+
+// 15. hover only where there is hover: on a touch screen the browser keeps :hover on the last element tapped, so a
+// hover color would stick ("still selected"). Every :hover rule sits inside @media (hover: hover); :active still
+// gives a tap its feedback.
+const sticky = [];
+for (const f of ['dist/base.css', 'dist/components.css']) {
+  const body = stripComments(read(f)), stack = [];
+  let prelude = '';
+  for (const ch of body) {
+    if (ch === '{') { stack.push(prelude.trim()); prelude = ''; }
+    else if (ch === '}') { stack.pop(); prelude = ''; }
+    else if (ch === ';') prelude = '';
+    else prelude += ch;
+    if (ch === '{' && /:hover/.test(stack[stack.length - 1]) && !stack.some((p) => /^@media[^{]*\(hover:\s*hover\)/.test(p))) sticky.push(`${f}: ${stack[stack.length - 1].slice(0, 80)}`);
+  }
+}
+check('hover styles apply only with a pointer that hovers: every :hover rule is inside @media (hover: hover)', !sticky.length, sticky.slice(0, 6).join('; '));
 
 done(report('Foundation', results));

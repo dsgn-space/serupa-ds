@@ -32,3 +32,5 @@ export const Interactive: Story = {
 };
 export const Vertical: Story = { args: { orientation: 'vertical', current: 2 } };
 export const WithError: Story = { args: { current: 2, steps: [{ title: 'Upload' }, { title: 'Check', status: 'error', description: '3 rows need fixing' }, { title: 'Import' }] } };
+/** Too narrow for the titles side by side (a phone, or 400% zoom): the circles, and the current step under them. */
+export const Narrow: Story = { args: { current: 1 }, decorators: [(S) => <div style={{ width: '320px' }}><S /></div>] };

@@ -1,5 +1,6 @@
 // Places a floating element (a tooltip, popover or menu) next to its anchor, inside the viewport: it flips to
-// the other side when there's no room, and slides along the side to stay on screen. Fixed coordinates, so it
+// the other side when there's no room, slides along the side to stay on screen, and when neither side has room it
+// takes the roomier one and scrolls inside. Fixed coordinates, so it
 // isn't clipped by scrolling or overflow: hidden ancestors (and in the top layer when shown as a popover).
 
 export type Side = 'top' | 'bottom' | 'left' | 'right';
@@ -14,29 +15,48 @@ export function parsePlacement(p: string | undefined, fallback: Placement): [Sid
   return [m[1] as Side, (m[2] as Align) || "center"];
 }
 
-/** Where to put the floating element (left, top in viewport px) and the side it ended up on. */
-export function place(anchor: DOMRect, floating: { width: number; height: number }, placement: string | undefined, offset: number, fallback: Placement = "top", margin = 8): { x: number; y: number; side: Side } {
+/** Where to put the floating element (left, top in viewport px), the side it ended up on, and a maxHeight when it's
+    taller than the room it has: then it takes that height and scrolls inside, so all of it stays on screen. */
+export function place(anchor: DOMRect, floating: { width: number; height: number }, placement: string | undefined, offset: number, fallback: Placement = "top", margin = 8): { x: number; y: number; side: Side; maxHeight?: number } {
   const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
   const parsed = parsePlacement(placement, fallback), align = parsed[1];
   let side = parsed[0];
   const rtl = getComputedStyle(document.documentElement).direction === "rtl";
-  const room = (s: Side) => s === "top" ? anchor.top - offset - floating.height >= margin
-    : s === "bottom" ? anchor.bottom + offset + floating.height <= vh - margin
-    : s === "left" ? anchor.left - offset - floating.width >= margin
-    : anchor.right + offset + floating.width <= vw - margin;
-  if (!room(side) && room(OPPOSITE[side])) side = OPPOSITE[side];
-  let x: number, y: number;
+  // The room on each side, between the anchor (and the gap) and the screen's margin.
+  const space = (s: Side) => s === "top" ? anchor.top - offset - margin
+    : s === "bottom" ? vh - margin - anchor.bottom - offset
+    : s === "left" ? anchor.left - offset - margin
+    : vw - margin - anchor.right - offset;
+  const need = (s: Side) => s === "top" || s === "bottom" ? floating.height : floating.width;
+  // Flip when only the other side fits; when neither does, take the side with more room.
+  const other = OPPOSITE[side];
+  if (space(side) < need(side) && (space(other) >= need(other) || space(other) > space(side))) side = other;
+  let x: number, y: number, height = floating.height, maxHeight: number | undefined;
   if (side === "top" || side === "bottom") {
-    y = side === "top" ? anchor.top - offset - floating.height : anchor.bottom + offset;
+    if (height > space(side)) height = maxHeight = Math.max(0, Math.floor(space(side)));
+    y = side === "top" ? anchor.top - offset - height : anchor.bottom + offset;
     const start = rtl ? anchor.right - floating.width : anchor.left, end = rtl ? anchor.left : anchor.right - floating.width;
     x = align === "start" ? start : align === "end" ? end : anchor.left + (anchor.width - floating.width) / 2;
     x = Math.min(Math.max(x, margin), Math.max(margin, vw - margin - floating.width));
   } else {
+    if (height > vh - 2 * margin) height = maxHeight = Math.max(0, Math.floor(vh - 2 * margin));
     x = side === "left" ? anchor.left - offset - floating.width : anchor.right + offset;
-    y = align === "start" ? anchor.top : align === "end" ? anchor.bottom - floating.height : anchor.top + (anchor.height - floating.height) / 2;
-    y = Math.min(Math.max(y, margin), Math.max(margin, vh - margin - floating.height));
+    y = align === "start" ? anchor.top : align === "end" ? anchor.bottom - height : anchor.top + (anchor.height - height) / 2;
+    y = Math.min(Math.max(y, margin), Math.max(margin, vh - margin - height));
   }
-  return { x: Math.round(x), y: Math.round(y), side };
+  return maxHeight === undefined ? { x: Math.round(x), y: Math.round(y), side } : { x: Math.round(x), y: Math.round(y), side, maxHeight };
+}
+
+/** Places `layer` next to `anchor` with place(): its left, top and data-side, and a max-height with overflow-y: auto
+    while it's taller than the room it has. It's measured at its own height each time, so it grows back when there's
+    room again, and it keeps its scroll position. */
+export function placeLayer(layer: HTMLElement, anchor: Element, placement: string | undefined, offset: number, fallback?: Placement): void {
+  const scroll = layer.scrollTop;
+  layer.style.maxHeight = ""; layer.style.overflowY = "";
+  const r = place(anchor.getBoundingClientRect(), { width: layer.offsetWidth, height: layer.offsetHeight }, placement, offset, fallback);
+  layer.style.left = r.x + "px"; layer.style.top = r.y + "px"; layer.dataset.side = r.side;
+  if (r.maxHeight !== undefined) { layer.style.maxHeight = r.maxHeight + "px"; layer.style.overflowY = "auto"; }
+  layer.scrollTop = scroll;
 }
 
 /** Shows an element in the top layer when the browser supports popover="manual", so nothing can cover or clip it. */

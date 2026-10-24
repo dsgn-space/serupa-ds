@@ -4,6 +4,7 @@ import { cn, domId, elementRef, setRef, useIsoLayoutEffect } from "../../interna
 import { type Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { named } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -57,7 +58,7 @@ export const Popover = /* @__PURE__ */ named("Popover", function Popover(props: 
   }, [open]);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); }
+    if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); }
   };
   // Focus leaving for somewhere other than the trigger closes it.
   const onBlur = (e: React.FocusEvent<HTMLDivElement>) => {
