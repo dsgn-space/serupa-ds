@@ -35,7 +35,7 @@ node tools/test/run.mjs --list            # the steps it would run (with --group
 node tools/test/run.mjs --since main      # only the components changed since main, and the ones that use them
 npm run test:unit                         # only the component tests (Vitest), straight from src/, in a few seconds
 npm run test:watch                        # the same, re-running as you edit
-npm run test:coverage                     # the same, and which lines they run (coverage/index.html)
+npm run test:coverage                     # the same, and which lines they run (coverage/index.html); fails under the floors in vitest.config.ts
 npx vitest run src/components/Checkbox    # one component's tests
 npm run test:checks                       # the checks below (all but visual and Storybook), in Vitest; build first
 npx vitest run tools/test/foundation.mjs  # one of them (or node tools/test/foundation.mjs, which prints its results)
