@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 
 const PERIODS: SegmentedControlOption[] = [{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }, { value: 'year', label: 'Year', disabled: true }];
@@ -72,6 +72,12 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('per')).toEqual([0, 0]);
     await userEvent.click(seg('per', 'year'), { force: true });
     expect(checked('per')).toBe('month');
+  });
+
+  test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it)', async () => {
+    await render(<SegmentedControl id="hc" aria-label="Period" options={PERIODS} />);
+    const r = await forcedColors((active) => active && [css(seg('hc', 'day')).forcedColorAdjust, css(seg('hc', 'week')).forcedColorAdjust]);
+    if (r) expect(r).toEqual(['none', 'auto']);
   });
 
   test('controlled: onValueChange once (not again for the same segment); the hidden input follows; icons show before labels; a new value from outside moves the selection', async () => {

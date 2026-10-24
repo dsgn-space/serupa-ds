@@ -40,6 +40,7 @@ const [day, setDay] = React.useState<Date | null>(null);
 - Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
 - Weekday headers show the short name and carry the full name in `abbr`.
 - Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`Calendar.test.tsx`).
+- In forced colors (Windows high contrast) the selected day is drawn in Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide its number. The same goes for DatePicker's and DateRangePicker's pop-ups.
 
 ### Keyboard
 
