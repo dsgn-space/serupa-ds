@@ -21,6 +21,14 @@ describe('Heading', () => {
     expect(got).toEqual(['H1 30px 36px 600 0px -0.75px', 'H2 24px 32px 600 0px -0.6px', 'H3 20px 28px 600 0px normal', 'H4 18px 28px 600 0px normal', 'H5 16px 24px 600 0px normal', 'H6 14px 20px 600 0px normal']);
   });
 
+  test('levels 1 to 4 render the type-heading-1 to -4 roles exactly', async () => {
+    const roles = ['type-heading-1', 'type-heading-2', 'type-heading-3', 'type-heading-4'];
+    await render(<>{[1, 2, 3, 4].map((l) => <Heading key={l} id={`hr${l}`} level={l as HeadingLevel}>Level {l}</Heading>)}{roles.map((r) => <p key={r} id={r} className={r}>Role</p>)}</>);
+    const keys = ['fontFamily', 'fontSize', 'lineHeight', 'fontWeight', 'letterSpacing'] as const;
+    const of = (e: HTMLElement) => keys.map((k) => css(e)[k]);
+    expect([1, 2, 3, 4].map((l) => of(el(`hr${l}`)))).toEqual(roles.map((r) => of(el(r))));
+  });
+
   test('an unknown level falls back to h2, an unknown size is ignored', async () => {
     await render(<Heading id="hbad" level={9 as never} size={'huge' as never}>Bad</Heading>);
     expect([el('hbad').tagName, el('hbad').className].join(' ')).toBe('H2 dk-heading dk-heading--2');

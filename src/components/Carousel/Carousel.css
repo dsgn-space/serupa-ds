@@ -45,7 +45,7 @@
 .dk-carousel__dot[aria-current="true"]::before { width: var(--carousel-dot-active-width, var(--spacing-6)); background: var(--carousel-dot-active, var(--primary)); }
 .dk-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--text-muted)); }
 .dk-carousel__dot:focus { outline: none; }
-.dk-carousel__dot:focus-visible { outline: var(--outline-width-2) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); border-radius: var(--rounded-full); }
+.dk-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }
 @media (prefers-reduced-motion: reduce) { .dk-carousel__track, .dk-carousel__dot::before { transition: none; } }
 @media (forced-colors: active) { .dk-carousel__dot::before { background: CanvasText; } .dk-carousel__dot[aria-current="true"]::before { background: Highlight; } }
 }

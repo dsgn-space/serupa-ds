@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, settle } from '../../../tools/test/vitest/helpers';
 import { Combobox, type ComboboxOption } from './Combobox';
+import { Field } from '../Field/Field';
 
 const COUNTRIES: ComboboxOption[] = ['Argentina', 'Brazil', 'Canada', { value: 'ci', label: 'Côte d’Ivoire', description: 'Africa' }, { value: 'dk', label: 'Denmark', disabled: true }, 'Egypt', 'France'];
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -136,7 +137,7 @@ describe('Combobox', () => {
     await render(<><button id="before">Before</button><Controlled /></>);
     const hidden = () => document.querySelector<HTMLInputElement>('#ctl ~ input[type=hidden]')!.value;
     const clear = () => document.querySelector<HTMLElement>('#ctl ~ .dk-combobox__clear');
-    expect([el('ctl').value, hidden(), clear()!.getAttribute('aria-label')]).toEqual(['Canada', 'Canada', 'Clear']);
+    expect([el('ctl').value, hidden(), clear()!.getAttribute('aria-label')]).toEqual(['Canada', 'Canada', 'Clear Country']);
     await userEvent.click(el('ctl'));
     await userEvent.keyboard('{ArrowDown}{Enter}');
     expect([calls.join(), el('ctl').value, hidden()]).toEqual(['ci', 'Côte d’Ivoire', 'ci']);
@@ -188,5 +189,18 @@ describe('Combobox', () => {
     }
     still.remove();
     expect(low).toEqual([]);
+  });
+
+  test('the × is named after the field: "Clear Country" from a Field label (without its * or "(optional)"), aria-labelledby or aria-label; "Clear" with no label; clearLabel wins', async () => {
+    await render(<>
+      <Field label="Country" required><Combobox id="f1" options={COUNTRIES} defaultValue="Canada" clearable /></Field>
+      <Field label="Region" optional><Combobox id="f2" options={COUNTRIES} defaultValue="Canada" clearable /></Field>
+      <span id="by">Ship to</span><Combobox id="f3" aria-labelledby="by" options={COUNTRIES} defaultValue="Canada" clearable />
+      <Combobox id="f4" options={COUNTRIES} defaultValue="Canada" clearable />
+      <Combobox id="f5" aria-label="Country" options={COUNTRIES} defaultValue="Canada" clearable clearLabel="Remove country" />
+    </>);
+    await settle();
+    const name = (id: string) => document.querySelector(`#${id} ~ .dk-combobox__clear`)!.getAttribute('aria-label');
+    expect(['f1', 'f2', 'f3', 'f4', 'f5'].map(name)).toEqual(['Clear Country', 'Clear Region', 'Clear Ship to', 'Clear', 'Remove country']);
   });
 });

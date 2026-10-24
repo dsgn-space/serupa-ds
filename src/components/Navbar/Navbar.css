@@ -18,7 +18,7 @@
 }
 .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); color: var(--navbar-link-text-hover, var(--text)); }
 .dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); }
-.dk-navbar__link:focus-visible { outline: var(--outline-width-2) solid var(--navbar-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); }
+.dk-navbar__link:focus-visible { outline: var(--focus-ring-width) solid var(--navbar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-navbar__actions { display: flex; align-items: center; gap: var(--spacing-2); flex-shrink: 0; margin-inline-start: auto; }
 .dk-navbar__toggle { display: none; }
 @media (max-width: 767.98px) {

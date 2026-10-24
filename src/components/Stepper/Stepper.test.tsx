@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { Stepper, type StepperStep } from './Stepper';
 
 const STEPS: StepperStep[] = [{ title: 'Account', description: 'Email and password' }, { title: 'Profile', optional: true }, { title: 'Billing' }, { title: 'Review' }];
@@ -46,6 +46,13 @@ describe('Stepper', () => {
     expect(s.map((x) => x.ind)).toEqual(['check', 'check', '3', '4']);
     expect([s[0].text, s[2].cur, s.filter((x) => x.cur).length]).toEqual(['Account, completed', 'step', 1]);
     expect(s.map((x) => x.btn)).toEqual([true, true, false, false]);
+  });
+
+  test('forced colors: the current and completed circles are Highlight with HighlightText, kept as is (no backplate hides the number or check)', async () => {
+    await render(<Stepper id="hc" steps={STEPS} current={1} />);
+    const ind = (i: number) => lis('hc')[i].querySelector('.dk-stepper__indicator')!;
+    const r = await forcedColors((active) => active && [0, 1, 2].map((i) => css(ind(i)).forcedColorAdjust));
+    if (r) expect(r).toEqual(['none', 'none', 'auto']);
   });
 
   test('clicking a completed step calls onStepClick with its index; it works from the keyboard too', async () => {

@@ -76,13 +76,24 @@ describe('Card', () => {
     expect(s.boxShadow).toMatch(/1px 2px/);
   });
 
-  test('elevated: a raised shadow and a transparent border that keeps the size; filled: surface-muted, no shadow, a transparent border', async () => {
+  test('elevated: a raised shadow on surface-raised, its 1px border-raised edge white on white in light; filled: surface-muted, no shadow, a transparent border', async () => {
     await render(<Variants />);
     const e = css(el('el')), f = css(el('fi'));
     expect(e.boxShadow).toMatch(/4px 6px -1px/);
-    expect([e.borderTopColor, e.borderTopWidth]).toEqual(['rgba(0, 0, 0, 0)', '1px']);
+    expect([e.backgroundColor, e.borderTopColor, e.borderTopWidth]).toEqual(['rgb(255, 255, 255)', 'rgb(255, 255, 255)', '1px']);
     expect([f.backgroundColor, f.borderTopColor]).toEqual([color('var(--surface-muted)'), 'rgba(0, 0, 0, 0)']);
     expect(f.boxShadow === 'none' || /0px 0px 0px 0px/.test(f.boxShadow)).toBe(true);
+  });
+
+  test('elevated in dark: one step up from the page (zinc-900 on zinc-950) with a zinc-800 edge, in every dark theme', async () => {
+    await render(<Variants />);
+    for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
+      document.documentElement.setAttribute('data-theme', th);
+      const e = css(el('el'));
+      expect([th, e.backgroundColor, e.borderTopColor]).toEqual([th, color('var(--zinc-900)'), color('var(--zinc-800)')]);
+      expect(e.backgroundColor).not.toBe(color('var(--surface)'));
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
   test('padding sm 12px, lg 24px, none 0', async () => {

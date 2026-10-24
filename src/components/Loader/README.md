@@ -7,7 +7,7 @@ Called Spinner before 3.0.0: see the upgrade table in the changelog.
 ```jsx
 const { Loader } = window.Serupa;
 
-<Loader />                                   // ring, 24px, text color, "Loading"
+<Loader />                                   // ring, 24px, text color, "Loading…"
 <Loader size="lg" />                         // a page or an empty area that is loading
 <Loader variant="spokes" />                  // ticking spokes, like iOS
 <Loader variant="dots" />                    // softer: chat replies, inline waits
@@ -171,7 +171,7 @@ By default a loader waits 300ms before it appears. Most requests finish sooner, 
 
 ## Accessibility
 
-- A loader with a label is a `role="progressbar"` without a value, which is how ARIA says "busy, progress unknown". Its name is `label` ("Loading").
+- A loader with a label is a `role="progressbar"` without a value, which is how ARIA says "busy, progress unknown". Its name is `label` ("Loading…").
 - When it appears, `label` is announced once through the system's shared polite status region (the same one Button's loading uses), so screen-reader users hear that something started loading.
 - `label=""` makes it decorative (`aria-hidden`), for when visible text next to it already says what's loading, or when a parent announces it (as Button does).
 - In a group of skeletons, name one ("Loading profile") and pass `label=""` to the rest, so it's announced once, and set `aria-busy` on the area.
@@ -190,7 +190,7 @@ By default a loader waits 300ms before it appears. Most requests finish sooner, 
 | `glow` | boolean | `false` | Pixel only: a soft halo of its color round the lit squares; best on dark surfaces |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 16px, 24px or 40px, the same steps as icons (and the skeleton circle); for `text` and skeleton lines, `text-xs`, `text-sm` or `text-base` |
 | `tone` | `'neutral'` \| `'primary'` \| `'muted'` \| `'inverse'` | `'neutral'` | `neutral` takes the text color, so it fits any surface (white on a primary button, `text` on a page). `primary` and `muted` color the ring, dots or pixel grid with those aliases (`text` and `skeleton` stay in the text color). `inverse` makes it white in every theme, for dark scrims, overlays and media |
-| `label` | string | `'Loading'` | Its accessible name, announced when it appears, and the words `text` shows. `''` makes it decorative |
+| `label` | string | `'Loading…'` | Its accessible name, announced when it appears, and the words `text` shows. `''` makes it decorative |
 | `delay` | number (ms) | `300` | Waits this long before showing. `0` shows it at once |
 
 `tone="current"`, the old name of `neutral`, was removed in 4.0.0; like any unknown tone it falls back to `neutral`, with no warning.
