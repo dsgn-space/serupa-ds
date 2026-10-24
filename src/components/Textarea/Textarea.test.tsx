@@ -43,6 +43,21 @@ function App(props: { tref?: React.Ref<HTMLTextAreaElement> }) {
 const setup = async (tref?: React.Ref<HTMLTextAreaElement>) => { changes = []; await render(<App tref={tref} />); await document.fonts.ready; };
 
 describe('Textarea', () => {
+  test('form reset: the count follows the default text back, uncontrolled; a controlled field shows its value again', async () => {
+    await render(<form id="tar">
+      <Textarea id="tar-u" defaultValue="Hi" showCount maxLength={10} />
+      <Textarea id="tar-c" value="Kept" onChange={() => {}} />
+    </form>);
+    await userEvent.click(el('tar-u'));
+    await userEvent.keyboard(' there');
+    await userEvent.fill(el('tar-c'), 'Typed');
+    const count = () => el('tar-u').parentElement!.querySelector('.dk-textarea__count')!.textContent;
+    expect(count()).toBe('8 / 10');
+    (document.getElementById('tar') as HTMLFormElement).reset();
+    await expect.poll(count).toBe('2 / 10');
+    expect([el('tar-u').value, el('tar-c').value]).toEqual(['Hi', 'Kept']);
+  });
+
   test('a native <textarea> in a .dk-textarea box (data-component="textarea"); md text-sm, 12px side and 6px top padding, 1px border, 6px corners, 3 rows by default', async () => {
     await setup();
     const md = box('md');
