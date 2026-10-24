@@ -546,6 +546,8 @@ interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "mi
     incrementLabel?: string;
     locale?: string;
     formatOptions?: Intl.NumberFormatOptions;
+    currency?: string;
+    minorUnits?: boolean;
 }
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;
 type Entry = "end-ellipsis" | "start-ellipsis" | number;

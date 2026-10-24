@@ -9,6 +9,10 @@ import { NumberInput } from "serupa-ds";
 
 const [price, setPrice] = React.useState<number | null>(9.5);
 <NumberInput aria-label="Price" value={price} onValueChange={setPrice} step={0.5} min={0} />
+
+// Money: the symbol where the locale puts it ("$19.99", "19,99 €"), stored as whole cents
+const [cents, setCents] = React.useState<number | null>(1999);
+<NumberInput aria-label="Price" currency="USD" minorUnits value={cents} onValueChange={setCents} min={0} />
 ```
 
 ## When to use
@@ -26,6 +30,8 @@ const [price, setPrice] = React.useState<number | null>(9.5);
 - Label it with [Field](../Field/README.md) and put the unit in the label or hint ("Weight (kg)").
 - Set `min`, `max` and `step` to the real limits, so the field keeps values within them.
 - Match the `size` to the fields and buttons beside it.
+- For money, set `currency` to its ISO 4217 code. The symbol goes where the locale writes it, and the value keeps the currency's decimals however coarse `step` is, so `12.5` stays $12.50.
+- Store money as whole minor units with `minorUnits`: `value`, `defaultValue`, `onValueChange`, `min`, `max` and `step` are then cents (`1999` is $19.99, `step={5}` is five cents), which avoids floating-point sums such as `0.1 + 0.2`. The minor units come from ISO 4217: 2 for most currencies, including IDR, 0 for JPY and KRW, 3 for KWD.
 
 ## Behavior
 
@@ -63,6 +69,8 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `steppers` | `boolean` | `true` | The − and + buttons. |
 | `decrementLabel`, `incrementLabel` | `string` | `'Decrease'`, `'Increase'` | The buttons' names. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's | Whose decimal and group marks are read and written: `1.500,25` in `id-ID`, `1,500.25` in `en-US`. |
+| `currency` | `string` | | An ISO 4217 code: shows the amount as money and keeps its decimals. Short for `formatOptions={{ style: 'currency', currency }}`; `formatOptions` still wins. |
+| `minorUnits` | `boolean` | `false` | With `currency`: the value props and `onValueChange` are whole minor units (cents). `aria-valuenow` stays in the currency's units. |
 | `formatOptions` | `Intl.NumberFormatOptions` | no grouping | How the number is shown: `{ style: 'currency', currency: 'IDR' }`, `{ useGrouping: true }`, `{ style: 'percent' }` (the value is the fraction, so 0.15 shows 15%). Sets `aria-valuetext` too. |
 
 `className` and `style` go to the box; `ref` and every other prop go to the `<input>`.
