@@ -97,6 +97,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # A pull request's merge commit and the base it merges into (HEAD^1), to see what it changes.
+          fetch-depth: 2
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -112,9 +114,12 @@ jobs:
           SERUPA_SHARD: ${{ matrix.shard }}
           # The component tests also measure coverage (coverage/, summed up on the run's summary page).
           SERUPA_COVERAGE: ${{ matrix.group == 'components' && '1' || '' }}
+          # On a pull request, a change inside component folders tests only those components and the ones that use
+          # them (run.mjs --since); main runs everything after the merge.
+          SINCE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}
         run: |
           set -o pipefail
-          node tools/test/run.mjs --group ${{ matrix.group }} 2>&1 | tee test-output.txt
+          node tools/test/run.mjs --group ${{ matrix.group }} ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
       - name: Coverage summary
         if: always() && matrix.group == 'components'
         run: node tools/test/vitest/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"

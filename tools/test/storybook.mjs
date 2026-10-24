@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { PROJECT, browser, report, serve } from './lib.mjs';
+import { PROJECT, browser, report, serve, onlyComponents } from './lib.mjs';
 
 const DIR = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(DIR, 'index.json'))) {
@@ -42,8 +42,11 @@ async function open(e, theme) {
 // SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
 // the docs pages are checked in the first shard.
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
-const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs') : [];
-const stories = Object.values(entries).filter((e) => e.type === 'story').filter((_, i) => i % shards === shard - 1);
+// SERUPA_ONLY (run.mjs --since on a pull request): only the stories and docs pages of the components it touches.
+const only = onlyComponents();
+const mine = (e) => !only || only.has(e.importPath.split('/')[3]);   // ./src/components/<Name>/…
+const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
+const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
 for (const e of docs) {
   const notReady = await open(e, 'blue-light');
   const ok = !notReady && await page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);

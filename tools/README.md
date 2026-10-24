@@ -32,6 +32,7 @@ node tools/test/run.mjs --update          # accept intended changes as the new b
 node tools/test/run.mjs --browser webkit  # the suite in WebKit (or firefox); baselines are kept per engine
 node tools/test/run.mjs --compat safari   # add the cross-browser comparison (safari, firefox or webkitgtk)
 node tools/test/run.mjs --list            # the steps it would run (with --group, of one group)
+node tools/test/run.mjs --since main      # only the components changed since main, and the ones that use them
 npm run test:unit                         # only the component tests (Vitest), straight from src/, in a few seconds
 npm run test:watch                        # the same, re-running as you edit
 npm run test:coverage                     # the same, and which lines they run (coverage/index.html)
@@ -40,6 +41,8 @@ npm run test:checks                       # the checks below (all but visual and
 npx vitest run tools/test/foundation.mjs  # one of them (or node tools/test/foundation.mjs, which prints its results)
 npx vitest run --project checks -t contrast  # the checks whose name says contrast
 ```
+
+On a pull request, CI runs `--since` its base: when every changed file is inside component folders (with their baselines, server-render case and changeset), the component tests, visual snapshots and Storybook checks cover only those components and every component that uses one of them; the checks always run whole. Any other change runs everything, and so does every push to main, which catches what a narrowed run missed. `affected.mjs` tests which components a change covers.
 
 ### Component tests
 
