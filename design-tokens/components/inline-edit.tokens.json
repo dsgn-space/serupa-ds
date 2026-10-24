@@ -1,0 +1,101 @@
+{
+  "inline-edit": {
+    "$description": "InlineEdit's component tokens. Each one is an optional override: set the CSS variable (--inline-edit-<name>) on the page, a container or one InlineEdit, and every InlineEdit inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The field and the button's height and padding use Input's tokens.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The text in the button (4.5:1 on the page and on the hover background).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-text"
+          }
+        }
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The placeholder when the text is empty (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-placeholder"
+          }
+        }
+      },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The text of a disabled InlineEdit (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-text-disabled"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The pencil, on hover and focus (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-icon"
+          }
+        }
+      },
+      "bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The button's background on hover (surface-muted, so the muted placeholder keeps 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-bg-hover"
+          }
+        }
+      },
+      "error": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "The error message under the field (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-error"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The button's keyboard focus ring.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "The button's corners, like Input's (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the field and its error message (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-gap"
+          }
+        }
+      }
+    }
+  }
+}

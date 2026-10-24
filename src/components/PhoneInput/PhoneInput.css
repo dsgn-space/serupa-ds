@@ -1,0 +1,32 @@
+/* ---------------------------------------------------------------
+   PhoneInput: Input's box with a country part at the start: the calling code ("+62") and a chevron, with a
+   native <select> laid over them (see-through, so a click or tap opens the real menu and it reads as a menu),
+   and a divider before the tel field. The part shades on hover and draws its own focus ring inside the box,
+   so it's clear whether the menu or the field has focus. Structure: .dk-phone-input (.dk-input) >
+   .dk-phone-input__country > .dk-phone-input__dial, .dk-phone-input__chevron, .dk-phone-input__select; then
+   .dk-input__field.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-phone-input { padding-inline-start: var(--spacing-0); }
+.dk-phone-input__country {
+  position: relative; display: inline-flex; align-items: center; flex-shrink: 0; align-self: stretch;
+  gap: var(--phone-input-gap, var(--spacing-1));
+  padding-inline: var(--dk-input-px) var(--phone-input-gap, var(--spacing-1));
+  border-inline-end: var(--input-border-width, var(--border-width-1)) solid var(--phone-input-divider, var(--border));
+  border-start-start-radius: inherit; border-end-start-radius: inherit;
+  color: var(--phone-input-dial, var(--text)); font-variant-numeric: tabular-nums; cursor: pointer;
+  transition: background-color var(--duration-150) var(--ease-in-out);
+}
+.dk-phone-input__chevron { font-size: var(--dk-input-icon); color: var(--phone-input-chevron, var(--text-muted)); }
+.dk-phone-input__select {
+  position: absolute; inset: var(--spacing-0); width: var(--sizing-full); height: var(--sizing-full);
+  margin: var(--spacing-0); padding: var(--spacing-0); border: 0; opacity: var(--opacity-0);
+  font: inherit; cursor: inherit; appearance: none; -webkit-appearance: none;
+}
+.dk-phone-input__select option { background-color: var(--input-bg, var(--field)); color: var(--input-text, var(--text)); }
+@media (hover: hover) { .dk-phone-input__country:hover:not(:has(:disabled)) { background: var(--phone-input-bg-hover, var(--surface-muted)); } }
+.dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-phone-input__country:has(:disabled) { cursor: not-allowed; }
+@media (forced-colors: active) { .dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline-color: Highlight; } }
+@media (prefers-reduced-motion: reduce) { .dk-phone-input__country { transition: none; } }
+}

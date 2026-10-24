@@ -1,0 +1,7 @@
+/* ---------------------------------------------------------------
+   FormattedNumber: inline text in the surrounding font and color, kept on one line ("Rp 150.000" doesn't break
+   between the symbol and the digits), with tabular digits so numbers in a column line up.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-formatted-number { white-space: nowrap; font-variant-numeric: tabular-nums; }
+}

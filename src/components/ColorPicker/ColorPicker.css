@@ -1,0 +1,44 @@
+/* ---------------------------------------------------------------
+   ColorPicker: a wrapping row of round swatches, then the browser's color picker and a hex field, then the
+   contrast line. The picked swatch has a ring (primary, 3:1 on the page) and a check in white or black, whichever
+   stands out on it. Every swatch has a thin inset border so a white one still shows on a white page.
+   Structure: .dk-color-picker > __swatches (radiogroup) > __swatch; __custom > __native, .dk-input; __contrast.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-color-picker {
+  --dk-cp-size: var(--color-picker-swatch-size-md, var(--spacing-8));
+  --dk-cp-check: var(--spacing-5);
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--color-picker-gap, var(--spacing-3));
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--color-picker-text, var(--text));
+}
+.dk-color-picker--size-sm { --dk-cp-size: var(--color-picker-swatch-size-sm, var(--spacing-6)); --dk-cp-check: var(--spacing-4); }
+.dk-color-picker__swatches { display: flex; flex-wrap: wrap; gap: var(--color-picker-swatch-gap, var(--spacing-2)); }
+.dk-color-picker__swatch {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: var(--dk-cp-size); height: var(--dk-cp-size); margin: var(--spacing-0); padding: var(--spacing-0);
+  background: var(--dk-swatch); color: var(--dk-swatch-ink);
+  border: 0; border-radius: var(--color-picker-swatch-radius, var(--rounded-full)); cursor: pointer;
+  box-shadow: inset 0 0 0 var(--border-width-1) var(--color-picker-swatch-border, var(--border));
+}
+.dk-color-picker__swatch--checked { outline: var(--border-width-2) solid var(--color-picker-ring, var(--primary)); outline-offset: var(--border-width-2); }
+.dk-color-picker__swatch:focus-visible { outline: var(--focus-ring-width) solid var(--color-picker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-color-picker__check { font-size: var(--dk-cp-check); }
+.dk-color-picker__swatch:disabled { cursor: not-allowed; }
+.dk-color-picker--disabled { opacity: var(--opacity-disabled); }
+.dk-color-picker__custom { display: flex; align-items: center; gap: var(--spacing-2); }
+.dk-color-picker__native {
+  inline-size: var(--dk-cp-size); block-size: var(--dk-cp-size); margin: var(--spacing-0); padding: var(--spacing-0);
+  border: var(--border-width-1) solid var(--color-picker-swatch-border, var(--border)); border-radius: var(--rounded-md);
+  background: transparent; cursor: pointer;
+}
+.dk-color-picker__native:focus-visible { outline: var(--focus-ring-width) solid var(--color-picker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-color-picker__native::-webkit-color-swatch-wrapper { padding: var(--spacing-0\.5); }
+.dk-color-picker__native::-webkit-color-swatch { border: 0; border-radius: var(--rounded-sm); }
+.dk-color-picker__native::-moz-color-swatch { border: 0; border-radius: var(--rounded-sm); }
+.dk-color-picker__hex { inline-size: var(--color-picker-hex-width, var(--spacing-28)); font-family: var(--font-mono); text-transform: lowercase; }
+.dk-color-picker__hash { font-family: var(--font-mono); }
+.dk-color-picker__contrast { display: flex; align-items: flex-start; gap: var(--spacing-1); min-height: var(--text-sm--line-height); color: var(--color-picker-contrast, var(--text-muted)); font-variant-numeric: tabular-nums; }
+.dk-color-picker__contrast--low { color: var(--color-picker-contrast-low, var(--warning-text)); }
+.dk-color-picker__warning { flex-shrink: 0; font-size: var(--spacing-4); height: var(--text-sm--line-height); }
+@media (forced-colors: active) { .dk-color-picker__swatch { forced-color-adjust: none; } .dk-color-picker__swatch--checked { outline-color: Highlight; } }
+}

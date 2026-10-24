@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ColorPicker — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  var swatches = [{ value: '#1d4ed8', label: 'Blue' }, { value: '#7c3aed', label: 'Violet' }, { value: '#047857', label: 'Emerald' },
+    { value: '#b91c1c', label: 'Red' }, { value: '#fde047', label: 'Yellow' }, { value: '#ffffff', label: 'White' }];
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.ColorPicker, { 'aria-label': 'Label color', swatches: swatches, defaultValue: '#1d4ed8', contrastWith: '#ffffff' }));
+</script>
+</body>
+</html>
