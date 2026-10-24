@@ -491,7 +491,7 @@
   --info-subtle: var(--sky-950);
   --info-text: var(--sky-300);
 }
-:root:is([data-brand], [data-mode]):not([data-theme]) {
+:where(:root:is([data-brand], [data-mode])):not([data-theme]) {
   color-scheme: light dark;
   --primary: light-dark(var(--blue-600), var(--blue-400));
   --primary-hover: light-dark(var(--blue-700), var(--blue-300));
@@ -966,6 +966,38 @@
   --text-type-7xl: 400 4.5rem/1 var(--font-sans); /* `type-7xl`: the whole 72px style in one class (Inter 400, line height 1). Same size as `text-7xl`. */
   --text-type-8xl: 400 6rem/1 var(--font-sans); /* `type-8xl`: the whole 96px style in one class (Inter 400, line height 1). Same size as `text-8xl`. */
   --text-type-9xl: 400 8rem/1 var(--font-sans); /* `type-9xl`: the whole 128px style in one class (Inter 400, line height 1). Same size as `text-9xl`. */
+}
+[data-theme$="-light"] { color-scheme: light; }
+[data-theme$="-dark"] { color-scheme: dark; }
+[data-contrast="more"] {
+  --field-border: light-dark(var(--zinc-700), var(--zinc-300));
+  --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
+  --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
+  --text: light-dark(var(--zinc-950), var(--white));
+  --text-muted: light-dark(var(--zinc-700), var(--zinc-300));
+  --border: light-dark(var(--zinc-500), var(--zinc-400));
+  --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast="normal"]) {
+  --field-border: light-dark(var(--zinc-700), var(--zinc-300));
+  --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
+  --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
+  --text: light-dark(var(--zinc-950), var(--white));
+  --text-muted: light-dark(var(--zinc-700), var(--zinc-300));
+  --border: light-dark(var(--zinc-500), var(--zinc-400));
+  --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
+}
+}
+[data-density="compact"] {
+  --control-height-sm: 1.5rem;
+  --control-height-md: 1.75rem;
+  --control-height-lg: 2.25rem;
+}
+[data-density="comfortable"] {
+  --control-height-sm: 1.5rem;
+  --control-height-md: 2rem;
+  --control-height-lg: 2.75rem;
 }
 .type-xs {
   font-family: var(--font-sans);
