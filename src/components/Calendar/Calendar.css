@@ -25,7 +25,7 @@
 .dk-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--surface-muted)); }
 .dk-calendar__day:active:not([aria-disabled="true"], .dk-calendar__day--selected, .dk-calendar__day--in-range) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
 .dk-calendar__day:focus { outline: none; }
-.dk-calendar__day:focus-visible { outline: var(--outline-width-2) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.dk-calendar__day:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-calendar__day--outside { color: var(--calendar-outside-color, var(--text-muted)); }
 .dk-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
 .dk-calendar__day--selected, .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-selected-bg, var(--primary)); color: var(--calendar-selected-color, var(--on-primary)); }
