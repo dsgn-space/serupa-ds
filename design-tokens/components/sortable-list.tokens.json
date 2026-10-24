@@ -1,0 +1,173 @@
+{
+  "sortable-list": {
+    "$description": "SortableList's component tokens. Each one is an optional override: set the CSS variable (--sortable-list-<name>) on the page, a container or one list, and every SortableList inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The rows' text.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-text"
+          }
+        }
+      },
+      "item-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A row's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-bg"
+          }
+        }
+      },
+      "item-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A row's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-border"
+          }
+        }
+      },
+      "item-border-active": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The border of the row being moved.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-border-active"
+          }
+        }
+      },
+      "handle": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The drag handle (3:1 on the row).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-handle"
+          }
+        }
+      },
+      "handle-active": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The handle on hover and while its row is moved.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-handle-active"
+          }
+        }
+      },
+      "handle-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The handle's background on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-handle-bg-hover"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The handle's keyboard focus ring.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-focus-ring"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "item-shadow-active": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-md}",
+        "$description": "The raised look of the row being moved.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-shadow-active"
+          }
+        }
+      }
+    },
+    "radius": {
+      "item-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "A row's corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between rows (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-gap"
+          }
+        }
+      },
+      "item-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between the handle and the row's content (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-gap"
+          }
+        }
+      },
+      "item-padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space above and below a row's content (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-padding-y"
+          }
+        }
+      },
+      "item-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space at a row's end, and its start without a handle (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-padding-x"
+          }
+        }
+      },
+      "item-padding-start": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space before the handle (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-padding-start"
+          }
+        }
+      },
+      "handle-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The handle's smallest size, its target (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-handle-size"
+          }
+        }
+      }
+    }
+  }
+}
