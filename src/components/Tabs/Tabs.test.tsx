@@ -113,6 +113,40 @@ describe('Tabs', () => {
     expect(focused()).toBe('Two');
   });
 
+  test('closing the selected tab (uncontrolled) selects the next enabled one, or else the previous; the list stays in the Tab order; controlled warns instead', async () => {
+    const calls: string[] = [];
+    function Closable(p: { controlled?: boolean }) {
+      const [open, setOpen] = React.useState(['a', 'b', 'c', 'd']);
+      const [v, setV] = React.useState('b');
+      const extra = p.controlled ? { value: v, onValueChange: setV } : { defaultValue: 'b', onValueChange: (x: string) => calls.push(x) };
+      return <div><Tabs id={p.controlled ? 'ctl' : 'cl'} {...extra}>
+        <TabList aria-label="Files">{open.map((x) => <Tab key={x} value={x} disabled={x === 'c'}>{x.toUpperCase()}</Tab>)}</TabList>
+        {open.map((x) => <TabPanel key={x} value={x}>Panel {x}</TabPanel>)}
+      </Tabs>{open.map((x) => <button key={x} id={`${p.controlled ? 'c' : 'u'}-close-${x}`} onClick={() => setOpen((o) => o.filter((y) => y !== x))}>Close {x}</button>)}</div>;
+    }
+    await render(<Closable />);
+    const sel = () => el('cl').querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.dataset.value;
+    const stops = () => [...el('cl').querySelectorAll<HTMLElement>('[role="tab"]')].filter((t) => t.tabIndex === 0).map((t) => t.dataset.value).join();
+    await userEvent.click(el('u-close-b'));   // the next one, c, is disabled: d
+    expect([sel(), stops(), calls.join()]).toEqual(['d', 'd', 'd']);
+    expect(el('cl').querySelector('[role="tabpanel"]:not([hidden])')!.textContent).toBe('Panel d');
+    await userEvent.click(el('u-close-d'));   // nothing after it that's enabled: the previous, a
+    expect([sel(), stops(), calls.join()]).toEqual(['a', 'a', 'd,a']);
+    await userEvent.click(el('u-close-c'));   // not the selected one: nothing changes
+    expect([sel(), calls.join()]).toEqual(['a', 'd,a']);
+
+    const warn = console.warn, warned: string[] = [];
+    console.warn = (m: string) => { warned.push(m); };
+    try {
+      await render(<Closable controlled />);
+      await userEvent.click(el('c-close-b'));
+      expect(el('ctl').querySelector('[role="tab"][aria-selected="true"]')).toBe(null);
+      expect(warned.join()).toMatch(/Tabs: the selected tab "b" was removed/);
+    } finally { console.warn = warn; }
+    await render(<Tabs id="nomatch" defaultValue="zzz"><TabList aria-label="X"><Tab value="p">P</Tab><Tab value="q">Q</Tab></TabList></Tabs>);
+    expect(el('nomatch').querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.dataset.value).toBe('p');
+  });
+
   test('line: a 1px border under the row, 36px tabs (text-sm, font-medium, 12px sides), a 2px primary line under the selected one, whose label is darker; 16px icons', async () => {
     await setup();
     const r = el('un'), sel = selected('un'), other = r.querySelector('[aria-selected="false"]')!, a = getComputedStyle(sel, '::after'), s = css(sel);
