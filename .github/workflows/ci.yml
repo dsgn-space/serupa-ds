@@ -157,6 +157,22 @@ jobs:
             tools/test/baseline-visual/**/*.actual.png
           if-no-files-found: ignore
 
+  # On a pull request, a failed types-and-lint job stops the whole run: the suite's own fail-fast only reaches the
+  # suite's jobs, and the run can't pass anyway, so its runners go to the next pull request. Main runs everything.
+  stop:
+    needs: static
+    if: failure() && github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+    steps:
+      - name: Cancel this run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: gh run cancel "$RUN_ID"
+
   # One check that passes only when every group passed, under the name the single job used to have.
   test:
     needs: [build, static, suite]
