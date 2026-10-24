@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
+import { Field } from '../Field/Field';
 import { Slider } from './Slider';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -149,6 +150,22 @@ describe('Slider', () => {
     thumb('fs').focus();
     await userEvent.keyboard('{ArrowRight}');
     expect([now('fs'), calls, thumb('fs').getAttribute('aria-disabled'), new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], null, '31']);
+  });
+
+  test('in a Field: the label names the thumb (or a range\'s group) and the hint describes it; its own aria-label still wins', async () => {
+    await render(<>
+      <Field label="Volume" hint="0 is muted"><Slider data-testid="sf1" /></Field>
+      <Field label="Price" hint="In dollars"><Slider data-testid="sf2" defaultValue={[20, 80]} /></Field>
+      <Field label="Volume"><Slider data-testid="sf3" aria-label="Music volume" /></Field>
+    </>);
+    const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
+    const one = root('sf1').querySelector('[role=slider]')!, two = root('sf2');
+    expect([text(one.getAttribute('aria-labelledby')), text(one.getAttribute('aria-describedby')), root('sf1').getAttribute('aria-describedby')])
+      .toEqual(['Volume', '0 is muted', null]);
+    expect([two.getAttribute('role'), text(two.getAttribute('aria-labelledby')), text(two.getAttribute('aria-describedby'))]).toEqual(['group', 'Price', 'In dollars']);
+    const own = root('sf3').querySelector('[role=slider]')!;
+    expect([own.getAttribute('aria-label'), own.getAttribute('aria-labelledby')]).toEqual(['Music volume', null]);
   });
 
   test('sm: 16px thumb on a 4px track; at 0 the thumb is centered on the track\'s start and stays inside the slider', async () => {
