@@ -7,6 +7,8 @@ name: Changeset
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
+  # The merge queue needs this check to pass too; the pull request's own run already checked its changeset.
+  merge_group:
 
 permissions:
   contents: read
@@ -26,6 +28,7 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: A changeset for every change to what the package ships
+        if: ${{ github.event_name == 'pull_request' }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: node tools/changeset-check.mjs "$BASE_SHA"

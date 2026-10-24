@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+  # The merge queue tests each pull request merged onto main (and the ones queued ahead of it) before it lands.
+  merge_group:
   push:
     branches: [main]
   # The Release workflow starts this on the Release pull request's branch: GitHub doesn't run CI for a pull

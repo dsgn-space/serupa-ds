@@ -1,8 +1,9 @@
 // Component contract: every folder in src/components/ ships what the project standard asks for, so a new
 // component can't pass CI with something missing. No browser needed.
 //   node tools/test/contract.mjs
-// Each component needs: <Name>.tsx, <Name>.css, <name>.tokens.json, <Name>.stories.tsx, <Name>.mdx, README.md,
-// preview.html, a test next to it (<Name>.test.tsx, Vitest), and visual baselines of its stories in every theme.
+// Each component needs: <Name>.tsx, index.ts (what the package exports from it), <Name>.css, <name>.tokens.json,
+// <Name>.stories.tsx, <Name>.mdx, README.md, preview.html, a test next to it (<Name>.test.tsx, Vitest), and visual
+// baselines of its stories in every theme.
 import fs from 'node:fs';
 import path from 'node:path';
 import { HERE, PROJECT, tokensCss, report, done } from './lib.mjs';
@@ -32,6 +33,7 @@ for (const c of comps) {
   const has = (f) => fs.existsSync(path.join(COMP, c, f));
   const parts = {
     code: has(`${c}.tsx`),
+    index: has('index.ts'),
     css: has(`${c}.css`),
     tokens: fs.readdirSync(path.join(COMP, c)).some((f) => f.endsWith('.tokens.json')),
     stories: has(`${c}.stories.tsx`),
@@ -47,7 +49,7 @@ for (const c of comps) {
     if (GAPS[c]?.[part]) { if (ok) fixed.push(part); continue; }
     if (!ok) missing.push(part);
   }
-  const what = { code: `${c}.tsx`, css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes (add the "update-visual-baselines" label)` };
+  const what = { code: `${c}.tsx`, index: 'index.ts (its public exports)', css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes (add the "update-visual-baselines" label)` };
   t(`${c} has everything a component ships with`, !missing.length && !fixed.length,
     [missing.length && `missing: ${missing.map((p) => what[p]).join(', ')}`, fixed.length && `known gap now fixed, remove it from GAPS in contract.mjs: ${fixed.join(', ')}`].filter(Boolean).join('; '));
 }

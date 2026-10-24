@@ -17,14 +17,16 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { build } from 'esbuild';
 import { buildUtilities } from '../utilities/build.mjs';
+import { buildRegistry, cascade } from './registry.mjs';
 
 const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
 const D = path.join(P, 'dist');
 const { version } = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
 const read = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 
-// The order the styles cascade in: the @import list in src/styles/index.css (Storybook loads that file).
-const IMPORTS = [...read('src/styles/index.css').matchAll(/^@import "\.\.\/components\/(\w+)\/\1\.css";$/gm)].map((m) => m[1]);
+// The lists built from the component folders (src/generated/), and the order the styles cascade in.
+buildRegistry(P);
+const IMPORTS = cascade(P);
 
 const tokens = spawnSync(process.execPath, [path.join(P, 'tools', 'tokens', 'build.mjs')], { cwd: P, stdio: 'inherit' });
 if (tokens.status !== 0) process.exit(tokens.status || 1);
@@ -37,8 +39,6 @@ if (!process.argv.includes('--css')) {
   await buildModules();
 }
 
-const missing = fs.readdirSync(path.join(P, 'src', 'components')).filter((n) => fs.existsSync(path.join(P, 'src', 'components', n, n + '.css')) && !IMPORTS.includes(n));
-if (missing.length) { console.error(`Add ${missing.join(', ')} to the @import list in src/styles/index.css`); process.exit(1); }
 const components = IMPORTS.map((n) => read(`src/components/${n}/${n}.css`)).join('');
 const utilities = buildUtilities(P);
 // Each file declares the system's cascade layers in one order (dk.tokens, dk.base, dk.components, dk.utilities),
