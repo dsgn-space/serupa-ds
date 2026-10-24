@@ -2,8 +2,8 @@
    Card: a surface that groups related content and actions. Variants outline (default: a border and a hairline
    shadow), elevated (a raised shadow, no visible border in light; a lighter surface and edge in dark) and filled (surface-muted, flat); padding none, sm, md
    (default) or lg. Structure: .dk-card > .dk-card__header (.dk-card__heading > .dk-card__title, .dk-card__description;
-   .dk-card__action), .dk-card__body, .dk-card__footer. With href the whole card is a link, with a hover border and a
-   focus ring. Every value goes through --card-* tokens.
+   .dk-card__action), .dk-card__body, .dk-card__footer. With href the whole card is clickable through one stretched link, with a hover border
+   and a focus ring. Every value goes through --card-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-card {
@@ -38,10 +38,16 @@
 .dk-card__footer--start { justify-content: flex-start; }
 .dk-card__footer--between { justify-content: space-between; }
 
-/* Interactive (href): the whole card is a link. */
-.dk-card--link { color: var(--card-text, var(--text)); text-decoration: none; cursor: pointer; transition: border-color var(--duration-150) var(--ease-in-out), box-shadow var(--duration-150) var(--ease-in-out); }
+/* Interactive (href): one link, around the title (or empty, over the card), whose area is stretched over the whole
+   card. Buttons and links inside sit above it, so they work on their own. The card shows the link's focus ring. */
+.dk-card--link { position: relative; cursor: pointer; transition: border-color var(--duration-150) var(--ease-in-out), box-shadow var(--duration-150) var(--ease-in-out); }
+.dk-card__link { color: inherit; text-decoration: none; outline: none; }
+.dk-card__link::after { content: ""; position: absolute; inset: var(--spacing-0); z-index: var(--z-0); border-radius: inherit; }
+.dk-card__link--cover { position: absolute; inset: var(--spacing-0); border-radius: inherit; }
+.dk-card__link--cover::after { content: none; }
+.dk-card--link :is(a[href], button, input, select, textarea, label, summary, [tabindex]):not(.dk-card__link) { position: relative; z-index: var(--z-10); }
 @media (hover: hover) { .dk-card--link:hover { border-color: var(--card-border-hover, var(--border-strong)); } }
-.dk-card--link:focus-visible { outline: var(--focus-ring-width) solid var(--card-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-card--link:has(.dk-card__link:focus-visible) { outline: var(--focus-ring-width) solid var(--card-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (prefers-reduced-motion: reduce) { .dk-card--link { transition: none; } }
 @media (forced-colors: active) { .dk-card { border-color: CanvasText; } }
 }

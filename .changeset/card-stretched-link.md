@@ -1,0 +1,5 @@
+---
+"serupa-ds": major
+---
+
+- **Breaking.** Changed: Card: a linked card (`href`) is no longer one `<a>`. It was invalid HTML with buttons inside (a `<button>` nested in an `<a>`, which also broke hydration), pressing such a button followed the link too, and screen readers read the whole card as one long link. Now the card stays a `<div>` (or `as`, which `href` no longer ignores), and the link wraps the `CardHeader` title, named by it, with its clickable area stretched over the card. Buttons and links inside work on their own. Without a `CardHeader` title, an empty link over the card is named by the card's text. **Migrating:** `ref` now points at the card element, not the link (reach the link with `.querySelector('.dk-card__link')`). `href`, `target`, `rel` and `aria-label` go to the link, and everything else, `onClick` included, stays on the card. CSS for `a.dk-card` or `.dk-card--link:focus-visible` should target `.dk-card--link` and `.dk-card--link:has(.dk-card__link:focus-visible)`.

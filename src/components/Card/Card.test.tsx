@@ -126,11 +126,41 @@ describe('Card', () => {
     expect(css(q('#def .dk-card__footer')).justifyContent).toBe('flex-end');
   });
 
-  test('href: the whole card is an <a> (no underline, a pointer), named by its text; target _blank adds rel="noopener noreferrer"', async () => {
-    await render(<Col><Card id="lnk" href="#here"><CardHeader title="Atlas" description="Updated" /></Card><Card id="blank" href="#x" target="_blank">Out</Card></Col>);
-    const e = el('lnk');
-    expect([e.tagName, e.getAttribute('href'), css(e).textDecorationLine, css(e).cursor, el('blank').getAttribute('rel'), e.textContent]).toEqual(['A', '#here', 'none', 'pointer', 'noopener noreferrer', 'AtlasUpdated']);
+  test('href: the card stays a <div> (or as), and its CardHeader title is the link, named by the title only; its area covers the card; target _blank adds rel="noopener noreferrer"; ref is the card', async () => {
+    const r = React.createRef<HTMLElement>();
+    await render(<Col><Card id="lnk" ref={r} href="#here" as="article" data-x="y"><CardHeader title="Atlas" description="Updated" /><CardBody>Six tasks</CardBody></Card><Card id="blank" href="#x" target="_blank"><CardHeader title="Out" /></Card></Col>);
+    const e = el('lnk'), a = e.querySelector('a')!, box = e.getBoundingClientRect();
+    expect([e.tagName, r.current === e, e.dataset.x, e.querySelectorAll('a').length, a.parentElement!.tagName, a.getAttribute('href'), a.textContent, css(a).textDecorationLine, el('blank').querySelector('a')!.getAttribute('rel'), el('blank').querySelector('a')!.target, el('blank').hasAttribute('target')])
+      .toEqual(['ARTICLE', true, 'y', 1, 'H3', '#here', 'Atlas', 'none', 'noopener noreferrer', '_blank', false]);
     expect(e.className).toMatch(/dk-card--link/);
+    // A click anywhere on the card lands on the link's stretched area.
+    const hit = document.elementFromPoint(box.left + box.width / 2, box.bottom - 6)!;
+    expect([hit === a, css(e).cursor]).toEqual([true, 'pointer']);
+  });
+
+  test('href with buttons inside: no button inside a link (valid HTML), the buttons sit above the link and don\'t follow it; Tab goes to the title link, then the buttons', async () => {
+    const saves: number[] = [];
+    await render(<Card id="act" href="#proj"><CardHeader title="Atlas" /><CardBody>Body</CardBody><CardFooter><Button id="save" onClick={() => saves.push(1)}>Save</Button></CardFooter></Card>);
+    const b = el('save'), box = b.getBoundingClientRect();
+    expect([b.closest('a'), document.elementFromPoint(box.left + 4, box.top + 4)!.closest('button') === b]).toEqual([null, true]);
+    await userEvent.click(b);
+    expect([saves, location.hash]).toEqual([[1], '']);
+    (document.activeElement as HTMLElement | null)?.blur();
+    await userEvent.tab();
+    expect(document.activeElement!.textContent).toBe('Atlas');
+    await userEvent.tab();
+    expect(document.activeElement).toBe(b);
+    history.replaceState(null, '', location.pathname + location.search);
+  });
+
+  test('href without a CardHeader title: an empty link over the card, named by the card\'s text (or aria-label); clicking the card follows it', async () => {
+    await render(<Col><Card id="bare" href="#bare">Read the guide</Card><Card id="lab" href="#lab" aria-label="Open Beacon"><p>Beacon</p></Card></Col>);
+    const a = el('bare').querySelector('a')!, a2 = el('lab').querySelector('a')!;
+    expect([a.className, a.getAttribute('aria-labelledby'), a.textContent, a2.getAttribute('aria-label'), a2.hasAttribute('aria-labelledby'), el('lab').hasAttribute('aria-label')])
+      .toEqual(['dk-card__link dk-card__link--cover', 'bare', '', 'Open Beacon', false, false]);
+    await userEvent.click(el('bare'));
+    expect(location.hash).toBe('#bare');
+    history.replaceState(null, '', location.pathname + location.search);
   });
 
   test('hover: a border-strong border', async () => {
@@ -141,13 +171,13 @@ describe('Card', () => {
     await expect.poll(() => css(el('lnk')).borderTopColor).toBe(strong);
   });
 
-  test('focus from the keyboard: a 2px focus-ring outline 2px outside', async () => {
+  test('focus from the keyboard: the link takes it and the card shows a 2px focus-ring outline 2px outside', async () => {
     await render(<Col><Card id="def"><Parts /></Card><Card id="lnk" href="#here"><CardHeader title="Atlas" /></Card></Col>);
     q('#def button').focus();
     await userEvent.tab();
-    expect(document.activeElement!.id).toBe('lnk');
+    expect(document.activeElement).toBe(q('#lnk a'));
     const s = css(el('lnk'));
-    expect([s.outlineWidth, s.outlineStyle, s.outlineOffset]).toEqual(['2px', 'solid', '2px']);
+    expect([s.outlineWidth, s.outlineStyle, s.outlineOffset, css(q('#lnk a')).outlineStyle]).toEqual(['2px', 'solid', '2px', 'none']);
   });
 
   test('component tokens (--card-bg, --card-radius, --card-padding-md) override one card', async () => {
@@ -191,14 +221,14 @@ describe('Card', () => {
   test('reduced motion: no transition on a linked card', async () => {
     const restore = emulate('prefers-reduced-motion');
     try {
-      await render(<Card id="lnk" href="#here">Atlas</Card>);
+      await render(<Card id="lnk" href="#here">Atlas</Card>);   // the cover link
       expect(`${css(el('lnk')).transitionProperty}/${css(el('lnk')).transitionDuration}`).toMatch(/^(all\/0s|none\/0s)$/);
     } finally { restore(); }
   });
 
   test('no errors or React warnings', async () => {
     const error = vi.spyOn(console, 'error');
-    await render(<Col><Variants /><Card href="#x" target="_blank">Out</Card></Col>);
+    await render(<Col><Variants /><Card href="#x" target="_blank">Out</Card><Card href="#y"><CardHeader title="T" /><CardFooter><Button>Save</Button></CardFooter></Card></Col>);
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
   });
