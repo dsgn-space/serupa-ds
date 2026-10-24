@@ -16,6 +16,7 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   CardFooter: Serupa.CardFooter,
   CardHeader: Serupa.CardHeader,
   Checkbox: Serupa.Checkbox,
+  ColorPicker: Serupa.ColorPicker,
   configure: Serupa.configure,
   SerupaProvider: Serupa.SerupaProvider,
   useSerupa: Serupa.useSerupa,

@@ -14,6 +14,7 @@
 @import "../components/Field/Field.css";
 @import "../components/Select/Select.css";
 @import "../components/Checkbox/Checkbox.css";
+@import "../components/ColorPicker/ColorPicker.css";
 @import "../components/Radio/Radio.css";
 @import "../components/Switch/Switch.css";
 @import "../components/Card/Card.css";
