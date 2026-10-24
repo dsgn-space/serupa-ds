@@ -61,13 +61,18 @@ export function place(anchor: DOMRect, floating: { width: number; height: number
 /** Places `layer` next to `anchor` with place(): its left, top and data-side, and a max-height with overflow-y: auto
     while it's taller than the room it has. It's measured at its own height each time, so it grows back when there's
     room again, and it keeps its scroll position. */
+// The max-width the layer had before placeLayer first set one (a style prop's, or none), put back on each call.
+const ownMaxWidth = new WeakMap<HTMLElement, string>();
+
 export function placeLayer(layer: HTMLElement, anchor: Element, placement: string | undefined, offset: number, fallback?: Placement): void {
   const scroll = layer.scrollTop;
-  layer.style.maxHeight = ""; layer.style.overflowY = ""; layer.style.maxWidth = "";
+  if (!ownMaxWidth.has(layer)) ownMaxWidth.set(layer, layer.style.maxWidth);
+  const own = ownMaxWidth.get(layer)!;
+  layer.style.maxHeight = ""; layer.style.overflowY = ""; layer.style.maxWidth = own;
   const r = place(anchor.getBoundingClientRect(), { width: layer.offsetWidth, height: layer.offsetHeight }, placement, offset, fallback);
   layer.style.left = r.x + "px"; layer.style.top = r.y + "px"; layer.dataset.side = r.side;
   if (r.maxHeight !== undefined) { layer.style.maxHeight = r.maxHeight + "px"; layer.style.overflowY = "auto"; }
-  if (r.maxWidth !== undefined) layer.style.maxWidth = r.maxWidth + "px";
+  if (r.maxWidth !== undefined) layer.style.maxWidth = own ? "min(" + own + ", " + r.maxWidth + "px)" : r.maxWidth + "px";
   layer.scrollTop = scroll;
 }
 

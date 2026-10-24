@@ -47,6 +47,20 @@ describe('place', () => {
     expect(place(at(100, 126), { width: 200, height: 40 }, 'right', 4)).toEqual({ x: 124, y: 93, side: 'right' });
   });
 
+  test('placeLayer: a max width of its own (a style prop) is kept, and combined with the room beside the anchor', () => {
+    const anchor = document.createElement('button'), layer = document.createElement('div');
+    anchor.style.cssText = 'position: fixed; left: 20px; top: 100px; height: 26px; width: 100px';
+    layer.style.cssText = 'position: fixed; width: 360px; max-width: 280px';
+    document.body.append(anchor, layer);
+    placeLayer(layer, anchor, 'bottom-start', 4);
+    expect(layer.style.maxWidth).toBe('280px');
+    placeLayer(layer, anchor, 'right', 4);
+    expect(layer.getBoundingClientRect().width).toBe(268);
+    placeLayer(layer, anchor, 'bottom-start', 4);
+    expect(layer.style.maxWidth).toBe('280px');
+    anchor.remove(); layer.remove();
+  });
+
   test('placeLayer: sets the max height and scrolls inside, keeps the scroll position, and grows back when there is room', async () => {
     const anchor = document.createElement('button'), layer = document.createElement('div');
     anchor.style.cssText = 'position: fixed; left: 20px; top: 180px; height: 26px; width: 100px';
