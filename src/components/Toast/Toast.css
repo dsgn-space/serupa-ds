@@ -36,6 +36,9 @@
   pointer-events: auto;
   animation: dk-toast-up var(--duration-200) var(--ease-out);
 }
+/* F8 moves focus to the newest toast itself, so a screen reader reads it and Tab reaches its buttons next. */
+.dk-toast:focus { outline: none; }
+.dk-toast:focus-visible { outline: var(--focus-ring-width) solid var(--toast-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-toaster--top-start .dk-toast, .dk-toaster--top-center .dk-toast, .dk-toaster--top-end .dk-toast { animation-name: dk-toast-down; }
 @keyframes dk-toast-up { from { opacity: var(--opacity-0); translate: var(--spacing-0) var(--spacing-2); } }
 @keyframes dk-toast-down { from { opacity: var(--opacity-0); translate: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); } }
