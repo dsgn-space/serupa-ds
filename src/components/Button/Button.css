@@ -120,6 +120,11 @@
 .dk-btn--loading-cover > .dk-btn__label,
 .dk-btn--loading-cover > .dk-btn__icon { opacity: var(--opacity-0); }
 .dk-btn__loader { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; }
+/* The success check (successText), drawn in CSS so Button keeps no icon data: two borders of a box turned 45°. */
+.dk-btn__check {
+  box-sizing: border-box; width: 0.375em; height: 0.75em; margin-top: -0.125em;
+  border: solid currentColor; border-width: 0 0.125em 0.125em 0; rotate: 45deg;
+}
 /* The spinner is the Loader component (ring): its motion, and its calmer reduced-motion version, are in the Loader section. */
 /* A Button with href that is disabled renders <a> without href and with aria-disabled: no pointer events */
 a.dk-btn[aria-disabled="true"] { pointer-events: none; }

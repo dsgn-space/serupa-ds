@@ -11,7 +11,6 @@ import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
 import { component } from "../../internal/component";
 import { BUTTON_VARIANTS, buttonClass } from "./buttonClass";
-import { Check } from "../../material/builtin";
 
 export { buttonClass };
 
@@ -70,6 +69,7 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingText: 1, disabledReason: 1, successText: 1 } as const;
 const SUCCESS_MS = 2000;
+const BUSY_MS = 300;
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === "function";
 
 
@@ -93,9 +93,12 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
   if (iconOnly && !rest["aria-label"] && !rest["aria-labelledby"] && !rest.title) {
     warnOnce("icon-label", "Button: an icon-only button needs an aria-label.");
   }
-  // An onClick that returns a promise: loading until it settles (no double submits), then successText if it resolved.
+  // An onClick that returns a promise: no second click until it settles (no double submits), loading once it has run
+  // for BUSY_MS (a quick one, such as CopyButton's copy, doesn't flash or announce "Loading"), then successText if it
+  // resolved.
   const [busy, setBusy] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const pending = React.useRef(false);
   const alive = React.useRef(true);
   React.useEffect(function () { alive.current = true; return () => { alive.current = false; }; }, []);
   React.useEffect(function () {
@@ -106,14 +109,20 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
   const successText = props.successText;
   const own = rest.onClick;
   if (own) rest.onClick = function (e: React.MouseEvent<HTMLElement>) {
+    if (pending.current) { block(e); return; }
     const r: unknown = own(e);
     if (!isThenable(r)) return;
-    setBusy(true); setSuccess(false);
-    r.then(function () {
+    pending.current = true;
+    setSuccess(false);
+    const slow = setTimeout(function () { if (alive.current && pending.current) setBusy(true); }, BUSY_MS);
+    const settle = function (ok: boolean) {
+      pending.current = false;
+      clearTimeout(slow);
       if (!alive.current) return;
       setBusy(false);
-      if (successText) { setSuccess(true); announce(successText); }
-    }, function () { if (alive.current) setBusy(false); });
+      if (ok && successText) { setSuccess(true); announce(successText); }
+    };
+    r.then(function () { settle(true); }, function () { settle(false); });
   };
   const loading = !!props.loading || busy;
   const disabled = !!rest.disabled;
@@ -138,7 +147,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
     slot(props.rightIcon, "right")
   ];
   if (loading) content = content.concat([<span className="dk-btn__loader" aria-hidden key="loader">{spin}</span>]);
-  else if (success) content = content.concat([<span className="dk-btn__loader dk-btn__success" aria-hidden key="success">{slot(Check, "only")}</span>]);
+  else if (success) content = content.concat([<span className="dk-btn__loader dk-btn__success" aria-hidden key="success"><span className="dk-btn__check" /></span>]);
   // The reason: a hidden element can still be a description (aria-describedby), and isn't part of the name.
   // A description passed in (a Tooltip around it, with the same words) is used instead, so it isn't read twice.
   if (reason && !rest["aria-describedby"]) {

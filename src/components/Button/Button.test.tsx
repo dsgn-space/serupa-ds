@@ -238,7 +238,7 @@ describe('Button', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
     settle[0]![0]();
     await expect.poll(() => el('pr').hasAttribute('data-success')).toBe(true);
-    expect([el('pr').hasAttribute('aria-busy'), !!el('pr').querySelector('.dk-btn__success .dk-icon')]).toEqual([false, true]);
+    expect([el('pr').hasAttribute('aria-busy'), !!el('pr').querySelector('.dk-btn__success .dk-btn__check')]).toEqual([false, true]);
     await expect.poll(() => getComputedStyle(el('pr').querySelector('.dk-btn__label')!).opacity).toBe('0');
     await expect.element(page.getByRole('button', { name: 'Save', exact: true })).toBeInTheDocument();
     await expect.poll(() => announcer().textContent).toMatch(/Saved$/);
@@ -248,6 +248,21 @@ describe('Button', () => {
     await expect.poll(() => el('pr2').hasAttribute('aria-busy')).toBe(false);
     expect(el('pr2').hasAttribute('data-success')).toBe(false);
     settle = [];
+  });
+
+  test('onClick with a quick promise (under 300ms): no loading flash and no "Loading" announced, but still no second click until it settles', async () => {
+    let ok: () => void = () => {};
+    const onClick = vi.fn(() => new Promise<void>((r) => { ok = r; }));
+    await render(<Button id="qk" onClick={onClick}>Copy</Button>);
+    const a = announcer(); a.textContent = '';
+    await userEvent.click(el('qk'));
+    await userEvent.click(el('qk'));
+    expect([onClick.mock.calls.length, el('qk').hasAttribute('aria-busy')]).toEqual([1, false]);
+    ok();
+    await new Promise((r) => setTimeout(r, 400));
+    expect([el('qk').hasAttribute('aria-busy'), a.textContent]).toEqual([false, '']);
+    await userEvent.click(el('qk'));
+    expect(onClick).toHaveBeenCalledTimes(2);
   });
 
   test('loading: one spinner, centered, on every kind of button; it is the Loader (ring: turning, its arc growing and shrinking)', async () => {
