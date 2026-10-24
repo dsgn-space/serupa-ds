@@ -30,3 +30,14 @@ export const Controlled: Story = {
     </Field>;
   },
 };
+export const Currency: Story = {
+  render: function Render() {
+    const [cents, setCents] = React.useState<number | null>(1999);
+    return <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>
+      <Field label="Price (en-US, US dollars)" hint={`Stored as ${cents ?? 'nothing'} cents`}><NumberInput locale="en-US" currency="USD" minorUnits value={cents} onValueChange={setCents} min={0} /></Field>
+      <Field label="Preis (de-DE, euros)"><NumberInput locale="de-DE" currency="EUR" defaultValue={19.99} min={0} /></Field>
+      <Field label="Harga (id-ID, rupiah)"><NumberInput locale="id-ID" currency="IDR" defaultValue={150000} step={1000} min={0} /></Field>
+      <Field label="Price (ja-JP, yen)"><NumberInput locale="ja-JP" currency="JPY" defaultValue={1980} step={10} min={0} /></Field>
+    </div>;
+  },
+};

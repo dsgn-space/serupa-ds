@@ -1,0 +1,157 @@
+{
+  "meter": {
+    "$description": "Meter's component tokens. Each one is an optional override: set the CSS variable (--meter-<name>) on the page, a container or one meter, and every Meter inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "track": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The empty part of the bar.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-track"
+          }
+        }
+      },
+      "fill": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The filled part, without low and high zones (3:1 on the track and the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-fill"
+          }
+        }
+      },
+      "fill-optimum": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The filled part in the best zone.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-fill-optimum"
+          }
+        }
+      },
+      "fill-suboptimal": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The filled part in the next zone.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-fill-suboptimal"
+          }
+        }
+      },
+      "fill-poor": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The filled part in the worst zone.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-fill-poor"
+          }
+        }
+      },
+      "label-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The label.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-label-color"
+          }
+        }
+      },
+      "value-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The value at the end of the label row (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-value-color"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The bar's thickness, size sm (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The bar's thickness, size md (8px, the default).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "The bar's thickness, size lg (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-height-lg"
+          }
+        }
+      }
+    },
+    "borders": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "The bar's ends.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space between the label row and the bar (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "label-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The label's weight.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-label-weight"
+          }
+        }
+      }
+    },
+    "transitions": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{transitions.duration-300}",
+        "$description": "How long the fill takes to move to a new value.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-duration"
+          }
+        }
+      }
+    }
+  }
+}
