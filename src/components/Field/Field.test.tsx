@@ -119,7 +119,7 @@ describe('Field', () => {
       <Field id="deep" label="Phone" hint="Mobile"><div><span><Input /></span></div></Field>
     </>);
     const input = document.querySelector('.wrap input') as HTMLInputElement;
-    expect([input.labels?.[0]?.textContent?.replace('*', ''), input.getAttribute('aria-required'), input.getAttribute('aria-invalid')]).toEqual(['Email', 'true', 'true']);
+    expect([input.labels?.[0]?.textContent?.replace(/\*/g, ''), input.getAttribute('aria-required'), input.getAttribute('aria-invalid')]).toEqual(['Email', 'true', 'true']);
     const ids = (input.getAttribute('aria-describedby') || '').split(' ').filter(Boolean);
     expect(ids.map((i) => document.getElementById(i)?.textContent)).toEqual(expect.arrayContaining(['Work address', 'Required']));
     expect([el('deep').labels?.[0]?.textContent, document.getElementById(described('deep')[0])?.textContent]).toEqual(['Phone', 'Mobile']);
