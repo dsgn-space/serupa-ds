@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Textarea } from './Textarea';
 
 const el = (id: string) => document.getElementById(id) as HTMLTextAreaElement;
@@ -115,6 +116,14 @@ describe('Textarea', () => {
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
     removeEventListener('error', onError);
     expect(errors).toEqual([]);
+  });
+
+  test('showCount: written in the digits of the locale, as Calendar writes its days: ١٢ / ٢٠٠ in ar-EG, ۳ in fa', async () => {
+    await render(<>
+      <SerupaProvider locale="ar-EG"><Textarea id="car" showCount maxLength={200} defaultValue="Twelve chars" /></SerupaProvider>
+      <SerupaProvider locale="fa"><Textarea id="cfa" showCount defaultValue="abc" /></SerupaProvider>
+    </>);
+    expect([count('car').textContent, count('cfa').textContent]).toEqual(['١٢ / ٢٠٠', '۳']);
   });
 
   test('showCount: "2 / 5" under the text, linked by aria-describedby after the field\'s own; counts typing, stops at maxLength and turns text-colored', async () => {
