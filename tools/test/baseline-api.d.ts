@@ -297,6 +297,7 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     invalid?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
+    required?: boolean;
     id?: string;
     startLabel?: string;
     endLabel?: string;
