@@ -12,6 +12,7 @@ const SKIP = [];
 const EXEMPT = {
   FormattedNumber: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },
   Icon: { tokens: 'draws in currentColor at 1em; no visual values of its own' },
+  RelativeTime: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },
   VisuallyHidden: { tokens: 'no visual values', preview: 'nothing to see', visual: 'nothing to see' },
 };
 // Known gaps, to be fixed. The check fails when one is fixed, so the entry gets removed and can't come back.

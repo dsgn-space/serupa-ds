@@ -83,6 +83,7 @@ if (D) {
     PasswordInput: h(D.PasswordInput, { 'aria-label': 'Password' }),
     Popover: h(D.Popover, { trigger: h(D.Button, null, 'Share'), title: 'Share' }, 'Body'),
     Progress: h(D.Progress, { value: 40, label: 'Uploading' }),
+    RelativeTime: h(D.RelativeTime, { date: 0, locale: 'en-US' }),
     CopyButton: h(D.CopyButton, { value: 'x' }),
     Meter: h(D.Meter, { value: 7, max: 10, high: 8, optimum: 0, label: 'Storage' }),
     SearchInput: h(D.SearchInput, { 'aria-label': 'Search', defaultValue: 'tokens' }),

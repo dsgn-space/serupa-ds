@@ -83,6 +83,8 @@ window.Serupa = Object.assign(window.Serupa || {}, {
   Progress: Serupa.Progress,
   Radio: Serupa.Radio,
   RadioGroup: Serupa.RadioGroup,
+  RelativeTime: Serupa.RelativeTime,
+  relativeTime: Serupa.relativeTime,
   SearchInput: Serupa.SearchInput,
   SegmentedControl: Serupa.SegmentedControl,
   Slider: Serupa.Slider,
