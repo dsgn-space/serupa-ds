@@ -16,7 +16,8 @@ for (const f of ['src/internal/labels.ts', 'tokens.json', 'src/styles/cascade.tx
 }
 t('a changeset alone covers no component', affectedComponents(['.changeset/x.md'])?.size === 0);
 const deps = withDependents(new Set(['Button']));
-t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Badge'), list(deps));
+t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
+t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
 t('a component nothing uses brings only itself', list(withDependents(new Set(['Meter']))) === 'Meter', list(withDependents(new Set(['Meter']))));
 
 done(report('Affected components', R));
