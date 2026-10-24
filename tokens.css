@@ -946,10 +946,10 @@
   --text-type-8xl: 400 6rem/1 var(--font-sans); /* `type-8xl`: the whole 96px style in one class (Inter 400, line height 1). Same size as `text-8xl`. */
   --text-type-9xl: 400 8rem/1 var(--font-sans); /* `type-9xl`: the whole 128px style in one class (Inter 400, line height 1). Same size as `text-9xl`. */
   --text-type-display: 600 3rem/1.1 var(--font-sans); /* `type-display`: hero and marketing headlines (48px, 600, tracked tight, line height 1.1 so two lines don't touch). */
-  --text-type-heading-1: 600 1.875rem/2.25rem var(--font-sans); /* `type-heading-1`: a page title. What `<Heading level={1}>` renders. */
-  --text-type-heading-2: 600 1.5rem/2rem var(--font-sans); /* `type-heading-2`: a section title. What `<Heading level={2}>` renders. */
-  --text-type-heading-3: 600 1.25rem/1.75rem var(--font-sans); /* `type-heading-3`: a subsection title. What `<Heading level={3}>` renders. */
-  --text-type-heading-4: 600 1.125rem/1.75rem var(--font-sans); /* `type-heading-4`: a group title, and Dialog and Drawer titles. What `<Heading level={4}>` renders. */
+  --text-type-heading-1: 600 1.875rem/2.25rem var(--font-sans); /* `type-heading-1`: a page title. What a level 1 `Heading` renders. */
+  --text-type-heading-2: 600 1.5rem/2rem var(--font-sans); /* `type-heading-2`: a section title. What a level 2 `Heading` renders. */
+  --text-type-heading-3: 600 1.25rem/1.75rem var(--font-sans); /* `type-heading-3`: a subsection title. What a level 3 `Heading` renders. */
+  --text-type-heading-4: 600 1.125rem/1.75rem var(--font-sans); /* `type-heading-4`: a group title, and Dialog and Drawer titles. What a level 4 `Heading` renders. */
   --text-type-title: 600 1rem/1.5rem var(--font-sans); /* `type-title`: a card or list title, and Card and EmptyState titles. */
   --text-type-body: 400 1rem/1.5rem var(--font-sans); /* `type-body`: running text. */
   --text-type-body-sm: 400 0.875rem/1.25rem var(--font-sans); /* `type-body-sm`: UI text: controls, table cells, menus, descriptions. */

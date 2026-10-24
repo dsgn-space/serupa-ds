@@ -9000,7 +9000,7 @@
         },
         "lineHeight": 1.2
       },
-      "$description": "`type-heading-1`: a page title. What `<Heading level={1}>` renders.",
+      "$description": "`type-heading-1`: a page title. What a level 1 `Heading` renders.",
       "$extensions": {
         "com.serupa": {
           "class": "type-heading-1"
@@ -9022,7 +9022,7 @@
         },
         "lineHeight": 1.3333
       },
-      "$description": "`type-heading-2`: a section title. What `<Heading level={2}>` renders.",
+      "$description": "`type-heading-2`: a section title. What a level 2 `Heading` renders.",
       "$extensions": {
         "com.serupa": {
           "class": "type-heading-2"
@@ -9044,7 +9044,7 @@
         },
         "lineHeight": 1.4
       },
-      "$description": "`type-heading-3`: a subsection title. What `<Heading level={3}>` renders.",
+      "$description": "`type-heading-3`: a subsection title. What a level 3 `Heading` renders.",
       "$extensions": {
         "com.serupa": {
           "class": "type-heading-3"
@@ -9066,7 +9066,7 @@
         },
         "lineHeight": 1.5556
       },
-      "$description": "`type-heading-4`: a group title, and Dialog and Drawer titles. What `<Heading level={4}>` renders.",
+      "$description": "`type-heading-4`: a group title, and Dialog and Drawer titles. What a level 4 `Heading` renders.",
       "$extensions": {
         "com.serupa": {
           "class": "type-heading-4"
