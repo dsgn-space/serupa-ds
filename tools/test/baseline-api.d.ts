@@ -432,6 +432,7 @@ interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "al
     viewLabel?: string;
     onRemove?: () => void;
     removeLabel?: string;
+    priority?: boolean;
     frameProps?: React.HTMLAttributes<HTMLSpanElement>;
 }
 declare const Image: React.ForwardRefExoticComponent<ImageProps & React.RefAttributes<HTMLImageElement>>;
