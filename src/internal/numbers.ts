@@ -70,3 +70,13 @@ export function formatNumber(n: number, locale?: string, options?: Intl.NumberFo
   if (!f) formats.set(key, f = new Intl.NumberFormat(locale, { numberingSystem: "latn", ...(options || { useGrouping: false, maximumFractionDigits: 20 }) }));
   return f.format(n);
 }
+
+const shown = new Map<string, Intl.NumberFormat>();
+/** A number to show, not to type: in the locale's own digits and signs, as Calendar shows its days ("٤٥٪" in ar-EG,
+    "%45" in tr-TR, "45 %" in fr-FR as a percentage). formatNumber is for what a field reads back. */
+export function displayNumber(n: number, locale?: string, options?: Intl.NumberFormatOptions): string {
+  const key = (locale || "") + "|" + (options ? JSON.stringify(options) : "");
+  let f = shown.get(key);
+  if (!f) shown.set(key, f = new Intl.NumberFormat(locale, options));
+  return f.format(n);
+}

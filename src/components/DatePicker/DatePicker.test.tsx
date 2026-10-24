@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
 import { Calendar } from '../Calendar/Calendar';
 import { DatePicker } from './DatePicker';
@@ -19,6 +19,20 @@ function Ctl(props: { calls: string[]; setRef?: { set?: (d: Date | null) => void
 }
 
 describe('DatePicker', () => {
+  test('in a 500px tall window with the field at mid-height, the calendar stays on screen and scrolls inside, so its last week can be reached', async () => {
+    await page.viewport(900, 500);
+    try {
+      await render(<div style={{ position: 'fixed', top: '230px', left: '20px' }}><DatePicker id="mid" aria-label="Date" defaultValue={new Date(2026, 2, 1)} /></div>);
+      await userEvent.click(button('mid'));
+      const p = popup('mid'), r = p.getBoundingClientRect();
+      expect([r.top >= 8, r.bottom <= 500 - 8, p.scrollHeight > p.clientHeight, getComputedStyle(p).overflowY]).toEqual([true, true, true, 'auto']);
+      const last = [...p.querySelectorAll<HTMLElement>('[data-date]')].pop()!;
+      last.scrollIntoView({ block: 'nearest' });
+      const lr = last.getBoundingClientRect();
+      expect(lr.bottom <= r.bottom + 1 && lr.top >= r.top - 1).toBe(true);
+    } finally { await page.viewport(900, 700); }
+  });
+
   test('a dk-input field with a "Choose a date" button (aria-haspopup="dialog"); the placeholder shows the locale\'s pattern; ref goes to the field', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<>
