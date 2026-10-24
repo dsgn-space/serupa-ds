@@ -31,11 +31,11 @@ describe('FormattedNumber', () => {
         '1.5 kB', '820 kB', '1.5 MB', '5 GB', '3,072 PB', '-2 kB']);
   });
 
-  test('options win over the format\'s own; a currency or unit format without its code writes a plain number; NaN is empty', () => {
+  test('options win over the format\'s own; a currency or unit format without its code writes a plain number, and an empty unit or currency is ignored; NaN is empty', () => {
     expect([formatNumber(0.031, 'en-US', { format: 'percent', signDisplay: 'always', maximumFractionDigits: 1 }), formatNumber(1572864, 'en-US', { format: 'bytes', maximumFractionDigits: 2 }),
       formatNumber(150000, 'en-US', { format: 'currency', currency: 'IDR', maximumFractionDigits: 0 }), formatNumber(1234567, 'en-US', { format: 'compact', compactDisplay: 'long' }),
-      formatNumber(1234, 'en-US', { format: 'currency' }), formatNumber(1234, 'en-US', { format: 'unit' }), formatNumber(NaN, 'en-US'), formatNumber(12345678901234567890n, 'en-US')])
-      .toEqual(['+3.1%', '1.5 MB', nf('en-US', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }, 150000), '1.2 million', '1,234', '1,234', '', new Intl.NumberFormat('en-US').format(12345678901234567890n)]);
+      formatNumber(1234, 'en-US', { format: 'currency' }), formatNumber(1234, 'en-US', { format: 'unit' }), formatNumber(NaN, 'en-US'), formatNumber(12345678901234567890n, 'en-US'), formatNumber(5, 'en-US', { unit: '', currency: '' })])
+      .toEqual(['+3.1%', '1.5 MB', nf('en-US', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }, 150000), '1.2 million', '1,234', '1,234', '', new Intl.NumberFormat('en-US').format(12345678901234567890n), '5']);
   });
 
   test('the words and digits follow the locale: Indonesian, German, Egyptian Arabic, Hindi', async () => {

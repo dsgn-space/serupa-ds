@@ -13,7 +13,10 @@ const BYTES = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte
 
 /** The Intl.NumberFormat options for a format; your own options win. Bytes also give the number to format. */
 function resolve(value: number | bigint, o: FormatNumberOptions): [number | bigint, Intl.NumberFormatOptions] {
-  const { format = "decimal", ...own } = o;
+  const { format = "decimal", ...given } = o;
+  // Only the options that are set: Intl rejects an empty unit or currency even where the format doesn't use it.
+  const own: Intl.NumberFormatOptions = {};
+  for (const [k, v] of Object.entries(given)) if (v !== undefined && v !== "") (own as Record<string, unknown>)[k] = v;
   switch (format) {
     case "compact": return [value, { notation: "compact", ...own }];
     case "percent": return [value, { style: "percent", ...own }];
