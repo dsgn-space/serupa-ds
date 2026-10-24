@@ -8,6 +8,7 @@ import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { fieldName } from "../../internal/fieldName";
 
 export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
 export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
@@ -33,7 +34,7 @@ export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defa
   loadingText?: string;
   /** The chevron button's name. Default: "Show options". */
   toggleLabel?: string;
-  /** The × button's name. Default: "Clear". */
+  /** The × button's name. Default: "Clear" and the field's label ("Clear Country"), or "Clear" when it has none. */
   clearLabel?: string;
 }
 
@@ -66,6 +67,9 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const input = React.useRef<HTMLInputElement | null>(null);
   const pop = React.useRef<HTMLDivElement | null>(null);
   const locked = !!rest.disabled || !!rest.readOnly;
+  const showClear = !!props.clearable && value != null && !locked;
+  const [name, setName] = React.useState("");   // the field's label, read from the page once the × shows
+  React.useEffect(() => { if (showClear) setName(fieldName(input.current)); }, [showClear]);
   useFormReset(input, () => {
     if (controlled) return;
     const v = props.defaultValue ?? null, o = opts.find((x) => x.value === v);
@@ -166,8 +170,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         autoComplete="off" autoCorrect="off" spellCheck={false} className="dk-input__field" value={text}
         onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show("selected"); }} />
-      {props.clearable && value != null && !locked ? (
-        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || "Clear"} onMouseDown={keep} onClick={clear}>
+      {showClear ? (
+        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || (name ? "Clear " + name : "Clear")} onMouseDown={keep} onClick={clear}>
           <Icon name="close" />
         </button>
       ) : null}
