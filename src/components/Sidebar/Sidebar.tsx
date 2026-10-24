@@ -92,6 +92,7 @@ export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarS
   );
 });
 
+const ITEM_OWN = { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 } as const;
 type ItemElement = React.ReactElement<SidebarItemProps>;
 const itemsOf = (children: React.ReactNode) => flattenChildren(children).filter(React.isValidElement) as ItemElement[];
 /** The item is the current page, or one of its items is, at any depth: a group opens and shows active for a grandchild too. */
@@ -102,7 +103,7 @@ const activeWithin = (k: ItemElement): boolean => !!k.props.active || itemsOf(k.
 /** An item in a Sidebar: a link, or a group of nested items. */
 export const SidebarItem = /* @__PURE__ */ component<HTMLAnchorElement, SidebarItemProps>("SidebarItem", function SidebarItem(props, ref) {
   const ctx = React.useContext(SidebarContext);
-  const rest = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
+  const rest = omit(props, ITEM_OWN);
   const kids = itemsOf(props.children);
   const group = kids.length > 0;
   const childActive = kids.some(activeWithin);
@@ -126,8 +127,8 @@ export const SidebarItem = /* @__PURE__ */ component<HTMLAnchorElement, SidebarI
           <button type="button" {...btnProps} className={cls}>{inner(false)}</button>
         }>
           {/* Each item keeps its link component (as), its other link attributes and the current page. */}
-          {kids.map((k, i) => <MenuItem key={k.key != null ? k.key : i} {...omit(k.props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1, onClick: 1 }) as object}
-            href={k.props.href} as={k.props.as} icon={k.props.icon} aria-current={activeWithin(k) ? "page" : undefined} className={cn("dk-sidebar__menu-item", k.props.className)}
+          {kids.map((k, i) => <MenuItem key={k.key != null ? k.key : i} {...omit(k.props, ITEM_OWN) as object} onClick={undefined}
+            as={k.props.as} icon={k.props.icon} aria-current={activeWithin(k) ? "page" : undefined} className={cn("dk-sidebar__menu-item", k.props.className)}
             onSelect={k.props.onClick as ((e: React.SyntheticEvent) => void) | undefined}>{k.props.label}</MenuItem>)}
         </Menu>
       </li>
