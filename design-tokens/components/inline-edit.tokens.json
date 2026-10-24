@@ -22,6 +22,16 @@
           }
         }
       },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The text of a disabled InlineEdit (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-text-disabled"
+          }
+        }
+      },
       "icon": {
         "$type": "color",
         "$value": "{color.text-muted}",

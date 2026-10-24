@@ -39,7 +39,7 @@ const [slug, setSlug] = React.useState("apollo-plan");
 - Enter saves and Escape cancels; both put focus back on the button. Leaving the field (Tab or a click elsewhere) saves too and leaves focus where it went.
 - Escape inside a [Dialog](../Dialog/README.md) or [Drawer](../Drawer/README.md) only cancels the edit; the dialog stays open.
 - With `editing` and `onEditingChange` you open and close it yourself, for example from a Rename item in a [Menu](../Menu/README.md).
-- `disabled` and `readOnly` show the text without a button; `disabled` also dims it.
+- `disabled` and `readOnly` show the text without a button; `disabled` also mutes it (`--inline-edit-text-disabled`, still 4.5:1).
 - While someone types with an input method (Japanese, Chinese, Korean), Enter and Escape confirm or cancel the composition, not the edit.
 
 ## Accessibility
@@ -75,6 +75,7 @@ Each is an optional override: set it on the page, a container or one InlineEdit.
 | Token | Default | Use |
 | --- | --- | --- |
 | `--inline-edit-text` | `text` | The text in the button. |
+| `--inline-edit-text-disabled` | `text-muted` | The text of a disabled InlineEdit. |
 | `--inline-edit-placeholder` | `text-muted` | The placeholder when the text is empty. |
 | `--inline-edit-icon` | `text-muted` | The pencil. |
 | `--inline-edit-bg-hover` | `surface-muted` | The button's background on hover. |
