@@ -22,7 +22,7 @@ export interface ToastOptions {
   tone?: ToastTone;
   /** One button in the toast, such as Undo. Choosing it also closes the toast. */
   action?: { label: string; onClick: () => void };
-  /** Milliseconds before it goes. Default: 5000; 0 keeps it until it's closed. The time stops while it's hovered or focused, or the window is in the background. */
+  /** Milliseconds before it goes. Default: 5000, or 0 with an action, so there's time to reach it; 0 keeps it until it's closed. The time stops while it's hovered or focused, or the window is in the background. */
   duration?: number;
   /** What screen readers announce. Default: the title and description, when they're text. */
   announcement?: string;
@@ -38,6 +38,10 @@ let next = 0;
 const emit = () => listeners.forEach((l) => l(items));
 const text = (n: React.ReactNode) => (typeof n === "string" || typeof n === "number" ? String(n) : "");
 const TONES: readonly ToastTone[] = ["neutral", "info", "success", "warning", "danger"];
+// The key that moves focus to the newest toast and back (as in Radix), and the hint the first toast with an action
+// adds to what's announced, in the Toaster's words.
+const HOTKEY = "F8";
+let hint = "", hinted = false;
 
 /** Shows a toast in the page's <Toaster> and returns its id. */
 function show(options: ToastOptions | string): string {
@@ -47,7 +51,8 @@ function show(options: ToastOptions | string): string {
   const at = items.findIndex((x) => x.id === id);
   items = at >= 0 ? items.map((x, i) => (i === at ? item : x)) : items.concat(item);
   emit();
-  const say = o.announcement != null ? o.announcement : [text(o.title), text(o.description)].filter(Boolean).join(". ");
+  let say = o.announcement != null ? o.announcement : [text(o.title), text(o.description)].filter(Boolean).join(". ");
+  if (say && o.action && hint && !hinted) { say += ". " + hint; hinted = true; }
   if (say) announce(say, { assertive: item.tone === "danger" });   // an error interrupts; the rest wait their turn
   return id;
 }
@@ -72,21 +77,44 @@ const POSITIONS: readonly ToasterPosition[] = ["top-start", "top-center", "top-e
 const ICONS: Record<ToastTone, string | null> = { neutral: null, info: "info", success: "check_circle", warning: "warning", danger: "error" };
 
 /* Toaster: where toast() messages appear. Render one, once, near the root. Each toast has a title, an optional
-   description, tone icon, action and close button, and goes after its duration; the time stops while it's
-   hovered or focused. New toasts are announced through the shared polite live region. */
+   description, tone icon, action and close button, and goes after its duration (one with an action stays); the
+   time stops while it's hovered or focused. New toasts are announced through the shared polite live region. F8
+   moves focus to the newest toast, and F8 or Escape takes it back to where it was. */
 /** The place toast() messages appear: render one, once, near the root of the app. */
 export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: ToasterProps): React.ReactElement {
   const sds = useSerupa();
   const { position, label, dismissLabel, className, ...rest } = props;
   const [list, setList] = React.useState<Item[]>(items);
-  React.useEffect(() => { ensureAnnouncer(); listeners.add(setList); setList(items); return () => { listeners.delete(setList); }; }, []);
+  React.useEffect(() => { ensureAnnouncer(); hinted = false; listeners.add(setList); setList(items); return () => { listeners.delete(setList); }; }, []);
   const pos = oneOf(POSITIONS, position, "bottom-end");
+  hint = sds.labels.toastShortcut(HOTKEY);
+  const self = React.useRef<HTMLElement | null>(null);
+  const back = React.useRef<HTMLElement | null>(null);
+  React.useEffect(() => {
+    const away = () => { const b = back.current; back.current = null; if (b && b.isConnected) b.focus(); };
+    const onKey = (e: KeyboardEvent) => {
+      const region = self.current;
+      if (!region || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const inside = region.contains(document.activeElement);
+      if (e.key === HOTKEY) {
+        const toasts = region.querySelectorAll<HTMLElement>(".dk-toast");
+        if (inside) { e.preventDefault(); away(); return; }
+        if (!toasts.length) return;
+        e.preventDefault();
+        back.current = document.activeElement as HTMLElement | null;
+        // The newest one: last in the list, or first when the toasts stack downward from the top.
+        toasts[pos.startsWith("top") ? 0 : toasts.length - 1].focus();
+      } else if (e.key === "Escape" && inside && back.current) { e.preventDefault(); away(); }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [pos]);
   const ordered = pos.startsWith("top") ? list.slice().reverse() : list;   // newest nearest the edge
   // While a Dialog or Drawer is open the page behind it is inert and under it, so the toasts move into it: a
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
   const region = (
-    <section {...rest} aria-label={label || sds.labels.notifications} className={cn("dk-toaster", "dk-toaster--" + pos, className)} data-component="toaster" data-position={pos}>
+    <section {...rest} ref={self} aria-label={label || sds.labels.notifications} className={cn("dk-toaster", "dk-toaster--" + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="dk-toaster__list">
         {ordered.map((t) => <ToastView key={t.id} item={t} dismissLabel={dismissLabel || sds.labels.dismiss} />)}
       </ol>
@@ -97,7 +125,7 @@ export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: 
 
 function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElement {
   const t = props.item;
-  const duration = t.duration == null ? 5000 : t.duration;
+  const duration = t.duration == null ? (t.action ? 0 : 5000) : t.duration;
   // Each reason to stop the time is kept apart, so leaving with the mouse doesn't restart it while focus is still inside.
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -119,7 +147,7 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
   const titleId = t.id + "-title", descId = t.id + "-desc";
   const icon = ICONS[t.tone];
   return (
-    <li className={cn("dk-toast", "dk-toast--" + t.tone)} data-tone={t.tone} aria-labelledby={titleId} aria-describedby={t.description != null ? descId : undefined}
+    <li tabIndex={-1} className={cn("dk-toast", "dk-toast--" + t.tone)} data-tone={t.tone} aria-labelledby={titleId} aria-describedby={t.description != null ? descId : undefined}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false); }}>
       {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon name={icon} /></span> : null}

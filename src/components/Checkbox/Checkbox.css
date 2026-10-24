@@ -44,7 +44,7 @@
 .dk-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0); }
 .dk-checkbox__description { color: var(--checkbox-description-color, var(--text-muted)); }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
-.dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-checkbox__input:disabled:not(:checked, :indeterminate) { background: var(--checkbox-bg-disabled, var(--surface-muted)); }
 @media (forced-colors: active) { .dk-checkbox__icon { color: CanvasText; } }
 }

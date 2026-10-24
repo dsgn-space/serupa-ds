@@ -86,8 +86,8 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-chevron` | `text-muted` | The chevron button's icon (3:1 on the field). |
 | `--combobox-chevron-hover` | `text` | The chevron and × buttons' icon on hover. |
 | `--combobox-chevron-bg-hover` | `secondary` | The chevron and × buttons' background on hover. |
-| `--combobox-listbox-bg` | `surface` | The list's background. |
-| `--combobox-listbox-border` | `border` | The list's outline. |
+| `--combobox-listbox-bg` | `surface-overlay` | The list's background. |
+| `--combobox-listbox-border` | `border-overlay` | The list's outline. |
 | `--combobox-option-color` | `text` | An option's label. |
 | `--combobox-option-bg-active` | `surface-muted` | The highlighted option (hover or arrow keys), so muted text keeps 4.5:1 on it. |
 | `--combobox-description-color` | `text-muted` | An option's second line, and the empty and loading messages. |
