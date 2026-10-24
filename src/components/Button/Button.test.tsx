@@ -30,7 +30,7 @@ async function eased(node: Element) {
 async function hold<T>(target: Element, during: () => Promise<T> | T, { ms = 500, at, button }: { ms?: number; at?: { x: number; y: number }; button?: 'right' } = {}): Promise<T> {
   const down = new Promise((ok) => document.addEventListener('pointerdown', ok, { once: true, capture: true }));
   // userEvent calls start once awaited (then), so chain one now and look while the button is down.
-  const click = userEvent.click(target, { delay: ms, position: at, button, force: true } as never).then(() => {});
+  const click = userEvent.click(target, { delay: ms, position: at, button, force: true }).then(() => {});
   await Promise.race([down, new Promise((ok) => setTimeout(ok, ms / 2))]);   // a disabled control may get no pointerdown
   await eased(target);
   const out = await during();
@@ -51,7 +51,7 @@ function reduceMotion(): () => void {
   };
   for (const s of document.styleSheets) { try { walk(s.cssRules); } catch { /* another origin */ } }
   const mm = window.matchMedia;
-  window.matchMedia = ((query: string) => (/prefers-reduced-motion:\s*reduce/.test(query) ? { ...mm.call(window, 'all'), matches: true, media: query } : mm.call(window, query))) as typeof window.matchMedia;
+  window.matchMedia = ((query: string) => (/prefers-reduced-motion:\s*reduce/.test(query) ? { ...mm.call(window, 'all'), matches: true, media: query } : mm.call(window, query)));
   return () => { for (const [m, t] of flipped) m.mediaText = t; window.matchMedia = mm; };
 }
 

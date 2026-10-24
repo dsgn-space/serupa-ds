@@ -88,7 +88,7 @@ async function swipe(id: string, dx: number, from?: HTMLElement) {
   v.scrollIntoView({ block: 'center' });
   const r = v.getBoundingClientRect(), s = from ? from.getBoundingClientRect() : null;
   const x = s ? s.left + s.width / 2 - r.left : r.width / 2, y = s ? s.top + s.height / 2 - r.top : 40;
-  await userEvent.dragAndDrop(from || v, v, { sourcePosition: s ? { x: s.width / 2, y: s.height / 2 } : { x, y }, targetPosition: { x: x + dx, y }, force: true } as never);
+  await userEvent.dragAndDrop(from || v, v, { sourcePosition: s ? { x: s.width / 2, y: s.height / 2 } : { x, y }, targetPosition: { x: x + dx, y }, force: true });
 }
 
 describe('Carousel', () => {
