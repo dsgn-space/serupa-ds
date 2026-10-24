@@ -51,6 +51,7 @@
 
 /* pill */
 @media (hover: hover) { .dk-tabs--pill .dk-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }
+.dk-tabs--pill .dk-tabs__tab:active:not(:disabled):not([aria-selected="true"]) { background: var(--tabs-pill-bg-pressed, var(--pressed)); }
 .dk-tabs--pill .dk-tabs__tab[aria-selected="true"] { background: var(--tabs-pill-bg-selected, var(--primary)); color: var(--tabs-pill-text-selected, var(--on-primary)); }
 .dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:focus-visible { box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)), inset 0 0 0 var(--spacing-1) var(--tabs-focus-gap-color, var(--surface)); }
 

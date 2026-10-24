@@ -8,6 +8,7 @@ import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import * as icons from "../../material/builtin";
+import { isComposing } from "../../internal/ime";
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -28,7 +29,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   /** 'sm', 'md' (default) or 'lg', like Input. */
   size?: 'sm' | 'md' | 'lg';
   invalid?: boolean;
-  /** The list's name, and the button's. Default: "Choose time". */
+  /** The list's name, and the button's. Default: "Choose a time". */
   listLabel?: string;
 }
 
@@ -111,7 +112,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const pick = (n: number) => { commit(n); setOpen(false); if (field.current) field.current.focus(); };
   const keys = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onKeyDown) onKeyDown(e);
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || isComposing(e)) return;
     const last = times.length - 1, page = 4;
     const move = (i: number) => { e.preventDefault(); typed.current = false; setActive(i); };
     if (!open) {

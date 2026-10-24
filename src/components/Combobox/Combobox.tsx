@@ -9,8 +9,10 @@ import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
+import { isComposing } from "../../internal/ime";
 import { fieldName } from "../../internal/fieldName";
 import * as icons from "../../material/builtin";
+import { fold } from "../../internal/fold";
 
 export type ComboboxOption = string | { value: string; label: string; description?: React.ReactNode; disabled?: boolean };
 export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defaultValue" | "rightIcon" | "onChange"> {
@@ -24,7 +26,7 @@ export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defa
   onValueChange?: (value: string | null) => void;
   /** Called with the text as it's typed: for loading options from a server (with filter={false} and loading). */
   onInputChange?: (text: string) => void;
-  /** How typing narrows the list. Default: options whose label contains the text, ignoring case and accents. false shows every option (filter them yourself). */
+  /** How typing narrows the list. Default: options whose label contains the text, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße"). false shows every option (filter them yourself). */
   filter?: false | ((option: { value: string; label: string }, text: string) => boolean);
   /** Shows a × that clears the selection once something is picked. Default: false. */
   clearable?: boolean;
@@ -41,7 +43,6 @@ export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defa
 }
 
 interface Opt { value: string; label: string; description?: React.ReactNode; disabled?: boolean; i: number }
-const plain = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 /* Combobox: a text field with a list of options that narrows as you type: pick a country, an assignee, a
    project. Follows the ARIA combobox pattern: the field is role="combobox" (aria-expanded, aria-controls,
@@ -91,7 +92,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const matches = (o: Opt) => {
     if (!typed || props.filter === false) return true;
     if (typeof props.filter === "function") return props.filter({ value: o.value, label: o.label }, text);
-    return plain(o.label).includes(plain(text.trim()));
+    return fold(o.label).includes(fold(text.trim()));
   };
   const shown = opts.filter(matches);
   const usable = shown.filter((o) => !o.disabled);
@@ -127,13 +128,13 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     const t = e.target.value;
     setText(t); setTyped(true);
     if (!locked) setOpen(true);
-    const first = opts.filter((o) => !o.disabled && (props.filter === false || (typeof props.filter === "function" ? props.filter({ value: o.value, label: o.label }, t) : plain(o.label).includes(plain(t.trim())))))[0];
+    const first = opts.filter((o) => !o.disabled && (props.filter === false || (typeof props.filter === "function" ? props.filter({ value: o.value, label: o.label }, t) : fold(o.label).includes(fold(t.trim())))))[0];
     setActive(t.trim() && first ? first.i : -1);
     if (props.onInputChange) props.onInputChange(t);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e);
-    if (e.defaultPrevented || locked) return;
+    if (e.defaultPrevented || locked || isComposing(e)) return;
     if (e.key === "ArrowDown") { e.preventDefault(); if (!open) show(e.altKey ? "selected" : "first"); else move(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); if (!open) show("last"); else move(-1); }
     else if (e.key === "Enter" && open) { e.preventDefault(); const o = opts[active]; if (o && shown.includes(o)) pick(o); else hide(); }

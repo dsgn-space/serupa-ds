@@ -9,6 +9,7 @@ import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import * as icons from "../../material/builtin";
+import { isComposing } from "../../internal/ime";
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
@@ -140,6 +141,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       value={text[which]} placeholder={datePattern(locale)} disabled={disabled} readOnly={readOnly}
       onChange={(e) => setText({ ...text, [which]: e.target.value })} onBlur={() => read(which)}
       onKeyDown={(e) => {
+        if (isComposing(e)) return;
         if (e.key === "Enter") read(which);
         else if (e.key === "ArrowDown" && e.altKey && !off) { e.preventDefault(); read(which); show(); }
       }} />
@@ -163,7 +165,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       {startName ? <input type="hidden" name={startName} value={value.start ? isoDate(value.start) : ""} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} value={value.end ? isoDate(value.end) : ""} disabled={disabled} /> : null}
       <div ref={panel} id={popId} role="dialog" aria-label={buttonLabel || sds.labels.chooseDates} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup dk-date-range-picker__popup"
-        onKeyDown={(e) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); } }}
+        onKeyDown={(e) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}
         onMouseLeave={() => setHover(null)}>
         {open ? <>
           <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>

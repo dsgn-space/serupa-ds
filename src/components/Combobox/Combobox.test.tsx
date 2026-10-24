@@ -80,6 +80,15 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('typing ignores letters that don\'t decompose and width too: "lodz" finds Łódź, "strasse" finds Straße, "ｔｏｋｙｏ" finds Tokyo', async () => {
+    await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="City" options={['Łódź', 'Straße', 'Ørsted', 'Tokyo', 'Paris']} /></div>);
+    await open();
+    for (const [typed, found] of [['lodz', 'Łódź'], ['strasse', 'Straße'], ['orsted', 'Ørsted'], ['ｔｏｋｙｏ', 'Tokyo']]) {
+      await selectAll(); await userEvent.keyboard(typed);
+      expect(st('cb').opts, typed).toEqual([found]);
+    }
+  });
+
   test('leaving with half-typed text puts back the picked label; emptying the field and leaving clears the selection', async () => {
     await render(<Countries />);
     await open();

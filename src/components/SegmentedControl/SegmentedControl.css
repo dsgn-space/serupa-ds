@@ -36,7 +36,7 @@
 .dk-segmented__icon { display: inline-flex; }
 .dk-segmented__icon .dk-icon { font-size: var(--spacing-4); }
 .dk-segmented--size-sm .dk-segmented__icon .dk-icon { font-size: var(--spacing-3\.5); }
-.dk-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); }
+@media (hover: hover) { .dk-segmented__item:hover:not(:disabled) { color: var(--segmented-control-text-hover, var(--text)); } }
 .dk-segmented__item--selected { color: var(--segmented-control-text-selected, var(--text)); }
 .dk-segmented__item:focus { outline: none; }
 .dk-segmented__item:focus-visible { outline: var(--focus-ring-width) solid var(--segmented-control-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }

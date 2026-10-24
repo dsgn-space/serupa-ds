@@ -15,10 +15,10 @@ const BUDGET = {
   'All components (index.js)': 49,   // 46.8 once each component imports only its own icons (R7)
   'Button alone': 5.5,   // 5.1, without any icon data (R7)
   'Dialog alone': 6.5,   // 6.2, with only its close icon (R7)
-  'components.css': 38,
+  'components.css': 39.5,   // 38.2 after R11 put the hover rules in @media (hover: hover)
   'utilities.css': 168,
   'bundle.css': 206,
-  'base.css': 1.5,
+  'base.css': 1.85,   // 1.74 with the print styles (R12)
   'theme.js': 2,
   'serupa.iife.js': 600,
 };

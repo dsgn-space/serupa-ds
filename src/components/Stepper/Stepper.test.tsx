@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Stepper, type StepperStep } from './Stepper';
 
 const STEPS: StepperStep[] = [{ title: 'Account', description: 'Email and password' }, { title: 'Profile', optional: true }, { title: 'Billing' }, { title: 'Review' }];
@@ -30,6 +31,12 @@ function App(props: { sref?: React.Ref<HTMLElement> }) {
 const setup = async (sref?: React.Ref<HTMLElement>) => { clicks = []; await render(<App sref={sref} />); };
 
 describe('Stepper', () => {
+  test('step numbers are written in the digits of the locale, as Calendar writes its days: ٣ ٤ in ar-EG', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Stepper id="sar" current={1} steps={[{ title: 'One' }, { title: 'Two' }, { title: 'Three' }, { title: 'Four' }]} /></SerupaProvider>);
+    const shown = [...document.querySelectorAll('#sar .dk-stepper__indicator')].map((e) => e.textContent);
+    expect(shown.slice(2)).toEqual(['٣', '٤']);
+  });
+
   test('a <nav aria-label="Progress"> around an <ol> of 4 steps, 3 lines between them; description and "Optional"; ref and className reach the nav', async () => {
     const ref = React.createRef<HTMLElement>();
     await setup(ref);
@@ -129,5 +136,29 @@ describe('Stepper', () => {
   test('--stepper-active-bg overrides one stepper', async () => {
     await setup();
     expect(css(el('tok').querySelector('.dk-stepper__indicator')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+  test('too narrow for the titles side by side (320px): circles only, "Step 3 of 4: Billing" under them, no sideways scroll; wide again: titles back', async () => {
+    let setW: (w: number) => void = () => {};
+    function Narrow() {
+      const [w, set] = React.useState(320); setW = set;
+      return <div id="box" style={{ width: w + 'px' }}><Stepper id="nar" steps={STEPS} current={2} /><Stepper id="nv" orientation="vertical" steps={STEPS} current={2} /></div>;
+    }
+    await render(<Narrow />);
+    const n = el('nar');
+    expect(n.className).toMatch(/dk-stepper--compact/);
+    expect(n.scrollWidth).toBeLessThanOrEqual(320);
+    const circles = [...n.querySelectorAll('.dk-stepper__indicator')].map(rect);
+    for (let i = 1; i < circles.length; i++) expect(circles[i].left).toBeGreaterThanOrEqual(circles[i - 1].right);
+    const summary = n.querySelector('.dk-stepper__summary') as HTMLElement;
+    expect([summary.textContent, summary.getAttribute('aria-hidden')]).toEqual(['Step 3 of 4: Billing', 'true']);
+    // The titles stay in the list for screen readers: clipped to 1px, not removed.
+    const title = lis('nar')[0].querySelector('.dk-stepper__text') as HTMLElement;
+    expect([title.textContent, rect(title).width <= 1, css(title).display !== 'none']).toEqual(['Account, completedEmail and password', true, true]);
+    expect(el('nv').className).not.toMatch(/compact/);
+    setW(720);
+    await expect.poll(() => n.className).not.toMatch(/compact/);
+    expect(n.querySelector('.dk-stepper__summary')).toBeNull();
+    setW(320);
+    await expect.poll(() => n.className).toMatch(/compact/);
   });
 });

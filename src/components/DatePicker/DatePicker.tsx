@@ -2,13 +2,14 @@
 import * as React from "react";
 import { cn, domId, isInvalid, oneOf, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { compare, datePattern, day, formatDate, isoDate, isValid, parseDate } from "../../internal/dates";
-import { cssLength, hideLayer, place, showLayer } from "../../internal/position";
+import { cssLength, hideLayer, placeLayer, showLayer } from "../../internal/position";
 import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 import * as icons from "../../material/builtin";
+import { isComposing } from "../../internal/ime";
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> {
   /** The chosen day (controlled), or null. Use with onValueChange. */
@@ -30,7 +31,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   size?: 'sm' | 'md' | 'lg';
   /** A danger border and aria-invalid, like Input. */
   invalid?: boolean;
-  /** The calendar button's name. Default: "Choose date". */
+  /** The calendar button's name. Default: "Choose a date". */
   buttonLabel?: string;
 }
 
@@ -90,15 +91,14 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
     if (!p) return;
     if (!open || !anchor) { hideLayer(p); return; }
     showLayer(p);
-    const update = () => {
-      const r = place(anchor.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, "bottom-start", cssLength(p, "--dk-dp-offset"), "bottom");
-      p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
-    };
+    const update = () => placeLayer(p, anchor, "bottom-start", cssLength(p, "--dk-dp-offset"), "bottom");
+    // Scrolling inside the calendar (when it's taller than the room it has) doesn't move it.
+    const scrolled = (e: Event) => { if (!(e.target instanceof Node && p.contains(e.target))) update(); };
     update();
     const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
     if (ro) { ro.observe(p); ro.observe(anchor); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+    window.addEventListener("scroll", scrolled, true); window.addEventListener("resize", update);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", update); };
   }, [open]);
   React.useEffect(() => {
     if (!open) return;
@@ -122,7 +122,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
         onBlur={(e) => { read(); if (onBlur) onBlur(e); }}
         onKeyDown={(e) => {
           if (onKeyDown) onKeyDown(e);
-          if (e.defaultPrevented) return;
+          if (e.defaultPrevented || isComposing(e)) return;
           if (e.key === "Enter") read();
           else if (e.key === "ArrowDown" && e.altKey && !off) { e.preventDefault(); read(); setOpen(true); }
         }} />
@@ -132,7 +132,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
       </button>
       {name ? <input type="hidden" name={name} value={value ? isoDate(value) : ""} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"
-        onKeyDown={(e) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); } }}>
+        onKeyDown={(e) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}>
         {open ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus
           onValueChange={(d) => { commit(d); close(true); }} /> : null}
       </div>

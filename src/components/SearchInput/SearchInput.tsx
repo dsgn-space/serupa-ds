@@ -5,6 +5,7 @@ import { Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import type { InputProps } from "../Input/Input";
 import { component } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 import { useSerupa } from "../../internal/provider";
 import * as icons from "../../material/builtin";
 
@@ -52,7 +53,7 @@ export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInp
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => { if (!controlled) setTyped(e.target.value); if (rest.onChange) rest.onChange(e); };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e);
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || isComposing(e)) return;
     if (e.key === "Escape" && e.currentTarget.value !== "" && !locked) { e.preventDefault(); e.stopPropagation(); clear(); }
     else if (e.key === "Enter" && props.onSearch) props.onSearch(e.currentTarget.value);
   };

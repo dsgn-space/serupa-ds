@@ -2,7 +2,8 @@
 import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { config } from "../../internal/config";
-import { useSerupa } from "../../internal/provider";
+import { displayNumber } from "../../internal/numbers";
+import { useLocale, useSerupa } from "../../internal/provider";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
@@ -64,11 +65,13 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
    loadingText ("Loading") and, on an interactive badge, blocks clicks while keeping focus. */
 const VARIANTS: readonly BadgeVariant[] = ["subtle", "solid", "outline"];
 const TONES: readonly BadgeTone[] = ["neutral", "primary", "success", "warning", "danger", "info", "red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal", "cyan", "sky", "blue", "indigo", "violet", "purple", "fuchsia", "pink", "rose"];
+const PLAIN = { useGrouping: false } as const;
 const OWN = { variant: 1, tone: 1, size: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingText: 1, className: 1, children: 1 } as const;
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
 export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge", function Badge(props, ref) {
   const sds = useSerupa();
+  const locale = useLocale();
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, "subtle");
   const tone = oneOf(TONES, props.tone, "neutral");
@@ -89,7 +92,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
     const n = Math.max(0, Math.floor(Number(props.count)) || 0);
     const max = Math.max(1, Math.floor(Number(props.max)) || 99);
     if (n === 0 && !props.showZero) return null;   // nothing to count: no badge
-    label = n > max ? max + "+" : String(n);
+    label = displayNumber(Math.min(n, max), locale, PLAIN) + (n > max ? "+" : "");   // the locale's digits, as Calendar's
   }
   const isLink = rest.href != null, interactive = isLink || typeof rest.onClick === "function";
   let removable = !isCount && typeof props.onRemove === "function";

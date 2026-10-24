@@ -41,6 +41,27 @@ function App(props: { sref?: React.Ref<HTMLDivElement> }) {
 const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits = []; await render(<App sref={sref} />); };
 
 describe('Slider', () => {
+  test('your onKeyDown runs first: preventDefault() on a key keeps the slider from changing; other keys still work', async () => {
+    const changes: number[] = [];
+    await render(<Slider id="kd" aria-label="Volume" defaultValue={50} onValueChange={(v) => changes.push(v as number)}
+      onKeyDown={(e) => { if (e.key === 'ArrowRight') e.preventDefault(); }} />);
+    thumb('kd').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([now('kd'), changes]).toEqual([50, []]);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([now('kd'), changes.length > 0]).toEqual([49, true]);
+  });
+
+  test('a range: onFocus and onBlur fire once each, entering and leaving the slider, not when Tab moves between its thumbs', async () => {
+    const seen: string[] = [];
+    await render(<><button id="before">Before</button>
+      <Slider id="fb" aria-label="Price" defaultValue={[20, 80]} onFocus={() => seen.push('focus')} onBlur={() => seen.push('blur')} />
+      <button id="after">After</button></>);
+    el('before').focus();
+    await userEvent.tab(); await userEvent.tab(); await userEvent.tab();
+    expect([document.activeElement!.id, seen]).toEqual(['after', ['focus', 'blur']]);
+  });
+
   test('one thumb: a role="slider" at 50 of 0..100, labelled by aria-labelledby, in the Tab order; ref and className reach the root; md is 20px tall', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await setup(ref);
@@ -149,6 +170,25 @@ describe('Slider', () => {
     thumb('fs').focus();
     await userEvent.keyboard('{ArrowRight}');
     expect([now('fs'), calls, thumb('fs').getAttribute('aria-disabled'), new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], null, '31']);
+  });
+
+  test('ref.current.focus() and autoFocus land on the first thumb, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
+    const one = React.createRef<HTMLDivElement>(), two = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    await render(<>
+      <Slider id="sfa" aria-label="Volume" autoFocus />
+      <Slider id="sfr" ref={one} aria-label="Volume" />
+      <Slider id="sfg" ref={two} aria-label="Price" defaultValue={[20, 80]} />
+      <Slider id="sfd" ref={off} aria-label="Volume" disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(thumb('sfa'));
+    expect(el('sfa').hasAttribute('autofocus')).toBe(false);
+    one.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfr'));
+    two.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfg', 0));
+    off.current!.focus();
+    expect(document.activeElement).toBe(thumb('sfg', 0));
+    expect(one.current).toBe(el('sfr'));
   });
 
   test('sm: 16px thumb on a 4px track; at 0 the thumb is centered on the track\'s start and stays inside the slider', async () => {

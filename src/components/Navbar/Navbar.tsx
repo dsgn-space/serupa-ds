@@ -4,6 +4,7 @@ import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
 import type { ContainerSize } from "../Container/Container";
 import { component } from "../../internal/component";
+import { isComposing } from "../../internal/ime";
 import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
 import * as icons from "../../material/builtin";
@@ -58,7 +59,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
   }, [open]);
   function onKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (props.onKeyDown) props.onKeyDown(e);
-    if (!e.defaultPrevented && e.key === "Escape" && open) { e.preventDefault(); setOpen(false); if (toggle.current) toggle.current.focus(); }
+    if (!e.defaultPrevented && e.key === "Escape" && open && !isComposing(e)) { e.preventDefault(); setOpen(false); if (toggle.current) toggle.current.focus(); }
   }
   return (
     <NavbarContext.Provider value={{ close }}>

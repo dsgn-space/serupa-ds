@@ -29,7 +29,7 @@ export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "
   previousLabel?: string;
   /** The next button's name. Default: "Next slide". */
   nextLabel?: string;
-  /** Each slide's name, and its dot's. Default: "<n> of <count>". */
+  /** Each slide's name, and its dot's, from the index (from 0) and the count. Default: the slideOf label, "2 of 5". */
   slideLabel?: (index: number, count: number) => string;
 }
 
@@ -52,7 +52,7 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
   const controlled = props.index != null;
   const index = clamp(controlled ? props.index! : own);
   const loop = !!props.loop && count > 1;
-  const name = props.slideLabel || ((i: number, n: number) => (i + 1) + " of " + n);
+  const name = props.slideLabel || ((i: number, n: number) => sds.labels.slideOf(i + 1, n));
   const dotsRef = React.useRef<HTMLDivElement>(null);
   const viewport = React.useRef<HTMLDivElement>(null);
   const drag = React.useRef<{ x: number; y: number; id: number } | null>(null);
