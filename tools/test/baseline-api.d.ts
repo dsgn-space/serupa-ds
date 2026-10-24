@@ -639,6 +639,9 @@ interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDivElement
     fullWidth?: boolean;
     disabled?: boolean;
     name?: string;
+    invalid?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
 }
 declare const SegmentedControl: React.ForwardRefExoticComponent<SegmentedControlProps & React.RefAttributes<HTMLDivElement>>;
 type SelectOption = {
