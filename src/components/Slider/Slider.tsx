@@ -101,8 +101,10 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   };
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX)); };
   const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); commit(); };
+  // Your onKeyDown runs first, so preventDefault() in it keeps the slider's own handling of that key from running.
   const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
-    if (disabled) return;
+    if (rest.onKeyDown) rest.onKeyDown(e as unknown as React.KeyboardEvent<HTMLDivElement>);
+    if (disabled || e.defaultPrevented) return;
     const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
     const by = (e.shiftKey ? large : 1) * step, v = latest.current[i];
     let n: number;
@@ -122,6 +124,11 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
     if (set(i, n)[i] !== before) commit();
   };
 
+  // onFocus and onBlur fire when focus enters or leaves the slider, not when it moves between a range's two thumbs.
+  const crossing = (e: React.FocusEvent<HTMLDivElement>) => !(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget));
+  const onFocus = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onFocus && crossing(e)) rest.onFocus(e); };
+  const onBlur = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onBlur && crossing(e)) rest.onBlur(e); };
+
   const names = props.thumbLabels || ["Minimum", "Maximum"];
   const lo = isRange ? pct(vals[0]) : 0, hi = pct(vals[vals.length - 1]);
   return (
@@ -129,7 +136,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
       role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? props["aria-labelledby"] : undefined}
       className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", props.className)}
       data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined}
-      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}>
+      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
+      onKeyDown={undefined} onFocus={onFocus} onBlur={onBlur}>
       <div className="dk-slider__track">
         <div className="dk-slider__fill" style={{ insetInlineStart: lo + "%", inlineSize: hi - lo + "%" }} />
         {vals.map((v, i) => (

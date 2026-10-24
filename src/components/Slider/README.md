@@ -49,6 +49,8 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 | Shift+Arrow, PageUp, PageDown | ± `largeStep` steps |
 | Home, End | The ends; a range thumb stops at the other thumb |
 
+Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in it overrides one. `onFocus` and `onBlur` fire when focus enters or leaves the slider, not as it moves between a range's two thumbs, so a form library's "touched on blur" waits until people leave the whole control.
+
 ## Props
 
 | Prop | Type | Default | Notes |

@@ -41,6 +41,27 @@ function App(props: { sref?: React.Ref<HTMLDivElement> }) {
 const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits = []; await render(<App sref={sref} />); };
 
 describe('Slider', () => {
+  test('your onKeyDown runs first: preventDefault() on a key keeps the slider from changing; other keys still work', async () => {
+    const changes: number[] = [];
+    await render(<Slider id="kd" aria-label="Volume" defaultValue={50} onValueChange={(v) => changes.push(v as number)}
+      onKeyDown={(e) => { if (e.key === 'ArrowRight') e.preventDefault(); }} />);
+    thumb('kd').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([now('kd'), changes]).toEqual([50, []]);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([now('kd'), changes.length > 0]).toEqual([49, true]);
+  });
+
+  test('a range: onFocus and onBlur fire once each, entering and leaving the slider, not when Tab moves between its thumbs', async () => {
+    const seen: string[] = [];
+    await render(<><button id="before">Before</button>
+      <Slider id="fb" aria-label="Price" defaultValue={[20, 80]} onFocus={() => seen.push('focus')} onBlur={() => seen.push('blur')} />
+      <button id="after">After</button></>);
+    el('before').focus();
+    await userEvent.tab(); await userEvent.tab(); await userEvent.tab();
+    expect([document.activeElement!.id, seen]).toEqual(['after', ['focus', 'blur']]);
+  });
+
   test('one thumb: a role="slider" at 50 of 0..100, labelled by aria-labelledby, in the Tab order; ref and className reach the root; md is 20px tall', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await setup(ref);
