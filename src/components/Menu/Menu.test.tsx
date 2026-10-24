@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, settle } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, press, settle } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuGroup, MenuItem, MenuSeparator } from './Menu';
@@ -174,4 +174,12 @@ describe('Menu', () => {
     still.remove();
     expect(low).toEqual([]);
   });
+
+  test('pressed: an item held down fills with pressed, one step past the highlight', async () => {
+    await render(<Actions chosen={[]} />);
+    await userEvent.click(el('mb'));
+    const item = menuOf('mb').querySelectorAll<HTMLElement>('[role="menuitem"]')[1];
+    await press(item, () => expect.poll(() => getComputedStyle(item).backgroundColor).toBe(color('var(--pressed)')));
+  });
+
 });
