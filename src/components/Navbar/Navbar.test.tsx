@@ -124,6 +124,34 @@ describe('Navbar', () => {
     expect(gap <= 0 && gap >= -1).toBe(true);
   });
 
+  test('open, Tab goes from the menu button into the links, in order (WCAG 2.4.3); Tab past the last one leaves the header and closes the menu', async () => {
+    await render(<><Main /><button id="after">After</button></>);
+    await resize(500);
+    await userEvent.click(toggle());
+    await expect.poll(() => vis('#nav nav')).toBe(true);
+    const seen: string[] = [];
+    for (let i = 0; i < 4; i++) { await userEvent.tab(); seen.push((document.activeElement as HTMLElement).textContent || ''); }
+    expect(seen).toEqual(['Dashboard', 'Projects', 'Team', 'After']);
+    expect([toggle().getAttribute('aria-expanded'), vis('#nav nav')]).toEqual(['false', false]);
+  });
+
+  test('open, Shift+Tab from the first link goes back to the menu button, and the menu stays open', async () => {
+    await render(<Main />);
+    await resize(500);
+    await userEvent.click(toggle());
+    await userEvent.tab();
+    await userEvent.tab({ shift: true });
+    expect([document.activeElement === toggle(), toggle().getAttribute('aria-expanded')]).toEqual([true, 'true']);
+  });
+
+  test('closed, and on wide screens, Tab still goes brand, links, actions', async () => {
+    await render(<Main />);
+    el('brand').focus();
+    const seen: string[] = [];
+    for (let i = 0; i < 4; i++) { await userEvent.tab(); seen.push((document.activeElement as HTMLElement).textContent || ''); }
+    expect(seen).toEqual(['Dashboard', 'Projects', 'Team', 'Sign in']);
+  });
+
   test('Escape closes it and returns focus to the menu button', async () => {
     await render(<Main />);
     await resize(500);
