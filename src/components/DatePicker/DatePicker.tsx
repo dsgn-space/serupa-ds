@@ -7,6 +7,7 @@ import { Calendar } from "../Calendar/Calendar";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useFieldControl } from "../../internal/field";
+import { useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> {
@@ -21,7 +22,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   max?: Date;
   /** Days that can't be chosen, such as weekends. */
   isDateDisabled?: (date: Date) => boolean;
-  /** A BCP 47 locale for the typed format, names and first day of the week. Default: the browser's. */
+  /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
   weekStartsOn?: number;
@@ -42,7 +43,9 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 /** A date field: type a date or pick one from a calendar popover. */
 export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePickerProps>("DatePicker", function DatePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
-  const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale, weekStartsOn, size: _s, invalid: _i, buttonLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const sds = useSerupa();
+  const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, buttonLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const locale = localeProp || sds.locale;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   const controlled = props.value !== undefined;
@@ -120,12 +123,12 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
           if (e.key === "Enter") read();
           else if (e.key === "ArrowDown" && e.altKey && !off) { e.preventDefault(); read(); setOpen(true); }
         }} />
-      <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || "Choose date"} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
+      <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
         disabled={off} onClick={() => { if (!open) read(); setOpen(!open); }}>
         <Icon name="calendar_today" />
       </button>
       {name ? <input type="hidden" name={name} value={value ? isoDate(value) : ""} disabled={disabled} /> : null}
-      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || "Choose date"} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"
+      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: "manual" }} hidden={!open || undefined} className="dk-date-picker__popup"
         onKeyDown={(e) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); } }}>
         {open ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus
           onValueChange={(d) => { commit(d); close(true); }} /> : null}

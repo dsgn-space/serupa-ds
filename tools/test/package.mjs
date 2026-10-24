@@ -86,6 +86,7 @@ if (D) {
     SegmentedControl: h(D.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }] }),
     Sidebar: h(D.Sidebar, null, h(D.SidebarSection, { title: 'Workspace' }, h(D.SidebarItem, { href: '/', icon: 'home', label: 'Home', active: true }))),
     Slider: h(D.Slider, { 'aria-label': 'Price', defaultValue: [20, 80] }),
+    SerupaProvider: h(D.SerupaProvider, { locale: 'id-ID', labels: D.idLabels }, h(D.Pagination, { count: 3 })),
     Stepper: h(D.Stepper, { current: 1, steps: [{ title: 'Account' }, { title: 'Plan' }, { title: 'Pay' }] }),
     Table: h(D.Table, null, h(D.TableHead, null, h(D.TableRow, null, h(D.TableHeaderCell, null, 'Name'))), h(D.TableBody, null, h(D.TableRow, null, h(D.TableCell, null, 'Ada'))), h(D.TableFoot, null, h(D.TableRow, null, h(D.TableCell, null, '1')))),
     Tabs: h(D.Tabs, { defaultValue: 'a' }, h(D.TabList, { 'aria-label': 'Sections' }, h(D.Tab, { value: 'a' }, 'A'), h(D.Tab, { value: 'b' }, 'B')), h(D.TabPanel, { value: 'a' }, 'Panel')),
@@ -132,7 +133,7 @@ if (D) {
   try { sc = JSON.parse(rsc.stdout); } catch { /* reported below */ }
   t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 KB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
   // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
-  const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\bon[A-Z]\w*=\{/;
+  const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\buseSerupa\(|\bon[A-Z]\w*=\{/;
   const unmarked = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
     .filter((f) => { const src = read(`src/components/${f}`); return clientOnly.test(src) && !/^"use client";/.test(src); });
   t('every component module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));
