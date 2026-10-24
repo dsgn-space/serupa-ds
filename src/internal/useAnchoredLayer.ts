@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useIsoLayoutEffect } from "./cn";
-import { cssLength, hideLayer, place, showLayer, type Placement } from "./position";
+import { cssLength, hideLayer, placeLayer, showLayer, type Placement } from "./position";
 
 type Ref = React.RefObject<HTMLElement | null>;
 
@@ -35,14 +35,15 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     showLayer(p);
     const update = () => {
       if (matchWidth) p.style.minWidth = a.offsetWidth + "px";
-      const r = place(a.getBoundingClientRect(), { width: p.offsetWidth, height: p.offsetHeight }, placement, cssLength(p, offsetVar), fallback);
-      p.style.left = r.x + "px"; p.style.top = r.y + "px"; p.dataset.side = r.side;
+      placeLayer(p, a, placement, cssLength(p, offsetVar), fallback);
     };
+    // Scrolling inside the layer doesn't move it.
+    const scrolled = (e: Event) => { if (!(e.target instanceof Node && p.contains(e.target))) update(); };
     update();
     const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
     if (ro) { ro.observe(p); ro.observe(a); }
-    window.addEventListener("scroll", update, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+    window.addEventListener("scroll", scrolled, true); window.addEventListener("resize", update);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", update); };
   }, [open, layer, anchor, placement, fallback, offsetVar, matchWidth, watch]);
   React.useEffect(() => {
     if (!open) return;

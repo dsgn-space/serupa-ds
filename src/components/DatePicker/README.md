@@ -1,6 +1,6 @@
 # DatePicker
 
-A date field: people type a date, or pick one from a calendar that opens under the field.
+A date field: people type a date, or pick one from a calendar that opens under the field. The calendar flips above the field when there's no room below; with no room on either side (a short window, a phone held sideways) it takes the roomier side and scrolls inside, so its last week can still be reached.
 
 ```tsx
 import { DatePicker, Field } from "serupa-ds";
