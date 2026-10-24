@@ -1,0 +1,44 @@
+/* ---------------------------------------------------------------
+   InlineEdit: text in a borderless button that opens into an Input in the same place. The button takes Input's
+   height, padding and border width (a transparent border), so opening it moves nothing. It shows a background and
+   the pencil on hover and keyboard focus. Structure: .dk-inline-edit > .dk-inline-edit__view (button) >
+   .dk-inline-edit__text, .dk-inline-edit__icon; or .dk-input while editing, then .dk-inline-edit__error.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-inline-edit {
+  --dk-ie-h: var(--input-height-md, var(--control-height-md));
+  --dk-ie-px: var(--input-padding-x-md, var(--spacing-3));
+  --dk-ie-icon: var(--input-icon-size-md, var(--spacing-4));
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--inline-edit-gap, var(--spacing-1));
+  max-width: var(--sizing-full); min-width: var(--spacing-0);
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+}
+.dk-inline-edit--size-sm { --dk-ie-h: var(--input-height-sm, var(--control-height-sm)); --dk-ie-px: var(--input-padding-x-sm, var(--spacing-2)); --dk-ie-icon: var(--input-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-inline-edit--size-lg { --dk-ie-h: var(--input-height-lg, var(--control-height-lg)); --dk-ie-px: var(--input-padding-x-lg, var(--spacing-4)); --dk-ie-icon: var(--input-icon-size-lg, var(--spacing-5)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-inline-edit--editing { align-items: stretch; }
+.dk-inline-edit__view {
+  display: inline-flex; align-items: center; gap: var(--input-gap, var(--spacing-2));
+  box-sizing: border-box; max-width: var(--sizing-full); min-height: var(--dk-ie-h);
+  margin: var(--spacing-0); padding: var(--spacing-0) var(--dk-ie-px);
+  background: transparent; color: var(--inline-edit-text, var(--text));
+  border: var(--input-border-width, var(--border-width-1)) solid transparent; border-radius: var(--inline-edit-radius, var(--rounded-md));
+  font: inherit; text-align: start; cursor: pointer;
+  transition: background-color var(--duration-150) var(--ease-in-out);
+}
+.dk-inline-edit__view--static { cursor: auto; }
+.dk-inline-edit__text { min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.dk-inline-edit__text--placeholder { color: var(--inline-edit-placeholder, var(--text-muted)); }
+.dk-inline-edit__icon { flex-shrink: 0; font-size: var(--dk-ie-icon); color: var(--inline-edit-icon, var(--text-muted)); opacity: var(--opacity-0); transition: opacity var(--duration-150) var(--ease-in-out); }
+@media (hover: hover) {
+  .dk-inline-edit__view:not(.dk-inline-edit__view--static):hover { background: var(--inline-edit-bg-hover, var(--surface-muted)); }
+  .dk-inline-edit__view:hover .dk-inline-edit__icon { opacity: var(--opacity-100); }
+}
+.dk-inline-edit__view:focus-visible { outline: var(--focus-ring-width) solid var(--inline-edit-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-inline-edit__view:focus-visible .dk-inline-edit__icon { opacity: var(--opacity-100); }
+/* Touch screens have no hover: the pencil always shows, so people can tell the text is editable. */
+@media (hover: none) { .dk-inline-edit__icon { opacity: var(--opacity-100); } }
+.dk-inline-edit--disabled .dk-inline-edit__view { opacity: var(--opacity-disabled); }
+.dk-inline-edit__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--inline-edit-error, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-inline-edit__error-icon { flex-shrink: 0; font-size: var(--spacing-4); }
+@media (prefers-reduced-motion: reduce) { .dk-inline-edit__view, .dk-inline-edit__icon { transition: none; } }
+}
