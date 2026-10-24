@@ -27,7 +27,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   /** 'sm', 'md' (default) or 'lg', like Input. */
   size?: 'sm' | 'md' | 'lg';
   invalid?: boolean;
-  /** The list's name, and the button's. Default: "Choose time". */
+  /** The list's name, and the button's. Default: "Choose a time". */
   listLabel?: string;
 }
 

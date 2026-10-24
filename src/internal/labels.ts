@@ -101,7 +101,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   increase: "Increase",
   chooseDate: "Choose a date",
   chooseDates: "Choose dates",
-  chooseTime: "Choose time",
+  chooseTime: "Choose a time",
   startDate: "Start date",
   endDate: "End date",
   chooseStartDate: "Choose the start date",
