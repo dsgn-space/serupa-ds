@@ -95,6 +95,29 @@ describe('DatePicker', () => {
     expect(popup('dp').hidden).toBe(true);
   });
 
+  test('Tab past the calendar closes it, leaving focus on the next control; Shift+Tab back to the button keeps it open', async () => {
+    await render(<><DatePicker id="dp" aria-label="Start" locale="en-US" defaultValue={new Date(2025, 0, 1)} /><button id="after">After</button></>);
+    await userEvent.click(button('dp'));
+    expect(popup('dp').hidden).toBe(false);
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(popup('dp').hidden).toBe(false);
+    for (let i = 0; i < 12 && document.activeElement !== el('after') && document.activeElement !== document.getElementById('after'); i++) await userEvent.keyboard('{Tab}');
+    expect([focused(), popup('dp').hidden]).toEqual(['after', true]);
+  });
+
+  test('touch: a finger that starts a scroll outside (pointercancel, no click) leaves the calendar open; a tap outside closes it', async () => {
+    await render(<DatePicker id="dp" aria-label="Start" locale="en-US" defaultValue={new Date(2025, 0, 1)} />);
+    await userEvent.click(button('dp'));
+    const touch = (type: string) => document.body.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerType: 'touch' }));
+    touch('pointerdown'); touch('pointercancel');
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(popup('dp').hidden).toBe(false);
+    touch('pointerdown'); touch('pointerup');
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await expect.poll(() => popup('dp').hidden).toBe(true);
+  });
+
   test('name: a hidden input sends yyyy-mm-dd; controlled, with max: a day after max puts back the value; a good day calls onValueChange and the hidden input follows; a new value from outside rewrites the field', async () => {
     const calls: string[] = [], setRef: { set?: (d: Date | null) => void } = {};
     await render(<Ctl calls={calls} setRef={setRef} />);
