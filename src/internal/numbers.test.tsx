@@ -1,0 +1,35 @@
+import { describe, expect, test } from 'vitest';
+import { formatNumber, parseNumber } from './numbers';
+
+describe('typed numbers', () => {
+  test.each([
+    ['en-US', '1,500', 1500], ['en-US', '1,500.25', 1500.25], ['en-US', '1.5', 1.5], ['en-US', '9,5', 9.5], ['en-US', '0,125', 0.125],
+    ['id-ID', '1.000', 1000], ['id-ID', '1.500,25', 1500.25], ['id-ID', '9,5', 9.5], ['id-ID', '9.5', 9.5], ['id-ID', 'Rp 1.500', 1500],
+    ['de-DE', '1.000', 1000], ['de-DE', '2.500.000', 2500000], ['de-DE', '1,000', 1], ['de-DE', '−3,5', -3.5],
+    ['fr-FR', '1 000', 1000], ['fr-FR', '1 000,5', 1000.5], ['de-CH', '1’000.5', 1000.5],
+    ['ar-EG', '١٬٥٠٠٫٢٥', 1500.25], ['fa', '۱۲٫۵', 12.5], ['en-US', '-$1,234.50', -1234.5], ['en-US', '15%', 15], ['en-US', '.5', 0.5],
+  ])('%s: %s is %d', (locale, text, n) => {
+    expect(parseNumber(text, locale)).toBe(n);
+  });
+
+  test('empty is null; half-typed or not a number is undefined', () => {
+    expect(parseNumber('  ', 'en-US')).toBe(null);
+    for (const t of ['-', '1.', 'abc', '1e5', '1.2.3,4', '1,2,3', '1-2']) expect(parseNumber(t, 'en-US'), t).toBe(undefined);
+  });
+
+  test.each(['en-US', 'id-ID', 'de-DE', 'fr-FR', 'de-CH', 'ar-EG', 'fa', 'hi-IN', 'ja'])('%s: parseNumber(formatNumber(n)) is n, with and without grouping or currency', (locale) => {
+    for (const n of [0, 9.5, -3.25, 1500, 1234567.891, 0.001]) {
+      expect(parseNumber(formatNumber(n, locale), locale), formatNumber(n, locale)).toBe(n);
+      const g = formatNumber(n, locale, { useGrouping: true, maximumFractionDigits: 3 });
+      expect(parseNumber(g, locale), g).toBe(n);
+    }
+    const c = formatNumber(1500, locale, { style: 'currency', currency: 'IDR' });
+    expect(parseNumber(c, locale), c).toBe(1500);
+  });
+
+  test('formatNumber: Latin digits and the locale\'s decimal mark, no grouping by default', () => {
+    expect(formatNumber(1500.5, 'de-DE')).toBe('1500,5');
+    expect(formatNumber(1500.5, 'id-ID', { useGrouping: true })).toBe('1.500,5');
+    expect(formatNumber(12.5, 'ar-EG')).toMatch(/^12[.٫]5$/);
+  });
+});
