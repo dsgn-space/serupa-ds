@@ -5,6 +5,7 @@ import { type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export interface SegmentedControlOption {
   value: string;
@@ -34,7 +35,7 @@ export interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDiv
   name?: string;
 }
 
-const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, className: 1 } as const;
+const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, autoFocus: 1, className: 1 } as const;
 
 /* SegmentedControl: picks one of a few options shown side by side, such as a view (List, Board) or a period
    (Day, Week, Month). It's a radio group: one Tab stop, arrow keys move and select (Home and End too), and
@@ -55,6 +56,10 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
   const size = props.size === "sm" ? "sm" : "md";
+  // ref.current.focus() and autoFocus land on the segment in the Tab order: the selected one, or else the first
+  // that isn't disabled (none when all are).
+  const tabStop = () => root.current && root.current.querySelector<HTMLElement>('[role=radio][tabindex="0"]');
+  useAutoFocus(props.autoFocus, tabStop);
 
   const choose = (v: string, focus?: boolean) => {
     if (focus) { const b = buttons.current[v]; if (b) b.focus(); }
@@ -96,7 +101,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   };
   const checkedUsable = usable.some((o) => o.value === value);
   return (
-    <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }}
+    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, tabStop); setRef(ref, n); }}
       role="radiogroup" aria-disabled={disabled || undefined}
       className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", disabled && "dk-segmented--disabled", props.className)}
       data-component="segmented-control" data-size={size}>

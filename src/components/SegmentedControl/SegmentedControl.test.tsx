@@ -74,6 +74,26 @@ describe('SegmentedControl', () => {
     expect(checked('per')).toBe('month');
   });
 
+  test('ref.current.focus() and autoFocus land on the selected segment, or else the first one that isn\'t disabled; all disabled, nothing is focused', async () => {
+    const sel = React.createRef<HTMLDivElement>(), none = React.createRef<HTMLDivElement>(), off = React.createRef<HTMLDivElement>();
+    const later: SegmentedControlOption[] = [{ value: 'a', label: 'A', disabled: true }, { value: 'b', label: 'B' }];
+    await render(<>
+      <SegmentedControl id="sfa" aria-label="Period" options={PERIODS} defaultValue="week" autoFocus />
+      <SegmentedControl id="sfr" ref={sel} aria-label="Period" options={PERIODS} defaultValue="month" />
+      <SegmentedControl id="sfn" ref={none} aria-label="Period" options={later} defaultValue="a" />
+      <SegmentedControl id="sfd" ref={off} aria-label="Period" options={PERIODS} disabled />
+    </>);
+    await expect.poll(() => document.activeElement).toBe(seg('sfa', 'week'));
+    expect(el('sfa').hasAttribute('autofocus')).toBe(false);
+    sel.current!.focus();
+    expect(document.activeElement).toBe(seg('sfr', 'month'));
+    none.current!.focus();
+    expect(document.activeElement).toBe(seg('sfn', 'b'));
+    off.current!.focus();
+    expect(document.activeElement).toBe(seg('sfn', 'b'));
+    expect(sel.current).toBe(el('sfr'));
+  });
+
   test('forced colors: the checked segment\'s text is HighlightText on the Highlight selection, kept as is (no backplate hides it)', async () => {
     await render(<SegmentedControl id="hc" aria-label="Period" options={PERIODS} />);
     const r = await forcedColors((active) => active && [css(seg('hc', 'day')).forcedColorAdjust, css(seg('hc', 'week')).forcedColorAdjust]);
