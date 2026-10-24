@@ -37,9 +37,9 @@ export interface ComboboxProps extends Omit<InputProps, "type" | "value" | "defa
   emptyText?: React.ReactNode;
   /** Shown while loading. Default: "Loading…". */
   loadingText?: string;
-  /** The chevron button's name. Default: "Show options". */
+  /** The chevron button's name. Default: the showOptions label ("Show options"). */
   toggleLabel?: string;
-  /** The × button's name. Default: "Clear" and the field's label ("Clear Country"), or "Clear" when it has none. */
+  /** The × button's name. Default: the clearValue label, "Clear" and the field's label ("Clear Country"), or "Clear" when it has none. */
   clearLabel?: string;
 }
 
@@ -187,11 +187,11 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show("selected"); }} />
       {showClear ? (
-        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || (name ? "Clear " + name : "Clear")} onMouseDown={keep} onClick={clear}>
+        <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__clear" aria-label={props.clearLabel || sds.labels.clearValue(name || "")} onMouseDown={keep} onClick={clear}>
           <Icon icon={icons.Close} />
         </button>
       ) : null}
-      <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" aria-label={props.toggleLabel || "Show options"} aria-expanded={open} aria-controls={listId}
+      <button type="button" tabIndex={-1} className="dk-combobox__button dk-combobox__toggle" aria-label={props.toggleLabel || sds.labels.showOptions} aria-expanded={open} aria-controls={listId}
         disabled={locked} onMouseDown={keep} onClick={() => { if (open) hide(); else show("selected"); if (input.current) input.current.focus(); }}>
         <Icon icon={icons.ExpandMore} />
       </button>
