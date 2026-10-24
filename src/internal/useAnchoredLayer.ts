@@ -47,7 +47,13 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const ro = typeof ResizeObserver === "function" ? new ResizeObserver(update) : null;
     if (ro) { ro.observe(p); ro.observe(a); }
     window.addEventListener("scroll", scrolled, true); window.addEventListener("resize", update);
-    return () => { if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", update); };
+    // A phone's keyboard opening, or pinch-zoom, moves the visual viewport without a window resize or scroll.
+    const vv = window.visualViewport;
+    if (vv) { vv.addEventListener("resize", update); vv.addEventListener("scroll", update); }
+    return () => {
+      if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", update);
+      if (vv) { vv.removeEventListener("resize", update); vv.removeEventListener("scroll", update); }
+    };
   }, [open, layer, anchor, placement, fallback, offsetVar, matchWidth, watch]);
   React.useEffect(() => {
     if (!open) return;
