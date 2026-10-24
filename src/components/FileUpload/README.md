@@ -36,11 +36,12 @@ import { FileUpload } from "serupa-ds";
 - Files that don't fit are listed under the area in danger text and passed to `onReject`; the same file picked twice is skipped quietly.
 - Removing a file moves focus to the Choose button, since the row is gone.
 - The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
+- `readOnly` shows the files without remove buttons and ignores the button and drops; the files are still submitted. `disabled` also fades it and leaves the files out of the form.
 
 ## Accessibility
 
 - The button is the keyboard and screen-reader way in; dragging is an extra. Messages about refused files are `role="alert"`, so they're announced.
-- In a [Field](../Field/README.md), the button is named by the label and its own text ("Due date, Choose a file") and described by the Field's hint and error, then the `hint`. `aria-describedby` goes to the button too.
+- In a [Field](../Field/README.md), the button is named by the label and its own text ("Due date, Choose a file") and described by the Field's hint and error, then the `hint`. `aria-describedby` goes to the button too. With the Field's `error` the button gets `aria-invalid`; with `required` it's described by "Required" first (`labels.required`), since a button can't carry `aria-required`.
 - Text keeps 4.5:1 (also while dragging), and the icons and dashed outline 3:1, in all six themes (`FileUpload.test.tsx`).
 
 ## Props
@@ -55,6 +56,9 @@ import { FileUpload } from "serupa-ds";
 | `maxSize` | `number` | | The largest file, in bytes. |
 | `maxFiles` | `number` | | The most files, with `multiple`. |
 | `disabled` | `boolean` | `false` | |
+| `invalid` | `boolean` | `false` | A solid danger outline on the drop area and `aria-invalid` on the button. Set for you in a Field with an `error`. |
+| `required` | `boolean` | `false` | `required` on the native input (the form's check) and a hidden "Required" in the button's description. A required Field adds the description for you. |
+| `readOnly` | `boolean` | `false` | The files are listed and submitted but can't change: the button stays focusable with `aria-disabled` and opens no picker, drops are ignored, and there are no remove buttons. |
 | `name` | `string` | | Sends the files with a form. |
 | `id` | `string` | | Goes to the native input, so a `<label htmlFor>` or Field can point at it. |
 | `title` | `ReactNode` | `'Drag files here'` or `'Drag a file here'` | |
@@ -74,6 +78,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-zone-border` | `field-border` | The drop area's dashed outline (3:1 on the surface). |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
 | `--file-upload-zone-border-active` | `primary` | Its outline then. |
+| `--file-upload-zone-border-invalid` | `danger` | The drop area's outline when invalid (solid, 3:1 on the surface). |
 | `--file-upload-icon-color` | `text-muted` | The upload icon and file icons (3:1). |
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |
 | `--file-upload-hint-color` | `text-muted` | The hint and file sizes (4.5:1 on zone-bg and the surface). |

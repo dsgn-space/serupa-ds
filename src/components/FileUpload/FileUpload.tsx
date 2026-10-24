@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { cn, domId, omit, setRef } from "../../internal/cn";
+import { cn, domId, isInvalid, omit, setRef } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
@@ -9,6 +9,7 @@ import { useSerupa } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
 import * as icons from "../../material/builtin";
 import { useFieldLabel } from "../../internal/fieldLabel";
+import { useFieldControl } from "../../internal/field";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export { formatFileSize };
@@ -30,6 +31,12 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   /** The most files allowed, with multiple. */
   maxFiles?: number;
   disabled?: boolean;
+  /** A danger outline on the drop area, and aria-invalid on the choose button. In a Field with an error, it's set for you. */
+  invalid?: boolean;
+  /** Required for the form's check (on the native input) and aria-required on the choose button. In a required Field, aria-required is set for you. */
+  required?: boolean;
+  /** The chosen files are shown and submitted, but can't be changed: the choose button stays focusable (aria-disabled) and doesn't open the picker, dropped files are ignored and there are no remove buttons. */
+  readOnly?: boolean;
   /** Submits the files with a form, through the native file input. */
   name?: string;
   /** The drop area's title. Default: "Drag files here" ("Drag a file here" without multiple). */
@@ -42,7 +49,7 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   removeLabel?: (name: string) => string;
 }
 
-const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1 } as const;
+const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1 } as const;
 
 function accepts(file: File, accept?: string) {
   if (!accept) return true;
@@ -80,6 +87,7 @@ const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.t
 /** A drop area and a button for choosing files, with the chosen files listed under it. */
 export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadProps>("FileUpload", function FileUpload(props, ref) {
   const sds = useSerupa();
+  props = useFieldControl(props);   // invalid, aria-required and disabled from a surrounding Field, at any depth
   const rest = omit(props, OWN);
   const base = domId("dk-fu", React.useId());
   const inputId = props.id || base + "-input";
@@ -95,11 +103,16 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const [over, setOver] = React.useState(false);
   const depth = React.useRef(0);
   const multiple = !!props.multiple, disabled = !!props.disabled;
+  const invalid = isInvalid(props.invalid, props["aria-invalid"]);
+  const readOnly = !disabled && !!(props.readOnly || props["aria-readonly"] === true || props["aria-readonly"] === "true");
+  const still = disabled || readOnly;   // nothing can be added or removed
+  // A button can't carry aria-required, so a required upload's button is described by a hidden "Required" first.
+  const required = props["aria-required"] != null ? props["aria-required"] === true || props["aria-required"] === "true" : !!props.required;
   const removeLabel = props.removeLabel || ((n: string) => sds.labels.remove + " " + n);
 
   const set = (next: File[]) => { if (!controlled) setOwn(next); if (props.onFilesChange) props.onFilesChange(next); };
   const add = (list: FileList | File[] | null) => {
-    if (!list || disabled) return;
+    if (!list || still) return;
     const incoming = Array.from(list), ok: File[] = [], bad: FileRejection[] = [];
     const limit = props.maxSize != null ? formatFileSize(props.maxSize) : "";
     for (const f of incoming) {
@@ -135,27 +148,29 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   }, [files]);
 
   const drag = {
-    onDragEnter: (e: React.DragEvent) => { if (disabled) return; e.preventDefault(); depth.current++; setOver(true); },
-    onDragOver: (e: React.DragEvent) => { if (disabled) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; },
-    onDragLeave: () => { if (disabled) return; depth.current = Math.max(0, depth.current - 1); if (!depth.current) setOver(false); },
-    onDrop: (e: React.DragEvent) => { if (disabled) return; e.preventDefault(); depth.current = 0; setOver(false); add(e.dataTransfer.files); },
+    onDragEnter: (e: React.DragEvent) => { if (still) return; e.preventDefault(); depth.current++; setOver(true); },
+    onDragOver: (e: React.DragEvent) => { if (still) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; },
+    onDragLeave: () => { if (still) return; depth.current = Math.max(0, depth.current - 1); if (!depth.current) setOver(false); },
+    onDrop: (e: React.DragEvent) => { if (still) return; e.preventDefault(); depth.current = 0; setOver(false); add(e.dataTransfer.files); },
   };
   const hasHint = props.hint != null && props.hint !== "";
   // In a Field (whose <label for> reaches only the hidden input), the button is named "Due date, Choose a file" and
   // described by the Field's hint and error, then its own hint.
   const fieldLabel = useFieldLabel(inputId);
   return (
-    <div {...rest} ref={(n) => { delegateFocus(n, choose); setRef(ref, n); }} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
+    <div {...rest} ref={(n) => { delegateFocus(n, choose); setRef(ref, n); }} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", readOnly && "dk-file-upload--readonly", invalid && "dk-file-upload--invalid", props.className)} data-component="file-upload">
       <div className={cn("dk-file-upload__zone", over && "dk-file-upload__zone--over")} data-dragging={over ? "" : undefined} aria-disabled={disabled || undefined} {...drag}
-        onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
+        onClick={(e) => { if (!still && e.target === e.currentTarget && input.current) input.current.click(); }}>
         <Icon icon={icons.UploadFile} className="dk-file-upload__icon" />
         <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
-        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()}
-          aria-labelledby={fieldLabel ? fieldLabel + " " + base + "-choose" : undefined} aria-describedby={cn(props["aria-describedby"], hasHint && base + "-hint") || undefined}>
+        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => { if (!readOnly && input.current) input.current.click(); }}
+          aria-disabled={readOnly || undefined} aria-invalid={invalid || undefined}
+          aria-labelledby={fieldLabel ? fieldLabel + " " + base + "-choose" : undefined} aria-describedby={cn(required && base + "-req", props["aria-describedby"], hasHint && base + "-hint") || undefined}>
           <span id={base + "-choose"}>{props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}</span>
         </Button>
+        {required ? <span className="dk-file-upload__required" id={base + "-req"}>{sds.labels.required}</span> : null}
         {hasHint ? <p className="dk-file-upload__hint" id={base + "-hint"}>{props.hint}</p> : null}
-        <input ref={input} id={inputId} type="file" className="dk-file-upload__input" tabIndex={-1} aria-hidden name={props.name} accept={props.accept} multiple={multiple} disabled={disabled}
+        <input ref={input} id={inputId} type="file" className="dk-file-upload__input" tabIndex={-1} aria-hidden name={props.name} accept={props.accept} multiple={multiple} disabled={disabled} required={props.required}
           onChange={(e) => { add(e.target.files); }} />
       </div>
       {rejected.length ? (
@@ -172,7 +187,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
                 <span className="dk-file-upload__name">{f.name}</span>
                 <span className="dk-file-upload__size">{formatFileSize(f.size)}</span>
               </span>
-              <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />
+              {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}
             </li>
           ))}
         </ul>
