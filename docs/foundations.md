@@ -418,6 +418,39 @@ Rules of thumb:
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 
+## Elevation and layers
+
+How things sit above one another: the page, raised cards, floating menus and dialogs. Elevation is shown three ways at once, so it reads in every theme: the surface color, an edge, and a shadow.
+
+**The levels**
+
+| Level | What sits there | Surface | Edge | Shadow |
+| --- | --- | --- | --- | --- |
+| 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
+| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted` | none | none, or `inset-shadow-xs` for an input well |
+| 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
+| 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border-raised` | `shadow-md` |
+| 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
+| 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-overlay` | `border-overlay` | `shadow-xl` |
+| Inverse | Tooltip | `surface-inverse` | none | `shadow-md` |
+
+- Higher means bigger shadow and, in dark themes, a lighter surface. Don't skip the surface and edge and rely on the shadow alone.
+- Keep to one raised level per region. A card inside a card stays at level 1; give the inner one `filled` or no border instead of a second shadow.
+- Elevation means "this is above the page", not "this is important". Use color and type for emphasis.
+
+**Light and dark**
+
+In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, and `border-raised` is invisible. In dark themes, shadows hardly show against a near-black page, so the surface steps up to `zinc-900` and the edge to `zinc-800` or `zinc-700`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in all six themes.
+
+In forced-colors mode, backgrounds and shadows are replaced, so only the edge survives. Every floating surface has a real border for that reason; keep it if you restyle one.
+
+**Layers and z-index**
+
+- The floating components (Menu, Popover, Tooltip, the Combobox, DatePicker, DateRangePicker and TimePicker lists) and the modal ones (Dialog, Drawer) open in the browser's **top layer** (`popover` and `showModal()`). The top layer is above every z-index on the page, so they can't be hidden by a parent's `overflow: hidden` or a high z-index, and you never need to raise them. Toasts move into an open Dialog or Drawer so they stay visible and clickable there.
+- Your own fixed and sticky elements use the named layers (`z-sticky`, `z-dropdown`, `z-overlay`, `z-modal`, `z-popover`, `z-toast`, `z-tooltip`, listed in Layout under Utility classes), so they stack in the same order as the components.
+- Use the numbered steps (`z-10`, `z-20`) only inside one component, such as a badge over an avatar. Wrap that component in `isolate` so its z-indexes can't compete with the page's.
+- A new stacking context traps z-index: `transform`, `filter`, `opacity` below 1, `isolation: isolate` and `position: sticky` with a z-index all create one. If something won't come to the front, look for one of these on an ancestor before raising a number.
+
 ## Filters
 
 Filter and backdrop-filter utilities, as classes in `bundle.css`. Scales are tokens in the `filters` group (backdrop opacity uses the `opacity` group); grayscale, invert and sepia need none. Filter classes combine on one element (`blur-sm grayscale`), and so do backdrop classes.
