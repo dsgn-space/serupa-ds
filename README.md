@@ -120,11 +120,11 @@ React components, styled only with this system's tokens. Each one's guide (when 
 | Group | Components |
 | --- | --- |
 | Actions | `Button`, `IconButton`, `Fab`, `ButtonGroup`, `ToggleButton`, `CopyButton`, `Link` |
-| Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload` |
+| Forms | `Field`, `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `ColorPicker`, `Radio`, `Switch`, `Slider`, `NumberInput`, `PasswordInput`, `PhoneInput`, `SearchInput`, `SegmentedControl`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Calendar`, `FileUpload`, `InlineEdit` |
 | Feedback | `Alert`, `Toast`, `Loader`, `Progress`, `Meter`, `Badge`, `EmptyState` |
 | Overlays | `Dialog`, `Drawer`, `Popover`, `Tooltip`, `Menu` |
 | Navigation | `Navbar`, `Sidebar`, `Tabs`, `Breadcrumb`, `Pagination`, `Stepper` |
-| Content | `Card`, `Table`, `List`, `SortableList`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd` |
+| Content | `Card`, `Table`, `List`, `Accordion`, `Avatar`, `Image`, `Icon`, `Kbd`, `FormattedNumber`, `SortableList`, `RelativeTime` |
 | Layout and type | `Stack`, `Grid`, `Container`, `Divider`, `Heading`, `Text`, `VisuallyHidden` |
 
 Shared conventions, so learning one component teaches the rest:

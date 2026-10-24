@@ -47,6 +47,8 @@ export interface SerupaLabels {
   /** NumberInput step buttons. */
   decrease: string;
   increase: string;
+  /** InlineEdit: after the text in its button's name ("Project name: Apollo, Edit"). */
+  edit: string;
   /** DatePicker, DateRangePicker and TimePicker. */
   chooseDate: string;
   chooseDates: string;
@@ -88,8 +90,15 @@ export interface SerupaLabels {
   chosenFile: string;
   /** FileUpload: read out with the choose button when the upload is required (a button can't carry aria-required). */
   required: string;
+  /** PhoneInput's country menu. */
+  country: string;
   /** PasswordInput show/hide button. */
   showPassword: string;
+  /** ColorPicker: the native picker's name, the hex field's name, and the contrast line under them. */
+  customColor: string;
+  hexCode: string;
+  contrast: (ratio: string) => string;
+  lowContrast: (minimum: string) => string;
   /** Table's scroll region when it has no caption. */
   table: string;
 }
@@ -123,6 +132,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   slideOf: (slide, total) => slide + " of " + total,
   decrease: "Decrease",
   increase: "Increase",
+  edit: "Edit",
   chooseDate: "Choose a date",
   chooseDates: "Choose dates",
   chooseTime: "Choose a time",
@@ -153,7 +163,12 @@ export const DEFAULT_LABELS: SerupaLabels = {
   chosenFiles: "Chosen files",
   chosenFile: "Chosen file",
   required: "Required",
+  country: "Country",
   showPassword: "Show password",
+  customColor: "Custom color",
+  hexCode: "Hex code",
+  contrast: (ratio) => "Contrast " + ratio + ":1",
+  lowContrast: (min) => "below " + min + ":1, which can be hard to read",
   table: "Table",
 };
 
@@ -187,6 +202,7 @@ export const idLabels: SerupaLabels = {
   slideOf: (slide, total) => slide + " dari " + total,
   decrease: "Kurangi",
   increase: "Tambah",
+  edit: "Ubah",
   chooseDate: "Pilih tanggal",
   chooseDates: "Pilih rentang tanggal",
   chooseTime: "Pilih waktu",
@@ -217,6 +233,11 @@ export const idLabels: SerupaLabels = {
   chosenFiles: "File yang dipilih",
   chosenFile: "File yang dipilih",
   required: "Wajib diisi",
+  country: "Negara",
   showPassword: "Tampilkan kata sandi",
+  customColor: "Warna khusus",
+  hexCode: "Kode hex",
+  contrast: (ratio) => "Kontras " + ratio + ":1",
+  lowContrast: (min) => "di bawah " + min + ":1, bisa sulit dibaca",
   table: "Tabel",
 };

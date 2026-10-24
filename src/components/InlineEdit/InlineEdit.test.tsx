@@ -1,0 +1,139 @@
+import * as React from 'react';
+import { describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
+import { Dialog } from '../Dialog/Dialog';
+import { InlineEdit } from './InlineEdit';
+
+const root = (id: string) => document.getElementById(id) as HTMLDivElement;
+const view = (id: string) => root(id).querySelector('.dk-inline-edit__view') as HTMLElement;
+const input = (id: string) => root(id).querySelector('input') as HTMLInputElement | null;
+const Box = ({ children }: { children: React.ReactNode }) => <div style={{ width: '320px', display: 'grid', gap: '12px', background: 'var(--surface)' }}>{children}</div>;
+
+function Controlled({ calls }: { calls: string[] }) {
+  const [v, setV] = React.useState('Apollo');
+  return <><InlineEdit id="ctl" label="Project name" value={v} onValueChange={(n) => { calls.push(n); setV(n); }} /><output id="ctl-out">{v}</output></>;
+}
+
+describe('InlineEdit', () => {
+  test('the text in a button named "label: text, Edit"; a click opens an Input named by label with the text selected; ref and props reach the outer div', async () => {
+    const ref = React.createRef<HTMLDivElement>();
+    await render(<Box><InlineEdit id="a" ref={ref} className="extra" data-x="y" label="Project name" defaultValue="Apollo" /></Box>);
+    const b = view('a');
+    expect([b.tagName, b.getAttribute('type'), b.textContent, root('a').dataset.state, root('a').dataset.component, ref.current === root('a'), root('a').className, root('a').dataset.x])
+      .toEqual(['BUTTON', 'button', 'Project name: Apollo, Edit', 'viewing', 'inline-edit', true, 'dk-inline-edit dk-inline-edit--size-md extra', 'y']);
+    expect(css(b.querySelector('.dk-inline-edit__text')).position).not.toBe('absolute');
+    await userEvent.click(b);
+    const i = input('a')!;
+    expect([root('a').dataset.state, document.activeElement === i, i.getAttribute('aria-label'), i.value, i.selectionStart, i.selectionEnd]).toEqual(['editing', true, 'Project name', 'Apollo', 0, 6]);
+  });
+
+  test('Enter saves and puts focus back on the button; Escape puts the text back; both from the keyboard alone', async () => {
+    const calls: string[] = [], cancels: number[] = [];
+    await render(<Box><InlineEdit id="k" label="Name" defaultValue="Apollo" onValueChange={(v) => calls.push(v)} onCancel={() => cancels.push(1)} /></Box>);
+    view('k').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(document.activeElement).toBe(input('k'));
+    await userEvent.keyboard('{Control>}a{/Control}Artemis{Enter}');
+    expect([input('k'), document.activeElement === view('k'), view('k').textContent, calls]).toEqual([null, true, 'Name: Artemis, Edit', ['Artemis']]);
+    await userEvent.keyboard(' ');
+    await userEvent.keyboard('{Control>}a{/Control}Gemini{Escape}');
+    expect([input('k'), document.activeElement === view('k'), view('k').textContent, calls, cancels]).toEqual([null, true, 'Name: Artemis, Edit', ['Artemis'], [1]]);
+  });
+
+  test('leaving the field saves, once, without taking focus back; an unchanged text calls nothing', async () => {
+    const calls: string[] = [];
+    await render(<Box><InlineEdit id="b" label="Name" defaultValue="Apollo" onValueChange={(v) => calls.push(v)} /><button id="next">Next</button></Box>);
+    await userEvent.click(view('b'));
+    await userEvent.fill(input('b')!, 'Apollo 11');
+    await userEvent.click(document.getElementById('next')!);
+    expect([input('b'), document.activeElement?.id, view('b').textContent, calls]).toEqual([null, 'next', 'Name: Apollo 11, Edit', ['Apollo 11']]);
+    await userEvent.click(view('b'));
+    await userEvent.keyboard('{Enter}');
+    expect(calls).toEqual(['Apollo 11']);
+  });
+
+  test('controlled: value and onValueChange', async () => {
+    const calls: string[] = [];
+    await render(<Controlled calls={calls} />);
+    await userEvent.click(view('ctl'));
+    await userEvent.fill(input('ctl')!, 'Artemis');
+    await userEvent.keyboard('{Enter}');
+    expect([calls, document.getElementById('ctl-out')!.textContent, view('ctl').textContent]).toEqual([['Artemis'], 'Artemis', 'Project name: Artemis, Edit']);
+  });
+
+  test('validate: an error keeps the field open, invalid and described by the message; typing clears it; a valid text saves', async () => {
+    const calls: string[] = [];
+    await render(<Box><InlineEdit id="v" label="Slug" defaultValue="apollo" onValueChange={(x) => calls.push(x)} validate={(x) => (x.includes(' ') ? 'Use dashes instead of spaces.' : null)} /></Box>);
+    await userEvent.click(view('v'));
+    await userEvent.fill(input('v')!, 'apollo plan');
+    await userEvent.keyboard('{Enter}');
+    const i = input('v')!, err = root('v').querySelector('.dk-inline-edit__error')!;
+    expect([i.getAttribute('aria-invalid'), i.getAttribute('aria-describedby') === err.id, err.textContent, document.activeElement === i, calls]).toEqual(['true', true, 'Use dashes instead of spaces.', true, []]);
+    await userEvent.fill(i, 'apollo-plan');
+    expect([i.hasAttribute('aria-invalid'), root('v').querySelector('.dk-inline-edit__error')]).toEqual([false, null]);
+    await userEvent.keyboard('{Enter}');
+    expect([input('v'), calls]).toEqual([null, ['apollo-plan']]);
+  });
+
+  test('Escape inside a Dialog cancels the edit and leaves the dialog open', async () => {
+    const asks: boolean[] = [];
+    await render(<Dialog open title="Rename" onOpenChange={(o) => asks.push(o)}><InlineEdit id="d" label="Name" defaultValue="Apollo" /></Dialog>);
+    await userEvent.click(view('d'));
+    await userEvent.keyboard('{Escape}');
+    expect([input('d'), asks]).toEqual([null, []]);
+  });
+
+  test('editing and onEditingChange (controlled); disabled and readOnly show the text without a button; placeholder when empty', async () => {
+    const changes: boolean[] = [];
+    await render(<SerupaProvider labels={{ edit: 'Ubah' }}><Box>
+      <InlineEdit id="e" label="Name" defaultValue="Apollo" editing onEditingChange={(x) => changes.push(x)} />
+      <InlineEdit id="dis" label="Name" defaultValue="Apollo" disabled />
+      <InlineEdit id="ro" label="Name" defaultValue="Apollo" readOnly />
+      <InlineEdit id="ph" label="Description" placeholder="Add a description" />
+    </Box></SerupaProvider>);
+    expect([root('e').dataset.state, document.activeElement === input('e')]).toEqual(['editing', true]);
+    await userEvent.keyboard('{Enter}');
+    expect([changes, root('e').dataset.state]).toEqual([[false], 'editing']);
+    expect([view('dis').tagName, view('dis').textContent, view('ro').tagName, root('ro').querySelector('button')]).toEqual(['SPAN', 'Apollo', 'SPAN', null]);
+    expect([view('ph').textContent, view('ph').querySelector('.dk-inline-edit__text--placeholder') != null]).toEqual(['Description: Add a description, Ubah', true]);
+  });
+
+  test('opening moves nothing: the button and the field have the same height at sm, md and lg, and the text starts at the same x', async () => {
+    const out: string[] = [];
+    await render(<Box>{(['sm', 'md', 'lg'] as const).map((s) => <InlineEdit key={s} id={'s-' + s} size={s} label="Name" defaultValue="Apollo" />)}</Box>);
+    for (const size of ['sm', 'md', 'lg'] as const) {
+      const b = view('s-' + size).getBoundingClientRect(), x = (view('s-' + size).querySelector('.dk-inline-edit__text') as HTMLElement).getBoundingClientRect().left;
+      await userEvent.click(view('s-' + size));
+      const box = input('s-' + size)!.parentElement!.getBoundingClientRect(), fx = input('s-' + size)!.getBoundingClientRect().left;
+      out.push(`${size} ${Math.round(b.height)} ${Math.round(box.height)} ${Math.round(x - fx)}`);
+      await userEvent.keyboard('{Escape}');
+    }
+    expect(out).toEqual(['sm 24 24 0', 'md 32 32 0', 'lg 44 44 0']);
+  });
+
+  test('contrast: the text and placeholder keep 4.5:1 on the page and on the hover background, in all six themes', async () => {
+    await render(<Box><InlineEdit id="c" label="Name" defaultValue="Apollo" /><InlineEdit id="cp" label="Name" placeholder="Add a name" /><div id="hover-bg" style={{ background: 'var(--surface-muted)' }} /></Box>);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      await Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined)));
+      const page = css(root('c').parentElement).backgroundColor, hover = css(document.getElementById('hover-bg')).backgroundColor;
+      for (const [id, need] of [['c', 4.5], ['cp', 4.5]] as const) {
+        const fg = css(view(id).querySelector('.dk-inline-edit__text')).color;
+        for (const [where, bg] of [['page', page], ['hover', hover]]) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${id} on ${where} ${r.toFixed(2)}`); }
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+
+  test('no errors or warnings while rendering', async () => {
+    const error = vi.spyOn(console, 'error'), warn = vi.spyOn(console, 'warn');
+    await render(<InlineEdit label="Name" defaultValue="Apollo" />);
+    expect([error.mock.calls, warn.mock.calls]).toEqual([[], []]);
+    error.mockRestore(); warn.mockRestore();
+  });
+});

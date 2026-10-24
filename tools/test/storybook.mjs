@@ -97,8 +97,8 @@ for (const e of stories) {
     await page.addScriptTag({ content: axe });
     const v = await page.evaluate(async () => {
       const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
-      // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint.
-      const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, :disabled, [aria-disabled="true"]');
+      // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
+      const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
       return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
         .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
     });
