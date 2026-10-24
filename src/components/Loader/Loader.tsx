@@ -36,7 +36,7 @@ export interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
    content will be: shape "text" with lines, "circle" or "rect", sized by className); sizes sm, md, lg (16, 24, 40px drawings;
    text-xs, text-sm, text-base words); tone "neutral" (the text color), "primary", "muted" (the ring or dots)
    or "inverse" (white, for dark scrims and media). By default it waits delay ms (300) before it appears, so
-   fast requests don't flash it, and then announces label ("Loading") to screen readers; label="" makes it
+   fast requests don't flash it, and then announces label ("Loading…") to screen readers; label="" makes it
    decorative, for when something nearby already says it's loading. */
 const VARIANTS: readonly LoaderVariant[] = ["ring", "spokes", "dots", "pixel", "text", "skeleton"];
 const SHAPES: readonly LoaderShape[] = ["text", "circle", "rect"];
@@ -61,12 +61,12 @@ export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>("L
   const variant = oneOf(VARIANTS, props.variant, "ring");
   const size = oneOf(SIZES, props.size, "md");
   const tone = oneOf(TONES, props.tone, "neutral");
-  const label = props.label == null ? "Loading" : String(props.label);
+  const label = props.label == null ? "Loading…" : String(props.label);
   const isText = variant === "text", isSkeleton = variant === "skeleton";
   const shape = oneOf(SHAPES, props.shape, "text");
   const pattern = oneOf(PATTERNS, props.pattern, "wave");   // pixel only
   const lines = Math.min(20, Math.max(1, Math.floor(Number(props.lines)) || 1));   // text shape: 1 to 20 lines
-  const words = label || "Loading";   // the text variant always shows words; label="" only makes it decorative
+  const words = label || "Loading…";   // the text variant always shows words; label="" only makes it decorative
   const delay = props.delay == null ? 300 : Math.max(0, Number(props.delay) || 0);
   const [shown, setShown] = React.useState(delay === 0);
   const [wait] = React.useState(delay);   // the delay it mounted with: a later change doesn't restart the wait
