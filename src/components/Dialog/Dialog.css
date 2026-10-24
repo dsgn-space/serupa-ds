@@ -49,6 +49,8 @@
 @keyframes dk-dialog-in { from { opacity: var(--opacity-0); scale: var(--scale-95); } }
 @keyframes dk-dialog-fade { from { opacity: var(--opacity-0); } }
 .dk-dialog__header { display: flex; align-items: flex-start; gap: var(--spacing-3); }
+/* Long words wrap inside the panel rather than overflow it. */
+.dk-dialog__panel { overflow-wrap: anywhere; }
 .dk-dialog__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
 .dk-dialog__title { margin: var(--spacing-0); color: var(--dialog-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--dialog-title-weight, var(--font-semibold)); }
 .dk-dialog__description { margin: var(--spacing-0); color: var(--dialog-description-color, var(--text-muted)); }
