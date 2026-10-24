@@ -96,12 +96,16 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `secondary-hover` | `zinc-200` | `zinc-700` | Hover state of `secondary`. |
 | `surface` | `white` | `zinc-950` | Page and card background. |
 | `surface-muted` | `zinc-50` | `zinc-900` | Secondary panels, sidebars, table headers. |
+| `surface-raised` | `white` | `zinc-900` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
+| `surface-overlay` | `white` | `zinc-900` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
 | `text` | `zinc-900` | `zinc-50` | Body text and headings on `surface`. |
 | `text-muted` | `zinc-500` | `zinc-400` | Secondary text, captions, placeholders. |
 | `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
 | `border` | `zinc-200` | `zinc-800` | Default borders and dividers. |
 | `border-strong` | `zinc-300` | `zinc-700` | Emphasised dividers and outlines. Form fields use `field-border`. |
+| `border-raised` | `white` | `zinc-800` | A raised card's edge: invisible in light, a 1px lighter edge in dark. |
+| `border-overlay` | `zinc-200` | `zinc-700` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
 | `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
@@ -406,10 +410,10 @@ Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are to
 Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
-- Shadows barely show in dark themes: separate surfaces with `border` or `surface-muted` there, or add `ring-1 ring-border`.
+- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border-raised` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-50` for disabled controls; don't lower the opacity of text to make it secondary — use `text-muted`.
+- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary — use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 

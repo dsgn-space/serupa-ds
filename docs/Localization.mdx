@@ -29,6 +29,19 @@ export default function RootLayout({ children }) {
 
 What wins, in order: the component's own prop (`dismissLabel`, `locale`, …), the nearest provider, an outer provider, then the defaults. A nested provider changes only the keys it sets.
 
+## Server-rendered pages
+
+A server can't know the visitor's locale. Without a `locale`, the date and time components and NumberInput render the server HTML in `en-US`, hydrate in `en-US` too so React sees no mismatch, and switch to the browser's locale right after. To show the visitor's format from the first paint, set the provider's `locale` from the request, for example from the `Accept-Language` header or the user's saved setting:
+
+```tsx
+import { headers } from 'next/headers';
+
+export default async function RootLayout({ children }) {
+  const locale = (await headers()).get('accept-language')?.split(',')[0] || 'en-US';
+  return <html lang={locale}><body><SerupaProvider locale={locale}>{children}</SerupaProvider></body></html>;
+}
+```
+
 <Canvas of={Stories.Indonesian} />
 
 <Canvas of={Stories.Nested} />

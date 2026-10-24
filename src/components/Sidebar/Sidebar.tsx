@@ -6,6 +6,7 @@ import { asIcon } from "../Icon/asIcon";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Menu, MenuItem } from "../Menu/Menu";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
@@ -63,7 +64,7 @@ export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sid
   const body: React.ReactNode[] = [];
   let run: React.ReactNode[] = [];
   const flush = () => { if (run.length) { body.push(<ul key={"l" + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
-  React.Children.forEach(props.children, (c) => { if (isSection(c)) { flush(); body.push(c); } else if (c != null && c !== false) run.push(c); });
+  flattenChildren(props.children).forEach((c) => { if (isSection(c)) { flush(); body.push(c); } else run.push(c); });
   flush();
   return (
     <SidebarContext.Provider value={{ collapsed, depth: 0 }}>
@@ -96,7 +97,7 @@ export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarS
 export const SidebarItem = /* @__PURE__ */ component<HTMLAnchorElement, SidebarItemProps>("SidebarItem", function SidebarItem(props, ref) {
   const ctx = React.useContext(SidebarContext);
   const rest = omit(props, { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, as: 1, className: 1 });
-  const kids = React.Children.toArray(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
+  const kids = flattenChildren(props.children).filter(React.isValidElement) as React.ReactElement<SidebarItemProps>[];
   const group = kids.length > 0;
   const childActive = kids.some((k) => k.props.active);
   const [open, setOpen] = React.useState(props.defaultOpen != null ? !!props.defaultOpen : childActive);

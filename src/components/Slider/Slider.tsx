@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, omit } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { useFormReset } from "../../internal/useFormReset";
+import { useFieldsetDisabled } from "../../internal/useFieldsetDisabled";
 import { snap as snapToGrid } from "../../internal/step";
 
 export type SliderValue = number | [number, number];
@@ -61,7 +62,9 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? min); });
   const thumbs = React.useRef<(HTMLSpanElement | null)[]>([]);
   const drag = React.useRef<number | null>(null);
-  const disabled = !!props.disabled;
+  // A disabled <fieldset> around it disables it too, as it does native inputs.
+  const inDisabledFieldset = useFieldsetDisabled(root);
+  const disabled = !!props.disabled || inDisabledFieldset;
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
   const out = (vs: number[]): SliderValue => (isRange ? [vs[0], vs[1]] : vs[0]);
   const text = (v: number) => (props.formatValue ? props.formatValue(v) : String(v));

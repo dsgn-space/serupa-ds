@@ -130,6 +130,27 @@ describe('Slider', () => {
     expect(now('dis')).toBe(30);
   });
 
+  test('inside a disabled <fieldset>: disabled like a native input (Tab skips it, aria-disabled, keys and presses do nothing, no form value); enabling the fieldset brings it back', async () => {
+    const calls: unknown[] = [];
+    function Form() {
+      const [off, setOff] = React.useState(true);
+      return <form id="fsf"><fieldset disabled={off}><legend>Volume</legend><Slider id="fs" aria-label="Volume" name="vol" defaultValue={30} onValueChange={(v) => calls.push(v)} /></fieldset>
+        <button type="button" id="fs-toggle" onClick={() => setOff(!off)}>toggle</button></form>;
+    }
+    await render(<Form />);
+    const th = thumb('fs');
+    expect([th.tabIndex, th.getAttribute('aria-disabled'), el('fs').dataset.disabled, [...new FormData(el('fsf') as HTMLFormElement).keys()].join()]).toEqual([-1, 'true', '', '']);
+    th.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await press('fs', 0.9);
+    expect([now('fs'), calls.length]).toEqual([30, 0]);
+    await userEvent.click(el('fs-toggle'));
+    await expect.poll(() => thumb('fs').tabIndex).toBe(0);
+    thumb('fs').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([now('fs'), calls, thumb('fs').getAttribute('aria-disabled'), new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], null, '31']);
+  });
+
   test('sm: 16px thumb on a 4px track; at 0 the thumb is centered on the track\'s start and stays inside the slider', async () => {
     await setup();
     const t = track('sm'), c = center(thumb('sm'));

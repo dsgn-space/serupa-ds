@@ -121,7 +121,7 @@
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
   outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset);
 }
-.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-50); cursor: not-allowed; }
+.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-disabled); cursor: not-allowed; }
 /* Loading: the content fades out under a centered ring at the icon size; the badge keeps its width and colors. */
 .dk-badge--loading { cursor: progress; }
 .dk-badge--loading > :not(.dk-badge__loader) { opacity: var(--opacity-0); }
