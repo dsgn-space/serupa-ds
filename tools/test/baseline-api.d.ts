@@ -229,6 +229,23 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     readOnly?: boolean;
 }
 declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
+interface ColorSwatch {
+    value: string;
+    label: string;
+}
+interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
+    swatches: ReadonlyArray<ColorSwatch | string>;
+    value?: null | string;
+    defaultValue?: null | string;
+    onValueChange?: (value: string) => void;
+    custom?: boolean;
+    contrastWith?: string;
+    minContrast?: number;
+    size?: "md" | "sm";
+    disabled?: boolean;
+    name?: string;
+}
+declare const ColorPicker: React.ForwardRefExoticComponent<ColorPickerProps & React.RefAttributes<HTMLDivElement>>;
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
     size?: "lg" | "md" | "sm";
     invalid?: boolean;
@@ -971,6 +988,10 @@ interface SerupaLabels {
     chosenFile: string;
     required: string;
     showPassword: string;
+    customColor: string;
+    hexCode: string;
+    contrast: (ratio: string) => string;
+    lowContrast: (minimum: string) => string;
     table: string;
 }
 declare const DEFAULT_LABELS: SerupaLabels;
@@ -1015,6 +1036,7 @@ declare global {
             Calendar: typeof Calendar;
             Carousel: typeof Carousel;
             Checkbox: typeof Checkbox;
+            ColorPicker: typeof ColorPicker;
             Combobox: typeof Combobox;
             configure: typeof configure;
             Container: typeof Container;
@@ -1097,5 +1119,5 @@ declare global {
         };
     }
 }
-export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, Combobox, Container, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, Icon, IconButton, IconData, Image, Input, Kbd, Link, List, ListItem, Loader, MaterialIconName, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, Navbar, NavbarLink, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, TabList, TabPanel, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, Tabs, Text, Textarea, TimePicker, Toaster, ToggleButton, Tooltip, VisuallyHidden, buttonClass, configure, customIcons, DEFAULT_LABELS as enLabels, formatFileSize, getIcon, idLabels, initials, meterState, paginationRange, registerIcons, toast, useSerupa, version };
-export type { AccordionItemProps, AccordionProps, AlertProps, AlertTone, AvatarGroupProps, AvatarProps, AvatarSize, AvatarStatus, BadgeProps, BadgeTone, BadgeVariant, BreadcrumbItemProps, BreadcrumbProps, ButtonAsButtonProps, ButtonAsLinkProps, ButtonGroupProps, ButtonProps, ButtonSize, ButtonVariant, CalendarProps, CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant, CarouselProps, CheckboxProps, ComboboxOption, ComboboxProps, ContainerProps, ContainerSize, CustomIconName, DatePickerProps, DateRange, DateRangePickerProps, DialogProps, DividerProps, DrawerProps, EmptyStateProps, FabPosition, FabProps, FieldProps, FileRejection, FileUploadProps, GridProps, HeadingLevel, HeadingProps, HeadingSize, IconButtonProps, IconName, IconProps, IconSource, ImageProps, ImageRatio, InputProps, KbdProps, LinkProps, ListItemProps, ListProps, LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant, MenuGroupProps, MenuItemProps, MenuProps, MeterProps, MeterState, NavbarLinkProps, NavbarProps, NumberInputProps, PaginationProps, PasswordInputProps, Placement, PopoverProps, ProgressProps, ProgressTone, RadioGroupProps, RadioProps, SearchInputProps, SegmentedControlOption, SegmentedControlProps, SelectOption, SelectOptionGroup, SelectProps, SerupaConfig, SerupaLabels, SerupaProviderProps, SerupaSettings, SerupaTheme, SidebarItemProps, SidebarProps, SidebarSectionProps, SliderProps, SliderValue, SortDirection, Space, StackProps, StepperProps, StepperStep, SwitchProps, TabPanelProps, TabProps, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps, TableSelectCellProps, TabsProps, TabsVariant, TextProps, TextSize, TextTone, TextWeight, TextareaProps, ThemeBrand, ThemeInfo, ThemeMode, TimePickerProps, ToastOptions, ToastTone, ToasterPosition, ToasterProps, ToggleButtonProps, TooltipProps, VisuallyHiddenProps };
+export { Accordion, AccordionItem, Alert, Avatar, AvatarGroup, Badge, Breadcrumb, BreadcrumbItem, Button, ButtonGroup, Calendar, Card, CardBody, CardFooter, CardHeader, Carousel, Checkbox, ColorPicker, Combobox, Container, DatePicker, DateRangePicker, Dialog, Divider, Drawer, EmptyState, Fab, Field, FileUpload, Grid, Heading, Icon, IconButton, IconData, Image, Input, Kbd, Link, List, ListItem, Loader, MaterialIconName, Menu, MenuGroup, MenuItem, MenuSeparator, Meter, Navbar, NavbarLink, NumberInput, Pagination, PasswordInput, Popover, Progress, Radio, RadioGroup, SearchInput, SegmentedControl, Select, SerupaProvider, Sidebar, SidebarItem, SidebarSection, Slider, Stack, Stepper, Switch, Tab, TabList, TabPanel, Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, Tabs, Text, Textarea, TimePicker, Toaster, ToggleButton, Tooltip, VisuallyHidden, buttonClass, configure, customIcons, DEFAULT_LABELS as enLabels, formatFileSize, getIcon, idLabels, initials, meterState, paginationRange, registerIcons, toast, useSerupa, version };
+export type { AccordionItemProps, AccordionProps, AlertProps, AlertTone, AvatarGroupProps, AvatarProps, AvatarSize, AvatarStatus, BadgeProps, BadgeTone, BadgeVariant, BreadcrumbItemProps, BreadcrumbProps, ButtonAsButtonProps, ButtonAsLinkProps, ButtonGroupProps, ButtonProps, ButtonSize, ButtonVariant, CalendarProps, CardBodyProps, CardFooterProps, CardHeaderProps, CardPadding, CardProps, CardVariant, CarouselProps, CheckboxProps, ColorPickerProps, ColorSwatch, ComboboxOption, ComboboxProps, ContainerProps, ContainerSize, CustomIconName, DatePickerProps, DateRange, DateRangePickerProps, DialogProps, DividerProps, DrawerProps, EmptyStateProps, FabPosition, FabProps, FieldProps, FileRejection, FileUploadProps, GridProps, HeadingLevel, HeadingProps, HeadingSize, IconButtonProps, IconName, IconProps, IconSource, ImageProps, ImageRatio, InputProps, KbdProps, LinkProps, ListItemProps, ListProps, LoaderPattern, LoaderProps, LoaderShape, LoaderTone, LoaderVariant, MenuGroupProps, MenuItemProps, MenuProps, MeterProps, MeterState, NavbarLinkProps, NavbarProps, NumberInputProps, PaginationProps, PasswordInputProps, Placement, PopoverProps, ProgressProps, ProgressTone, RadioGroupProps, RadioProps, SearchInputProps, SegmentedControlOption, SegmentedControlProps, SelectOption, SelectOptionGroup, SelectProps, SerupaConfig, SerupaLabels, SerupaProviderProps, SerupaSettings, SerupaTheme, SidebarItemProps, SidebarProps, SidebarSectionProps, SliderProps, SliderValue, SortDirection, Space, StackProps, StepperProps, StepperStep, SwitchProps, TabPanelProps, TabProps, TableCellProps, TableHeaderCellProps, TableProps, TableRowProps, TableSelectCellProps, TabsProps, TabsVariant, TextProps, TextSize, TextTone, TextWeight, TextareaProps, ThemeBrand, ThemeInfo, ThemeMode, TimePickerProps, ToastOptions, ToastTone, ToasterPosition, ToasterProps, ToggleButtonProps, TooltipProps, VisuallyHiddenProps };

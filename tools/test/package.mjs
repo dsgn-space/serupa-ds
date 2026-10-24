@@ -44,6 +44,7 @@ if (D) {
     Button: h(D.Button, { leftIcon: 'add', loading: true }, 'Save'),
     'Button (link)': h(D.Button, { href: '/docs', variant: 'link' }, 'Docs'),
     Checkbox: h(D.Checkbox, { defaultChecked: true, description: 'Weekly' }, 'Email me'),
+    ColorPicker: h(D.ColorPicker, { 'aria-label': 'Color', swatches: [{ value: '#1d4ed8', label: 'Blue' }, '#ffffff'], defaultValue: '#1d4ed8', contrastWith: '#ffffff' }),
     Field: h(D.Field, { label: 'Name', hint: 'As on your ID', error: 'Required', required: true }, h(D.Input, {})),
     Icon: h(D.Icon, { name: 'home', 'aria-label': 'Home' }),
     Input: h(D.Input, { leftIcon: 'search', placeholder: 'Search' }),

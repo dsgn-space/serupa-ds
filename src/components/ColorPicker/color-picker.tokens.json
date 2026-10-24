@@ -1,0 +1,131 @@
+{
+  "color-picker": {
+    "$description": "ColorPicker's component tokens. Each one is an optional override: set the CSS variable (--color-picker-<name>) on the page, a container or one picker, and every ColorPicker inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The hex field uses Input's tokens.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The picker's text.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-text"
+          }
+        }
+      },
+      "swatch-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The thin inset border on every swatch, so a white one shows on a white page.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-swatch-border"
+          }
+        }
+      },
+      "ring": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The ring around the picked swatch (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-ring"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring on a swatch and the color button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-focus-ring"
+          }
+        }
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The contrast line (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-contrast"
+          }
+        }
+      },
+      "contrast-low": {
+        "$type": "color",
+        "$value": "{color.warning-text}",
+        "$description": "The contrast line when it's below minContrast (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-contrast-low"
+          }
+        }
+      }
+    },
+    "radius": {
+      "swatch-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-full}",
+        "$description": "A swatch's shape (round).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-swatch-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the swatches, the custom row and the contrast line (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-gap"
+          }
+        }
+      },
+      "swatch-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between swatches (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-swatch-gap"
+          }
+        }
+      },
+      "swatch-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "A swatch, size=\"sm\" (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-swatch-size-sm"
+          }
+        }
+      },
+      "swatch-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "A swatch, size=\"md\", the default (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-swatch-size-md"
+          }
+        }
+      },
+      "hex-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-28}",
+        "$description": "The hex field's width (112px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-hex-width"
+          }
+        }
+      }
+    }
+  }
+}

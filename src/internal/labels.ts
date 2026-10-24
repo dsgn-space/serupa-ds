@@ -76,6 +76,11 @@ export interface SerupaLabels {
   required: string;
   /** PasswordInput show/hide button. */
   showPassword: string;
+  /** ColorPicker: the native picker's name, the hex field's name, and the contrast line under them. */
+  customColor: string;
+  hexCode: string;
+  contrast: (ratio: string) => string;
+  lowContrast: (minimum: string) => string;
   /** Table's scroll region when it has no caption. */
   table: string;
 }
@@ -130,6 +135,10 @@ export const DEFAULT_LABELS: SerupaLabels = {
   chosenFile: "Chosen file",
   required: "Required",
   showPassword: "Show password",
+  customColor: "Custom color",
+  hexCode: "Hex code",
+  contrast: (ratio) => "Contrast " + ratio + ":1",
+  lowContrast: (min) => "below " + min + ":1, which can be hard to read",
   table: "Table",
 };
 
@@ -184,5 +193,9 @@ export const idLabels: SerupaLabels = {
   chosenFile: "File yang dipilih",
   required: "Wajib diisi",
   showPassword: "Tampilkan kata sandi",
+  customColor: "Warna khusus",
+  hexCode: "Kode hex",
+  contrast: (ratio) => "Kontras " + ratio + ":1",
+  lowContrast: (min) => "di bawah " + min + ":1, bisa sulit dibaca",
   table: "Tabel",
 };
