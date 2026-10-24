@@ -7892,7 +7892,7 @@
     "opacity-50": {
       "$type": "number",
       "$value": 0.5,
-      "$description": "`opacity-50`, `backdrop-opacity-50`. Disabled controls.",
+      "$description": "`opacity-50`, `backdrop-opacity-50`. For disabled controls use `opacity-disabled`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--opacity-50"
@@ -7996,6 +7996,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--opacity-100"
+        }
+      }
+    },
+    "opacity-disabled": {
+      "$type": "number",
+      "$value": 0.5,
+      "$description": "`opacity-disabled`. Every disabled control and item (50%). Set it once to change how disabled looks everywhere.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--opacity-disabled"
         }
       }
     }

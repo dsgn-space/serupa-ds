@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { color, css, press } from '../../../tools/test/vitest/helpers';
+import { color, css, forcedColors, press } from '../../../tools/test/vitest/helpers';
 import { Calendar, type CalendarProps } from './Calendar';
 
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -38,6 +38,13 @@ describe('Calendar', () => {
     await render(<Cal />);
     const d = cal('[data-date="2025-03-10"]');
     expect([d.getAttribute('aria-label'), d.parentElement!.getAttribute('aria-selected')]).toEqual(['Monday, March 10, 2025', 'true']);
+  });
+
+  test('forced colors: the selected day is Highlight with HighlightText, kept as is (no backplate hides the number)', async () => {
+    await render(<Cal />);
+    const d = cal('[data-date="2025-03-10"]'), other = cal('[data-date="2025-03-11"]');
+    const r = await forcedColors((active) => active && [css(d).forcedColorAdjust, css(other).forcedColorAdjust, css(d).color !== css(d).backgroundColor]);
+    if (r) expect(r).toEqual(['none', 'auto', true]);
   });
 
   test('de-DE: German names and weeks starting on Monday', async () => {

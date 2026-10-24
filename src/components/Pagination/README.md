@@ -79,4 +79,4 @@ Each is an optional override: set it on the page, a container or one pagination.
 | `--pagination-gap` | `spacing-1` | Space between pages (4px). |
 | `--pagination-padding-x` | `spacing-2` | Side padding inside a page, for wide numbers (8px). |
 | `--pagination-radius` | `rounded-md` | A page's corners (6px). |
-| `--pagination-disabled` | `opacity-50` | Previous or next when there's no page that way. |
+| `--pagination-disabled` | `opacity-disabled` | Previous or next when there's no page that way. |

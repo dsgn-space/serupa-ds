@@ -34,7 +34,7 @@ const [open, setOpen] = React.useState(false);
 
 ## Behavior
 
-- It's a native `<dialog>` opened with `showModal()`, like Dialog. Focus moves inside and stays there, the page behind can't be reached and doesn't scroll, and closing moves focus back to where it was.
+- It's a native `<dialog>` opened with `showModal()`, like Dialog. Focus moves inside and stays there, the page behind can't be reached and doesn't scroll (or shift sideways when a classic scrollbar goes away), and closing moves focus back to where it was.
 - Left and right drawers are full height. Top and bottom drawers are full width, as tall as their content up to the screen less 64px, and rounded on the open side.
 - The body scrolls on its own, so the header and footer stay in view.
 - It slides in over 300ms, and appears at once with `prefers-reduced-motion`.
@@ -67,7 +67,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--drawer-bg` | `surface` | The panel's background. |
+| `--drawer-bg` | `surface-overlay` | The panel's background. |
 | `--drawer-text` | `text` | The panel's text: the body and the footer. |
 | `--drawer-overlay` | `overlay` | The dimmed backdrop over the page. |
 | `--drawer-title-color` | `text` | The title. |

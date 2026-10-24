@@ -90,6 +90,26 @@
         }
       }
     },
+    "surface-raised": {
+      "$type": "color",
+      "$value": "{color.zinc-900}",
+      "$description": "Alias. A raised card (Card `elevated`). One step up from `surface` in dark, where a shadow doesn't show.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--surface-raised"
+        }
+      }
+    },
+    "surface-overlay": {
+      "$type": "color",
+      "$value": "{color.zinc-900}",
+      "$description": "Alias. Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast and the Combobox, DatePicker and TimePicker lists.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--surface-overlay"
+        }
+      }
+    },
     "field": {
       "$type": "color",
       "$value": "{color.zinc-900}",
@@ -206,6 +226,26 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-strong"
+        }
+      }
+    },
+    "border-raised": {
+      "$type": "color",
+      "$value": "{color.zinc-800}",
+      "$description": "Alias. A raised card's edge: invisible in light (white on white), a 1px lighter edge in dark.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--border-raised"
+        }
+      }
+    },
+    "border-overlay": {
+      "$type": "color",
+      "$value": "{color.zinc-700}",
+      "$description": "Alias. The edge of a top-layer surface. In dark it is one step stronger than `border`, so a menu stands off the page.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--border-overlay"
         }
       }
     },

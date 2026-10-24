@@ -87,8 +87,8 @@ Each is an optional override: set it on the page, a container or one menu. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--menu-bg` | `surface` | The menu's background. |
-| `--menu-border` | `border` | The menu's border. |
+| `--menu-bg` | `surface-overlay` | The menu's background. |
+| `--menu-border` | `border-overlay` | The menu's border. |
 | `--menu-item-text` | `text` | An item's label. |
 | `--menu-item-bg-active` | `secondary` | The highlighted item's background (hover and keyboard). |
 | `--menu-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past the highlight. A destructive item keeps its danger tint. |

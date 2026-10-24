@@ -4,7 +4,7 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface}",
+        "$value": "{color.surface-overlay}",
         "$description": "The menu's background.",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "border-color": {
         "$type": "color",
-        "$value": "{color.border}",
+        "$value": "{color.border-overlay}",
         "$description": "The menu's border.",
         "$extensions": {
           "com.serupa": {

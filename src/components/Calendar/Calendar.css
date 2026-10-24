@@ -29,8 +29,8 @@
 .dk-calendar__day--outside { color: var(--calendar-outside-color, var(--text-muted)); }
 .dk-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
 .dk-calendar__day--selected, .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-selected-bg, var(--primary)); color: var(--calendar-selected-color, var(--on-primary)); }
-.dk-calendar__day--disabled { opacity: var(--opacity-50); text-decoration: line-through; cursor: not-allowed; }
+.dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
 /* Ranges (DateRangePicker): days between the ends get a subtle fill; the ends are selected days. */
 .dk-calendar__day--in-range, .dk-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
-@media (forced-colors: active) { .dk-calendar__day--selected { background: Highlight; color: HighlightText; } .dk-calendar__day--today { text-decoration: underline; } .dk-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
+@media (forced-colors: active) { .dk-calendar__day--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; } .dk-calendar__day--today { text-decoration: underline; } .dk-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
 }
