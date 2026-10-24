@@ -908,6 +908,7 @@ interface SerupaLabels {
     nextMonth: string;
     previousSlide: string;
     nextSlide: string;
+    slideOf: (slide: number, total: number) => string;
     decrease: string;
     increase: string;
     chooseDate: string;

@@ -38,6 +38,8 @@ export interface SerupaLabels {
   /** Carousel arrows. */
   previousSlide: string;
   nextSlide: string;
+  /** Carousel: each slide's name, and its dot's ("2 of 5"). */
+  slideOf: (slide: number, total: number) => string;
   /** NumberInput step buttons. */
   decrease: string;
   increase: string;
@@ -99,6 +101,7 @@ export const DEFAULT_LABELS: SerupaLabels = {
   nextMonth: "Next month",
   previousSlide: "Previous slide",
   nextSlide: "Next slide",
+  slideOf: (slide, total) => slide + " of " + total,
   decrease: "Decrease",
   increase: "Increase",
   chooseDate: "Choose a date",
@@ -151,6 +154,7 @@ export const idLabels: SerupaLabels = {
   nextMonth: "Bulan berikutnya",
   previousSlide: "Slide sebelumnya",
   nextSlide: "Slide berikutnya",
+  slideOf: (slide, total) => slide + " dari " + total,
   decrease: "Kurangi",
   increase: "Tambah",
   chooseDate: "Pilih tanggal",
