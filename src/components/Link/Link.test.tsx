@@ -73,6 +73,16 @@ describe('Link', () => {
     expect([e.hasAttribute('data-router'), e.getAttribute('href'), e.className]).toEqual([true, '#router/settings', 'dk-link']);
   });
 
+  test('autoFocus focuses the link once it mounts (React does it only for form controls), also with as; the ref still reaches it', async () => {
+    const r = React.createRef<HTMLAnchorElement>();
+    await render(<><Link id="laf" href="#f" autoFocus ref={r}>Skip</Link><Link id="lafr" as={RouterLink} {...{ to: '/x' }}>Router</Link></>);
+    await expect.poll(() => document.activeElement?.id).toBe('laf');
+    expect([r.current === el('laf'), el('laf').hasAttribute('autofocus')]).toEqual([true, false]);
+    (document.activeElement as HTMLElement).blur();
+    await render(<Link id="lafr2" as={RouterLink} {...{ to: '/y' }} autoFocus>Router</Link>);
+    await expect.poll(() => document.activeElement?.id).toBe('lafr2');
+  });
+
   test('tokens (--link-text, --link-thickness, --link-offset) override one link', async () => {
     await render(<Link id="ltok" href="#e" style={{ '--link-text': 'rgb(1, 2, 3)', '--link-thickness': '3px', '--link-offset': '5px' } as React.CSSProperties}>Tokens</Link>);
     const s = underline('ltok');
