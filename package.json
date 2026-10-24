@@ -120,10 +120,6 @@
   "engines": {
     "node": ">=26"
   },
-  "allowScripts": {
-    "esbuild": false,
-    "fsevents": false
-  },
   "overrides": {
     "typescript-eslint": {
       "typescript": "$typescript"
