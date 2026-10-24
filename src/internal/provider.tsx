@@ -1,0 +1,60 @@
+"use client";
+import * as React from "react";
+import type { IconData } from "../material/types";
+import { isIconData } from "../icons";
+import { DEFAULT_LABELS, type SerupaLabels } from "./labels";
+
+export interface SerupaProviderProps {
+  /** A BCP 47 locale (such as "id-ID") for Calendar, DatePicker, DateRangePicker and TimePicker: how dates and
+   *  times are written and typed, month and weekday names, and the first day of the week. Default: the browser's. */
+  locale?: string;
+  /** Replaces some or all of the words the components say on their own, such as { close: "Tutup" }, or a whole
+   *  set (idLabels). Keys left out keep the outer provider's words, else English. */
+  labels?: Partial<SerupaLabels>;
+  /** Icons that work by name inside this provider, in the shape registerIcons takes: one icon, or a module of them. */
+  icons?: Array<IconData | Readonly<Record<string, IconData>>> | IconData | Readonly<Record<string, IconData>>;
+  children?: React.ReactNode;
+}
+
+/** What the components read: the nearest provider's settings, merged with the outer ones. */
+export interface SerupaSettings {
+  locale: string | undefined;
+  labels: SerupaLabels;
+  icons: ReadonlyMap<string, IconData>;
+}
+
+const NONE: SerupaSettings = { locale: undefined, labels: DEFAULT_LABELS, icons: new Map() };
+const Context = React.createContext<SerupaSettings>(NONE);
+
+/* SerupaProvider: settings for every component inside it (ADR-0010), as React context rather than module state, so
+   they reach client components from a server layout, differ between concurrent server requests, and can change for
+   one part of a page. Nested providers merge: an inner one changes only what it sets. It keeps no state. */
+/** Locale, built-in words and extra icons for every component inside it. A component's own prop still wins. */
+export function SerupaProvider(props: SerupaProviderProps): React.ReactElement {
+  const outer = React.useContext(Context);
+  const { locale, labels, icons } = props;
+  const value = React.useMemo<SerupaSettings>(() => {
+    const merged: SerupaLabels = { ...outer.labels };
+    if (labels) for (const k of Object.keys(labels) as (keyof SerupaLabels)[]) {
+      const v = labels[k];
+      if (v != null && v !== "") (merged as unknown as Record<string, unknown>)[k] = v;
+    }
+    let map = outer.icons;
+    if (icons) {
+      const m = new Map(outer.icons);
+      for (const x of Array.isArray(icons) ? icons : [icons]) {
+        if (isIconData(x)) m.set(x.name, x);
+        else for (const v of Object.values(x)) if (isIconData(v)) m.set(v.name, v);
+      }
+      map = m;
+    }
+    return { locale: locale || outer.locale, labels: merged, icons: map };
+  }, [outer, locale, labels, icons]);
+  return <Context.Provider value={value}>{props.children}</Context.Provider>;
+}
+SerupaProvider.displayName = "SerupaProvider";
+
+/** The nearest SerupaProvider's settings, or the defaults (browser locale, English words) without one. */
+export function useSerupa(): SerupaSettings {
+  return React.useContext(Context);
+}

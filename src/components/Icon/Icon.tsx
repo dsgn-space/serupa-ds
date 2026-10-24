@@ -6,6 +6,7 @@ import { ICONS, hasIcon, getIcon, loadAllIcons, type CustomIconName } from "../.
 import type { MaterialIconName } from "../../material/icons";
 import type { IconData } from "../../material/types";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 /** Any Material Symbol's name, a custom icon's name, or a name you registered with registerIcons. */
 export type IconName = CustomIconName | MaterialIconName | (string & {});
@@ -29,8 +30,9 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 /** An icon: Material Symbols Rounded (filled) or one of your custom SVG icons. Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
 export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>("Icon", function Icon(props, ref) {
   const [, loadedAll] = React.useReducer((n: number) => n + 1, 0);
+  const own = useSerupa().icons;   // icons given to a SerupaProvider
   const custom = !props.icon && hasIcon(props.name);
-  const data = props.icon || (custom || props.name == null ? undefined : getIcon(props.name));
+  const data = props.icon || (custom || props.name == null ? undefined : own.get(props.name) || getIcon(props.name));
   const missing = !custom && !data && props.name != null;
   // A name outside the built-in icons: load the full set once, then draw it (or warn if it isn't a Material Symbol).
   React.useEffect(() => {
