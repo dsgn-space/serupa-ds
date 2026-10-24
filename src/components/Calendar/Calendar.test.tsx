@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { color, css, press } from '../../../tools/test/vitest/helpers';
 import { Calendar, type CalendarProps } from './Calendar';
 
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -107,4 +108,11 @@ describe('Calendar', () => {
     await render(<Calendar data-testid="tok" style={{ '--calendar-selected-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />);
     await expect.poll(() => getComputedStyle(q('[data-testid=tok] .dk-calendar__day--selected')).backgroundColor).toBe('rgb(1, 2, 3)');
   });
+
+  test('pressed: a day held down fills with pressed, one step past hover', async () => {
+    await render(<Cal />);
+    const d = cal('[data-date="2025-03-12"]');
+    await press(d, () => expect.poll(() => css(d).backgroundColor).toBe(color('var(--pressed)')));
+  });
+
 });

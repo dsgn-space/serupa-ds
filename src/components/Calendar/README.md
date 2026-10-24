@@ -81,6 +81,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |
 | `--calendar-day-bg-hover` | `surface-muted` | A day under the pointer. |
+| `--calendar-day-bg-pressed` | `pressed` | A day while it's pressed, one step past hover. |
 | `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
 | `--calendar-selected-bg` | `primary` | The selected day. |
 | `--calendar-selected-color` | `on-primary` | Its number. |
