@@ -47,8 +47,8 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   const later = (v: boolean, ms: number) => { window.clearTimeout(timer.current); timer.current = window.setTimeout(() => set(v), ms); };
   React.useEffect(() => () => window.clearTimeout(timer.current), []);
 
-  // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes.
-  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: "top", offsetVar: "--dk-tooltip-offset", watch: props.content });
+  // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes. A press outside hides it.
+  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: "top", offsetVar: "--dk-tooltip-offset", watch: props.content, onOutside: () => set(false) });
 
   // Escape hides it from anywhere while it's open (the element may not have focus when hovered). It's the top
   // layer, so it takes that Escape: caught first (capture) and stopped, so a Dialog or Menu around it stays open.
@@ -69,8 +69,10 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   const trigger = React.cloneElement(child, {
     ref: (n: HTMLElement | null) => { anchorRef.current = n; if (childRef) setRef(childRef, n); },
     [aria]: merged,
-    onMouseEnter: chain("onMouseEnter", () => later(true, delay)),
-    onMouseLeave: chain("onMouseLeave", () => later(false, 100)),
+    // Pointer events, not mouse events: a tap sends a mouseenter after its pointerdown and never a mouseleave, so the
+    // tooltip opened 400ms after a tap and stayed. A touch pointer doesn't hover; focus still shows it from the keyboard.
+    onPointerEnter: chain("onPointerEnter", (e) => { if ((e as unknown as React.PointerEvent).pointerType !== "touch") later(true, delay); }),
+    onPointerLeave: chain("onPointerLeave", (e) => { if ((e as unknown as React.PointerEvent).pointerType !== "touch") later(false, 100); }),
     onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(":focus-visible")) set(true); }),
     onBlur: chain("onBlur", () => set(false)),
     onPointerDown: chain("onPointerDown", () => set(false)),
