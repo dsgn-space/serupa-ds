@@ -5,6 +5,7 @@ import { IconButton } from "../IconButton/IconButton";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { modalClosed, modalOpened, modalOpening } from "../../internal/layers";
+import * as icons from "../../material/builtin";
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -98,7 +99,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
               {has(props.title) ? <h2 className="dk-drawer__title" id={base + "-title"}>{props.title}</h2> : null}
               {has(props.description) ? <p className="dk-drawer__description" id={base + "-desc"}>{props.description}</p> : null}
             </div>
-            {showClose ? <IconButton className="dk-drawer__close" icon="close" label={props.closeLabel || sds.labels.close} size="sm" noTitle onClick={close} /> : null}
+            {showClose ? <IconButton className="dk-drawer__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" noTitle onClick={close} /> : null}
           </div>
         ) : null}
         {has(props.children) ? <div className="dk-drawer__body">{props.children}</div> : null}

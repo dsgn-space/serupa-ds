@@ -4,7 +4,9 @@ import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { displayNumber } from "../../internal/numbers";
+import { useLocale, useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -42,6 +44,7 @@ const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, lab
 /** Where people are in a task split into steps: numbered circles joined by lines. */
 export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Stepper", function Stepper(props, ref) {
   const sds = useSerupa();
+  const locale = useLocale();
   const rest = omit(props, OWN);
   const steps = props.steps || [];
   const current = Math.max(0, Math.min(steps.length, Math.floor(Number(props.current)) || 0));
@@ -81,7 +84,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
             <li key={i} className={cn("dk-stepper__step", "dk-stepper__step--" + state, i < current && "dk-stepper__step--done")} data-state={state} aria-current={i === current ? "step" : undefined}>
               <Head className="dk-stepper__head" {...(clickable ? { type: "button", onClick: () => props.onStepClick!(i) } : {})}>
                 <span className="dk-stepper__indicator" aria-hidden>
-                  {state === "complete" ? <Icon name="check" /> : state === "error" ? <Icon name="priority_high" /> : i + 1}
+                  {state === "complete" ? <Icon icon={icons.Check} /> : state === "error" ? <Icon icon={icons.PriorityHigh} /> : displayNumber(i + 1, locale)}
                 </span>
                 <span className="dk-stepper__text">
                   <span className="dk-stepper__title">

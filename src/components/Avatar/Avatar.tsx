@@ -4,6 +4,7 @@ import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { initials } from "./initials";
+import * as icons from "../../material/builtin";
 
 export { initials };
 
@@ -56,7 +57,7 @@ export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>("A
   const body = showImg
     ? <img className="dk-avatar__img" src={props.src} alt="" onError={() => setFailedSrc(props.src as string)} />
     : text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span>
-    : <Icon className="dk-avatar__icon" name="person" />;
+    : <Icon className="dk-avatar__icon" icon={icons.Person} />;
   if (full) { rest.role = "img"; rest["aria-label"] = full; } else rest["aria-hidden"] = true;
   return (
     <span {...rest} ref={ref} className={cn("dk-avatar", "dk-avatar--" + size, square && "dk-avatar--square", props.className)}

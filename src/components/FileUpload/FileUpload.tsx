@@ -1,12 +1,15 @@
 "use client";
 import * as React from "react";
-import { cn, domId, omit } from "../../internal/cn";
+import { cn, domId, omit, setRef } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
+import * as icons from "../../material/builtin";
+import { useFieldLabel } from "../../internal/fieldLabel";
+import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 export { formatFileSize };
 
@@ -39,7 +42,7 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   removeLabel?: (name: string) => string;
 }
 
-const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, className: 1, id: 1 } as const;
+const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1 } as const;
 
 function accepts(file: File, accept?: string) {
   if (!accept) return true;
@@ -66,7 +69,7 @@ function acceptedTypes(accept: string): string | null {
   const list = names.length === 1 ? first : names.slice(0, -1).join(", ") + " or " + names[names.length - 1];
   return (an ? "an " : "a ") + list;
 }
-const iconFor = (f: File) => /^image\//.test(f.type) ? "image" : f.type === "application/pdf" ? "picture_as_pdf" : /^video\//.test(f.type) ? "movie" : /^audio\//.test(f.type) ? "audio_file" : /zip|compressed|tar/.test(f.type) ? "folder_zip" : "draft";
+const iconFor = (f: File) => /^image\//.test(f.type) ? icons.Image : f.type === "application/pdf" ? icons.PictureAsPdf : /^video\//.test(f.type) ? icons.Movie : /^audio\//.test(f.type) ? icons.AudioFile : /zip|compressed|tar/.test(f.type) ? icons.FolderZip : icons.Draft;
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
 /* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size
@@ -82,6 +85,9 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const inputId = props.id || base + "-input";
   const input = React.useRef<HTMLInputElement | null>(null);
   const chooser = React.useRef<HTMLButtonElement | null>(null);
+  // ref.current.focus() and autoFocus land on the button that opens the file picker.
+  const choose = () => chooser.current;
+  useAutoFocus(props.autoFocus, choose);
   const controlled = props.files !== undefined;
   const [own, setOwn] = React.useState<File[]>([]);
   const files = controlled ? props.files! : own;
@@ -135,14 +141,18 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     onDrop: (e: React.DragEvent) => { if (disabled) return; e.preventDefault(); depth.current = 0; setOver(false); add(e.dataTransfer.files); },
   };
   const hasHint = props.hint != null && props.hint !== "";
+  // In a Field (whose <label for> reaches only the hidden input), the button is named "Due date, Choose a file" and
+  // described by the Field's hint and error, then its own hint.
+  const fieldLabel = useFieldLabel(inputId);
   return (
-    <div {...rest} ref={ref} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
+    <div {...rest} ref={(n) => { delegateFocus(n, choose); setRef(ref, n); }} className={cn("dk-file-upload", disabled && "dk-file-upload--disabled", props.className)} data-component="file-upload">
       <div className={cn("dk-file-upload__zone", over && "dk-file-upload__zone--over")} data-dragging={over ? "" : undefined} aria-disabled={disabled || undefined} {...drag}
         onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
-        <Icon name="upload_file" className="dk-file-upload__icon" />
+        <Icon icon={icons.UploadFile} className="dk-file-upload__icon" />
         <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
-        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()} aria-describedby={hasHint ? base + "-hint" : undefined}>
-          {props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}
+        <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()}
+          aria-labelledby={fieldLabel ? fieldLabel + " " + base + "-choose" : undefined} aria-describedby={cn(props["aria-describedby"], hasHint && base + "-hint") || undefined}>
+          <span id={base + "-choose"}>{props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}</span>
         </Button>
         {hasHint ? <p className="dk-file-upload__hint" id={base + "-hint"}>{props.hint}</p> : null}
         <input ref={input} id={inputId} type="file" className="dk-file-upload__input" tabIndex={-1} aria-hidden name={props.name} accept={props.accept} multiple={multiple} disabled={disabled}
@@ -150,19 +160,19 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       </div>
       {rejected.length ? (
         <div className="dk-file-upload__errors" role="alert">
-          {rejected.map((r, i) => <p key={i} className="dk-file-upload__error"><Icon name="error" />{r.message}</p>)}
+          {rejected.map((r, i) => <p key={i} className="dk-file-upload__error"><Icon icon={icons.Error} />{r.message}</p>)}
         </div>
       ) : null}
       {files.length ? (
         <ul className="dk-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
           {files.map((f, i) => (
             <li key={f.name + f.size + f.lastModified + i} className="dk-file-upload__item">
-              <Icon name={iconFor(f)} className="dk-file-upload__file-icon" />
+              <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />
               <span className="dk-file-upload__file">
                 <span className="dk-file-upload__name">{f.name}</span>
                 <span className="dk-file-upload__size">{formatFileSize(f.size)}</span>
               </span>
-              <IconButton icon="close" label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />
+              <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />
             </li>
           ))}
         </ul>

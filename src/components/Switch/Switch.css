@@ -31,7 +31,7 @@
   cursor: inherit;
   transition: background-color var(--duration-150) var(--ease-in-out);
 }
-.dk-switch:hover .dk-switch__input:not(:disabled) { --dk-switch-track: var(--switch-track-hover, var(--field-border-hover)); --dk-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); }
+@media (hover: hover) { .dk-switch:hover .dk-switch__input:not(:disabled) { --dk-switch-track: var(--switch-track-hover, var(--field-border-hover)); --dk-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
 .dk-switch__input:checked { background: var(--dk-switch-on); }
 .dk-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--dk-switch-pad);

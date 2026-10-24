@@ -80,6 +80,15 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('typing ignores letters that don\'t decompose and width too: "lodz" finds Łódź, "strasse" finds Straße, "ｔｏｋｙｏ" finds Tokyo', async () => {
+    await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="City" options={['Łódź', 'Straße', 'Ørsted', 'Tokyo', 'Paris']} /></div>);
+    await open();
+    for (const [typed, found] of [['lodz', 'Łódź'], ['strasse', 'Straße'], ['orsted', 'Ørsted'], ['ｔｏｋｙｏ', 'Tokyo']]) {
+      await selectAll(); await userEvent.keyboard(typed);
+      expect(st('cb').opts, typed).toEqual([found]);
+    }
+  });
+
   test('leaving with half-typed text puts back the picked label; emptying the field and leaving clears the selection', async () => {
     await render(<Countries />);
     await open();
@@ -189,6 +198,19 @@ describe('Combobox', () => {
     }
     still.remove();
     expect(low).toEqual([]);
+  });
+
+  test('the highlighted option: highlight background and a 2px primary bar at its start, on the right in rtl', async () => {
+    await render(<Countries />);
+    await open();
+    await userEvent.keyboard('{ArrowDown}');
+    const act = () => popOf('cb').querySelector('.dk-combobox__option--active')!;
+    const probe = document.createElement('div'); probe.style.background = 'var(--highlight)'; probe.style.color = 'var(--primary)'; document.body.appendChild(probe);
+    await expect.poll(() => getComputedStyle(act()).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+    expect(getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} 2px 0px 0px 0px inset`);
+    document.documentElement.dir = 'rtl';
+    await expect.poll(() => getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} -2px 0px 0px 0px inset`);
+    document.documentElement.removeAttribute('dir'); probe.remove();
   });
 
   test('the × is named after the field: "Clear Country" from a Field label (without its * or "(optional)"), aria-labelledby or aria-label; "Clear" with no label; clearLabel wins', async () => {

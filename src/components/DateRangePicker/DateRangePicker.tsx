@@ -8,7 +8,9 @@ import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
 import { useLocale, useSerupa } from "../../internal/provider";
 import { useFormReset } from "../../internal/useFormReset";
+import * as icons from "../../material/builtin";
 import { isComposing } from "../../internal/ime";
+import { delegateFocus, useAutoFocus } from "../../internal/focus";
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
@@ -60,7 +62,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 /** Two date fields for a start and end, with a two-month calendar popup to pick the range. */
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>("DateRangePicker", function DateRangePicker(props, ref) {
   const sds = useSerupa();
-  const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, className, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, min, max, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, id, startLabel, endLabel, startName, endName, buttonLabel, months: _m, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -85,6 +87,9 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const popId = domId("dk-drp", React.useId());
   const box = React.useRef<HTMLSpanElement | null>(null);
   const startField = React.useRef<HTMLInputElement | null>(null);
+  // ref.current.focus() and autoFocus land on the start field, as they would on a date input.
+  const start = () => startField.current;
+  useAutoFocus(autoFocus, start);
   useFormReset(startField, () => {
     if (controlled) return;
     const r = norm(props.defaultValue);
@@ -151,7 +156,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} />
   );
   return (
-    <span {...rest} ref={(n) => { box.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }} role="group"
+    <span {...rest} ref={(n) => { box.current = n; delegateFocus(n, start); if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }} role="group"
       className={cn("dk-input", "dk-input--size-" + size, "dk-date-range-picker", invalid && "dk-input--invalid", disabled && "dk-input--disabled", readOnly && "dk-input--readonly", className)}
       data-component="date-range-picker" data-size={size}>
       {field("start")}
@@ -159,7 +164,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       {field("end")}
       <button ref={button} type="button" className="dk-date-picker__button dk-date-range-picker__button" aria-label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
         disabled={off} onClick={() => { if (open) close(false); else { read("start"); show(); } }}>
-        <Icon name="date_range" />
+        <Icon icon={icons.DateRange} />
       </button>
       {startName ? <input type="hidden" name={startName} value={value.start ? isoDate(value.start) : ""} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} value={value.end ? isoDate(value.end) : ""} disabled={disabled} /> : null}

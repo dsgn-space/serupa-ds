@@ -37,10 +37,11 @@ Find icons in the Material Symbols catalog (Rounded style) at fonts.google.com/i
 
 There's no font to load. Every icon is an SVG drawn in the page, so it shows at once and nothing flashes while a file loads.
 
-- **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations → Icons page in Storybook: search, then click to copy its name. The icons the components use are built in. The full set is a separate file that loads the first time a page draws another name, so that icon appears a moment later the first time, and apps that don't use other names never download it.
-- **An imported icon works too** (`icon={Category}` with `import { Category } from "serupa-ds/icons"`), the same icon either way.
+- **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations → Icons page in Storybook: search, then click to copy its name. A name loads the first time a page draws it, so it appears a moment later that first time: the icons the components use come from a small file (about 14 KB), and any other name from the full set. Apps that draw no names never download either.
+- **An imported icon works too** (`icon={Category}` with `import { Category } from "serupa-ds/icons"`), the same icon either way. It draws on the first render, and only the icons you import ship in your bundle, so prefer it for icons you know ahead of time.
+- **The components' own icons** (Dialog's close, Checkbox's check, Select's chevron) are imported by each component, so they draw at once and on the server, and a bundle keeps only the icons of the components it uses.
 - **On a plain page** (`serupa.iife.js`), every name works. `serupa-icons.iife.js` is no longer needed; it's kept, empty, for pages that still include it.
-- **Server rendering:** built-in icons render on the server; other names show their empty box until the page loads in the browser. To render them on the server too, call `registerIcons(await import("serupa-ds/icons"))` before rendering.
+- **Server rendering:** the components' own icons and imported icons (`icon={Close}`) render on the server. A name (`name="close"`, `leftIcon="close"`) shows its empty box until the page loads in the browser. To draw it on the server, pass the imported icon instead, or register what you draw by name once before rendering: `registerIcons(Close, Add)`, or `registerIcons(await import("serupa-ds/icons"))` for every name.
 - `registerIcons({ name, d })` adds an icon of your own in Material's shape (`d` on the 960-unit grid) under a name.
 
 A name that isn't a Material Symbol or one of your icons draws an empty 1em box and logs a console warning.

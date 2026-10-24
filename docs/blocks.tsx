@@ -10,6 +10,8 @@ import { Icon } from '../src/components/Icon/Icon';
 import { Button } from '../src/components/Button/Button';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
 import { customIcons, isIconData } from '../src/icons';
+import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
+import labelsSource from '../src/internal/labels.ts?raw';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -159,6 +161,25 @@ export function IconSizes() {
       <Icon name="favorite" size={s} /><strong>{s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
     </div>)}
   </div>;
+}
+
+// Which components say each label: the doc comment above its key (or group of keys) in SerupaLabels.
+const labelUse: Record<string, string> = {};
+{
+  let use = '';
+  for (const line of labelsSource.slice(labelsSource.indexOf('export interface SerupaLabels'), labelsSource.indexOf('\n}\n')).split('\n').slice(1)) {
+    const doc = /^\s*\/\*\*\s*(.*?)\s*\*\/$/.exec(line), key = /^\s*(\w+):/.exec(line);
+    if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
+  }
+}
+const word = (v: SerupaLabels[keyof SerupaLabels]) => (typeof v === 'function' ? v('n' as unknown as number) : v);
+/** Every word the components say on their own, in English and Indonesian, with where it's used. */
+export function LabelTable() {
+  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <thead><tr><th style={cell}>Key</th><th style={cell}>English</th><th style={cell}>Indonesian (<code>idLabels</code>)</th><th style={cell}>Where</th></tr></thead>
+    <tbody>{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k}>
+      <td style={cell}><code>{k}</code></td><td style={cell}>{word(DEFAULT_LABELS[k])}</td><td style={cell}>{word(idLabels[k])}</td><td style={cell}>{labelUse[k]}</td></tr>)}</tbody>
+  </table>;
 }
 
 const LEVELS: [string, string, string, string][] = [

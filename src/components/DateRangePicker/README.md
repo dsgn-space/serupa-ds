@@ -59,7 +59,7 @@ const [stay, setStay] = React.useState<DateRange>({ start: null, end: null });
 | `startName`, `endName` | `string` | | Hidden inputs that send each end as `yyyy-mm-dd`. |
 | `buttonLabel` | `string` | `"Choose dates"` | The calendar button's name, and the popup's. |
 
-`className`, `ref`, `aria-label` and other props go to the box (`role="group"`); `aria-describedby` and `aria-required` (which Field passes) go to both fields.
+`className`, `ref`, `aria-label` and other props go to the box (`role="group"`); `aria-describedby` and `aria-required` (which Field passes) go to both fields. Its `focus()` and `autoFocus` move focus to the start field, so a form library that focuses the first invalid field after a failed submit lands on it.
 
 ## Component tokens
 

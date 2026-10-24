@@ -54,7 +54,7 @@
       },
       "item-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.highlight}",
         "$description": "An item's background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -74,7 +74,7 @@
       },
       "item-bg-active": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.highlight}",
         "$description": "The current page's item background.",
         "$extensions": {
           "com.serupa": {

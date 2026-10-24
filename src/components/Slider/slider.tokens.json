@@ -51,6 +51,16 @@
             "cssVar": "--slider-focus-ring"
           }
         }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The fill and the thumb's ring when invalid.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-invalid"
+          }
+        }
       }
     },
     "sizing": {

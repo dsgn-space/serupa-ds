@@ -2,6 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Progress } from './Progress';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -54,6 +55,14 @@ describe('Progress', () => {
     await expect.poll(() => share('p3')).toBe(100);
     await expect.poll(() => share('p4')).toBe(0);
     expect([pb('p3').getAttribute('aria-valuenow'), pb('p4').getAttribute('aria-valuenow')]).toEqual(['100', '0']);
+  });
+
+  test('the value is written as the locale writes a percentage, shown and read out: ٤٥٪ in ar-EG, %45 in tr-TR, 45 % in fr-FR', async () => {
+    const LOCALES = ['ar-EG', 'tr-TR', 'fr-FR', 'en-US'];
+    await render(<Wrap>{LOCALES.map((l) => <SerupaProvider key={l} locale={l}><Progress id={'loc-' + l} value={45} label="Upload" showValue /></SerupaProvider>)}</Wrap>);
+    const seen = LOCALES.map((l) => [value('loc-' + l), pb('loc-' + l).getAttribute('aria-valuetext')]);
+    expect(seen).toEqual(LOCALES.map((l) => { const t = new Intl.NumberFormat(l, { style: 'percent' }).format(0.45); return [t, t]; }));
+    expect([seen[0][0]!.includes('٤٥'), seen[1][0]!.startsWith('%'), seen[3][0]]).toEqual([true, true, '45%']);
   });
 
   test('no value: indeterminate, without valuenow or valuetext, a sliding segment', async () => {

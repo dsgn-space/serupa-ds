@@ -9,6 +9,8 @@ import { IconButton } from "../IconButton/IconButton";
 import { named } from "../../internal/component";
 import { useSerupa } from "../../internal/provider";
 import { onModalChange, topModal } from "../../internal/layers";
+import * as icons from "../../material/builtin";
+import type { IconData } from "../../material/types";
 
 export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
@@ -74,7 +76,7 @@ export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const POSITIONS: readonly ToasterPosition[] = ["top-start", "top-center", "top-end", "bottom-start", "bottom-center", "bottom-end"];
-const ICONS: Record<ToastTone, string | null> = { neutral: null, info: "info", success: "check_circle", warning: "warning", danger: "error" };
+const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error };
 
 /* Toaster: where toast() messages appear. Render one, once, near the root. Each toast has a title, an optional
    description, tone icon, action and close button, and goes after its duration (one with an action stays); the
@@ -150,13 +152,13 @@ function ToastView(props: { item: Item; dismissLabel: string }): React.ReactElem
     <li tabIndex={-1} className={cn("dk-toast", "dk-toast--" + t.tone)} data-tone={t.tone} aria-labelledby={titleId} aria-describedby={t.description != null ? descId : undefined}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false); }}>
-      {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon name={icon} /></span> : null}
+      {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
       <div className="dk-toast__content">
         <p className="dk-toast__title" id={titleId}>{t.title}</p>
         {t.description != null ? <p className="dk-toast__description" id={descId}>{t.description}</p> : null}
       </div>
       {t.action ? <Button className="dk-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); toast.dismiss(t.id); }}>{t.action.label}</Button> : null}
-      <IconButton className="dk-toast__close" icon="close" label={props.dismissLabel} size="sm" noTitle onClick={() => toast.dismiss(t.id)} />
+      <IconButton className="dk-toast__close" icon={icons.Close} label={props.dismissLabel} size="sm" noTitle onClick={() => toast.dismiss(t.id)} />
     </li>
   );
 }

@@ -8,6 +8,7 @@ import { Menu, MenuItem } from "../Menu/Menu";
 import { component } from "../../internal/component";
 import { flattenChildren } from "../../internal/children";
 import { useSerupa } from "../../internal/provider";
+import * as icons from "../../material/builtin";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -107,7 +108,7 @@ export const SidebarItem = /* @__PURE__ */ component<HTMLAnchorElement, SidebarI
     {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}</span> : null}
     <span className="dk-sidebar__label">{props.label}</span>
     {props.badge != null && !rail ? <span className="dk-sidebar__badge">{props.badge}</span> : null}
-    {chevron && !rail ? <Icon name="expand_more" className="dk-sidebar__chevron" /> : null}
+    {chevron && !rail ? <Icon icon={icons.ExpandMore} className="dk-sidebar__chevron" /> : null}
   </>;
   // An item with children is a button, not a link: its other attributes and handlers go to the button.
   const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, type: 1, onClick: 1 }) as unknown as React.ButtonHTMLAttributes<HTMLButtonElement>;

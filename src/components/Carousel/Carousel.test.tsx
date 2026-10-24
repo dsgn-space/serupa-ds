@@ -3,6 +3,8 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, keepMotion } from '../../../tools/test/vitest/helpers';
+import { idLabels } from '../../internal/labels';
+import { SerupaProvider } from '../../internal/provider';
 import { Carousel } from './Carousel';
 
 // About motion: transitions and animations stay on for this file (setup.ts turns them off elsewhere).
@@ -90,6 +92,13 @@ async function swipe(id: string, dx: number, from?: HTMLElement) {
 }
 
 describe('Carousel', () => {
+  test('the slide and dot names come from the slideOf label, so SerupaProvider translates them: "2 dari 3" in Indonesian', async () => {
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Carousel id="cid" label="Foto">{slides(3, 'i')}</Carousel></SerupaProvider>);
+    const c = el('cid');
+    expect([...c.querySelectorAll('.dk-carousel__dot')].map((x) => x.getAttribute('aria-label'))).toEqual(['1 dari 3', '2 dari 3', '3 dari 3']);
+    expect(c.querySelector('[aria-roledescription="slide"]')!.getAttribute('aria-label')).toBe('1 dari 3');
+  });
+
   test('a <section> region (roledescription carousel, named by label); slides are groups named "1 of 4" in a polite live region, as wide as it; buttons and dots are named; ref, className and props reach it', async () => {
     const ref = React.createRef<HTMLElement>();
     await render(<App carRef={ref} />);

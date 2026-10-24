@@ -3,8 +3,10 @@ import * as React from "react";
 import { cn, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
-import { useSerupa } from "../../internal/provider";
+import { displayNumber } from "../../internal/numbers";
+import { useLocale, useSerupa } from "../../internal/provider";
 import { paginationRange } from "./paginationRange";
+import * as icons from "../../material/builtin";
 
 export { paginationRange };
 
@@ -46,6 +48,7 @@ function int(v: unknown, min: number, fallback: number): number {
 /** Moves through pages of results: previous, next, and page numbers with … where pages are skipped. */
 export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps>("Pagination", function Pagination(props, ref) {
   const sds = useSerupa();
+  const locale = useLocale();
   const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, className: 1 });
   const count = int(props.count, 0, 0);
   const [own, setOwn] = React.useState(() => int(props.defaultPage, 1, 1));
@@ -65,17 +68,17 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   };
   const arrow = (dir: "prev" | "next") => {
     const n = dir === "prev" ? page - 1 : page + 1;
-    const icons = dir === "prev"
-      ? <><Icon name="chevron_left" className="dk-pagination__ltr" /><Icon name="chevron_right" className="dk-pagination__rtl" /></>
-      : <><Icon name="chevron_right" className="dk-pagination__ltr" /><Icon name="chevron_left" className="dk-pagination__rtl" /></>;
-    return <li key={dir}>{item(n, icons, { "aria-label": dir === "prev" ? props.previousLabel || sds.labels.previousPage : props.nextLabel || sds.labels.nextPage, rel: props.getHref ? dir : undefined }, n < 1 || n > count, "dk-pagination__arrow")}</li>;
+    const arrows = dir === "prev"
+      ? <><Icon icon={icons.ChevronLeft} className="dk-pagination__ltr" /><Icon icon={icons.ChevronRight} className="dk-pagination__rtl" /></>
+      : <><Icon icon={icons.ChevronRight} className="dk-pagination__ltr" /><Icon icon={icons.ChevronLeft} className="dk-pagination__rtl" /></>;
+    return <li key={dir}>{item(n, arrows, { "aria-label": dir === "prev" ? props.previousLabel || sds.labels.previousPage : props.nextLabel || sds.labels.nextPage, rel: props.getHref ? dir : undefined }, n < 1 || n > count, "dk-pagination__arrow")}</li>;
   };
   return (
     <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn("dk-pagination", size === "sm" && "dk-pagination--sm", props.className)}>
       <ul className="dk-pagination__list">
         {arrow("prev")}
         {paginationRange(page, count, int(props.siblings, 0, 1), int(props.boundaries, 0, 1)).map((e) => typeof e === "number"
-          ? <li key={e}>{item(e, e, { "aria-label": label(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
+          ? <li key={e}>{item(e, displayNumber(e, locale), { "aria-label": label(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
           : <li key={e} className="dk-pagination__ellipsis" aria-hidden="true">…</li>)}
         {arrow("next")}
       </ul>

@@ -639,6 +639,9 @@ interface SegmentedControlProps extends Omit<React.HTMLAttributes<HTMLDivElement
     fullWidth?: boolean;
     disabled?: boolean;
     name?: string;
+    invalid?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
 }
 declare const SegmentedControl: React.ForwardRefExoticComponent<SegmentedControlProps & React.RefAttributes<HTMLDivElement>>;
 type SelectOption = {
@@ -703,6 +706,9 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
         string
     ];
     name?: string;
+    invalid?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
 }
 declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
@@ -908,6 +914,7 @@ interface SerupaLabels {
     nextMonth: string;
     previousSlide: string;
     nextSlide: string;
+    slideOf: (slide: number, total: number) => string;
     decrease: string;
     increase: string;
     chooseDate: string;

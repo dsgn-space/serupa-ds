@@ -98,7 +98,7 @@ npx serupa-purge src -o public/bundle.min.css --components
 | File | What it is |
 | --- | --- |
 | `tokens.css` | Every token as a CSS variable, the six themes, and the fonts. Load it first. |
-| `dist/base.css` | Page defaults (font, colors, focus style, reduced motion), all inside `:where()` so any class wins. |
+| `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, and `data-print-urls` on a container prints each outside link's address after it. |
 | `dist/components.css` | The component styles (`dk-*`), about 90 KB. |
 | `dist/utilities.css` | Every utility class. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
