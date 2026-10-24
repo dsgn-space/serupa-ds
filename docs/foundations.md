@@ -497,6 +497,75 @@ Rules of thumb:
 - Animate `translate` and `scale`, not `top` or `width`: they don't trigger layout. Don't use `zoom` for animation.
 - Respect reduced motion: drop large movements and 3D flips when the viewer prefers reduced motion.
 
+## Page layout
+
+How to lay out a page: the breakpoints it adapts at, the containers that hold its content, and the spacing between its parts. The tokens and classes are in Layout under Utility classes; this is how to use them together.
+
+**Breakpoints**
+
+Design for a phone first, then add what changes on wider screens. The five breakpoints are minimum widths:
+
+| Breakpoint | From | Layout it usually gets |
+| --- | --- | --- |
+| (none) | 0 | One column. Navigation behind Navbar's menu button. 16px side padding. |
+| `sm` | 640px | Still one column; forms and cards can sit two to a row. 24px side padding. |
+| `md` | 768px | Two columns. Navbar shows its links. |
+| `lg` | 1024px | A Sidebar beside the content, or three columns of cards. 32px side padding. |
+| `xl` | 1280px | Content reaches its container's width; extra space goes to the margins. |
+| `2xl` | 1536px | Only for dense data: wide tables, dashboards. |
+
+- Change the layout where the content needs it, not at every breakpoint. Two or three changes are usually enough.
+- Test at 320px wide. WCAG 1.4.10 asks that content reflows without scrolling sideways at that width (400% zoom on a 1280px screen); only data tables, maps and diagrams may scroll.
+- For a component that sits in places of different widths (a card in a sidebar and in the main column), let its width decide, not the screen's: Grid's `columns="auto"` and `minColumnWidth`, or a container query (`@container`).
+
+**Containers**
+
+Wrap each band of the page (header, main content, footer) in a Container of the same `size`, so their edges line up.
+
+| Content | Container | Max width |
+| --- | --- | --- |
+| Articles, help pages, settings forms | `size="prose"` | 672px, about 70 characters a line |
+| A page of cards or a form with a side panel | `size="lg"` | 1024px |
+| Most app pages (the default) | `size="xl"` | 1280px |
+| Dashboards and wide tables | `size="2xl"` | 1536px |
+| A layout that brings its own margins, such as a full-bleed hero | `size="full"` | none |
+
+- Keep reading text within `prose` width even on a wide page: put a long description in its own `prose` block.
+- Don't nest Containers. Inside one, lay things out with Stack and Grid.
+- An app shell (Sidebar and Navbar) fills the window; put a Container inside the content area, not around the shell.
+
+**Spacing rhythm**
+
+Use spacing to show what belongs together: the closer two things are, the more related they look. Pick from a few steps of the spacing scale and use them the same way on every page.
+
+| Between | Step | Size |
+| --- | --- | --- |
+| An icon and its label; a label and its control | `1` to `2` | 4–8px |
+| Fields in a form; items in a list; lines of a card | `3` to `4` | 12–16px |
+| Groups inside a section; cards in a grid | `6` | 24px |
+| A section's heading and the groups under it | `4` to `6` | 16–24px |
+| Sections of a page | `8` to `12` | 32–48px |
+| The page header and the content; bands on a marketing page | `12` to `16` | 48–64px |
+
+- Space inside a group is always smaller than the space between groups. If two gaps are equal, the groups stop reading as groups.
+- Pad the container and gap its children: a Card has `p-6`, and its contents sit in a Stack with `gap={3}` or `gap={4}`. Don't add margins to each child.
+- On small screens, step the big gaps down one step: `gap-8 md:gap-12`.
+- Compact density (`data-density="compact"`) shrinks controls, not the page's spacing. For a denser table or list, choose smaller gaps on purpose.
+
+**A typical app page**
+
+```jsx
+<div style={{ display: 'flex', minHeight: '100vh' }}>
+  <Sidebar header={<Logo />}>…</Sidebar>
+  <Container as="main" size="xl" className="py-8">
+    <Stack gap={8}>
+      <Stack gap={2}><Heading level={1}>Projects</Heading><Text tone="muted">12 active</Text></Stack>
+      <Grid columns="auto" gap={6}>{cards}</Grid>
+    </Stack>
+  </Container>
+</div>
+```
+
 ## Layout
 
 Layout scales as tokens, and layout utilities as classes in `bundle.css` (`.container`, `.flex`, `.grid`, `.sticky`, `.z-30`, `.aspect-video`, `.overflow-hidden`…).
