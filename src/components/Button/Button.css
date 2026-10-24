@@ -8,6 +8,7 @@
   justify-content: center;
   gap: var(--button-gap-md, var(--spacing-1\.5));
   white-space: nowrap;
+  max-inline-size: var(--sizing-full);   /* never wider than its container: a long label is cut with an ellipsis (below) */
   box-sizing: border-box;
   height: var(--button-height-md, var(--control-height-md));
   padding: var(--spacing-0) var(--button-padding-x-md, var(--spacing-3));
@@ -37,7 +38,8 @@
   --dk-btn-ring: var(--button-focus-ring, var(--focus-ring));
   box-shadow: var(--dk-btn-shadow);
 }
-.dk-btn__label { display: inline-flex; }
+/* A label longer than the room it has ends in an ellipsis; the whole label is still the button's name. */
+.dk-btn__label { display: block; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; }
 .dk-btn:focus-visible {
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
   outline: var(--focus-ring-width) solid var(--dk-btn-ring); outline-offset: var(--focus-ring-offset);
