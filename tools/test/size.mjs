@@ -12,9 +12,9 @@ import { PROJECT, done, report } from './lib.mjs';
 
 // KiB, gzipped. About 3 to 5% above the size when each line was last set.
 const BUDGET = {
-  'All components (index.js)': 55,   // 46.8 once each component imports only its own icons (R7); 50.5 with R21–R28 and Meter; 52.8 with PhoneInput
+  'All components (index.js)': 58,   // 46.8 once each component imports only its own icons (R7); 52.2 with R21–R28, Meter and CopyButton; about 55 with the components in review
   'Button alone': 5.5,   // 5.1, without any icon data (R7)
-  'Dialog alone': 6.5,   // 6.2, with only its close icon (R7)
+  'Dialog alone': 7,   // 6.2, with only its close icon (R7); 6.5 with every label the new components added
   'components.css': 42.5,   // 38.2 after R11 put the hover rules in @media (hover: hover); 40.7 with InlineEdit, ColorPicker and PhoneInput
   'utilities.css': 168,
   'bundle.css': 212,   // 206.2 with InlineEdit, ColorPicker and PhoneInput
@@ -30,7 +30,7 @@ const bundled = async (code) => gz((await esbuild.build({ stdin: { contents: cod
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));
 
 const size = {
-  'All components (index.js)': 55,   // 46.8 once each component imports only its own icons (R7); 50.5 with R21–R28 and Meter; 52.8 with PhoneInput
+  'All components (index.js)': await bundled("export * from './dist/index.js';"),
   'Button alone': await bundled("export { Button } from './dist/index.js';"),
   'Dialog alone': await bundled("export { Dialog } from './dist/index.js';"),
 };
@@ -43,6 +43,7 @@ if (process.env.GITHUB_STEP_SUMMARY) {
 }
 done(report('Size', rows.map((r) => ({
   name: `${r.name}: ${kib(r.now)} KiB gzipped, within ${r.budget} KiB`,
-  ok: r.now <= r.budget * 1024,
-  detail: `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
+  // Under 1 KiB means it wasn't measured (a budget number pasted in place of the measurement), not that it's tiny.
+  ok: r.now <= r.budget * 1024 && r.now >= 1024,
+  detail: r.now < 1024 ? 'not measured: its line in `size` must measure the build, not repeat the budget' : `${kib(r.now - r.budget * 1024)} KiB over; if the growth is worth it, raise its budget in tools/test/size.mjs`,
 }))));
