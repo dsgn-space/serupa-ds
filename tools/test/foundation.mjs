@@ -355,7 +355,7 @@ check('hover styles apply only with a pointer that hovers: every :hover rule is 
 const PRINTS = new Set(['Dialog', 'Drawer']);
 const baseCss = stripComments(read('src/styles/base.css'));
 const printBlock = (baseCss.match(/@media print\s*\{([\s\S]*?)\n\}/) || ['', ''])[1];
-const printHidden = new Set([...(printBlock.match(/:where\(([^)]*)\)\s*\{\s*display:\s*none/) || ['', ''])[1].matchAll(/\.(dk-[\w-]+)/g)].map((m) => m[1]));
+const printHidden = new Set([...printBlock.matchAll(/:where\(([^)]*)\)\s*\{\s*display:\s*none/g)].flatMap((w) => [...w[1].matchAll(/\.(dk-[\w-]+)/g)].map((m) => m[1])));
 const floating = [], fadesInForcedColors = [];
 for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   const f = path.join('src', 'components', n, `${n}.css`);
@@ -366,7 +366,8 @@ for (const n of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
   const pops = /\[popover\]|:popover-open|popover/.test(rules.map(([sel]) => sel).join(' ')) ? ['popover'] : [];
   if ((fixed.length || pops.length) && !PRINTS.has(n) && !/@media print/.test(css)) {
     const own = [...new Set(rules.map(([sel]) => (sel.match(/^\.(dk-[\w-]+)/) || [])[1]).filter(Boolean))];
-    if (!own.some((c) => printHidden.has(c))) floating.push(`${n} (${[...fixed, ...pops][0].slice(0, 40)})`);
+    // .dk-fab--bottom-end is hidden by .dk-fab in the list (a modifier's element carries the base class too).
+    if (!own.some((c) => printHidden.has(c) || printHidden.has(c.replace(/(--|__).*$/, '')))) floating.push(`${n} (${[...fixed, ...pops][0].slice(0, 40)})`);
   }
   const forced = (css.match(/@media[^{]*forced-colors[^{]*\{(?:[^{}]|\{[^{}]*\})*\}/g) || []).join(' ');
   for (const [sel, body] of rules) {
