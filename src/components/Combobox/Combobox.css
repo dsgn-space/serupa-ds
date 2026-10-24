@@ -1,8 +1,8 @@
 /* ---------------------------------------------------------------
    Combobox: Input's box with a chevron button at the end (and a × when clearable), and a list in the top layer
    under it: surface, outline, 8px corners, shadow-lg, 4px inside, up to 240px tall before it scrolls, at least
-   as wide as the field. Options are 32px with an optional muted second line; the highlighted one is
-   surface-muted and the selected one has a primary check. Empty and loading messages are muted.
+   as wide as the field. Options are 32px with an optional muted second line; the highlighted one gets
+   highlight with a 2px primary bar at its start, and the selected one has a primary check. Empty and loading messages are muted.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-combobox { padding-inline-end: var(--spacing-1); }
@@ -33,10 +33,13 @@
   padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2));
   border-radius: var(--combobox-option-radius, var(--rounded-md)); cursor: pointer; user-select: none;
 }
-.dk-combobox__option--active { background: var(--combobox-option-bg-active, var(--surface-muted)); }
+.dk-combobox__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
+.dk-combobox__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-combobox__option--active { background: var(--combobox-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--combobox-option-indicator, var(--primary)); }
 .dk-combobox__option[aria-disabled="true"] { opacity: var(--opacity-50); cursor: not-allowed; }
 .dk-combobox__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); }
 .dk-combobox__description { color: var(--combobox-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-combobox__option--active .dk-combobox__description { color: var(--combobox-option-color, var(--text)); }   /* muted text is below 4.5:1 on highlight */
 .dk-combobox__check { flex-shrink: 0; color: var(--combobox-check, var(--primary)); font-size: var(--spacing-4); }
 .dk-combobox__message { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2)); color: var(--combobox-description-color, var(--text-muted)); }
 @media (prefers-reduced-motion: reduce) { .dk-combobox__button, .dk-combobox__button .dk-icon { transition: none; } }

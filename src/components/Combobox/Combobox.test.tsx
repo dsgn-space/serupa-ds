@@ -189,4 +189,17 @@ describe('Combobox', () => {
     still.remove();
     expect(low).toEqual([]);
   });
+
+  test('the highlighted option: highlight background and a 2px primary bar at its start, on the right in rtl', async () => {
+    await render(<Countries />);
+    await open();
+    await userEvent.keyboard('{ArrowDown}');
+    const act = () => popOf('cb').querySelector('.dk-combobox__option--active')!;
+    const probe = document.createElement('div'); probe.style.background = 'var(--highlight)'; probe.style.color = 'var(--primary)'; document.body.appendChild(probe);
+    await expect.poll(() => getComputedStyle(act()).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+    expect(getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} 2px 0px 0px 0px inset`);
+    document.documentElement.dir = 'rtl';
+    await expect.poll(() => getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} -2px 0px 0px 0px inset`);
+    document.documentElement.removeAttribute('dir'); probe.remove();
+  });
 });

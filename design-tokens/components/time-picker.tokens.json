@@ -64,11 +64,21 @@
       },
       "option-bg-active": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.highlight}",
         "$description": "The highlighted time (pointer or keyboard).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--time-picker-option-bg-active"
+          }
+        }
+      },
+      "option-indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The 2px bar at the highlighted time's start (3:1 on highlight).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--time-picker-option-indicator"
           }
         }
       },

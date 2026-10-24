@@ -90,7 +90,8 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | `--menu-bg` | `surface` | The menu's background. |
 | `--menu-border` | `border` | The menu's border. |
 | `--menu-item-text` | `text` | An item's label. |
-| `--menu-item-bg-active` | `secondary` | The highlighted item's background (hover and keyboard). |
+| `--menu-item-bg-active` | `highlight` | The highlighted item's background (hover and keyboard). |
+| `--menu-item-indicator` | `primary` | From the keyboard: the 2px bar at the highlighted item's start. A destructive item uses its danger color. |
 | `--menu-muted` | `text-muted` | Icons, shortcuts and group labels (4.5:1 on surface; the highlighted item's shortcut turns to item-color). |
 | `--menu-danger` | `danger-text` | A destructive item's label and icon. |
 | `--menu-danger-bg-active` | `danger-subtle` | A highlighted destructive item's background. |

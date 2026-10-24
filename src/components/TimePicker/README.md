@@ -71,7 +71,8 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-list-bg` | `surface` | The list's background. |
 | `--time-picker-list-border` | `border` | The list's outline. |
 | `--time-picker-option-color` | `text` | A time in the list. |
-| `--time-picker-option-bg-active` | `surface-muted` | The highlighted time (pointer or keyboard). |
+| `--time-picker-option-bg-active` | `highlight` | The highlighted time (pointer or keyboard). |
+| `--time-picker-option-indicator` | `primary` | The 2px bar at the highlighted time's start. |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
 | `--time-picker-list-shadow` | `shadow-lg` | The list's shadow. |
 | `--time-picker-list-radius` | `rounded-lg` | The list's corners (8px). |
