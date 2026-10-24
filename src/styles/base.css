@@ -56,8 +56,8 @@
 
 /* One visible focus style for every focusable element (WCAG 2.4.7); components may draw their own. */
 :where(:focus-visible) {
-  outline: var(--outline-width-2) solid var(--focus-ring);
-  outline-offset: var(--outline-offset-2);
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Hidden means hidden, even on elements that set their own display. */

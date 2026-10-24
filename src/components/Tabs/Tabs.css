@@ -41,7 +41,7 @@
 .dk-tabs__icon { display: inline-flex; }
 .dk-tabs__icon .dk-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .dk-tabs__tab:hover:not(:disabled) { color: var(--tabs-text-hover, var(--text)); } }
-.dk-tabs__tab:focus-visible { outline: var(--outline-width-2) solid transparent; box-shadow: inset 0 0 0 var(--outline-width-2) var(--tabs-focus-ring, var(--focus-ring)); }   /* inside the tab, since the scrolling row would clip a ring outside it; the transparent outline shows in forced colors */
+.dk-tabs__tab:focus-visible { outline: var(--focus-ring-width) solid transparent; box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)); }   /* inside the tab, since the scrolling row would clip a ring outside it; the transparent outline shows in forced colors */
 .dk-tabs__tab:disabled { opacity: var(--opacity-50); cursor: not-allowed; }
 
 /* line */
@@ -52,10 +52,10 @@
 /* pill */
 @media (hover: hover) { .dk-tabs--pill .dk-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }
 .dk-tabs--pill .dk-tabs__tab[aria-selected="true"] { background: var(--tabs-pill-bg-selected, var(--primary)); color: var(--tabs-pill-text-selected, var(--on-primary)); }
-.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:focus-visible { box-shadow: inset 0 0 0 var(--outline-width-2) var(--tabs-focus-ring, var(--focus-ring)), inset 0 0 0 var(--spacing-1) var(--tabs-focus-gap-color, var(--surface)); }
+.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:focus-visible { box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)), inset 0 0 0 var(--spacing-1) var(--tabs-focus-gap-color, var(--surface)); }
 
 .dk-tabs__panel { padding-top: var(--tabs-panel-gap, var(--spacing-4)); }
-.dk-tabs__panel:focus-visible { outline: var(--outline-width-2) solid var(--tabs-focus-ring, var(--focus-ring)); outline-offset: var(--outline-offset-2); border-radius: var(--rounded-sm); }
+.dk-tabs__panel:focus-visible { outline: var(--focus-ring-width) solid var(--tabs-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-sm); }
 .dk-tabs__panel[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .dk-tabs__tab { transition: none; } }
 @media (forced-colors: active) {

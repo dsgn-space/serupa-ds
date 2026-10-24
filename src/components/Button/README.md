@@ -183,7 +183,7 @@ Small motion that confirms what happened, all built in:
 | Default | Variant colors, `shadow-xs` on filled and outline buttons | `pointer` |
 | Hover | `primary` darkens one step (`primary-hover`); secondary gains a `primary-subtle` tint and its text and border darken to `primary-hover`; outline and ghost gain a `secondary` fill; link underlines; a right icon slides 2px forward | `pointer` |
 | Pressed | Hover colors, shrinks to 97% (`scale-97`); a ripple spreads from the press point | `pointer` |
-| Focus (keyboard) | 2px `focus-ring` outside a 2px `surface` gap (`danger` ring when destructive); in forced-colors (high-contrast) mode, a 2px system-color outline instead | `pointer` |
+| Focus (keyboard) | A 2px `focus-ring` outline 2px out (`danger` when destructive). The gap is transparent, so it reads on tinted backgrounds; forced-colors (high-contrast) mode draws it in the system color | `pointer` |
 | Disabled | 50% opacity, no shadow, no hover change, ignores clicks | `not-allowed` |
 | Loading | Full color, the content fades into a spinner, no hover change, no press, ignores clicks, keeps focus | `progress` |
 
@@ -266,7 +266,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-destructive-link-text` | `danger-text` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
 | `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
-| `--button-focus-gap-color` | `surface` | The 2px gap between the button and its focus ring; set it to the color the button sits on. |
+| `--button-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
 
 **Spacing**
 
@@ -322,7 +322,7 @@ Every value comes from a token. Colors, spacing, sizes, borders and micro-intera
 | Padding, gap, icon size | `spacing-2` / `spacing-3` / `spacing-5`; `spacing-1`, `spacing-1.5`, `spacing-2`; `spacing-3.5`, `spacing-4`, `spacing-5` |
 | Type | `font-sans`, `font-medium`, `tracking-normal`, `text-xs`, `text-sm`, `text-base` (each with its `--line-height`) |
 | Shape | `rounded-md`, `border-width-1`, `shadow-xs`, `shadow-none` |
-| Focus ring | `outline-offset-2` (the gap), `outline-width-2` (the ring) |
+| Focus ring | `focus-ring-width` (the ring), `focus-ring-offset` (the gap), `focus-ring` (the color) |
 | States | `opacity-50` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
 | Motion | `duration-150` and `ease-in-out` for colors and the focus ring; `scale-97`, `duration-100`, `spacing-0.5`, `duration-150`, `opacity-20`, `duration-500`, `duration-300`, `ease-out` for the micro-interactions; `scale-50`, `scale-100`, `scale-0`, `spacing-0` and `rounded-full` inside them |
 | Components and utilities it reuses | the Loader (ring) while loading, `sr-only` on the loading announcement |

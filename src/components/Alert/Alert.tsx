@@ -5,6 +5,7 @@ import { Icon, type IconSource } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { Button } from "../Button/Button";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -32,6 +33,7 @@ const ICONS: Record<AlertTone, string> = { info: "info", success: "check_circle"
 
 /** A message about the page or a task: a tinted box with an icon, an optional title, actions and a close button. */
 export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Alert", function Alert(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
   const tone = oneOf(TONES, props.tone, "info");
   const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
@@ -45,7 +47,7 @@ export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Aler
         {has(props.children) ? <div className="dk-alert__message">{props.children}</div> : null}
         {has(props.actions) ? <div className="dk-alert__actions">{props.actions}</div> : null}
       </div>
-      {props.onDismiss ? <Button className="dk-alert__dismiss" variant="ghost" size="sm" icon="close" aria-label={props.dismissLabel || "Dismiss"} onClick={props.onDismiss} /> : null}
+      {props.onDismiss ? <Button className="dk-alert__dismiss" variant="ghost" size="sm" icon="close" aria-label={props.dismissLabel || sds.labels.dismiss} onClick={props.onDismiss} /> : null}
     </div>
   );
 });
