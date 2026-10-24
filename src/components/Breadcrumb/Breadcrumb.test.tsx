@@ -132,4 +132,15 @@ describe('Breadcrumb', () => {
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
   });
+
+  test('items inside a Fragment count: the last one is the current page, with no React error', async () => {
+    const errors: string[] = [], log = console.error;
+    console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+    try {
+      await render(<Breadcrumb id="bfrag"><BreadcrumbItem href="/">Home</BreadcrumbItem><><BreadcrumbItem href="/p">Projects</BreadcrumbItem><BreadcrumbItem>Website</BreadcrumbItem></></Breadcrumb>);
+      expect(trail('bfrag')).toBe('Home > Projects > Website');
+      expect(el('bfrag').querySelector('[aria-current="page"]')!.textContent).toBe('Website');
+      expect(errors).toEqual([]);
+    } finally { console.error = log; }
+  });
 });

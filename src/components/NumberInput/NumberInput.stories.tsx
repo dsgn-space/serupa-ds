@@ -15,6 +15,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const Decimals: Story = { args: { 'aria-label': 'Price', defaultValue: 9.5, step: 0.25, max: undefined, leftIcon: 'attach_money' } };
+export const Locales: Story = {
+  render: () => <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>
+    <Field label="Harga (id-ID, rupiah)"><NumberInput locale="id-ID" defaultValue={1500000} step={500} min={0} formatOptions={{ style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }} /></Field>
+    <Field label="Gewicht (de-DE)" hint="9,5 or 9.5 both work"><NumberInput locale="de-DE" defaultValue={9.5} step={0.1} /></Field>
+    <Field label="Rate (en-US, percent)"><NumberInput locale="en-US" defaultValue={0.15} step={0.01} min={0} max={1} formatOptions={{ style: 'percent' }} /></Field>
+  </div>,
+};
 export const Controlled: Story = {
   render: function Render() {
     const [guests, setGuests] = React.useState<number | null>(2);

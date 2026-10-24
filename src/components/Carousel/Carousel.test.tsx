@@ -258,4 +258,9 @@ describe('Carousel', () => {
   test('no errors on the page', () => {
     expect(errors).toEqual([]);
   });
+
+  test('slides inside a Fragment are slides of their own', async () => {
+    await render(<Carousel id="cfrag" label="Photos"><div>A</div><><div>B</div><div>C</div></></Carousel>);
+    expect(el('cfrag').querySelectorAll('.dk-carousel__dot').length).toBe(3);
+  });
 });

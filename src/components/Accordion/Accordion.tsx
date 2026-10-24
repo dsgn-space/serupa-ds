@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, domId, oneOf, omit } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { flattenChildren } from "../../internal/children";
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
   /** 'single' (default): opening one closes the others. 'multiple': any number can be open. */
@@ -32,7 +33,7 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
   children?: React.ReactNode;
 }
 
-interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; base: string; }
+interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 
 /* Accordion: a stack of items whose content shows and hides under a heading button (the WAI-ARIA accordion
@@ -58,7 +59,6 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
     if (onChange.current) onChange.current(next);
   }, [open, single, collapsible, controlled]);
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? (props.headingLevel as number) : 3;
-  const base = domId("dk-acc", React.useId());
   const variant = oneOf(["plain", "card"] as const, props.variant, "plain");
   function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (props.onKeyDown) props.onKeyDown(e);
@@ -70,9 +70,9 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
     if (to) { e.preventDefault(); to.focus(); }
   }
   let n = 0;
-  const items = React.Children.map(props.children, (c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ "data-index"?: string }>, { "data-index": String(n++) }) : c);
+  const items = flattenChildren(props.children).map((c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ "data-index"?: string }>, { "data-index": String(n++) }) : c);
   return (
-    <AccordionContext.Provider value={{ open, toggle, level, collapsible, single, base }}>
+    <AccordionContext.Provider value={{ open, toggle, level, collapsible, single }}>
       <div {...rest} ref={ref} onKeyDown={onKeyDown} data-component="accordion" className={cn("dk-accordion", variant === "card" && "dk-accordion--card", props.className)}>{items}</div>
     </AccordionContext.Provider>
   );
@@ -88,7 +88,7 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
   delete rest["data-index"];
   const value = props.value != null ? props.value : index;
   const open = !!ctx && ctx.open.indexOf(value) >= 0;
-  const id = (ctx ? ctx.base : "dk-acc") + "-" + index;
+  const id = domId("dk-acc", React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
   // an open item in a single, non-collapsible accordion can't close: say so with aria-disabled
   const locked = !!ctx && open && ctx.single && !ctx.collapsible;
   const H = ("h" + (ctx ? ctx.level : 3)) as "h3";
