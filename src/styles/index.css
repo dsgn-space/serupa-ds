@@ -43,6 +43,7 @@
 @import "../components/ToggleButton/ToggleButton.css";
 @import "../components/ButtonGroup/ButtonGroup.css";
 @import "../components/PasswordInput/PasswordInput.css";
+@import "../components/PhoneInput/PhoneInput.css";
 @import "../components/List/List.css";
 @import "../components/EmptyState/EmptyState.css";
 @import "../components/Popover/Popover.css";
