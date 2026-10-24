@@ -38,6 +38,7 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 
 - Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
 - The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
+- In a [Field](../Field/README.md), the label names the thumb (a range's group) through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
 - `disabled`, or a disabled `<fieldset>` around it, takes the thumbs out of the Tab order, sets `aria-disabled` and ignores keys and presses, as native inputs do.
 
 ### Keyboard
@@ -48,6 +49,8 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 | ArrowLeft, ArrowDown | − `step` |
 | Shift+Arrow, PageUp, PageDown | ± `largeStep` steps |
 | Home, End | The ends; a range thumb stops at the other thumb |
+
+Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in it overrides one. `onFocus` and `onBlur` fire when focus enters or leaves the slider, not as it moves between a range's two thumbs, so a form library's "touched on blur" waits until people leave the whole control.
 
 ## Props
 
@@ -66,7 +69,7 @@ const [price, setPrice] = React.useState<[number, number]>([20, 80]);
 | `thumbLabels` | `[string, string]` | `['Minimum', 'Maximum']` | A range's thumb names. |
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
 
-Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`.
+Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the first thumb (none when disabled), so a form library that focuses the first invalid field after a failed submit lands on the slider.
 
 ## Component tokens
 
