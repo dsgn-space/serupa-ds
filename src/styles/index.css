@@ -47,6 +47,7 @@
 @import "../components/Popover/Popover.css";
 @import "../components/Drawer/Drawer.css";
 @import "../components/Progress/Progress.css";
+@import "../components/RelativeTime/RelativeTime.css";
 @import "../components/CopyButton/CopyButton.css";
 @import "../components/Meter/Meter.css";
 @import "../components/SearchInput/SearchInput.css";
@@ -58,6 +59,7 @@
 @import "../components/Stepper/Stepper.css";
 @import "../components/Kbd/Kbd.css";
 @import "../components/FileUpload/FileUpload.css";
+@import "../components/FormattedNumber/FormattedNumber.css";
 @import "../components/Calendar/Calendar.css";
 @import "../components/DatePicker/DatePicker.css";
 @import "../components/DateRangePicker/DateRangePicker.css";

@@ -107,11 +107,12 @@ export async function press<T>(el: Element, during: () => Promise<T> | T, at?: {
 }
 
 /** Runs `during` with forced colors (Windows high contrast) on, as the browser applies them (system colors, and a
- *  backplate behind text), then turns them off. `active` is false where the engine can't emulate them. */
+ *  backplate behind text), then turns them off. `active` is false where the engine can't emulate them, or matches
+ *  the media query but has no forced-color-adjust (WebKit), so a test can't check what a component keeps as is. */
 export async function forcedColors<T>(during: (active: boolean) => Promise<T> | T): Promise<T> {
   await commands.forcedColors(true);
   try {
-    return await during(matchMedia('(forced-colors: active)').matches);
+    return await during(matchMedia('(forced-colors: active)').matches && CSS.supports('forced-color-adjust', 'none'));
   } finally {
     await commands.forcedColors(false);
   }
