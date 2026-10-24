@@ -14,6 +14,9 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const pkg = JSON.parse(read('package.json'));
 
+// 0. Nothing publishes to a registry until Diki picks the final name: projects install releases from GitHub.
+t('package.json is private and has no publishConfig, so npm publish refuses', pkg.private === true && !('publishConfig' in pkg), `private: ${pkg.private}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
+
 // 1. exports
 const targets = [];
 for (const [k, v] of Object.entries(pkg.exports)) for (const f of typeof v === 'string' ? [v] : Object.values(v)) if (!f.includes('*')) targets.push([k, f]);
