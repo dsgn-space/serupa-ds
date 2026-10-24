@@ -50,7 +50,7 @@ const { Menu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton } = window.
 | Enter, Space | Opens it on the first item | Chooses the item |
 | ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
 | Home, End | | The first or last item |
-| A letter | | The next item starting with it |
+| Letters | | The next item starting with them. Letters typed within half a second make one word ("de" finds Delete past Duplicate), the same letter again steps through the items starting with it, and accents and case don't matter ("e" finds "Éditer") |
 | Escape | | Closes it; focus goes back to the button |
 | Tab | | Closes it and moves on |
 
