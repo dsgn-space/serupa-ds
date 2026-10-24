@@ -143,6 +143,27 @@ describe('Switch', () => {
     expect([d.disabled, d.op, d.cur, d.checked]).toEqual([true, '0.5', 'not-allowed', false]);
   });
 
+  test('readOnly: focusable with aria-readonly; a click on the label or track and Space leave it as it was, onClick still runs, onChange doesn\'t, and an on switch is submitted', async () => {
+    const onChange = vi.fn(), onClick = vi.fn();
+    await render(<form id="ro-form"><Switch id="ro" name="wifi" readOnly defaultChecked onChange={onChange} onClick={onClick}>Wi-Fi</Switch><Switch id="ro2" readOnly>Bluetooth</Switch></form>);
+    const lab = (id: string) => el(id).closest('.dk-switch') as HTMLElement;
+    expect([el('ro').getAttribute('aria-readonly'), lab('ro').className.includes('dk-switch--readonly'), css(lab('ro')).cursor]).toEqual(['true', true, 'default']);
+    await userEvent.click(lab('ro'));
+    await userEvent.click(el('ro2'));
+    el('ro').focus();
+    await userEvent.keyboard(' ');
+    expect([el('ro').checked, el('ro2').checked, document.activeElement === el('ro'), onChange.mock.calls.length, onClick.mock.calls.length]).toEqual([true, false, true, 0, 2]);
+    expect(new FormData(document.getElementById('ro-form') as HTMLFormElement).get('wifi')).toBe('on');
+  });
+
+  test('readOnly and controlled (checked without onChange): no React warning, and it stays on', async () => {
+    const warned: unknown[] = [], warn = console.error;
+    console.error = (...a: unknown[]) => { warned.push(a[0]); };
+    try { await render(<Switch id="roc" checked readOnly>Locked</Switch>); } finally { console.error = warn; }
+    await userEvent.click(el('roc').closest('.dk-switch') as HTMLElement);
+    expect([el('roc').checked, warned]).toEqual([true, []]);
+  });
+
   test('in a Field: labelled and described by the hint', async () => {
     await setup();
     const i = el('fld');

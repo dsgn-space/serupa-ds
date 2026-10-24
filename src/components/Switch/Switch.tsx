@@ -14,6 +14,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   labelPosition?: 'start' | 'end';
   /** A danger track (while off) and focus ring, and aria-invalid. */
   invalid?: boolean;
+  /** Focusable and read out (aria-readonly), but a click or Space doesn't flip it; an on switch is still submitted. */
+  readOnly?: boolean;
 }
 
 /* Switch: an on/off setting that applies at once. A native checkbox with role="switch" (announced as on or off),
@@ -29,13 +31,22 @@ export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>("
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
   if (invalid) rest["aria-invalid"] = true;
+  // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
+  // puts the switch back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
+  const readOnly = !!rest.readOnly;
+  if (readOnly) {
+    rest["aria-readonly"] = true;
+    delete rest.onChange;
+    const onClick = rest.onClick;
+    rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
+  }
   const base = domId("dk-sw", React.useId()), labelId = base + "-label", descId = base + "-desc";
   const hasLabel = props.children != null && props.children !== false && props.children !== "";
   const hasDesc = props.description != null && props.description !== false && props.description !== "";
   if (hasDesc) rest["aria-describedby"] = cn(rest["aria-describedby"], descId);
   if (hasDesc && hasLabel && rest["aria-label"] == null && rest["aria-labelledby"] == null) rest["aria-labelledby"] = labelId;   // the description stays out of the name
   return (
-    <label className={cn("dk-switch", "dk-switch--size-" + size, props.labelPosition === "start" && "dk-switch--label-start", invalid && "dk-switch--invalid", rest.disabled && "dk-switch--disabled", !hasLabel && !hasDesc && "dk-switch--bare", props.className)} style={props.style} data-component="switch" data-size={size}>
+    <label className={cn("dk-switch", "dk-switch--size-" + size, props.labelPosition === "start" && "dk-switch--label-start", invalid && "dk-switch--invalid", rest.disabled && "dk-switch--disabled", readOnly && "dk-switch--readonly", !hasLabel && !hasDesc && "dk-switch--bare", props.className)} style={props.style} data-component="switch" data-size={size}>
       <span className="dk-switch__control" key="control">
         <input {...rest} ref={ref} type="checkbox" role="switch" className="dk-switch__input" key="input" />
         <span className="dk-switch__thumb" aria-hidden key="thumb" />
