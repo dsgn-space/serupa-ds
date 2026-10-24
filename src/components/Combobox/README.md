@@ -72,7 +72,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results'` | |
 | `loadingText` | `string` | `'Loading…'` | |
-| `toggleLabel`, `clearLabel` | `string` | `'Show options'`, `'Clear'` | The buttons' names. |
+| `toggleLabel`, `clearLabel` | `string` | `'Show options'`, `'Clear'` and the field's label | The buttons' names. The × reads "Clear Country" when the field's label is "Country", and "Clear" when it has none. |
 | `name` | `string` | | Sends the value with a form, in a hidden input. |
 
 `className` and `style` go to the box; `ref` and every other prop go to the `<input>`.

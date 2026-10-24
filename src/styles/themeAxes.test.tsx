@@ -1,6 +1,10 @@
+import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import tokens from '../../tokens.json';
-import { THEMES } from '../../tools/test/vitest/helpers';
+import { render } from 'vitest-browser-react';
+import { Button } from '../components/Button/Button';
+import { Input } from '../components/Input/Input';
+import { contrast, lowContrast, THEMES } from '../../tools/test/vitest/helpers';
 
 // Theme axes (ADR-0011): data-brand and data-mode on an element without data-theme give the same colors as the
 // flat data-theme="<brand>-<mode>" themes, through light-dark() pairs that the element's color-scheme resolves.
@@ -33,7 +37,7 @@ const axes = (brand?: string, mode?: string) => {
   if (mode) root.setAttribute('data-mode', mode); else root.removeAttribute('data-mode');
 };
 
-afterEach(() => { root.removeAttribute('data-brand'); root.removeAttribute('data-mode'); root.setAttribute('data-theme', 'blue-light'); });
+afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
 
 describe('Theme axes', () => {
   test('data-brand + data-mode give exactly the colors of each data-theme', () => {
@@ -75,11 +79,92 @@ describe('Theme axes', () => {
     section.remove();
   });
 
+  test('a data-mode section switches in any page: with no axes on the root, or inside each data-theme, keeping that theme\'s brand; with data-brand too it takes that brand', () => {
+    const flat: Record<string, Record<string, string>> = {};
+    for (const th of THEMES) { root.setAttribute('data-theme', th); flat[th] = read(document.body); }
+    const section = document.createElement('section');
+    document.body.appendChild(section);
+    const cases: Array<[string | null, string, string | null, string]> = [[null, 'dark', null, 'blue-dark'], [null, 'dark', 'emerald', 'emerald-dark']];
+    for (const th of THEMES) {
+      const [brand, mode] = th.split('-'), other = mode === 'light' ? 'dark' : 'light';
+      cases.push([th, other, null, `${brand}-${other}`], [th, mode, null, th], [th, other, 'violet', `violet-${other}`]);
+    }
+    for (const [page, mode, brand, want] of cases) {
+      if (page) root.setAttribute('data-theme', page); else axes();
+      section.setAttribute('data-mode', mode);
+      if (brand) section.setAttribute('data-brand', brand); else section.removeAttribute('data-brand');
+      expect(read(section), `page ${page} section ${brand || ''} ${mode}`).toEqual(flat[want]);
+      expect(getComputedStyle(section).colorScheme).toBe(mode);
+    }
+    section.remove();
+  });
+
+  test('data-contrast="more" on the page reaches a data-mode section', () => {
+    root.setAttribute('data-theme', 'blue-dark');
+    root.setAttribute('data-contrast', 'more');
+    const strong = read(document.body);
+    root.setAttribute('data-theme', 'blue-light');
+    const section = document.createElement('section');
+    section.setAttribute('data-mode', 'dark');
+    document.body.appendChild(section);
+    expect(read(section)).toEqual(strong);
+    section.remove();
+  });
+
   test('a root with neither attribute stays light, as before', () => {
     root.setAttribute('data-theme', 'blue-light');
     const flat = read(document.body);
     axes();
     expect(read(document.body)).toEqual(flat);
     expect(getComputedStyle(root).colorScheme).toBe('light');
+  });
+});
+
+describe('Contrast axis', () => {
+  // WCAG AAA text (7:1) and stronger boundaries, for people who ask their system for more contrast.
+  const pairs: Array<[string, string, string, number]> = [
+    ['text', 'var(--text)', 'var(--surface)', 7],
+    ['muted text', 'var(--text-muted)', 'var(--surface)', 7],
+    ['muted text on muted surface', 'var(--text-muted)', 'var(--surface-muted)', 7],
+    ['placeholder', 'var(--placeholder)', 'var(--field)', 7],
+    ['border', 'var(--border)', 'var(--surface)', 3],
+    ['field border', 'var(--field-border)', 'var(--field)', 4.5],
+  ];
+
+  test('data-contrast="more": 7:1 text and stronger borders in all six themes', () => {
+    expect(lowContrast(pairs)).not.toEqual([]);   // without it muted text is 4.5:1, so passing below is the attribute's work
+    root.setAttribute('data-contrast', 'more');
+    expect(lowContrast(pairs)).toEqual([]);
+  });
+
+  test('works with the axes too, and outranks them', () => {
+    for (const mode of ['light', 'dark']) {
+      axes('violet', mode);
+      const before = contrast('var(--text-muted)', 'var(--surface)');
+      root.setAttribute('data-contrast', 'more');
+      expect(contrast('var(--text-muted)', 'var(--surface)'), mode).toBeGreaterThan(Math.max(before, 7));
+      root.removeAttribute('data-contrast');
+    }
+  });
+
+  test('tokens.css follows prefers-contrast: more unless the page says data-contrast="normal"', async () => {
+    const walk = (rules: CSSRuleList): CSSRule[] => [...rules].flatMap((r) => [r, ...('cssRules' in r ? walk((r as CSSGroupingRule).cssRules) : [])]);
+    const all = [...document.styleSheets].flatMap((sh) => { try { return walk(sh.cssRules); } catch { return []; } });
+    const media = all.filter((r) => r instanceof CSSMediaRule && r.conditionText.includes('prefers-contrast: more'));
+    expect(media.map((r) => r.cssText).join('')).toContain(':root:not([data-contrast="normal"])');
+  });
+});
+
+describe('Density axis', () => {
+  test('data-density="compact": md and lg controls get shorter, sm keeps the 24px target; comfortable puts them back', async () => {
+    root.setAttribute('data-density', 'compact');
+    await render(<div>
+      <Button id="b-md">Save</Button><Button id="b-sm" size="sm">Save</Button><Button id="b-lg" size="lg">Save</Button>
+      <Input id="i-md" aria-label="Name" />
+      <div data-density="comfortable"><Button id="b-back">Save</Button></div>
+    </div>);
+    const h = (id: string) => document.getElementById(id)!.getBoundingClientRect().height;
+    expect([h('b-sm'), h('b-md'), h('b-lg'), h('b-back')]).toEqual([24, 28, 36, 32]);
+    expect(document.getElementById('i-md')!.closest('.dk-input')!.getBoundingClientRect().height).toBe(28);
   });
 });

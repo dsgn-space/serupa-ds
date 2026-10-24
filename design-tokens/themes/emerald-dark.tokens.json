@@ -252,7 +252,7 @@
     "success": {
       "$type": "color",
       "$value": "{color.green-500}",
-      "$description": "Alias. Success icons and fills. For success text on light surfaces use `green-700`.",
+      "$description": "Alias. Success icons and fills (3:1). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--success"
@@ -269,10 +269,20 @@
         }
       }
     },
+    "success-text": {
+      "$type": "color",
+      "$value": "{color.green-300}",
+      "$description": "Alias. Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-text"
+        }
+      }
+    },
     "warning": {
       "$type": "color",
       "$value": "{color.amber-500}",
-      "$description": "Alias. Warning icons and fills; put dark text on it. For warning text on light surfaces use `amber-700`.",
+      "$description": "Alias. Warning icons and fills; put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning"
@@ -286,6 +296,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning-subtle"
+        }
+      }
+    },
+    "warning-text": {
+      "$type": "color",
+      "$value": "{color.amber-300}",
+      "$description": "Alias. Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-text"
         }
       }
     },
@@ -376,6 +396,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--info-subtle"
+        }
+      }
+    },
+    "info-text": {
+      "$type": "color",
+      "$value": "{color.sky-300}",
+      "$description": "Alias. Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-text"
         }
       }
     }

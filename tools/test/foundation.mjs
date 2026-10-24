@@ -105,7 +105,7 @@ for (const [n, [, tok]] of COMP) {
   const d = compDefault(tok);
   if (d == null) { badRef.push(`${n} → ${JSON.stringify(tok.$value)}`); continue; }
   const uses = [...css.matchAll(new RegExp(String.raw`var\(--${esc(n)}(?:,\s*((?:[^()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))*))?\)`, 'g'))].map((m) => m[1]);
-  if (!uses.length) unused.push(n);
+  if (!uses.length && !tok.$deprecated) unused.push(n);   // a deprecated token may have no effect until it's removed
   for (const fb of uses) if (fb == null || norm(fb) !== norm(d)) wrong.push(`${n}: CSS default ${String(fb).trim().slice(0, 50)} ≠ ${d}`);
 }
 if (COMP.size) {
@@ -197,6 +197,9 @@ const PAIRS = [['text', 'surface', 4.5], ['text', 'surface-muted', 4.5], ['text-
   ['primary', 'surface-overlay', 3], ['focus-ring', 'surface-overlay', 3], ['danger-text', 'surface-overlay', 4.5],
   ['text-inverse', 'surface-inverse', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['on-danger', 'danger', 4.5], ['on-danger', 'danger-hover', 4.5], ['danger-text', 'surface', 4.5], ['danger-text', 'danger-subtle', 4.5],
+  ['danger-text', 'surface-muted', 4.5], ['success-text', 'surface', 4.5], ['success-text', 'surface-muted', 4.5], ['success-text', 'success-subtle', 4.5],
+  ['warning-text', 'surface', 4.5], ['warning-text', 'surface-muted', 4.5], ['warning-text', 'warning-subtle', 4.5],
+  ['info-text', 'surface', 4.5], ['info-text', 'surface-muted', 4.5], ['info-text', 'info-subtle', 4.5],
   ['primary', 'surface', 3], ['focus-ring', 'surface', 3], ['text', 'secondary', 4.5], ['text', 'secondary-hover', 4.5],
   ['text', 'field', 4.5], ['placeholder', 'field', 4.5], ['field-border', 'field', 3], ['field-border', 'surface', 3],
   ['info', 'surface', 4.5], ['text', 'primary-subtle', 4.5],

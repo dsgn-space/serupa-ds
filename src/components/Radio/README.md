@@ -43,7 +43,7 @@ const { Radio, RadioGroup, Field } = window.Serupa;
 | Unchecked | `field` background, 1px `field-border` |
 | Checked | `primary` fill and border, with a dot in `on-primary` (6, 6 or 8px) |
 | Hover | `field-border-hover`; a checked radio turns `primary-hover` |
-| Focus | From the keyboard: a 2px `focus-ring` ring outside a 2px `surface` gap, like Button; a visible outline in forced-colors mode |
+| Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` circle; also inside a disabled fieldset (`Field group disabled`) |
 
@@ -100,7 +100,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-label-color` | `text` | The label |
 | `--radio-description-color` | `text-muted` | The description |
 | `--radio-focus-ring` | `focus-ring` | The focus ring |
-| `--radio-focus-gap-color` | `surface` | The 2px gap between the circle and the focus ring |
+| `--radio-focus-gap-color` | `surface` | Deprecated, no effect: the focus ring is an outline now, so its gap is transparent on any background. Removed in 9.0.0. |
 | `--radio-invalid` | `danger` | Border and focus ring when invalid |
 | `--radio-size-sm` / `-md` / `-lg` | `spacing-3.5` / `spacing-4` / `spacing-5` | Circle sizes (14, 16, 20px) |
 | `--radio-dot-size-sm` / `-md` / `-lg` | `spacing-1.5` / `spacing-1.5` / `spacing-2` | Dot sizes (6, 6, 8px) |

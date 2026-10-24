@@ -2,6 +2,7 @@
 import * as React from "react";
 import { cn, type DataAttributes, omit, oneOf, SIZES } from "../../internal/cn";
 import { config } from "../../internal/config";
+import { useSerupa } from "../../internal/provider";
 import { announce, ensureAnnouncer } from "../../internal/announce";
 import { block, both, chain, pressKey, releaseKey, ripple } from "../../internal/interactions";
 import { warnOnce } from "../../internal/warn";
@@ -70,6 +71,7 @@ function slot(source: IconSource, side: string): React.ReactNode {
 /* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
 /** Button without the overloads, for components built on it (IconButton, Fab) that pass either shape through. */
 export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("Button", function Button(props, ref) {
+  const sds = useSerupa();
   // Both shapes (button and link) are HTML attributes; which ones apply depends on href below.
   const rest: React.AllHTMLAttributes<HTMLElement> & DataAttributes = omit(props as ButtonOwnProps & React.AllHTMLAttributes<HTMLElement>, OWN);
   const isLink = rest.href != null;
@@ -83,7 +85,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
   }
   const loading = !!props.loading;
   const disabled = !!rest.disabled;
-  const loadingText = props.loadingText == null ? "Loading" : props.loadingText;
+  const loadingText = props.loadingText == null ? sds.labels.loading : props.loadingText;
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   const wasLoading = React.useRef(false);
   // Announced when loading starts, with the text it has then (a later loadingText change isn't announced again).

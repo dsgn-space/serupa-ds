@@ -5,6 +5,7 @@ import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
 import { component } from "../../internal/component";
+import { useSerupa } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
 
 export { formatFileSize };
@@ -46,6 +47,25 @@ function accepts(file: File, accept?: string) {
   return accept.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean).some((a) =>
     a.startsWith(".") ? name.endsWith(a) : a.endsWith("/*") ? type.startsWith(a.slice(0, -1)) : type === a);
 }
+// accept in words, for the message on a refused file: "image/*,.pdf" is "an image or PDF", ".png,.jpg,.jpeg"
+// is "a PNG or JPG". null when a type has no short name (application/vnd.ms-excel), so the message stays general.
+const KINDS: Record<string, string> = { image: "image", video: "video", audio: "audio file", text: "text file" };
+const SUBTYPES: Record<string, string> = { jpeg: "JPG", "svg+xml": "SVG", plain: "TXT", "x-icon": "ICO" };
+function acceptedTypes(accept: string): string | null {
+  const names: string[] = [];
+  for (const a of accept.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean)) {
+    const [main, sub] = a.split("/");
+    const name = a.startsWith(".") ? (a === ".jpeg" ? "JPG" : a.slice(1).toUpperCase())
+      : sub === "*" ? KINDS[main] : SUBTYPES[sub] || (/^[a-z0-9]{2,5}$/.test(sub || "") ? sub.toUpperCase() : undefined);
+    if (!name) return null;
+    if (!names.includes(name)) names.push(name);
+  }
+  if (!names.length) return null;
+  const first = names[0];   // "an" before a vowel sound: "an image", "an SVG" (said "ess"), "an MP4"
+  const an = first === first.toUpperCase() ? /^[AEFHILMNORSX]/.test(first) : /^[aeiou]/.test(first);
+  const list = names.length === 1 ? first : names.slice(0, -1).join(", ") + " or " + names[names.length - 1];
+  return (an ? "an " : "a ") + list;
+}
 const iconFor = (f: File) => /^image\//.test(f.type) ? "image" : f.type === "application/pdf" ? "picture_as_pdf" : /^video\//.test(f.type) ? "movie" : /^audio\//.test(f.type) ? "audio_file" : /zip|compressed|tar/.test(f.type) ? "folder_zip" : "draft";
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
@@ -56,6 +76,7 @@ const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.t
    files from onFilesChange. */
 /** A drop area and a button for choosing files, with the chosen files listed under it. */
 export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadProps>("FileUpload", function FileUpload(props, ref) {
+  const sds = useSerupa();
   const rest = omit(props, OWN);
   const base = domId("dk-fu", React.useId());
   const inputId = props.id || base + "-input";
@@ -68,7 +89,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const [over, setOver] = React.useState(false);
   const depth = React.useRef(0);
   const multiple = !!props.multiple, disabled = !!props.disabled;
-  const removeLabel = props.removeLabel || ((n: string) => "Remove " + n);
+  const removeLabel = props.removeLabel || ((n: string) => sds.labels.remove + " " + n);
 
   const set = (next: File[]) => { if (!controlled) setOwn(next); if (props.onFilesChange) props.onFilesChange(next); };
   const add = (list: FileList | File[] | null) => {
@@ -76,7 +97,10 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     const incoming = Array.from(list), ok: File[] = [], bad: FileRejection[] = [];
     const limit = props.maxSize != null ? formatFileSize(props.maxSize) : "";
     for (const f of incoming) {
-      if (!accepts(f, props.accept)) bad.push({ file: f, reason: "type", message: `${f.name}: this type of file isn't accepted.` });
+      if (!accepts(f, props.accept)) {
+        const types = acceptedTypes(props.accept || "");
+        bad.push({ file: f, reason: "type", message: types ? `${f.name} isn't ${types}.` : `${f.name}: this type of file isn't accepted.` });
+      }
       else if (props.maxSize != null && f.size > props.maxSize) bad.push({ file: f, reason: "size", message: `${f.name} is larger than ${limit}.` });
       else ok.push(f);
     }
@@ -116,9 +140,9 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       <div className={cn("dk-file-upload__zone", over && "dk-file-upload__zone--over")} data-dragging={over ? "" : undefined} aria-disabled={disabled || undefined} {...drag}
         onClick={(e) => { if (!disabled && e.target === e.currentTarget && input.current) input.current.click(); }}>
         <Icon name="upload_file" className="dk-file-upload__icon" />
-        <p className="dk-file-upload__title">{props.title ?? (multiple ? "Drag files here" : "Drag a file here")}</p>
+        <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
         <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => input.current && input.current.click()} aria-describedby={hasHint ? base + "-hint" : undefined}>
-          {props.buttonLabel || (multiple ? "Choose files" : "Choose a file")}
+          {props.buttonLabel || (multiple ? sds.labels.chooseFiles : sds.labels.chooseFile)}
         </Button>
         {hasHint ? <p className="dk-file-upload__hint" id={base + "-hint"}>{props.hint}</p> : null}
         <input ref={input} id={inputId} type="file" className="dk-file-upload__input" tabIndex={-1} aria-hidden name={props.name} accept={props.accept} multiple={multiple} disabled={disabled}
@@ -130,7 +154,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
         </div>
       ) : null}
       {files.length ? (
-        <ul className="dk-file-upload__list" aria-label={multiple ? "Chosen files" : "Chosen file"}>
+        <ul className="dk-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
           {files.map((f, i) => (
             <li key={f.name + f.size + f.lastModified + i} className="dk-file-upload__item">
               <Icon name={iconFor(f)} className="dk-file-upload__file-icon" />
