@@ -207,7 +207,7 @@ describe('Toast with a Dialog open', () => {
     await render(<Loading />);
     const modal = q('dialog[open]');
     await userEvent.click(q('#up'));
-    await expect.poll(() => q('[data-dk-announcer]').textContent).toBe('Loading');
+    await expect.poll(() => q('[data-dk-announcer]').textContent).toBe('Loading…');
     expect(modal.contains(q('[data-dk-announcer]'))).toBe(true);
   });
 

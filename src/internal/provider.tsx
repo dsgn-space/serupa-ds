@@ -5,8 +5,8 @@ import { isIconData } from "../icons";
 import { DEFAULT_LABELS, type SerupaLabels } from "./labels";
 
 export interface SerupaProviderProps {
-  /** A BCP 47 locale (such as "id-ID") for Calendar, DatePicker, DateRangePicker and TimePicker: how dates and
-   *  times are written and typed, month and weekday names, and the first day of the week. Default: the browser's. */
+  /** A BCP 47 locale (such as "id-ID") for Calendar, DatePicker, DateRangePicker, TimePicker and NumberInput: how dates, times and numbers
+   *  are written and typed, month and weekday names, and the first day of the week. Default: the browser's. */
   locale?: string;
   /** Replaces some or all of the words the components say on their own, such as { close: "Tutup" }, or a whole
    *  set (idLabels). Keys left out keep the outer provider's words, else English. */

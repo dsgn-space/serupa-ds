@@ -128,7 +128,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `href` | string | | Renders a link (the component set with `Serupa.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
 | `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
 | `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile |
-| `loadingText` | string | `'Loading'` | Announced to screen readers when loading starts ("" announces nothing) |
+| `loadingText` | string | `'Loading…'` | Announced to screen readers when loading starts ("" announces nothing) |
 
 Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `data-*`, `ref`) goes to the outer element: a `<span>`, or the `<button>` or link when clickable. Every badge has `data-component="badge"`, `data-variant`, `data-tone` and `data-size` for tests, plus `data-interactive` when clickable and `data-loading` while loading.
 
