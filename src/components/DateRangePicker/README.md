@@ -33,7 +33,7 @@ const [stay, setStay] = React.useState<DateRange>({ start: null, end: null });
 
 ## Behavior
 
-- In the popup, the first pick is the start and the second the end; a day before the start moves the start instead. Pointing at days previews the range. The popup closes once both ends are set, and on Escape or a click outside.
+- In the popup, the first pick is the start and the second the end; a day before the start moves the start instead. Pointing at days previews the range. The popup closes once both ends are set, on Escape, on a click outside and when Tab moves focus past it. A finger that starts a scroll outside leaves it open.
 - Opening it with only a start asks for the end.
 - Each field reads typed text on blur and Enter, like DatePicker. Text that can't be used puts back the last good day, and a typed start after the end clears the end.
 
