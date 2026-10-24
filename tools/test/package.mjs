@@ -82,6 +82,7 @@ if (D) {
     PasswordInput: h(D.PasswordInput, { 'aria-label': 'Password' }),
     Popover: h(D.Popover, { trigger: h(D.Button, null, 'Share'), title: 'Share' }, 'Body'),
     Progress: h(D.Progress, { value: 40, label: 'Uploading' }),
+    RelativeTime: h(D.RelativeTime, { date: 0, locale: 'en-US' }),
     SearchInput: h(D.SearchInput, { 'aria-label': 'Search', defaultValue: 'tokens' }),
     SegmentedControl: h(D.SegmentedControl, { 'aria-label': 'View', options: [{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }] }),
     Sidebar: h(D.Sidebar, null, h(D.SidebarSection, { title: 'Workspace' }, h(D.SidebarItem, { href: '/', icon: 'home', label: 'Home', active: true }))),
