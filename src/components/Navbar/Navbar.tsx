@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { cn, domId, oneOf, omit } from "../../internal/cn";
+import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { IconButton } from "../IconButton/IconButton";
 import type { ContainerSize } from "../Container/Container";
 import { component } from "../../internal/component";
@@ -16,7 +16,8 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   /** Controls on the right: a search, a user menu, a sign-in button. */
   actions?: React.ReactNode;
-  /** Keeps the bar at the top while the page scrolls. Default: false. */
+  /** Keeps the bar at the top while the page scrolls, and keeps what the keyboard focuses (or a #link jumps to)
+   *  from scrolling under it. Default: false. */
   sticky?: boolean;
   /** The content's maximum width, like Container: 'md', 'lg', 'xl' (default), '2xl' or 'full'. */
   size?: ContainerSize;
@@ -49,6 +50,19 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
   const links = flattenChildren(props.children);
   const hasLinks = links.length > 0;
   const close = React.useCallback(() => setOpen(false), []);
+  const header = React.useRef<HTMLElement | null>(null);
+  /* Sticky: the page's scroll-padding-top follows the bar's height (Navbar.css), so a field Tab reaches, or the
+     target of a #link, scrolls into view below the bar instead of under it (WCAG 2.4.11 Focus Not Obscured). */
+  useIsoLayoutEffect(() => {
+    const h = header.current;
+    if (!props.sticky || !h) return;
+    const root = document.documentElement;
+    const set = () => root.style.setProperty("--dk-navbar-offset", h.getBoundingClientRect().height + "px");
+    set();
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(set) : null;
+    if (ro) ro.observe(h);
+    return () => { if (ro) ro.disconnect(); root.style.removeProperty("--dk-navbar-offset"); };
+  }, [props.sticky]);
   // closes when the screen grows past the breakpoint, so it isn't open the next time it shrinks
   React.useEffect(() => {
     if (!open || typeof window === "undefined" || !window.matchMedia) return;
@@ -76,7 +90,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
   ) : null;
   return (
     <NavbarContext.Provider value={{ close }}>
-      <header {...rest} ref={ref} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? "open" : "closed"} className={cn("dk-navbar", props.sticky && "dk-navbar--sticky", props.className)}>
+      <header {...rest} ref={(n) => { header.current = n; setRef(ref, n); }} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? "open" : "closed"} className={cn("dk-navbar", props.sticky && "dk-navbar--sticky", props.className)}>
         <div className={cn("dk-navbar__inner dk-container dk-container--padded", "dk-container--" + size)}>
           {props.brand != null ? <div className="dk-navbar__brand">{props.brand}</div> : null}
           {open ? null : nav}
