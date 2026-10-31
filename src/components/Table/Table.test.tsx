@@ -629,3 +629,37 @@ describe('TableVirtualBody (51)', () => {
     expect([document.activeElement === link, link.isConnected, drawn().length < 45]).toEqual([true, true, true]);
   });
 });
+
+describe('Table layout="fixed" (PT4)', () => {
+  const PAGES = [[['Ada', 'Admin'], ['Grace', 'Editor']], [['Maximiliana Wolfeschlegelsteinhausen', 'Viewer'], ['Li', 'Owner of the whole billing and invoicing workspace']]];
+  function Paged(p: { page: number; layout?: 'auto' | 'fixed'; widths?: boolean }) {
+    return <div style={{ width: 480 }}><Table caption="Users" layout={p.layout}>
+      <TableHead><TableRow><TableHeaderCell id="h1" width={p.widths ? '30%' : undefined}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody>{PAGES[p.page].map(([a, b]) => <TableRow key={a}><TableCell>{a}</TableCell><TableCell>{b}</TableCell></TableRow>)}</TableBody>
+    </Table></div>;
+  }
+  const widths = () => [el('h1').getBoundingClientRect().width, el('h2').getBoundingClientRect().width];
+
+  test('with auto layout the columns follow each page\'s content; fixed keeps them the same on both pages, and long text wraps', async () => {
+    const s = await render(<Paged page={0} />);
+    const auto0 = widths();
+    await s.rerender(<Paged page={1} />);
+    expect(widths()).not.toEqual(auto0);
+    await s.rerender(<Paged page={0} layout="fixed" />);
+    const fixed0 = widths();
+    expect(Math.abs(fixed0[0] - fixed0[1])).toBeLessThanOrEqual(1);   // no widths: they share the table
+    await s.rerender(<Paged page={1} layout="fixed" />);
+    expect(widths()).toEqual(fixed0);
+    expect(s.getByText('Owner of the whole billing and invoicing workspace').element().getBoundingClientRect().height).toBeGreaterThan(30);
+  });
+
+  test('a header cell\'s width sets its column, as a CSS length or pixels; the select column stays the checkbox\'s width', async () => {
+    const s = await render(<Paged page={0} layout="fixed" widths />);
+    expect(widths()[0]).toBeCloseTo(480 * 0.3, -1);
+    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell header label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
+    expect(el('h1').style.width).toBe('200px');
+    expect(el('h1').style.color).toBe('red');
+    const box = s.getByRole('checkbox').element().closest('th')!.getBoundingClientRect().width;
+    expect(box).toBeLessThan(48);
+  });
+});

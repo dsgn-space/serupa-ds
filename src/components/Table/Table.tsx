@@ -21,6 +21,10 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   size?: 'sm' | 'md' | undefined;
   /** Shades every other body row. Rows then don't change on hover. Default: false. */
   striped?: boolean | undefined;
+  /** 'auto' (default): each column is as wide as its content needs, so widths change with the data. 'fixed': widths
+      come from the header cells' width (the rest share what's left) and stay put as rows are sorted, filtered or paged;
+      long cell text wraps. */
+  layout?: 'auto' | 'fixed' | undefined;
   /** Keeps the header row in view while the table scrolls inside a container with a height. Default: false. */
   stickyHeader?: boolean | undefined;
   /** A title for the table, rendered as its <caption> (announced with it, and names the scroll area). */
@@ -63,6 +67,8 @@ export interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTa
   sort?: SortDirection | undefined;
   /** Called when the sort button is pressed (decide the next order yourself). */
   onSort?: (() => void) | undefined;
+  /** The column's width, for a Table with layout="fixed": a CSS length ("12rem", "30%") or a number of pixels. */
+  width?: string | number | undefined;
 }
 
 export interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, 'align'> {
@@ -92,7 +98,7 @@ const ALIGN = ['start', 'center', 'end'] as const;
 /** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
 export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Table', function Table(props, ref) {
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, className: 1, children: 1 });
+  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const frame = React.useRef<HTMLDivElement>(null);
   const [scrolls, setScrolls] = React.useState(false);
@@ -137,7 +143,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   const region = !scrolls ? {} : hasCaption ? { tabIndex: 0, role: 'region', 'aria-labelledby': cid }
     : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
-    <div {...cp} {...region} ref={frame} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', cp.className)}>
+    <div {...cp} {...region} ref={frame} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', cp.className)}>
       <table {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
         {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
@@ -308,7 +314,8 @@ const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpwar
 
 /** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. */
 export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>('TableHeaderCell', function TableHeaderCell(props, ref) {
-  const rest = omit(props, { align: 1, sort: 1, onSort: 1, className: 1, children: 1 });
+  const rest = omit(props, { align: 1, sort: 1, onSort: 1, width: 1, style: 1, className: 1, children: 1 });
+  const style = props.width != null ? { ...props.style, width: typeof props.width === 'number' ? props.width + 'px' : props.width } : props.style;
   const align = oneOf(ALIGN, props.align, 'start');
   const sort = props.sort !== undefined ? oneOf(['ascending', 'descending', 'none'] as const, props.sort, 'none') : null;
   // A new order is read out ("Sorted by Amount, ascending"): aria-sort alone is only heard when focus reaches the
@@ -322,7 +329,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
     if ((sort === 'ascending' || sort === 'descending') && button.current) announce(labels.tableSorted((button.current.textContent || '').trim(), sort));
   }, [sort, labels]);
   return (
-    <th scope="col" {...rest} ref={ref} aria-sort={sort && sort !== 'none' ? sort : undefined}
+    <th scope="col" {...rest} ref={ref} style={style} aria-sort={sort && sort !== 'none' ? sort : undefined}
       className={cn('dk-table__cell dk-table__header', align !== 'start' && 'dk-table__cell--' + align, sort && 'dk-table__header--sortable', props.className)}>
       {sort ? (
         <button type="button" ref={button} className="dk-table__sort" onClick={props.onSort}>

@@ -50,6 +50,11 @@
   .dk-table--sticky { container-type: scroll-state; }
   @container scroll-state(scrollable: top) { .dk-table__head .dk-table__cell { box-shadow: var(--table-head-shadow-scrolled, var(--elevation-part)); } }
 }
+/* layout="fixed": the columns take the header cells' widths and keep them whatever the rows hold; long text wraps
+   in its cell instead of widening the column. The select column keeps the checkbox's width. */
+.dk-table--fixed .dk-table__table { table-layout: fixed; }
+.dk-table--fixed .dk-table__cell { overflow-wrap: anywhere; }
+.dk-table--fixed .dk-table__select { width: var(--checkbox-size-md, var(--spacing-4)); }
 /* What the keyboard focuses in the frame scrolls into view below the sticky header, not under it (WCAG 2.4.11).
    Table measures the header into --dk-table-head; until then, one md header row (40px). */
 .dk-table--sticky { scroll-padding-top: var(--dk-table-head, var(--spacing-10)); }

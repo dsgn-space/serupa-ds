@@ -58,6 +58,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - Give every table a `caption`. When a heading on the page already says what it holds, add `hideCaption` so screen readers still hear it.
 - Set `align="end"` on number columns, in the header and the cells, so the digits line up.
 - A number given to `TableCell` as its child (`{p.calls}`) is written in the locale's digits, ungrouped as given: 1204 in en-US, ١٢٠٤ in ar-EG. For grouping, currency or units, put a `FormattedNumber` in the cell.
+- When rows change under the user (sorting, filtering, paging), use `layout="fixed"` so the columns don't jump: set `width` on the header cells that need it (`"40%"`, `"8rem"`, or a number of pixels) and the others share what's left. Long text wraps in its cell. With the default `layout="auto"`, each column is as wide as its content on that page.
 - Use `size="sm"` for dense data, and `striped` when long rows are hard to follow across.
 - With selectable rows, put a `TableActionBar` just before the table: while rows are selected it shows "3 selected", your actions for them (Delete, Export) and "Clear selection" (`onClear`). Pass it the count; it's hidden at 0. It reads out each new count, including the first when you render it only while rows are selected, but keeping it mounted also moves focus to "Select all" when Clear empties the selection.
 - To make each row open a page, give the `TableRow` an `href` (with `target` and `rel` as on a link). The row gets one real link, in its first `TableCell` (or the one you mark `link`), stretched over the whole row: a click anywhere on it follows the link, Ctrl/Cmd-click and middle-click open a new tab, and the keyboard tabs to it. Buttons, checkboxes and links in other cells sit above it and work on their own. Don't use `onClick` on a row for this: it reaches the mouse only, and warns in development.
@@ -90,6 +91,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the `<table>`, not the scrolling wrapper, so `aria-describedby` and links to it reach the table. |
 | `size` | `'sm'` \| `'md'` | `'md'` | 12px cell padding, or 8px top and bottom for dense data |
+| `layout` | `'auto'` \| `'fixed'` | `'auto'` | `'fixed'`: column widths come from the header cells' `width` and stay put as rows change; long text wraps |
 | `striped` | boolean | `false` | Shades every other body row (rows then don't change on hover) |
 | `stickyHeader` | boolean | `false` | Keeps the header in view; give the frame a height with `containerProps` |
 | `caption` | node | none | The table's title, as its `<caption>` |
@@ -105,7 +107,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 | `TableHead`, `TableBody`, `TableFoot` | `<thead>`, `<tbody>`, `<tfoot>` | everything goes to the element |
 | `TableRow` | `<tr>` | `selected`: shaded, with a primary bar at its start; `href` (with `target`, `rel`): the whole row is one link, from its link cell |
 | `TableSelectCell` | `<td>`, or `<th scope="col">` with `header` | `label` (required, the checkbox's name: "Select Ada", "Select all rows"); `checked`, `defaultChecked`, `indeterminate`, `onChange`, `disabled`, `name`, `value` and `ref` go to the [Checkbox](../Checkbox/README.md); `cellProps` to the cell. A row whose checkbox is checked is shaded like a selected one |
-| `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button. Pass `scope="row"` for a row header |
+| `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `width`: the column's width with `layout="fixed"`; `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button. Pass `scope="row"` for a row header |
 | `TableActionBar` | `<div role="group">`, before the Table | `count` (required: the bar shows while it's above 0); `onClear` adds "Clear selection"; `clearLabel` renames it; children are the actions; `className`, `ref` and the rest go to the `<div>` |
 | `TableCell` | `<td>` | `align`; `'end'` also gives tabular digits, for numbers; `link`: in a row with `href`, this cell holds the row's link (default: the first `TableCell`) |
 | `TableVirtualBody` (beta) | `<tbody>` drawing only the rows in view | `count` (required); `renderRow(index)` (required) returns a `TableRow`; `itemKey(index)`: a stable key per row (default the index); `estimatedRowHeight`: a guess for rows not drawn yet (default 41, 36 at `size="sm"`); `overscan`: rows drawn beyond each edge (default 6); the rest goes to the `<tbody>` |

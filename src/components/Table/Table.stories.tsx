@@ -71,6 +71,28 @@ function LinkedRows(args: React.ComponentProps<typeof Table>) {
 }
 export const RowLinks: Story = { render: (args) => <LinkedRows {...args} /> };
 
+/** layout="fixed": the columns keep the widths the header gives them (Name 40%, Calls 6rem, the rest share), so they
+ *  don't jump when the rows change; long text wraps in its cell. */
+export const FixedLayout: Story = {
+  args: { layout: 'fixed' },
+  render: (args) => <FixedRows {...args} />,
+};
+function FixedRows(args: React.ComponentProps<typeof Table>) {
+  const people = usePeople();
+  return (
+    <Table {...args}>
+      <TableHead>
+        <TableRow><TableHeaderCell width="40%">Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell><TableHeaderCell width="6rem" align="end">Calls</TableHeaderCell></TableRow>
+      </TableHead>
+      <TableBody>
+        {people.map((p) => (
+          <TableRow key={p.name}><TableCell>{p.name}</TableCell><TableCell><Text as="span" tone="muted">{p.role || 'No role'}</Text></TableCell><TableCell align="end"><FormattedNumber value={p.calls} /></TableCell></TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
 export const SelectableRows: Story = {
   render: function Render(args) {
     const people = usePeople();
