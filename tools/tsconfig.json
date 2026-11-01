@@ -17,7 +17,7 @@
   // window.Serupa and the test hooks live); those are moving to typed Vitest tests next to each component.
   "include": [
     "**/*.mjs",
-    "../bin/*.mjs"
+    "../bin/**/*.mjs"
   ],
   "exclude": ["test/*.mjs"],
   "files": [

@@ -61,6 +61,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
+    "serupa-migrate": "./bin/serupa-migrate.mjs",
     "serupa-purge": "./bin/serupa-purge.mjs"
   },
   "files": [
