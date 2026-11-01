@@ -1,0 +1,50 @@
+name: Design QA
+
+# Before a pull request that changes how components look merges, someone looks at each changed story in all six
+# themes (96). This job writes the review sheet into its summary (tools/design-qa.mjs): every story with a changed
+# picture, its six themes before and after. With the repository variable DESIGN_QA set to "required" it also waits
+# for the "design-qa" label, added after the last commit that changed a picture; until then it only shows the sheet
+# and passes. Make "design QA" a required check in the branch rules to hold merges on it.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+    paths: ['tools/test/baseline-visual/**']
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  design-qa:
+    name: design QA
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: The changed stories in all six themes
+        run: node tools/design-qa.mjs "$BASE_SHA" >> "$GITHUB_STEP_SUMMARY"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          DESIGN_QA: ${{ vars.DESIGN_QA }}
+      - name: Looked at since the last change to a picture
+        if: ${{ vars.DESIGN_QA == 'required' }}
+        run: |
+          set -euo pipefail
+          changed=$(git log -1 --format=%ct "$HEAD_SHA" -- tools/test/baseline-visual)
+          labeled=$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/events" --paginate \
+            --jq '[.[] | select(.event == "labeled" and .label.name == "design-qa")] | last | .created_at // ""')
+          has=$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/labels" --jq 'map(.name) | index("design-qa") != null')
+          if [ "$has" != true ]; then echo "::error::Review the sheet in this job's summary, then add the design-qa label."; exit 1; fi
+          if [ "$(date -d "$labeled" +%s)" -lt "$changed" ]; then echo "::error::The pictures changed after the design-qa label was added ($labeled): review again, then remove and add the label."; exit 1; fi
+          echo "Reviewed at $labeled, after the last change to a picture."
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          NUMBER: ${{ github.event.pull_request.number }}
