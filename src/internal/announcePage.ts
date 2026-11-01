@@ -1,4 +1,5 @@
 import { announce } from "./announce";
+import { activeIn } from "./root";
 
 /** What announcePage takes: the title to say (default: document.title), and where focus goes (default: the h1 in
  * <main>, else the first h1, else <main>; an element or a selector; false leaves focus where it is). */
@@ -23,7 +24,8 @@ export function announcePage(options?: AnnouncePageOptions): void {
     if (!target.hasAttribute("tabindex") && target.tabIndex < 0) target.setAttribute("tabindex", "-1");
     target.focus();
   }
-  const read = target && document.activeElement === target ? (target.textContent || "").trim() : "";
+  // Focus read in the target's own document or shadow root (document.activeElement is the shadow host there).
+  const read = target && activeIn(target) === target ? (target.textContent || "").trim() : "";
   const title = (o.title != null ? o.title : document.title).trim();
   if (title && title !== read) announce(title);
 }
