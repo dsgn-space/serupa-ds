@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { ConformanceReport, ConformanceSummary } from './blocks';
+
+<Meta title="Accessibility statement" />
+
+# Accessibility statement
+
+Serupa aims for **WCAG 2.2 level AA** in all six themes, with a keyboard, a screen reader, a touch screen, at any zoom up to 400% and in forced colors. This statement covers what the package ships: the React components, the CSS and the tokens. A page built with them meets WCAG only when the app does its share too, and [Foundations/Accessibility](?path=/docs/foundations-accessibility--docs) says which share is whose.
+
+## Conformance status
+
+The components are **partially conformant** with WCAG 2.2 level AA: most criteria are fully supported, and the ones below are partly supported. The [conformance report](#conformance-report) has every criterion.
+
+<ConformanceSummary />
+
+## How it's tested
+
+On every pull request that changes a component:
+
+- axe on every story, in all six themes and with more contrast;
+- every story with text at 200%, with WCAG's text spacing and at 320 CSS pixels wide, for clipped text and sideways scrolling;
+- the contrast of every text, border and focus-ring pair in every theme;
+- component tests in Chromium for the keyboard, focus, names, states and announcements, and the roles, names and structure of each story against a saved snapshot;
+- screenshots of every story in every theme, once more right to left with more contrast and compact density, and in forced colors for the components whose states could disappear there.
+
+Every night the component tests also run in Firefox and WebKit (Safari's engine). No screen reader runs in these checks: the tests check what one is given (names, roles, states, descriptions and live announcements). Automated checks find only part of what people meet, so try a flow with a screen reader too.
+
+## Cognitive accessibility
+
+Reviewed against the eight objectives of the W3C's [Making Content Usable for People with Cognitive and Learning Disabilities](https://www.w3.org/TR/coga-usable/) (21). What the components do, and what's left to the app:
+
+| Objective | What the components do | What the app does |
+| --- | --- | --- |
+| 1. Help people understand what things are and how to use them | Controls look like what they are, with visible labels (Field) and the same look and words for the same thing everywhere. Icons in buttons come with words, or a name and a tooltip. | Use familiar words for actions and the same component for the same job. |
+| 2. Help people find what they need | Headings, landmarks (Navbar, Sidebar), Breadcrumb, CommandPalette and search fields with result counts. | Keep navigation in the same place and order on every page. |
+| 3. Use clear and understandable content | The built-in words follow Content and voice: short sentences, plain words, no jargon, in each language the package ships. | Write content the same way; say one thing per sentence. |
+| 4. Help people avoid mistakes and correct them | Field hints before input; errors in words next to the field and in ErrorSummary; confirmation dialogs, TypeToConfirm and Undo in toasts; a typed date it can't read keeps the previous value and says so. | Ask only what's needed, accept the formats people use, and let them review before anything final. |
+| 5. Help people focus | No autoplay, no flashing; motion follows reduced motion; toasts wait while hovered or focused; Dialog keeps focus on the task. | Keep pages calm: one main task per page, few interruptions. |
+| 6. Don't rely on memory | Passwords can be pasted and shown; one-time codes fill from a paste or the phone's suggestion; Stepper shows where people are in a process; SaveStatus says when work is saved. | Don't ask people to remember things from step to step; never make sign-in depend on a puzzle. |
+| 7. Provide help and support | Hints in fields, keyboard shortcuts listed in KeyboardShortcuts, empty states that say what to do next. | Put help and contact details in the same place on every page. |
+| 8. Support adaptation and personalization | Text zooms to 200% and beyond, more contrast, compact density, dark themes, reduced motion, right to left and the language packs all work together. | Keep those settings available and remember them. |
+
+## Feedback
+
+If something in a component keeps you from using a page, or you find a place where this statement is wrong, open an issue on the repository. Say which component and story, the browser and any assistive technology (with versions), what you did, and what happened.
+
+## Conformance report
+
+The Accessibility Conformance Report in the shape of VPAT 2.5 (WCAG edition), kept in `docs/acr.json` and reviewed for each major version (18). "Not Applicable" means the criterion is about something the package doesn't make (media, page titles, navigation across pages), so it rests on the app.
+
+<ConformanceReport />
