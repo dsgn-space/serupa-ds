@@ -48,4 +48,19 @@ describe('announcePage (15)', () => {
       expect(document.activeElement!.id).toBe('p');
     } finally { box.remove(); }
   });
+
+  test('a heading inside a shadow root, given as focus, takes it and its words aren\'t said again (GR95)', async () => {
+    ensureAnnouncer();
+    await expect.poll(announcerIdle, { timeout: 3000 }).toBe(true);
+    const host = page('');
+    const root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = '<main><h1 id="sh">Reports</h1></main>';
+    try {
+      const h = root.getElementById('sh')!;
+      announcePage({ focus: h, title: 'Reports' });
+      expect([root.activeElement === h, h.getAttribute('tabindex')]).toEqual([true, '-1']);
+      await new Promise((r) => setTimeout(r, 700));
+      expect(region().textContent).not.toBe('Reports');
+    } finally { host.remove(); }
+  });
 });
