@@ -89,6 +89,18 @@
 /* Hidden means hidden, even on elements that set their own display. */
 :where([hidden]:not([hidden="until-found"])) { display: none !important; }
 
+/* Chart colors in forced colors: the user's own colors, five of them told apart (the series past the fifth, and the
+   ramps, rely on the chart's markers, patterns and text, which a chart draws anyway). The gap is the page. */
+@media (forced-colors: active) {
+  :where(:root, [data-theme], [data-brand], [data-mode]) {
+    --chart-1: CanvasText; --chart-2: LinkText; --chart-3: Highlight; --chart-4: VisitedText; --chart-5: ActiveText;
+    --chart-6: CanvasText; --chart-7: LinkText; --chart-8: Highlight;
+    --chart-seq-1: CanvasText; --chart-seq-2: CanvasText; --chart-seq-3: CanvasText; --chart-seq-4: CanvasText; --chart-seq-5: CanvasText;
+    --chart-div-1: CanvasText; --chart-div-2: CanvasText; --chart-div-3: CanvasText; --chart-div-4: CanvasText; --chart-div-5: CanvasText; --chart-div-6: CanvasText; --chart-div-7: CanvasText;
+    --chart-grid: GrayText; --chart-axis: CanvasText; --chart-label: CanvasText; --chart-gap: Canvas;
+  }
+}
+
 /* Print: filled controls keep their colors, on-screen layers don't print, and data-print-urls shows link addresses. */
 @media print {
   :where(.dk-btn, .dk-badge, .dk-progress, .dk-switch, .dk-checkbox__input, .dk-radio__input, .dk-avatar, .dk-stepper__indicator, .dk-segmented, .dk-alert, .dk-slider, .dk-calendar, .dk-pagination, .dk-tabs) { print-color-adjust: exact; }
