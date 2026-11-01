@@ -15,6 +15,8 @@ import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/lab
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
 import { componentTests } from './generated/tested';
+import changelog from '../CHANGELOG.md?raw';
+import { changesFor } from './changes';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 
@@ -45,7 +47,26 @@ export function Guide({ source }: { source: string }) {
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
     <Markdown>{relink(source.replace(/^# .*\n+/, ''))}</Markdown>
     {name && <TestedBehavior name={name} />}
+    {name && <ComponentChanges name={name} />}
   </>;
+}
+
+/** What changed in a component, release by release (134): the CHANGELOG.md entries that name it, newest first, the
+ * latest few open and the rest folded away. */
+export function ComponentChanges({ name }: { name: string }) {
+  const all = changesFor(name, changelog);
+  if (!all.length) return null;
+  const SHOWN = 5;
+  const md = (list: typeof all) => list.map((c) => `- **${c.version}**${c.kind ? ` (${c.kind.toLowerCase()})` : ''}: ${c.text}`).join('\n');
+  return <section className="sb-changes" aria-labelledby={`changes-${name}`}>
+    <h2 id={`changes-${name}`}>Changes</h2>
+    <p>The entries of the <a href="?path=/docs/changelog--docs">changelog</a> that name {name}, newest first.</p>
+    <Markdown>{relink(md(all.slice(0, SHOWN)))}</Markdown>
+    {all.length > SHOWN && <details>
+      <summary>Earlier changes ({all.length - SHOWN})</summary>
+      <Markdown>{relink(md(all.slice(SHOWN)))}</Markdown>
+    </details>}
+  </section>;
 }
 
 // A test name without the backlog ids it carries for the people working on the repository: "(GR44)", "(62)", "(FH1, 180)",
