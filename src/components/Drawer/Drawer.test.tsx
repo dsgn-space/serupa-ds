@@ -47,6 +47,40 @@ describe('Drawer', () => {
   beforeEach(async () => { await page.viewport(1000, 700); });
   afterAll(async () => { await page.viewport(900, 700); });
 
+  for (const modal of [true, false]) test(`inside a shadow root, focus goes back to the button that opened it, closed or taken off the page${modal ? '' : ', non-modal too'} (GR95)`, async () => {
+    function Shadow() {
+      const [open, setOpen] = React.useState(false), [shown, setShown] = React.useState(true);
+      return <>
+        <Button id="sopen" onClick={() => setOpen(true)}>Open</Button>
+        {shown && <Drawer id="sdrw" modal={modal} open={open} onOpenChange={setOpen} title="Filters"><Input aria-label="Name" />
+          <button id="sremove" onClick={() => setShown(false)}>Remove it</button></Drawer>}
+      </>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Shadow />, { container: inner });
+      const root = host.shadowRoot!, opener = root.getElementById('sopen')!;
+      const isOpen = () => (root.getElementById('sdrw') as HTMLDialogElement).open;
+      await userEvent.click(opener);
+      await expect.poll(isOpen).toBe(true);
+      await settled();
+      (root.querySelector('#sdrw input') as HTMLElement).focus();
+      await userEvent.keyboard('{Escape}');
+      await expect.poll(isOpen).toBe(false);
+      expect(root.activeElement?.id).toBe('sopen');
+      // Taken off the page while open, with focus inside it: the opener again.
+      await userEvent.click(opener);
+      await expect.poll(isOpen).toBe(true);
+      await settled();
+      await userEvent.click(root.getElementById('sremove')!);
+      await expect.poll(() => root.getElementById('sdrw')).toBe(null);
+      expect(root.activeElement?.id).toBe('sopen');
+    } finally { host.remove(); }
+  });
+
   test('a 320px screen: a long footer label wraps onto more lines inside the panel, whole, not cut with an ellipsis (GR74)', async () => {
     await page.viewport(320, 640);
     const label = 'Apply these filters to every one of your saved views';
