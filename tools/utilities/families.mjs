@@ -3,7 +3,8 @@
 //   t  the token name, CSS-escaped ("var(--spacing-0\.5)")
 // A family named in the template ("@each spacing- { … }") gets one copy per token, in tokens.json order,
 // so a new token gets its utility classes without anyone editing the CSS. The families:
-//   color       every color token; k is the token name (.bg-primary → var(--primary))
+//   color       every color token but the ones marked "utilities": false (the chart colors, which a chart reads
+//               as variables); k is the token name (.bg-primary → var(--primary))
 //   fraction    the sizing-a-b tokens; k is a/b (.w-1/2 → var(--sizing-1-2))
 //   <prefix>-   every token whose name starts with <prefix>-; k is the rest (.p-4 → var(--spacing-4))
 const esc = (s) => s.replace(/[./%]/g, (c) => '\\' + c);
@@ -12,7 +13,7 @@ export function families(tokens) {
   const all = Object.values(tokens).filter((g) => g && Array.isArray(g.tokens)).flatMap((g) => g.tokens);
   const item = (x, k) => ({ k: esc(k), t: esc(x.name), v: typeof x.value === 'string' ? x.value : '' });
   const fams = {
-    color: tokens.color.tokens.map((x) => item(x, x.name)),
+    color: tokens.color.tokens.filter((x) => x.utilities !== false).map((x) => item(x, x.name)),
     fraction: all.filter((x) => /^sizing-\d+-\d+$/.test(x.name)).map((x) => item(x, x.name.slice(7).replace('-', '/'))),
   };
   return new Proxy(fams, {
