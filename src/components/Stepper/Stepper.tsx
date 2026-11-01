@@ -8,6 +8,7 @@ import { displayNumber } from "../../internal/numbers";
 import { useLocale, useSettings } from "../../internal/provider";
 import * as icons from "../../material/builtin";
 import { en as words } from "./labels";
+import { activeIn } from "../../internal/root";
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -109,8 +110,10 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
     const el = nav.current, to = going.current;
     going.current = null;
     if (!el || to !== current) return;
-    const active = document.activeElement;
-    if (active && active !== document.body && el.contains(active)) return;
+    // Only when focus fell to the page: the app may have moved it on (to a field), and it stays there. What has focus
+    // is read in the stepper's own document or shadow root, where document.activeElement is the shadow host (GR95).
+    const active = activeIn(el);
+    if (active && active !== document.body) return;
     const head = el.querySelectorAll<HTMLElement>(".dk-stepper__head")[current];
     if (head) head.focus();
   }, [current]);

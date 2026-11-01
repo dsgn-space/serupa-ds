@@ -95,6 +95,37 @@ describe('Stepper', () => {
     expect([steps('gn1')[0].state, document.activeElement === lis('gn1')[0].querySelector('[tabindex="-1"]')]).toEqual(['current', true]);
   });
 
+  test('going to a step whose onStepClick moves focus to a field of the app leaves focus there', async () => {
+    function Back() {
+      const [c, set] = React.useState(2), field = React.useRef<HTMLInputElement>(null);
+      return <><Stepper id="mv" steps={STEPS} current={c} onStepClick={(i) => { set(i); field.current!.focus(); }} /><input ref={field} id="mvfield" aria-label="Name" /></>;
+    }
+    await render(<Back />);
+    await userEvent.click(lis('mv')[0].querySelector('button')!);
+    expect([steps('mv')[0].state, document.activeElement!.id]).toEqual(['current', 'mvfield']);
+  });
+
+  test('inside a shadow root, going to a step leaves focus where the click moved it, and otherwise keeps it on the step (GR95)', async () => {
+    function Back() {
+      const [c, set] = React.useState(2), field = React.useRef<HTMLInputElement>(null);
+      return <><Stepper id="sgn" steps={STEPS} current={c} onStepClick={(i) => { set(i); if (i === 0) field.current!.focus(); }} /><input ref={field} id="sfield" aria-label="Name" /></>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Back />, { container: inner });
+      const root = host.shadowRoot!, items = () => [...root.getElementById('sgn')!.querySelectorAll('li')];
+      items()[1].querySelector('button')!.focus();
+      await userEvent.keyboard('{Enter}');
+      expect(root.activeElement === items()[1].querySelector('[tabindex="-1"]')).toBe(true);
+      // The app moved focus to a field of its own: it stays there.
+      await userEvent.click(items()[0].querySelector('button')!);
+      expect(root.activeElement?.id).toBe('sfield');
+    } finally { host.remove(); }
+  });
+
   test('keyboard table: Tab goes to each completed step\'s button and skips the rest; Space on one goes to that step; without onStepClick nothing takes focus (FH1)', async () => {
     const got: number[] = [];
     await render(<div><button id="kb-before">before</button><Stepper id="kb-st" steps={STEPS} current={2} onStepClick={(i) => got.push(i)} /><Stepper id="kb-plain" steps={STEPS} current={2} /><button id="kb-after">after</button></div>);
