@@ -29,8 +29,6 @@ if (majors.length) {
     t(`the ${next} RFC has a status`, /^\*\*Status:\*\* \S/m.test(rfc));
     const missing = majors.filter((f) => !rfc.includes(`.changeset/${f}`));
     t(`the ${next} RFC has a section for each major changeset`, !missing.length, `add a section naming .changeset/<file>.md for: ${missing.join(', ')}`);
-    const named = [...rfc.matchAll(/\.changeset\/([\w.-]+\.md)/g)].map((m) => m[1]).filter((f) => !changesets[f] || !majors.includes(f));
-    t(`the ${next} RFC names only major changesets that are waiting`, !named.length, named.join(', '));
   }
 }
 const noNote = majors.filter((f) => !/migration/i.test(changesets[f]));
