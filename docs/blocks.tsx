@@ -14,6 +14,10 @@ import { customIcons, isIconData } from '../src/icons';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
+import changelogSource from '../CHANGELOG.md?raw';
+import pkg from '../package.json';
+import { majorsIn, nextMajor, type Major } from './upgrades';
+import { transformsAfter } from '../bin/migrate/transforms.mjs';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 
@@ -306,4 +310,29 @@ export function TokenExplorer() {
     </div> : <p style={{ margin: 0 }}>No token matches.</p>}
     {hits.length > limit ? <div><Button variant="secondary" size="sm" onClick={() => setLimit(limit + 200)}>Show more ({hits.length - limit} left)</Button></div> : null}
   </div>;
+}
+
+const pendingChangesets = import.meta.glob('../.changeset/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+type Transform = { version: string; id: string; title: string };
+
+/** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
+ * and what `npx serupa-migrate` changes for it. */
+export function UpgradeGuide() {
+  const next = nextMajor(pkg.version, pendingChangesets);
+  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
+  const auto = transformsAfter(null) as Transform[];
+  return <>{majors.map((m) => {
+    const prev = Number(m.version.split('.')[0]) - 1;
+    const mine = auto.filter((t) => t.version === m.version);
+    const intro = m.next
+      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://github.com/diki-stwn/serupa-ds/tree/main/docs/rfcs) has the proposal.`
+      : m.date ? `Released ${m.date}.` : '';
+    const run = mine.length
+      ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`
+      : '';
+    const body = m.entries.length ? m.entries.join('\n') : '- No entry of this release is marked breaking; [the Changelog](?path=/docs/changelog--docs) has what changed.';
+    return <section key={m.version}>
+      <Markdown>{[`## ${m.version}${m.next ? ' (next)' : ''}`, intro, run, body].filter(Boolean).join('\n\n')}</Markdown>
+    </section>;
+  })}</>;
 }

@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { UpgradeGuide } from './blocks';
+
+<Meta title="Upgrading" />
+
+# Upgrading
+
+A minor or a patch release never breaks a working project: update and carry on. A major release can, and this page lists what each one breaks and what to do instead, newest first. It's made from the changelog's entries, so it says what they say, before and after.
+
+To go up more than one major, read each one between your version and the new one, oldest first.
+
+## Let a script make the renames
+
+`serupa-migrate` comes with the package and makes the changes a script can make on its own: a prop with a new name, a renamed type or file. Run it on your source folders. Without `--write` it only says what it would change.
+
+```sh
+npx serupa-migrate src --from 12          # what would change, coming from 12.x
+npx serupa-migrate src --from 12 --write  # change the files
+npx serupa-migrate --list                 # every change it knows, by version
+```
+
+Commit first, so the change is one diff to review. What it can't decide on its own (a prop passed in an object, a removed token with nothing in its place) it lists at the end as file and line, to change by hand. It reads the text without running anything and leaves `node_modules` and build output alone.
+
+## Before a major
+
+Every major starts as a proposal in [docs/rfcs](https://github.com/diki-stwn/serupa-ds/tree/main/docs/rfcs), open for comments before it ships, so a breaking change can be argued with while it's still cheap to change. The next major's section below lists what's in it so far.
+
+<UpgradeGuide />
