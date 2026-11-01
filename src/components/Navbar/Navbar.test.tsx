@@ -123,6 +123,22 @@ describe('Navbar', () => {
       .toEqual([0, '40', 'Docs', '1088px']);
   });
 
+  test('sticky: a field focused inside a shadow root stays in view, out from under the bar (GR95)', async () => {
+    await render(<div>
+      <Navbar id="nshadow" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
+      <div id="shost" />
+    </div>);
+    const host = el('shost'), root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = '<div style="height: 2400px"></div><input id="sf" aria-label="Name"><div style="height: 600px"></div>';
+    window.scrollTo(0, 0);
+    const f = root.getElementById('sf') as HTMLInputElement;
+    f.focus();
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await new Promise((r) => setTimeout(r, 100));
+    const bar = el('nshadow').getBoundingClientRect(), r = f.getBoundingClientRect();
+    expect([r.top >= Math.round(bar.bottom) - 1, r.bottom <= window.innerHeight]).toEqual([true, true]);
+  });
+
   test('sticky: no shadow at the top of the page; scrolled under, the bar lifts with the shadow-scrolled token, tied to the scroll (149)', async () => withMotion(async () => {
     await render(<div>
       <Navbar id="nlift" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>

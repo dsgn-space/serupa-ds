@@ -9,6 +9,7 @@ import { isComposing } from "../../internal/ime";
 import { flattenChildren } from "../../internal/children";
 import { useSettings } from "../../internal/provider";
 import * as icons from "../../material/builtin";
+import { activeIn } from "../../internal/root";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
@@ -78,12 +79,13 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
     // a field in a dialog or popover: those sit above the page, not under the bar.
     let raf = 0;
     const onFocus = (e: FocusEvent) => {
-      const t = e.target;
+      // The field itself, also inside a shadow root (where the event's target is the shadow host) (GR95).
+      const t = typeof e.composedPath === "function" ? e.composedPath()[0] : e.target;
       if (!(t instanceof Element) || h.contains(t) || t.closest("dialog, [popover]")) return;
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const covered = h.getBoundingClientRect().bottom - t.getBoundingClientRect().top;
-        if (covered > 0 && document.activeElement === t) window.scrollBy(0, -covered);
+        if (covered > 0 && activeIn(t) === t) window.scrollBy(0, -covered);
       });
     };
     document.addEventListener("focusin", onFocus);
