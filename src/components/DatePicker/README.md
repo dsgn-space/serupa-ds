@@ -102,8 +102,8 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-popup-bg` | `surface-overlay` | The calendar panel's background. |
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
 | `--date-picker-popup-border` | `border-overlay` | Its outline. |
-| `--date-picker-popup-shadow` | `shadow-lg` | Its shadow. |
-| `--date-picker-popup-radius` | `rounded-lg` | Its corners (8px). |
+| `--date-picker-popup-shadow` | `elevation-overlay` | Its shadow. |
+| `--date-picker-popup-radius` | `radius-surface` | Its corners (8px). |
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |
 | `--date-picker-offset` | `spacing-1` | The gap between the field and the panel (4px). |
 | `--date-picker-z-index` | `z-popover` | The panel's stacking order, where the top layer isn't available. |
