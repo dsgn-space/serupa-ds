@@ -46,6 +46,7 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
   const [instant, setInstant] = React.useState(!online);
   const was = React.useRef<boolean | null>(null);
   const onChange = React.useRef(props.onChange);
+  // every render: the newest onChange is the one called when the connection changes.
   React.useEffect(() => { onChange.current = props.onChange; });
   React.useEffect(() => {
     const before = was.current;
