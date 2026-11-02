@@ -5,10 +5,11 @@
 // - checks (npm run test:checks): the scripts in tools/test/ that check the package, tokens, icons, guides and
 //   API in Node, each result a test. Build first (npm run build). Each still runs alone with node, too.
 import fs from 'node:fs';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
+import { TOUCH } from './tools/test/vitest/touch.ts';
 import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
@@ -16,6 +17,8 @@ const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.
 buildUtilities(new URL('.', import.meta.url).pathname);
 // …and the export, style and label lists from the component folders (src/generated/).
 buildRegistry(new URL('.', import.meta.url).pathname);
+
+const BROWSER = (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium';
 
 export default defineConfig({
   define: { __VERSION__: JSON.stringify(version) },
@@ -67,7 +70,15 @@ export default defineConfig({
             ...(process.env.SERUPA_LOCALE ? { contextOptions: { locale: process.env.SERUPA_LOCALE } } : {}),
           }),
           // SERUPA_BROWSER=firefox|webkit runs them in that engine, like the rest of the suite (run.mjs --browser).
-          instances: [{ browser: (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium' }],
+          // Two instances of the one browser, so the files that make the page a touch screen get pages of their own.
+          // Headless Chromium only has a hovering mouse because Playwright launches it with --blink-settings
+          // (primaryHoverType and the rest), and turning DevTools touch emulation off puts back the device's own
+          // values, not those: (hover: hover) stays false for the rest of that page. Every later file in it then
+          // lost its :hover styles (Button and Table hover tests failing together in a long run).
+          instances: [
+            { browser: BROWSER, exclude: [...configDefaults.exclude, ...TOUCH] },
+            { browser: BROWSER, name: `components (${BROWSER}, touch)`, include: TOUCH },
+          ],
           viewport: { width: 900, height: 700 },
           commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, ariaSnapshot, ariaMode, writeAriaBaseline },
         },

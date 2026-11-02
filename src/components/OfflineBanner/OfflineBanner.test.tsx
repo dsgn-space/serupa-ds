@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { OfflineBanner } from './OfflineBanner';
 
 const q = (s: string) => document.querySelector<HTMLElement>(s);
@@ -118,4 +118,14 @@ describe('OfflineBanner', () => {
     await expect.poll(() => document.querySelector('[data-component=offline-banner]')).toBe(null);
     expect([document.documentElement.style.getPropertyValue('--dk-offline-banner-space'), getComputedStyle(document.documentElement).scrollPaddingBottom, document.body.style.paddingBlockEnd]).toEqual(['', 'auto', '']);
   });
+  test('GR124: the room is measured where the bar comes to rest, not where it is as it slides in', async () => withMotion(async () => {
+    const screen = await render(<OfflineBanner online />);
+    await screen.rerender(<OfflineBanner online={false}>Changes are kept and sent when you're back.</OfflineBanner>);
+    const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    const space = () => parseFloat(document.documentElement.style.getPropertyValue('--dk-offline-banner-space'));
+    const early = space();
+    await wait(600);
+    const settled = Math.ceil(window.innerHeight - banner.getBoundingClientRect().top + 8);
+    expect([early, space()]).toEqual([settled, settled]);
+  }));
 });
