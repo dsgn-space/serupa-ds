@@ -103,7 +103,7 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--number-input-stepper` | `text-muted` | The − and + icons (3:1 on the field). |
 | `--number-input-stepper-hover` | `text` | The icons on hover. |
 | `--number-input-stepper-bg-hover` | `secondary` | The buttons' background on hover. |
-| `--number-input-stepper-radius` | `rounded-sm` | The buttons' corners (4px). |
+| `--number-input-stepper-radius` | `radius-inner` | The buttons' corners (4px). |
 | `--number-input-stepper-padding` | `spacing-1` | Space around each button's icon (4px). |
 | `--number-input-stepper-gap` | `spacing-0.5` | Space between the − and + buttons (2px). |
 <!-- token-table:end -->

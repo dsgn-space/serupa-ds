@@ -96,7 +96,7 @@
     "shadow": {
       "indicator-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-sm}",
+        "$value": "{shadow.elevation-part}",
         "$description": "The selected segment's shadow.",
         "$extensions": {
           "com.serupa": {
@@ -108,7 +108,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "The control's corners (6px).",
         "$extensions": {
           "com.serupa": {
@@ -118,7 +118,7 @@
       },
       "indicator-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "The selected segment's corners (4px).",
         "$extensions": {
           "com.serupa": {

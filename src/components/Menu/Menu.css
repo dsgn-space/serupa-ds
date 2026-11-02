@@ -23,10 +23,10 @@
   /* Its rows lay out and paint inside it (it scrolls, so it clips already): a row changing never relays out the page (I3). */
   contain: layout paint;
   border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border-overlay));
-  border-radius: var(--menu-radius, var(--rounded-lg));
+  border-radius: var(--menu-radius, var(--radius-surface));
   background: var(--menu-bg, var(--surface-overlay));
   color: var(--menu-item-text, var(--text));
-  box-shadow: var(--menu-shadow, var(--shadow-lg));
+  box-shadow: var(--menu-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--text-sm--line-height);
@@ -59,7 +59,7 @@
   gap: var(--menu-item-gap, var(--spacing-2));
   min-height: var(--menu-item-height, var(--control-height-md));
   padding: var(--spacing-1) var(--menu-item-padding-x, var(--spacing-2));   /* the block padding only shows on a wrapped label */
-  border-radius: var(--menu-item-radius, var(--rounded-md));
+  border-radius: var(--menu-item-radius, var(--radius-control));
   color: var(--menu-item-text, var(--text));
   text-decoration: none;
   cursor: pointer; touch-action: manipulation;
