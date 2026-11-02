@@ -58,6 +58,8 @@ export const RightEnd: Story = { name: 'Placement: right-end', args: { open: tru
 export const LeftStart: Story = { name: 'Placement: left-start', args: { open: true, placement: 'left-start' }, decorators: [centered], parameters: { centered: true } };
 export const LeftEnd: Story = { name: 'Placement: left-end', args: { open: true, placement: 'left-end' }, decorators: [centered], parameters: { centered: true } };
 
+// sheet: along the foot of the screen, full width (sheet="mobile" does this only under 640px).
+export const Sheet: Story = { args: { open: true, sheet: true, title: 'Share' } };
 export const WithoutTitle: Story = {
   name: 'Without a title',
   args: {
