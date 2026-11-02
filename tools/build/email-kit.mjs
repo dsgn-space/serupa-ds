@@ -4,8 +4,9 @@
 //                   out in hex and px, light first, then the dark theme under prefers-color-scheme for the clients
 //                   that honor it. Inline it with an inliner (juice, Premailer, or the one your sender has).
 //   <brand>.html    a starting email with those styles already inline: a table layout 600px wide, a preview line,
-//                   a heading, text, a button that is a link padded inside a cell (Outlook included), a callout, a
-//                   divider and a footer. Its <style> keeps only the dark theme, which can't be inlined.
+//                   a heading, text, a button that is a link padded inside a cell, a callout, a divider and a
+//                   footer. Outlook for Windows draws with Word, which ignores padding on a link, so the cell carries
+//                   the same padding as mso-padding-alt (which only Outlook reads) and the link's is zeroed there. Its <style> keeps only the dark theme, which can't be inlined.
 //   tokens.json     every alias color of each theme in hex (a color with alpha mixed over its surface first), and
 //                   the type sizes, spacing and radii in px, for a template language or an email builder.
 import { nativeTokens } from './native-tokens.mjs';
@@ -58,13 +59,17 @@ export function emailRules(c, s) {
     'serupa-text': [['margin', `0 0 ${sp(4)}`], ['font-family', FONT], ['color', c.text], ...type('base')],
     'serupa-muted': [['margin', `0 0 ${sp(4)}`], ['font-family', FONT], ['color', c['text-muted']], ...type('sm')],
     'serupa-link': [['color', c.primary], ['text-decoration', 'underline']],
-    'serupa-button-cell': [['background-color', c.primary], ['border-radius', `${s.radius.md}px`]],
+    'serupa-button-cell': [['background-color', c.primary], ['border-radius', `${s.radius.md}px`], ['mso-padding-alt', `${sp(3)} ${sp(5)}`]],
     'serupa-button': [['display', 'inline-block'], ['padding', `${sp(3)} ${sp(5)}`], ['font-family', FONT], ['font-weight', '600'], ['color', c['on-primary']], ['background-color', c.primary], ['border-radius', `${s.radius.md}px`], ['text-decoration', 'none'], ...type('base'), ['mso-padding-alt', '0']],
     'serupa-divider': [['border-top', `1px solid ${c.border}`], ['font-size', '0'], ['line-height', '0'], ['height', '1px']],
     'serupa-footer': [['padding', `0 ${sp(8)} ${sp(6)}`], ['font-family', FONT], ['color', c['text-muted']], ...type('xs')],
   };
+  // A callout's accent bar is on its start side: left, and right in a right-to-left email (the -rtl class), since
+  // email clients don't read border-inline-start.
   for (const t of TONES) {
-    rules[`serupa-callout-${t}`] = [['padding', `${sp(3)} ${sp(4)}`], ['background-color', c[`${t}-subtle`]], ['border-left', `4px solid ${c[t]}`], ['color', c[`${t}-text`]], ['font-family', FONT], ...type('sm')];
+    const callout = (side) => [['padding', `${sp(3)} ${sp(4)}`], ['background-color', c[`${t}-subtle`]], [`border-${side}`, `4px solid ${c[t]}`], ['color', c[`${t}-text`]], ['font-family', FONT], ...type('sm')];
+    rules[`serupa-callout-${t}`] = callout('left');
+    rules[`serupa-callout-${t}-rtl`] = callout('right');
   }
   return rules;
 }
@@ -72,7 +77,7 @@ export function emailRules(c, s) {
 const decl = (list, important = '') => list.map(([p, v]) => `${p}: ${v}${important}`).join('; ');
 const css = (rules, indent = '', important = '') => Object.entries(rules).map(([k, v]) => `${indent}.${k} { ${decl(v, important)}; }`).join('\n');
 // Only what changes between light and dark goes in the dark block: the colors.
-const colorsOnly = (rules) => Object.fromEntries(Object.entries(rules).map(([k, v]) => [k, v.filter(([p]) => /color$|^border(-top|-left)?$/.test(p))]).filter(([, v]) => v.length));
+const colorsOnly = (rules) => Object.fromEntries(Object.entries(rules).map(([k, v]) => [k, v.filter(([p]) => /color$|^border(-top|-left|-right)?$/.test(p))]).filter(([, v]) => v.length));
 
 /** The files of dist/email/, by their path in it. */
 export function emailFiles(dir, version) {
