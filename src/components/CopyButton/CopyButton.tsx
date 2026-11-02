@@ -15,17 +15,17 @@ export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'on
   /** What to copy: the text, or a function that returns it (or a promise of it) when the button is pressed. */
   value: string | (() => string | Promise<string>);
   /** The button's text. Default: "Copy" (labels.copy). */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** What it shows and announces once it has copied. Default: "Copied" (labels.copied). */
-  copiedLabel?: string;
+  copiedLabel?: string | undefined;
   /** Shows only the icon, named by children (or "Copy") as its aria-label and tooltip. Default: false. */
-  iconOnly?: boolean;
+  iconOnly?: boolean | undefined;
   /** How long it shows "Copied", in ms. Default: 2000. */
-  timeout?: number;
+  timeout?: number | undefined;
   /** Called with the text once it's on the clipboard. */
-  onCopy?: (text: string) => void;
+  onCopy?: ((text: string) => void) | undefined;
   /** Called when the browser refuses (no permission, an insecure page). The button also announces labels.copyFailed. */
-  onCopyError?: (error: unknown) => void;
+  onCopyError?: ((error: unknown) => void) | undefined;
 }
 
 // The clipboard API needs a secure page and focus; the old execCommand route covers the rest.

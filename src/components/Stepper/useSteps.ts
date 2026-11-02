@@ -8,11 +8,11 @@ export interface UseStepsOptions {
   steps: StepperStep[];
   /** Checks the step about to be left with next(), or every step before the one goTo() jumps forward to: true lets
       it go on, false keeps people there and marks it with an error. It may return a promise (a server check). */
-  validate?: (index: number) => boolean | Promise<boolean>;
+  validate?: ((index: number) => boolean | Promise<boolean>) | undefined;
   /** Called by next() on the last step, once it passes its check: submit here. */
-  onComplete?: () => void;
+  onComplete?: (() => void) | undefined;
   /** The step to start on. Default: 0. */
-  defaultStep?: number;
+  defaultStep?: number | undefined;
 }
 
 export interface UseSteps {

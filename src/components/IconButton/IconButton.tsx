@@ -12,9 +12,9 @@ interface IconButtonOwnProps {
   /** What the button does, for screen readers (its aria-label) and as a tooltip (title). Required: an icon alone has no name. */
   label: string;
   /** 'square' (default, the Button's corners) or 'round'. */
-  shape?: 'square' | 'round';
+  shape?: 'square' | 'round' | undefined;
   /** Leaves out the title tooltip, for when visible text already shows the label. A wrapping Tooltip (aria-describedby or aria-labelledby) leaves it out by itself. Default: false. */
-  hideTitle?: boolean;
+  hideTitle?: boolean | undefined;
 }
 
 export type IconButtonProps = Without<ButtonAsButtonProps> & IconButtonOwnProps | Without<ButtonAsLinkProps> & IconButtonOwnProps;

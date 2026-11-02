@@ -4,9 +4,9 @@ interface OfflineBannerLabels {
     backOnline: string;
 }
 interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
-    online?: boolean;
-    placement?: "bottom" | "inline" | "top";
-    children?: React.ReactNode;
-    onChange?: (online: boolean) => void;
+    online?: boolean | undefined;
+    placement?: "bottom" | "inline" | "top" | undefined;
+    children?: React.ReactNode | undefined;
+    onChange?: ((online: boolean) => void) | undefined;
 }
 declare const OfflineBanner: React.ForwardRefExoticComponent<OfflineBannerProps & React.RefAttributes<HTMLDivElement>>;

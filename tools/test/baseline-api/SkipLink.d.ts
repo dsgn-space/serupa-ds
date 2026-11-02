@@ -3,7 +3,7 @@ interface SkipLinkLabels {
     skipToContent: string;
 }
 interface SkipLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
-    target?: string;
-    children?: React.ReactNode;
+    target?: string | undefined;
+    children?: React.ReactNode | undefined;
 }
 declare const SkipLink: React.ForwardRefExoticComponent<SkipLinkProps & React.RefAttributes<HTMLAnchorElement>>;

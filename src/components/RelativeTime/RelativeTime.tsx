@@ -13,18 +13,18 @@ export interface RelativeTimeProps extends Omit<React.TimeHTMLAttributes<HTMLTim
       "2026-10-24", is that day on the viewer's calendar, in days: "today", "yesterday", "in 3 days". */
   date: Date | number | string;
   /** 'long' ("3 minutes ago", default), 'short' ("3 min. ago") or 'narrow' ("3m ago"), as Intl.RelativeTimeFormat writes them. */
-  format?: 'long' | 'short' | 'narrow';
+  format?: 'long' | 'short' | 'narrow' | undefined;
   /** 'auto' (default): "yesterday", "now", "next week" where the language has a word. 'always': "1 day ago". */
-  numeric?: 'auto' | 'always';
+  numeric?: 'auto' | 'always' | undefined;
   /** How the exact date in the tooltip (title) is written. Default: { dateStyle: "long", timeStyle: "short" }. false: no tooltip. */
-  titleFormat?: Intl.DateTimeFormatOptions | false;
+  titleFormat?: Intl.DateTimeFormatOptions | false | undefined;
   /** After how many days, ago or ahead, it shows the date instead of words ("Oct 24, 2026" rather than "340 days
       ago"), as absoluteFormat writes it. Default 7. false: words however far. */
-  absoluteAfter?: number | false;
+  absoluteAfter?: number | false | undefined;
   /** How that date is written. Default: { dateStyle: "medium" }. */
-  absoluteFormat?: Intl.DateTimeFormatOptions;
+  absoluteFormat?: Intl.DateTimeFormatOptions | undefined;
   /** A locale for this one; otherwise the SerupaProvider's, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
 }
 
 /* One clock for every RelativeTime on the page: it ticks every 15 seconds while any is mounted (and at once when
