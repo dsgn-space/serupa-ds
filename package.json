@@ -29,6 +29,11 @@
       "import": "./dist/icons.js",
       "default": "./dist/icons.js"
     },
+    "./icons/outlined": {
+      "types": "./dist/icons-outlined.d.ts",
+      "import": "./dist/icons-outlined.js",
+      "default": "./dist/icons-outlined.js"
+    },
     "./tokens.css": "./tokens.css",
     "./tokens.json": "./tokens.json",
     "./base.css": "./dist/base.css",
@@ -75,6 +80,7 @@
   },
   "bin": {
     "serupa-create": "./bin/serupa-create.mjs",
+    "serupa-migrate": "./bin/serupa-migrate.mjs",
     "serupa-purge": "./bin/serupa-purge.mjs",
     "serupa-usage": "./bin/serupa-usage.mjs"
   },
@@ -139,6 +145,7 @@
     "@arethetypeswrong/cli": "0.18.5",
     "@changesets/cli": "3.0.3",
     "@eslint/js": "10.0.1",
+    "@guidepup/guidepup": "0.40.0",
     "@mdn/browser-compat-data": "8.1.7",
     "@storybook/addon-a11y": "10.6.5",
     "@storybook/addon-docs": "10.6.5",

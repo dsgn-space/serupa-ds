@@ -102,10 +102,17 @@ const vt = process.env.VITEST ? await import('vitest') : null;
 // Opens a story URL and returns '' or why it didn't open. A run of hundreds of pages on a busy runner has had one
 // goto time out on its load event (Menu in #1080, TreeView in #1110), and a goto that throws ended the whole group
 // instead of failing that one story, so a timeout is tried once more and then reported as that story's failure.
+// A goto can also be cut short by a second navigation to the same URL (the Storybook iframe reloading itself as the
+// page opened: PinInput's In a field story in a visual run on 2 Nov 2026); that one is waited out, then tried again.
 export async function openUrl(page, url) {
   for (let attempt = 1; ; attempt++) {
     try { await page.goto(url); return ''; }
-    catch (err) { if (err.name !== 'TimeoutError') throw err; if (attempt === 2) return `the page did not open in 30 s, twice (${url})`; }
+    catch (err) {
+      const interrupted = /interrupted by another navigation/.test(String(err && err.message));
+      if (err.name !== 'TimeoutError' && !interrupted) throw err;
+      if (attempt === 2) return interrupted ? `the page kept navigating away as it opened, twice (${url})` : `the page did not open in 30 s, twice (${url})`;
+      if (interrupted) await page.waitForLoadState('load').catch(() => {});
+    }
   }
 }
 

@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Tour — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { padding: 24 } },
+    h(T.Button, { id: 'new' }, 'New project'),
+    h(T.Tour, { defaultOpen: true, steps: [
+      { target: '#new', title: 'Start something new', content: 'New project opens a blank board you can share later.' },
+      { title: 'That’s it', content: 'You can take this tour again from Help.' }
+    ] })));
+</script>
+</body>
+</html>

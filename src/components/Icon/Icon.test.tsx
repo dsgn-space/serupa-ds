@@ -121,3 +121,35 @@ describe('Icon', () => {
     root.unmount(); host.remove();
   });
 });
+
+describe('Icon: the size scale and weights (116+76)', () => {
+  test('size="xs" to "xl" are the icon-size tokens, 14, 16, 20, 24 and 40px; the default is lg', async () => {
+    await render(<div>{(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <Icon key={s} id={'size-' + s} icon={Close} size={s} />)}<Icon id="size-none" icon={Close} /></div>);
+    const px = (id: string) => document.getElementById(id)!.getBoundingClientRect().width;
+    expect(['xs', 'sm', 'md', 'lg', 'xl', 'none'].map((s) => px('size-' + s))).toEqual([14, 16, 20, 24, 40, 24]);
+  });
+
+  test('weight thickens a Material Symbol by a stroke of the icon-weight token; regular draws no stroke', async () => {
+    await render(<div>{(['regular', 'semibold', 'bold'] as const).map((w) => <Icon key={w} id={'weight-' + w} icon={Close} size={40} weight={w} />)}</div>);
+    const stroke = (w: string) => getComputedStyle(document.querySelector(`#weight-${w} path`)!);
+    expect(stroke('regular').stroke).toBe('none');
+    expect(stroke('semibold').strokeWidth).toBe('0.8px');   // 0.02em of 40px
+    expect(stroke('bold').strokeWidth).toBe('1.4px');       // 0.035em of 40px
+    expect(stroke('bold').vectorEffect).toBe('non-scaling-stroke');
+    expect(stroke('bold').stroke).toBe(stroke('bold').fill);
+  });
+});
+
+describe('Icon: outlined (I10)', () => {
+  test('serupa-ds/icons/outlined has every name serupa-ds/icons has; an icon with an outlined drawing is its own (named "<name>:outlined"), the rest are the filled ones; both draw', async () => {
+    const [filled, outlined] = await Promise.all([import('../../material/icons'), import('../../material/outlined')]);
+    const names = (m: object) => Object.keys(m).filter((k) => /^[A-Z]/.test(k)).sort();
+    expect(names(outlined)).toEqual(names(filled));
+    const f = filled as unknown as Record<string, { name: string; d: string }>, o = outlined as unknown as Record<string, { name: string; d: string }>;
+    expect([o.Home.name, o.Home.d !== f.Home.d, o.Favorite.name, o.Add === f.Add]).toEqual(['home:outlined', true, 'favorite:outlined', true]);
+    const own = names(outlined).filter((k) => o[k] !== f[k]);
+    expect([own.length > 2000, own.every((k) => o[k].name === f[k].name + ':outlined' && o[k].d !== f[k].d)]).toEqual([true, true]);
+    await render(<p><Icon id="ho" icon={o.Home} /><Icon id="hf" icon={f.Home} /></p>);
+    expect([path('ho')!.getAttribute('d'), path('hf')!.getAttribute('d')]).toEqual([o.Home.d, f.Home.d]);
+  });
+});

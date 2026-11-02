@@ -146,5 +146,5 @@ Each is an optional override: set it on the page, a container or one input. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--input-border-width` | `border-width-1` | Border width (1px) |
-| `--input-radius` | `rounded-md` | Corner radius (6px), like Button and Badge |
+| `--input-radius` | `radius-control` | Corner radius (6px), like Button and Badge |
 <!-- token-table:end -->

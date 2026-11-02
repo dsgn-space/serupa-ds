@@ -16,7 +16,7 @@
   padding: var(--alert-padding-y, var(--spacing-3)) var(--alert-padding-x, var(--spacing-4));
   background: var(--dk-alert-bg);
   border: var(--alert-border-width, var(--border-width-1)) solid color-mix(in srgb, var(--dk-alert-icon) var(--alert-border-strength, var(--opacity-30)), transparent);
-  border-radius: var(--alert-radius, var(--rounded-lg));
+  border-radius: var(--alert-radius, var(--radius-surface));
   color: var(--alert-text, var(--text));
   font-family: var(--font-sans);
   font-size: var(--text-sm);

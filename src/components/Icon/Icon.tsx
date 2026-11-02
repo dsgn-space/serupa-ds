@@ -22,12 +22,22 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   name?: IconName;
   /** A Material Symbols icon imported from serupa-ds/icons: `icon={ArrowForward}`. Give `name` or `icon`. */
   icon?: IconData;
-  /** Size in px (a number, or a string of one: "20") or any CSS length. Default: 24px, or the button's icon size inside a Button. */
-  size?: number | string;
+  /** A step of the icon scale ("xs" 14px, "sm" 16px, "md" 20px, "lg" 24px, "xl" 40px: the icon-size tokens), px (a
+   * number, or a string of one: "20") or any CSS length. Default: 24px, or the button's icon size inside a Button. */
+  size?: IconSize | number | (string & {});
+  /** How heavy a Material Symbol's lines are, to go with the text beside it: "regular" (default, the drawing as it is),
+   * "semibold" for font-semibold text, "bold" for bold text and headings (the icon-weight tokens). Custom icons keep
+   * their own drawing. */
+  weight?: IconWeight;
   /** Flips the icon in right-to-left text (dir="rtl"), so an arrow points the way reading goes. 'auto' (default) flips
    * Material Symbols' directional icons (arrow_forward, chevron_right, send, undo…); true flips any icon, false none. */
   mirror?: boolean | "auto";
 }
+
+/** The steps of the icon scale, the icon-size tokens. */
+export type IconSize = "xs" | "sm" | "md" | "lg" | "xl";
+/** An icon's weight, the icon-weight tokens. */
+export type IconWeight = "regular" | "semibold" | "bold";
 
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -97,12 +107,13 @@ export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>("Icon"
     });
     return () => { live = false; offline(); };
   }, [missing, props.name, tries, own]);
-  const rest = omit(props, { name: 1, icon: 1, size: 1, mirror: 1, className: 1, style: 1 } as const);
+  const rest = omit(props, { name: 1, icon: 1, size: 1, weight: 1, mirror: 1, className: 1, style: 1 } as const);
   const labelled = rest["aria-label"] || rest["aria-labelledby"];
   if (!labelled) rest["aria-hidden"] = true; else rest.role = "img";
   const style: React.CSSProperties = Object.assign({}, props.style);
   // A plain number as a string (size="20", as from a data attribute or a CMS) is px too: font-size: 20 is invalid and would leave it 24px.
-  if (props.size != null) style.fontSize = typeof props.size === "number" || /^\s*\d*\.?\d+\s*$/.test(props.size) ? String(props.size).trim() + "px" : props.size;
+  // A step of the scale ("sm") is its icon-size token.
+  if (props.size != null) style.fontSize = /^(xs|sm|md|lg|xl)$/.test(props.size as string) ? `var(--icon-size-${props.size})` : typeof props.size === "number" || /^\s*\d*\.?\d+\s*$/.test(props.size) ? String(props.size).trim() + "px" : props.size;
   const name = props.icon ? props.icon.name : props.name;
   if (name != null) rest["data-icon"] = name;
   // Which icons flip in right-to-left text is in Icon.css (by data-icon), so the list costs no script.
@@ -117,7 +128,7 @@ export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>("Icon"
     );
   }
   return (
-    <span {...rest} ref={restyle} className={cn("dk-icon", mirror, props.className)} style={style}>
+    <span {...rest} ref={restyle} className={cn("dk-icon", mirror, props.weight && "dk-icon--" + props.weight, props.className)} style={style}>
       {data && <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden focusable="false"><path d={data.d} /></svg>}
     </span>
   );

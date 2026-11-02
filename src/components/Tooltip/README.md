@@ -43,8 +43,9 @@ const { Tooltip, IconButton, Button } = window.Serupa;
 ## Accessibility
 
 - It shows on keyboard focus as well as hover, and only for the focus ring (not after a click). A tap on a touch screen doesn't show it, and a press anywhere outside hides it.
+- The element points at the tooltip with `interestfor` (interest invokers), so where the browser has them (Chrome 142 and later, including on Android), a long press on a touch screen shows it at once. The browser's own showing is cancelled and the tooltip shows itself, so the delay, the warm-up and Escape stay the same with a mouse or the keyboard. Elsewhere the attribute does nothing. It works on a `<button>` or a link.
 - WCAG 1.4.13: Escape hides it from anywhere, the pointer can move onto it without it closing, and it stays until the pointer or focus leaves.
-- Don't put anything only in a tooltip that people need to do the task: touch screens have no hover.
+- Don't put anything only in a tooltip that people need to do the task: touch screens have no hover, and few people know a long press shows it.
 - A disabled `<button>` can't take focus or hover events, so a tooltip on it never shows. For a Serupa [Button](../Button/README.md), pass `disabledReason` with `disabled`: it stays focusable, and a Tooltip with the same words shows on hover and focus. For other elements, use `aria-disabled` instead of `disabled`.
 - It fades in and slides 4px away from the element over 150ms, and fades and slides back over 100ms as it hides; with `prefers-reduced-motion` it only fades. Moving from one tooltip to the next (the warm-up) swaps them at once, with no fade either way. Firefox and Safari can't keep a hiding tooltip in the top layer yet, so there it hides at once.
 - The text keeps 4.5:1 on the tooltip in all six themes (`Tooltip.test.tsx`). In forced-colors mode it gets a border.
@@ -82,8 +83,8 @@ Each is an optional override: set it on the page, a container or one tooltip. Th
 | --- | --- | --- |
 | `--tooltip-bg` | `surface-inverse` | The background: the inverse surface, so it stands out in light and dark themes. |
 | `--tooltip-text` | `text-inverse` | The text (4.5:1 on the background). |
-| `--tooltip-shadow` | `shadow-md` | The shadow. |
-| `--tooltip-radius` | `rounded-md` | The corners (6px). |
+| `--tooltip-shadow` | `elevation-raised` | The shadow. |
+| `--tooltip-radius` | `radius-control` | The corners (6px). |
 | `--tooltip-padding-x` | `spacing-2` | Padding at the sides (8px). |
 | `--tooltip-padding-y` | `spacing-1` | Padding at the top and bottom (4px). |
 | `--tooltip-offset` | `spacing-1.5` | The gap between the tooltip and what it describes (6px). |
