@@ -1,4 +1,4 @@
-// exports: Tour, type TourProps
+// exports: Tour, type TourProps, type TourStep
 interface TourLabels {
     tourBack: string;
     tourNext: string;

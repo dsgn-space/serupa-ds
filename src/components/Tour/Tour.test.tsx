@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { Tour, type TourStep } from './Tour';
 
@@ -60,7 +60,7 @@ describe('Tour', () => {
     const onStepChange = vi.fn<(step: number) => void>(), onFinish = vi.fn(), onOpenChange = vi.fn();
     await render(<Page defaultOpen onStepChange={onStepChange} onFinish={onFinish} onOpenChange={onOpenChange} />);
     expect(button('Back')).toBe(undefined);
-    expect(el('t').querySelector('.dk-tour__count')!.textContent).toBe('Step 1 of 3');
+    await expect.element(page.getByText('Step 1 of 3')).toBeVisible();
     await userEvent.click(button('Next'));
     expect([el('t').querySelector('h2')!.textContent, el('a').hasAttribute('data-tour-target'), el('b').hasAttribute('data-tour-target')]).toEqual(['Second', false, true]);
     await userEvent.click(button('Back'));
@@ -88,6 +88,28 @@ describe('Tour', () => {
     await userEvent.keyboard('{Escape}');
     expect(el('t').hidden).toBe(true);
     expect(document.activeElement).toBe(el('go'));
+  });
+
+  test('keyboard: Tab moves between the close button, Back and Next; Enter and Space press them', async () => {
+    const onStepChange = vi.fn<(step: number) => void>();
+    await render(<Page defaultOpen defaultStep={1} onStepChange={onStepChange} />);
+    expect(document.activeElement).toBe(el('t'));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(button('Close'));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(button('Back'));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(button('Next'));
+    await userEvent.tab({ shift: true });
+    expect(document.activeElement).toBe(button('Back'));
+    await userEvent.keyboard('{Enter}');
+    expect(onStepChange).toHaveBeenLastCalledWith(0);
+    el('t').focus();
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(button('Next'));
+    await userEvent.keyboard(' ');
+    expect(onStepChange).toHaveBeenLastCalledWith(1);
   });
 
   test('Escape and the close button end it, with their reasons; a press outside doesn\'t', async () => {
@@ -138,7 +160,7 @@ describe('Tour', () => {
 
   test('its text reads 4.5:1 on its background in all six themes', async () => {
     await render(<Page open />);
-    const count = el('t').querySelector('.dk-tour__count') as HTMLElement;
+    const count = page.getByText('Step 1 of 3').element() as HTMLElement;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       expect(contrast(css(el('t')).color, css(el('t')).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
