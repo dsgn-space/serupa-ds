@@ -1,6 +1,6 @@
 // exports: announce, announcePage, type AnnouncePageOptions, configure, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useCollator, useLocale, useSerupa, version, withoutTransitions, withViewTransition
 import * as React from "react";
-type ThemeBrand = "blue" | "emerald" | "violet";
+type ThemeBrand = "blue" | "emerald" | "violet" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
 interface ThemeInfo {
     brand: ThemeBrand;
