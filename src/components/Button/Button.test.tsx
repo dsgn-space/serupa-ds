@@ -248,8 +248,9 @@ describe('Button', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
     settle[0][0]();
     await expect.poll(() => el('pr').hasAttribute('data-success')).toBe(true);
-    expect([el('pr').hasAttribute('aria-busy'), !!el('pr').querySelector('.dk-btn__success .dk-btn__check')]).toEqual([false, true]);
-    await expect.poll(() => getComputedStyle(el('pr').querySelector('.dk-btn__label')!).opacity).toBe('0');
+    // The check: an empty mark in a hidden layer over the label, after it.
+    expect([el('pr').hasAttribute('aria-busy'), el('pr').lastElementChild!.getAttribute('aria-hidden'), el('pr').lastElementChild!.firstElementChild!.matches('span:empty')]).toEqual([false, 'true', true]);
+    await expect.poll(() => getComputedStyle([...el('pr').children].find((c) => c.textContent === 'Save')!).opacity).toBe('0');
     await expect.element(page.getByRole('button', { name: 'Save', exact: true })).toBeInTheDocument();
     await expect.poll(() => announcer().textContent).toMatch(/Saved$/);
     await expect.poll(() => el('pr').hasAttribute('data-success'), { timeout: 3000 }).toBe(false);

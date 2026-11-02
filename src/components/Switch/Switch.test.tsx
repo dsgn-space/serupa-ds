@@ -7,9 +7,9 @@ import { Field } from '../Field/Field';
 import { Switch } from './Switch';
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
-// The input (track), its label and thumb, measured.
+// The input (track), its label and thumb, measured. The label is the text with an id that doesn't describe the input.
 const box = (id: string) => {
-  const i = el(id), w = i.closest('label') as HTMLElement, c = css(i), lc = css(w), ir = i.getBoundingClientRect(), th = w.querySelector('input + span')!, tr = th.getBoundingClientRect(), tx = w.querySelector('.dk-switch__label'), xr = tx && tx.getBoundingClientRect();
+  const i = el(id), w = i.closest('label') as HTMLElement, c = css(i), lc = css(w), ir = i.getBoundingClientRect(), th = w.querySelector('input + span')!, tr = th.getBoundingClientRect(), tx = [...w.querySelectorAll('span[id]')].find((s) => !(i.getAttribute('aria-describedby') ?? '').split(' ').includes(s.id)), xr = tx && tx.getBoundingClientRect();
   return {
     tag: i.tagName + ':' + i.type + ':' + i.getAttribute('role'), root: w.tagName, wrap: w.className, w: ir.width, h: ir.height, app: c.appearance, bg: c.backgroundColor, r: c.borderTopLeftRadius, bs: c.boxShadow,
     fs: lc.fontSize, op: lc.opacity, cur: lc.cursor, size: w.dataset.size, comp: w.dataset.component, checked: i.checked, disabled: i.matches(':disabled'), thumb: tr.width, thumbBg: css(th).backgroundColor,

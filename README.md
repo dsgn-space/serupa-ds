@@ -33,6 +33,17 @@ Always pin a tag (`#v13.0.0`), never `#main`, so an update only reaches your pro
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
 
+**Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
+
+```sh
+npx --package=github:diki-stwn/serupa-ds#v13.0.0 serupa-create my-app
+cd my-app
+npm install
+npm run dev
+```
+
+Add `--brand violet` or `--brand emerald` for another brand. Then steps 2 and 3 below are done for you.
+
 ### 2. Load the styles and use the components
 
 In a React app (Vite, Next.js, Remix):
@@ -125,6 +136,12 @@ To also drop the styles of components your code never names, pass `components: t
 
 ```sh
 npx serupa-purge src -o public/bundle.min.css --components
+```
+
+To see how a product uses Serupa, run `serupa-usage` on its sources. It lists each component it renders, how often, in how many files and with which props, the components it never uses, and the plain elements it writes where a component would do (a `<button>` where Button gives the focus ring, loading state and theme). `--json` prints the same numbers for a dashboard or a comparison between releases:
+
+```sh
+npx serupa-usage src
 ```
 
 ### What's in the package
@@ -411,6 +428,18 @@ The Figma variables workflow keeps a Figma file's variables in step with the tok
 
 Shadows, easings and the type styles aren't in them yet.
 
+## Tokens for email
+
+Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed stylesheets, so the components' CSS can't go in an email. `dist/email/` (`serupa-ds/email/…`) has Serupa's colors, type and spacing written out in hex and px instead, made from the same tokens by `npm run build`.
+
+| File | Holds |
+| --- | --- |
+| `<brand>.css` | The email classes: `serupa-body`, `serupa-container`, `serupa-content`, `serupa-h1`, `serupa-h2`, `serupa-text`, `serupa-muted`, `serupa-link`, `serupa-button` in a `serupa-button-cell`, `serupa-callout-info` (and `-success`, `-warning`, `-danger`), `serupa-divider` and `serupa-footer`. Light first, then the dark theme under `prefers-color-scheme: dark`. Inline it with your sender's inliner (or juice, or Premailer) and keep the dark block in `<style>` |
+| `<brand>.html` | A starting email with those styles already inline: a 600px table layout, a preview line, a heading, text, a button, a callout, a divider and a footer |
+| `tokens.json` | Every theme's colors in hex (a color with alpha mixed over its surface), and the type sizes, spacing and radii in px, for a template language or an email builder |
+
+Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way.
+
 ## Editor autocomplete
 
 The package carries [VS Code custom data](https://code.visualstudio.com/api/extension-guides/custom-data-extension) for the utility classes and the tokens. With it, VS Code offers every utility class in `class="…"` with what it sets, the themes in `data-theme`, and every token where a stylesheet sets one (`:root { --primary: … }`). Add this to the project's `.vscode/settings.json`:
@@ -464,7 +493,7 @@ The source is in `src/`: one folder per component in `src/components/<Name>/` (t
 
 `npm run new-component -- <Name> --group <Storybook group>` starts one: it writes the folder with every file the contract asks for, already wired to the tokens, the layers and the docs, plus its server-render case, and marks each place that needs your words `TODO(new-component)` (the contract check fails while one is left), then prints the remaining steps. A new component lives in its own folder and nothing else needs a line for it: its `index.ts` says what the package exports, its words go in its `labels.ts` (with the Indonesian), and `tools/build/registry.mjs` builds the export list, the CSS import list and the label sets from the folders into `src/generated/` (not committed). Its stylesheet joins `components.css` after the ones listed in `src/styles/cascade.txt`; list it there only when it must come before another component's styles. Its server-render case is `tools/test/ssr/<Name>.mjs`, and `node tools/test/api.mjs --update` writes its `tools/test/baseline-api/<Name>.d.ts`, and `node tools/test/size.mjs --update <Name>` its size budgets, `tools/test/baseline-size/<Name>.json`. So two pull requests that add or change different components don't conflict.
 
-How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
+What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
 
