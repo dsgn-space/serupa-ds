@@ -93,6 +93,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} zaten eklendi.`,
   filesAdded: (names) => (names.length === 1 ? `${names[0]} eklendi.` : `${n(names.length)} dosya eklendi.`),
   fileRemoved: (name) => `${name} kaldırıldı.`,
+  fileError: "Yüklenemedi",
   viewImage: "Görseli görüntüle",
   removeImage: "Görseli kaldır",
   edit: "Düzenle",
