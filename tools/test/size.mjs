@@ -42,15 +42,16 @@ const TOTALS = {
   'serupa.iife.js': [123.5, 99.0, 'share'],   // 119.4 on 31 Oct 2026, once the full icon table moved to serupa-icons.iife.js (PF1); 610.1 with it
 };
 // KiB, gzipped: [budget, the size it was set at]. The totals that count shared code move with the budget.
-const LABELS = [2.9, 1.9];   // +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over
+const LABELS = [3.1, 1.9];   // +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over; 3.1 the same day for the words of CodeBlock (50), OfflineBanner (58) and Chart (CH2), about 3.05 with all three
 // KiB, gzipped: PhoneInput's country table (PHONE_COUNTRIES in phone.ts, the calling codes, groupings and lengths;
 // 2.4 on 26 Oct 2026). It's data, not code, and grows a row at a time, so it has its own line: a country added is
 // a choice made here, not a few bytes lost in PhoneInput's own budget.
 const PHONE_DATA = 2.8;
 // Not made of component folders. theme.js went from 2 to 2.3 with theme-color (KW12: 2.2 when set), and to 2.4 on
 // 31 Oct 2026 with the choice read again on a return from the back/forward cache (FEC6: 2.37), and to 2.5 on 2 Nov
-// 2026 with the brands a page names in data-brands (I5: 2.44).
-const FIXED = { 'utilities.css': 168, 'base.css': 1.85, 'theme.js': 2.5, 'tokens.css': 10.3, 'serupa-icons.iife.js': 525 };   // tokens.css: 7.4 on 31 Oct 2026, once it shipped without the description comments (PF2), 8.5 on 1 Nov 2026 with a unicode-range @font-face per script (F6), 0.7 KiB that saves 240 KiB of font on an English page; 8.7 the same day with the four Inter Fallback faces (144), so text doesn't move when Inter arrives; 9.0 the same day with the line heights and CJK fonts by lang (143); 9.6 the same day with the opt-in data-type-scale="fluid" axis (22); 10.0 the same day with the 30 chart colors (CH1); 10.3 on 2 Nov 2026 with the 15 role tokens for corners, shadows and spacing (E13, I6: 10.2 with both); serupa-icons.iife.js: 492.9 the same day, every Material Symbol, loaded only when a plain page names one outside the everyday set (PF1)
+// 2026 with the brands a page names in data-brands (I5: 2.44), and to 2.7 the same
+// day with the crossfade on a switch (30).
+const FIXED = { 'utilities.css': 168, 'base.css': 1.85, 'theme.js': 2.7, 'tokens.css': 10.3, 'serupa-icons.iife.js': 525 };   // tokens.css: 7.4 on 31 Oct 2026, once it shipped without the description comments (PF2), 8.5 on 1 Nov 2026 with a unicode-range @font-face per script (F6), 0.7 KiB that saves 240 KiB of font on an English page; 8.7 the same day with the four Inter Fallback faces (144), so text doesn't move when Inter arrives; 9.0 the same day with the line heights and CJK fonts by lang (143); 9.6 the same day with the opt-in data-type-scale="fluid" axis (22); 10.0 the same day with the 30 chart colors (CH1); 10.3 on 2 Nov 2026 with the 15 role tokens for corners, shadows and spacing (E13, I6: 10.2 with both); serupa-icons.iife.js: 492.9 the same day, every Material Symbol, loaded only when a plain page names one outside the everyday set (PF1)
 // KiB as shipped (woff2 is compressed already). Since F6 (1 Nov 2026) tokens.css points at Inter split by script
 // (tools/fonts/subset.py), so an English page downloads the latin files: 103.3 and 113.2 KiB, against 344 and 379
 // for the whole fonts, which still ship for a page that links them itself.

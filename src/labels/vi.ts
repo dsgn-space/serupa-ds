@@ -183,6 +183,8 @@ export const labels: SerupaLabels = {
   dismiss: "Bỏ qua",
   loading: "Đang tải…",
   copy: "Sao chép",
+  codeCopy: "Sao chép mã",
+  codeName: "Mã",
   remove: "Bỏ",
   image: "Hình ảnh",
   page: (p) => "Trang " + p,
