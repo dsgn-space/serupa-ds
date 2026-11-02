@@ -48,8 +48,9 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // and Combobox's typed values (83) cost about 1,900 and 470 instantiations, which took them from 216,882 to about 219,300. SkipLink and Prose (31 Oct) took it to about 220,200 and past the
 // budget, which moved to 223,000. HoverCard (1 Nov) fits within it. Tour, a new component (2 Nov 2026), took them to
 // 223,090, so the budget went to 224,000, with room for Logo, the next new component. Illustration and Sparkline (77 and
-// CH3, 2 Nov 2026) cost about 570 each, which takes them to about 225,140, so it went to 226,000.
-const BUDGET = { Types: 101000, Instantiations: 226000 };
+// CH3, 2 Nov 2026) cost about 570 each, which takes them to about 225,140, so it went to 226,000. Chart (CH2, 2 Nov 2026) took them to
+// 226,320, so it went to 227,000.
+const BUDGET = { Types: 101000, Instantiations: 227000 };
 const diag = built && spawnSync(process.execPath, [tsc, '-p', path.join(HERE, 'types'), '--extendedDiagnostics'], { cwd: PROJECT, encoding: 'utf8' });
 for (const [what, budget] of Object.entries(BUDGET)) {
   const n = diag ? Number((diag.stdout.match(new RegExp(`^${what}:\\s+(\\d+)`, 'm')) || [])[1]) : NaN;

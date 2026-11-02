@@ -10,7 +10,7 @@ const CATS = ['Jan', 'Feb', 'Mar', 'Apr'];
 const TWO = [{ name: 'Visitors', values: [10, 20, null, 40] }, { name: 'Sign-ups', values: [1, 2, 3, 4] }];
 const focused = () => document.activeElement?.getAttribute('aria-label');
 // Tab into the chart from a button just before it (tabTo's stand-in can't go inside an SVG).
-async function tabIn(chart: Element = document.querySelector('.dk-chart')!) {
+async function tabIn(chart: Element = document.querySelector('figure[data-component="chart"]')!) {
   const from = document.createElement('button');
   chart.before(from);
   try { from.focus(); await userEvent.tab(); await userEvent.tab(); } finally { from.remove(); }   // the button, then the plot
@@ -33,15 +33,15 @@ describe('Chart', () => {
 
   test('every point with a value is named with its series, category and value; a missing one has none', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
-    const names = [...document.querySelectorAll('.dk-chart__point')].map((p) => [p.getAttribute('role'), p.getAttribute('aria-label')].join(' '));
+    const names = [...document.querySelectorAll('g[role="group"] > [role="img"]')].map((p) => [p.getAttribute('role'), p.getAttribute('aria-label')].join(' '));
     expect(names).toEqual(['img Visitors, Jan: 10', 'img Visitors, Feb: 20', 'img Visitors, Apr: 40', 'img Sign-ups, Jan: 1', 'img Sign-ups, Feb: 2', 'img Sign-ups, Mar: 3', 'img Sign-ups, Apr: 4']);
     await render(<Chart title="One" categories={CATS} series={[TWO[1]]} />);
-    expect(document.querySelectorAll('.dk-chart')[1].querySelector('.dk-chart__point')!.getAttribute('aria-label')).toBe('Jan: 1');
+    expect(document.querySelectorAll('figure[data-component="chart"]')[1].querySelector('g[role="group"] > [role="img"]')!.getAttribute('aria-label')).toBe('Jan: 1');
   });
 
   test('one tab stop; arrows move along a series and across series, skipping gaps; Home and End', async () => {
     await render(<><button>before</button><Chart title="Visitors" categories={CATS} series={TWO} /><button>after</button></>);
-    expect(document.querySelectorAll('.dk-chart__point[tabindex="0"]').length).toBe(1);
+    expect(document.querySelectorAll('g[role="group"] > [tabindex="0"]').length).toBe(1);
     await userEvent.click(page.getByRole('button', { name: 'before' }));
     await userEvent.keyboard('{Tab}');
     expect(document.activeElement?.textContent).toBe('Show as table');
@@ -67,7 +67,7 @@ describe('Chart', () => {
 
   test('right to left: the first category is on the right, and ArrowLeft moves on', async () => {
     await render(<div dir="rtl"><Chart title="Visitors" categories={CATS} series={TWO} /></div>);
-    const pts = [...document.querySelectorAll('.dk-chart__series')[0].querySelectorAll('.dk-chart__point')].map((p) => p.getBoundingClientRect().x);
+    const pts = [...document.querySelectorAll('svg[aria-describedby] g[role="group"]')[0].querySelectorAll('g[role="group"] > [role="img"]')].map((p) => p.getBoundingClientRect().x);
     expect(pts[0]).toBeGreaterThan(pts[1]);
     await tabIn();
     await userEvent.keyboard('{ArrowLeft}');
@@ -78,45 +78,45 @@ describe('Chart', () => {
 
   test('a focused point shows its category\'s values beside it, and the focus ring', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
-    const first = document.querySelector('.dk-chart__point[tabindex="0"]') as HTMLElement;
+    const first = document.querySelector('g[role="group"] > [tabindex="0"]') as HTMLElement;
     await tabIn();
     expect(document.activeElement).toBe(first);
-    const tip = document.querySelector('.dk-chart__tip') as HTMLElement;
+    const tip = document.querySelector('svg[aria-describedby] + div') as HTMLElement;
     expect([tip.getAttribute('aria-hidden'), tip.textContent]).toEqual(['true', 'JanVisitors10Sign-ups1']);
     const probe = document.body.appendChild(document.createElement('span'));
     probe.style.color = 'var(--focus-ring)';
-    const ring = document.querySelector('.dk-chart__focus') as SVGElement;
+    const ring = document.querySelector('svg[aria-describedby] > :is(circle, rect)') as SVGElement;
     expect([css(ring).stroke, css(ring).strokeWidth]).toEqual([css(probe).color, '3px']);
     await userEvent.keyboard('{Tab}');
-    expect(document.querySelector('.dk-chart__focus')).toBeNull();
+    expect(document.querySelector('svg[aria-describedby] > :is(circle, rect)')).toBeNull();
     probe.remove();
   });
 
   test('the pointer over a category shows its values and a line there; leaving hides them', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
-    const pt = document.querySelectorAll('.dk-chart__point')[1] as SVGElement;
+    const pt = document.querySelectorAll('g[role="group"] > [role="img"]')[1] as SVGElement;
     await userEvent.hover(pt);
-    await expect.poll(() => document.querySelector('.dk-chart__tip')?.textContent).toBe('FebVisitors20Sign-ups2');
-    expect(document.querySelector('.dk-chart__cursor')).not.toBeNull();
+    await expect.poll(() => document.querySelector('svg[aria-describedby] + div')?.textContent).toBe('FebVisitors20Sign-ups2');
+    expect(document.querySelector('svg[aria-describedby] > line')).not.toBeNull();
     await userEvent.unhover(pt);
-    await userEvent.hover(page.getByRole('figure').element().querySelector('.dk-chart__title')!);
-    await expect.poll(() => document.querySelector('.dk-chart__tip')).toBeNull();
+    await userEvent.hover(page.getByRole('figure').element().querySelector('figcaption')!);
+    await expect.poll(() => document.querySelector('svg[aria-describedby] + div')).toBeNull();
   });
 
   test('each series has its own marker shape, in the legend too', async () => {
     await render(<Chart title="Eight" categories={['a', 'b']} series={Array.from({ length: 8 }, (_, s) => ({ name: 'S' + s, values: [s, s + 1] }))} />);
     const shapes = new Set(Array.from({ length: 8 }, (_, s) => markerPath(s, 0, 0, 4)));
     expect(shapes.size).toBe(8);
-    const legend = [...document.querySelectorAll('.dk-chart__legend .dk-chart__marker')].map((m) => m.getAttribute('d'));
+    const legend = [...document.querySelectorAll('figure ul svg path:last-child')].map((m) => m.getAttribute('d'));
     expect(new Set(legend).size).toBe(8);
-    expect(document.querySelector('.dk-chart__legend')!.getAttribute('aria-hidden')).toBe('true');
+    expect(document.querySelector('figure ul')!.getAttribute('aria-hidden')).toBe('true');
   });
 
   test('bars: one per value, from zero, a pattern on every series after the first; negative bars go down', async () => {
     await render(<Chart type="bar" title="Profit" categories={['Q1', 'Q2']} series={[{ name: 'A', values: [10, -5] }, { name: 'B', values: [4, 8] }]} />);
-    const bars = [...document.querySelectorAll('.dk-chart__series .dk-chart__bar')] as SVGRectElement[];
+    const bars = [...document.querySelectorAll('g[role="group"] > rect')] as SVGRectElement[];
     expect(bars.length).toBe(4);
-    const base = document.querySelector('.dk-chart__baseline')!.getBoundingClientRect().y;
+    const base = document.querySelector('svg[aria-describedby] > g[aria-hidden] > line')!.getBoundingClientRect().y;
     const [up, down] = [bars[0].getBoundingClientRect(), bars[1].getBoundingClientRect()];
     expect(Math.abs(up.bottom - base)).toBeLessThan(1.5);
     expect(Math.abs(down.top - base)).toBeLessThan(1.5);
@@ -136,7 +136,7 @@ describe('Chart', () => {
     expect(rows()).toEqual(['Jan101', 'Feb202', 'Apr404', 'MarNo value3']);
     await userEvent.click(page.getByRole('button', { name: 'Visitors' }));
     expect(rows()).toEqual(['Apr404', 'Feb202', 'Jan101', 'MarNo value3']);
-    expect(document.querySelector('.dk-chart__plot')).toBeNull();
+    expect(document.querySelector('svg[aria-describedby]')).toBeNull();
     await userEvent.click(page.getByRole('button', { name: 'Show as chart' }));
     await expect.element(page.getByRole('group', { name: 'Line chart' })).toBeInTheDocument();
   });
@@ -151,7 +151,7 @@ describe('Chart', () => {
 
   test('takes its box\'s width, and follows it', async () => {
     await render(<div id="box" style={{ width: 300 }}><Chart title="V" categories={CATS} series={TWO} /></div>);
-    const svg = () => document.querySelector('.dk-chart__plot') as SVGSVGElement;
+    const svg = () => document.querySelector('svg[aria-describedby]') as SVGSVGElement;
     expect(svg().getAttribute('width')).toBe('300');
     el('box').style.width = '500px';
     await expect.poll(() => svg().getAttribute('width')).toBe('500');
@@ -159,8 +159,8 @@ describe('Chart', () => {
 
   test('formatValue reaches the axis, the points and the summary; labels change the words', async () => {
     await render(<Chart title="V" categories={['a', 'b']} series={[{ name: 'S', values: [1000, 2000] }]} formatValue={(v) => `$${v / 1000}k`} />);
-    expect(document.querySelector('.dk-chart__point')!.getAttribute('aria-label')).toBe('a: $1k');
-    expect([...document.querySelectorAll('.dk-chart__grid .dk-chart__label')].map((t) => t.textContent)).toContain('$2k');
+    expect(document.querySelector('g[role="group"] > [role="img"]')!.getAttribute('aria-label')).toBe('a: $1k');
+    expect([...document.querySelectorAll('svg[aria-describedby] > g[aria-hidden] > g > text')].map((t) => t.textContent)).toContain('$2k');
   });
 
   test('ticks are round numbers that cover the values', () => {
@@ -173,8 +173,8 @@ describe('Chart', () => {
   test('the line draws in once and the bars grow, unless motion is reduced (CSS)', async () => {
     await render(<><Chart title="L" categories={CATS} series={TWO} /><Chart type="bar" title="B" categories={CATS} series={TWO} /></>);
     await withMotion(async () => {
-      expect(css(document.querySelector('.dk-chart__plot .dk-chart__line')).animationName).toBe('dk-chart-draw');
-      expect(css(document.querySelector('.dk-chart--bar .dk-chart__point')).animationName).toBe('dk-chart-grow');
+      expect(css(document.querySelector('svg[aria-describedby] g[role="group"] > path[aria-hidden]')).animationName).toBe('dk-chart-draw');
+      expect(css(document.querySelector('figure[data-type="bar"] g[role="group"] > [role="img"]')).animationName).toBe('dk-chart-grow');
     });
     const sheet = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules]; } catch { return []; } });
     const text = sheet.map((r) => r.cssText).join('\n');
@@ -183,7 +183,7 @@ describe('Chart', () => {
 
   test('labels, title and table text read 4.5:1 on the surface in all six themes', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><Chart id="c" title="V" categories={CATS} series={TWO} /></div>);
-    const label = document.querySelector('.dk-chart__grid .dk-chart__label') as SVGElement;
+    const label = document.querySelector('svg[aria-describedby] > g[aria-hidden] > g > text') as SVGElement;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(el('bg')).backgroundColor;
