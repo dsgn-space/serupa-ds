@@ -125,19 +125,27 @@ function FileName({ name, id }: { name: string; id?: string }) {
   );
 }
 
-/* An image file's picture, from an object URL made while it's shown and let go after; a file the browser can't draw
-   (HEIC on most) keeps its type icon. The name next to it says what it is, so the picture is decorative. */
+/* An image file's picture, decoded with createImageBitmap and drawn on a canvas (cropped to fill it, at the screen's
+   pixel ratio), so no URL made from the file reaches the page; a file the browser can't decode (HEIC on most) keeps
+   its type icon. The name next to it says what it is, so the picture is decorative. */
 function Thumbnail({ file, children }: { file: File; children: React.ReactNode }) {
-  const img = React.useRef<HTMLImageElement | null>(null);
+  const canvas = React.useRef<HTMLCanvasElement | null>(null);
   const [broken, setBroken] = React.useState<File | null>(null);
   React.useEffect(() => {
-    const el = img.current;
-    if (!el || typeof URL === "undefined" || !URL.createObjectURL) return;
-    const u = URL.createObjectURL(file);
-    el.src = u;
-    return () => { URL.revokeObjectURL(u); el.removeAttribute("src"); };
+    const el = canvas.current, ctx = el && el.getContext("2d");
+    let live = true;
+    // Without a canvas or createImageBitmap (an older browser), the promise fails and the type icon stays.
+    (el && ctx && typeof createImageBitmap === "function" ? createImageBitmap(file) : Promise.reject(new Error("no canvas"))).then((bmp) => {
+      if (live && el && ctx) {
+        const side = el.clientWidth * (window.devicePixelRatio || 1) || 40, k = Math.max(side / bmp.width, side / bmp.height);
+        el.width = el.height = side;
+        ctx.drawImage(bmp, (side - bmp.width * k) / 2, (side - bmp.height * k) / 2, bmp.width * k, bmp.height * k);
+      }
+      bmp.close();
+    }, () => { if (live) setBroken(file); });
+    return () => { live = false; };
   }, [file]);
-  return broken === file ? <>{children}</> : <img ref={img} className="dk-file-upload__thumbnail" alt="" onError={() => setBroken(file)} />;
+  return broken === file ? <>{children}</> : <canvas ref={canvas} className="dk-file-upload__thumbnail" aria-hidden />;
 }
 
 /* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size

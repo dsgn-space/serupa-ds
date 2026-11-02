@@ -553,15 +553,16 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     await expect.element(screen.getByText('Selesai')).toBeVisible();
   });
 
-  test('thumbnails: an image file shows a decorative 40px picture in place of its icon; other files, an image the browser can\'t draw, and an upload without thumbnails keep the icon', async () => {
+  test('thumbnails: an image file shows a decorative 40px picture (a canvas, no file URL) in place of its icon; other files, an image the browser can\'t draw, and an upload without thumbnails keep the icon', async () => {
     const photo = new File([PNG], 'photo.png', { type: 'image/png' }), heic = new File([new Uint8Array(8)], 'phone.heic', { type: 'image/heic' });
     const screen = await render(<FileUpload id="th" multiple thumbnails files={[photo, b, heic]} />);
     const el = rootOf('th');
-    await expect.poll(() => items(el).map((li) => (li.firstElementChild as HTMLElement).tagName + ' ' + (li.firstElementChild as HTMLElement).hasAttribute('data-icon'))).toEqual(['IMG false', 'SPAN true', 'SPAN true']);
-    const img = items(el)[0].querySelector('img')!;
-    expect([img.getAttribute('alt'), img.src.startsWith('blob:'), Math.round(img.getBoundingClientRect().width), Math.round(img.getBoundingClientRect().height)]).toEqual(['', true, 40, 40]);
+    await expect.poll(() => items(el).map((li) => (li.firstElementChild as HTMLElement).tagName + ' ' + (li.firstElementChild as HTMLElement).hasAttribute('data-icon'))).toEqual(['CANVAS false', 'SPAN true', 'SPAN true']);
+    const pic = items(el)[0].querySelector('canvas')!;
+    expect([pic.getAttribute('aria-hidden'), Math.round(pic.getBoundingClientRect().width), Math.round(pic.getBoundingClientRect().height)]).toEqual(['true', 40, 40]);
+    await expect.poll(() => pic.width).toBeGreaterThanOrEqual(40);   // drawn, at the screen's pixel ratio
     await screen.rerender(<FileUpload id="th" multiple files={[photo]} />);
-    expect(items(el)[0].querySelector('img')).toBeNull();
+    expect(items(el)[0].querySelector('canvas')).toBeNull();
   });
 
   test('"Uploaded", the failed message and the failed outline have contrast in all six themes', async () => {
