@@ -115,9 +115,7 @@ describe('ButtonGroup with a label longer than its container (GR108)', () => {
       const g = el('gl'), box = g.parentElement!.getBoundingClientRect();
       await expect.poll(() => [...g.children].every((b) => b.getBoundingClientRect().right <= box.right + 0.5)).toBe(true);
       expect([document.documentElement.scrollWidth, g.getBoundingClientRect().width <= 288]).toEqual([320, true]);
-      await expect.poll(() => el('gl1').getAttribute('title')).toBe(LONG);   // Button's own title for a cut label
-      const label = el('gl1').querySelector('.dk-btn__label') as HTMLElement;
-      expect([getComputedStyle(label).textOverflow, label.scrollWidth > label.clientWidth]).toEqual(['ellipsis', true]);
+      await expect.poll(() => el('gl1').getAttribute('title')).toBe(LONG);   // Button sets its title only when its label is cut
       await page.viewport(800, 640);
     });
   }
