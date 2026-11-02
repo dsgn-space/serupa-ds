@@ -1,7 +1,9 @@
 CHANGELOG.md
 LICENSE
 README.md
+bin/serupa-create.mjs
 bin/serupa-purge.mjs
+bin/serupa-usage.mjs
 design-tokens/css-values.json
 design-tokens/serupa.tokens.json
 design-tokens/themes/blue-dark.tokens.json
@@ -10,6 +12,7 @@ design-tokens/themes/emerald-dark.tokens.json
 design-tokens/themes/emerald-light.tokens.json
 design-tokens/themes/violet-dark.tokens.json
 design-tokens/themes/violet-light.tokens.json
+design-tokens/tokens.schema.json
 dist/base.css
 dist/bundle.css
 dist/components.css
@@ -32,6 +35,8 @@ dist/native/android/res-violet/values-night/serupa_colors.xml
 dist/native/android/res-violet/values/serupa_colors.xml
 dist/native/android/res/values/serupa_tokens.xml
 dist/native/ios/SerupaTokens.swift
+dist/purge.d.ts
+dist/purge.js
 dist/serupa-icons.iife.js
 dist/serupa.iife.js
 dist/serupa.iife.js.map
@@ -40,6 +45,7 @@ dist/stylelint.js
 dist/testing.d.ts
 dist/testing.js
 dist/theme.js
+dist/utilities-extra.css
 dist/utilities.css
 dist/vscode/serupa.css-data.json
 dist/vscode/serupa.html-data.json
