@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render as draw } from 'vitest-browser-react';
+import { SerupaProvider } from '../../internal/provider';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { Chart, markerPath, niceTicks } from './Chart';
 
+// The tests read the numbers as en-US writes them; the second-language runs (ar-EG's digits) would write them otherwise.
+const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
+const render = (ui: React.ReactNode) => draw(ui, { wrapper: EnUS });
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const CATS = ['Jan', 'Feb', 'Mar', 'Apr'];
 const TWO = [{ name: 'Visitors', values: [10, 20, null, 40] }, { name: 'Sign-ups', values: [1, 2, 3, 4] }];
