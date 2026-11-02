@@ -53,7 +53,6 @@ export const labels: SerupaLabels = {
   loadFailed: "No se pudieron cargar las opciones. Escribe para volver a intentarlo.",
   noResults: "Sin resultados",
   resultsCount: (count) => (count === 1 ? "1 resultado" : n(count) + " resultados"),
-  moreResults: (count) => "Sigue escribiendo para acotar " + n(count) + " más",
   showOptions: "Mostrar opciones",
   clearValue: (label) => (label ? "Borrar " + label : "Borrar"),
   valueAdded: (label) => label + " añadido",

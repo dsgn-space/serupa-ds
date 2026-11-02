@@ -52,7 +52,6 @@ export const labels: SerupaLabels = {
   loadFailed: "옵션을 불러오지 못했습니다. 입력하면 다시 시도합니다.",
   noResults: "결과 없음",
   resultsCount: (count) => "결과 " + n(count) + "개",
-  moreResults: (count) => "계속 입력해 나머지 " + n(count) + "개를 좁혀 보세요",
   showOptions: "옵션 보기",
   clearValue: (label) => (label ? label + " 지우기" : "지우기"),
   valueAdded: (label) => label + " 추가됨",

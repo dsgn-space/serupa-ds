@@ -50,7 +50,6 @@ export const labels: SerupaLabels = {
   loadFailed: "Seçenekler yüklenemedi. Yeniden denemek için yazın.",
   noResults: "Sonuç yok",
   resultsCount: (count) => n(count) + " sonuç",
-  moreResults: (count) => "Kalan " + n(count) + " sonucu daraltmak için yazmaya devam edin",
   showOptions: "Seçenekleri göster",
   clearValue: (label) => (label ? label + " temizle" : "Temizle"),
   valueAdded: (label) => label + " eklendi",

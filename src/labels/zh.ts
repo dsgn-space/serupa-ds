@@ -49,7 +49,6 @@ export const labels: SerupaLabels = {
   loadFailed: "无法加载选项。请输入以重试。",
   noResults: "没有结果",
   resultsCount: (count) => n(count) + " 个结果",
-  moreResults: (count) => "继续输入以缩小其余 " + n(count) + " 项",
   showOptions: "显示选项",
   clearValue: (label) => (label ? "清除" + label : "清除"),
   valueAdded: (label) => "已添加" + label,

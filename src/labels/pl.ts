@@ -53,7 +53,6 @@ export const labels: SerupaLabels = {
   loadFailed: "Nie udało się wczytać opcji. Pisz dalej, aby spróbować ponownie.",
   noResults: "Brak wyników",
   resultsCount: (count) => p3(count, "wynik", "wyniki", "wyników", "wyniku"),
-  moreResults: (count) => "Pisz dalej, aby zawęzić pozostałe (" + n(count) + ")",
   showOptions: "Pokaż opcje",
   clearValue: (label) => (label ? "Wyczyść: " + label : "Wyczyść"),
   valueAdded: (label) => "Dodano: " + label,

@@ -127,6 +127,12 @@ To also drop the styles of components your code never names, pass `components: t
 npx serupa-purge src -o public/bundle.min.css --components
 ```
 
+To see how a product uses Serupa, run `serupa-usage` on its sources. It lists each component it renders, how often, in how many files and with which props, the components it never uses, and the plain elements it writes where a component would do (a `<button>` where Button gives the focus ring, loading state and theme). `--json` prints the same numbers for a dashboard or a comparison between releases:
+
+```sh
+npx serupa-usage src
+```
+
 ### What's in the package
 
 | File | What it is |
@@ -146,7 +152,7 @@ npx serupa-purge src -o public/bundle.min.css --components
 | `dist/stylelint.js` (`serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length or a radius written out where a token belongs. See Getting started in Storybook. |
 | `dist/testing.js` (`serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
 | `dist/purge.js` (`serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
-| `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. |
+| `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. Both are made from `tokens/serupa.tokens.json` in the repository. |
 
 ### For your own components
 
@@ -382,8 +388,17 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | `themes/<theme>.tokens.json` | The 33 alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
+| `tokens.schema.json` | A JSON Schema (2020-12) for the token files above, except `css-values.json`: the types and value shapes they use |
 
-Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The files are generated from `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
+Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The files are generated from the token source, `tokens/serupa.tokens.json` in the repository, through `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
+
+To check a token file of your own (a theme you add, a component's overrides) as you write it, map the schema in the project's `.vscode/settings.json`:
+
+```json
+{
+  "json.schemas": [{ "fileMatch": ["*.tokens.json"], "url": "./node_modules/serupa-ds/design-tokens/tokens.schema.json" }]
+}
+```
 
 ### In Figma
 

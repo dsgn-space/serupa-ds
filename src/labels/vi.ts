@@ -50,7 +50,6 @@ export const labels: SerupaLabels = {
   loadFailed: "Không tải được các lựa chọn. Hãy gõ để thử lại.",
   noResults: "Không có kết quả",
   resultsCount: (count) => n(count) + " kết quả",
-  moreResults: (count) => "Tiếp tục gõ để lọc " + n(count) + " kết quả còn lại",
   showOptions: "Hiện các lựa chọn",
   clearValue: (label) => (label ? "Xóa " + label : "Xóa"),
   valueAdded: (label) => "Đã thêm " + label,
