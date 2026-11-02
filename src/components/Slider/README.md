@@ -119,6 +119,6 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-thumb-size-sm` | `spacing-4` | The thumb, size="sm" (16px). |
 | `--slider-thumb-size-md` | `spacing-5` | The thumb, size="md" (20px). |
 | `--slider-thumb-border-width` | `border-width-2` | The thumb's ring (2px). |
-| `--slider-radius` | `rounded-full` | The track's ends and the thumb. |
-| `--slider-thumb-shadow` | `shadow-sm` | The thumb's shadow. |
+| `--slider-radius` | `radius-pill` | The track's ends and the thumb. |
+| `--slider-thumb-shadow` | `elevation-part` | The thumb's shadow. |
 <!-- token-table:end -->

@@ -6,7 +6,7 @@
 @layer dk.components {
 .dk-table {
   box-sizing: border-box; max-width: var(--sizing-full); overflow: auto; overscroll-behavior-x: contain; position: relative;
-  border: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--rounded-lg));
+  border: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--radius-surface));
   background: var(--table-bg, var(--surface));
 }
 .dk-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
@@ -40,7 +40,7 @@
    stays flat, as before. */
 @supports (container-type: scroll-state) {
   .dk-table--sticky { container-type: scroll-state; }
-  @container scroll-state(scrollable: top) { .dk-table__head .dk-table__cell { box-shadow: var(--table-head-shadow-scrolled, var(--shadow-sm)); } }
+  @container scroll-state(scrollable: top) { .dk-table__head .dk-table__cell { box-shadow: var(--table-head-shadow-scrolled, var(--elevation-part)); } }
 }
 /* What the keyboard focuses in the frame scrolls into view below the sticky header, not under it (WCAG 2.4.11).
    Table measures the header into --dk-table-head; until then, one md header row (40px). */
@@ -85,7 +85,7 @@
 .dk-table__body--virtual { position: relative; }
 .dk-table__spacer { border: var(--spacing-0); }
 /* TableActionBar: a tinted bar above the table while rows are selected: the count, the actions, then Clear at the end. */
-.dk-table-action-bar:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-3); margin-bottom: var(--spacing-2); padding: var(--table-action-bar-padding, var(--spacing-2)) var(--spacing-3); border-radius: var(--table-radius, var(--rounded-lg)); background: var(--table-action-bar-bg, var(--primary-subtle)); color: var(--table-action-bar-text, var(--text)); font-size: var(--text-sm); }
+.dk-table-action-bar:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-3); margin-bottom: var(--spacing-2); padding: var(--table-action-bar-padding, var(--spacing-2)) var(--spacing-3); border-radius: var(--table-radius, var(--radius-surface)); background: var(--table-action-bar-bg, var(--primary-subtle)); color: var(--table-action-bar-text, var(--text)); font-size: var(--text-sm); }
 .dk-table-action-bar__count { font-weight: var(--table-action-bar-weight, var(--font-semibold)); }
 .dk-table-action-bar__actions { display: flex; flex-wrap: wrap; gap: var(--spacing-2); margin-inline-end: auto; }
 }

@@ -105,8 +105,8 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-error-color` | `danger-text` | Messages about files that weren't added. |
 | `--file-upload-item-bg` | `surface` | A file row's background. |
 | `--file-upload-item-border` | `border` | A file row's outline. |
-| `--file-upload-zone-radius` | `rounded-lg` | The drop area's corners (8px). |
-| `--file-upload-item-radius` | `rounded-md` | A file row's corners (6px). |
+| `--file-upload-zone-radius` | `radius-surface` | The drop area's corners (8px). |
+| `--file-upload-item-radius` | `radius-control` | A file row's corners (6px). |
 | `--file-upload-zone-padding` | `spacing-6` | Space inside the drop area (24px). |
 | `--file-upload-gap` | `spacing-2` | Space between the drop area's lines, and between file rows (8px). |
 | `--file-upload-item-padding` | `spacing-2` | Space inside a file row (8px). |

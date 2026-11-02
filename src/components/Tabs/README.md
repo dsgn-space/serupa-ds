@@ -125,7 +125,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | Token | Default | Use |
 | --- | --- | --- |
 | `--tabs-indicator-width` | `border-width-2` | The thickness of the selected tab's line (2px). |
-| `--tabs-radius` | `rounded-md` | A tab's corners (6px): the focus ring, and the pills. |
+| `--tabs-radius` | `radius-control` | A tab's corners (6px): the focus ring, and the pills. |
 
 **Spacing**
 

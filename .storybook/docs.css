@@ -42,7 +42,7 @@ html, body { background-color: var(--surface); }
 .sbdocs-content :is(p, ul, ol, blockquote):not(.docs-story *, .sb-unstyled *, td *, th *, li *) { max-inline-size: var(--container-prose); }
 
 /* What the tests check (docs/blocks.tsx TestedBehavior): the list of test names, closed until asked for. */
-.sbdocs-content .sb-tested summary { cursor: pointer; font-weight: 600; }
+.sbdocs-content :is(.sb-tested, .sb-changes) summary { cursor: pointer; font-weight: 600; }
 .sbdocs-content .sb-tested li { margin-block: 4px; }
 
 /* Anatomy diagrams (docs/anatomy.tsx): the story with its parts outlined and numbered. An overlay is drawn from a
