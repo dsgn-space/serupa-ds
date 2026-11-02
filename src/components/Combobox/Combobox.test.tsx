@@ -181,7 +181,7 @@ describe('Combobox', () => {
     await open();
     const list = el('cb').parentElement!.querySelector('[role=listbox]')!;
     const groups = () => [...list.querySelectorAll('[role=group]')].map((g) => [g.getAttribute('aria-label'), [...g.querySelectorAll('[role=option]')].map(label)]);
-    const heads = () => [...list.querySelectorAll('.dk-combobox__group-label')].map((h) => [h.textContent, h.getAttribute('aria-hidden')]);
+    const heads = () => [...list.querySelectorAll('[role=presentation]')].map((h) => [h.textContent, h.getAttribute('aria-hidden')]);
     expect(st('cb').opts).toEqual(['Anywhere', 'Egypt', 'Kenya', 'France', 'Germany', 'Atlantis']);
     expect(groups()).toEqual([['Africa', ['Egypt', 'Kenya']], ['Europe', ['France', 'Germany']], ['Closed', ['Atlantis']]]);
     expect(heads()).toEqual([['Africa', 'true'], ['Europe', 'true'], ['Closed', 'true']]);
