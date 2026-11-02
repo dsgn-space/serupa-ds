@@ -18,6 +18,7 @@ import changelogSource from '../CHANGELOG.md?raw';
 import pkg from '../package.json';
 import { majorsIn, nextMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
+import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 
@@ -41,12 +42,24 @@ function relink(md: string): string {
     .replace(/\]\(README\.md(#[\w-]+)?\)/g, '](?path=/docs/introduction--docs)');
 }
 
+// The guide in pieces, with the anatomy diagram after the "## Anatomy" heading and the text before its list.
+function anatomyAt(md: string): (string | Anatomy)[] {
+  const at = md.search(/^## Anatomy\s*$/m);
+  if (at < 0) return [md];
+  const end = md.slice(at + 1).search(/^## /m), section = end < 0 ? md.slice(at) : md.slice(at, at + 1 + end);
+  const list = section.search(/^1\. /m), anatomy = parseAnatomy(section);
+  if (list < 0 || !anatomy.parts.length) return [md];
+  return [md.slice(0, at + list), anatomy, md.slice(at + list)];
+}
+
 /** A component's guidelines (its README.md), without the title the page already has. */
 export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
   return <>
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
-    <Markdown>{relink(source.replace(/^# .*\n+/, ''))}</Markdown>
+    {anatomyAt(source.replace(/^# .*\n+/, '')).map((part, i) => (typeof part === 'string'
+      ? <Markdown key={i}>{relink(part)}</Markdown>
+      : <AnatomyDiagram key={i} {...part} />))}
   </>;
 }
 
