@@ -13,21 +13,21 @@ import { en as words } from "./labels";
 
 export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The avatars: <Avatar> elements, or elements around them such as a Tooltip or a link. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** The most avatars to show. The rest fold into a "+N" avatar at the end. Default: all of them. */
-  max?: number;
+  max?: number | undefined;
   /** How many there are in all, when you pass only some (e.g. the first 5 of 120 members). Default: the number of children. */
-  total?: number;
+  total?: number | undefined;
   /** One size for every avatar in the group: 'xs', 'sm', 'md' (default), 'lg' or 'xl'. */
-  size?: AvatarSize;
+  size?: AvatarSize | undefined;
   /** What a screen reader hears for the "+N" avatar. Default: the avatarMore label ("N more"). */
-  moreLabel?: (count: number) => string;
+  moreLabel?: ((count: number) => string) | undefined;
   /** The group's accessible name, such as "Assigned to". */
-  label?: string;
+  label?: string | undefined;
   /** Makes "+N" a button that opens a popover listing the people not shown, so keyboard and touch users can see them too. */
-  showMore?: boolean;
+  showMore?: boolean | undefined;
   /** Makes "+N" a button that calls this, to show the rest your own way (a Dialog, a page). Wins over showMore. */
-  onMore?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onMore?: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
 }
 
 /* AvatarGroup: avatars in a row that overlap, each in a surface ring, with a "+N" avatar for the ones that

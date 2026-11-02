@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { cn, omit, setRef } from "../../internal/cn";
+import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { announce } from "../../internal/announce";
 import { useSettings } from "../../internal/provider";
@@ -13,13 +13,13 @@ import { en as words } from "./labels";
 export interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** Whether the app can reach its server. Leave it out to follow the browser (navigator.onLine and its online and
       offline events); set it when the app knows better, such as when its requests fail on a network that's "online". */
-  online?: boolean;
+  online?: boolean | undefined;
   /** 'bottom' (default) or 'top': fixed to that edge of the screen, in the middle. 'inline': where you put it. */
-  placement?: "bottom" | "top" | "inline";
+  placement?: "bottom" | "top" | "inline" | undefined;
   /** More words after "You're offline", such as what still works: "Changes are kept and sent when you're back." */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Called when the connection drops (false) or comes back (true). */
-  onChange?: (online: boolean) => void;
+  onChange?: ((online: boolean) => void) | undefined;
 }
 
 const listen = (cb: () => void) => {
@@ -67,8 +67,34 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
   const { leaving } = useExit(open, bar);
   const [shown, setShown] = React.useState<"offline" | "back">("offline");
   if (open && shown !== (online ? "back" : "offline")) setShown(online ? "back" : "offline");
-  if (!open && !leaving) return null;
   const placement = props.placement === "top" || props.placement === "inline" ? props.placement : "bottom";
+  // While the fixed bar shows, the page keeps what it covers clear of it (GR122, WCAG 2.4.11): its height and its gap
+  // from the edge, plus a little room, go to --dk-offline-banner-space on the root, which OfflineBanner.css makes the
+  // root's scroll-padding on that edge, so a field Tab moves to scrolls into view clear of the bar, not under it.
+  // At the foot of the page there's nothing left to scroll, so a bottom bar also adds its space to the end of the
+  // body: the last field (a form's Submit) can scroll up clear of it too. What the body had is put back after.
+  useIsoLayoutEffect(() => {
+    const n = bar.current, root = document.documentElement, body = document.body;
+    if (!open || !n || placement === "inline") return;
+    const had = body.style.paddingBlockEnd, base = getComputedStyle(body).paddingBlockEnd;
+    const set = () => {
+      const r = n.getBoundingClientRect(), gap = parseFloat(getComputedStyle(n).getPropertyValue("--dk-offline-gap")) || 8;
+      const space = Math.ceil(placement === "bottom" ? window.innerHeight - r.top + gap : r.bottom + gap) + "px";
+      root.style.setProperty("--dk-offline-banner-space", space);
+      if (placement === "bottom") body.style.paddingBlockEnd = "calc(" + base + " + " + space + ")";
+    };
+    set();
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(set);
+    if (ro) ro.observe(n);
+    window.addEventListener("resize", set);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", set);
+      root.style.removeProperty("--dk-offline-banner-space");
+      if (placement === "bottom") body.style.paddingBlockEnd = had;
+    };
+  }, [open, placement]);
+  if (!open && !leaving) return null;
   return (
     <div {...rest} ref={(n) => { bar.current = n; setRef(ref, n); }} className={cn("dk-offline-banner", `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? "" : undefined}
       data-state={shown} data-leaving={open ? undefined : ""} inert={open ? undefined : true}>

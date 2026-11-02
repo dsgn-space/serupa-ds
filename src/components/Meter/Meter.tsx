@@ -14,25 +14,25 @@ export interface MeterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   /** The measured value, between min and max. */
   value: number;
   /** The lowest possible value. Default: 0. */
-  min?: number;
+  min?: number | undefined;
   /** The highest possible value. Default: 100. */
-  max?: number;
+  max?: number | undefined;
   /** Values under this are low. With high, it sets the zones that color the bar. */
-  low?: number;
+  low?: number | undefined;
   /** Values over this are high. */
-  high?: number;
+  high?: number | undefined;
   /** The best value. Under low: low values are good (a fill rate). Over high: high values are good (a battery). In
       between, or left out: the middle zone is good and both ends are less good (a temperature). */
-  optimum?: number;
+  optimum?: number | undefined;
   /** The bar's thickness: 'sm' 4px, 'md' 8px (default), 'lg' 12px. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A visible name above the bar, which also names it. Without one, give it an aria-label. */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** Shows the value at the end of the label row, in the same words as the read-out ("92%, high"). Default: false. */
-  showValue?: boolean;
+  showValue?: boolean | undefined;
   /** Turns the value into words, shown and read out: (value, min, max) => "7.2 of 10 GB". Default: the share as the
       locale writes a percentage ("72%"). Say what a colored zone means here too, such as "92%, almost full". */
-  formatValue?: (value: number, min: number, max: number) => string;
+  formatValue?: ((value: number, min: number, max: number) => string) | undefined;
 }
 
 const OWN = { value: 1, min: 1, max: 1, low: 1, high: 1, optimum: 1, size: 1, label: 1, showValue: 1, formatValue: 1, className: 1 } as const;

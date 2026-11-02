@@ -6,39 +6,39 @@ interface TableLabels {
     clearSelection: string;
 }
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
-    size?: "md" | "sm";
-    striped?: boolean;
-    stickyHeader?: boolean;
-    caption?: React.ReactNode;
-    hideCaption?: boolean;
-    containerProps?: React.HTMLAttributes<HTMLDivElement>;
+    size?: "md" | "sm" | undefined;
+    striped?: boolean | undefined;
+    stickyHeader?: boolean | undefined;
+    caption?: React.ReactNode | undefined;
+    hideCaption?: boolean | undefined;
+    containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
 }
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-    selected?: boolean;
-    href?: string;
-    target?: string;
-    rel?: string;
+    selected?: boolean | undefined;
+    href?: string | undefined;
+    target?: string | undefined;
+    rel?: string | undefined;
 }
 interface TableSelectCellProps extends Omit<CheckboxProps, "children" | "description" | "size"> {
     label: string;
-    header?: boolean;
-    cellProps?: React.TdHTMLAttributes<HTMLTableCellElement>;
+    header?: boolean | undefined;
+    cellProps?: React.TdHTMLAttributes<HTMLTableCellElement> | undefined;
 }
 type SortDirection = "ascending" | "descending" | "none";
 interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, "align"> {
-    align?: "center" | "end" | "start";
-    sort?: SortDirection;
-    onSort?: () => void;
+    align?: "center" | "end" | "start" | undefined;
+    sort?: SortDirection | undefined;
+    onSort?: (() => void) | undefined;
 }
 interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, "align"> {
-    align?: "center" | "end" | "start";
-    link?: boolean;
+    align?: "center" | "end" | "start" | undefined;
+    link?: boolean | undefined;
 }
 interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
     count: number;
-    onClear?: () => void;
-    clearLabel?: string;
-    children?: React.ReactNode;
+    onClear?: (() => void) | undefined;
+    clearLabel?: string | undefined;
+    children?: React.ReactNode | undefined;
 }
 declare const Table: React.ForwardRefExoticComponent<TableProps & React.RefAttributes<HTMLTableElement>>;
 type TableHeadProps = React.HTMLAttributes<HTMLTableSectionElement>;
@@ -47,12 +47,12 @@ type TableFootProps = React.HTMLAttributes<HTMLTableSectionElement>;
 declare const TableHead: React.ForwardRefExoticComponent<TableHeadProps & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableBody: React.ForwardRefExoticComponent<TableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
 interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
-    children?: never;
+    children?: never | undefined;
     count: number;
     renderRow: (index: number) => React.ReactElement;
-    itemKey?: (index: number) => React.Key;
-    estimatedRowHeight?: number;
-    overscan?: number;
+    itemKey?: ((index: number) => React.Key) | undefined;
+    estimatedRowHeight?: number | undefined;
+    overscan?: number | undefined;
 }
 declare const TableVirtualBody: React.ForwardRefExoticComponent<TableVirtualBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableFoot: React.ForwardRefExoticComponent<TableFootProps & React.RefAttributes<HTMLTableSectionElement>>;

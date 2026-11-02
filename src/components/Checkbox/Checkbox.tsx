@@ -14,45 +14,45 @@ import { en as words } from "./labels";
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** 'sm' (14px box, text-xs), 'md' (16px, text-sm, default) or 'lg' (20px, text-base). */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** The label, next to the box; a click on it toggles the box. Without one, give the checkbox an aria-label. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** A second, muted line under the label, linked to the checkbox with aria-describedby. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** The "some" state, such as a select-all box when only some rows are picked: a dash, announced as mixed. Set it from your state; a click clears it natively. */
-  indeterminate?: boolean;
+  indeterminate?: boolean | undefined;
   /** A danger border (while unchecked) and focus ring, and aria-invalid. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Focusable and read out (aria-readonly), but a click or Space doesn't change it; a checked box is still submitted. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** In a CheckboxGroup: the box that checks or clears every other box. It's checked when all are, and indeterminate when some are. Leave out value. */
-  selectAll?: boolean;
+  selectAll?: boolean | undefined;
   /** Called with the new checked state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
-  onCheckedChange?: (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
 
 /** V is the boxes' value type: string (or number) as you use them, inferred from value, defaultValue or onValueChange. */
 export interface CheckboxGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue'> {
   /** The checked boxes' values (controlled). Use with onValueChange. */
-  value?: readonly V[];
+  value?: readonly V[] | undefined;
   /** The values checked at first (uncontrolled). Default: none. */
-  defaultValue?: readonly V[];
+  defaultValue?: readonly V[] | undefined;
   /** Called with the new list of checked values (in the boxes' order) and the change event. */
-  onValueChange?: (value: V[], event: React.ChangeEvent<HTMLInputElement>) => void;
+  onValueChange?: ((value: V[], event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
   /** The boxes' name, so each checked one is submitted with its value; a generated one by default. */
-  name?: string;
+  name?: string | undefined;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: 'vertical' | 'horizontal' | undefined;
   /** The boxes' size, unless a Checkbox sets its own. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger border on every unchecked box, and aria-invalid on the group. Field sets it from its error. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Disables every box. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** At least one box must be checked: aria-required on the group, and the browser won't submit the form until one is. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** The Checkbox elements, at any depth. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 interface GroupContextValue {

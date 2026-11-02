@@ -4,15 +4,15 @@ type LoaderShape = "circle" | "rect" | "text";
 type LoaderPattern = "checker" | "cross" | "fall" | "random" | "rise" | "snake" | "spiral" | "sweep" | "wave";
 type LoaderTone = "inverse" | "muted" | "neutral" | "primary";
 interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
-    variant?: LoaderVariant;
-    size?: "lg" | "md" | "sm";
-    tone?: LoaderTone;
-    label?: string;
-    shape?: LoaderShape;
-    lines?: number;
-    pattern?: LoaderPattern;
-    glow?: boolean;
-    delay?: number;
-    loading?: boolean;
+    variant?: LoaderVariant | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
+    tone?: LoaderTone | undefined;
+    label?: string | undefined;
+    shape?: LoaderShape | undefined;
+    lines?: number | undefined;
+    pattern?: LoaderPattern | undefined;
+    glow?: boolean | undefined;
+    delay?: number | undefined;
+    loading?: boolean | undefined;
 }
 declare const Loader: React.ForwardRefExoticComponent<LoaderProps & React.RefAttributes<HTMLSpanElement>>;

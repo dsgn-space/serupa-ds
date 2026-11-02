@@ -8,8 +8,8 @@ interface SaveStatusLabels {
 type SaveState = "error" | "idle" | "saved" | "saving";
 interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
     status: SaveState;
-    savedAt?: Date | number;
-    onRetry?: () => void;
-    errorText?: React.ReactNode;
+    savedAt?: Date | number | undefined;
+    onRetry?: (() => void) | undefined;
+    errorText?: React.ReactNode | undefined;
 }
 declare const SaveStatus: React.ForwardRefExoticComponent<SaveStatusProps & React.RefAttributes<HTMLDivElement>>;

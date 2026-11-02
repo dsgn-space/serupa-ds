@@ -4,10 +4,10 @@ interface PasswordInputLabels {
     capsLockOn: string;
 }
 interface PasswordInputProps extends Omit<InputProps, "prefix" | "rightIcon" | "showCount" | "suffix" | "type"> {
-    visible?: boolean;
-    defaultVisible?: boolean;
-    onVisibleChange?: (visible: boolean) => void;
-    toggleLabel?: string;
-    capsLockHint?: boolean;
+    visible?: boolean | undefined;
+    defaultVisible?: boolean | undefined;
+    onVisibleChange?: ((visible: boolean) => void) | undefined;
+    toggleLabel?: string | undefined;
+    capsLockHint?: boolean | undefined;
 }
 declare const PasswordInput: React.ForwardRefExoticComponent<PasswordInputProps & React.RefAttributes<HTMLInputElement>>;

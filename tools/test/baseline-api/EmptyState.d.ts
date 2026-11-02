@@ -4,16 +4,16 @@ interface EmptyStateLabels {
     clearFilters: string;
 }
 interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
-    icon?: IconSource;
+    icon?: IconSource | undefined;
     title: React.ReactNode;
-    description?: React.ReactNode;
-    actions?: React.ReactNode;
-    size?: "md" | "sm";
-    variant?: "dashed" | "plain";
-    headingLevel?: 2 | 3 | 4 | 5 | 6;
-    announce?: boolean;
-    suggestions?: string[];
-    onSuggestion?: (suggestion: string) => void;
-    onClearFilters?: () => void;
+    description?: React.ReactNode | undefined;
+    actions?: React.ReactNode | undefined;
+    size?: "md" | "sm" | undefined;
+    variant?: "dashed" | "plain" | undefined;
+    headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
+    announce?: boolean | undefined;
+    suggestions?: string[] | undefined;
+    onSuggestion?: ((suggestion: string) => void) | undefined;
+    onClearFilters?: (() => void) | undefined;
 }
 declare const EmptyState: React.ForwardRefExoticComponent<EmptyStateProps & React.RefAttributes<HTMLDivElement>>;

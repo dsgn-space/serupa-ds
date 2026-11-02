@@ -2,15 +2,15 @@
 interface TooltipProps {
     content: React.ReactNode;
     children: React.ReactElement;
-    placement?: Placement;
-    delay?: number;
-    role?: "description" | "label";
-    open?: boolean;
-    defaultOpen?: boolean;
-    onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
-    disabled?: boolean;
-    className?: string;
-    style?: React.CSSProperties;
+    placement?: Placement | undefined;
+    delay?: number | undefined;
+    role?: "description" | "label" | undefined;
+    open?: boolean | undefined;
+    defaultOpen?: boolean | undefined;
+    onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
+    disabled?: boolean | undefined;
+    className?: string | undefined;
+    style?: React.CSSProperties | undefined;
 }
 declare const Tooltip: ((props: TooltipProps) => React.ReactElement) & {
     displayName: string;

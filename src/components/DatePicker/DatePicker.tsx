@@ -21,30 +21,30 @@ import { windowBlur } from "../../internal/focus";
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'children'> {
   /** The chosen day (controlled), or null. Use with onValueChange. A "yyyy-mm-dd" string is that day, wherever the
       browser is (a Date made from one is UTC midnight, the day before west of Greenwich). */
-  value?: Date | string | null;
+  value?: Date | string | null | undefined;
   /** The chosen day at first (uncontrolled), as a Date or "yyyy-mm-dd". */
-  defaultValue?: Date | string | null;
+  defaultValue?: Date | string | null | undefined;
   /** Called with the new day (local midnight) and the same day as "yyyy-mm-dd", or null and null when the field is cleared. */
-  onValueChange?: (value: Date | null, iso: string | null) => void;
+  onValueChange?: ((value: Date | null, iso: string | null) => void) | undefined;
   /** Called when typed text is put back on blur or Enter: "unreadable" when it isn't a date, "unavailable" when it
       is one that can't be chosen (outside min..max, or isDateDisabled). The field also says so to screen readers. */
-  onInvalidInput?: (text: string, reason: "unreadable" | "unavailable") => void;
+  onInvalidInput?: ((text: string, reason: "unreadable" | "unavailable") => void) | undefined;
   /** The earliest and latest days that can be chosen, as Dates or "yyyy-mm-dd". */
-  min?: Date | string;
+  min?: Date | string | undefined;
   /** The latest day that can be chosen, as a Date or "yyyy-mm-dd". */
-  max?: Date | string;
+  max?: Date | string | undefined;
   /** Days that can't be chosen, such as weekends. */
-  isDateDisabled?: (date: Date) => boolean;
+  isDateDisabled?: ((date: Date) => boolean) | undefined;
   /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
-  weekStartsOn?: number;
+  weekStartsOn?: number | undefined;
   /** 'sm', 'md' (default) or 'lg', like Input. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger border and aria-invalid, like Input. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** The calendar button's name. Default: "Choose a date". */
-  buttonLabel?: string;
+  buttonLabel?: string | undefined;
 }
 
 /* DatePicker: a text field for a date with a calendar button. People type a date in the locale's numeric order

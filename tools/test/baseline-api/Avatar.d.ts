@@ -6,13 +6,13 @@ declare function initials(name?: string): string;
 type AvatarSize = "lg" | "md" | "sm" | "xl" | "xs";
 type AvatarStatus = "away" | "busy" | "offline" | "online";
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
-    src?: string;
-    name?: string;
-    alt?: string;
-    size?: AvatarSize;
-    shape?: "circle" | "square";
-    status?: AvatarStatus;
-    statusLabel?: string;
-    imgProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+    src?: string | undefined;
+    name?: string | undefined;
+    alt?: string | undefined;
+    size?: AvatarSize | undefined;
+    shape?: "circle" | "square" | undefined;
+    status?: AvatarStatus | undefined;
+    statusLabel?: string | undefined;
+    imgProps?: React.ImgHTMLAttributes<HTMLImageElement> | undefined;
 }
 declare const Avatar: React.ForwardRefExoticComponent<AvatarProps & React.RefAttributes<HTMLSpanElement>>;
