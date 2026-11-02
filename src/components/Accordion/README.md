@@ -118,6 +118,6 @@ Each is an optional override: set it on the page, a container or one accordion. 
 | `--accordion-padding-x` | `spacing-4` | Side padding in variant="card" (16px). |
 | `--accordion-icon-size` | `spacing-5` | The chevron (20px). |
 | `--accordion-border-width` | `border-width-1` | Lines and frame (1px). |
-| `--accordion-radius` | `rounded-lg` | The corners of variant="card" (8px). |
+| `--accordion-radius` | `radius-surface` | The corners of variant="card" (8px). |
 | `--accordion-duration` | `motion-change-md` | Opening: the fade, unfold and height (200ms), and the chevron turning. Closing folds back and shrinks over motion-exit-md (150ms). |
 <!-- token-table:end -->

@@ -132,9 +132,9 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
 | `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
-| `--combobox-listbox-shadow` | `shadow-lg` | The list's shadow. |
-| `--combobox-listbox-radius` | `rounded-lg` | The list's corners (8px). |
-| `--combobox-option-radius` | `rounded-md` | An option's corners (6px). |
+| `--combobox-listbox-shadow` | `elevation-overlay` | The list's shadow. |
+| `--combobox-listbox-radius` | `radius-surface` | The list's corners (8px). |
+| `--combobox-option-radius` | `radius-control` | An option's corners (6px). |
 | `--combobox-listbox-max-height` | `spacing-60` | The list's height before it scrolls (240px). |
 | `--combobox-listbox-max-width` | `container-md` | The list's widest, unless the field is wider (448px). Longer labels wrap. |
 | `--combobox-option-height` | `control-height-md` | An option's least height (32px). |

@@ -10,7 +10,7 @@
   --dk-bar: var(--border-width-2);
   margin: var(--spacing-0); list-style: none;
   padding: var(--tree-view-padding, var(--spacing-1));
-  border-radius: var(--tree-view-radius, var(--rounded-md));
+  border-radius: var(--tree-view-radius, var(--radius-control));
   background: var(--tree-view-bg, var(--surface));
   color: var(--tree-view-text, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm);
