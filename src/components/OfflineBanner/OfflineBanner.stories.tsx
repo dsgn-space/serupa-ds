@@ -11,8 +11,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Follows the browser: turn the network off in the developer tools (Network, Offline) to see it.
-export const Playground: Story = { args: { online: undefined, placement: 'bottom', children: "Changes are kept and sent when you're back." } };
+// Offline, so the bar shows. Clear online in the controls and it follows the browser instead: turn the network off in
+// the developer tools (Network, Offline) to see it. Online it renders nothing, so a story left online is an empty page.
+export const Playground: Story = { args: { online: false, placement: 'bottom', children: "Changes are kept and sent when you're back." } };
 
 // The stories set online={false} so the bar shows; an app leaves it out.
 export const Default: Story = {};
