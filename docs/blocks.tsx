@@ -18,6 +18,7 @@ import changelogSource from '../CHANGELOG.md?raw';
 import pkg from '../package.json';
 import { majorsIn, nextMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
+import acr from './acr.json';
 import { componentTests } from './generated/tested';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
@@ -373,4 +374,29 @@ export function UpgradeGuide() {
       <Markdown>{[`## ${m.version}${m.next ? ' (next)' : ''}`, intro, run, body].filter(Boolean).join('\n\n')}</Markdown>
     </section>;
   })}</>;
+}
+type Criterion = { id: string; name: string; level: string; conformance: string; remarks: string };
+const ACR = acr as { standard: string; product: string; reviewed: { version: string; date: string }; criteria: Criterion[] };
+/** How many criteria each conformance level covers, from docs/acr.json (162). */
+export function ConformanceSummary() {
+  const count = (c: string) => ACR.criteria.filter((x) => x.conformance === c).length;
+  const partial = ACR.criteria.filter((x) => x.conformance === 'Partially Supports');
+  const stale = ACR.reviewed.version.split('.')[0] !== pkg.version.split('.')[0];
+  return <>
+    <p>Of the {ACR.criteria.length} {ACR.standard} criteria at levels A and AA, the components support {count('Supports')}, partly support {count('Partially Supports')}{count('Does Not Support') ? `, don't support ${count('Does Not Support')}` : ''}, and {count('Not Applicable')} are the app's alone (page titles, media, navigation across pages). Reviewed for version {ACR.reviewed.version} on {ACR.reviewed.date}.</p>
+    {stale && <p role="note"><strong>This review is for {ACR.reviewed.version.split('.')[0]}.x; the current version is {pkg.version}.</strong> A new major is reviewed before its report is updated.</p>}
+    {partial.length > 0 && <ul>{partial.map((x) => <li key={x.id}><strong>{x.id} {x.name}</strong>: {code(x.remarks)}</li>)}</ul>}
+  </>;
+}
+/** The Accessibility Conformance Report (18): every WCAG criterion at A and AA, as VPAT 2.5's table has it. */
+export function ConformanceReport() {
+  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <caption style={{ textAlign: 'start', fontWeight: 600, paddingBlock: 8 }}>{ACR.standard} Level A and AA: {ACR.product}, version {ACR.reviewed.version}</caption>
+    <thead><tr><th style={cell} scope="col">Criteria</th><th style={cell} scope="col">Conformance level</th><th style={cell} scope="col">Remarks and explanations</th></tr></thead>
+    <tbody>{ACR.criteria.map((x) => <tr key={x.id}>
+      <th style={{ ...cell, fontWeight: 'normal' }} scope="row">{x.id} {x.name} (Level {x.level})</th>
+      <td style={cell}>{x.conformance}</td>
+      <td style={cell}>{code(x.remarks)}</td>
+    </tr>)}</tbody>
+  </table>;
 }
