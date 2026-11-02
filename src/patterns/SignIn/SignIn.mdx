@@ -1,0 +1,40 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './SignIn.stories';
+
+<Meta of={Stories} />
+
+# Sign in
+
+An email and a password, then a one-time code, as one page. It meets WCAG 2.2's accessible authentication (3.3.8): nothing to remember or work out beyond the password itself.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Signing in with an email and a password, with or without a second step.
+- Not for creating an account: that page asks for `autocomplete="new-password"` and says the password's rules before the first try.
+- Not for a passkey or "sign in with" button alone: those need no form. Add them above this one when you offer both.
+
+## What each part is for
+
+- **Email**, an Input with `type="email"` and `autocomplete="username"`, and **Password**, a PasswordInput with `autocomplete="current-password"`. These are the words password managers look for, so they fill both. Paste works in both: never block it.
+- **The show-password toggle** (PasswordInput's own), so someone can check what they typed instead of typing it again.
+- **"Forgot your password?"**, a Link next to the field it's about, before the button, so it's found on the way.
+- **An ErrorSummary** at the top after a failed try. It takes focus, so a screen reader reads it, and each error links to its field. Each Field shows the same words under it. The words say how to fix it ("Enter an email address in the right format, like name@example.com").
+- **A wrong email or password** gets one error, on the password, that doesn't say which was wrong, so the form doesn't tell anyone which emails have an account.
+- **The code step**, a PinInput, which sets `autocomplete="one-time-code"`, so a phone offers the texted code and a pasted code fills every box. "Send a new code" is a button beside it.
+- **Focus on each new step's heading** (an h1 with `tabIndex={-1}`), so a screen reader says the step changed and the next Tab goes on from there.
+- **No puzzle.** A CAPTCHA that asks someone to read, pick or work something out fails 3.3.8. Use rate limits, or a check that needs nothing from the person.
+
+<Canvas of={Stories.Errors} />
+
+## What stays your app's job
+
+- Checking the email, password and code against your server. `check` and `verify` stand in for that here.
+- Rate limits, and locking an account after many tries, said in words on the page when it happens.
+- Adding "Error: " to the page's `<title>` after a failed try, so it's the first thing read on reload.
+- The `action` and `method` of the form, so it works before JavaScript loads.
+
+## Copying it
+
+Copy `SignIn.tsx` and `SignIn.test.tsx`. Change the imports to `serupa`, pass your own `check` and `verify`, and keep the ids: the ErrorSummary links point at them.
