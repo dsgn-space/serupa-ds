@@ -3,7 +3,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PROJECT, affectedComponents, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, affectedComponents, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -12,14 +12,7 @@ const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.a
 if (arg('--browser')) process.env.SERUPA_BROWSER = arg('--browser');
 // --locale ar runs the component tests with the browser in that language (SERUPA_LOCALE, vitest.config.ts).
 if (arg('--locale')) process.env.SERUPA_LOCALE = arg('--locale');
-// On CI the component tests run a second time with the browser in one of these languages, picked by the commit, so
-// a component that reads the browser's language where it should take the provider's, or a test that expects English
-// without saying so, fails. A full run (main, the merge queue) runs all of them again; a pull request that changes only
-// component folders runs again just the changed components' own tests, so a new test that expects English fails on
-// its pull request instead of turning main red for everyone. Right-to-left with Arabic
-// digits (ar-EG: Chromium writes plain ar in Latin ones, WebKit doesn't), comma decimals, Thai and Japanese scripts.
-// To repeat one: node tools/test/run.mjs --group components --locale id-ID.
-const LOCALES = ['ar-EG', 'id-ID', 'th', 'ja'];
+// On CI the component tests run a second time in one of LOCALES (lib.mjs), picked by the commit.
 // The visual and Storybook steps, by group. They drive a browser through every preview and story, sharded across
 // CI jobs, so they stay scripts of their own.
 const GROUPS = {
