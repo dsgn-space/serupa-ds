@@ -32,7 +32,7 @@ describe('Blocks/Page header', () => {
     await page.viewport(1024, 768);
     await render(<PageHeader {...ALL} />);
     const order: string[] = [];
-    for (let i = 0; i < 7; i++) { await userEvent.tab(); order.push(active().textContent!.trim()); }
+    for (let i = 0; i < 7; i++) { await userEvent.tab(); order.push(active().textContent.trim()); }
     expect(order).toEqual(['Home', 'Projects', 'New task', 'Share', 'Export', 'Overview', 'Tasks']);
   });
 
