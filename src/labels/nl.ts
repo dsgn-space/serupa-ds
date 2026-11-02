@@ -157,6 +157,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Deelvensters vergroten of verkleinen",
   splitterPlace: "Tik waar de greep moet komen, of tik nogmaals op de greep om te annuleren.",
   skipToContent: "Naar de inhoud",
+  offline: "Je bent offline",
+  backOnline: "Weer online",
   completed: "voltooid",
   hasError: "bevat een fout",
   hasWarning: "vraagt aandacht",

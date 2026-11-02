@@ -157,6 +157,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Ubah saiz anak tetingkap",
   splitterPlace: "Ketik tempat pemegang patut berada, atau ketik pemegang sekali lagi untuk membatalkan.",
   skipToContent: "Langkau ke kandungan",
+  offline: "Anda di luar talian",
+  backOnline: "Kembali dalam talian",
   completed: "selesai",
   hasError: "ada ralat",
   hasWarning: "perlu perhatian",
