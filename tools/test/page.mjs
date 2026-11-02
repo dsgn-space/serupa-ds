@@ -50,9 +50,9 @@ for (const [w, cols, disp, fs_] of expect) {
   await p.close();
 }
 
-// 3. theme.js
+// 3. theme.js (with reduced motion, so a switch is synchronous; the crossfade it makes otherwise is checked after)
 for (const scheme of ['light', 'dark']) {
-  const ctx = await b.newContext({ colorScheme: scheme });
+  const ctx = await b.newContext({ colorScheme: scheme, reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="emerald" data-mode="auto"' }));
   t(`theme.js: data-mode="auto" follows the system (${scheme})`, (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === `emerald-${scheme}`);
@@ -70,7 +70,7 @@ for (const scheme of ['light', 'dark']) {
 }
 {
   // A page that sets data-theme itself keeps it, under a dark system too, and reset() goes back to it.
-  const ctx = await b.newContext({ colorScheme: 'light' });
+  const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme-own.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-theme="violet-dark"' }));
   const own = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), Serupa.theme.get().mode, Serupa.theme.set({ mode: 'light' }).theme, Serupa.theme.reset().theme]);
@@ -78,7 +78,7 @@ for (const scheme of ['light', 'dark']) {
   await ctx.close();
 }
 {
-  const ctx = await b.newContext({ colorScheme: 'light' });
+  const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
   await p.goto(url);
@@ -97,9 +97,59 @@ for (const scheme of ['light', 'dark']) {
   await ctx.close();
 }
 {
+  // After the first paint, a switch crossfades the page in one View Transition typed "serupa-theme", and onChange
+  // hears it once the new theme is on; the first paint and reduced motion switch at once, with none.
+  const ctx = await b.newContext({ colorScheme: 'light' });
+  const p = await ctx.newPage();
+  await p.addInitScript(() => {
+    window.__vt = [];
+    const start = document.startViewTransition?.bind(document);
+    if (start) document.startViewTransition = (o) => { window.__vt.push(typeof o === 'function' ? 'fn' : (o.types || []).join()); return start(o); };
+  });
+  await p.goto(writePage('theme-fade.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="blue" data-mode="light"' }));
+  const first = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), window.__vt.length]);
+  await p.evaluate(() => { window.__seen = []; Serupa.theme.onChange((i) => window.__seen.push([i.theme, document.documentElement.getAttribute('data-theme')].join())); Serupa.theme.set({ mode: 'dark' }); });
+  await p.waitForFunction(() => window.__seen.length > 0);
+  const after = await p.evaluate(() => [window.__vt.join('|'), window.__seen.join('|'), getComputedStyle(document.body).backgroundColor]);
+  t('theme.js: the first paint sets the theme without a transition', first.join() === 'blue-light,0', first.join());
+  t('theme.js: a switch crossfades the page in one View Transition (type serupa-theme), onChange after it', after.join(' ; ') === 'serupa-theme ; blue-dark,blue-dark ; rgb(24, 24, 27)', after.join(' ; '));
+  await ctx.close();
+  const still = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
+  const q = await still.newPage();
+  await q.addInitScript(() => { window.__vt = 0; const start = document.startViewTransition?.bind(document); if (start) document.startViewTransition = (o) => { window.__vt++; return start(o); }; });
+  await q.goto(writePage('theme-fade.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="blue" data-mode="light"' }));
+  const now = await q.evaluate(() => { Serupa.theme.set({ mode: 'dark' }); return [document.documentElement.getAttribute('data-theme'), window.__vt].join(); });
+  t('theme.js: with reduced motion a switch is at once, with no transition', now === 'blue-dark,0', now);
+  await still.close();
+  // Switches in a row end on the last, with no uncaught errors from the crossfades they skip (GR115); one made during
+  // the app's own View Transition is at once, and leaves the app's to run.
+  const row = await b.newContext({ colorScheme: 'light' });
+  const r = await row.newPage();
+  const errors = [];
+  r.on('pageerror', (e) => errors.push(e.message));
+  r.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+  await r.goto(writePage('theme-fade.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="blue" data-mode="light"' }));
+  await r.evaluate(() => { window.__seen = []; Serupa.theme.onChange((i) => window.__seen.push(i.theme)); Serupa.theme.set({ mode: 'dark' }); Serupa.theme.set({ brand: 'violet' }); Serupa.theme.set({ mode: 'light' }); });
+  await r.waitForFunction(() => !document.activeViewTransition && document.documentElement.getAttribute('data-theme') === 'violet-light');
+  await r.waitForTimeout(100);
+  const seen = await r.evaluate(() => window.__seen.join());
+  t('theme.js: switches in a row end on the last, each theme heard once, with no uncaught errors', seen.endsWith('violet-light') && new Set(seen.split(',')).size === seen.split(',').length && !errors.length, `${seen} ; ${errors.join(' | ')}`);
+  const own = await r.evaluate(async () => {
+    const vt = document.startViewTransition(() => new Promise((ok) => setTimeout(ok, 50)));
+    await new Promise((ok) => requestAnimationFrame(() => ok(null)));
+    Serupa.theme.set({ mode: 'dark' });
+    const at = document.documentElement.getAttribute('data-theme');
+    const ran = await vt.ready.then(() => 'ran', () => 'skipped');
+    await vt.finished.catch(() => {});
+    return [at, ran].join();
+  });
+  t('theme.js: a switch during the app\'s own View Transition is at once and leaves it to run', own === 'violet-dark,ran', own);
+  await row.close();
+}
+{
   // <meta name="theme-color"> follows the page's surface in all six themes, so a phone's bars change with the mode.
   // Before any stylesheet it is the token value (white, zinc-900); a page's own theme-color meta is left alone.
-  const ctx = await b.newContext({ colorScheme: 'light' });
+  const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme-color.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' }));
   const tints = await p.evaluate(() => ['blue', 'violet', 'emerald'].flatMap((brand) => ['light', 'dark'].map((mode) => {
@@ -121,7 +171,7 @@ for (const scheme of ['light', 'dark']) {
 }
 {
   // A choice saved by 4.x (as "diki-theme") is kept, and reset() forgets it for good.
-  const ctx = await b.newContext({ colorScheme: 'light' });
+  const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
   await p.goto(url);
@@ -137,7 +187,7 @@ for (const scheme of ['light', 'dark']) {
 {
   // DX1: loaded twice (an inline copy and the file), the second copy returns early, so the first's onChange still
   // hears set(); and another tab's localStorage.clear() (a storage event with key null) is followed like a reset.
-  const ctx = await b.newContext({ colorScheme: 'light' });
+  const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme-twice.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"', extraHead: '<script>window.__first = Serupa.theme; window.__heard = []; Serupa.theme.onChange(function (i) { window.__heard.push(i.theme); });</script><script src="../dist/theme.js"></script>' }));
   const twice = await p.evaluate(() => { Serupa.theme.set({ brand: 'violet', mode: 'dark' }); return [Serupa.theme === window.__first, window.__heard.join(), window.__first.get().theme]; });

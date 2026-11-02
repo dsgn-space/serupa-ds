@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Patterns/Introduction" />
+
+# Patterns
+
+A pattern is a whole screen built from Serupa's components only: a page shell, a sign-in, a list with filters. Some of what WCAG 2.2 asks lives in the flow between components, not in any one of them: a sign-in that a password manager can fill (3.3.8), a form that keeps every answer when you go back (3.3.7), focus that lands on the right place after each step. A pattern shows one way to meet it, with tests that prove it.
+
+Patterns don't ship in the package. They're for copying.
+
+## How to copy one
+
+1. Open the pattern's story and its guide. The guide says when to use it, what each part is for, and what stays your app's job.
+2. Copy `src/patterns/<Name>/<Name>.tsx` (or the story's `render`, for a pattern that is all markup) into your app. Change the imports from `../../components/<Component>/<Component>` to `serupa`.
+3. Replace the demo parts the guide names, such as the stand-in for your server's checks, with your own.
+4. Keep the test: copy `<Name>.test.tsx` too, and run it against your copy, so a later change that breaks the flow is caught.
+
+## What each one holds
+
+Each folder in `src/patterns/` holds the stories, a test and a guide (`tools/test/contract.mjs` checks this). Their stories run the page rules in `tools/test/storybook.mjs` in all six themes: one main landmark, everything inside a landmark, one h1 and no skipped heading level, no id twice, and a first Tab stop that is a skip link into main.
+
+## The patterns
+
+| Pattern | What it carries | Status |
+| --- | --- | --- |
+| [Page shell](?path=/docs/patterns-page-shell--docs) | A skip link, a sticky Navbar, a named Sidebar beside main, a footer (2.4.1, 2.4.11) | Ready |
+| [Sign in](?path=/docs/patterns-sign-in--docs) | Email and password a password manager fills, paste, a show-password toggle, an error summary, a one-time code, no puzzle (3.3.8, 3.3.1, 3.3.3) | Ready |
+| List with search and filters | A results count that's announced, filters kept in the URL, an empty state with a way out | Planned |
+| Multi-step form | Going back keeps every answer, a review step, help in the same place on each step (3.3.7, 3.2.6) | Planned |
+| Settings form | An error summary over many sections, saving announced | Planned |
+| Error pages | Not found, offline and server error, each with a way back | Planned |
+| Session time-out | A warning well before expiry, one action to extend, nothing typed lost (2.2.1) | Planned |
+| Consent banner | Accept and decline of equal weight, never over the focused element (2.4.11) | Planned |
