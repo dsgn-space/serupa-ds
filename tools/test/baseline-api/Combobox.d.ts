@@ -6,6 +6,7 @@ interface ComboboxLabels {
     resultsCount: (count: number) => string;
     showOptions: string;
     clearValue: (label: string) => string;
+    createOption: (text: string) => string;
     valueAdded: (label: string) => string;
     valueRemoved: (label: string) => string;
 }
@@ -42,6 +43,7 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
     loadingText?: string;
     toggleLabel?: string;
     clearLabel?: string;
+    onCreate?: (text: string) => V | void;
 }
 interface ComboboxSingleProps<V extends string = string> extends ComboboxBaseProps<V> {
     multiple?: false;

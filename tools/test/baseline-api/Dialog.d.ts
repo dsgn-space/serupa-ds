@@ -1,4 +1,4 @@
-// exports: Dialog, type DialogProps
+// exports: Dialog, type DialogProps, useUnsavedChanges
 interface DialogLabels {
     discardTitle: string;
     discardDescription: string;
@@ -23,3 +23,7 @@ interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>
     unsaved?: boolean;
 }
 declare const Dialog: React.ForwardRefExoticComponent<DialogProps & React.RefAttributes<HTMLDialogElement>>;
+declare function useUnsavedChanges(unsaved: boolean): {
+    confirm: () => Promise<boolean>;
+    dialog: null | React.ReactElement;
+};
