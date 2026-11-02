@@ -28,7 +28,7 @@ const watchPicker = (root: Element) => { const w = { opened: 0 }; input(root).ad
 
 // en-US, so the sizes are written the same way under every CI locale (GR20).
 function Many(props: { rejects?: string[]; fref?: React.Ref<HTMLDivElement> }) {
-  return <SerupaProvider locale="en-US"><div style={{ width: '420px' }}><FileUpload id="many" data-testid="many" multiple accept="image/*,.pdf" maxSize={1024 * 1024} maxFiles={3} hint="Images or PDF, up to 1 MB" name="docs" ref={props.fref} className="extra"
+  return <SerupaProvider locale="en-US"><div style={{ width: '420px' }}><FileUpload id="many" data-testid="many" multiple accept="image/*,.pdf" maxSize={1_000_000} maxFiles={3} hint="Images or PDF, up to 1 MB" name="docs" ref={props.fref} className="extra"
     onReject={(r) => { if (props.rejects) props.rejects.push(r.map((x) => x.reason).join(',')); }} /></div></SerupaProvider>;
 }
 function Controlled(props: { changes: string[]; setRef: { set?: (f: File[]) => void } }) {
@@ -81,7 +81,7 @@ describe('FileUpload', () => {
   });
 
   test('refusal messages in the provider\'s words: Indonesian under id-ID, the types joined with "atau"', async () => {
-    await render(<SerupaProvider locale="id-ID" labels={idLabels}><FileUpload id="fid" multiple accept="image/*,.pdf" maxSize={1024} maxFiles={1} /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><FileUpload id="fid" multiple accept="image/*,.pdf" maxSize={1000} maxFiles={1} /></SerupaProvider>);
     const root = rootOf('fid');
     await userEvent.upload(input(root), [file('catatan.txt', 'text/plain', 10), file('besar.png', 'image/png', 4096), file('a.png', 'image/png', 10), file('b.png', 'image/png', 10)]);
     expect(errs(root)).toBe('alert: catatan.txt bukan gambar atau PDF. / besar.png lebih besar dari 1 kB. / b.png tidak ditambahkan: maksimal 1 file.');
@@ -98,10 +98,10 @@ describe('FileUpload', () => {
     const rejects: string[] = [];
     await render(<Many rejects={rejects} />);
     const el = q(many);
-    await userEvent.upload(input(el), [file('photo.png', 'image/png', 2048), file('report.pdf', 'application/pdf', 1536 * 1024 / 2)]);
+    await userEvent.upload(input(el), [file('photo.png', 'image/png', 2048), file('report.pdf', 'application/pdf', 768_000)]);
     expect(list(el)).toEqual(['photo.png 2 kB image', 'report.pdf 768 kB picture_as_pdf']);
     await expect.poll(() => [...input(el).files!].map((f) => f.name).join()).toBe('photo.png,report.pdf');
-    await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2 * 1024 * 1024), file('photo.png', 'image/png', 2048)]);
+    await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2_000_000), file('photo.png', 'image/png', 2048)]);
     expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn\'t an image or PDF. / huge.png is larger than 1 MB. / photo.png is already added.', 'type,size,duplicate']);
     await userEvent.upload(input(el), [file('a.jpg', 'image/jpeg', 100), file('b.jpg', 'image/jpeg', 100)]);
     expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn\'t added: up to 3 files.']);
@@ -278,8 +278,8 @@ describe('FileUpload', () => {
     expect([w.opened, changes, names(el), new FormData(document.getElementById('rof') as HTMLFormElement).getAll('doc').length]).toEqual([0, [], 'a.pdf', 1]);
   });
 
-  test('formatFileSize: 0 B, 12 B, 1023 B, 1 kB, 1.5 kB, 10 MB, 3.3 GB', () => {
-    expect([0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|1023 B|1 kB|1.5 kB|10 MB|3.3 GB');
+  test('formatFileSize steps by 1000: 0 B, 12 B, 999 B, 1 kB, 1.5 kB, 10 MB, 3.3 GB; 1024 is 1 kB', () => {
+    expect([0, 12, 999, 1000, 1500, 10_000_001, 3.25e9, 1024].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|999 B|1 kB|1.5 kB|10 MB|3.3 GB|1 kB');
   });
 
   test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in all six themes', async () => {
@@ -471,15 +471,15 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
   // Each row's size: the dir="auto" span that isn't the name (the name has a title).
   const sizes = (root: Element) => [...root.querySelectorAll<HTMLElement>('li [dir=auto]:not([title])')].map((x) => [x.textContent, x.dir]);
   test.each([
-    ['en-US', ['4.8 MB', '2 kB'], 'larger than 1 kB'],
-    ['id-ID', ['4,8 MB', '2 kB'], 'lebih besar dari 1 kB'],
-    ['de-DE', ['4,8 MB', '2 kB'], 'larger than 1 kB'],
+    ['en-US', ['1.5 MB', '2 kB'], 'larger than 1 kB'],
+    ['id-ID', ['1,5 MB', '2 kB'], 'lebih besar dari 1 kB'],
+    ['de-DE', ['1,5 MB', '2 kB'], 'larger than 1 kB'],
   ] as const)('%s: each size and the size in a refusal are written as FormattedNumber writes bytes', async (locale, want, refusal) => {
-    await render(<SerupaProvider locale={locale} labels={locale === 'id-ID' ? idLabels : undefined}><FileUpload id={'sz-' + locale} multiple maxSize={1024} readOnly={false} /></SerupaProvider>);
+    await render(<SerupaProvider locale={locale} labels={locale === 'id-ID' ? idLabels : undefined}><FileUpload id={'sz-' + locale} multiple maxSize={1000} readOnly={false} /></SerupaProvider>);
     const root = rootOf('sz-' + locale);
     await userEvent.upload(input(root), [file('big.png', 'image/png', 4096)]);
     expect(errs(root)).toContain(refusal);
-    await render(<SerupaProvider locale={locale}><FileUpload id={'sl-' + locale} readOnly files={[file('a.pdf', 'application/pdf', 5_000_000), file('b.png', 'image/png', 2048)]} /></SerupaProvider>);
+    await render(<SerupaProvider locale={locale}><FileUpload id={'sl-' + locale} readOnly files={[file('a.pdf', 'application/pdf', 1_500_000), file('b.png', 'image/png', 2048)]} /></SerupaProvider>);
     expect(sizes(rootOf('sl-' + locale))).toEqual(want.map((w) => [w, 'auto']));
   });
 
@@ -489,11 +489,11 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     expect([/[\u0660-\u0669]/.test(text ?? ''), dir]).toEqual([true, 'auto']);
   });
 
-  test('formatFileSize: a size that rounds up to 1024 of a unit is written in the next one, as formatNumber bytes does', () => {
-    expect([1024 ** 2 - 1, 1024 ** 3 - 1, 1023.6 * 1024].map((b) => [formatFileSize(b), formatFileSize(b, 'en-US')])).toEqual([['1 MB', '1 MB'], ['1 GB', '1 GB'], ['1 MB', '1 MB']]);
+  test('formatFileSize: a size that rounds up to 1000 of a unit is written in the next one, as formatNumber bytes does', () => {
+    expect([1e6 - 1, 1e9 - 1, 999.6 * 1000].map((b) => [formatFileSize(b), formatFileSize(b, 'en-US')])).toEqual([['1 MB', '1 MB'], ['1 GB', '1 GB'], ['1 MB', '1 MB']]);
   });
   test('formatFileSize with a locale matches formatNumber bytes; without one it stays as it was; an index from map() is not a locale', () => {
-    expect([formatFileSize(5_000_000, 'de-DE'), formatFileSize(5_000_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['4,8 MB', '4.8 MB', '2 kB']);
+    expect([formatFileSize(1_500_000, 'de-DE'), formatFileSize(1_500_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['1,5 MB', '1.5 MB', '2 kB']);
   });
 });
 
