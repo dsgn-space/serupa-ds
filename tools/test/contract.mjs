@@ -87,5 +87,19 @@ const readme = fs.readFileSync(path.join(PROJECT, 'README.md'), 'utf8');
 const dead = [...readme.matchAll(/\]\((src\/components\/[^)#]+)\)/g)].map((m) => m[1]).filter((f) => !fs.existsSync(path.join(PROJECT, f)));
 t('README.md links only to component files that exist', !dead.length, `${[...new Set(dead)].join(', ')}: run node tools/build/registry.mjs --readme`);
 
-console.log(`(${comps.length} components)`);
+// Patterns (src/patterns/<Name>/, PT0): whole screens for apps to copy. Each holds its stories, a test that proves the
+// flow (keyboard, focus, what's said) and a guide (<Name>.mdx: when to use it and what stays the app's job), and is
+// listed in Patterns/Introduction.
+const PAT = path.join(PROJECT, 'src', 'patterns');
+const patterns = fs.existsSync(PAT) ? fs.readdirSync(PAT).filter((p) => fs.statSync(path.join(PAT, p)).isDirectory()).sort() : [];
+const intro = fs.existsSync(path.join(PAT, 'Introduction.mdx')) ? fs.readFileSync(path.join(PAT, 'Introduction.mdx'), 'utf8') : '';
+for (const p of patterns) {
+  const lacks = ['stories.tsx', 'test.tsx', 'mdx'].filter((ext) => !fs.existsSync(path.join(PAT, p, `${p}.${ext}`))).map((ext) => `${p}.${ext}`);
+  const title = (fs.existsSync(path.join(PAT, p, `${p}.stories.tsx`)) ? fs.readFileSync(path.join(PAT, p, `${p}.stories.tsx`), 'utf8') : '').match(/title: '(Patterns\/[^']+)'/);
+  const listed = !!title && intro.includes(`?path=/docs/${title[1].toLowerCase().replace(/[^a-z0-9]+/g, '-')}--docs`);
+  t(`pattern ${p}: stories, test and guide, listed in Patterns/Introduction`, !lacks.length && listed,
+    [lacks.length && `missing: ${lacks.join(', ')}`, !listed && 'add it to the table in src/patterns/Introduction.mdx, linked to its docs page'].filter(Boolean).join('; '));
+}
+
+console.log(`(${comps.length} components, ${patterns.length} patterns)`);
 done(report('Contract', R));
