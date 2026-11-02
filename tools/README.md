@@ -36,6 +36,7 @@ node tools/test/run.mjs --locale id-ID    # the suite with the browser in anothe
 node tools/test/run.mjs --compat safari   # add the cross-browser comparison (safari, firefox or webkitgtk)
 node tools/test/run.mjs --list            # the steps it would run (with --group, of one group)
 node tools/test/run.mjs --since main      # only the components changed since main, and the ones that use them
+node tools/ci.mjs --since main            # every job CI requires on a pull request, here, before you push (below)
 npm run test:unit                         # only the component tests (Vitest), straight from src/, in a few seconds
 npm run test:watch                        # the same, re-running as you edit
 npm run test:coverage                     # the same, and which lines they run (coverage/index.html); fails under the floors in vitest.config.ts
@@ -46,6 +47,8 @@ npx vitest run --project checks -t contrast  # the checks whose name says contra
 ```
 
 On a pull request, CI runs `--since` its base: when every changed file is inside component folders (with their baselines, server-render case and changeset), the component tests, visual snapshots and Storybook checks cover only those components and every component that uses one of them; the checks always run whole. Any other change runs everything, and so does every push to main, which catches what a narrowed run missed. `affected.mjs` tests which components a change covers.
+
+`node tools/ci.mjs` runs every job CI requires, one after the other, in the order CI runs them: the tokens check, the build and Storybook's, the version check, the typecheck and lint, the suite's four groups, the component tests again in each second language, the consumer check and the frameworks check. `--since main` narrows it as a pull request's run is narrowed and adds the Changeset workflow's check. CI runs the second language its commit's hash picks, and a pull request's merge commit isn't known before it exists, so `ci.mjs` runs all four (`LOCALES` in `test/lib.mjs`): a test that only passes in English fails before the push instead of on main. The first failure stops it (`--keep-going` runs the rest), `--skip frameworks,consumer` leaves steps out, `--list` names them. It leaves out what needs CI itself: `npm audit signatures` and CodeQL.
 
 ### Component tests
 
