@@ -56,6 +56,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => results(count),
   showOptions: "عرض الخيارات",
   clearValue: (label) => (label ? "مسح " + label : "مسح"),
+  createOption: (text) => "إضافة «" + text + "»",
   valueAdded: (label) => "تمت إضافة " + label,
   valueRemoved: (label) => "تمت إزالة " + label,
   copied: "تم النسخ",
