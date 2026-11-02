@@ -16,7 +16,7 @@
   padding: var(--spacing-0) var(--dk-input-px);
   background: var(--input-bg, var(--field)); color: var(--input-text, var(--text));
   border: var(--input-border-width, var(--border-width-1)) solid var(--dk-input-bd);
-  border-radius: var(--input-radius, var(--rounded-md));
+  border-radius: var(--input-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   cursor: text; vertical-align: middle;
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
