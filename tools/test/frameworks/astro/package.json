@@ -1,0 +1,7 @@
+{
+  "name": "serupa-example-astro",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "astro build" },
+  "dependencies": { "@astrojs/react": "7.1.2", "astro": "7.4.4" }
+}
