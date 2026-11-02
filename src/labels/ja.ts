@@ -156,6 +156,8 @@ export const labels: SerupaLabels = {
   resizePanes: "パネルのサイズを変更",
   splitterPlace: "ハンドルを置く位置を押すか、もう一度ハンドルを押してキャンセルします。",
   skipToContent: "本文へスキップ",
+  offline: "オフラインです",
+  backOnline: "オンラインに戻りました",
   completed: "完了",
   hasError: "エラーがあります",
   hasWarning: "確認が必要です",

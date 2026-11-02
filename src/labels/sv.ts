@@ -157,6 +157,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Ändra storlek på paneler",
   splitterPlace: "Tryck där handtaget ska vara, eller tryck på handtaget igen för att avbryta.",
   skipToContent: "Hoppa till innehållet",
+  offline: "Du är offline",
+  backOnline: "Online igen",
   completed: "klart",
   hasError: "har ett fel",
   hasWarning: "behöver uppmärksamhet",
