@@ -1,6 +1,5 @@
 {
   "src/components/CopyButton/CopyButton.test.tsx": 3,
-  "src/components/DateRangePicker/DateRangePicker.test.tsx": 5,
   "src/components/Dialog/Dialog.test.tsx": 2,
   "src/components/Drawer/Drawer.test.tsx": 5,
   "src/components/InlineEdit/InlineEdit.test.tsx": 1,
