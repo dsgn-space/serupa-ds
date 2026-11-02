@@ -1,7 +1,9 @@
 CHANGELOG.md
 LICENSE
 README.md
+bin/serupa-create.mjs
 bin/serupa-purge.mjs
+bin/serupa-usage.mjs
 design-tokens/css-values.json
 design-tokens/serupa.tokens.json
 design-tokens/themes/blue-dark.tokens.json
@@ -16,6 +18,13 @@ dist/bundle.css
 dist/components.css
 dist/components.json
 dist/debug.js
+dist/email/blue.css
+dist/email/blue.html
+dist/email/emerald.css
+dist/email/emerald.html
+dist/email/tokens.json
+dist/email/violet.css
+dist/email/violet.html
 dist/eslint.d.ts
 dist/eslint.js
 dist/icons.d.ts
