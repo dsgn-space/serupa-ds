@@ -71,7 +71,7 @@ The element the step points at gets a 2px primary ring (`[data-tour-target]`), s
 | `defaultOpen` | `boolean` | `false` | Show it at first (uncontrolled). |
 | `onOpenChange` | `(open, { reason }) => void` | | `reason` is `'escape'` or `'close'` (the close button, or Done). |
 | `step` | `number` | | The step shown, from 0 (controlled), with `onStepChange`. |
-| `defaultStep` | `number` | `0` | The step shown at first (uncontrolled). |
+| `defaultStep` | `number` | `0` | The step shown each time it opens (uncontrolled). |
 | `onStepChange` | `(step) => void` | | Called with the new step on Back or Next. |
 | `onFinish` | `() => void` | | Called when Done is pressed on the last step, before it closes. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `2` | The heading level of each title. |
