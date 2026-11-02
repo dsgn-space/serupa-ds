@@ -29,23 +29,23 @@ export interface PhoneValueDetails {
 
 export interface PhoneInputProps extends Omit<InputProps, "type" | "showCount" | "prefix" | "suffix" | "value" | "defaultValue" | "onChange" | "leftIcon" | "rightIcon"> {
   /** The number in E.164, such as "+6281234567890", or "" (controlled). Use with onValueChange. */
-  value?: string;
+  value?: string | undefined;
   /** The number at first (uncontrolled), in E.164. */
-  defaultValue?: string;
+  defaultValue?: string | undefined;
   /** Called with the E.164 number ("" when empty) as people type, paste or change the country. */
-  onValueChange?: (value: string, details: PhoneValueDetails) => void;
+  onValueChange?: ((value: string, details: PhoneValueDetails) => void) | undefined;
   /** The picked country, an ISO code such as "ID" (controlled). Use with onCountryChange. */
-  country?: string;
+  country?: string | undefined;
   /** The country at first (uncontrolled). Default: the locale's region when it's known, else "US". */
-  defaultCountry?: string;
+  defaultCountry?: string | undefined;
   /** Called with the ISO code when the country changes, from the menu or a pasted "+…" number. */
-  onCountryChange?: (country: string) => void;
+  onCountryChange?: ((country: string) => void) | undefined;
   /** The countries in the menu, as ISO codes or your own PhoneCountry rows (which replace the built-in row with the same code); the menu sorts them by name. Default: every country PhoneInput knows. */
-  countries?: Array<string | PhoneCountry>;
+  countries?: Array<string | PhoneCountry> | undefined;
   /** The country menu's name. Default: "Country". */
-  countryLabel?: string;
+  countryLabel?: string | undefined;
   /** Submits the E.164 number under this name in a hidden input. */
-  name?: string;
+  name?: string | undefined;
 }
 
 const own = { size: 1, invalid: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, country: 1, defaultCountry: 1,

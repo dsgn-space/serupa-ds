@@ -7,9 +7,9 @@ export type HeadingSize = 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | 
 
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   /** The heading element, h1 to h6: pick the level that fits the page's outline. Default: 2. */
-  level?: HeadingLevel;
+  level?: HeadingLevel | undefined;
   /** The look, from the type scale, separate from the level. Default: the level's own (1: 3xl, 2: 2xl, 3: xl, 4: lg, 5: base, 6: sm). */
-  size?: HeadingSize;
+  size?: HeadingSize | undefined;
 }
 
 /* Heading: an h1 to h6 in the system's type. level sets the element, size the look (each level has its own

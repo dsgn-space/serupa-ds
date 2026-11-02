@@ -14,19 +14,19 @@ export interface LogoProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement
   alt: string;
   /** The full logo drawn for a dark background: shown when the page's theme is dark (a *-dark data-theme or a
    *  data-mode), or, where the theme follows the screen, when the screen prefers dark. */
-  darkSrc?: string;
+  darkSrc?: string | undefined;
   /** The small mark alone (a square symbol), for narrow spaces: shown when variant is 'mark', or 'auto' on a narrow screen. */
-  markSrc?: string;
+  markSrc?: string | undefined;
   /** The small mark drawn for a dark background. */
-  markDarkSrc?: string;
+  markDarkSrc?: string | undefined;
   /** 'full' (default) shows the full logo; 'mark' the small mark; 'auto' the mark below the `collapseBelow` breakpoint
    *  and the full logo from there up. Without markSrc it is always the full logo. */
-  variant?: "full" | "mark" | "auto";
+  variant?: "full" | "mark" | "auto" | undefined;
   /** With variant 'auto', the screen width below which the mark shows: 'sm' (640px), 'md' (768px, default, where
    *  Navbar folds its links) or 'lg' (1024px). */
-  collapseBelow?: "sm" | "md" | "lg";
+  collapseBelow?: "sm" | "md" | "lg" | undefined;
   /** Its height: 'sm' (24px), 'md' (32px, default) or 'lg' (40px). The width follows the picture's shape. */
-  size?: LogoSize;
+  size?: LogoSize | undefined;
 }
 
 const BELOW = { sm: "(max-width: 639.98px)", md: "(max-width: 767.98px)", lg: "(max-width: 1023.98px)" } as const;

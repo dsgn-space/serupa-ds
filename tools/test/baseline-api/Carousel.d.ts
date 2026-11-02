@@ -8,18 +8,18 @@ interface CarouselLabels {
     slideRole: string;
 }
 interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
-    children?: React.ReactNode;
-    label?: string;
-    index?: number;
-    defaultIndex?: number;
-    onIndexChange?: (index: number) => void;
-    loop?: boolean;
-    arrows?: boolean;
-    dots?: boolean;
-    previousLabel?: string;
-    nextLabel?: string;
-    slideLabel?: (index: number, count: number) => string;
-    perView?: CarouselPerView | number;
+    children?: React.ReactNode | undefined;
+    label?: string | undefined;
+    index?: number | undefined;
+    defaultIndex?: number | undefined;
+    onIndexChange?: ((index: number) => void) | undefined;
+    loop?: boolean | undefined;
+    arrows?: boolean | undefined;
+    dots?: boolean | undefined;
+    previousLabel?: string | undefined;
+    nextLabel?: string | undefined;
+    slideLabel?: ((index: number, count: number) => string) | undefined;
+    perView?: CarouselPerView | number | undefined;
 }
 interface CarouselPerView {
     base?: number;
