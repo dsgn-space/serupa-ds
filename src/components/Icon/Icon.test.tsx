@@ -90,6 +90,20 @@ describe('Icon', () => {
     expect(['sn', 'ss', 'sd', 'sl'].map(fs)).toEqual(['20px', '20px', '18.5px', '32px']);
   });
 
+  test('inline in running text, each size step leaves its text\'s line as tall as it was, centred on the text (GR110)', async () => {
+    const steps = [['xs', 'text-xs'], ['sm', 'text-sm'], ['md', 'text-base'], ['lg', 'text-lg']] as const;
+    await render(<>{steps.map(([s, t]) => <React.Fragment key={s}>
+      <p id={'bare-' + s} className={t} style={{ margin: 0 }}>Label</p>
+      <p id={'with-' + s} className={t} style={{ margin: 0 }}><Icon id={'i-' + s} name="close" size={s} /><span id={'t-' + s}>Label</span></p>
+    </React.Fragment>)}</>);
+    for (const [s] of steps) {
+      const h = (id: string) => document.getElementById(id)!.getBoundingClientRect();
+      const mid = (r: DOMRect) => (r.top + r.bottom) / 2;
+      expect(h('with-' + s).height, s).toBe(h('bare-' + s).height);
+      expect(Math.abs(mid(h('i-' + s)) - mid(h('t-' + s))), s).toBeLessThanOrEqual(2);
+    }
+  });
+
   test('mirror: in right-to-left text a directional icon (arrow_forward, chevron_right) flips to point the way reading goes; others don\'t; true flips any, false none', async () => {
     const fwd = { name: 'arrow_forward', d: 'M0 0' }, home = { name: 'home', d: 'M0 0' };
     await render(<>
@@ -119,6 +133,24 @@ describe('Icon', () => {
     await expect.poll(() => !!host.querySelector('#hyd svg')).toBe(true);
     expect(errors).toEqual([]);
     root.unmount(); host.remove();
+  });
+});
+
+describe('Icon: the size scale and weights (116+76)', () => {
+  test('size="xs" to "xl" are the icon-size tokens, 14, 16, 20, 24 and 40px; the default is lg', async () => {
+    await render(<div>{(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <Icon key={s} id={'size-' + s} icon={Close} size={s} />)}<Icon id="size-none" icon={Close} /></div>);
+    const px = (id: string) => document.getElementById(id)!.getBoundingClientRect().width;
+    expect(['xs', 'sm', 'md', 'lg', 'xl', 'none'].map((s) => px('size-' + s))).toEqual([14, 16, 20, 24, 40, 24]);
+  });
+
+  test('weight thickens a Material Symbol by a stroke of the icon-weight token; regular draws no stroke', async () => {
+    await render(<div>{(['regular', 'semibold', 'bold'] as const).map((w) => <Icon key={w} id={'weight-' + w} icon={Close} size={40} weight={w} />)}</div>);
+    const stroke = (w: string) => getComputedStyle(document.querySelector(`#weight-${w} path`)!);
+    expect(stroke('regular').stroke).toBe('none');
+    expect(stroke('semibold').strokeWidth).toBe('0.8px');   // 0.02em of 40px
+    expect(stroke('bold').strokeWidth).toBe('1.4px');       // 0.035em of 40px
+    expect(stroke('bold').vectorEffect).toBe('non-scaling-stroke');
+    expect(stroke('bold').stroke).toBe(stroke('bold').fill);
   });
 });
 

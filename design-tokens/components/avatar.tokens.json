@@ -128,7 +128,7 @@
     "border": {
       "radius-square": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The corners of shape=\"square\" (8px).",
         "$extensions": {
           "com.serupa": {

@@ -56,7 +56,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "The panel's shadow.",
         "$extensions": {
           "com.serupa": {
@@ -68,7 +68,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The panel's corners (8px).",
         "$extensions": {
           "com.serupa": {

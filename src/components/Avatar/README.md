@@ -84,7 +84,7 @@ Each is an optional override: set it on the page, a container or one avatar. The
 | `--avatar-size-md` | `spacing-10` | size="md", the default (40px). |
 | `--avatar-size-lg` | `spacing-12` | size="lg" (48px). |
 | `--avatar-size-xl` | `spacing-16` | size="xl" (64px). |
-| `--avatar-radius-square` | `rounded-lg` | The corners of shape="square" (8px). |
+| `--avatar-radius-square` | `radius-surface` | The corners of shape="square" (8px). |
 | `--avatar-ring-width` | `border-width-2` | The ring around the status dot (2px). |
 | `--avatar-weight` | `font-medium` | The initials' weight (500). |
 <!-- token-table:end -->

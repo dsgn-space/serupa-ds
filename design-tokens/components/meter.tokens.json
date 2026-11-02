@@ -108,7 +108,7 @@
     "borders": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-full}",
+        "$value": "{radius.radius-pill}",
         "$description": "The bar's ends.",
         "$extensions": {
           "com.serupa": {

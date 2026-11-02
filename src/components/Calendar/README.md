@@ -111,7 +111,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
 | `--calendar-day-size` | `control-height-md` | Each day's square (32px). |
-| `--calendar-day-radius` | `rounded-md` | A day's corners (6px). |
+| `--calendar-day-radius` | `radius-control` | A day's corners (6px). |
 | `--calendar-gap` | `spacing-2` | Space between the header and the days (8px). |
 | `--calendar-title-weight` | `font-semibold` | The month and year (600). |
 | `--calendar-today-weight` | `font-semibold` | Today's number (600). |
