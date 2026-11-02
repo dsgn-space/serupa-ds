@@ -1,0 +1,69 @@
+# Centered
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Find a project":
+  - heading "Find a project" [level=2]
+  - button "Close"
+  - text: Search by name or owner. Results update as you type. Step 1 of 3
+  - button "Next"
+
+# Closed
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- paragraph:
+  - button "Take the tour"
+
+# Default
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Find a project":
+  - heading "Find a project" [level=2]
+  - button "Close"
+  - text: Search by name or owner. Results update as you type. Step 1 of 3
+  - button "Next"
+
+# Last
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Help is here":
+  - heading "Help is here" [level=2]
+  - button "Close"
+  - text: Guides and shortcuts live behind this button, and you can take this tour again from there. Step 3 of 3
+  - button "Back"
+  - button "Done"
+
+# LongText
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Find a project":
+  - heading "Find a project" [level=2]
+  - button "Close"
+  - text: Search by name or owner. Results update as you type. Step 1 of 3
+  - button "Next"
+
+# Middle
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Start something new":
+  - heading "Start something new" [level=2]
+  - button "Close"
+  - text: New project opens a blank board you can share later. Step 2 of 3
+  - button "Back"
+  - button "Next"
+
+# Playground
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Find a project":
+  - heading "Find a project" [level=2]
+  - button "Close"
+  - text: Search by name or owner. Results update as you type. Step 1 of 3
+  - button "Next"
+
