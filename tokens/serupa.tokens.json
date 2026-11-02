@@ -8198,6 +8198,44 @@
       "$value": "65ch",
       "$description": "`max-w-prose`: about 65 characters per line, the comfortable reading width for body text."
     },
+    "icon-size-xs": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-3_5}",
+      "$description": "14px. Icons in `sm` buttons and next to `text-xs`: `<Icon size=\"xs\">`."
+    },
+    "icon-size-sm": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-4}",
+      "$description": "16px. Icons in `md` buttons and next to `text-sm`: `<Icon size=\"sm\">`."
+    },
+    "icon-size-md": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-5}",
+      "$description": "20px. Icons in `lg` buttons, list rows and inputs, and next to `text-base`: `<Icon size=\"md\">`."
+    },
+    "icon-size-lg": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-6}",
+      "$description": "24px, the Icon default: toolbars, navigation, icons on their own: `<Icon size=\"lg\">`."
+    },
+    "icon-size-xl": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-10}",
+      "$description": "40px. Empty states and illustrations: `<Icon size=\"xl\">`."
+    },
+    "icon-weight-regular": {
+      "$type": "number",
+      "$value": 0,
+      "$description": "The Material Symbols drawing as it is (weight 400), next to regular and medium text: `<Icon weight=\"regular\">`, the default."
+    },
+    "icon-weight-semibold": {
+      "$value": "0.02em",
+      "$description": "Thickens a Material Symbol to go with `font-semibold` text: a stroke this wide round the drawing (0.5px at 24px). `<Icon weight=\"semibold\">`."
+    },
+    "icon-weight-bold": {
+      "$value": "0.035em",
+      "$description": "Thickens a Material Symbol to go with `font-bold` text and headings, close to weight 700 (0.84px at 24px). `<Icon weight=\"bold\">`."
+    },
     "sizing-1-2": {
       "$value": "50%",
       "$description": "Fraction 1/2: `w-1/2`, `h-1/2`, `inline-1/2`… = 50% of the parent."
