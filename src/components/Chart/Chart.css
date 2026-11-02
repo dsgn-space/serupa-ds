@@ -21,7 +21,7 @@
 .dk-chart__frame, .dk-chart__table, .dk-chart__legend, .dk-chart > .dk-table-wrap { grid-column: var(--dk-chart-all); }
 .dk-chart__frame { position: relative; min-inline-size: 0; }
 /* The plot lays itself out in page order, so its own direction stays left to right (labels keep their own). */
-.dk-chart__plot { display: block; inline-size: var(--sizing-full); block-size: auto; overflow: visible; direction: ltr; touch-action: pan-y; }
+.dk-chart__plot { display: block; inline-size: var(--sizing-full); overflow: visible; direction: ltr; touch-action: pan-y; }
 .dk-chart__plot:focus { outline: none; }
 .dk-chart__label { fill: var(--chart-label-text, var(--chart-label)); font-size: var(--text-xs); font-variant-numeric: tabular-nums; unicode-bidi: plaintext; }
 .dk-chart__gridline { stroke: var(--chart-grid-line, var(--chart-grid)); stroke-width: var(--stroke-width-1); shape-rendering: crispEdges; }
