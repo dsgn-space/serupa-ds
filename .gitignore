@@ -1,6 +1,7 @@
 node_modules
 dist/
 .test-tmp/
+.test-tmp-*/
 bundle.min.css
 .DS_Store
 *.log
