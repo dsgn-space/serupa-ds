@@ -21,4 +21,4 @@ Where Serupa is going, by theme. It says what is coming and roughly in what orde
 
 ## Majors
 
-No breaking change is planned. 13.0.0 is the current major, and nothing is marked deprecated, so no removals are waiting. A major comes only when something has to stop working. Before one, the change is written up for comment, and the release comes with a migration guide and, where it can, a codemod that makes the change for you.
+The next major renames the package, once its final name is chosen. Your code keeps working: what changes is the name you install and import from, and the release comes with a migration guide and a codemod that makes the change for you. Nothing is marked deprecated today, so no other removals are waiting. Any major after that comes only when something has to stop working, and is written up for comment first.
