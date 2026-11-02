@@ -103,6 +103,26 @@ describe('ButtonGroup', () => {
   });
 });
 
+describe('ButtonGroup with a label longer than its container (GR108)', () => {
+  // German at 320px with a 16px gutter: one word wider than the 288px box.
+  const LONG = 'Datenschutzgrundverordnungskonformitätsprüfung';
+  for (const attached of [true, false]) {
+    test(`${attached ? 'attached' : 'not attached'}: the long label is cut with an ellipsis and a title, and the page doesn't scroll sideways`, async () => {
+      await page.viewport(320, 640);
+      await render(<div lang="de" style={{ width: '288px' }}><ButtonGroup id="gl" aria-label="Aktionen" attached={attached}>
+        <Button id="gl1" variant="outline">{LONG}</Button><Button id="gl2" variant="outline">Zahlungsverkehrsbestätigung anfordern</Button>
+      </ButtonGroup></div>);
+      const g = el('gl'), box = g.parentElement!.getBoundingClientRect();
+      await expect.poll(() => [...g.children].every((b) => b.getBoundingClientRect().right <= box.right + 0.5)).toBe(true);
+      expect([document.documentElement.scrollWidth, g.getBoundingClientRect().width <= 288]).toEqual([320, true]);
+      await expect.poll(() => el('gl1').getAttribute('title')).toBe(LONG);   // Button's own title for a cut label
+      const label = el('gl1').querySelector('.dk-btn__label') as HTMLElement;
+      expect([getComputedStyle(label).textOverflow, label.scrollWidth > label.clientWidth]).toEqual(['ellipsis', true]);
+      await page.viewport(800, 640);
+    });
+  }
+});
+
 describe('ButtonGroup in a grid (GP2)', () => {
   test('an attached row wider than its grid column wraps instead of widening the track', async () => {
     await render(<div id="gp2" style={{ width: '288px', display: 'grid' }}>
