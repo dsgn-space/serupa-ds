@@ -1,4 +1,4 @@
-// exports: type FileRejection, FileUpload, type FileUploadProps, formatFileSize
+// exports: type FileRejection, FileUpload, type FileUploadProps, type FileUploadStatus, formatFileSize
 interface FileUploadLabels {
     dragFiles: string;
     dragFile: string;
@@ -15,8 +15,14 @@ interface FileUploadLabels {
     fileAlreadyAdded: (name: string) => string;
     filesAdded: (names: string[]) => string;
     fileRemoved: (name: string) => string;
+    fileError: string;
 }
 declare function formatFileSize(bytes: number, locale?: string): string;
+interface FileUploadStatus {
+    state: "done" | "error" | "uploading";
+    progress?: number;
+    message?: React.ReactNode;
+}
 type FileRejection = {
     file: File;
     reason: "count" | "duplicate" | "folder" | "size" | "type";
@@ -40,5 +46,8 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "de
     buttonLabel?: string;
     hint?: React.ReactNode;
     removeLabel?: (name: string) => string;
+    fileStatus?: (file: File) => FileUploadStatus | null | undefined;
+    onRetry?: (file: File) => void;
+    thumbnails?: boolean;
 }
 declare const FileUpload: React.ForwardRefExoticComponent<FileUploadProps & React.RefAttributes<HTMLDivElement>>;

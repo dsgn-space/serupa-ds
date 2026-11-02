@@ -41,6 +41,15 @@ Drawn from the `ReadOnly` story.
 - Use `onReject` if you need to log refused files or show the reason elsewhere; the messages already show under the area.
 - A refused type says what the field takes, in words from `accept`: "photo.heic isn't a PNG or JPG." Types with no short name, such as `application/vnd.ms-excel`, get "photo.heic: this type of file isn't accepted."
 - Change `title` and `buttonLabel` to name what's expected ("Drag your CV here", "Choose a CV").
+- Uploading as files are added: keep each file's upload in your state and return it from `fileStatus`. Pass `onRetry` to give a failed file a retry button, and remove a file from `files` to cancel it.
+
+```tsx
+const [files, setFiles] = useState<File[]>([]);
+const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
+<FileUpload multiple files={files} onFilesChange={(next) => { setFiles(next); next.filter((f) => !status.has(f)).forEach(upload); }}
+  fileStatus={(f) => status.get(f)} onRetry={upload} thumbnails />
+// upload(f) sets { state: "uploading", progress } as it goes, then { state: "done" } or { state: "error", message }.
+```
 
 ## Behavior
 
@@ -49,6 +58,8 @@ Drawn from the `ReadOnly` story.
 - Files that don't fit are listed under the area in danger text and passed to `onReject`; the same file picked twice is skipped quietly.
 - Removing a file moves focus to the next file's remove button, or the one before it, so clearing several files stays in the list; with none left, focus goes to the choose button.
 - A long file name is cut in the middle, as Finder and Drive do: "quarterly-report-fi…t-2026.pdf". The last few characters and the extension stay, so files that differ only by year or version still look different. Hover shows the full name, and it's laid out in its own direction. It is cut wherever FileUpload sits, a grid cell or a flex row included, so a long name never widens the page.
+- With `fileStatus`, each file shows its upload: while `uploading`, a small bar under its name, filled to `progress` (0 to 100) or moving on its own without one; when `done`, "Complete" with a check after its size; on `error`, a danger outline and the `message` (default "Upload failed") under its name, and with `onRetry` a "Try again" button before the remove button. FileUpload doesn't upload anything itself.
+- With `thumbnails`, an image file shows a 40px picture of itself in place of its type icon. The picture is decoded in the browser (`createImageBitmap`) and drawn on a canvas, so no URL made from the file reaches the page. An image the browser can't decode, such as HEIC in most browsers, keeps the icon.
 - The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
 - `readOnly` shows the files without remove buttons and ignores the button and drops; the files are still submitted. `disabled` also fades it and leaves the files out of the form.
 
@@ -56,11 +67,12 @@ Drawn from the `ReadOnly` story.
 
 - The button is the keyboard and screen-reader way in; dragging is an extra. Messages about refused files are `role="alert"`, so they're announced. They come from labels (`fileWrongType`, `fileTooLarge`, `fileTooMany`, `fileOnlyOne`, `fileFolder`, `fileAlreadyAdded`), Indonesian in `idLabels`, and `onReject` gets the same text.
 - Adding and removing files are said politely, since the list changes away from focus: "report.pdf added.", "3 files added.", "report.pdf removed." (`filesAdded`, `fileRemoved`).
+- Each upload bar is a `progressbar` named by its file. A file that was uploading is said politely when it finishes or fails: "report.pdf: complete", "report.pdf: Upload failed" (`progressComplete`, `fileError`); one that arrives done, such as a restored draft, isn't. A retry button is named by its text and the file ("Try again report.pdf", `tryAgain`) and described by the failure message. Thumbnails are decorative (`aria-hidden`): the name next to them says what the file is.
 - Submitted without a required file, FileUpload doesn't let the browser point its bubble at the hidden input: it shows "Choose a file." (`fileMissing`) in the same alert area, makes the button invalid and described by it, and focuses the button when it's the first invalid field. Choosing a file clears it.
 - In a [Field](../Field/README.md), the button is named by the label and its own text ("Due date, Choose a file") and described by the Field's hint and error, then the `hint`. `aria-describedby` goes to the button too. A button supports none of `aria-invalid`, `aria-errormessage` and `aria-required`, so the button is described by the Field's `error` (or your own `aria-errormessage`), and with `required` by "Required" first (`labels.required`). `aria-invalid` goes on the native input.
 - Text keeps 4.5:1 (also while dragging), and the icons and dashed outline 3:1, in all six themes (`FileUpload.test.tsx`).
 - In forced colors (Windows High Contrast), the drag-over area turns its border solid and `Highlight`, so the state still shows without the primary fill.
-- **Keyboard:** Tab reaches the choose button, where Enter or Space opens the file picker, then each chosen file's remove button. Dropping files needs a pointer, so the button is the keyboard's way in; Ctrl+V (⌘V) there pastes copied files. Read-only, the choose button stays focusable but opens nothing.
+- **Keyboard:** Tab reaches the choose button, where Enter or Space opens the file picker, then each failed file's retry button and each chosen file's remove button. Dropping files needs a pointer, so the button is the keyboard's way in; Ctrl+V (⌘V) there pastes copied files. Read-only, the choose button stays focusable but opens nothing.
 
 ## Props
 
@@ -84,6 +96,9 @@ Drawn from the `ReadOnly` story.
 | `buttonLabel` | `string` | `'Choose files'` or `'Choose a file'` | |
 | `hint` | `ReactNode` | | A muted line such as "PNG or JPG, up to 5 MB". The button is described by it. |
 | `removeLabel` | `(name) => string` | `` `Remove ${name}` `` | The remove buttons' names. |
+| `fileStatus` | `(file) => FileUploadStatus \| null` | | Each file's upload: `{ state: 'uploading' \| 'done' \| 'error', progress?, message? }`. |
+| `onRetry` | `(file) => void` | | A failed file's retry button calls it. Without it there's no retry button. |
+| `thumbnails` | `boolean` | `false` | A picture of each image file in place of its type icon. |
 
 `formatFileSize(bytes, locale?)` is exported too: `1.5 MB` or `820 kB`, in steps of 1000, as macOS, iOS and Android count (so a `maxSize` of `5_000_000` reads "5 MB", and one of `5 * 1024 * 1024` reads "5.2 MB"), or with a locale the same as FormattedNumber's `format="bytes"` (`formatFileSize(1_500_000, "id-ID")` is `1,5 MB`). FileUpload writes each size, and the size in a refusal, in the provider's locale. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the choose button, so a form library that focuses the first invalid field after a failed submit lands on it.
 
@@ -103,6 +118,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |
 | `--file-upload-hint-color` | `text-muted` | The hint and file sizes (4.5:1 on zone-bg and the surface). |
 | `--file-upload-error-color` | `danger-text` | Messages about files that weren't added. |
+| `--file-upload-done-color` | `success-text` | A finished upload's "Complete" and its check (fileStatus). |
 | `--file-upload-item-bg` | `surface` | A file row's background. |
 | `--file-upload-item-border` | `border` | A file row's outline. |
 | `--file-upload-zone-radius` | `radius-surface` | The drop area's corners (8px). |

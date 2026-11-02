@@ -93,6 +93,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} đã được thêm.`,
   filesAdded: (names) => (names.length === 1 ? `Đã thêm ${names[0]}.` : `Đã thêm ${n(names.length)} tệp.`),
   fileRemoved: (name) => `Đã bỏ ${name}.`,
+  fileError: "Không tải lên được",
   viewImage: "Xem hình ảnh",
   removeImage: "Bỏ hình ảnh",
   edit: "Chỉnh sửa",

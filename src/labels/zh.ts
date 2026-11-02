@@ -92,6 +92,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} 已添加。`,
   filesAdded: (names) => (names.length === 1 ? `已添加 ${names[0]}。` : `已添加 ${n(names.length)} 个文件。`),
   fileRemoved: (name) => `已移除 ${name}。`,
+  fileError: "上传失败",
   viewImage: "查看图片",
   removeImage: "移除图片",
   edit: "编辑",

@@ -92,6 +92,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} पहले से जुड़ी है।`,
   filesAdded: (names) => (names.length === 1 ? `${names[0]} जोड़ी गई।` : `${n(names.length)} फ़ाइलें जोड़ी गईं।`),
   fileRemoved: (name) => `${name} हटाई गई।`,
+  fileError: "अपलोड नहीं हो सकी",
   viewImage: "इमेज देखें",
   removeImage: "इमेज हटाएँ",
   edit: "बदलें",
