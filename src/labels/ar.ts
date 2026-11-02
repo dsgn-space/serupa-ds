@@ -105,6 +105,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} مضاف بالفعل.`,
   filesAdded: (names) => (names.length === 1 ? `تمت إضافة ${names[0]}.` : `تمت إضافة ${files(names.length)}.`),
   fileRemoved: (name) => `تمت إزالة ${name}.`,
+  fileError: "تعذّر الرفع",
   viewImage: "عرض الصورة",
   removeImage: "إزالة الصورة",
   edit: "تعديل",

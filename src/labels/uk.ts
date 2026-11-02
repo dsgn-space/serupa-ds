@@ -106,6 +106,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} уже додано.`,
   filesAdded: (names) => (names.length === 1 ? `${names[0]}: додано.` : `Додано файлів: ${n(names.length)}.`),
   fileRemoved: (name) => `${name}: вилучено.`,
+  fileError: "Не вдалося завантажити",
   viewImage: "Переглянути зображення",
   removeImage: "Вилучити зображення",
   edit: "Змінити",
