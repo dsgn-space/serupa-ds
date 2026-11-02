@@ -33,9 +33,15 @@
 .dk-code-block__pre:focus-visible { outline: var(--focus-ring-width) solid var(--code-block-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-code-block__code { display: block; inline-size: max-content; min-inline-size: var(--sizing-full); font: inherit; }
 .dk-code-block__line { display: block; padding-inline: var(--code-block-padding, var(--spacing-4)); }
-.dk-code-block--numbered .dk-code-block__line { display: grid; grid-template-columns: calc(var(--dk-code-digits, 2) * 1ch) minmax(0, 1fr); column-gap: var(--spacing-4); padding-inline-start: var(--spacing-3); counter-increment: dk-code-line; }   /* stylelint-disable-line serupa/no-raw-value -- the numbers' column is as many characters wide as the last line's number has digits: no token measures a character */
+.dk-code-block--numbered .dk-code-block__line {
+  /* Not a grid: a grid item holding only a line break drops out of copied text, so blank lines went (GR114). The
+     number hangs in the start padding instead, and a wrapped line's rest lines up under the code. */
+  --dk-code-gutter: calc(var(--dk-code-digits, 2) * 1ch);   /* stylelint-disable-line serupa/no-raw-value -- as many characters wide as the last line's number has digits: no token measures a character */
+  padding-inline-start: calc(var(--spacing-3) + var(--dk-code-gutter) + var(--spacing-4)); counter-increment: dk-code-line;
+}
 .dk-code-block--numbered .dk-code-block__line::before {
-  content: counter(dk-code-line); text-align: end; color: var(--code-block-muted, var(--text-muted));
+  content: counter(dk-code-line); display: inline-block; inline-size: var(--dk-code-gutter); text-align: end;
+  margin-inline: calc(var(--spacing-0) - var(--dk-code-gutter) - var(--spacing-4)) var(--spacing-4); color: var(--code-block-muted, var(--text-muted));
   user-select: none; -webkit-user-select: none; font-variant-numeric: tabular-nums;
 }
 .dk-code-block__line--marked {
