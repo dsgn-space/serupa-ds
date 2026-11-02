@@ -6994,6 +6994,16 @@
         }
       }
     },
+    "icon-weight-regular": {
+      "$type": "number",
+      "$value": 0,
+      "$description": "The Material Symbols drawing as it is (weight 400), next to regular and medium text: `<Icon weight=\"regular\">`, the default.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-weight-regular"
+        }
+      }
+    },
     "sizing-px": {
       "$type": "dimension",
       "$value": {
