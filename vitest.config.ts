@@ -90,8 +90,9 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       // src/browser*.ts are the plain-page scripts' entries (serupa.iife.js, serupa-icons.iife.js): nothing imports them
-      // here, and tools/test/icon-names.mjs checks them as built, on a page.
-      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts', 'src/browser*.ts'],
+      // here, and tools/test/icon-names.mjs checks them as built, on a page. src/labels/ holds the language packs, which
+      // no component imports: tools/test/label-packs.mjs builds each one and says every word of it.
+      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts', 'src/browser*.ts', 'src/labels/**'],
       reporter: ['text-summary', 'html', 'json-summary'],
       reportsDirectory: 'coverage',
       // Floors a little under the full run's figures on 25 Oct 2026 (96.2 / 88.6 / 98.9 / 99.6 %), so a change
