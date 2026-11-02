@@ -155,6 +155,19 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 3. Check contrast: text aliases need 4.5:1 on the surface they sit on (3:1 for icons, borders and focus rings). The palette tokens' usage notes give the ratios.
 4. Only colours can be aliases: spacing, radius, shadow and type tokens hold their own values.
 
+### A theme from your brand color
+
+`serupa-brand` comes with the package and makes a light and a dark theme from one color:
+
+```sh
+npx serupa-brand acme "#0f766e" -o src/acme-theme.css          # corners as they are
+npx serupa-brand acme "#0f766e" --corners round -o src/acme-theme.css   # or sharp
+```
+
+Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
+
+It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary` on the page at 4.5:1 in light, the mirror in dark, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. A color no shade of which can pass says so, and makes no file.
+
 ### Adding a theme
 
 1. Pick a brand hue from the palette.
