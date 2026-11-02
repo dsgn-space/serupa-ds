@@ -248,6 +248,20 @@ describe('Combobox', () => {
     await expect.poll(() => { const a = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return a.top >= l.top - 1 && a.bottom <= l.bottom + 1; }).toBe(true);
   }); });
 
+  test.each([false, true])('long lists: labels of two heights, with motion %s, ArrowUp from the first option wraps to the last, scrolled to the very end (GR101)', async (motion) => { const go = async () => {
+    const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) + (i % 7 === 6 ? ', with a label long enough to wrap onto a second line' : '') }));
+    await render(<div style={{ width: '240px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} /></div>);
+    await userEvent.click(el('cb'));
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    await userEvent.keyboard('{ArrowDown}{ArrowUp}');
+    expect(st('cb').active).toBe('Member number 5000');
+    // Scrolled to the very end, and the last row's bottom at the list's (to a pixel's rounding): it was short by 2 to
+    // 11px once the rows around it measured shorter and the browser clamped the scroll.
+    await expect.poll(() => lb.scrollHeight - lb.clientHeight - lb.scrollTop).toBeLessThan(1);
+    const a = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect();
+    expect(a.bottom - l.bottom).toBeLessThan(1);
+  }; if (motion) await withMotion(go); else await go(); });
+
   test('ArrowDown opens the list in the top layer with every option, the first highlighted, focus staying in the field', async () => {
     await render(<Countries />);
     await open();
