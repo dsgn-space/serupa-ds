@@ -18,7 +18,8 @@ import { Alert } from '../../components/Alert/Alert';
    - 3.3.1 and 3.3.3: a failed try lists each problem in an ErrorSummary at the top, which takes focus, with the same
      words under each field, saying how to fix it.
    - 2.4.3 and 4.1.3: moving to the code step and to the end puts focus on the new step's heading, so a screen reader
-     says where it is.
+     says where it is. "Send a new code" says on screen that the code went, in a status region a screen reader reads
+     without moving focus off the button.
    The checks against a server are the app's job: here `check` and `verify` stand in for it. */
 
 export type SignInStep = 'password' | 'code' | 'done';
@@ -54,6 +55,8 @@ export function SignIn({ start = 'password', failed, check = demoCheck, verify =
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>(failed === 'empty' ? problems('', '') : failed === 'wrong' ? WRONG : []);
   const [code, setCode] = React.useState('');
   const [codeError, setCodeError] = React.useState<string | null>(null);
+  // How many times a new code was asked for. Each ask puts a new line in the status region below, so it is said every time.
+  const [sent, setSent] = React.useState(0);
   // A new step puts focus on its heading (tabIndex -1), so the change is said and the next Tab goes on from there.
   const heading = React.useRef<HTMLHeadingElement | null>(null);
   const moved = React.useRef(false);
@@ -106,7 +109,14 @@ export function SignIn({ start = 'password', failed, check = demoCheck, verify =
                 <PinInput id="sign-in-code" name="code" length={6} value={code} onValueChange={setCode} />
               </Field>
               <Button type="submit">Verify</Button>
-              <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); }}>Send a new code</Button>
+              <div className="flex flex-col">
+                <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); setSent((n) => n + 1); }}>Send a new code</Button>
+                {/* Always there, so a reader is listening before the first ask; a new keyed line is added for each ask.
+                    Empty, it takes no room, so the step looks the same until a code is asked for. */}
+                <div role="status" className="text-sm text-text-muted">
+                  {sent ? <p key={sent} className="m-0 mt-2">We sent a new code to your phone. It works for 10 minutes.</p> : null}
+                </div>
+              </div>
             </form>
           </section>
         ) : (
