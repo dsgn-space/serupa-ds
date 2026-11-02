@@ -7,6 +7,7 @@ import { en as words } from "./labels";
 import { component } from "../../internal/component";
 import { useSettings } from "../../internal/provider";
 import { modalClosed, modalOpened, modalOpening, wasDismissal } from "../../internal/layers";
+import { deepActive } from "../../internal/root";
 import * as icons from "../../material/builtin";
 import { useScrolls } from "../../internal/useScrolls";
 import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
@@ -103,7 +104,7 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
     const d = el.current;
     if (!d) return;
     if (open && !d.open) {
-      if (!back.current) back.current = document.activeElement as HTMLElement | null;   // kept when it opens again
+      if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
       modalOpening();
       if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
       modalOpened(d);
