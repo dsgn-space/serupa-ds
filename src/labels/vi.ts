@@ -167,6 +167,7 @@ export const labels: SerupaLabels = {
   tourBack: "Quay lại",
   tourNext: "Tiếp",
   tourDone: "Xong",
+  sparklineSummary: (label, first, last, min, max) => label + ": từ " + first + " đến " + last + ", thấp nhất " + min + ", cao nhất " + max,
   table: "Bảng",
   tableSorted: (column, direction) => "Đã sắp xếp theo " + column + ", " + (direction === "ascending" ? "tăng dần" : "giảm dần") + ".",
   tableSelected: (count) => "Đã chọn " + n(count),

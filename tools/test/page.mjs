@@ -59,6 +59,16 @@ for (const scheme of ['light', 'dark']) {
   await ctx.close();
 }
 {
+  // A brand made with serupa-brand works once the page names it in data-brands; a brand it doesn't name is ignored.
+  const ctx = await b.newContext({ colorScheme: 'dark' });
+  const p = await ctx.newPage();
+  await p.goto(writePage('theme-brands.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brands="acme ocean" data-brand="acme" data-mode="auto"' }));
+  const own = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), Serupa.theme.set({ brand: 'ocean', mode: 'light' }).theme, Serupa.theme.set({ brand: 'nope' }).theme, Serupa.theme.set({ brand: 'violet' }).theme]);
+  await p.evaluate(() => Serupa.theme.reset());
+  t('theme.js: brands named in data-brands can be chosen, and others still can\'t', own.join() === 'acme-dark,ocean-light,ocean-light,violet-light', own.join());
+  await ctx.close();
+}
+{
   // A page that sets data-theme itself keeps it, under a dark system too, and reset() goes back to it.
   const ctx = await b.newContext({ colorScheme: 'light' });
   const p = await ctx.newPage();
