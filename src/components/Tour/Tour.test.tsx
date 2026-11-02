@@ -112,6 +112,21 @@ describe('Tour', () => {
     expect(onStepChange).toHaveBeenLastCalledWith(1);
   });
 
+  test('opened again, an uncontrolled tour starts over at defaultStep', async () => {
+    function Reopen() {
+      const [open, setOpen] = React.useState(true);
+      return <><button id="again" onClick={() => setOpen(true)}>Take the tour</button><Page open={open} onOpenChange={setOpen} defaultStep={1} /></>;
+    }
+    await render(<Reopen />);
+    expect(el('t').querySelector('h2')!.textContent).toBe('Second');
+    await userEvent.click(button('Next'));
+    expect(el('t').querySelector('h2')!.textContent).toBe('Third');
+    await userEvent.click(button('Close'));
+    expect(el('t').hidden).toBe(true);
+    await userEvent.click(el('again'));
+    expect([el('t').hidden, el('t').querySelector('h2')!.textContent, el('b').hasAttribute('data-tour-target')]).toEqual([false, 'Second', true]);
+  });
+
   test('Escape and the close button end it, with their reasons; a press outside doesn\'t', async () => {
     const onOpenChange = vi.fn();
     await render(<Page defaultOpen onOpenChange={onOpenChange} />);
