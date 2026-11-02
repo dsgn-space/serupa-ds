@@ -1,0 +1,33 @@
+# Auto
+- img "Acme"
+
+# AutoLg
+- img "Acme"
+
+# AutoSm
+- img "Acme"
+
+# Default
+- img "Acme"
+
+# InALink
+- link "Acme home":
+  - /url: "#home"
+
+# LightOnly
+- img "Acme"
+
+# Mark
+- img "Acme"
+
+# Overflow
+- img "Acme"
+
+# Playground
+- img "Acme"
+
+# Sizes
+- img "Acme"
+- img "Acme"
+- img "Acme"
+
