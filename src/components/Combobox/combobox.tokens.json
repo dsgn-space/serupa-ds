@@ -85,7 +85,7 @@
       "description-color": {
         "$type": "color",
         "$value": "{color.text-muted}",
-        "$description": "An option's second line, and the empty and loading messages.",
+        "$description": "An option's second line, the group headings, and the empty and loading messages.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--combobox-description-color"

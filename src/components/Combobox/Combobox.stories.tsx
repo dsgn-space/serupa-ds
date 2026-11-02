@@ -53,6 +53,14 @@ export const WithDescriptions: Story = {
     return <Owner key={useContent()} people={people} />;
   },
 };
+export const Groups: Story = {
+  args: { 'aria-label': 'Country', placeholder: 'Pick a country', options: [
+    { label: 'Africa', options: ['Côte d’Ivoire', 'Egypt', 'Kenya'] },
+    { label: 'Americas', options: ['Argentina', 'Brazil', 'Canada', 'Mexico', 'Peru'] },
+    { label: 'Asia and Oceania', options: ['Australia', 'India', 'Japan'] },
+    { label: 'Europe', options: ['Denmark', 'France', 'Germany', 'Norway'] },
+  ] },
+};
 export const FromAServer: Story = {
   render: function Render() {
     const [q, setQ] = React.useState('');

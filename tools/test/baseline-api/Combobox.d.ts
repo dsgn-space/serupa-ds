@@ -1,4 +1,4 @@
-// exports: Combobox, type ComboboxMultipleProps, type ComboboxOption, type ComboboxProps, type ComboboxSingleProps
+// exports: Combobox, type ComboboxMultipleProps, type ComboboxOption, type ComboboxOptionGroup, type ComboboxProps, type ComboboxSingleProps
 interface ComboboxLabels {
     loadingResults: string;
     loadFailed: string;
@@ -15,11 +15,16 @@ type ComboboxOption<V extends string = string> = {
     description?: React.ReactNode;
     disabled?: boolean;
 } | V;
+interface ComboboxOptionGroup<V extends string = string> {
+    label: string;
+    options: readonly ComboboxOption<V>[];
+    disabled?: boolean;
+}
 interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, "defaultValue" | "onChange" | "prefix" | "rightIcon" | "showCount" | "suffix" | "type" | "value"> {
-    options?: readonly ComboboxOption<V>[];
+    options?: readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[];
     loadOptions?: (text: string, context: {
         signal: AbortSignal;
-    }) => Promise<readonly ComboboxOption<V>[]>;
+    }) => Promise<readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[]>;
     debounce?: number;
     inputValue?: string;
     defaultInputValue?: string;

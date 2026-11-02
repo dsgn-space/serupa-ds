@@ -45,6 +45,7 @@ Drawn from the `Multiple` story.
 - Label it with [Field](../Field/README.md), a `<label htmlFor>` or `aria-label`; the placeholder isn't a label.
 - Add a `description` when options look alike, such as people with the same name (their email).
 - Set `clearable` when no selection is a valid answer, so people can clear it in one click.
+- Group options under headings with `{ label, options }`, as Select's `optgroup`: each group is a `role="group"` named after its heading, typing hides a heading once none of its options match, and `disabled` on a group turns off every option in it.
 - Write an `emptyText` that says what to try next, and match the `size` to the fields beside it.
 - Long lists are fine: the options are in the page only while the list is open, each label is prepared for matching once per `options` array, and moving the highlight redraws two rows. Only the rows in view are drawn, plus a few either side, as in [VirtualList](../VirtualList/README.md): scrolling and the arrow and Page keys reach every match, each row's `aria-posinset` and `aria-setsize` count every match, and the highlighted option is always drawn, so screen readers can follow it. Keep `options` the same array between renders (state, a constant or `useMemo`), so that work isn't redone. For tens of thousands of options, load the matches as people type with `loadOptions`.
 - With `loadOptions`, Combobox runs the requests: it waits for typing to pause (`debounce`, 250ms), passes an `AbortSignal` that aborts when newer text is typed (hand it to `fetch`), drops any answer that isn't for the latest text, and shows the loading row while it waits and "Couldn't load options. Type to try again." (the `loadFailed` label) when the promise rejects. Opening the list loads what `""` finds. The picked option keeps its label when later answers leave it out. Filter on the server: `filter` is ignored. To run the requests yourself instead, use `filter={false}`, `onInputChange` and `loading`.
@@ -88,7 +89,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
-| `options` | `string[]` or `{ value, label, description?, disabled? }[]` | | The label is what's typed to find an option and shown once it's picked. With `loadOptions`, what shows before the first answer (or leave it out). |
+| `options` | `string[]`, `{ value, label, description?, disabled? }[]`, or groups `{ label, options, disabled? }` among them | | The label is what's typed to find an option and shown once it's picked. With `loadOptions`, what shows before the first answer (or leave it out). |
 | `loadOptions` | `(text, { signal }) => Promise<options>` | | Loads the options for the typed text (and `""` on opening), after `debounce`; older requests are aborted and their answers dropped. |
 | `debounce` | `number` | `250` | With `loadOptions`, how long typing must pause before loading, in ms. |
 | `multiple` | `boolean` | `false` | Picks any number of options, shown as tags. `value`, `defaultValue` and `onValueChange` then use `string[]`. |
@@ -126,7 +127,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-option-color` | `text` | An option's label. |
 | `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
 | `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
-| `--combobox-description-color` | `text-muted` | An option's second line, and the empty and loading messages. |
+| `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
 | `--combobox-listbox-shadow` | `shadow-lg` | The list's shadow. |
 | `--combobox-listbox-radius` | `rounded-lg` | The list's corners (8px). |
