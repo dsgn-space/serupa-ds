@@ -63,6 +63,20 @@ describe('Patterns/Sign in', () => {
     expect([active().tagName, active().textContent]).toEqual(['H1', "You're signed in"]);
   });
 
+  test('"Send a new code" says on screen and to a screen reader that it went, each time, and clears the code typed so far', async () => {
+    const screen = await render(<SignIn start="code" />);
+    await userEvent.click(input('sign-in-code'));
+    await userEvent.keyboard('12');
+    const status = document.querySelector('main [role="status"]')!;
+    expect(status.textContent).toBe('');
+    await screen.getByRole('button', { name: 'Send a new code' }).click();
+    expect([status.textContent, input('sign-in-code').value]).toEqual(['We sent a new code to your phone. It works for 10 minutes.', '']);
+    // A second ask adds a new line, so it is said again rather than left unchanged.
+    const first = status.firstElementChild;
+    await screen.getByRole('button', { name: 'Send a new code' }).click();
+    expect([status.childElementCount, status.firstElementChild === first]).toEqual([1, false]);
+  });
+
   test('there is one h1 and one main on every step', async () => {
     for (const start of ['password', 'code', 'done'] as const) {
       const r = await render(<SignIn start={start} />);
