@@ -141,6 +141,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Switch**: An on/off setting that takes effect at once.
 - **Textarea**: A multi-line text field, Input's sibling: a native `<textarea>` in a box.
 - **TimePicker**: A time-of-day field: people type a time, or pick one from a list.
+- **TimeZonePicker** (beta): A searchable list of time zones by city, each with its offset now and its name in the reader's language; the value is the IANA name.
 - **TypeToConfirm**: A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted.
 
 ### Layout

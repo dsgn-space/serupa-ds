@@ -36,6 +36,7 @@ import { Switch } from '../components/Switch/Switch';
 import { TableSelectCell } from '../components/Table/Table';
 import { Textarea } from '../components/Textarea/Textarea';
 import { TimePicker } from '../components/TimePicker/TimePicker';
+import { TimeZonePicker } from '../components/TimeZonePicker/TimeZonePicker';
 
 type Sent = Record<string, string>;
 interface Control {
@@ -107,6 +108,8 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: (r) => fill($(r, 'input:not([type="hidden"])'), '02/10/2026'), changed: { day: '2026-02-10' } },
   DateRangePicker: { el: (form) => <DateRangePicker startName="from" endName="to" form={form} locale="en-US" defaultValue={{ start: new Date(2026, 0, 5), end: new Date(2026, 0, 9) }} />, initial: { from: '2026-01-05', to: '2026-01-09' },
     change: (r) => fill($(r, 'input:not([type="hidden"])'), '01/07/2026'), changed: { from: '2026-01-07', to: '2026-01-09' } },
+  TimeZonePicker: { el: (form) => <TimeZonePicker aria-label="Zone" name="zone" form={form} zones={['Asia/Jakarta', 'Asia/Tokyo', 'Europe/Paris']} defaultValue="Asia/Jakarta" />, initial: { zone: 'Asia/Jakarta' },
+    change: async (r) => { await userEvent.click($(r, 'input')); await userEvent.click($(document.body, '[role="option"]:last-child')); }, changed: { zone: 'Asia/Tokyo' } },
   TimePicker: { el: (form) => <TimePicker aria-label="At" name="at" form={form} locale="en-US" hour12={false} defaultValue="09:00" />, initial: { at: '09:00' },
     change: (r) => fill($(r, 'input:not([type="hidden"])'), '14:30'), changed: { at: '14:30' } },
   ColorPicker: { el: (form) => <ColorPicker aria-label="Color" name="color" form={form} custom={false} swatches={['#1d4ed8', '#b91c1c']} defaultValue="#1d4ed8" />, initial: { color: '#1d4ed8' },

@@ -1,0 +1,22 @@
+# Controlled
+- combobox "Time zone": New York
+- button "Show options"
+- paragraph: "Saved: America/New_York"
+
+# Default
+- text: Time zone Meetings and reminders use it.
+- combobox "Time zone": Jakarta
+- button "Show options"
+
+# LongText
+- combobox "Time zone": New Salem
+- button "Show options"
+
+# Playground
+- combobox "Time zone"
+- button "Show options"
+
+# SomeZones
+- combobox "Time zone": Makassar
+- button "Show options"
+
