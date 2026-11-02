@@ -186,6 +186,8 @@ export const labels: SerupaLabels = {
   dismiss: "تجاهل",
   loading: "جارٍ التحميل…",
   copy: "نسخ",
+  codeCopy: "نسخ الرمز",
+  codeName: "رمز",
   remove: "إزالة",
   image: "صورة",
   page: (p) => "الصفحة " + p,

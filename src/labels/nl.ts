@@ -182,6 +182,8 @@ export const labels: SerupaLabels = {
   dismiss: "Negeren",
   loading: "Laden…",
   copy: "Kopiëren",
+  codeCopy: "Code kopiëren",
+  codeName: "Code",
   remove: "Verwijderen",
   image: "Afbeelding",
   page: (p) => "Pagina " + p,
