@@ -38,7 +38,7 @@
 - paragraph: Images or PDF, up to 5 MB each
 - list "Chosen files":
   - listitem:
-    - text: site-photo.png 70 byte Uploaded
+    - text: site-photo.png 70 byte Complete
     - button "Remove site-photo.png"
   - listitem:
     - text: site-plan.pdf 240 kB
@@ -46,7 +46,7 @@
     - button "Remove site-plan.pdf"
   - listitem:
     - text: invoice-0412.pdf 1.6 MB The server didn't answer. Try again in a moment.
-    - button "Retry invoice-0412.pdf": Retry
+    - button "Try again invoice-0412.pdf": Try again
     - button "Remove invoice-0412.pdf"
 
 # WithFiles
