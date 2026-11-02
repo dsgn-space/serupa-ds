@@ -42,7 +42,7 @@ const TOTALS = {
   'serupa.iife.js': [123.5, 99.0, 'share'],   // 119.4 on 31 Oct 2026, once the full icon table moved to serupa-icons.iife.js (PF1); 610.1 with it
 };
 // KiB, gzipped: [budget, the size it was set at]. The totals that count shared code move with the budget.
-const LABELS = [3.0, 1.9];   // 3.0 on 2 Nov 2026 with OfflineBanner's words (2.83)
+const LABELS = [3.1, 1.9];   // +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over; 3.1 the same day for the words of CodeBlock (50), OfflineBanner (58) and Chart (CH2), about 3.05 with all three
 // KiB, gzipped: PhoneInput's country table (PHONE_COUNTRIES in phone.ts, the calling codes, groupings and lengths;
 // 2.4 on 26 Oct 2026). It's data, not code, and grows a row at a time, so it has its own line: a country added is
 // a choice made here, not a few bytes lost in PhoneInput's own budget.

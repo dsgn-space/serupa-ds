@@ -20,7 +20,7 @@ export const Formats: Story = {
       ['Compact', <FormattedNumber key="c" value={1234567} format="compact" />],
       ['Percent', <FormattedNumber key="p" value={0.456} format="percent" />],
       ['Currency', <FormattedNumber key="m" value={150000} format="currency" currency="IDR" />],
-      ['Bytes', <FormattedNumber key="b" value={1572864} format="bytes" />],
+      ['Bytes', <FormattedNumber key="b" value={1500000} format="bytes" />],
       ['Unit', <FormattedNumber key="u" value={50} format="unit" unit="kilometer-per-hour" />],
       ['Change', <FormattedNumber key="s" value={0.031} format="percent" options={{ signDisplay: 'always', maximumFractionDigits: 1 }} />],
     ] as const).map(([k, v]) => <div key={k} style={row}><dt>{k}</dt><dd style={{ margin: 0 }}>{v}</dd></div>)}
