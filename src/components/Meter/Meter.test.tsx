@@ -29,7 +29,7 @@ describe('Meter', () => {
     const LONG = 'Datenschutzgrundverordnungskonformitätsprüfung';
     await render(<div id="box" style={{ width: 288 }}><Meter id="m" label={LONG} value={40} showValue /></div>);
     const box = el('box').getBoundingClientRect(), m = el('m').getBoundingClientRect();
-    expect([m.right <= box.right + 0.5, el('m').scrollWidth <= el('m').clientWidth + 1, el('m').textContent!.includes(LONG)]).toEqual([true, true, true]);
+    expect([m.right <= box.right + 0.5, el('m').scrollWidth <= el('m').clientWidth + 1, el('m').textContent.includes(LONG)]).toEqual([true, true, true]);
   });
 
   test('a meter with valuenow 72, min 0, max 100 and valuetext "72%", named by its label; ref, className and props reach the outer box', async () => {
