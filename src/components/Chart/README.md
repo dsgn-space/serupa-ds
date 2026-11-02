@@ -87,14 +87,51 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
 Each is an optional override: set it on the page, a container or one Chart. The list lives in `src/components/Chart/chart.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from chart.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--chart-text` | `text` | The title and the table's text (4.5:1 on the surface). |
 | `--chart-tip-bg` | `surface-overlay` | The tooltip's background. |
 | `--chart-tip-text` | `text` | The tooltip's text (4.5:1 on tip-bg). |
+| `--chart-series-1` | `chart-1` | Series 1's line, markers and bars. Unset, the page's chart-1. |
+| `--chart-series-2` | `chart-2` | Series 2's line, markers and bars. Unset, the page's chart-2. |
+| `--chart-series-3` | `chart-3` | Series 3's line, markers and bars. Unset, the page's chart-3. |
+| `--chart-series-4` | `chart-4` | Series 4's line, markers and bars. Unset, the page's chart-4. |
+| `--chart-series-5` | `chart-5` | Series 5's line, markers and bars. Unset, the page's chart-5. |
+| `--chart-series-6` | `chart-6` | Series 6's line, markers and bars. Unset, the page's chart-6. |
+| `--chart-series-7` | `chart-7` | Series 7's line, markers and bars. Unset, the page's chart-7. |
+| `--chart-series-8` | `chart-8` | Series 8's line, markers and bars. Unset, the page's chart-8. |
+| `--chart-grid-line` | `chart-grid` | The grid lines. |
+| `--chart-axis-line` | `chart-axis` | The zero line, the baseline and the hover cursor (3:1 on the surface). |
+| `--chart-label-text` | `chart-label` | The axis labels and the legend (4.5:1 on the surface). |
+| `--chart-separator` | `chart-gap` | The ring around markers and bars and the marks in a bar's pattern: the page color, so each series has 3:1 against it. |
+| `--chart-focus-ring` | `focus-ring` | The ring around a focused point or bar. |
+| `--chart-tip-border` | `border-overlay` | The tooltip's border. |
+| `--chart-tip-muted` | `text-muted` | A series' name in the tooltip (4.5:1 on tip-bg). |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--chart-tip-radius` | `rounded-md` | The tooltip's corners (6px). |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--chart-tip-shadow` | `shadow-md` | The tooltip's shadow. |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--chart-line-width` | `stroke-width-2` | A line's thickness (2). |
 | `--chart-focus-width` | `stroke-width-3` | The focus ring around a focused point or bar (3). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--chart-gap-size` | `spacing-2` | Space between the title, the plot and the legend (8px). |
 <!-- token-table:end -->
