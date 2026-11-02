@@ -45,6 +45,8 @@
   padding-bottom: max(var(--popover-padding, var(--spacing-4)), env(safe-area-inset-bottom));
   transform-origin: bottom;
 }
+/* Inset: the sheet meets the screen's sides and foot, where an outside ring would be cut off (GR113). */
+.dk-popover--sheet:focus-visible { outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-popover--sheet:not([hidden]) { transition: opacity var(--motion-enter-md) var(--ease-enter), translate var(--motion-enter-md) var(--ease-enter); }
 .dk-popover--sheet[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), translate var(--motion-exit-sm) var(--ease-exit); }
 @supports (overlay: auto) {
