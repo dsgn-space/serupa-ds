@@ -2,6 +2,7 @@ CHANGELOG.md
 LICENSE
 README.md
 bin/serupa-purge.mjs
+bin/serupa-usage.mjs
 design-tokens/css-values.json
 design-tokens/serupa.tokens.json
 design-tokens/themes/blue-dark.tokens.json
