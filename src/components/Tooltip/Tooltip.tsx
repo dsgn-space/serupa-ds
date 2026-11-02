@@ -84,6 +84,23 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
     document.addEventListener("keydown", esc, true);
   };
   React.useEffect(() => () => { window.clearTimeout(timer.current); unarm(); }, []);
+  // Interest invokers (174): the element points at the tooltip with interestfor, so where the browser has them, a
+  // long press on a touch screen shows it (Chrome on Android), as a hover does with a mouse. The browser's own showing
+  // is cancelled and the tooltip shows itself; an interest while the pointer is over the element or it has keyboard
+  // focus is one this component already handles (with its delay, its warm-up and Escape cancelling a waiting hover),
+  // so it's left alone.
+  const hovered = React.useRef(false), focused = React.useRef(false);
+  const interest = React.useRef<() => void>(() => {});
+  interest.current = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, "hover"); } };
+  React.useEffect(() => {
+    const tip = tipRef.current;
+    if (!tip) return;
+    const on = (e: Event) => { e.preventDefault(); interest.current(); };
+    const lose = (e: Event) => { e.preventDefault(); };
+    tip.addEventListener("interest", on);
+    tip.addEventListener("loseinterest", lose);
+    return () => { tip.removeEventListener("interest", on); tip.removeEventListener("loseinterest", lose); };
+  }, []);
   // The open tooltip is the warm one: opening another closes it, and closing it keeps others warm for hoverWarm.
   const self = React.useRef({});
   // Opened warm: no fade, so moving along a toolbar swaps one tooltip for the next without a flicker. One open on
@@ -146,12 +163,13 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
     ...fwd,
     ref: (n: HTMLElement | null) => { anchorRef.current = n; if (childRef) setRef(childRef, n); if (passedRef) setRef(passedRef, n); },
     [aria]: merged,
+    ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter after its pointerdown and never a mouseleave, so the
     // tooltip opened 400ms after a tap and stayed. A touch pointer doesn't hover; focus still shows it from the keyboard.
-    onPointerEnter: chain("onPointerEnter", (e) => { if (!touch(e)) { const w = !!warm.owner || Date.now() < warm.until; setInstant(w); if (w) set(true, "hover"); else later(true, delay); } }),
-    onPointerLeave: chain("onPointerLeave", (e) => { if (!touch(e)) later(false, hoverLeave); }),
-    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(":focus-visible")) { setInstant(!!warm.owner || Date.now() < warm.until); set(true, "focus"); } }),
-    onBlur: chain("onBlur", () => set(false, "blur")),
+    onPointerEnter: chain("onPointerEnter", (e) => { if (!touch(e)) { hovered.current = true; const w = !!warm.owner || Date.now() < warm.until; setInstant(w); if (w) set(true, "hover"); else later(true, delay); } }),
+    onPointerLeave: chain("onPointerLeave", (e) => { if (!touch(e)) { hovered.current = false; later(false, hoverLeave); } }),
+    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(":focus-visible")) { focused.current = true; setInstant(!!warm.owner || Date.now() < warm.until); set(true, "focus"); } }),
+    onBlur: chain("onBlur", () => { focused.current = false; set(false, "blur"); }),
     onPointerDown: chain("onPointerDown", () => set(false, "trigger")),
   });
   return (

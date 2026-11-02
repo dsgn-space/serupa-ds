@@ -29,6 +29,11 @@
       "import": "./dist/icons.js",
       "default": "./dist/icons.js"
     },
+    "./icons/outlined": {
+      "types": "./dist/icons-outlined.d.ts",
+      "import": "./dist/icons-outlined.js",
+      "default": "./dist/icons-outlined.js"
+    },
     "./tokens.css": "./tokens.css",
     "./tokens.json": "./tokens.json",
     "./base.css": "./dist/base.css",
@@ -56,6 +61,11 @@
       "import": "./dist/testing.js",
       "default": "./dist/testing.js"
     },
+    "./labels/*": {
+      "types": "./dist/labels/*.d.ts",
+      "import": "./dist/js/labels/*.js",
+      "default": "./dist/js/labels/*.js"
+    },
     "./purge": {
       "types": "./dist/purge.d.ts",
       "import": "./dist/purge.js",
@@ -64,11 +74,13 @@
     "./design-tokens/*": "./design-tokens/*",
     "./vscode/*": "./dist/vscode/*",
     "./native/*": "./dist/native/*",
+    "./email/*": "./dist/email/*",
     "./fonts/*": "./fonts/*",
     "./package.json": "./package.json"
   },
   "bin": {
     "serupa-create": "./bin/serupa-create.mjs",
+    "serupa-migrate": "./bin/serupa-migrate.mjs",
     "serupa-purge": "./bin/serupa-purge.mjs",
     "serupa-usage": "./bin/serupa-usage.mjs"
   },
