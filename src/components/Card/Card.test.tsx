@@ -62,7 +62,9 @@ describe('Card', () => {
     const e = el('def');
     expect([e.tagName, e.className, e.dataset.component, e.dataset.variant, r.current === e, e.dataset.x, [...e.children].map((c) => c.className).join(' | ')])
       .toEqual(['DIV', 'dk-card extra', 'card', 'outline', true, 'y', 'dk-card__header | dk-card__body | dk-card__footer']);
-    expect([e.querySelector('.dk-card__title')!.tagName, e.querySelector('.dk-card__description')!.tagName, !!e.querySelector('.dk-card__header > .dk-card__action .dk-badge')]).toEqual(['H3', 'P', true]);
+    const header = e.firstElementChild!, byText = (t: string) => [...header.querySelectorAll('*')].find((n) => n.textContent === t && !n.children.length)!;
+    expect([byText('Team plan').tagName, byText('Up to 10 members').tagName, byText('Active').closest('[data-component=badge]')!.parentElement!.parentElement === header])
+      .toEqual(['H3', 'P', true]);
   });
 
   test('unknown variant, padding and element fall back to outline, md and <div>; as article and li; headingLevel sets the title\'s heading', async () => {

@@ -27,7 +27,7 @@ const prose = [
   ...walk(path.join(PROJECT, 'src', 'components'), (f) => /(^|[\\/])README\.md$/.test(f)),
   ...walk(path.join(PROJECT, 'docs'), (f) => /\.mdx?$/.test(f)),
   ...walk(path.join(PROJECT, 'skills'), (f) => /\.md$/.test(f)),
-  ...['README.md', 'CONTRIBUTING.md', 'AGENTS.md'].map((f) => path.join(PROJECT, f)).filter((f) => fs.existsSync(f)),
+  ...['README.md', 'CONTRIBUTING.md', 'AGENTS.md', 'ROADMAP.md'].map((f) => path.join(PROJECT, f)).filter((f) => fs.existsSync(f)),
 ];
 const words = [];
 for (const f of prose) {
