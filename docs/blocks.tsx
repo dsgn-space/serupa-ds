@@ -169,6 +169,23 @@ export function Aliases() {
   </table>;
 }
 
+/** The chart colors (CH1) in the theme picked in the toolbar: the 8 series as touching bars with the gap between
+ * them, and the two ramps. */
+export function ChartColors() {
+  const names = (re: RegExp) => T.color.tokens.map((t) => t.name).filter((n) => re.test(n));
+  const row = (list: string[], gap: boolean) => <div style={{ display: 'flex', gap: gap ? 2 : 0, background: 'var(--chart-gap)', padding: 2, borderRadius: 6 }}>
+    {list.map((n) => <div key={n} title={`--${n}`} style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ height: 40, background: `var(--${n})` }} />
+      <code style={{ display: 'block', fontSize: 10, color: 'var(--chart-label)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.replace('chart-', '')}</code>
+    </div>)}
+  </div>;
+  return <div data-token-sheet="chart-colors" style={{ display: 'grid', gap: 16 }}>
+    <div><strong>Series</strong>{row(names(/^chart-\d+$/), true)}</div>
+    <div><strong>Sequential</strong>{row(names(/^chart-seq-\d+$/), false)}</div>
+    <div><strong>Diverging</strong>{row(names(/^chart-div-\d+$/), false)}</div>
+  </div>;
+}
+
 /** The type scale: each type-* style rendered in its own family, size, line height and weight. */
 export function TypeScale() {
   return <div data-token-sheet="type-scale">{T.type.groups.map((g) => <div key={g.name} style={{ marginBottom: 24 }}>
@@ -221,10 +238,10 @@ export function IconGallery() {
 
 /** Icons at the system's sizes, with what each is for. */
 export function IconSizes() {
-  const sizes: [number, string][] = [[14, '`sm` buttons'], [16, '`md` buttons, inline with `text-sm`'], [20, '`lg` buttons, list rows'], [24, 'The default: toolbars, navigation'], [40, 'Empty states']];
+  const sizes: ['xs' | 'sm' | 'md' | 'lg' | 'xl', number, string][] = [['xs', 14, '`sm` buttons, `text-xs`'], ['sm', 16, '`md` buttons, inline with `text-sm`'], ['md', 20, '`lg` buttons, list rows, `text-base`'], ['lg', 24, 'The default: toolbars, navigation'], ['xl', 40, 'Empty states']];
   return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
-    {sizes.map(([s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
-      <Icon name="favorite" size={s} /><strong>{s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
+      <Icon name="favorite" size={step} /><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
     </div>)}
   </div>;
 }
