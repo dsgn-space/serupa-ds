@@ -14,7 +14,7 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const pkg = JSON.parse(read('package.json'));
 
-// 0. Nothing publishes to a registry until Diki picks the final name: projects install releases from GitHub.
+// 0. Nothing publishes to a registry until Diki says so (the name, serupa-ds, is final since 2 November 2026): projects install releases from GitHub.
 t('package.json is private and has no publishConfig, so npm publish refuses', pkg.private === true && !('publishConfig' in pkg), `private: ${pkg.private}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
 // Every component is built by tools in devDependencies, so a project installs nothing else (J7).
 t('package.json has no dependencies (React is a peer dependency; everything else is bundled)', !Object.keys(pkg.dependencies || {}).length && !Object.keys(pkg.optionalDependencies || {}).length, JSON.stringify({ ...pkg.dependencies, ...pkg.optionalDependencies }));
@@ -126,8 +126,10 @@ if (D) {
   // index.js and every module it imports (dist/js/), as a bundler puts them together, without the full icon set.
   // Measured minified, as a project ships it. 31 Oct 2026: it was measured unminified, so comments counted, and main
   // sat 3 B under 150 KB; minified it is 117 KB. This is a backstop: the tight line is "All components (index.js)" in size.mjs.
+  // 2 Nov 2026: 140 KB. Main reached 129.9 KB with each component's budget in size.mjs still met, and Illustration (77)
+  // and Sparkline (CH3) each take it over 130; size.mjs keeps holding every component and the shared code to its own line.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
-  t('index.js leaves the full icon set out (loaded on demand) and stays under 130 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 130 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 140 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 140 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by component() or named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
   const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
