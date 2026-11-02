@@ -1,0 +1,135 @@
+{
+  "offlineBanner": {
+    "$description": "OfflineBanner's component tokens. Each one is an optional override: set the CSS variable (--offline-banner-<name>) on the page, a container or one OfflineBanner, and every OfflineBanner inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The bar's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-bg"
+          }
+        }
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "Its border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-border-color"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The words (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-text"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The icon while offline (3:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-icon"
+          }
+        }
+      },
+      "icon-online": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The icon once it's back online (3:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-icon-online"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "Its shadow, which lifts it off the page.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-shadow"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space inside, at the start and end (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-padding-x"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space inside, above and below (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-padding-y"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Between the icon and the words (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-gap"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "From the edge of the screen when fixed (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-toast}",
+        "$description": "Its stacking level when fixed: with the toasts, over the page and its dialogs.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-z-index"
+          }
+        }
+      }
+    }
+  }
+}

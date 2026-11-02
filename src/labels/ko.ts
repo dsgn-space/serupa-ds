@@ -169,6 +169,8 @@ export const labels: SerupaLabels = {
   resizePanes: "창 크기 조절",
   splitterPlace: "핸들을 둘 곳을 누르거나, 핸들을 다시 눌러 취소하세요.",
   skipToContent: "본문으로 건너뛰기",
+  offline: "오프라인 상태입니다",
+  backOnline: "다시 온라인 상태입니다",
   completed: "완료",
   hasError: "오류 있음",
   hasWarning: "확인 필요",

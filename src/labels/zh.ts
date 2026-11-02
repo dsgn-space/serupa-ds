@@ -166,6 +166,8 @@ export const labels: SerupaLabels = {
   resizePanes: "调整窗格大小",
   splitterPlace: "点按手柄要放的位置，或再次点按手柄取消。",
   skipToContent: "跳到主要内容",
+  offline: "您已离线",
+  backOnline: "已恢复联网",
   completed: "已完成",
   hasError: "有错误",
   hasWarning: "需要注意",
