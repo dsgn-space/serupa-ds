@@ -1,6 +1,8 @@
 CHANGELOG.md
 LICENSE
 README.md
+bin/brand/generate.mjs
+bin/serupa-brand.mjs
 bin/serupa-purge.mjs
 design-tokens/css-values.json
 design-tokens/serupa.tokens.json
