@@ -37,11 +37,20 @@ export function allTimeZones(): string[] {
   return list.includes("UTC") ? list.slice() : ["UTC", ...list];
 }
 /** A zone's city, offset and name at a moment, in a locale. null for a name the browser doesn't know. */
+// Each zone's two formatters, made once per zone and language: building some 800 of them was most of a mount's time,
+// and every picker on the page, and every later mount, uses the same ones.
+const formats = new Map<string, Intl.DateTimeFormat>();
+const formatter = (locale: string, zone: string, timeZoneName: "longOffset" | "long") => {
+  const key = locale + "|" + zone + "|" + timeZoneName;
+  let f = formats.get(key);
+  if (!f) { f = new Intl.DateTimeFormat(locale, { timeZone: zone, timeZoneName }); formats.set(key, f); }
+  return f;
+};
 export function timeZoneInfo(zone: string, locale: string, at: Date = new Date()): TimeZoneInfo | null {
   let offsetPart: string, name: string;
   try {
-    offsetPart = part(new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "longOffset" }), at);
-    name = part(new Intl.DateTimeFormat(locale, { timeZone: zone, timeZoneName: "long" }), at);
+    offsetPart = part(formatter("en-US", zone, "longOffset"), at);
+    name = part(formatter(locale, zone, "long"), at);
   } catch { return null; }
   const m = /([+-−])(\d{1,2}):?(\d{2})?/.exec(offsetPart);
   const offset = m ? (m[1] === "+" ? 1 : -1) * (Number(m[2]) * 60 + Number(m[3] || 0)) : 0;
@@ -70,9 +79,10 @@ export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZo
   const zonesKey = zones ? zones.join(",") : "";
   const infos = React.useMemo(() => {
     const moment = atTime == null ? new Date() : new Date(atTime);
+    const collator = new Intl.Collator(locale);
     const list = zonesKey ? zonesKey.split(",") : allTimeZones();
     return list.map((z) => timeZoneInfo(z, locale, moment)).filter((x): x is TimeZoneInfo => !!x)
-      .sort((a, b) => a.offset - b.offset || a.city.localeCompare(b.city, locale));
+      .sort((a, b) => a.offset - b.offset || collator.compare(a.city, b.city));
   }, [locale, atTime, zonesKey]);
   const byZone = React.useMemo(() => new Map(infos.map((i) => [i.zone, i])), [infos]);
   const options = React.useMemo(() => {
