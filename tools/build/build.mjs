@@ -11,6 +11,7 @@
 //   debug.js               the opt-in debug overlay (?serupa-debug), from src/
 //   vscode/                VS Code custom data for editor autocomplete: utility classes and tokens (editor-data.mjs)
 //   native/                the tokens for native apps: Swift, Kotlin and Android resources (native-tokens.mjs)
+//   email/                 the email-safe kit: each brand's email CSS and a starting email, and tokens.json (email-kit.mjs)
 //   components.json        each component's exports, CSS classes and the components it needs (for serupa-purge --components)
 //   eslint.js, eslint.d.ts what each component renders, for eslint-plugin-jsx-a11y in a project's lint (serupa-ds/eslint)
 //   lib/                   React for plain pages: react.production.min.js sets window.React, and
@@ -26,6 +27,7 @@ import { split } from '../utilities/extra.mjs';
 import { buildRegistry, cascade } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
 import { nativeFiles } from './native-tokens.mjs';
+import { emailFiles } from './email-kit.mjs';
 import { tokenDescriptions } from '../tokens/build.mjs';
 import { a11yComponents } from '../lint/a11y-components.mjs';
 import { PAIRS as CONTRAST_PAIRS } from '../tokens/contrast-pairs.mjs';
@@ -157,6 +159,9 @@ for (const [f, body] of Object.entries(nativeFiles(path.join(P, 'design-tokens')
   fs.mkdirSync(path.dirname(path.join(D, 'native', f)), { recursive: true });
   fs.writeFileSync(path.join(D, 'native', f), body);
 }
+// The email-safe kit (139): hex and px CSS for HTML email, a starting email per brand, and tokens.json.
+fs.mkdirSync(path.join(D, 'email'), { recursive: true });
+for (const [f, body] of Object.entries(emailFiles(path.join(P, 'design-tokens'), version))) fs.writeFileSync(path.join(D, 'email', f), body);
 
 // React 19 ships no browser builds (React 18's umd/ folder), so they're built here, under the names and globals
 // React 18's had. react-dom takes React from window.React, so both use the one copy.

@@ -42,7 +42,7 @@ describe('Alert', () => {
     await render(<Alert id="def" ref={r} className="extra" data-x="y">Plain message</Alert>);
     const e = el('def');
     expect([e.tagName, e.className, e.dataset.component, e.dataset.tone, e.getAttribute('role'), r.current === e, e.dataset.x]).toEqual(['DIV', 'dk-alert dk-alert--info extra', 'alert', 'info', 'status', true, 'y']);
-    expect([iconName(e), e.querySelector(':scope > span[aria-hidden]')!.getAttribute('aria-hidden'), !!e.querySelector(':scope > div > p'), e.querySelector('.dk-alert__message')!.textContent, !!e.querySelector('button')])
+    expect([iconName(e), e.querySelector(':scope > span[aria-hidden]')!.getAttribute('aria-hidden'), !!e.querySelector(':scope > div > p'), e.textContent, !!e.querySelector('button')])
       .toEqual(['info', 'true', false, 'Plain message', false]);
   });
 
@@ -60,7 +60,7 @@ describe('Alert', () => {
       <Alert id="role" tone="danger" role="status">Quiet danger</Alert>
     </>);
     expect([el('bad').dataset.tone, el('role').getAttribute('role')]).toEqual(['info', 'status']);
-    expect([el('noicon').querySelector(':scope > span[aria-hidden]'), iconName(el('named')), el('noicon').querySelector('.dk-alert__message')]).toEqual([null, 'bolt', null]);
+    expect([el('noicon').querySelector(':scope > span[aria-hidden]'), iconName(el('named')), el('noicon').textContent]).toEqual([null, 'bolt', 'No icon']);
   });
 
   test('layout: 12px by 16px padding, a 1px border, 8px corners, 12px between icon and content, text-sm; the icon is 20px, as tall as the first line', async () => {
@@ -73,7 +73,7 @@ describe('Alert', () => {
   test('title: font-semibold, no margin; actions in a row under the message; backgrounds: each tone\'s -subtle color (neutral: surface-muted)', async () => {
     await render(<Box><Tones /></Box>);
     const ti = css(tone('info').querySelector(':scope > div > p'));
-    expect([ti.fontWeight, ti.marginTop, css(tone('info').querySelector('.dk-alert__actions')).display]).toEqual(['600', '0px', 'flex']);
+    expect([ti.fontWeight, ti.marginTop, css(tone('info').querySelector('button')!.parentElement).display]).toEqual(['600', '0px', 'flex']);
     for (const [t, bg] of [['info', 'info-subtle'], ['success', 'success-subtle'], ['warning', 'warning-subtle'], ['danger', 'danger-subtle'], ['neutral', 'surface-muted']]) {
       expect([t, css(tone(t)).backgroundColor]).toEqual([t, color(`var(--${bg})`)]);
     }
