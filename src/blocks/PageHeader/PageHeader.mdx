@@ -21,6 +21,7 @@ The top of a page inside an app: where the page is, what it's called, what it's 
 - **The title**, the page's one h1. Keep it the same as the page's `<title>` and the item it names.
 - **A description**, one sentence in plain text, not a heading. Leave it out rather than repeat the title.
 - **The primary action**, one button, always shown. **The secondary actions** sit beside it on a wide screen and move into a "More actions" Menu on a phone, so none is cut off or makes the page scroll sideways (1.4.10).
+- **More actions**: on a phone the secondary actions move into a menu. Its button has only an icon, so pass its name in the page's language with `moreLabel` (default "More actions"), as you do `sectionsLabel`.
 - **Section links**, a `nav` with its own name (`sectionsLabel`), so it's told apart from the breadcrumb and the app's navigation in a screen reader's landmark list. The current one says `aria-current="page"` and is bold, not only a different color.
 - **Reading order** matches the Tab order: breadcrumb, title, primary action, other actions, sections.
 
