@@ -4,6 +4,7 @@ import { cn, domId, isInvalid, omit, setRef } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
+import { Progress } from "../Progress/Progress";
 import { component } from "../../internal/component";
 import { useLocale, useSettings } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
@@ -17,6 +18,15 @@ import { en as words } from "./labels";
 
 export { formatFileSize };
 
+/** Where a file's upload has got to, from fileStatus. */
+export interface FileUploadStatus {
+  /** 'uploading': a bar under the name. 'done': "Uploaded" after the size. 'error': a danger message under the name, and a retry button with onRetry. */
+  state: 'uploading' | 'done' | 'error';
+  /** While uploading, how far along, from 0 to 100. Leave it out when you can't tell: the bar then moves on its own. */
+  progress?: number;
+  /** With 'error', what went wrong. Default: "Upload failed". */
+  message?: React.ReactNode;
+}
 export type FileRejection = { file: File; reason: 'type' | 'size' | 'count' | 'folder' | 'duplicate'; message: string };
 export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'title'> {
   /** The chosen files (controlled). Use with onFilesChange. */
@@ -53,9 +63,16 @@ export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   hint?: React.ReactNode;
   /** The remove buttons' names, given the file name. Default: (name) => `Remove ${name}`. */
   removeLabel?: (name: string) => string;
+  /** Each chosen file's upload, when you upload as files are added: return { state, progress, message } for a file, or
+      nothing when it isn't uploading. Screen readers hear when one finishes or fails. */
+  fileStatus?: (file: File) => FileUploadStatus | null | undefined;
+  /** Called by a failed file's retry button. Without it, a failed file has no retry button. */
+  onRetry?: (file: File) => void;
+  /** Shows a small picture of each image file in place of its type icon. Default: false. */
+  thumbnails?: boolean;
 }
 
-const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, form: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1, "aria-errormessage": 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1 } as const;
+const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, form: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, fileStatus: 1, onRetry: 1, thumbnails: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1, "aria-errormessage": 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1 } as const;
 
 // Extensions and types that name the same kind of file. The file picker offers all of them for any one (accept=".jpg"
 // shows photo.jpeg too), so the check takes them as well (L8E12); image/jpg isn't a registered type but is often written.
@@ -89,8 +106,8 @@ const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.t
 /* A file's name, cut in the middle when it doesn't fit, as Finder and Drive do: the start shrinks to an ellipsis and
    the last few characters and the extension stay, so "report-2025.pdf" and "report-2026.pdf" still look different
    (GR17). dir="auto" lays it out in the name's own direction. The two parts are hidden from screen readers, which
-   read the whole name once, and title shows it in full on hover. */
-function FileName({ name }: { name: string }) {
+   read the whole name once (the progress bar and retry button are named by it too), and title shows it in full on hover. */
+function FileName({ name, id }: { name: string; id?: string }) {
   const chars = Array.from(name), dot = name.lastIndexOf(".");
   const ext = dot > 0 ? Array.from(name.slice(dot)).length : 0;
   const keep = Math.min(chars.length, Math.min(ext, 10) + 6);
@@ -98,9 +115,24 @@ function FileName({ name }: { name: string }) {
     <span className="dk-file-upload__name" dir="auto" title={name}>
       <span className="dk-file-upload__name-start" aria-hidden>{chars.slice(0, chars.length - keep).join("")}</span>
       <span className="dk-file-upload__name-end" aria-hidden>{chars.slice(chars.length - keep).join("")}</span>
-      <span className="dk-visually-hidden">{name}</span>
+      <span className="dk-visually-hidden" id={id}>{name}</span>
     </span>
   );
+}
+
+/* An image file's picture, from an object URL made while it's shown and let go after; a file the browser can't draw
+   (HEIC on most) keeps its type icon. The name next to it says what it is, so the picture is decorative. */
+function Thumbnail({ file, children }: { file: File; children: React.ReactNode }) {
+  const img = React.useRef<HTMLImageElement | null>(null);
+  const [broken, setBroken] = React.useState<File | null>(null);
+  React.useEffect(() => {
+    const el = img.current;
+    if (!el || typeof URL === "undefined" || !URL.createObjectURL) return;
+    const u = URL.createObjectURL(file);
+    el.src = u;
+    return () => { URL.revokeObjectURL(u); el.removeAttribute("src"); };
+  }, [file]);
+  return broken === file ? <>{children}</> : <img ref={img} className="dk-file-upload__thumbnail" alt="" onError={() => setBroken(file)} />;
 }
 
 /* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size
@@ -192,10 +224,27 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   React.useEffect(() => {
     if (refocus == null) return;
     setRefocus(null);
-    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>("li button") : [];
+    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>("li > button:last-child") : [];
     const to = left.length ? left[Math.min(refocus, left.length - 1)] : chooser.current;
     if (to) to.focus();
   }, [refocus, files]);
+
+  // Each file's upload, as the app reports it. A file that was uploading and is now done or failed is said politely;
+  // one that arrives done (files restored from a draft) isn't.
+  const statuses = files.map((f) => (props.fileStatus && props.fileStatus(f)) || null);
+  const seen = React.useRef<WeakMap<File, string> | null>(null);
+  // every render: fileStatus is read afresh each time, so a change of status shows only as a render; the check is cheap.
+  React.useEffect(() => {
+    const was = seen.current || (seen.current = new WeakMap());
+    files.forEach((f, i) => {
+      const st = statuses[i], now = st ? st.state : "";
+      if (was.get(f) === "uploading" && now !== "uploading") {
+        if (now === "done") announce(L.fileUploaded(f.name));
+        else if (now === "error") announce(L.fileFailed(f.name));
+      }
+      was.set(f, now);
+    });
+  });
 
   // A file dropped just outside the area would be opened by the browser in place of the page, losing what was
   // typed (FQ1): while one can be added here, a file drop nothing else took is stopped on the document.
@@ -288,16 +337,32 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       ) : null}
       {files.length ? (
         <ul ref={list} role="list" className="dk-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
-          {files.map((f, i) => (
-            <li key={f.name + f.size + f.lastModified + i} className="dk-file-upload__item">
-              <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />
-              <span className="dk-file-upload__file">
-                <FileName name={f.name} />
-                <span className="dk-file-upload__size" dir="auto">{formatFileSize(f.size, locale)}</span>
-              </span>
-              {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}
-            </li>
-          ))}
+          {files.map((f, i) => {
+            const st = statuses[i], id = base + "-file-" + i, icon = <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />;
+            const failed = st && st.state === "error";
+            return (
+              <li key={f.name + f.size + f.lastModified + i} className={cn("dk-file-upload__item", failed && "dk-file-upload__item--error")}>
+                {props.thumbnails && /^image\//.test(f.type) ? <Thumbnail file={f}>{icon}</Thumbnail> : icon}
+                <span className="dk-file-upload__file">
+                  <FileName name={f.name} id={id + "-name"} />
+                  <span className="dk-file-upload__size" dir="auto">
+                    {formatFileSize(f.size, locale)}
+                    {st && st.state === "done" ? <span className="dk-file-upload__done"><Icon icon={icons.CheckCircle} />{L.fileDone}</span> : null}
+                  </span>
+                  {st && st.state === "uploading" ? (
+                    <Progress className="dk-file-upload__progress" size="sm" value={typeof st.progress === "number" && isFinite(st.progress) ? Math.min(100, Math.max(0, st.progress)) : null} aria-labelledby={id + "-name"} />
+                  ) : null}
+                  {failed ? <span className="dk-file-upload__failed" id={id + "-error"}><Icon icon={icons.Error} />{st.message ?? L.fileError}</span> : null}
+                </span>
+                {failed && props.onRetry && !still ? (
+                  <Button variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + "-retry " + id + "-name"} aria-describedby={id + "-error"}>
+                    <span id={id + "-retry"}>{L.fileRetry}</span>
+                  </Button>
+                ) : null}
+                {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}
+              </li>
+            );
+          })}
         </ul>
       ) : null}
     </div>
