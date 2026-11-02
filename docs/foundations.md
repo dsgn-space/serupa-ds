@@ -82,6 +82,8 @@ Serupa.theme.get();                           // { brand, mode, theme: 'violet-d
 Serupa.theme.onChange(({ theme }) => { … });  // returns an unsubscribe function
 ```
 
+After the first paint, where the browser has View Transitions, a switch crossfades the whole page in one View Transition (type `serupa-theme`, for `:active-view-transition-type(serupa-theme)`). Then the new `data-theme` is set, and `onChange` called, when the transition takes its "after" picture, a frame after `set()`; `set()` and `get()` return the new theme at once, so read it from them or from `onChange`, not from the attribute. Several switches in a row end on the last. With reduced motion, in a hidden tab, without View Transitions, and while the app runs a View Transition of its own (which a new one would cut short), a switch is at once.
+
 ## Alias tokens
 
 Alias tokens give a colour a **job** instead of a hue. Each one points to a palette colour rather than holding its own value, and that pointer can differ per theme: `primary` is `{blue-600}` in Blue Light and `{violet-400}` in Violet Dark.
