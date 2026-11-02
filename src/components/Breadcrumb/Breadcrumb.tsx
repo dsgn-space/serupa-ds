@@ -14,35 +14,35 @@ import { en as words } from "./labels";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
   /** BreadcrumbItems, from the top level down to the current page (the last one). */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** 'chevron' (default) or 'slash' between items. */
-  separator?: 'chevron' | 'slash';
+  separator?: 'chevron' | 'slash' | undefined;
   /** Shows at most this many items: the first, a "…" button that shows the rest, and the last ones. Default: no limit. */
-  maxItems?: number;
+  maxItems?: number | undefined;
   /** What the "…" button does. 'inline' (default): shows the hidden items in the trail. 'menu': opens a Menu of
       them, so a long trail stays on one line on a phone. */
-  collapse?: 'inline' | 'menu';
+  collapse?: 'inline' | 'menu' | undefined;
   /** The nav's accessible name. Default: "Breadcrumb". */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
   /** The "…" button's accessible name. Default: "Show all pages", or "More pages" with collapse="menu". */
-  expandLabel?: string;
+  expandLabel?: string | undefined;
 }
 
 /** BreadcrumbItem's own props, beside those of the element it renders. */
 export interface BreadcrumbItemOwnProps {
   /** Where it goes. The last item is the current page: it's text, not a link, whatever href says. */
-  href?: string;
+  href?: string | undefined;
   /** An icon before the label: a Material Symbols or custom name, or an element. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** Set by Breadcrumb on the last item. */
-  current?: boolean;
+  current?: boolean | undefined;
 }
 
 /** BreadcrumbItem's props: its own, `as`, and the props of the element `as` names (an <a>'s by default), so
  *  <BreadcrumbItem as={RouterLink} to="/projects"> takes RouterLink's `to`. */
 export type BreadcrumbItemProps<C extends React.ElementType = 'a'> = BreadcrumbItemOwnProps & {
   /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. */
-  as?: C;
+  as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof BreadcrumbItemOwnProps | 'as'>;
 
 /* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */
@@ -65,7 +65,7 @@ const BreadcrumbItemBase = /* @__PURE__ */ component<HTMLAnchorElement, Breadcru
 /** One page in a Breadcrumb: a link, or the current page when it's the last. `as` renders your router's link, typed with its props. */
 export const BreadcrumbItem = BreadcrumbItemBase as {
   <C extends React.ElementType = 'a'>(props: BreadcrumbItemProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
-  displayName?: string;
+  displayName?: string | undefined;
 };
 
 /* Breadcrumb: a nav with an ordered list of pages from the top level to the current one, a chevron (or slash)

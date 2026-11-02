@@ -2,20 +2,20 @@
 interface TreeViewItem {
     id: string;
     label: React.ReactNode;
-    textValue?: string;
-    icon?: IconSource;
-    children?: TreeViewItem[];
-    disabled?: boolean;
+    textValue?: string | undefined;
+    icon?: IconSource | undefined;
+    children?: TreeViewItem[] | undefined;
+    disabled?: boolean | undefined;
 }
 interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "defaultValue" | "onChange"> {
     items: TreeViewItem[];
-    selectionMode?: "multiple" | "none" | "single";
-    value?: string[];
-    defaultValue?: string[];
-    onValueChange?: (value: string[]) => void;
-    expanded?: string[];
-    defaultExpanded?: string[];
-    onExpandedChange?: (expanded: string[]) => void;
-    "aria-label"?: string;
+    selectionMode?: "multiple" | "none" | "single" | undefined;
+    value?: string[] | undefined;
+    defaultValue?: string[] | undefined;
+    onValueChange?: ((value: string[]) => void) | undefined;
+    expanded?: string[] | undefined;
+    defaultExpanded?: string[] | undefined;
+    onExpandedChange?: ((expanded: string[]) => void) | undefined;
+    "aria-label"?: string | undefined;
 }
 declare const TreeView: React.ForwardRefExoticComponent<TreeViewProps & React.RefAttributes<HTMLUListElement>>;

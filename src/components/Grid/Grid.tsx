@@ -6,15 +6,15 @@ import { component } from "../../internal/component";
 export interface GridProps extends React.HTMLAttributes<HTMLElement> {
   /** A number of equal columns (1 to 12), or 'auto' (default): as many columns as fit, each at least minColumnWidth.
       A number with minColumnWidth is "up to": that many on a wide screen, fewer as columns would get narrower than minColumnWidth. */
-  columns?: number | 'auto';
+  columns?: number | 'auto' | undefined;
   /** The narrowest a column gets, a CSS length or a sizing token name ('container-3xs'). Default: 256px (container-3xs) with columns="auto"; none with a number. */
-  minColumnWidth?: string;
+  minColumnWidth?: string | undefined;
   /** With columns="auto" or "up to": a short last row's cells stretch across the empty columns (auto-fit), so two cards on a wide screen share the width. Default: false (empty columns stay, so cells line up with the rows above). */
-  fill?: boolean;
+  fill?: boolean | undefined;
   /** The space between cells, a step of the spacing scale. Default: 4 (16px). */
-  gap?: Space;
+  gap?: Space | undefined;
   /** The element. Default: 'div'. */
-  as?: 'div' | 'section' | 'ul' | 'ol';
+  as?: 'div' | 'section' | 'ul' | 'ol' | undefined;
 }
 
 const TAGS = ["div", "section", "ul", "ol"] as const;

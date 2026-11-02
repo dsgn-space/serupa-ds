@@ -28,32 +28,32 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 /** What every Button takes, as a <button> or as a link. */
 interface ButtonOwnProps {
   /** Visual style. Default: 'primary' (solid brand color). */
-  variant?: ButtonVariant;
+  variant?: ButtonVariant | undefined;
   /** Danger colors on any variant, for deleting or irreversible actions. Default: false. */
-  destructive?: boolean;
+  destructive?: boolean | undefined;
   /** Height: sm 24px, md 32px, lg 44px (the control-height tokens). Default: 'md'. */
-  size?: ButtonSize;
+  size?: ButtonSize | undefined;
   /** Icon before the label: an icon name (custom or Material Symbols, "add") or any element. */
-  leftIcon?: IconSource;
+  leftIcon?: IconSource | undefined;
   /** Icon after the label: an icon name (custom or Material Symbols, "arrow_forward") or any element. */
-  rightIcon?: IconSource;
+  rightIcon?: IconSource | undefined;
   /** Icon-only button: an icon name (custom or Material Symbols) or element, in a square at the size's height. Ignores children, leftIcon and rightIcon; needs an aria-label. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** Shows a centered Loader (ring) and blocks clicks, keys and Enter-key form submission while an action runs, so a request can't be sent twice. Keeps size, colors and keyboard focus; sets aria-busy, aria-disabled and data-loading. Default: false, except that a type="submit" button inside a `<form action={fn}>` is loading while that form is being sent. Set it to override. */
-  loading?: boolean;
+  loading?: boolean | undefined;
   /** Announced to screen readers (polite status region) when loading starts. Default: 'Loading'. Pass '' to stay silent. */
-  loadingText?: string;
+  loadingText?: string | undefined;
   /** Why it's disabled ("Fill in your name first"). With disabled, the button stays focusable (aria-disabled, so
       keyboard and screen reader users can reach it and hear why) and this is its description; clicks still do
       nothing. Wrap it in a Tooltip with the same words to show them on hover and focus too. */
-  disabledReason?: string;
+  disabledReason?: string | undefined;
   /** Shown with a check in place of the label for 2 seconds, and announced, after an onClick that returned a
       promise resolves ("Saved"). For actions that don't move people elsewhere. Default: none. */
-  successText?: string;
+  successText?: string | undefined;
   /** Lets a long label take more than one line: the button grows from its size's height instead of cutting the
       label with an ellipsis. Without it, a text label that's cut shows in full as the button's title on hover.
       Default: false. */
-  wrap?: boolean;
+  wrap?: boolean | undefined;
 }
 
 /** A Button without href: a native <button>. */
@@ -61,27 +61,27 @@ export interface ButtonAsButtonProps extends ButtonOwnProps, Omit<React.ButtonHT
   /** Without href it's a <button>; give it href to make it a link. */
   href?: undefined;
   /** Can return a promise: the button then takes no second click until it settles, shows loading if it takes a while, and shows successText once it resolves. */
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => unknown;
+  onClick?: ((event: React.MouseEvent<HTMLButtonElement>) => unknown) | undefined;
   /** 'button' (default, never submits by accident), 'submit' or 'reset'. */
-  type?: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset' | undefined;
   /** Opens, closes or toggles a [popover] element by id (native HTML). */
-  popoverTarget?: string;
+  popoverTarget?: string | undefined;
   /** What a press does to the popoverTarget element: 'show', 'hide' or 'toggle' (default). */
-  popoverTargetAction?: 'show' | 'hide' | 'toggle';
+  popoverTargetAction?: 'show' | 'hide' | 'toggle' | undefined;
   /** Invoker commands: the id of the element to act on, and the action ('show-modal', 'close', 'request-close', 'show-popover', 'hide-popover', 'toggle-popover', or a custom '--name'). */
-  commandfor?: string;
+  commandfor?: string | undefined;
   /** The action for the commandfor element: 'show-modal', 'close', 'request-close', 'show-popover', 'hide-popover', 'toggle-popover', or a custom '--name'. */
-  command?: string;
+  command?: string | undefined;
 }
 
 /** A Button with href: a link (<a>, or the component set with Serupa.configure({ link })), for navigation. */
 export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'type' | 'onClick'> {
   /** Can return a promise, as on a button. */
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => unknown;
+  onClick?: ((event: React.MouseEvent<HTMLAnchorElement>) => unknown) | undefined;
   /** Where the link goes. With target="_blank", rel defaults to "noopener noreferrer". */
   href: string;
   /** A link has no disabled state in HTML: a disabled link Button renders without href, with aria-disabled, and can't be focused or followed. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
@@ -255,5 +255,5 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
 export const Button = ButtonBase as unknown as {
   (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
   (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;
-  displayName?: string;
+  displayName?: string | undefined;
 };

@@ -9,20 +9,20 @@ interface CommandPaletteLabels {
 interface Command {
     id: string;
     label: string;
-    group?: string;
-    keywords?: string[];
-    icon?: IconData | React.ReactNode;
-    shortcut?: string[];
-    href?: string;
-    disabled?: boolean;
-    onSelect?: () => void;
+    group?: string | undefined;
+    keywords?: string[] | undefined;
+    icon?: IconData | React.ReactNode | undefined;
+    shortcut?: string[] | undefined;
+    href?: string | undefined;
+    disabled?: boolean | undefined;
+    onSelect?: (() => void) | undefined;
 }
 interface CommandPaletteProps extends Omit<DialogProps, "alert" | "children" | "closeButton" | "closeLabel" | "description" | "footer" | "fullScreen" | "initialFocus" | "onSelect" | "size" | "title" | "unsaved"> {
     commands: Command[];
-    onSelect?: (command: Command) => void;
-    hotkey?: false | string[];
-    placeholder?: string;
-    emptyText?: React.ReactNode;
-    limit?: number;
+    onSelect?: ((command: Command) => void) | undefined;
+    hotkey?: false | string[] | undefined;
+    placeholder?: string | undefined;
+    emptyText?: React.ReactNode | undefined;
+    limit?: number | undefined;
 }
 declare const CommandPalette: React.ForwardRefExoticComponent<CommandPaletteProps & React.RefAttributes<HTMLDialogElement>>;

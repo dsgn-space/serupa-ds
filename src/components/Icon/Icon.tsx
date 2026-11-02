@@ -19,19 +19,19 @@ export type IconSource = IconName | IconData | React.ReactNode;
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Any Material Symbols name (search them on Foundations/Icons), a custom icon's name, or one you registered with
    * registerIcons. A custom icon with the same name wins. Give `name` or `icon`. */
-  name?: IconName;
+  name?: IconName | undefined;
   /** A Material Symbols icon imported from serupa-ds/icons: `icon={ArrowForward}`. Give `name` or `icon`. */
-  icon?: IconData;
+  icon?: IconData | undefined;
   /** A step of the icon scale ("xs" 14px, "sm" 16px, "md" 20px, "lg" 24px, "xl" 40px: the icon-size tokens), px (a
    * number, or a string of one: "20") or any CSS length. Default: 24px, or the button's icon size inside a Button. */
-  size?: IconSize | number | (string & {});
+  size?: IconSize | number | (string & {}) | undefined;
   /** How heavy a Material Symbol's lines are, to go with the text beside it: "regular" (default, the drawing as it is),
    * "semibold" for font-semibold text, "bold" for bold text and headings (the icon-weight tokens). Custom icons keep
    * their own drawing. */
-  weight?: IconWeight;
+  weight?: IconWeight | undefined;
   /** Flips the icon in right-to-left text (dir="rtl"), so an arrow points the way reading goes. 'auto' (default) flips
    * Material Symbols' directional icons (arrow_forward, chevron_right, send, undo…); true flips any icon, false none. */
-  mirror?: boolean | "auto";
+  mirror?: boolean | "auto" | undefined;
 }
 
 /** The steps of the icon scale, the icon-size tokens. */

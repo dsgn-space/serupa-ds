@@ -13,25 +13,25 @@ export type LoaderPattern = 'wave' | 'random' | 'sweep' | 'fall' | 'rise' | 'sna
 export type LoaderTone = 'neutral' | 'primary' | 'muted' | 'inverse';
 export interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** 'ring' (default): an arc that grows and shrinks as it turns on a faint track. 'spokes': eight rounded spokes fading round a circle, ticking a spoke at a time, like the iOS activity indicator. 'dots': three pulsing dots, softer, for chat-like or inline waits. 'pixel': a 3×3 grid of squares lighting up in a diagonal wave. 'text': the label's words with a shine sweeping through them. 'skeleton': placeholder shapes where the content will be (see shape). */
-  variant?: LoaderVariant;
+  variant?: LoaderVariant | undefined;
   /** sm 16px (inline, small controls), md 24px (default: cards, panels, lists), lg 40px (a page or empty area). The text variant's words, and the skeleton's text lines: text-xs, text-sm, text-base. The skeleton circle: 16, 24 or 40px. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** 'neutral' (default): the text color, so it fits any surface. 'primary' or 'muted' color the ring, dots or pixel grid with those aliases (the text and skeleton variants stay in the text color). 'inverse': white in every theme, for dark scrims, overlays and media. */
-  tone?: LoaderTone;
+  tone?: LoaderTone | undefined;
   /** Announced to screen readers when the loader appears, and its accessible name (role="progressbar"); the words the text variant shows. Default: 'Loading'. Pass '' when something nearby already announces it (the loader is then decorative). In a group of skeletons, name one and pass '' to the rest. */
-  label?: string;
+  label?: string | undefined;
   /** Skeleton only. 'text' (default): lines as tall as the size's text line, full width, the last of several shorter. 'circle': an avatar, the size's 24px by default. 'rect': an image or card, full width and 96px tall. Set width and height with className (w-48, size-12, h-40). */
-  shape?: LoaderShape;
+  shape?: LoaderShape | undefined;
   /** Skeleton with shape 'text': how many lines, 1 (default) to 20. */
-  lines?: number;
+  lines?: number | undefined;
   /** Pixel only. 'wave' (default): a wave of light runs along the diagonals from the top-left. 'random': each square twinkles on its own clock, so they light up in an ever-changing order. 'sweep': columns, left to right. 'fall': rows, top to bottom. 'rise': rows, bottom to top. 'snake': square by square, left to right then back, row by row. 'spiral': clockwise round the edge, then the center. 'cross': the corners, then the plus. 'checker': the X, then the edges. */
-  pattern?: LoaderPattern;
+  pattern?: LoaderPattern | undefined;
   /** Pixel only: a soft halo of the loader's color round the lit squares (--loader-pixel-glow-size, 2px). Best on dark surfaces. Default false. */
-  glow?: boolean;
+  glow?: boolean | undefined;
   /** Milliseconds to wait before showing, so fast requests don't flash a loader. Its space is kept meanwhile. Default: 300. 0 shows it at once. */
-  delay?: number;
+  delay?: number | undefined;
   /** Whether it's loading. Keep the Loader mounted and pass false when the work ends: once shown, it stays at least 500ms, so it never flashes, then renders nothing. Default: true. */
-  loading?: boolean;
+  loading?: boolean | undefined;
 }
 
 /* Loader: shows that something is loading when you can't say how far along it is.
