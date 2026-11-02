@@ -70,8 +70,8 @@ Each is an optional override: set it on the page, a container or one HoverCard. 
 | `--hover-card-bg` | `surface-overlay` | The card's background. |
 | `--hover-card-text` | `text` | The card's text (4.5:1 on bg). |
 | `--hover-card-border` | `border-overlay` | The card's border. |
-| `--hover-card-shadow` | `shadow-lg` | The card's shadow. |
-| `--hover-card-radius` | `rounded-lg` | The corners (8px). |
+| `--hover-card-shadow` | `elevation-overlay` | The card's shadow. |
+| `--hover-card-radius` | `radius-surface` | The corners (8px). |
 | `--hover-card-border-width` | `border-width-1` | The border's width (1px). |
 | `--hover-card-width` | `container-xs` | The card's width (320px), never wider than the screen. |
 | `--hover-card-padding` | `spacing-4` | Space inside, on every side (16px). |

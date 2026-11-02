@@ -1,0 +1,43 @@
+name: Dependabot auto-merge
+
+# A Dependabot update that only moves patch or minor versions (tools/update-type.mjs reads them from git) gets
+# auto-merge, so it lands once every required check is green. Majors and anything else wait for a person. The
+# script is the base commit's copy and nothing is installed, so no code from the update runs with this token.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  auto-merge:
+    name: auto-merge
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: How big the update is
+        id: size
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git show "$BASE_SHA:tools/update-type.mjs" > "$RUNNER_TEMP/update-type.mjs"
+          echo "type=$(node "$RUNNER_TEMP/update-type.mjs" "$BASE_SHA" "$HEAD_SHA")" >> "$GITHUB_OUTPUT"
+      - name: Merge when green
+        if: ${{ steps.size.outputs.type == 'patch' || steps.size.outputs.type == 'minor' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --merge "$PR_URL"

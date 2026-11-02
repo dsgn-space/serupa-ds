@@ -110,3 +110,26 @@ jobs:
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: ${{ needs.release.outputs.tarball }}
+
+  # The release as a project installs it (D5): the tarball from the GitHub release, by the URL the README's install
+  # line gives, on every Node package.json allows. No npm ci: tools/test/consumer.mjs needs only Node.
+  installed:
+    needs: release
+    if: needs.release.outputs.tarball != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24, 26]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node tools/test/consumer.mjs --release
