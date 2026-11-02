@@ -48,7 +48,7 @@ describe('Sparkline', () => {
       <Sparkline id="f" data={[5, 5, 5]} label="f" />
       <Sparkline id="o" data={[7]} label="o" />
       <Sparkline id="e" data={[]} label="Nothing yet" />
-      <Sparkline id="n" data={[1, NaN, Infinity, 3]} label="n" />
+      <SerupaProvider locale="en-US"><Sparkline id="n" data={[1, NaN, Infinity, 3]} label="n" /></SerupaProvider>
     </>);
     expect(part(el('a'), 'area')!.getAttribute('d')).toMatch(/L100 30L0 30Z$/);
     expect(points(part(el('f'), 'line')!.getAttribute('d')!).map((p) => p[1])).toEqual([15, 15, 15]);
