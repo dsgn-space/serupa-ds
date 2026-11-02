@@ -52,6 +52,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => n(count) + " resultat",
   showOptions: "Visa alternativ",
   clearValue: (label) => (label ? "Rensa " + label : "Rensa"),
+  createOption: (text) => "Lägg till ”" + text + "”",
   valueAdded: (label) => label + " har lagts till",
   valueRemoved: (label) => label + " har tagits bort",
   copied: "Kopierat",
