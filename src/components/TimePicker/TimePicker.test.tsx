@@ -218,7 +218,7 @@ describe('TimePicker', () => {
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const l = listOf('ctl'), bg = getComputedStyle(l).backgroundColor, act = l.querySelector('.dk-time-picker__option--active')!, opt = l.querySelector('.dk-time-picker__option:not(.dk-time-picker__option--active)')!, chk = l.querySelector('.dk-time-picker__check')!, btn = button('ctl');
+      const l = listOf('ctl'), bg = getComputedStyle(l).backgroundColor, act = document.getElementById(el('ctl').getAttribute('aria-activedescendant')!)!, opt = [...l.querySelectorAll('[role=option]')].find((o) => o !== act)!, chk = l.querySelector('[aria-selected=true] [data-icon]')!, btn = button('ctl');
       const chkBg = getComputedStyle(chk.parentElement!).backgroundColor;
       const pairs: Array<[string, string, string, number]> = [['time', getComputedStyle(opt).color, bg, 4.5], ['highlighted time', getComputedStyle(act).color, getComputedStyle(act).backgroundColor, 4.5], ['check', getComputedStyle(chk).color, chkBg === 'rgba(0, 0, 0, 0)' ? bg : chkBg, 3], ['clock icon', getComputedStyle(btn).color, getComputedStyle(btn.parentElement!).backgroundColor, 3]];
       for (const [k, fg, on, min] of pairs) { const r = contrast(fg, on); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
@@ -232,7 +232,7 @@ describe('TimePicker', () => {
     await render(<TimePicker id="tok" aria-label="Tok" style={{ '--time-picker-option-bg-active': 'rgb(1, 2, 3)' } as React.CSSProperties} />);
     el('tok').focus();
     await userEvent.keyboard('{ArrowDown}');
-    await expect.poll(() => getComputedStyle(document.querySelector('#tok ~ ul .dk-time-picker__option--active')!).backgroundColor).toBe('rgb(1, 2, 3)');
+    await expect.poll(() => getComputedStyle(document.getElementById(el('tok').getAttribute('aria-activedescendant')!)!).backgroundColor).toBe('rgb(1, 2, 3)');
   });
 
   test('typing with the list open moves the highlight to the nearest time, and Enter keeps what was typed; after typing, moving with the arrows makes Enter pick the highlighted time again', async () => {
