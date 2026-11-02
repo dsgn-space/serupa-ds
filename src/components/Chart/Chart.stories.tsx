@@ -64,5 +64,5 @@ export const LongText: Story = {
     categories: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
     series: [{ name: 'Donaudampfschifffahrtsgesellschaft', values: Array.from({ length: 30 }, (_, i) => 1000 + ((i * 377) % 900)) }, { name: 'A second series with a long name', values: Array.from({ length: 30 }, (_, i) => 600 + ((i * 211) % 700)) }],
   },
-  decorators: [(Story) => <div style={{ width: 320 }}><Story /></div>],
+  decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 };
