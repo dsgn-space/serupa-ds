@@ -201,8 +201,15 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     // measured shorter): its scroll event comes after this, and finds the position set here.
     const pin = L.pin && L.pin.i < count ? L.pin : null;
     if (view && !scaled && (pin || (Math.abs(el.scrollTop - L.seen) < 1 && el.scrollTop >= L.origin))) {
-      const to = clamp((pin ? (pin.end ? offsets[pin.i + 1] - el.clientHeight : offsets[pin.i]) : top) + L.origin, 0, el.scrollHeight - el.clientHeight);
+      // The last row pinned at the bottom edge goes to the very end, and the first at the top to the very start: the
+      // offsets can be a pixel off the drawn rows (measured while the list was still growing in), the ends can't (GR101).
+      const max = el.scrollHeight - el.clientHeight;
+      const want = pin ? (pin.end ? (pin.i === count - 1 ? max - L.origin : offsets[pin.i + 1] - el.clientHeight) : pin.i === 0 ? 0 : offsets[pin.i]) : top;
+      const to = clamp(want + L.origin, 0, max);
       if (Math.abs(to - el.scrollTop) >= 1) { el.scrollTop = to; L.seen = el.scrollTop; }
+      // Already there, as the browser clamped it when the rows below measured shorter: the scroll event the clamp sent
+      // is the list's own, not the user's, so the pin stays (GR101).
+      else if (pin) L.seen = el.scrollTop;
     }
     // Not while the list is drawn scaled (Combobox's popup grows in as it opens): rows measured then were a little
     // short, every row not yet seen counted as short as them, and a row far down was drawn and scrolled to away from
