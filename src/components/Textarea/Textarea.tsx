@@ -15,19 +15,19 @@ const PLAIN = { useGrouping: false } as const;
 
 export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows' | 'children'> {
   /** 'sm' (text-xs), 'md' (text-sm, default) or 'lg' (text-base): Input's text sizes and side padding. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Visible lines of text: the starting height, and the smallest one with autoResize. Default: 3. */
-  rows?: number;
+  rows?: number | undefined;
   /** Grows with the text, from rows up to maxRows, and scrolls past that. Turns off the resize handle. Default: false. */
-  autoResize?: boolean;
+  autoResize?: boolean | undefined;
   /** With autoResize: the most lines it grows to before it scrolls. Unset: no limit. */
-  maxRows?: number;
+  maxRows?: number | undefined;
   /** 'vertical' (default): a handle to drag the height. 'none': a fixed height. Read-only, disabled and autoResize textareas have none. */
-  resize?: 'vertical' | 'none';
+  resize?: 'vertical' | 'none' | undefined;
   /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** A character count under the text, "12 / 200" with maxLength (text-colored once it's reached). Linked to the field with aria-describedby. Default: false. */
-  showCount?: boolean;
+  showCount?: boolean | undefined;
 }
 
 /* Textarea: a multi-line text field, Input's sibling. size "sm", "md" (default) or "lg" (Input's text sizes and

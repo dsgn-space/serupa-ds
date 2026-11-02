@@ -5,17 +5,17 @@ import { component } from "../../internal/component";
 
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   /** 'column' (default): items one under another. 'row': side by side. */
-  direction?: 'column' | 'row';
+  direction?: 'column' | 'row' | undefined;
   /** The space between items, a step of the spacing scale (4 → 16px). Default: 4. */
-  gap?: Space;
+  gap?: Space | undefined;
   /** Cross-axis alignment: 'stretch' (default for columns), 'start', 'center' (default for rows), 'end' or 'baseline'. */
-  align?: 'stretch' | 'start' | 'center' | 'end' | 'baseline';
+  align?: 'stretch' | 'start' | 'center' | 'end' | 'baseline' | undefined;
   /** Main-axis distribution: 'start' (default), 'center', 'end' or 'between'. */
-  justify?: 'start' | 'center' | 'end' | 'between';
+  justify?: 'start' | 'center' | 'end' | 'between' | undefined;
   /** Lets a row wrap onto more lines. Default: false. */
-  wrap?: boolean;
+  wrap?: boolean | undefined;
   /** The element. Default: 'div'. */
-  as?: 'div' | 'section' | 'ul' | 'ol' | 'nav' | 'header' | 'footer' | 'form' | 'fieldset' | 'span';
+  as?: 'div' | 'section' | 'ul' | 'ol' | 'nav' | 'header' | 'footer' | 'form' | 'fieldset' | 'span' | undefined;
 }
 
 const TAGS = ["div", "section", "ul", "ol", "nav", "header", "footer", "form", "fieldset", "span"] as const;

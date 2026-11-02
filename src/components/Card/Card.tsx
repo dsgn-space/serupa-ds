@@ -9,20 +9,20 @@ export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 
 export interface CardProps extends React.HTMLAttributes<HTMLElement> {
   /** 'outline' (default): surface, a border and a hairline shadow. 'elevated': a raised shadow, for content that floats over the page. 'filled': surface-muted and flat, for panels inside another surface. */
-  variant?: CardVariant;
+  variant?: CardVariant | undefined;
   /** Inner padding: 'none' (for full-bleed media; pad the parts yourself), 'sm' 12px, 'md' 20px (default) or 'lg' 24px. */
-  padding?: CardPadding;
+  padding?: CardPadding | undefined;
   /** The element: 'div' (default), 'section', 'article' or 'li'. */
-  as?: 'div' | 'section' | 'article' | 'li';
+  as?: 'div' | 'section' | 'article' | 'li' | undefined;
   /** Makes the whole card clickable, with a hover border and a focus ring. The link (the component set with
       configure({ link }), <a> by default) goes around the CardHeader's title and is named by it; its area is
       stretched over the card. Buttons and links inside still work on their own. Without a CardHeader title, the
       link is named by the card's text. */
-  href?: string;
+  href?: string | undefined;
   /** The link's target. "_blank" adds rel="noopener noreferrer". */
-  target?: string;
+  target?: string | undefined;
   /** The link's rel. */
-  rel?: string;
+  rel?: string | undefined;
 }
 
 /* Card: a surface that groups related content and actions, made of CardHeader, CardBody and CardFooter (or any
@@ -96,13 +96,13 @@ const hasContent = (n: React.ReactNode) => n != null && n !== false && n !== "";
 
 export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** The card's title, as a heading. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** A muted line (or a few) under the title. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Something at the end of the header: a Badge, a menu button. */
-  action?: React.ReactNode;
+  action?: React.ReactNode | undefined;
   /** The title's heading level: 2 to 6, default 3. Pick the level that fits the page's outline. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
 }
 
 /** The card's title, an optional description and an optional action at the end. Any children come after the description. */
@@ -132,7 +132,7 @@ export const CardBody = /* @__PURE__ */ component<HTMLDivElement, CardBodyProps>
 
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Where the actions sit: 'end' (default), 'start' or 'between' (the first at the start, the rest at the end: give them a wrapper). */
-  justify?: 'start' | 'end' | 'between';
+  justify?: 'start' | 'end' | 'between' | undefined;
 }
 
 /** The card's actions, in a wrapping row at the end. */
