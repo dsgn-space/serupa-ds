@@ -240,7 +240,9 @@ describe('InlineEdit', () => {
     await userEvent.keyboard('{Enter}');
     expect([changes, root('e').dataset.state]).toEqual([[false], 'editing']);
     expect([view('dis').tagName, view('dis').textContent, view('ro').tagName, root('ro').querySelector('button')]).toEqual(['SPAN', 'Apollo', 'SPAN', null]);
-    expect([view('ph').textContent, view('ph').querySelector('.dk-inline-edit__text--placeholder') != null]).toEqual(['Description: Add a description, Ubah', true]);
+    // The placeholder is the text the button shows, muted: a different color from a value's text.
+    const shown = (id: string, t: string) => [...view(id).querySelectorAll('span')].find((s) => s.textContent === t)!;
+    expect([view('ph').textContent, getComputedStyle(shown('ph', 'Add a description')).color !== getComputedStyle(shown('ro', 'Apollo')).color]).toEqual(['Description: Add a description, Ubah', true]);
   });
 
   test('opened by the editing prop: the field starts from the current text, not a draft from before or the text at first (L8E53)', async () => {
