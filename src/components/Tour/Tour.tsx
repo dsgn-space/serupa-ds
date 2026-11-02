@@ -40,7 +40,7 @@ export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
   onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
   /** The step shown, from 0 (controlled), with onStepChange. */
   step?: number;
-  /** The step shown at first, from 0 (uncontrolled). Default: 0. */
+  /** The step shown each time it opens, from 0 (uncontrolled). Default: 0. */
   defaultStep?: number;
   /** Called with the new step when Back or Next is pressed. */
   onStepChange?: (step: number) => void;
@@ -75,6 +75,12 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
   const [ownStep, setOwnStep] = React.useState(props.defaultStep || 0);
   const at = Math.max(0, Math.min(steps.length - 1, props.step !== undefined ? props.step : ownStep));
   const step = steps[at] as TourStep | undefined;
+  // Opened again, an uncontrolled tour starts over at defaultStep rather than carrying on where it was closed.
+  const [wasOpen, setWasOpen] = React.useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open && props.step === undefined) setOwnStep(props.defaultStep || 0);
+  }
   const panel = React.useRef<HTMLDivElement | null>(null);
   const anchor = React.useRef<HTMLElement | null>(null);
   const opener = React.useRef<Element | null>(null);
