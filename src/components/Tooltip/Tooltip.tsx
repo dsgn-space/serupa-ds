@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { cn, domId, elementRef, omit, setRef } from "../../internal/cn";
+import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { oneElement, useTriggerRef } from "../../internal/trigger";
 import type { Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
@@ -120,8 +120,22 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
     };
   }, [open, set]);
 
+  // A label in the element cut with an ellipsis (a long Button label in a narrow column) shows in full at the top of
+  // the tooltip, which would otherwise hide the title the Button gives it (GR118). Hidden from screen readers: it is
+  // already the element's name. Not with role="label", whose content is the name.
+  const [full, setFull] = React.useState("");
+  useIsoLayoutEffect(() => {
+    const a = anchorRef.current;
+    if (!open || !a || props.role === "label") return;
+    let cut = "";
+    for (const n of [a].concat(Array.prototype.slice.call(a.querySelectorAll("*")))) {
+      if (n.scrollWidth > n.clientWidth && getComputedStyle(n).textOverflow === "ellipsis") cut = n.textContent || "";
+    }
+    setFull(cut.trim());
+  }, [open, props.role]);
+
   // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes. A press outside hides it.
-  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: "top", offsetVar: "--dk-tooltip-offset", watch: props.content, onOutside: () => set(false, "outside") });
+  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: "top", offsetVar: "--dk-tooltip-offset", watch: full || props.content, onOutside: () => set(false, "outside") });
 
   /* Its content is plain text: the keyboard can't reach a link or button in it (focus leaving the element hides it),
      and on its inverse fill a link's color measures under 4.5:1 in every theme. Warn when one is there, rendered or not. */
@@ -178,6 +192,7 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
       <div ref={tipRef} id={id} role="tooltip" {...{ popover: "manual" }} hidden={!open || undefined}
         className={cn("dk-tooltip", props.className)} style={props.style} data-component="tooltip" data-state={open ? "open" : "closed"} data-warm={(open && instant) || (!open && handed) ? "" : undefined}
         onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
+        {full && props.role !== "label" ? <span className="dk-tooltip__full" aria-hidden="true">{full}</span> : null}
         {props.content}
       </div>
     </>

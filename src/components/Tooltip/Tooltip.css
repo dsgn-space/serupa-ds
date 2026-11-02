@@ -34,6 +34,8 @@
 @supports (overlay: auto) {
   .dk-tooltip[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), translate var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
 }
+/* A cut label of the element, in full (GR118), on its own line over the hint. */
+.dk-tooltip__full { display: block; font-weight: var(--font-medium); }
 .dk-tooltip[hidden] { display: none; opacity: var(--opacity-0); pointer-events: none; }
 @starting-style { .dk-tooltip:not([hidden]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
