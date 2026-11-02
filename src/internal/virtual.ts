@@ -9,7 +9,7 @@ import { useIsoLayoutEffect } from "./cn";
    only for rows not yet seen, and then only until some are: after that, unseen rows count as the average of the seen.
    A row measured above the view keeps the view where it is: the scroll moves by the difference. Before the first
    measure (and on the server) it draws the first `initial` rows. Attach `ref` to the scrolling element; its drawn rows
-   are its children with data-index.
+   are its children with data-index (or the children of a role="group" child: Combobox's groups).
    The view is kept as the row at its top and how far into that row it is, not as a scroll position: when rows above
    it are measured, or the guess for the rows not yet seen changes, the scroll position moves to keep that row where it
    was (GR93).
@@ -201,8 +201,15 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     // measured shorter): its scroll event comes after this, and finds the position set here.
     const pin = L.pin && L.pin.i < count ? L.pin : null;
     if (view && !scaled && (pin || (Math.abs(el.scrollTop - L.seen) < 1 && el.scrollTop >= L.origin))) {
-      const to = clamp((pin ? (pin.end ? offsets[pin.i + 1] - el.clientHeight : offsets[pin.i]) : top) + L.origin, 0, el.scrollHeight - el.clientHeight);
+      // The last row pinned at the bottom edge goes to the very end, and the first at the top to the very start: the
+      // offsets can be a pixel off the drawn rows (measured while the list was still growing in), the ends can't (GR101).
+      const max = el.scrollHeight - el.clientHeight;
+      const want = pin ? (pin.end ? (pin.i === count - 1 ? max - L.origin : offsets[pin.i + 1] - el.clientHeight) : pin.i === 0 ? 0 : offsets[pin.i]) : top;
+      const to = clamp(want + L.origin, 0, max);
       if (Math.abs(to - el.scrollTop) >= 1) { el.scrollTop = to; L.seen = el.scrollTop; }
+      // Already there, as the browser clamped it when the rows below measured shorter: the scroll event the clamp sent
+      // is the list's own, not the user's, so the pin stays (GR101).
+      else if (pin) L.seen = el.scrollTop;
     }
     // Not while the list is drawn scaled (Combobox's popup grows in as it opens): rows measured then were a little
     // short, every row not yet seen counted as short as them, and a row far down was drawn and scrolled to away from
@@ -214,7 +221,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     }
     let changed = false;
     const holder = (options.rows && options.rows()) || el;
-    for (const r of holder.querySelectorAll<HTMLElement>(":scope > [data-index]")) {
+    for (const r of holder.querySelectorAll<HTMLElement>(":scope > [data-index], :scope > [role=group] > [data-index]")) {
       const i = Number(r.dataset.index), h = r.getBoundingClientRect().height;
       if (!(i < count) || !h) continue;
       if (sizes.has(i) && Math.abs((sizes.get(i) ?? 0) - h) < 0.5) continue;

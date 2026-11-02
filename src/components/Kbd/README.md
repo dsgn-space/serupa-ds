@@ -87,7 +87,7 @@ Each is an optional override: set it on the page, a container or one key. The li
 | `--kbd-border` | `field-border` | A key's outline, thicker at the bottom like a keycap. |
 | `--kbd-text` | `text` | The key's label (4.5:1 on bg). |
 | `--kbd-separator` | `text-muted` | The + between keys in a combination. |
-| `--kbd-radius` | `rounded-sm` | A key's corners (4px). |
+| `--kbd-radius` | `radius-inner` | A key's corners (4px). |
 | `--kbd-height-sm` | `spacing-5` | size="sm" (20px). |
 | `--kbd-height-md` | `spacing-6` | size="md", the default (24px). |
 | `--kbd-padding-x` | `spacing-1.5` | Space on each side of a key's label (6px). |

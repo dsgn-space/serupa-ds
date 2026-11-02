@@ -204,7 +204,7 @@
     "radius": {
       "link-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "A link's corners (6px).",
         "$extensions": {
           "com.serupa": {
@@ -228,7 +228,7 @@
     "shadow": {
       "shadow-scrolled": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-md}",
+        "$value": "{shadow.elevation-raised}",
         "$description": "A sticky bar's shadow once the page has scrolled under it.",
         "$extensions": {
           "com.serupa": {

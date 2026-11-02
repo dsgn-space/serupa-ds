@@ -121,6 +121,6 @@ Each is an optional override: set it on the page, a container or one pagination.
 | `--pagination-padding-x` | `spacing-2` | Side padding inside a page, for wide numbers (8px). |
 | `--pagination-padding-x-sm` | `spacing-0.5` | At size sm (2px), so two semibold digits fit in the 24px square. |
 | `--pagination-summary-gap` | `spacing-4` | Space between the summary and the pages (16px). |
-| `--pagination-radius` | `rounded-md` | A page's corners (6px). |
+| `--pagination-radius` | `radius-control` | A page's corners (6px). |
 | `--pagination-disabled` | `opacity-disabled` | Previous or next when there's no page that way. |
 <!-- token-table:end -->

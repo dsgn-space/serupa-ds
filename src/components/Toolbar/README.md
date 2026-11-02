@@ -81,7 +81,7 @@ Each is an optional override: set it on the page, a container or one Toolbar. Th
 | --- | --- | --- |
 | `--toolbar-bg` | `surface` | The background, behind the controls. |
 | `--toolbar-text` | `text` | Text color inherited by plain text inside (4.5:1 on bg). |
-| `--toolbar-radius` | `rounded-md` | The corners (6px). |
+| `--toolbar-radius` | `radius-control` | The corners (6px). |
 | `--toolbar-padding` | `spacing-1` | Space inside, on every side (4px). |
 | `--toolbar-gap` | `spacing-1` | Space between the controls (4px). |
 <!-- token-table:end -->

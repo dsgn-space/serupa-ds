@@ -4848,6 +4848,56 @@
           "cssVar": "--spacing-96"
         }
       }
+    },
+    "space-inline": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-1}",
+      "$description": "Between an icon and its label, or a mark and its text. 4px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-inline"
+        }
+      }
+    },
+    "space-related": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-2}",
+      "$description": "Between the parts of one control, or items that belong together: a field's label and input, buttons in a group. 8px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-related"
+        }
+      }
+    },
+    "space-content": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-4}",
+      "$description": "The default padding and gap: inside a menu or popover, between fields of a form. 16px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-content"
+        }
+      }
+    },
+    "space-surface": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-6}",
+      "$description": "The padding of a card, dialog or drawer. 24px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-surface"
+        }
+      }
+    },
+    "space-section": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-8}",
+      "$description": "Between groups or sections of a page. 32px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-section"
+        }
+      }
     }
   },
   "radius": {
@@ -4991,6 +5041,56 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--rounded-full"
+        }
+      }
+    },
+    "radius-inner": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-sm}",
+      "$description": "A small part inside or beside a control: a checkbox, a key, a clear or stepper button, the indicator of a segmented control, the focus ring of a link in text, inline code. 4px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-inner"
+        }
+      }
+    },
+    "radius-control": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-md}",
+      "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-control"
+        }
+      }
+    },
+    "radius-surface": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-lg}",
+      "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-surface"
+        }
+      }
+    },
+    "radius-container": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-xl}",
+      "$description": "A large container: cards, dialogs, drawers and carousels. 12px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-container"
+        }
+      }
+    },
+    "radius-pill": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-full}",
+      "$description": "A pill or a circle: tracks and thumbs, steps, round buttons and swatches.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-pill"
         }
       }
     }
@@ -5561,6 +5661,56 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--inset-shadow-none"
+        }
+      }
+    },
+    "elevation-rest": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-xs}",
+      "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-rest"
+        }
+      }
+    },
+    "elevation-part": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-sm}",
+      "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-part"
+        }
+      }
+    },
+    "elevation-raised": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-md}",
+      "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-raised"
+        }
+      }
+    },
+    "elevation-overlay": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-lg}",
+      "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-overlay"
+        }
+      }
+    },
+    "elevation-modal": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-xl}",
+      "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-modal"
         }
       }
     }
@@ -6841,6 +6991,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--container-7xl"
+        }
+      }
+    },
+    "icon-weight-regular": {
+      "$type": "number",
+      "$value": 0,
+      "$description": "The Material Symbols drawing as it is (weight 400), next to regular and medium text: `<Icon weight=\"regular\">`, the default.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--icon-weight-regular"
         }
       }
     },

@@ -40,6 +40,7 @@ There's no font to load. Every icon is an SVG drawn in the page, so it shows at 
 
 - **Every Material Symbol works by name** (`name="category"`, `leftIcon="category"`), about 3,800 of them, with autocomplete in TypeScript. Find one on the Foundations → Icons page in Storybook: search, then click to copy its name. A name loads the first time a page draws it, so it appears a moment later that first time: the icons the components use come from a small file (about 14 KB), and any other name from the part of the full set that holds it. The set is cut into 32 parts of about 86 KB each (9 to 20 KB gzipped), in name order, so a page downloads only the parts its names are in. Apps that draw no names never download any of it. Both are dynamic imports, so this needs a bundler that splits them into files of their own, as Vite, Next.js, webpack and Rollup do by default. A build that puts everything in one file (esbuild without `--splitting`, Rollup with `inlineDynamicImports`, a single-chunk webpack or IIFE build) puts the full set in it too, about 2.7 MB (510 KB gzipped). There, draw imported icons (`icon={Close}`) or `registerIcons` the ones you use by name, and keep names out of the bundle's reach.
 - **An imported icon works too** (`icon={Category}` with `import { Category } from "serupa-ds/icons"`), the same icon either way. It draws on the first render, and only the icons you import ship in your bundle, so prefer it for icons you know ahead of time.
+- **Outlined icons** come from `serupa-ds/icons/outlined`, under the same export names: `import { Home } from "serupa-ds/icons/outlined"`. Use them for the unselected state of something that shows a selected one filled, such as navigation and tabs (`icon={current ? HomeFilled : Home}`, with `import { Home as HomeFilled } from "serupa-ds/icons"`), or where a lighter set suits the page. Each outlined icon's `name` is the name and `:outlined` (`"home:outlined"`), so `registerIcons(Home)` draws it as `name="home:outlined"` without replacing the filled `home`. An icon with no outlined drawing (about a third, such as `add` or `close`) is the filled one, so any name can be imported from either. The names-only set the components draw is filled.
 - **The components' own icons** (Dialog's close, Checkbox's check, Select's chevron) are imported by each component, so they draw at once and on the server, and a bundle keeps only the icons of the components it uses.
 - **On a plain page** (`serupa.iife.js`), every name works. The components' own icons and the everyday ones are in `serupa.iife.js`; the full set (about 490 KiB gzipped) is `serupa-icons.iife.js`, which `serupa.iife.js` adds to the page from its own folder the first time an Icon names one outside that set, so keep the two files side by side. A page that names many icons can include `serupa-icons.iife.js` itself, after `serupa.iife.js`, so they draw on the first try.
 - **Server rendering:** the components' own icons and imported icons (`icon={Close}`) render on the server. A name (`name="close"`, `leftIcon="close"`) shows its empty box until the page loads in the browser. To draw it on the server, pass the imported icon instead, or register what you draw by name once before rendering: `registerIcons(Close, Add)`, or `registerIcons(await import("serupa-ds/icons"))` for every name.
@@ -77,13 +78,23 @@ The build keeps only the shapes and removes editor leftovers (ids, classes, size
 
 The same for Material Symbols and custom icons.
 
-| Size | Use |
-| --- | --- |
-| 14px | Inside `sm` buttons |
-| 16px | Inside `md` buttons, inline with `text-sm` |
-| 20px | Inside `lg` buttons, list rows, inputs |
-| 24px | Default: toolbars, navigation, standalone |
-| 40px+ | Empty states, illustrations |
+| `size` | Token | Size | Use |
+| --- | --- | --- | --- |
+| `"xs"` | `icon-size-xs` | 14px | Inside `sm` buttons, next to `text-xs` |
+| `"sm"` | `icon-size-sm` | 16px | Inside `md` buttons, next to `text-sm` |
+| `"md"` | `icon-size-md` | 20px | Inside `lg` buttons, list rows, inputs, next to `text-base` |
+| `"lg"` | `icon-size-lg` | 24px | Default: toolbars, navigation, standalone |
+| `"xl"` | `icon-size-xl` | 40px | Empty states, illustrations |
+
+Every step is on the 4px spacing grid except `xs`, and each matches the line height of the text it sits beside, so an icon and its label share a line box.
+
+### Weight
+
+Match an icon to the weight of the text beside it. The drawings are weight 400, which goes with regular and medium text. Next to `font-semibold` text use `weight="semibold"`; next to `font-bold` text and headings use `weight="bold"`. The weight thickens the icon's lines by a stroke of the `icon-weight-semibold` (0.02em) or `icon-weight-bold` (0.035em) token round the drawing, the same share of the icon at every size, so the small details stay open. Custom icons keep their own drawing.
+
+```tsx
+<h2 className="flex items-center gap-2 font-bold"><Icon name="bolt" size="md" weight="bold" /> Quick start</h2>
+```
 
 Every icon is the 24px design (Material Symbols' optical size 24), scaled.
 
@@ -121,8 +132,9 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<span>`. |
 | `name` | `IconName`: any Material Symbol's name, a custom icon's name, or a name you registered | | Give `name` or `icon`. A custom icon with the same name as a Material Symbol wins. All names autocomplete. |
-| `icon` | `IconData`: a Material Symbol imported from `serupa-ds/icons` | | Give `name` or `icon`: `icon={ArrowForward}`. |
-| `size` | `number \| string` | 24px, or the button's icon size inside a Button | Pixels as a number (or a string of one: `"20"` is 20px), or any CSS length. Sets the font size; the icon is 1em square. |
+| `icon` | `IconData`: a Material Symbol imported from `serupa-ds/icons` (or `serupa-ds/icons/outlined`) | | Give `name` or `icon`: `icon={ArrowForward}`. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| number \| string` | 24px, or the button's icon size inside a Button | A step of the icon scale (the `icon-size-*` tokens: 14, 16, 20, 24, 40px), pixels as a number (or a string of one: `"20"` is 20px), or any CSS length. Sets the font size; the icon is 1em square. |
+| `weight` | `'regular' \| 'semibold' \| 'bold'` | `'regular'` | How heavy a Material Symbol's lines are, to go with the text beside it (the `icon-weight-*` tokens). See Weight, under Usage. Custom icons keep their own drawing. |
 | `mirror` | `boolean \| 'auto'` | `'auto'` | Flips the icon in right-to-left text (`dir="rtl"`), so it points the way reading goes. `'auto'` flips Material Symbols' directional icons (`arrow_forward`, `arrow_back`, `chevron_left`, `chevron_right`, `navigate_next`, `first_page`, `last_page`, `send`, `reply`, `undo`, `redo`, `open_in_new`, `logout` and the like) and nothing else; `true` flips any icon (your own custom arrow), `false` none (an icon you turn yourself). |
 | `aria-label` | `string` | | Makes the icon meaningful: `role="img"` with this name. Without it (or `aria-labelledby`) the icon is `aria-hidden`. |
 

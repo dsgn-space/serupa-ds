@@ -71,5 +71,5 @@ Each is an optional override: set it on the page, a container or one boundary. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--error-boundary-focus-ring` | `focus-ring` | The ring when the fallback takes focus. |
-| `--error-boundary-radius` | `rounded-lg` | The fallback box's corners, matching the Alert (8px). |
+| `--error-boundary-radius` | `radius-surface` | The fallback box's corners, matching the Alert (8px). |
 <!-- token-table:end -->
