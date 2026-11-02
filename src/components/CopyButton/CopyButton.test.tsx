@@ -11,7 +11,9 @@ import { CopyButton } from './CopyButton';
 const el = (id: string) => document.getElementById(id) as HTMLButtonElement;
 const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
 const shout = () => document.querySelector('[data-dk-announcer-assertive]')?.textContent;
-const shown = (id: string) => [...el(id).querySelectorAll('.dk-copy-btn__label')].filter((s) => !s.hasAttribute('aria-hidden')).map((s) => s.textContent).join();
+// The two words (the label and the copied one) are the button's only text: spans with words and no elements inside.
+const labels = (e: Element) => [...e.querySelectorAll('span')].filter((s) => !s.children.length && s.textContent);
+const shown = (id: string) => labels(el(id)).filter((s) => !s.hasAttribute('aria-hidden')).map((s) => s.textContent).join();
 const icon = (id: string) => [...el(id).querySelectorAll<HTMLElement>('[data-icon]')].find((i) => getComputedStyle(i).opacity !== '0')!.dataset.icon;   // the one showing (both share a cell, KW18)
 
 let clip: string[];
@@ -60,7 +62,7 @@ describe('CopyButton', () => {
     await userEvent.click(el('w'));
     await expect.poll(() => el('w').hasAttribute('data-copied')).toBe(true);
     expect(css(el('w')).width).toBe(before);
-    expect([...el('w').querySelectorAll('.dk-copy-btn__label[aria-hidden]')].map((s) => s.textContent)).toEqual(['OK']);
+    expect(labels(el('w')).filter((s) => s.hasAttribute('aria-hidden')).map((s) => s.textContent)).toEqual(['OK']);
   });
 
   test('value as a function (sync or async) is called on press; children, copiedLabel and timeout change the words and the time', async () => {
@@ -114,7 +116,7 @@ describe('CopyButton', () => {
   test('iconOnly: just the icon, named by children with a tooltip; the name becomes "Copied" while the check shows', async () => {
     await render(<CopyButton id="io" value="npm i serupa-ds" iconOnly variant="ghost">Copy the command</CopyButton>);
     const b = el('io');
-    expect([b.getAttribute('aria-label'), b.title, b.querySelector('.dk-copy-btn__labels'), b.hasAttribute('data-icon-only')]).toEqual(['Copy the command', 'Copy the command', null, true]);
+    expect([b.getAttribute('aria-label'), b.title, labels(b).length, b.hasAttribute('data-icon-only')]).toEqual(['Copy the command', 'Copy the command', 0, true]);
     await userEvent.click(b);
     await expect.poll(() => b.getAttribute('aria-label')).toBe('Copied');
   });

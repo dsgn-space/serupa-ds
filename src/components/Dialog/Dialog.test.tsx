@@ -16,6 +16,9 @@ const panel = (id: string) => el(id).firstElementChild as HTMLElement;
 const isOpen = (id: string) => dlg(id).open;
 // The title is the element that names the dialog (aria-labelledby).
 const titleOf = (id: string) => document.getElementById(el(id).getAttribute('aria-labelledby')!) as HTMLElement;
+const descOf = (id: string) => document.getElementById(el(id).getAttribute('aria-describedby')!) as HTMLElement;
+// The body is the panel's part that holds the dialog's children.
+const bodyOf = (id: string, inner: Element) => [...panel(id).children].find((c) => c.contains(inner)) as HTMLElement;
 // The panel scales in from 95%: measure once every finite animation has ended (headless WebKit can start it late).
 
 type Ctl = { setOpen: (v: boolean) => void; setAlert: (v: boolean) => void; setSize: (s: 'sm' | 'md' | 'lg') => void };
@@ -64,6 +67,38 @@ describe('Dialog', () => {
 
   beforeEach(async () => { await page.viewport(1000, 700); });
   afterAll(async () => { await page.viewport(900, 700); });
+
+  test('inside a shadow root, focus goes back to the button that opened it, closed or taken off the page (GR95)', async () => {
+    function Shadow() {
+      const [open, setOpen] = React.useState(false), [shown, setShown] = React.useState(true);
+      return <>
+        <Button id="sopen" onClick={() => setOpen(true)}>Open</Button>
+        {shown && <Dialog id="sdlg" open={open} onOpenChange={setOpen} title="Rename"><Input aria-label="Name" />
+          <button id="sremove" onClick={() => setShown(false)}>Remove it</button></Dialog>}
+      </>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Shadow />, { container: inner });
+      const root = host.shadowRoot!, opener = root.getElementById('sopen')!;
+      await userEvent.click(opener);
+      await expect.poll(() => (root.getElementById('sdlg') as HTMLDialogElement).open).toBe(true);
+      await settled();
+      await userEvent.keyboard('{Escape}');
+      await expect.poll(() => (root.getElementById('sdlg') as HTMLDialogElement).open).toBe(false);
+      expect(root.activeElement?.id).toBe('sopen');
+      // Taken off the page while open (the browser gives focus back to nothing then): the opener again.
+      await userEvent.click(opener);
+      await expect.poll(() => (root.getElementById('sdlg') as HTMLDialogElement).open).toBe(true);
+      await settled();
+      await userEvent.click(root.getElementById('sremove')!);
+      await expect.poll(() => root.getElementById('sdlg')).toBe(null);
+      expect(root.activeElement?.id).toBe('sopen');
+    } finally { host.remove(); }
+  });
 
   test('closed at first: not shown', async () => {
     await render(<App asks={[]} ctl={{}} />);
@@ -172,7 +207,7 @@ describe('Dialog', () => {
     await expect.poll(() => asks.join()).toBe('dlg:false');
     await openDlg();
     const f = document.createElement('form'); f.method = 'dialog'; f.id = 'fdlg'; f.innerHTML = '<button id="fsub">OK</button>';
-    el('dlg').querySelector('.dk-dialog__body')!.appendChild(f);
+    bodyOf('dlg', el('email')).appendChild(f);
     el('fsub').click();
     await expect.poll(() => asks.join()).toBe('dlg:false,dlg:false');
     f.remove();
@@ -356,7 +391,7 @@ describe('Dialog', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = getComputedStyle(panel('dlg')).backgroundColor;
-      for (const sel of ['.dk-dialog__title', '.dk-dialog__description']) { const r = contrast(getComputedStyle(el('dlg').querySelector(sel)!).color, bg); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
+      for (const [sel, part] of [['title', titleOf('dlg')], ['description', descOf('dlg')]] as const) { const r = contrast(getComputedStyle(part).color, bg); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();
     expect(low).toEqual([]);
@@ -420,7 +455,7 @@ describe('Dialog: a body that scrolls', () => {
     const d = dlg('dsl');
     await expect.poll(() => d.open).toBe(true);
     await settled();
-    const body = d.querySelector('.dk-dialog__body') as HTMLElement;
+    const body = bodyOf('dsl', d.querySelector('p')!);
     await expect.poll(() => body.tabIndex).toBe(0);
     expect([body.getAttribute('role'), document.getElementById(body.getAttribute('aria-labelledby')!)!.textContent]).toEqual(['region', 'Terms']);
     (d.querySelector('button[aria-label="Close"]') as HTMLElement).focus();
