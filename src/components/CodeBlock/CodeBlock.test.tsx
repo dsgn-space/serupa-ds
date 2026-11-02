@@ -33,8 +33,8 @@ describe('CodeBlock', () => {
   test('copyable={false} has no button; without a title the language shows in the header', async () => {
     await render(<><CodeBlock id="a" code={CODE} copyable={false} /><CodeBlock id="b" code={CODE} language="sh" /></>);
     expect(el('a').querySelector('button')).toBeNull();
-    expect(el('a').querySelector('.dk-code-block__header')).toBeNull();
-    expect(el('b').querySelector('.dk-code-block__header')!.textContent).toBe('sh');
+    expect(el('a').firstElementChild!.tagName).toBe('PRE');   // no header above the code
+    expect(el('b').firstElementChild!.textContent).toBe('sh');
   });
 
   test('a box that scrolls is a named region in the tab order; one that fits is neither', async () => {
@@ -56,7 +56,7 @@ describe('CodeBlock', () => {
 
   test('line numbers count from startLine, out of the copied text; highlight marks lines and ranges', async () => {
     await render(<CodeBlock code={'a\nb\nc\nd\ne'} lineNumbers startLine={9} highlight={[9, [11, 12], 40]} />);
-    const lines = [...pre().querySelectorAll('.dk-code-block__line')];
+    const lines = [...pre().querySelector('code')!.children];
     expect(lines.map((l) => getComputedStyle(l, '::before').content)).toEqual(Array(5).fill('counter(dk-code-line)'));
     expect(lines.map((l) => l.tagName)).toEqual(['MARK', 'SPAN', 'MARK', 'MARK', 'SPAN']);
     expect(pre().textContent).toBe('a\nb\nc\nd\ne');
@@ -78,7 +78,7 @@ describe('CodeBlock', () => {
 
   test('its text, the muted words and marked lines read 4.5:1 in all six themes', async () => {
     await render(<CodeBlock id="c" code={'a\nb'} language="ts" lineNumbers highlight={[2]} />);
-    const mark = el('c').querySelector('mark')!, lang = el('c').querySelector('.dk-code-block__language')!;
+    const mark = el('c').querySelector('mark')!, lang = el('c').firstElementChild!.firstElementChild!;   // the header's language
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(el('c')).backgroundColor;

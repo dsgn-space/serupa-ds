@@ -7,6 +7,7 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-code-block {
+  --dk-code-block-tab: 2;   /* a tab stop, counted in characters: no token measures one */
   min-inline-size: 0; overflow: hidden;
   border: var(--border-width-1) solid var(--code-block-border, var(--border));
   border-radius: var(--code-block-radius, var(--rounded-md));
@@ -25,7 +26,7 @@
   margin: 0; padding-block: var(--code-block-padding, var(--spacing-4)); overflow: auto;
   overscroll-behavior-inline: contain;   /* a long line scrolled to its end doesn't go on to swipe the page back */
   font-family: var(--font-mono); font-size: var(--code-block-font-size, var(--text-sm)); line-height: var(--leading-5);
-  white-space: pre; overflow-wrap: normal; tab-size: 2;   /* stylelint-disable-line serupa/no-raw-value -- a tab stop counted in characters: no token measures one */
+  white-space: pre; overflow-wrap: normal; tab-size: var(--dk-code-block-tab);
   direction: ltr; unicode-bidi: isolate; text-align: start;   /* run(); never reads ;()run on a right-to-left page */
   counter-reset: dk-code-line;
 }
