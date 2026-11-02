@@ -577,6 +577,22 @@ describe('TableVirtualBody (51)', () => {
       expect([odd.every((x) => getComputedStyle(x).backgroundColor !== NONE), r.filter((x) => Number(x.dataset.index) % 2 === 0).every((x) => getComputedStyle(x).backgroundColor === NONE)]).toEqual([true, true]);
     }
   });
+  test('in print, every row is in the page (the first 5,000), with no spacers; afterwards the view is as it was (GR103)', async () => {
+    await render(<Big />);
+    await frames();
+    const f = el('vt-frame');
+    f.scrollTop = 120000;
+    await frames(); await frames();
+    const at = f.scrollTop, first = drawn()[0].getAttribute('aria-rowindex');
+    const body = el('vt').querySelector('tbody')!;
+    window.dispatchEvent(new Event('beforeprint'));
+    // Drawn at once, before the browser lays the page out for print.
+    const rows = [...body.querySelectorAll<HTMLElement>(':scope > tr')];
+    expect([rows.length, rows[0].getAttribute('aria-rowindex'), rows.at(-1)!.getAttribute('aria-rowindex'), body.querySelectorAll(':scope > tr[aria-hidden]').length]).toEqual([5000, '2', '5001', 0]);
+    window.dispatchEvent(new Event('afterprint'));
+    await frames(); await frames();
+    expect([drawn().length < 40, drawn()[0].getAttribute('aria-rowindex'), Math.abs(f.scrollTop - at) < 1]).toEqual([true, first, true]);
+  });
   test('a row with focus stays in the page when it scrolls away, so focus is never lost', async () => {
     await render(<Big />);
     await frames();
