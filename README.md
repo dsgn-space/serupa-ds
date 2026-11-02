@@ -428,6 +428,18 @@ The Figma variables workflow keeps a Figma file's variables in step with the tok
 
 Shadows, easings and the type styles aren't in them yet.
 
+## Tokens for email
+
+Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed stylesheets, so the components' CSS can't go in an email. `dist/email/` (`serupa-ds/email/…`) has Serupa's colors, type and spacing written out in hex and px instead, made from the same tokens by `npm run build`.
+
+| File | Holds |
+| --- | --- |
+| `<brand>.css` | The email classes: `serupa-body`, `serupa-container`, `serupa-content`, `serupa-h1`, `serupa-h2`, `serupa-text`, `serupa-muted`, `serupa-link`, `serupa-button` in a `serupa-button-cell`, `serupa-callout-info` (and `-success`, `-warning`, `-danger`), `serupa-divider` and `serupa-footer`. Light first, then the dark theme under `prefers-color-scheme: dark`. Inline it with your sender's inliner (or juice, or Premailer) and keep the dark block in `<style>` |
+| `<brand>.html` | A starting email with those styles already inline: a 600px table layout, a preview line, a heading, text, a button, a callout, a divider and a footer |
+| `tokens.json` | Every theme's colors in hex (a color with alpha mixed over its surface), and the type sizes, spacing and radii in px, for a template language or an email builder |
+
+Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way.
+
 ## Editor autocomplete
 
 The package carries [VS Code custom data](https://code.visualstudio.com/api/extension-guides/custom-data-extension) for the utility classes and the tokens. With it, VS Code offers every utility class in `class="…"` with what it sets, the themes in `data-theme`, and every token where a stylesheet sets one (`:root { --primary: … }`). Add this to the project's `.vscode/settings.json`:
