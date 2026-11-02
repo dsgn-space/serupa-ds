@@ -183,7 +183,7 @@
       "name": "Pause, Stop, Hide",
       "level": "A",
       "conformance": "Partially Supports",
-      "remarks": "Nothing starts moving on its own except Loader, which shows that work is in progress, and a Badge with `ping`; neither has its own pause control, and under reduced motion Loader stands still or slows. Keep `ping` for live states only."
+      "remarks": "Only what shows that work is under way or input is awaited moves on its own: Loader, an indeterminate Progress (bar or circle), a loading Switch's spinner, Image's sweep while it loads and PinInput's blinking caret, plus a Badge with `ping`. None has a pause control of its own, and each stops when the wait ends. Under reduced motion Image's sweep and PinInput's caret stop, Progress stands still, and Loader and Switch's spinner stand still or slowly breathe. RelativeTime updates its text by itself every 15 seconds and doesn't announce it. Keep `ping` for live states only."
     },
     {
       "id": "2.3.1",
@@ -287,8 +287,8 @@
       "id": "2.5.8",
       "name": "Target Size (Minimum)",
       "level": "AA",
-      "conformance": "Supports",
-      "remarks": "Buttons, fields and other sized controls are at least 24 by 24 CSS pixels at every size and density. A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows."
+      "conformance": "Partially Supports",
+      "remarks": "Buttons and most controls are at least 24 by 24 CSS pixels. Some are drawn smaller and pass by the spacing exception, with nothing else within 24px of their centres: fields at size `sm` (22px tall), SegmentedControl's `sm` segments (18px drawn, a 24px press area), Slider's thumb (16px) and Splitter's handle (8px wide). Rating doesn't yet: at `sm`, and with `allowHalf` at any size, its stars or halves are under 24px and closer than 24px apart (GR104). A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows."
     },
     {
       "id": "3.1.1",
