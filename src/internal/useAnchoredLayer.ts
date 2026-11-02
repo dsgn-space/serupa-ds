@@ -23,6 +23,9 @@ export interface AnchoredLayerOptions {
   matchWidth?: boolean;
   /** A value that changes the layer's size when it changes (a tooltip's text): it is placed again. */
   watch?: unknown;
+  /** The layer's CSS places it (a popover shown as a sheet at the screen's foot): it is shown, not placed next to
+      the anchor, and what placing set on it before is cleared. */
+  docked?: boolean;
 }
 
 /** Shows `layer` in the top layer next to `anchor` while open, following scrolls, resizes and size changes;
@@ -30,7 +33,7 @@ export interface AnchoredLayerOptions {
     moving outside them and the anchor calls onFocusOutside. Focus is the caller's: do it in a layout effect
     declared after this hook, which runs once the layer is shown and placed. */
 export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: AnchoredLayerOptions): void {
-  const { placement, fallback = "bottom", offsetVar, inside, matchWidth, watch } = opts;
+  const { placement, fallback = "bottom", offsetVar, inside, matchWidth, watch, docked } = opts;
   const outside = React.useRef(opts.onOutside), focusOutside = React.useRef(opts.onFocusOutside);
   // every render: keeps the latest callbacks, so the listeners below needn't be added again when they change.
   useIsoLayoutEffect(() => { outside.current = opts.onOutside; focusOutside.current = opts.onFocusOutside; });
@@ -38,6 +41,12 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const p = layer.current, a = anchor.current;
     if (!p) return;
     if (!open || !a) { hideLayer(p); return; }
+    if (docked) {
+      for (const k of ["left", "top", "max-height", "max-width", "overflow-y", "min-width"]) p.style.removeProperty(k);
+      p.setAttribute("data-side", "bottom");
+      showLayer(p);
+      return;
+    }
     // A first guess at the side before it shows: showing resolves the layer's first style, which is when an entry
     // from @starting-style keyed on data-side (Tooltip's slide) is fixed. placeLayer corrects it on a flip.
     firstSide(p, (placement || fallback || "bottom").split("-")[0]);
@@ -64,7 +73,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
       if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", resized);
       if (vv) { vv.removeEventListener("resize", resized); vv.removeEventListener("scroll", update); }
     };
-  }, [open, layer, anchor, placement, fallback, offsetVar, matchWidth, watch]);
+  }, [open, layer, anchor, placement, fallback, offsetVar, matchWidth, watch, docked]);
   React.useEffect(() => {
     if (!open) return;
     const within = (t: EventTarget | null, refs: Array<Ref | undefined>) => refs.some((r) => !!r && !!r.current && t instanceof Node && r.current.contains(t));
