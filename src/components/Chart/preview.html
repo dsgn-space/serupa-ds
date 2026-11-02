@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Chart — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); max-width: 720px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { display: 'grid', gap: 24 } },
+    h(T.Chart, { title: 'Visitors and sign-ups', categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      series: [{ name: 'Visitors', values: [120, 132, 101, 134, 190, 230] }, { name: 'Sign-ups', values: [20, 42, 31, 54, 60, 73] }] }),
+    h(T.Chart, { type: 'bar', title: 'Orders by region', categories: ['North', 'South', 'East', 'West'],
+      series: [{ name: '2025', values: [420, 380, 510, 290] }, { name: '2026', values: [460, 350, 580, 340] }] })));
+</script>
+</body>
+</html>

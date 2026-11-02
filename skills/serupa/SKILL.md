@@ -101,6 +101,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 ### Data display
 
+- **Chart**: A line or bar chart of a few series over the same categories, with a summary for screen readers, keyboard focus on each point and the numbers as a table. Beta.
 - **Timeline**: An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content.
 
 ### Feedback
