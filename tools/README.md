@@ -18,7 +18,7 @@ Node 26 (`.nvmrc`), which the package also requires (`engines`). TypeScript 7 ty
 ```sh
 npm run build       # src/ → dist/ (tools/build/build.mjs: tsup for the JavaScript and types, then the CSS)
 npm run typecheck   # tsc over src/ (strict), then tools/ and bin/ (JavaScript, checked from JSDoc)
-npm run lint        # ESLint (TypeScript with type information for src/, React hooks rules, Vitest rules for the tests, no English words written into a component: tools/lint/, the tools) and Stylelint (the CSS; in a component's CSS also the system's conventions, tools/lint/stylelint-serupa.mjs: one dk.components layer, values from tokens, colors through the component's tokens, outline focus rings, class names as dk-block__element--modifier, no styling of another block's elements)
+npm run lint        # ESLint (TypeScript with type information for src/, React hooks rules, Vitest rules for the tests, no English words written into a component: tools/lint/, the tools) and Stylelint (the CSS; in a component's CSS also the system's conventions, tools/lint/stylelint-serupa.mjs: one dk.components layer, values from tokens, colors through the component's tokens, outline focus rings, class names as dk-block__element--modifier, no styling of another block's elements, no selector more specific than 0,5,0)
 ```
 
 ESLint also checks accessibility on the components' and docs' JSX (eslint-plugin-jsx-a11y-x, taught what each Serupa component renders by `tools/lint/a11y-components.mjs`). The hits that were already there when it was turned on are listed in `eslint-suppressions.json`. That list only shrinks: a new hit fails, and so does one that's gone until `npx eslint . --prune-suppressions` takes it out.
