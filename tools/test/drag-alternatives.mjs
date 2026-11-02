@@ -23,6 +23,7 @@ const DRAGS = {
 // Moves that aren't a drag: nothing is held down while the pointer moves.
 const NOT_DRAG = {
   Menu: 'onPointerMove only moves focus to the item under the pointer, as hover does',
+  Rating: 'onPointerMove only lights the half or whole star under the pointer, as hover does; a press picks',
 };
 // What has no single-pointer way yet, by component: the queue item that adds one, and why. Empty since FG1.
 const KNOWN = {};

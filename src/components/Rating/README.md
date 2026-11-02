@@ -27,16 +27,25 @@ const [stars, setStars] = React.useState<number | null>(null);
 - A number on a wide scale, such as 0 to 100: use a [Slider](../Slider/README.md) or a [NumberInput](../NumberInput/README.md).
 - A yes or no ("Was this helpful?"): use two [Buttons](../Button/README.md) or [ToggleButtons](../ToggleButton/README.md).
 
+## Anatomy
+
+Drawn from the `Disabled` story.
+
+1. **Star** (`.dk-rating__star`): one point of the score.
+2. **Filled** (`.dk-rating__fill`): the part of each star the score covers, half stars too.
+3. **Empty** (`.dk-rating__empty`): the part it doesn't.
+
 ## Usage
 
 - Label it with [Field](../Field/README.md) or `aria-label`, and say what's being rated.
 - Set `clearable` when no rating is a valid answer, so a second pick on the same star clears it.
-- Use `allowHalf` only where half stars mean something to people. Each half is half a star wide, so at `sm` a half is a small target: keep `md` or `lg` for pointers and touch.
+- Use `allowHalf` only where half stars mean something to people. A press still lands on the whole star, and where in it picks the half, so halves need no bigger size.
 - For a read-only score, pass the exact average (`value={4.27}`): the stars draw any fraction, and the name rounds it to one decimal ("4.3 out of 5"). Put the number of reviews in text beside it.
 
 ## Behavior
 
-- A click (or a tap) on a star picks it; with `allowHalf`, the start half of a star picks the half. The stars up to the pointer light up while it hovers, without picking.
+- A click (or a tap) on a star picks it; with `allowHalf`, the start half of a star picks the half and the end half the whole star, and the hover shows which.
+- Each star takes presses over its height and the whole step to its neighbours, so a press between two stars picks the nearer one. Stars are at least 24px apart, centre to centre (WCAG 2.2's target size, 2.5.8): at `sm` the gap between them is 4px, and md or lg stars shrinking to fit a narrow box stop at 22px. With `allowHalf` each star is still one target; the half's own radio is there for the keyboard and screen readers. The stars up to the pointer light up while it hovers, without picking.
 - Form reset brings back `defaultValue`, also for a rating outside the form that `form` names. With `name`, the rating is sent with the form as one value.
 - In a right-to-left page the stars run from the right, and halves fill from the right.
 

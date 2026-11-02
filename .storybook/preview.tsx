@@ -135,7 +135,7 @@ const preview: Preview = {
     // function into a string and runs it on its own, so it can't use anything from outside it or TypeScript types.
     options: {
       storySort: (a, b) => {
-        const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Changelog'];
+        const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Upgrading', 'Changelog'];
         const foundations = ['Colors', 'Themes', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
           'Content and voice', 'Accessibility', 'Utility classes', 'Icons'];
         const at = (list, name) => { const i = list.indexOf(name); return i < 0 ? list.length : i; };

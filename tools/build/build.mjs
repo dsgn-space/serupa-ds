@@ -2,13 +2,17 @@
 //   index.js, index.d.ts   the components as ES modules, with types (React is a peer dependency): index.js and
 //                          icons.js re-export js/, which has one module per source file, so each interactive
 //                          component keeps its "use client" and works from React Server Components
+//   icons.js, icons-outlined.js  serupa-ds/icons and serupa-ds/icons/outlined: every Material Symbol, filled and outlined
 //   serupa.iife.js           the browser script: reads window.React, sets window.Serupa
 //   components.css         the dk-* component styles, from src/components/<Name>/<Name>.css
 //   utilities.css          the utility classes, from src/styles/utilities.template.css (tools/utilities/build.mjs)
+//   utilities-extra.css    the masks and gradients, which utilities.css and bundle.css leave out (tools/utilities/extra.mjs)
 //   bundle.css             both in one file, components first (what bundle.css has always been)
 //   base.css, theme.js     page defaults and automatic dark mode, from src/
 //   debug.js               the opt-in debug overlay (?serupa-debug), from src/
 //   vscode/                VS Code custom data for editor autocomplete: utility classes and tokens (editor-data.mjs)
+//   native/                the tokens for native apps: Swift, Kotlin and Android resources (native-tokens.mjs)
+//   email/                 the email-safe kit: each brand's email CSS and a starting email, and tokens.json (email-kit.mjs)
 //   components.json        each component's exports, CSS classes and the components it needs (for serupa-purge --components)
 //   eslint.js, eslint.d.ts what each component renders, for eslint-plugin-jsx-a11y in a project's lint (serupa-ds/eslint)
 //   lib/                   React for plain pages: react.production.min.js sets window.React, and
@@ -20,8 +24,11 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { build } from 'esbuild';
 import { buildUtilities } from '../utilities/build.mjs';
+import { split } from '../utilities/extra.mjs';
 import { buildRegistry, cascade } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
+import { nativeFiles } from './native-tokens.mjs';
+import { emailFiles } from './email-kit.mjs';
 import { tokenDescriptions } from '../tokens/build.mjs';
 import { a11yComponents } from '../lint/a11y-components.mjs';
 import { PAIRS as CONTRAST_PAIRS } from '../tokens/contrast-pairs.mjs';
@@ -60,8 +67,12 @@ const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG
 // devtools still reads well.
 const bare = (css) => css.replace(/\/\*(?!!)[\s\S]*?\*\//g, '').replace(/^[ \t]+|[ \t]+$/gm, '').replace(/\n{2,}/g, '\n');
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
-fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(utilities));
-fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(utilities));
+// The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
+// the few pages that use them.
+const { core, extra } = split(utilities);
+fs.writeFileSync(path.join(D, 'utilities.css'), banner('utilities') + bare(core));
+fs.writeFileSync(path.join(D, 'utilities-extra.css'), banner('masks and gradients, after utilities.css or bundle.css') + bare(extra));
+fs.writeFileSync(path.join(D, 'bundle.css'), banner('utilities and components') + bare(components) + bare(core));
 // base.css and theme.js say __VERSION__ in src/; the build writes package.json's version there, so a release changes
 // the number in one place.
 const stamp = (s) => s.replaceAll('__VERSION__', version);
@@ -130,11 +141,28 @@ fs.copyFileSync(path.join(P, 'src', 'stylelint.d.ts'), path.join(D, 'stylelint.d
 // testing.js (184): forEachTheme() for screenshots of an app's own pages in each theme (serupa-ds/testing), as written.
 fs.writeFileSync(path.join(D, 'testing.js'), stamp(read('src/testing.js')));
 fs.copyFileSync(path.join(P, 'src', 'testing.d.ts'), path.join(D, 'testing.d.ts'));
+// Language packs (I7): serupa-ds/labels/<language> is dist/js/labels/<language>.js, one module per src/labels/ file,
+// with these types beside it.
+fs.mkdirSync(path.join(D, 'labels'), { recursive: true });
+for (const f of fs.readdirSync(path.join(P, 'src', 'labels')).filter((x) => x.endsWith('.ts'))) {
+  fs.writeFileSync(path.join(D, 'labels', f.replace(/\.ts$/, '.d.ts')), `import type { SerupaLabels } from "../index.js";\n/** Every built-in word, in this language: <SerupaProvider locale={locale} labels={labels}>. */\nexport declare const labels: SerupaLabels;\n/** The locale the words are written for. */\nexport declare const locale: string;\n`);
+}
+// purge.js (D11): serupa-purge as a Vite and a PostCSS plugin (serupa-ds/purge), as written; it imports bin/serupa-purge.mjs.
+fs.writeFileSync(path.join(D, 'purge.js'), stamp(read('src/purge.js')));
+fs.copyFileSync(path.join(P, 'src', 'purge.d.ts'), path.join(D, 'purge.d.ts'));
 // VS Code custom data: the utility classes and tokens, for editor autocomplete (tools/build/editor-data.mjs).
 const editor = editorData(utilities, read('tokens.css'), tokenDescriptions(JSON.parse(read('tokens.json'))));
 fs.mkdirSync(path.join(D, 'vscode'), { recursive: true });
 fs.writeFileSync(path.join(D, 'vscode', 'serupa.html-data.json'), JSON.stringify(editor.html) + '\n');
 fs.writeFileSync(path.join(D, 'vscode', 'serupa.css-data.json'), JSON.stringify(editor.css) + '\n');
+// Tokens for native apps (138): Swift, Kotlin and Android resources (tools/build/native-tokens.mjs).
+for (const [f, body] of Object.entries(nativeFiles(path.join(P, 'design-tokens'), version))) {
+  fs.mkdirSync(path.dirname(path.join(D, 'native', f)), { recursive: true });
+  fs.writeFileSync(path.join(D, 'native', f), body);
+}
+// The email-safe kit (139): hex and px CSS for HTML email, a starting email per brand, and tokens.json.
+fs.mkdirSync(path.join(D, 'email'), { recursive: true });
+for (const [f, body] of Object.entries(emailFiles(path.join(P, 'design-tokens'), version))) fs.writeFileSync(path.join(D, 'email', f), body);
 
 // React 19 ships no browser builds (React 18's umd/ folder), so they're built here, under the names and globals
 // React 18's had. react-dom takes React from window.React, so both use the one copy.
@@ -175,19 +203,20 @@ async function buildModules() {
       return { path: rel.startsWith('.') ? rel : './' + rel, external: true };
     });
   } };
-  for (const f of fs.readdirSync(D)) if (/^(chunk|icons)-[A-Z0-9]+\.js(\.map)?$|^(index|icons)\.js\.map$/.test(f) || f === 'js') fs.rmSync(path.join(D, f), { recursive: true });
+  for (const f of fs.readdirSync(D)) if (/^(chunk|icons)-[A-Z0-9]+\.js(\.map)?$|^(index|icons|icons-outlined)\.js\.map$/.test(f) || f === 'js') fs.rmSync(path.join(D, f), { recursive: true });
   await build({
     entryPoints: entries, outdir: path.join(D, 'js'), outbase: SRC, bundle: true, plugins: [keepImports],
     format: 'esm', target: 'es2022', platform: 'neutral', sourcemap: true, jsx: 'transform', logLevel: 'warning',
     define: { __VERSION__: JSON.stringify(version) },
   });
   // The generated icon table is data with nothing to step through, and its map was 3 MB of the package: none, for
-  // icons.js and each of its parts (material/part/NN.js).
-  const part = path.join(D, 'js', 'material', 'part');
-  for (const table of [path.join(D, 'js', 'material', 'icons.js'), ...fs.readdirSync(part).filter((f) => f.endsWith('.js')).map((f) => path.join(part, f))]) {
+  // icons.js and each of its parts (material/part/NN.js), nor for the outlined ones (outlined.js, material/outlined/NN.js).
+  const parts = ['part', 'outlined'].flatMap((d) => { const dir = path.join(D, 'js', 'material', d); return fs.readdirSync(dir).filter((f) => f.endsWith('.js')).map((f) => path.join(dir, f)); });
+  for (const table of [path.join(D, 'js', 'material', 'icons.js'), path.join(D, 'js', 'material', 'outlined.js'), ...parts]) {
     fs.rmSync(table + '.map');
     fs.writeFileSync(table, fs.readFileSync(table, 'utf8').replace(/\/\/# sourceMappingURL=[\w.]+\.js\.map\n?$/, ''));
   }
   fs.writeFileSync(path.join(D, 'index.js'), 'export * from "./js/index.js";\n');
   fs.writeFileSync(path.join(D, 'icons.js'), 'export * from "./js/material/index.js";\n');
+  fs.writeFileSync(path.join(D, 'icons-outlined.js'), 'export * from "./js/material/outlined.js";\n');
 }

@@ -1,6 +1,6 @@
 # Combobox
 
-A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked. For a short list (under about 10), a Select is simpler.
+A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked, unless `onCreate` lets people add one. For a short list (under about 10), a Select is simpler.
 
 ```tsx
 import { Combobox } from "serupa-ds";
@@ -24,21 +24,33 @@ const [reviewers, setReviewers] = React.useState<string[]>([]);
 - One choice from a long list people know the name of: a country, an assignee, a project.
 - Several choices from a long list, such as reviewers or tags (`multiple`).
 - Options that come from a server as people type (`loadOptions`).
+- A list people can add to as they pick, such as tags or labels (`onCreate`).
 
 ## When not to use
 
 - A short list (under about 10): use [Select](../Select/README.md).
-- An answer that may not be in the list: use [Input](../Input/README.md), since only listed options can be picked.
+- Free text that a list only suggests, such as an address: use [Input](../Input/README.md). Combobox's value is always an option, even one added with `onCreate`.
 - Picking more than one option from a short list (under about 10): use [checkboxes](../Checkbox/README.md), which show every choice at once.
+
+## Anatomy
+
+Drawn from the `Multiple` story.
+
+1. **Chosen values** (`.dk-combobox__values`): the values chosen so far, each with a way to remove it.
+2. **Value** (`.dk-combobox__tag`): one chosen value.
+3. **Toggle** (`.dk-combobox__toggle`): opens and closes the list.
+4. **Clear** (`.dk-combobox__clear`): removes every chosen value.
 
 ## Usage
 
 - Label it with [Field](../Field/README.md), a `<label htmlFor>` or `aria-label`; the placeholder isn't a label.
 - Add a `description` when options look alike, such as people with the same name (their email).
 - Set `clearable` when no selection is a valid answer, so people can clear it in one click.
+- Group options under headings with `{ label, options }`, as Select's `optgroup`: each group is a `role="group"` named after its heading, typing hides a heading once none of its options match, and `disabled` on a group turns off every option in it.
+- With `onCreate`, people can add an option that isn't listed. While the typed text isn't an option's label (in any case, with or without accents), the list ends with 'Add “text”' (the `createOption` label). It's highlighted when nothing else matches, so Enter adds the text. Picking it calls `onCreate(text)` with the text trimmed. Add the option to `options` and return its value to pick it; with `multiple`, it becomes a tag. Return nothing to leave the pick to you. Leaving the field never adds anything. Added values are new, so give the options as `string[]` (or write `Combobox<string>`), not as a fixed set of values. With `loadOptions`, the row waits for the answer, since the answer may already have the option.
 - Write an `emptyText` that says what to try next, and match the `size` to the fields beside it.
-- Long lists are fine: the options are in the page only while the list is open, each label is prepared for matching once per `options` array, and moving the highlight redraws two rows. At most 100 rows are drawn at once, with a muted "Keep typing to narrow N more" line under them (the `moreResults` label); each row's `aria-posinset` and `aria-setsize` still count every match, and the picked option is drawn even when it's further down. Keep `options` the same array between renders (state, a constant or `useMemo`), so that work isn't redone. For tens of thousands of options, load the matches as people type with `loadOptions`.
-- With `loadOptions`, Combobox runs the requests: it waits for typing to pause (`debounce`, 250ms), passes an `AbortSignal` that aborts when newer text is typed (hand it to `fetch`), drops any answer that isn't for the latest text, and shows the loading row while it waits and "Couldn't load options. Type to try again." (the `loadFailed` label) when the promise rejects. Opening the list loads what `""` finds. The picked option keeps its label when later answers leave it out. Filter on the server: `filter` is ignored. To run the requests yourself instead, use `filter={false}`, `onInputChange` and `loading`.
+- Long lists are fine: the options are in the page only while the list is open, each label is prepared for matching once per `options` array, and moving the highlight redraws two rows. Only the rows in view are drawn, plus a few either side, as in [VirtualList](../VirtualList/README.md): scrolling and the arrow and Page keys reach every match, each row's `aria-posinset` and `aria-setsize` count every match, and the highlighted option is always drawn, so screen readers can follow it. Keep `options` the same array between renders (state, a constant or `useMemo`), so that work isn't redone. For tens of thousands of options, load the matches as people type with `loadOptions`.
+- With `loadOptions`, Combobox runs the requests: it waits for typing to pause (`debounce`, 250ms), passes an `AbortSignal` that aborts when newer text is typed (hand it to `fetch`), drops any answer that isn't for the latest text, and shows the loading row while it waits and "Couldn't load options. Type to try again." (the `loadFailed` label) when the promise rejects. Opening the list loads what `""` finds. The picked option keeps its label when later answers leave it out. Enter or leaving the field before the answer for the typed text arrives doesn't lose it: the request goes at once, and the answer decides as a list that was already there would (an exact label is picked; after Enter, else the first match or the add row). Filter on the server: `filter` is ignored. To run the requests yourself instead, use `filter={false}`, `onInputChange` and `loading`.
 
 ## Behavior
 
@@ -46,6 +58,7 @@ const [reviewers, setReviewers] = React.useState<string[]>([]);
 - A press anywhere on the box, on the left icon, the side padding or a tag, focuses the field with the caret at the end, as the text cursor over the box promises (the chevron and × keep their own presses).
 - Leaving the field closes the list and puts back the picked label. Leaving it empty clears the selection. Switching to another window or browser tab isn't leaving the field: the text waits until people come back.
 - With `multiple`, each picked option is a tag before the text, in the order it was picked, with a remove button. Picking an option toggles it and keeps the list open on it, and the text empties so the next search starts from every option. Backspace in the empty field removes the last tag. Leaving the field empties the text and picks nothing. The box grows a row at a time as tags wrap.
+- As the list narrows, the typed text is marked in each option's label (with Highlight), matched the way the filter matches: "lod" marks "Łód" in "Łódź". Not with a `filter` function or `loadOptions`, which may match on something else.
 - Text that is exactly one option's label ("brazil" for Brazil: any case, with or without accents) picks that option when focus leaves the field (Tab or a click elsewhere), as Enter would.
 - The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room. With no room above or below either, it takes the roomier side and gets shorter, scrolling inside.
 - It fades and grows in from the edge facing the field, and fades and shrinks back out a little faster on close, inert while it goes, as Menu, Popover and DatePicker do. Closed mid-way, it turns back from where it is. Under reduced motion it only fades. From the keyboard there is no motion: opened by typing or an arrow the list is there at once, and Escape takes it away at once.
@@ -78,15 +91,21 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
-| `options` | `string[]` or `{ value, label, description?, disabled? }[]` | | The label is what's typed to find an option and shown once it's picked. With `loadOptions`, what shows before the first answer (or leave it out). |
+| `options` | `string[]`, `{ value, label, description?, disabled? }[]`, or groups `{ label, options, disabled? }` among them | | The label is what's typed to find an option and shown once it's picked. With `loadOptions`, what shows before the first answer (or leave it out). |
 | `loadOptions` | `(text, { signal }) => Promise<options>` | | Loads the options for the typed text (and `""` on opening), after `debounce`; older requests are aborted and their answers dropped. |
 | `debounce` | `number` | `250` | With `loadOptions`, how long typing must pause before loading, in ms. |
 | `multiple` | `boolean` | `false` | Picks any number of options, shown as tags. `value`, `defaultValue` and `onValueChange` then use `string[]`. |
 | `value` | `V \| null` (`V[]` with `multiple`) | | Controlled. `V` is the options' values, a `string` by default: it's inferred from `options`, or given as `Combobox<'red' \| 'green'>`, so `onValueChange` gets that union; given, a value outside it is a type error. |
 | `defaultValue` | `V \| null` (`V[]` with `multiple`) | | Uncontrolled. |
 | `onValueChange` | `(value: V \| null) => void` (`(value: V[]) => void` with `multiple`) | | When an option is picked, or `null` when the field is emptied or cleared. With `multiple`, every picked value in the order picked. |
-| `onInputChange` | `(text: string) => void` | | The text as it's typed, for loading options. |
+| `open` | `boolean` | | Whether the list is open (controlled). Use with `onOpenChange`. |
+| `defaultOpen` | `boolean` | `false` | Whether the list is open at first (uncontrolled). |
+| `onOpenChange` | `(open, { reason }) => void` | | The list asks to open or close, and why: `'trigger'` (typing, the arrow keys, a click or the chevron), `'escape'`, `'blur'`, `'select'` or `'api'` (a form reset). |
+| `inputValue` | `string` | | The text in the field (controlled). Use with `onInputChange`. |
+| `defaultInputValue` | `string` | the picked label | The text in the field at first (uncontrolled). |
+| `onInputChange` | `(text: string) => void` | | Every change to the text: typing, and the label that picking, clearing, Escape or leaving the field puts back. |
 | `filter` | `false \| (option, text) => boolean` | contains, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo", "こーひー" finds "コーヒー") | `false` shows every option you pass. |
+| `onCreate` | `(text: string) => V \| void` | | Adds 'Add “text”' to the end of the list while the text isn't an option's label. Picking it calls this with the trimmed text. Return the new option's value to pick it. |
 | `clearable` | `boolean` | `false` | A × that clears the selection (every tag, with `multiple`). |
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results'` | Shown when nothing matches. A string is also what screen readers hear |
@@ -111,7 +130,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-option-color` | `text` | An option's label. |
 | `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
 | `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
-| `--combobox-description-color` | `text-muted` | An option's second line, and the empty and loading messages. |
+| `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
 | `--combobox-listbox-shadow` | `shadow-lg` | The list's shadow. |
 | `--combobox-listbox-radius` | `rounded-lg` | The list's corners (8px). |

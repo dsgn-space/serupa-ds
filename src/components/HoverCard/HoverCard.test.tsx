@@ -78,6 +78,38 @@ describe('HoverCard', () => {
     expect(asks).toEqual(['true hover', 'false hover']);
   });
 
+  test('interest invokers (174): the link points at its card with interestfor; an interest the pointer or focus didn\'t bring (a long press on a touch screen) opens it at once, the browser\'s own showing cancelled; a tap outside closes it', async () => {
+    const asks: string[] = [];
+    await render(<><Card onOpenChange={(v, d) => asks.push(v + ' ' + d.reason)} /><p id="out">Page</p></>);
+    const t = el('t'), c = el('hc');
+    expect(t.getAttribute('interestfor')).toBe('hc');
+    if ('interestForElement' in HTMLAnchorElement.prototype) expect((t as HTMLAnchorElement & { interestForElement: Element | null }).interestForElement).toBe(c);
+    const ev = new Event('interest', { cancelable: true });
+    c.dispatchEvent(ev);
+    await expect.poll(() => isOpen('hc')).toBe(true);
+    expect([ev.defaultPrevented, asks, c.matches(':popover-open')]).toEqual([true, ['true hover'], true]);
+    const lose = new Event('loseinterest', { cancelable: true });
+    c.dispatchEvent(lose);
+    await settle(400);
+    expect([lose.defaultPrevented, isOpen('hc')]).toEqual([true, true]);
+    el('out').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }));
+    el('out').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'touch' }));
+    el('out').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await expect.poll(() => isOpen('hc')).toBe(false);
+  });
+
+  test('an interest while the pointer is over the link is the hover\'s: Escape during the delay still cancels the open (174, GR88); disabled: an interest opens nothing', async () => {
+    const asks: string[] = [];
+    await render(<><Card /><HoverCard id="hd" disabled onOpenChange={(v) => asks.push(String(v))} trigger={<a id="td" href="#x">@x</a>}>X</HoverCard></>);
+    await userEvent.hover(el('t'));
+    await settle(150);
+    await userEvent.keyboard('{Escape}');
+    el('hc').dispatchEvent(new Event('interest', { cancelable: true }));
+    el('hd').dispatchEvent(new Event('interest', { cancelable: true }));
+    await settle(700);
+    expect([isOpen('hc'), isOpen('hd'), asks]).toEqual([false, false, []]);
+  });
+
   test('the pointer can move onto the card and stay; Escape closes it while hovered', async () => {
     await render(<Card />);
     await userEvent.hover(el('t'));
