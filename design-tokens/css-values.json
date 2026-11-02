@@ -44,7 +44,7 @@
       "description": "`tracking-wide`."
     },
     "tracking-wider": {
-      "css": "0.035em",
+      "css": "0.05em",
       "description": "Small caps labels."
     },
     "tracking-widest": {

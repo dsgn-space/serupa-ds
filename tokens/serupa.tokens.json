@@ -7072,7 +7072,7 @@
       "$description": "`tracking-wide`."
     },
     "tracking-wider": {
-      "$value": "0.035em",
+      "$value": "0.05em",
       "$description": "Small caps labels."
     },
     "tracking-widest": {
