@@ -52,9 +52,10 @@ export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursi
 
 // On CI the component tests run a second time with the browser in one of these languages, picked by the commit, so
 // a component that reads the browser's language where it should take the provider's, or a test that expects English
-// without saying so, fails. A full run (main, the merge queue) runs all of them again; a pull request that changes only
-// component folders runs again just the changed components' own tests, so a new test that expects English fails on
-// its pull request instead of turning main red for everyone. Right-to-left with Arabic
+// without saying so, fails. A full run (main, the merge queue) runs all of them again in that one; a pull request that
+// changes only component folders runs the changed components and the ones using them again in its one, and the
+// changed components' own tests in the other three, so a new test that
+// expects English fails on its pull request instead of turning main red for everyone (as Sparkline's did, #1462). Right-to-left with Arabic
 // digits (ar-EG: Chromium writes plain ar in Latin ones, WebKit doesn't), comma decimals, Thai and Japanese scripts.
 // To repeat one: node tools/test/run.mjs --group components --locale id-ID; tools/ci.mjs runs them all.
 export const LOCALES = ['ar-EG', 'id-ID', 'th', 'ja'];
