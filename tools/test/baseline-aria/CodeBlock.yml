@@ -1,0 +1,53 @@
+# Default
+- text: SignIn.tsx
+- button "Copy code"
+- region "SignIn.tsx":
+  - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
+
+# LanguageOnly
+- text: sh
+- button "Copy code"
+- region "sh":
+  - code: npm install serupa-ds npx serupa-brand acme "#0f766e" -o src/acme-theme.css
+
+# LineNumbers
+- text: SignIn.tsx
+- button "Copy code"
+- region "SignIn.tsx":
+  - code:
+    - mark: "import { Button, Field, Input } from \"serupa-ds\";"
+    - text: "export function SignIn() { return ( <form>"
+    - mark: <Field label="Email"><Input type="email" autoComplete="email" /></Field>
+    - mark: <Button type="submit">Sign in</Button>
+    - text: "</form> ); }"
+
+# LongText
+- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung.config.ts and a title long enough to wrap
+- button "Copy code"
+- region "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung.config.ts and a title long enough to wrap":
+  - code: const line1 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line2 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line3 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line4 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line5 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line6 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line7 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line8 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line9 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line10 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line11 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"; const line12 = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung";
+
+# NoCopy
+- region "Code":
+  - code: SELECT name, email FROM users WHERE active = true;
+
+# Playground
+- text: SignIn.tsx
+- button "Copy code"
+- region "SignIn.tsx":
+  - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
+
+# StartLine
+- text: SignIn.tsx, lines 41 to 47
+- button "Copy code"
+- region "SignIn.tsx, lines 41 to 47":
+  - code:
+    - text: "export function SignIn() { return ( <form>"
+    - mark: <Field label="Email"><Input type="email" autoComplete="email" /></Field>
+    - text: <Button type="submit">Sign in</Button> </form> );
+
+# Wrap
+- text: SignIn.tsx
+- button "Copy code"
+- code: const message = "A line long enough that it would scroll sideways in a narrow box, unless the block wraps it onto the next line instead.";
+

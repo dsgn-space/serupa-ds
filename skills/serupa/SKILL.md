@@ -87,6 +87,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Avatar**: A small picture of a person (a circle) or of a team, project or organisation (a square).
 - **AvatarGroup**: Avatars in an overlapping row, such as the people on a project or the assignees of a task.
 - **Card**: A surface that groups related content and its actions: a summary, a settings panel, an item in a grid.
+- **CodeBlock**: Shows code to read or copy: an install command, a config file, an example, with a copy button, line numbers and marked lines.
 - **Carousel**: One slide at a time, with previous and next buttons, a dot per slide and swipe.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette.
