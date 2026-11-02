@@ -29,6 +29,11 @@
       "import": "./dist/icons.js",
       "default": "./dist/icons.js"
     },
+    "./icons/outlined": {
+      "types": "./dist/icons-outlined.d.ts",
+      "import": "./dist/icons-outlined.js",
+      "default": "./dist/icons-outlined.js"
+    },
     "./tokens.css": "./tokens.css",
     "./tokens.json": "./tokens.json",
     "./base.css": "./dist/base.css",
