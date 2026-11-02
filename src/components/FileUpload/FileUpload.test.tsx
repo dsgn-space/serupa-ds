@@ -527,7 +527,8 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
   test('the retry button keeps "Try again" whole beside a long failure message, which wraps instead', async () => {
     const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
     const screen = await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
-    const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('.dk-btn__label') as HTMLElement;
+    // The words' box inside the button is the one that cuts a label too long for it.
+    const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('span[id$="-retry"]')!.parentElement!;
     expect([label.textContent, label.scrollWidth <= label.clientWidth]).toEqual(['Try again', true]);
   });
 
