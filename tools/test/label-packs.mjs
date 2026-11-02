@@ -26,7 +26,7 @@ t('serupa-ds/labels/en and /id are enLabels and idLabels', packs.en.labels === e
 const reasons = ['valueMissing', 'typeMismatch', 'badInput', 'tooShort', 'tooLong', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'patternMismatch'];
 const SAMPLES = {
   avatarStatus: ['online', 'busy', 'away', 'offline'].map((s) => [s]),
-  avatarMore: [[1], [5]], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]],
+  avatarMore: [[1], [5]], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]], sparklineSummary: [['Revenue', '12', '18', '9', '21']],
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
   contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0], [1], [5]], moreResults: [[1], [40]],
   clearValue: [['Size'], ['']], createOption: [['Research']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],

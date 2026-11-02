@@ -35,7 +35,7 @@ Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or pa
 <html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
 ```
 
-One theme on one element: `data-theme="violet-dark"`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`. For router links, call `configure({ link: Link })` once at startup.
+One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`. For router links, call `configure({ link: Link })` once at startup.
 
 ## Rules
 

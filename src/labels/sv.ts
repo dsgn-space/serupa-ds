@@ -165,6 +165,7 @@ export const labels: SerupaLabels = {
   tourBack: "Tillbaka",
   tourNext: "Nästa",
   tourDone: "Klar",
+  sparklineSummary: (label, first, last, min, max) => label + ": från " + first + " till " + last + ", lägst " + min + ", högst " + max,
   table: "Tabell",
   tableSorted: (column, direction) => "Sorterat efter " + column + ", " + (direction === "ascending" ? "stigande" : "fallande") + ".",
   tableSelected: (count) => n(count) + " valda",
