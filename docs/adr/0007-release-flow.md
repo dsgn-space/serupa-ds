@@ -39,7 +39,7 @@ A matches how Diki wants to work: every change carries its note, and a release h
 
 - After the setting: the first Release PR will be one big minor release (4.8.0) with 37 entries. Read it once before merging.
 - Easier later: one script, one language, no version stamps to keep in step.
-- Revisit: the bump for the rename. Changesets will compute 5.0.0 from a `major` changeset, which the rename PR should carry with migration notes.
+- Revisit: the bump for the rename. Changesets will compute 5.0.0 from a `major` changeset, which the rename PR should carry with migration notes. (2 November 2026: no rename is coming; Diki kept `serupa-ds`.)
 
 ## Action items
 
