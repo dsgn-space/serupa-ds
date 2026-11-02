@@ -90,8 +90,8 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   // focus is one this component already handles (with its delay, its warm-up and Escape cancelling a waiting hover),
   // so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
-  const interest = React.useRef<() => void>(() => {});
-  interest.current = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, "hover"); } };
+  const fromInterest = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, "hover"); } };
+  const interest = React.useRef(fromInterest); interest.current = fromInterest;
   React.useEffect(() => {
     const tip = tipRef.current;
     if (!tip) return;
