@@ -175,8 +175,8 @@ const ENTRIES = new Set(['browser', 'browser-icons', 'theme-types']);
 const modules = fs.readdirSync(path.join(PROJECT, 'src'), { recursive: true }).map((f) => String(f).split(path.sep).join('/'))
   .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$|\.d\.ts$/.test(f)).map((f) => f.replace(/\.tsx?$/, '')).filter((f) => !ENTRIES.has(f));
 const tokenFiles = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => f.endsWith('.tokens.json')).map((f) => `design-tokens/components/${path.basename(f)}`);
-// The generated icon table ships without a source map, both icons.js and its parts (tools/build/build.mjs).
-const noMap = (m) => m === 'material/icons' || m.startsWith('material/part/');
+// The generated icon tables ship without a source map: icons.js, outlined.js and their parts (tools/build/build.mjs).
+const noMap = (m) => m === 'material/icons' || m === 'material/outlined' || m.startsWith('material/part/') || m.startsWith('material/outlined/');
 const expected = new Set([...read('tools/test/baseline-package.txt').split('\n').filter(Boolean), ...modules.flatMap((m) => [`dist/js/${m}.js`, ...(noMap(m) ? [] : [`dist/js/${m}.js.map`])]), ...tokenFiles]);
 const extra = shipped ? [...shipped].filter((f) => !expected.has(f)) : [], gone = shipped ? [...expected].filter((f) => !shipped.has(f)) : [];
 t('npm pack ships exactly the expected files (tools/test/baseline-package.txt, a module per src/ file, a tokens file per component)', shipped && !extra.length && !gone.length,
