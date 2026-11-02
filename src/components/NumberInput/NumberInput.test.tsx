@@ -21,7 +21,8 @@ const reach = (b: HTMLElement) => {
 };
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
-const steps = (id: string) => [...field(id).parentElement!.querySelectorAll<HTMLButtonElement>('.dk-number-input__step')];
+// The two step buttons say which field they change (aria-controls).
+const steps = (id: string) => [...field(id).parentElement!.querySelectorAll<HTMLButtonElement>(`button[aria-controls="${field(id).id}"]`)];
 const minus = (id: string) => steps(id)[0];
 const plus = (id: string) => steps(id)[1];
 // Replaces the field's text, as a person selecting it all and typing would, then (optionally) leaves it.
