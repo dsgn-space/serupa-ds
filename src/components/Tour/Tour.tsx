@@ -13,8 +13,8 @@ import { IconButton } from "../IconButton/IconButton";
 import { en as stepper } from "../Stepper/labels";
 import { en as tour } from "./labels";
 
-// Its words, with Stepper's "Step 2 of 4".
-const words = { ...tour, stepOf: stepper.stepOf };
+// Its words, with Stepper's ("Step 2 of 4"): a property read here would keep this module in every bundle.
+const words = /* @__PURE__ */ Object.assign({}, stepper, tour);
 
 /** One step of a Tour. */
 export interface TourStep {
