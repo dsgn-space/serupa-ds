@@ -21,10 +21,20 @@ const section = (md) => {
   const rest = md.slice(at + 1), end = rest.search(/^## /m);
   return end < 0 ? md.slice(at) : md.slice(at, at + 1 + end);
 };
-// The server markup of each story: <!-- Name --> then its HTML.
+// The server markup of each story: a line "<!-- Name -->" then its HTML. Read line by line, not with a regular
+// expression for comments, which CodeQL takes for an HTML filter (this only reads the baseline file it wrote).
 const stories = (html) => {
-  const bits = html.split(/^<!-- (\w+) -->$/m), out = {};
-  for (let i = 1; i < bits.length; i += 2) out[bits[i]] = bits[i + 1];
+  const out = {};
+  let name = null, from = 0, at = 0;
+  for (const line of html.split('\n')) {
+    const marker = line.startsWith('<!-- ') && line.endsWith(' -->') ? line.slice(5, -4) : '';
+    if (marker && /^\w+$/.test(marker)) {
+      if (name) out[name] = html.slice(from, at);
+      name = marker; from = at + line.length;
+    }
+    at += line.length + 1;
+  }
+  if (name) out[name] = html.slice(from);
   return out;
 };
 const classLists = (html) => [...html.matchAll(/\sclass="([^"]*)"/g)].map((m) => new Set(m[1].split(/\s+/)));
