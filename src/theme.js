@@ -11,6 +11,7 @@
    never contains a closing script tag or an HTML comment opener, either of which would end or break it.
 
    data-brand  blue | violet | emerald         (default: blue)
+   data-brands your own brands (serupa-brand), such as "acme"
    data-mode   auto | light | dark             (default: auto = follow the operating system)
    A page with only data-theme="violet-dark" (no data-brand or data-mode) keeps that theme as its default.
    It sets data-theme (e.g. "blue-dark"), which tokens.css reads. A choice made with
@@ -26,6 +27,7 @@
   if (window.Serupa && window.Serupa.theme) return;
   var BRANDS = ["blue", "violet", "emerald"], MODES = ["auto", "light", "dark"], KEY = "serupa-theme";
   var root = document.documentElement;
+  BRANDS = BRANDS.concat((root.getAttribute("data-brands") || "").match(/[a-z][a-z0-9]*/g) || []);
   var own = !root.hasAttribute("data-brand") && !root.hasAttribute("data-mode") && /^([a-z]+)-(light|dark)$/.exec(root.getAttribute("data-theme") || "");
   var page = own && BRANDS.indexOf(own[1]) >= 0 ? { brand: own[1], mode: own[2] }
     : { brand: pick(root.getAttribute("data-brand"), BRANDS, "blue"), mode: pick(root.getAttribute("data-mode"), MODES, "auto") };

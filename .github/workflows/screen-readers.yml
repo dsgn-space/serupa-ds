@@ -1,0 +1,54 @@
+name: Screen readers
+
+# Every night, VoiceOver (macOS, WebKit) and NVDA (Windows, Chromium) read Button, Checkbox, Switch, Tabs and Dialog
+# through Guidepup (I9, tools/test/screen-reader.mjs). It doesn't block pull requests: a red run is a screen reader
+# difference to look at. What each reader said is in the run's artifacts.
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths: ['.github/workflows/screen-readers.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  read:
+    name: ${{ matrix.reader }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - reader: voiceover
+            os: macos-15
+            browser: webkit
+          - reader: nvda
+            os: windows-2025
+            browser: chromium
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Set the screen reader up for automation
+        run: npx --yes @guidepup/setup@0.29.3 --ci
+      - run: npx playwright install ${{ matrix.browser }}
+      - name: Build the package
+        run: npm run build
+      - name: Read the components
+        shell: bash
+        run: node tools/test/screen-reader.mjs
+      - name: Upload what the reader said
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screen-reader-${{ matrix.reader }}
+          path: .test-tmp/screen-reader-${{ matrix.reader }}.txt
+          if-no-files-found: ignore

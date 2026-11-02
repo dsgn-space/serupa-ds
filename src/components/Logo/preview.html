@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Logo — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.Logo, { alt: 'Acme', size: 'lg',
+    src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="104" height="32" viewBox="0 0 104 32"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M9 23 16 8l7 15h-4l-3-7-3 7z" fill="#fff"/><text x="42" y="23" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Acme</text></svg>') }));
+</script>
+</body>
+</html>

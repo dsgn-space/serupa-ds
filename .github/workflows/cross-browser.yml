@@ -1,6 +1,6 @@
 name: Cross-browser
 
-# Every night, the component suites run in Firefox and WebKit (Safari's engine) as well as Chromium.
+# Every night, the component tests, the checks and the Storybook checks run in Firefox and WebKit (Safari's engine) as well as Chromium.
 # It doesn't block pull requests: a red run here is a browser difference to look at, not a broken main.
 # It also runs on a pull request that changes this file, and on demand from the Actions tab.
 on:
@@ -16,12 +16,14 @@ permissions:
 
 jobs:
   components:
-    name: components (${{ matrix.browser }})
+    name: ${{ matrix.group }} (${{ matrix.browser }})
     strategy:
       fail-fast: false
       matrix:
+        group: [components, checks, storybook]
         browser: [firefox, webkit]
     runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -34,24 +36,26 @@ jobs:
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - name: Build the package
         run: npm run build
-      - name: Component suites in ${{ matrix.browser }}
+      - name: Build Storybook
+        if: matrix.group == 'storybook'
+        run: npm run build-storybook
+      - name: ${{ matrix.group }} in ${{ matrix.browser }}
         shell: bash
         run: |
           set -o pipefail
-          node tools/test/run.mjs --browser ${{ matrix.browser }} --group components 2>&1 | tee test-output.txt
+          node tools/test/run.mjs --browser ${{ matrix.browser }} --group ${{ matrix.group }} 2>&1 | tee test-output.txt
       - name: List the failures
         if: failure()
         shell: bash
         run: |
-          { echo '## Failing in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo '## Failing: ${{ matrix.group }} in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload the output
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-output-${{ matrix.browser }}
+          name: test-output-${{ matrix.group }}-${{ matrix.browser }}
           path: test-output.txt
           if-no-files-found: ignore
-
   # A scheduled run opens one issue when it fails (or updates the open one) and closes it when it's green again.
   report:
     name: nightly issue
@@ -75,4 +79,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RESULT: ${{ needs.components.result }}
+          JOBS: components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit
         run: node tools/nightly-issue.mjs artifacts "$RESULT"
