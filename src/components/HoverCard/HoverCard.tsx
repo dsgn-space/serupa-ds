@@ -45,8 +45,9 @@ const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1
    the link or keyboard focus stays on it, and placed next to it in the top layer. Unlike a Tooltip it may hold links
    and buttons: the pointer can move onto it, and it comes right after the trigger in the Tab order, so Tab goes from
    the trigger into it. It stays open while the pointer or focus is on either, and closes a moment after both leave.
-   Escape closes it (and brings focus back to the trigger from inside). A touch screen has no hover, so it never
-   opens there: the link itself goes to the details, so nothing may live only in the card. */
+   Escape closes it (and brings focus back to the trigger from inside). A touch screen has no hover: a long press
+   opens it where the browser has interest invokers, and elsewhere it never opens there, so the link itself goes to
+   the details and nothing may live only in the card. */
 /** A preview card for a link, shown on hover and keyboard focus, that may hold links of its own. */
 export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProps>("HoverCard", function HoverCard(props, ref) {
   const own = domId("dk-hcard", React.useId());
@@ -109,6 +110,23 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
   const within = (to: EventTarget | null) => !!to && ((!!cardRef.current && cardRef.current.contains(to as Node)) || (!!triggerRef.current && triggerRef.current.contains(to as Node)));
   const blurred = (e: React.SyntheticEvent) => { if (!within((e as React.FocusEvent).relatedTarget)) { unmute(); later(false, closeDelay, "blur"); } };
   const touch = (e: React.SyntheticEvent) => "pointerType" in e && (e as React.PointerEvent).pointerType === "touch";
+  // Interest invokers (174): the trigger points at the card with interestfor, so where the browser has them, a long
+  // press on a touch screen opens it at once (Chrome on Android), as a resting pointer does with a mouse. The
+  // browser's own showing and hiding are cancelled and the card opens itself; a tap outside or Escape closes it. An
+  // interest while the pointer is over the trigger or it has keyboard focus is one this component already handles
+  // (with its delay and Escape cancelling a waiting open), so it's left alone.
+  const hovered = React.useRef(false), focused = React.useRef(false);
+  const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, "hover"); };
+  const interest = React.useRef(fromInterest); interest.current = fromInterest;
+  React.useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    const on = (e: Event) => { e.preventDefault(); interest.current(); };
+    const lose = (e: Event) => { e.preventDefault(); };
+    card.addEventListener("interest", on);
+    card.addEventListener("loseinterest", lose);
+    return () => { card.removeEventListener("interest", on); card.removeEventListener("loseinterest", lose); };
+  }, []);
 
   const child = oneElement<TriggerProps>(props.trigger, "HoverCard", "trigger");
   useTriggerRef(triggerRef, "HoverCard");
@@ -117,12 +135,13 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const f: unknown = cp[name]; if (typeof f === "function") (f as Handler)(e); fn(e); };
   const trigger = React.cloneElement(child, {
     ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
+    ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter and never a mouseleave. A touch pointer doesn't hover.
-    onPointerEnter: chain("onPointerEnter", (e) => { if (touch(e)) return; if (openRef.current) stay(); else later(true, openDelay, "hover"); }),
-    onPointerLeave: chain("onPointerLeave", (e) => { if (!touch(e)) { unmute(); later(false, closeDelay, "hover"); } }),
+    onPointerEnter: chain("onPointerEnter", (e) => { if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, "hover"); }),
+    onPointerLeave: chain("onPointerLeave", (e) => { if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, "hover"); } }),
     // Keyboard focus only (focus-visible): a click on the link is on its way to the page it opens.
-    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(":focus-visible")) later(true, openDelay, "focus"); }),
-    onBlur: chain("onBlur", blurred),
+    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(":focus-visible")) { focused.current = true; later(true, openDelay, "focus"); } }),
+    onBlur: chain("onBlur", (e) => { focused.current = false; blurred(e); }),
   });
   return (
     <>

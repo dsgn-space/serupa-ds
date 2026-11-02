@@ -70,6 +70,10 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
   toggleLabel?: string;
   /** The × button's name. Default: the clearValue label, "Clear" and the field's label ("Clear Country"), or "Clear" when it has none. */
   clearLabel?: string;
+  /** Lets people add an option that isn't listed: while the typed text isn't an option's label, the list ends with
+      'Add "text"' (the createOption label). Picking it calls onCreate with the text (trimmed); return the new option's
+      value to pick it (and add the option to options), or nothing to leave the pick to you. */
+  onCreate?: (text: string) => V | void;
 }
 /** Picks one option. */
 export interface ComboboxSingleProps<V extends string = string> extends ComboboxBaseProps<V> {
@@ -101,7 +105,8 @@ const list = (v: string | string[] | null | undefined): string[] => (Array.isArr
 const ROW = 32;   // a guess at an option row's height in px (control-height-md), until rows are measured
 
 // g: the option's group, by its place in the options (undefined outside a group), and gl the group's label.
-interface Opt { value: string; label: string; description?: React.ReactNode; disabled?: boolean; i: number; folded: string; g?: number; gl?: string }
+// add: the 'Add "text"' row of onCreate, after the options.
+interface Opt { value: string; label: string; description?: React.ReactNode; disabled?: boolean; i: number; folded: string; g?: number; gl?: string; add?: string }
 type Given = ComboboxOption | ComboboxOptionGroup;
 const isGroup = (o: Given): o is ComboboxOptionGroup => typeof o === "object" && o !== null && Array.isArray((o as ComboboxOptionGroup).options);
 // The options, groups flattened in order, each label folded for matching.
@@ -151,7 +156,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1 } as const);
   const multi = props.multiple === true;
   const size = oneOf(SIZES, props.size, "md");
   const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
@@ -162,11 +167,14 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const [loaded, setLoaded] = React.useState<readonly Given[] | null>(null);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
+  // Enter or leaving the field while typed text is still loading: what to do once its answer comes (GR106).
+  const later = React.useRef<"select" | "blur" | null>(null);
   const source = props.loadOptions && loaded ? loaded : props.options;
   const opts: Opt[] = React.useMemo(() => toOpts(source), [source]);
   // Every option seen, by value, so a picked one keeps its label when a later answer doesn't include it.
   const seen = React.useRef(new Map<string, string>());
   for (const o of opts) seen.current.set(o.value, o.label);
+  const creatable = !!props.onCreate;
   // loadOptions: one request at a time. A new one (after the debounce) aborts the one before, and an answer that
   // isn't for the latest request is dropped, so a slow answer never overwrites a newer one.
   const loader = React.useRef<{ timer: number; ctl: AbortController | null; n: number; q: string | null }>({ timer: 0, ctl: null, n: 0, q: null });
@@ -188,7 +196,9 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         if (n !== l.n || ctl.signal.aborted) return;
         const got: readonly Given[] = Array.isArray(list) ? list : [];
         setLoaded(got); setBusy(false);
-        setActive(q.trim() ? toOpts(got).findIndex((o) => !o.disabled) : -1);   // the first match, as typing does
+        // The first match, as typing does; with onCreate and no option of that label, the add row (GR106).
+        const o = toOpts(got), t = fold(q.trim()), first = t ? o.findIndex((x) => !x.disabled) : -1;
+        setActive(first < 0 && t && creatable && !props.loading && !o.some((x) => x.folded === t) ? o.length : first);
       },
         () => { if (n === l.n && !ctl.signal.aborted) { setFailed(true); setBusy(false); } });
     };
@@ -266,12 +276,23 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   }
 
   const filter = props.loadOptions ? false : props.filter;
-  const shown = React.useMemo(() => {
+  const matches = React.useMemo(() => {
     if (!typed || filter === false) return opts;
     if (typeof filter === "function") return opts.filter((o) => filter({ value: o.value, label: o.label }, text));
     const q = fold(text.trim());
     return opts.filter((o) => o.folded.includes(q));
   }, [opts, typed, filter, text]);
+  // With onCreate, 'Add "text"' ends the list while the typed text isn't an option's label (any case or accents),
+  // and not while options are loading: the answer may have it (185).
+  const addText = text.trim();
+  const adding: Opt | null = React.useMemo(() => {
+    if (!creatable || !typed || !addText || loading) return null;
+    const t = fold(addText);
+    return opts.some((o) => o.folded === t) ? null : { value: "", label: "", i: opts.length, folded: "", add: addText };
+  }, [creatable, typed, addText, loading, opts]);
+  const shown = React.useMemo(() => (adding ? matches.concat(adding) : matches), [matches, adding]);
+  // An option by its index: the options, then the add row.
+  const byIndex = (i: number) => (adding && i === adding.i ? adding : opts[i]);
   // The enabled matches, which the arrow and Page keys move through. Only the rows in view are drawn (below), so a
   // list of thousands opens and narrows quickly, and each row's aria-posinset and aria-setsize count every match.
   const usable = React.useMemo(() => shown.filter((o) => !o.disabled), [shown]);
@@ -292,6 +313,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const remove = (v: string) => commitMany(values.filter((x) => x !== v), sds.labels.valueRemoved(labelOf(v)));
   const show = (to?: "first" | "last" | "selected") => {
     if (locked) return;
+    later.current = null;
     setOpen(true, "trigger");
     if (loader.current.q !== "") load("", 0);   // opening lists what "" finds, unless that's what's loaded
     const list = opts.filter((o) => !o.disabled);
@@ -299,11 +321,22 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     setActive(to === "last" ? (sel >= 0 ? sel : list.length ? list[list.length - 1].i : -1) : to === "first" ? (sel >= 0 ? sel : list.length ? list[0].i : -1) : sel);
   };
   const hide = (reason: OpenChangeReason, revert = true) => {
+    later.current = null;
     setOpen(false, reason); setActive(-1); setTyped(false);
     if (revert) setText(pickedLabel);
   };
   const pick = (o: Opt, reason: OpenChangeReason = "select") => {
     if (o.disabled) return;
+    later.current = null;
+    if (o.add != null) {
+      // The add row: the app adds the option, and the value it returns is picked, labelled with the text until the
+      // option arrives in options.
+      const made = props.onCreate ? props.onCreate(o.add) : undefined;
+      if (typeof made !== "string") { hide(reason, !multi); if (multi) setText(""); return; }
+      seen.current.set(made, o.add);
+      pick({ value: made, label: o.add, i: -1, folded: fold(o.add) }, reason);
+      return;
+    }
     if (multi) {
       // Toggles it and keeps the list open on it; the search text empties so the next pick starts from every option.
       if (chosen.has(o.value)) remove(o.value);
@@ -338,13 +371,34 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     setActive(usable[n].i);
   };
 
+  // Typed text whose options are still loading: Enter and leaving wait for the answer, sending the request at once
+  // if the typing pause hasn't, so a fast typist's "bandung" is picked rather than emptied (GR106).
+  const waiting = () => {
+    if (!busy || !props.loadOptions || !typed || !text.trim()) return false;
+    if (!loader.current.ctl) load(text, 0);
+    return true;
+  };
+  // every render: it reads the answer just drawn (opts, exact, usable), and returns at once with nothing waiting.
+  React.useEffect(() => {
+    const why = later.current;
+    if (!why || busy) return;
+    later.current = null;
+    // A failed load: leaving puts the picked label back as usual; after Enter the list stays open, saying so.
+    if (failed) { if (why === "blur") hide("blur"); return; }
+    const x = exact();
+    if (why === "blur") { if (x) pick(x, "blur"); else hide("blur"); return; }
+    const o = x || usable[0];   // as Enter on a list that was there: the exact label, else the first match or the add row
+    if (o) pick(o); else hide("select");
+  });
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    later.current = null;
     const t = e.target.value;
     setText(t); setTyped(true);
     if (!locked) setOpen(true, "trigger");
     const q = fold(t.trim());
     const first = opts.find((o) => !o.disabled && (filter === false || (typeof filter === "function" ? filter({ value: o.value, label: o.label }, t) : o.folded.includes(q))));
-    setActive(t.trim() && first ? first.i : -1);
+    // No match: the add row (onCreate), so Enter adds the text.
+    setActive(t.trim() && first ? first.i : t.trim() && props.onCreate && !props.loadOptions && !props.loading && !opts.some((o) => o.folded === q) ? opts.length : -1);
     load(t, pause);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -355,7 +409,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if ((e.ctrlKey || e.metaKey) && /^(Arrow|Page)/.test(e.key)) return;
     if (e.key === "ArrowDown") { e.preventDefault(); if (!open) show(e.altKey ? "selected" : "first"); else move(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); if (!open) show("last"); else move(-1); }
-    else if (e.key === "Enter" && open) { e.preventDefault(); const o = opts[active]; if (o && shown.includes(o)) pick(o); else { const x = exact(); if (x) pick(x); else hide("select"); } }
+    else if (e.key === "Enter" && open && waiting()) { e.preventDefault(); later.current = "select"; }
+    else if (e.key === "Enter" && open) { e.preventDefault(); const o = byIndex(active); if (o && shown.includes(o)) pick(o); else { const x = exact() || adding; if (x) pick(x); else hide("select"); } }
     else if (e.key === "Escape" && open) { e.preventDefault(); e.stopPropagation(); hide("escape"); }
     else if ((e.key === "PageDown" || e.key === "PageUp") && open) { e.preventDefault(); page(e.key === "PageDown" ? 1 : -1); }
     else if (e.key === "Backspace" && multi && text === "" && values.length) remove(values[values.length - 1]);
@@ -364,6 +419,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (rest.onBlur) rest.onBlur(e);
     if (windowBlur(e)) return;   // switched windows: the typing goes on when they come back
     if (multi) { hide("blur"); return; }
+    // Its answer still decides the pick (GR106), but the list closes now, so it doesn't sit over the next field (GR107).
+    if (waiting()) { later.current = "blur"; setOpen(false, "blur"); return; }
     const x = exact();
     if (text.trim() === "" && value != null) { commit(null); setOpen(false, "blur"); setActive(-1); setTyped(false); setText(""); }
     else if (x) pick(x, "blur");
@@ -378,9 +435,9 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   // While typing, how many options match is said once the typing stops, and so are "No results" and "Couldn't load"
   // (GR53): a role=status row inserted with its text already in it isn't read by VoiceOver or JAWS, so those rows
   // are plain text and the shared announcer says them, as it says the counts.
-  const count = usable.length;
+  const count = usable.length - (adding ? 1 : 0);
   const empty = typeof props.emptyText === "string" ? props.emptyText : sds.labels.noResults;
-  const said = failed ? sds.labels.loadFailed : shown.length === 0 ? empty : count ? sds.labels.resultsCount(count) : "";
+  const said = failed ? sds.labels.loadFailed : shown.length === 0 ? empty : count ? sds.labels.resultsCount(count) : adding ? sds.labels.createOption(adding.add!) : "";
   React.useEffect(() => {
     if (!open || !typed || loading || !said) return;
     const t = setTimeout(() => announce(said), announcePause);
@@ -423,17 +480,18 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
   const listId = base + "-list";
   // Stable handlers for the memoised rows, reading the latest state through a ref.
-  const latest = React.useRef({ pick, opts });
-  latest.current = { pick, opts };
+  const latest = React.useRef({ pick, byIndex });
+  latest.current = { pick, byIndex };
   const onMove = React.useCallback((i: number) => setActive(i), []);
-  const onPick = React.useCallback((i: number) => { const l = latest.current; const o = l.opts[i]; if (o) l.pick(o); }, []);
+  const onPick = React.useCallback((i: number) => { const l = latest.current; const o = l.byIndex(i); if (o) l.pick(o); }, []);
   const activeShown = at >= 0;
   // The typed text, marked in each option's label as the list narrows (185): only with the default filter, which
   // matches the same way (a custom filter or the server's results may match on something else).
   const mark = typed && filter === undefined ? text.trim() : "";
   const row = (n: number, top?: number) => {
-    const o = shown[n];
-    return <Row key={o.value} o={o} id={base + "-opt-" + o.i} index={n} slot={lay.slot[n]} top={top} active={o.i === active} selected={multi ? chosen.has(o.value) : o.value === value} size={shown.length} query={mark} onMove={onMove} onPick={onPick} />;
+    let o = shown[n];
+    if (o.add != null) o = { ...o, label: sds.labels.createOption(o.add) };
+    return <Row key={o.add != null ? "\u0000add" : o.value} o={o} id={base + "-opt-" + o.i} index={n} slot={lay.slot[n]} top={top} active={o.i === active} selected={o.add == null && (multi ? chosen.has(o.value) : o.value === value)} size={shown.length} query={o.add != null ? "" : mark} onMove={onMove} onPick={onPick} />;
   };
   // The drawn rows, those of a group inside a role="group" named after it (the heading is drawn for the eye only,
   // and may be scrolled out of the drawn window while its options aren't).

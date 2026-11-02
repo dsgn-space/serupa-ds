@@ -8,7 +8,7 @@ import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { topModal } from '../../internal/layers';
 import { Popover } from '../Popover/Popover';
-import { Dialog } from './Dialog';
+import { Dialog, useUnsavedChanges } from './Dialog';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const dlg = (id: string) => el(id) as HTMLDialogElement;
@@ -16,6 +16,9 @@ const panel = (id: string) => el(id).firstElementChild as HTMLElement;
 const isOpen = (id: string) => dlg(id).open;
 // The title is the element that names the dialog (aria-labelledby).
 const titleOf = (id: string) => document.getElementById(el(id).getAttribute('aria-labelledby')!) as HTMLElement;
+const descOf = (id: string) => document.getElementById(el(id).getAttribute('aria-describedby')!) as HTMLElement;
+// The body is the panel's part that holds the dialog's children.
+const bodyOf = (id: string, inner: Element) => [...panel(id).children].find((c) => c.contains(inner)) as HTMLElement;
 // The panel scales in from 95%: measure once every finite animation has ended (headless WebKit can start it late).
 
 type Ctl = { setOpen: (v: boolean) => void; setAlert: (v: boolean) => void; setSize: (s: 'sm' | 'md' | 'lg') => void };
@@ -204,7 +207,7 @@ describe('Dialog', () => {
     await expect.poll(() => asks.join()).toBe('dlg:false');
     await openDlg();
     const f = document.createElement('form'); f.method = 'dialog'; f.id = 'fdlg'; f.innerHTML = '<button id="fsub">OK</button>';
-    el('dlg').querySelector('.dk-dialog__body')!.appendChild(f);
+    bodyOf('dlg', el('email')).appendChild(f);
     el('fsub').click();
     await expect.poll(() => asks.join()).toBe('dlg:false,dlg:false');
     f.remove();
@@ -388,7 +391,7 @@ describe('Dialog', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = getComputedStyle(panel('dlg')).backgroundColor;
-      for (const sel of ['.dk-dialog__title', '.dk-dialog__description']) { const r = contrast(getComputedStyle(el('dlg').querySelector(sel)!).color, bg); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
+      for (const [sel, part] of [['title', titleOf('dlg')], ['description', descOf('dlg')]] as const) { const r = contrast(getComputedStyle(part).color, bg); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();
     expect(low).toEqual([]);
@@ -452,7 +455,7 @@ describe('Dialog: a body that scrolls', () => {
     const d = dlg('dsl');
     await expect.poll(() => d.open).toBe(true);
     await settled();
-    const body = d.querySelector('.dk-dialog__body') as HTMLElement;
+    const body = bodyOf('dsl', d.querySelector('p')!);
     await expect.poll(() => body.tabIndex).toBe(0);
     expect([body.getAttribute('role'), document.getElementById(body.getAttribute('aria-labelledby')!)!.textContent]).toEqual(['region', 'Terms']);
     (d.querySelector('button[aria-label="Close"]') as HTMLElement).focus();
@@ -561,6 +564,62 @@ describe('Dialog: unsaved (13)', () => {
     expect(leave()).toBe(true);
     await screen.rerender(<Form why={why} unsaved={false} />);
     expect(leave()).toBe(false);
+  });
+});
+
+describe('useUnsavedChanges: a form or page (13)', () => {
+  const question = () => document.querySelector<HTMLDialogElement>('dialog[role="alertdialog"]');
+  const button = (name: string) => [...question()!.querySelectorAll('button')].find((b) => b.textContent === name)!;
+  const leave = () => { const e = new Event('beforeunload', { cancelable: true }); window.dispatchEvent(e); return e.defaultPrevented; };
+  let api: { confirm: () => Promise<boolean> } = { confirm: async () => true };
+  function Settings(props: { saved?: string }) {
+    const [name, setName] = React.useState(props.saved ?? 'Atlas');
+    const guard = useUnsavedChanges(name !== (props.saved ?? 'Atlas'));
+    api = guard;
+    return <form>
+      <Input id="name" aria-label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+      {guard.dialog}
+    </form>;
+  }
+  test('nothing changed: confirm() is true at once, no question, and leaving the page doesn\'t ask', async () => {
+    await render(<Settings />);
+    expect([await api.confirm(), question(), leave()]).toEqual([true, null, false]);
+  });
+  test('with changes: leaving the page asks; confirm() asks "Discard changes?" with Keep editing focused, false on Keep editing or Escape, true on Discard; focus goes back', async () => {
+    await render(<Settings />);
+    el('name').focus();
+    await userEvent.keyboard('s');
+    expect(leave()).toBe(true);
+    let got = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await expect.poll(() => document.activeElement?.textContent).toBe('Keep editing');
+    await userEvent.click(button('Keep editing'));
+    expect([await got, question()?.open]).toEqual([false, false]);
+    await expect.poll(() => document.activeElement?.id).toBe('name');
+    got = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    expect(await got).toBe(false);
+    got = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await userEvent.click(button('Discard'));
+    expect([await got, question()?.open, (el('name') as HTMLInputElement).value]).toEqual([true, false, 'Atlass']);
+  });
+  test('a newer confirm() answers the one before with false; saving while it asks answers true; unmounting answers false', async () => {
+    const screen = await render(<Settings />);
+    el('name').focus();
+    await userEvent.keyboard('s');
+    const first = api.confirm(), second = api.confirm();
+    expect(await first).toBe(false);
+    await expect.poll(() => question()?.open).toBe(true);
+    await screen.rerender(<Settings saved="Atlass" />);
+    expect([await second, leave()]).toEqual([true, false]);
+    await expect.poll(() => question()?.open ?? false).toBe(false);
+    await userEvent.keyboard('!');
+    const third = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await screen.unmount();
+    expect([await third, leave()]).toEqual([false, false]);
   });
 });
 

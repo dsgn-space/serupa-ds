@@ -36,7 +36,7 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
 .dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-stepper__indicator {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--dk-step-size); height: var(--dk-step-size);
-  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--field-border)); border-radius: var(--stepper-radius, var(--rounded-full));
+  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--field-border)); border-radius: var(--stepper-radius, var(--radius-pill));
   background: var(--stepper-indicator-bg, var(--surface)); color: var(--stepper-indicator-text, var(--text-muted));
   font-weight: var(--font-semibold); font-variant-numeric: tabular-nums;
 }

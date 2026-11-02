@@ -34,7 +34,7 @@
 .dk-calendar__grid td { padding: var(--spacing-0); text-align: center; }
 .dk-calendar__day {
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--dk-cal-day); height: var(--dk-cal-day);
-  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--rounded-md));
+  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation;
 }
 @media (hover: hover) { .dk-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--surface-muted)); } }

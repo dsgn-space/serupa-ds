@@ -282,7 +282,8 @@ Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus
 
 Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations/Icons page in Storybook, which searches all of them and copies the name. You can also pass an icon imported from `serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
 
-- **Sizes:** 14px (`sm` buttons), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows), 24px (default, toolbars and navigation), 40px+ (empty states).
+- **Sizes:** the `icon-size-*` tokens, `<Icon size="xs">` to `"xl"`: 14px (`sm` buttons, `text-xs`), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows, `text-base`), 24px (default, toolbars and navigation), 40px (empty states).
+- **Weight:** match the text beside the icon: weight 400 as drawn for regular and medium text, `weight="semibold"` or `weight="bold"` (the `icon-weight-*` tokens) next to semibold or bold text and headings.
 - **Color:** icons follow the text color. Use `text` or `text-muted` for neutral icons and `success`, `warning`, `danger` or `info` for status.
 - **Meaning:** icons are decorative by default. Add an `aria-label` only when the icon carries meaning alone, and give icon-only buttons an `aria-label`.
 - **Consistency:** one icon per meaning across the product (always `delete`, never `delete` in one place and `remove` in another).
@@ -322,6 +323,8 @@ The spacing scale, named `spacing-<step>`: 1 step = 4px (`spacing-4` = 16px = `p
 
 - Stay on the scale: `1` (4px), `2` (8px), `3` (12px), `4` (16px), `6` (24px), `8` (32px), `12` (48px) and `16` (64px) cover most layouts.
 - Spacing inside a group should be smaller than the spacing between groups.
+
+**Roles.** Five steps have names for what they space, for layouts and your own components: `space-inline` (4px, an icon and its label), `space-related` (8px, the parts of one control, or items that belong together such as a label and its input), `space-content` (16px, the default padding and gap), `space-surface` (24px, the padding of a card, dialog or drawer) and `space-section` (32px, between groups or sections of a page).
 
 ### Padding and margin
 
@@ -364,6 +367,18 @@ The corner radius scale. `rounded-sm` is 4px; the 2px step is `rounded-xs`.
 | `rounded-full` | 9999px | Pills, avatars |
 
 A container nested inside another should have a smaller radius than its parent.
+
+**Roles.** The components don't name a step of the scale: they name what the corner belongs to. Use the roles for your own components too, so a brand that wants softer or sharper corners changes five tokens and every component follows.
+
+| Role | Step | What it rounds |
+| --- | --- | --- |
+| `radius-inner` | `rounded-sm` (4px) | A small part inside or beside a control: a checkbox, a key, a clear or stepper button, a segmented control's indicator, the focus ring of a link in text, inline code |
+| `radius-control` | `rounded-md` (6px) | Buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree |
+| `radius-surface` | `rounded-lg` (8px) | Alerts, tables, lists, accordions, drop zones, and the floating surfaces: menus, popovers, list boxes, toasts |
+| `radius-container` | `rounded-xl` (12px) | Cards, dialogs, drawers and carousels |
+| `radius-pill` | `rounded-full` | Tracks and thumbs, steps, round buttons and swatches |
+
+Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart.
 
 ## Borders and outlines
 
@@ -446,6 +461,8 @@ How things sit above one another: the page, raised cards, floating menus and dia
 - Higher means bigger shadow and, in dark themes, a lighter surface. Don't skip the surface and edge and rely on the shadow alone.
 - Keep to one raised level per region. A card inside a card stays at level 1; give the inner one `filled` or no border instead of a second shadow.
 - Elevation means "this is above the page", not "this is important". Use color and type for emphasis.
+
+**Roles.** The components take their shadow from a role named for the level, not from a step of the shadow scale: `elevation-rest` (level 1, `shadow-xs`), `elevation-raised` (level 2 and the tooltip, `shadow-md`), `elevation-overlay` (level 3, `shadow-lg`) and `elevation-modal` (level 4, `shadow-xl`). `elevation-part` (`shadow-sm`) lifts a part over the control it sits on: a slider thumb, a segmented control's indicator, carousel arrows, a table head once rows scroll under it. Give your own surfaces the same roles. They follow `data-shadow="brand"` like the shadows they name, in a section as well as on the page.
 
 **Light and dark**
 

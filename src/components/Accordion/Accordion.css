@@ -6,7 +6,7 @@
 @layer dk.components {
 .dk-accordion { --dk-accordion-turn: 180deg; font-family: var(--font-sans); }
 .dk-accordion__item { border-bottom: var(--accordion-border-width, var(--border-width-1)) solid var(--accordion-border, var(--border)); }
-.dk-accordion--card { overflow: hidden; border: var(--accordion-border-width, var(--border-width-1)) solid var(--accordion-border, var(--border)); border-radius: var(--accordion-radius, var(--rounded-lg)); background: var(--accordion-bg, var(--surface)); }
+.dk-accordion--card { overflow: hidden; border: var(--accordion-border-width, var(--border-width-1)) solid var(--accordion-border, var(--border)); border-radius: var(--accordion-radius, var(--radius-surface)); background: var(--accordion-bg, var(--surface)); }
 .dk-accordion--card > .dk-accordion__item:last-child { border-bottom: var(--spacing-0); }
 .dk-accordion__toolbar { display: flex; justify-content: flex-end; padding-block: var(--spacing-2); border-bottom: var(--accordion-border-width, var(--border-width-1)) solid var(--accordion-border, var(--border)); }
 .dk-accordion--card > .dk-accordion__toolbar { padding-inline: var(--accordion-padding-x, var(--spacing-4)); }

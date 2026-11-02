@@ -31,7 +31,7 @@ gh attestation verify ./serupa-ds-13.0.0.tgz --repo diki-stwn/serupa-ds
 
 Always pin a tag (`#v13.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
-To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
+To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
