@@ -78,8 +78,14 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
     if (!open || !n || placement === "inline") return;
     const had = body.style.paddingBlockEnd, base = getComputedStyle(body).paddingBlockEnd;
     const set = () => {
-      const r = n.getBoundingClientRect(), gap = parseFloat(getComputedStyle(n).getPropertyValue("--dk-offline-gap")) || 8;
-      const space = Math.ceil(placement === "bottom" ? window.innerHeight - r.top + gap : r.bottom + gap) + "px";
+      // Its settled place, not where it is now: as it slides in, translate moves it a few pixels toward its edge, and
+      // nothing measures again when that ends (a ResizeObserver doesn't see translate), so the room came out short
+      // (GR124). Its height and its inset from the edge are where it comes to rest.
+      // The room past it, --dk-offline-gap, reads as the token wrote it ("0.5rem"), not in pixels.
+      const cs = getComputedStyle(n), g = cs.getPropertyValue("--dk-offline-gap").trim();
+      const gap = /rem$/.test(g) ? parseFloat(g) * parseFloat(getComputedStyle(root).fontSize) : parseFloat(g) || 8;
+      const inset = parseFloat(placement === "bottom" ? cs.bottom : cs.top) || 0;
+      const space = Math.ceil(n.offsetHeight + inset + gap) + "px";
       root.style.setProperty("--dk-offline-banner-space", space);
       if (placement === "bottom") body.style.paddingBlockEnd = "calc(" + base + " + " + space + ")";
     };
