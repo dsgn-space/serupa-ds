@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { announce } from "../../internal/announce";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
@@ -10,6 +11,7 @@ import { activeIn } from "../../internal/root";
 import { warnOnce } from "../../internal/warn";
 import { useLocale, useSettings } from "../../internal/provider";
 import { displayNumber } from "../../internal/numbers";
+import { useVirtual } from "../../internal/virtual";
 import * as icons from "../../material/builtin";
 import type { IconData } from "../../material/types";
 import { en as words } from "./labels";
@@ -156,6 +158,104 @@ export const TableHead = /* @__PURE__ */ component<HTMLTableSectionElement, Tabl
 /** The body rows (<tbody>). */
 export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableBodyProps>("TableBody", function TableBody(props, ref) {
   return <tbody {...props} ref={ref} className={cn("dk-table__body", props.className)} />;
+});
+
+export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  /** Not used: renderRow draws the rows. */
+  children?: never;
+  /** How many rows there are. */
+  count: number;
+  /** Draws row `index`: a TableRow. */
+  renderRow: (index: number) => React.ReactElement;
+  /** A stable key for row `index` (its id), so a row keeps its state when rows are added or removed. Default: the index. */
+  itemKey?: (index: number) => React.Key;
+  /** A guess at a row's height in px, for rows not drawn yet. Rows are measured once drawn. Default: 41 (36 with size="sm"). */
+  estimatedRowHeight?: number;
+  /** Rows drawn beyond each edge of the view, so a fast scroll doesn't show a gap. Default: 6. */
+  overscan?: number;
+}
+
+// The most rows TableVirtualBody draws for print: about 100 pages of one-line rows, drawn in a second or so.
+const PRINT_ROWS = 5000;
+
+/* TableVirtualBody: a <tbody> of any length that draws only the rows in view of the Table's frame, plus a few either
+   side (useVirtual, as VirtualList and Combobox do). Give the frame a height (containerProps style maxHeight, or a
+   stickyHeader table in a sized box) so it scrolls; without one every row is in view. An empty row above and below the
+   drawn ones stands in for the rest, so the columns keep their widths from the drawn rows (use table-layout: fixed or
+   column widths for columns that mustn't shift while scrolling). Each drawn row gets aria-rowindex, and the table
+   aria-rowcount, so screen readers say "row 5,002 of 10,001". A row with focus stays drawn when it scrolls away. */
+/** A table body of thousands of rows that draws only the ones in view of the Table's scrolling frame.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableVirtualBodyProps>("TableVirtualBody", function TableVirtualBody(props, ref) {
+  const rest = omit(props, { count: 1, renderRow: 1, itemKey: 1, estimatedRowHeight: 1, overscan: 1, className: 1, onFocus: 1, onBlur: 1 });
+  const count = Math.max(0, Math.floor(props.count) || 0);
+  const body = React.useRef<HTMLTableSectionElement | null>(null);
+  const [small, setSmall] = React.useState(false);
+  const estimate = props.estimatedRowHeight && props.estimatedRowHeight > 0 ? props.estimatedRowHeight : small ? 36 : 41;
+  const r = useVirtual({
+    count, estimate, overscan: props.overscan != null && props.overscan >= 0 ? props.overscan : 6,
+    rows: () => body.current,
+    // The rows start under the caption and the header: where this body starts in the frame's scrolling content.
+    origin: () => {
+      const b = body.current, f = b && b.closest<HTMLElement>(".dk-table");
+      return b && f ? b.getBoundingClientRect().top - f.getBoundingClientRect().top - f.clientTop + f.scrollTop : 0;
+    },
+  });
+  // The Table's frame is the scroller. The header rows count in aria-rowindex, and the table says how many rows there are.
+  const attach = r.ref;
+  const [head, setHead] = React.useState(0);
+  useIsoLayoutEffect(() => {
+    const b = body.current, f = b && b.closest<HTMLElement>(".dk-table"), t = b && b.closest("table");
+    attach(f);
+    setSmall(!!f && f.classList.contains("dk-table--sm"));
+    // The rows of the head and foot, by their <tr>s (a DOM without HTMLTableSectionElement.rows, as happy-dom, has these).
+    const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(":scope > tr").length : 0);
+    const h = t ? rowsOf(t.querySelector(":scope > thead")) : 0;
+    setHead(h);
+    if (t) t.setAttribute("aria-rowcount", String(h + count + rowsOf(t.querySelector(":scope > tfoot"))));
+  }, [attach, count]);
+  const [focused, setFocused] = React.useState<number | null>(null);
+  // Print: every row (the first PRINT_ROWS), drawn from beforeprint to afterprint, so the printout is the whole table
+  // as the Table's print styles promise, not the rows in view (GR103). flushSync, as the browser lays out the page for
+  // print as soon as beforeprint returns. Not measured (no data-index): the view is put back as it was afterwards.
+  const [printing, setPrinting] = React.useState(false);
+  React.useEffect(() => {
+    const on = () => flushSync(() => setPrinting(true)), off = () => setPrinting(false);
+    window.addEventListener("beforeprint", on);
+    window.addEventListener("afterprint", off);
+    return () => { window.removeEventListener("beforeprint", on); window.removeEventListener("afterprint", off); };
+  }, []);
+  const { renderRow, itemKey } = props;
+  const row = (i: number, out: boolean) => {
+    const el = renderRow(i) as React.ReactElement<{ style?: React.CSSProperties }>;
+    const style = out ? { ...el.props.style, position: "absolute" as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
+    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, "data-index": printing ? undefined : i, "aria-rowindex": head + i + 1, style } as React.Attributes);
+  };
+  const rows: React.ReactElement[] = [];
+  const keep = !printing && focused != null && focused < count && (focused < r.start || focused >= r.end) ? focused : null;
+  const start = printing ? 0 : r.start, end = printing ? Math.min(count, PRINT_ROWS) : r.end;
+  if (keep != null && keep < start) rows.push(row(keep, true));
+  for (let i = start; i < end; i++) rows.push(row(i, false));
+  if (keep != null && keep >= end) rows.push(row(keep, true));
+  // Row i is the (i + 1)th child, as in a TableBody, so striped stays on the same rows while scrolling: an empty
+  // spacer of no height evens out the count before the drawn rows when it's needed.
+  const lead: number[] = [];
+  if (!printing && r.before > 0) lead.push(r.before);
+  if ((lead.length + (keep != null && keep < start ? 1 : 0)) % 2 !== start % 2) lead.push(0);
+  const indexOf = (t: EventTarget | null, tb: Element) => {
+    const tr = t instanceof HTMLElement ? t.closest<HTMLElement>("[data-index]") : null;
+    return tr && tr.parentElement === tb ? Number(tr.dataset.index) : null;
+  };
+  const setNode = React.useCallback((n: HTMLTableSectionElement | null) => { body.current = n; setRef(ref, n); }, [ref]);
+  return (
+    <tbody {...rest} ref={setNode} className={cn("dk-table__body", "dk-table__body--virtual", props.className)}
+      onFocus={(e) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); }}
+      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); }}>
+      {lead.map((h, n) => <tr key={"lead" + n} aria-hidden="true" className="dk-table__spacer" style={{ height: h }} />)}
+      {rows}
+      {!printing && r.after > 0 ? <tr aria-hidden="true" className="dk-table__spacer" style={{ height: r.after }} /> : null}
+    </tbody>
+  );
 });
 
 /** Footer rows such as totals (<tfoot>). */

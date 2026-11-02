@@ -14,18 +14,20 @@
     "types": ["node"]
   },
   // Every script, except the suites in test/ that drive a browser (their page.evaluate code runs in the page, where
-  // window.Serupa and the test hooks live); those are moving to typed Vitest tests next to each component.
+  // window.Serupa and the test hooks live); those are moving to typed Vitest tests next to each component. The
+  // framework apps in test/frameworks/ are projects of their own, checked by their frameworks' builds.
   "include": [
     "**/*.mjs",
-    "../bin/*.mjs"
+    "../bin/**/*.mjs"
   ],
-  "exclude": ["test/*.mjs"],
+  "exclude": ["test/*.mjs", "test/frameworks"],
   "files": [
     "test/lib.mjs",
     "test/run.mjs",
     "test/contract.mjs",
     "test/package.mjs",
     "test/package-lint.mjs",
+    "test/pack.mjs",
     "test/api.mjs",
     "test/guides.mjs",
     "test/design-tokens.mjs",
