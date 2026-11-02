@@ -22,7 +22,7 @@ An email and a password, then a one-time code, as one page. It meets WCAG 2.2's 
 - **"Forgot your password?"**, a Link next to the field it's about, before the button, so it's found on the way.
 - **An ErrorSummary** at the top after a failed try. It takes focus, so a screen reader reads it, and each error links to its field. Each Field shows the same words under it. The words say how to fix it ("Enter an email address in the right format, like name@example.com").
 - **A wrong email or password** gets one error, on the password, that doesn't say which was wrong, so the form doesn't tell anyone which emails have an account.
-- **The code step**, a PinInput, which sets `autocomplete="one-time-code"`, so a phone offers the texted code and a pasted code fills every box. "Send a new code" is a button beside it.
+- **The code step**, a PinInput, which sets `autocomplete="one-time-code"`, so a phone offers the texted code and a pasted code fills every box. "Send a new code" is a button beside it. Pressing it says "We sent a new code" under the button, in a status region that is always on the page, so a screen reader reads it each time without focus leaving the button.
 - **Focus on each new step's heading** (an h1 with `tabIndex={-1}`), so a screen reader says the step changed and the next Tab goes on from there.
 - **No puzzle.** A CAPTCHA that asks someone to read, pick or work something out fails 3.3.8. Use rate limits, or a check that needs nothing from the person.
 
