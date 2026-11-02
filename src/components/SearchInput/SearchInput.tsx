@@ -16,15 +16,15 @@ import { en as words } from "./labels";
 
 export interface SearchInputProps extends Omit<InputProps, "type" | "showCount" | "prefix" | "suffix" | "leftIcon" | "rightIcon"> {
   /** Called with the text when Enter is pressed. */
-  onSearch?: (value: string) => void;
+  onSearch?: ((value: string) => void) | undefined;
   /** Called after the field is cleared, by the × or Escape. The field's onChange also gets an empty value. */
-  onClear?: () => void;
+  onClear?: (() => void) | undefined;
   /** The clear button's name. Default: "Clear search". */
-  clearLabel?: string;
+  clearLabel?: string | undefined;
   /** Shows a small loader in place of the search icon while results load. Default: false. */
-  loading?: boolean;
+  loading?: boolean | undefined;
   /** The loader's name, announced when it appears. Default: "Searching". */
-  loadingLabel?: string;
+  loadingLabel?: string | undefined;
 }
 
 /* SearchInput: an Input for searching: a search icon at the start, type="search", and a × at the end once

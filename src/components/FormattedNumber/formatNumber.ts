@@ -8,7 +8,7 @@ export type NumberFormat = 'decimal' | 'compact' | 'percent' | 'currency' | 'byt
 
 export interface FormatNumberOptions extends Intl.NumberFormatOptions {
   /** 'decimal' (default), 'compact', 'percent' (0.45 is 45%), 'currency' (with currency), 'bytes' or 'unit' (with unit). */
-  format?: NumberFormat;
+  format?: NumberFormat | undefined;
 }
 
 import { pinCurrencyDigits } from "../../internal/currency";

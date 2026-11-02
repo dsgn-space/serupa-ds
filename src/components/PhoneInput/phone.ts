@@ -14,9 +14,9 @@ export interface PhoneCountry {
   /** The grouping, with # for a digit, such as "###-####-####". Digits past the last # follow it without a space. "#" leaves the digits ungrouped. */
   pattern: string;
   /** Groupings for national numbers that start with these digits, such as { "30": "## ########" } for Berlin; the longest match wins over pattern. */
-  patterns?: Record<string, string>;
+  patterns?: Record<string, string> | undefined;
   /** For a calling code shared with another country: the starts of the national numbers that are this country's, such as ["416", "604"] for Canada in +1. */
-  areas?: string[];
+  areas?: string[] | undefined;
   /** The shortest and longest national number, without the trunk prefix. */
   min: number;
   max: number;

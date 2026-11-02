@@ -12,28 +12,28 @@ import { en as ownWords } from "./labels";
 export type ProgressTone = 'primary' | 'success' | 'warning' | 'danger';
 export interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** How far along, from 0 to max. Leave it out (or null) when you can't tell: the bar then shows an animated segment. */
-  value?: number | null;
+  value?: number | null | undefined;
   /** The value that means done. Default: 100. */
-  max?: number;
+  max?: number | undefined;
   /** 'bar' (default): a horizontal bar, full width. 'circle': a ring. */
-  variant?: 'bar' | 'circle';
+  variant?: 'bar' | 'circle' | undefined;
   /** The bar's thickness: 'sm' 4px, 'md' 8px (default), 'lg' 12px. The ring: 24, 40 or 64px. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** The fill color: 'primary' (default), 'success', 'warning' or 'danger'. */
-  tone?: ProgressTone;
+  tone?: ProgressTone | undefined;
   /** A visible name above the bar, which also names it; a ring has no room to show it, so there it only names it.
       Without one, give it an aria-label. */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** Shows the value: at the end of the label row, or inside the ring (md and lg). Default: false. */
-  showValue?: boolean;
+  showValue?: boolean | undefined;
   /** Turns the value into words, shown and read out. Default: the percentage as the locale writes it: "45%", "%45" in
       Turkish, "45 %" in French, "٤٥٪" in Egyptian Arabic. */
-  formatValue?: (value: number, max: number) => string;
+  formatValue?: ((value: number, max: number) => string) | undefined;
   /** Says politely that it's done when the value reaches max: true says "Upload: complete" (the label or aria-label,
       then labels.progressComplete), or pass your own words. The bar's value changes aren't read out on their own. */
-  announceComplete?: boolean | string;
+  announceComplete?: boolean | string | undefined;
   /** Called once each time the value reaches max (not when it starts there). */
-  onComplete?: () => void;
+  onComplete?: (() => void) | undefined;
 }
 
 const TONES: readonly ProgressTone[] = ["primary", "success", "warning", "danger"];

@@ -6,21 +6,21 @@ interface DialogLabels {
     keepEditing: string;
 }
 interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "open" | "title"> {
-    open?: boolean;
-    defaultOpen?: boolean;
-    onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
-    title?: React.ReactNode;
-    description?: React.ReactNode;
-    footer?: React.ReactNode;
-    size?: "lg" | "md" | "sm";
-    alert?: boolean;
-    closeButton?: boolean;
-    closeLabel?: string;
-    closeOnBackdrop?: boolean;
-    fullScreen?: "mobile" | boolean;
-    initialFocus?: React.RefObject<HTMLElement | null>;
-    finalFocus?: React.RefObject<HTMLElement | null>;
-    unsaved?: boolean;
+    open?: boolean | undefined;
+    defaultOpen?: boolean | undefined;
+    onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
+    title?: React.ReactNode | undefined;
+    description?: React.ReactNode | undefined;
+    footer?: React.ReactNode | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
+    alert?: boolean | undefined;
+    closeButton?: boolean | undefined;
+    closeLabel?: string | undefined;
+    closeOnBackdrop?: boolean | undefined;
+    fullScreen?: "mobile" | boolean | undefined;
+    initialFocus?: React.RefObject<HTMLElement | null> | undefined;
+    finalFocus?: React.RefObject<HTMLElement | null> | undefined;
+    unsaved?: boolean | undefined;
 }
 declare const Dialog: React.ForwardRefExoticComponent<DialogProps & React.RefAttributes<HTMLDialogElement>>;
 declare function useUnsavedChanges(unsaved: boolean): {
