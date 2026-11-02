@@ -1,0 +1,18 @@
+/* ---------------------------------------------------------------
+   Illustration: a small line drawing for an empty state, 4:3, 96, 160 (default) or 224px wide. Muted 3px outlines
+   over a soft secondary fill, with one primary detail. Every value reads one of its own tokens
+   (illustration.tokens.json), which fall back to the shared ones. In forced colors the lines take CanvasText.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-illustration { display: block; flex-shrink: 0; width: var(--illustration-size-md, var(--spacing-40)); height: auto; overflow: visible; }
+.dk-illustration--sm { width: var(--illustration-size-sm, var(--spacing-24)); }
+.dk-illustration--lg { width: var(--illustration-size-lg, var(--spacing-56)); }
+.dk-illustration__fill { fill: var(--illustration-fill, var(--secondary)); }
+.dk-illustration__line { fill: none; stroke: var(--illustration-line, var(--text-muted)); stroke-linecap: round; stroke-linejoin: round; }
+.dk-illustration__accent { fill: none; stroke: var(--illustration-accent, var(--primary)); stroke-linecap: round; stroke-linejoin: round; }
+@media (forced-colors: active) {
+  .dk-illustration__fill { fill: Canvas; }
+  .dk-illustration__line { stroke: CanvasText; }
+  .dk-illustration__accent { stroke: Highlight; }
+}
+}
