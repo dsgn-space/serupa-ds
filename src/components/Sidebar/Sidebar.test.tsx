@@ -483,4 +483,18 @@ describe('Sidebar', () => {
     expect(el('gfix').getAttribute('aria-expanded')).toBe('true');
     expect(calls).toEqual([[true, 'trigger'], [false, 'trigger']]);
   });
+  test('a label cut with an ellipsis shows in full as the item\'s title (GR117); a short one, a title of its own and the rail have none', async () => {
+    const long = 'Benachrichtigungseinstellungen und Datenschutz';
+    const { rerender } = await render(<div style={{ height: 600 }}><Sidebar aria-label="Cut">
+      <S><I id="long" href="#a" icon="settings" label={long} /><I id="short" href="#b" icon="home" label="Home" /><I id="own" href="#c" icon="mail" label={long} title="Mine" />
+        <I id="grp" icon="folder" label={long}><I href="#d" label="Child" /></I></S>
+    </Sidebar></div>);
+    await settled();
+    expect([el('long').title, el('short').getAttribute('title'), el('own').title, el('grp').title]).toEqual([long, null, 'Mine', long]);
+    await rerender(<div style={{ height: 600 }}><Sidebar aria-label="Cut" collapsed>
+      <S><I id="long" href="#a" icon="settings" label={long} /></S>
+    </Sidebar></div>);
+    await settled();
+    expect(el('long').getAttribute('title')).toBe(null);
+  });
 });

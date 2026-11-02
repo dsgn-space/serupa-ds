@@ -205,9 +205,26 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("Sideb
   // description: "Inbox", then "4".
   const badgeId = listId + "-badge";
   if (dot) rest["aria-describedby"] = cn(rest["aria-describedby"], badgeId);
+  // A text label cut with an ellipsis shows in full as the item's title on hover, as Button's does (GR117). Not in
+  // the rail, where the tooltip already names it, or with a title of its own.
+  const text = typeof props.label === "string" || typeof props.label === "number" ? String(props.label) : "";
+  const tipOk = !!text && !rail && rest.title == null;
+  const labelEl = React.useRef<HTMLSpanElement | null>(null);
+  const [cut, setCut] = React.useState(false);
+  useIsoLayoutEffect(() => {
+    const label = labelEl.current;
+    if (!tipOk || !label) { setCut(false); return; }
+    const check = () => setCut(label.scrollWidth > label.clientWidth);
+    check();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(check);
+    ro.observe(label);
+    return () => ro.disconnect();
+  }, [tipOk, text]);
+  if (cut && tipOk) rest.title = text;
   const inner = (chevron: boolean) => <>
     {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}{dot ? <span className="dk-sidebar__dot" aria-hidden="true" /> : null}</span> : null}
-    <span className="dk-sidebar__label">{props.label}</span>
+    <span className="dk-sidebar__label" ref={labelEl}>{props.label}</span>
     {props.badge != null ? <span className="dk-sidebar__badge" id={dot ? badgeId : undefined}>{props.badge}</span> : null}
     {chevron && !rail ? <Icon icon={icons.ExpandMore} className="dk-sidebar__chevron" /> : null}
   </>;
