@@ -59,6 +59,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => n(count) + "件の結果",
   showOptions: "選択肢を表示",
   clearValue: (label) => (label ? label + "をクリア" : "クリア"),
+  createOption: (text) => "「" + text + "」を追加",
   valueAdded: (label) => label + "を追加しました",
   valueRemoved: (label) => label + "を削除しました",
   copied: "コピーしました",

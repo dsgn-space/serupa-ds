@@ -1,4 +1,4 @@
-// Builds dist/index.d.ts and dist/icons.d.ts, and serupa.iife.js (the browser script that reads window.React and
+// Builds dist/index.d.ts, dist/icons.d.ts and dist/icons-outlined.d.ts, and serupa.iife.js (the browser script that reads window.React and
 // sets window.Serupa). The ES modules (dist/js/, one file per source file) and the CSS come from
 // tools/build/build.mjs, which runs this first: npm run build.
 import fs from 'node:fs';
@@ -39,6 +39,7 @@ export default defineConfig([
   ...(only === 'iife' ? [] : [
     { entry: { index: 'src/index.ts' }, format: ['esm'], dts: { only: true, compilerOptions: { stripInternal: true } }, clean: false, external: ['react', 'react-dom'] },
     { entry: { icons: 'src/material/index.ts' }, format: ['esm'], dts: { only: true, compilerOptions: { stripInternal: true } }, clean: false, external: ['react', 'react-dom'] },
+    { entry: { 'icons-outlined': 'src/material/outlined.ts' }, format: ['esm'], dts: { only: true, compilerOptions: { stripInternal: true } }, clean: false, external: ['react', 'react-dom'] },
   ]),
   ...[['serupa.iife', 'src/browser.ts'], ['serupa-icons.iife', 'src/browser-icons.ts']].map(([name, file]) => ({
     entry: { [name]: file },

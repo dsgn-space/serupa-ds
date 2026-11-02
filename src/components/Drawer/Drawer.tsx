@@ -10,6 +10,7 @@ import * as icons from "../../material/builtin";
 import { useScrolls } from "../../internal/useScrolls";
 import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
 import { isComposing } from "../../internal/ime";
+import { deepActive } from "../../internal/root";
 import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
 import { project, rubber, settleTime, speed, track, type Samples } from "../../internal/fling";
 
@@ -111,7 +112,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     const d = el.current;
     if (!d) return;
     if (open && !d.open) {
-      if (!back.current) back.current = document.activeElement as HTMLElement | null;   // kept when it opens again
+      if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
       // Non-modal: shown in place (not the top layer), so it isn't on the modal stack and the page stays usable.
       if (!modal) { if (typeof d.show === "function") d.show(); else d.setAttribute("open", ""); }
       else {
@@ -130,7 +131,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
       if (modal) modalOpened(d);
     } else {
       // Non-modal, focus may have moved on to the page: it goes back only from inside the drawer.
-      const inside = modal || d.contains(document.activeElement);
+      const inside = modal || d.contains(deepActive());
       if (d.open) { if (typeof d.close === "function") d.close(); else d.removeAttribute("open"); }
       modalClosed(d);
       giveBack(inside);
@@ -138,7 +139,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   }, [open, reopened]);
   // Closed while unmounting: give focus back too, unless it's non-modal and focus had moved on to the page (focus
   // that was inside it has fallen to <body> by now, the drawer gone from the page).
-  React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const a = document.activeElement; giveBack(isModal.current || !a || a === document.body || !!d && d.contains(a), true); }; }, []);
+  React.useEffect(() => { const d = el.current; return () => { if (d) modalClosed(d); const a = deepActive(); giveBack(isModal.current || !a || a === document.body || !!d && d.contains(a), true); }; }, []);
 
   // React passes a nested dialog's cancel and close up to this one, though the browser doesn't bubble them: only
   // this dialog's own count, or Escape in a Dialog or Drawer opened from inside it would close this one too.
