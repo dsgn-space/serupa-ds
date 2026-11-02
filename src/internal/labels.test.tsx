@@ -33,6 +33,7 @@ const ARGS: Record<string, unknown[]> = {
   reorderMoved: ['Apollo', 2, 5],
   slideOf: [2, 5],
   slidesOf: [1, 3, 7],
+  sparklineSummary: ['Revenue', '12', '18', '9', '21'],
   stepOf: [2, 5],
   tableSorted: ['Amount', 'ascending'],
   toastShortcut: ['F8'],

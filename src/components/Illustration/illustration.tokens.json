@@ -1,0 +1,69 @@
+{
+  "illustration": {
+    "$description": "Illustration's component tokens. Each one is an optional override: set the CSS variable (--illustration-<name>) on the page, a container or one Illustration, and every Illustration inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "line": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The outlines (3:1 on the surface behind).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--illustration-line"
+          }
+        }
+      },
+      "fill": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The shapes' soft fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--illustration-fill"
+          }
+        }
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The one detail that says what happened: the lens, the check, the slash (3:1 on the surface behind).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--illustration-accent"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "size=\"sm\" (96px wide).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--illustration-size-sm"
+          }
+        }
+      },
+      "size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-40}",
+        "$description": "size=\"md\" (160px wide).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--illustration-size-md"
+          }
+        }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-56}",
+        "$description": "size=\"lg\" (224px wide).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--illustration-size-lg"
+          }
+        }
+      }
+    }
+  }
+}

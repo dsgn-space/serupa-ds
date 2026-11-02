@@ -103,7 +103,20 @@ export function purge(css, used, drop = new Set()) {
     return out.join('\n');
   };
   // comments go first (an apostrophe in one would look like a string)
-  return walk(css.replace(/\/\*[\s\S]*?\*\//g, ''));
+  return walk(stripComments(css));
+}
+
+// A scan, not /\/\*[\s\S]*?\*\//g: on a stylesheet full of unclosed "/*" that regex tries every one to the end
+// (quadratic), and this reads it once. An unclosed comment stays as it is, as the regex left it.
+function stripComments(css) {
+  let out = '', i = 0;
+  for (;;) {
+    const open = css.indexOf('/*', i);
+    const close = open < 0 ? -1 : css.indexOf('*/', open + 2);
+    if (close < 0) return out + css.slice(i);
+    out += css.slice(i, open);
+    i = close + 2;
+  }
 }
 
 export function usedClasses(sources, keep = []) {

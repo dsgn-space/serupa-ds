@@ -9,7 +9,7 @@ import { FormattedNumber, formatNumber } from "serupa-ds";
 <FormattedNumber value={1234567} format="compact" />                 // "1.2M", with "1,234,567" as its tooltip
 <FormattedNumber value={0.456} format="percent" />                   // "46%"
 <FormattedNumber value={19.99} format="currency" currency="USD" />    // "$19.99" in en, "US$19,99" in id
-<FormattedNumber value={1572864} format="bytes" />                   // "1.5 MB"
+<FormattedNumber value={1500000} format="bytes" />                   // "1.5 MB"
 <FormattedNumber value={50} format="unit" unit="kilometer-per-hour" />  // "50 km/h"
 <FormattedNumber value={0.031} format="percent" options={{ signDisplay: "always", maximumFractionDigits: 1 }} />  // "+3.1%"
 
@@ -32,7 +32,7 @@ formatNumber(1234, "id-ID", { format: "compact" })                  // "1,2 rb",
 - The words follow the locale from `SerupaProvider` (or the `locale` prop, or the browser's), including its digits.
 - `percent` takes a fraction, as `Intl.NumberFormat` does: `0.45` is 45%. Divide by 100 first if your value is already a percentage.
 - `currency` needs `currency`, an ISO 4217 code. The amount uses that currency's usual minor units (2 for USD and EUR, 0 for JPY); pass `options={{ maximumFractionDigits: 0 }}` to drop them, or `minimumFractionDigits: 2` to show them. Without a code it writes a plain number.
-- `bytes` steps by 1024, like `formatFileSize`, with one decimal under 10 ("1.5 MB") and none above ("820 kB"). A size that rounds up to 1024 takes the next unit (1,048,575 is "1 MB", not "1,024 kB"), and bytes are whole ("2 byte" for 1.5).
+- `bytes` steps by 1000, like `formatFileSize`, with one decimal under 10 ("1.5 MB") and none above ("820 kB"). A size that rounds up to 1000 takes the next unit (999,999 is "1 MB", not "1,000 kB"), and bytes are whole ("2 byte" for 1.5). Steps of 1000, as macOS, iOS and Android count and as the SI names kB, MB and GB mean, so 1,500,000 bytes is "1.5 MB". Write a limit as `5_000_000` to have it read "5 MB"; `5 * 1024 * 1024` reads "5.2 MB".
 - `unit` takes any unit `Intl.NumberFormat` knows (`"celsius"`, `"liter"`, `"kilometer-per-hour"`), written short.
 - `options` takes any other `Intl.NumberFormat` option and wins over the format's own: `maximumFractionDigits`, `signDisplay`, `currencyDisplay: "name"`, `compactDisplay: "long"`.
 - Options Intl rejects, such as a currency `"US"` or a unit `"km/h"`, write the plain number with a `number-options` warning in development, rather than throwing and unmounting the page.

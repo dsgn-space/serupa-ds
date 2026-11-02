@@ -90,6 +90,20 @@ describe('Icon', () => {
     expect(['sn', 'ss', 'sd', 'sl'].map(fs)).toEqual(['20px', '20px', '18.5px', '32px']);
   });
 
+  test('inline in running text, each size step leaves its text\'s line as tall as it was, centred on the text (GR110)', async () => {
+    const steps = [['xs', 'text-xs'], ['sm', 'text-sm'], ['md', 'text-base'], ['lg', 'text-lg']] as const;
+    await render(<>{steps.map(([s, t]) => <React.Fragment key={s}>
+      <p id={'bare-' + s} className={t} style={{ margin: 0 }}>Label</p>
+      <p id={'with-' + s} className={t} style={{ margin: 0 }}><Icon id={'i-' + s} name="close" size={s} /><span id={'t-' + s}>Label</span></p>
+    </React.Fragment>)}</>);
+    for (const [s] of steps) {
+      const h = (id: string) => document.getElementById(id)!.getBoundingClientRect();
+      const mid = (r: DOMRect) => (r.top + r.bottom) / 2;
+      expect(h('with-' + s).height, s).toBe(h('bare-' + s).height);
+      expect(Math.abs(mid(h('i-' + s)) - mid(h('t-' + s))), s).toBeLessThanOrEqual(2);
+    }
+  });
+
   test('mirror: in right-to-left text a directional icon (arrow_forward, chevron_right) flips to point the way reading goes; others don\'t; true flips any, false none', async () => {
     const fwd = { name: 'arrow_forward', d: 'M0 0' }, home = { name: 'home', d: 'M0 0' };
     await render(<>
