@@ -159,7 +159,9 @@ export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, Tabl
   return <tbody {...props} ref={ref} className={cn("dk-table__body", props.className)} />;
 });
 
-export interface TableVirtualBodyProps extends Omit<React.HTMLAttributes<HTMLTableSectionElement>, "children"> {
+export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  /** Not used: renderRow draws the rows. */
+  children?: never;
   /** How many rows there are. */
   count: number;
   /** Draws row `index`: a TableRow. */
