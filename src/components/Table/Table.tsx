@@ -18,70 +18,70 @@ import { en as words } from "./labels";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** Shades every other body row. Rows then don't change on hover. Default: false. */
-  striped?: boolean;
+  striped?: boolean | undefined;
   /** Keeps the header row in view while the table scrolls inside a container with a height. Default: false. */
-  stickyHeader?: boolean;
+  stickyHeader?: boolean | undefined;
   /** A title for the table, rendered as its <caption> (announced with it, and names the scroll area). */
-  caption?: React.ReactNode;
+  caption?: React.ReactNode | undefined;
   /** Hides the caption on screen; screen readers still announce it. Default: false. */
-  hideCaption?: boolean;
+  hideCaption?: boolean | undefined;
   /** Props for the scrolling frame around the table (style with a maxHeight for stickyHeader). */
-  containerProps?: React.HTMLAttributes<HTMLDivElement>;
+  containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
 }
 
 export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   /** Marks a row as selected: a shaded background and a primary bar at its start. Screen readers can't tell from
       the shading (and ignore aria-selected in a table), so give the row a TableSelectCell, whose checkbox says it. */
-  selected?: boolean;
+  selected?: boolean | undefined;
   /** Makes the whole row a link to this URL: a real <a> in one cell (the first TableCell, or the one marked link)
       whose area is stretched over the row. Buttons, checkboxes and links in other cells sit above it and work on
       their own. Ctrl/Cmd-click and middle-click open it in a new tab, as any link does. */
-  href?: string;
+  href?: string | undefined;
   /** The row link's target. "_blank" adds rel="noopener noreferrer". */
-  target?: string;
+  target?: string | undefined;
   /** The row link's rel. */
-  rel?: string;
+  rel?: string | undefined;
 }
 
 export interface TableSelectCellProps extends Omit<CheckboxProps, 'children' | 'description' | 'size'> {
   /** The checkbox's name for screen readers, such as "Select Alpha", or "Select all rows" in the header. */
   label: string;
   /** In the header row: renders a <th>, for a select-all checkbox (with indeterminate while some rows are). Default: false. */
-  header?: boolean;
+  header?: boolean | undefined;
   /** Props for the cell around the checkbox. */
-  cellProps?: React.TdHTMLAttributes<HTMLTableCellElement>;
+  cellProps?: React.TdHTMLAttributes<HTMLTableCellElement> | undefined;
 }
 
 export type SortDirection = 'ascending' | 'descending' | 'none';
 
 export interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, 'align'> {
   /** Lines the text up: 'start' (default), 'center' or 'end' (numbers). */
-  align?: 'start' | 'center' | 'end';
+  align?: 'start' | 'center' | 'end' | undefined;
   /** Makes the column sortable: the header becomes a button, and this is the current order. */
-  sort?: SortDirection;
+  sort?: SortDirection | undefined;
   /** Called when the sort button is pressed (decide the next order yourself). */
-  onSort?: () => void;
+  onSort?: (() => void) | undefined;
 }
 
 export interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, 'align'> {
   /** Lines the text up: 'start' (default), 'center' or 'end' (numbers, which also get tabular digits). */
-  align?: 'start' | 'center' | 'end';
+  align?: 'start' | 'center' | 'end' | undefined;
   /** In a TableRow with href: this cell holds the row's link (its text is the link's name). Default: the row's
       first TableCell. Mark one when that cell isn't a direct child of the row, or isn't the one that names it. */
-  link?: boolean;
+  link?: boolean | undefined;
 }
 
 export interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** How many rows are selected. The bar shows while it's more than 0, with "3 selected" at its start. */
   count: number;
   /** Called by its "Clear selection" button: clear the selection. Without it, there's no button. */
-  onClear?: () => void;
+  onClear?: (() => void) | undefined;
   /** The clear button's text. Default: "Clear selection" (labels.clearSelection). */
-  clearLabel?: string;
+  clearLabel?: string | undefined;
   /** The actions for the selected rows: Buttons such as Delete or Export. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 const ALIGN = ["start", "center", "end"] as const;
@@ -162,17 +162,17 @@ export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, Tabl
 
 export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
   /** Not used: renderRow draws the rows. */
-  children?: never;
+  children?: never | undefined;
   /** How many rows there are. */
   count: number;
   /** Draws row `index`: a TableRow. */
   renderRow: (index: number) => React.ReactElement;
   /** A stable key for row `index` (its id), so a row keeps its state when rows are added or removed. Default: the index. */
-  itemKey?: (index: number) => React.Key;
+  itemKey?: ((index: number) => React.Key) | undefined;
   /** A guess at a row's height in px, for rows not drawn yet. Rows are measured once drawn. Default: 41 (36 with size="sm"). */
-  estimatedRowHeight?: number;
+  estimatedRowHeight?: number | undefined;
   /** Rows drawn beyond each edge of the view, so a fast scroll doesn't show a gap. Default: 6. */
-  overscan?: number;
+  overscan?: number | undefined;
 }
 
 // The most rows TableVirtualBody draws for print: about 100 pages of one-line rows, drawn in a second or so.

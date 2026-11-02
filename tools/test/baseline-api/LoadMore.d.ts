@@ -8,12 +8,12 @@ interface LoadMoreLabels {
 }
 interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
     onLoadMore: () => PromiseLike<unknown> | void;
-    hasMore?: boolean;
-    loading?: boolean;
-    count?: number;
-    total?: number;
-    infinite?: boolean;
-    label?: React.ReactNode;
-    endText?: React.ReactNode;
+    hasMore?: boolean | undefined;
+    loading?: boolean | undefined;
+    count?: number | undefined;
+    total?: number | undefined;
+    infinite?: boolean | undefined;
+    label?: React.ReactNode | undefined;
+    endText?: React.ReactNode | undefined;
 }
 declare const LoadMore: React.ForwardRefExoticComponent<LoadMoreProps & React.RefAttributes<HTMLDivElement>>;

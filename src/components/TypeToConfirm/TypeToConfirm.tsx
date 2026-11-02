@@ -19,15 +19,15 @@ export interface TypeToConfirmProps extends Omit<React.HTMLAttributes<HTMLDivEle
    *  the button shows loading until it settles and takes no second press. */
   onConfirm: () => unknown;
   /** The field's label. Default: "To confirm, type" and the phrase in bold. */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** Help under the label, such as what can't be undone. */
-  hint?: React.ReactNode;
+  hint?: React.ReactNode | undefined;
   /** Whether letter case must match too. Default: true. */
-  caseSensitive?: boolean;
+  caseSensitive?: boolean | undefined;
   /** Called when what's typed starts or stops matching the phrase. */
-  onMatch?: (matched: boolean) => void;
+  onMatch?: ((matched: boolean) => void) | undefined;
   /** Disables the field and the button. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 
 /* TypeToConfirm: a field and a destructive button for an action that can't be undone. The button takes no press until
