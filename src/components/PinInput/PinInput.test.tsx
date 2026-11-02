@@ -33,8 +33,8 @@ describe('PinInput', () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<PinInput id="p" ref={ref} aria-label="Code" name="code" className="extra" style={{ margin: '3px' }} data-x="y" />);
     const i = el('p'), r = root('p');
-    expect([page.getByRole('textbox', { name: 'Code' }).element() === i, ref.current === i, i.type, i.name, i.dataset.x, i.inputMode, i.getAttribute('autocomplete'), i.pattern, r.className, r.style.margin, r.dataset.component, boxes('p').length, r.querySelector('.dk-pin-input__boxes')!.getAttribute('aria-hidden')])
-      .toEqual([true, true, 'text', 'code', 'y', 'numeric', 'one-time-code', '[0-9]{6}', 'dk-pin-input dk-pin-input--size-md extra', '3px', 'pin-input', 6, 'true']);
+    expect([page.getByRole('textbox', { name: 'Code' }).element() === i, ref.current === i, i.type, i.name, i.dataset.x, i.inputMode, i.getAttribute('autocomplete'), i.pattern, r.className, r.style.margin, r.dataset.component, boxes('p').length, boxes('p')[0].parentElement!.getAttribute('aria-hidden'), boxes('p')[0].parentElement!.parentElement === r])
+      .toEqual([true, true, 'text', 'code', 'y', 'numeric', 'one-time-code', '[0-9]{6}', 'dk-pin-input dk-pin-input--size-md extra', '3px', 'pin-input', 6, 'true', true]);
   });
 
   test('typing fills the boxes one by one and drops what isn\'t a digit; Backspace empties the last; onValueChange, then onComplete when full', async () => {
@@ -109,7 +109,7 @@ describe('PinInput', () => {
 
   test('the caret stays at the end, and the box it\'s in gets the focus ring (the last one once full)', async () => {
     await render(<PinInput id="p" aria-label="Code" length={3} defaultValue="4" />);
-    expect(root('p').querySelector('.dk-pin-input__box--active')).toBeNull();
+    expect(boxes('p').some((b) => b.classList.contains('dk-pin-input__box--active'))).toBe(false);
     await userEvent.click(el('p'), { position: { x: 4, y: 4 } });
     expect([el('p').selectionStart, boxes('p').findIndex((b) => b.classList.contains('dk-pin-input__box--active'))]).toEqual([1, 1]);
     const b = css(boxes('p')[1]);
