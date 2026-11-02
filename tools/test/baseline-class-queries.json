@@ -1,7 +1,5 @@
 {
-  "src/components/Alert/Alert.test.tsx": 3,
   "src/components/Button/Button.test.tsx": 2,
-  "src/components/DatePicker/DatePicker.test.tsx": 3,
   "src/components/DateRangePicker/DateRangePicker.test.tsx": 5,
   "src/components/Dialog/Dialog.test.tsx": 2,
   "src/components/Drawer/Drawer.test.tsx": 5,
