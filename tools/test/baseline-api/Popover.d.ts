@@ -9,6 +9,7 @@ interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "child
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
     "aria-label"?: string;
+    sheet?: "mobile" | boolean;
     initialFocus?: "first" | "panel";
     className?: string;
     style?: React.CSSProperties;
