@@ -41,11 +41,11 @@
     - text: site-photo.png 70 byte Complete
     - button "Remove site-photo.png"
   - listitem:
-    - text: site-plan.pdf 240 kB
+    - text: site-plan.pdf 246 kB
     - progressbar "site-plan.pdf"
     - button "Remove site-plan.pdf"
   - listitem:
-    - text: invoice-0412.pdf 1.6 MB The server didn't answer. Try again in a moment.
+    - text: invoice-0412.pdf 1.7 MB The server didn't answer. Try again in a moment.
     - button "Try again invoice-0412.pdf": Try again
     - button "Remove invoice-0412.pdf"
 
