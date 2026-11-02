@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useFormStatus } from "react-dom";
+import * as ReactDOM from "react-dom";
 import { cn, type DataAttributes, domId, omit, oneOf, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
 import { config } from "../../internal/config";
 import { useShowAfter } from "../../internal/showAfter";
@@ -14,6 +14,11 @@ import { Loader } from "../Loader/Loader";
 import { component } from "../../internal/component";
 import { BUTTON_VARIANTS, buttonClass } from "./buttonClass";
 import { feedbackHold, spinnerDelay } from "../../internal/timing";
+// React 19's form status, read off the namespace: Preact's compat layer has no useFormStatus (and no form actions), so
+// a named import would stop the whole package loading there. Without it a submit button is never pending on its own.
+// Whether it's there never changes while the page runs, so the hook is called on every render or on none. No fallback
+// function: it would never run under React, and the coverage floor counts functions.
+const formStatus: (() => { pending: boolean }) | undefined = (ReactDOM as Partial<typeof ReactDOM>).useFormStatus;
 
 export { buttonClass };
 
@@ -148,8 +153,8 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>("B
     r.then(function () { settle(true); }, function (err: unknown) { settle(false); throw err; });
   };
   // type="submit" in a <form action={fn}> that is being sent (React's form status): loading on its own, unless set.
-  const form = useFormStatus();
-  const loading = (props.loading != null ? !!props.loading : !isLink && rest.type === "submit" && form.pending) || busy;
+  const formPending = formStatus ? formStatus().pending : false;
+  const loading = (props.loading != null ? !!props.loading : !isLink && rest.type === "submit" && formPending) || busy;
   const disabled = !!rest.disabled;
   const reasonId = domId("dk-btn-why", React.useId());
   const reason = disabled && props.disabledReason ? props.disabledReason : "";
