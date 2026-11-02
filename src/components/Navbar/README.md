@@ -140,7 +140,7 @@ Each is an optional override: set it on the page, a container or one navbar. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--navbar-link-radius` | `rounded-md` | A link's corners (6px). |
+| `--navbar-link-radius` | `radius-control` | A link's corners (6px). |
 
 **Layout**
 
@@ -152,5 +152,5 @@ Each is an optional override: set it on the page, a container or one navbar. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--navbar-shadow-scrolled` | `shadow-md` | A sticky bar's shadow once the page has scrolled under it. |
+| `--navbar-shadow-scrolled` | `elevation-raised` | A sticky bar's shadow once the page has scrolled under it. |
 <!-- token-table:end -->

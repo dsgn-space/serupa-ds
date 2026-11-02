@@ -100,14 +100,14 @@ Each is an optional override: set it on the page, a container or one control. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--segmented-control-indicator-shadow` | `shadow-sm` | The selected segment's shadow. |
+| `--segmented-control-indicator-shadow` | `elevation-part` | The selected segment's shadow. |
 
 **Radius**
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--segmented-control-radius` | `rounded-md` | The control's corners (6px). |
-| `--segmented-control-indicator-radius` | `rounded-sm` | The selected segment's corners (4px). |
+| `--segmented-control-radius` | `radius-control` | The control's corners (6px). |
+| `--segmented-control-indicator-radius` | `radius-inner` | The selected segment's corners (4px). |
 
 **Sizing**
 

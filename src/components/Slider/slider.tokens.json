@@ -158,7 +158,7 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-full}",
+        "$value": "{radius.radius-pill}",
         "$description": "The track's ends and the thumb.",
         "$extensions": {
           "com.serupa": {
@@ -170,7 +170,7 @@
     "shadow": {
       "thumb-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-sm}",
+        "$value": "{shadow.elevation-part}",
         "$description": "The thumb's shadow.",
         "$extensions": {
           "com.serupa": {

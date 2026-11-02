@@ -148,7 +148,7 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "A tab's corners (6px): the focus ring, and the pills.",
         "$extensions": {
           "com.serupa": {

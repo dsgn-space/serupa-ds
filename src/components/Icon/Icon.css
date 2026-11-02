@@ -2,9 +2,12 @@
    directional ones flip in right-to-left text. */
 @layer dk.components {
 .dk-icon {
-  font-size: var(--spacing-6);            /* 24px default */
+  font-size: var(--icon-size-lg);         /* 24px default */
   line-height: var(--leading-none);
   display: inline-block;
+  /* In running text, centred on the text rather than sat on its baseline, so an icon no taller than the line height
+     (each size step against its text size) leaves the line box as it is (GR110). In a flex row it's ignored. */
+  vertical-align: middle;
   width: 1em;
   height: 1em;
   flex-shrink: 0;
@@ -12,6 +15,17 @@
   user-select: none;
 }
 .dk-icon > svg { display: block; width: var(--sizing-full); height: var(--sizing-full); fill: currentColor; }
+/* Weight (weight="semibold" or "bold"): a Material Symbol's lines thickened to go with heavier text, by a stroke of the
+   icon-weight token's width round the drawing. In ems of the icon's size and not scaled with the 960-unit drawing
+   (non-scaling-stroke), so it is the same share of the icon at any size. Custom icons keep their own drawing. */
+.dk-icon--semibold { --dk-icon-weight: var(--icon-weight-semibold); }
+.dk-icon--bold { --dk-icon-weight: var(--icon-weight-bold); }
+.dk-icon:is(.dk-icon--semibold, .dk-icon--bold):not(.dk-icon--custom) > svg > path {
+  stroke: currentColor;
+  stroke-width: var(--dk-icon-weight);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
 /* A directional icon points the way reading goes, so it's flipped in right-to-left text: Material Symbols' arrows and
    chevrons along the line, and the others Material mirrors (send, reply, undo, redo, open_in_new, logout, lists…),
    unless mirror={false} (dk-icon--fixed); mirror (dk-icon--mirror) flips any icon. Icons of things (a clock, a check,

@@ -254,7 +254,7 @@
     "radius": {
       "item-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "An item's corners (6px).",
         "$extensions": {
           "com.serupa": {

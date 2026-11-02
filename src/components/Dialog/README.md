@@ -102,6 +102,30 @@ Drawn from the `FullScreen` story.
 
 `children` is the body, which scrolls when it's taller than the screen. `className`, `style`, `ref` and everything else go to the `<dialog>`, which has `data-component="dialog"` and `data-size`.
 
+## useUnsavedChanges(unsaved)
+
+The same "Discard changes?" question, for a form or a page that isn't in a Dialog: a settings page, an editor.
+
+```tsx
+import { useUnsavedChanges } from "serupa-ds";
+
+const guard = useUnsavedChanges(name !== saved.name);
+// before moving away inside the app (a Cancel button, your router's blocker):
+if (await guard.confirm()) navigate("/projects");
+// …and somewhere in the form:
+{guard.dialog}
+```
+
+- While `unsaved` is true, leaving or reloading the page asks the browser's own question (`beforeunload`), as an unsaved Dialog does.
+- Moving away inside the app goes through your router, so ask first: `await confirm()` is `true` at once when nothing is unsaved. Otherwise it asks "Discard changes?" in a small alert dialog, with Keep editing focused. It's `true` on Discard, and `false` on Keep editing or Escape, and focus goes back to where it was. With React Router, call it when `useBlocker` blocks: `confirm().then((ok) => (ok ? blocker.proceed() : blocker.reset()))`.
+- Render `dialog` inside the form's tree, so it's there while there are changes.
+- A newer `confirm()` answers the one before it with `false`. Saving while the question shows (`unsaved` back to `false`) answers it with `true`, and unmounting answers it with `false`.
+
+| Returns | Type | Notes |
+| --- | --- | --- |
+| `confirm` | `() => Promise<boolean>` | Asks "Discard changes?" when there are changes, and says whether to go on. |
+| `dialog` | `ReactElement \| null` | The question; render it in the form. |
+
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one dialog. The list lives in `src/components/Dialog/dialog.tokens.json` (also in `design-tokens/components/`).
@@ -115,8 +139,8 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | `--dialog-title-color` | `text` | The title. |
 | `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--dialog-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
-| `--dialog-shadow` | `shadow-xl` | The panel's shadow. |
-| `--dialog-radius` | `rounded-xl` | The panel's corners (12px). |
+| `--dialog-shadow` | `elevation-modal` | The panel's shadow. |
+| `--dialog-radius` | `radius-container` | The panel's corners (12px). |
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |
 | `--dialog-width-md` | `container-lg` | size="md", the default (512px). |
 | `--dialog-width-lg` | `container-2xl` | size="lg" (672px). |
