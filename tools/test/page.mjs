@@ -121,6 +121,30 @@ for (const scheme of ['light', 'dark']) {
   const now = await q.evaluate(() => { Serupa.theme.set({ mode: 'dark' }); return [document.documentElement.getAttribute('data-theme'), window.__vt].join(); });
   t('theme.js: with reduced motion a switch is at once, with no transition', now === 'blue-dark,0', now);
   await still.close();
+  // Switches in a row end on the last, with no uncaught errors from the crossfades they skip (GR115); one made during
+  // the app's own View Transition is at once, and leaves the app's to run.
+  const row = await b.newContext({ colorScheme: 'light' });
+  const r = await row.newPage();
+  const errors = [];
+  r.on('pageerror', (e) => errors.push(e.message));
+  r.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+  await r.goto(writePage('theme-fade.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="blue" data-mode="light"' }));
+  await r.evaluate(() => { window.__seen = []; Serupa.theme.onChange((i) => window.__seen.push(i.theme)); Serupa.theme.set({ mode: 'dark' }); Serupa.theme.set({ brand: 'violet' }); Serupa.theme.set({ mode: 'light' }); });
+  await r.waitForFunction(() => !document.activeViewTransition && document.documentElement.getAttribute('data-theme') === 'violet-light');
+  await r.waitForTimeout(100);
+  const seen = await r.evaluate(() => window.__seen.join());
+  t('theme.js: switches in a row end on the last, each theme heard once, with no uncaught errors', seen.endsWith('violet-light') && new Set(seen.split(',')).size === seen.split(',').length && !errors.length, `${seen} ; ${errors.join(' | ')}`);
+  const own = await r.evaluate(async () => {
+    const vt = document.startViewTransition(() => new Promise((ok) => setTimeout(ok, 50)));
+    await new Promise((ok) => requestAnimationFrame(() => ok(null)));
+    Serupa.theme.set({ mode: 'dark' });
+    const at = document.documentElement.getAttribute('data-theme');
+    const ran = await vt.ready.then(() => 'ran', () => 'skipped');
+    await vt.finished.catch(() => {});
+    return [at, ran].join();
+  });
+  t('theme.js: a switch during the app\'s own View Transition is at once and leaves it to run', own === 'violet-dark,ran', own);
+  await row.close();
 }
 {
   // <meta name="theme-color"> follows the page's surface in all six themes, so a phone's bars change with the mode.
