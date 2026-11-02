@@ -1,4 +1,4 @@
-// exports: Chart, type ChartProps
+// exports: Chart, type ChartProps, type ChartSeries, type ChartType, type ChartView
 interface ChartLabels {
     chartKind: (type: "bar" | "line") => string;
     chartSummary: (kind: string, series: number, points: number, first: string, last: string) => string;
