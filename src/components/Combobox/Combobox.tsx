@@ -167,11 +167,14 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const [loaded, setLoaded] = React.useState<readonly Given[] | null>(null);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
+  // Enter or leaving the field while typed text is still loading: what to do once its answer comes (GR106).
+  const later = React.useRef<"select" | "blur" | null>(null);
   const source = props.loadOptions && loaded ? loaded : props.options;
   const opts: Opt[] = React.useMemo(() => toOpts(source), [source]);
   // Every option seen, by value, so a picked one keeps its label when a later answer doesn't include it.
   const seen = React.useRef(new Map<string, string>());
   for (const o of opts) seen.current.set(o.value, o.label);
+  const creatable = !!props.onCreate;
   // loadOptions: one request at a time. A new one (after the debounce) aborts the one before, and an answer that
   // isn't for the latest request is dropped, so a slow answer never overwrites a newer one.
   const loader = React.useRef<{ timer: number; ctl: AbortController | null; n: number; q: string | null }>({ timer: 0, ctl: null, n: 0, q: null });
@@ -193,7 +196,9 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         if (n !== l.n || ctl.signal.aborted) return;
         const got: readonly Given[] = Array.isArray(list) ? list : [];
         setLoaded(got); setBusy(false);
-        setActive(q.trim() ? toOpts(got).findIndex((o) => !o.disabled) : -1);   // the first match, as typing does
+        // The first match, as typing does; with onCreate and no option of that label, the add row (GR106).
+        const o = toOpts(got), t = fold(q.trim()), first = t ? o.findIndex((x) => !x.disabled) : -1;
+        setActive(first < 0 && t && creatable && !props.loading && !o.some((x) => x.folded === t) ? o.length : first);
       },
         () => { if (n === l.n && !ctl.signal.aborted) { setFailed(true); setBusy(false); } });
     };
@@ -279,7 +284,6 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   }, [opts, typed, filter, text]);
   // With onCreate, 'Add "text"' ends the list while the typed text isn't an option's label (any case or accents),
   // and not while options are loading: the answer may have it (185).
-  const creatable = !!props.onCreate;
   const addText = text.trim();
   const adding: Opt | null = React.useMemo(() => {
     if (!creatable || !typed || !addText || loading) return null;
@@ -316,11 +320,13 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     setActive(to === "last" ? (sel >= 0 ? sel : list.length ? list[list.length - 1].i : -1) : to === "first" ? (sel >= 0 ? sel : list.length ? list[0].i : -1) : sel);
   };
   const hide = (reason: OpenChangeReason, revert = true) => {
+    later.current = null;
     setOpen(false, reason); setActive(-1); setTyped(false);
     if (revert) setText(pickedLabel);
   };
   const pick = (o: Opt, reason: OpenChangeReason = "select") => {
     if (o.disabled) return;
+    later.current = null;
     if (o.add != null) {
       // The add row: the app adds the option, and the value it returns is picked, labelled with the text until the
       // option arrives in options.
@@ -364,7 +370,27 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     setActive(usable[n].i);
   };
 
+  // Typed text whose options are still loading: Enter and leaving wait for the answer, sending the request at once
+  // if the typing pause hasn't, so a fast typist's "bandung" is picked rather than emptied (GR106).
+  const waiting = () => {
+    if (!busy || !props.loadOptions || !typed || !text.trim()) return false;
+    if (!loader.current.ctl) load(text, 0);
+    return true;
+  };
+  // every render: it reads the answer just drawn (opts, exact, usable), and returns at once with nothing waiting.
+  React.useEffect(() => {
+    const why = later.current;
+    if (!why || busy) return;
+    later.current = null;
+    // A failed load: leaving puts the picked label back as usual; after Enter the list stays open, saying so.
+    if (failed) { if (why === "blur") hide("blur"); return; }
+    const x = exact();
+    if (why === "blur") { if (x) pick(x, "blur"); else hide("blur"); return; }
+    const o = x || usable[0];   // as Enter on a list that was there: the exact label, else the first match or the add row
+    if (o) pick(o); else hide("select");
+  });
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    later.current = null;
     const t = e.target.value;
     setText(t); setTyped(true);
     if (!locked) setOpen(true, "trigger");
@@ -382,6 +408,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if ((e.ctrlKey || e.metaKey) && /^(Arrow|Page)/.test(e.key)) return;
     if (e.key === "ArrowDown") { e.preventDefault(); if (!open) show(e.altKey ? "selected" : "first"); else move(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); if (!open) show("last"); else move(-1); }
+    else if (e.key === "Enter" && open && waiting()) { e.preventDefault(); later.current = "select"; }
     else if (e.key === "Enter" && open) { e.preventDefault(); const o = byIndex(active); if (o && shown.includes(o)) pick(o); else { const x = exact() || adding; if (x) pick(x); else hide("select"); } }
     else if (e.key === "Escape" && open) { e.preventDefault(); e.stopPropagation(); hide("escape"); }
     else if ((e.key === "PageDown" || e.key === "PageUp") && open) { e.preventDefault(); page(e.key === "PageDown" ? 1 : -1); }
@@ -391,6 +418,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (rest.onBlur) rest.onBlur(e);
     if (windowBlur(e)) return;   // switched windows: the typing goes on when they come back
     if (multi) { hide("blur"); return; }
+    if (waiting()) { later.current = "blur"; return; }
     const x = exact();
     if (text.trim() === "" && value != null) { commit(null); setOpen(false, "blur"); setActive(-1); setTyped(false); setText(""); }
     else if (x) pick(x, "blur");
