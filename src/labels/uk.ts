@@ -31,6 +31,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "Показати всі сторінки",
   morePages: "Інші сторінки",
   previousMonth: "Попередній місяць",
+  timeZoneYours: "Ваш часовий пояс",
   nextMonth: "Наступний місяць",
   month: "Місяць",
   year: "Рік",

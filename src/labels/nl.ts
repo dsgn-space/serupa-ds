@@ -26,6 +26,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "Alle pagina’s tonen",
   morePages: "Meer pagina’s",
   previousMonth: "Vorige maand",
+  timeZoneYours: "Je tijdzone",
   nextMonth: "Volgende maand",
   month: "Maand",
   year: "Jaar",

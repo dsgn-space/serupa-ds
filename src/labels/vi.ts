@@ -26,6 +26,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "Hiện tất cả các trang",
   morePages: "Trang khác",
   previousMonth: "Tháng trước",
+  timeZoneYours: "Múi giờ của bạn",
   nextMonth: "Tháng sau",
   month: "Tháng",
   year: "Năm",
