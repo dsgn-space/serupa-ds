@@ -1,6 +1,6 @@
 # Combobox
 
-A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked. For a short list (under about 10), a Select is simpler.
+A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked, unless `onCreate` lets people add one. For a short list (under about 10), a Select is simpler.
 
 ```tsx
 import { Combobox } from "serupa-ds";
@@ -24,11 +24,12 @@ const [reviewers, setReviewers] = React.useState<string[]>([]);
 - One choice from a long list people know the name of: a country, an assignee, a project.
 - Several choices from a long list, such as reviewers or tags (`multiple`).
 - Options that come from a server as people type (`loadOptions`).
+- A list people can add to as they pick, such as tags or labels (`onCreate`).
 
 ## When not to use
 
 - A short list (under about 10): use [Select](../Select/README.md).
-- An answer that may not be in the list: use [Input](../Input/README.md), since only listed options can be picked.
+- Free text that a list only suggests, such as an address: use [Input](../Input/README.md). Combobox's value is always an option, even one added with `onCreate`.
 - Picking more than one option from a short list (under about 10): use [checkboxes](../Checkbox/README.md), which show every choice at once.
 
 ## Anatomy
@@ -46,6 +47,7 @@ Drawn from the `Multiple` story.
 - Add a `description` when options look alike, such as people with the same name (their email).
 - Set `clearable` when no selection is a valid answer, so people can clear it in one click.
 - Group options under headings with `{ label, options }`, as Select's `optgroup`: each group is a `role="group"` named after its heading, typing hides a heading once none of its options match, and `disabled` on a group turns off every option in it.
+- With `onCreate`, people can add an option that isn't listed. While the typed text isn't an option's label (in any case, with or without accents), the list ends with 'Add “text”' (the `createOption` label). It's highlighted when nothing else matches, so Enter adds the text. Picking it calls `onCreate(text)` with the text trimmed. Add the option to `options` and return its value to pick it; with `multiple`, it becomes a tag. Return nothing to leave the pick to you. Leaving the field never adds anything. Added values are new, so give the options as `string[]` (or write `Combobox<string>`), not as a fixed set of values. With `loadOptions`, the row waits for the answer, since the answer may already have the option.
 - Write an `emptyText` that says what to try next, and match the `size` to the fields beside it.
 - Long lists are fine: the options are in the page only while the list is open, each label is prepared for matching once per `options` array, and moving the highlight redraws two rows. Only the rows in view are drawn, plus a few either side, as in [VirtualList](../VirtualList/README.md): scrolling and the arrow and Page keys reach every match, each row's `aria-posinset` and `aria-setsize` count every match, and the highlighted option is always drawn, so screen readers can follow it. Keep `options` the same array between renders (state, a constant or `useMemo`), so that work isn't redone. For tens of thousands of options, load the matches as people type with `loadOptions`.
 - With `loadOptions`, Combobox runs the requests: it waits for typing to pause (`debounce`, 250ms), passes an `AbortSignal` that aborts when newer text is typed (hand it to `fetch`), drops any answer that isn't for the latest text, and shows the loading row while it waits and "Couldn't load options. Type to try again." (the `loadFailed` label) when the promise rejects. Opening the list loads what `""` finds. The picked option keeps its label when later answers leave it out. Filter on the server: `filter` is ignored. To run the requests yourself instead, use `filter={false}`, `onInputChange` and `loading`.
@@ -103,6 +105,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `defaultInputValue` | `string` | the picked label | The text in the field at first (uncontrolled). |
 | `onInputChange` | `(text: string) => void` | | Every change to the text: typing, and the label that picking, clearing, Escape or leaving the field puts back. |
 | `filter` | `false \| (option, text) => boolean` | contains, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo", "こーひー" finds "コーヒー") | `false` shows every option you pass. |
+| `onCreate` | `(text: string) => V \| void` | | Adds 'Add “text”' to the end of the list while the text isn't an option's label. Picking it calls this with the trimmed text. Return the new option's value to pick it. |
 | `clearable` | `boolean` | `false` | A × that clears the selection (every tag, with `multiple`). |
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results'` | Shown when nothing matches. A string is also what screen readers hear |

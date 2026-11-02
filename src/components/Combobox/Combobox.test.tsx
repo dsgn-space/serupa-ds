@@ -292,6 +292,52 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('onCreate: text that isn\'t an option\'s label ends the list with Add "text"; Enter or a click adds it and picks the value onCreate returns; an exact label shows no add row; it says the add row when nothing matches (185)', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    const made: string[] = [], picked: Array<string | null> = [];
+    function Tags() {
+      const [opts, setOpts] = React.useState<ComboboxOption[]>(['Design', 'Docs']);
+      const [v, setV] = React.useState<string | null>(null);
+      return <Combobox id="ct" aria-label="Tag" options={opts} value={v} onValueChange={(x) => { picked.push(x); setV(x); }}
+        onCreate={(t) => { made.push(t); setOpts((o) => o.concat({ value: 'new-' + t, label: t })); return 'new-' + t; }} />;
+    }
+    await render(<Tags />);
+    el('ct').focus();
+    await userEvent.keyboard('{ArrowDown}de');
+    expect([st('ct').opts, st('ct').active]).toEqual([['Design', 'Add \u201cde\u201d'], 'Design']);
+    await userEvent.keyboard('sign');
+    expect(st('ct').opts).toEqual(['Design']);   // the label, any case: no add row
+    await selectAll(); await userEvent.keyboard('  Research ');
+    expect([st('ct').opts, st('ct').active, statusOf('ct')]).toEqual([['Add \u201cResearch\u201d'], 'Add \u201cResearch\u201d', undefined]);
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('Add \u201cResearch\u201d');
+    await userEvent.keyboard('{Enter}');
+    expect([made, picked, st('ct').text, st('ct').open]).toEqual([['Research'], ['new-Research'], 'Research', 'false']);
+    // A click on the add row adds too; the new option is in the list from then on.
+    await selectAll(); await userEvent.keyboard('Ops');
+    const rows = [...popOf('ct').querySelectorAll('[role=option]')];
+    expect(rows.at(-1)!.getAttribute('aria-selected')).toBe('false');
+    await userEvent.click(rows.at(-1)!);
+    expect([made, picked.at(-1), st('ct').text]).toEqual([['Research', 'Ops'], 'new-Ops', 'Ops']);
+    await userEvent.keyboard('{ArrowDown}');
+    expect(st('ct').opts).toEqual(['Design', 'Docs', 'Research', 'Ops']);
+    seen.disconnect();
+  });
+  test('onCreate with multiple: the added text becomes a tag and the field empties; onCreate returning nothing picks nothing (185)', async () => {
+    const got: string[][] = [];
+    await render(<>
+      <Combobox id="cm" aria-label="Labels" multiple options={['Bug', 'Idea'] as string[]} onValueChange={(v) => got.push(v)} onCreate={(t) => t.toLowerCase()} />
+      <Combobox id="cn" aria-label="Note" options={['One']} onCreate={() => undefined} />
+    </>);
+    el('cm').focus();
+    await userEvent.keyboard('{ArrowDown}Chore{Enter}');
+    const tags = [...el('cm').closest('[data-component=combobox]')!.querySelectorAll('[data-component=badge]')].map((b) => b.firstChild!.textContent);
+    expect([got, tags, st('cm').text, st('cm').open]).toEqual([[['chore']], ['Chore'], '', 'true']);
+    el('cn').focus();
+    await userEvent.keyboard('{ArrowDown}Two{Enter}');
+    expect([st('cn').text, st('cn').open]).toEqual(['', 'false']);
+  });
   test('typing ignores letters that don\'t decompose and width too: "lodz" finds Łódź, "strasse" finds Straße, "ｔｏｋｙｏ" finds Tokyo', async () => {
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="City" options={['Łódź', 'Straße', 'Ørsted', 'Tokyo', 'Paris']} /></div>);
     await open();
