@@ -51,12 +51,12 @@ const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStat
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
-  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName'],
+  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName'],
   es: ['generalShortcuts'],
   ms: ['edit'],
-  nl: ['sliderMaximum'],
+  nl: ['sliderMaximum', 'codeName'],
   sv: ['sliderMaximum', 'colorName'],
-  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page'],
+  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName'],
 };
 const sameOk = (l, k) => SAME_OK.has(k) || (SAME_IN[l] || []).includes(k);
 

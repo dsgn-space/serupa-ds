@@ -190,6 +190,8 @@ export const labels: SerupaLabels = {
   dismiss: "Ketepikan",
   loading: "Memuatkan…",
   copy: "Salin",
+  codeCopy: "Salin kod",
+  codeName: "Kod",
   remove: "Alih keluar",
   image: "Imej",
   page: (p) => "Halaman " + p,

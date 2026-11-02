@@ -189,6 +189,8 @@ export const labels: SerupaLabels = {
   dismiss: "关闭",
   loading: "正在加载…",
   copy: "复制",
+  codeCopy: "复制代码",
+  codeName: "代码",
   remove: "移除",
   image: "图片",
   page: (p) => "第 " + p + " 页",

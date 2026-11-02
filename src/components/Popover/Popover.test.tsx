@@ -386,6 +386,18 @@ describe('Popover inside a shadow root (GR60)', () => {
       expect(p.scrollHeight).toBeGreaterThan(p.clientHeight);
       await page.viewport(900, 700);
     });
+    test('a focused sheet draws its focus ring inside its edges, where the screen would cut an outside one (GR113)', async () => {
+      await page.viewport(390, 700);
+      await render(<Popover title="Note" sheet="mobile" trigger={<Button id="tnote">Note</Button>}><p>Nothing to press here.</p></Popover>);
+      el('tnote').focus();
+      await userEvent.keyboard('{Enter}');
+      await expect.poll(() => isOpen('tnote')).toBe(true);
+      await settled();
+      const p = panel('tnote'), cs = getComputedStyle(p);
+      expect([document.activeElement === p, p.matches(':focus-visible'), cs.outlineStyle]).toEqual([true, true, 'solid']);
+      expect(parseFloat(cs.outlineOffset)).toBe(-parseFloat(cs.outlineWidth));
+      await page.viewport(900, 700);
+    });
     test("sheet='mobile': next to its trigger on a wide screen, a sheet under 640px; it follows the screen while open", async () => {
       await page.viewport(900, 700);
       await render(<Sheet sheet="mobile" />);
