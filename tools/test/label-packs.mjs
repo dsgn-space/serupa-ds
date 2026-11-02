@@ -29,7 +29,7 @@ const SAMPLES = {
   avatarMore: [[1], [5]], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]],
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
   contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0], [1], [5]], moreResults: [[1], [40]],
-  clearValue: [['Size'], ['']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],
+  clearValue: [['Size'], ['']], createOption: [['Research']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],
   errorSummaryTitle: [[1], [3]],
   fileWrongType: [['a.exe', ['image']], ['a.exe', ['image', 'video', 'PDF']], ['a.exe', undefined]], fileTooLarge: [['a.png', '5 MB']],
   fileTooMany: [['a.png', 1], ['a.png', 3]], fileOnlyOne: [['a.png']], fileMissing: [[true], [false]], fileFolder: [['photos']], fileAlreadyAdded: [['a.png']],

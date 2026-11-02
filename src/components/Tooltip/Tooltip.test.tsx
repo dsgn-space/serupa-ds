@@ -155,6 +155,36 @@ describe('Tooltip', () => {
     await expect.poll(() => isOpen('t')).toBe(false);
   });
 
+  test('interest invokers (174): the element points at its tooltip with interestfor; an interest the pointer or focus didn\'t bring (a long press on a touch screen) shows it at once, the browser\'s own showing cancelled; a press outside hides it', async () => {
+    const asks: string[] = [];
+    await render(<><Tooltip content="Save" onOpenChange={(v, d) => asks.push(v + ' ' + d.reason)}><button id="t">Save</button></Tooltip><p id="out">Page</p></>);
+    const b = el('t'), tip = tipOf('t');
+    expect(b.getAttribute('interestfor')).toBe(tip.id);
+    if ('interestForElement' in HTMLButtonElement.prototype) expect((b as HTMLButtonElement & { interestForElement: Element | null }).interestForElement).toBe(tip);
+    const ev = new Event('interest', { cancelable: true });
+    tip.dispatchEvent(ev);
+    await expect.poll(() => isOpen('t')).toBe(true);
+    expect([ev.defaultPrevented, asks, tip.matches(':popover-open')]).toEqual([true, ['true hover'], true]);
+    const lose = new Event('loseinterest', { cancelable: true });
+    tip.dispatchEvent(lose);
+    expect([lose.defaultPrevented, isOpen('t')]).toEqual([true, true]);
+    // A tap outside: on touch the layer waits for the tap's click, so a scroll that starts outside doesn't close it.
+    el('out').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }));
+    el('out').dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'touch' }));
+    el('out').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await expect.poll(() => isOpen('t')).toBe(false);
+  });
+
+  test('an interest while the pointer is over the element is the hover\'s: Escape during the delay still cancels the show (174, GR89)', async () => {
+    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file" delay={500}><button id="a">Edit</button></Tooltip></div>);
+    await userEvent.hover(el('a'));
+    await settle(150);
+    await userEvent.keyboard('{Escape}');
+    tipOf('a').dispatchEvent(new Event('interest', { cancelable: true }));
+    await settle(700);
+    expect(isOpen('a')).toBe(false);
+  });
+
   test('controlled: hovering only asks (onOpenChange(true)); open decides. disabled: never shows', async () => {
     const opens: boolean[] = [];
     let setOpen: (v: boolean) => void = () => {};

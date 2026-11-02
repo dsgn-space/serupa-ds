@@ -106,5 +106,5 @@ Each is an optional override: set it on the page, a container or one empty state
 | `--empty-state-padding-sm` | `spacing-6` | At size sm (24px). |
 | `--empty-state-gap` | `spacing-4` | Space between the icon, the text and the actions (16px). |
 | `--empty-state-border-width` | `border-width-1` | The dashed frame (1px). |
-| `--empty-state-radius` | `rounded-lg` | The dashed frame's corners (8px). |
+| `--empty-state-radius` | `radius-surface` | The dashed frame's corners (8px). |
 <!-- token-table:end -->

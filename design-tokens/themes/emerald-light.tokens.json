@@ -448,6 +448,246 @@
           "cssVar": "--link-visited"
         }
       }
+    },
+    "chart-1": {
+      "$type": "color",
+      "$value": "{color.blue-700}",
+      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-1"
+        }
+      }
+    },
+    "chart-2": {
+      "$type": "color",
+      "$value": "{color.orange-600}",
+      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-2"
+        }
+      }
+    },
+    "chart-3": {
+      "$type": "color",
+      "$value": "{color.teal-800}",
+      "$description": "Alias. Chart series 3 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-3"
+        }
+      }
+    },
+    "chart-4": {
+      "$type": "color",
+      "$value": "{color.pink-500}",
+      "$description": "Alias. Chart series 4 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-4"
+        }
+      }
+    },
+    "chart-5": {
+      "$type": "color",
+      "$value": "{color.violet-700}",
+      "$description": "Alias. Chart series 5 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-5"
+        }
+      }
+    },
+    "chart-6": {
+      "$type": "color",
+      "$value": "{color.amber-600}",
+      "$description": "Alias. Chart series 6 (amber): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-6"
+        }
+      }
+    },
+    "chart-7": {
+      "$type": "color",
+      "$value": "{color.emerald-800}",
+      "$description": "Alias. Chart series 7 (emerald): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-7"
+        }
+      }
+    },
+    "chart-8": {
+      "$type": "color",
+      "$value": "{color.red-500}",
+      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-8"
+        }
+      }
+    },
+    "chart-seq-1": {
+      "$type": "color",
+      "$value": "{color.blue-200}",
+      "$description": "Alias. Sequential ramp, step 1 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-seq-1"
+        }
+      }
+    },
+    "chart-seq-2": {
+      "$type": "color",
+      "$value": "{color.blue-400}",
+      "$description": "Alias. Sequential ramp, step 2 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-seq-2"
+        }
+      }
+    },
+    "chart-seq-3": {
+      "$type": "color",
+      "$value": "{color.blue-600}",
+      "$description": "Alias. Sequential ramp, step 3 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-seq-3"
+        }
+      }
+    },
+    "chart-seq-4": {
+      "$type": "color",
+      "$value": "{color.blue-800}",
+      "$description": "Alias. Sequential ramp, step 4 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-seq-4"
+        }
+      }
+    },
+    "chart-seq-5": {
+      "$type": "color",
+      "$value": "{color.blue-950}",
+      "$description": "Alias. Sequential ramp, step 5 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before, and the last is 3:1+.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-seq-5"
+        }
+      }
+    },
+    "chart-div-1": {
+      "$type": "color",
+      "$value": "{color.red-700}",
+      "$description": "Alias. Diverging ramp, step 1 of 7 (below the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle; the ends are 3:1+.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-1"
+        }
+      }
+    },
+    "chart-div-2": {
+      "$type": "color",
+      "$value": "{color.red-500}",
+      "$description": "Alias. Diverging ramp, step 2 of 7 (below the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-2"
+        }
+      }
+    },
+    "chart-div-3": {
+      "$type": "color",
+      "$value": "{color.red-200}",
+      "$description": "Alias. Diverging ramp, step 3 of 7 (below the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-3"
+        }
+      }
+    },
+    "chart-div-4": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. Diverging ramp, step 4 of 7 (the middle, no change): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-4"
+        }
+      }
+    },
+    "chart-div-5": {
+      "$type": "color",
+      "$value": "{color.blue-200}",
+      "$description": "Alias. Diverging ramp, step 5 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-5"
+        }
+      }
+    },
+    "chart-div-6": {
+      "$type": "color",
+      "$value": "{color.blue-500}",
+      "$description": "Alias. Diverging ramp, step 6 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-6"
+        }
+      }
+    },
+    "chart-div-7": {
+      "$type": "color",
+      "$value": "{color.blue-700}",
+      "$description": "Alias. Diverging ramp, step 7 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle; the ends are 3:1+.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-div-7"
+        }
+      }
+    },
+    "chart-grid": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. Chart grid lines: quiet, behind the data.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-grid"
+        }
+      }
+    },
+    "chart-axis": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. Chart axis lines and ticks (3:1+ on `surface` in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-axis"
+        }
+      }
+    },
+    "chart-label": {
+      "$type": "color",
+      "$value": "{color.zinc-600}",
+      "$description": "Alias. Chart axis labels, values and legend text (4.5:1+ on `surface` and `surface-raised` in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-label"
+        }
+      }
+    },
+    "chart-gap": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. The gap drawn between neighbouring bars, slices and areas, so each one has 3:1+ against what touches it (WCAG 1.4.11). The page color: set it to the card's on a raised surface.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--chart-gap"
+        }
+      }
     }
   }
 }

@@ -14,7 +14,13 @@ import { customIcons, isIconData } from '../src/icons';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
+import changelogSource from '../CHANGELOG.md?raw';
+import pkg from '../package.json';
+import { majorsIn, nextMajor, type Major } from './upgrades';
+import { transformsAfter } from '../bin/migrate/transforms.mjs';
+import acr from './acr.json';
 import { componentTests } from './generated/tested';
+import { changesFor } from './changes';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
@@ -58,7 +64,26 @@ export function Guide({ source }: { source: string }) {
       ? <Markdown key={i}>{relink(part)}</Markdown>
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
+    {name && <ComponentChanges name={name} />}
   </>;
+}
+
+/** What changed in a component, release by release (134): the CHANGELOG.md entries that name it, newest first, the
+ * latest few open and the rest folded away. */
+export function ComponentChanges({ name }: { name: string }) {
+  const all = changesFor(name, changelogSource);
+  if (!all.length) return null;
+  const SHOWN = 5;
+  const md = (list: typeof all) => list.map((c) => `- **${c.version}**${c.kind ? ` (${c.kind.toLowerCase()})` : ''}: ${c.text}`).join('\n');
+  return <section className="sb-changes" aria-labelledby={`changes-${name}`}>
+    <h2 id={`changes-${name}`}>Changes</h2>
+    <p>The entries of the <a href="?path=/docs/changelog--docs">changelog</a> that name {name}, newest first.</p>
+    <Markdown>{relink(md(all.slice(0, SHOWN)))}</Markdown>
+    {all.length > SHOWN && <details>
+      <summary>Earlier changes ({all.length - SHOWN})</summary>
+      <Markdown>{relink(md(all.slice(SHOWN)))}</Markdown>
+    </details>}
+  </section>;
 }
 
 // A test name without the backlog ids it carries for the people working on the repository: "(GR44)", "(62)", "(FH1, 180)",
@@ -164,6 +189,23 @@ export function Aliases() {
   </table>;
 }
 
+/** The chart colors (CH1) in the theme picked in the toolbar: the 8 series as touching bars with the gap between
+ * them, and the two ramps. */
+export function ChartColors() {
+  const names = (re: RegExp) => T.color.tokens.map((t) => t.name).filter((n) => re.test(n));
+  const row = (list: string[], gap: boolean) => <div style={{ display: 'flex', gap: gap ? 2 : 0, background: 'var(--chart-gap)', padding: 2, borderRadius: 6 }}>
+    {list.map((n) => <div key={n} title={`--${n}`} style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ height: 40, background: `var(--${n})` }} />
+      <code style={{ display: 'block', fontSize: 10, color: 'var(--chart-label)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.replace('chart-', '')}</code>
+    </div>)}
+  </div>;
+  return <div data-token-sheet="chart-colors" style={{ display: 'grid', gap: 16 }}>
+    <div><strong>Series</strong>{row(names(/^chart-\d+$/), true)}</div>
+    <div><strong>Sequential</strong>{row(names(/^chart-seq-\d+$/), false)}</div>
+    <div><strong>Diverging</strong>{row(names(/^chart-div-\d+$/), false)}</div>
+  </div>;
+}
+
 /** The type scale: each type-* style rendered in its own family, size, line height and weight. */
 export function TypeScale() {
   return <div data-token-sheet="type-scale">{T.type.groups.map((g) => <div key={g.name} style={{ marginBottom: 24 }}>
@@ -216,10 +258,10 @@ export function IconGallery() {
 
 /** Icons at the system's sizes, with what each is for. */
 export function IconSizes() {
-  const sizes: [number, string][] = [[14, '`sm` buttons'], [16, '`md` buttons, inline with `text-sm`'], [20, '`lg` buttons, list rows'], [24, 'The default: toolbars, navigation'], [40, 'Empty states']];
+  const sizes: ['xs' | 'sm' | 'md' | 'lg' | 'xl', number, string][] = [['xs', 14, '`sm` buttons, `text-xs`'], ['sm', 16, '`md` buttons, inline with `text-sm`'], ['md', 20, '`lg` buttons, list rows, `text-base`'], ['lg', 24, 'The default: toolbars, navigation'], ['xl', 40, 'Empty states']];
   return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
-    {sizes.map(([s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
-      <Icon name="favorite" size={s} /><strong>{s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
+      <Icon name="favorite" size={step} /><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
     </div>)}
   </div>;
 }
@@ -344,4 +386,54 @@ export function TokenExplorer() {
     </div> : <p style={{ margin: 0 }}>No token matches.</p>}
     {hits.length > limit ? <div><Button variant="secondary" size="sm" onClick={() => setLimit(limit + 200)}>Show more ({hits.length - limit} left)</Button></div> : null}
   </div>;
+}
+
+const pendingChangesets = import.meta.glob('../.changeset/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+type Transform = { version: string; id: string; title: string };
+
+/** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
+ * and what `npx serupa-migrate` changes for it. */
+export function UpgradeGuide() {
+  const next = nextMajor(pkg.version, pendingChangesets);
+  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
+  const auto = transformsAfter(null) as Transform[];
+  return <>{majors.map((m) => {
+    const prev = Number(m.version.split('.')[0]) - 1;
+    const mine = auto.filter((t) => t.version === m.version);
+    const intro = m.next
+      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://github.com/diki-stwn/serupa-ds/tree/main/docs/rfcs) has the proposal.`
+      : m.date ? `Released ${m.date}.` : '';
+    const run = mine.length
+      ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`
+      : '';
+    const body = m.entries.length ? m.entries.join('\n') : '- No entry of this release is marked breaking; [the Changelog](?path=/docs/changelog--docs) has what changed.';
+    return <section key={m.version}>
+      <Markdown>{[`## ${m.version}${m.next ? ' (next)' : ''}`, intro, run, body].filter(Boolean).join('\n\n')}</Markdown>
+    </section>;
+  })}</>;
+}
+type Criterion = { id: string; name: string; level: string; conformance: string; remarks: string };
+const ACR = acr as { standard: string; product: string; reviewed: { version: string; date: string }; criteria: Criterion[] };
+/** How many criteria each conformance level covers, from docs/acr.json (162). */
+export function ConformanceSummary() {
+  const count = (c: string) => ACR.criteria.filter((x) => x.conformance === c).length;
+  const partial = ACR.criteria.filter((x) => x.conformance === 'Partially Supports');
+  const stale = ACR.reviewed.version.split('.')[0] !== pkg.version.split('.')[0];
+  return <>
+    <p>Of the {ACR.criteria.length} {ACR.standard} criteria at levels A and AA, the components support {count('Supports')}, partly support {count('Partially Supports')}{count('Does Not Support') ? `, don't support ${count('Does Not Support')}` : ''}, and {count('Not Applicable')} are the app's alone (page titles, media, navigation across pages). Reviewed for version {ACR.reviewed.version} on {ACR.reviewed.date}.</p>
+    {stale && <p role="note"><strong>This review is for {ACR.reviewed.version.split('.')[0]}.x; the current version is {pkg.version}.</strong> A new major is reviewed before its report is updated.</p>}
+    {partial.length > 0 && <ul>{partial.map((x) => <li key={x.id}><strong>{x.id} {x.name}</strong>: {code(x.remarks)}</li>)}</ul>}
+  </>;
+}
+/** The Accessibility Conformance Report (18): every WCAG criterion at A and AA, as VPAT 2.5's table has it. */
+export function ConformanceReport() {
+  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <caption style={{ textAlign: 'start', fontWeight: 600, paddingBlock: 8 }}>{ACR.standard} Level A and AA: {ACR.product}, version {ACR.reviewed.version}</caption>
+    <thead><tr><th style={cell} scope="col">Criteria</th><th style={cell} scope="col">Conformance level</th><th style={cell} scope="col">Remarks and explanations</th></tr></thead>
+    <tbody>{ACR.criteria.map((x) => <tr key={x.id}>
+      <th style={{ ...cell, fontWeight: 'normal' }} scope="row">{x.id} {x.name} (Level {x.level})</th>
+      <td style={cell}>{x.conformance}</td>
+      <td style={cell}>{code(x.remarks)}</td>
+    </tr>)}</tbody>
+  </table>;
 }

@@ -210,7 +210,7 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "Corner radius (6px)",
         "$extensions": {
           "com.serupa": {
