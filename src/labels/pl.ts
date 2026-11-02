@@ -104,6 +104,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} został już dodany.`,
   filesAdded: (names) => (names.length === 1 ? `Dodano ${names[0]}.` : `Dodano ${p3(names.length, "plik", "pliki", "plików")}.`),
   fileRemoved: (name) => `Usunięto ${name}.`,
+  fileError: "Nie udało się przesłać",
   viewImage: "Wyświetl obraz",
   removeImage: "Usuń obraz",
   edit: "Edytuj",

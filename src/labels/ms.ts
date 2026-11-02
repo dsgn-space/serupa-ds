@@ -101,6 +101,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} sudah ditambah.`,
   filesAdded: (names) => (names.length === 1 ? `${names[0]} ditambah.` : `${n(names.length)} fail ditambah.`),
   fileRemoved: (name) => `${name} dialih keluar.`,
+  fileError: "Gagal dimuat naik",
   viewImage: "Lihat imej",
   removeImage: "Alih keluar imej",
   edit: "Edit",
