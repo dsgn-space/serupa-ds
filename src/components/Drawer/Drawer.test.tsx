@@ -17,6 +17,9 @@ const panel = (id = 'drw') => el(id).firstElementChild as HTMLElement;
 const isOpen = () => drw().open;
 // The title is the element that names the dialog (aria-labelledby).
 const titleOf = (id: string) => document.getElementById(el(id).getAttribute('aria-labelledby')!) as HTMLElement;
+const descOf = (id: string) => document.getElementById(el(id).getAttribute('aria-describedby')!) as HTMLElement;
+// The body is the panel's part that holds the drawer's children.
+const bodyOf = (id: string, inner: Element) => [...panel(id).children].find((c) => c.contains(inner)) as HTMLElement;
 const box = () => { const r = panel().getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); };
 // The panel slides in: read positions once every finite animation has ended (headless WebKit can start it late).
 
@@ -46,6 +49,40 @@ const reopen = async (ctl: Partial<Ctl>, fn: () => void) => {
 describe('Drawer', () => {
   beforeEach(async () => { await page.viewport(1000, 700); });
   afterAll(async () => { await page.viewport(900, 700); });
+
+  for (const modal of [true, false]) test(`inside a shadow root, focus goes back to the button that opened it, closed or taken off the page${modal ? '' : ', non-modal too'} (GR95)`, async () => {
+    function Shadow() {
+      const [open, setOpen] = React.useState(false), [shown, setShown] = React.useState(true);
+      return <>
+        <Button id="sopen" onClick={() => setOpen(true)}>Open</Button>
+        {shown && <Drawer id="sdrw" modal={modal} open={open} onOpenChange={setOpen} title="Filters"><Input aria-label="Name" />
+          <button id="sremove" onClick={() => setShown(false)}>Remove it</button></Drawer>}
+      </>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Shadow />, { container: inner });
+      const root = host.shadowRoot!, opener = root.getElementById('sopen')!;
+      const isOpen = () => (root.getElementById('sdrw') as HTMLDialogElement).open;
+      await userEvent.click(opener);
+      await expect.poll(isOpen).toBe(true);
+      await settled();
+      (root.querySelector('#sdrw input') as HTMLElement).focus();
+      await userEvent.keyboard('{Escape}');
+      await expect.poll(isOpen).toBe(false);
+      expect(root.activeElement?.id).toBe('sopen');
+      // Taken off the page while open, with focus inside it: the opener again.
+      await userEvent.click(opener);
+      await expect.poll(isOpen).toBe(true);
+      await settled();
+      await userEvent.click(root.getElementById('sremove')!);
+      await expect.poll(() => root.getElementById('sdrw')).toBe(null);
+      expect(root.activeElement?.id).toBe('sopen');
+    } finally { host.remove(); }
+  });
 
   test('a 320px screen: a long footer label wraps onto more lines inside the panel, whole, not cut with an ellipsis (GR74)', async () => {
     await page.viewport(320, 640);
@@ -446,7 +483,7 @@ describe('Drawer', () => {
   test('long content scrolls in the body; the footer is pinned to the bottom, edge to edge, under a 1px line', async () => {
     await render(<App asks={[]} ctl={{}} />);
     await openDrw();
-    const bd = el('drw').querySelector('.dk-drawer__body') as HTMLElement, ft = panel().lastElementChild as HTMLElement, f = ft.getBoundingClientRect();
+    const bd = bodyOf('drw', el('q')), ft = panel().lastElementChild as HTMLElement, f = ft.getBoundingClientRect();
     expect([bd.scrollHeight > bd.clientHeight, getComputedStyle(bd).overflowY]).toEqual([true, 'auto']);
     expect([Math.round(f.bottom), Math.round(f.left), Math.round(f.right), getComputedStyle(ft).borderTopWidth]).toEqual([700, 616, 1000, '1px']);
   });
@@ -499,7 +536,7 @@ describe('Drawer', () => {
     await expect.poll(() => asks.join()).toBe('false');
     await openDrw();
     const f = document.createElement('form'); f.method = 'dialog'; f.id = 'fdrw'; f.innerHTML = '<button id="fsub">OK</button>';
-    el('drw').querySelector('.dk-drawer__body')!.prepend(f);
+    bodyOf('drw', el('q')).prepend(f);
     el('fsub').click();
     await expect.poll(() => asks.join()).toBe('false,false');
     f.remove();
@@ -553,7 +590,7 @@ describe('Drawer', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = getComputedStyle(panel()).backgroundColor;
-      for (const sel of ['.dk-drawer__title', '.dk-drawer__description', '.dk-drawer__body p']) { const r = contrast(getComputedStyle(el('drw').querySelector(sel)!).color, bg); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
+      for (const [sel, part] of [['title', titleOf('drw')], ['description', descOf('drw')], ['body text', bodyOf('drw', el('q')).querySelector('p')!]] as const) { const r = contrast(getComputedStyle(part).color, bg); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();
     expect(low).toEqual([]);
@@ -585,7 +622,7 @@ describe('Drawer: a body that scrolls', () => {
     const d = el('dsl') as HTMLDialogElement;
     await expect.poll(() => d.open).toBe(true);
     await settled();
-    const body = d.querySelector('.dk-drawer__body') as HTMLElement;
+    const body = bodyOf('dsl', d.querySelector('p')!);
     await expect.poll(() => body.tabIndex).toBe(0);
     expect([body.getAttribute('role'), document.getElementById(body.getAttribute('aria-labelledby')!)!.textContent]).toEqual(['region', 'Terms']);
     (d.querySelector('button[aria-label="Close"]') as HTMLElement).focus();
@@ -621,8 +658,9 @@ describe('Drawer: a body that scrolls', () => {
     await expect.poll(() => d().open).toBe(true);
     expect([d().getAttribute('aria-labelledby'), d().getAttribute('aria-describedby')]).toEqual(['ext', 'extd']);
     await screen.rerender(<div><Drawer id="dn" open onOpenChange={() => {}} closeButton={false} aria-label="Terms">{text}</Drawer></div>);
-    const body = () => d().querySelector('.dk-drawer__body') as HTMLElement;
-    expect(d().querySelector('.dk-drawer__header')).toBe(null);
+    const body = () => bodyOf('dn', d().querySelector('p')!);
+    // No header: the body is the panel's only part.
+    expect([panel('dn').children.length, panel('dn').firstElementChild === body()]).toEqual([1, true]);
     await expect.poll(() => body().getAttribute('role')).toBe('region');
     expect([body().getAttribute('aria-label'), body().tabIndex]).toEqual(['Terms', 0]);
     await screen.rerender(<div><Drawer id="dn" open onOpenChange={() => {}} closeButton={false}>{text}</Drawer></div>);

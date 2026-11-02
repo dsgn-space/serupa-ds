@@ -1,6 +1,6 @@
 {
   "name": "serupa-ds",
-  "version": "12.0.0",
+  "version": "13.0.0",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
@@ -35,6 +35,7 @@
     "./bundle.css": "./dist/bundle.css",
     "./components.css": "./dist/components.css",
     "./utilities.css": "./dist/utilities.css",
+    "./utilities-extra.css": "./dist/utilities-extra.css",
     "./serupa.iife.js": "./dist/serupa.iife.js",
     "./serupa-icons.iife.js": "./dist/serupa-icons.iife.js",
     "./theme.js": "./dist/theme.js",
@@ -55,14 +56,28 @@
       "import": "./dist/testing.js",
       "default": "./dist/testing.js"
     },
+    "./labels/*": {
+      "types": "./dist/labels/*.d.ts",
+      "import": "./dist/js/labels/*.js",
+      "default": "./dist/js/labels/*.js"
+    },
+    "./purge": {
+      "types": "./dist/purge.d.ts",
+      "import": "./dist/purge.js",
+      "default": "./dist/purge.js"
+    },
     "./design-tokens/*": "./design-tokens/*",
     "./vscode/*": "./dist/vscode/*",
     "./native/*": "./dist/native/*",
+    "./email/*": "./dist/email/*",
     "./fonts/*": "./fonts/*",
     "./package.json": "./package.json"
   },
   "bin": {
-    "serupa-purge": "./bin/serupa-purge.mjs"
+    "serupa-create": "./bin/serupa-create.mjs",
+    "serupa-migrate": "./bin/serupa-migrate.mjs",
+    "serupa-purge": "./bin/serupa-purge.mjs",
+    "serupa-usage": "./bin/serupa-usage.mjs"
   },
   "files": [
     "bin/",
@@ -91,7 +106,7 @@
     "prepare": "node tools/build/build.mjs",
     "pretest": "node tools/build/build.mjs",
     "test": "node tools/test/run.mjs",
-    "tokens": "node tools/tokens/build.mjs && node tools/tokens/export.mjs && node tools/tokens/readme-tables.mjs && node tools/tokens/badge-palette.mjs",
+    "tokens": "node tools/tokens/source.mjs && node tools/tokens/build.mjs && node tools/tokens/export.mjs && node tools/tokens/readme-tables.mjs && node tools/tokens/badge-palette.mjs",
     "test:safari": "node tools/test/run.mjs --compat safari",
     "test:firefox": "node tools/test/run.mjs --browser firefox",
     "test:webkit": "node tools/test/run.mjs --browser webkit",
@@ -136,6 +151,7 @@
     "@vitest/browser-playwright": "5.0.5",
     "@vitest/coverage-v8": "5.0.5",
     "@vitest/eslint-plugin": "1.6.28",
+    "ajv": "^8.20.0",
     "axe-core": "4.14.0",
     "esbuild": "0.28.2",
     "eslint": "10.13.0",
@@ -155,6 +171,7 @@
     "style-dictionary": "5.7.1",
     "stylelint": "17.16.0",
     "stylelint-config-recommended": "18.0.0",
+    "sucrase": "^3.35.1",
     "tsup": "9.0.0",
     "typescript": "7.0.2",
     "typescript-eslint": "8.72.1",

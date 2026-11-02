@@ -201,7 +201,7 @@ describe('Input', () => {
 
   test('icons: decorative, 16px at md, before and after the field, and they don\'t take clicks', async () => {
     await render(<Input id="ic" leftIcon="search" rightIcon="mail" aria-label="Icons" />);
-    const w = box('ic'), l = w.querySelector('.dk-input__icon--left')!, r = w.querySelector('.dk-input__icon--right')!;
+    const w = box('ic'), l = w.querySelector(':scope > span:first-child')!, r = w.querySelector(':scope > span:last-child')!;
     expect([...w.children].map((c) => c.className.split(' ')[0])).toEqual(['dk-input__icon', 'dk-input__field', 'dk-input__icon']);
     expect(w.firstElementChild).toBe(l);
     expect(w.lastElementChild).toBe(r);

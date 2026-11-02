@@ -7,6 +7,7 @@ import { en as words } from "./labels";
 import { component } from "../../internal/component";
 import { useSettings } from "../../internal/provider";
 import { modalClosed, modalOpened, modalOpening, wasDismissal } from "../../internal/layers";
+import { deepActive } from "../../internal/root";
 import * as icons from "../../material/builtin";
 import { useScrolls } from "../../internal/useScrolls";
 import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
@@ -103,7 +104,7 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
     const d = el.current;
     if (!d) return;
     if (open && !d.open) {
-      if (!back.current) back.current = document.activeElement as HTMLElement | null;   // kept when it opens again
+      if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
       modalOpening();
       if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
       modalOpened(d);
@@ -191,4 +192,33 @@ export function Discard(props: { open: boolean; onKeep: () => void; onDiscard: (
       footer={[<Button key="keep" ref={keep} variant="secondary" onClick={props.onKeep}>{sds.labels.keepEditing}</Button>,
         <Button key="discard" destructive onClick={props.onDiscard}>{sds.labels.discard}</Button>]} />
   );
+}
+
+/* useUnsavedChanges: Dialog's "Discard changes?" question for a form or a page with changes that would be lost (13).
+   While unsaved, leaving the page (closing the tab, reloading, a link to another site) asks the browser's own
+   question, as an unsaved Dialog does. Moving away inside the app is the app's router: before it moves, it awaits
+   confirm(), which is true at once when nothing is unsaved, and otherwise asks "Discard changes?" (Keep editing
+   focused) and is true on Discard. Render dialog somewhere in the form's tree. A newer confirm() answers the one
+   before with false, saving while it asks answers it with true, and unmounting with false. */
+/** Asks "Discard changes?" before a form or page with unsaved changes is left: the browser asks on leaving the page, and `await confirm()` before moving away inside the app. Render `dialog`. */
+export function useUnsavedChanges(unsaved: boolean): { confirm: () => Promise<boolean>; dialog: React.ReactElement | null } {
+  const [asking, setAsking] = React.useState(false);
+  const settle = React.useRef<((ok: boolean) => void) | null>(null);
+  const now = React.useRef(unsaved);
+  useIsoLayoutEffect(() => { now.current = unsaved; }, [unsaved]);
+  const answer = React.useCallback((ok: boolean) => { const s = settle.current; settle.current = null; setAsking(false); if (s) s(ok); }, []);
+  React.useEffect(() => {
+    if (!unsaved) { if (settle.current) answer(true); return; }   // saved while it asked: nothing to lose
+    const stay = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener("beforeunload", stay);
+    return () => window.removeEventListener("beforeunload", stay);
+  }, [unsaved, answer]);
+  React.useEffect(() => () => { const s = settle.current; settle.current = null; if (s) s(false); }, []);
+  const confirm = React.useCallback(() => {
+    if (!now.current) return Promise.resolve(true);
+    if (settle.current) settle.current(false);
+    setAsking(true);
+    return new Promise<boolean>((ok) => { settle.current = ok; });
+  }, []);
+  return { confirm, dialog: unsaved || asking ? <Discard open={asking} onKeep={() => answer(false)} onDiscard={() => answer(true)} /> : null };
 }
