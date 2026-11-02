@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Sparkline — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('p', null, 'Sign-ups are up ',
+    h(T.Sparkline, { data: [12, 14, 11, 15, 18, 16, 21, 19, 17, 20, 22, 18], label: 'Sign-ups, last 12 weeks', area: true }), ' since spring.'));
+</script>
+</body>
+</html>

@@ -166,6 +166,7 @@ export const labels: SerupaLabels = {
   tourBack: "戻る",
   tourNext: "次へ",
   tourDone: "完了",
+  sparklineSummary: (label, first, last, min, max) => label + "：" + first + "から" + last + "、最小" + min + "、最大" + max,
   table: "表",
   tableSorted: (column, direction) => column + "で" + (direction === "ascending" ? "昇順" : "降順") + "に並べ替えました。",
   tableSelected: (count) => n(count) + "件選択中",

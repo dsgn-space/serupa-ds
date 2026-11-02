@@ -1,7 +1,9 @@
 CHANGELOG.md
 LICENSE
 README.md
+bin/brand/generate.mjs
 bin/migrate/transforms.mjs
+bin/serupa-brand.mjs
 bin/serupa-create.mjs
 bin/serupa-migrate.mjs
 bin/serupa-purge.mjs
