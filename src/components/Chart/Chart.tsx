@@ -20,9 +20,9 @@ export interface ChartSeries {
 export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'title'> {
   /** 'line' (default): a line per series with a marker at each point, for a change over time. 'bar': bars side by
       side in each category, for comparing amounts. */
-  type?: ChartType;
+  type?: ChartType | undefined;
   /** A visible title above the chart, which also names it. Without one, give it an aria-label. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The categories along the bottom, in order (months, regions, …): the labels of the points. */
   categories: ReadonlyArray<string>;
   /** Up to eight series, each with a value per category. Each gets a chart color (chart-1 to chart-8) and, so color
@@ -30,19 +30,19 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   series: ReadonlyArray<ChartSeries>;
   /** Turns a value into words, on the axis, in the tooltip, the table and what's read out: (value) => "Rp 1,2 jt".
       Default: the locale's number. */
-  formatValue?: (value: number) => string;
+  formatValue?: ((value: number) => string) | undefined;
   /** The heading of the categories' column in the table. Default: "Category" (labels.chartCategory). */
-  categoryLabel?: string;
+  categoryLabel?: string | undefined;
   /** The plot's height in pixels; the width is the box's. Default: 240. */
-  height?: number;
+  height?: number | undefined;
   /** Hides the legend under the chart: with a single series, or when the title already names each one. Default: false. */
-  hideLegend?: boolean;
+  hideLegend?: boolean | undefined;
   /** Shows the chart or the same numbers as a table, controlled. */
-  view?: ChartView;
+  view?: ChartView | undefined;
   /** The view it starts in, uncontrolled. Default: 'chart'. */
-  defaultView?: ChartView;
+  defaultView?: ChartView | undefined;
   /** Called when the "Show as table" or "Show as chart" button is pressed, with the view it asks for. */
-  onViewChange?: (view: ChartView) => void;
+  onViewChange?: ((view: ChartView) => void) | undefined;
 }
 
 const OWN = { type: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, className: 1 } as const;

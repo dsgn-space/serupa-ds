@@ -16,16 +16,16 @@ interface ChartSeries {
     values: ReadonlyArray<null | number | undefined>;
 }
 interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, "children" | "title"> {
-    type?: ChartType;
-    title?: React.ReactNode;
+    type?: ChartType | undefined;
+    title?: React.ReactNode | undefined;
     categories: ReadonlyArray<string>;
     series: ReadonlyArray<ChartSeries>;
-    formatValue?: (value: number) => string;
-    categoryLabel?: string;
-    height?: number;
-    hideLegend?: boolean;
-    view?: ChartView;
-    defaultView?: ChartView;
-    onViewChange?: (view: ChartView) => void;
+    formatValue?: ((value: number) => string) | undefined;
+    categoryLabel?: string | undefined;
+    height?: number | undefined;
+    hideLegend?: boolean | undefined;
+    view?: ChartView | undefined;
+    defaultView?: ChartView | undefined;
+    onViewChange?: ((view: ChartView) => void) | undefined;
 }
 declare const Chart: React.ForwardRefExoticComponent<ChartProps & React.RefAttributes<HTMLElement>>;
