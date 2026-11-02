@@ -20,7 +20,8 @@ describe('Sparkline', () => {
   });
 
   test('is an image named by its label and its first, last, low and high values', async () => {
-    await render(<Sparkline data={[12, 9, 21, 18]} label="Revenue" format={{ style: 'currency', currency: 'USD', maximumFractionDigits: 0 }} />);
+    // In en-US, as the name is written below: the second-language run gives the browser another default locale.
+    await render(<SerupaProvider locale="en-US"><Sparkline data={[12, 9, 21, 18]} label="Revenue" format={{ style: 'currency', currency: 'USD', maximumFractionDigits: 0 }} /></SerupaProvider>);
     await expect.element(page.getByRole('img', { name: 'Revenue: from $12 to $18, low $9, high $21' })).toBeInTheDocument();
   });
 
