@@ -116,8 +116,8 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
   // interest while the pointer is over the trigger or it has keyboard focus is one this component already handles
   // (with its delay and Escape cancelling a waiting open), so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
-  const interest = React.useRef<() => void>(() => {});
-  interest.current = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, "hover"); };
+  const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, "hover"); };
+  const interest = React.useRef(fromInterest); interest.current = fromInterest;
   React.useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
