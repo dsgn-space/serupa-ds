@@ -39,6 +39,8 @@
 .dk-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
 .dk-file-upload__item--error { border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
 .dk-file-upload__thumbnail { flex: none; inline-size: var(--spacing-10); block-size: var(--spacing-10); border-radius: var(--radius-inner); }
+/* The retry button keeps its words whole beside a long failure message: the message wraps instead (it was cut to "Try …"). */
+.dk-file-upload__retry { flex: none; }
 .dk-file-upload__progress { margin-block-start: var(--spacing-1); }
 .dk-file-upload__done, .dk-file-upload__failed { display: inline-flex; align-items: center; gap: var(--spacing-1); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-file-upload__done { margin-inline-start: var(--spacing-2); color: var(--file-upload-done-color, var(--success-text)); }
