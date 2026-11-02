@@ -13,13 +13,13 @@ import { en as words } from "./labels";
 export interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** Whether the app can reach its server. Leave it out to follow the browser (navigator.onLine and its online and
       offline events); set it when the app knows better, such as when its requests fail on a network that's "online". */
-  online?: boolean;
+  online?: boolean | undefined;
   /** 'bottom' (default) or 'top': fixed to that edge of the screen, in the middle. 'inline': where you put it. */
-  placement?: "bottom" | "top" | "inline";
+  placement?: "bottom" | "top" | "inline" | undefined;
   /** More words after "You're offline", such as what still works: "Changes are kept and sent when you're back." */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Called when the connection drops (false) or comes back (true). */
-  onChange?: (online: boolean) => void;
+  onChange?: ((online: boolean) => void) | undefined;
 }
 
 const listen = (cb: () => void) => {

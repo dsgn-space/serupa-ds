@@ -18,22 +18,22 @@ export interface ErrorBoundaryFallbackProps {
 
 export interface ErrorBoundaryProps {
   /** The part of the page to guard. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** What to show instead when something inside throws while rendering. Default: a danger Alert with a title, a
       description and a "Try again" button. A function gets { error, reset }. */
-  fallback?: React.ReactNode | ((props: ErrorBoundaryFallbackProps) => React.ReactNode);
+  fallback?: (React.ReactNode | ((props: ErrorBoundaryFallbackProps) => React.ReactNode)) | undefined;
   /** The default fallback's title. Default: "Something went wrong" (the errorTitle label). */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The default fallback's message. Default: "This part of the page couldn't load." (errorDescription). */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Called with the error and React's component stack, for logging or reporting. */
-  onError?: (error: unknown, info: React.ErrorInfo) => void;
+  onError?: ((error: unknown, info: React.ErrorInfo) => void) | undefined;
   /** Called when the error is cleared: Try again, reset(), or a change in resetKeys. */
-  onReset?: () => void;
+  onReset?: (() => void) | undefined;
   /** Values that, when one changes, clear the error and render the children again (a route, an id). */
-  resetKeys?: ReadonlyArray<unknown>;
+  resetKeys?: ReadonlyArray<unknown> | undefined;
   /** A class for the default fallback's box. */
-  className?: string;
+  className?: string | undefined;
 }
 
 interface BoundaryProps extends ErrorBoundaryProps { labels: ErrorBoundaryLabels }

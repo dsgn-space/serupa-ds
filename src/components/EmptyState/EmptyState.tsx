@@ -8,29 +8,29 @@ import { ClearFilters, Suggestions } from "./NoResults";
 
 export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** A picture of what's missing: an icon name ('inbox', 'search_off') or an element (an illustration). */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** What's empty, in a few words: "No projects yet". */
   title: React.ReactNode;
   /** What it means or what to do next. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** One or two Buttons: the way out ("New project"). */
-  actions?: React.ReactNode;
+  actions?: React.ReactNode | undefined;
   /** 'md' (default) or 'sm' (inside a card, a table or a menu). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** 'plain' (default) or 'dashed': a dashed frame, for a drop zone or a slot to fill. */
-  variant?: 'plain' | 'dashed';
+  variant?: 'plain' | 'dashed' | undefined;
   /** The title's heading level, to fit the page outline. Default: 3. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** Says the title and description to screen readers once, politely, as it appears: for a result shown after a search
       or a filter ("No results for “mars”"), which would otherwise appear in silence. Not for an empty page on arrival. Default: false. */
-  announce?: boolean;
+  announce?: boolean | undefined;
   /** After a search that found nothing: searches to try instead, such as a spelling fix ("Did you mean: mars").
       Each is a link-style button that calls onSuggestion; without onSuggestion they're plain text. */
-  suggestions?: string[];
+  suggestions?: string[] | undefined;
   /** Called with the suggestion picked: run that search. */
-  onSuggestion?: (suggestion: string) => void;
+  onSuggestion?: ((suggestion: string) => void) | undefined;
   /** Adds a "Clear filters" button after the actions, which calls this: the usual way out of no results. */
-  onClearFilters?: () => void;
+  onClearFilters?: (() => void) | undefined;
 }
 
 /* EmptyState: what a page or a panel shows when there's nothing in it yet (or nothing matches): an icon in a

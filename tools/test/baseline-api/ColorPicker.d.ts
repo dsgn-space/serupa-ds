@@ -12,18 +12,18 @@ interface ColorSwatch {
 }
 interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     swatches: ReadonlyArray<ColorSwatch | string>;
-    value?: null | string;
-    defaultValue?: null | string;
-    onValueChange?: (value: string) => void;
-    onValueCommit?: (value: string) => void;
-    custom?: boolean;
-    contrastWith?: string;
-    minContrast?: number;
-    size?: "md" | "sm";
-    disabled?: boolean;
-    name?: string;
-    form?: string;
-    required?: boolean;
-    invalid?: boolean;
+    value?: null | string | undefined;
+    defaultValue?: null | string | undefined;
+    onValueChange?: ((value: string) => void) | undefined;
+    onValueCommit?: ((value: string) => void) | undefined;
+    custom?: boolean | undefined;
+    contrastWith?: string | undefined;
+    minContrast?: number | undefined;
+    size?: "md" | "sm" | undefined;
+    disabled?: boolean | undefined;
+    name?: string | undefined;
+    form?: string | undefined;
+    required?: boolean | undefined;
+    invalid?: boolean | undefined;
 }
 declare const ColorPicker: React.ForwardRefExoticComponent<ColorPickerProps & React.RefAttributes<HTMLDivElement>>;

@@ -22,30 +22,30 @@ const words = /* @__PURE__ */ Object.assign({}, TimePickerWords, DatePickerWords
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step' | 'children'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
-  value?: string | null;
+  value?: string | null | undefined;
   /** The chosen time at first (uncontrolled). */
-  defaultValue?: string | null;
+  defaultValue?: string | null | undefined;
   /** Called with the new time as "HH:mm", or null when the field is cleared. */
-  onValueChange?: (value: string | null) => void;
+  onValueChange?: ((value: string | null) => void) | undefined;
   /** Called when typed text is put back on blur or Enter: "unreadable" when it isn't a time, "unavailable" when it
       is one that can't be chosen (outside min..max). The field also says so to screen readers. */
-  onInvalidInput?: (text: string, reason: "unreadable" | "unavailable") => void;
+  onInvalidInput?: ((text: string, reason: "unreadable" | "unavailable") => void) | undefined;
   /** The earliest and latest times, as "HH:mm". */
-  min?: string;
+  min?: string | undefined;
   /** The latest time, as "HH:mm". */
-  max?: string;
+  max?: string | undefined;
   /** Minutes between the times in the list (not seconds, as <input type="time"> counts its step: 15, not 900). Default: 30. Typed times don't have to fall on a step. */
-  step?: number;
+  step?: number | undefined;
   /** A BCP 47 locale for how times are written. Default: the nearest SerupaProvider's locale, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
   /** 12-hour (AM/PM) or 24-hour. Default: the locale's. */
-  hour12?: boolean;
+  hour12?: boolean | undefined;
   /** 'sm', 'md' (default) or 'lg', like Input. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Marks the field invalid (aria-invalid and the error border), as on Input. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** The list's name, and the button's. Default: "Choose a time". */
-  listLabel?: string;
+  listLabel?: string | undefined;
 }
 
 /* TimePicker: a field for a time of day with a list of times. People type a time ("2:30 pm", "14:30", "1430",
