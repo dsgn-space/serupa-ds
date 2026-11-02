@@ -118,6 +118,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-title-color` | `text` | The drop area's title and file names. |
 | `--file-upload-hint-color` | `text-muted` | The hint and file sizes (4.5:1 on zone-bg and the surface). |
 | `--file-upload-error-color` | `danger-text` | Messages about files that weren't added. |
+| `--file-upload-done-color` | `success-text` | A finished upload's "Complete" and its check (fileStatus). |
 | `--file-upload-item-bg` | `surface` | A file row's background. |
 | `--file-upload-item-border` | `border` | A file row's outline. |
 | `--file-upload-zone-radius` | `radius-surface` | The drop area's corners (8px). |
