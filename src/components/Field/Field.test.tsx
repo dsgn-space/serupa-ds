@@ -131,7 +131,8 @@ describe('Field', () => {
     expect((fs.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)?.textContent)).toEqual(['Pick one.', 'Choose a plan.']);
     expect(el('r1').id).toBe('r1');
     expect(css(fs).borderTopWidth).toBe('0px');
-    expect(fs.querySelector('.dk-field__hint')!.getBoundingClientRect().top).toBeGreaterThanOrEqual(legend.getBoundingClientRect().bottom);
+    // The hint is the first thing the fieldset's aria-describedby names.
+    expect(document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0])!.getBoundingClientRect().top).toBeGreaterThanOrEqual(legend.getBoundingClientRect().bottom);
     expect(el('c1').matches(':disabled')).toBe(true);
   });
 
