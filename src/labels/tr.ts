@@ -159,6 +159,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Bölmeleri yeniden boyutlandır",
   splitterPlace: "Tutamacın gideceği yere dokunun ya da iptal etmek için tutamaca yeniden dokunun.",
   skipToContent: "İçeriğe atla",
+  offline: "Çevrimdışısınız",
+  backOnline: "Yeniden çevrimiçi",
   completed: "tamamlandı",
   hasError: "hata var",
   hasWarning: "dikkat gerekiyor",

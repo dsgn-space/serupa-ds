@@ -163,6 +163,8 @@ export const labels: SerupaLabels = {
   resizePanes: "تغيير حجم الأجزاء",
   splitterPlace: "اضغط حيث يجب أن يكون المقبض، أو اضغط المقبض مرة أخرى للإلغاء.",
   skipToContent: "الانتقال إلى المحتوى",
+  offline: "أنت غير متصل بالإنترنت",
+  backOnline: "عاد الاتصال",
   completed: "مكتمل",
   hasError: "به خطأ",
   hasWarning: "يحتاج إلى انتباه",
