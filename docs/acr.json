@@ -1,0 +1,399 @@
+{
+  "standard": "WCAG 2.2",
+  "levels": [
+    "A",
+    "AA"
+  ],
+  "product": "Serupa (serupa-ds) React components, CSS and tokens",
+  "reviewed": {
+    "version": "12.0.0",
+    "date": "2026-11-01"
+  },
+  "criteria": [
+    {
+      "id": "1.1.1",
+      "name": "Non-text Content",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Icons inside controls are hidden from screen readers and the control carries the name: IconButton needs a `label`, Image needs `alt` (empty for decoration), Avatar is named by `name`. The app writes the alternative text."
+    },
+    {
+      "id": "1.2.1",
+      "name": "Audio-only and Video-only (Prerecorded)",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "No component plays audio or video. Media the app adds needs its own alternative."
+    },
+    {
+      "id": "1.2.2",
+      "name": "Captions (Prerecorded)",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "No component plays video. Video the app adds needs captions."
+    },
+    {
+      "id": "1.2.3",
+      "name": "Audio Description or Media Alternative (Prerecorded)",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "No component plays video."
+    },
+    {
+      "id": "1.2.4",
+      "name": "Captions (Live)",
+      "level": "AA",
+      "conformance": "Not Applicable",
+      "remarks": "No component plays live media."
+    },
+    {
+      "id": "1.2.5",
+      "name": "Audio Description (Prerecorded)",
+      "level": "AA",
+      "conformance": "Not Applicable",
+      "remarks": "No component plays video."
+    },
+    {
+      "id": "1.3.1",
+      "name": "Info and Relationships",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Components render native elements or the ARIA role their pattern needs; Field ties a control to its label, hint and error; Table marks headers with `scope`. The roles, names and structure of every story are compared with `tools/test/baseline-aria/` on each change."
+    },
+    {
+      "id": "1.3.2",
+      "name": "Meaningful Sequence",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "The reading order is the order on screen, and layouts use logical properties, so right-to-left pages read and mirror in order."
+    },
+    {
+      "id": "1.3.3",
+      "name": "Sensory Characteristics",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "The components' own words never point by shape, color, position or sound alone; `tools/test/voice.mjs` checks every built-in label."
+    },
+    {
+      "id": "1.3.4",
+      "name": "Orientation",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Nothing is locked to portrait or landscape."
+    },
+    {
+      "id": "1.3.5",
+      "name": "Identify Input Purpose",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Input and the fields built on it pass `autoComplete` to the native field, and PhoneInput sets `tel-national`. The app sets the purpose of each field about the user."
+    },
+    {
+      "id": "1.4.1",
+      "name": "Use of Color",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "States are shown by more than color: check marks, icons, bars, underlines and words. The app's own content (charts, status dots, links in text) needs a second cue too."
+    },
+    {
+      "id": "1.4.2",
+      "name": "Audio Control",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "No component plays sound."
+    },
+    {
+      "id": "1.4.3",
+      "name": "Contrast (Minimum)",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Text and placeholder colors meet 4.5:1 in all six themes; the foundation check measures every pair, and axe runs on every story in every theme."
+    },
+    {
+      "id": "1.4.4",
+      "name": "Resize Text",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Sizes are in `rem`; every story is checked with text at 200% for clipped or hidden text."
+    },
+    {
+      "id": "1.4.5",
+      "name": "Images of Text",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "No component draws text as an image."
+    },
+    {
+      "id": "1.4.10",
+      "name": "Reflow",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Every story is checked at 320 CSS pixels wide for sideways scrolling; tables, grids and code scroll inside their own box."
+    },
+    {
+      "id": "1.4.11",
+      "name": "Non-text Contrast",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Control borders, focus rings, selected states and icons that carry meaning meet 3:1 in all six themes, checked with the text pairs."
+    },
+    {
+      "id": "1.4.12",
+      "name": "Text Spacing",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Every story is checked with WCAG's line, paragraph, letter and word spacing for text cut off by its box."
+    },
+    {
+      "id": "1.4.13",
+      "name": "Content on Hover or Focus",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Tooltip and HoverCard close with Escape, stay while the pointer moves onto them, and stay until the pointer or focus leaves."
+    },
+    {
+      "id": "2.1.1",
+      "name": "Keyboard",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Every component works from the keyboard, as its ARIA Authoring Practices pattern expects; each guide has a Keyboard table and the tests drive it. Anything that can be dragged has a keyboard and click alternative."
+    },
+    {
+      "id": "2.1.2",
+      "name": "No Keyboard Trap",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Focus leaves every component with Tab. Dialog and Drawer keep focus inside while open, as a modal must, and close with Escape."
+    },
+    {
+      "id": "2.1.4",
+      "name": "Character Key Shortcuts",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "No component reacts to a single character key on the page. Type-ahead in menus, lists and trees works only while focus is in them."
+    },
+    {
+      "id": "2.2.1",
+      "name": "Timing Adjustable",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "A toast's time stops while it's hovered or focused and while the window is in the background, and `autoDismiss: false` keeps one until it's closed. Session time-outs are the app's."
+    },
+    {
+      "id": "2.2.2",
+      "name": "Pause, Stop, Hide",
+      "level": "A",
+      "conformance": "Partially Supports",
+      "remarks": "Only what shows that work is under way or input is awaited moves on its own: Loader, an indeterminate Progress (bar or circle), a loading Switch's spinner, Image's sweep while it loads and PinInput's blinking caret, plus a Badge with `ping`. None has a pause control of its own, and each stops when the wait ends. Under reduced motion Image's sweep and PinInput's caret stop, Progress stands still, and Loader and Switch's spinner stand still or slowly breathe. RelativeTime updates its text by itself every 15 seconds and doesn't announce it. Keep `ping` for live states only."
+    },
+    {
+      "id": "2.3.1",
+      "name": "Three Flashes or Below Threshold",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Nothing flashes: no component blinks or flashes, and the only repeating motion (Loader, a Badge's ping) is a slow fade or turn."
+    },
+    {
+      "id": "2.4.1",
+      "name": "Bypass Blocks",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "SkipLink gives a \"Skip to content\" link, and Navbar and Sidebar render navigation landmarks. The app places the skip link and the `main` landmark."
+    },
+    {
+      "id": "2.4.2",
+      "name": "Page Titled",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "The app titles each page."
+    },
+    {
+      "id": "2.4.3",
+      "name": "Focus Order",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Focus moves in reading order; Dialog, Drawer and Menu move focus in when they open and back to their trigger when they close."
+    },
+    {
+      "id": "2.4.4",
+      "name": "Link Purpose (In Context)",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Link announces when it opens a new tab. The app writes link text that says where it goes."
+    },
+    {
+      "id": "2.4.5",
+      "name": "Multiple Ways",
+      "level": "AA",
+      "conformance": "Not Applicable",
+      "remarks": "Finding pages (navigation, search, a site map) is the app's."
+    },
+    {
+      "id": "2.4.6",
+      "name": "Headings and Labels",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Heading, Field and the components' own words give headings and labels; the app writes ones that describe its content."
+    },
+    {
+      "id": "2.4.7",
+      "name": "Focus Visible",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Every focusable part shows a 2px ring at 3:1, with an outline that stays in forced colors."
+    },
+    {
+      "id": "2.4.11",
+      "name": "Focus Not Obscured (Minimum)",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "A sticky Table header keeps the focused row in view (tested). The app's own sticky headers need `scroll-padding-top`."
+    },
+    {
+      "id": "2.5.1",
+      "name": "Pointer Gestures",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Swiping a Carousel also works with its buttons and dots; no component needs a path or multipoint gesture."
+    },
+    {
+      "id": "2.5.2",
+      "name": "Pointer Cancellation",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Buttons and controls act on release, as native buttons do; a press can be cancelled by moving off."
+    },
+    {
+      "id": "2.5.3",
+      "name": "Label in Name",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "A control's accessible name starts with its visible label."
+    },
+    {
+      "id": "2.5.4",
+      "name": "Motion Actuation",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "No component reacts to moving the device."
+    },
+    {
+      "id": "2.5.7",
+      "name": "Dragging Movements",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Slider, Splitter, SortableList, Carousel and FileUpload all work without dragging; `tools/test/drag-alternatives.mjs` checks each draggable part has one."
+    },
+    {
+      "id": "2.5.8",
+      "name": "Target Size (Minimum)",
+      "level": "AA",
+      "conformance": "Partially Supports",
+      "remarks": "Buttons and most controls are at least 24 by 24 CSS pixels. Some are drawn smaller and pass by the spacing exception, with nothing else within 24px of their centres: fields at size `sm` (22px tall), SegmentedControl's `sm` segments (18px drawn, a 24px press area), Slider's thumb (16px) and Splitter's handle (8px wide). Rating doesn't yet: at `sm`, and with `allowHalf` at any size, its stars or halves are under 24px and closer than 24px apart (GR104). A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows."
+    },
+    {
+      "id": "3.1.1",
+      "name": "Language of Page",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "The app sets `<html lang>`. The components' words follow the locale it gives SerupaProvider."
+    },
+    {
+      "id": "3.1.2",
+      "name": "Language of Parts",
+      "level": "AA",
+      "conformance": "Not Applicable",
+      "remarks": "The app marks text in another language with `lang`."
+    },
+    {
+      "id": "3.2.1",
+      "name": "On Focus",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Focusing a component never changes the page or opens something on its own."
+    },
+    {
+      "id": "3.2.2",
+      "name": "On Input",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Changing a value never navigates or submits; the app decides what happens after."
+    },
+    {
+      "id": "3.2.3",
+      "name": "Consistent Navigation",
+      "level": "AA",
+      "conformance": "Not Applicable",
+      "remarks": "Navigation across pages is the app's."
+    },
+    {
+      "id": "3.2.4",
+      "name": "Consistent Identification",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "The components use the same words for the same things everywhere (one set of labels per language)."
+    },
+    {
+      "id": "3.2.6",
+      "name": "Consistent Help",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "Where help is on each page is the app's."
+    },
+    {
+      "id": "3.3.1",
+      "name": "Error Identification",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Field shows the error in words with an icon and links it to the control, which is marked invalid; ErrorSummary lists every problem and links to each field."
+    },
+    {
+      "id": "3.3.2",
+      "name": "Labels or Instructions",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Field gives every control a visible label and an optional hint, and marks required or optional ones."
+    },
+    {
+      "id": "3.3.3",
+      "name": "Error Suggestion",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "A failed native check shows a message that says what is expected (a minimum length, a format, a range): the browser's own, or the words of the locale's language pack. The app's own messages need to say how to fix the value too."
+    },
+    {
+      "id": "3.3.4",
+      "name": "Error Prevention (Legal, Financial, Data)",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Dialog confirmations, TypeToConfirm and toasts with Undo give the ways to check, confirm or reverse; the app uses them where it takes money, legal steps or data."
+    },
+    {
+      "id": "3.3.7",
+      "name": "Redundant Entry",
+      "level": "A",
+      "conformance": "Not Applicable",
+      "remarks": "What a flow asks for again is the app's."
+    },
+    {
+      "id": "3.3.8",
+      "name": "Accessible Authentication (Minimum)",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "PasswordInput never blocks paste and can show the password; PinInput takes a paste or a phone's one-time-code suggestion into every box."
+    },
+    {
+      "id": "4.1.2",
+      "name": "Name, Role, Value",
+      "level": "A",
+      "conformance": "Supports",
+      "remarks": "Every control has a name, a role and states kept in step (`aria-expanded`, `aria-selected`, `aria-checked`, `aria-invalid`…), checked by the component tests and the ARIA baselines."
+    },
+    {
+      "id": "4.1.3",
+      "name": "Status Messages",
+      "level": "AA",
+      "conformance": "Supports",
+      "remarks": "Loading, saving, toasts, counts and result changes are announced through live regions, which work inside an open Dialog too."
+    }
+  ]
+}

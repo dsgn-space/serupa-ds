@@ -31,7 +31,7 @@ gh attestation verify ./serupa-ds-13.0.0.tgz --repo diki-stwn/serupa-ds
 
 Always pin a tag (`#v13.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
-To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
+To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
@@ -427,6 +427,18 @@ The Figma variables workflow keeps a Figma file's variables in step with the tok
 | `android/res-<brand>/values/` and `values-night/` | One brand's alias colors (`@color/serupa_primary`), light and dark. Add the brand's folder as a resource directory and night mode picks the dark ones |
 
 Shadows, easings and the type styles aren't in them yet.
+
+## Tokens for email
+
+Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed stylesheets, so the components' CSS can't go in an email. `dist/email/` (`serupa-ds/email/…`) has Serupa's colors, type and spacing written out in hex and px instead, made from the same tokens by `npm run build`.
+
+| File | Holds |
+| --- | --- |
+| `<brand>.css` | The email classes: `serupa-body`, `serupa-container`, `serupa-content`, `serupa-h1`, `serupa-h2`, `serupa-text`, `serupa-muted`, `serupa-link`, `serupa-button` in a `serupa-button-cell`, `serupa-callout-info` (and `-success`, `-warning`, `-danger`, each with an `-rtl` twin whose bar is on the right, for a right-to-left email), `serupa-divider` and `serupa-footer`. Light first, then the dark theme under `prefers-color-scheme: dark`. Inline it with your sender's inliner (or juice, or Premailer) and keep the dark block in `<style>` |
+| `<brand>.html` | A starting email with those styles already inline: a 600px table layout, a preview line, a heading, text, a button, a callout, a divider and a footer |
+| `tokens.json` | Every theme's colors in hex (a color with alpha mixed over its surface), and the type sizes, spacing and radii in px, for a template language or an email builder |
+
+Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way. Outlook for Windows ignores padding on a link, so the button's padding is also on its `serupa-button-cell` as `mso-padding-alt`, which only Outlook reads: keep the link inside that cell.
 
 ## Editor autocomplete
 

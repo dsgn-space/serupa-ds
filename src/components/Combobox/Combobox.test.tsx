@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
-import { Combobox, type ComboboxOption } from './Combobox';
+import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
 import { Field } from '../Field/Field';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -170,6 +170,51 @@ describe('Combobox', () => {
     expect(lb.querySelectorAll('[role=option]').length).toBeLessThan(30);
   });
 
+  test('groups: options under headings, in role="group"s named after them; the arrows run through every group; a group with no match hides its heading; a disabled group\'s options can\'t be picked (185)', async () => {
+    const GROUPED: Array<ComboboxOption | ComboboxOptionGroup> = [
+      'Anywhere',
+      { label: 'Africa', options: [{ value: 'eg', label: 'Egypt' }, { value: 'ke', label: 'Kenya' }] },
+      { label: 'Europe', options: ['France', 'Germany'] },
+      { label: 'Closed', disabled: true, options: ['Atlantis'] },
+    ];
+    await render(<div style={{ width: '320px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Place" options={GROUPED} /></div>);
+    await open();
+    const list = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    const groups = () => [...list.querySelectorAll('[role=group]')].map((g) => [g.getAttribute('aria-label'), [...g.querySelectorAll('[role=option]')].map(label)]);
+    const heads = () => [...list.querySelectorAll('[role=presentation]')].map((h) => [h.textContent, h.getAttribute('aria-hidden')]);
+    expect(st('cb').opts).toEqual(['Anywhere', 'Egypt', 'Kenya', 'France', 'Germany', 'Atlantis']);
+    expect(groups()).toEqual([['Africa', ['Egypt', 'Kenya']], ['Europe', ['France', 'Germany']], ['Closed', ['Atlantis']]]);
+    expect(heads()).toEqual([['Africa', 'true'], ['Europe', 'true'], ['Closed', 'true']]);
+    expect(list.querySelector('[role=group] [role=option]')!.getAttribute('aria-setsize')).toBe('6');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+    expect(st('cb').active).toBe('France');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');   // past Germany, Atlantis is disabled: wraps to Anywhere
+    expect(st('cb').active).toBe('Anywhere');
+    await userEvent.keyboard('ny');
+    await expect.poll(() => st('cb').opts).toEqual(['Anywhere', 'Kenya', 'Germany']);
+    expect(heads().map((h) => h[0])).toEqual(['Africa', 'Europe']);
+    expect(groups()).toEqual([['Africa', ['Kenya']], ['Europe', ['Germany']]]);
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect([st('cb').text, st('cb').open]).toEqual(['Kenya', 'false']);
+    await userEvent.click(el('cb'));
+    expect(list.querySelector('[role=option][aria-disabled=true]')!.textContent).toBe('Atlantis');
+  });
+
+  test('groups with a long list: the headings are drawn as rows and only the rows in view are drawn; a picked option far down opens in view inside its group (185, 51)', async () => {
+    const big: ComboboxOptionGroup[] = Array.from({ length: 40 }, (_, g) => ({ label: 'Team ' + (g + 1), options: Array.from({ length: 50 }, (_, i) => ({ value: g + '-' + i, label: 'Person ' + (g * 50 + i + 1) })) }));
+    await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="People" options={big} defaultValue="30-10" /></div>);
+    await open();
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    expect(st('cb').active).toBe('Person 1511');
+    expect(lb.querySelectorAll('[role=option]').length).toBeLessThan(30);
+    const a = activeOf('cb');
+    expect(a.closest('[role=group]')!.getAttribute('aria-label')).toBe('Team 31');
+    await expect.poll(() => { const r = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+    await userEvent.keyboard('{ArrowUp}'.repeat(11));
+    expect(st('cb').active).toBe('Person 1500');   // the last of Team 30
+    expect(activeOf('cb').closest('[role=group]')!.getAttribute('aria-label')).toBe('Team 30');
+    await expect.poll(() => { const r = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+  });
   test('long lists: with 5,000 options, a picked option far down opens in place, its neighbours drawn around it, and the arrows step from it (GR100)', async () => { await withMotion(async () => {
     const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) }));
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} defaultValue="v3999" /></div>);
@@ -202,6 +247,20 @@ describe('Combobox', () => {
     expect(st('cb').active).toBe('Member number 5000');
     await expect.poll(() => { const a = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return a.top >= l.top - 1 && a.bottom <= l.bottom + 1; }).toBe(true);
   }); });
+
+  test.each([false, true])('long lists: labels of two heights, with motion %s, ArrowUp from the first option wraps to the last, scrolled to the very end (GR101)', async (motion) => { const go = async () => {
+    const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) + (i % 7 === 6 ? ', with a label long enough to wrap onto a second line' : '') }));
+    await render(<div style={{ width: '240px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} /></div>);
+    await userEvent.click(el('cb'));
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    await userEvent.keyboard('{ArrowDown}{ArrowUp}');
+    expect(st('cb').active).toBe('Member number 5000');
+    // Scrolled to the very end, and the last row's bottom at the list's (to a pixel's rounding): it was short by 2 to
+    // 11px once the rows around it measured shorter and the browser clamped the scroll.
+    await expect.poll(() => lb.scrollHeight - lb.clientHeight - lb.scrollTop).toBeLessThan(1);
+    const a = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect();
+    expect(a.bottom - l.bottom).toBeLessThan(1);
+  }; if (motion) await withMotion(go); else await go(); });
 
   test('ArrowDown opens the list in the top layer with every option, the first highlighted, focus staying in the field', async () => {
     await render(<Countries />);
@@ -247,6 +306,52 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('onCreate: text that isn\'t an option\'s label ends the list with Add "text"; Enter or a click adds it and picks the value onCreate returns; an exact label shows no add row; it says the add row when nothing matches (185)', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    const made: string[] = [], picked: Array<string | null> = [];
+    function Tags() {
+      const [opts, setOpts] = React.useState<ComboboxOption[]>(['Design', 'Docs']);
+      const [v, setV] = React.useState<string | null>(null);
+      return <Combobox id="ct" aria-label="Tag" options={opts} value={v} onValueChange={(x) => { picked.push(x); setV(x); }}
+        onCreate={(t) => { made.push(t); setOpts((o) => o.concat({ value: 'new-' + t, label: t })); return 'new-' + t; }} />;
+    }
+    await render(<Tags />);
+    el('ct').focus();
+    await userEvent.keyboard('{ArrowDown}de');
+    expect([st('ct').opts, st('ct').active]).toEqual([['Design', 'Add \u201cde\u201d'], 'Design']);
+    await userEvent.keyboard('sign');
+    expect(st('ct').opts).toEqual(['Design']);   // the label, any case: no add row
+    await selectAll(); await userEvent.keyboard('  Research ');
+    expect([st('ct').opts, st('ct').active, statusOf('ct')]).toEqual([['Add \u201cResearch\u201d'], 'Add \u201cResearch\u201d', undefined]);
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('Add \u201cResearch\u201d');
+    await userEvent.keyboard('{Enter}');
+    expect([made, picked, st('ct').text, st('ct').open]).toEqual([['Research'], ['new-Research'], 'Research', 'false']);
+    // A click on the add row adds too; the new option is in the list from then on.
+    await selectAll(); await userEvent.keyboard('Ops');
+    const rows = [...popOf('ct').querySelectorAll('[role=option]')];
+    expect(rows.at(-1)!.getAttribute('aria-selected')).toBe('false');
+    await userEvent.click(rows.at(-1)!);
+    expect([made, picked.at(-1), st('ct').text]).toEqual([['Research', 'Ops'], 'new-Ops', 'Ops']);
+    await userEvent.keyboard('{ArrowDown}');
+    expect(st('ct').opts).toEqual(['Design', 'Docs', 'Research', 'Ops']);
+    seen.disconnect();
+  });
+  test('onCreate with multiple: the added text becomes a tag and the field empties; onCreate returning nothing picks nothing (185)', async () => {
+    const got: string[][] = [];
+    await render(<>
+      <Combobox id="cm" aria-label="Labels" multiple options={['Bug', 'Idea'] as string[]} onValueChange={(v) => got.push(v)} onCreate={(t) => t.toLowerCase()} />
+      <Combobox id="cn" aria-label="Note" options={['One']} onCreate={() => undefined} />
+    </>);
+    el('cm').focus();
+    await userEvent.keyboard('{ArrowDown}Chore{Enter}');
+    const tags = [...el('cm').closest('[data-component=combobox]')!.querySelectorAll('[data-component=badge]')].map((b) => b.firstChild!.textContent);
+    expect([got, tags, st('cm').text, st('cm').open]).toEqual([[['chore']], ['Chore'], '', 'true']);
+    el('cn').focus();
+    await userEvent.keyboard('{ArrowDown}Two{Enter}');
+    expect([st('cn').text, st('cn').open]).toEqual(['', 'false']);
+  });
   test('typing ignores letters that don\'t decompose and width too: "lodz" finds Łódź, "strasse" finds Straße, "ｔｏｋｙｏ" finds Tokyo', async () => {
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="City" options={['Łódź', 'Straße', 'Ørsted', 'Tokyo', 'Paris']} /></div>);
     await open();
@@ -791,5 +896,44 @@ describe('Combobox loadOptions (DG1)', () => {
       await userEvent.keyboard('{Escape}');
       expect([pop.hidden, css(pop).display, pop.getAnimations().length, pop.querySelectorAll('[role=option]').length]).toEqual([true, 'none', 0, 0]);
     });
+  });
+
+  test('Enter or leaving before the answer waits for it: "bandung" picks Bandung, "Band" then Enter picks the first match, the request goes at once; a failed answer keeps the text after Enter (GR106)', async () => {
+    const s = server(), got: unknown[] = [];
+    await render(<div style={{ width: '320px' }}>
+      <Combobox id="w" aria-label="City" loadOptions={s.loadOptions} debounce={300} onValueChange={(v) => got.push(v)} />
+      <Combobox id="w2" aria-label="City" loadOptions={s.loadOptions} debounce={300} onValueChange={(v) => got.push(v)} />
+      <button id="after">Next</button>
+    </div>);
+    el('w').focus();
+    await userEvent.keyboard('bandung{Enter}');
+    expect([s.calls.map((c) => c.text), st('w').text]).toEqual([['bandung'], 'bandung']);   // sent at once, text kept
+    s.calls[0].ok(['Bandung']);
+    await expect.poll(() => [st('w').text, got]).toEqual(['Bandung', ['Bandung']]);
+    el('w2').focus();
+    await userEvent.keyboard('band');
+    await userEvent.tab();   // leaving waits too
+    expect(st('w2').text).toBe('band');
+    s.calls.at(-1)!.ok(['Bandung', 'Bandar Lampung']);
+    await expect.poll(() => st('w2').text).toBe('');   // no exact label: as leaving a list that was there
+    el('w2').focus();
+    await userEvent.keyboard('band{Enter}');
+    s.calls.at(-1)!.ok(['Bandung', 'Bandar Lampung']);
+    await expect.poll(() => [st('w2').text, got]).toEqual(['Bandung', ['Bandung', 'Bandung']]);
+    await userEvent.keyboard('{Control>}a{/Control}x{Enter}');
+    s.calls.at(-1)!.fail();
+    await expect.poll(() => status('w2')).toBe("Couldn't load options. Type to try again.");
+    expect(st('w2').text).toBe('x');
+  });
+
+  test('with onCreate, an answer with no match highlights the add row, as a list that was there does (GR106)', async () => {
+    const s = server(), made: string[] = [];
+    await render(<div style={{ width: '320px' }}><Combobox id="ac" aria-label="City" loadOptions={s.loadOptions} debounce={0} onCreate={(t) => { made.push(t); return 'new'; }} /></div>);
+    el('ac').focus();
+    await userEvent.keyboard('Zz');
+    s.calls.at(-1)!.ok([]);
+    await expect.poll(() => activeOf('ac')?.textContent).toContain('Zz');
+    await userEvent.keyboard('{Enter}');
+    expect([made, st('ac').text]).toEqual([['Zz'], 'Zz']);
   });
 });
