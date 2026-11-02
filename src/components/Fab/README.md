@@ -67,9 +67,9 @@ Each is an optional override: set it on the page, a container or one FAB. The li
 | `--fab-size` | `spacing-14` | The height (and width, without a label) of a medium FAB (56px). |
 | `--fab-size-sm` | `spacing-10` | The height of a small FAB (40px). |
 | `--fab-icon-size` | `spacing-6` | The icon (24px). |
-| `--fab-shadow` | `shadow-lg` | The raised shadow at rest. |
+| `--fab-shadow` | `elevation-overlay` | The raised shadow at rest. |
 | `--fab-shadow-hover` | `shadow-xl` | The shadow on hover. |
-| `--fab-radius` | `rounded-full` | The corners (round). |
+| `--fab-radius` | `radius-pill` | The corners (round). |
 | `--fab-offset` | `spacing-6` | The distance from the corner of the screen (24px). |
 | `--fab-padding-x` | `spacing-5` | Padding at the sides of an extended FAB (20px). |
 | `--fab-z-index` | `z-30` | The stacking level: above the page, under dialogs and toasts. |

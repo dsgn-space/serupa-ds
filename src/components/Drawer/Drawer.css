@@ -42,7 +42,7 @@
   width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
   padding: var(--drawer-padding, var(--spacing-6));
   background: var(--drawer-bg, var(--surface-overlay));
-  box-shadow: var(--drawer-shadow, var(--shadow-xl));
+  box-shadow: var(--drawer-shadow, var(--elevation-modal));
   position: relative;
 }
 /* Behind the panel's outer edge, a copy of its background while a drag pulls it away from the edge (up to 24px,
@@ -53,8 +53,8 @@
 .dk-drawer--top { --dk-drawer-from: 0 calc(var(--spacing-0) - var(--sizing-full)); }
 .dk-drawer--bottom { --dk-drawer-from: 0 var(--sizing-full); }
 .dk-drawer--top .dk-drawer__panel, .dk-drawer--bottom .dk-drawer__panel { width: var(--sizing-full); height: auto; max-height: calc(var(--sizing-full) - var(--spacing-16)); }
-.dk-drawer--top .dk-drawer__panel { border-end-start-radius: var(--drawer-radius, var(--rounded-xl)); border-end-end-radius: var(--drawer-radius, var(--rounded-xl)); }
-.dk-drawer--bottom .dk-drawer__panel { border-start-start-radius: var(--drawer-radius, var(--rounded-xl)); border-start-end-radius: var(--drawer-radius, var(--rounded-xl)); }
+.dk-drawer--top .dk-drawer__panel { border-end-start-radius: var(--drawer-radius, var(--radius-container)); border-end-end-radius: var(--drawer-radius, var(--radius-container)); }
+.dk-drawer--bottom .dk-drawer__panel { border-start-start-radius: var(--drawer-radius, var(--radius-container)); border-start-end-radius: var(--drawer-radius, var(--radius-container)); }
 /* Motion (DZ1): transitions, not keyframes, so closing while it slides in turns back from where it is. In from
    @starting-style; out, back the way it came, with the <dialog> kept shown (display, allow-discrete) and, modal, in
    the top layer (overlay) until the panel is gone and the backdrop has faded with it. Focus goes back at once, and

@@ -76,7 +76,7 @@
     "radius": {
       "swatch-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-full}",
+        "$value": "{radius.radius-pill}",
         "$description": "A swatch's shape.",
         "$extensions": {
           "com.serupa": {

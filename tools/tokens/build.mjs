@@ -11,7 +11,8 @@
 //                                         light or dark setting applies from the first paint, with no JavaScript
 //   :root                                 every other token, the font families, and the type-* shorthands
 //   contrast and density axes             data-contrast="more" (and prefers-contrast: more) and data-density="compact"
-//   shadow axis (73)                      data-shadow="brand": the box shadows in a deep shade of the brand color
+//   shadow axis (73)                      data-shadow="brand": the box shadows in a deep shade of the brand color,
+//                                         and the elevation roles again, so they follow
 //   type scale axis (22)                  data-type-scale="fluid": sizes from 1.5rem up grow with the viewport
 //   :lang() per script (143)              taller lines for Arabic, Devanagari, Thai and CJK; CJK's font by language
 //   .type-*                               one class per complete text style
@@ -180,8 +181,11 @@ const TINT = 'rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) 
 function tintedShadows(all, line) {
   const box = all.filter((x) => /^shadow-(2xs|xs|sm|md|lg|xl|2xl)$/.test(x.name));
   const at = (x) => (typeof x.value === 'object' ? Object.values(x.value)[0] : x.value);
-  let css = `[data-shadow="brand"] {\n${box.map((x) => line(x.name, at(x).replace(/rgb\(0 0 0 \/ ([\d.]+)\)/g, TINT))).join('')}}\n`;
-  css += `[data-shadow="neutral"] {\n${box.map((x) => line(x.name, at(x))).join('')}}\n`;
+  // The elevation roles (elevation-overlay → shadow-lg) are set again beside the shadows they name: a custom property's
+  // var() is worked out where it's set, so one set only on :root would keep the root's shadow inside data-shadow="brand".
+  const roles = all.filter((x) => box.some((b) => at(x) === `{${b.name}}`)).map((x) => line(x.name, at(x))).join('');
+  let css = `[data-shadow="brand"] {\n${box.map((x) => line(x.name, at(x).replace(/rgb\(0 0 0 \/ ([\d.]+)\)/g, TINT))).join('')}${roles}}\n`;
+  css += `[data-shadow="neutral"] {\n${box.map((x) => line(x.name, at(x))).join('')}${roles}}\n`;
   return css;
 }
 

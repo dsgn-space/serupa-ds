@@ -136,7 +136,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--table-head-shadow-scrolled` | `shadow-sm` | A sticky header's shadow once rows have scrolled under it (where scroll-state container queries are supported). |
+| `--table-head-shadow-scrolled` | `elevation-part` | A sticky header's shadow once rows have scrolled under it (where scroll-state container queries are supported). |
 
 **Type**
 
@@ -166,7 +166,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--table-radius` | `rounded-lg` | The frame's corners (8px). |
+| `--table-radius` | `radius-surface` | The frame's corners (8px). |
 <!-- token-table:end -->
 
 ## Related
