@@ -332,6 +332,11 @@
   --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1), 0px 2px 4px rgb(0 0 0 / 0.1);
   --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1);
   --text-shadow-none: none;
+  --elevation-rest: var(--shadow-xs);
+  --elevation-part: var(--shadow-sm);
+  --elevation-raised: var(--shadow-md);
+  --elevation-overlay: var(--shadow-lg);
+  --elevation-modal: var(--shadow-xl);
   --dk-more-primary: var(--blue-800);
   --dk-more-primary-hover: var(--blue-900);
   --dk-more-focus-ring: var(--blue-700);
@@ -873,6 +878,11 @@
   --spacing-72: 18rem;
   --spacing-80: 20rem;
   --spacing-96: 24rem;
+  --space-inline: var(--spacing-1);
+  --space-related: var(--spacing-2);
+  --space-content: var(--spacing-4);
+  --space-surface: var(--spacing-6);
+  --space-section: var(--spacing-8);
   --rounded-none: 0px;
   --rounded-xs: 0.125rem;
   --rounded-sm: 0.25rem;
@@ -884,6 +894,11 @@
   --rounded-3xl: 1.5rem;
   --rounded-4xl: 2rem;
   --rounded-full: 9999px;
+  --radius-inner: var(--rounded-sm);
+  --radius-control: var(--rounded-md);
+  --radius-surface: var(--rounded-lg);
+  --radius-container: var(--rounded-xl);
+  --radius-pill: var(--rounded-full);
   --border-width-0: 0px;
   --border-width-1: 1px;
   --border-width-2: 2px;
@@ -1387,6 +1402,11 @@
   --shadow-lg: 0 10px 15px -3px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1), 0 4px 6px -4px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1), 0 8px 10px -6px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.25);
+  --elevation-rest: var(--shadow-xs);
+  --elevation-part: var(--shadow-sm);
+  --elevation-raised: var(--shadow-md);
+  --elevation-overlay: var(--shadow-lg);
+  --elevation-modal: var(--shadow-xl);
 }
 [data-shadow="neutral"] {
   --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
@@ -1396,6 +1416,11 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --elevation-rest: var(--shadow-xs);
+  --elevation-part: var(--shadow-sm);
+  --elevation-raised: var(--shadow-md);
+  --elevation-overlay: var(--shadow-lg);
+  --elevation-modal: var(--shadow-xl);
 }
 [data-type-scale="fluid"] {
   --text-2xl: clamp(1.25rem, 1.1667rem + 0.4167vw, 1.5rem);

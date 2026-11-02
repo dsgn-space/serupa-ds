@@ -145,7 +145,7 @@ if (D) {
   const rsc = spawnSync(process.execPath, ['--conditions=react-server', path.join(HERE, 'server-components', 'render.mjs'), path.join(PROJECT, 'dist')], { encoding: 'utf8' });
   let sc = null;
   try { sc = JSON.parse(rsc.stdout); } catch { /* reported below */ }
-  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 KB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
+  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 kB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
   // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
   const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\buseSerupa\(|\buseLocale\(|\bon[A-Z]\w*=\{/;
   const unmarked = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))

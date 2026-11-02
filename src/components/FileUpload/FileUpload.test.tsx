@@ -278,8 +278,8 @@ describe('FileUpload', () => {
     expect([w.opened, changes, names(el), new FormData(document.getElementById('rof') as HTMLFormElement).getAll('doc').length]).toEqual([0, [], 'a.pdf', 1]);
   });
 
-  test('formatFileSize: 0 B, 12 B, 1023 B, 1 KB, 1.5 KB, 10 MB, 3.3 GB', () => {
-    expect([0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|1023 B|1 KB|1.5 KB|10 MB|3.3 GB');
+  test('formatFileSize: 0 B, 12 B, 1023 B, 1 kB, 1.5 kB, 10 MB, 3.3 GB', () => {
+    expect([0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|1023 B|1 kB|1.5 kB|10 MB|3.3 GB');
   });
 
   test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in all six themes', async () => {
@@ -493,6 +493,6 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     expect([1024 ** 2 - 1, 1024 ** 3 - 1, 1023.6 * 1024].map((b) => [formatFileSize(b), formatFileSize(b, 'en-US')])).toEqual([['1 MB', '1 MB'], ['1 GB', '1 GB'], ['1 MB', '1 MB']]);
   });
   test('formatFileSize with a locale matches formatNumber bytes; without one it stays as it was; an index from map() is not a locale', () => {
-    expect([formatFileSize(5_000_000, 'de-DE'), formatFileSize(5_000_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['4,8 MB', '4.8 MB', '2 KB']);
+    expect([formatFileSize(5_000_000, 'de-DE'), formatFileSize(5_000_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['4,8 MB', '4.8 MB', '2 kB']);
   });
 });

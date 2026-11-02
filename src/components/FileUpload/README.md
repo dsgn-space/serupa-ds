@@ -85,7 +85,7 @@ Drawn from the `ReadOnly` story.
 | `hint` | `ReactNode` | | A muted line such as "PNG or JPG, up to 5 MB". The button is described by it. |
 | `removeLabel` | `(name) => string` | `` `Remove ${name}` `` | The remove buttons' names. |
 
-`formatFileSize(bytes, locale?)` is exported too: `1.5 MB`, or with a locale the same as FormattedNumber's `format="bytes"` (`formatFileSize(5_000_000, "id-ID")` is `4,8 MB`). FileUpload writes each size, and the size in a refusal, in the provider's locale. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the choose button, so a form library that focuses the first invalid field after a failed submit lands on it.
+`formatFileSize(bytes, locale?)` is exported too: `1.5 MB` or `820 kB`, in steps of 1024 (so a `maxSize` of `5 * 1024 * 1024` reads "5 MB"), or with a locale the same as FormattedNumber's `format="bytes"` (`formatFileSize(5_000_000, "id-ID")` is `4,8 MB`). FileUpload writes each size, and the size in a refusal, in the provider's locale. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the choose button, so a form library that focuses the first invalid field after a failed submit lands on it.
 
 ## Component tokens
 
@@ -105,8 +105,8 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-error-color` | `danger-text` | Messages about files that weren't added. |
 | `--file-upload-item-bg` | `surface` | A file row's background. |
 | `--file-upload-item-border` | `border` | A file row's outline. |
-| `--file-upload-zone-radius` | `rounded-lg` | The drop area's corners (8px). |
-| `--file-upload-item-radius` | `rounded-md` | A file row's corners (6px). |
+| `--file-upload-zone-radius` | `radius-surface` | The drop area's corners (8px). |
+| `--file-upload-item-radius` | `radius-control` | A file row's corners (6px). |
 | `--file-upload-zone-padding` | `spacing-6` | Space inside the drop area (24px). |
 | `--file-upload-gap` | `spacing-2` | Space between the drop area's lines, and between file rows (8px). |
 | `--file-upload-item-padding` | `spacing-2` | Space inside a file row (8px). |

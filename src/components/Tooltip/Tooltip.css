@@ -14,10 +14,10 @@
   padding: var(--tooltip-padding-y, var(--spacing-1)) var(--tooltip-padding-x, var(--spacing-2));
   overflow: visible;
   border: var(--spacing-0);
-  border-radius: var(--tooltip-radius, var(--rounded-md));
+  border-radius: var(--tooltip-radius, var(--radius-control));
   background: var(--tooltip-bg, var(--surface-inverse));
   color: var(--tooltip-text, var(--text-inverse));
-  box-shadow: var(--tooltip-shadow, var(--shadow-md));
+  box-shadow: var(--tooltip-shadow, var(--elevation-raised));
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   line-height: var(--text-xs--line-height);
