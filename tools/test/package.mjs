@@ -125,9 +125,11 @@ if (D) {
   t('a name ("close", "sports_cricket") keeps its empty box on the server until it loads in the browser', !/<svg/.test(iconHtml({ name: 'close' })) && !/<svg/.test(iconHtml({ name: 'sports_cricket' })), iconHtml({ name: 'close' }));
   // index.js and every module it imports (dist/js/), as a bundler puts them together, without the full icon set.
   // Measured minified, as a project ships it. 31 Oct 2026: it was measured unminified, so comments counted, and main
-  // sat 3 B under 150 KB; minified it is 117 KB. 2 Nov 2026: CodeBlock took it to 130 KB, so the line went to 132 KB. This is a backstop: the tight line is "All components (index.js)" in size.mjs.
+  // sat 3 B under 150 KB; minified it is 117 KB. This is a backstop: the tight line is "All components (index.js)" in size.mjs.
+  // 2 Nov 2026: 140 KB. Main reached 129.9 KB with each component's budget in size.mjs still met, and Illustration (77)
+  // and Sparkline (CH3) each take it over 130; size.mjs keeps holding every component and the shared code to its own line.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
-  t('index.js leaves the full icon set out (loaded on demand) and stays under 132 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 132 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 140 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 140 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by component() or named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
   const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].contents).length;
