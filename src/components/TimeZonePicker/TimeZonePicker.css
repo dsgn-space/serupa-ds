@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
-   TimeZonePicker: a Combobox, which sets its look. The offsets under each city use digits of one width, so
-   "UTC+07:00" and "UTC−11:00" line up down the list.
+   TimeZonePicker: a Combobox, which sets its look, the list's included. Its own field uses digits of one width, so
+   a typed offset ("+07:00") doesn't shift as it changes.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-time-zone-picker .dk-combobox__description { font-variant-numeric: tabular-nums; }
+.dk-time-zone-picker { font-variant-numeric: tabular-nums; }
 }
