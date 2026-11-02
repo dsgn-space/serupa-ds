@@ -186,6 +186,8 @@ export const labels: SerupaLabels = {
   dismiss: "닫기",
   loading: "불러오는 중…",
   copy: "복사",
+  codeCopy: "코드 복사",
+  codeName: "코드",
   remove: "삭제",
   image: "이미지",
   page: (p) => p + "페이지",
