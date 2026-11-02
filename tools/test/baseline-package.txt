@@ -29,6 +29,8 @@ dist/eslint.d.ts
 dist/eslint.js
 dist/icons.d.ts
 dist/icons.js
+dist/icons-outlined.d.ts
+dist/icons-outlined.js
 dist/index.d.ts
 dist/index.js
 dist/labels/ar.d.ts
