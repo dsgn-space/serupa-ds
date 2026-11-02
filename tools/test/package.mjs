@@ -14,7 +14,7 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const pkg = JSON.parse(read('package.json'));
 
-// 0. Nothing publishes to a registry until Diki picks the final name: projects install releases from GitHub.
+// 0. Nothing publishes to a registry until Diki says so (the name, serupa-ds, is final since 2 November 2026): projects install releases from GitHub.
 t('package.json is private and has no publishConfig, so npm publish refuses', pkg.private === true && !('publishConfig' in pkg), `private: ${pkg.private}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
 // Every component is built by tools in devDependencies, so a project installs nothing else (J7).
 t('package.json has no dependencies (React is a peer dependency; everything else is bundled)', !Object.keys(pkg.dependencies || {}).length && !Object.keys(pkg.optionalDependencies || {}).length, JSON.stringify({ ...pkg.dependencies, ...pkg.optionalDependencies }));
