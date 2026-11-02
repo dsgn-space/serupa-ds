@@ -1,4 +1,4 @@
-# ADR-0014: Majors start as an RFC, and a script makes their renames
+# ADR-0015: Majors start as an RFC, and a script makes their renames
 
 **Status:** Proposed
 Queue items 93 (RFCs), 40 (an upgrade guide per major), 205 (codemods) and I8 (a migration command for the rename).
