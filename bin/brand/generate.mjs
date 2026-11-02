@@ -18,6 +18,7 @@
 
 // The contrast pairs (from tools/tokens/contrast-pairs.mjs) that a brand alias is in, plus the 7:1 that more contrast
 // promises. "more:" names the more-contrast value of the alias.
+/** @type {[string, string, number][]} */
 const PAIRS_FOR_BRAND = [
   ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['primary', 'surface', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5],
@@ -41,11 +42,12 @@ export const CORNER_PRESETS = ['default', ...Object.keys(CORNERS)];
 // --- color math: sRGB hex <-> OKLCH (Björn Ottosson's OKLab), WCAG 2.2 contrast ---
 const toLin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
 const toGam = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+/** @returns {[number, number, number] | null} */
 export function parseHex(hex) {
   const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(hex).trim());
   if (!m) return null;
   const h = m[1].length === 3 ? [...m[1]].map((c) => c + c).join('') : m[1];
-  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
+  return /** @type {[number, number, number]} */ ([0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255));
 }
 const hexOf = (rgb) => '#' + rgb.map((c) => Math.round(Math.min(1, Math.max(0, c)) * 255).toString(16).padStart(2, '0')).join('');
 function rgbToOklch([r, g, b]) {
@@ -108,7 +110,7 @@ const NAME = /^[a-z][a-z0-9]{0,23}$/;
 
 /**
  * A brand's light and dark themes as CSS, to load after tokens.css.
- * @param {{ name: string, color: string, corners?: string, tokens: object }} o
+ * @param {{ name: string, color: string, corners?: string, tokens: any }} o
  * @returns {{ css: string, shades: Record<string,string>, themes: Record<string, Record<string,string>>, picks: object }}
  */
 export function brandTheme({ name, color, corners = 'default', tokens }) {
@@ -129,7 +131,7 @@ export function brandTheme({ name, color, corners = 'default', tokens }) {
 
   for (const mode of ['light', 'dark']) {
     const b = base(mode);
-    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), muted = hexAt(b['surface-muted'], b);
+    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b);
     const light = mode === 'light';
     const on = light ? palette.get('white') : S('950');
     const subtle = light ? S('50') : S('950');
