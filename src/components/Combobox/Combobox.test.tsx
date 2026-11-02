@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
-import { Combobox, type ComboboxOption } from './Combobox';
+import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
 import { Field } from '../Field/Field';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -170,6 +170,51 @@ describe('Combobox', () => {
     expect(lb.querySelectorAll('[role=option]').length).toBeLessThan(30);
   });
 
+  test('groups: options under headings, in role="group"s named after them; the arrows run through every group; a group with no match hides its heading; a disabled group\'s options can\'t be picked (185)', async () => {
+    const GROUPED: Array<ComboboxOption | ComboboxOptionGroup> = [
+      'Anywhere',
+      { label: 'Africa', options: [{ value: 'eg', label: 'Egypt' }, { value: 'ke', label: 'Kenya' }] },
+      { label: 'Europe', options: ['France', 'Germany'] },
+      { label: 'Closed', disabled: true, options: ['Atlantis'] },
+    ];
+    await render(<div style={{ width: '320px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Place" options={GROUPED} /></div>);
+    await open();
+    const list = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    const groups = () => [...list.querySelectorAll('[role=group]')].map((g) => [g.getAttribute('aria-label'), [...g.querySelectorAll('[role=option]')].map(label)]);
+    const heads = () => [...list.querySelectorAll('[role=presentation]')].map((h) => [h.textContent, h.getAttribute('aria-hidden')]);
+    expect(st('cb').opts).toEqual(['Anywhere', 'Egypt', 'Kenya', 'France', 'Germany', 'Atlantis']);
+    expect(groups()).toEqual([['Africa', ['Egypt', 'Kenya']], ['Europe', ['France', 'Germany']], ['Closed', ['Atlantis']]]);
+    expect(heads()).toEqual([['Africa', 'true'], ['Europe', 'true'], ['Closed', 'true']]);
+    expect(list.querySelector('[role=group] [role=option]')!.getAttribute('aria-setsize')).toBe('6');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+    expect(st('cb').active).toBe('France');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');   // past Germany, Atlantis is disabled: wraps to Anywhere
+    expect(st('cb').active).toBe('Anywhere');
+    await userEvent.keyboard('ny');
+    await expect.poll(() => st('cb').opts).toEqual(['Anywhere', 'Kenya', 'Germany']);
+    expect(heads().map((h) => h[0])).toEqual(['Africa', 'Europe']);
+    expect(groups()).toEqual([['Africa', ['Kenya']], ['Europe', ['Germany']]]);
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect([st('cb').text, st('cb').open]).toEqual(['Kenya', 'false']);
+    await userEvent.click(el('cb'));
+    expect(list.querySelector('[role=option][aria-disabled=true]')!.textContent).toBe('Atlantis');
+  });
+
+  test('groups with a long list: the headings are drawn as rows and only the rows in view are drawn; a picked option far down opens in view inside its group (185, 51)', async () => {
+    const big: ComboboxOptionGroup[] = Array.from({ length: 40 }, (_, g) => ({ label: 'Team ' + (g + 1), options: Array.from({ length: 50 }, (_, i) => ({ value: g + '-' + i, label: 'Person ' + (g * 50 + i + 1) })) }));
+    await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="People" options={big} defaultValue="30-10" /></div>);
+    await open();
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    expect(st('cb').active).toBe('Person 1511');
+    expect(lb.querySelectorAll('[role=option]').length).toBeLessThan(30);
+    const a = activeOf('cb');
+    expect(a.closest('[role=group]')!.getAttribute('aria-label')).toBe('Team 31');
+    await expect.poll(() => { const r = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+    await userEvent.keyboard('{ArrowUp}'.repeat(11));
+    expect(st('cb').active).toBe('Person 1500');   // the last of Team 30
+    expect(activeOf('cb').closest('[role=group]')!.getAttribute('aria-label')).toBe('Team 30');
+    await expect.poll(() => { const r = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+  });
   test('long lists: with 5,000 options, a picked option far down opens in place, its neighbours drawn around it, and the arrows step from it (GR100)', async () => { await withMotion(async () => {
     const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) }));
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} defaultValue="v3999" /></div>);
