@@ -897,4 +897,64 @@ describe('Combobox loadOptions (DG1)', () => {
       expect([pop.hidden, css(pop).display, pop.getAnimations().length, pop.querySelectorAll('[role=option]').length]).toEqual([true, 'none', 0, 0]);
     });
   });
+
+  test('Enter or leaving before the answer waits for it: "bandung" picks Bandung, "Band" then Enter picks the first match, the request goes at once; a failed answer keeps the text after Enter (GR106)', async () => {
+    const s = server(), got: unknown[] = [];
+    await render(<div style={{ width: '320px' }}>
+      <Combobox id="w" aria-label="City" loadOptions={s.loadOptions} debounce={300} onValueChange={(v) => got.push(v)} />
+      <Combobox id="w2" aria-label="City" loadOptions={s.loadOptions} debounce={300} onValueChange={(v) => got.push(v)} />
+      <button id="after">Next</button>
+    </div>);
+    el('w').focus();
+    await userEvent.keyboard('bandung{Enter}');
+    expect([s.calls.map((c) => c.text), st('w').text]).toEqual([['bandung'], 'bandung']);   // sent at once, text kept
+    s.calls[0].ok(['Bandung']);
+    await expect.poll(() => [st('w').text, got]).toEqual(['Bandung', ['Bandung']]);
+    el('w2').focus();
+    await userEvent.keyboard('band');
+    await userEvent.tab();   // leaving waits too
+    expect(st('w2').text).toBe('band');
+    s.calls.at(-1)!.ok(['Bandung', 'Bandar Lampung']);
+    await expect.poll(() => st('w2').text).toBe('');   // no exact label: as leaving a list that was there
+    el('w2').focus();
+    await userEvent.keyboard('band{Enter}');
+    s.calls.at(-1)!.ok(['Bandung', 'Bandar Lampung']);
+    await expect.poll(() => [st('w2').text, got]).toEqual(['Bandung', ['Bandung', 'Bandung']]);
+    await userEvent.keyboard('{Control>}a{/Control}x{Enter}');
+    s.calls.at(-1)!.fail();
+    await expect.poll(() => status('w2')).toBe("Couldn't load options. Type to try again.");
+    expect(st('w2').text).toBe('x');
+  });
+
+  test('leaving while the answer is pending closes the list at once (aria-expanded false), keeps the text, and the answer still picks; one that never comes leaves it closed (GR107)', async () => {
+    const s = server(), got: unknown[] = [];
+    await render(<div style={{ width: '320px' }}>
+      <Combobox id="g1" aria-label="City" loadOptions={s.loadOptions} debounce={0} onValueChange={(v) => got.push(v)} />
+      <Combobox id="g2" aria-label="Town" loadOptions={s.loadOptions} debounce={0} />
+    </div>);
+    el('g1').focus();
+    await userEvent.keyboard('bandung');
+    expect(el('g1').getAttribute('aria-expanded')).toBe('true');
+    await userEvent.tab();
+    expect([document.activeElement?.id, el('g1').getAttribute('aria-expanded'), popOf('g1').matches(':popover-open'), st('g1').text]).toEqual(['g2', 'false', false, 'bandung']);
+    s.calls.at(-1)!.ok(['Bandung']);
+    await expect.poll(() => [st('g1').text, got]).toEqual(['Bandung', ['Bandung']]);
+    expect(el('g1').getAttribute('aria-expanded')).toBe('false');
+    el('g1').focus();
+    await userEvent.keyboard('{Control>}a{/Control}x');
+    await userEvent.tab();   // this answer never comes
+    await new Promise((r) => setTimeout(r, 50));
+    expect([el('g1').getAttribute('aria-expanded'), popOf('g1').matches(':popover-open')]).toEqual(['false', false]);
+  });
+
+  test('with onCreate, an answer with no match highlights the add row, as a list that was there does (GR106)', async () => {
+    const s = server(), made: string[] = [];
+    await render(<div style={{ width: '320px' }}><Combobox id="ac" aria-label="City" loadOptions={s.loadOptions} debounce={0} onCreate={(t) => { made.push(t); return 'new'; }} /></div>);
+    el('ac').focus();
+    await userEvent.keyboard('Zz');
+    s.calls.at(-1)!.ok([]);
+    await expect.poll(() => activeOf('ac')?.textContent).toContain('Zz');
+    await userEvent.keyboard('{Enter}');
+    expect([made, st('ac').text]).toEqual([['Zz'], 'Zz']);
+  });
 });
