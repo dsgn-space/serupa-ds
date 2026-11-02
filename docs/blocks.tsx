@@ -14,6 +14,12 @@ import { customIcons, isIconData } from '../src/icons';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
+import changelogSource from '../CHANGELOG.md?raw';
+import pkg from '../package.json';
+import { majorsIn, nextMajor, type Major } from './upgrades';
+import { transformsAfter } from '../bin/migrate/transforms.mjs';
+import acr from './acr.json';
+import { componentTests } from './generated/tested';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
@@ -56,7 +62,31 @@ export function Guide({ source }: { source: string }) {
     {anatomyAt(source.replace(/^# .*\n+/, '')).map((part, i) => (typeof part === 'string'
       ? <Markdown key={i}>{relink(part)}</Markdown>
       : <AnatomyDiagram key={i} {...part} />))}
+    {name && <TestedBehavior name={name} />}
   </>;
+}
+
+// A test name without the backlog ids it carries for the people working on the repository: "(GR44)", "(62)", "(FH1, 180)",
+// "GR55: ".
+const plainName = (t: string) => t.replace(/\s*\((?:[A-Z]{0,3}\d+[a-z]?(?:,\s*)?)+\)/g, '').replace(/^[A-Z]{1,3}\d+: /, '').trim();
+
+/** What a component's tests check (131), by their names, read from its <Name>.test.tsx when the docs are built, so
+ * the list is the suite and can't promise more than it runs. Closed by default: it's long, and for the curious. */
+export function TestedBehavior({ name }: { name: string }) {
+  const groups = componentTests[name] || [];
+  const count = groups.reduce((n, g) => n + g.tests.length, 0);
+  if (!count) return null;
+  return <section className="sb-tested" aria-labelledby={`tested-${name}`}>
+    <h2 id={`tested-${name}`}>What the tests check</h2>
+    <p>{count} {count === 1 ? 'test' : 'tests'} in <code>{name}.test.tsx</code> run in Chromium on every pull request that changes it, and in Firefox and WebKit every night. Besides these, every story is checked with axe in all six themes, at 200% text, with wider text spacing and at 320px wide, and compared with its screenshots.</p>
+    <details>
+      <summary>Every test, by name</summary>
+      {groups.map((g, i) => <React.Fragment key={i}>
+        {groups.length > 1 && <h3>{plainName(g.group)}</h3>}
+        <ul>{g.tests.map((t, j) => <li key={j}>{plainName(t)}</li>)}</ul>
+      </React.Fragment>)}
+    </details>
+  </section>;
 }
 
 // What each status means to someone choosing a component, as README.md's Versioning section says it.
@@ -319,4 +349,54 @@ export function TokenExplorer() {
     </div> : <p style={{ margin: 0 }}>No token matches.</p>}
     {hits.length > limit ? <div><Button variant="secondary" size="sm" onClick={() => setLimit(limit + 200)}>Show more ({hits.length - limit} left)</Button></div> : null}
   </div>;
+}
+
+const pendingChangesets = import.meta.glob('../.changeset/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+type Transform = { version: string; id: string; title: string };
+
+/** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
+ * and what `npx serupa-migrate` changes for it. */
+export function UpgradeGuide() {
+  const next = nextMajor(pkg.version, pendingChangesets);
+  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
+  const auto = transformsAfter(null) as Transform[];
+  return <>{majors.map((m) => {
+    const prev = Number(m.version.split('.')[0]) - 1;
+    const mine = auto.filter((t) => t.version === m.version);
+    const intro = m.next
+      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://github.com/diki-stwn/serupa-ds/tree/main/docs/rfcs) has the proposal.`
+      : m.date ? `Released ${m.date}.` : '';
+    const run = mine.length
+      ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`
+      : '';
+    const body = m.entries.length ? m.entries.join('\n') : '- No entry of this release is marked breaking; [the Changelog](?path=/docs/changelog--docs) has what changed.';
+    return <section key={m.version}>
+      <Markdown>{[`## ${m.version}${m.next ? ' (next)' : ''}`, intro, run, body].filter(Boolean).join('\n\n')}</Markdown>
+    </section>;
+  })}</>;
+}
+type Criterion = { id: string; name: string; level: string; conformance: string; remarks: string };
+const ACR = acr as { standard: string; product: string; reviewed: { version: string; date: string }; criteria: Criterion[] };
+/** How many criteria each conformance level covers, from docs/acr.json (162). */
+export function ConformanceSummary() {
+  const count = (c: string) => ACR.criteria.filter((x) => x.conformance === c).length;
+  const partial = ACR.criteria.filter((x) => x.conformance === 'Partially Supports');
+  const stale = ACR.reviewed.version.split('.')[0] !== pkg.version.split('.')[0];
+  return <>
+    <p>Of the {ACR.criteria.length} {ACR.standard} criteria at levels A and AA, the components support {count('Supports')}, partly support {count('Partially Supports')}{count('Does Not Support') ? `, don't support ${count('Does Not Support')}` : ''}, and {count('Not Applicable')} are the app's alone (page titles, media, navigation across pages). Reviewed for version {ACR.reviewed.version} on {ACR.reviewed.date}.</p>
+    {stale && <p role="note"><strong>This review is for {ACR.reviewed.version.split('.')[0]}.x; the current version is {pkg.version}.</strong> A new major is reviewed before its report is updated.</p>}
+    {partial.length > 0 && <ul>{partial.map((x) => <li key={x.id}><strong>{x.id} {x.name}</strong>: {code(x.remarks)}</li>)}</ul>}
+  </>;
+}
+/** The Accessibility Conformance Report (18): every WCAG criterion at A and AA, as VPAT 2.5's table has it. */
+export function ConformanceReport() {
+  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <caption style={{ textAlign: 'start', fontWeight: 600, paddingBlock: 8 }}>{ACR.standard} Level A and AA: {ACR.product}, version {ACR.reviewed.version}</caption>
+    <thead><tr><th style={cell} scope="col">Criteria</th><th style={cell} scope="col">Conformance level</th><th style={cell} scope="col">Remarks and explanations</th></tr></thead>
+    <tbody>{ACR.criteria.map((x) => <tr key={x.id}>
+      <th style={{ ...cell, fontWeight: 'normal' }} scope="row">{x.id} {x.name} (Level {x.level})</th>
+      <td style={cell}>{x.conformance}</td>
+      <td style={cell}>{code(x.remarks)}</td>
+    </tr>)}</tbody>
+  </table>;
 }

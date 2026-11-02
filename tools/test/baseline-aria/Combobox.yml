@@ -3,6 +3,10 @@
 - combobox "Country"
 - button "Show options"
 
+# Groups
+- combobox "Country"
+- button "Show options"
+
 # InAFieldWithAnError
 - text: Country
 - combobox "Country" [invalid]
