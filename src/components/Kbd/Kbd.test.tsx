@@ -7,7 +7,8 @@ import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const caps = (id: string) => [...el(id).querySelectorAll<HTMLElement>('.dk-kbd__key')];
+// Each key is a <kbd> inside the combination's <kbd>, as HTML recommends.
+const caps = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > kbd')];
 // What each keycap shows, with its name for screen readers in brackets when it has one.
 const keys = (id: string) => caps(id).map((k) => k.textContent + (k.title ? `(${k.title})` : '')).join(' ');
 // What a screen reader reads: the text that isn't aria-hidden.
