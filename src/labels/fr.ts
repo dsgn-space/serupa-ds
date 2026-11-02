@@ -57,6 +57,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => n(count) + (one(count) ? " résultat" : " résultats"),
   showOptions: "Afficher les options",
   clearValue: (label) => (label ? "Effacer " + label : "Effacer"),
+  createOption: (text) => "Ajouter « " + text + " »",
   valueAdded: (label) => label + " ajouté",
   valueRemoved: (label) => label + " retiré",
   copied: "Copié",
