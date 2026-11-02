@@ -130,6 +130,39 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
 
+  # One comment on the pull request with what the refresh changed (K9): each picture beside the old one, the size
+  # changes, the other baselines counted. Runs the base branch's own tools/baseline-report.mjs, never the pull
+  # request's code, and edits its earlier comment (found by the report's first line) instead of adding another.
+  report:
+    needs: commit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Post or update the comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin "refs/pull/$PR_NUMBER/head:refs/remotes/pr/head"
+          node tools/baseline-report.mjs "origin/$BASE_REF" pr/head > "$RUNNER_TEMP/report.md"
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
+            --jq '.[] | select(.body | startswith("<!-- serupa-baseline-report -->")) | .id' | tail -1)
+          if [ -n "$id" ]; then gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F body=@"$RUNNER_TEMP/report.md" > /dev/null
+          else gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/report.md"; fi
+
   unlabel:
     needs: [render, commit]
     if: always() && github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
