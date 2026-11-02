@@ -4,7 +4,9 @@
    buttons are found among the buttons, not the children: a Menu or Tooltip puts its popup right after its trigger.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-button-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--button-group-gap, var(--spacing-2)); }
+/* Never wider than its container, so a button's own max-inline-size (100%) is the container's too: a label too long
+   for one line is cut with an ellipsis and a title, as a lone Button's is, instead of running out of it (GR108). */
+.dk-button-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--button-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); }
 .dk-button-group--vertical { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
 /* min-inline-size 0: in a grid track or a flex row, the row is held to its container too, so it can tell it doesn't fit (GP2). */
 .dk-button-group--attached { flex-wrap: nowrap; gap: var(--spacing-0); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full); }
