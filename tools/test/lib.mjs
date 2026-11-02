@@ -50,6 +50,15 @@ export function writePage(name, body, { react = false, extraHead = '', base = fa
 }
 export function cleanup() { fs.rmSync(path.join(PROJECT, '.test-tmp'), { recursive: true, force: true }); }
 
+// On CI the component tests run a second time with the browser in one of these languages, picked by the commit, so
+// a component that reads the browser's language where it should take the provider's, or a test that expects English
+// without saying so, fails. A full run (main, the merge queue) runs all of them again; a pull request that changes only
+// component folders runs again just the changed components' own tests, so a new test that expects English fails on
+// its pull request instead of turning main red for everyone. Right-to-left with Arabic
+// digits (ar-EG: Chromium writes plain ar in Latin ones, WebKit doesn't), comma decimals, Thai and Japanese scripts.
+// To repeat one: node tools/test/run.mjs --group components --locale id-ID; tools/ci.mjs runs them all.
+export const LOCALES = ['ar-EG', 'id-ID', 'th', 'ja'];
+
 // Which engine the Playwright suites run in: SERUPA_BROWSER=chromium (default) | firefox | webkit.
 // Baselines are kept per engine (Chromium's are the reference; tools/test/compat.mjs compares engines).
 export const ENGINE = process.env.SERUPA_BROWSER || 'chromium';
