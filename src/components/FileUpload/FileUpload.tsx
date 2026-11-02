@@ -368,7 +368,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
                   {failed ? <span className="dk-file-upload__failed" id={id + "-error"}><Icon icon={icons.Error} />{st.message ?? L.fileError}</span> : null}
                 </span>
                 {failed && props.onRetry && !still ? (
-                  <Button variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + "-retry " + id + "-name"} aria-describedby={id + "-error"}>
+                  <Button className="dk-file-upload__retry" variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + "-retry " + id + "-name"} aria-describedby={id + "-error"}>
                     <span id={id + "-retry"}>{L.tryAgain}</span>
                   </Button>
                 ) : null}

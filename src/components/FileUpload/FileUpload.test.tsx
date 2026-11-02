@@ -524,6 +524,13 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     expect(items(el).map((li) => li.className.includes('--error'))).toEqual([true, true, false]);
   });
 
+  test('the retry button keeps "Try again" whole beside a long failure message, which wraps instead', async () => {
+    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    const screen = await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
+    const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('.dk-btn__label') as HTMLElement;
+    expect([label.textContent, label.scrollWidth <= label.clientWidth]).toEqual(['Try again', true]);
+  });
+
   test('no retry button without onRetry or when read-only; removing a file still moves focus to the next remove button', async () => {
     const status = new Map<File, S>([[a, { state: 'error' }]]);
     const screen = await render(<Uploads status={status} retry={false} />);
