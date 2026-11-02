@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Blocks/Introduction" />
+
+# Blocks
+
+A block is a section of a page, built from Serupa's components only: a page header, a row of stats, a table's toolbar. Where a [pattern](?path=/docs/patterns-introduction--docs) is a whole screen, a block goes inside a screen you already have, next to your own content.
+
+Blocks don't ship in the package. They're for copying.
+
+## How to copy one
+
+1. Open the block's story and its guide. The guide says when to use it, what each part is for, and what stays your app's job.
+2. Copy `src/blocks/<Name>/<Name>.tsx` into your app. Change the imports from `../../components/<Component>/<Component>` to `serupa`.
+3. Pass your own words and data, or change the markup to fit: it's your code now.
+4. Keep the test: copy `<Name>.test.tsx` too, and run it against your copy, so a later change that breaks the block is caught.
+
+## What each one holds
+
+Each folder in `src/blocks/` holds the block, its stories, a test and a guide (`tools/test/contract.mjs` checks this). The stories put the block on a small page (a skip link and main), so the page rules in `tools/test/storybook.mjs` run on it in all six themes: WCAG 2.2 AA, 200% text, wider text spacing, and no sideways scroll at 320px.
+
+## The blocks
+
+| Block | What it carries | Status |
+| --- | --- | --- |
+| [Page header](?path=/docs/blocks-page-header--docs) | A breadcrumb that ends on the page, the one h1, actions that move into a menu on a phone, named section links (2.4.8, 1.4.10) | Ready |
+| Stats row | Trends said in words, not color alone; charts with a text alternative | Planned |
+| Table toolbar | Search and filters, a results count that's announced, bulk actions for the selected rows | Planned |
+| Settings section | Fields with their own save and status, and an error summary for the section | Planned |
+| Empty states | First run, no results, no access and failed to load, each with its next step | Planned |
+| Pricing | Plans with what's included as a real list, monthly or yearly with the saving in words | Planned |
+| Activity feed | Who did what and when, "Load more" that keeps focus and says how many were added | Planned |
+| Comment thread | Replies with a character count, edit and delete with undo | Planned |
+| Sign-in card | The sign-in form as a card to place on your own page | Planned |
+| Footer | Link groups as named navigation, language and theme pickers | Planned |
