@@ -168,6 +168,7 @@ export const labels: SerupaLabels = {
   tourBack: "Zurück",
   tourNext: "Weiter",
   tourDone: "Fertig",
+  sparklineSummary: (label, first, last, min, max) => label + ": von " + first + " auf " + last + ", Minimum " + min + ", Maximum " + max,
   table: "Tabelle",
   tableSorted: (column, direction) => "Sortiert nach " + column + ", " + (direction === "ascending" ? "aufsteigend" : "absteigend") + ".",
   tableSelected: (count) => n(count) + " ausgewählt",
