@@ -1,0 +1,199 @@
+{
+  "tour": {
+    "$description": "Tour's component tokens. Each one is an optional override: set the CSS variable (--tour-<name>) on the page, a container or one Tour, and every Tour inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The panel's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The text (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "\"Step 2 of 4\" (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-muted"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The panel's edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-border"
+          }
+        }
+      },
+      "ring": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The ring round the element a step points at (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-ring"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The panel's focus ring, when the keyboard brings focus to it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-focus-ring"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-lg}",
+        "$description": "The panel's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-shadow"
+          }
+        }
+      }
+    },
+    "border": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-lg}",
+        "$description": "The panel's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-radius"
+          }
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The panel's edge (1px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-border-width"
+          }
+        }
+      },
+      "ring-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The ring round the element (2px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-ring-width"
+          }
+        }
+      },
+      "ring-offset": {
+        "$type": "dimension",
+        "$value": "{borders.outline-offset-2}",
+        "$description": "The gap between the element and its ring (2px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-ring-offset"
+          }
+        }
+      }
+    },
+    "typography": {
+      "title-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-base}",
+        "$description": "The step's title (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-title-size"
+          }
+        }
+      },
+      "title-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The step's title.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-title-weight"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-2xs}",
+        "$description": "The panel's width (288px), never wider than the screen.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space inside the panel (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the title, the text and the buttons (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-gap"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "The gap between the element and the panel (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-popover}",
+        "$description": "Its stacking order, for a browser without the top layer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-z-index"
+          }
+        }
+      }
+    }
+  }
+}

@@ -83,8 +83,8 @@ Each is an optional override: set it on the page, a container or one tooltip. Th
 | --- | --- | --- |
 | `--tooltip-bg` | `surface-inverse` | The background: the inverse surface, so it stands out in light and dark themes. |
 | `--tooltip-text` | `text-inverse` | The text (4.5:1 on the background). |
-| `--tooltip-shadow` | `shadow-md` | The shadow. |
-| `--tooltip-radius` | `rounded-md` | The corners (6px). |
+| `--tooltip-shadow` | `elevation-raised` | The shadow. |
+| `--tooltip-radius` | `radius-control` | The corners (6px). |
 | `--tooltip-padding-x` | `spacing-2` | Padding at the sides (8px). |
 | `--tooltip-padding-y` | `spacing-1` | Padding at the top and bottom (4px). |
 | `--tooltip-offset` | `spacing-1.5` | The gap between the tooltip and what it describes (6px). |
