@@ -169,6 +169,23 @@ export function Aliases() {
   </table>;
 }
 
+/** The chart colors (CH1) in the theme picked in the toolbar: the 8 series as touching bars with the gap between
+ * them, and the two ramps. */
+export function ChartColors() {
+  const names = (re: RegExp) => T.color.tokens.map((t) => t.name).filter((n) => re.test(n));
+  const row = (list: string[], gap: boolean) => <div style={{ display: 'flex', gap: gap ? 2 : 0, background: 'var(--chart-gap)', padding: 2, borderRadius: 6 }}>
+    {list.map((n) => <div key={n} title={`--${n}`} style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ height: 40, background: `var(--${n})` }} />
+      <code style={{ display: 'block', fontSize: 10, color: 'var(--chart-label)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.replace('chart-', '')}</code>
+    </div>)}
+  </div>;
+  return <div data-token-sheet="chart-colors" style={{ display: 'grid', gap: 16 }}>
+    <div><strong>Series</strong>{row(names(/^chart-\d+$/), true)}</div>
+    <div><strong>Sequential</strong>{row(names(/^chart-seq-\d+$/), false)}</div>
+    <div><strong>Diverging</strong>{row(names(/^chart-div-\d+$/), false)}</div>
+  </div>;
+}
+
 /** The type scale: each type-* style rendered in its own family, size, line height and weight. */
 export function TypeScale() {
   return <div data-token-sheet="type-scale">{T.type.groups.map((g) => <div key={g.name} style={{ marginBottom: 24 }}>
