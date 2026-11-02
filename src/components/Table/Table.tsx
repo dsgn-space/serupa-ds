@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { announce } from "../../internal/announce";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { Icon } from "../Icon/Icon";
@@ -174,6 +175,9 @@ export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSec
   overscan?: number;
 }
 
+// The most rows TableVirtualBody draws for print: about 100 pages of one-line rows, drawn in a second or so.
+const PRINT_ROWS = 5000;
+
 /* TableVirtualBody: a <tbody> of any length that draws only the rows in view of the Table's frame, plus a few either
    side (useVirtual, as VirtualList and Combobox do). Give the frame a height (containerProps style maxHeight, or a
    stickyHeader table in a sized box) so it scrolls; without one every row is in view. An empty row above and below the
@@ -211,22 +215,33 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
     if (t) t.setAttribute("aria-rowcount", String(h + count + rowsOf(t.querySelector(":scope > tfoot"))));
   }, [attach, count]);
   const [focused, setFocused] = React.useState<number | null>(null);
+  // Print: every row (the first PRINT_ROWS), drawn from beforeprint to afterprint, so the printout is the whole table
+  // as the Table's print styles promise, not the rows in view (GR103). flushSync, as the browser lays out the page for
+  // print as soon as beforeprint returns. Not measured (no data-index): the view is put back as it was afterwards.
+  const [printing, setPrinting] = React.useState(false);
+  React.useEffect(() => {
+    const on = () => flushSync(() => setPrinting(true)), off = () => setPrinting(false);
+    window.addEventListener("beforeprint", on);
+    window.addEventListener("afterprint", off);
+    return () => { window.removeEventListener("beforeprint", on); window.removeEventListener("afterprint", off); };
+  }, []);
   const { renderRow, itemKey } = props;
   const row = (i: number, out: boolean) => {
     const el = renderRow(i) as React.ReactElement<{ style?: React.CSSProperties }>;
     const style = out ? { ...el.props.style, position: "absolute" as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
-    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, "data-index": i, "aria-rowindex": head + i + 1, style } as React.Attributes);
+    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, "data-index": printing ? undefined : i, "aria-rowindex": head + i + 1, style } as React.Attributes);
   };
   const rows: React.ReactElement[] = [];
-  const keep = focused != null && focused < count && (focused < r.start || focused >= r.end) ? focused : null;
-  if (keep != null && keep < r.start) rows.push(row(keep, true));
-  for (let i = r.start; i < r.end; i++) rows.push(row(i, false));
-  if (keep != null && keep >= r.end) rows.push(row(keep, true));
+  const keep = !printing && focused != null && focused < count && (focused < r.start || focused >= r.end) ? focused : null;
+  const start = printing ? 0 : r.start, end = printing ? Math.min(count, PRINT_ROWS) : r.end;
+  if (keep != null && keep < start) rows.push(row(keep, true));
+  for (let i = start; i < end; i++) rows.push(row(i, false));
+  if (keep != null && keep >= end) rows.push(row(keep, true));
   // Row i is the (i + 1)th child, as in a TableBody, so striped stays on the same rows while scrolling: an empty
   // spacer of no height evens out the count before the drawn rows when it's needed.
   const lead: number[] = [];
-  if (r.before > 0) lead.push(r.before);
-  if ((lead.length + (keep != null && keep < r.start ? 1 : 0)) % 2 !== r.start % 2) lead.push(0);
+  if (!printing && r.before > 0) lead.push(r.before);
+  if ((lead.length + (keep != null && keep < start ? 1 : 0)) % 2 !== start % 2) lead.push(0);
   const indexOf = (t: EventTarget | null, tb: Element) => {
     const tr = t instanceof HTMLElement ? t.closest<HTMLElement>("[data-index]") : null;
     return tr && tr.parentElement === tb ? Number(tr.dataset.index) : null;
@@ -238,7 +253,7 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); }}>
       {lead.map((h, n) => <tr key={"lead" + n} aria-hidden="true" className="dk-table__spacer" style={{ height: h }} />)}
       {rows}
-      {r.after > 0 ? <tr aria-hidden="true" className="dk-table__spacer" style={{ height: r.after }} /> : null}
+      {!printing && r.after > 0 ? <tr aria-hidden="true" className="dk-table__spacer" style={{ height: r.after }} /> : null}
     </tbody>
   );
 });

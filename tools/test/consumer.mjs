@@ -15,6 +15,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { packShipped } from './pack.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT = path.resolve(HERE, '..', '..');
@@ -35,17 +36,8 @@ let tarball;
 if (release) tarball = `${repo}/releases/download/v${pkg.version}/${pkg.name}-${pkg.version}.tgz`;
 else {
   if (!fs.existsSync(path.join(PROJECT, 'dist', 'index.js'))) { console.log('FAIL  nothing built: run npm run build first'); process.exit(1); }
-  // The package exactly as a release ships it (as in package-lint.mjs): the files package.json lists, and a
-  // package.json without scripts, devDependencies or devEngines (as tools/publish.mjs ships it: devEngines asks for
-  // the Node the repository builds with, and npm pack refuses to run on an older one).
-  const dir = path.join(tmp, 'package');
-  for (const f of pkg.files) if (fs.existsSync(path.join(PROJECT, f))) fs.cpSync(path.join(PROJECT, f), path.join(dir, f), { recursive: true });
-  const shipped = { ...pkg };
-  delete shipped.scripts;
-  delete shipped.devDependencies;
-  delete shipped.devEngines;
-  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(shipped, null, 2) + '\n');
-  tarball = path.join(tmp, JSON.parse(run(['pack', '--json', '--pack-destination', tmp], dir))[0].filename);
+  // The package exactly as a release ships it (pack.mjs).
+  tarball = packShipped(PROJECT, tmp);
 }
 
 // An empty project with the tarball and the React the repository tests with.

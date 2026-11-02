@@ -60,6 +60,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => n(count) + " kết quả",
   showOptions: "Hiện các lựa chọn",
   clearValue: (label) => (label ? "Xóa " + label : "Xóa"),
+  createOption: (text) => "Thêm “" + text + "”",
   valueAdded: (label) => "Đã thêm " + label,
   valueRemoved: (label) => "Đã bỏ " + label,
   copied: "Đã sao chép",

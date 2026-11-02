@@ -66,6 +66,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => p3(count, "результат", "результата", "результатов"),
   showOptions: "Показать варианты",
   clearValue: (label) => (label ? "Очистить: " + label : "Очистить"),
+  createOption: (text) => "Добавить «" + text + "»",
   valueAdded: (label) => label + ": добавлено",
   valueRemoved: (label) => label + ": удалено",
   copied: "Скопировано",

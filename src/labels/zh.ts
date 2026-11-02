@@ -59,6 +59,7 @@ export const labels: SerupaLabels = {
   resultsCount: (count) => n(count) + " 个结果",
   showOptions: "显示选项",
   clearValue: (label) => (label ? "清除" + label : "清除"),
+  createOption: (text) => "添加“" + text + "”",
   valueAdded: (label) => "已添加" + label,
   valueRemoved: (label) => "已移除" + label,
   copied: "已复制",
