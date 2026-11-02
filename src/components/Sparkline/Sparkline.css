@@ -1,0 +1,16 @@
+/* ---------------------------------------------------------------
+   Sparkline: an 80 × 20px trend line in chart series 1, 2px wide with round joins, and a 6px dot on the latest
+   value. area fills under the line in the first sequential step. It sits on the text's middle. Every value reads one
+   of its own tokens (sparkline.tokens.json), which fall back to the shared ones. In forced colors the line and the
+   dot take CanvasText.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-sparkline { display: inline-block; flex-shrink: 0; width: var(--sparkline-width, var(--spacing-20)); height: var(--sparkline-height, var(--spacing-5)); overflow: visible; vertical-align: middle; }
+.dk-sparkline__line { fill: none; stroke: var(--sparkline-line, var(--chart-1)); stroke-width: var(--border-width-2); stroke-linecap: round; stroke-linejoin: round; }
+.dk-sparkline__dot { fill: none; stroke: var(--sparkline-line, var(--chart-1)); stroke-width: var(--sparkline-dot, var(--spacing-1\.5)); stroke-linecap: round; }
+.dk-sparkline__area { fill: var(--sparkline-area, var(--chart-seq-1)); stroke: none; }
+@media (forced-colors: active) {
+  .dk-sparkline__line, .dk-sparkline__dot { stroke: CanvasText; }
+  .dk-sparkline__area { fill: Canvas; }
+}
+}
