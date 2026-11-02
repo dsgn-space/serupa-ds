@@ -36,7 +36,7 @@
   -webkit-user-select: none;
   user-select: none;
 }
-.dk-avatar--square .dk-avatar__frame { border-radius: var(--avatar-radius-square, var(--rounded-lg)); }
+.dk-avatar--square .dk-avatar__frame { border-radius: var(--avatar-radius-square, var(--radius-surface)); }
 .dk-avatar__img { width: var(--sizing-full); height: var(--sizing-full); object-fit: cover; }
 .dk-avatar .dk-avatar__icon { font-size: var(--dk-avatar-icon); }
 .dk-avatar__status {

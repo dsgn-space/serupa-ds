@@ -112,14 +112,14 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
-| `--drawer-shadow` | `shadow-xl` | The panel's shadow. |
+| `--drawer-shadow` | `elevation-modal` | The panel's shadow. |
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |
 | `--drawer-padding` | `spacing-6` | Padding inside the panel (24px). |
 | `--drawer-gap` | `spacing-4` | Space between the header and the body (16px). |
 | `--drawer-border-width` | `border-width-1` | The line above the footer (1px). |
-| `--drawer-radius` | `rounded-xl` | The corners on the open side of a top or bottom drawer (12px). |
+| `--drawer-radius` | `radius-container` | The corners on the open side of a top or bottom drawer (12px). |
 | `--drawer-title-weight` | `font-semibold` | The title's weight (600). |
 | `--drawer-duration` | `motion-enter-lg` | Sliding in (300ms). Sliding out takes `motion-exit-lg` (200ms). |
 <!-- token-table:end -->

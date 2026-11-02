@@ -89,7 +89,7 @@ Each is an optional override: set it on the page, a container or one alert. The 
 | `--alert-title-color` | `text` | The title. |
 | `--alert-text` | `text` | The message (4.5:1 on every tone's background). |
 | `--alert-border-strength` | `opacity-30` | How strongly the border shows the tone's color (30%). |
-| `--alert-radius` | `rounded-lg` | The corner radius (8px). |
+| `--alert-radius` | `radius-surface` | The corner radius (8px). |
 | `--alert-border-width` | `border-width-1` | The border width. |
 | `--alert-padding-x` | `spacing-4` | Padding at the start and end (16px). |
 | `--alert-padding-y` | `spacing-3` | Padding at the top and bottom (12px). |

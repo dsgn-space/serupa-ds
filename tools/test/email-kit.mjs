@@ -86,6 +86,17 @@ for (const th of themes) {
 }
 t(`text, links, the button and callouts pass 4.5:1 in all ${themes.length} themes`, !low.length, low.join('; '));
 
+// Outlook for Windows (Word) ignores a link's padding: the button's cell carries the same padding as mso-padding-alt,
+// and each callout has a right-to-left twin with its bar on the right, in light and dark.
+{
+  const r = emailRules(colors[themes[0]], sizes);
+  const get = (k, p) => r[k]?.find(([q]) => q === p)?.[1];
+  t('the button cell pads the button in Outlook as the link does elsewhere', get('serupa-button-cell', 'mso-padding-alt') === get('serupa-button', 'padding') && get('serupa-button', 'mso-padding-alt') === '0', `${get('serupa-button-cell', 'mso-padding-alt')} vs ${get('serupa-button', 'padding')}`);
+  const rtl = ['info', 'success', 'warning', 'danger'].filter((x) => !get(`serupa-callout-${x}-rtl`, 'border-right') || get(`serupa-callout-${x}-rtl`, 'border-right') !== get(`serupa-callout-${x}`, 'border-left') || get(`serupa-callout-${x}-rtl`, 'border-left'));
+  const darkRtl = brands.filter((b) => !/@media \(prefers-color-scheme: dark\)[^]*\.serupa-callout-info-rtl \{ [^}]*border-right: 4px solid #[0-9a-f]{6} !important/.test(read(`${b}.css`)));
+  t('each callout has a right-to-left class with its bar on the right, in light and dark', !rtl.length && !darkRtl.length, [...rtl, ...darkRtl].join(', '));
+}
+
 // The starting email: a document a screen reader can read, with layout tables marked as such.
 const html = brands.map((b) => [b, read(`${b}.html`)]);
 const shape = [];

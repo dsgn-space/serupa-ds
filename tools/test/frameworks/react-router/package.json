@@ -1,0 +1,8 @@
+{
+  "name": "serupa-example-react-router",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "react-router build", "start": "react-router-serve ./build/server/index.js" },
+  "dependencies": { "@react-router/node": "8.5.1", "@react-router/serve": "8.5.1", "isbot": "5", "react-router": "8.5.1" },
+  "devDependencies": { "@react-router/dev": "8.5.1", "vite": "8" }
+}
