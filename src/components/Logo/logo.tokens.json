@@ -1,0 +1,37 @@
+{
+  "logo": {
+    "$description": "Logo's component tokens. Each one is an optional override: set the CSS variable (--logo-<name>) on the page, a container or one Logo, and every Logo inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "spacing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Its height at size sm (24px): a compact bar or a footer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--logo-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "Its height at size md (32px), the default: a Navbar or Sidebar.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--logo-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-10}",
+        "$description": "Its height at size lg (40px): a sign-in page or a splash.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--logo-height-lg"
+          }
+        }
+      }
+    }
+  }
+}

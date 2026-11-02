@@ -85,6 +85,45 @@ Drawn from the `LongLabels` story.
 
 It renders a `<nav>`; name it with `aria-label` (default `'Progress'`). `className`, `ref` and other props go to the `<nav>`.
 
+## useSteps(options)
+
+The state of a form split into steps, to go with Stepper: which step is open, a check before each step forward, and focus moved to each step as it opens.
+
+```tsx
+import { Stepper, useSteps } from "serupa-ds";
+
+const s = useSteps({ steps, validate: (i) => checkStep(i), onComplete: submit });
+
+<form onSubmit={(e) => { e.preventDefault(); s.next(); }}>
+  <Stepper {...s.stepperProps} />
+  {steps.map((step, i) => (
+    <section key={i} {...s.panelProps(i)}>
+      <h2 {...s.headingProps(i)}>{step.title}</h2>
+      {/* the step's fields */}
+    </section>
+  ))}
+  <Button variant="secondary" onClick={s.back} disabled={s.isFirst}>Back</Button>
+  <Button type="submit">{s.isLast ? "Submit" : "Next"}</Button>
+</form>
+```
+
+- `next()` runs `validate` on the current step first. If it returns `false` (or a promise of `false`, for a check on the server), people stay on the step and the Stepper marks it "has an error". Show the field errors yourself, with Field or ErrorSummary. On the last step, a passing check calls `onComplete`.
+- `back()` and a press on a finished step in the Stepper go back with no check. `goTo(i)` forward checks every step on the way and stops on the first one that fails.
+- Every step stays rendered, and the others are `hidden`. Whatever was typed in a step, controlled or not, is still there on the way back, so nothing is asked for twice (WCAG 3.3.7).
+- When the step changes, focus moves to its heading (`tabIndex={-1}`), so a screen reader says which step people are on. It doesn't move focus on the first render.
+- A second `next()` while a check is still running does nothing, so a double press of Next moves one step.
+
+| Returns | Type | Notes |
+| --- | --- | --- |
+| `current` | `number` | The open step, from 0. |
+| `next` / `back` / `goTo(i)` | functions | `next` and `goTo` resolve to whether they moved. |
+| `isFirst` / `isLast` | `boolean` | For the Back button and the Next or Submit label. |
+| `stepperProps` | object | Spread on Stepper: `steps` with errors marked, `current` and `onStepClick`. |
+| `panelProps(i)` | `{ id, hidden, aria-labelledby }` | Spread on each step's container. |
+| `headingProps(i)` | `{ id, tabIndex, ref }` | Spread on each step's heading. |
+
+Options: `steps` (as Stepper takes them), `validate(index)`, `onComplete()` and `defaultStep` (default `0`).
+
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one stepper. The list lives in `src/components/Stepper/stepper.tokens.json` (also in `design-tokens/components/`).

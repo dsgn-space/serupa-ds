@@ -5,6 +5,9 @@
   font-size: var(--icon-size-lg);         /* 24px default */
   line-height: var(--leading-none);
   display: inline-block;
+  /* In running text, centred on the text rather than sat on its baseline, so an icon no taller than the line height
+     (each size step against its text size) leaves the line box as it is (GR110). In a flex row it's ignored. */
+  vertical-align: middle;
   width: 1em;
   height: 1em;
   flex-shrink: 0;
