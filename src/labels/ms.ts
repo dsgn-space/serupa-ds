@@ -19,6 +19,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: "Kembangkan semua",
+  chartKind: (type) => (type === "bar" ? "Carta bar" : "Carta garis"),
+  chartSummary: (kind, series, points, first, last) => kind + ", " + n(series) + " siri" + ", " + n(points) + " titik" + (points > 1 ? " dari " + first + " hingga " + last : "") + ".",
+  chartRange: (series, low, lowAt, high, highAt) => series + ": terendah " + low + " (" + lowAt + "), tertinggi " + high + " (" + highAt + ").",
+  chartPoint: (series, category, value) => (series ? series + ", " + category + ": " + value : category + ": " + value),
+  chartNoValue: "Tiada nilai",
+  chartCategory: "Kategori",
+  chartShowTable: "Tunjukkan sebagai jadual",
+  chartShowChart: "Tunjukkan sebagai carta",
   collapseAll: "Kuncupkan semua",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => n(count) + " lagi",

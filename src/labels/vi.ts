@@ -19,6 +19,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: "Mở rộng tất cả",
+  chartKind: (type) => (type === "bar" ? "Biểu đồ cột" : "Biểu đồ đường"),
+  chartSummary: (kind, series, points, first, last) => kind + ", " + n(series) + " chuỗi" + ", " + n(points) + " điểm" + (points > 1 ? " từ " + first + " đến " + last : "") + ".",
+  chartRange: (series, low, lowAt, high, highAt) => series + ": thấp nhất " + low + " (" + lowAt + "), cao nhất " + high + " (" + highAt + ").",
+  chartPoint: (series, category, value) => (series ? series + ", " + category + ": " + value : category + ": " + value),
+  chartNoValue: "Không có giá trị",
+  chartCategory: "Danh mục",
+  chartShowTable: "Hiển thị dạng bảng",
+  chartShowChart: "Hiển thị dạng biểu đồ",
   collapseAll: "Thu gọn tất cả",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => "+" + n(count) + " người khác",
