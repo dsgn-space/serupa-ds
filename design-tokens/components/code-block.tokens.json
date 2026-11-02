@@ -1,0 +1,113 @@
+{
+  "code-block": {
+    "$description": "CodeBlock's component tokens. Each one is an optional override: set the CSS variable (--code-block-<name>) on the page, a container or one CodeBlock, and every CodeBlock inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The code and title (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The language and the line numbers (4.5:1 on bg). A marked line's number takes the text color.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-muted"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The frame and the line under the header.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-border"
+          }
+        }
+      },
+      "mark-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A marked line's tint.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-mark-bg"
+          }
+        }
+      },
+      "mark-bar": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The bar at a marked line's start.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-mark-bar"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring inside the frame when the code scrolls and has keyboard focus.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "The corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space around the code (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-padding"
+          }
+        }
+      }
+    },
+    "typography": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The code's size (14px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-font-size"
+          }
+        }
+      }
+    }
+  }
+}

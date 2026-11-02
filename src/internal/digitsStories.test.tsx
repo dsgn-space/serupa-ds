@@ -25,6 +25,7 @@ const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimat
 
 // Latin digits on purpose, each with its reason: a component, or one story as "<Component>/<Story>".
 const LATIN: Record<string, string> = {
+  CodeBlock: 'the code is the story\'s, in ASCII as a program is written (its line numbers are CSS counters, not text)',
   Calendar: 'the grid is Gregorian with Latin digits, so its title and days are too (Calendar.tsx, formats())',
   'CommandPalette/LongText': "the story's own generated labels ('Project number ' + n)",
   'FormattedNumber/Locales': 'each number passes its own locale',

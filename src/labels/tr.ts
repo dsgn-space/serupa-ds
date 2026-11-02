@@ -182,6 +182,8 @@ export const labels: SerupaLabels = {
   dismiss: "Kapat",
   loading: "Yükleniyor…",
   copy: "Kopyala",
+  codeCopy: "Kodu kopyala",
+  codeName: "Kod",
   remove: "Kaldır",
   image: "Görsel",
   page: (p) => "Sayfa " + p,
