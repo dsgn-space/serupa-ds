@@ -33,6 +33,9 @@ export interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
   /** Its name for screen readers when it has no title. */
   "aria-label"?: string;
+  /** Show it as a sheet along the bottom of the screen, full width, instead of next to its trigger: true always,
+      'mobile' under 640px (the sm breakpoint), where a panel by a button is small to tap and covers what's around it. */
+  sheet?: boolean | 'mobile';
   /** Where focus goes when it opens: 'first' (default: the first control inside, or the panel) or 'panel'. */
   initialFocus?: 'first' | 'panel';
   /** Classes on the panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
@@ -41,7 +44,13 @@ export interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   style?: React.CSSProperties;
 }
 
-const OWN = { trigger: 1, children: 1, title: 1, "aria-label": 1, "aria-labelledby": 1, headingLevel: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, initialFocus: 1, className: 1, style: 1, onKeyDown: 1, onBlur: 1 } as const;
+const OWN = { trigger: 1, children: 1, title: 1, "aria-label": 1, "aria-labelledby": 1, headingLevel: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, sheet: 1, initialFocus: 1, className: 1, style: 1, onKeyDown: 1, onBlur: 1 } as const;
+// 'mobile': under the sm breakpoint, as Dialog's fullScreen="mobile" (Dialog.css).
+const NARROW = "(max-width: 639.98px)";
+const noSubscribe = () => () => {};
+const subscribeNarrow = (on: () => void) => { const m = window.matchMedia(NARROW); m.addEventListener("change", on); return () => m.removeEventListener("change", on); };
+const isNarrow = () => window.matchMedia(NARROW).matches;
+const notNarrow = () => false;
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /* Popover: a small non-modal dialog next to its trigger, for content people interact with (a form, filters,
@@ -71,7 +80,11 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>("
 
   // Closing: the content stays (inert) while the panel fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, panelRef);
-  useAnchoredLayer(open, panelRef, triggerRef, { placement: props.placement, offsetVar: "--dk-popover-offset", onOutside: () => close("outside", false), inside: triggerRef });
+  // A sheet: on the server and while hydrating, a 'mobile' one is next to its trigger until the screen is known.
+  const mobile = props.sheet === "mobile";
+  const narrow = React.useSyncExternalStore(mobile ? subscribeNarrow : noSubscribe, mobile ? isNarrow : notNarrow, notNarrow);
+  const sheet = props.sheet === true || narrow;
+  useAnchoredLayer(open, panelRef, triggerRef, { placement: props.placement, offsetVar: "--dk-popover-offset", onOutside: () => close("outside", false), inside: triggerRef, docked: sheet });
   // On open, focus moves inside (a press outside the panel and its trigger closes it; focus stays where the press put it).
   useIsoLayoutEffect(() => {
     const panel = panelRef.current;
@@ -116,7 +129,7 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>("
       {trigger}
       <div {...omit(props, OWN)} ref={(n) => { panelRef.current = n; setRef(ref, n); if (!titled) nameRef(n); }} id={id} role="dialog" tabIndex={-1} {...{ popover: "manual" }} hidden={!open || undefined}
         aria-labelledby={titled ? id + "-title" : props["aria-labelledby"]} aria-label={titled ? undefined : props["aria-label"]}
-        className={cn("dk-popover", props.className)} style={props.style} data-component="popover" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}
+        className={cn("dk-popover", sheet && "dk-popover--sheet", props.className)} style={props.style} data-component="popover" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}
         inert={!open || undefined} onKeyDown={onKeyDown} onBlur={onBlur}>
         {open || exit.leaving ? <>
           {titled ? <H id={id + "-title"} className="dk-popover__title">{props.title}</H> : null}

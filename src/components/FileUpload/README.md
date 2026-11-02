@@ -5,7 +5,7 @@ A drop area with a button for choosing files, and the chosen files listed under 
 ```tsx
 import { FileUpload } from "serupa-ds";
 
-<FileUpload accept="image/*" maxSize={5 * 1024 * 1024} hint="PNG or JPG, up to 5 MB" onFilesChange={setAvatar} />
+<FileUpload accept="image/*" maxSize={5_000_000} hint="PNG or JPG, up to 5 MB" onFilesChange={setAvatar} />
 
 <FileUpload multiple maxFiles={10} accept=".pdf,.docx" files={files} onFilesChange={setFiles}
   onReject={(r) => console.log(r)} />
@@ -85,7 +85,7 @@ Drawn from the `ReadOnly` story.
 | `hint` | `ReactNode` | | A muted line such as "PNG or JPG, up to 5 MB". The button is described by it. |
 | `removeLabel` | `(name) => string` | `` `Remove ${name}` `` | The remove buttons' names. |
 
-`formatFileSize(bytes, locale?)` is exported too: `1.5 MB` or `820 kB`, in steps of 1024 (so a `maxSize` of `5 * 1024 * 1024` reads "5 MB"), or with a locale the same as FormattedNumber's `format="bytes"` (`formatFileSize(5_000_000, "id-ID")` is `4,8 MB`). FileUpload writes each size, and the size in a refusal, in the provider's locale. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the choose button, so a form library that focuses the first invalid field after a failed submit lands on it.
+`formatFileSize(bytes, locale?)` is exported too: `1.5 MB` or `820 kB`, in steps of 1000, as macOS, iOS and Android count (so a `maxSize` of `5_000_000` reads "5 MB", and one of `5 * 1024 * 1024` reads "5.2 MB"), or with a locale the same as FormattedNumber's `format="bytes"` (`formatFileSize(1_500_000, "id-ID")` is `1,5 MB`). FileUpload writes each size, and the size in a refusal, in the provider's locale. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the choose button, so a form library that focuses the first invalid field after a failed submit lands on it.
 
 ## Component tokens
 
