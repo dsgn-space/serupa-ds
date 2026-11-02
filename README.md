@@ -127,6 +127,12 @@ To also drop the styles of components your code never names, pass `components: t
 npx serupa-purge src -o public/bundle.min.css --components
 ```
 
+To see how a product uses Serupa, run `serupa-usage` on its sources. It lists each component it renders, how often, in how many files and with which props, the components it never uses, and the plain elements it writes where a component would do (a `<button>` where Button gives the focus ring, loading state and theme). `--json` prints the same numbers for a dashboard or a comparison between releases:
+
+```sh
+npx serupa-usage src
+```
+
 ### What's in the package
 
 | File | What it is |
