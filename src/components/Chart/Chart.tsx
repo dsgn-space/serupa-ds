@@ -206,6 +206,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
   const tip = shown != null && tipRows.length ? { i: shown, x: xAt(shown), y: Math.min(...tipRows.map((r) => yAt(r.v!))) } : null;
   // Beside the category, on the other side near the edge, inside the frame: set through the CSSOM, which a strict
   // style-src allows.
+  // every render: the tip's size follows its words, which change with the category, the series and the format.
   useIsoLayoutEffect(() => {
     const el = tipRef.current;
     if (!el || !tip) return;
