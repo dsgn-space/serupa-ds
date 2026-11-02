@@ -78,13 +78,23 @@ The build keeps only the shapes and removes editor leftovers (ids, classes, size
 
 The same for Material Symbols and custom icons.
 
-| Size | Use |
-| --- | --- |
-| 14px | Inside `sm` buttons |
-| 16px | Inside `md` buttons, inline with `text-sm` |
-| 20px | Inside `lg` buttons, list rows, inputs |
-| 24px | Default: toolbars, navigation, standalone |
-| 40px+ | Empty states, illustrations |
+| `size` | Token | Size | Use |
+| --- | --- | --- | --- |
+| `"xs"` | `icon-size-xs` | 14px | Inside `sm` buttons, next to `text-xs` |
+| `"sm"` | `icon-size-sm` | 16px | Inside `md` buttons, next to `text-sm` |
+| `"md"` | `icon-size-md` | 20px | Inside `lg` buttons, list rows, inputs, next to `text-base` |
+| `"lg"` | `icon-size-lg` | 24px | Default: toolbars, navigation, standalone |
+| `"xl"` | `icon-size-xl` | 40px | Empty states, illustrations |
+
+Every step is on the 4px spacing grid except `xs`, and each matches the line height of the text it sits beside, so an icon and its label share a line box.
+
+### Weight
+
+Match an icon to the weight of the text beside it. The drawings are weight 400, which goes with regular and medium text. Next to `font-semibold` text use `weight="semibold"`; next to `font-bold` text and headings use `weight="bold"`. The weight thickens the icon's lines by a stroke of the `icon-weight-semibold` (0.02em) or `icon-weight-bold` (0.035em) token round the drawing, the same share of the icon at every size, so the small details stay open. Custom icons keep their own drawing.
+
+```tsx
+<h2 className="flex items-center gap-2 font-bold"><Icon name="bolt" size="md" weight="bold" /> Quick start</h2>
+```
 
 Every icon is the 24px design (Material Symbols' optical size 24), scaled.
 
@@ -123,7 +133,8 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 | `id` | string | none | Goes to the root `<span>`. |
 | `name` | `IconName`: any Material Symbol's name, a custom icon's name, or a name you registered | | Give `name` or `icon`. A custom icon with the same name as a Material Symbol wins. All names autocomplete. |
 | `icon` | `IconData`: a Material Symbol imported from `serupa-ds/icons` (or `serupa-ds/icons/outlined`) | | Give `name` or `icon`: `icon={ArrowForward}`. |
-| `size` | `number \| string` | 24px, or the button's icon size inside a Button | Pixels as a number (or a string of one: `"20"` is 20px), or any CSS length. Sets the font size; the icon is 1em square. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| number \| string` | 24px, or the button's icon size inside a Button | A step of the icon scale (the `icon-size-*` tokens: 14, 16, 20, 24, 40px), pixels as a number (or a string of one: `"20"` is 20px), or any CSS length. Sets the font size; the icon is 1em square. |
+| `weight` | `'regular' \| 'semibold' \| 'bold'` | `'regular'` | How heavy a Material Symbol's lines are, to go with the text beside it (the `icon-weight-*` tokens). See Weight, under Usage. Custom icons keep their own drawing. |
 | `mirror` | `boolean \| 'auto'` | `'auto'` | Flips the icon in right-to-left text (`dir="rtl"`), so it points the way reading goes. `'auto'` flips Material Symbols' directional icons (`arrow_forward`, `arrow_back`, `chevron_left`, `chevron_right`, `navigate_next`, `first_page`, `last_page`, `send`, `reply`, `undo`, `redo`, `open_in_new`, `logout` and the like) and nothing else; `true` flips any icon (your own custom arrow), `false` none (an icon you turn yourself). |
 | `aria-label` | `string` | | Makes the icon meaningful: `role="img"` with this name. Without it (or `aria-labelledby`) the icon is `aria-hidden`. |
 
