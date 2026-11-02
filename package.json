@@ -68,7 +68,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "serupa-purge": "./bin/serupa-purge.mjs"
+    "serupa-purge": "./bin/serupa-purge.mjs",
+    "serupa-usage": "./bin/serupa-usage.mjs"
   },
   "files": [
     "bin/",
