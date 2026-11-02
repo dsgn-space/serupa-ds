@@ -21,6 +21,13 @@ import { Logo } from "serupa-ds";
 - A person or a team: use [Avatar](../Avatar/README.md).
 - A brand that is only text: put the name in the link, styled as you like.
 
+## Anatomy
+
+Drawn from the `Default` story.
+
+1. **Picture** (`.dk-logo__picture`): with a dark version or a mark, a `<picture>` that offers them to the browser ahead of the full logo. It takes no room of its own.
+2. **Logo** (`.dk-logo`): the `<img>`, at the size's height, named by `alt`.
+
 ## Usage
 
 - Give it the full logo (`src`) drawn for a light background, and, where it can be shown on dark, `darkSrc`. A theme with no dark version shows `src` as is, so pick one that reads on both if you have only one.
