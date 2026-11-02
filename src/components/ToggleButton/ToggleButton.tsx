@@ -6,13 +6,13 @@ import { component } from "../../internal/component";
 
 export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "variant" | "destructive" | "loading" | "loadingText"> {
   /** Whether it's on (controlled). Use with onPressedChange. */
-  pressed?: boolean;
+  pressed?: boolean | undefined;
   /** Whether it starts on (uncontrolled). Default: false. */
-  defaultPressed?: boolean;
+  defaultPressed?: boolean | undefined;
   /** Called with the new state when it's pressed. */
-  onPressedChange?: (pressed: boolean) => void;
+  onPressedChange?: ((pressed: boolean) => void) | undefined;
   /** 'outline' (default) or 'ghost' (for toolbars). */
-  variant?: 'outline' | 'ghost';
+  variant?: 'outline' | 'ghost' | undefined;
 }
 
 /* ToggleButton: a Button that stays on or off (aria-pressed), for a setting that applies right away: bold,

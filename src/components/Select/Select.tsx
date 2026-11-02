@@ -14,15 +14,15 @@ export type SelectOption = string | number | { value: string | number; label?: R
 export interface SelectOptionGroup { label: string; options: SelectOption[]; disabled?: boolean }
 export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size' | 'multiple'> {
   /** 'sm' (24px, text-xs), 'md' (32px, text-sm, default) or 'lg' (44px, text-base): the control heights, like Input. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger border and focus ring, and aria-invalid. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** A decorative icon before the text: an icon name or an element. */
-  leftIcon?: IconSource;
+  leftIcon?: IconSource | undefined;
   /** A first, empty option shown in the placeholder color until something is picked (it can't be picked back). An uncontrolled Select starts on it. */
-  placeholder?: string;
+  placeholder?: string | undefined;
   /** The options: strings, { value, label, disabled }, or groups { label, options }. Or pass <option> and <optgroup> children (after these). */
-  options?: Array<SelectOption | SelectOptionGroup>;
+  options?: Array<SelectOption | SelectOptionGroup> | undefined;
 }
 
 /* Select: a native <select> styled like Input. size "sm", "md" (default) or "lg" (the control heights);

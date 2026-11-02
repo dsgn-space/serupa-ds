@@ -15,35 +15,35 @@ import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openCha
 
 export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Open at first, then it closes itself (uncontrolled), for one shown on arrival. Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called with false when people ask to close it, and why: { reason: 'escape' | 'close' (the ×) | 'outside' (the backdrop) | 'api' (the browser closed it) }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** The heading, which also names the dialog. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** A muted line under the title, read when the dialog opens. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Buttons at the bottom end: the main action last. */
-  footer?: React.ReactNode;
+  footer?: React.ReactNode | undefined;
   /** 'sm' 384px, 'md' 512px (default) or 'lg' 672px wide, at most the screen less 16px each side. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** An alert dialog (role="alertdialog") for a confirmation that needs an answer: no close button, and the backdrop doesn't close it. Escape still does. */
-  alert?: boolean;
+  alert?: boolean | undefined;
   /** Shows the × in the corner. Default: true (false for alert). */
-  closeButton?: boolean;
+  closeButton?: boolean | undefined;
   /** The × button's name. Default: 'Close'. */
-  closeLabel?: string;
+  closeLabel?: string | undefined;
   /** Whether a click on the backdrop closes it. Default: true (false for alert). */
-  closeOnBackdrop?: boolean;
+  closeOnBackdrop?: boolean | undefined;
   /** Fills the screen: true always, 'mobile' under 640px wide (a long form on a phone). Default: false. */
-  fullScreen?: boolean | 'mobile';
+  fullScreen?: boolean | 'mobile' | undefined;
   /** The element that takes focus when it opens, instead of the first that can (the ×) or one marked data-autofocus: the safe choice in a confirmation (Cancel), or the field people came to fill. */
-  initialFocus?: React.RefObject<HTMLElement | null>;
+  initialFocus?: React.RefObject<HTMLElement | null> | undefined;
   /** Where focus goes when it closes, instead of back to what opened it: the next row after deleting one, whose own button is gone. Used when it's on the page then; otherwise focus goes back to the opener. */
-  finalFocus?: React.RefObject<HTMLElement | null>;
+  finalFocus?: React.RefObject<HTMLElement | null> | undefined;
   /** There are changes that would be lost: Escape, the ×, the backdrop or the browser closing it first ask "Discard changes?" (an alert dialog, Keep editing focused), and onOpenChange(false) comes only after Discard. Leaving the page asks too (beforeunload). Your own Cancel button closes it directly, so ask there yourself if it should. Default: false. */
-  unsaved?: boolean;
+  unsaved?: boolean | undefined;
 }
 
 /* Dialog: a modal on the native <dialog> (showModal), so the browser keeps focus inside, makes the page behind

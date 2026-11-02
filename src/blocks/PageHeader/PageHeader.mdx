@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './PageHeader.stories';
+
+<Meta of={Stories} />
+
+# Page header
+
+The top of a page inside an app: where the page is, what it's called, what it's for, and what you can do there.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- At the top of main on any page below the app's top level: a project, a customer, a report.
+- With only a title and one action for a top-level page such as a list.
+- Not for the app's own header with the logo and account menu: that's the Navbar, outside main.
+
+## What each part is for
+
+- **A Breadcrumb**, so someone who arrived from a search or a link knows where they are and can go up a level (2.4.8). Its last item is this page, not a link, and says `aria-current="page"`.
+- **The title**, the page's one h1. Keep it the same as the page's `<title>` and the item it names.
+- **A description**, one sentence in plain text, not a heading. Leave it out rather than repeat the title.
+- **The primary action**, one button, always shown. **The secondary actions** sit beside it on a wide screen and move into a "More actions" Menu on a phone, so none is cut off or makes the page scroll sideways (1.4.10).
+- **Section links**, a `nav` with its own name (`sectionsLabel`), so it's told apart from the breadcrumb and the app's navigation in a screen reader's landmark list. The current one says `aria-current="page"` and is bold, not only a different color.
+- **Reading order** matches the Tab order: breadcrumb, title, primary action, other actions, sections.
+
+<Canvas of={Stories.Simple} />
+
+<Canvas of={Stories.LongTitle} />
+
+## What stays your app's job
+
+- The page's `<title>`, matching the h1.
+- What each action does, and where each section link goes. Use links (`href`) for actions that go to another page, and `onSelect` for ones that act here.
+- Using Tabs instead of section links when the sections are panels on this page rather than pages of their own.
+
+## Copying it
+
+Copy `PageHeader.tsx` and `PageHeader.test.tsx`. Change the imports to `serupa`, and pass your own breadcrumb, title, actions and sections.

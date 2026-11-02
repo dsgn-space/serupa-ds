@@ -8,9 +8,9 @@ import { en as words } from "./labels";
 
 export interface KbdProps extends React.HTMLAttributes<HTMLElement> {
   /** A combination, one key each: ['mod', 'K'], ['shift', 'enter']. Names below show as symbols on Apple devices. Or pass one key as children. */
-  keys?: string[];
+  keys?: string[] | undefined;
   /** 'sm' (20px) or 'md' (24px, default). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
 }
 
 /* Named keys: [shown on Apple devices, its name there, shown elsewhere, its name there]. "mod" is ⌘ on Apple

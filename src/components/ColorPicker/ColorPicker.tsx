@@ -25,33 +25,33 @@ export interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
       its color ("Dark blue", the colorName label) and its code as a tooltip. */
   swatches: ReadonlyArray<ColorSwatch | string>;
   /** The color, as #rrggbb (controlled). Use with onValueChange. null: none picked. */
-  value?: string | null;
+  value?: string | null | undefined;
   /** The color at first (uncontrolled). */
-  defaultValue?: string | null;
+  defaultValue?: string | null | undefined;
   /** Called with the new color, always lowercase #rrggbb, as it changes: also on every step while dragging in the
       browser's color picker, and as a hex code is typed. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: ((value: string) => void) | undefined;
   /** Called with the color once it's chosen: a swatch picked, the browser's color picker closed, or the hex field
       left or Enter pressed. Not while dragging or typing, so it fits saving or other costly work. */
-  onValueCommit?: (value: string) => void;
+  onValueCommit?: ((value: string) => void) | undefined;
   /** A hex field and the browser's color picker after the swatches, for any color. Default: true. */
-  custom?: boolean;
+  custom?: boolean | undefined;
   /** A color to check the picked one against (the background it goes on, or the text on it): shows the WCAG ratio. */
-  contrastWith?: string;
+  contrastWith?: string | undefined;
   /** The ratio below which it warns. Default: 4.5 (text); 3 for large text and icons. */
-  minContrast?: number;
+  minContrast?: number | undefined;
   /** 'sm' (24px swatches) or 'md' (32px, default). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** Turns every swatch and the hex field off, as a disabled native control. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Submits the color with a form, in a hidden input. */
-  name?: string;
+  name?: string | undefined;
   /** The id of the form the color submits with, when the picker sits outside it (like an input's form attribute). */
-  form?: string;
+  form?: string | undefined;
   /** A color must be picked: aria-required on the swatches, and a form isn't submitted without one. In a required Field, it's set for you. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** Marks the swatches invalid (aria-invalid). In a Field with an error, it's set for you. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
 }
 
 const OWN = { "aria-label": 1, "aria-labelledby": 1, swatches: 1, value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, custom: 1, contrastWith: 1, minContrast: 1, size: 1, disabled: 1, name: 1, className: 1, form: 1, required: 1, invalid: 1, "aria-describedby": 1, "aria-errormessage": 1, "aria-required": 1, "aria-invalid": 1, autoFocus: 1 } as const;
