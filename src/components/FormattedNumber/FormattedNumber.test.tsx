@@ -25,18 +25,18 @@ describe('FormattedNumber', () => {
       .toEqual(['1.2M', '46%', nf('en-US', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }, 150000), '¥20', '50 km/h', '1,234.5']);
   });
 
-  test('bytes step by 1024 like formatFileSize: one decimal under 10, none above or for bytes; negatives keep their sign', () => {
+  test('bytes step by 1000 like formatFileSize: one decimal under 10, none above or for bytes; negatives keep their sign', () => {
     const b = (v: number) => formatNumber(v, 'en-US', { format: 'bytes' });
-    expect([b(0), b(12), b(1023), b(1536), b(840000), b(1572864), b(5 * 1024 ** 3), b(3 * 1024 ** 6), b(-2048)])
-      .toEqual([nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 0), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 12), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 1023),
-        '1.5 kB', '820 kB', '1.5 MB', '5 GB', '3,072 PB', '-2 kB']);
+    expect([b(0), b(12), b(999), b(1500), b(820000), b(1500000), b(5e9), b(3e18), b(-2000)])
+      .toEqual([nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 0), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 12), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 999),
+        '1.5 kB', '820 kB', '1.5 MB', '5 GB', '3,000 PB', '-2 kB']);
   });
 
   test('options win over the format\'s own; a currency or unit format without its code writes a plain number, and an empty unit or currency is ignored; NaN is empty', () => {
-    expect([formatNumber(0.031, 'en-US', { format: 'percent', signDisplay: 'always', maximumFractionDigits: 1 }), formatNumber(1572864, 'en-US', { format: 'bytes', maximumFractionDigits: 2 }),
+    expect([formatNumber(0.031, 'en-US', { format: 'percent', signDisplay: 'always', maximumFractionDigits: 1 }), formatNumber(1_250_000, 'en-US', { format: 'bytes', maximumFractionDigits: 2 }),
       formatNumber(150000, 'en-US', { format: 'currency', currency: 'IDR', maximumFractionDigits: 0 }), formatNumber(1234567, 'en-US', { format: 'compact', compactDisplay: 'long' }),
       formatNumber(1234, 'en-US', { format: 'currency' }), formatNumber(1234, 'en-US', { format: 'unit' }), formatNumber(NaN, 'en-US'), formatNumber(12345678901234567890n, 'en-US'), formatNumber(5, 'en-US', { unit: '', currency: '' })])
-      .toEqual(['+3.1%', '1.5 MB', nf('en-US', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }, 150000), '1.2 million', '1,234', '1,234', '', new Intl.NumberFormat('en-US').format(12345678901234567890n), '5']);
+      .toEqual(['+3.1%', '1.25 MB', nf('en-US', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }, 150000), '1.2 million', '1,234', '1,234', '', new Intl.NumberFormat('en-US').format(12345678901234567890n), '5']);
   });
 
   test('the words and digits follow the locale: Indonesian, German, Egyptian Arabic, Hindi', async () => {
@@ -99,9 +99,9 @@ describe('FormattedNumber: bad options, speed and byte rounding (FT1)', () => {
     expect(built).toBe(2);
   });
 
-  test('bytes step up when the rounded number reaches 1024, and fractional bytes round to whole ones', () => {
+  test('bytes step up when the rounded number reaches 1000, and fractional bytes round to whole ones', () => {
     const b = (v: number) => formatNumber(v, 'en-US', { format: 'bytes' });
-    expect([b(1048575), b(1023.9), b(1.5), b(1048575 * 1024), b(-1048575), b(1023)]).toEqual(['1 MB', '1 kB', '2 byte', '1 GB', '-1 MB', '1,023 byte']);
+    expect([b(999999), b(999.9), b(1.5), b(999999 * 1000), b(-999999), b(999), b(1024)]).toEqual(['1 MB', '1 kB', '2 byte', '1 GB', '-1 MB', '999 byte', '1 kB']);
   });
 });
 
