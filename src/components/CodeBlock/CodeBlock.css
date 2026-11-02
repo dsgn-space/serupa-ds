@@ -1,0 +1,57 @@
+/* ---------------------------------------------------------------
+   CodeBlock: a framed box on a muted surface: a header row with the title (or the language) and an icon copy
+   button, then the code in the mono font, scrolling sideways or wrapping. Numbered lines count with a CSS counter
+   (so the numbers aren't selected or copied); a marked line has a tint and a bar at its start. The code reads left
+   to right in every script. Every value reads one of its own tokens (code-block.tokens.json), which fall back to the
+   shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-code-block {
+  min-inline-size: 0; overflow: hidden;
+  border: var(--border-width-1) solid var(--code-block-border, var(--border));
+  border-radius: var(--code-block-radius, var(--rounded-md));
+  background: var(--code-block-bg, var(--surface-muted)); color: var(--code-block-text, var(--text));
+}
+.dk-code-block__header {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2);
+  min-block-size: var(--spacing-10); padding-block: var(--spacing-1); padding-inline: var(--code-block-padding, var(--spacing-4)) var(--spacing-1);
+  border-block-end: var(--border-width-1) solid var(--code-block-border, var(--border));
+  font-size: var(--text-xs); line-height: var(--leading-4);
+}
+.dk-code-block__title { min-inline-size: 0; font-weight: var(--font-medium); overflow-wrap: anywhere; }
+.dk-code-block__language { color: var(--code-block-muted, var(--text-muted)); font-family: var(--font-mono); text-transform: lowercase; }
+.dk-code-block__copy { flex: none; }
+.dk-code-block__pre {
+  margin: 0; padding-block: var(--code-block-padding, var(--spacing-4)); overflow: auto;
+  font-family: var(--font-mono); font-size: var(--code-block-font-size, var(--text-sm)); line-height: var(--leading-5);
+  white-space: pre; overflow-wrap: normal; tab-size: 2;
+  direction: ltr; unicode-bidi: isolate; text-align: start;   /* run(); never reads ;()run on a right-to-left page */
+  counter-reset: dk-code-line;
+}
+.dk-code-block__pre:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: calc(0px - var(--focus-ring-width)); }
+.dk-code-block__code { display: block; inline-size: max-content; min-inline-size: 100%; font: inherit; }
+.dk-code-block__line { display: block; padding-inline: var(--code-block-padding, var(--spacing-4)); }
+.dk-code-block--numbered .dk-code-block__line { display: grid; grid-template-columns: calc(var(--dk-code-digits, 2) * 1ch) minmax(0, 1fr); column-gap: var(--spacing-4); padding-inline-start: var(--spacing-3); counter-increment: dk-code-line; }
+.dk-code-block--numbered .dk-code-block__line::before {
+  content: counter(dk-code-line); text-align: end; color: var(--code-block-muted, var(--text-muted));
+  user-select: none; -webkit-user-select: none; font-variant-numeric: tabular-nums;
+}
+.dk-code-block__line--marked {
+  background: var(--code-block-mark-bg, var(--primary-subtle)); color: inherit;
+  box-shadow: inset var(--border-width-2) 0 0 var(--code-block-mark-bar, var(--primary));
+}
+/* text-muted is under 4.5:1 on the tint in Blue Light, so a marked line's number takes the code's color. */
+.dk-code-block--numbered .dk-code-block__line--marked::before { color: inherit; }
+.dk-code-block--wrap .dk-code-block__pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.dk-code-block--wrap .dk-code-block__code { inline-size: auto; }
+
+@media (forced-colors: active) {
+  .dk-code-block__line--marked { forced-color-adjust: none; background: Mark; color: MarkText; box-shadow: inset var(--border-width-2) 0 0 MarkText; }
+  .dk-code-block--numbered .dk-code-block__line--marked::before { color: MarkText; }
+}
+@media print {
+  .dk-code-block__copy { display: none; }
+  .dk-code-block__pre { overflow: visible; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .dk-code-block__code { inline-size: auto; }
+}
+}
