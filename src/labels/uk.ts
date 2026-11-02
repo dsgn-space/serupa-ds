@@ -195,6 +195,8 @@ export const labels: SerupaLabels = {
   dismiss: "Приховати",
   loading: "Завантаження…",
   copy: "Копіювати",
+  codeCopy: "Копіювати код",
+  codeName: "Код",
   remove: "Вилучити",
   image: "Зображення",
   page: (p) => "Сторінка " + p,
