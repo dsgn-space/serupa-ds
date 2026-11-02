@@ -172,6 +172,7 @@ export const labels: SerupaLabels = {
   tourBack: "पीछे",
   tourNext: "आगे",
   tourDone: "हो गया",
+  sparklineSummary: (label, first, last, min, max) => label + ": " + first + " से " + last + ", न्यूनतम " + min + ", अधिकतम " + max,
   table: "टेबल",
   tableSorted: (column, direction) => column + " के हिसाब से " + (direction === "ascending" ? "बढ़ते क्रम में" : "घटते क्रम में") + " लगाया गया।",
   tableSelected: (count) => n(count) + " चुने गए",
