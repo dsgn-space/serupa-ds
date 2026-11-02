@@ -1,0 +1,67 @@
+name: Canary
+
+# Every night, the package against what's coming next: TypeScript's nightly (typescript@next) and React's canary
+# (react@canary). It doesn't block pull requests: a red run is a change coming in React or TypeScript to look at
+# before it ships. It also runs on a pull request that changes this file, and on demand from the Actions tab.
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths: ['.github/workflows/canary.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  types:
+    name: types (typescript@next)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save typescript@next
+      - run: echo "TypeScript $(npx tsc -v)" >> "$GITHUB_STEP_SUMMARY"
+      - run: node tools/build/registry.mjs && npx tsc -p . && npx tsc -p tools
+
+  components:
+    name: components (react@canary)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save --legacy-peer-deps react@canary react-dom@canary
+      - run: echo "React $(node -p "require('react/package.json').version")" >> "$GITHUB_STEP_SUMMARY"
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:unit
+
+  consumer:
+    name: consumer (react@canary)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: node tools/test/consumer.mjs --react canary
