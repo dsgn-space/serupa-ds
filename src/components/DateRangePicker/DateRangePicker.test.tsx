@@ -12,7 +12,13 @@ const vals = (tid: string) => fields(tid).map((x) => x.value).join(' – ');
 const pop = (tid: string) => box(tid).querySelector('[role=dialog]') as HTMLElement;
 const isOpen = (tid: string) => !pop(tid).hidden;
 const day = (tid: string, d: string) => pop(tid).querySelector(`[data-date="${d}"]`) as HTMLElement;
-const inRange = (tid: string) => [...pop(tid).querySelectorAll<HTMLElement>('.dk-calendar__day--in-range')].map((b) => b.dataset.date!.slice(5)).join();
+const days = (tid: string) => [...pop(tid).querySelectorAll<HTMLElement>('button[data-date]')];
+// A day in the range is filled with the range color (--calendar-range-bg, primary-subtle by default), read off a probe in the popup.
+const rangeBg = (tid: string) => { const p = document.createElement('span'); p.style.background = 'var(--calendar-range-bg, var(--primary-subtle))'; pop(tid).appendChild(p); const c = getComputedStyle(p).backgroundColor; p.remove(); return c; };
+const ranged = (tid: string) => { const c = rangeBg(tid); return days(tid).filter((b) => getComputedStyle(b).backgroundColor === c); };
+const inRange = (tid: string) => ranged(tid).map((b) => b.dataset.date!.slice(5)).join();
+// A day of another month than its grid's: each grid's month is the one its third week is in.
+const outside = (tid: string) => [...pop(tid).querySelectorAll('[role=grid]')].flatMap((g) => { const m = g.querySelector<HTMLElement>('tbody tr:nth-child(3) button')!.dataset.date!.slice(0, 7); return [...g.querySelectorAll<HTMLElement>('button[data-date]')].filter((b) => b.dataset.date!.slice(0, 7) !== m); });
 const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.getAttribute('aria-label') || a.tagName; };
 const btn = (tid: string) => box(tid).querySelector('button') as HTMLButtonElement;
 const fill = async (tid: string, i: number, text: string, key = '{Tab}') => { await userEvent.fill(fields(tid)[i], text); await userEvent.keyboard(key); };
@@ -110,7 +116,7 @@ describe('DateRangePicker', () => {
     const d = pop('trip'), vis = (sel: string) => [...d.querySelectorAll(sel)].map((x) => getComputedStyle(x).visibility).join();
     expect([d.getAttribute('role'), d.matches(':popover-open')]).toEqual(['dialog', true]);
     expect([...d.querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent).join()).toBe('March 2025,April 2025');
-    expect([d.querySelectorAll('td[role=gridcell]:empty').length > 0, !!d.querySelector('.dk-calendar__day--outside')]).toEqual([true, false]);
+    expect([d.querySelectorAll('td[role=gridcell]:empty').length > 0, outside('trip').length]).toEqual([true, 0]);
     expect([vis('[data-component=calendar] > div:first-child > button:first-child'), vis('[data-component=calendar] > div:first-child > button:last-child')]).toEqual(['visible,hidden', 'hidden,visible']);
     expect([focused(), d.querySelector(':scope p[aria-live]')!.textContent]).toEqual(['2025-03-10', 'Choose the start date']);
     expect([...d.querySelectorAll<HTMLElement>('[aria-selected=true] button')].map((x) => x.dataset.date).join()).toBe('2025-03-10,2025-03-14');
@@ -196,7 +202,7 @@ describe('DateRangePicker', () => {
     await render(<DateRangePicker data-testid="one" aria-label="One" months={1} locale="en-US" weekStartsOn={0} />);
     await userEvent.click(btn('one'));
     expect(pop('one').querySelectorAll('[role=grid]').length).toBe(1);
-    expect(pop('one').querySelectorAll('.dk-calendar__day--outside').length).toBeGreaterThan(0);
+    expect(outside('one').length).toBeGreaterThan(0);
   });
 
   test('ref.current.focus() and autoFocus land on the start field, as a form library focusing the first invalid field expects; disabled, nothing is focused', async () => {
@@ -243,7 +249,7 @@ describe('DateRangePicker', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const d = pop('trip'), bg = getComputedStyle(d).backgroundColor;
-      const r = getComputedStyle(d.querySelector('.dk-calendar__day--in-range')!), st = getComputedStyle(d.querySelector(':scope p[aria-live]')!), dash = getComputedStyle(box('trip').querySelector(':scope > span[aria-hidden]')!);
+      const r = getComputedStyle(ranged('trip')[0]), st = getComputedStyle(d.querySelector(':scope p[aria-live]')!), dash = getComputedStyle(box('trip').querySelector(':scope > span[aria-hidden]')!);
       const field = getComputedStyle(box('trip')).backgroundColor;
       const pairs: Array<[string, string, string, number]> = [['day in range', r.color, r.backgroundColor, 4.5], ['status', st.color, bg, 4.5], ['dash', dash.color, field, 4.5]];
       for (const [k, fg, on, min] of pairs) { const x = contrast(fg, on); n++; if (x < min) low.push(`${th} ${k} ${x.toFixed(2)}`); }
@@ -252,7 +258,7 @@ describe('DateRangePicker', () => {
     expect(low).toEqual([]);
     expect(n).toBe(18);
     box('trip').style.setProperty('--calendar-range-bg', 'rgb(1, 2, 3)');
-    expect(getComputedStyle(pop('trip').querySelector('.dk-calendar__day--in-range')!).backgroundColor).toBe('rgb(1, 2, 3)');
+    expect([rangeBg('trip'), ranged('trip').length > 0]).toEqual(['rgb(1, 2, 3)', true]);
     still.remove();
   });
 

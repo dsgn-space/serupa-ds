@@ -55,8 +55,9 @@ describe('Rating', () => {
   test('allowHalf: two choices per star ("2.5 stars"), the start half of a star picks the half; right to left, the half fills from the right', async () => {
     await render(<div><Rating id="h" aria-label="Half" allowHalf max={4} /><div dir="rtl"><Rating id="rt" aria-label="RTL" allowHalf defaultValue={1.5} max={3} /></div></div>);
     expect(radios('h').map((r) => r.getAttribute('aria-label'))).toEqual(['0.5 stars', '1 star', '1.5 stars', '2 stars', '2.5 stars', '3 stars', '3.5 stars', '4 stars']);
-    await userEvent.click(radios('h')[4]);
+    await userEvent.click(stars('h')[2], { position: { x: 4, y: 12 } });
     expect([picked('h'), filled('h')]).toEqual([['2.5'], [24, 24, 12, 0]]);
+    expect(document.activeElement).toBe(radios('h')[4]);
     const s = stars('rt')[1].getBoundingClientRect(), f = (stars('rt')[1].children[1] as HTMLElement).getBoundingClientRect();
     expect([filled('rt'), Math.round(s.right - f.right), stars('rt')[0].getBoundingClientRect().left > s.left]).toEqual([[24, 12, 0], 0, true]);
   });
@@ -196,5 +197,58 @@ describe('Rating', () => {
   test('L8E92 autoFocus focuses the picked star (else the first), as it does on SegmentedControl and Slider', async () => {
     await render(<><button>Before</button><Rating aria-label="Stay" defaultValue={2} autoFocus /></>);
     await expect.poll(() => document.activeElement === page.getByRole('radiogroup', { name: 'Stay' }).element().querySelectorAll('input')[1]).toBe(true);
+  });
+
+  describe('target size (WCAG 2.5.8, GR104)', () => {
+    // Each radio that takes presses: its box, and the distance between neighbours' centres.
+    const targets = (id: string) => radios(id).filter((r) => getComputedStyle(r).pointerEvents !== 'none').map((r) => r.getBoundingClientRect());
+    const pitch = (rs: DOMRect[]) => rs.slice(1).map((r, i) => Math.round((r.left + r.width / 2 - (rs[i].left + rs[i].width / 2)) * 10) / 10);
+    test('every size, with and without halves: one target per star, at least 24px apart centre to centre, with no gap between them', async () => {
+      await render(<div>{(['sm', 'md', 'lg'] as const).flatMap((sz) => [<Rating key={sz} id={'t-' + sz} aria-label={sz} size={sz} />, <Rating key={sz + 'h'} id={'th-' + sz} aria-label={sz + ' half'} size={sz} allowHalf />])}</div>);
+      for (const id of ['t-sm', 'th-sm', 't-md', 'th-md', 't-lg', 'th-lg']) {
+        const rs = targets(id);
+        expect(rs.length, id).toBe(5);
+        expect(pitch(rs).every((d) => d >= 24), id + ': ' + pitch(rs).join(' ')).toBe(true);
+        expect(rs.slice(1).every((r, i) => Math.abs(r.left - rs[i].right) < 0.5), id).toBe(true);
+      }
+      expect(Math.round(stars('t-sm')[0].getBoundingClientRect().width)).toBe(20);
+    });
+    test('allowHalf: the start half of a star picks the half and the end half the whole, also right to left; hovering shows which', async () => {
+      await render(<div><Rating id="hp" aria-label="Halves" allowHalf size="md" /><div dir="rtl"><Rating id="hr" aria-label="RTL" allowHalf size="md" /></div></div>);
+      await userEvent.hover(stars('hp')[1], { position: { x: 5, y: 12 } });
+      expect(filled('hp')).toEqual([24, 12, 0, 0, 0]);
+      await userEvent.click(stars('hp')[1], { position: { x: 19, y: 12 } });
+      expect(picked('hp')).toEqual(['2']);
+      expect(document.activeElement).toBe(radios('hp')[3]);
+      await userEvent.click(stars('hp')[3], { position: { x: 5, y: 12 } });
+      expect(picked('hp')).toEqual(['3.5']);
+      await userEvent.click(stars('hr')[0], { position: { x: 19, y: 12 } });
+      expect(picked('hr')).toEqual(['0.5']);
+      await userEvent.click(stars('hr')[0], { position: { x: 5, y: 12 } });
+      expect(picked('hr')).toEqual(['1']);
+    });
+    test('a press in the gap between two stars picks the nearer one', async () => {
+      await render(<Rating id="gp" aria-label="Gap" size="sm" />);
+      const a = stars('gp')[1].getBoundingClientRect(), b = stars('gp')[2].getBoundingClientRect();
+      expect(Math.round(b.left - a.right)).toBe(4);
+      await userEvent.click(document.body, { position: { x: a.right + 1, y: a.top + 10 } });
+      expect(picked('gp')).toEqual(['2']);
+      await userEvent.click(document.body, { position: { x: b.left - 1, y: a.top + 10 } });
+      expect(picked('gp')).toEqual(['3']);
+    });
+    test('allowHalf with clearable: pressing the picked half again clears it; the keys still reach every half', async () => {
+      await render(<Rating id="hc" aria-label="Clear" allowHalf clearable defaultValue={1.5} />);
+      await userEvent.click(stars('hc')[1], { position: { x: 4, y: 12 } });
+      expect(picked('hc')).toEqual([]);
+      radios('hc')[0].focus();
+      await userEvent.keyboard('{ArrowRight}{ArrowRight}');
+      expect(picked('hc')).toEqual(['1.5']);
+    });
+    test('ten md stars in a narrow box stop shrinking at 22px, so they stay 24px apart', async () => {
+      await render(<div style={{ width: '100px' }}><Rating id="nm" aria-label="Narrow" max={10} /></div>);
+      const w = stars('nm').map((s) => Math.round(s.getBoundingClientRect().width * 10) / 10);
+      expect(w.every((x) => x === 22), w.join(' ')).toBe(true);
+      expect(pitch(targets('nm')).every((d) => d >= 24), pitch(targets('nm')).join(' ')).toBe(true);
+    });
   });
 });

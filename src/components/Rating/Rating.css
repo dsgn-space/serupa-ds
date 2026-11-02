@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
-   Rating: a row of stars, 20, 24 or 32px (sm, md, lg) with 2px between them. Each star is the empty color with the
+   Rating: a row of stars, 20, 24 or 32px (sm, md, lg) with 2px between them (4px at sm when they can be picked). Each star is the empty color with the
    fill color drawn over its share (a whole, a half, or any fraction when read-only), from the start side. The
-   radios are invisible and laid over their star or half; the focused one rings its star. Every value reads one of
+   radios are invisible and laid over their star; the focused one rings its star. Every value reads one of
    its own tokens (rating.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
 @layer dk.components {
@@ -22,8 +22,22 @@
 .dk-rating__fill { width: var(--dk-rating-share); color: var(--rating-fill, var(--warning)); }
 /* Every star is drawn whole and the fill span clips it to its share; base.css's max-width on svg would shrink it to the share instead (GI1). */
 .dk-rating svg { --dk-rating-drawn: 100cqi; display: block; flex: none; width: var(--dk-rating-drawn); max-width: none; height: var(--dk-rating-drawn); fill: currentColor; }   /* stylelint-disable-line serupa/no-raw-value -- the star's own width, as a container unit: no token measures a container */
-/* The radios share the star's width in its row: one covers it, or two cover a half each (from the start side). */
-.dk-rating__choice { position: relative; flex: auto; align-self: stretch; width: var(--spacing-0); margin: var(--spacing-0); appearance: none; opacity: var(--opacity-0); cursor: pointer; touch-action: manipulation; }
+/* Target size (WCAG 2.5.8, GR104): a star's radio is a press area the star's height and the whole step to its
+   neighbours wide, half the gap on each side, so a press between two stars picks one and no gap is dead. Stars are
+   at least 24px apart, centre to centre: at sm the gap opens to 4px, and md and lg stars shrinking to fit stop at
+   22px. With allowHalf, the half's radio takes no presses: the star's whole radio does, and where in the star the
+   press lands picks the half or the whole (Rating.tsx), so each star is one target, never a 12px one. */
+.dk-rating:not(.dk-rating--readonly) {
+  --dk-rating-gap: max(var(--rating-gap, var(--spacing-0\.5)), calc(var(--spacing-6) - var(--dk-rating-size)));
+  --dk-rating-reach: calc((var(--spacing-0) - var(--dk-rating-gap)) / 2);   /* half the gap, outward */
+  gap: var(--dk-rating-gap);
+  grid-auto-columns: minmax(max(var(--rating-size-sm, var(--spacing-5)), calc(var(--spacing-6) - var(--dk-rating-gap))), var(--dk-rating-size));
+}
+.dk-rating__choice {
+  position: absolute; inset-block: var(--spacing-0); inset-inline: var(--dk-rating-reach);
+  margin: var(--spacing-0); appearance: none; opacity: var(--opacity-0); cursor: pointer; touch-action: manipulation;
+}
+.dk-rating__choice--half { pointer-events: none; }
 .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }   /* the error shows on the stars, as on a field's border */
 .dk-rating--disabled { opacity: var(--opacity-disabled); }
