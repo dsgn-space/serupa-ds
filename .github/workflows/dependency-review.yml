@@ -1,0 +1,25 @@
+name: Dependency review
+
+# A pull request that adds or bumps a dependency with a known vulnerability (moderate or worse) fails here, before
+# it merges. GitHub's dependency graph compares package-lock.json and the workflows' actions at the base and the
+# head, so this reads no code from the pull request and installs nothing.
+on:
+  pull_request:
+  # Skipped in the merge queue (it passes there), so it can be a required check.
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    name: dependency review
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: moderate
+          # The licenses are checked by tools/test/licenses.mjs, against what the package ships.
+          license-check: false
