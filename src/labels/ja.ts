@@ -18,6 +18,14 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: "すべて展開",
+  chartKind: (type) => (type === "bar" ? "棒グラフ" : "折れ線グラフ"),
+  chartSummary: (kind, series, points, first, last) => kind + "、" + n(series) + "系列、" + n(points) + "点" + (points > 1 ? "（" + first + "〜" + last + "）" : "") + "。",
+  chartRange: (series, low, lowAt, high, highAt) => series + "：最小 " + low + "（" + lowAt + "）、最大 " + high + "（" + highAt + "）。",
+  chartPoint: (series, category, value) => (series ? series + "、" + category + "：" + value : category + "：" + value),
+  chartNoValue: "値なし",
+  chartCategory: "カテゴリ",
+  chartShowTable: "表で表示",
+  chartShowChart: "グラフで表示",
   collapseAll: "すべて折りたたむ",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => "他" + n(count) + "人",

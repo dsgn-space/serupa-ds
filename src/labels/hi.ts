@@ -18,6 +18,14 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: "सभी खोलें",
+  chartKind: (type) => (type === "bar" ? "बार चार्ट" : "लाइन चार्ट"),
+  chartSummary: (kind, series, points, first, last) => kind + ", " + n(series) + " सीरीज़" + ", " + n(points) + " बिंदु" + (points > 1 ? ", " + first + " से " + last + " तक" : "") + "।",
+  chartRange: (series, low, lowAt, high, highAt) => series + ": न्यूनतम " + low + " (" + lowAt + "), अधिकतम " + high + " (" + highAt + ")।",
+  chartPoint: (series, category, value) => (series ? series + ", " + category + ": " + value : category + ": " + value),
+  chartNoValue: "कोई मान नहीं",
+  chartCategory: "श्रेणी",
+  chartShowTable: "तालिका के रूप में दिखाएँ",
+  chartShowChart: "चार्ट के रूप में दिखाएँ",
   collapseAll: "सभी बंद करें",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => n(count) + " और",
