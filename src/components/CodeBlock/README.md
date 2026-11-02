@@ -81,6 +81,7 @@ Each is an optional override: set it on the page, a container or one CodeBlock. 
 | `--code-block-border` | `border` | The frame and the line under the header. |
 | `--code-block-mark-bg` | `primary-subtle` | A marked line's tint. |
 | `--code-block-mark-bar` | `primary` | The bar at a marked line's start. |
+| `--code-block-focus-ring` | `focus-ring` | The ring inside the frame when the code scrolls and has keyboard focus. |
 | `--code-block-radius` | `rounded-md` | The corners (6px). |
 | `--code-block-padding` | `spacing-4` | Space around the code (16px). |
 | `--code-block-font-size` | `text-sm` | The code's size (14px). |

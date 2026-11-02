@@ -61,6 +61,16 @@
             "cssVar": "--code-block-mark-bar"
           }
         }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring inside the frame when the code scrolls and has keyboard focus.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--code-block-focus-ring"
+          }
+        }
       }
     },
     "radius": {
