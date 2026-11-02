@@ -124,6 +124,9 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const [own, setOwn] = React.useState<File[]>([]);
   const files = controlled ? props.files! : own;
   const [rejected, setRejected] = React.useState<FileRejection[]>([]);
+  // Each choice that refuses files puts a new alert in: the same refusal twice ("a.pdf isn't a PNG.", then a.pdf
+  // again) leaves the words as they were, which a screen reader doesn't say again (GR119).
+  const [tries, setTries] = React.useState(0);
   const [over, setOver] = React.useState(false);
   const depth = React.useRef(0);
   const multiple = !!props.multiple, disabled = !!props.disabled;
@@ -170,6 +173,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     }
     if (!multiple && ok.length > 1) for (const f of ok.slice(1)) bad.push({ file: f, reason: "count", message: L.fileOnlyOne(f.name) });
     setRejected(bad);
+    if (bad.length) setTries((n) => n + 1);
     if (bad.length && props.onReject) props.onReject(bad);
     // Only refused files (a duplicate, one too large) leave the list as it was: no onFilesChange with a copy of it,
     // which an app that uploads on change took as new files (L8E110).
@@ -281,7 +285,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
           onFocus={() => { const b = chooser.current; if (b && !b.disabled) b.focus(); }} />
       </div>
       {rejected.length || missing ? (
-        <div className="dk-file-upload__errors" role="alert">
+        <div key={tries} className="dk-file-upload__errors" role="alert">
           {missing ? <p className="dk-file-upload__error" id={base + "-missing"}><Icon icon={icons.Error} />{L.fileMissing(multiple)}</p> : null}
           {rejected.map((r, i) => <p key={i} className="dk-file-upload__error"><Icon icon={icons.Error} />{r.message}</p>)}
         </div>
