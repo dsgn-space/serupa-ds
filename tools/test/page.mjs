@@ -391,6 +391,9 @@ for (const scheme of ['light', 'dark']) {
     await other.close();
     await q.goBack({ waitUntil: 'commit' });
     await q.waitForFunction(() => document.readyState === 'complete', null, { timeout: 10000 }).catch(() => undefined);
+    // Since the crossfade (30), a theme change while the page is shown goes through a View Transition, which sets
+    // data-theme in its update callback a frame or so later, not in pageshow itself: wait for it (or time out).
+    await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 5000 }).catch(() => undefined);
     const back = await q.evaluate(() => ({ cached: window.__stayed === true, reasons: /** @type {any} */ (performance.getEntriesByType('navigation')[0]).notRestoredReasons, theme: document.documentElement.getAttribute('data-theme') }));
     await full.close();
     t('Getting started\'s plain page: Back brings it from the back/forward cache (nothing blocks it)', back.cached && !back.reasons, JSON.stringify(back.reasons));
