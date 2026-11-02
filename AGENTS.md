@@ -39,6 +39,6 @@ node tools/test/run.mjs --since main
   - The public API: `node tools/test/api.mjs --update` (`tools/test/baseline-api/`).
   - A component's size: `node tools/test/size.mjs --update <Name>` (`tools/test/baseline-size/`).
   - Shared code (`src/internal/`, the labels) that grows: raise the "All components (index.js)" line of `TOTALS` in `tools/test/size.mjs` by up to 0.5 KiB, with a dated note. A bigger raise needs a reason in the pull request.
-  - Looks: add the `update-visual-baselines` label as soon as the pull request opens, so CI draws the new screenshots. Then review them.
+  - Looks: add the `update-visual-baselines` label as soon as the pull request opens, so CI draws the new screenshots. Then review them in all six themes: the Design QA job's summary shows each changed story in every theme, before and after.
 - **WCAG 2.2 AA in all six themes.**
 - **A failing test is fixed, never skipped.** When it fails in one browser only, find out whether the browser has a real bug (fix the component) or the test assumes too much (fix the test).

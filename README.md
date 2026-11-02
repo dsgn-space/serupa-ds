@@ -434,11 +434,11 @@ Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed s
 
 | File | Holds |
 | --- | --- |
-| `<brand>.css` | The email classes: `serupa-body`, `serupa-container`, `serupa-content`, `serupa-h1`, `serupa-h2`, `serupa-text`, `serupa-muted`, `serupa-link`, `serupa-button` in a `serupa-button-cell`, `serupa-callout-info` (and `-success`, `-warning`, `-danger`), `serupa-divider` and `serupa-footer`. Light first, then the dark theme under `prefers-color-scheme: dark`. Inline it with your sender's inliner (or juice, or Premailer) and keep the dark block in `<style>` |
+| `<brand>.css` | The email classes: `serupa-body`, `serupa-container`, `serupa-content`, `serupa-h1`, `serupa-h2`, `serupa-text`, `serupa-muted`, `serupa-link`, `serupa-button` in a `serupa-button-cell`, `serupa-callout-info` (and `-success`, `-warning`, `-danger`, each with an `-rtl` twin whose bar is on the right, for a right-to-left email), `serupa-divider` and `serupa-footer`. Light first, then the dark theme under `prefers-color-scheme: dark`. Inline it with your sender's inliner (or juice, or Premailer) and keep the dark block in `<style>` |
 | `<brand>.html` | A starting email with those styles already inline: a 600px table layout, a preview line, a heading, text, a button, a callout, a divider and a footer |
 | `tokens.json` | Every theme's colors in hex (a color with alpha mixed over its surface), and the type sizes, spacing and radii in px, for a template language or an email builder |
 
-Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way.
+Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way. Outlook for Windows ignores padding on a link, so the button's padding is also on its `serupa-button-cell` as `mso-padding-alt`, which only Outlook reads: keep the link inside that cell.
 
 ## Editor autocomplete
 
