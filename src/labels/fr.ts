@@ -98,6 +98,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name} est déjà ajouté.`,
   filesAdded: (names) => (names.length === 1 ? `${names[0]} ajouté.` : `${n(names.length)} fichiers ajoutés.`),
   fileRemoved: (name) => `${name} retiré.`,
+  fileError: "Échec de l’envoi",
   viewImage: "Voir l’image",
   removeImage: "Retirer l’image",
   edit: "Modifier",

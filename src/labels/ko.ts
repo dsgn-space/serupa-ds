@@ -95,6 +95,7 @@ export const labels: SerupaLabels = {
   fileAlreadyAdded: (name) => `${name}${ga(name)} 이미 추가되었습니다.`,
   filesAdded: (names) => (names.length === 1 ? `${names[0]} 추가됨.` : `파일 ${n(names.length)}개 추가됨.`),
   fileRemoved: (name) => `${name} 삭제됨.`,
+  fileError: "업로드 실패",
   viewImage: "이미지 보기",
   removeImage: "이미지 삭제",
   edit: "편집",
