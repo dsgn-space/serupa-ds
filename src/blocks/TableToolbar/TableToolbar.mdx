@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './TableToolbar.stories';
+
+<Meta of={Stories} />
+
+# Table toolbar
+
+The controls above a table: a search field, filters, a count of the results, and actions for the selected rows.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A table long enough that people search or filter it: projects, orders, members.
+- Not for a short list that fits on one screen. There, the table on its own is enough.
+
+## What each part is for
+
+- **A search landmark** named after what the table lists ("Search and filter projects"), so a screen reader can jump straight to it. Each control has a visible label (2.4.6).
+- **The search field** filters as people type. Enter doesn't submit anything.
+- **Filters** are Selects whose first option means "no filter" (`value: ''`), such as "All" or "Anyone".
+- **The results count**, "3 of 8 projects", is a status region. Screen readers read it out each time it changes, without moving focus (4.1.3). Say the total too, so it's clear the list is filtered.
+- **Clear filters** shows only while a search or a filter is set. Pressing it empties them all and puts focus in the search field, since the button itself goes away (2.4.3).
+- **Bulk actions** come from TableActionBar. With rows selected, it shows "2 selected", your actions and Clear selection. It says the count when it changes, and when the selection is cleared it moves focus to the table's "Select all". That's why the table is this block's child: the bar must come just before it.
+- **On a phone**, the controls stack, and the table scrolls sideways in its own frame (1.4.10).
+
+<Canvas of={Stories.Filtered} />
+
+<Canvas of={Stories.Selected} />
+
+## What stays your app's job
+
+- Filtering the rows, on the device or on a server, and writing the count in the person's language.
+- Keeping the search and filters in the URL, if people should be able to share a filtered view.
+- Choosing which rows a "Select all" covers: here, the rows that match.
+
+## Copying it
+
+Copy `TableToolbar.tsx` and `TableToolbar.test.tsx`. Change the imports to `serupa`, and pass your own filters and table.
