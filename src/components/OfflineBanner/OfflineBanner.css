@@ -1,0 +1,60 @@
+/* ---------------------------------------------------------------
+   OfflineBanner: a small raised bar, an icon and a sentence, fixed in the middle of the bottom (or top) edge of the
+   screen, clear of a phone's home bar and notch, or in the page where you put it (inline). Offline its icon is
+   muted; back online it turns success.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-offline-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--offline-banner-gap, var(--spacing-2));
+  box-sizing: border-box;
+  max-inline-size: min(var(--container-sm), var(--sizing-full));
+  padding: var(--offline-banner-padding-y, var(--spacing-2)) var(--offline-banner-padding-x, var(--spacing-4));
+  border: var(--border-width-1) solid var(--offline-banner-border-color, var(--border-overlay));
+  border-radius: var(--offline-banner-radius, var(--rounded-lg));
+  background: var(--offline-banner-bg, var(--surface-overlay));
+  color: var(--offline-banner-text, var(--text));
+  box-shadow: var(--offline-banner-shadow, var(--shadow-lg));
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  overflow-wrap: anywhere;
+  /* Motion (DZ1): in from @starting-style over motion-enter-md, out (data-leaving, kept by OfflineBanner.tsx until
+     it ends) over motion-exit-md, toward its edge. Reduced motion: the fade alone. */
+  --dk-offline-from: var(--spacing-0) var(--spacing-2);
+  transition: opacity var(--motion-enter-md) var(--ease-enter), translate var(--motion-enter-md) var(--ease-enter);
+}
+.dk-offline-banner--top { --dk-offline-from: var(--spacing-0) calc(var(--spacing-0) - var(--spacing-2)); }
+.dk-offline-banner--bottom, .dk-offline-banner--top {
+  position: fixed;
+  z-index: var(--offline-banner-z-index, var(--z-toast));
+  inset-inline: var(--spacing-0);
+  margin-inline: auto;
+  inline-size: max-content;
+  max-inline-size: calc(var(--sizing-full) - var(--offline-banner-offset, var(--spacing-4)) - var(--offline-banner-offset, var(--spacing-4)));
+}
+.dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom)); }
+.dk-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
+.dk-offline-banner[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
+/* Not when it's there from the first render (offline as the page loads, data-instant): it only moves when it comes. */
+@starting-style { .dk-offline-banner:not([data-instant]) { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dk-offline-banner[data-leaving] { translate: var(--dk-offline-from); }
+  @starting-style { .dk-offline-banner:not([data-instant]) { translate: var(--dk-offline-from); } }
+}
+.dk-offline-banner__icon {
+  flex: none;
+  /* One line's height (20px), so the icon sits on the first line when the words wrap. */
+  font-size: var(--spacing-5);
+  color: var(--offline-banner-icon, var(--text-muted));
+  transition: color var(--motion-change-md) var(--ease-move);
+}
+.dk-offline-banner[data-state="back"] .dk-offline-banner__icon { color: var(--offline-banner-icon-online, var(--success)); }
+.dk-offline-banner__title { font-weight: var(--font-semibold); }
+@media (forced-colors: active) {
+  .dk-offline-banner { border-color: CanvasText; }
+  .dk-offline-banner__icon, .dk-offline-banner[data-state="back"] .dk-offline-banner__icon { color: CanvasText; }
+}
+@media print { .dk-offline-banner { display: none; } }
+}

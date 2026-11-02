@@ -23,6 +23,7 @@ import { Loader } from '../components/Loader/Loader';
 import { LoadMore } from '../components/LoadMore/LoadMore';
 import { SerupaProvider } from './provider';
 import { NumberInput } from '../components/NumberInput/NumberInput';
+import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
@@ -73,6 +74,9 @@ const SITES: Record<string, Site> = {
   'Field: a new error message': {
     ui: (s) => <Field label="Email" error={s ? 'Enter an email address with an @' : 'Enter an email address'}><Input /></Field>,
     act: (next) => next(), says: /Enter an email address with an @/ },
+  'OfflineBanner: the connection drops': {
+    ui: (s) => <OfflineBanner online={s !== 1} />,
+    act: (next) => next(), says: /You're offline/ },
   'FileUpload: a file added': {
     ui: () => <FileUpload id="fu" />,
     act: async () => { await userEvent.upload($('#fu'), [new File(['x'], 'report.pdf', { type: 'application/pdf' })]); }, says: /report\.pdf added/ },
