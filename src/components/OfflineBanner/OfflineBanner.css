@@ -37,10 +37,11 @@
 .dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom)); }
 .dk-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
 .dk-offline-banner[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
-@starting-style { .dk-offline-banner { opacity: var(--opacity-0); } }
+/* Not when it's there from the first render (offline as the page loads, data-instant): it only moves when it comes. */
+@starting-style { .dk-offline-banner:not([data-instant]) { opacity: var(--opacity-0); } }
 @media (prefers-reduced-motion: no-preference) {
   .dk-offline-banner[data-leaving] { translate: var(--dk-offline-from); }
-  @starting-style { .dk-offline-banner { translate: var(--dk-offline-from); } }
+  @starting-style { .dk-offline-banner:not([data-instant]) { translate: var(--dk-offline-from); } }
 }
 .dk-offline-banner__icon {
   flex: none;

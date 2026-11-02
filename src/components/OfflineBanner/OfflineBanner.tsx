@@ -42,6 +42,8 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
   const online = props.online ?? browser;
   // "Back online" shows for a moment after it comes back; null until the connection first changes.
   const [back, setBack] = React.useState(false);
+  // Offline from the first render, it's simply there; it slides in only when the connection drops later.
+  const [instant, setInstant] = React.useState(!online);
   const was = React.useRef<boolean | null>(null);
   const onChange = React.useRef(props.onChange);
   React.useEffect(() => { onChange.current = props.onChange; });
@@ -50,7 +52,7 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
     was.current = online;
     if (before === online || (before === null && online)) return;   // no change, or online from the start
     announce(online ? labels.backOnline : labels.offline);
-    if (before !== null) onChange.current?.(online);
+    if (before !== null) { onChange.current?.(online); setInstant(false); }
     setBack(online);
   }, [online, labels]);
   React.useEffect(() => {
@@ -67,7 +69,7 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
   if (!open && !leaving) return null;
   const placement = props.placement === "top" || props.placement === "inline" ? props.placement : "bottom";
   return (
-    <div {...rest} ref={(n) => { bar.current = n; setRef(ref, n); }} className={cn("dk-offline-banner", `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner"
+    <div {...rest} ref={(n) => { bar.current = n; setRef(ref, n); }} className={cn("dk-offline-banner", `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? "" : undefined}
       data-state={shown} data-leaving={open ? undefined : ""} inert={open ? undefined : true}>
       <Icon className="dk-offline-banner__icon" icon={shown === "back" ? icons.CloudDone : icons.CloudOff} />
       <span className="dk-offline-banner__text">
