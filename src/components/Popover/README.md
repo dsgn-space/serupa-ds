@@ -93,8 +93,8 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-border` | `border-overlay` | The panel's border. |
 | `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
-| `--popover-shadow` | `shadow-lg` | The panel's shadow. |
-| `--popover-radius` | `rounded-lg` | The panel's corners (8px). |
+| `--popover-shadow` | `elevation-overlay` | The panel's shadow. |
+| `--popover-radius` | `radius-surface` | The panel's corners (8px). |
 | `--popover-border-width` | `border-width-1` | The panel's border (1px). |
 | `--popover-title-size` | `text-sm` | The title (14px). |
 | `--popover-title-weight` | `font-semibold` | The title's weight (600). |

@@ -36,7 +36,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "The raised shadow at rest.",
         "$extensions": {
           "com.serupa": {
@@ -58,7 +58,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-full}",
+        "$value": "{radius.radius-pill}",
         "$description": "The corners (round).",
         "$extensions": {
           "com.serupa": {

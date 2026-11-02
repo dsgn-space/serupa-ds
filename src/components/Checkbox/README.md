@@ -172,7 +172,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--checkbox-border-width` | `border-width-1` | Border width (1px) |
-| `--checkbox-radius` | `rounded-sm` | Corner radius (4px) |
+| `--checkbox-radius` | `radius-inner` | Corner radius (4px) |
 
 **Motion**
 

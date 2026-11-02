@@ -34,7 +34,7 @@
   box-sizing: border-box; flex-shrink: 0; width: var(--dk-checkbox-box); height: var(--dk-checkbox-box); margin: var(--spacing-0);
   background: var(--checkbox-bg, var(--field));
   border: var(--checkbox-border-width, var(--border-width-1)) solid var(--dk-checkbox-bd);
-  border-radius: var(--checkbox-radius, var(--rounded-sm));
+  border-radius: var(--checkbox-radius, var(--radius-inner));
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }

@@ -63,5 +63,5 @@ Each is an optional override: set it on the page, a container or one button. The
 <!-- token-table:start (made from icon-button.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--icon-button-radius-round` | `rounded-full` | The corners of a round icon button (shape="round"). |
+| `--icon-button-radius-round` | `radius-pill` | The corners of a round icon button (shape="round"). |
 <!-- token-table:end -->

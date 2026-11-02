@@ -106,7 +106,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-xs}",
+        "$value": "{shadow.elevation-rest}",
         "$description": "An outline card's shadow",
         "$extensions": {
           "com.serupa": {
@@ -116,7 +116,7 @@
       },
       "shadow-elevated": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-md}",
+        "$value": "{shadow.elevation-raised}",
         "$description": "An elevated card's shadow",
         "$extensions": {
           "com.serupa": {
@@ -128,7 +128,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-xl}",
+        "$value": "{radius.radius-container}",
         "$description": "The corners",
         "$extensions": {
           "com.serupa": {

@@ -192,7 +192,7 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | Token | Default | Use |
 | --- | --- | --- |
 | `--badge-border-width` | `border-width-1` | Border width (subtle and outline badges, and every badge in forced-colors mode) |
-| `--badge-radius` | `rounded-md` | Corner radius (6px), like Button. Count badges are always fully round |
+| `--badge-radius` | `radius-control` | Corner radius (6px), like Button. Count badges are always fully round |
 | `--badge-subtle-border` | `opacity-20` | Strength of the subtle badge's outline, in its text color (20%). Set `0%` for no outline |
 | `--badge-indicator-ring` | `border-width-2` | The indicator's ring in the surface color (2px) |
 

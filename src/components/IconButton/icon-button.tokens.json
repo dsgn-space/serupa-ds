@@ -4,7 +4,7 @@
     "border": {
       "radius-round": {
         "$type": "dimension",
-        "$value": "{radius.rounded-full}",
+        "$value": "{radius.radius-pill}",
         "$description": "The corners of a round icon button (shape=\"round\").",
         "$extensions": {
           "com.serupa": {

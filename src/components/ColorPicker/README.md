@@ -105,7 +105,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--color-picker-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--color-picker-contrast` | `text-muted` | The contrast line (4.5:1). |
 | `--color-picker-contrast-low` | `warning-text` | The contrast line below `minContrast` (4.5:1). |
-| `--color-picker-swatch-radius` | `rounded-full` | A swatch's shape. |
+| `--color-picker-swatch-radius` | `radius-pill` | A swatch's shape. |
 | `--color-picker-gap` | `spacing-3` | Space between the swatches, the custom row and the contrast line (12px). |
 | `--color-picker-swatch-gap` | `spacing-2` | Space between swatches (8px). |
 | `--color-picker-swatch-size-sm` | `spacing-6` | A swatch at `size="sm"` (24px). |

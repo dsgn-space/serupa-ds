@@ -6,10 +6,10 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-btn.dk-fab {
-  --dk-btn-shadow: var(--fab-shadow, var(--shadow-lg));
+  --dk-btn-shadow: var(--fab-shadow, var(--elevation-overlay));
   height: var(--fab-size, var(--spacing-14));
   width: var(--fab-size, var(--spacing-14));
-  border-radius: var(--fab-radius, var(--rounded-full));
+  border-radius: var(--fab-radius, var(--radius-pill));
 }
 .dk-btn.dk-fab .dk-icon { font-size: var(--fab-icon-size, var(--spacing-6)); }
 .dk-btn.dk-fab svg { width: var(--fab-icon-size, var(--spacing-6)); height: var(--fab-icon-size, var(--spacing-6)); }

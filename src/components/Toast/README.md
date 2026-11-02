@@ -134,8 +134,8 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 | `--toast-icon-warning` | `warning` | The icon of a warning toast. |
 | `--toast-icon-danger` | `danger` | The icon of a danger toast. |
 | `--toast-focus-ring` | `focus-ring` | The ring around a toast that F8 moved focus to. |
-| `--toast-shadow` | `shadow-lg` | A toast's shadow. |
-| `--toast-radius` | `rounded-lg` | A toast's corners (8px). |
+| `--toast-shadow` | `elevation-overlay` | A toast's shadow. |
+| `--toast-radius` | `radius-surface` | A toast's corners (8px). |
 | `--toast-border-width` | `border-width-1` | A toast's border. |
 | `--toast-width` | `container-sm` | A toast's width (384px), at most the screen less the offset on each side. |
 | `--toast-padding` | `spacing-4` | Padding inside a toast (16px). |

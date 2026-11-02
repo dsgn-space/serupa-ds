@@ -126,7 +126,7 @@
     "shadow": {
       "head-scrolled": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-sm}",
+        "$value": "{shadow.elevation-part}",
         "$description": "A sticky header's shadow once rows have scrolled under it (where scroll-state container queries are supported).",
         "$extensions": {
           "com.serupa": {
@@ -234,7 +234,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The frame's corners (8px).",
         "$extensions": {
           "com.serupa": {

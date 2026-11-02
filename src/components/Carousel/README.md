@@ -104,11 +104,11 @@ Each is an optional override: set it on the page, a container or one carousel. T
 | `--carousel-dot-hover` | `text-muted` | A dot under the pointer. |
 | `--carousel-dot-active` | `primary` | The current slide's dot. |
 | `--carousel-focus-ring` | `focus-ring` | A dot's keyboard focus ring. |
-| `--carousel-radius` | `rounded-xl` | The slides' corners (12px). |
+| `--carousel-radius` | `radius-container` | The slides' corners (12px). |
 | `--carousel-dot-size` | `spacing-2` | A dot's size (8px). |
 | `--carousel-dot-active-width` | `spacing-6` | The current dot's width (24px). |
 | `--carousel-gap` | `spacing-3` | Space between the slides and the dots (12px). |
 | `--carousel-slide-gap` | `spacing-4` | Space between slides shown side by side, with `perView` (16px). |
 | `--carousel-arrow-offset` | `spacing-2` | The previous and next buttons' distance from the sides (8px). |
-| `--carousel-arrow-shadow` | `shadow-sm` | The previous and next buttons' shadow, so they stand out on any slide. |
+| `--carousel-arrow-shadow` | `elevation-part` | The previous and next buttons' shadow, so they stand out on any slide. |
 <!-- token-table:end -->

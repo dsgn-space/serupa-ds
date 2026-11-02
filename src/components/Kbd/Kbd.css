@@ -14,7 +14,7 @@
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--dk-kbd-h); height: var(--dk-kbd-h);
   padding: var(--spacing-0) var(--kbd-padding-x, var(--spacing-1\.5));
   border: var(--border-width-1) solid var(--kbd-border, var(--field-border)); border-bottom-width: var(--border-width-2);
-  border-radius: var(--kbd-radius, var(--rounded-sm)); background: var(--kbd-bg, var(--surface-muted)); color: var(--kbd-text, var(--text));
+  border-radius: var(--kbd-radius, var(--radius-inner)); background: var(--kbd-bg, var(--surface-muted)); color: var(--kbd-text, var(--text));
   font: inherit;
 }
 .dk-kbd__plus { color: var(--kbd-separator, var(--text-muted)); }

@@ -55,8 +55,8 @@ Each is an optional override: set it on the page, a container or one SkipLink. T
 | `--skip-link-text` | `primary` | The link's text (4.5:1 on its background). |
 | `--skip-link-border` | `border-raised` | The shown link's border. |
 | `--skip-link-focus-ring` | `focus-ring` | The focus ring around it while it's shown. |
-| `--skip-link-shadow` | `shadow-lg` | Lifts it above the page and a sticky Navbar. |
-| `--skip-link-radius` | `rounded-md` | Its corners. |
+| `--skip-link-shadow` | `elevation-overlay` | Lifts it above the page and a sticky Navbar. |
+| `--skip-link-radius` | `radius-control` | Its corners. |
 | `--skip-link-border-width` | `border-width-1` | Its border's width. |
 | `--skip-link-offset` | `spacing-3` | How far it sits from the viewport's top and start edges. |
 | `--skip-link-padding-x` | `spacing-4` | Space at its start and end. |

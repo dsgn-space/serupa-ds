@@ -110,5 +110,5 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-md` | `spacing-1.5` | Top and bottom padding, md (6px). |
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |
-| `--textarea-radius` | `rounded-md` | Corner radius (6px), like Input and Button |
+| `--textarea-radius` | `radius-control` | Corner radius (6px), like Input and Button |
 <!-- token-table:end -->

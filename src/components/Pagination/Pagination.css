@@ -13,7 +13,7 @@
 .dk-pagination__item {
   white-space: nowrap; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center;
   min-width: var(--dk-pagination-size); height: var(--dk-pagination-size); padding: var(--spacing-0) var(--pagination-padding-x, var(--spacing-2));
-  border: var(--spacing-0); border-radius: var(--pagination-radius, var(--rounded-md)); background: transparent;
+  border: var(--spacing-0); border-radius: var(--pagination-radius, var(--radius-control)); background: transparent;
   color: var(--pagination-text, var(--text)); font: inherit; font-variant-numeric: tabular-nums; text-decoration: none; cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }

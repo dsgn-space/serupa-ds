@@ -36,7 +36,7 @@
     "radius": {
       "stepper-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "The buttons' corners (4px).",
         "$extensions": {
           "com.serupa": {

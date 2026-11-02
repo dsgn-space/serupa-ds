@@ -86,7 +86,7 @@
     "shadow": {
       "item-shadow-active": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-md}",
+        "$value": "{shadow.elevation-raised}",
         "$description": "The raised look of the row being moved.",
         "$extensions": {
           "com.serupa": {
@@ -98,7 +98,7 @@
     "radius": {
       "item-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "A row's corners (6px).",
         "$extensions": {
           "com.serupa": {

@@ -12,7 +12,7 @@
   position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--spacing-0), max-content); align-items: stretch; box-sizing: border-box; height: var(--dk-seg-h); max-width: var(--sizing-full);
   padding: var(--segmented-control-padding, var(--spacing-0\.5));
   border: var(--border-width-1) solid var(--segmented-control-border, var(--field-border));
-  border-radius: var(--segmented-control-radius, var(--rounded-md)); background: var(--segmented-control-bg, var(--surface-muted));
+  border-radius: var(--segmented-control-radius, var(--radius-control)); background: var(--segmented-control-bg, var(--surface-muted));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;
 }
 .dk-segmented--size-sm { --dk-seg-h: var(--segmented-control-height-sm, var(--control-height-sm)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
@@ -24,8 +24,8 @@
 .dk-segmented__indicator {
   position: absolute; inset-block: var(--segmented-control-padding, var(--spacing-0\.5)); box-sizing: border-box;
   border: var(--border-width-1) solid var(--segmented-control-indicator-border, var(--field-border));
-  border-radius: var(--segmented-control-indicator-radius, var(--rounded-sm)); background: var(--segmented-control-indicator, var(--surface));
-  box-shadow: var(--segmented-control-indicator-shadow, var(--shadow-sm));
+  border-radius: var(--segmented-control-indicator-radius, var(--radius-inner)); background: var(--segmented-control-indicator, var(--surface));
+  box-shadow: var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
 /* The indicator sits on the selected segment by left and width, which don't animate. A new choice slides it there by
    clip-path, which the compositor runs (EG1), and which keeps its 1px border and round corners whatever the widths
@@ -35,7 +35,7 @@
    drop-shadow meanwhile. */
 .dk-segmented__indicator[data-slide] { border-color: transparent; background: transparent; box-shadow: none; filter: drop-shadow(var(--drop-shadow-xs)); }
 .dk-segmented__indicator[data-slide]::before, .dk-segmented__indicator[data-slide]::after {
-  --dk-seg-r1: var(--segmented-control-indicator-radius, var(--rounded-sm));
+  --dk-seg-r1: var(--segmented-control-indicator-radius, var(--radius-inner));
   content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1));
   transition: clip-path var(--segmented-control-duration, var(--motion-change-md)) var(--ease-settle);
 }
@@ -46,12 +46,12 @@
    shows the choice; the indicator takes over in the same place (FC1). */
 .dk-segmented:not(:has(> .dk-segmented__indicator)) .dk-segmented__item--selected {
   background: var(--segmented-control-indicator, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--segmented-control-indicator-border, var(--field-border)), var(--segmented-control-indicator-shadow, var(--shadow-sm));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--segmented-control-indicator-border, var(--field-border)), var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
 .dk-segmented__item {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--segmented-control-gap, var(--spacing-1\.5));
   min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0) var(--segmented-control-padding-x, var(--spacing-3));
-  border: var(--spacing-0); border-radius: var(--segmented-control-indicator-radius, var(--rounded-sm)); background: transparent;
+  border: var(--spacing-0); border-radius: var(--segmented-control-indicator-radius, var(--radius-inner)); background: transparent;
   color: var(--segmented-control-text, var(--text-muted)); font: inherit; font-weight: var(--segmented-control-weight, var(--font-medium)); white-space: nowrap; cursor: pointer; touch-action: manipulation;
   transition: color var(--motion-hover) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }

@@ -133,5 +133,5 @@ Each is an optional override: set it on the page, a container or one select. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--select-border-width` | `border-width-1` | Border width (1px) |
-| `--select-radius` | `rounded-md` | Corner radius (6px) |
+| `--select-radius` | `radius-control` | Corner radius (6px) |
 <!-- token-table:end -->

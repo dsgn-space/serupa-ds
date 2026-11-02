@@ -182,7 +182,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The corners of variant=\"card\" (8px).",
         "$extensions": {
           "com.serupa": {

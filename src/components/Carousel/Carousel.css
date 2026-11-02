@@ -7,7 +7,7 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-carousel { display: flex; flex-direction: column; gap: var(--carousel-gap, var(--spacing-3)); min-width: var(--spacing-0); }
-.dk-carousel__viewport { position: relative; overflow: hidden; border-radius: var(--carousel-radius, var(--rounded-xl)); touch-action: pan-y; }
+.dk-carousel__viewport { position: relative; overflow: hidden; border-radius: var(--carousel-radius, var(--radius-container)); touch-action: pan-y; }
 .dk-carousel {
   --dk-carousel-space: var(--spacing-0);
   --dk-carousel-step: calc((var(--sizing-full) + var(--dk-carousel-space)) / var(--dk-carousel-per, 1));
@@ -37,7 +37,7 @@
 .dk-carousel[data-dir="rtl"] .dk-carousel__track { transform: translateX(calc(var(--dk-carousel-index) * var(--dk-carousel-step) + var(--dk-carousel-drag, 0px))); }
 .dk-carousel__viewport[data-dragging] .dk-carousel__track { transition: none; -webkit-user-select: none; user-select: none; }
 .dk-carousel__slide { flex: 0 0 calc(var(--dk-carousel-step) - var(--dk-carousel-space)); min-width: var(--spacing-0); }
-.dk-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2); translate: 0 calc(var(--spacing-0) - var(--sizing-1-2)); box-shadow: var(--carousel-arrow-shadow, var(--shadow-sm)); }
+.dk-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2); translate: 0 calc(var(--spacing-0) - var(--sizing-1-2)); box-shadow: var(--carousel-arrow-shadow, var(--elevation-part)); }
 .dk-carousel__arrow--prev { inset-inline-start: var(--carousel-arrow-offset, var(--spacing-2)); }
 .dk-carousel__arrow--next { inset-inline-end: var(--carousel-arrow-offset, var(--spacing-2)); }
 .dk-carousel__arrow:disabled { visibility: hidden; }

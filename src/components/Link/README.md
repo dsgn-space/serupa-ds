@@ -83,5 +83,5 @@ Each is an optional override: set it on the page, a container or one link. The l
 | `--link-thickness-hover` | `decoration-2` | The underline's thickness on hover (2px). |
 | `--link-offset` | `underline-offset-2` | The gap between the text and the underline (2px). |
 | `--link-icon-gap` | `spacing-0.5` | Space before the new-tab icon of an external link (2px). |
-| `--link-focus-radius` | `rounded-sm` | The focus ring's corners (4px). |
+| `--link-focus-radius` | `radius-inner` | The focus ring's corners (4px). |
 <!-- token-table:end -->

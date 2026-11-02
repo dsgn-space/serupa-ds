@@ -56,7 +56,7 @@
     "radius": {
       "clear-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "The clear button's corners (4px).",
         "$extensions": {
           "com.serupa": {

@@ -100,8 +100,8 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-option-bg-active` | `highlight` | The highlighted time (pointer or keyboard). |
 | `--time-picker-option-indicator` | `primary` | The 2px bar at the highlighted time's start. |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
-| `--time-picker-list-shadow` | `shadow-lg` | The list's shadow. |
-| `--time-picker-list-radius` | `rounded-lg` | The list's corners (8px). |
+| `--time-picker-list-shadow` | `elevation-overlay` | The list's shadow. |
+| `--time-picker-list-radius` | `radius-surface` | The list's corners (8px). |
 | `--time-picker-list-max-height` | `spacing-60` | The list's tallest before it scrolls (240px). |
 | `--time-picker-list-min-width` | `spacing-40` | The list's least width (160px). |
 | `--time-picker-option-height` | `control-height-md` | Each time's height (32px). |

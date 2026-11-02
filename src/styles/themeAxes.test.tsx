@@ -260,6 +260,16 @@ describe('Density axis', () => {
     // A deep shade: dark enough to read as shadow.
     expect(Math.max(pr, pg, pb, er, eg, eb)).toBeLessThan(0.35);
   });
+  test('the elevation roles (I6) follow data-shadow in a section too: elevation-overlay is shadow-lg wherever it is read', async () => {
+    const box = (id: string, v: string) => <div id={id} style={{ boxShadow: `var(${v})` }}>Menu</div>;
+    await render(<div>
+      {box('el-root', '--elevation-overlay')}
+      <section data-shadow="brand">{box('el-brand', '--elevation-overlay')}{box('el-brand-lg', '--shadow-lg')}</section>
+    </div>);
+    const shadow = (id: string) => getComputedStyle(document.getElementById(id)!).boxShadow;
+    expect(shadow('el-brand')).toBe(shadow('el-brand-lg'));
+    expect(shadow('el-brand')).not.toBe(shadow('el-root'));
+  });
 
   test('data-type-scale="fluid" (22): text-2xl and up shrink to 70% on a 320px viewport and reach full size at 1280px; body sizes and fixed sections stay put; browser zoom doubles them by 300% (GR82)', async () => {
     root.setAttribute('data-type-scale', 'fluid');
