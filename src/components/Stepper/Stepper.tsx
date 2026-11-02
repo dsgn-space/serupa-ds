@@ -13,12 +13,12 @@ import { activeIn } from "../../internal/root";
 export interface StepperStep {
   title: React.ReactNode;
   /** A muted line under the title. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Shows "Optional" under the title. */
-  optional?: boolean;
+  optional?: boolean | undefined;
   /** 'error': marks the step in danger, such as a step with a problem to fix. 'warning': amber, for a softer
       problem that doesn't block going on, such as a field left for later. */
-  status?: 'error' | 'warning';
+  status?: 'error' | 'warning' | undefined;
 }
 export interface StepperProps extends React.HTMLAttributes<HTMLElement> {
   /** The steps, in order. */
@@ -26,16 +26,16 @@ export interface StepperProps extends React.HTMLAttributes<HTMLElement> {
   /** The current step's index, from 0. Steps before it are complete; steps.length marks them all complete. */
   current: number;
   /** 'horizontal' (default): side by side, joined by lines. 'vertical': stacked, for narrow spaces or long descriptions. */
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: 'horizontal' | 'vertical' | undefined;
   /** 'sm' (24px circles, text-xs) or 'md' (32px, text-sm, default). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** Makes steps buttons that go to them: the completed ones, or every one but the current with clickable="all". */
-  onStepClick?: (index: number) => void;
+  onStepClick?: ((index: number) => void) | undefined;
   /** Which steps onStepClick makes buttons. 'completed' (default): the ones before the current step. 'all': every
       step but the current one, for a form people can fill in any order. */
-  clickable?: 'completed' | 'all';
+  clickable?: 'completed' | 'all' | undefined;
   /** Words read out or shown: { completed: 'completed', error: 'has an error', warning: 'needs attention', optional: 'Optional', stepOf: (step, total) => `Step ${step} of ${total}` }. */
-  labels?: { completed?: string; error?: string; warning?: string; optional?: string; stepOf?: (step: number, total: number) => string };
+  labels?: ({ completed?: string; error?: string; warning?: string; optional?: string; stepOf?: (step: number, total: number) => string }) | undefined;
 }
 
 const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, clickable: 1, labels: 1, className: 1 } as const;

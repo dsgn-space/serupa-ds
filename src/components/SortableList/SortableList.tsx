@@ -22,13 +22,13 @@ export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLULis
   /** Called with the new order when an item is dropped somewhere new, and which positions it moved between (from 0). */
   onReorder: (items: T[], move: { from: number; to: number }) => void;
   /** Shows the items without handles. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** The word before an item's name on its handle. Default: "Reorder" (from SerupaProvider labels). */
-  reorderLabel?: string;
+  reorderLabel?: string | undefined;
   /** Which way the items run: "vertical" (default), a column, or "horizontal", a row (tabs, chips, a board's columns)
    *  that drags and auto-scrolls sideways. In a row, Left and Right follow the reading direction, so in right-to-left
    *  ArrowLeft moves an item later. */
-  orientation?: "vertical" | "horizontal";
+  orientation?: "vertical" | "horizontal" | undefined;
 }
 
 type Drag = { key: string | number; from: number; to: number; pointer: boolean };
@@ -280,7 +280,7 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     </ul>
     {props.disabled ? null : <span hidden id={hintId}>{sds.labels.reorderInstructions}</span>}
   </>);
-}) as <T>(props: SortableListProps<T> & { ref?: React.Ref<HTMLUListElement> }) => React.ReactElement;
+}) as <T>(props: SortableListProps<T> & { ref?: React.Ref<HTMLUListElement> | undefined }) => React.ReactElement;
 
 /** items with the one at `from` moved to `to`. */
 function move<T>(items: readonly T[], from: number, to: number): T[] {

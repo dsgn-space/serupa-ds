@@ -12,24 +12,24 @@ const STATUSES: readonly TimelineStatus[] = ["neutral", "primary", "success", "w
 
 export interface TimelineProps extends React.OlHTMLAttributes<HTMLOListElement> {
   /** 'start' (default): every event on one side of the line. 'alternate': from 768px up, events take turns on either side of a centered line; narrower, they stay on one side. */
-  align?: TimelineAlign;
+  align?: TimelineAlign | undefined;
   /** TimelineItems, in the order they happened (or newest first: the list keeps whatever order you give). */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 export interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "title"> {
   /** What happened: "Order shipped". */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** When it happened, as people read it: "12 Mar, 14:05" or "2 hours ago". */
-  time?: React.ReactNode;
+  time?: React.ReactNode | undefined;
   /** The same moment for machines, on the <time> element: "2026-03-12T14:05". */
-  dateTime?: string;
+  dateTime?: string | undefined;
   /** An icon in the marker instead of a dot: a Material Symbols or custom name, or an element. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** The marker's color: 'neutral' (default), 'primary', 'success', 'warning', 'danger' or 'info'. It's decoration: say the status in the title too. */
-  status?: TimelineStatus;
+  status?: TimelineStatus | undefined;
   /** More about the event, below the title and time. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 /* Timeline: an <ol> of events, each with a marker (a dot or an icon) on a line that joins them, then a title, a

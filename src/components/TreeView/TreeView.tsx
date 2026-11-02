@@ -16,34 +16,34 @@ export interface TreeViewItem {
   /** What the row shows. */
   label: React.ReactNode;
   /** The text typing finds it by, when label isn't a string. Default: label. */
-  textValue?: string;
+  textValue?: string | undefined;
   /** An icon before the label, such as a folder or a file. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** The items inside it. An item with children (even an empty array) can open and close. */
-  children?: TreeViewItem[];
+  children?: TreeViewItem[] | undefined;
   /** Can be focused and read, but not picked, opened or closed. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 
 export interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "defaultValue" | "onChange"> {
   /** The items at the top level, each with its own children. */
   items: TreeViewItem[];
   /** 'single' (default): one item is picked at a time. 'multiple': any number, toggled with Space or a click. 'none': items are only opened and closed. */
-  selectionMode?: 'single' | 'multiple' | 'none';
+  selectionMode?: 'single' | 'multiple' | 'none' | undefined;
   /** The picked items' ids (controlled). Use with onValueChange. */
-  value?: string[];
+  value?: string[] | undefined;
   /** The picked items' ids at first (uncontrolled). */
-  defaultValue?: string[];
+  defaultValue?: string[] | undefined;
   /** Called with the picked items' ids when they change. */
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: ((value: string[]) => void) | undefined;
   /** The open items' ids (controlled). Use with onExpandedChange. */
-  expanded?: string[];
+  expanded?: string[] | undefined;
   /** The open items' ids at first (uncontrolled). */
-  defaultExpanded?: string[];
+  defaultExpanded?: string[] | undefined;
   /** Called with the open items' ids when one opens or closes. */
-  onExpandedChange?: (expanded: string[]) => void;
+  onExpandedChange?: ((expanded: string[]) => void) | undefined;
   /** What the tree holds ("Files"). Needed, unless aria-labelledby names it. */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
 }
 
 interface Row { item: TreeViewItem; level: number; parent: string | null }

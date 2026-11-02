@@ -13,33 +13,33 @@ import { activeIn } from "../../internal/root";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
-  brand?: React.ReactNode;
+  brand?: React.ReactNode | undefined;
   /** NavbarLinks: the main pages. Below 768px they fold into a menu button. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Controls on the right: a search, a user menu, a sign-in button. */
-  actions?: React.ReactNode;
+  actions?: React.ReactNode | undefined;
   /** Keeps the bar at the top while the page scrolls, and keeps what the keyboard focuses (or a #link jumps to)
    *  from scrolling under it. Default: false. */
-  sticky?: boolean;
+  sticky?: boolean | undefined;
   /** The content's maximum width, like Container: 'prose', 'md', 'lg', 'xl' (default), '2xl' or 'full'. */
-  size?: ContainerSize;
+  size?: ContainerSize | undefined;
   /** The links' nav name. Default: "Main". */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
   /** The menu button's name on small screens. Default: "Menu". */
-  menuLabel?: string;
+  menuLabel?: string | undefined;
 }
 
 /** NavbarLink's own props, beside those of the element it renders. */
 export interface NavbarLinkOwnProps {
   /** The current page: shaded, with aria-current="page". Default: false. */
-  active?: boolean;
+  active?: boolean | undefined;
 }
 
 /** NavbarLink's props: its own, `as`, and the props of the element `as` names (an <a>'s by default), so
  *  <NavbarLink as={RouterLink} to="/team"> takes RouterLink's `to`, and its ref is that element's. */
 export type NavbarLinkProps<C extends React.ElementType = 'a'> = NavbarLinkOwnProps & {
   /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. */
-  as?: C;
+  as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof NavbarLinkOwnProps | 'as'>;
 
 const NavbarContext = /* @__PURE__ */ React.createContext<{ close: () => void } | null>(null);
@@ -166,5 +166,5 @@ const NavbarLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, NavbarLinkPr
 /** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. `as` renders your router's link, typed with its props. */
 export const NavbarLink = NavbarLinkBase as {
   <C extends React.ElementType = 'a'>(props: NavbarLinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
-  displayName?: string;
+  displayName?: string | undefined;
 };

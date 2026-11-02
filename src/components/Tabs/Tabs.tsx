@@ -13,19 +13,19 @@ export type TabsVariant = 'line' | 'pill';
 
 export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected tab's value (controlled). Use with onValueChange. */
-  value?: string;
+  value?: string | undefined;
   /** The tab selected at first (uncontrolled). Default: the first tab that isn't disabled. */
-  defaultValue?: string;
+  defaultValue?: string | undefined;
   /** Called with the new value when a tab is chosen. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: ((value: string) => void) | undefined;
   /** 'line' (default): a line under the selected tab. 'pill': the selected tab filled in primary. */
-  variant?: TabsVariant;
+  variant?: TabsVariant | undefined;
   /** 'sm' (32px tabs) or 'md' (36px, default). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** 'auto' (default): arrow keys move and select at once. 'manual': arrow keys move, Enter or Space selects (for panels that are slow to show). */
-  activation?: 'auto' | 'manual';
+  activation?: 'auto' | 'manual' | undefined;
   /** 'horizontal' (default): the tabs in a row over the panels. 'vertical': a column beside them, with ↑ ↓ between tabs. */
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: 'horizontal' | 'vertical' | undefined;
 }
 
 interface Ctx { base: string; value: string | null; select: (v: string) => void; manual: boolean; vertical: boolean; panels: Record<string, number>; register: (v: string, d: number) => void; stop: string | null; before: { current: (() => void) | null }; keyed: boolean }
@@ -284,7 +284,7 @@ export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElem
   /** Ties the tab to the TabPanel with the same value. */
   value: string;
   /** An icon before the label: an icon name or any element. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
 }
 
 /** One tab: a button that selects its panel. */
@@ -307,7 +307,7 @@ export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The value of the Tab that shows this panel. */
   value: string;
   /** Keeps the panel in the page while hidden (the default: hidden panels keep their state). false renders it only while selected. */
-  keepMounted?: boolean;
+  keepMounted?: boolean | undefined;
 }
 
 /** The content for one tab, shown while its tab is selected. */

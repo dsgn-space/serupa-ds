@@ -28,53 +28,53 @@ export interface FileUploadStatus {
   /** 'uploading': a bar under the name. 'done': "Complete" after the size. 'error': a danger message under the name, and a retry button with onRetry. */
   state: 'uploading' | 'done' | 'error';
   /** While uploading, how far along, from 0 to 100. Leave it out when you can't tell: the bar then moves on its own. */
-  progress?: number;
+  progress?: number | undefined;
   /** With 'error', what went wrong. Default: "Upload failed". */
-  message?: React.ReactNode;
+  message?: React.ReactNode | undefined;
 }
 export type FileRejection = { file: File; reason: 'type' | 'size' | 'count' | 'folder' | 'duplicate'; message: string };
 export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'title'> {
   /** The chosen files (controlled). Use with onFilesChange. */
-  files?: File[];
+  files?: File[] | undefined;
   /** Called with the new list when files are added or removed. */
-  onFilesChange?: (files: File[]) => void;
+  onFilesChange?: ((files: File[]) => void) | undefined;
   /** Called with the files that weren't added and why. They're also listed under the drop area. */
-  onReject?: (rejections: FileRejection[]) => void;
+  onReject?: ((rejections: FileRejection[]) => void) | undefined;
   /** File types to allow, as for <input accept>: "image/*,.pdf". */
-  accept?: string;
+  accept?: string | undefined;
   /** Allows several files. Default: false (a new file replaces the old one). */
-  multiple?: boolean;
+  multiple?: boolean | undefined;
   /** The largest file allowed, in bytes. */
-  maxSize?: number;
+  maxSize?: number | undefined;
   /** The most files allowed, with multiple. */
-  maxFiles?: number;
+  maxFiles?: number | undefined;
   /** Turns the drop area and its button off, as a disabled native control. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** A danger outline on the drop area, and aria-invalid on the native input; the choose button is described by the error (a button supports neither aria-invalid nor aria-errormessage). In a Field with an error, it's set for you. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Required for the form's check (on the native input) and aria-required on the choose button. In a required Field, aria-required is set for you. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** The chosen files are shown and submitted, but can't be changed: the choose button stays focusable (aria-disabled) and doesn't open the picker, dropped files are ignored and there are no remove buttons. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** Submits the files with a form, through the native file input. */
-  name?: string;
+  name?: string | undefined;
   /** The id of the form the files submit with, when the FileUpload sits outside it (like an input's form attribute). */
-  form?: string;
+  form?: string | undefined;
   /** The drop area's title. Default: "Drag files here" ("Drag a file here" without multiple). */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The button's text. Default: "Choose files" ("Choose a file"). */
-  buttonLabel?: string;
+  buttonLabel?: string | undefined;
   /** A muted line, such as "PNG or JPG, up to 5 MB". */
-  hint?: React.ReactNode;
+  hint?: React.ReactNode | undefined;
   /** The remove buttons' names, given the file name. Default: (name) => `Remove ${name}`. */
-  removeLabel?: (name: string) => string;
+  removeLabel?: ((name: string) => string) | undefined;
   /** Each chosen file's upload, when you upload as files are added: return { state, progress, message } for a file, or
       nothing when it isn't uploading. Screen readers hear when one finishes or fails. */
-  fileStatus?: (file: File) => FileUploadStatus | null | undefined;
+  fileStatus?: ((file: File) => FileUploadStatus | null | undefined) | undefined;
   /** Called by a failed file's retry button. Without it, a failed file has no retry button. */
-  onRetry?: (file: File) => void;
+  onRetry?: ((file: File) => void) | undefined;
   /** Shows a small picture of each image file in place of its type icon. Default: false. */
-  thumbnails?: boolean;
+  thumbnails?: boolean | undefined;
 }
 
 const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, form: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, fileStatus: 1, onRetry: 1, thumbnails: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1, "aria-errormessage": 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1 } as const;

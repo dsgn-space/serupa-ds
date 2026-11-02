@@ -17,11 +17,11 @@ export interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Where saving is: 'idle' (nothing to say, renders empty), 'saving', 'saved' or 'error'. */
   status: SaveState;
   /** When the last save finished, for "Saved 2 minutes ago" (kept up to date). Without it, just "Saved". */
-  savedAt?: Date | number;
+  savedAt?: Date | number | undefined;
   /** Shows a Try again button after an error; called when it's pressed. */
-  onRetry?: () => void;
+  onRetry?: (() => void) | undefined;
   /** What went wrong, in place of "Couldn't save" ("Couldn't save: you're offline"). */
-  errorText?: React.ReactNode;
+  errorText?: React.ReactNode | undefined;
 }
 
 const STATES: readonly SaveState[] = ["idle", "saving", "saved", "error"];

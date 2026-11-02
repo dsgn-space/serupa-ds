@@ -14,17 +14,17 @@ export type AlertTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
 
 export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** 'info' (default), 'success', 'warning', 'danger' or 'neutral'. Sets the background, the border tint and the icon. */
-  tone?: AlertTone;
+  tone?: AlertTone | undefined;
   /** A short bold first line. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The icon before the content: an icon name or element, or false for none. Default: each tone's own (info, check_circle, warning, error). */
-  icon?: IconSource | false;
+  icon?: IconSource | false | undefined;
   /** Buttons or links under the message. */
-  actions?: React.ReactNode;
+  actions?: React.ReactNode | undefined;
   /** Shows a close button that calls this. Hide or remove the alert yourself. */
-  onDismiss?: () => void;
+  onDismiss?: (() => void) | undefined;
   /** The close button's name. Default: 'Dismiss'. */
-  dismissLabel?: string;
+  dismissLabel?: string | undefined;
 }
 
 /* Alert: a message about the page or a task, in a tinted box with an icon. tone info (default), success, warning,

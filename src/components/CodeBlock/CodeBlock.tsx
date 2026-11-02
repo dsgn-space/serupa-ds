@@ -12,20 +12,20 @@ export interface CodeBlockProps extends Omit<React.HTMLAttributes<HTMLDivElement
   code: string;
   /** The language, shown in the header when there's no title ("tsx", "sh"), and set as data-language and a
       language-* class on the <code>, for a highlighter to find. */
-  language?: string;
+  language?: string | undefined;
   /** A title or file name in the header ("App.tsx"). It also names the code's scroll area. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** Numbers each line, at the start, out of the text you select and copy. Default: false. */
-  lineNumbers?: boolean;
+  lineNumbers?: boolean | undefined;
   /** The first line's number, with lineNumbers. Default: 1. */
-  startLine?: number;
+  startLine?: number | undefined;
   /** Lines to mark, by number: single lines and [from, to] ranges, such as [2, [5, 7]]. Each is a <mark>, with a bar
       at its start as well as a tint. */
-  highlight?: ReadonlyArray<number | readonly [number, number]>;
+  highlight?: ReadonlyArray<number | readonly [number, number]> | undefined;
   /** Wraps long lines instead of scrolling sideways. Default: false. */
-  wrap?: boolean;
+  wrap?: boolean | undefined;
   /** Shows the copy button in the header, which copies the whole code. Default: true. */
-  copyable?: boolean;
+  copyable?: boolean | undefined;
 }
 
 const OWN = { code: 1, language: 1, title: 1, lineNumbers: 1, startLine: 1, highlight: 1, wrap: 1, copyable: 1, className: 1 } as const;
