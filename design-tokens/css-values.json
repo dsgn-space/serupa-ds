@@ -44,7 +44,7 @@
       "description": "`tracking-wide`."
     },
     "tracking-wider": {
-      "css": "0.05em",
+      "css": "0.035em",
       "description": "Small caps labels."
     },
     "tracking-widest": {
@@ -122,6 +122,34 @@
     "container-prose": {
       "css": "65ch",
       "description": "`max-w-prose`: about 65 characters per line, the comfortable reading width for body text."
+    },
+    "icon-size-xs": {
+      "css": "{spacing-3.5}",
+      "description": "14px. Icons in `sm` buttons and next to `text-xs`: `<Icon size=\"xs\">`."
+    },
+    "icon-size-sm": {
+      "css": "{spacing-4}",
+      "description": "16px. Icons in `md` buttons and next to `text-sm`: `<Icon size=\"sm\">`."
+    },
+    "icon-size-md": {
+      "css": "{spacing-5}",
+      "description": "20px. Icons in `lg` buttons, list rows and inputs, and next to `text-base`: `<Icon size=\"md\">`."
+    },
+    "icon-size-lg": {
+      "css": "{spacing-6}",
+      "description": "24px, the Icon default: toolbars, navigation, icons on their own: `<Icon size=\"lg\">`."
+    },
+    "icon-size-xl": {
+      "css": "{spacing-10}",
+      "description": "40px. Empty states and illustrations: `<Icon size=\"xl\">`."
+    },
+    "icon-weight-semibold": {
+      "css": "0.02em",
+      "description": "Thickens a Material Symbol to go with `font-semibold` text: a stroke this wide round the drawing (0.5px at 24px). `<Icon weight=\"semibold\">`."
+    },
+    "icon-weight-bold": {
+      "css": "0.035em",
+      "description": "Thickens a Material Symbol to go with `font-bold` text and headings, close to weight 700 (0.84px at 24px). `<Icon weight=\"bold\">`."
     },
     "sizing-1-2": {
       "css": "50%",

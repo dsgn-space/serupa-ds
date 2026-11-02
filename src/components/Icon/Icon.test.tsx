@@ -121,3 +121,21 @@ describe('Icon', () => {
     root.unmount(); host.remove();
   });
 });
+
+describe('Icon: the size scale and weights (116+76)', () => {
+  test('size="xs" to "xl" are the icon-size tokens, 14, 16, 20, 24 and 40px; the default is lg', async () => {
+    await render(<div>{(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <Icon key={s} id={'size-' + s} icon={Close} size={s} />)}<Icon id="size-none" icon={Close} /></div>);
+    const px = (id: string) => document.getElementById(id)!.getBoundingClientRect().width;
+    expect(['xs', 'sm', 'md', 'lg', 'xl', 'none'].map((s) => px('size-' + s))).toEqual([14, 16, 20, 24, 40, 24]);
+  });
+
+  test('weight thickens a Material Symbol by a stroke of the icon-weight token; regular draws no stroke', async () => {
+    await render(<div>{(['regular', 'semibold', 'bold'] as const).map((w) => <Icon key={w} id={'weight-' + w} icon={Close} size={40} weight={w} />)}</div>);
+    const stroke = (w: string) => getComputedStyle(document.querySelector(`#weight-${w} path`)!);
+    expect(stroke('regular').stroke).toBe('none');
+    expect(stroke('semibold').strokeWidth).toBe('0.8px');   // 0.02em of 40px
+    expect(stroke('bold').strokeWidth).toBe('1.4px');       // 0.035em of 40px
+    expect(stroke('bold').vectorEffect).toBe('non-scaling-stroke');
+    expect(stroke('bold').stroke).toBe(stroke('bold').fill);
+  });
+});
