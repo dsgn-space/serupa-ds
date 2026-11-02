@@ -2,7 +2,6 @@
 import * as React from "react";
 import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
-import { isComposing } from "../../internal/ime";
 import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
 import { showLayer, type Placement } from "../../internal/position";
 import { useSettings } from "../../internal/provider";
@@ -51,7 +50,7 @@ export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
   headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
-const OWN = { steps: 1, open: 1, defaultOpen: 1, onOpenChange: 1, step: 1, defaultStep: 1, onStepChange: 1, onFinish: 1, headingLevel: 1, className: 1, onKeyDown: 1, id: 1 } as const;
+const OWN = { steps: 1, open: 1, defaultOpen: 1, onOpenChange: 1, step: 1, defaultStep: 1, onStepChange: 1, onFinish: 1, headingLevel: 1, className: 1, id: 1 } as const;
 
 // The element a step points at, if it's on the page now.
 function find(t: TourStep["target"]): HTMLElement | null {
@@ -130,19 +129,24 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
     if (back && back.isConnected && typeof back.focus === "function" && (!now || now === document.body || (!!p && p.contains(now)))) back.focus({ preventScroll: true });
   }, [open]);
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (props.onKeyDown) props.onKeyDown(e);
-    if (e.defaultPrevented) return;
-    if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close("escape"); }
-  };
+  // Escape ends it, from anywhere in the panel: a listener on the panel itself, as it isn't an interactive element.
+  useIsoLayoutEffect(() => {
+    const p = panel.current;
+    if (!open || !p) return;
+    const esc = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented || e.isComposing) return;
+      e.preventDefault(); e.stopPropagation(); close("escape");
+    };
+    p.addEventListener("keydown", esc);
+    return () => p.removeEventListener("keydown", esc);
+  }, [open, close]);
 
   if (!step) return null;
   const H = ("h" + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 2)) as "h2";
   return (
     <div {...omit(props, OWN)} ref={(n) => { panel.current = n; setRef(ref, n); }} id={id} role="dialog" tabIndex={-1} {...{ popover: "manual" }}
       hidden={!open || undefined} inert={!open || undefined} aria-labelledby={id + "-title"} aria-describedby={step.content != null ? id + "-text" : undefined}
-      className={cn("dk-tour", !target && "dk-tour--center", props.className)} data-component="tour" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}
-      onKeyDown={onKeyDown}>
+      className={cn("dk-tour", !target && "dk-tour--center", props.className)} data-component="tour" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}>
       {open || exit.leaving ? <>
         <div className="dk-tour__head">
           <H id={id + "-title"} className="dk-tour__title">{step.title}</H>
