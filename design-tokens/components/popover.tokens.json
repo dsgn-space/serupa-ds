@@ -85,6 +85,16 @@
             "cssVar": "--popover-border-width"
           }
         }
+      },
+      "sheet-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xl}",
+        "$description": "A sheet's top corners (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-sheet-radius"
+          }
+        }
       }
     },
     "typography": {
@@ -149,6 +159,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--popover-offset"
+          }
+        }
+      },
+      "sheet-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "The room a sheet leaves above it, at its tallest (64px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-sheet-gap"
           }
         }
       }
