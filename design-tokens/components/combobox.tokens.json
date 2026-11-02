@@ -106,7 +106,7 @@
     "shadow": {
       "listbox-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "The list's shadow.",
         "$extensions": {
           "com.serupa": {
@@ -118,7 +118,7 @@
     "radius": {
       "listbox-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The list's corners (8px).",
         "$extensions": {
           "com.serupa": {
@@ -128,7 +128,7 @@
       },
       "option-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "An option's corners (6px).",
         "$extensions": {
           "com.serupa": {

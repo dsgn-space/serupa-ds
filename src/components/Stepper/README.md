@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--stepper-connector-width` | `border-width-2` | The line's thickness (2px). |
-| `--stepper-radius` | `rounded-full` | The circle. |
+| `--stepper-radius` | `radius-pill` | The circle. |
 
 **Spacing**
 

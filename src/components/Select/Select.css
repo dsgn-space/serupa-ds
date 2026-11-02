@@ -15,7 +15,7 @@
   box-sizing: border-box; width: var(--sizing-full); height: var(--dk-select-h);
   background: var(--select-bg, var(--field)); color: var(--select-text, var(--text));
   border: var(--select-border-width, var(--border-width-1)) solid var(--dk-select-bd);
-  border-radius: var(--select-radius, var(--rounded-md));
+  border-radius: var(--select-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   vertical-align: middle;
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);

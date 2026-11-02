@@ -25,7 +25,7 @@
   max-width: var(--sizing-full);
   padding: var(--spacing-0) var(--dk-badge-px);
   border: var(--badge-border-width, var(--border-width-1)) solid transparent;
-  border-radius: var(--badge-radius, var(--rounded-md));
+  border-radius: var(--badge-radius, var(--radius-control));
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   line-height: var(--text-xs--line-height);
@@ -97,7 +97,7 @@
 .dk-badge__remove::after {
   content: ""; position: absolute; inset-block: calc(var(--spacing-0) - var(--dk-badge-rm-reach-y));
   inset-inline: calc(var(--spacing-0) - var(--dk-badge-rm-reach));
-  border-radius: var(--badge-radius, var(--rounded-md));
+  border-radius: var(--badge-radius, var(--radius-control));
 }
 @media (hover: hover) { .dk-badge__remove:hover { opacity: var(--opacity-100); } }
 .dk-badge__remove:focus-visible { opacity: var(--opacity-100); }

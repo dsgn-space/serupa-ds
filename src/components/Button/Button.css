@@ -14,7 +14,7 @@
   height: var(--button-height-md, var(--control-height-md));
   padding: var(--spacing-0) var(--button-padding-x-md, var(--spacing-3));
   border: var(--button-border-width, var(--border-width-1)) solid transparent;   /* invisible, but drawn in forced-colors mode */
-  border-radius: var(--button-radius, var(--rounded-md));
+  border-radius: var(--button-radius, var(--radius-control));
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--text-sm--line-height);

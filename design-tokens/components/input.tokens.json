@@ -240,7 +240,7 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "Corner radius (6px), like Button and Badge",
         "$extensions": {
           "com.serupa": {

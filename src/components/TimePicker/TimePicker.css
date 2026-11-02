@@ -19,9 +19,9 @@
   /* Its rows lay out and paint inside it (it scrolls, so it clips already): a row changing never relays out the page (I3). */
   contain: layout paint;
   margin: var(--spacing-0); padding: var(--time-picker-list-padding, var(--spacing-1)); list-style: none;
-  border: var(--border-width-1) solid var(--time-picker-list-border, var(--border-overlay)); border-radius: var(--time-picker-list-radius, var(--rounded-lg));
+  border: var(--border-width-1) solid var(--time-picker-list-border, var(--border-overlay)); border-radius: var(--time-picker-list-radius, var(--radius-surface));
   background: var(--time-picker-list-bg, var(--surface-overlay)); color: var(--time-picker-option-color, var(--text));
-  box-shadow: var(--time-picker-list-shadow, var(--shadow-lg));
+  box-shadow: var(--time-picker-list-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; cursor: default;
 }
 .dk-time-picker__list[hidden] { display: none; }

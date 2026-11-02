@@ -46,7 +46,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "A key's corners (4px).",
         "$extensions": {
           "com.serupa": {

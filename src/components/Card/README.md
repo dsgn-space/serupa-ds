@@ -133,14 +133,14 @@ Each is an optional override: set it on the page, a container or one card. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--card-shadow` | `shadow-xs` | An outline card's shadow |
-| `--card-shadow-elevated` | `shadow-md` | An elevated card's shadow |
+| `--card-shadow` | `elevation-rest` | An outline card's shadow |
+| `--card-shadow-elevated` | `elevation-raised` | An elevated card's shadow |
 
 **Border**
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--card-radius` | `rounded-xl` | The corners |
+| `--card-radius` | `radius-container` | The corners |
 | `--card-border-width` | `border-width-1` | The border |
 
 **Spacing**

@@ -99,7 +99,7 @@ Each is an optional override: set it on the page, a container or one meter. The 
 | `--meter-height-sm` | `spacing-1` | The bar's thickness, size sm (4px). |
 | `--meter-height-md` | `spacing-2` | The bar's thickness, size md (8px, the default). |
 | `--meter-height-lg` | `spacing-3` | The bar's thickness, size lg (12px). |
-| `--meter-radius` | `rounded-full` | The bar's ends. |
+| `--meter-radius` | `radius-pill` | The bar's ends. |
 | `--meter-gap` | `spacing-1.5` | Space between the label row and the bar (6px). |
 | `--meter-label-weight` | `font-medium` | The label's weight. |
 | `--meter-duration` | `motion-change-lg` | How long the fill takes to move to a new value. |

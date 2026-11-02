@@ -14,7 +14,7 @@
   box-sizing: border-box; width: var(--sizing-full);
   background: var(--textarea-bg, var(--field)); color: var(--textarea-text, var(--text));
   border: var(--textarea-border-width, var(--border-width-1)) solid var(--dk-ta-bd);
-  border-radius: var(--textarea-radius, var(--rounded-md));
+  border-radius: var(--textarea-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   cursor: text; vertical-align: middle;
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);

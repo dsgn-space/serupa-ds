@@ -46,7 +46,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-xl}",
+        "$value": "{radius.radius-container}",
         "$description": "The slides' corners (12px).",
         "$extensions": {
           "com.serupa": {
@@ -112,7 +112,7 @@
     "shadow": {
       "arrow-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-sm}",
+        "$value": "{shadow.elevation-part}",
         "$description": "The previous and next buttons' shadow, so they stand out on any slide.",
         "$extensions": {
           "com.serupa": {

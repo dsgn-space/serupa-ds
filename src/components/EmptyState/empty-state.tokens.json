@@ -174,7 +174,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The dashed frame's corners (8px).",
         "$extensions": {
           "com.serupa": {

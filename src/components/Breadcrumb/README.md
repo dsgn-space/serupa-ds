@@ -102,5 +102,5 @@ Each is an optional override: set it on the page, a container or one breadcrumb.
 | `--breadcrumb-gap` | `spacing-1.5` | Space between an item and a separator (6px). |
 | `--breadcrumb-separator-size` | `spacing-4` | The chevron's size (16px). |
 | `--breadcrumb-icon-size` | `spacing-4` | An item's icon (16px). |
-| `--breadcrumb-focus-radius` | `rounded-sm` | The focus ring's corners (4px). |
+| `--breadcrumb-focus-radius` | `radius-inner` | The focus ring's corners (4px). |
 <!-- token-table:end -->

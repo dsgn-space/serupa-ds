@@ -97,9 +97,9 @@ Each is an optional override: set it on the page, a container or one image. The 
 | `--image-dim` | `black` | With dim, the layer that darkens a photo in a dark color scheme (at 20%). |
 | `--image-fallback-color` | `text-muted` | The broken-image icon (3:1 on bg). |
 | `--image-focus-ring` | `focus-ring` | A viewable picture's keyboard focus ring. |
-| `--image-radius` | `rounded-lg` | The frame's corners with rounded (8px). |
+| `--image-radius` | `radius-surface` | The frame's corners with rounded (8px). |
 | `--image-min-size` | `spacing-12` | The least width and height of an 'auto' frame before the picture arrives (48px). |
 | `--image-fallback-icon` | `spacing-6` | The broken-image icon's size (24px). |
 | `--image-remove-offset` | `spacing-2` | The remove button's distance from the corner (8px). |
-| `--image-remove-shadow` | `shadow-sm` | The remove button's shadow, so it stands out on any picture. |
+| `--image-remove-shadow` | `elevation-part` | The remove button's shadow, so it stands out on any picture. |
 <!-- token-table:end -->

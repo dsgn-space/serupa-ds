@@ -3,5 +3,5 @@
    makes it a circle. Everything else is the Button's.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-icon-btn--round { border-radius: var(--icon-button-radius-round, var(--rounded-full)); }
+.dk-icon-btn--round { border-radius: var(--icon-button-radius-round, var(--radius-pill)); }
 }

@@ -76,7 +76,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-xl}",
+        "$value": "{shadow.elevation-modal}",
         "$description": "The panel's shadow.",
         "$extensions": {
           "com.serupa": {
@@ -152,7 +152,7 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-xl}",
+        "$value": "{radius.radius-container}",
         "$description": "The corners on the open side of a top or bottom drawer (12px).",
         "$extensions": {
           "com.serupa": {

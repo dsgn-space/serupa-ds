@@ -25,7 +25,7 @@
 .dk-progress__header .dk-progress__value { flex-shrink: 0; margin-inline-start: auto; }
 .dk-progress--bar .dk-progress__track {
   position: relative; overflow: hidden; height: var(--dk-progress-h);
-  border-radius: var(--progress-radius, var(--rounded-full)); background: var(--progress-track, var(--secondary));
+  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--secondary));
 }
 .dk-progress__fill {
   height: var(--sizing-full); border-radius: inherit; background: var(--dk-progress-fill);

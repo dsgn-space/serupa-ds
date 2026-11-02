@@ -16,7 +16,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The fallback box's corners, matching the Alert (8px).",
         "$extensions": {
           "com.serupa": {

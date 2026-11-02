@@ -14,7 +14,7 @@
 }
 /* The lift: a shadow, and the raised surface. On the dark themes' near-black page a shadow barely shows, so there the
    bar turns the lighter raised surface (as Card elevated does); in the light themes that's the same white (GR64). */
-@keyframes dk-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--shadow-md)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); } }
+@keyframes dk-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--elevation-raised)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); } }
 /* What the keyboard focuses, or a #link jumps to, scrolls into view below a sticky bar, not under it (WCAG 2.4.11).
    Navbar measures the bar into --dk-navbar-offset; until then, the default bar height. */
 :root:has(.dk-navbar--sticky) { scroll-padding-top: var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16))); }
@@ -24,7 +24,7 @@
 .dk-navbar__links { display: flex; align-items: center; gap: var(--navbar-link-gap, var(--spacing-1)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-navbar__link {
   display: flex; align-items: center; padding: var(--navbar-link-padding-y, var(--spacing-2)) var(--navbar-link-padding-x, var(--spacing-3));
-  border-radius: var(--navbar-link-radius, var(--rounded-md)); color: var(--navbar-link-text, var(--text-muted));
+  border-radius: var(--navbar-link-radius, var(--radius-control)); color: var(--navbar-link-text, var(--text-muted));
   font-size: var(--navbar-link-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--navbar-link-weight, var(--font-medium)); text-decoration: none; white-space: nowrap;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }

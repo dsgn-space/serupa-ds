@@ -314,7 +314,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | Token | Default | Use |
 | --- | --- | --- |
 | `--button-border-width` | `border-width-1` | Border width (1px; drawn on outline buttons, invisible on the others but shown in forced-colors mode). |
-| `--button-radius` | `rounded-md` | Corner radius (6px). |
+| `--button-radius` | `radius-control` | Corner radius (6px). |
 
 **Motion**
 

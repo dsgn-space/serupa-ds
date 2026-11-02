@@ -197,14 +197,14 @@ Each is an optional override: set it on the page, a container or one menu. The l
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--menu-shadow` | `shadow-lg` | The menu's shadow. |
+| `--menu-shadow` | `elevation-overlay` | The menu's shadow. |
 
 **Border**
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--menu-radius` | `rounded-lg` | The menu's corners (8px). |
-| `--menu-item-radius` | `rounded-md` | An item's corners (6px). |
+| `--menu-radius` | `radius-surface` | The menu's corners (8px). |
+| `--menu-item-radius` | `radius-control` | An item's corners (6px). |
 | `--menu-border-width` | `border-width-1` | The menu's border. |
 
 **Sizing**

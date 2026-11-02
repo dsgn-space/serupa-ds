@@ -113,5 +113,5 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
 | `--list-border-width` | `border-width-1` | Lines and frame (1px). |
 | `--list-indicator-width` | `border-width-2` | The selected item's bar (2px). |
-| `--list-radius` | `rounded-lg` | The corners of variant="card" (8px). |
+| `--list-radius` | `radius-surface` | The corners of variant="card" (8px). |
 <!-- token-table:end -->

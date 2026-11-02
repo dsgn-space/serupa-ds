@@ -17,14 +17,14 @@
   touch-action: none; -webkit-user-select: none; user-select: none; cursor: pointer;
 }
 .dk-slider--size-sm { --dk-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --dk-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
-.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--rounded-full)); background: var(--slider-track, var(--field-border)); }
+.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--field-border)); }
 .dk-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
 .dk-slider__thumb {
   position: absolute; inset-block-start: var(--dk-slider-thumb-top); box-sizing: border-box; width: var(--dk-slider-thumb); height: var(--dk-slider-thumb);
   margin-inline-start: calc(var(--spacing-0) - var(--dk-slider-half));
   border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--primary));
-  border-radius: var(--slider-radius, var(--rounded-full)); background: var(--slider-thumb-bg, var(--field));
-  box-shadow: var(--slider-thumb-shadow, var(--shadow-sm));
+  border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-thumb-bg, var(--field));
+  box-shadow: var(--slider-thumb-shadow, var(--elevation-part));
   cursor: grab; transition: scale var(--motion-change-sm) var(--ease-settle);
 }
 .dk-slider__thumb:focus { outline: none; }

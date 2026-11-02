@@ -66,7 +66,7 @@
   padding: var(--spacing-0) var(--tabs-padding-x, var(--spacing-3));
   margin: var(--spacing-0);
   border: var(--spacing-0);
-  border-radius: var(--tabs-radius, var(--rounded-md));
+  border-radius: var(--tabs-radius, var(--radius-control));
   background: transparent;
   color: var(--tabs-text, var(--text-muted));
   font: inherit;
@@ -101,7 +101,7 @@
   content: ""; position: absolute; z-index: calc(var(--z-0) - var(--z-10)); background: var(--tabs-pill-bg-selected, var(--primary));
   inset-block: calc(var(--spacing-0) - var(--dk-tabs-span-t, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-b, var(--spacing-0)));
   inset-inline: calc(var(--spacing-0) - var(--dk-tabs-span-l, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-r, var(--spacing-0)));
-  clip-path: inset(var(--dk-tabs-span-t, var(--spacing-0)) var(--dk-tabs-span-r, var(--spacing-0)) var(--dk-tabs-span-b, var(--spacing-0)) var(--dk-tabs-span-l, var(--spacing-0)) round var(--tabs-radius, var(--rounded-md)));
+  clip-path: inset(var(--dk-tabs-span-t, var(--spacing-0)) var(--dk-tabs-span-r, var(--spacing-0)) var(--dk-tabs-span-b, var(--spacing-0)) var(--dk-tabs-span-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control)));
 }
 /* Tabs.tsx measures the span on the page (left and right), so in right-to-left text the inline start is its right. */
 .dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:dir(rtl)::before { inset-inline: calc(var(--spacing-0) - var(--dk-tabs-span-r, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-l, var(--spacing-0))); }
@@ -120,7 +120,7 @@
 @media (prefers-reduced-motion: no-preference) {
   @starting-style {
     .dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { translate: var(--dk-tabs-from-shift, none); scale: var(--dk-tabs-from-scale, none); }
-    .dk-tabs--pill .dk-tabs__tab[aria-selected="true"]::before { clip-path: inset(var(--dk-tabs-from-t, var(--spacing-0)) var(--dk-tabs-from-r, var(--spacing-0)) var(--dk-tabs-from-b, var(--spacing-0)) var(--dk-tabs-from-l, var(--spacing-0)) round var(--tabs-radius, var(--rounded-md))); }
+    .dk-tabs--pill .dk-tabs__tab[aria-selected="true"]::before { clip-path: inset(var(--dk-tabs-from-t, var(--spacing-0)) var(--dk-tabs-from-r, var(--spacing-0)) var(--dk-tabs-from-b, var(--spacing-0)) var(--dk-tabs-from-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control))); }
   }
 }
 
@@ -132,7 +132,7 @@
 .dk-tabs--vertical .dk-tabs__tab { justify-content: flex-start; }
 .dk-tabs--vertical .dk-tabs__panel { flex: auto; min-width: var(--spacing-0); padding-top: var(--spacing-0); padding-inline-start: var(--tabs-panel-gap, var(--spacing-4)); }
 .dk-tabs--vertical.dk-tabs--line .dk-tabs__list { border-bottom: var(--spacing-0); border-inline-end: var(--border-width-1) solid var(--tabs-border, var(--border)); }
-.dk-tabs--vertical.dk-tabs--line .dk-tabs__tab { border-radius: var(--tabs-radius, var(--rounded-md)); border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+.dk-tabs--vertical.dk-tabs--line .dk-tabs__tab { border-radius: var(--tabs-radius, var(--radius-control)); border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 .dk-tabs--vertical.dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { inset-inline: auto var(--spacing-0); inset-block: var(--spacing-0); width: var(--tabs-indicator-width, var(--border-width-2)); height: auto; }
 .dk-tabs__panel:focus-visible { outline: var(--focus-ring-width) solid var(--tabs-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-sm); }
 .dk-tabs__panel[hidden]:not([hidden="until-found"]) { display: none; }

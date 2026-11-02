@@ -44,8 +44,8 @@
   max-height: var(--sizing-full);
   padding: var(--dialog-padding, var(--spacing-6));
   background: var(--dialog-bg, var(--surface-overlay));
-  border-radius: var(--dialog-radius, var(--rounded-xl));
-  box-shadow: var(--dialog-shadow, var(--shadow-xl));
+  border-radius: var(--dialog-radius, var(--radius-container));
+  box-shadow: var(--dialog-shadow, var(--elevation-modal));
 }
 /* Motion (DZ1): transitions, not keyframes, so closing while it opens turns back from where it is. In from
    @starting-style; out, the <dialog> stays shown and in the top layer (display and overlay, allow-discrete) until

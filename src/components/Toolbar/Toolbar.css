@@ -8,7 +8,7 @@
 .dk-toolbar {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--toolbar-gap, var(--spacing-1));
   padding: var(--toolbar-padding, var(--spacing-1));
-  border-radius: var(--toolbar-radius, var(--rounded-md));
+  border-radius: var(--toolbar-radius, var(--radius-control));
   background: var(--toolbar-bg, var(--surface));
   color: var(--toolbar-text, var(--text));
 }

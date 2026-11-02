@@ -80,7 +80,7 @@
     "radius": {
       "focus-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "The focus ring's corners (4px).",
         "$extensions": {
           "com.serupa": {

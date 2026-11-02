@@ -26,7 +26,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-md}",
+        "$value": "{shadow.elevation-raised}",
         "$description": "The shadow.",
         "$extensions": {
           "com.serupa": {
@@ -38,7 +38,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "The corners (6px).",
         "$extensions": {
           "com.serupa": {

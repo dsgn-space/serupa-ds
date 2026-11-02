@@ -103,6 +103,6 @@ Each is an optional override: set it on the page, a container or one InlineEdit.
 | `--inline-edit-bg-hover` | `surface-muted` | The button's background on hover. |
 | `--inline-edit-error` | `danger-text` | The validation message. |
 | `--inline-edit-focus-ring` | `focus-ring` | The button's keyboard focus ring. |
-| `--inline-edit-radius` | `rounded-md` | The button's corners (6px). |
+| `--inline-edit-radius` | `radius-control` | The button's corners (6px). |
 | `--inline-edit-gap` | `spacing-1` | Space between the field and its message (4px). |
 <!-- token-table:end -->

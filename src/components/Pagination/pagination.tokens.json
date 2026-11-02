@@ -172,7 +172,7 @@
     "radius": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "A page's corners (6px).",
         "$extensions": {
           "com.serupa": {
