@@ -56,7 +56,6 @@ export const labels: SerupaLabels = {
   loadFailed: "Не удалось загрузить варианты. Начните вводить, чтобы попробовать снова.",
   noResults: "Ничего не найдено",
   resultsCount: (count) => p3(count, "результат", "результата", "результатов"),
-  moreResults: (count) => "Продолжайте вводить, чтобы сузить ещё " + n(count),
   showOptions: "Показать варианты",
   clearValue: (label) => (label ? "Очистить: " + label : "Очистить"),
   valueAdded: (label) => label + ": добавлено",

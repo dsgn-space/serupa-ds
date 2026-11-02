@@ -49,7 +49,6 @@ export const labels: SerupaLabels = {
   loadFailed: "選択肢を読み込めませんでした。入力すると再試行します。",
   noResults: "結果はありません",
   resultsCount: (count) => n(count) + "件の結果",
-  moreResults: (count) => "入力を続けて残り" + n(count) + "件を絞り込んでください",
   showOptions: "選択肢を表示",
   clearValue: (label) => (label ? label + "をクリア" : "クリア"),
   valueAdded: (label) => label + "を追加しました",

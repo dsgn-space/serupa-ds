@@ -49,7 +49,6 @@ export const labels: SerupaLabels = {
   loadFailed: "विकल्प लोड नहीं हो सके। फिर से कोशिश करने के लिए टाइप करें।",
   noResults: "कोई नतीजा नहीं",
   resultsCount: (count) => n(count) + (count === 1 ? " नतीजा" : " नतीजे"),
-  moreResults: (count) => "बाकी " + n(count) + " को छाँटने के लिए टाइप करते रहें",
   showOptions: "विकल्प दिखाएँ",
   clearValue: (label) => (label ? label + " हटाएँ" : "हटाएँ"),
   valueAdded: (label) => label + " जोड़ा गया",

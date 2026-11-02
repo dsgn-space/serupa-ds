@@ -50,7 +50,6 @@ export const labels: SerupaLabels = {
   loadFailed: "Pilihan tidak dapat dimuatkan. Taip untuk mencuba lagi.",
   noResults: "Tiada hasil",
   resultsCount: (count) => n(count) + " hasil",
-  moreResults: (count) => "Terus menaip untuk menapis " + n(count) + " lagi",
   showOptions: "Tunjukkan pilihan",
   clearValue: (label) => (label ? "Kosongkan " + label : "Kosongkan"),
   valueAdded: (label) => label + " ditambah",

@@ -50,7 +50,6 @@ export const labels: SerupaLabels = {
   loadFailed: "Alternativen kunde inte läsas in. Skriv för att försöka igen.",
   noResults: "Inga resultat",
   resultsCount: (count) => n(count) + " resultat",
-  moreResults: (count) => "Fortsätt skriva för att filtrera de återstående " + n(count),
   showOptions: "Visa alternativ",
   clearValue: (label) => (label ? "Rensa " + label : "Rensa"),
   valueAdded: (label) => label + " har lagts till",
