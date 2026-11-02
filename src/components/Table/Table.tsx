@@ -204,9 +204,11 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
     const b = body.current, f = b && b.closest<HTMLElement>(".dk-table"), t = b && b.closest("table");
     attach(f);
     setSmall(!!f && f.classList.contains("dk-table--sm"));
-    const h = t && t.tHead ? t.tHead.rows.length : 0;
+    // The rows of the head and foot, by their <tr>s (a DOM without HTMLTableSectionElement.rows, as happy-dom, has these).
+    const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(":scope > tr").length : 0);
+    const h = t ? rowsOf(t.querySelector(":scope > thead")) : 0;
     setHead(h);
-    if (t) t.setAttribute("aria-rowcount", String(h + count + (t.tFoot ? t.tFoot.rows.length : 0)));
+    if (t) t.setAttribute("aria-rowcount", String(h + count + rowsOf(t.querySelector(":scope > tfoot"))));
   }, [attach, count]);
   const [focused, setFocused] = React.useState<number | null>(null);
   const { renderRow, itemKey } = props;
