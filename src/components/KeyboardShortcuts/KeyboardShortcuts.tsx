@@ -18,28 +18,28 @@ export interface Shortcut {
   /** What it does, in a few words ("Search", "New message"). */
   description: string;
   /** The heading it's listed under. Default: "General". */
-  group?: string;
+  group?: string | undefined;
 }
 
 export interface ShortcutOptions {
   /** What it does, listed in <KeyboardShortcuts>'s dialog. Without it, the shortcut works but isn't listed. */
-  description?: string;
+  description?: string | undefined;
   /** The heading it's listed under. Default: "General". */
-  group?: string;
+  group?: string | undefined;
   /** false turns it off for now (default true). */
-  enabled?: boolean;
+  enabled?: boolean | undefined;
   /** Also fire while typing in a text field. Shortcuts with mod, ctrl or cmd always do; others don't by default,
    *  so "/" or "N" can still be typed. */
-  inInputs?: boolean;
+  inInputs?: boolean | undefined;
 }
 
 export interface KeyboardShortcutsProps extends Omit<DialogProps, "title" | "description" | "footer" | "alert" | "children" | "size" | "fullScreen" | "initialFocus" | "finalFocus" | "closeButton" | "closeOnBackdrop" | "closeLabel" | "unsaved"> {
   /** The dialog's title. Default: "Keyboard shortcuts" (labels.keyboardShortcuts). */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** Shortcuts to list that aren't set up with useShortcut, such as the browser's or another library's. */
-  shortcuts?: Shortcut[];
+  shortcuts?: Shortcut[] | undefined;
   /** The keys that open it (default ['?']); false for none, when you open it yourself. */
-  helpKeys?: string[] | false;
+  helpKeys?: string[] | false | undefined;
 }
 
 // A combination, parsed: the modifiers it needs and its key as KeyboardEvent.key reports it (letters in lower case).

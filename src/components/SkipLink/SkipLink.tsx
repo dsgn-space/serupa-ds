@@ -8,9 +8,9 @@ import { en as words } from "./labels";
 
 export interface SkipLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   /** The id of the element it skips to: the page's main content. Default: "main". */
-  target?: string;
+  target?: string | undefined;
   /** The link's text. Default: "Skip to content" (labels.skipToContent). */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 const FOCUSABLE = "a[href], area[href], button, input, select, textarea, summary, iframe, [tabindex], [contenteditable]";

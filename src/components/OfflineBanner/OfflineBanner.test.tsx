@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { userEvent } from 'vitest/browser';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { OfflineBanner } from './OfflineBanner';
 
 const q = (s: string) => document.querySelector<HTMLElement>(s);
@@ -98,4 +99,33 @@ describe('OfflineBanner', () => {
       await expect.poll(() => contrast(css(icon()).color, css(document.getElementById('c')).backgroundColor)).toBeGreaterThanOrEqual(3);
     }
   });
+  test('GR122: a field Tab moves to scrolls into view clear of the bar, not under it (WCAG 2.4.11); the room goes when the bar does', async () => {
+    const screen = await render(<>
+      {Array.from({ length: 40 }, (_, i) => <input key={i} id={'f' + i} aria-label={'Field ' + i} style={{ display: 'block', height: 40, margin: 8 }} />)}
+      <OfflineBanner online={false}>Changes are kept and sent when you're back.</OfflineBanner>
+    </>);
+    const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    document.getElementById('f0')!.focus();
+    const covered: string[] = [];
+    for (let i = 1; i < 40; i++) {
+      await userEvent.tab();
+      const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect(), b = banner.getBoundingClientRect();
+      if (r.bottom > b.top && r.top < b.bottom) covered.push(f.id);
+    }
+    expect([covered, document.activeElement!.id]).toEqual([[], 'f39']);
+    expect(document.documentElement.style.getPropertyValue('--dk-offline-banner-space')).toMatch(/^\d+px$/);
+    await screen.rerender(<OfflineBanner online />);
+    await expect.poll(() => document.querySelector('[data-component=offline-banner]')).toBe(null);
+    expect([document.documentElement.style.getPropertyValue('--dk-offline-banner-space'), getComputedStyle(document.documentElement).scrollPaddingBottom, document.body.style.paddingBlockEnd]).toEqual(['', 'auto', '']);
+  });
+  test('GR124: the room is measured where the bar comes to rest, not where it is as it slides in', async () => withMotion(async () => {
+    const screen = await render(<OfflineBanner online />);
+    await screen.rerender(<OfflineBanner online={false}>Changes are kept and sent when you're back.</OfflineBanner>);
+    const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    const space = () => parseFloat(document.documentElement.style.getPropertyValue('--dk-offline-banner-space'));
+    const early = space();
+    await wait(600);
+    const settled = Math.ceil(window.innerHeight - banner.getBoundingClientRect().top + 8);
+    expect([early, space()]).toEqual([settled, settled]);
+  }));
 });

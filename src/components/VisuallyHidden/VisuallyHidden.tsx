@@ -4,9 +4,9 @@ import { component } from "../../internal/component";
 
 export interface VisuallyHiddenProps extends React.HTMLAttributes<HTMLElement> {
   /** Shows it while it (or something in it) has keyboard focus: for a "Skip to content" link. Default: false. */
-  focusable?: boolean;
+  focusable?: boolean | undefined;
   /** The element. Default: 'span'. */
-  as?: 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'label' | 'legend';
+  as?: 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'label' | 'legend' | undefined;
 }
 
 const TAGS = ["span", "div", "h1", "h2", "h3", "h4", "h5", "h6", "p", "label", "legend"] as const;

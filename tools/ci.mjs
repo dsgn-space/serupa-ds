@@ -6,6 +6,9 @@
 //   node tools/ci.mjs --keep-going     run every step even after one fails (by default the first failure stops it,
 //                                      as on a pull request)
 //   node tools/ci.mjs --skip <names>   leave out steps, comma-separated by the name --list prints (frameworks,consumer)
+//   node tools/ci.mjs --from <name>    start at that step, after fixing what stopped a run (a failed run prints the
+//                                      command); the steps before it are taken as passed, and dist/ as built
+//   node tools/ci.mjs --only <names>   just those steps, comma-separated (--keep-going's failures, run again)
 //   node tools/ci.mjs --list           the steps it would run
 // CI picks one second language per commit (LOCALES in test/lib.mjs, by the commit's hash), and a pull request's merge
 // commit can't be known here, so this runs all of them: a test that only passes in English fails here, not on main.
@@ -46,9 +49,12 @@ const all = [
   step('consumer', 'consumer', node('tools/test/consumer.mjs')),
   step('frameworks', 'frameworks', node('tools/test/frameworks.mjs')),
 ];
-const unknown = [...skip].filter((s) => s !== 'changeset' && !all.some((st) => st.name === s));
-if (unknown.length) { console.error(`Unknown step for --skip: ${unknown.join(', ')} (see --list)`); process.exit(2); }
-const steps = all.filter((st) => !skip.has(st.name));
+const from = arg('--from');
+const only = arg('--only') ? new Set(arg('--only').split(',').filter(Boolean)) : null;
+const unknown = [...skip, ...(from ? [from] : []), ...(only || [])].filter((s) => s !== 'changeset' && !all.some((st) => st.name === s));
+if (unknown.length) { console.error(`Unknown step: ${unknown.join(', ')} (see --list)`); process.exit(2); }
+const start = from ? Math.max(0, all.findIndex((st) => st.name === from)) : 0;
+const steps = all.slice(start).filter((st) => !skip.has(st.name) && (!only || only.has(st.name)));
 if (process.argv.includes('--list')) { for (const { name, job, cmd, args } of steps) console.log(`${name}\t${job}\t${path.basename(cmd)} ${args.join(' ')}`); process.exit(0); }
 
 const summary = [];
@@ -63,4 +69,16 @@ console.log('\n━━ Summary ━━');
 for (const [name, job, ok, ms] of summary) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name} (${job})  ${(ms / 1000).toFixed(1)}s`);
 const left = steps.length - summary.length;
 if (left) console.log(`Stopped after the first failure: ${left} step${left === 1 ? '' : 's'} not run (--keep-going runs them).`);
+// The command that picks up where this run failed, with the same options: from the step that stopped it, or, after
+// --keep-going, just the steps that failed.
+const failed = summary.filter(([, , ok]) => !ok).map(([name]) => name);
+if (failed.length) {
+  const keep = [];
+  for (let i = 2; i < process.argv.length; i++) {
+    if (['--from', '--only'].includes(process.argv[i])) { i++; continue; }
+    keep.push(process.argv[i]);
+  }
+  const again = left ? ['--from', failed[0]] : ['--only', failed.join(',')];
+  console.log(`After the fix: node tools/ci.mjs ${[...keep.filter((a) => !(left && a === '--keep-going')), ...again].join(' ')}`);
+}
 process.exit(summary.every(([, , ok]) => ok) && !left ? 0 : 1);
