@@ -6,6 +6,7 @@ import { THEMES, contrast, css, settle, withMotion } from '../../../tools/test/v
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Drawer } from '../Drawer/Drawer';
+import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 import { toast, Toaster, type ToasterPosition } from './Toast';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -719,5 +720,15 @@ describe('Toaster inside a shadow root (GR60)', () => {
       await userEvent.keyboard('{F8}');
       await expect.poll(() => root.activeElement).toBe(field);
     } finally { React.act(() => { toast.dismiss(); }); host.remove(); }
+  });
+  test('GR123: a Toaster on the same edge as a shown OfflineBanner stacks above the bar, not on it; back in its place when the bar goes', async () => {
+    const screen = await render(<><Toaster position="bottom-center" /><OfflineBanner online={false} /></>);
+    toast('Saved');
+    await expect.poll(() => toasts().length).toBe(1);
+    const bar = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    await expect.poll(() => toasts()[0].getBoundingClientRect().bottom <= bar.getBoundingClientRect().top).toBe(true);
+    await screen.rerender(<><Toaster position="bottom-center" /><OfflineBanner online /></>);
+    await expect.poll(() => document.querySelector('[data-component=offline-banner]'), { timeout: 5000 }).toBe(null);
+    await expect.poll(() => Math.round(window.innerHeight - toasts()[0].getBoundingClientRect().bottom)).toBe(16);
   });
 });
