@@ -162,6 +162,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Redimensionar painéis",
   splitterPlace: "Toque onde a alça deve ficar, ou toque na alça de novo para cancelar.",
   skipToContent: "Pular para o conteúdo",
+  offline: "Você está offline",
+  backOnline: "Online novamente",
   completed: "concluída",
   hasError: "tem um erro",
   hasWarning: "precisa de atenção",

@@ -158,6 +158,8 @@ export const labels: SerupaLabels = {
   resizePanes: "पैन का आकार बदलें",
   splitterPlace: "जहाँ हैंडल जाना चाहिए वहाँ दबाएँ, या रद्द करने के लिए हैंडल फिर से दबाएँ।",
   skipToContent: "मुख्य सामग्री पर जाएँ",
+  offline: "आप ऑफ़लाइन हैं",
+  backOnline: "फिर से ऑनलाइन",
   completed: "पूरा हुआ",
   hasError: "इसमें गड़बड़ी है",
   hasWarning: "ध्यान देने की ज़रूरत है",

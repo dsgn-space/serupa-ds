@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>OfflineBanner — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.OfflineBanner, { online: false, placement: 'inline' }, "Changes are kept and sent when you're back."));
+</script>
+</body>
+</html>
