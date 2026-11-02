@@ -76,7 +76,7 @@
     "shadow": {
       "popup-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "Its shadow.",
         "$extensions": {
           "com.serupa": {
@@ -88,7 +88,7 @@
     "radius": {
       "popup-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "Its corners (8px).",
         "$extensions": {
           "com.serupa": {

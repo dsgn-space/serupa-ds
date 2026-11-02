@@ -10,7 +10,7 @@
 .dk-search-input .dk-input__field::-webkit-search-cancel-button, .dk-search-input .dk-input__field::-webkit-search-decoration { appearance: none; }
 .dk-search-input__clear {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--search-input-clear-padding, var(--spacing-1));
-  border: var(--spacing-0); border-radius: var(--search-input-clear-radius, var(--rounded-sm)); background: transparent;
+  border: var(--spacing-0); border-radius: var(--search-input-clear-radius, var(--radius-inner)); background: transparent;
   color: var(--search-input-clear, var(--text-muted)); cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }

@@ -38,7 +38,7 @@ const LATIN: Record<string, string> = {
   PhoneInput: 'the field and its value are ASCII digits, so the calling codes beside them (+20, Egypt (+20)) match what people type and dial (GR45)',
   // A label pack's text (the provider's labels, English and Indonesian) is the app's words: an app with an Arabic
   // pack writes its own digits there.
-  ErrorSummary: 'the title is the label pack\'s errorSummaryTitle(n)', Stepper: "the compact summary is the label pack's stepOf(n, total)",
+  ErrorSummary: 'the title is the label pack\'s errorSummaryTitle(n)', Stepper: "the compact summary is the label pack's stepOf(n, total)", Tour: "the step count is the label pack's stepOf(n, total), as Stepper's",
 };
 // What still writes ASCII digits, until its fix lands. None now.
 const KNOWN = new Set<string>([]);
