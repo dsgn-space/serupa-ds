@@ -9,7 +9,22 @@ import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const part = (id: string, name: string) => el(id).querySelector<HTMLElement>(`.dk-empty-state__${name}`);
+// The parts by their place: the hidden icon first, then the text (the heading, the description right under it, the
+// suggestions), then the actions.
+const part = (id: string, name: string): HTMLElement | null => {
+  const kids = [...el(id).children] as HTMLElement[];
+  const text = kids.find((c) => c.querySelector(':scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6')) ?? null;
+  const parts: Record<string, HTMLElement | null> = {
+    icon: kids.find((c) => c.getAttribute('aria-hidden') === 'true') ?? null,
+    text,
+    title: text?.querySelector<HTMLElement>(':scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6') ?? null,
+    description: text?.querySelector<HTMLElement>(':is(h2, h3, h4, h5, h6) + p') ?? null,
+    // "Did you mean:", then a button (or, without onSuggestion, a strong) per search.
+    suggestions: text?.querySelector<HTMLElement>(':scope > p:has(> button, > strong)') ?? null,
+    actions: kids.find((c) => c !== text && c.getAttribute('aria-hidden') !== 'true') ?? null,
+  };
+  return parts[name];
+};
 const rect = (e: Element) => e.getBoundingClientRect();
 const near = (a: number, b: number) => Math.abs(a - b) <= 1;
 
