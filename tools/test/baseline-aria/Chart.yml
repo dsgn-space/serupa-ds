@@ -1,0 +1,376 @@
+# AsTable
+- figure "Visitors and sign-ups":
+  - text: Visitors and sign-ups
+  - button "Show as chart"
+  - table "Visitors and sign-ups":
+    - caption: Visitors and sign-ups
+    - rowgroup:
+      - row "Category Visitors Sign-ups":
+        - columnheader "Category":
+          - button "Category"
+        - columnheader "Visitors":
+          - button "Visitors"
+        - columnheader "Sign-ups":
+          - button "Sign-ups"
+    - rowgroup:
+      - row "Jan 120 20":
+        - rowheader "Jan"
+        - cell "120"
+        - cell "20"
+      - row "Feb 132 42":
+        - rowheader "Feb"
+        - cell "132"
+        - cell "42"
+      - row "Mar 101 31":
+        - rowheader "Mar"
+        - cell "101"
+        - cell "31"
+      - row "Apr 134 54":
+        - rowheader "Apr"
+        - cell "134"
+        - cell "54"
+      - row "May 190 60":
+        - rowheader "May"
+        - cell "190"
+        - cell "60"
+      - row "Jun 230 73":
+        - rowheader "Jun"
+        - cell "230"
+        - cell "73"
+      - row "Jul 210 80":
+        - rowheader "Jul"
+        - cell "210"
+        - cell "80"
+      - row "Aug 182 64":
+        - rowheader "Aug"
+        - cell "182"
+        - cell "64"
+      - row "Sep 191 71":
+        - rowheader "Sep"
+        - cell "191"
+        - cell "71"
+      - row "Oct 234 94":
+        - rowheader "Oct"
+        - cell "234"
+        - cell "94"
+      - row "Nov 290 110":
+        - rowheader "Nov"
+        - cell "290"
+        - cell "110"
+      - row "Dec 330 142":
+        - rowheader "Dec"
+        - cell "330"
+        - cell "142"
+
+# Bar
+- figure "Orders by region":
+  - text: Orders by region
+  - button "Show as table"
+  - group "Bar chart":
+    - group "2025":
+      - 'img "2025, North: 420"'
+      - 'img "2025, South: 380"'
+      - 'img "2025, East: 510"'
+      - 'img "2025, West: 290"'
+    - group "2026":
+      - 'img "2026, North: 460"'
+      - 'img "2026, South: 350"'
+      - 'img "2026, East: 580"'
+      - 'img "2026, West: 340"'
+    - group "2027 target":
+      - 'img "2027 target, North: 500"'
+      - 'img "2027 target, South: 400"'
+      - 'img "2027 target, East: 600"'
+      - 'img "2027 target, West: 380"'
+
+# EightBars
+- figure "Every chart color, with its pattern":
+  - text: Every chart color, with its pattern
+  - button "Show as table"
+  - group "Bar chart":
+    - group "Series 1":
+      - 'img "Series 1, Mon: 10"'
+      - 'img "Series 1, Tue: 20"'
+      - 'img "Series 1, Wed: 15"'
+    - group "Series 2":
+      - 'img "Series 2, Mon: 16"'
+      - 'img "Series 2, Tue: 27"'
+      - 'img "Series 2, Wed: 23"'
+    - group "Series 3":
+      - 'img "Series 3, Mon: 22"'
+      - 'img "Series 3, Tue: 34"'
+      - 'img "Series 3, Wed: 31"'
+    - group "Series 4":
+      - 'img "Series 4, Mon: 28"'
+      - 'img "Series 4, Tue: 41"'
+      - 'img "Series 4, Wed: 34"'
+    - group "Series 5":
+      - 'img "Series 5, Mon: 34"'
+      - 'img "Series 5, Tue: 48"'
+      - 'img "Series 5, Wed: 42"'
+    - group "Series 6":
+      - 'img "Series 6, Mon: 40"'
+      - 'img "Series 6, Tue: 50"'
+      - 'img "Series 6, Wed: 45"'
+    - group "Series 7":
+      - 'img "Series 7, Mon: 46"'
+      - 'img "Series 7, Tue: 57"'
+      - 'img "Series 7, Wed: 53"'
+    - group "Series 8":
+      - 'img "Series 8, Mon: 52"'
+      - 'img "Series 8, Tue: 64"'
+      - 'img "Series 8, Wed: 61"'
+
+# EightSeries
+- figure "Every chart color, with its marker":
+  - text: Every chart color, with its marker
+  - button "Show as table"
+  - group "Line chart":
+    - group "Series 1":
+      - 'img "Series 1, Mon: 10"'
+      - 'img "Series 1, Tue: 20"'
+      - 'img "Series 1, Wed: 15"'
+      - 'img "Series 1, Thu: 25"'
+      - 'img "Series 1, Fri: 20"'
+    - group "Series 2":
+      - 'img "Series 2, Mon: 16"'
+      - 'img "Series 2, Tue: 27"'
+      - 'img "Series 2, Wed: 23"'
+      - 'img "Series 2, Thu: 34"'
+      - 'img "Series 2, Fri: 30"'
+    - group "Series 3":
+      - 'img "Series 3, Mon: 22"'
+      - 'img "Series 3, Tue: 34"'
+      - 'img "Series 3, Wed: 31"'
+      - 'img "Series 3, Thu: 38"'
+      - 'img "Series 3, Fri: 35"'
+    - group "Series 4":
+      - 'img "Series 4, Mon: 28"'
+      - 'img "Series 4, Tue: 41"'
+      - 'img "Series 4, Wed: 34"'
+      - 'img "Series 4, Thu: 47"'
+      - 'img "Series 4, Fri: 40"'
+    - group "Series 5":
+      - 'img "Series 5, Mon: 34"'
+      - 'img "Series 5, Tue: 48"'
+      - 'img "Series 5, Wed: 42"'
+      - 'img "Series 5, Thu: 51"'
+      - 'img "Series 5, Fri: 45"'
+    - group "Series 6":
+      - 'img "Series 6, Mon: 40"'
+      - 'img "Series 6, Tue: 50"'
+      - 'img "Series 6, Wed: 45"'
+      - 'img "Series 6, Thu: 55"'
+      - 'img "Series 6, Fri: 50"'
+    - group "Series 7":
+      - 'img "Series 7, Mon: 46"'
+      - 'img "Series 7, Tue: 57"'
+      - 'img "Series 7, Wed: 53"'
+      - 'img "Series 7, Thu: 64"'
+      - 'img "Series 7, Fri: 60"'
+    - group "Series 8":
+      - 'img "Series 8, Mon: 52"'
+      - 'img "Series 8, Tue: 64"'
+      - 'img "Series 8, Wed: 61"'
+      - 'img "Series 8, Thu: 68"'
+      - 'img "Series 8, Fri: 65"'
+
+# Formatted
+- figure "Revenue":
+  - text: Revenue
+  - button "Show as table"
+  - group "Bar chart":
+    - group:
+      - 'img "Jan: $1.3M"'
+      - 'img "Feb: $1.8M"'
+      - 'img "Mar: $1.6M"'
+
+# Gaps
+- figure "Readings":
+  - text: Readings
+  - button "Show as table"
+  - group "Line chart":
+    - group "Sensor A":
+      - 'img "Sensor A, Jan: 3"'
+      - 'img "Sensor A, Feb: 4"'
+      - 'img "Sensor A, May: 6"'
+      - 'img "Sensor A, Jun: 7"'
+      - 'img "Sensor A, Jul: 5"'
+      - 'img "Sensor A, Sep: 8"'
+      - 'img "Sensor A, Oct: 9"'
+      - 'img "Sensor A, Nov: 9"'
+      - 'img "Sensor A, Dec: 10"'
+    - group "Sensor B":
+      - 'img "Sensor B, Jan: 2"'
+      - 'img "Sensor B, Feb: 3"'
+      - 'img "Sensor B, Mar: 3"'
+      - 'img "Sensor B, Apr: 4"'
+      - 'img "Sensor B, Jun: 5"'
+      - 'img "Sensor B, Jul: 6"'
+      - 'img "Sensor B, Aug: 6"'
+      - 'img "Sensor B, Sep: 7"'
+      - 'img "Sensor B, Nov: 8"'
+      - 'img "Sensor B, Dec: 8"'
+
+# Line
+- figure "Visitors and sign-ups":
+  - text: Visitors and sign-ups
+  - button "Show as table"
+  - group "Line chart":
+    - group "Visitors":
+      - 'img "Visitors, Jan: 120"'
+      - 'img "Visitors, Feb: 132"'
+      - 'img "Visitors, Mar: 101"'
+      - 'img "Visitors, Apr: 134"'
+      - 'img "Visitors, May: 190"'
+      - 'img "Visitors, Jun: 230"'
+      - 'img "Visitors, Jul: 210"'
+      - 'img "Visitors, Aug: 182"'
+      - 'img "Visitors, Sep: 191"'
+      - 'img "Visitors, Oct: 234"'
+      - 'img "Visitors, Nov: 290"'
+      - 'img "Visitors, Dec: 330"'
+    - group "Sign-ups":
+      - 'img "Sign-ups, Jan: 20"'
+      - 'img "Sign-ups, Feb: 42"'
+      - 'img "Sign-ups, Mar: 31"'
+      - 'img "Sign-ups, Apr: 54"'
+      - 'img "Sign-ups, May: 60"'
+      - 'img "Sign-ups, Jun: 73"'
+      - 'img "Sign-ups, Jul: 80"'
+      - 'img "Sign-ups, Aug: 64"'
+      - 'img "Sign-ups, Sep: 71"'
+      - 'img "Sign-ups, Oct: 94"'
+      - 'img "Sign-ups, Nov: 110"'
+      - 'img "Sign-ups, Dec: 142"'
+
+# LongText
+- figure "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice in a narrow column":
+  - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice in a narrow column
+  - button "Show as table"
+  - group "Line chart":
+    - group "Donaudampfschifffahrtsgesellschaft":
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 1: 1,000"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 2: 1,377"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 3: 1,754"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 4: 1,231"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 5: 1,608"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 6: 1,085"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 7: 1,462"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 8: 1,839"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 9: 1,316"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 10: 1,693"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 11: 1,170"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 12: 1,547"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 13: 1,024"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 14: 1,401"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 15: 1,778"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 16: 1,255"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 17: 1,632"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 18: 1,109"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 19: 1,486"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 20: 1,863"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 21: 1,340"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 22: 1,717"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 23: 1,194"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 24: 1,571"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 25: 1,048"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 26: 1,425"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 27: 1,802"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 28: 1,279"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 29: 1,656"'
+      - 'img "Donaudampfschifffahrtsgesellschaft, Day 30: 1,133"'
+    - group "A second series with a long name":
+      - 'img "A second series with a long name, Day 1: 600"'
+      - 'img "A second series with a long name, Day 2: 811"'
+      - 'img "A second series with a long name, Day 3: 1,022"'
+      - 'img "A second series with a long name, Day 4: 1,233"'
+      - 'img "A second series with a long name, Day 5: 744"'
+      - 'img "A second series with a long name, Day 6: 955"'
+      - 'img "A second series with a long name, Day 7: 1,166"'
+      - 'img "A second series with a long name, Day 8: 677"'
+      - 'img "A second series with a long name, Day 9: 888"'
+      - 'img "A second series with a long name, Day 10: 1,099"'
+      - 'img "A second series with a long name, Day 11: 610"'
+      - 'img "A second series with a long name, Day 12: 821"'
+      - 'img "A second series with a long name, Day 13: 1,032"'
+      - 'img "A second series with a long name, Day 14: 1,243"'
+      - 'img "A second series with a long name, Day 15: 754"'
+      - 'img "A second series with a long name, Day 16: 965"'
+      - 'img "A second series with a long name, Day 17: 1,176"'
+      - 'img "A second series with a long name, Day 18: 687"'
+      - 'img "A second series with a long name, Day 19: 898"'
+      - 'img "A second series with a long name, Day 20: 1,109"'
+      - 'img "A second series with a long name, Day 21: 620"'
+      - 'img "A second series with a long name, Day 22: 831"'
+      - 'img "A second series with a long name, Day 23: 1,042"'
+      - 'img "A second series with a long name, Day 24: 1,253"'
+      - 'img "A second series with a long name, Day 25: 764"'
+      - 'img "A second series with a long name, Day 26: 975"'
+      - 'img "A second series with a long name, Day 27: 1,186"'
+      - 'img "A second series with a long name, Day 28: 697"'
+      - 'img "A second series with a long name, Day 29: 908"'
+      - 'img "A second series with a long name, Day 30: 1,119"'
+
+# Negative
+- figure "Profit and loss":
+  - text: Profit and loss
+  - button "Show as table"
+  - group "Bar chart":
+    - group:
+      - 'img "Q1: $12k"'
+      - 'img "Q2: −$8k"'
+      - 'img "Q3: $4k"'
+      - 'img "Q4: $18k"'
+
+# OneSeries
+- figure "Daily active users":
+  - text: Daily active users
+  - button "Show as table"
+  - group "Line chart":
+    - group:
+      - 'img "Jan: 12"'
+      - 'img "Feb: 18"'
+      - 'img "Mar: 15"'
+      - 'img "Apr: 22"'
+      - 'img "May: 30"'
+      - 'img "Jun: 28"'
+      - 'img "Jul: 35"'
+      - 'img "Aug: 41"'
+      - 'img "Sep: 39"'
+      - 'img "Oct: 44"'
+      - 'img "Nov: 52"'
+      - 'img "Dec: 60"'
+
+# Playground
+- figure "Visitors and sign-ups":
+  - text: Visitors and sign-ups
+  - button "Show as table"
+  - group "Line chart":
+    - group "Visitors":
+      - 'img "Visitors, Jan: 120"'
+      - 'img "Visitors, Feb: 132"'
+      - 'img "Visitors, Mar: 101"'
+      - 'img "Visitors, Apr: 134"'
+      - 'img "Visitors, May: 190"'
+      - 'img "Visitors, Jun: 230"'
+      - 'img "Visitors, Jul: 210"'
+      - 'img "Visitors, Aug: 182"'
+      - 'img "Visitors, Sep: 191"'
+      - 'img "Visitors, Oct: 234"'
+      - 'img "Visitors, Nov: 290"'
+      - 'img "Visitors, Dec: 330"'
+    - group "Sign-ups":
+      - 'img "Sign-ups, Jan: 20"'
+      - 'img "Sign-ups, Feb: 42"'
+      - 'img "Sign-ups, Mar: 31"'
+      - 'img "Sign-ups, Apr: 54"'
+      - 'img "Sign-ups, May: 60"'
+      - 'img "Sign-ups, Jun: 73"'
+      - 'img "Sign-ups, Jul: 80"'
+      - 'img "Sign-ups, Aug: 64"'
+      - 'img "Sign-ups, Sep: 71"'
+      - 'img "Sign-ups, Oct: 94"'
+      - 'img "Sign-ups, Nov: 110"'
+      - 'img "Sign-ups, Dec: 142"'
+
