@@ -29,6 +29,14 @@ const basic = (p: Parts): TourStep[] => [
   { target: p.help, title: 'Help is here', content: 'Guides and shortcuts live behind this button, and you can take this tour again from there.', placement: 'left' },
 ];
 
+// A story's render: the page with these steps.
+function view(steps?: (p: Parts) => TourStep[]) {
+  return function Render(args: TourProps, ctx: { viewMode?: string }) {
+    const docs = ctx.viewMode === 'docs';
+    return <Page {...args} steps={steps} open={!docs && args.open} start={docs || !args.open} />;
+  };
+}
+
 const meta = {
   title: 'Components/Overlays/Tour',
   component: Tour,
@@ -36,10 +44,7 @@ const meta = {
   argTypes: { steps: { control: false } },
   // On the docs page every story starts closed with a "Take the tour" button, so the open panels don't all take
   // focus and scroll the page; in its own canvas a story shows its step open, for the Storybook test in all six themes.
-  render: function Render(args: TourProps, ctx) {
-    const docs = ctx.viewMode === 'docs';
-    return <Page {...args} steps={ctx.parameters.steps as ((p: Parts) => TourStep[]) | undefined} open={!docs && args.open} start={docs || !args.open} />;
-  },
+  render: view(),
 } satisfies Meta<typeof Tour>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -52,11 +57,11 @@ export const Last: Story = { name: 'Last step (Done)', args: { open: true, defau
 export const Centered: Story = {
   name: 'No target: in the middle',
   args: { open: true },
-  parameters: { steps: (p: Parts) => [{ title: 'Welcome to Projects', content: 'A quick look at the three things you\'ll use most. It takes under a minute.' }, ...basic(p)] },
+  render: view((p: Parts) => [{ title: 'Welcome to Projects', content: 'A quick look at the three things you\'ll use most. It takes under a minute.' }, ...basic(p)]),
 };
 export const Closed: Story = { args: { open: false } };
 // The stress story (G14): a long title and text in a narrow screen; the visual baselines show how it copes.
 export const LongText: Story = {
   args: { open: true },
-  parameters: { steps: (p: Parts) => [{ target: p.create, title: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, a title long enough to wrap twice', content: 'A long explanation that keeps going, so the panel has to wrap its text across several lines and still keep its buttons in reach at the bottom, even on a narrow phone screen.' }] },
+  render: view((p: Parts) => [{ target: p.create, title: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, a title long enough to wrap twice', content: 'A long explanation that keeps going, so the panel has to wrap its text across several lines and still keep its buttons in reach at the bottom, even on a narrow phone screen.' }]),
 };

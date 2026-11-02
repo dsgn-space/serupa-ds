@@ -2,10 +2,10 @@
 - searchbox "Search projects"
 - button "New project"
 - button "Help"
-- dialog "Find a project":
-  - heading "Find a project" [level=2]
+- dialog "Welcome to Projects":
+  - heading "Welcome to Projects" [level=2]
   - button "Close"
-  - text: Search by name or owner. Results update as you type. Step 1 of 3
+  - text: A quick look at the three things you'll use most. It takes under a minute. Step 1 of 4
   - button "Next"
 
 # Closed
@@ -40,11 +40,11 @@
 - searchbox "Search projects"
 - button "New project"
 - button "Help"
-- dialog "Find a project":
-  - heading "Find a project" [level=2]
+- dialog "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, a title long enough to wrap twice":
+  - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, a title long enough to wrap twice" [level=2]
   - button "Close"
-  - text: Search by name or owner. Results update as you type. Step 1 of 3
-  - button "Next"
+  - text: A long explanation that keeps going, so the panel has to wrap its text across several lines and still keep its buttons in reach at the bottom, even on a narrow phone screen.
+  - button "Done"
 
 # Middle
 - searchbox "Search projects"
