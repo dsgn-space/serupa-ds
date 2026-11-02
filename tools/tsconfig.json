@@ -18,7 +18,7 @@
   // framework apps in test/frameworks/ are projects of their own, checked by their frameworks' builds.
   "include": [
     "**/*.mjs",
-    "../bin/*.mjs"
+    "../bin/**/*.mjs"
   ],
   "exclude": ["test/*.mjs", "test/frameworks"],
   "files": [
