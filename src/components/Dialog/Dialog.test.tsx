@@ -8,7 +8,7 @@ import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { topModal } from '../../internal/layers';
 import { Popover } from '../Popover/Popover';
-import { Dialog } from './Dialog';
+import { Dialog, useUnsavedChanges } from './Dialog';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const dlg = (id: string) => el(id) as HTMLDialogElement;
@@ -564,6 +564,62 @@ describe('Dialog: unsaved (13)', () => {
     expect(leave()).toBe(true);
     await screen.rerender(<Form why={why} unsaved={false} />);
     expect(leave()).toBe(false);
+  });
+});
+
+describe('useUnsavedChanges: a form or page (13)', () => {
+  const question = () => document.querySelector<HTMLDialogElement>('dialog[role="alertdialog"]');
+  const button = (name: string) => [...question()!.querySelectorAll('button')].find((b) => b.textContent === name)!;
+  const leave = () => { const e = new Event('beforeunload', { cancelable: true }); window.dispatchEvent(e); return e.defaultPrevented; };
+  let api: { confirm: () => Promise<boolean> } = { confirm: async () => true };
+  function Settings(props: { saved?: string }) {
+    const [name, setName] = React.useState(props.saved ?? 'Atlas');
+    const guard = useUnsavedChanges(name !== (props.saved ?? 'Atlas'));
+    api = guard;
+    return <form>
+      <Input id="name" aria-label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+      {guard.dialog}
+    </form>;
+  }
+  test('nothing changed: confirm() is true at once, no question, and leaving the page doesn\'t ask', async () => {
+    await render(<Settings />);
+    expect([await api.confirm(), question(), leave()]).toEqual([true, null, false]);
+  });
+  test('with changes: leaving the page asks; confirm() asks "Discard changes?" with Keep editing focused, false on Keep editing or Escape, true on Discard; focus goes back', async () => {
+    await render(<Settings />);
+    el('name').focus();
+    await userEvent.keyboard('s');
+    expect(leave()).toBe(true);
+    let got = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await expect.poll(() => document.activeElement?.textContent).toBe('Keep editing');
+    await userEvent.click(button('Keep editing'));
+    expect([await got, question()?.open]).toEqual([false, false]);
+    await expect.poll(() => document.activeElement?.id).toBe('name');
+    got = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    expect(await got).toBe(false);
+    got = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await userEvent.click(button('Discard'));
+    expect([await got, question()?.open, (el('name') as HTMLInputElement).value]).toEqual([true, false, 'Atlass']);
+  });
+  test('a newer confirm() answers the one before with false; saving while it asks answers true; unmounting answers false', async () => {
+    const screen = await render(<Settings />);
+    el('name').focus();
+    await userEvent.keyboard('s');
+    const first = api.confirm(), second = api.confirm();
+    expect(await first).toBe(false);
+    await expect.poll(() => question()?.open).toBe(true);
+    await screen.rerender(<Settings saved="Atlass" />);
+    expect([await second, leave()]).toEqual([true, false]);
+    await expect.poll(() => question()?.open ?? false).toBe(false);
+    await userEvent.keyboard('!');
+    const third = api.confirm();
+    await expect.poll(() => question()?.open).toBe(true);
+    await screen.unmount();
+    expect([await third, leave()]).toEqual([false, false]);
   });
 });
 
