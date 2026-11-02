@@ -14,24 +14,35 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v12.0.0
+npm install github:diki-stwn/serupa-ds#v13.0.0
 ```
 
 Or install the same release from its file on the Releases page, which needs no git on the machine and puts the file's checksum in your lockfile:
 
 ```sh
-npm install https://github.com/diki-stwn/serupa-ds/releases/download/v12.0.0/serupa-ds-12.0.0.tgz
+npm install https://github.com/diki-stwn/serupa-ds/releases/download/v13.0.0/serupa-ds-13.0.0.tgz
 ```
 
 To check a downloaded file before you install it: the release notes give its SHA-256, and releases after 10.1.0 also carry a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit. With the [GitHub CLI](https://cli.github.com):
 
 ```sh
-gh attestation verify ./serupa-ds-12.0.0.tgz --repo diki-stwn/serupa-ds
+gh attestation verify ./serupa-ds-13.0.0.tgz --repo diki-stwn/serupa-ds
 ```
 
-Always pin a tag (`#v12.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v13.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes.
+
+**Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
+
+```sh
+npx --package=github:diki-stwn/serupa-ds#v13.0.0 serupa-create my-app
+cd my-app
+npm install
+npm run dev
+```
+
+Add `--brand violet` or `--brand emerald` for another brand. Then steps 2 and 3 below are done for you.
 
 ### 2. Load the styles and use the components
 
@@ -41,6 +52,7 @@ In a React app (Vite, Next.js, Remix):
 import 'serupa-ds/tokens.css';
 import 'serupa-ds/base.css';     // page defaults; leave out when adding the system to an existing app
 import 'serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
+// import 'serupa-ds/utilities-extra.css';   // masks and gradients (mask-*, bg-linear-*, from-*…), if you use them
 import { Button, Field, Input } from 'serupa-ds';
 
 export function SignUp() {
@@ -93,18 +105,43 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. A theme sw
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses with `serupa-purge`, which comes with the package. From your project's folder:
+`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
+
+```js
+// vite.config.js
+import react from '@vitejs/plugin-react';
+import { serupaPurge } from 'serupa-ds/purge';
+
+export default { plugins: [react(), serupaPurge()] };
+```
+
+`vite build` then ships the component styles (about 220 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
+
+```js
+// postcss.config.mjs
+import { serupaPurgePostcss } from 'serupa-ds/purge';
+
+export default { plugins: [serupaPurgePostcss()] };
+```
+
+Without a bundler, run `serupa-purge` from your project's folder; it reads the installed `bundle.css` (or `--css <file>`):
 
 ```sh
 npx serupa-purge src -o public/bundle.min.css
 ```
 
-It reads the installed `bundle.css` (or `--css <file>`); name classes your code builds at runtime with `--keep`.
+Class names must appear whole in your code: name the ones it builds at runtime (`"grid-cols-" + n`) with `keep: ['grid-cols-2', '@safelist.txt']` in either plugin, or `--keep` on the command line.
 
-That keeps the component styles (about 220 KB) and only the utility classes your code uses. Add `--components` to also drop the styles of components your code never names: an app that only uses Button gets about 48 KB instead of 189 KB. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
+To also drop the styles of components your code never names, pass `components: true` (or `--components`): an app that only uses Button gets about 48 KB instead of 189 KB. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
 
 ```sh
 npx serupa-purge src -o public/bundle.min.css --components
+```
+
+To see how a product uses Serupa, run `serupa-usage` on its sources. It lists each component it renders, how often, in how many files and with which props, the components it never uses, and the plain elements it writes where a component would do (a `<button>` where Button gives the focus ring, loading state and theme). `--json` prints the same numbers for a dashboard or a comparison between releases:
+
+```sh
+npx serupa-usage src
 ```
 
 ### What's in the package
@@ -114,7 +151,8 @@ npx serupa-purge src -o public/bundle.min.css --components
 | `tokens.css` | Every token as a CSS variable, the six themes, and the fonts. Load it first. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, and `data-print-urls` on a container prints each outside link's address after it. |
 | `dist/components.css` | The component styles (`dk-*`), about 205 KB (27 KB gzipped). |
-| `dist/utilities.css` | Every utility class. |
+| `dist/utilities.css` | The utility classes, apart from masks and gradients. |
+| `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |
 | `dist/index.js`, `dist/index.d.ts` | The components as ES modules, with types. |
 | `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). |
@@ -124,7 +162,8 @@ npx serupa-purge src -o public/bundle.min.css --components
 | `dist/eslint.js` (`serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
 | `dist/stylelint.js` (`serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length or a radius written out where a token belongs. See Getting started in Storybook. |
 | `dist/testing.js` (`serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
-| `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. |
+| `dist/purge.js` (`serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
+| `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. Both are made from `tokens/serupa.tokens.json` in the repository. |
 
 ### For your own components
 
@@ -226,6 +265,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [RelativeTime](src/components/RelativeTime/README.md) | Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". |
 | [SortableList](src/components/SortableList/README.md) | A list people put in their own order: tasks by priority, steps in a flow, columns in a table. |
 | [Table](src/components/Table/README.md) | A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. |
+| [VirtualList](src/components/VirtualList/README.md) (beta) | A [List](src/components/List/README.md) of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. |
 
 ### Data display
 
@@ -291,6 +331,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Divider](src/components/Divider/README.md) | A 1px line between content, horizontal or vertical, with an optional label in the middle such as "or". |
 | [Grid](src/components/Grid/README.md) | Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. |
 | [Heading](src/components/Heading/README.md) | A heading, `h1` to `h6`, in the system's type. |
+| [Prose](src/components/Prose/README.md) | Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. |
 | [Stack](src/components/Stack/README.md) | Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. |
 | [Text](src/components/Text/README.md) | Body text in the system's type: a paragraph, a caption, an error line. |
 | [VisuallyHidden](src/components/VisuallyHidden/README.md) | Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. |
@@ -304,6 +345,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Navbar](src/components/Navbar/README.md) | The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). |
 | [Pagination](src/components/Pagination/README.md) | Moves through pages of results: previous and next arrows around the page numbers, with … where pages are skipped. |
 | [Sidebar](src/components/Sidebar/README.md) | A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). |
+| [SkipLink](src/components/SkipLink/README.md) | The "Skip to content" link that keyboard and screen reader users need first on every page (WCAG 2.4.1 Bypass Blocks). |
 | [Stepper](src/components/Stepper/README.md) | Shows where people are in a task split into steps, such as sign-up, checkout or setup. |
 | [Tabs](src/components/Tabs/README.md) | Switches between related panels in one place, such as a project's Overview, Activity and Settings. |
 | [TreeView](src/components/TreeView/README.md) | Nested items that open and close, such as folders and files, a table of contents or categories. |
@@ -312,8 +354,10 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
+| [CommandPalette](src/components/CommandPalette/README.md) (beta) | A search over the app's commands and pages in a dialog, opened with ⌘K (Ctrl+K off Apple devices) from anywhere: type a few letters, move with the arrows, press Enter. |
 | [Dialog](src/components/Dialog/README.md) | A modal window over a dimmed page, for a task or a decision that needs attention before people go on: inviting someone, confirming a delete, editing a few fields. |
 | [Drawer](src/components/Drawer/README.md) | A modal panel that slides in from an edge of the screen: navigation on small screens, filters, or details and edits without leaving the page. |
+| [HoverCard](src/components/HoverCard/README.md) | A preview of what a link points to: a person, a page, a repository. |
 | [KeyboardShortcuts](src/components/KeyboardShortcuts/README.md) | Keyboard shortcuts for an app, in one place: `useShortcut` sets one up where it's used, and `<KeyboardShortcuts>` is the help dialog that lists them all, opened with <kbd>?</kbd>. |
 | [Menu](src/components/Menu/README.md) | A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a user menu. |
 | [NotificationCenter](src/components/NotificationCenter/README.md) | A drawer of past notifications with read states: newest first, unread ones with a dot and a bolder title, and buttons to mark them read or clear the list. |
@@ -355,8 +399,21 @@ Names are never removed in a minor or patch release: they're marked deprecated i
 | `themes/<theme>.tokens.json` | The 33 alias colors for one theme, as references into the palette (`"{color.blue-600}"`). Load `serupa.tokens.json` plus one theme file |
 | `css-values.json` | Values the format has no type for yet (degrees, `em`, percentages of a box, viewport units, keywords, CSS shorthands, text shadows), as plain CSS |
 | `components/<component>.tokens.json` | A component's own tokens (Button's 44 `--button-*` tokens), as references to the shared ones. Copied from `src/components/<Name>/<name>.tokens.json` |
+| `tokens.schema.json` | A JSON Schema (2020-12) for the token files above, except `css-values.json`: the types and value shapes they use |
 
-Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The files are generated from `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
+Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The files are generated from the token source, `tokens/serupa.tokens.json` in the repository, through `tokens.json` (`npm run tokens`) and the tests fail if they fall out of step. `tools/tokens/style-dictionary.config.mjs` builds them back into CSS, one file per theme, with the system's own variable names; the tests check that every one of its 3,500 values equals the token.
+
+To check a token file of your own (a theme you add, a component's overrides) as you write it, map the schema in the project's `.vscode/settings.json`:
+
+```json
+{
+  "json.schemas": [{ "fileMatch": ["*.tokens.json"], "url": "./node_modules/serupa-ds/design-tokens/tokens.schema.json" }]
+}
+```
+
+### In Figma
+
+The Figma variables workflow keeps a Figma file's variables in step with the tokens: three collections (Serupa palette, Serupa themes with a mode per theme, Serupa scales), each variable named by its path (`spacing/spacing-4`) with its description and its CSS variable as the code syntax Dev Mode shows. It runs on `main` when the tokens change, once the repository has a `FIGMA_TOKEN` (with the `file_variables:read` and `file_variables:write` scopes) and a `FIGMA_FILE` secret; Figma's Variables REST API needs an Enterprise plan. `node tools/tokens/figma-variables.mjs` shows what it would send.
 
 ## Tokens for native apps
 
@@ -370,6 +427,18 @@ Each token keeps its CSS variable in `$extensions["com.serupa"].cssVar`. The fil
 | `android/res-<brand>/values/` and `values-night/` | One brand's alias colors (`@color/serupa_primary`), light and dark. Add the brand's folder as a resource directory and night mode picks the dark ones |
 
 Shadows, easings and the type styles aren't in them yet.
+
+## Tokens for email
+
+Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed stylesheets, so the components' CSS can't go in an email. `dist/email/` (`serupa-ds/email/…`) has Serupa's colors, type and spacing written out in hex and px instead, made from the same tokens by `npm run build`.
+
+| File | Holds |
+| --- | --- |
+| `<brand>.css` | The email classes: `serupa-body`, `serupa-container`, `serupa-content`, `serupa-h1`, `serupa-h2`, `serupa-text`, `serupa-muted`, `serupa-link`, `serupa-button` in a `serupa-button-cell`, `serupa-callout-info` (and `-success`, `-warning`, `-danger`, each with an `-rtl` twin whose bar is on the right, for a right-to-left email), `serupa-divider` and `serupa-footer`. Light first, then the dark theme under `prefers-color-scheme: dark`. Inline it with your sender's inliner (or juice, or Premailer) and keep the dark block in `<style>` |
+| `<brand>.html` | A starting email with those styles already inline: a 600px table layout, a preview line, a heading, text, a button, a callout, a divider and a footer |
+| `tokens.json` | Every theme's colors in hex (a color with alpha mixed over its surface), and the type sizes, spacing and radii in px, for a template language or an email builder |
+
+Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way. Outlook for Windows ignores padding on a link, so the button's padding is also on its `serupa-button-cell` as `mso-padding-alt`, which only Outlook reads: keep the link inside that cell.
 
 ## Editor autocomplete
 
@@ -424,7 +493,7 @@ The source is in `src/`: one folder per component in `src/components/<Name>/` (t
 
 `npm run new-component -- <Name> --group <Storybook group>` starts one: it writes the folder with every file the contract asks for, already wired to the tokens, the layers and the docs, plus its server-render case, and marks each place that needs your words `TODO(new-component)` (the contract check fails while one is left), then prints the remaining steps. A new component lives in its own folder and nothing else needs a line for it: its `index.ts` says what the package exports, its words go in its `labels.ts` (with the Indonesian), and `tools/build/registry.mjs` builds the export list, the CSS import list and the label sets from the folders into `src/generated/` (not committed). Its stylesheet joins `components.css` after the ones listed in `src/styles/cascade.txt`; list it there only when it must come before another component's styles. Its server-render case is `tools/test/ssr/<Name>.mjs`, and `node tools/test/api.mjs --update` writes its `tools/test/baseline-api/<Name>.d.ts`, and `node tools/test/size.mjs --update <Name>` its size budgets, `tools/test/baseline-size/<Name>.json`. So two pull requests that add or change different components don't conflict.
 
-How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
+What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
 
