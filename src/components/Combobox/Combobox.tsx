@@ -313,6 +313,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const remove = (v: string) => commitMany(values.filter((x) => x !== v), sds.labels.valueRemoved(labelOf(v)));
   const show = (to?: "first" | "last" | "selected") => {
     if (locked) return;
+    later.current = null;
     setOpen(true, "trigger");
     if (loader.current.q !== "") load("", 0);   // opening lists what "" finds, unless that's what's loaded
     const list = opts.filter((o) => !o.disabled);
@@ -418,7 +419,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (rest.onBlur) rest.onBlur(e);
     if (windowBlur(e)) return;   // switched windows: the typing goes on when they come back
     if (multi) { hide("blur"); return; }
-    if (waiting()) { later.current = "blur"; return; }
+    // Its answer still decides the pick (GR106), but the list closes now, so it doesn't sit over the next field (GR107).
+    if (waiting()) { later.current = "blur"; setOpen(false, "blur"); return; }
     const x = exact();
     if (text.trim() === "" && value != null) { commit(null); setOpen(false, "blur"); setActive(-1); setTyped(false); setText(""); }
     else if (x) pick(x, "blur");

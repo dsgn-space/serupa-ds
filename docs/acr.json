@@ -287,8 +287,8 @@
       "id": "2.5.8",
       "name": "Target Size (Minimum)",
       "level": "AA",
-      "conformance": "Partially Supports",
-      "remarks": "Buttons and most controls are at least 24 by 24 CSS pixels. Some are drawn smaller and pass by the spacing exception, with nothing else within 24px of their centres: fields at size `sm` (22px tall), SegmentedControl's `sm` segments (18px drawn, a 24px press area), Slider's thumb (16px) and Splitter's handle (8px wide). Rating doesn't yet: at `sm`, and with `allowHalf` at any size, its stars or halves are under 24px and closer than 24px apart (GR104). A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows."
+      "conformance": "Supports",
+      "remarks": "Buttons and most controls are at least 24 by 24 CSS pixels. Some are drawn smaller and pass by the spacing exception, with nothing else within 24px of their centres: fields at size `sm` (22px tall), SegmentedControl's `sm` segments (18px drawn, a 24px press area), Slider's thumb (16px) and Splitter's handle (8px wide). Rating's stars are 24px apart at every size, each taking presses over the whole step to its neighbours, and with `allowHalf` a star is still one target: where the press lands picks the half. A checkbox, radio or switch without a visible label needs space around it, as the spacing exception allows."
     },
     {
       "id": "3.1.1",
