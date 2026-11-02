@@ -77,8 +77,9 @@ export default defineConfig({
         name: 'checks',
         include: ['tools/test/*.mjs'],
         // Shared code, the cross-browser comparison (npm run test:safari), the visual and Storybook steps, which
-        // run.mjs shards across CI jobs, and the install on older Node (consumer.mjs, its own CI job).
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer}.mjs'],
+        // run.mjs shards across CI jobs, the install on older Node (consumer.mjs, its own CI job) and the framework
+        // apps (frameworks.mjs, its own CI job; pack.mjs is shared by the two).
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack}.mjs'],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,
@@ -90,8 +91,9 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       // src/browser*.ts are the plain-page scripts' entries (serupa.iife.js, serupa-icons.iife.js): nothing imports them
-      // here, and tools/test/icon-names.mjs checks them as built, on a page.
-      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts', 'src/browser*.ts'],
+      // here, and tools/test/icon-names.mjs checks them as built, on a page. src/labels/ holds the language packs, which
+      // no component imports: tools/test/label-packs.mjs builds each one and says every word of it.
+      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts', 'src/browser*.ts', 'src/labels/**'],
       reporter: ['text-summary', 'html', 'json-summary'],
       reportsDirectory: 'coverage',
       // Floors a little under the full run's figures on 25 Oct 2026 (96.2 / 88.6 / 98.9 / 99.6 %), so a change

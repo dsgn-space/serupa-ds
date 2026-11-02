@@ -11,8 +11,8 @@ const described = (e: Element) => (e.getAttribute('aria-describedby') || '').spl
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const announcerA = () => document.querySelector<HTMLElement>('[data-dk-announcer-assertive]');
-const popup = (id: string) => document.querySelector(`#${id} ~ .dk-date-picker__popup`) as HTMLElement;
-const button = (id: string) => document.querySelector(`#${id} ~ .dk-date-picker__button`) as HTMLButtonElement;
+const popup = (id: string) => document.querySelector(`#${id} ~ [role=dialog]`) as HTMLElement;
+const button = (id: string) => document.querySelector(`#${id} ~ button[aria-haspopup=dialog]`) as HTMLButtonElement;
 const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.id || a.tagName; };
 const type = async (id: string, text: string, key = '{Tab}') => { await userEvent.fill(el(id), text); await userEvent.keyboard(key); };
 
@@ -251,7 +251,8 @@ describe('DatePicker', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const pop = popup('ctl'), bg = getComputedStyle(pop).backgroundColor, cs = (sel: string) => getComputedStyle(pop.querySelector(sel)!);
-      const day = pop.querySelector<HTMLElement>('.dk-calendar__day:not(.dk-calendar__day--outside):not(.dk-calendar__day--selected):not(.dk-calendar__day--today)')!;
+      // A plain day: the third week is always in the month shown; not the picked day, not today.
+      const day = pop.querySelector<HTMLElement>('tbody tr:nth-child(3) td:not([aria-selected=true]) > button:not([aria-current])')!;
       const sel = cs('.dk-calendar__day--selected');
       const pairs: Array<[string, string, string, number]> = [['title', cs('.dk-calendar__title').color, bg, 4.5], ['weekday', cs('th').color, bg, 4.5], ['day', getComputedStyle(day).color, bg, 4.5], ['outside day', cs('.dk-calendar__day--outside').color, bg, 4.5], ['selected day', sel.color, sel.backgroundColor, 4.5], ['selected day vs popup', sel.backgroundColor, bg, 3]];
       day.style.background = 'var(--calendar-day-bg-hover, var(--surface-muted))';

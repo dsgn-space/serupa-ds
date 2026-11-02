@@ -106,7 +106,7 @@ describe('Navbar', () => {
   test('a Navbar with no links has no nav and no menu button; an unknown size falls back to xl', async () => {
     await render(<Navbar id="nbare" brand="Only a brand" size={'huge' as never} />);
     const n = el('nbare');
-    expect([n.querySelector('nav'), n.querySelector('button[aria-controls]'), n.querySelector('.dk-navbar__inner')!.className])
+    expect([n.querySelector('nav'), n.querySelector('button[aria-controls]'), n.firstElementChild!.className])
       .toEqual([null, null, 'dk-navbar__inner dk-container dk-container--padded dk-container--xl']);
   });
 

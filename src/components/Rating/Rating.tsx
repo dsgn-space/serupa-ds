@@ -104,14 +104,29 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>("Ra
     return <div {...rest} ref={ref2} role="img" aria-label={rest["aria-label"] ? rest["aria-label"] + ", " + sds.labels.ratingValue(said, max) : sds.labels.ratingValue(said, max)}
       className={classes} data-component="rating" data-size={size}>{stars.map((s) => box(null, s.i, s.fill))}</div>;
   }
+  // With allowHalf the whole star's radio takes the presses (the half's is for keys and screen readers, Rating.css):
+  // a press in the star's start half picks the half. A click from a key (Space, an arrow) has no pointer (detail 0).
+  const startHalf = (e: React.MouseEvent<HTMLInputElement>) => {
+    const t = e.currentTarget, r = (t.parentElement || t).getBoundingClientRect(), x = e.clientX - r.left;
+    return getComputedStyle(t).direction === "rtl" ? x > r.width / 2 : x < r.width / 2;
+  };
   const radios = (i: number) => {
     const choices = allowHalf ? [i + 0.5, i + 1] : [i + 1];
-    return choices.map((v) => (
-      <input key={v} type="radio" className="dk-rating__choice"
+    return choices.map((v) => {
+      const whole = v === i + 1, split = allowHalf && whole;
+      return <input key={v} type="radio" className={cn("dk-rating__choice", allowHalf && !whole && "dk-rating__choice--half")}
         name={name || auto} form={form} value={v} checked={picked === v} disabled={disabled} required={required} aria-label={sds.labels.ratingStars(v)}
-        onChange={() => set(v)} onClick={() => { if (clearable && picked === v) set(null); }}
-        onPointerEnter={(e) => { if (!off && e.pointerType !== "touch") setHover(v); }} />
-    ));
+        onChange={(e) => { if (!split || !((e.nativeEvent as MouseEvent).detail > 0)) set(v); }}
+        onClick={(e) => {
+          const pointer = e.detail > 0, want = split && pointer && startHalf(e) ? i + 0.5 : v;
+          if (clearable && picked === want) set(null);
+          else if (split && pointer) set(want);
+          // The half picked by a press takes focus from the whole star's radio, so Tab and the arrow keys go on from it.
+          if (want !== v) { const half = e.currentTarget.previousElementSibling as HTMLElement | null; if (half) half.focus(); }
+        }}
+        onPointerMove={split ? (e) => { if (!off && e.pointerType !== "touch") setHover(e.clientX && startHalf(e) ? i + 0.5 : v); } : undefined}
+        onPointerEnter={split ? undefined : (e) => { if (!off && e.pointerType !== "touch") setHover(v); }} />;
+    });
   };
   // A Field's required arrives as aria-required (L8E88): it was dropped, since the group's own attribute came after rest.
   return (
