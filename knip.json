@@ -23,6 +23,9 @@
     "bin/*.mjs!",
     ".storybook/*.{ts,tsx}"
   ],
+  "ignore": [
+    "tools/test/frameworks/**"
+  ],
   "ignoreExportsUsedInFile": true,
   "includeEntryExports": false,
   "ignoreDependencies": [
