@@ -165,6 +165,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Изменить размер панелей",
   splitterPlace: "Нажмите, куда поставить разделитель, или нажмите на него ещё раз для отмены.",
   skipToContent: "Перейти к содержимому",
+  offline: "Нет подключения к сети",
+  backOnline: "Подключение восстановлено",
   completed: "выполнено",
   hasError: "есть ошибка",
   hasWarning: "требует внимания",

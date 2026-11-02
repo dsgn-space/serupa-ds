@@ -112,6 +112,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **ErrorBoundary**: Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page.
 - **Loader**: Shows that something is loading when you can't say how far along it is.
 - **Meter**: Shows a measurement within a known range: storage used, a plan's seats, a password's strength, a battery level.
+- **OfflineBanner**: Says when the connection drops and when it comes back, on screen and to screen readers; put one in the app's layout.
 - **Progress**: Shows how far along a task is when you can tell: an upload, a setup, a quota.
 - **SaveStatus**: A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button.
 - **Toast**: A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way.

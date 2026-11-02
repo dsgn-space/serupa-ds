@@ -159,6 +159,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Đổi kích thước khung",
   splitterPlace: "Chạm vào chỗ đặt tay nắm, hoặc chạm lại vào tay nắm để hủy.",
   skipToContent: "Chuyển đến nội dung",
+  offline: "Bạn đang ngoại tuyến",
+  backOnline: "Đã trực tuyến trở lại",
   completed: "đã hoàn tất",
   hasError: "có lỗi",
   hasWarning: "cần chú ý",
