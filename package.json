@@ -75,6 +75,7 @@
   },
   "bin": {
     "serupa-create": "./bin/serupa-create.mjs",
+    "serupa-migrate": "./bin/serupa-migrate.mjs",
     "serupa-purge": "./bin/serupa-purge.mjs",
     "serupa-usage": "./bin/serupa-usage.mjs"
   },

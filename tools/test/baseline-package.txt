@@ -1,7 +1,9 @@
 CHANGELOG.md
 LICENSE
 README.md
+bin/migrate/transforms.mjs
 bin/serupa-create.mjs
+bin/serupa-migrate.mjs
 bin/serupa-purge.mjs
 bin/serupa-usage.mjs
 design-tokens/css-values.json
