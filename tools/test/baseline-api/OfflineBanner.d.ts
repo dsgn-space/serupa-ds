@@ -3,7 +3,7 @@ interface OfflineBannerLabels {
     offline: string;
     backOnline: string;
 }
-interface OfflineBannerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
     online?: boolean;
     placement?: "bottom" | "inline" | "top";
     children?: React.ReactNode;
