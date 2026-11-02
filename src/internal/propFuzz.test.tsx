@@ -117,8 +117,14 @@ async function attempt(el: React.ReactElement, rtl: boolean, theme: string): Pro
     await frames(2);
     if (!problems.length) {
       const result = await axe.run(document, { runOnly: { type: 'tag', values: TAGS } });
-      // WCAG 1.4.3 exempts text that is part of an inactive control, as tools/test/storybook.mjs does.
-      const inactive = (n: axe.NodeResult) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
+      // WCAG 1.4.3 exempts text that is part of an inactive control, as tools/test/storybook.mjs does: inside a
+      // disabled control, or in a Field or Input whose control is disabled (a dimmed label or hint).
+      const inactive = (n: axe.NodeResult) => {
+        const el = document.querySelector(n.target.join(' '));
+        if (el?.closest(':disabled, [aria-disabled="true"]')) return true;
+        const around = el?.closest('[data-component="field"], [data-component="input"]');
+        return !!around && (around.matches(':disabled') || !!around.querySelector(':disabled'));
+      };
       for (const v of result.violations) {
         const nodes = v.id === 'color-contrast' ? v.nodes.filter((n) => !inactive(n)) : v.nodes;
         if (nodes.length) problems.push(`axe ${v.id}: ${nodes.slice(0, 2).map((n) => n.target.join(' ') + (v.id === 'color-contrast' ? ` ${JSON.stringify(n.any[0]?.data)}` : '')).join(', ')}`);
