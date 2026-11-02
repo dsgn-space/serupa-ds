@@ -46,7 +46,8 @@ type TableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>;
 type TableFootProps = React.HTMLAttributes<HTMLTableSectionElement>;
 declare const TableHead: React.ForwardRefExoticComponent<TableHeadProps & React.RefAttributes<HTMLTableSectionElement>>;
 declare const TableBody: React.ForwardRefExoticComponent<TableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
-interface TableVirtualBodyProps extends Omit<React.HTMLAttributes<HTMLTableSectionElement>, "children"> {
+interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+    children?: never;
     count: number;
     renderRow: (index: number) => React.ReactElement;
     itemKey?: (index: number) => React.Key;
