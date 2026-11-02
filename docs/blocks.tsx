@@ -20,6 +20,7 @@ import { majorsIn, nextMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
 import acr from './acr.json';
 import { componentTests } from './generated/tested';
+import { changesFor } from './changes';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
@@ -63,7 +64,26 @@ export function Guide({ source }: { source: string }) {
       ? <Markdown key={i}>{relink(part)}</Markdown>
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
+    {name && <ComponentChanges name={name} />}
   </>;
+}
+
+/** What changed in a component, release by release (134): the CHANGELOG.md entries that name it, newest first, the
+ * latest few open and the rest folded away. */
+export function ComponentChanges({ name }: { name: string }) {
+  const all = changesFor(name, changelogSource);
+  if (!all.length) return null;
+  const SHOWN = 5;
+  const md = (list: typeof all) => list.map((c) => `- **${c.version}**${c.kind ? ` (${c.kind.toLowerCase()})` : ''}: ${c.text}`).join('\n');
+  return <section className="sb-changes" aria-labelledby={`changes-${name}`}>
+    <h2 id={`changes-${name}`}>Changes</h2>
+    <p>The entries of the <a href="?path=/docs/changelog--docs">changelog</a> that name {name}, newest first.</p>
+    <Markdown>{relink(md(all.slice(0, SHOWN)))}</Markdown>
+    {all.length > SHOWN && <details>
+      <summary>Earlier changes ({all.length - SHOWN})</summary>
+      <Markdown>{relink(md(all.slice(SHOWN)))}</Markdown>
+    </details>}
+  </section>;
 }
 
 // A test name without the backlog ids it carries for the people working on the repository: "(GR44)", "(62)", "(FH1, 180)",

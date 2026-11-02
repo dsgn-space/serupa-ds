@@ -106,7 +106,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "The menu's shadow.",
         "$extensions": {
           "com.serupa": {
@@ -118,7 +118,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-lg}",
+        "$value": "{radius.radius-surface}",
         "$description": "The menu's corners (8px).",
         "$extensions": {
           "com.serupa": {
@@ -128,7 +128,7 @@
       },
       "item-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "An item's corners (6px).",
         "$extensions": {
           "com.serupa": {

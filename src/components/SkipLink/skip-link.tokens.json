@@ -46,7 +46,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "Lifts it above the page and a sticky Navbar.",
         "$extensions": {
           "com.serupa": {
@@ -58,7 +58,7 @@
     "border": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "Its corners.",
         "$extensions": {
           "com.serupa": {

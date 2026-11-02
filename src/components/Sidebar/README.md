@@ -165,5 +165,5 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--sidebar-item-radius` | `rounded-md` | An item's corners (6px). |
+| `--sidebar-item-radius` | `radius-control` | An item's corners (6px). |
 <!-- token-table:end -->
