@@ -23,15 +23,16 @@
 .dk-code-block__copy { flex: none; }
 .dk-code-block__pre {
   margin: 0; padding-block: var(--code-block-padding, var(--spacing-4)); overflow: auto;
+  overscroll-behavior-inline: contain;   /* a long line scrolled to its end doesn't go on to swipe the page back */
   font-family: var(--font-mono); font-size: var(--code-block-font-size, var(--text-sm)); line-height: var(--leading-5);
-  white-space: pre; overflow-wrap: normal; tab-size: 2;
+  white-space: pre; overflow-wrap: normal; tab-size: 2;   /* stylelint-disable-line serupa/no-raw-value -- a tab stop counted in characters: no token measures one */
   direction: ltr; unicode-bidi: isolate; text-align: start;   /* run(); never reads ;()run on a right-to-left page */
   counter-reset: dk-code-line;
 }
-.dk-code-block__pre:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: calc(0px - var(--focus-ring-width)); }
-.dk-code-block__code { display: block; inline-size: max-content; min-inline-size: 100%; font: inherit; }
+.dk-code-block__pre:focus-visible { outline: var(--focus-ring-width) solid var(--code-block-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-code-block__code { display: block; inline-size: max-content; min-inline-size: var(--sizing-full); font: inherit; }
 .dk-code-block__line { display: block; padding-inline: var(--code-block-padding, var(--spacing-4)); }
-.dk-code-block--numbered .dk-code-block__line { display: grid; grid-template-columns: calc(var(--dk-code-digits, 2) * 1ch) minmax(0, 1fr); column-gap: var(--spacing-4); padding-inline-start: var(--spacing-3); counter-increment: dk-code-line; }
+.dk-code-block--numbered .dk-code-block__line { display: grid; grid-template-columns: calc(var(--dk-code-digits, 2) * 1ch) minmax(0, 1fr); column-gap: var(--spacing-4); padding-inline-start: var(--spacing-3); counter-increment: dk-code-line; }   /* stylelint-disable-line serupa/no-raw-value -- the numbers' column is as many characters wide as the last line's number has digits: no token measures a character */
 .dk-code-block--numbered .dk-code-block__line::before {
   content: counter(dk-code-line); text-align: end; color: var(--code-block-muted, var(--text-muted));
   user-select: none; -webkit-user-select: none; font-variant-numeric: tabular-nums;
