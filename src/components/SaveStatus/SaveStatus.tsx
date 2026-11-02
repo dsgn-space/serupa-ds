@@ -32,6 +32,8 @@ const STATES: readonly SaveState[] = ["idle", "saving", "saved", "error"];
    comes and goes with every save), and the time ticking isn't either. The wrapper keeps its place when idle, so the
    layout doesn't jump. className and other props go to the wrapper <div>. */
 /** Whether autosaved changes are saved: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with Try again; announced politely. */
+const ORDER: readonly SaveState[] = ["saving", "saved", "error"];
+
 export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusProps>("SaveStatus", function SaveStatus(props, ref) {
   const sds = useSettings(words);
   const { status: _s, savedAt, onRetry, errorText, className, ...rest } = props;
@@ -98,7 +100,10 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
   );
   return (
     <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} onFocus={onFocus} onBlur={onBlur} className={cn("dk-save-status", "dk-save-status--" + status, className)} data-component="save-status" data-state={status}>
-      {[gone && gone !== status ? face(gone, true) : null, face(status, false)]}
+      {/* In one fixed order, not "leaving, then coming": a status that comes back while it's still fading out
+          (saving, saved, saving within a moment) would otherwise be moved in the page, which starts its fade over
+          from nothing, and the label blinked out for a few frames (GR127). Kept where it is, it turns back. */}
+      {ORDER.map((st) => (st === status ? face(st, false) : st === gone ? face(st, true) : null))}
     </div>
   );
 });
