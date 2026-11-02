@@ -16,7 +16,7 @@
 .dk-meter--warning { --dk-meter-fill: var(--meter-fill-suboptimal, var(--warning)); }
 .dk-meter--danger { --dk-meter-fill: var(--meter-fill-poor, var(--danger)); }
 .dk-meter__header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--spacing-3); }
-.dk-meter__label { font-weight: var(--meter-label-weight, var(--font-medium)); min-width: var(--spacing-0); }
+.dk-meter__label { font-weight: var(--meter-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-meter__value { margin-inline-start: auto; color: var(--meter-value-color, var(--text-muted)); font-variant-numeric: tabular-nums; }
 .dk-meter__track { position: relative; overflow: hidden; height: var(--dk-meter-h); border-radius: var(--meter-radius, var(--radius-pill)); background: var(--meter-track, var(--secondary)); }
 .dk-meter__fill { height: var(--sizing-full); border-radius: inherit; background: var(--dk-meter-fill); transition: translate var(--meter-duration, var(--motion-change-lg)) var(--ease-settle); }
