@@ -496,3 +496,86 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     expect([formatFileSize(5_000_000, 'de-DE'), formatFileSize(5_000_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['4,8 MB', '4.8 MB', '2 kB']);
   });
 });
+
+describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
+  const said = () => document.querySelector('[data-dk-announcer]')?.textContent ?? '';
+  const PNG = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='), (ch) => ch.charCodeAt(0));
+  const a = file('a.png', 'image/png', 10), b = file('b.pdf', 'application/pdf', 10), c = file('c.pdf', 'application/pdf', 10);
+  type S = import('./FileUpload').FileUploadStatus;
+  function Uploads(props: { status: Map<File, S>; retried?: string[]; readOnly?: boolean; retry?: boolean }) {
+    return <SerupaProvider locale="en-US"><FileUpload id="up" multiple files={[a, b, c]} readOnly={props.readOnly} fileStatus={(f) => props.status.get(f)}
+      onRetry={props.retry === false ? undefined : (f) => props.retried?.push(f.name)} /></SerupaProvider>;
+  }
+
+  test('uploading: a bar under the name, named by the file, with its progress (or moving on its own); done: "Uploaded" after the size; error: the message and a retry button named for the file', async () => {
+    const retried: string[] = [];
+    const screen = await render(<Uploads retried={retried} status={new Map<File, S>([[a, { state: 'uploading', progress: 40 }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
+    const el = rootOf('up');
+    await expect.element(screen.getByRole('progressbar', { name: 'a.png' })).toHaveAttribute('aria-valuenow', '40');
+    await expect.element(screen.getByRole('progressbar', { name: 'b.pdf' })).not.toHaveAttribute('aria-valuenow');
+    expect([items(el)[2].querySelector(`${SIZE} > span`)!.textContent, items(el)[0].querySelector(`${SIZE} > span`)]).toEqual(['Uploaded', null]);
+    await screen.rerender(<Uploads retried={retried} status={new Map<File, S>([[a, { state: 'error' }], [b, { state: 'error', message: 'The server is busy.' }]])} />);
+    expect(screen.container.querySelectorAll('[role=progressbar]').length).toBe(0);
+    const retry = screen.getByRole('button', { name: 'Retry b.pdf' });
+    await expect.element(retry).toHaveAccessibleDescription('The server is busy.');
+    await expect.element(screen.getByRole('button', { name: 'Retry a.png' })).toHaveAccessibleDescription('Upload failed');
+    await userEvent.click(retry);
+    expect(retried).toEqual(['b.pdf']);
+    expect(items(el).map((li) => li.className.includes('--error'))).toEqual([true, true, false]);
+  });
+
+  test('no retry button without onRetry or when read-only; removing a file still moves focus to the next remove button', async () => {
+    const status = new Map<File, S>([[a, { state: 'error' }]]);
+    const screen = await render(<Uploads status={status} retry={false} />);
+    expect(screen.container.querySelectorAll('button').length).toBe(4);   // choose + three removes
+    await screen.rerender(<Uploads status={status} readOnly />);
+    await expect.element(screen.getByRole('button', { name: 'Retry a.png' })).not.toBeInTheDocument();
+    function Removable() {
+      const [files, set] = React.useState([a, b, c]);
+      return <FileUpload multiple files={files} onFilesChange={set} fileStatus={(f) => (f === a ? { state: 'error' } : null)} onRetry={() => {}} />;
+    }
+    await screen.rerender(<Removable />);
+    await userEvent.click(screen.getByRole('button', { name: 'Remove a.png' }));
+    await expect.element(screen.getByRole('button', { name: 'Remove b.pdf' })).toHaveFocus();
+  });
+
+  test('screen readers hear a file finish or fail after uploading, in the provider\'s words; a file that arrives done says nothing', async () => {
+    const screen = await render(<Uploads status={new Map<File, S>([[a, { state: 'uploading', progress: 10 }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(said()).not.toMatch(/c\.pdf/);
+    await screen.rerender(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
+    await expect.poll(said).toBe('a.png uploaded.');
+    await screen.rerender(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'error' }], [c, { state: 'done' }]])} />);
+    await expect.poll(said).toBe("b.pdf wasn't uploaded.");
+    await screen.rerender(<SerupaProvider labels={idLabels}><FileUpload multiple files={[a]} fileStatus={() => ({ state: 'uploading' })} /></SerupaProvider>);
+    await screen.rerender(<SerupaProvider labels={idLabels}><FileUpload multiple files={[a]} fileStatus={() => ({ state: 'done' })} /></SerupaProvider>);
+    await expect.poll(said).toBe('a.png terunggah.');
+    await expect.element(screen.getByText('Terunggah')).toBeVisible();
+  });
+
+  test('thumbnails: an image file shows a decorative 40px picture in place of its icon; other files, an image the browser can\'t draw, and an upload without thumbnails keep the icon', async () => {
+    const photo = new File([PNG], 'photo.png', { type: 'image/png' }), heic = new File([new Uint8Array(8)], 'phone.heic', { type: 'image/heic' });
+    const screen = await render(<FileUpload id="th" multiple thumbnails files={[photo, b, heic]} />);
+    const el = rootOf('th');
+    await expect.poll(() => items(el).map((li) => (li.firstElementChild as HTMLElement).tagName + ' ' + (li.firstElementChild as HTMLElement).hasAttribute('data-icon'))).toEqual(['IMG false', 'SPAN true', 'SPAN true']);
+    const img = items(el)[0].querySelector('img')!;
+    expect([img.getAttribute('alt'), img.src.startsWith('blob:'), Math.round(img.getBoundingClientRect().width), Math.round(img.getBoundingClientRect().height)]).toEqual(['', true, 40, 40]);
+    await screen.rerender(<FileUpload id="th" multiple files={[photo]} />);
+    expect(items(el)[0].querySelector('img')).toBeNull();
+  });
+
+  test('"Uploaded", the failed message and the failed outline have contrast in all six themes', async () => {
+    await render(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'error' }]])} />);
+    const el = rootOf('up'), still = document.createElement('style');
+    still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const [ok, bad] = items(el), bg = css(ok).backgroundColor;
+      const pairs: Array<[string, string, number]> = [['done', css(ok.querySelector(`${SIZE} > span`)).color, 4.5], ['failed', css(bad.querySelector(`${NAME} ~ span:last-child`)).color, 4.5], ['failed outline', css(bad).borderTopColor, 3]];
+      for (const [k, fg, min] of pairs) { const r = contrast(fg, bg); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();
+    expect(low).toEqual([]);
+  });
+});

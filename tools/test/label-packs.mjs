@@ -33,7 +33,7 @@ const SAMPLES = {
   errorSummaryTitle: [[1], [3]],
   fileWrongType: [['a.exe', ['image']], ['a.exe', ['image', 'video', 'PDF']], ['a.exe', undefined]], fileTooLarge: [['a.png', '5 MB']],
   fileTooMany: [['a.png', 1], ['a.png', 3]], fileOnlyOne: [['a.png']], fileMissing: [[true], [false]], fileFolder: [['photos']], fileAlreadyAdded: [['a.png']],
-  filesAdded: [[['a.png']], [['a.png', 'b.png']]], fileRemoved: [['a.png']],
+  filesAdded: [[['a.png']], [['a.png', 'b.png']]], fileRemoved: [['a.png']], fileUploaded: [['a.png']], fileFailed: [['a.png']],
   charactersLeft: [[0], [1], [5]],
   invalidValue: reasons.map((reason) => [{ reason, type: reason === 'typeMismatch' ? 'email' : 'text', length: 3, minLength: 5, maxLength: 2, min: '1', max: '9', step: '2', title: '' }]),
   keyName: [['Up arrow'], ['Space'], ['Enter']], showingOf: [[10, 50]], loadedMore: [[1], [10]], meterZone: [['92%', 'high'], ['10%', 'low'], ['50%', 'medium']],

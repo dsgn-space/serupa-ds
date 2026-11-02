@@ -3,7 +3,9 @@
    icon, a title, an outline button and a muted hint, centered. While files are dragged over it, it turns
    primary-subtle with a primary outline (a Highlight one in forced colors). Under it: messages about files that weren't added (danger), and the
    chosen files as rows (surface, outline, 6px corners) with a type icon, the name, the size and a remove
-   button. Disabled: faded. Invalid: a solid danger outline. Read-only: the files are listed without remove buttons.
+   button. With fileStatus, a row shows its upload: a small bar under the name, "Uploaded" with a success check
+   after the size, or a danger outline and message with a retry button. With thumbnails, an image file shows a
+   40px picture in place of its type icon. Disabled: faded. Invalid: a solid danger outline. Read-only: the files are listed without remove buttons.
    --------------------------------------------------------------- */
 @layer dk.components {
 /* min-inline-size 0: as a grid or flex item too, a long file name is cut in place of widening it (GR30). */
@@ -35,6 +37,13 @@
 .dk-file-upload__name-start { overflow: hidden; text-overflow: ellipsis; min-width: var(--spacing-0); }
 .dk-file-upload__name-end { flex: none; }
 .dk-file-upload__size { color: var(--file-upload-hint-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
+.dk-file-upload__item--error { border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
+.dk-file-upload__thumbnail { flex: none; inline-size: var(--spacing-10); block-size: var(--spacing-10); object-fit: cover; border-radius: var(--radius-inner); }
+.dk-file-upload__progress { margin-block-start: var(--spacing-1); }
+.dk-file-upload__done, .dk-file-upload__failed { display: inline-flex; align-items: center; gap: var(--spacing-1); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-file-upload__done { margin-inline-start: var(--spacing-2); color: var(--success-text); }
+.dk-file-upload__failed { color: var(--file-upload-error-color, var(--danger-text)); }
+.dk-file-upload__done .dk-icon, .dk-file-upload__failed .dk-icon { font-size: var(--spacing-4); }
 .dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-file-upload--invalid .dk-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
 .dk-file-upload--readonly .dk-file-upload__zone { cursor: default; }
