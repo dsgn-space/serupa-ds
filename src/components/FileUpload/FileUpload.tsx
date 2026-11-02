@@ -14,13 +14,18 @@ import { useFieldControl } from "../../internal/field";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 import { announce } from "../../internal/announce";
 import { useFormReset } from "../../internal/useFormReset";
-import { en as words } from "./labels";
+import { en as fileWords } from "./labels";
+import { en as boundary } from "../ErrorBoundary/labels";
+import { en as progress } from "../Progress/labels";
+
+// Its own words, Progress's "Complete" for a finished upload and ErrorBoundary's "Try again" for a failed one.
+const words = /* @__PURE__ */ Object.assign({}, boundary, progress, fileWords);
 
 export { formatFileSize };
 
 /** Where a file's upload has got to, from fileStatus. */
 export interface FileUploadStatus {
-  /** 'uploading': a bar under the name. 'done': "Uploaded" after the size. 'error': a danger message under the name, and a retry button with onRetry. */
+  /** 'uploading': a bar under the name. 'done': "Complete" after the size. 'error': a danger message under the name, and a retry button with onRetry. */
   state: 'uploading' | 'done' | 'error';
   /** While uploading, how far along, from 0 to 100. Leave it out when you can't tell: the bar then moves on its own. */
   progress?: number;
@@ -239,8 +244,8 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
     files.forEach((f, i) => {
       const st = statuses[i], now = st ? st.state : "";
       if (was.get(f) === "uploading" && now !== "uploading") {
-        if (now === "done") announce(L.fileUploaded(f.name));
-        else if (now === "error") announce(L.fileFailed(f.name));
+        if (now === "done") announce(L.progressComplete(f.name));
+        else if (now === "error") announce(f.name + ": " + L.fileError);
       }
       was.set(f, now);
     });
@@ -347,7 +352,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
                   <FileName name={f.name} id={id + "-name"} />
                   <span className="dk-file-upload__size" dir="auto">
                     {formatFileSize(f.size, locale)}
-                    {st && st.state === "done" ? <span className="dk-file-upload__done"><Icon icon={icons.CheckCircle} />{L.fileDone}</span> : null}
+                    {st && st.state === "done" ? <span className="dk-file-upload__done"><Icon icon={icons.CheckCircle} />{L.progressComplete("")}</span> : null}
                   </span>
                   {st && st.state === "uploading" ? (
                     <Progress className="dk-file-upload__progress" size="sm" value={typeof st.progress === "number" && isFinite(st.progress) ? Math.min(100, Math.max(0, st.progress)) : null} aria-labelledby={id + "-name"} />
@@ -356,7 +361,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
                 </span>
                 {failed && props.onRetry && !still ? (
                   <Button variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + "-retry " + id + "-name"} aria-describedby={id + "-error"}>
-                    <span id={id + "-retry"}>{L.fileRetry}</span>
+                    <span id={id + "-retry"}>{L.tryAgain}</span>
                   </Button>
                 ) : null}
                 {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}

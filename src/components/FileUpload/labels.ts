@@ -22,13 +22,9 @@ export interface FileUploadLabels {
   /** FileUpload: said to screen readers as files are added (their names) and removed. */
   filesAdded: (names: string[]) => string;
   fileRemoved: (name: string) => string;
-  /** FileUpload, a file's upload (fileStatus): the words shown after its size when it's done, under it when it
-      failed (unless you pass a message) and on its retry button; and what screen readers hear as it finishes or fails. */
-  fileDone: string;
+  /** FileUpload: shown under a file whose upload failed (fileStatus), unless you pass a message, and said as it fails.
+      A finished one says Progress's progressComplete, and the retry button ErrorBoundary's tryAgain. */
   fileError: string;
-  fileRetry: string;
-  fileUploaded: (name: string) => string;
-  fileFailed: (name: string) => string;
 }
 // "an image or PDF", "a PNG, JPG or GIF": "an" before a vowel sound ("an SVG", said "ess"; "an MP4").
 function anyOf(types: string[]): string {
@@ -52,11 +48,7 @@ export const en: FileUploadLabels = {
   fileAlreadyAdded: (name) => `${name} is already added.`,
   filesAdded: (names) => names.length === 1 ? `${names[0]} added.` : `${names.length} files added.`,
   fileRemoved: (name) => `${name} removed.`,
-  fileDone: "Uploaded",
   fileError: "Upload failed",
-  fileRetry: "Retry",
-  fileUploaded: (name) => `${name} uploaded.`,
-  fileFailed: (name) => `${name} wasn't uploaded.`,
 };
 const ID_KINDS: Record<string, string> = { image: "gambar", video: "video", "audio file": "file audio", "text file": "file teks" };
 export const id: FileUploadLabels = {
@@ -77,9 +69,5 @@ export const id: FileUploadLabels = {
   fileAlreadyAdded: (name) => `${name} sudah ditambahkan.`,
   filesAdded: (names) => names.length === 1 ? `${names[0]} ditambahkan.` : `${names.length} file ditambahkan.`,
   fileRemoved: (name) => `${name} dihapus.`,
-  fileDone: "Terunggah",
   fileError: "Gagal mengunggah",
-  fileRetry: "Coba lagi",
-  fileUploaded: (name) => `${name} terunggah.`,
-  fileFailed: (name) => `${name} gagal diunggah.`,
 };

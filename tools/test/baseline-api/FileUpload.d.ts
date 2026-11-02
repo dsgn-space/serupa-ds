@@ -15,11 +15,7 @@ interface FileUploadLabels {
     fileAlreadyAdded: (name: string) => string;
     filesAdded: (names: string[]) => string;
     fileRemoved: (name: string) => string;
-    fileDone: string;
     fileError: string;
-    fileRetry: string;
-    fileUploaded: (name: string) => string;
-    fileFailed: (name: string) => string;
 }
 declare function formatFileSize(bytes: number, locale?: string): string;
 interface FileUploadStatus {
