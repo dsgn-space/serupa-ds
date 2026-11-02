@@ -21,10 +21,13 @@ const GROUPS = {
 };
 // --since <ref> (CI on a pull request): when every changed file belongs to a component folder, the component tests,
 // visual snapshots and Storybook checks cover only those components and the ones that use them (SERUPA_ONLY). The checks always run whole.
+// The components the change itself touches (without the ones that use them), on a narrowed run.
+let direct = null;
 if (arg('--since')) {
   const diff = spawnSync('git', ['diff', '--name-only', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
   const changed = diff.status === 0 ? affectedComponents(diff.stdout.split('\n').filter(Boolean)) : null;
   const names = changed && withDependents(changed);
+  direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
 }
@@ -44,11 +47,17 @@ const steps = [
   // only on a full run: the floors in vitest.config.ts are for all of src/, which a few components can't reach.
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
   vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
-  ...(process.env.CI && (!arg('--since') || only?.size) && !arg('--locale') ? [(() => {
+  // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
+  // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
+  ...(process.env.CI && (!arg('--since') || only?.size) && !arg('--locale') ? (() => {
     const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
     const locale = LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
-    return [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...covered), { SERUPA_LOCALE: locale }];
-  })()] : []),
+    const own = direct?.size ? [...[...direct].map((n) => `src/components/${n}/`), ...internalTestsFor(direct)] : [];
+    return [
+      [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...covered), { SERUPA_LOCALE: locale }],
+      ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(',') }]) : []),
+    ];
+  })() : []),
   // --update first accepts the current API and utility classes as the baselines the checks compare with.
   ...(update.length ? [['Public API', 'api.mjs', ...update], ['Utility classes', 'utilities.mjs', ...update]].map(node('checks')) : []),
   // Every other script in tools/test/ is a check (package, tokens, icons, guides, …), run by Vitest's checks project

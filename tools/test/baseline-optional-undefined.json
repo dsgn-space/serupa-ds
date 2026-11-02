@@ -1,0 +1,889 @@
+{
+  "Accordion": [
+    "collapsible",
+    "defaultValue",
+    "headingLevel",
+    "onValueChange",
+    "showExpandAll",
+    "type",
+    "value",
+    "variant"
+  ],
+  "Alert": [
+    "dismissLabel",
+    "onDismiss",
+    "tone"
+  ],
+  "Avatar": [
+    "alt",
+    "imgProps",
+    "name",
+    "shape",
+    "size",
+    "src",
+    "status",
+    "statusLabel"
+  ],
+  "AvatarGroup": [
+    "label",
+    "max",
+    "moreLabel",
+    "onMore",
+    "showMore",
+    "size",
+    "total"
+  ],
+  "Badge": [
+    "count",
+    "disabled",
+    "dot",
+    "href",
+    "loading",
+    "loadingText",
+    "max",
+    "onClick",
+    "onRemove",
+    "ping",
+    "rel",
+    "removeLabel",
+    "showZero",
+    "target",
+    "tone",
+    "type",
+    "variant"
+  ],
+  "Breadcrumb": [
+    "collapse",
+    "expandLabel",
+    "maxItems",
+    "separator"
+  ],
+  "Button": [
+    "destructive",
+    "disabled",
+    "disabledReason",
+    "loading",
+    "loadingText",
+    "onClick",
+    "size",
+    "successText",
+    "variant",
+    "wrap"
+  ],
+  "ButtonGroup": [
+    "attached",
+    "orientation"
+  ],
+  "Calendar": [
+    "autoFocus",
+    "defaultMonth",
+    "defaultValue",
+    "isDateDisabled",
+    "locale",
+    "max",
+    "min",
+    "month",
+    "monthYearPicker",
+    "nextLabel",
+    "onMonthChange",
+    "onValueChange",
+    "previousLabel",
+    "value",
+    "weekStartsOn"
+  ],
+  "Card": [
+    "as",
+    "href",
+    "padding",
+    "rel",
+    "target",
+    "variant"
+  ],
+  "Carousel": [
+    "arrows",
+    "defaultIndex",
+    "dots",
+    "index",
+    "label",
+    "loop",
+    "nextLabel",
+    "onIndexChange",
+    "perView",
+    "previousLabel",
+    "slideLabel"
+  ],
+  "Checkbox": [
+    "indeterminate",
+    "invalid",
+    "onCheckedChange",
+    "readOnly",
+    "selectAll",
+    "size"
+  ],
+  "CodeBlock": [
+    "copyable",
+    "highlight",
+    "language",
+    "lineNumbers",
+    "startLine",
+    "wrap"
+  ],
+  "ColorPicker": [
+    "contrastWith",
+    "custom",
+    "defaultValue",
+    "disabled",
+    "form",
+    "invalid",
+    "minContrast",
+    "name",
+    "onValueChange",
+    "onValueCommit",
+    "required",
+    "size",
+    "value"
+  ],
+  "Combobox": [
+    "clearLabel",
+    "clearable",
+    "debounce",
+    "defaultInputValue",
+    "defaultOpen",
+    "defaultValue",
+    "filter",
+    "inputValue",
+    "invalid",
+    "loadOptions",
+    "loading",
+    "loadingText",
+    "mask",
+    "multiple",
+    "onCreate",
+    "onInputChange",
+    "onOpenChange",
+    "onValueChange",
+    "open",
+    "options",
+    "size",
+    "toggleLabel",
+    "value"
+  ],
+  "CommandPalette": [
+    "closeOnBackdrop",
+    "defaultOpen",
+    "finalFocus",
+    "hotkey",
+    "limit",
+    "onOpenChange",
+    "onSelect",
+    "open",
+    "placeholder"
+  ],
+  "Container": [
+    "as",
+    "padded",
+    "size"
+  ],
+  "CopyButton": [
+    "command",
+    "commandfor",
+    "copiedLabel",
+    "destructive",
+    "disabledReason",
+    "iconOnly",
+    "onClick",
+    "onCopy",
+    "onCopyError",
+    "popoverTarget",
+    "popoverTargetAction",
+    "size",
+    "successText",
+    "timeout",
+    "type",
+    "variant",
+    "wrap"
+  ],
+  "DatePicker": [
+    "buttonLabel",
+    "defaultValue",
+    "invalid",
+    "isDateDisabled",
+    "locale",
+    "max",
+    "min",
+    "onInvalidInput",
+    "onValueChange",
+    "size",
+    "value",
+    "weekStartsOn"
+  ],
+  "DateRangePicker": [
+    "buttonLabel",
+    "defaultValue",
+    "disabled",
+    "endLabel",
+    "endName",
+    "form",
+    "id",
+    "invalid",
+    "isDateDisabled",
+    "locale",
+    "max",
+    "min",
+    "months",
+    "onInvalidInput",
+    "onValueChange",
+    "readOnly",
+    "required",
+    "size",
+    "startLabel",
+    "startName",
+    "value",
+    "weekStartsOn"
+  ],
+  "Dialog": [
+    "alert",
+    "closeButton",
+    "closeLabel",
+    "closeOnBackdrop",
+    "defaultOpen",
+    "finalFocus",
+    "fullScreen",
+    "initialFocus",
+    "onOpenChange",
+    "open",
+    "size",
+    "unsaved"
+  ],
+  "Divider": [
+    "decorative",
+    "orientation"
+  ],
+  "Drawer": [
+    "closeButton",
+    "closeLabel",
+    "closeOnBackdrop",
+    "defaultOpen",
+    "finalFocus",
+    "initialFocus",
+    "modal",
+    "onOpenChange",
+    "open",
+    "side",
+    "size",
+    "swipeToClose",
+    "unsaved"
+  ],
+  "EmptyState": [
+    "announce",
+    "headingLevel",
+    "onClearFilters",
+    "onSuggestion",
+    "size",
+    "suggestions",
+    "variant"
+  ],
+  "ErrorBoundary": [
+    "className",
+    "onError",
+    "onReset",
+    "resetKeys"
+  ],
+  "ErrorSummary": [
+    "autoFocus",
+    "headingLevel"
+  ],
+  "Fab": [
+    "command",
+    "commandfor",
+    "destructive",
+    "disabledReason",
+    "extended",
+    "loading",
+    "loadingText",
+    "onClick",
+    "popoverTarget",
+    "popoverTargetAction",
+    "position",
+    "size",
+    "successText",
+    "type",
+    "wrap"
+  ],
+  "Field": [
+    "disabled",
+    "group",
+    "id",
+    "layout",
+    "optional",
+    "required"
+  ],
+  "FileUpload": [
+    "accept",
+    "buttonLabel",
+    "disabled",
+    "fileStatus",
+    "files",
+    "form",
+    "invalid",
+    "maxFiles",
+    "maxSize",
+    "multiple",
+    "name",
+    "onFilesChange",
+    "onReject",
+    "onRetry",
+    "readOnly",
+    "removeLabel",
+    "required",
+    "thumbnails"
+  ],
+  "FormattedNumber": [
+    "currency",
+    "format",
+    "locale",
+    "options",
+    "unit"
+  ],
+  "Grid": [
+    "as",
+    "columns",
+    "fill",
+    "gap",
+    "minColumnWidth"
+  ],
+  "Heading": [
+    "level",
+    "size"
+  ],
+  "Highlight": [
+    "words"
+  ],
+  "HoverCard": [
+    "className",
+    "closeDelay",
+    "defaultOpen",
+    "disabled",
+    "onOpenChange",
+    "open",
+    "openDelay",
+    "placement",
+    "style"
+  ],
+  "Icon": [
+    "icon",
+    "mirror",
+    "name",
+    "size",
+    "weight"
+  ],
+  "IconButton": [
+    "destructive",
+    "disabled",
+    "disabledReason",
+    "hideTitle",
+    "loading",
+    "loadingText",
+    "onClick",
+    "popoverTarget",
+    "popoverTargetAction",
+    "shape",
+    "size",
+    "successText",
+    "variant",
+    "wrap"
+  ],
+  "Illustration": [
+    "label",
+    "name",
+    "size"
+  ],
+  "Image": [
+    "darkSrc",
+    "dim",
+    "fit",
+    "frameProps",
+    "fullSrc",
+    "onRemove",
+    "priority",
+    "ratio",
+    "removeLabel",
+    "rounded",
+    "sources",
+    "viewLabel",
+    "viewable"
+  ],
+  "InlineEdit": [
+    "defaultEditing",
+    "defaultValue",
+    "disabled",
+    "editLabel",
+    "editing",
+    "inputProps",
+    "onCancel",
+    "onEditingChange",
+    "onValueChange",
+    "placeholder",
+    "readOnly",
+    "size",
+    "validate",
+    "value"
+  ],
+  "Input": [
+    "invalid",
+    "mask",
+    "showCount",
+    "size"
+  ],
+  "Kbd": [
+    "keys",
+    "size"
+  ],
+  "KeyboardShortcuts": [
+    "defaultOpen",
+    "helpKeys",
+    "onOpenChange",
+    "open",
+    "shortcuts"
+  ],
+  "List": [
+    "as",
+    "divided",
+    "variant"
+  ],
+  "LoadMore": [
+    "count",
+    "hasMore",
+    "infinite",
+    "loading",
+    "total"
+  ],
+  "Loader": [
+    "delay",
+    "glow",
+    "label",
+    "lines",
+    "loading",
+    "pattern",
+    "shape",
+    "size",
+    "tone",
+    "variant"
+  ],
+  "Logo": [
+    "collapseBelow",
+    "darkSrc",
+    "markDarkSrc",
+    "markSrc",
+    "size",
+    "variant"
+  ],
+  "Menu": [
+    "className",
+    "defaultOpen",
+    "onOpenChange",
+    "open",
+    "placement",
+    "style"
+  ],
+  "Meter": [
+    "formatValue",
+    "high",
+    "low",
+    "max",
+    "min",
+    "optimum",
+    "showValue",
+    "size"
+  ],
+  "Navbar": [
+    "menuLabel",
+    "size",
+    "sticky"
+  ],
+  "NotificationCenter": [
+    "children",
+    "closeButton",
+    "closeLabel",
+    "closeOnBackdrop",
+    "defaultOpen",
+    "description",
+    "finalFocus",
+    "footer",
+    "initialFocus",
+    "modal",
+    "onClear",
+    "onMarkAllRead",
+    "onMarkRead",
+    "onOpenChange",
+    "open",
+    "side",
+    "size",
+    "swipeToClose",
+    "unsaved"
+  ],
+  "NumberInput": [
+    "currency",
+    "decrementLabel",
+    "defaultValue",
+    "formatOptions",
+    "incrementLabel",
+    "invalid",
+    "largeStep",
+    "locale",
+    "mask",
+    "max",
+    "min",
+    "minorUnits",
+    "numberingSystem",
+    "onInvalidInput",
+    "onValueChange",
+    "size",
+    "step",
+    "steppers",
+    "value"
+  ],
+  "OfflineBanner": [
+    "onChange",
+    "online",
+    "placement"
+  ],
+  "Pagination": [
+    "boundaries",
+    "defaultPage",
+    "getHref",
+    "linkAs",
+    "nextLabel",
+    "onPageChange",
+    "onPageSizeChange",
+    "page",
+    "pageLabel",
+    "pageSize",
+    "pageSizeOptions",
+    "previousLabel",
+    "siblings",
+    "size",
+    "total"
+  ],
+  "PasswordInput": [
+    "capsLockHint",
+    "defaultVisible",
+    "invalid",
+    "mask",
+    "onVisibleChange",
+    "size",
+    "toggleLabel",
+    "visible"
+  ],
+  "PhoneInput": [
+    "countries",
+    "country",
+    "countryLabel",
+    "defaultCountry",
+    "defaultValue",
+    "invalid",
+    "mask",
+    "name",
+    "onCountryChange",
+    "onValueChange",
+    "size",
+    "value"
+  ],
+  "PinInput": [
+    "defaultValue",
+    "invalid",
+    "length",
+    "mask",
+    "onComplete",
+    "onValueChange",
+    "size",
+    "type",
+    "value"
+  ],
+  "Popover": [
+    "className",
+    "defaultOpen",
+    "headingLevel",
+    "initialFocus",
+    "onOpenChange",
+    "open",
+    "placement",
+    "sheet",
+    "style"
+  ],
+  "Progress": [
+    "announceComplete",
+    "formatValue",
+    "max",
+    "onComplete",
+    "showValue",
+    "size",
+    "tone",
+    "value",
+    "variant"
+  ],
+  "Prose": [
+    "as"
+  ],
+  "Radio": [
+    "invalid",
+    "size"
+  ],
+  "Rating": [
+    "allowHalf",
+    "clearable",
+    "defaultValue",
+    "disabled",
+    "form",
+    "invalid",
+    "max",
+    "name",
+    "onValueChange",
+    "readOnly",
+    "required",
+    "size",
+    "value"
+  ],
+  "RelativeTime": [
+    "absoluteAfter",
+    "absoluteFormat",
+    "format",
+    "locale",
+    "numeric",
+    "titleFormat"
+  ],
+  "SaveStatus": [
+    "onRetry",
+    "savedAt"
+  ],
+  "SearchInput": [
+    "clearLabel",
+    "invalid",
+    "loading",
+    "loadingLabel",
+    "mask",
+    "onClear",
+    "onSearch",
+    "size"
+  ],
+  "SegmentedControl": [
+    "defaultValue",
+    "disabled",
+    "form",
+    "fullWidth",
+    "invalid",
+    "name",
+    "onValueChange",
+    "readOnly",
+    "required",
+    "size",
+    "value"
+  ],
+  "Select": [
+    "invalid",
+    "options",
+    "placeholder",
+    "size"
+  ],
+  "Sidebar": [
+    "collapsed"
+  ],
+  "SkipLink": [
+    "target"
+  ],
+  "Slider": [
+    "defaultValue",
+    "disabled",
+    "form",
+    "formatValue",
+    "invalid",
+    "largeStep",
+    "marks",
+    "max",
+    "min",
+    "name",
+    "onValueChange",
+    "onValueCommit",
+    "readOnly",
+    "required",
+    "showValue",
+    "size",
+    "step",
+    "thumbLabels",
+    "value"
+  ],
+  "SortableList": [
+    "disabled",
+    "orientation",
+    "ref",
+    "reorderLabel"
+  ],
+  "Sparkline": [
+    "area",
+    "format",
+    "max",
+    "min"
+  ],
+  "Splitter": [
+    "collapsible",
+    "defaultSize",
+    "direction",
+    "max",
+    "min",
+    "onSizeChange",
+    "separatorLabel",
+    "size",
+    "step",
+    "storageKey"
+  ],
+  "Stack": [
+    "align",
+    "as",
+    "direction",
+    "gap",
+    "justify",
+    "wrap"
+  ],
+  "Stepper": [
+    "clickable",
+    "labels",
+    "onStepClick",
+    "orientation",
+    "size"
+  ],
+  "Switch": [
+    "invalid",
+    "labelPosition",
+    "onCheckedChange",
+    "pending",
+    "readOnly",
+    "size"
+  ],
+  "Table": [
+    "containerProps",
+    "hideCaption",
+    "size",
+    "stickyHeader",
+    "striped"
+  ],
+  "Tabs": [
+    "activation",
+    "defaultValue",
+    "onValueChange",
+    "orientation",
+    "size",
+    "value",
+    "variant"
+  ],
+  "Text": [
+    "as",
+    "htmlFor",
+    "measure",
+    "size",
+    "tone",
+    "truncate",
+    "weight"
+  ],
+  "Textarea": [
+    "autoResize",
+    "invalid",
+    "maxRows",
+    "resize",
+    "rows",
+    "showCount",
+    "size"
+  ],
+  "TimePicker": [
+    "defaultValue",
+    "hour12",
+    "invalid",
+    "listLabel",
+    "locale",
+    "max",
+    "min",
+    "onInvalidInput",
+    "onValueChange",
+    "size",
+    "step",
+    "value"
+  ],
+  "Timeline": [
+    "align"
+  ],
+  "ToggleButton": [
+    "command",
+    "commandfor",
+    "defaultPressed",
+    "disabledReason",
+    "onClick",
+    "onPressedChange",
+    "popoverTarget",
+    "popoverTargetAction",
+    "pressed",
+    "size",
+    "successText",
+    "type",
+    "variant",
+    "wrap"
+  ],
+  "ToggleGroup": [
+    "attached",
+    "defaultValue",
+    "disabled",
+    "onValueChange",
+    "orientation",
+    "required",
+    "type",
+    "value"
+  ],
+  "Toolbar": [
+    "orientation"
+  ],
+  "Tooltip": [
+    "className",
+    "defaultOpen",
+    "delay",
+    "disabled",
+    "onOpenChange",
+    "open",
+    "placement",
+    "role",
+    "style"
+  ],
+  "Tour": [
+    "defaultOpen",
+    "defaultStep",
+    "headingLevel",
+    "onFinish",
+    "onOpenChange",
+    "onStepChange",
+    "open",
+    "step"
+  ],
+  "TreeView": [
+    "defaultExpanded",
+    "defaultValue",
+    "expanded",
+    "onExpandedChange",
+    "onValueChange",
+    "selectionMode",
+    "value"
+  ],
+  "TypeToConfirm": [
+    "caseSensitive",
+    "disabled",
+    "onMatch"
+  ],
+  "VirtualList": [
+    "as",
+    "divided",
+    "estimatedItemHeight",
+    "itemKey",
+    "overscan",
+    "variant"
+  ],
+  "VisuallyHidden": [
+    "as",
+    "focusable"
+  ]
+}
