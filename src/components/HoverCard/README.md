@@ -20,7 +20,7 @@ import { HoverCard, Link, Avatar } from "serupa-ds";
 
 - A short hint about a control: use [Tooltip](../Tooltip/README.md).
 - Something people open on purpose to act on (a form, filters, settings): use [Popover](../Popover/README.md), which opens on a press.
-- Anything that only exists in the card. A touch screen has no hover, so the card never opens there, and the link goes straight to its page. Everything in the card must also be on the page the link opens.
+- Anything that only exists in the card. A touch screen has no hover, so a tap on the link goes straight to its page. Only a long press opens the card there, and only where the browser has interest invokers. Everything in the card must also be on the page the link opens.
 
 ## Usage
 
@@ -33,6 +33,7 @@ import { HoverCard, Link, Avatar } from "serupa-ds";
 - **Role and name:** the card is a plain group in the top layer, placed right after the link in the page's order, so a screen reader's reading order reaches it after the link while it's open. The link's own name and target are unchanged.
 - **Keyboard:** focus resting on the link opens the card after `openDelay` (keyboard focus only, not a click). Tab then goes into the card, and Shift+Tab back to the link. Focus leaving both closes it. Escape closes it from anywhere and, from inside the card, puts focus back on the link (WCAG 1.4.13: dismissible, hoverable, persistent).
 - **Pointer:** the pointer can move from the link onto the card, and the card stays while it's there.
+- **Touch:** the link points at the card with `interestfor` (interest invokers), so where the browser has them (Chrome 142 and later, including on Android), a long press on the link opens the card at once. The browser's own showing is cancelled and the card opens itself, so the delays and Escape stay the same with a mouse or the keyboard. A tap outside or Escape closes it. Elsewhere the attribute does nothing.
 - **Contrast:** its text reads 4.5:1 on its background in all six themes (`HoverCard.test.tsx`).
 - **What's still yours:** the same details reachable without hover (the page the link opens), and links in the card with names that make sense on their own.
 
