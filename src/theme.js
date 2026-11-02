@@ -66,13 +66,31 @@
     var b = document.body ? getComputedStyle(document.body).backgroundColor : "";
     tint.content = /\d/.test(b) && !/, 0\)$/.test(b) ? b : resolved() === "dark" ? "#18181b" : "#fff";
   }
+  // After the first paint a switch crossfades the page at once (a View Transition, type "serupa-theme").
+  var shown = false, mine = null, heard = null;
   function apply(always) {
     var i = info();
     if (root.getAttribute("data-theme") === i.theme && !always) return chrome();
-    root.setAttribute("data-theme", i.theme);
-    root.getAnimations({ subtree: true }).forEach(function (a) { if (/color|shadow|fill|stroke/.test(a.transitionProperty)) a.finish(); });
-    chrome();
-    listeners.slice().forEach(function (fn) { try { fn(i); } catch (e) { if (window.console) console.error(e); } });
+    function go(crossfade) {
+      // The newest choice (a switch skips the crossfade before it); onChange hears each theme once.
+      i = info();
+      if (root.getAttribute("data-theme") === i.theme && (!always || (crossfade && heard === i.theme))) return chrome();
+      heard = i.theme;
+      root.setAttribute("data-theme", i.theme);
+      root.getAnimations({ subtree: true }).forEach(function (a) { if (/color|shadow|fill|stroke/.test(a.transitionProperty)) a.finish(); });
+      chrome();
+      listeners.slice().forEach(function (fn) { try { fn(i); } catch (e) { if (window.console) console.error(e); } });
+    }
+    // At once, too, during the app's own View Transition, which a new one would skip.
+    var other = document.activeViewTransition && document.activeViewTransition !== mine;
+    if (!shown || !document.startViewTransition || document.hidden || other || matchMedia("(prefers-reduced-motion: reduce)").matches) return go();
+    var vt, update = function () { go(true); };
+    try { vt = document.startViewTransition({ update: update, types: ["serupa-theme"] }); } catch (e) { vt = document.startViewTransition(update); }
+    mine = vt;
+    // A skipped crossfade rejects its promises: expected, not an error.
+    var no = function () {};
+    vt.ready.catch(no); vt.updateCallbackDone.catch(no);
+    vt.finished.then(function () { if (mine === vt) mine = null; }, no);
   }
 
   if (media) {
@@ -101,7 +119,7 @@
     reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} state = Object.assign({}, page); apply(true); return info(); },
     onChange: function (fn) { listeners.push(fn); return function () { listeners = listeners.filter(function (f) { return f !== fn; }); }; }
   };
-  window.addEventListener("load", chrome);
+  window.addEventListener("load", function () { shown = true; chrome(); });
   window.Serupa = window.Serupa || {};
   window.Serupa.theme = api;
   if (!window.Serupa.version) window.Serupa.version = "__VERSION__";
