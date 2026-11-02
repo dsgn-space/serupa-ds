@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
-import { Combobox, type ComboboxOption } from './Combobox';
+import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
 import { Field } from '../Field/Field';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -37,6 +37,25 @@ function Countries(props: { cref?: React.Ref<HTMLInputElement> }) {
 const open = async () => { el('before').focus(); await userEvent.keyboard('{Tab}{ArrowDown}'); };
 
 describe('Combobox', () => {
+  test('as the list narrows, the typed text is marked in each option, as it was matched: ignoring case and accents (185)', async () => {
+    await render(<>
+      <Combobox id="chl" aria-label="City" options={['Łódź', 'Kłodzko', 'Lodi', 'Paris']} />
+      <Combobox id="chf" aria-label="City" options={['Łódź', 'Lodi']} filter={(o, t) => o.label.length > t.length} />
+    </>);
+    const marks = (id: string) => [...el(id).parentElement!.querySelectorAll('[role=option]')].map((o) => [...o.querySelectorAll('mark')].map((m) => m.textContent).join('|'));
+    await userEvent.click(el('chl'));
+    expect(marks('chl')).toEqual(['', '', '', '']);   // just opened: every option, nothing typed
+    await userEvent.keyboard('LOD');
+    await expect.poll(() => marks('chl')).toEqual(['Łód', 'łod', 'Lod']);
+    expect(st('chl').opts).toEqual(['Łódź', 'Kłodzko', 'Lodi']);   // the label reads the same
+    // A filter of the app's own may match on something else: nothing is marked.
+    await userEvent.keyboard('{Escape}');
+    await userEvent.click(el('chf'));
+    await userEvent.keyboard('lo');
+    await expect.poll(() => st('chf').opts).toEqual(['Łódź', 'Lodi']);
+    expect(marks('chf')).toEqual(['', '']);
+  });
+
   test('with Ctrl or ⌘ the arrows and Page keys are left to the system and the browser: closed, nothing opens; open, nothing moves (L8E35)', async () => {
     await render(<Combobox id="cmk" aria-label="Country" options={COUNTRIES} />);
     const t = document.getElementById('cmk') as HTMLInputElement;
@@ -112,35 +131,136 @@ describe('Combobox', () => {
     expect(names).toEqual(['Hapus Negara', 'Tampilkan pilihan']);
   });
 
-  test('long lists: closed, 2,000 options keep no option nodes in the page; open, the first 100 show with a "more" line and full counts; typing narrows them', async () => {
+  test('long lists: closed, 2,000 options keep no option nodes in the page; open, only the rows in view are drawn, with full counts; the arrows reach every match (51)', async () => {
     const many = Array.from({ length: 2000 }, (_, i) => 'Option ' + i);
     await render(<div style={{ width: '320px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} /></div>);
     const list = () => el('cb').parentElement!.querySelector('[role=listbox]')!;
     expect(list().querySelectorAll('[role=option]').length).toBe(0);
     await open();
     const rows = () => [...list().querySelectorAll('[role=option]')];
-    // The "keep typing" line has no role, so it's found by its words.
-    const more = () => Array.from(el('cb').parentElement!.querySelectorAll('div')).find((d) => !d.children.length && /^Keep typing/.test(d.textContent || ''))?.textContent;
-    expect([rows().length, st('cb').active, more()]).toEqual([100, 'Option 0', 'Keep typing to narrow 1900 more']);
-    expect([rows()[99].getAttribute('aria-posinset'), rows()[99].getAttribute('aria-setsize')]).toEqual(['100', '2000']);
+    const drawn = rows().length;
+    expect(drawn).toBeGreaterThan(5);
+    expect(drawn).toBeLessThan(30);
+    expect([st('cb').active, rows()[0].getAttribute('aria-posinset'), rows()[0].getAttribute('aria-setsize')]).toEqual(['Option 0', '1', '2000']);
+    // No "keep typing" line: every match is in reach.
+    expect(popOf('cb').textContent).not.toMatch(/Keep typing/);
     await userEvent.keyboard('{ArrowDown}');
     expect(st('cb').active).toBe('Option 1');
     await userEvent.keyboard('{ArrowUp}{ArrowUp}');
-    expect(st('cb').active).toBe('Option 99');   // the arrows wrap through the rows that are there
+    expect(st('cb').active).toBe('Option 1999');   // the arrows wrap through every match, drawing the last one
+    const last = activeOf('cb');
+    expect([last.getAttribute('aria-posinset'), list().scrollTop > 1000]).toEqual(['2000', true]);
+    const lr = list().getBoundingClientRect(), r = last.getBoundingClientRect();
+    expect(r.top >= lr.top - 1 && r.bottom <= lr.bottom + 1).toBe(true);   // scrolled into view
+    expect(rows().length).toBeLessThan(30);
     await userEvent.keyboard('1999');
     await expect.poll(() => st('cb').opts).toEqual(['Option 1999']);
-    expect([more(), rows()[0].getAttribute('aria-setsize')]).toEqual([undefined, '1']);
+    expect(rows()[0].getAttribute('aria-setsize')).toBe('1');
     await userEvent.keyboard('{Escape}');
     expect(list().querySelectorAll('[role=option]').length).toBe(0);
   });
 
-  test('long lists: a picked option past the first 100 still shows, highlighted, when the list opens', async () => {
+  test('long lists: a picked option far down is drawn, highlighted and in view when the list opens', async () => {
     const many = Array.from({ length: 500 }, (_, i) => 'Option ' + i);
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} defaultValue="Option 400" /></div>);
     await open();
-    const rows = [...el('cb').parentElement!.querySelectorAll('[role=option]')];
-    expect([rows.length, st('cb').active, rows[100].getAttribute('aria-posinset')]).toEqual([101, 'Option 400', '401']);
+    const a = activeOf('cb'), lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    expect([st('cb').active, a.getAttribute('aria-posinset')]).toEqual(['Option 400', '401']);
+    await expect.poll(() => { const r = a.isConnected ? activeOf('cb').getBoundingClientRect() : null, l = lb.getBoundingClientRect(); return !!r && r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+    expect(lb.querySelectorAll('[role=option]').length).toBeLessThan(30);
   });
+
+  test('groups: options under headings, in role="group"s named after them; the arrows run through every group; a group with no match hides its heading; a disabled group\'s options can\'t be picked (185)', async () => {
+    const GROUPED: Array<ComboboxOption | ComboboxOptionGroup> = [
+      'Anywhere',
+      { label: 'Africa', options: [{ value: 'eg', label: 'Egypt' }, { value: 'ke', label: 'Kenya' }] },
+      { label: 'Europe', options: ['France', 'Germany'] },
+      { label: 'Closed', disabled: true, options: ['Atlantis'] },
+    ];
+    await render(<div style={{ width: '320px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Place" options={GROUPED} /></div>);
+    await open();
+    const list = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    const groups = () => [...list.querySelectorAll('[role=group]')].map((g) => [g.getAttribute('aria-label'), [...g.querySelectorAll('[role=option]')].map(label)]);
+    const heads = () => [...list.querySelectorAll('[role=presentation]')].map((h) => [h.textContent, h.getAttribute('aria-hidden')]);
+    expect(st('cb').opts).toEqual(['Anywhere', 'Egypt', 'Kenya', 'France', 'Germany', 'Atlantis']);
+    expect(groups()).toEqual([['Africa', ['Egypt', 'Kenya']], ['Europe', ['France', 'Germany']], ['Closed', ['Atlantis']]]);
+    expect(heads()).toEqual([['Africa', 'true'], ['Europe', 'true'], ['Closed', 'true']]);
+    expect(list.querySelector('[role=group] [role=option]')!.getAttribute('aria-setsize')).toBe('6');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+    expect(st('cb').active).toBe('France');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');   // past Germany, Atlantis is disabled: wraps to Anywhere
+    expect(st('cb').active).toBe('Anywhere');
+    await userEvent.keyboard('ny');
+    await expect.poll(() => st('cb').opts).toEqual(['Anywhere', 'Kenya', 'Germany']);
+    expect(heads().map((h) => h[0])).toEqual(['Africa', 'Europe']);
+    expect(groups()).toEqual([['Africa', ['Kenya']], ['Europe', ['Germany']]]);
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect([st('cb').text, st('cb').open]).toEqual(['Kenya', 'false']);
+    await userEvent.click(el('cb'));
+    expect(list.querySelector('[role=option][aria-disabled=true]')!.textContent).toBe('Atlantis');
+  });
+
+  test('groups with a long list: the headings are drawn as rows and only the rows in view are drawn; a picked option far down opens in view inside its group (185, 51)', async () => {
+    const big: ComboboxOptionGroup[] = Array.from({ length: 40 }, (_, g) => ({ label: 'Team ' + (g + 1), options: Array.from({ length: 50 }, (_, i) => ({ value: g + '-' + i, label: 'Person ' + (g * 50 + i + 1) })) }));
+    await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="People" options={big} defaultValue="30-10" /></div>);
+    await open();
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    expect(st('cb').active).toBe('Person 1511');
+    expect(lb.querySelectorAll('[role=option]').length).toBeLessThan(30);
+    const a = activeOf('cb');
+    expect(a.closest('[role=group]')!.getAttribute('aria-label')).toBe('Team 31');
+    await expect.poll(() => { const r = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+    await userEvent.keyboard('{ArrowUp}'.repeat(11));
+    expect(st('cb').active).toBe('Person 1500');   // the last of Team 30
+    expect(activeOf('cb').closest('[role=group]')!.getAttribute('aria-label')).toBe('Team 30');
+    await expect.poll(() => { const r = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return r.top >= l.top - 1 && r.bottom <= l.bottom + 1; }).toBe(true);
+  });
+  test('long lists: with 5,000 options, a picked option far down opens in place, its neighbours drawn around it, and the arrows step from it (GR100)', async () => { await withMotion(async () => {
+    const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) }));
+    await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} defaultValue="v3999" /></div>);
+    await userEvent.click(el('cb'));
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    const inView = (label: string) => {
+      const r = [...lb.querySelectorAll('[role=option]')].find((o) => o.textContent === label);
+      if (!r) return false;
+      const a = r.getBoundingClientRect(), l = lb.getBoundingClientRect();
+      return a.top >= l.top - 1 && a.bottom <= l.bottom + 1;
+    };
+    expect(st('cb').active).toBe('Member number 4000');
+    await expect.poll(() => [inView('Member number 4000'), inView('Member number 3999')]).toEqual([true, true]);
+    await userEvent.keyboard('{ArrowDown}');
+    expect(st('cb').active).toBe('Member number 4001');
+    await expect.poll(() => [inView('Member number 4001'), inView('Member number 4000')]).toEqual([true, true]);
+    await userEvent.keyboard('{ArrowUp}{ArrowUp}');
+    expect(st('cb').active).toBe('Member number 3999');
+    await expect.poll(() => inView('Member number 3999')).toBe(true);
+  }); });
+
+  test('long lists: labels of two heights, ArrowUp from the first option wraps to the last, drawn whole (GR100)', async () => { await withMotion(async () => {
+    const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) + (i % 7 === 6 ? ', with a label long enough to wrap onto a second line' : '') }));
+    await render(<div style={{ width: '240px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} /></div>);
+    await userEvent.click(el('cb'));
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    await userEvent.keyboard('{ArrowDown}');
+    expect(st('cb').active).toBe('Member number 1');
+    await userEvent.keyboard('{ArrowUp}');
+    expect(st('cb').active).toBe('Member number 5000');
+    await expect.poll(() => { const a = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect(); return a.top >= l.top - 1 && a.bottom <= l.bottom + 1; }).toBe(true);
+  }); });
+
+  test.each([false, true])('long lists: labels of two heights, with motion %s, ArrowUp from the first option wraps to the last, scrolled to the very end (GR101)', async (motion) => { const go = async () => {
+    const many = Array.from({ length: 5000 }, (_, i) => ({ value: 'v' + i, label: 'Member number ' + (i + 1) + (i % 7 === 6 ? ', with a label long enough to wrap onto a second line' : '') }));
+    await render(<div style={{ width: '240px' }}><button id="before">Before</button><Combobox id="cb" aria-label="Many" options={many} /></div>);
+    await userEvent.click(el('cb'));
+    const lb = el('cb').parentElement!.querySelector('[role=listbox]')!;
+    await userEvent.keyboard('{ArrowDown}{ArrowUp}');
+    expect(st('cb').active).toBe('Member number 5000');
+    // Scrolled to the very end, and the last row's bottom at the list's (to a pixel's rounding): it was short by 2 to
+    // 11px once the rows around it measured shorter and the browser clamped the scroll.
+    await expect.poll(() => lb.scrollHeight - lb.clientHeight - lb.scrollTop).toBeLessThan(1);
+    const a = activeOf('cb').getBoundingClientRect(), l = lb.getBoundingClientRect();
+    expect(a.bottom - l.bottom).toBeLessThan(1);
+  }; if (motion) await withMotion(go); else await go(); });
 
   test('ArrowDown opens the list in the top layer with every option, the first highlighted, focus staying in the field', async () => {
     await render(<Countries />);
@@ -186,6 +306,52 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('onCreate: text that isn\'t an option\'s label ends the list with Add "text"; Enter or a click adds it and picks the value onCreate returns; an exact label shows no add row; it says the add row when nothing matches (185)', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    const made: string[] = [], picked: Array<string | null> = [];
+    function Tags() {
+      const [opts, setOpts] = React.useState<ComboboxOption[]>(['Design', 'Docs']);
+      const [v, setV] = React.useState<string | null>(null);
+      return <Combobox id="ct" aria-label="Tag" options={opts} value={v} onValueChange={(x) => { picked.push(x); setV(x); }}
+        onCreate={(t) => { made.push(t); setOpts((o) => o.concat({ value: 'new-' + t, label: t })); return 'new-' + t; }} />;
+    }
+    await render(<Tags />);
+    el('ct').focus();
+    await userEvent.keyboard('{ArrowDown}de');
+    expect([st('ct').opts, st('ct').active]).toEqual([['Design', 'Add \u201cde\u201d'], 'Design']);
+    await userEvent.keyboard('sign');
+    expect(st('ct').opts).toEqual(['Design']);   // the label, any case: no add row
+    await selectAll(); await userEvent.keyboard('  Research ');
+    expect([st('ct').opts, st('ct').active, statusOf('ct')]).toEqual([['Add \u201cResearch\u201d'], 'Add \u201cResearch\u201d', undefined]);
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('Add \u201cResearch\u201d');
+    await userEvent.keyboard('{Enter}');
+    expect([made, picked, st('ct').text, st('ct').open]).toEqual([['Research'], ['new-Research'], 'Research', 'false']);
+    // A click on the add row adds too; the new option is in the list from then on.
+    await selectAll(); await userEvent.keyboard('Ops');
+    const rows = [...popOf('ct').querySelectorAll('[role=option]')];
+    expect(rows.at(-1)!.getAttribute('aria-selected')).toBe('false');
+    await userEvent.click(rows.at(-1)!);
+    expect([made, picked.at(-1), st('ct').text]).toEqual([['Research', 'Ops'], 'new-Ops', 'Ops']);
+    await userEvent.keyboard('{ArrowDown}');
+    expect(st('ct').opts).toEqual(['Design', 'Docs', 'Research', 'Ops']);
+    seen.disconnect();
+  });
+  test('onCreate with multiple: the added text becomes a tag and the field empties; onCreate returning nothing picks nothing (185)', async () => {
+    const got: string[][] = [];
+    await render(<>
+      <Combobox id="cm" aria-label="Labels" multiple options={['Bug', 'Idea'] as string[]} onValueChange={(v) => got.push(v)} onCreate={(t) => t.toLowerCase()} />
+      <Combobox id="cn" aria-label="Note" options={['One']} onCreate={() => undefined} />
+    </>);
+    el('cm').focus();
+    await userEvent.keyboard('{ArrowDown}Chore{Enter}');
+    const tags = [...el('cm').closest('[data-component=combobox]')!.querySelectorAll('[data-component=badge]')].map((b) => b.firstChild!.textContent);
+    expect([got, tags, st('cm').text, st('cm').open]).toEqual([[['chore']], ['Chore'], '', 'true']);
+    el('cn').focus();
+    await userEvent.keyboard('{ArrowDown}Two{Enter}');
+    expect([st('cn').text, st('cn').open]).toEqual(['', 'false']);
+  });
   test('typing ignores letters that don\'t decompose and width too: "lodz" finds Łódź, "strasse" finds Straße, "ｔｏｋｙｏ" finds Tokyo', async () => {
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="City" options={['Łódź', 'Straße', 'Ørsted', 'Tokyo', 'Paris']} /></div>);
     await open();
@@ -293,6 +459,64 @@ describe('Combobox', () => {
     await selectAll(); await userEvent.keyboard('zz');
     const m = statusOf('async');
     expect([m.textContent, m.getAttribute('role'), !!m.querySelector('[data-component=loader]')]).toEqual(['Finding people…', 'status', true]);
+  });
+
+  test('inputValue: the text is the app\'s, and onInputChange hears typing, picking, Escape, clearing and a new value; defaultInputValue starts it (AQ1)', async () => {
+    const heard: string[] = [];
+    let setValue: (v: string | null) => void = () => {};
+    function Owned() {
+      const [text, setText] = React.useState('Br'), [value, setV] = React.useState<string | null>(null);
+      setValue = setV;
+      return <Combobox id="own" aria-label="Country" options={COUNTRIES} clearable value={value} onValueChange={setV} inputValue={text} onInputChange={(t) => { heard.push(t); setText(t.toUpperCase() === 'XX' ? 'yy' : t); }} />;
+    }
+    await render(<>
+      <Owned />
+      <Combobox id="dflt" aria-label="Start" options={COUNTRIES} defaultValue="Canada" defaultInputValue="Can" />
+    </>);
+    expect([el('own').value, el('dflt').value]).toEqual(['Br', 'Can']);
+    await userEvent.click(el('own'));
+    await userEvent.keyboard('a');
+    expect([el('own').value, st('own').opts]).toEqual(['Bra', ['Brazil']]);
+    await userEvent.keyboard('{Enter}');
+    expect([el('own').value, heard]).toEqual(['Brazil', ['Bra', 'Brazil']]);
+    await selectAll(); await userEvent.keyboard('Fr{Escape}');
+    expect([el('own').value, heard.slice(2)]).toEqual(['Brazil', ['F', 'Fr', 'Brazil']]);
+    setValue('Egypt'); await settle();
+    expect([el('own').value, heard.at(-1)]).toEqual(['Egypt', 'Egypt']);
+    await userEvent.click(clearOf('own')!);
+    expect([el('own').value, heard.at(-1)]).toEqual(['', '']);
+    await userEvent.keyboard('xx');
+    expect(el('own').value).toBe('yy');   // the app's text wins over what was typed
+  });
+
+  test('open: onOpenChange says why the list opens and closes; the app can hold it open or shut; defaultOpen starts it open (188)', async () => {
+    const heard: string[] = [];
+    let setShut: (v: boolean) => void = () => {};
+    function Owned() {
+      const [open, setOpen] = React.useState(false), [shut, setS] = React.useState(false);
+      setShut = setS;
+      return <Combobox id="oc" aria-label="Country" options={COUNTRIES} open={open && !shut} onOpenChange={(v, d) => { heard.push(v + ':' + d.reason); setOpen(v); }} />;
+    }
+    await render(<>
+      <Owned />
+      <Combobox id="dop" aria-label="Start" options={COUNTRIES} defaultOpen />
+    </>);
+    expect([st('dop').open, st('dop').shown, st('dop').opts.length]).toEqual(['true', true, 7]);
+    await userEvent.click(el('oc'));
+    await userEvent.keyboard('{Escape}');
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    await userEvent.keyboard('E');
+    await userEvent.click(toggleOf('oc'));
+    await userEvent.click(toggleOf('oc'));
+    expect(heard).toEqual(['true:trigger', 'false:escape', 'true:trigger', 'false:select', 'true:trigger', 'false:trigger', 'true:trigger']);
+    setShut(true); await settle();
+    expect([st('oc').open, st('oc').shown]).toEqual(['false', false]);   // the app's open wins
+    await userEvent.keyboard('g');
+    expect(st('oc').open).toBe('false');
+    setShut(false); await settle();
+    expect(st('oc').open).toBe('true');
+    await userEvent.click(document.body);
+    expect([st('oc').open, heard.at(-1)]).toEqual(['false', 'false:blur']);
   });
 
   test('disabled: doesn\'t open, and the chevron is disabled; --combobox-chevron overrides one field', async () => {
@@ -662,7 +886,7 @@ describe('Combobox loadOptions (DG1)', () => {
       expect([pop.hidden, toggleOf('cb').getAttribute('aria-expanded')]).toEqual([true, 'false']);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (CSS.supports('overlay', 'auto')) {
-        expect([css(pop).display, pop.inert, pop.querySelectorAll('[role=option]').length, runs(pop)]).toEqual(['block', true, 7, [['opacity', 100], ['scale', 100]]]);
+        expect([css(pop).display, pop.inert, pop.querySelectorAll('[role=option]').length, runs(pop)]).toEqual(['flex', true, 7, [['opacity', 100], ['scale', 100]]]);
         await settled(pop);
       }
       await expect.poll(() => pop.querySelectorAll('[role=option]').length).toBe(0);

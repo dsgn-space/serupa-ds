@@ -31,6 +31,17 @@ const [open, setOpen] = React.useState(false);
 - A confirmation that something happened: use a [Toast](../Toast/README.md) instead.
 - A message about the page that doesn't need an answer: use an [Alert](../Alert/README.md) instead.
 
+## Anatomy
+
+Drawn from the `FullScreen` story.
+
+1. **Panel** (`.dk-dialog__panel`): the box over the dimmed page; focus stays inside while it's open.
+2. **Title** (`.dk-dialog__title`): what the dialog is for; it names the dialog for screen readers.
+3. **Description** (`.dk-dialog__description`): an optional line under the title.
+4. **Close** (`.dk-dialog__close`): closes it, as Escape does.
+5. **Body** (`.dk-dialog__body`): the content; it scrolls when it's taller than the screen.
+6. **Footer** (`.dk-dialog__footer`): the actions, the main one last.
+
 ## Usage
 
 - Use a `title` that says what the dialog is for; for a confirmation, ask the question: "Delete Atlas?".
@@ -90,6 +101,30 @@ const [open, setOpen] = React.useState(false);
 | `unsaved` | boolean | `false` | There are changes that would be lost: closing asks "Discard changes?" first (Keep editing or Discard), and leaving the page asks too. `onOpenChange(false)` comes after Discard |
 
 `children` is the body, which scrolls when it's taller than the screen. `className`, `style`, `ref` and everything else go to the `<dialog>`, which has `data-component="dialog"` and `data-size`.
+
+## useUnsavedChanges(unsaved)
+
+The same "Discard changes?" question, for a form or a page that isn't in a Dialog: a settings page, an editor.
+
+```tsx
+import { useUnsavedChanges } from "serupa-ds";
+
+const guard = useUnsavedChanges(name !== saved.name);
+// before moving away inside the app (a Cancel button, your router's blocker):
+if (await guard.confirm()) navigate("/projects");
+// …and somewhere in the form:
+{guard.dialog}
+```
+
+- While `unsaved` is true, leaving or reloading the page asks the browser's own question (`beforeunload`), as an unsaved Dialog does.
+- Moving away inside the app goes through your router, so ask first: `await confirm()` is `true` at once when nothing is unsaved. Otherwise it asks "Discard changes?" in a small alert dialog, with Keep editing focused. It's `true` on Discard, and `false` on Keep editing or Escape, and focus goes back to where it was. With React Router, call it when `useBlocker` blocks: `confirm().then((ok) => (ok ? blocker.proceed() : blocker.reset()))`.
+- Render `dialog` inside the form's tree, so it's there while there are changes.
+- A newer `confirm()` answers the one before it with `false`. Saving while the question shows (`unsaved` back to `false`) answers it with `true`, and unmounting answers it with `false`.
+
+| Returns | Type | Notes |
+| --- | --- | --- |
+| `confirm` | `() => Promise<boolean>` | Asks "Discard changes?" when there are changes, and says whether to go on. |
+| `dialog` | `ReactElement \| null` | The question; render it in the form. |
 
 ## Component tokens
 
