@@ -28,6 +28,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "모든 페이지 보기",
   morePages: "페이지 더 보기",
   previousMonth: "이전 달",
+  timeZoneYours: "내 시간대",
   nextMonth: "다음 달",
   month: "월",
   year: "연도",

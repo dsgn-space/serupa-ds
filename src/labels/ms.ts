@@ -26,6 +26,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "Tunjukkan semua halaman",
   morePages: "Halaman lain",
   previousMonth: "Bulan sebelumnya",
+  timeZoneYours: "Zon waktu anda",
   nextMonth: "Bulan seterusnya",
   month: "Bulan",
   year: "Tahun",

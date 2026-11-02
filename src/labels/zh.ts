@@ -25,6 +25,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "显示所有页面",
   morePages: "更多页面",
   previousMonth: "上个月",
+  timeZoneYours: "您的时区",
   nextMonth: "下个月",
   month: "月",
   year: "年",

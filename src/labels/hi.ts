@@ -25,6 +25,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "सभी पेज दिखाएँ",
   morePages: "और पेज",
   previousMonth: "पिछला महीना",
+  timeZoneYours: "आपका समय क्षेत्र",
   nextMonth: "अगला महीना",
   month: "महीना",
   year: "साल",
