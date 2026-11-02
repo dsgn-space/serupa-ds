@@ -9,7 +9,7 @@ import { useIsoLayoutEffect } from "./cn";
    only for rows not yet seen, and then only until some are: after that, unseen rows count as the average of the seen.
    A row measured above the view keeps the view where it is: the scroll moves by the difference. Before the first
    measure (and on the server) it draws the first `initial` rows. Attach `ref` to the scrolling element; its drawn rows
-   are its children with data-index.
+   are its children with data-index (or the children of a role="group" child: Combobox's groups).
    The view is kept as the row at its top and how far into that row it is, not as a scroll position: when rows above
    it are measured, or the guess for the rows not yet seen changes, the scroll position moves to keep that row where it
    was (GR93).
@@ -214,7 +214,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     }
     let changed = false;
     const holder = (options.rows && options.rows()) || el;
-    for (const r of holder.querySelectorAll<HTMLElement>(":scope > [data-index]")) {
+    for (const r of holder.querySelectorAll<HTMLElement>(":scope > [data-index], :scope > [role=group] > [data-index]")) {
       const i = Number(r.dataset.index), h = r.getBoundingClientRect().height;
       if (!(i < count) || !h) continue;
       if (sizes.has(i) && Math.abs((sizes.get(i) ?? 0) - h) < 0.5) continue;
