@@ -9,7 +9,8 @@
 - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung forms are kept on this device and sent when the connection comes back.
 
 # Playground
-
+- strong: You're offline
+- text: Changes are kept and sent when you're back.
 
 # WithMoreWords
 - strong: You're offline
