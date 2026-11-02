@@ -29,11 +29,11 @@ export const Auto: Story = { name: 'Mark on a narrow screen (auto)', args: { var
 export const AutoSm: Story = { name: 'Auto, below 640px', args: { variant: 'auto', collapseBelow: 'sm' } };
 export const AutoLg: Story = { name: 'Auto, below 1024px', args: { variant: 'auto', collapseBelow: 'lg' } };
 export const Sizes: Story = {
-  render: (args) => <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}><Logo {...args} size="sm" /><Logo {...args} size="md" /><Logo {...args} size="lg" /></div>,
+  render: (args) => <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}><Logo {...args} alt={args.alt} size="sm" /><Logo {...args} alt={args.alt} size="md" /><Logo {...args} alt={args.alt} size="lg" /></div>,
 };
 // In a link home, the link takes the name and the picture is left out of the accessibility tree.
 export const InALink: Story = { name: 'In a link home', render: (args) => <a href="#home" aria-label="Acme home"><Logo {...args} alt="" /></a> };
 // The light version only: a dark theme shows it as is.
 export const LightOnly: Story = { name: 'No dark version', args: { darkSrc: undefined, markDarkSrc: undefined } };
 // The stress story (G14): a wide logo in a narrow box shrinks to fit, keeping its shape.
-export const Overflow: Story = { name: 'Wider than its box', render: (args) => <div style={{ width: 80, border: '1px dashed currentColor' }}><Logo {...args} size="lg" /></div> };
+export const Overflow: Story = { name: 'Wider than its box', render: (args) => <div style={{ width: 80, border: '1px dashed currentColor' }}><Logo {...args} alt={args.alt} size="lg" /></div> };
