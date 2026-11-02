@@ -4,6 +4,7 @@
 **Status when written:** Proposed
 **Checked against main (31 October 2026, 11.0.0):** Done: each release tag is prebuilt and carries `dist/`, and each GitHub release also has the packed `.tgz` (README, Install).
 **Date:** 2026-10-17
+**Update (2 November 2026):** Diki chose to keep `serupa-ds` as the final name. Registry publishing no longer waits on a name, only on Diki's go-ahead; until then releases install from GitHub as below.
 **Deciders:** Diki
 
 ## Context

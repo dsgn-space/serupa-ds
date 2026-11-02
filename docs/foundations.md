@@ -622,7 +622,7 @@ Use spacing to show what belongs together: the closer two things are, the more r
 
 ```jsx
 <div style={{ display: 'flex', minHeight: '100vh' }}>
-  <Sidebar header={<Logo />}>…</Sidebar>
+  <Sidebar header={<Logo src="/logo.svg" alt="Acme" />}>…</Sidebar>
   <Container as="main" size="xl" className="py-8">
     <Stack gap={8}>
       <Stack gap={2}><Heading level={1}>Projects</Heading><Text tone="muted">12 active</Text></Stack>

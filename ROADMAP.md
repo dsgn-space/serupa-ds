@@ -17,8 +17,8 @@ Where Serupa is going, by theme. It says what is coming and roughly in what orde
 ## Later
 
 - **Page patterns.** Whole screens built from the components, such as sign-in, settings, a dashboard and a data table page, as examples to copy and as tests that the components work together.
-- **A package registry.** Installing from GitHub releases works today. Publishing to a registry waits on the package's name there.
+- **A package registry.** Installing from GitHub releases works today. The name is final (`serupa-ds`, chosen 2 November 2026); publishing to a registry waits only on Diki's go-ahead.
 
 ## Majors
 
-The next major renames the package, once its final name is chosen. Your code keeps working: what changes is the name you install and import from, and the release comes with a migration guide and a codemod that makes the change for you. Nothing is marked deprecated today, so no other removals are waiting. Any major after that comes only when something has to stop working, and is written up for comment first.
+The package keeps its name, `serupa-ds`: Diki chose it on 2 November 2026, so no major is waiting to rename it, and your imports stay as they are. Nothing is marked deprecated today, so no removals are waiting either. A major comes only when something has to stop working, and is written up for comment first, with a migration guide and `npx serupa-migrate` for the renames a script can make.

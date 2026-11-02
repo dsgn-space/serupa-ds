@@ -14,7 +14,7 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const pkg = JSON.parse(read('package.json'));
 
-// 0. Nothing publishes to a registry until Diki picks the final name: projects install releases from GitHub.
+// 0. Nothing publishes to a registry until Diki says so (the name, serupa-ds, is final since 2 November 2026): projects install releases from GitHub.
 t('package.json is private and has no publishConfig, so npm publish refuses', pkg.private === true && !('publishConfig' in pkg), `private: ${pkg.private}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
 // Every component is built by tools in devDependencies, so a project installs nothing else (J7).
 t('package.json has no dependencies (React is a peer dependency; everything else is bundled)', !Object.keys(pkg.dependencies || {}).length && !Object.keys(pkg.optionalDependencies || {}).length, JSON.stringify({ ...pkg.dependencies, ...pkg.optionalDependencies }));
@@ -145,7 +145,7 @@ if (D) {
   const rsc = spawnSync(process.execPath, ['--conditions=react-server', path.join(HERE, 'server-components', 'render.mjs'), path.join(PROJECT, 'dist')], { encoding: 'utf8' });
   let sc = null;
   try { sc = JSON.parse(rsc.stdout); } catch { /* reported below */ }
-  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 KB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
+  t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 kB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
   // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
   const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\buseSerupa\(|\buseLocale\(|\bon[A-Z]\w*=\{/;
   const unmarked = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
