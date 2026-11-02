@@ -19,10 +19,10 @@ interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLUListElemen
         from: number;
         to: number;
     }) => void;
-    disabled?: boolean;
-    reorderLabel?: string;
-    orientation?: "horizontal" | "vertical";
+    disabled?: boolean | undefined;
+    reorderLabel?: string | undefined;
+    orientation?: "horizontal" | "vertical" | undefined;
 }
 declare const SortableList: <T>(props: SortableListProps<T> & {
-    ref?: React.Ref<HTMLUListElement>;
+    ref?: React.Ref<HTMLUListElement> | undefined;
 }) => React.ReactElement;

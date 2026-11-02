@@ -12,28 +12,28 @@ interface SliderMark {
     label?: React.ReactNode;
 }
 interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
-    value?: V;
-    defaultValue?: V;
-    onValueChange?: (value: V) => void;
-    onValueCommit?: (value: V) => void;
-    min?: number;
-    max?: number;
-    step?: number;
-    largeStep?: number;
-    size?: "md" | "sm";
-    disabled?: boolean;
-    formatValue?: (value: number) => string;
+    value?: undefined | V;
+    defaultValue?: undefined | V;
+    onValueChange?: ((value: V) => void) | undefined;
+    onValueCommit?: ((value: V) => void) | undefined;
+    min?: number | undefined;
+    max?: number | undefined;
+    step?: number | undefined;
+    largeStep?: number | undefined;
+    size?: "md" | "sm" | undefined;
+    disabled?: boolean | undefined;
+    formatValue?: ((value: number) => string) | undefined;
     thumbLabels?: [
         string,
         string
-    ];
-    name?: string;
-    form?: string;
-    invalid?: boolean;
-    readOnly?: boolean;
-    required?: boolean;
-    marks?: boolean | SliderMark[];
-    showValue?: boolean;
+    ] | undefined;
+    name?: string | undefined;
+    form?: string | undefined;
+    invalid?: boolean | undefined;
+    readOnly?: boolean | undefined;
+    required?: boolean | undefined;
+    marks?: boolean | SliderMark[] | undefined;
+    showValue?: boolean | undefined;
 }
 declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;

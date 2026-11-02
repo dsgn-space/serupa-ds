@@ -21,41 +21,41 @@ export type BadgeTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger'
   | 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'cyan' | 'sky' | 'blue' | 'indigo' | 'violet' | 'purple' | 'fuchsia' | 'pink' | 'rose';
 export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onClick'> {
   /** 'subtle' (default): a tint with colored text. 'solid': a full fill, for strong emphasis. 'outline': a colored border and text. */
-  variant?: BadgeVariant;
+  variant?: BadgeVariant | undefined;
   /** 'neutral' (default) and 'primary' use the alias colors; 'success' (green), 'warning' (amber), 'danger' (red) and 'info' (sky) are statuses; the palette families are for categories and tags. Every tone and variant keeps 4.5:1 text in light and dark. */
-  tone?: BadgeTone;
+  tone?: BadgeTone | undefined;
   /** A small status dot before the label, in the badge's text color. Ignored with leftIcon or count. With no label, icon or count, renders a lone indicator dot ("something new"): decorative unless given aria-label. */
-  dot?: boolean;
+  dot?: boolean | undefined;
   /** With dot (in a label or the lone indicator): a copy of the dot grows and fades every second (the system's ping animation), for live states. Off under reduced motion. Ignored without a dot. Default false. */
-  ping?: boolean;
+  ping?: boolean | undefined;
   /** A Material Symbols (or custom) icon name, or an element, before the label. Decorative. */
-  leftIcon?: IconSource;
+  leftIcon?: IconSource | undefined;
   /** Makes it a count badge: a round pill with the number. 0 renders nothing unless showZero. */
-  count?: number;
+  count?: number | undefined;
   /** With count: above this, shows "max+" (default 99: "99+"). */
-  max?: number;
+  max?: number | undefined;
   /** With count: show the badge at 0. */
-  showZero?: boolean;
+  showZero?: boolean | undefined;
   /** Adds a remove (×) button at the end that calls this. */
-  onRemove?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onRemove?: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
   /** The remove button's accessible name, before the label: "Remove" (default) → "Remove Design". */
-  removeLabel?: string;
+  removeLabel?: string | undefined;
   /** Makes it interactive: renders a <button type="button"> with hover, focus and active states. onRemove is ignored then. */
-  onClick?: React.MouseEventHandler<HTMLElement>;
+  onClick?: React.MouseEventHandler<HTMLElement> | undefined;
   /** Makes it a link (the component set with Serupa.configure({ link }), <a> by default), with hover, focus and active states. */
-  href?: string;
+  href?: string | undefined;
   /** Where the link opens, as on <a>; with "_blank", rel defaults to "noopener noreferrer". */
-  target?: string;
+  target?: string | undefined;
   /** The link's relation to the page, as on <a>. */
-  rel?: string;
+  rel?: string | undefined;
   /** Turns an interactive badge off. A link has no disabled state in HTML: a disabled link badge renders without href, with role="link" and aria-disabled, and can't be focused or followed. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** 'button' (default, never submits by accident), 'submit' or 'reset', when interactive. */
-  type?: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset' | undefined;
   /** A ring replaces the content (the width stays); aria-busy, and an interactive badge ignores clicks but keeps focus. */
-  loading?: boolean;
+  loading?: boolean | undefined;
   /** Announced to screen readers when loading starts. Default "Loading"; "" announces nothing. */
-  loadingText?: string;
+  loadingText?: string | undefined;
 }
 
 /* Badge: a short label for status, counts and categories. variant "subtle" (default: a tint), "solid" (a full

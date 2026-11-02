@@ -10,10 +10,10 @@ interface SelectOptionGroup {
     disabled?: boolean;
 }
 interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "multiple" | "size"> {
-    size?: "lg" | "md" | "sm";
-    invalid?: boolean;
-    leftIcon?: IconSource;
-    placeholder?: string;
-    options?: Array<SelectOption | SelectOptionGroup>;
+    size?: "lg" | "md" | "sm" | undefined;
+    invalid?: boolean | undefined;
+    leftIcon?: IconSource | undefined;
+    placeholder?: string | undefined;
+    options?: Array<SelectOption | SelectOptionGroup> | undefined;
 }
 declare const Select: React.ForwardRefExoticComponent<SelectProps & React.RefAttributes<HTMLSelectElement>>;

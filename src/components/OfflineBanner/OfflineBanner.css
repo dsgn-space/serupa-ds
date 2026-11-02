@@ -34,6 +34,12 @@
   inline-size: max-content;
   max-inline-size: calc(var(--sizing-full) - var(--offline-banner-offset, var(--spacing-4)) - var(--offline-banner-offset, var(--spacing-4)));
 }
+/* What the keyboard focuses, or a #link jumps to, scrolls into view clear of the bar, not under it (GR122, WCAG
+   2.4.11): OfflineBanner measures the bar, its gap from the edge and --dk-offline-gap of room into
+   --dk-offline-banner-space while it shows. (A top bar with a sticky Navbar: the Navbar's padding wins.) */
+.dk-offline-banner { --dk-offline-gap: var(--spacing-2); }
+:root:has(.dk-offline-banner--bottom:not([data-leaving])) { scroll-padding-bottom: var(--dk-offline-banner-space, var(--spacing-16)); }
+:root:has(.dk-offline-banner--top:not([data-leaving])):not(:has(.dk-navbar--sticky)) { scroll-padding-top: var(--dk-offline-banner-space, var(--spacing-16)); }
 .dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom)); }
 .dk-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
 .dk-offline-banner[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }

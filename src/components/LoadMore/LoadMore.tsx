@@ -12,20 +12,20 @@ export interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Loads the next page. Return a promise: the button shows loading and takes no second press until it settles. */
   onLoadMore: () => void | PromiseLike<unknown>;
   /** false once there's nothing more: the button gives way to "You've reached the end" (endText). Default: true. */
-  hasMore?: boolean;
+  hasMore?: boolean | undefined;
   /** Loading from outside (your own fetch state), on top of a promise from onLoadMore. */
-  loading?: boolean;
+  loading?: boolean | undefined;
   /** How many items are shown now. When it grows, the number added is announced ("20 more loaded"). */
-  count?: number;
+  count?: number | undefined;
   /** How many there are in all: with count, shows "Showing 20 of 134" and adds it to the announcement. */
-  total?: number;
+  total?: number | undefined;
   /** Loads on its own when the button scrolls near the viewport (infinite scroll); the button stays for keyboard users
       and as the fallback. It loads once each time it comes near, and again only after count changes. Default: false. */
-  infinite?: boolean;
+  infinite?: boolean | undefined;
   /** The button's text, in place of "Load more" ("Show 20 more"). */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** Shown in place of the button once hasMore is false. Default: "You've reached the end"; null shows nothing. */
-  endText?: React.ReactNode;
+  endText?: React.ReactNode | undefined;
 }
 
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === "function";

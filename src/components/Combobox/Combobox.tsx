@@ -34,57 +34,57 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
   /** The choices: strings, or { value, label, description, disabled }. The label is what's typed to find it and shown once picked.
       Groups { label, options } put options under a heading; a group with no match left hides its heading.
       With loadOptions, the ones shown before anything has loaded (or leave it out). */
-  options?: readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[];
+  options?: readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[] | undefined;
   /** Loads the options for the typed text, such as from a server: called after typing pauses (debounce), and with ""
       when the list first opens. The signal aborts when newer text is typed or the field goes away, so a slow answer
       for "ca" never replaces the one for "can". The list shows the loading row while it waits and the loadFailed
       message if it rejects; filtering is then yours (filter is ignored). */
-  loadOptions?: (text: string, context: { signal: AbortSignal }) => Promise<readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[]>;
+  loadOptions?: ((text: string, context: { signal: AbortSignal }) => Promise<readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[]>) | undefined;
   /** With loadOptions, how long typing must pause before loading, in ms. Default: 250. */
-  debounce?: number;
+  debounce?: number | undefined;
   /** The text in the field (controlled). Use with onInputChange, which is called with every change to it. */
-  inputValue?: string;
+  inputValue?: string | undefined;
   /** The text in the field at first (uncontrolled). Default: the picked option's label, or "". */
-  defaultInputValue?: string;
+  defaultInputValue?: string | undefined;
   /** Called whenever the field's text changes: as it's typed, and when picking, clearing, Escape or leaving the
       field puts a label back. For loading options from a server (with filter={false} and loading), or with inputValue. */
-  onInputChange?: (text: string) => void;
+  onInputChange?: ((text: string) => void) | undefined;
   /** How typing narrows the list. Default: options whose label contains the text, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße"). false shows every option (filter them yourself). */
-  filter?: false | ((option: { value: V; label: string }, text: string) => boolean);
+  filter?: (false | ((option: { value: V; label: string }, text: string) => boolean)) | undefined;
   /** Whether the list is open (controlled). Use with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Whether the list is open at first (uncontrolled). Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called when the list asks to open or close, with why: { reason: 'trigger' (typing, the arrow keys, a click or the
       chevron) | 'escape' | 'blur' (focus left the field) | 'select' (an option was picked, or Enter with none) | 'api' (the form was reset) }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** Shows a × that clears the selection once something is picked. Default: false. */
-  clearable?: boolean;
+  clearable?: boolean | undefined;
   /** Shows a loading row in the list. Default: false. */
-  loading?: boolean;
+  loading?: boolean | undefined;
   /** Shown when nothing matches. Default: "No results". */
-  emptyText?: React.ReactNode;
+  emptyText?: React.ReactNode | undefined;
   /** Shown while loading. Default: "Loading…". */
-  loadingText?: string;
+  loadingText?: string | undefined;
   /** The chevron button's name. Default: the showOptions label ("Show options"). */
-  toggleLabel?: string;
+  toggleLabel?: string | undefined;
   /** The × button's name. Default: the clearValue label, "Clear" and the field's label ("Clear Country"), or "Clear" when it has none. */
-  clearLabel?: string;
+  clearLabel?: string | undefined;
   /** Lets people add an option that isn't listed: while the typed text isn't an option's label, the list ends with
       'Add "text"' (the createOption label). Picking it calls onCreate with the text (trimmed); return the new option's
       value to pick it (and add the option to options), or nothing to leave the pick to you. */
-  onCreate?: (text: string) => V | void;
+  onCreate?: ((text: string) => V | void) | undefined;
 }
 /** Picks one option. */
 export interface ComboboxSingleProps<V extends string = string> extends ComboboxBaseProps<V> {
   /** Picks one option (default); true picks any number, as tags. */
-  multiple?: false;
+  multiple?: false | undefined;
   /** The selected value (controlled), or null. Use with onValueChange. */
-  value?: V | null;
+  value?: V | null | undefined;
   /** The value selected at first (uncontrolled). */
-  defaultValue?: V | null;
+  defaultValue?: V | null | undefined;
   /** Called with the picked value, or null when the field is emptied or cleared. */
-  onValueChange?: (value: V | null) => void;
+  onValueChange?: ((value: V | null) => void) | undefined;
 }
 /** Picks any number of options, each shown as a tag in the field. */
 export interface ComboboxMultipleProps<V extends string = string> extends ComboboxBaseProps<V> {
@@ -92,11 +92,11 @@ export interface ComboboxMultipleProps<V extends string = string> extends Combob
       the list open, and Backspace in the empty field removes the last tag. */
   multiple: true;
   /** The selected values in order (controlled). Use with onValueChange. */
-  value?: readonly V[];
+  value?: readonly V[] | undefined;
   /** The values selected at first (uncontrolled). */
-  defaultValue?: readonly V[];
+  defaultValue?: readonly V[] | undefined;
   /** Called with every selected value, in the order they were picked. */
-  onValueChange?: (value: V[]) => void;
+  onValueChange?: ((value: V[]) => void) | undefined;
 }
 export type ComboboxProps<V extends string = string> = ComboboxSingleProps<V> | ComboboxMultipleProps<V>;
 type AnyProps = ComboboxBaseProps & { multiple?: boolean; value?: string | string[] | null; defaultValue?: string | string[] | null; onValueChange?: unknown };
