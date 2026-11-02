@@ -339,7 +339,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
             ) : null}
           </div>
           {!props.hideLegend && series.length ? (
-            <ul className="dk-chart__legend" aria-hidden>
+            <ul role="list" className="dk-chart__legend" aria-hidden>
               {series.map((sr, s) => (
                 <li key={s} className={"dk-chart__key dk-chart--s" + (s + 1)}>
                   <svg className="dk-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
