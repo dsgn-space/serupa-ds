@@ -84,4 +84,12 @@ describe('Blocks/Settings section', () => {
     expect(field.top).toBeGreaterThan(heading.bottom);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
   });
+
+  test('on a wide screen the heading sits beside the fields', async () => {
+    await page.viewport(1024, 768);
+    await render(<Settings />);
+    const heading = section('Profile').getByRole('heading', { name: 'Profile' }).element().getBoundingClientRect();
+    const field = page.getByRole('textbox', { name: 'Name' }).element().getBoundingClientRect();
+    expect(field.left).toBeGreaterThan(heading.right);
+  });
 });
