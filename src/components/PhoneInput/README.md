@@ -42,6 +42,7 @@ Drawn from the `ByArea` story.
 - `complete` says whether the number has a length the country uses. Use it to enable submit or to show an error after blur. It doesn't check that the number exists.
 - Set `defaultCountry` to where most of your users are. Without it, the country comes from the locale's region (`id-ID` gives Indonesia), else the US.
 - Pasting or typing a number that starts with `+` or `00` picks the country from its calling code. Where countries share one, the area decides: `+1 416…` is Canada, `+1 684…` American Samoa, `+7 7…` Kazakhstan, `+44 1481…` Guernsey.
+- A pasted `tel:` link reads as its number (`tel:+4930123456`, parameters such as `;phone-context=` too). An extension at the end ("ext. 12", "x12", "#12", "Durchwahl 12", `;ext=12`) is left off, not joined onto the number. Ask for it in a field of its own.
 - A trunk prefix typed at the start (the `0` of `0812…`) is dropped, since the calling code replaces it. So is a calling code typed without `+` ("62 812…" with Indonesia picked), once the number is too long to be a national one.
 - A `+` code PhoneInput doesn't know warns once in the console; its digits are read as a number in the picked country.
 - A press on the box past the number field focuses the field with the caret at the end, as the text cursor over the box promises; the country menu keeps its own press.
