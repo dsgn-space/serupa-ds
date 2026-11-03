@@ -5,7 +5,7 @@ import { cdp, server } from 'vitest/browser';
 import { keepMotion } from '../../tools/test/vitest/helpers';
 import { withViewTransition } from './viewTransition';
 
-type Go = { flip?: () => Promise<void>; seen?: string[] };
+type Go = { flip?: () => Promise<void>; seen?: string[]; groups?: Promise<Animation[]> };
 
 function List({ go }: { go: Go }) {
   const [order, setOrder] = React.useState(['a', 'b', 'c']);
@@ -21,12 +21,20 @@ describe('withViewTransition', () => {
     await render(<List go={go} />);
     // What the page holds when the update returns, which is when the browser takes its "after" picture.
     const real = 'startViewTransition' in document ? document.startViewTransition.bind(document) : null;
-    if (real) document.startViewTransition = ((arg: { update: () => void } | (() => void)) => real(() => { (typeof arg === 'function' ? arg : arg.update)(); go.seen = [...document.querySelectorAll('#vt li')].map((li) => li.id); })) as typeof real;
+    // The group animations, read as soon as the transition is ready: the browser makes them just before ready
+    // settles, so read then they are running. Read after the update (as this did), a busy machine could get there
+    // before they existed or after the 200 ms had run out, and find none.
+    const groupsOf = () => document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.pseudoElement?.startsWith('::view-transition-group('));
+    if (real) document.startViewTransition = ((arg: { update: () => void } | (() => void)) => {
+      const vt = real(() => { (typeof arg === 'function' ? arg : arg.update)(); go.seen = [...document.querySelectorAll('#vt li')].map((li) => li.id); });
+      go.groups = vt.ready.then(groupsOf);
+      return vt;
+    }) as typeof real;
     let done: Promise<void>;
     try { done = go.flip!() ; } finally { if (real) delete (document as { startViewTransition?: unknown }).startViewTransition; }
     if (real) {
       await expect.poll(() => go.seen).toEqual(['c', 'b', 'a']);
-      const groups = document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.pseudoElement?.startsWith('::view-transition-group('));
+      const groups = await go.groups!;
       expect(groups.length).toBeGreaterThan(0);
       const e = groups[0].effect as KeyframeEffect;
       expect([e.getComputedTiming().duration, e.getKeyframes()[0].easing]).toEqual([200, 'cubic-bezier(0.65, 0, 0.35, 1)']);

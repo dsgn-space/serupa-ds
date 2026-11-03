@@ -139,11 +139,13 @@ async function attempt(el: React.ReactElement, rtl: boolean, theme: string): Pro
   return problems;
 }
 
+// Every component, and the ones this run covers (SERUPA_ONLY, set by run.mjs --since, or all of them).
 const only = inject('only');
-const list = Object.entries(files)
+const everyone = Object.entries(files)
   .map(([file, mod]) => [file.split('/').at(-2)!, mod] as const)
-  .filter(([name]) => !SKIP.has(name) && (only === null || only.split(',').includes(name)))
+  .filter(([name]) => !SKIP.has(name))
   .sort(([a], [b]) => a.localeCompare(b));
+const list = everyone.filter(([name]) => only === null || only.split(',').includes(name));
 
 describe(`random prop combinations draw without a throw, a console.error or an axe violation (seed ${SEED})`, () => {
   for (const [name, mod] of list) {
@@ -173,5 +175,6 @@ test('the props are read from the public types', () => {
   expect(b.booleans.has('loading')).toBe(true);
   // Controlled halves are left out (Switch's checked has defaultChecked and onCheckedChange).
   expect(shape('Switch').booleans.has('checked')).toBe(false);
-  expect(list.filter(([name, mod]) => base(mod) && shape(name).options.size + shape(name).booleans.size > 0).length).toBeGreaterThan(60);
+  // All of them, whichever this run covers.
+  expect(everyone.filter(([name, mod]) => base(mod) && shape(name).options.size + shape(name).booleans.size > 0).length).toBeGreaterThan(60);
 });
