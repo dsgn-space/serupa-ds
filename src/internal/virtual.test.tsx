@@ -37,7 +37,10 @@ test('past the height limit (1,000,000 rows of 20px), scrollToIndex maps the row
   const out: { r?: VirtualRange } = {};
   await render(<Rows count={1_000_000} out={out} />);
   const s = document.getElementById('s')!;
-  await expect.poll(() => s.scrollHeight).toBeLessThanOrEqual(15_000_000);
+  // The cap, give or take a pixel per spacer: at 15 million pixels Firefox's layout keeps a height to about a pixel, so
+  // its two spacers can add up to 15,000,002. Its limit is near 17.9 million, so that's still well under it.
+  await expect.poll(() => s.scrollHeight).toBeLessThanOrEqual(15_000_004);
+  expect(s.scrollHeight).toBeGreaterThan(14_999_000);
   out.r!.scrollToIndex(999_999);
   await expect.poll(() => shown()).toContain(999_999);
   out.r!.scrollToIndex(400_000);

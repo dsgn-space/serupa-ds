@@ -84,6 +84,19 @@ describe('ErrorSummary', () => {
     expect(document.activeElement).toBe(el('f-name'));
   });
 
+  test('GR120: takes focus again when a field\'s message changes (another failed submit), not when the same message renders again', async () => {
+    const screen = await render(<Form errors={[ERRORS[0]]} />);
+    await expect.poll(() => document.activeElement).toBe(el('sum'));
+    (el('f-name') as HTMLInputElement).focus();
+    await screen.rerender(<Form errors={[{ field: ERRORS[0].field, message: 'A new message about the same field' }]} />);
+    await expect.poll(() => document.activeElement).toBe(el('sum'));
+    (el('f-name') as HTMLInputElement).focus();
+    await screen.rerender(<Form errors={[{ field: ERRORS[0].field, message: 'A new message about the same field' }]} />);
+    expect(document.activeElement).toBe(el('f-name'));
+    await screen.rerender(<Form errors={[{ field: ERRORS[0].field, message: <span>An element message</span> }]} />);
+    await expect.poll(() => document.activeElement).toBe(el('sum'));
+  });
+
   test('a link still moves focus where there is no scrollIntoView (jsdom, where apps run unit tests) (L8E46)', async () => {
     await render(<Form autoFocus={false} />);
     const own = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollIntoView')!;
