@@ -125,6 +125,8 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   const [store, remeasured] = React.useReducer((s: { sizes: Map<number, number> }) => ({ sizes: s.sizes }), null, () => ({ sizes: new Map<number, number>() }));
   const sizes = store.sizes;
   const [view, setView] = React.useState<View | null>(null);
+  // What End does, from the last render (the key listener is added once per scroller).
+  const toEnd = React.useRef(() => {});
   const live = React.useRef<Live>({ offsets: new Float64Array(1), top: 0, pending: null, seen: 0, origin: 0, pin: null });
 
   // Rows not measured yet count as the average of those that are (the guess until one is), so the scroll range
@@ -144,7 +146,9 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   const top = view ? clamp(offsets[Math.min(view.i, count)] - view.at, 0, Math.max(0, total - view.height)) : 0;
   const shift = scaled && view ? view.p - top : 0;
   let start: number, end: number;
-  if (!view || !count) { start = 0; end = Math.min(count, initial); }
+  // Until the scroller has a height (a popup still hidden when it was read: WebKit reports the opened one's a frame
+  // later), the first rows as before it was measured, not only the overscan (Combobox drew 5 of 7, FW1).
+  if (!view || !count || !view.height) { start = 0; end = Math.min(count, initial); }
   else {
     start = Math.max(0, find(offsets, top) - overscan);
     end = Math.min(count, find(offsets, top + view.height) + 1 + overscan);
@@ -161,6 +165,14 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     const step = (d: number) => { go(L, scroller, L.top + d); read(); };
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement, by = STEP[e.key];
+      // End: the last row, kept at the bottom while the rows on the way are measured. The browser's own End scrolls to
+      // the end of the range as it stands, and in WebKit the rows then measured taller than the guess left the view at
+      // row 408 of 1,000 (FW1).
+      if (e.key === "End" && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+        e.preventDefault();
+        toEnd.current();
+        return;
+      }
       if (!by || !(L.offsets[L.offsets.length - 1] > CAP) || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (t !== scroller && t.closest(EDITABLE))) return;
       e.preventDefault();
       step(by(scroller.clientHeight));
@@ -246,6 +258,9 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     live.current.seen = el.scrollTop;
     live.current.pin = { i: index, end: want !== a };
   };
+
+  // every render: End uses this render's rows and offsets.
+  useIsoLayoutEffect(() => { toEnd.current = () => { if (count) scrollToIndex(count - 1); }; });
 
   const drawn = offsets[end] - offsets[start];
   const before = scaled ? Math.max(0, offsets[start] + shift) : offsets[start];

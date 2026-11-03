@@ -9,14 +9,14 @@ interface ErrorBoundaryFallbackProps {
     reset: () => void;
 }
 interface ErrorBoundaryProps {
-    children?: React.ReactNode;
-    fallback?: ((props: ErrorBoundaryFallbackProps) => React.ReactNode) | React.ReactNode;
-    title?: React.ReactNode;
-    description?: React.ReactNode;
-    onError?: (error: unknown, info: React.ErrorInfo) => void;
-    onReset?: () => void;
-    resetKeys?: ReadonlyArray<unknown>;
-    className?: string;
+    children?: React.ReactNode | undefined;
+    fallback?: (((props: ErrorBoundaryFallbackProps) => React.ReactNode) | React.ReactNode) | undefined;
+    title?: React.ReactNode | undefined;
+    description?: React.ReactNode | undefined;
+    onError?: ((error: unknown, info: React.ErrorInfo) => void) | undefined;
+    onReset?: (() => void) | undefined;
+    resetKeys?: ReadonlyArray<unknown> | undefined;
+    className?: string | undefined;
 }
 declare const ErrorBoundary: ((props: ErrorBoundaryProps) => React.ReactElement) & {
     displayName: string;

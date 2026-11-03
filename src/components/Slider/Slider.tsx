@@ -20,43 +20,43 @@ export interface SliderMark { value: number; label?: React.ReactNode }
 /** V is a number for one thumb or [low, high] for a range, inferred from value, defaultValue or the callbacks. */
 export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
   /** The value (controlled): a number, or [low, high] for a range with two thumbs. Use with onValueChange. */
-  value?: V;
+  value?: V | undefined;
   /** The value at first (uncontrolled). Default: min. */
-  defaultValue?: V;
+  defaultValue?: V | undefined;
   /** Called with the new value as it moves (dragging, keys). */
-  onValueChange?: (value: V) => void;
+  onValueChange?: ((value: V) => void) | undefined;
   /** Called once when a drag or key press that changed the value ends: for saving or fetching. */
-  onValueCommit?: (value: V) => void;
+  onValueCommit?: ((value: V) => void) | undefined;
   /** Default: 0. */
-  min?: number;
+  min?: number | undefined;
   /** Default: 100. */
-  max?: number;
+  max?: number | undefined;
   /** The smallest change. Default: 1. */
-  step?: number;
+  step?: number | undefined;
   /** How many steps PageUp, PageDown and Shift with an arrow move. Default: 10. */
-  largeStep?: number;
+  largeStep?: number | undefined;
   /** 'sm' (4px track, 16px thumb) or 'md' (6px, 20px, default). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** Turns the thumbs off, as a disabled native control. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Turns a value into the words read out (aria-valuetext), such as "$40". Default: the number (shown by showValue in the locale's digits). */
-  formatValue?: (value: number) => string;
+  formatValue?: ((value: number) => string) | undefined;
   /** A range's thumb names. Default: the sliderMinimum and sliderMaximum labels ("Minimum", "Maximum"). A single thumb is named by aria-label or aria-labelledby. */
-  thumbLabels?: [string, string];
+  thumbLabels?: [string, string] | undefined;
   /** Submits the value with a form: one hidden input, or two with the same name for a range. */
-  name?: string;
+  name?: string | undefined;
   /** The id of a form to submit and reset with, when it isn't inside one, as the form attribute of an input. */
-  form?: string;
+  form?: string | undefined;
   /** A danger fill and thumb ring, and aria-invalid on the thumbs. Say what's wrong in text next to it (Field's error does). */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Focusable and read out, but keys and presses don't change it; the value is still submitted. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** Accepted so Field's required doesn't reach the DOM. A slider always has a value, so it has no effect. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** Ticks on the track: true for every step (every largeStep steps past 100 ticks), or a list of values with optional text under each. Visual only; the thumb's value is what's read out. */
-  marks?: boolean | SliderMark[];
+  marks?: boolean | SliderMark[] | undefined;
   /** Shows the value (formatValue's text) over a thumb while it's focused, dragged or hovered. Visual only, as aria-valuetext already says it. */
-  showValue?: boolean;
+  showValue?: boolean | undefined;
 }
 
 const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, "aria-required": 1, "aria-invalid": 1, "aria-readonly": 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1, "aria-describedby": 1, "aria-errormessage": 1 } as const;

@@ -20,42 +20,42 @@ export interface NotificationItem {
   /** The main line. */
   title: React.ReactNode;
   /** A muted line under it. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** 'neutral' (default, no icon), 'info', 'success', 'warning' or 'danger', as a toast's. */
-  tone?: ToastTone;
+  tone?: ToastTone | undefined;
   /** When it happened, shown as "5 minutes ago". */
-  time?: Date | number;
+  time?: Date | number | undefined;
   /** Whether it's been read. Unread ones have a dot, bolder titles and a "Mark as read" button. */
-  read?: boolean;
+  read?: boolean | undefined;
 }
 
 // DrawerProps with four of them closed off, not an Omit<>, which costs every project's type check more (types.mjs).
 export interface NotificationCenterProps extends DrawerProps {
   /** The drawer's title. Default: "Notifications" (labels.notificationCenter). */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** Not taken: the list is the drawer's content. */
-  description?: never;
+  description?: never | undefined;
   /** Not taken: the footer holds "Mark all as read" and "Clear all". */
-  footer?: never;
+  footer?: never | undefined;
   /** Not taken: the list is the drawer's content. */
-  children?: never;
+  children?: never | undefined;
   /** Not taken: there's nothing to edit, so nothing to lose. */
-  unsaved?: never;
+  unsaved?: never | undefined;
   /** The notifications, newest first: useToastHistory().items, or your own. */
   items: NotificationItem[];
   /** Called with an unread one's id when its "Mark as read" is chosen. Without it, there's no button. */
-  onMarkRead?: (id: string) => void;
+  onMarkRead?: ((id: string) => void) | undefined;
   /** Called when "Mark all as read" in the footer is chosen. Without it, there's no button. */
-  onMarkAllRead?: () => void;
+  onMarkAllRead?: (() => void) | undefined;
   /** Called when "Clear all" in the footer is chosen. Without it, there's no button. */
-  onClear?: () => void;
+  onClear?: (() => void) | undefined;
   /** What shows with no notifications. Default: "No notifications yet" (labels.noNotifications). */
-  empty?: React.ReactNode;
+  empty?: React.ReactNode | undefined;
 }
 
 export interface ToastHistoryOptions {
   /** The most kept; older ones drop off the end. Default: 50. */
-  limit?: number;
+  limit?: number | undefined;
 }
 
 /** What useToastHistory returns. */

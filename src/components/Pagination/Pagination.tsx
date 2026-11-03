@@ -18,37 +18,37 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   /** How many pages there are. */
   count: number;
   /** The current page, from 1 (controlled). Use with onPageChange. */
-  page?: number;
+  page?: number | undefined;
   /** The page it starts on when uncontrolled. Default: 1. */
-  defaultPage?: number;
+  defaultPage?: number | undefined;
   /** Called with the new page when someone picks one. */
-  onPageChange?: (page: number) => void;
+  onPageChange?: ((page: number) => void) | undefined;
   /** Makes every page a link to this URL instead of a button (it still calls onPageChange on click). */
-  getHref?: (page: number) => string;
+  getHref?: ((page: number) => string) | undefined;
   /** With getHref, what renders each page link: your router's link component. Default: the link set with configure({ link }), else 'a'. */
-  linkAs?: React.ElementType;
+  linkAs?: React.ElementType | undefined;
   /** Pages shown on each side of the current one. Default: 1. Fewer show when the row wouldn't fit on one line. */
-  siblings?: number;
+  siblings?: number | undefined;
   /** Pages always shown at the start and the end. Default: 1. Fewer show, after the siblings, when the row wouldn't fit. */
-  boundaries?: number;
+  boundaries?: number | undefined;
   /** 'md' (default, 32px) or 'sm' (24px). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** The nav's accessible name. Default: "Pagination". */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
   /** Default: "Previous page". */
-  previousLabel?: string;
+  previousLabel?: string | undefined;
   /** Default: "Next page". */
-  nextLabel?: string;
+  nextLabel?: string | undefined;
   /** A page's accessible name. Default: (n) => "Page " + n. */
-  pageLabel?: (page: number) => string;
+  pageLabel?: ((page: number) => string) | undefined;
   /** How many items there are in all. With pageSize, a summary before the pages says which ones show: "21–30 of 245". */
-  total?: number;
+  total?: number | undefined;
   /** How many items a page holds. With total, shows the summary. */
-  pageSize?: number;
+  pageSize?: number | undefined;
   /** The page sizes to offer, as a select labelled "Items per page" after the summary: [10, 25, 50]. Needs pageSize (the one picked). */
-  pageSizeOptions?: number[];
+  pageSizeOptions?: number[] | undefined;
   /** Called with the size picked in the select, and the page that keeps the first item shown in view (page 5 at 10 a page starts with item 41, which is on page 2 at 25 a page). Set pageSize, and page when controlled; uncontrolled, the page moves by itself. */
-  onPageSizeChange?: (pageSize: number, page: number) => void;
+  onPageSizeChange?: ((pageSize: number, page: number) => void) | undefined;
 }
 
 
@@ -70,6 +70,9 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   const page = Math.min(Math.max(int(controlled ? props.page : own, 1, 1), 1), Math.max(count, 1));
   const size = oneOf(["sm", "md"] as const, props.size, "md");
   const label = props.pageLabel || sds.labels.page;
+  // The name says the number as the button shows it, "١٠" in ar-EG and "1,000" in en-US, so it holds the visible
+  // text, as WCAG 2.5.3 asks: "Page ١٠", not "Page 10".
+  const said = (n: number) => { const shown = displayNumber(n, locale), l = label(n); return shown === String(n) ? l : l.replace(new RegExp("(?<!\\d)" + n + "(?!\\d)", "g"), shown); };
   // ET1: the row stays on one line. When it's wider than its box, siblings and then boundaries step down (cut) until
   // it fits, before paint; when the box grows they start over from what was asked.
   const siblings = int(props.siblings, 0, 1), boundaries = int(props.boundaries, 0, 1);
@@ -151,7 +154,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
       <ul className="dk-pagination__list" ref={list}>
         {arrow("prev")}
         {paginationRange(page, count, Math.max(siblings - cut, 0), Math.max(boundaries - Math.max(cut - siblings, 0), 0)).map((e) => typeof e === "number"
-          ? <li key={e}>{item(e, displayNumber(e, locale), { "aria-label": label(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
+          ? <li key={e}>{item(e, displayNumber(e, locale), { "aria-label": said(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
           : <li key={e} className="dk-pagination__ellipsis" aria-hidden="true">…</li>)}
         {arrow("next")}
       </ul>
