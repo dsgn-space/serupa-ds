@@ -73,7 +73,8 @@ describe('CodeBlock', () => {
       r.selectNodeContents(el(id).querySelector('code')!);
       const sel = getSelection()!;
       sel.removeAllRanges(); sel.addRange(r);
-      const text = sel.toString();
+      // Safari ends a selection that runs to the end of a block line with a line break; code ends with one anyway.
+      const text = sel.toString().replace(/\n$/, '');
       sel.removeAllRanges();
       return text;
     };

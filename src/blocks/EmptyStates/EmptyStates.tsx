@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Button } from '../../components/Button/Button';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Link } from '../../components/Link/Link';
+import { announce } from '../../internal/announce';
 
 /* Empty states (BL5): the four empties most apps need, each with its next step, built from EmptyState only, for an app
    to copy. What they carry (WCAG 2.2):
@@ -69,6 +70,9 @@ export interface EmptyNoAccessProps {
   requestLabel?: string | undefined;
   /** Said and shown on the button once the request is sent. Default: "Request sent". */
   requestedLabel?: string | undefined;
+  /** Said and shown under the description when onRequest rejects; the button can be pressed again.
+      Default: "Couldn't send the request. Try again." */
+  requestFailedLabel?: string | undefined;
   /** Where to go instead: the list this page belongs to. */
   backHref?: string | undefined;
   /** Default: "Go back". */
@@ -77,14 +81,24 @@ export interface EmptyNoAccessProps {
 }
 
 /** A page the person can't see: who can let them in, Request access, and a way back. */
-export function EmptyNoAccess({ title = "You don't have access", description, onRequest, requestLabel = 'Request access', requestedLabel = 'Request sent', backHref, backLabel = 'Go back', headingLevel }: EmptyNoAccessProps) {
+export function EmptyNoAccess({ title = "You don't have access", description, onRequest, requestLabel = 'Request access', requestedLabel = 'Request sent', requestFailedLabel = "Couldn't send the request. Try again.", backHref, backLabel = 'Go back', headingLevel }: EmptyNoAccessProps) {
   // Once sent, the button keeps saying so and does nothing more, so one person can't send the same request twice.
   // It stays focusable (aria-disabled, not disabled), so focus isn't lost from under the keyboard.
+  // A request that fails says so, in words under the description and once to a screen reader, and the button stays
+  // Request access, so it can be pressed again (GR136). Nothing is said as sent unless onRequest resolved.
   const [sent, setSent] = React.useState(false);
-  const request = onRequest ? async () => { if (sent) return; await onRequest(); setSent(true); } : undefined;
+  const [failed, setFailed] = React.useState(false);
+  const request = onRequest ? async () => {
+    if (sent) return;
+    setFailed(false);
+    try { await onRequest(); } catch { setFailed(true); announce(requestFailedLabel); return; }
+    setSent(true);
+    announce(requestedLabel);
+  } : undefined;
   return (
-    <EmptyState icon="lock" title={title} description={description} headingLevel={headingLevel}
-      actions={<>{request ? <Button onClick={request} successText={requestedLabel} aria-disabled={sent || undefined}>{sent ? requestedLabel : requestLabel}</Button> : null}{backHref ? <Link href={backHref}>{backLabel}</Link> : null}</>} />
+    <EmptyState icon="lock" title={title} headingLevel={headingLevel}
+      description={failed ? <>{description}<br /><span className="text-danger">{requestFailedLabel}</span></> : description}
+      actions={<>{request ? <Button onClick={request} aria-disabled={sent || undefined}>{sent ? requestedLabel : requestLabel}</Button> : null}{backHref ? <Link href={backHref}>{backLabel}</Link> : null}</>} />
   );
 }
 
