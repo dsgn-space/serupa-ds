@@ -23,6 +23,8 @@ function network(online: boolean) {
 }
 const real = () => { delete (navigator as unknown as Record<string, unknown>).onLine; };
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// Where the browser leaves a focused field under the bar (Safari), the page moves it on the next frame.
+const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
 describe('OfflineBanner', () => {
   test('online it renders nothing; offline a <div> with the words, and ref, className and other props reach it', async () => {
@@ -109,7 +111,7 @@ describe('OfflineBanner', () => {
     document.getElementById('f0')!.focus();
     const covered: string[] = [];
     for (let i = 1; i < 40; i++) {
-      await userEvent.tab();
+      await userEvent.tab(); await frame();
       const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect(), b = banner.getBoundingClientRect();
       if (r.bottom > b.top && r.top < b.bottom) covered.push(f.id);
     }
@@ -138,7 +140,7 @@ describe('OfflineBanner', () => {
     document.getElementById('t29')!.focus();
     const covered: string[] = [];
     for (let i = 28; i >= 0; i--) {
-      await userEvent.tab({ shift: true });
+      await userEvent.tab({ shift: true }); await frame();
       const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect(), b = banner.getBoundingClientRect();
       if (r.top < b.bottom && r.bottom > b.top) covered.push(f.id);
     }
@@ -169,7 +171,7 @@ describe('OfflineBanner', () => {
       document.getElementById('n29')!.focus();
       const covered: string[] = [];
       for (let i = 28; i >= 0; i--) {
-        await userEvent.tab({ shift: true });
+        await userEvent.tab({ shift: true }); await frame();
         const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect();
         if (![banner, nav].every((o) => { const b = o.getBoundingClientRect(); return r.top >= b.bottom || r.bottom <= b.top; })) covered.push(f.id);
       }
