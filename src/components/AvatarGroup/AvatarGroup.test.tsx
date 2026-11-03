@@ -159,7 +159,7 @@ describe('AvatarGroup', () => {
 
   // DS1: "+N" was a span, so keyboard and touch users could never see who's behind it.
   test('showMore: "+2" is a button with the same name that Tab reaches; it opens a popover listing the hidden people by name, then "N more" for the unloaded ones', async () => {
-    await render(<><button>before</button><AvatarGroup id="sm" label="Team" max={3} total={7} showMore>{av(5)}</AvatarGroup></>);
+    await render(<><button>before</button><AvatarGroup id="sm" label="Team" max={3} total={7} showMore>{av(5)}</AvatarGroup></>, { wrapper: EnUS });
     const b = more('sm')!;
     expect([b.tagName, b.getAttribute('aria-label'), b.getAttribute('aria-expanded')]).toEqual(['BUTTON', '4 more', 'false']);
     await userEvent.click(document.querySelector('button')!);
