@@ -4,19 +4,19 @@ interface InlineEditLabels {
 }
 interface InlineEditProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "defaultValue" | "onChange"> {
     label: string;
-    value?: string;
-    defaultValue?: string;
-    onValueChange?: (value: string) => void;
-    onCancel?: () => void;
-    validate?: (value: string) => Promise<React.ReactNode> | React.ReactNode;
-    placeholder?: string;
-    size?: "lg" | "md" | "sm";
-    editing?: boolean;
-    defaultEditing?: boolean;
-    onEditingChange?: (editing: boolean) => void;
-    disabled?: boolean;
-    readOnly?: boolean;
-    editLabel?: string;
-    inputProps?: Omit<InputProps, "aria-label" | "defaultValue" | "size" | "value">;
+    value?: string | undefined;
+    defaultValue?: string | undefined;
+    onValueChange?: ((value: string) => void) | undefined;
+    onCancel?: (() => void) | undefined;
+    validate?: ((value: string) => Promise<React.ReactNode> | React.ReactNode) | undefined;
+    placeholder?: string | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
+    editing?: boolean | undefined;
+    defaultEditing?: boolean | undefined;
+    onEditingChange?: ((editing: boolean) => void) | undefined;
+    disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
+    editLabel?: string | undefined;
+    inputProps?: Omit<InputProps, "aria-label" | "defaultValue" | "size" | "value"> | undefined;
 }
 declare const InlineEdit: React.ForwardRefExoticComponent<InlineEditProps & React.RefAttributes<HTMLDivElement>>;

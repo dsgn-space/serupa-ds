@@ -14,40 +14,40 @@ import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
 export interface SegmentedControlOption<V extends string = string> {
   value: V;
   /** The segment's text. With only an icon, pass aria-label instead. */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** An icon name or element before the label. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** The segment's name when it shows only an icon. */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
   /** Turns this segment off. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 /** V is the segments' values, inferred from options or given, such as SegmentedControl<'list' | 'board'>. */
 export interface SegmentedControlProps<V extends string = string> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The segments, in order: 2 to about 5. */
   options: readonly SegmentedControlOption<V>[];
   /** The selected value (controlled). Use with onValueChange. */
-  value?: V;
+  value?: V | undefined;
   /** The value selected at first (uncontrolled). Default: the first segment that isn't disabled. */
-  defaultValue?: V;
+  defaultValue?: V | undefined;
   /** Called with the new value when a segment is chosen. */
-  onValueChange?: (value: V) => void;
+  onValueChange?: ((value: V) => void) | undefined;
   /** 'sm' (24px), 'md' (32px, default) or 'lg' (44px): the control heights. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Stretches to its container, with equal segments. Default: false. */
-  fullWidth?: boolean;
+  fullWidth?: boolean | undefined;
   /** Turns every segment off, as a disabled native control. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Submits the value with a form, in a hidden input. */
-  name?: string;
+  name?: string | undefined;
   /** The id of a form to submit and reset with, when it isn't inside one, as the form attribute of an input. */
-  form?: string;
+  form?: string | undefined;
   /** A danger outline, and aria-invalid on the group. Say what's wrong in text next to it (Field's error does). */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Sets aria-required on the group. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** Focusable and read out, and arrows move focus, but nothing changes the selection; the value is still submitted. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
 }
 
 const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, form: 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1, autoFocus: 1, className: 1 } as const;

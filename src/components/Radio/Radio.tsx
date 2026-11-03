@@ -10,35 +10,35 @@ import { delegateFocus, useAutoFocus } from "../../internal/focus";
 /** V is the radios' value type: string (or number) as you use them, inferred from value or onValueChange. */
 export interface RadioGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The radios' name; a generated one by default. */
-  name?: string;
+  name?: string | undefined;
   /** The picked value (controlled); null or undefined for none. Use with onValueChange. */
-  value?: V | null;
+  value?: V | null | undefined;
   /** The value picked at first (uncontrolled). */
-  defaultValue?: V;
+  defaultValue?: V | undefined;
   /** Called with the picked radio's value (and the change event), like SegmentedControl, Tabs and Slider. */
-  onValueChange?: (value: V, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onValueChange?: ((value: V, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
   /** 'vertical' (stacked, default) or 'horizontal' (a wrapping row). */
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: 'vertical' | 'horizontal' | undefined;
   /** The radios' size, unless a Radio sets its own. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger border on every unchecked radio, and aria-invalid on the group. Field sets it from its error. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Disables every radio. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Marks the choice required (aria-required, and required on the radios). */
-  required?: boolean;
+  required?: boolean | undefined;
   /** The Radio elements, at any depth. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** 'sm' (14px circle, text-xs), 'md' (16px, text-sm, default) or 'lg' (20px, text-base). In a RadioGroup, the group's size by default. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** The label, next to the circle; a click on it picks the radio. Without one, give the radio an aria-label. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** A second, muted line under the label, linked to the radio with aria-describedby. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** A danger border (while unchecked) and focus ring, and aria-invalid. In a group, set invalid on the RadioGroup. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
 }
 
 interface RadioContextValue {

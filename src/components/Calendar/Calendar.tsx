@@ -11,45 +11,45 @@ import { en as words } from "./labels";
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. A Date, or a plain "yyyy-mm-dd" string for that local day. */
-  value?: Date | string | null;
+  value?: Date | string | null | undefined;
   /** The selected day at first (uncontrolled), as a Date or "yyyy-mm-dd". */
-  defaultValue?: Date | string | null;
+  defaultValue?: Date | string | null | undefined;
   /** Called with the day people pick (local midnight), and the same day as "yyyy-mm-dd". */
-  onValueChange?: (value: Date, iso: string) => void;
+  onValueChange?: ((value: Date, iso: string) => void) | undefined;
   /** The month shown (controlled): any day in it. Use with onMonthChange. */
-  month?: Date;
+  month?: Date | undefined;
   /** The month shown at first. Default: the selected day's, or today's (min's or max's when today is outside them). */
-  defaultMonth?: Date;
+  defaultMonth?: Date | undefined;
   /** Called when the shown month changes. */
-  onMonthChange?: (month: Date) => void;
+  onMonthChange?: ((month: Date) => void) | undefined;
   /** The earliest day that can be picked, as a Date or "yyyy-mm-dd". */
-  min?: Date | string;
+  min?: Date | string | undefined;
   /** The latest day that can be picked, as a Date or "yyyy-mm-dd". */
-  max?: Date | string;
+  max?: Date | string | undefined;
   /** Days that can't be picked, such as weekends. */
-  isDateDisabled?: (date: Date) => boolean;
+  isDateDisabled?: ((date: Date) => boolean) | undefined;
   /** A BCP 47 locale for month and weekday names and the first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
-  weekStartsOn?: number;
+  weekStartsOn?: number | undefined;
   /** Moves focus to the selected day (or today) when the calendar appears. Default: false. */
-  autoFocus?: boolean;
+  autoFocus?: boolean | undefined;
   /** Names for the month buttons. Default: "Previous month" and "Next month". */
-  previousLabel?: string;
+  previousLabel?: string | undefined;
   /** The next month button's name. Default: "Next month". */
-  nextLabel?: string;
+  nextLabel?: string | undefined;
   /** Month and year menus in the header in place of the title, to jump far (a birth date, a contract 18 months
       out) without a click per month. The years run from min's (else 100 years back) to max's (else 10 ahead).
       Default: false. */
-  monthYearPicker?: boolean;
+  monthYearPicker?: boolean | undefined;
   /** @internal Extra classes per day, for DateRangePicker. */
   dayClassName?: (date: Date) => string | undefined;
   /** @internal aria-selected per day, for DateRangePicker. */
-  isDateSelected?: (date: Date) => boolean;
+  isDateSelected?: ((date: Date) => boolean) | undefined;
   /** @internal Called when a day gets focus or the pointer, for DateRangePicker's preview. */
-  onDayHover?: (date: Date) => void;
+  onDayHover?: ((date: Date) => void) | undefined;
   /** @internal Leaves the days of other months blank, for DateRangePicker's two months side by side. */
-  hideOutside?: boolean;
+  hideOutside?: boolean | undefined;
 }
 
 // The four formats a Calendar draws with, built once per locale rather than on every render (a grid of 42 days
