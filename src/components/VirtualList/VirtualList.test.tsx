@@ -110,6 +110,27 @@ describe('VirtualList', () => {
     expect([el('v').scrollTop, titles('v')[0]]).toEqual([0, 'Row 1']);
   });
 
+  test('GR142: after End, the first PageUp moves the view up a screen, with rows of mixed heights', async () => {
+    const mixed = (i: number) => <ListItem title={'Row ' + (i + 1)} style={{ minHeight: [40, 64, 96][i % 3] }} />;
+    await render(<div style={{ width: 320 }}><VirtualList id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
+    el('v').focus();
+    for (const k of ['{End}', '{Home}', '{End}']) {
+      await userEvent.keyboard(k);
+      await expect.poll(() => k === '{Home}' ? titles('v')[0] : titles('v').at(-1)).toBe(k === '{Home}' ? 'Row 1' : 'Row 1000');
+    }
+    await new Promise((r) => setTimeout(r, 300));
+    // The first row in view, by its number.
+    const first = () => { const v = el('v').getBoundingClientRect(); const r = rows('v').find((x) => x.getBoundingClientRect().bottom > v.top + 1)!; return Number(title(r)!.slice(4)); };
+    const at = first();
+    await userEvent.keyboard('{PageUp}');
+    // A screen (400px) of rows 40 to 96px tall is four or more of them; the browser's smooth scroll went back one.
+    await expect.poll(() => at - first()).toBeGreaterThanOrEqual(4);
+    await new Promise((r) => setTimeout(r, 300));
+    expect(at - first()).toBeGreaterThanOrEqual(4);
+    await userEvent.keyboard('{PageDown}');
+    await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
+  });
+
   test('fewer rows, or none, after a change; itemKey keeps a row\'s element when rows before it go', async () => {
     const ids = Array.from({ length: 50 }, (_, i) => 'id' + i);
     const page = (list: string[]) => <VirtualList id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]} renderItem={(i) => <ListItem title={list[i]} />} />;

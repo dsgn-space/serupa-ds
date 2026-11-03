@@ -174,6 +174,15 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
         toEdge.current(e.key === "End");
         return;
       }
+      // PageUp and PageDown: a screen at once, not the browser's smooth scroll. The rows it measures on the way move
+      // the view's row, the list scrolls by as much to keep it, and the animation then carried on from there: the first
+      // PageUp after End went back one row of eight (GR142).
+      if ((e.key === "PageUp" || e.key === "PageDown") && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+        e.preventDefault();
+        scroller.scrollTop += by(scroller.clientHeight);
+        read();
+        return;
+      }
       if (!by || !(L.offsets[L.offsets.length - 1] > CAP) || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (t !== scroller && t.closest(EDITABLE))) return;
       e.preventDefault();
       step(by(scroller.clientHeight));
