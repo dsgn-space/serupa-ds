@@ -1,6 +1,7 @@
 // Shared helpers for the Serupa test suite.
 import fs from 'node:fs';
 import http from 'node:http';
+import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -75,6 +76,17 @@ export async function browser(args) {
   const opts = ENGINE === 'firefox' ? { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } : {};
   if (args && ENGINE === 'chromium') opts.args = args;
   try { return await pw[ENGINE].launch(opts); } catch (e) { fail(`Can't start ${ENGINE}: run "npx playwright install ${ENGINE}".\n${e.message.split('\n')[0]}`); }
+}
+
+// The browser build this Playwright installs and the baselines are drawn with (in CI, npx playwright install). A
+// browser from another build draws text differently: a container whose Chromium 153 stood in for Playwright's 156
+// drew Inter's medium weight as regular, and every picture failed. '' when Playwright doesn't say.
+export function expectedVersion() {
+  try {
+    const dir = path.dirname(createRequire(import.meta.url).resolve('playwright-core/package.json'));
+    const list = JSON.parse(fs.readFileSync(path.join(dir, 'browsers.json'), 'utf8')).browsers;
+    return list.find((b) => b.name === ENGINE)?.browserVersion || '';
+  } catch { return ''; }
 }
 
 // How many stories the visual and Storybook checks open at once, each in a page of its own. Most of a story's time
