@@ -59,4 +59,12 @@ describe('Blocks/Activity feed', () => {
     await expect.element(page.getByRole('heading', { level: 3, name: 'Aktivitas' })).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Muat lagi' })).toBeVisible();
   });
+
+  test('the target can sit inside the action, for languages that put the object before the verb', async () => {
+    await render(<ActivityFeed events={[{ id: '1', actor: { name: 'Ana Putri' }, action: (t) => <>hat {t} kommentiert</>, target: { label: 'Bericht 3', href: '#b3' }, date: ago(5) }]}
+      hasMore={false} onLoadMore={() => {}} />);
+    await expect.element(page.getByRole('link', { name: 'Bericht 3' })).toBeVisible();
+    expect(page.getByRole('list').element().textContent).toContain('Ana Putri hat Bericht 3 kommentiert');
+    await expect.element(page.getByRole('link', { name: 'Bericht 3' })).toHaveAttribute('href', '#b3');
+  });
 });
