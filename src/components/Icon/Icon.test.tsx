@@ -99,7 +99,9 @@ describe('Icon', () => {
     for (const [s] of steps) {
       const h = (id: string) => document.getElementById(id)!.getBoundingClientRect();
       const mid = (r: DOMRect) => (r.top + r.bottom) / 2;
-      expect(h('with-' + s).height, s).toBe(h('bare-' + s).height);
+      // Within half a pixel: Firefox and WebKit put the icon's box on a subpixel baseline, so the line can come out
+      // 0.2px taller there (16.22 for 16), which no one sees; a line that grows by the icon is a pixel or more.
+      expect(Math.abs(h('with-' + s).height - h('bare-' + s).height), s).toBeLessThan(0.5);
       expect(Math.abs(mid(h('i-' + s)) - mid(h('t-' + s))), s).toBeLessThanOrEqual(2);
     }
   });
