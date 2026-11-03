@@ -39,11 +39,18 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
   const box = React.useRef<HTMLDivElement | null>(null);
   const heading = React.useId();
   const list = errors || [];
-  // Focus when the summary appears and whenever its errors change (another failed submit); not on every render.
-  const key = list.map((e) => e.field).join("\n");
+  // Focus when the summary appears and whenever its errors change (another failed submit): a field added or gone, or
+  // a message that says something new ("Enter your password", then "The email or password is not right") (GR120).
+  // Messages can be elements, so what they say is read from the rendered links.
+  const said = React.useRef("");
+  // every render: compares what the errors say now with what they said, and takes focus only when that changed.
   React.useEffect(() => {
-    if (key && autoFocus !== false && box.current) { box.current.focus(); summaryTookFocus(box.current); }
-  }, [key, autoFocus]);
+    const n = box.current, links = n && n.querySelector("ul");
+    const now = n ? list.map((e) => e.field).join("\n") + "\n" + (links ? links.textContent : "") : "";
+    if (now === said.current) return;
+    said.current = now;
+    if (now && autoFocus !== false && n) { n.focus(); summaryTookFocus(n); }
+  });
   if (!list.length) return null;
   const level = [2, 3, 4, 5, 6].indexOf(headingLevel as number) < 0 ? 2 : (headingLevel as number);
   return (

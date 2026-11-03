@@ -38,12 +38,28 @@ describe('Blocks/Pricing', () => {
     await render(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} onPeriodChange={onPeriodChange} /></SerupaProvider>);
     await expect.element(page.getByRole('radiogroup', { name: 'Billing period' })).toBeVisible();
     await expect.element(page.getByRole('radio', { name: 'Monthly' })).toBeChecked();
-    await userEvent.click(page.getByRole('radio', { name: 'Yearly, save 20%' }));
+    await userEvent.click(page.getByRole('radio', { name: 'Yearly, save up to 20%' }));
     expect(onPeriodChange).toHaveBeenCalledWith('yearly');
     await expect.poll(() => text('pro')).toContain('$8per month');
     expect(text('pro')).toContain('$96 billed yearly');
     expect(text('team')).toContain('$18per month');
     expect(text('free')).not.toContain('billed yearly');
+  });
+
+  test('the yearly option says "up to" only when the plans save different amounts (GR138)', async () => {
+    const same: PricingPlan[] = [{ id: 'a', name: 'A', monthly: 10, yearly: 96, features: [] }, { id: 'b', name: 'B', monthly: 20, yearly: 192, features: [] }];
+    await render(<SerupaProvider locale="en-US"><Pricing plans={same} currency="USD" onChoose={() => {}} /></SerupaProvider>);
+    await expect.element(page.getByRole('radio', { name: 'Yearly, save 20%' })).toBeVisible();
+  });
+
+  test('a long word wraps inside its card at 768px, rather than running out of it (GR137)', async () => {
+    await page.viewport(768, 900);
+    const long: PricingPlan[] = plans.map((p, i) => (i === 0 ? { ...p, features: ['Datenschutzgrundverordnungskonformitätsprüfung'] } : p));
+    await render(<SerupaProvider locale="de-DE"><Pricing plans={long} currency="EUR" onChoose={() => {}} /></SerupaProvider>);
+    const card = document.querySelector<HTMLElement>('[aria-labelledby="free-name"]')!;
+    expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+    const item = card.querySelector('ul li')!.getBoundingClientRect(), box = card.getBoundingClientRect();
+    expect(item.right).toBeLessThanOrEqual(box.right);
   });
 
   test('a plan’s button chooses that plan for the period shown', async () => {
