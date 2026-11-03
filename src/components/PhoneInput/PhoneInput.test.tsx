@@ -356,4 +356,16 @@ describe('PhoneInput', () => {
     expect([formatPhone('+6281234567890'), formatPhone('+74951234567'), formatPhone('+999123')]).toEqual(['+62 812-3456-7890', '+7 495 123-45-67', '+999123']);
     expect(formatNational('81234567890123', phoneCountry('ID')!)).toBe('812-3456-7890123');
   });
+  test('GR128, GR129: a pasted tel: link reads as its number, and an extension is left off rather than joined onto it', async () => {
+    const got: [string, boolean][] = [];
+    await render(<Wrap><PhoneInput id="tel" aria-label="Phone" defaultCountry="DE" onValueChange={(v, d) => got.push([v, d.complete])} /></Wrap>);
+    const out: string[] = [];
+    for (const pasted of ['tel:+4930123456', 'tel:+49-30-1234567;ext=12', '+49 30 1234567 ext. 12', '+49 30 1234567 x12', '+49 30 1234567 Durchwahl 12', '030 1234567 #12']) {
+      await userEvent.clear(field('tel'));
+      await userEvent.fill(field('tel'), pasted);
+      out.push(got.at(-1)![0]);
+    }
+    expect(out).toEqual(['+4930123456', '+49301234567', '+49301234567', '+49301234567', '+49301234567', '+49301234567']);
+    expect(parsePhone('tel:+4930123456;phone-context=example.com')).toEqual({ country: phoneCountry('DE'), national: '30123456' });
+  });
 });
