@@ -1,0 +1,213 @@
+// src/labels/sv.ts
+var locale = "sv";
+var n = (x) => new Intl.NumberFormat("sv").format(x);
+var HUES = { red: "r\xF6d", orange: "orange", yellow: "gul", green: "gr\xF6n", teal: "bl\xE5gr\xF6n", blue: "bl\xE5", purple: "lila", pink: "rosa", brown: "brun", gray: "gr\xE5", black: "svart", white: "vit" };
+var STATUS = { online: "online", busy: "upptagen", away: "borta", offline: "offline" };
+var ZONES = { low: "l\xE5g", medium: "medel", high: "h\xF6g" };
+var KINDS = { image: "en bild", video: "en video", "audio file": "en ljudfil", "text file": "en textfil" };
+var KEYS = {
+  "Up arrow": "Upp\xE5tpil",
+  "Down arrow": "Ned\xE5tpil",
+  "Left arrow": "V\xE4nsterpil",
+  "Right arrow": "H\xF6gerpil",
+  Space: "Blanksteg",
+  Delete: "Delete",
+  Backspace: "Backsteg",
+  Enter: "Retur",
+  Return: "Retur",
+  Escape: "Escape",
+  Function: "Fn"
+};
+var cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+var labels = {
+  expandAll: "Visa alla",
+  collapseAll: "D\xF6lj alla",
+  avatarStatus: (status) => STATUS[status],
+  avatarMore: (count) => n(count) + " till",
+  breadcrumb: "Br\xF6dsmulor",
+  showHiddenPages: "Visa alla sidor",
+  morePages: "Fler sidor",
+  previousMonth: "F\xF6reg\xE5ende m\xE5nad",
+  nextMonth: "N\xE4sta m\xE5nad",
+  month: "M\xE5nad",
+  year: "\xC5r",
+  previousSlide: "F\xF6reg\xE5ende bild",
+  nextSlide: "N\xE4sta bild",
+  slideOf: (slide, total) => slide + " av " + total,
+  slidesOf: (first, last, total) => first + "\u2013" + last + " av " + total,
+  carouselRole: "karusell",
+  slideRole: "bild",
+  selectAtLeastOne: "V\xE4lj minst ett alternativ.",
+  commandPalette: "Kommandopalett",
+  searchCommands: "S\xF6k efter kommandon och sidor",
+  noCommands: "Inga matchande kommandon",
+  commandsCount: (count) => n(count) + (count === 1 ? " kommando" : " kommandon"),
+  otherCommands: "Kommandon",
+  colorName: (hue, tone) => cap((tone === "light" ? "ljus" : tone === "dark" ? "m\xF6rk" : "") + HUES[hue]),
+  customColor: "Egen f\xE4rg",
+  hexCode: "Hexkod",
+  contrast: (ratio) => "Kontrast " + ratio.replace(".", ",") + ":1",
+  lowContrast: (min) => "under " + min.replace(".", ",") + ":1, kan vara sv\xE5rl\xE4st",
+  loadingResults: "L\xE4ser in\u2026",
+  loadFailed: "Alternativen kunde inte l\xE4sas in. Skriv f\xF6r att f\xF6rs\xF6ka igen.",
+  noResults: "Inga resultat",
+  resultsCount: (count) => n(count) + " resultat",
+  showOptions: "Visa alternativ",
+  clearValue: (label) => label ? "Rensa " + label : "Rensa",
+  createOption: (text) => "L\xE4gg till \u201D" + text + "\u201D",
+  valueAdded: (label) => label + " har lagts till",
+  valueRemoved: (label) => label + " har tagits bort",
+  copied: "Kopierat",
+  copyFailed: "Det gick inte att kopiera. Markera texten och kopiera den sj\xE4lv.",
+  discardTitle: "Vill du ignorera \xE4ndringarna?",
+  discardDescription: "Det du har \xE4ndrat h\xE4r \xE4r inte sparat.",
+  discard: "Ignorera",
+  keepEditing: "Forts\xE4tt redigera",
+  chooseDate: "V\xE4lj datum",
+  inputNotAccepted: (text) => `\u201D${text}\u201D godtogs inte, s\xE5 det tidigare v\xE4rdet beh\xF6lls.`,
+  formatHint: (pattern) => "Format: " + pattern,
+  chooseDates: "V\xE4lj datum",
+  startDate: "Startdatum",
+  endDate: "Slutdatum",
+  chooseStartDate: "V\xE4lj startdatum",
+  chooseEndDate: "V\xE4lj slutdatum",
+  didYouMean: "Menade du:",
+  clearFilters: "Rensa filter",
+  errorTitle: "N\xE5got gick fel",
+  errorDescription: "Den h\xE4r delen av sidan kunde inte l\xE4sas in.",
+  tryAgain: "F\xF6rs\xF6k igen",
+  errorSummaryTitle: (count) => count === 1 ? "Det finns 1 problem" : "Det finns " + n(count) + " problem",
+  fieldOptional: "(valfritt)",
+  dragFiles: "Dra filer hit",
+  dragFile: "Dra en fil hit",
+  chooseFiles: "V\xE4lj filer",
+  chooseFile: "V\xE4lj fil",
+  chosenFiles: "Valda filer",
+  chosenFile: "Vald fil",
+  fileWrongType: (name, types) => types ? `${name} \xE4r inte ${new Intl.ListFormat("sv", { type: "disjunction" }).format(types.map((t) => KINDS[t] || t))}.` : `${name}: den h\xE4r filtypen godtas inte.`,
+  fileTooLarge: (name, limit) => `${name} \xE4r st\xF6rre \xE4n ${limit}.`,
+  fileTooMany: (name, max) => `${name} lades inte till: h\xF6gst ${n(max)} ${max === 1 ? "fil" : "filer"}.`,
+  fileOnlyOne: (name) => `${name} lades inte till: bara en fil.`,
+  fileMissing: (multiple) => multiple ? "V\xE4lj minst en fil." : "V\xE4lj en fil.",
+  fileFolder: (name) => `${name} \xE4r en mapp: v\xE4lj filerna i den.`,
+  fileAlreadyAdded: (name) => `${name} har redan lagts till.`,
+  filesAdded: (names) => names.length === 1 ? `${names[0]} har lagts till.` : `${n(names.length)} filer har lagts till.`,
+  fileRemoved: (name) => `${name} har tagits bort.`,
+  fileError: "Uppladdningen misslyckades",
+  viewImage: "Visa bild",
+  removeImage: "Ta bort bild",
+  edit: "Redigera",
+  charactersLeft: (left) => left === 0 ? "Teckengr\xE4nsen \xE4r n\xE5dd." : n(left) + " tecken kvar.",
+  invalidValue: (p) => {
+    switch (p.reason) {
+      case "valueMissing":
+        return "Fyll i det h\xE4r f\xE4ltet.";
+      case "typeMismatch":
+        return p.type === "email" ? "Ange en giltig e-postadress." : p.type === "url" ? "Ange en giltig URL." : "Ange ett giltigt v\xE4rde.";
+      case "badInput":
+        return "Ange ett tal.";
+      case "tooShort":
+        return "Minst " + p.minLength + " tecken (nu " + p.length + ").";
+      case "tooLong":
+        return "H\xF6gst " + p.maxLength + " tecken (nu " + p.length + ").";
+      case "rangeUnderflow":
+        return "V\xE4rdet m\xE5ste vara " + p.min + " eller mer.";
+      case "rangeOverflow":
+        return "V\xE4rdet m\xE5ste vara " + p.max + " eller mindre.";
+      case "stepMismatch":
+        return "Ange en multipel av " + p.step + ".";
+      case "patternMismatch":
+        return "Anv\xE4nd det format som efterfr\xE5gas." + (p.title ? " " + p.title : "");
+      default:
+        return "";
+    }
+  },
+  keyName: (name) => KEYS[name] || name,
+  keyboardShortcuts: "Kortkommandon",
+  generalShortcuts: "Allm\xE4nt",
+  showShortcuts: "Visa kortkommandon",
+  opensInNewTab: "(\xF6ppnas i en ny flik)",
+  loadMore: "L\xE4s in fler",
+  showingOf: (shown, total) => `Visar ${shown} av ${total}`,
+  loadedMore: (added) => `${added} till har l\xE4sts in`,
+  moreLoaded: "Fler har l\xE4sts in",
+  allLoaded: "Du har n\xE5tt slutet",
+  meterZone: (value, zone) => value + ", " + ZONES[zone],
+  notificationCenter: "Aviseringar",
+  noNotifications: "Inga aviseringar \xE4n",
+  unreadNotification: "Ol\xE4st",
+  markRead: "Markera som l\xE4st",
+  markAllRead: "Markera alla som l\xE4sta",
+  clearNotifications: "Rensa alla",
+  decrease: "Minska",
+  increase: "\xD6ka",
+  pagination: "Sidnavigering",
+  previousPage: "F\xF6reg\xE5ende sida",
+  nextPage: "N\xE4sta sida",
+  itemsOf: (first, last, total) => (first === last ? first : first + "\u2013" + last) + " av " + total,
+  perPage: "Objekt per sida",
+  showPassword: "Visa l\xF6senord",
+  capsLockOn: "Caps Lock \xE4r p\xE5",
+  country: "Land",
+  progressComplete: (name) => name ? name + ": klart" : "Klart",
+  ratingStars: (value) => n(value) + (value === 1 ? " stj\xE4rna" : " stj\xE4rnor"),
+  ratingValue: (value, max) => n(value) + " av " + n(max),
+  saving: "Sparar\u2026",
+  saved: "Sparat",
+  saveFailed: "Det gick inte att spara",
+  retrySave: "F\xF6rs\xF6k igen",
+  searching: "S\xF6ker",
+  clearSearch: "Rensa s\xF6kning",
+  sliderMinimum: "Minimum",
+  sliderMaximum: "Maximum",
+  reorder: "\xC4ndra ordning",
+  reorderInstructions: "Tryck p\xE5 blanksteg f\xF6r att plocka upp, piltangenterna f\xF6r att flytta, blanksteg igen f\xF6r att sl\xE4ppa eller Escape f\xF6r att avbryta.",
+  reorderGrabbed: (item, p, total) => item + " har plockats upp, plats " + p + " av " + total + ".",
+  reorderMoved: (item, p, total) => item + ", plats " + p + " av " + total + ".",
+  reorderDropped: (item, p, total) => item + " har sl\xE4ppts p\xE5 plats " + p + " av " + total + ".",
+  reorderCancelled: (item, p, total) => "Avbrutet. " + item + " \xE4r tillbaka p\xE5 plats " + p + " av " + total + ".",
+  resizePanes: "\xC4ndra storlek p\xE5 paneler",
+  splitterPlace: "Tryck d\xE4r handtaget ska vara, eller tryck p\xE5 handtaget igen f\xF6r att avbryta.",
+  skipToContent: "Hoppa till inneh\xE5llet",
+  offline: "Du \xE4r offline",
+  backOnline: "Online igen",
+  completed: "klart",
+  hasError: "har ett fel",
+  hasWarning: "beh\xF6ver uppm\xE4rksamhet",
+  stepOf: (step, total) => "Steg " + step + " av " + total,
+  tourBack: "Tillbaka",
+  tourNext: "N\xE4sta",
+  tourDone: "Klar",
+  sparklineSummary: (label, first, last, min, max) => label + ": fr\xE5n " + first + " till " + last + ", l\xE4gst " + min + ", h\xF6gst " + max,
+  table: "Tabell",
+  tableSorted: (column, direction) => "Sorterat efter " + column + ", " + (direction === "ascending" ? "stigande" : "fallande") + ".",
+  tableSelected: (count) => n(count) + " valda",
+  clearSelection: "Rensa markering",
+  chooseTime: "V\xE4lj tid",
+  notifications: "Aviseringar",
+  toastShortcut: (key) => "Tryck p\xE5 " + key + " f\xF6r att g\xE5 dit.",
+  moreToasts: (count) => "+" + n(count) + " till",
+  toastRepeated: (count) => n(count) + " g\xE5nger",
+  undo: "\xC5ngra",
+  typeToConfirm: "Skriv f\xF6r att bekr\xE4fta",
+  typePhraseFirst: (phrase) => "Skriv f\xF6rst \u201D" + phrase + "\u201D",
+  close: "St\xE4ng",
+  dismiss: "Avvisa",
+  loading: "L\xE4ser in\u2026",
+  copy: "Kopiera",
+  codeCopy: "Kopiera kod",
+  codeName: "Kod",
+  remove: "Ta bort",
+  image: "Bild",
+  page: (p) => "Sida " + p,
+  progress: "F\xF6rlopp",
+  optional: "Valfritt",
+  mainNavigation: "Huvudmeny",
+  menu: "Meny",
+  required: "Obligatoriskt"
+};
+export {
+  labels,
+  locale
+};
+//# sourceMappingURL=sv.js.map

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Tour/labels.ts"],
+  "sourcesContent": ["// Tour's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface TourLabels {\n  /** Tour: the button to the step before. */\n  tourBack: string;\n  /** Tour: the button to the next step. */\n  tourNext: string;\n  /** Tour: the button on the last step, which ends the tour. */\n  tourDone: string;\n}\nexport const en: TourLabels = {\n  tourBack: \"Back\",\n  tourNext: \"Next\",\n  tourDone: \"Done\",\n};\nexport const id: TourLabels = {\n  tourBack: \"Kembali\",\n  tourNext: \"Berikutnya\",\n  tourDone: \"Selesai\",\n};\n"],
+  "mappings": ";AAUO,IAAM,KAAiB;AAAA,EAC5B,UAAU;AAAA,EACV,UAAU;AAAA,EACV,UAAU;AACZ;AACO,IAAM,KAAiB;AAAA,EAC5B,UAAU;AAAA,EACV,UAAU;AAAA,EACV,UAAU;AACZ;",
+  "names": []
+}

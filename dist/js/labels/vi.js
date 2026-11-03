@@ -1,0 +1,212 @@
+// src/labels/vi.ts
+var locale = "vi";
+var n = (x) => new Intl.NumberFormat("vi").format(x);
+var HUES = { red: "\u0111\u1ECF", orange: "cam", yellow: "v\xE0ng", green: "xanh l\xE1", teal: "xanh m\xF2ng k\xE9t", blue: "xanh d\u01B0\u01A1ng", purple: "t\xEDm", pink: "h\u1ED3ng", brown: "n\xE2u", gray: "x\xE1m", black: "\u0111en", white: "tr\u1EAFng" };
+var STATUS = { online: "tr\u1EF1c tuy\u1EBFn", busy: "\u0111ang b\u1EADn", away: "v\u1EAFng m\u1EB7t", offline: "ngo\u1EA1i tuy\u1EBFn" };
+var ZONES = { low: "th\u1EA5p", medium: "trung b\xECnh", high: "cao" };
+var KINDS = { image: "h\xECnh \u1EA3nh", video: "video", "audio file": "t\u1EC7p \xE2m thanh", "text file": "t\u1EC7p v\u0103n b\u1EA3n" };
+var KEYS = {
+  "Up arrow": "M\u0169i t\xEAn l\xEAn",
+  "Down arrow": "M\u0169i t\xEAn xu\u1ED1ng",
+  "Left arrow": "M\u0169i t\xEAn tr\xE1i",
+  "Right arrow": "M\u0169i t\xEAn ph\u1EA3i",
+  Space: "Ph\xEDm c\xE1ch",
+  Delete: "X\xF3a",
+  Backspace: "X\xF3a l\xF9i",
+  Enter: "Enter",
+  Escape: "Esc",
+  Function: "Fn"
+};
+var cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+var labels = {
+  expandAll: "M\u1EDF r\u1ED9ng t\u1EA5t c\u1EA3",
+  collapseAll: "Thu g\u1ECDn t\u1EA5t c\u1EA3",
+  avatarStatus: (status) => STATUS[status],
+  avatarMore: (count) => "+" + n(count) + " ng\u01B0\u1EDDi kh\xE1c",
+  breadcrumb: "\u0110\u01B0\u1EDDng d\u1EABn",
+  showHiddenPages: "Hi\u1EC7n t\u1EA5t c\u1EA3 c\xE1c trang",
+  morePages: "Trang kh\xE1c",
+  previousMonth: "Th\xE1ng tr\u01B0\u1EDBc",
+  nextMonth: "Th\xE1ng sau",
+  month: "Th\xE1ng",
+  year: "N\u0103m",
+  previousSlide: "Trang chi\u1EBFu tr\u01B0\u1EDBc",
+  nextSlide: "Trang chi\u1EBFu sau",
+  slideOf: (slide, total) => slide + " tr\xEAn " + total,
+  slidesOf: (first, last, total) => first + "\u2013" + last + " tr\xEAn " + total,
+  carouselRole: "b\u0103ng chuy\u1EC1n",
+  slideRole: "trang chi\u1EBFu",
+  selectAtLeastOne: "H\xE3y ch\u1ECDn \xEDt nh\u1EA5t m\u1ED9t m\u1EE5c.",
+  commandPalette: "B\u1EA3ng l\u1EC7nh",
+  searchCommands: "T\xECm l\u1EC7nh v\xE0 trang",
+  noCommands: "Kh\xF4ng c\xF3 l\u1EC7nh ph\xF9 h\u1EE3p",
+  commandsCount: (count) => n(count) + " l\u1EC7nh",
+  otherCommands: "L\u1EC7nh",
+  colorName: (hue, tone) => cap(HUES[hue] + (tone === "light" ? " nh\u1EA1t" : tone === "dark" ? " \u0111\u1EADm" : "")),
+  customColor: "M\xE0u t\xF9y ch\u1EC9nh",
+  hexCode: "M\xE3 hex",
+  contrast: (ratio) => "\u0110\u1ED9 t\u01B0\u01A1ng ph\u1EA3n " + ratio.replace(".", ",") + ":1",
+  lowContrast: (min) => "d\u01B0\u1EDBi " + min.replace(".", ",") + ":1, c\xF3 th\u1EC3 kh\xF3 \u0111\u1ECDc",
+  loadingResults: "\u0110ang t\u1EA3i\u2026",
+  loadFailed: "Kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c c\xE1c l\u1EF1a ch\u1ECDn. H\xE3y g\xF5 \u0111\u1EC3 th\u1EED l\u1EA1i.",
+  noResults: "Kh\xF4ng c\xF3 k\u1EBFt qu\u1EA3",
+  resultsCount: (count) => n(count) + " k\u1EBFt qu\u1EA3",
+  showOptions: "Hi\u1EC7n c\xE1c l\u1EF1a ch\u1ECDn",
+  clearValue: (label) => label ? "X\xF3a " + label : "X\xF3a",
+  createOption: (text) => "Th\xEAm \u201C" + text + "\u201D",
+  valueAdded: (label) => "\u0110\xE3 th\xEAm " + label,
+  valueRemoved: (label) => "\u0110\xE3 b\u1ECF " + label,
+  copied: "\u0110\xE3 sao ch\xE9p",
+  copyFailed: "Kh\xF4ng sao ch\xE9p \u0111\u01B0\u1EE3c. H\xE3y ch\u1ECDn v\u0103n b\u1EA3n v\xE0 t\u1EF1 sao ch\xE9p.",
+  discardTitle: "B\u1ECF c\xE1c thay \u0111\u1ED5i?",
+  discardDescription: "Nh\u1EEFng g\xEC b\u1EA1n thay \u0111\u1ED5i \u1EDF \u0111\xE2y ch\u01B0a \u0111\u01B0\u1EE3c l\u01B0u.",
+  discard: "B\u1ECF",
+  keepEditing: "Ti\u1EBFp t\u1EE5c ch\u1EC9nh s\u1EEDa",
+  chooseDate: "Ch\u1ECDn ng\xE0y",
+  inputNotAccepted: (text) => `\u201C${text}\u201D kh\xF4ng \u0111\u01B0\u1EE3c ch\u1EA5p nh\u1EADn n\xEAn gi\xE1 tr\u1ECB c\u0169 \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.`,
+  formatHint: (pattern) => "\u0110\u1ECBnh d\u1EA1ng: " + pattern,
+  chooseDates: "Ch\u1ECDn kho\u1EA3ng ng\xE0y",
+  startDate: "Ng\xE0y b\u1EAFt \u0111\u1EA7u",
+  endDate: "Ng\xE0y k\u1EBFt th\xFAc",
+  chooseStartDate: "Ch\u1ECDn ng\xE0y b\u1EAFt \u0111\u1EA7u",
+  chooseEndDate: "Ch\u1ECDn ng\xE0y k\u1EBFt th\xFAc",
+  didYouMean: "C\xF3 ph\u1EA3i b\u1EA1n mu\u1ED1n t\xECm:",
+  clearFilters: "X\xF3a b\u1ED9 l\u1ECDc",
+  errorTitle: "\u0110\xE3 x\u1EA3y ra l\u1ED7i",
+  errorDescription: "Kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c ph\u1EA7n n\xE0y c\u1EE7a trang.",
+  tryAgain: "Th\u1EED l\u1EA1i",
+  errorSummaryTitle: (count) => "C\xF3 " + n(count) + " v\u1EA5n \u0111\u1EC1",
+  fieldOptional: "(kh\xF4ng b\u1EAFt bu\u1ED9c)",
+  dragFiles: "K\xE9o t\u1EC7p v\xE0o \u0111\xE2y",
+  dragFile: "K\xE9o t\u1EC7p v\xE0o \u0111\xE2y",
+  chooseFiles: "Ch\u1ECDn t\u1EC7p",
+  chooseFile: "Ch\u1ECDn m\u1ED9t t\u1EC7p",
+  chosenFiles: "T\u1EC7p \u0111\xE3 ch\u1ECDn",
+  chosenFile: "T\u1EC7p \u0111\xE3 ch\u1ECDn",
+  fileWrongType: (name, types) => types ? `${name} kh\xF4ng ph\u1EA3i l\xE0 ${new Intl.ListFormat("vi", { type: "disjunction" }).format(types.map((t) => KINDS[t] || t))}.` : `${name}: lo\u1EA1i t\u1EC7p n\xE0y kh\xF4ng \u0111\u01B0\u1EE3c ch\u1EA5p nh\u1EADn.`,
+  fileTooLarge: (name, limit) => `${name} l\u1EDBn h\u01A1n ${limit}.`,
+  fileTooMany: (name, max) => `Ch\u01B0a th\xEAm ${name}: t\u1ED1i \u0111a ${n(max)} t\u1EC7p.`,
+  fileOnlyOne: (name) => `Ch\u01B0a th\xEAm ${name}: ch\u1EC9 m\u1ED9t t\u1EC7p.`,
+  fileMissing: (multiple) => multiple ? "H\xE3y ch\u1ECDn \xEDt nh\u1EA5t m\u1ED9t t\u1EC7p." : "H\xE3y ch\u1ECDn m\u1ED9t t\u1EC7p.",
+  fileFolder: (name) => `${name} l\xE0 th\u01B0 m\u1EE5c: h\xE3y ch\u1ECDn c\xE1c t\u1EC7p b\xEAn trong.`,
+  fileAlreadyAdded: (name) => `${name} \u0111\xE3 \u0111\u01B0\u1EE3c th\xEAm.`,
+  filesAdded: (names) => names.length === 1 ? `\u0110\xE3 th\xEAm ${names[0]}.` : `\u0110\xE3 th\xEAm ${n(names.length)} t\u1EC7p.`,
+  fileRemoved: (name) => `\u0110\xE3 b\u1ECF ${name}.`,
+  fileError: "Kh\xF4ng t\u1EA3i l\xEAn \u0111\u01B0\u1EE3c",
+  viewImage: "Xem h\xECnh \u1EA3nh",
+  removeImage: "B\u1ECF h\xECnh \u1EA3nh",
+  edit: "Ch\u1EC9nh s\u1EEDa",
+  charactersLeft: (left) => left === 0 ? "\u0110\xE3 \u0111\u1EA1t gi\u1EDBi h\u1EA1n k\xFD t\u1EF1." : "C\xF2n " + n(left) + " k\xFD t\u1EF1.",
+  invalidValue: (p) => {
+    switch (p.reason) {
+      case "valueMissing":
+        return "H\xE3y \u0111i\u1EC1n v\xE0o tr\u01B0\u1EDDng n\xE0y.";
+      case "typeMismatch":
+        return p.type === "email" ? "H\xE3y nh\u1EADp \u0111\u1ECBa ch\u1EC9 email h\u1EE3p l\u1EC7." : p.type === "url" ? "H\xE3y nh\u1EADp URL h\u1EE3p l\u1EC7." : "H\xE3y nh\u1EADp gi\xE1 tr\u1ECB h\u1EE3p l\u1EC7.";
+      case "badInput":
+        return "H\xE3y nh\u1EADp m\u1ED9t s\u1ED1.";
+      case "tooShort":
+        return "\xCDt nh\u1EA5t " + p.minLength + " k\xFD t\u1EF1 (hi\u1EC7n c\xF3 " + p.length + ").";
+      case "tooLong":
+        return "T\u1ED1i \u0111a " + p.maxLength + " k\xFD t\u1EF1 (hi\u1EC7n c\xF3 " + p.length + ").";
+      case "rangeUnderflow":
+        return "Gi\xE1 tr\u1ECB ph\u1EA3i t\u1EEB " + p.min + " tr\u1EDF l\xEAn.";
+      case "rangeOverflow":
+        return "Gi\xE1 tr\u1ECB ph\u1EA3i t\u1EEB " + p.max + " tr\u1EDF xu\u1ED1ng.";
+      case "stepMismatch":
+        return "H\xE3y nh\u1EADp m\u1ED9t b\u1ED9i s\u1ED1 c\u1EE7a " + p.step + ".";
+      case "patternMismatch":
+        return "H\xE3y theo \u0111\xFAng \u0111\u1ECBnh d\u1EA1ng y\xEAu c\u1EA7u." + (p.title ? " " + p.title : "");
+      default:
+        return "";
+    }
+  },
+  keyName: (name) => KEYS[name] || name,
+  keyboardShortcuts: "Ph\xEDm t\u1EAFt",
+  generalShortcuts: "Chung",
+  showShortcuts: "Hi\u1EC7n ph\xEDm t\u1EAFt",
+  opensInNewTab: "(m\u1EDF trong th\u1EBB m\u1EDBi)",
+  loadMore: "T\u1EA3i th\xEAm",
+  showingOf: (shown, total) => `\u0110ang hi\u1EC7n ${shown} tr\xEAn ${total}`,
+  loadedMore: (added) => `\u0110\xE3 t\u1EA3i th\xEAm ${added}`,
+  moreLoaded: "\u0110\xE3 t\u1EA3i th\xEAm",
+  allLoaded: "B\u1EA1n \u0111\xE3 xem h\u1EBFt",
+  meterZone: (value, zone) => value + ", " + ZONES[zone],
+  notificationCenter: "Th\xF4ng b\xE1o",
+  noNotifications: "Ch\u01B0a c\xF3 th\xF4ng b\xE1o",
+  unreadNotification: "Ch\u01B0a \u0111\u1ECDc",
+  markRead: "\u0110\xE1nh d\u1EA5u \u0111\xE3 \u0111\u1ECDc",
+  markAllRead: "\u0110\xE1nh d\u1EA5u t\u1EA5t c\u1EA3 l\xE0 \u0111\xE3 \u0111\u1ECDc",
+  clearNotifications: "X\xF3a t\u1EA5t c\u1EA3",
+  decrease: "Gi\u1EA3m",
+  increase: "T\u0103ng",
+  pagination: "Ph\xE2n trang",
+  previousPage: "Trang tr\u01B0\u1EDBc",
+  nextPage: "Trang sau",
+  itemsOf: (first, last, total) => (first === last ? first : first + "\u2013" + last) + " tr\xEAn " + total,
+  perPage: "S\u1ED1 m\u1EE5c m\u1ED7i trang",
+  showPassword: "Hi\u1EC7n m\u1EADt kh\u1EA9u",
+  capsLockOn: "Caps Lock \u0111ang b\u1EADt",
+  country: "Qu\u1ED1c gia",
+  progressComplete: (name) => name ? name + ": ho\xE0n t\u1EA5t" : "Ho\xE0n t\u1EA5t",
+  ratingStars: (value) => n(value) + " sao",
+  ratingValue: (value, max) => n(value) + " tr\xEAn " + n(max),
+  saving: "\u0110ang l\u01B0u\u2026",
+  saved: "\u0110\xE3 l\u01B0u",
+  saveFailed: "Kh\xF4ng l\u01B0u \u0111\u01B0\u1EE3c",
+  retrySave: "Th\u1EED l\u1EA1i",
+  searching: "\u0110ang t\xECm",
+  clearSearch: "X\xF3a t\xECm ki\u1EBFm",
+  sliderMinimum: "T\u1ED1i thi\u1EC3u",
+  sliderMaximum: "T\u1ED1i \u0111a",
+  reorder: "S\u1EAFp x\u1EBFp l\u1EA1i",
+  reorderInstructions: "Nh\u1EA5n ph\xEDm c\xE1ch \u0111\u1EC3 nh\u1EA5c l\xEAn, ph\xEDm m\u0169i t\xEAn \u0111\u1EC3 di chuy\u1EC3n, ph\xEDm c\xE1ch l\u1EA7n n\u1EEFa \u0111\u1EC3 th\u1EA3, ho\u1EB7c Esc \u0111\u1EC3 h\u1EE7y.",
+  reorderGrabbed: (item, p, total) => "\u0110\xE3 nh\u1EA5c " + item + ", v\u1ECB tr\xED " + p + " tr\xEAn " + total + ".",
+  reorderMoved: (item, p, total) => item + ", v\u1ECB tr\xED " + p + " tr\xEAn " + total + ".",
+  reorderDropped: (item, p, total) => "\u0110\xE3 th\u1EA3 " + item + " \u1EDF v\u1ECB tr\xED " + p + " tr\xEAn " + total + ".",
+  reorderCancelled: (item, p, total) => "\u0110\xE3 h\u1EE7y. " + item + " tr\u1EDF v\u1EC1 v\u1ECB tr\xED " + p + " tr\xEAn " + total + ".",
+  resizePanes: "\u0110\u1ED5i k\xEDch th\u01B0\u1EDBc khung",
+  splitterPlace: "Ch\u1EA1m v\xE0o ch\u1ED7 \u0111\u1EB7t tay n\u1EAFm, ho\u1EB7c ch\u1EA1m l\u1EA1i v\xE0o tay n\u1EAFm \u0111\u1EC3 h\u1EE7y.",
+  skipToContent: "Chuy\u1EC3n \u0111\u1EBFn n\u1ED9i dung",
+  offline: "B\u1EA1n \u0111ang ngo\u1EA1i tuy\u1EBFn",
+  backOnline: "\u0110\xE3 tr\u1EF1c tuy\u1EBFn tr\u1EDF l\u1EA1i",
+  completed: "\u0111\xE3 ho\xE0n t\u1EA5t",
+  hasError: "c\xF3 l\u1ED7i",
+  hasWarning: "c\u1EA7n ch\xFA \xFD",
+  stepOf: (step, total) => "B\u01B0\u1EDBc " + step + " tr\xEAn " + total,
+  tourBack: "Quay l\u1EA1i",
+  tourNext: "Ti\u1EBFp",
+  tourDone: "Xong",
+  sparklineSummary: (label, first, last, min, max) => label + ": t\u1EEB " + first + " \u0111\u1EBFn " + last + ", th\u1EA5p nh\u1EA5t " + min + ", cao nh\u1EA5t " + max,
+  table: "B\u1EA3ng",
+  tableSorted: (column, direction) => "\u0110\xE3 s\u1EAFp x\u1EBFp theo " + column + ", " + (direction === "ascending" ? "t\u0103ng d\u1EA7n" : "gi\u1EA3m d\u1EA7n") + ".",
+  tableSelected: (count) => "\u0110\xE3 ch\u1ECDn " + n(count),
+  clearSelection: "B\u1ECF ch\u1ECDn",
+  chooseTime: "Ch\u1ECDn gi\u1EDD",
+  notifications: "Th\xF4ng b\xE1o",
+  toastShortcut: (key) => "Nh\u1EA5n " + key + " \u0111\u1EC3 \u0111\u1EBFn \u0111\xF3.",
+  moreToasts: (count) => "+" + n(count) + " th\xF4ng b\xE1o kh\xE1c",
+  toastRepeated: (count) => n(count) + " l\u1EA7n",
+  undo: "Ho\xE0n t\xE1c",
+  typeToConfirm: "\u0110\u1EC3 x\xE1c nh\u1EADn, h\xE3y g\xF5",
+  typePhraseFirst: (phrase) => "H\xE3y g\xF5 \u201C" + phrase + "\u201D tr\u01B0\u1EDBc",
+  close: "\u0110\xF3ng",
+  dismiss: "B\u1ECF qua",
+  loading: "\u0110ang t\u1EA3i\u2026",
+  copy: "Sao ch\xE9p",
+  codeCopy: "Sao ch\xE9p m\xE3",
+  codeName: "M\xE3",
+  remove: "B\u1ECF",
+  image: "H\xECnh \u1EA3nh",
+  page: (p) => "Trang " + p,
+  progress: "Ti\u1EBFn \u0111\u1ED9",
+  optional: "Kh\xF4ng b\u1EAFt bu\u1ED9c",
+  mainNavigation: "Ch\xEDnh",
+  menu: "Tr\xECnh \u0111\u01A1n",
+  required: "B\u1EAFt bu\u1ED9c"
+};
+export {
+  labels,
+  locale
+};
+//# sourceMappingURL=vi.js.map
