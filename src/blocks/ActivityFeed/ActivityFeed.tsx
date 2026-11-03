@@ -16,12 +16,20 @@ import { Timeline, TimelineItem, type TimelineStatus } from '../../components/Ti
      were added, and moves focus to the end text after the last page, so focus is never lost.
    - Each word is a prop or a label, English by default. */
 
+function line(e: ActivityEvent): React.ReactNode {
+  const target = e.target && (e.target.href ? <Link href={e.target.href}>{e.target.label}</Link> : e.target.label);
+  if (typeof e.action === 'function') return e.action(target);
+  return <>{e.action}{target && <> {target}</>}</>;
+}
+
 export interface ActivityEvent {
   id: string;
   /** Who did it. */
   actor: { name: string; avatar?: string | undefined };
-  /** What they did, after their name: "commented on", "closed". */
-  action: string;
+  /** What they did, after their name: "commented on", "closed". When the language puts the target inside the
+      sentence (German "hat Bericht 3 kommentiert", Japanese "が報告書3にコメントしました"), pass a function: it
+      gets the target, link and all, and returns the words around it. */
+  action: string | ((target: React.ReactNode) => React.ReactNode);
   /** What they did it to, after the action: a page or a record, with a link when it has one. */
   target?: { label: string; href?: string | undefined } | undefined;
   /** When. A Date, a timestamp or an ISO string. */
@@ -63,7 +71,7 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
             <TimelineItem key={e.id} status={e.status}
               title={<span className="flex items-start gap-2 font-normal">
                 <Avatar size="xs" name={e.actor.name} src={e.actor.avatar} alt="" />
-                <span><strong className="font-semibold">{e.actor.name}</strong> {e.action}{e.target && <> {e.target.href ? <Link href={e.target.href}>{e.target.label}</Link> : e.target.label}</>}</span>
+                <span><strong className="font-semibold">{e.actor.name}</strong> {line(e)}</span>
               </span>}
               time={<RelativeTime date={e.date} />}>
               {e.detail}
