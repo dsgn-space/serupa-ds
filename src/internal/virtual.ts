@@ -257,6 +257,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     live.current.pin = { i: index, end: want !== a };
   };
 
+  // every render: End uses this render's rows and offsets.
   useIsoLayoutEffect(() => { toEnd.current = () => { if (count) scrollToIndex(count - 1); }; });
 
   const drawn = offsets[end] - offsets[start];
