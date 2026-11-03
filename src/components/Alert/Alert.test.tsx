@@ -34,7 +34,8 @@ describe('Alert', () => {
     const a = el('hy');
     const parts = [...a.querySelectorAll<HTMLElement>('*')].filter((e) => e.children.length === 0 && /Donau|Rechts/.test(e.textContent ?? ''));
     expect([parts.length, ...parts.map((e) => css(e).hyphens), parts[0].closest('[lang]')!.getAttribute('lang'), parts.every((e) => e.scrollWidth <= e.clientWidth), a.scrollWidth <= a.clientWidth]).toEqual([2, 'auto', 'auto', 'de', true, true]);
-    expect(css(parts[0]).getPropertyValue('hyphenate-limit-chars')).toBe('10 4 4');
+    // WebKit writes it shortest, "10 4": a missing third value is the second (CSS Text 4).
+    expect(['10 4 4', '10 4']).toContain(css(parts[0]).getPropertyValue('hyphenate-limit-chars'));
   });
 
   test('defaults: an info alert (role status) with the info icon, hidden from screen readers; no title or close button; ref, className and props reach it', async () => {
