@@ -120,7 +120,7 @@ describe('VirtualList', () => {
     }
     await new Promise((r) => setTimeout(r, 300));
     // The first row in view, by its number.
-    const first = () => { const v = el('v').getBoundingClientRect(); const r = rows('v').find((x) => x.getBoundingClientRect().bottom > v.top + 1)!; return Number(title(r)!.slice(4)); };
+    const first = () => { const v = el('v').getBoundingClientRect(); const r = rows('v').find((x) => x.getBoundingClientRect().bottom > v.top + 1)!; return Number(title(r).slice(4)); };
     const at = first();
     await userEvent.keyboard('{PageUp}');
     // A screen (400px) of rows 40 to 96px tall is four or more of them; the browser's smooth scroll went back one.
