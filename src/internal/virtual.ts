@@ -144,7 +144,9 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   const top = view ? clamp(offsets[Math.min(view.i, count)] - view.at, 0, Math.max(0, total - view.height)) : 0;
   const shift = scaled && view ? view.p - top : 0;
   let start: number, end: number;
-  if (!view || !count) { start = 0; end = Math.min(count, initial); }
+  // Until the scroller has a height (a popup still hidden when it was read: WebKit reports the opened one's a frame
+  // later), the first rows as before it was measured, not only the overscan (Combobox drew 5 of 7, FW1).
+  if (!view || !count || !view.height) { start = 0; end = Math.min(count, initial); }
   else {
     start = Math.max(0, find(offsets, top) - overscan);
     end = Math.min(count, find(offsets, top + view.height) + 1 + overscan);
