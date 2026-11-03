@@ -44,13 +44,15 @@ export interface PageHeaderProps {
   sections?: PageHeaderSection[];
   /** The sections nav's name, for a screen reader's landmark list. Default: "Sections". */
   sectionsLabel?: string;
+  /** The phone menu's name, in the page's language. Default: "More actions". */
+  moreLabel?: string | undefined;
 }
 
 const button = (a: PageHeaderAction, variant: 'primary' | 'secondary') =>
   a.href ? <Button key={a.label} href={a.href} variant={variant}>{a.label}</Button> : <Button key={a.label} variant={variant} onClick={a.onSelect}>{a.label}</Button>;
 
 /** The top of a page: where it is, what it's called, what it's for, and what you can do there. */
-export function PageHeader({ breadcrumb, title, description, primary, secondary = [], sections, sectionsLabel = 'Sections' }: PageHeaderProps) {
+export function PageHeader({ breadcrumb, title, description, primary, secondary = [], sections, sectionsLabel = 'Sections', moreLabel = 'More actions' }: PageHeaderProps) {
   return (
     <div className="flex flex-col gap-4 border-b border-border pb-4">
       {breadcrumb?.length ? (
@@ -70,7 +72,7 @@ export function PageHeader({ breadcrumb, title, description, primary, secondary 
               <>
                 <div className="hidden flex-wrap gap-2 sm:flex">{secondary.map((a) => button(a, 'secondary'))}</div>
                 <div className="sm:hidden">
-                  <Menu placement="bottom-end" trigger={<Button variant="secondary" icon="more_horiz" aria-label="More actions" />}>
+                  <Menu placement="bottom-end" trigger={<Button variant="secondary" icon="more_horiz" aria-label={moreLabel} />}>
                     {secondary.map((a) => <MenuItem key={a.label} href={a.href} onSelect={a.onSelect}>{a.label}</MenuItem>)}
                   </Menu>
                 </div>

@@ -2,13 +2,16 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, inject, test } from 'vitest';
+import { commands } from 'vitest/browser';
 import { storiesToRun } from '../../tools/test/vitest/stories';
 
 // How long each story takes to mount (F9), as React's Profiler counts it: the render and commit of the first mount,
 // the fastest of five so a slow tick of the machine doesn't count. A story that takes longer than BUDGET to mount
 // fails. This is React's development build, slower than an app's production one: the slowest story here took about
 // 9 ms on 25 Oct 2026 (NumberInput/Currency), most take under 4, and 20 leaves room for a slower CI machine.
+// The nightly Benchmarks run keeps each time (SERUPA_BENCH, tools/test/bench.mjs), so a story that slowly gets
+// slower shows long before it reaches its budget.
 const BUDGET = 20;
 // Each PhoneInput lists every country (244 options) and takes about 7 to 9 ms to mount here, so its stories get a
 // budget of their own until the list is made cheaper. A pull request's CI run measured one PhoneInput at 21 to 28 ms
@@ -18,7 +21,8 @@ const OWN_BUDGET: Record<string, number> = {
   'PhoneInput/Controlled': 40, 'PhoneInput/InAField': 40, 'PhoneInput/LongValue': 40, 'PhoneInput/Playground': 40,
   'PhoneInput/States': 120, 'PhoneInput/ByArea': 280,
 };
-const RUNS = 5;
+// The nightly Benchmarks run takes the fastest of more, so a night's time moves less with the machine.
+const RUNS = inject('bench') ? 15 : 5;
 const frame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
 
 async function mountTime(ui: React.ReactElement): Promise<number> {
@@ -39,12 +43,14 @@ async function mountTime(ui: React.ReactElement): Promise<number> {
 describe('mount time', () => {
   for (const [name, list] of storiesToRun()) {
     test(`${name} stories each mount within their budget`, async () => {
-      const slow: string[] = [];
+      const slow: string[] = [], times: Record<string, number> = {};
       for (const [exportName, ui] of list) {
         const ms = await mountTime(ui);
+        times[`${name}/${exportName}`] = ms;
         const budget = OWN_BUDGET[`${name}/${exportName}`] ?? BUDGET;
         if (ms > budget) slow.push(`${exportName}: ${ms.toFixed(1)} ms (budget ${budget})`);
       }
+      await commands.recordBench('mount', times);
       expect(slow).toEqual([]);
     });
   }
