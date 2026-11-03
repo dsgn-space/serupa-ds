@@ -22,6 +22,7 @@ The controls above a table: a search field, filters, a count of the results, and
 - **The results count**, "3 of 8 projects", is a status region. Screen readers read it out each time it changes, without moving focus (4.1.3). Say the total too, so it's clear the list is filtered.
 - **Clear filters** shows only while a search or a filter is set. Pressing it empties them all and puts focus in the search field, since the button itself goes away (2.4.3).
 - **Bulk actions** come from TableActionBar. With rows selected, it shows "2 selected", your actions and Clear selection. It says the count when it changes, and when the selection is cleared it moves focus to the table's "Select all". That's why the table is this block's child: the bar must come just before it.
+- **Another language**: pass `labels` with the landmark's name, the search label and Clear filters. TableActionBar's words come from Serupa's own labels.
 - **On a phone**, the controls stack, and the table scrolls sideways in its own frame (1.4.10).
 
 <Canvas of={Stories.Filtered} />
