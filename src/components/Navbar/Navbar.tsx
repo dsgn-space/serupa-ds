@@ -84,8 +84,12 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>("Navba
       if (!(t instanceof Element) || h.contains(t) || t.closest("dialog, [popover]")) return;
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
+        if (activeIn(t) !== t) return;
+        // Safari doesn't scroll a field focused inside a shadow root into view at all: below the window, it comes up.
+        const below = t.getBoundingClientRect().bottom - window.innerHeight;
+        if (below > 0) window.scrollBy(0, below);
         const covered = h.getBoundingClientRect().bottom - t.getBoundingClientRect().top;
-        if (covered > 0 && activeIn(t) === t) window.scrollBy(0, -covered);
+        if (covered > 0) window.scrollBy(0, -covered);
       });
     };
     document.addEventListener("focusin", onFocus);

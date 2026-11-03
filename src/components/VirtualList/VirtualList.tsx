@@ -62,7 +62,15 @@ export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualLi
     "data-component": "virtual-list", role: rest.role ?? "list", tabIndex: rest.tabIndex ?? 0,
     className: cn("dk-list", "dk-virtual-list", variant === "card" && "dk-list--card", props.divided !== false && "dk-list--divided", props.className),
     style: { ...props.style, "--dk-vl-before": r.before + "px", "--dk-vl-after": r.after + "px" } as React.CSSProperties,
-    onFocus: (e: React.FocusEvent<HTMLUListElement>) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); },
+    // A row Tab reaches is scrolled into view by the list, not only the browser: Firefox scrolled with the guessed
+    // heights, and the rows measured on the way left the focused one below the view. scrollToIndex keeps it in view
+    // while they're measured; a row already in view doesn't move.
+    onFocus: (e: React.FocusEvent<HTMLUListElement>) => {
+      const i = indexOf(e.target, e.currentTarget);
+      setFocused(i);
+      if (i != null) r.scrollToIndex(i);
+      if (props.onFocus) props.onFocus(e);
+    },
     onBlur: (e: React.FocusEvent<HTMLUListElement>) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); },
   }), rows);
 });
