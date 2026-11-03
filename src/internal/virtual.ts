@@ -125,8 +125,8 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   const [store, remeasured] = React.useReducer((s: { sizes: Map<number, number> }) => ({ sizes: s.sizes }), null, () => ({ sizes: new Map<number, number>() }));
   const sizes = store.sizes;
   const [view, setView] = React.useState<View | null>(null);
-  // What End does, from the last render (the key listener is added once per scroller).
-  const toEnd = React.useRef(() => {});
+  // What Home and End do, from the last render (the key listener is added once per scroller).
+  const toEdge = React.useRef((_last: boolean) => {});
   const live = React.useRef<Live>({ offsets: new Float64Array(1), top: 0, pending: null, seen: 0, origin: 0, pin: null });
 
   // Rows not measured yet count as the average of those that are (the guess until one is), so the scroll range
@@ -167,10 +167,11 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       const t = e.target as HTMLElement, by = STEP[e.key];
       // End: the last row, kept at the bottom while the rows on the way are measured. The browser's own End scrolls to
       // the end of the range as it stands, and in WebKit the rows then measured taller than the guess left the view at
-      // row 408 of 1,000 (FW1).
-      if (e.key === "End" && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      // row 408 of 1,000 (FW1). Home the same way: back from the end, rows measured on the way up moved the top it
+      // aimed for, and it stopped at row 13 (GR139).
+      if ((e.key === "End" || e.key === "Home") && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
-        toEnd.current();
+        toEdge.current(e.key === "End");
         return;
       }
       if (!by || !(L.offsets[L.offsets.length - 1] > CAP) || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (t !== scroller && t.closest(EDITABLE))) return;
@@ -259,8 +260,8 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     live.current.pin = { i: index, end: want !== a };
   };
 
-  // every render: End uses this render's rows and offsets.
-  useIsoLayoutEffect(() => { toEnd.current = () => { if (count) scrollToIndex(count - 1); }; });
+  // every render: Home and End use this render's rows and offsets.
+  useIsoLayoutEffect(() => { toEdge.current = (last) => { if (count) scrollToIndex(last ? count - 1 : 0); }; });
 
   const drawn = offsets[end] - offsets[start];
   const before = scaled ? Math.max(0, offsets[start] + shift) : offsets[start];
