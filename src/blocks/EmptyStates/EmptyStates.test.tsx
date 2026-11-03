@@ -43,6 +43,20 @@ describe('Blocks/Empty states', () => {
     await expect.element(page.getByRole('link', { name: 'Go back' })).toHaveAttribute('href', '/projects');
   });
 
+  test('no access: a request that fails says so in words and once aloud, never "Request sent", and can be sent again (GR136)', async () => {
+    const send = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
+    await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={send} />);
+    await userEvent.click(page.getByRole('button', { name: 'Request access' }));
+    await expect.element(page.getByText("Couldn't send the request. Try again.")).toBeVisible();
+    await expect.poll(said).toContain("Couldn't send the request");
+    expect(document.body.textContent).not.toContain('Request sent');
+    await userEvent.click(page.getByRole('button', { name: 'Request access' }));
+    const shown = () => document.querySelector('[data-component="empty-state"]')!.textContent || '';   // not the announcer
+    await expect.poll(shown).toContain('Request sent');
+    expect(shown()).not.toContain("Couldn't send the request");
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
   test('failed to load: Try again runs, the reference is shown, and it is said once', async () => {
     const retry = vi.fn();
     await render(<EmptyLoadFailed onRetry={retry} reference="7F3A-91" />);

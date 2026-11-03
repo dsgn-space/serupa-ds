@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { announce } from "../../internal/announce";
+import { activeIn } from "../../internal/root";
 import { useSettings } from "../../internal/provider";
 import { feedbackHold } from "../../internal/timing";
 import { useExit } from "../../internal/useExit";
@@ -101,8 +102,26 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
     const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(set);
     if (ro) { ro.observe(n); if (nav) ro.observe(nav); }
     window.addEventListener("resize", set);
+    // Safari doesn't take scroll-padding when it scrolls a field Tab moves to into view, and leaves it under the bar.
+    // After the browser's own focus scroll, the page moves by what's still covered, plus the gap. Not for the bar's own
+    // controls, or a field in a dialog or popover: those sit above the page.
+    let raf = 0;
+    const onFocus = (e: FocusEvent) => {
+      const t = typeof e.composedPath === "function" ? e.composedPath()[0] : e.target;
+      if (!(t instanceof Element) || n.contains(t) || t.closest("dialog, [popover]")) return;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        // A top bar's edge is its bottom, below a sticky Navbar too: a field under either is above it.
+        const b = n.getBoundingClientRect(), r = t.getBoundingClientRect(), pad = 8;
+        const by = placement === "bottom" ? Math.max(0, r.bottom - b.top + pad) : Math.min(0, r.top - b.bottom - pad);
+        if (activeIn(t) === t && (placement === "bottom" ? r.bottom > b.top : r.top < b.bottom)) window.scrollBy(0, by);
+      });
+    };
+    document.addEventListener("focusin", onFocus);
     return () => {
       if (ro) ro.disconnect();
+      cancelAnimationFrame(raf);
+      document.removeEventListener("focusin", onFocus);
       window.removeEventListener("resize", set);
       root.style.removeProperty("--dk-offline-banner-space");
       room.style[prop] = had;
