@@ -128,4 +128,22 @@ describe('OfflineBanner', () => {
     const settled = Math.ceil(window.innerHeight - banner.getBoundingClientRect().top + 8);
     expect([early, space()]).toEqual([settled, settled]);
   }));
+  test('GR125: a top bar keeps the first fields clear at the top of the page too; nothing is added when it goes', async () => {
+    const screen = await render(<>
+      {Array.from({ length: 30 }, (_, i) => <input key={i} id={'t' + i} aria-label={'Field ' + i} style={{ display: 'block', height: 40, margin: 8 }} />)}
+      <OfflineBanner online={false} placement="top">Changes are kept and sent when you're back.</OfflineBanner>
+    </>);
+    const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    document.getElementById('t29')!.focus();
+    const covered: string[] = [];
+    for (let i = 28; i >= 0; i--) {
+      await userEvent.tab({ shift: true });
+      const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect(), b = banner.getBoundingClientRect();
+      if (r.top < b.bottom && r.bottom > b.top) covered.push(f.id);
+    }
+    expect([covered, document.activeElement!.id]).toEqual([[], 't0']);
+    await screen.rerender(<OfflineBanner online placement="top" />);
+    await expect.poll(() => document.querySelector('[data-component=offline-banner]'), { timeout: 5000 }).toBe(null);
+    expect(document.body.style.paddingBlockStart).toBe('');
+  });
 });
