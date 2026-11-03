@@ -26,50 +26,50 @@ export interface DateRangeInput { start: Date | string | null; end: Date | strin
 
 export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'defaultValue' | 'onChange'> {
   /** The chosen range (controlled). Use with onValueChange. Each end a Date or a plain "yyyy-mm-dd" string. */
-  value?: DateRangeInput;
+  value?: DateRangeInput | undefined;
   /** The chosen range at first (uncontrolled). */
-  defaultValue?: DateRangeInput;
+  defaultValue?: DateRangeInput | undefined;
   /** Called with the new range whenever either end changes (local midnights), and the same range as "yyyy-mm-dd" strings. */
-  onValueChange?: (value: DateRange, iso: { start: string | null; end: string | null }) => void;
+  onValueChange?: ((value: DateRange, iso: { start: string | null; end: string | null }) => void) | undefined;
   /** Called when typed text is put back on blur or Enter: "unreadable" when it isn't a date, "unavailable" when it
       is one that can't be chosen (outside min..max, or isDateDisabled). The field also says so to screen readers. */
-  onInvalidInput?: (text: string, reason: "unreadable" | "unavailable") => void;
+  onInvalidInput?: ((text: string, reason: "unreadable" | "unavailable") => void) | undefined;
   /** The earliest and latest days that can be chosen, as Dates or "yyyy-mm-dd". */
-  min?: Date | string;
+  min?: Date | string | undefined;
   /** The latest day that can be chosen, as a Date or "yyyy-mm-dd". */
-  max?: Date | string;
+  max?: Date | string | undefined;
   /** Days that can't be the start or end, such as holidays. They can sit inside a range. */
-  isDateDisabled?: (date: Date) => boolean;
+  isDateDisabled?: ((date: Date) => boolean) | undefined;
   /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
-  weekStartsOn?: number;
+  weekStartsOn?: number | undefined;
   /** 'sm', 'md' (default) or 'lg', like Input. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Marks both fields invalid (aria-invalid and the error border), as on Input. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Turns both fields and the calendar button off, as a disabled native control. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Shows the dates without letting them change, as a read-only <input>. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** Both fields are required: a form won't submit until each end has a date, as with a required <input>. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** The start field's id, so a Field or <label htmlFor> focuses it. */
-  id?: string;
+  id?: string | undefined;
   /** Names for the two fields. Default: "Start date" and "End date". */
-  startLabel?: string;
+  startLabel?: string | undefined;
   /** The end field's name. Default: "End date". */
-  endLabel?: string;
+  endLabel?: string | undefined;
   /** Form names: hidden inputs send each end as yyyy-mm-dd. */
-  startName?: string;
+  startName?: string | undefined;
   /** The form name the end date is sent under, as yyyy-mm-dd. */
-  endName?: string;
+  endName?: string | undefined;
   /** The id of a form to submit and reset with, when it isn't inside one, as the form attribute of an input. */
-  form?: string;
+  form?: string | undefined;
   /** The calendar button's name. Default: "Choose dates". */
-  buttonLabel?: string;
+  buttonLabel?: string | undefined;
   /** Months shown side by side in the popup: 1 or 2 (default). */
-  months?: 1 | 2;
+  months?: 1 | 2 | undefined;
 }
 
 const norm = (r: DateRangeInput | undefined): DateRange => ({ start: r ? toDay(r.start, "DateRangePicker") : null, end: r ? toDay(r.end, "DateRangePicker") : null });

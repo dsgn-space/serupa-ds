@@ -5,11 +5,11 @@ interface CopyButtonLabels {
 }
 interface CopyButtonProps extends Omit<ButtonAsButtonProps, "icon" | "leftIcon" | "loading" | "loadingText" | "onCopy" | "rightIcon" | "value"> {
     value: (() => Promise<string> | string) | string;
-    children?: React.ReactNode;
-    copiedLabel?: string;
-    iconOnly?: boolean;
-    timeout?: number;
-    onCopy?: (text: string) => void;
-    onCopyError?: (error: unknown) => void;
+    children?: React.ReactNode | undefined;
+    copiedLabel?: string | undefined;
+    iconOnly?: boolean | undefined;
+    timeout?: number | undefined;
+    onCopy?: ((text: string) => void) | undefined;
+    onCopyError?: ((error: unknown) => void) | undefined;
 }
 declare const CopyButton: React.ForwardRefExoticComponent<CopyButtonProps & React.RefAttributes<HTMLButtonElement>>;

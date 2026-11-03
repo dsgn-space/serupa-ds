@@ -3,26 +3,26 @@ interface CheckboxLabels {
     selectAtLeastOne: string;
 }
 interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
-    size?: "lg" | "md" | "sm";
-    children?: React.ReactNode;
-    description?: React.ReactNode;
-    indeterminate?: boolean;
-    invalid?: boolean;
-    readOnly?: boolean;
-    selectAll?: boolean;
-    onCheckedChange?: (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void;
+    size?: "lg" | "md" | "sm" | undefined;
+    children?: React.ReactNode | undefined;
+    description?: React.ReactNode | undefined;
+    indeterminate?: boolean | undefined;
+    invalid?: boolean | undefined;
+    readOnly?: boolean | undefined;
+    selectAll?: boolean | undefined;
+    onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
 interface CheckboxGroupProps<V extends number | string = number | string> extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue"> {
-    value?: readonly V[];
-    defaultValue?: readonly V[];
-    onValueChange?: (value: V[], event: React.ChangeEvent<HTMLInputElement>) => void;
-    name?: string;
-    orientation?: "horizontal" | "vertical";
-    size?: "lg" | "md" | "sm";
-    invalid?: boolean;
-    disabled?: boolean;
-    required?: boolean;
-    children?: React.ReactNode;
+    value?: readonly V[] | undefined;
+    defaultValue?: readonly V[] | undefined;
+    onValueChange?: ((value: V[], event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+    name?: string | undefined;
+    orientation?: "horizontal" | "vertical" | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
+    invalid?: boolean | undefined;
+    disabled?: boolean | undefined;
+    required?: boolean | undefined;
+    children?: React.ReactNode | undefined;
 }
 declare const CheckboxGroup: (<V extends number | string = number | string>(props: CheckboxGroupProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;

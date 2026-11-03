@@ -18,13 +18,13 @@ export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElem
   /** The errors, in the order of the fields on the page. With none, nothing renders. */
   errors: readonly ErrorSummaryItem[];
   /** The heading. Default: "There is a problem", or "There are N problems". */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The heading's level, h2 to h6, to fit the page's outline. Default: 2. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** Text under the heading, before the list. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Moves focus to the summary when it appears (a submit that failed), so it's read out and seen first. Default: true. */
-  autoFocus?: boolean;
+  autoFocus?: boolean | undefined;
 }
 
 /* ErrorSummary: after a submit fails, a box at the top of the form with a heading and a list of what's wrong, each

@@ -10,25 +10,25 @@ interface NotificationCenterLabels {
 interface NotificationItem {
     id: string;
     title: React.ReactNode;
-    description?: React.ReactNode;
-    tone?: ToastTone;
-    time?: Date | number;
-    read?: boolean;
+    description?: React.ReactNode | undefined;
+    tone?: ToastTone | undefined;
+    time?: Date | number | undefined;
+    read?: boolean | undefined;
 }
 interface NotificationCenterProps extends DrawerProps {
-    title?: React.ReactNode;
-    description?: never;
-    footer?: never;
-    children?: never;
-    unsaved?: never;
+    title?: React.ReactNode | undefined;
+    description?: never | undefined;
+    footer?: never | undefined;
+    children?: never | undefined;
+    unsaved?: never | undefined;
     items: NotificationItem[];
-    onMarkRead?: (id: string) => void;
-    onMarkAllRead?: () => void;
-    onClear?: () => void;
-    empty?: React.ReactNode;
+    onMarkRead?: ((id: string) => void) | undefined;
+    onMarkAllRead?: (() => void) | undefined;
+    onClear?: (() => void) | undefined;
+    empty?: React.ReactNode | undefined;
 }
 interface ToastHistoryOptions {
-    limit?: number;
+    limit?: number | undefined;
 }
 interface ToastHistory {
     items: NotificationItem[];

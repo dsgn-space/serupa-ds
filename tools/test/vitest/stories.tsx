@@ -15,12 +15,13 @@ type Meta = Story & { component?: React.ComponentType<Args>; title?: string };
 // the throw ends renderToString, so there is no server HTML to hydrate.
 // tools/test/run.mjs leaves the story-wide tests out of a pull request's run that covers only these.
 const SKIP = new Set(['ErrorBoundary']);
-const files = import.meta.glob<Record<string, Meta | Story>>('../../../src/components/*/*.stories.tsx', { eager: true });
+export type { Args, Meta, Story };
+export const files = import.meta.glob<Record<string, Meta | Story>>('../../../src/components/*/*.stories.tsx', { eager: true });
 
 // The story as Storybook draws it: its args over the file's, its render (or the component), inside its decorators
 // and then the file's.
-function storyElement(meta: Meta, story: Story): React.ReactElement {
-  const args = { ...meta.args, ...story.args };
+// With args, those instead of the story's (the prop fuzzing, src/internal/propFuzz.test.tsx).
+export function storyElement(meta: Meta, story: Story, args: Args = { ...meta.args, ...story.args }): React.ReactElement {
   const ctx: Ctx = { args, globals: {}, parameters: {}, viewMode: 'story' };
   const render = story.render || meta.render;
   const Component = meta.component;
@@ -65,5 +66,5 @@ export function serverBaseline(name: string, html: Record<string, string>): stri
 
 // What serverStories.ts hands the browser tests (inject('serverStories')).
 declare module 'vitest' {
-  export interface ProvidedContext { serverStories: Record<string, string>; only: string | null }
+  export interface ProvidedContext { serverStories: Record<string, string>; only: string | null; bench: boolean }
 }

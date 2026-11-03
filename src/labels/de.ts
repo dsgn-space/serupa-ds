@@ -162,6 +162,8 @@ export const labels: SerupaLabels = {
   resizePanes: "Bereichsgröße ändern",
   splitterPlace: "Tippen Sie, wo der Griff hin soll, oder tippen Sie erneut auf den Griff, um abzubrechen.",
   skipToContent: "Zum Inhalt springen",
+  offline: "Sie sind offline",
+  backOnline: "Wieder online",
   completed: "abgeschlossen",
   hasError: "hat einen Fehler",
   hasWarning: "braucht Aufmerksamkeit",

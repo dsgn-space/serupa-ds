@@ -8,21 +8,21 @@ import { warnOnce } from "../../internal/warn";
 
 export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'role'> {
   /** 'sm' (28 by 16px track, text-xs), 'md' (36 by 20px, text-sm, default) or 'lg' (44 by 24px, text-base). */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** The label; a click on it flips the switch. Without one, give the switch an aria-label. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** A second, muted line under the label, linked to the switch with aria-describedby. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** 'end' (the label after the track, default) or 'start' (the label first, as in a settings list). */
-  labelPosition?: 'start' | 'end';
+  labelPosition?: 'start' | 'end' | undefined;
   /** A danger track (while off) and focus ring, and aria-invalid. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Focusable and read out (aria-readonly), but a click or Space doesn't flip it; an on switch is still submitted. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** While a change is being saved: a small Loader turns on the thumb, aria-busy is set, and clicks and Space don't flip it, so it can't be sent twice. It stays focusable. Set checked when the save succeeds. */
-  pending?: boolean;
+  pending?: boolean | undefined;
   /** Called with the new state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
-  onCheckedChange?: (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void;
+  onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
 
 /* Switch: an on/off setting that applies at once. A native checkbox with role="switch" (announced as on or off),

@@ -20,23 +20,23 @@ export interface HoverCardProps extends Omit<React.HTMLAttributes<HTMLDivElement
   /** What the card shows: a person's name, photo and role, a page's title and summary. Links and buttons are fine. */
   children: React.ReactNode;
   /** Where it goes: 'bottom' (default), 'top', 'left', 'right', with '-start' or '-end'. It flips when there's no room. */
-  placement?: Placement;
+  placement?: Placement | undefined;
   /** Milliseconds the pointer rests on the trigger, or keyboard focus stays on it, before the card opens. Default: 500. */
-  openDelay?: number;
+  openDelay?: number | undefined;
   /** Milliseconds after the pointer leaves the trigger and the card (or focus leaves both) before it closes. Default: 300. */
-  closeDelay?: number;
+  closeDelay?: number | undefined;
   /** Open it yourself (controlled), with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Open at first (uncontrolled). Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called when it asks to open or close, with why: { reason: 'hover' | 'focus' | 'blur' | 'escape' | 'outside' }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** Never opens, for example while the trigger is disabled. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Classes on the card. The other HTML attributes (id, data-*, aria-*) and the ref go on the card too. */
-  className?: string;
+  className?: string | undefined;
   /** Styles on the card. */
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | undefined;
 }
 
 const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onBlur: 1, onFocus: 1, onPointerEnter: 1, onPointerLeave: 1 } as const;

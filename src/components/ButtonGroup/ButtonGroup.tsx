@@ -6,13 +6,13 @@ import { component } from "../../internal/component";
 
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Buttons, IconButtons or ToggleButtons. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Joins them into one control: shared borders, outer corners only. Default: true. */
-  attached?: boolean;
+  attached?: boolean | undefined;
   /** 'horizontal' (default) or 'vertical'. */
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: 'horizontal' | 'vertical' | undefined;
   /** What the group is for ("Text formatting"), for screen readers. */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
 }
 
 /* ButtonGroup: related buttons side by side (or stacked) in a role="group": attached into one control, or

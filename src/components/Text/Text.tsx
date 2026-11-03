@@ -8,20 +8,20 @@ export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
 export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   /** The element: 'p' (default), 'span', 'div', 'label', 'strong', 'em', 'small', 'li' or 'figcaption'. */
-  as?: 'p' | 'span' | 'div' | 'label' | 'strong' | 'em' | 'small' | 'li' | 'figcaption';
+  as?: 'p' | 'span' | 'div' | 'label' | 'strong' | 'em' | 'small' | 'li' | 'figcaption' | undefined;
   /** From the type scale, with its line height. Default: inherited from the parent. */
-  size?: TextSize;
+  size?: TextSize | undefined;
   /** 'default' (text), 'muted' (secondary), 'primary' or 'danger'. Each keeps 4.5:1 on surface. Default: inherited. */
-  tone?: TextTone;
+  tone?: TextTone | undefined;
   /** Default: inherited. */
-  weight?: TextWeight;
+  weight?: TextWeight | undefined;
   /** Keeps it on one line, cut with an ellipsis. Give it a width (it's a block). */
-  truncate?: boolean;
+  truncate?: boolean | undefined;
   /** Caps the line at about 65 characters (`container-prose`), the comfortable length for running text: an
    *  article's paragraphs, a long description, help text on a wide page. Default: false. */
-  measure?: boolean;
+  measure?: boolean | undefined;
   /** For a label: the id of the control it names. */
-  htmlFor?: string;
+  htmlFor?: string | undefined;
 }
 
 /* Text: body text in the system's type. size, tone and weight only set what's given; anything unset follows
