@@ -14,6 +14,7 @@ import { useLocale } from '../../internal/provider';
    - 2.4.6 / 2.5.3: each plan has one action, named after the plan ("Choose Pro"), so a list of buttons still makes
      sense out of context.
    - Monthly or yearly is a radio group (SegmentedControl, one choice); the yearly option says the saving in words.
+   - 1.4.10: a long word, such as a German compound, wraps inside its card rather than running out of it (GR137).
    - Prices are written the way the reader's locale writes money. Each word is a label, English by default. */
 
 export type PricingPeriod = 'monthly' | 'yearly';
@@ -40,8 +41,9 @@ export interface PricingLabels {
   /** The radio group's name. */
   period: string;
   monthly: string;
-  /** The yearly option; with a saving, it says how much. */
-  yearly: (savingPercent: number) => string;
+  /** The yearly option. savingPercent is the biggest saving yearly billing gives across the plans, rounded down (0
+      for none); upTo is true when the plans save different amounts, so the words must say "up to" (GR138). */
+  yearly: (savingPercent: number, upTo: boolean) => string;
   perMonth: string;
   /** Under a yearly price per month: what is paid once a year. */
   billedYearly: (total: string) => string;
@@ -56,7 +58,7 @@ export interface PricingLabels {
 const english: PricingLabels = {
   period: 'Billing period',
   monthly: 'Monthly',
-  yearly: (saving) => (saving > 0 ? `Yearly, save ${saving}%` : 'Yearly'),
+  yearly: (saving, upTo) => (saving > 0 ? `Yearly, save ${upTo ? 'up to ' : ''}${saving}%` : 'Yearly'),
   perMonth: 'per month',
   billedYearly: (total) => `${total} billed yearly`,
   current: 'Your current plan',
@@ -81,11 +83,10 @@ export interface PricingProps {
   labels?: Partial<PricingLabels> | undefined;
 }
 
-/** The biggest saving yearly billing gives over twelve monthly payments, as a whole percentage. */
-function bestSaving(plans: readonly PricingPlan[]) {
-  let best = 0;
-  for (const p of plans) if (p.monthly > 0) best = Math.max(best, Math.floor(Number(((1 - p.yearly / (p.monthly * 12)) * 100).toFixed(6))));   // toFixed: 96 of 120 is 20%, not 19.99…%
-  return best;
+/** What yearly billing saves over twelve monthly payments, per paid plan, as whole percentages rounded down. */
+function savings(plans: readonly PricingPlan[]) {
+  // toFixed: 96 of 120 is 20%, not 19.99…%
+  return plans.filter((p) => p.monthly > 0).map((p) => Math.max(0, Math.floor(Number(((1 - p.yearly / (p.monthly * 12)) * 100).toFixed(6)))));
 }
 
 /** Plans side by side, monthly or yearly, each with what it includes and one clear action. */
@@ -96,17 +97,18 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
   const shown = period ?? own;
   // A whole amount without its cents ("$12", not "$12.00"); anything else as the currency writes it.
   const money = (value: number) => formatNumber(value, locale, { format: 'currency', currency, ...(Number.isInteger(value) && { minimumFractionDigits: 0, maximumFractionDigits: 0 }) });
+  const saved = savings(plans), best = Math.max(0, ...saved);
   const change = (next: PricingPeriod) => { setOwn(next); onPeriodChange?.(next); };
   return (
     <div className="flex flex-col gap-6">
       <SegmentedControl<PricingPeriod> aria-label={l.period} value={shown} onValueChange={change} className="self-center"
-        options={[{ value: 'monthly', label: l.monthly }, { value: 'yearly', label: l.yearly(bestSaving(plans)) }]} />
+        options={[{ value: 'monthly', label: l.monthly }, { value: 'yearly', label: l.yearly(best, saved.some((x) => x !== best)) }]} />
       <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-3">
         {plans.map((plan) => {
           const perMonth = shown === 'yearly' ? plan.yearly / 12 : plan.monthly;
           return (
             <Card as="li" key={plan.id} padding="lg" variant={plan.recommended ? 'elevated' : 'outline'} aria-labelledby={`${plan.id}-name`}
-              className={plan.recommended ? 'flex h-full flex-col gap-4 border-primary' : 'flex h-full flex-col gap-4'}>
+              className={plan.recommended ? 'flex h-full min-w-0 flex-col gap-4 wrap-anywhere border-primary' : 'flex h-full min-w-0 flex-col gap-4 wrap-anywhere'}>
               <div className="flex flex-wrap items-center gap-2">
                 <Heading level={headingLevel} id={`${plan.id}-name`}>{plan.name}</Heading>
                 {plan.recommended && <Badge tone="primary">{l.recommended}</Badge>}
