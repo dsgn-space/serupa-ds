@@ -46,7 +46,7 @@ describe('Blocks/Stats row', () => {
     await render(<StatsRow title="This month" stats={[]} loading loadingCount={3} />);
     expect(document.querySelector('ul')!.getAttribute('aria-busy')).toBe('true');
     expect(cards().length).toBe(3);
-    await expect.poll(() => [...document.querySelectorAll('ul [aria-label]')].map((e) => e.getAttribute('aria-label'))).toEqual(['Loading this month']);
+    await expect.poll(() => [...document.querySelectorAll('ul [aria-label]')].map((e) => e.getAttribute('aria-label'))).toEqual(['Loading: This month']);
   });
 
   test('on a phone the cards stack in one column and nothing scrolls sideways', async () => {
@@ -54,5 +54,15 @@ describe('Blocks/Stats row', () => {
     await render(<StatsRow title="This month" period="vs last month" stats={STATS} />);
     const lefts = new Set(cards().map((li) => Math.round(li.getBoundingClientRect().left)));
     expect([lefts.size, document.documentElement.scrollWidth <= 360]).toEqual([1, true]);
+  });
+
+  test('in another language every word comes from labels, and the title keeps its case (GR133)', async () => {
+    const de = { up: (a: string) => `Gestiegen um ${a}`, down: (a: string) => `Gesunken um ${a}`, flat: 'Unverändert', loading: (t: string) => `${t} wird geladen`, trend: (l: string, n: number) => `${l}, letzte ${n} Zeiträume` };
+    const screen = await render(<StatsRow title="Dieser Monat" stats={STATS} labels={de} />);
+    const badges = [...document.querySelectorAll('[data-tone]')].map((b) => (b.textContent || '').replace(/arrow_upward|arrow_downward|remove/g, ''));
+    expect(badges).toEqual(['Gestiegen um 12%', 'Gestiegen um 8%', 'Gesunken um 4%', 'Unverändert']);
+    expect(document.querySelector('svg[role="img"]')!.getAttribute('aria-label') ?? '').toContain('Revenue, letzte 3 Zeiträume');
+    await screen.rerender(<StatsRow title="Dieser Monat" stats={[]} labels={de} loading loadingCount={2} />);
+    await expect.poll(() => [...document.querySelectorAll('ul [aria-label]')].map((e) => e.getAttribute('aria-label'))).toEqual(['Dieser Monat wird geladen']);
   });
 });
