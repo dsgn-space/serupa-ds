@@ -41,7 +41,7 @@ describe('Pagination', () => {
     ]);
   });
 
-  test('page numbers are written in the digits of the locale, as Calendar writes its days; the buttons keep their names', async () => {
+  test('page numbers are written in the digits of the locale, as Calendar writes its days, and the names say them so: "Page ٥" (WCAG 2.5.3)', async () => {
     await render(<>
       <SerupaProvider locale="ar-EG"><Pagination id="par" count={10} page={5} /></SerupaProvider>
       <SerupaProvider locale="fa"><Pagination id="pfa" count={3} page={2} /></SerupaProvider>
@@ -49,7 +49,13 @@ describe('Pagination', () => {
     const d = (l: string, n: number) => new Intl.NumberFormat(l).format(n);
     expect(shown('par')).toBe(`< ${d('ar-EG', 1)} … ${d('ar-EG', 4)} [${d('ar-EG', 5)}] ${d('ar-EG', 6)} … ${d('ar-EG', 10)} >`);
     expect([shown('par').includes('٥'), shown('pfa')]).toEqual([true, '< ۱ [۲] ۳ >']);
-    expect(named('par', 'Page 5').getAttribute('aria-current')).toBe('page');
+    expect(named('par', 'Page ' + d('ar-EG', 5)).getAttribute('aria-current')).toBe('page');
+    expect(named('pfa', 'Page ۳')).toBeTruthy();
+  });
+
+  test('a pageLabel keeps its other numbers: only the page is written in the locale\'s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Pagination id="pl" count={12} page={1} pageLabel={(n) => 'Page ' + n + ' of 12'} /></SerupaProvider>);
+    expect(named('pl', 'Page ١ of 12').getAttribute('aria-current')).toBe('page');
   });
 
   test('a <nav aria-label="Pagination"> with a list; ref, className and props reach the nav; buttons are named and the ellipsis is hidden', async () => {

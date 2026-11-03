@@ -45,6 +45,8 @@ describe('AvatarGroup', () => {
       <SerupaProvider locale="en-US"><AvatarGroup id="en" max={2}>{av(5)}</AvatarGroup></SerupaProvider>
     </Col>);
     expect([more('ar')!.textContent, more('arcap')!.textContent, more('en')!.textContent]).toEqual(['+٣', '٩٩+', '+3']);
+    // The name says the count as the face shows it, so a voice user can say what they see (WCAG 2.5.3).
+    expect([more('ar')!.getAttribute('aria-label'), more('en')!.getAttribute('aria-label')]).toEqual(['٣ more', '3 more']);
   });
 
   test('the "+N" avatar is named in the provider\'s words: "2 lainnya" under id-ID', async () => {
