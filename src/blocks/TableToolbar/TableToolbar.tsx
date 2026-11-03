@@ -77,7 +77,7 @@ export function TableToolbar({ noun, query, onQueryChange, filters = [], results
   return (
     <div className="flex flex-col gap-3">
       <form role="search" aria-label={w.landmark(noun)} onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <Field label={w.search} className="sm:min-w-64 sm:flex-1">
+        <Field label={w.search} className="sm:flex-1">
           <SearchInput ref={search} value={query} onChange={(e) => onQueryChange(e.target.value)} />
         </Field>
         {filters.map((f) => (
