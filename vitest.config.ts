@@ -10,7 +10,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
 import { TOUCH } from './tools/test/vitest/touch.ts';
-import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, writeAriaBaseline } from './tools/test/vitest/commands.ts';
+import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
@@ -54,7 +54,8 @@ export default defineConfig({
         // Every story rendered to HTML in Node first, for the hydration check (src/internal/hydrateStories.test.tsx).
         globalSetup: ['./tools/test/vitest/serverStories.ts'],
         // SERUPA_ONLY (run.mjs --since): the story-wide tests go through only these components' stories (storiesToRun).
-        provide: { only: process.env.SERUPA_ONLY ?? null },
+        // SERUPA_BENCH (the nightly Benchmarks run): mountTime.test.tsx mounts each story more times.
+        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH },
         // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
         // one file landed in the middle of a drag in another. One file at a time there.
         fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
@@ -80,7 +81,7 @@ export default defineConfig({
             { browser: BROWSER, name: `components (${BROWSER}, touch)`, include: TOUCH },
           ],
           viewport: { width: 900, height: 700 },
-          commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, ariaSnapshot, ariaMode, writeAriaBaseline },
+          commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, ariaSnapshot, ariaMode, writeAriaBaseline, recordBench },
         },
       },
     }, {
