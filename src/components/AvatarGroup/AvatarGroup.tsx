@@ -51,9 +51,10 @@ export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroup
   const count = shown.length + (more > 0 ? 1 : 0);
   const cap = size === "xs" ? 9 : 99;   // the most "+N" writes out: three characters don't fit in 24px
   if (props.label) rest["aria-label"] = props.label;
-  const moreName = (props.moreLabel || sds.labels.avatarMore)(more);
   // In the locale's digits, as Badge writes its count: "+٣" in ar-EG (GR22).
   const digits = (n: number) => displayNumber(n, locale, PLAIN);
+  // The name says the count in those digits too, "٣ more" for "+٣", so it holds the visible text (WCAG 2.5.3).
+  const moreName = (props.moreLabel || sds.labels.avatarMore)(more).replace(new RegExp("(?<!\\d)" + more + "(?!\\d)", "g"), digits(more));
   const face = <span className="dk-avatar__frame"><span className="dk-avatar__initials" aria-hidden="true">{more > cap ? digits(cap) + "+" : "+" + digits(more)}</span></span>;
   const cls = "dk-avatar dk-avatar--" + size + " dk-avatar-group__more";
   // Static, "+N" is one image; with showMore or onMore it's a button with the same name.
