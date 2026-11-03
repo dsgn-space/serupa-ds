@@ -13,6 +13,7 @@ declare module 'vitest/browser' {
     ariaSnapshot: (selector: string) => Promise<string>;
     ariaMode: () => Promise<'check' | 'update' | 'off'>;
     writeAriaBaseline: (name: string, text: string) => Promise<void>;
+    recordBench: (suite: 'mount' | 'inp', times: Record<string, number>) => Promise<void>;
   }
 }
 
