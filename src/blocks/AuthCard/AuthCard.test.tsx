@@ -34,6 +34,20 @@ describe('Blocks/Auth card', () => {
     expect(check).toHaveBeenLastCalledWith('ada@example.com', 'right');
   });
 
+  test('a check that fails (the network, not the password) ends the working state and stays on the step', async () => {
+    let fail = () => {};
+    const check = vi.fn(() => new Promise<boolean>((_, no) => { fail = () => no(new Error('offline')); }));
+    await render(<AuthCard check={check} verify={() => true} forgotHref="#" />);
+    await userEvent.fill(page.getByRole('textbox', { name: 'Email' }), 'ada@example.com');
+    await userEvent.fill(page.getByLabelText('Password', { exact: true }), 'right');
+    await userEvent.click(page.getByRole('button', { name: 'Sign in' }));
+    await expect.element(page.getByRole('button', { name: 'Sign in' })).toHaveAttribute('aria-busy', 'true');
+    fail();
+    await expect.poll(() => page.getByRole('button', { name: 'Sign in' }).element().getAttribute('aria-busy')).not.toBe('true');
+    await expect.element(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
+    expect(check).toHaveBeenCalledTimes(1);
+  });
+
   test('without verify there is no code step: a right password ends on done, and onSignedIn runs once', async () => {
     const onSignedIn = vi.fn();
     await render(<AuthCard check={() => true} onSignedIn={onSignedIn} forgotHref="#" doneHref="/home" />);
