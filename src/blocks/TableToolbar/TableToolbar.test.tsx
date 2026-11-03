@@ -14,7 +14,7 @@ const PROJECTS = [
 ];
 
 // The block as an app uses it: state for the search, a filter and the selection, and a table of what matches.
-function Projects({ initialQuery = '', initialStatus = '', initialPicked = [] as string[] }) {
+function Projects({ initialQuery = '', initialStatus = '', initialPicked = [] as string[], labels = undefined as React.ComponentProps<typeof TableToolbar>['labels'] }) {
   const [query, setQuery] = React.useState(initialQuery);
   const [status, setStatus] = React.useState(initialStatus);
   const [picked, setPicked] = React.useState<string[]>(initialPicked);
@@ -29,6 +29,7 @@ function Projects({ initialQuery = '', initialStatus = '', initialPicked = [] as
       onClearFilters={() => { setQuery(''); setStatus(''); }}
       selectedCount={picked.length} onClearSelection={() => setPicked([])}
       bulkActions={<Button size="sm" variant="outline">Export</Button>}
+      labels={labels}
     >
       <Table caption="Projects" hideCaption>
         <TableHead><TableRow>
@@ -100,5 +101,12 @@ describe('Blocks/Table toolbar', () => {
     const filter = page.getByRole('combobox', { name: 'Status' }).element().getBoundingClientRect();
     expect(filter.top).toBeGreaterThan(search.bottom);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
+  });
+
+  test('in another language its words come from labels', async () => {
+    await render(<Projects initialQuery="a" labels={{ landmark: (n) => `${n} suchen und filtern`, search: 'Suche', clearFilters: 'Filter zurücksetzen' }} />);
+    await expect.element(page.getByRole('search', { name: 'projects suchen und filtern' })).toBeVisible();
+    await expect.element(page.getByRole('searchbox', { name: 'Suche' })).toBeVisible();
+    await expect.element(page.getByRole('button', { name: 'Filter zurücksetzen' })).toBeVisible();
   });
 });

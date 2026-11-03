@@ -44,14 +44,36 @@ export interface StatsRowProps {
   loading?: boolean;
   /** How many skeleton cards to show while loading. Default: 4. */
   loadingCount?: number;
+  /** Its words, in the page's language. Each one left out stays English. */
+  labels?: Partial<StatsRowLabels> | undefined;
 }
 
-const WORD = { up: 'Up', down: 'Down', flat: 'No change' } as const;
+/** The words StatsRow says. Pass your own for a page in another language. */
+export interface StatsRowLabels {
+  /** The change badge for a rise: "Up 12%". */
+  up: (amount: string) => string;
+  /** The change badge for a fall: "Down 4%". */
+  down: (amount: string) => string;
+  /** The change badge when nothing changed: "No change". */
+  flat: string;
+  /** The one name while loading, from the title as given: "Loading: This month". */
+  loading: (title: string) => string;
+  /** A trend line's name: "Revenue, last 8 periods". */
+  trend: (label: string, count: number) => string;
+}
+const EN: StatsRowLabels = {
+  up: (amount) => `Up ${amount}`,
+  down: (amount) => `Down ${amount}`,
+  flat: 'No change',
+  loading: (title) => `Loading: ${title}`,
+  trend: (label, count) => `${label}, last ${count} periods`,
+};
 const ARROW = { up: 'arrow_upward', down: 'arrow_downward', flat: 'remove' } as const;
 
 /** A row of key numbers, each with its change said in words and an optional trend line. */
-export function StatsRow({ title, headingLevel = 2, stats, period, loading = false, loadingCount = 4 }: StatsRowProps) {
+export function StatsRow({ title, headingLevel = 2, stats, period, loading = false, loadingCount = 4, labels }: StatsRowProps) {
   const id = React.useId();
+  const w = { ...EN, ...labels };
   return (
     <section aria-labelledby={id} className="flex flex-col gap-3">
       <Heading level={headingLevel} size="lg" id={id}>{title}</Heading>
@@ -60,7 +82,7 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
           ? Array.from({ length: loadingCount }, (_, i) => (
             <Card as="li" key={i} padding="md">
               {/* One name for all of them: the first skeleton is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? `Loading ${title.toLowerCase()}` : ''} />
+              <Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? w.loading(title) : ''} />
             </Card>
           ))
           : stats.map((s) => {
@@ -73,11 +95,11 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
                 <p className="m-0 text-2xl font-semibold tabular-nums">{s.value}</p>
                 {c ? (
                   <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <Badge tone={tone} leftIcon={ARROW[c.direction]}>{c.direction === 'flat' ? WORD.flat : `${WORD[c.direction]} ${c.amount}`}</Badge>
+                    <Badge tone={tone} leftIcon={ARROW[c.direction]}>{c.direction === 'flat' ? w.flat : w[c.direction](c.amount)}</Badge>
                     {period ? <span>{period}</span> : null}
                   </p>
                 ) : null}
-                {s.trend && s.trend.length > 1 ? <Sparkline data={s.trend} label={`${s.label}, last ${s.trend.length} periods`} className="h-8 w-full" /> : null}
+                {s.trend && s.trend.length > 1 ? <Sparkline data={s.trend} label={w.trend(s.label, s.trend.length)} className="h-8 w-full" /> : null}
               </Card>
             );
           })}

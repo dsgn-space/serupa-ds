@@ -28,7 +28,7 @@ export interface TableFilter {
 }
 
 export interface TableToolbarProps {
-  /** What the table lists, in lower case: "projects". Names the search landmark ("Search and filter projects"). */
+  /** What the table lists: "projects". Names the search landmark ("Search and filter projects"). */
   noun: string;
   /** The search text. */
   query: string;
@@ -45,11 +45,29 @@ export interface TableToolbarProps {
   onClearSelection?: (() => void) | undefined;
   /** The actions for the selected rows: small Buttons such as Export or Archive. */
   bulkActions?: React.ReactNode;
+  /** Its words, in the page's language. Each one left out stays English. */
+  labels?: Partial<TableToolbarLabels> | undefined;
   /** The table. */
   children: React.ReactNode;
 }
 
-export function TableToolbar({ noun, query, onQueryChange, filters = [], results, onClearFilters, selectedCount = 0, onClearSelection, bulkActions, children }: TableToolbarProps) {
+/** The words TableToolbar says. Pass your own for a page in another language. */
+export interface TableToolbarLabels {
+  /** The search landmark's name, from noun: "Search and filter projects". */
+  landmark: (noun: string) => string;
+  /** The search field's visible label: "Search". */
+  search: string;
+  /** The button that empties the search and filters: "Clear filters". */
+  clearFilters: string;
+}
+const EN: TableToolbarLabels = {
+  landmark: (noun) => `Search and filter ${noun}`,
+  search: 'Search',
+  clearFilters: 'Clear filters',
+};
+
+export function TableToolbar({ noun, query, onQueryChange, filters = [], results, onClearFilters, selectedCount = 0, onClearSelection, bulkActions, labels, children }: TableToolbarProps) {
+  const w = { ...EN, ...labels };
   const search = React.useRef<HTMLInputElement | null>(null);
   const filtered = query !== '' || filters.some((f) => f.value !== '');
   const clear = () => {
@@ -58,8 +76,8 @@ export function TableToolbar({ noun, query, onQueryChange, filters = [], results
   };
   return (
     <div className="flex flex-col gap-3">
-      <form role="search" aria-label={`Search and filter ${noun}`} onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-        <Field label="Search" className="sm:min-w-64 sm:flex-1">
+      <form role="search" aria-label={w.landmark(noun)} onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <Field label={w.search} className="sm:min-w-64 sm:flex-1">
           <SearchInput ref={search} value={query} onChange={(e) => onQueryChange(e.target.value)} />
         </Field>
         {filters.map((f) => (
@@ -67,7 +85,7 @@ export function TableToolbar({ noun, query, onQueryChange, filters = [], results
             <Select value={f.value} options={f.options} onChange={(e) => f.onChange(e.target.value)} />
           </Field>
         ))}
-        {filtered ? <Button type="button" variant="ghost" onClick={clear}>Clear filters</Button> : null}
+        {filtered ? <Button type="button" variant="ghost" onClick={clear}>{w.clearFilters}</Button> : null}
       </form>
       <p role="status" className="m-0 text-sm text-text-muted">{results}</p>
       <TableActionBar count={selectedCount} onClear={onClearSelection}>{bulkActions}</TableActionBar>
