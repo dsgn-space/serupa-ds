@@ -7,10 +7,10 @@ interface TypeToConfirmProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     phrase: string;
     confirmLabel: React.ReactNode;
     onConfirm: () => unknown;
-    label?: React.ReactNode;
-    hint?: React.ReactNode;
-    caseSensitive?: boolean;
-    onMatch?: (matched: boolean) => void;
-    disabled?: boolean;
+    label?: React.ReactNode | undefined;
+    hint?: React.ReactNode | undefined;
+    caseSensitive?: boolean | undefined;
+    onMatch?: ((matched: boolean) => void) | undefined;
+    disabled?: boolean | undefined;
 }
 declare const TypeToConfirm: React.ForwardRefExoticComponent<TypeToConfirmProps & React.RefAttributes<HTMLDivElement>>;

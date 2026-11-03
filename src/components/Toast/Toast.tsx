@@ -26,21 +26,21 @@ export interface ToastOptions {
   /** The main line. */
   title: React.ReactNode;
   /** A muted line under it. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** 'neutral' (default, no icon), 'info', 'success', 'warning' or 'danger': an icon in the tone's color. */
-  tone?: ToastTone;
+  tone?: ToastTone | undefined;
   /** One button in the toast, such as Undo. Choosing it also closes the toast. */
-  action?: { label: string; onClick: () => void };
+  action?: ({ label: string; onClick: () => void }) | undefined;
   /** Milliseconds before it goes. Default: the Toaster's duration, 5000 unless set. 0 keeps it, as autoDismiss false does. The time stops while it's hovered or focused, or the window is in the background. */
-  duration?: number;
+  duration?: number | undefined;
   /** Whether it goes by itself after its duration. Default: the Toaster's autoDismiss, true unless set, with an action
    *  too (its time stops while it's hovered or focused, and F8 reaches it). false keeps it until it's closed: for a
    *  message someone has to act on, such as a failed upload with Retry. */
-  autoDismiss?: boolean;
+  autoDismiss?: boolean | undefined;
   /** What screen readers announce. Default: the title and description, when they're text. */
-  announcement?: string;
+  announcement?: string | undefined;
   /** Reuse an id to replace a toast that's showing (say, "Saving…" → "Saved"). */
-  id?: string;
+  id?: string | undefined;
 }
 
 interface Item extends ToastOptions { id: string; tone: ToastTone; count: number }
@@ -146,9 +146,9 @@ export interface ToastUndoOptions extends Omit<ToastOptions, "action" | "autoDis
    *  the page is left. */
   commit: () => void;
   /** Runs instead of commit when Undo is chosen: show things as they were. */
-  onUndo?: () => void;
+  onUndo?: (() => void) | undefined;
   /** The button's text. Default: "Undo" (labels.undo). */
-  undoLabel?: string;
+  undoLabel?: string | undefined;
 }
 /* toast.undo: the undo pattern. The action looks done at once (the item is gone from the list), and a toast says so
    with an Undo button; the action is done for good (commit) only when the toast closes without Undo, or when the
@@ -178,17 +178,17 @@ export const toast = /* @__PURE__ */ Object.assign(show, { dismiss, promise, und
 
 export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
   /** Where toasts appear: 'bottom-end' (default), 'bottom-start', 'bottom-center', 'top-start', 'top-center' or 'top-end'. Start and end follow the text direction. */
-  position?: ToasterPosition;
+  position?: ToasterPosition | undefined;
   /** The region's name for screen readers. Default: 'Notifications'. */
-  label?: string;
+  label?: string | undefined;
   /** The close button's name. Default: 'Dismiss'. */
-  dismissLabel?: string;
+  dismissLabel?: string | undefined;
   /** The most toasts shown at once; the newest show, and older ones wait under a "+2 more" line until there's room. Default: 3. */
-  limit?: number;
+  limit?: number | undefined;
   /** How long each toast stays, in milliseconds, unless it sets its own duration. Default: 5000. */
-  duration?: number;
+  duration?: number | undefined;
   /** Whether toasts go by themselves, unless one sets its own autoDismiss. Default: true. */
-  autoDismiss?: boolean;
+  autoDismiss?: boolean | undefined;
 }
 
 const POSITIONS: readonly ToasterPosition[] = ["top-start", "top-center", "top-end", "bottom-start", "bottom-center", "bottom-end"];

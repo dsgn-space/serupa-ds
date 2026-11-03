@@ -13,31 +13,31 @@ import { en as words } from "./labels";
 
 export interface RatingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue"> {
   /** The rating (controlled), or null for none. Use with onValueChange. */
-  value?: number | null;
+  value?: number | null | undefined;
   /** The rating at first (uncontrolled). */
-  defaultValue?: number | null;
+  defaultValue?: number | null | undefined;
   /** Called with the picked rating, or null when it's cleared. */
-  onValueChange?: (value: number | null) => void;
+  onValueChange?: ((value: number | null) => void) | undefined;
   /** How many stars. Default: 5. */
-  max?: number;
+  max?: number | undefined;
   /** Half stars can be picked too (each star is two choices). Default: false. */
-  allowHalf?: boolean;
+  allowHalf?: boolean | undefined;
   /** Picking the current rating again (a click, Space), Backspace or Delete clears it. Default: false. */
-  clearable?: boolean;
+  clearable?: boolean | undefined;
   /** Shows the rating without choices: a role="img" named "4.5 out of 5", for reviews and averages. Any fraction is drawn. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** Disables every choice. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Sends the rating with a form (a native radio per choice). */
-  name?: string;
+  name?: string | undefined;
   /** The id of a form elsewhere on the page that the radios belong to. */
-  form?: string;
+  form?: string | undefined;
   /** Marks a rating required (on the radios). */
-  required?: boolean;
+  required?: boolean | undefined;
   /** Marks the rating invalid (aria-invalid on the group). Field sets it from its error. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** 'sm' (20px stars), 'md' (24px, default) or 'lg' (32px). */
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | undefined;
 }
 
 // Material Symbols "star", drawn twice per star: the empty outline color under, the fill clipped to the star's share.

@@ -15,25 +15,25 @@ export interface SplitterProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   /** The two panes, first and second. The handle between them resizes the first; the second takes the rest. */
   children: [React.ReactNode, React.ReactNode];
   /** "horizontal" (default): the panes side by side, the first at the start (left, or right in rtl). "vertical": stacked, the first on top. */
-  direction?: "horizontal" | "vertical";
+  direction?: "horizontal" | "vertical" | undefined;
   /** The first pane's size in percent of the Splitter (controlled). Use with onSizeChange. */
-  size?: number;
+  size?: number | undefined;
   /** The first pane's size at first, in percent (uncontrolled); 0 starts it collapsed when collapsible. Default: 50. */
-  defaultSize?: number;
+  defaultSize?: number | undefined;
   /** Called with the first pane's new size in percent while it's dragged or moved with the keys. */
-  onSizeChange?: (size: number) => void;
+  onSizeChange?: ((size: number) => void) | undefined;
   /** The first pane's least and largest size, in percent. Default: 10 and 90. */
-  min?: number;
+  min?: number | undefined;
   /** The first pane's largest size, in percent. Default: 90. */
-  max?: number;
+  max?: number | undefined;
   /** How far an arrow key moves the handle, in percent. Default: 5. */
-  step?: number;
+  step?: number | undefined;
   /** Enter on the handle (or a double-click) collapses the first pane to 0, and again brings it back. Default: false. */
-  collapsible?: boolean;
+  collapsible?: boolean | undefined;
   /** Keeps an uncontrolled size in localStorage under this key, so the layout comes back on the next visit. */
-  storageKey?: string;
+  storageKey?: string | undefined;
   /** The handle's accessible name: say what it resizes ("Sidebar"). Default: the resizePanes label, "Resize panes". */
-  separatorLabel?: string;
+  separatorLabel?: string | undefined;
 }
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));

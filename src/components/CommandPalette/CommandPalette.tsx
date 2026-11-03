@@ -23,34 +23,34 @@ export interface Command {
   /** What it does or where it goes, in a few words ("New project", "Settings"). What's typed is matched against it. */
   label: string;
   /** The heading it's listed under ("Pages", "Actions"), in the order groups first appear. Default: "Commands". */
-  group?: string;
+  group?: string | undefined;
   /** More words that find it, not shown ("preferences" for Settings). */
-  keywords?: string[];
+  keywords?: string[] | undefined;
   /** An icon before the label: a name or an icon from serupa-ds/icons. */
-  icon?: React.ReactNode | IconData;
+  icon?: React.ReactNode | IconData | undefined;
   /** Keys shown after the label in Kbd (["mod", "N"]). Shown only: set the shortcut itself up with useShortcut. */
-  shortcut?: string[];
+  shortcut?: string[] | undefined;
   /** A page to go to when it's chosen, with no onSelect. */
-  href?: string;
+  href?: string | undefined;
   /** Shown but can't be chosen. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Runs when it's chosen, after the palette has closed. */
-  onSelect?: () => void;
+  onSelect?: (() => void) | undefined;
 }
 
 export interface CommandPaletteProps extends Omit<DialogProps, "title" | "description" | "footer" | "alert" | "children" | "size" | "fullScreen" | "initialFocus" | "closeButton" | "closeLabel" | "onSelect" | "unsaved"> {
   /** The commands and pages it searches, in the order they're listed before anything is typed. */
   commands: Command[];
   /** Runs for any command chosen, after the palette has closed and after the command's own onSelect. */
-  onSelect?: (command: Command) => void;
+  onSelect?: ((command: Command) => void) | undefined;
   /** The keys that open it anywhere on the page (default ["mod", "K"]: ⌘K on Apple devices, Ctrl+K elsewhere); false for none. */
-  hotkey?: string[] | false;
+  hotkey?: string[] | false | undefined;
   /** The search field's placeholder and name. Default: "Search commands and pages" (labels.searchCommands). */
-  placeholder?: string;
+  placeholder?: string | undefined;
   /** Shown when nothing matches. Default: "No matching commands" (labels.noCommands). */
-  emptyText?: React.ReactNode;
+  emptyText?: React.ReactNode | undefined;
   /** How many it lists at most while searching, the best matches first. Default: 50. */
-  limit?: number;
+  limit?: number | undefined;
 }
 
 interface Row { c: Command; i: number; s: number }
