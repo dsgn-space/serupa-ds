@@ -65,6 +65,16 @@ const ARIA = 'tools/test/baseline-aria';
 /** "check", "update" (SERUPA_UPDATE_ARIA) or "off" (another engine or a locale run). */
 export const ariaMode: BrowserCommand<[]> = async () =>
   (process.env.SERUPA_BROWSER && process.env.SERUPA_BROWSER !== 'chromium') || process.env.SERUPA_LOCALE ? 'off' : process.env.SERUPA_UPDATE_ARIA ? 'update' : 'check';
+/** With SERUPA_BENCH set to a folder, adds a test's timings (name → ms) to <folder>/<suite>.jsonl for
+ *  tools/test/bench.mjs, which keeps them from night to night (F9). Otherwise does nothing. */
+export const recordBench: BrowserCommand<[suite: 'mount' | 'inp', times: Record<string, number>]> = async (_ctx, suite, times) => {
+  const dir = process.env.SERUPA_BENCH;
+  if (!dir) return;
+  const fs = await import('node:fs');
+  fs.mkdirSync(dir, { recursive: true });
+  // One line a call, so the test files that run side by side can't overwrite each other's.
+  fs.appendFileSync(`${dir}/${suite}.jsonl`, JSON.stringify(times) + '\n');
+};
 /** Writes one component's accessibility-tree baseline, tools/test/baseline-aria/<name>.yml. */
 export const writeAriaBaseline: BrowserCommand<[name: string, text: string]> = async (_ctx, name, text) => {
   const fs = await import('node:fs');

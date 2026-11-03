@@ -50,6 +50,12 @@ describe('Blocks/Page header', () => {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
   });
 
+  test('the phone menu takes its name in the page language (GR126)', async () => {
+    await page.viewport(360, 720);
+    const screen = await render(<PageHeader {...ALL} moreLabel="Weitere Aktionen" />);
+    await expect.element(screen.getByRole('button', { name: 'Weitere Aktionen' })).toBeVisible();
+  });
+
   test('with only a title, it shows only the h1: no empty breadcrumb, actions or nav', async () => {
     await render(<PageHeader title="Projects" />);
     expect([document.querySelectorAll('h1').length, document.querySelectorAll('nav, button, a').length]).toEqual([1, 0]);
