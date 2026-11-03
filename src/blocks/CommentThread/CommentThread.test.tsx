@@ -92,6 +92,40 @@ describe('Blocks/Comment thread', () => {
     expect(onDelete).not.toHaveBeenCalled();
   });
 
+  test('Cancel ends an edit without saving and brings focus back to Edit', async () => {
+    await render(<Harness />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Changed my mind');
+    await userEvent.click(page.getByRole('button', { name: 'Cancel' }));
+    await expect.element(mine().getByRole('button', { name: 'Edit' })).toHaveFocus();
+    expect(mine().element().textContent).toContain('Yes, I will try 20px.');
+  });
+
+  test('deleting the last comment moves focus to the heading, and the delete is done once the toast goes without Undo', async () => {
+    const onDelete = vi.fn();
+    await render(<>
+      <CommentThread comments={[start[1]]} onReply={() => {}} onDelete={onDelete} />
+      <Toaster duration={300} />
+    </>);
+    await userEvent.click(page.getByRole('button', { name: 'Delete' }));
+    await expect.element(page.getByRole('heading', { name: 'Comments' })).toHaveFocus();
+    await expect.element(page.getByText('No comments yet. Start the conversation.')).toBeVisible();
+    await expect.poll(() => onDelete.mock.calls).toEqual([['b']]);
+  });
+
+  test('a reply that fails keeps its words in the box and ends the loading state', async () => {
+    let fail = () => {};
+    const onReply = vi.fn(() => new Promise<void>((_, no) => { fail = () => no(new Error('offline')); }));
+    await render(<CommentThread comments={start} onReply={onReply} />);
+    await userEvent.fill(page.getByRole('textbox', { name: 'Reply' }), 'Still here');
+    await userEvent.click(page.getByRole('button', { name: 'Post reply' }));
+    await expect.element(page.getByRole('button', { name: 'Post reply' })).toHaveAttribute('aria-busy', 'true');
+    fail();
+    await expect.poll(() => (page.getByRole('button', { name: 'Post reply' }).element() as HTMLButtonElement).getAttribute('aria-busy')).not.toBe('true');
+    await expect.element(page.getByRole('textbox', { name: 'Reply' })).toHaveValue('Still here');
+    expect(said()).not.toContain('Reply posted');
+  });
+
   test('every word can be given in the page language', async () => {
     await render(<CommentThread comments={[]} onReply={() => {}} labels={{ title: 'Komentar', noComments: 'Belum ada komentar.', reply: 'Balas', replyHint: (n) => `Paling banyak ${n} karakter.`, post: 'Kirim balasan' }} />);
     await expect.element(page.getByRole('region', { name: 'Komentar' })).toBeVisible();
