@@ -71,7 +71,8 @@ describe('Icon', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<><Icon name="Home" /><Icon name="arrow-forward" /><Icon name="Looks3" /><Icon name="Nonsense_Thing" /></>);
     const said = (n: string) => warn.mock.calls.map((c) => String(c[0])).find((m) => m.includes(`"${n}"`));
-    await vi.waitFor(() => expect(said('Nonsense_Thing')).toBeTruthy());
+    // Each name's warning comes once its part of the table has loaded, in whatever order those arrive.
+    await vi.waitFor(() => expect(['Home', 'arrow-forward', 'Looks3', 'Nonsense_Thing'].every((n) => said(n))).toBe(true));
     expect(said('Home')).toContain('Did you mean "home"?');
     expect(said('arrow-forward')).toContain('Did you mean "arrow_forward"?');
     expect(said('Looks3')).toContain('Did you mean "looks_3"?');
