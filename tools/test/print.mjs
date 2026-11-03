@@ -38,7 +38,9 @@ t('on screen nothing changes: the toast shows, no link addresses', screen.toaste
 t('printed, a primary Button and a filled Badge keep their colors (print-color-adjust: exact)', print.btn === 'exact' && print.badge === 'exact', JSON.stringify(print));
 t('printed, the toast stack is left out', print.toaster === 'none', print.toaster);
 t('printed, a Fab (position: fixed, so it would repeat on every page) is left out; on screen it shows', print.fab === 'none' && screen.fab !== 'none', JSON.stringify([screen.fab, print.fab]));
-t('printed, data-print-urls adds an outside link\'s address after it; same-page links and links outside it get none', print.out === '" (" attr(href) ")"' || print.out === '" (https://example.com/terms)"', JSON.stringify([print.out, print.inner, print.plain]));
+// The address as each engine writes the computed content: Chromium keeps attr(href) or joins the strings; Firefox and
+// Safari give the strings one by one.
+t('printed, data-print-urls adds an outside link\'s address after it; same-page links and links outside it get none', ['" (" attr(href) ")"', '" (https://example.com/terms)"', '" (" "https://example.com/terms" ")"'].includes(print.out), JSON.stringify([print.out, print.inner, print.plain]));
 t('a Splitter prints its panes\' whole content: on screen 300px with the pane scrolling, printed as tall as its 60 rows with no separator (GR59)', screen.spl === 300 && !screen.pane && print.spl >= 1200 && print.pane && print.sep === 'none', JSON.stringify([screen.spl, screen.pane, print.spl, print.pane, print.sep]));
 t('…and only there', print.inner === 'none' && print.plain === 'none', JSON.stringify([print.inner, print.plain]));
 await b.close();
