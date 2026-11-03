@@ -90,8 +90,9 @@ export default defineConfig({
         include: ['tools/test/*.mjs'],
         // Shared code, the cross-browser comparison (npm run test:safari), the visual and Storybook steps, which
         // run.mjs shards across CI jobs, the install on older Node (consumer.mjs, its own CI job) and the framework
-        // apps (frameworks.mjs, its own CI job; pack.mjs is shared by the two).
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader}.mjs'],
+        // apps (frameworks.mjs, its own CI job; pack.mjs is shared by the two) and the mutation run (mutation.mjs,
+        // nightly: it starts a components Vitest of its own).
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation}.mjs'],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,
