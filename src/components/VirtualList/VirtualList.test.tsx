@@ -97,6 +97,19 @@ describe('VirtualList', () => {
     await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
   });
 
+  test('GR139: with rows of mixed heights, End reaches the last row and Home then the first, each in one press', async () => {
+    // Taller than the guess on the way up, so the rows measured as the view goes back move the top it aimed for.
+    const mixed = (i: number) => <ListItem title={'Row ' + (i + 1)} description={i % 3 ? 'A longer line under the title that wraps onto a second line in a narrow list. '.repeat(i % 3) : undefined} />;
+    await render(<div style={{ width: 280 }}><VirtualList id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
+    el('v').focus();
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
+    await userEvent.keyboard('{Home}');
+    await expect.poll(() => [el('v').scrollTop, titles('v')[0]]).toEqual([0, 'Row 1']);
+    await new Promise((r) => setTimeout(r, 300));
+    expect([el('v').scrollTop, titles('v')[0]]).toEqual([0, 'Row 1']);
+  });
+
   test('fewer rows, or none, after a change; itemKey keeps a row\'s element when rows before it go', async () => {
     const ids = Array.from({ length: 50 }, (_, i) => 'id' + i);
     const page = (list: string[]) => <VirtualList id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]} renderItem={(i) => <ListItem title={list[i]} />} />;
