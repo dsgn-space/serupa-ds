@@ -3,6 +3,7 @@ LICENSE
 README.md
 bin/brand/generate.mjs
 bin/migrate/transforms.mjs
+bin/serupa-agents.mjs
 bin/serupa-brand.mjs
 bin/serupa-create.mjs
 bin/serupa-migrate.mjs
