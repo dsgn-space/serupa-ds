@@ -50,4 +50,28 @@
 .dk-calendar__day--in-range { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
 @media (hover: hover) { .dk-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); } }
 @media (forced-colors: active) { .dk-calendar__day--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; } .dk-calendar__day--today { text-decoration: underline; } .dk-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
+/* Presets (RU11): shortcuts in a column after the days, past a divider, each a button as tall as a day. The one the
+   value matches is pressed and filled like a range; one that can't be picked is faded. On a narrow screen they wrap
+   in rows under the days. */
+.dk-calendar--presets { display: inline-grid; grid-template-columns: auto auto; column-gap: var(--spacing-4); align-items: start; }
+.dk-calendar--presets > .dk-calendar__header, .dk-calendar--presets > .dk-calendar__grid { grid-column: 1; }
+.dk-calendar--presets > .dk-calendar__presets { grid-column: 2; grid-row: 1 / span 2; }
+.dk-calendar__presets { display: flex; flex-direction: column; gap: var(--spacing-1); padding-inline-start: var(--spacing-4); border-inline-start: var(--border-width-1) solid var(--border); }
+.dk-calendar__preset {
+  display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--dk-cal-day, var(--calendar-day-size, var(--control-height-md)));
+  margin: var(--spacing-0); padding: var(--spacing-0) var(--spacing-3); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
+  background: transparent; color: inherit; font: inherit; text-align: start; white-space: nowrap; cursor: pointer; touch-action: manipulation;
+}
+@media (hover: hover) { .dk-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--surface-muted)); } }
+.dk-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.dk-calendar__preset:focus { outline: none; }
+.dk-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.dk-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
+@media (hover: hover) { .dk-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--primary-subtle)); } }
+.dk-calendar__preset[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
+@media (max-width: 639.98px) {
+  .dk-calendar--presets { display: inline-flex; }
+  .dk-calendar__presets { flex-direction: row; flex-wrap: wrap; padding-inline-start: var(--spacing-0); padding-block-start: var(--spacing-2); border-inline-start: var(--spacing-0); border-block-start: var(--border-width-1) solid var(--border); }
+}
+@media (forced-colors: active) { .dk-calendar__preset[aria-pressed="true"] { border: var(--border-width-1) solid Highlight; } }
 }
