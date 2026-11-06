@@ -334,6 +334,19 @@ describe('NumberInput', () => {
     expect([field('cc').value, document.getElementById('cc-out')!.textContent]).toEqual(['', 'null']);
   });
 
+  function Yen() {
+    const [v, setV] = React.useState<number | null>(1000);
+    return <form id="yf"><NumberInput id="yc" name="price" aria-label="Price" locale="en-US" currency="JPY" minorUnits value={v} onValueChange={setV} /><output id="yc-out">{String(v)}</output></form>;
+  }
+  test('minorUnits with yen (no minor digits): a typed fraction is stored and sent whole, as the field shows it (GR154)', async () => {
+    await render(<Yen />);
+    await fill('yc', '2.50'); await blur('yc');
+    const sent = new FormData(document.getElementById('yf') as HTMLFormElement).get('price');
+    expect([field('yc').value, document.getElementById('yc-out')!.textContent, sent]).toEqual(['¥3', '3', '3']);
+    await fill('yc', '2.4'); await blur('yc');
+    expect([field('yc').value, document.getElementById('yc-out')!.textContent]).toEqual(['¥2', '2']);
+  });
+
   test('min with decimals the step doesn\'t have (min 0.5, step 1): ArrowUp from 2.5 is 3.5, and from Home (0.5) is 1.5', async () => {
     await render(<SerupaProvider locale="en-US"><NumberInput id="half" aria-label="Half" min={0.5} max={5.5} step={1} defaultValue={2.5} /></SerupaProvider>);
     await userEvent.click(field('half'));
