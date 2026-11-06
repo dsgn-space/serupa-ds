@@ -1,3 +1,4 @@
+"use client";
 import * as React from 'react';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
