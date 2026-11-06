@@ -4,6 +4,32 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [14.2.0] - 2026-11-06
+
+### Added
+
+- New apps get a "done" they can check. `serupa-create` now adds `npm run check`: the types, then ESLint with jsx-a11y and `serupa-ds/eslint` (an Image with no `alt` fails), then Stylelint with `serupa-ds/stylelint` (a raw color, spacing or radius fails). The agent skill gets a short "Before you finish" section that says to run it and fix until it passes, Tab through the page once, and look at it in dark mode. `serupa-ds/eslint` no longer reads SkipLink as a plain link, so `<SkipLink />` with no text or `href` passes, as it should.
+- OfflineBanner: `onOnlineChange(online)`, named like every other callback (`value` and `onValueChange`, `open` and `onOpenChange`). OfflineBanner is beta. Deprecated (OfflineBanner): `onChange`. It still works, and is called as `onOnlineChange` is when `onOnlineChange` isn't given. It is removed in 15.0.0: rename `onChange` to `onOnlineChange`.
+- `npx serupa-agents` points a project's coding agents at the Serupa skill that came with its install. It adds a section to `AGENTS.md` (Codex, Cursor, Copilot and others) saying to read `node_modules/serupa-ds/skills/serupa/SKILL.md` before any UI work, and `@AGENTS.md` to `CLAUDE.md` for Claude Code. It makes either file when it's missing, and running it again changes nothing. The skill read this way always matches the installed release, unlike `npx skills add`, which takes it from `main`. Apps made with `serupa-create` now come with both files.
+- A review skill, `skills/serupa-review/SKILL.md`, ships beside the Serupa skill. A project's coding agent uses it to review a change to the app's UI: a widget built by hand where a component exists, a native control in place of one, missing names, errors that don't help, color alone, lost focus, raw values instead of tokens, the wrong feedback for a message, and the words. Findings are grouped Must fix, Should fix and Nice to have, each with the problem, the fix and what happens if it's skipped, and end with a one-line verdict. The section `serupa-agents` adds to AGENTS.md now points at it too.
+- Added TimeZonePicker (beta): a Combobox of time zones by city, each with its offset now and its name in the reader's language ("UTC+07:00 · Western Indonesia Time"), the reader's own zone first. Typing finds a city, a zone name, an IANA name or an offset ("+7", "utc-5"), and the value is the IANA name. `timeZoneInfo()` and `allTimeZones()` give the same data for use elsewhere.
+
+### Fixed
+
+- The package no longer ships `dist/js/blocks/` and `dist/js/patterns/` (28 files, about 200 KB), which no export could reach. Blocks and patterns are for copying from the repository, as before. The ones that use state or handlers now start with `"use client";`, so a copy pasted into a Next.js App Router page builds.
+- Chart: Escape hides the tooltip of a focused or hovered point, as Tooltip's does, without moving focus. It shows again on the next point or category.
+- Chart: the tooltip sits beside its point in right-to-left pages instead of stretching to the right edge, wraps long series names inside its box on narrow charts, and goes above or below the point when neither side has room, rather than over it.
+- Fab: a Fab in a corner rises above an OfflineBanner or the toasts at its edge while they show, instead of being hidden under them even when focused, and the page keeps room for both when it scrolls to a field. A Toaster puts the room its toasts take in `--dk-toaster-space-<position>` on the root for this.
+- FileUpload: choosing a file it refuses a second time (the same wrong type again) now puts a new alert in, so a screen reader says it again. Before, the words didn't change, so nothing was said.
+- Meter: a label with a word longer than the line ("Datenschutzgrundverordnungskonformitätsprüfung") wraps inside the meter, as Progress's does, instead of running out of it and making a narrow page scroll sideways.
+- NumberInput: with minorUnits and a currency that has no minor digits (JPY, KRW), a typed fraction now reaches onValueChange and the form rounded to a whole unit, as the field shows it: 2.50 is ¥3 and 3, not 2.5.
+- Popover: opened from the keyboard inside a shadow root, Firefox now shows the focus ring where focus lands (the panel, or a sheet's inside ring).
+- SaveStatus: a status that comes back while it is still fading out (saving, then saved, then saving again within a moment) now turns back from where its fade had got to. Before, its face was moved in the page, which started its fade over from nothing, and the label blinked out for a few frames.
+- Table: a "Select all" checkbox next to a sortable header keeps a small gap before the sort button, so each one has a 24px target that doesn't touch the other (WCAG 2.5.8). Before, the sort button started right at the checkbox's edge.
+- Tabs: in Firefox, an overflowing tab list no longer eases its edge fade in on the first frame; TabList's own scroll to the selected tab as it mounts no longer counts as the list being scrolled.
+- Toast: a Toaster on the same edge as a shown OfflineBanner stacks its toasts above the bar instead of on it, and goes back to its place when the bar goes.
+- VirtualList (and the lists built on it): PageUp and PageDown move a screen at once. With rows of mixed heights, the browser's smooth scroll was thrown back by the rows it measured on the way, so the first PageUp after End moved one row instead of a screen.
+
 ## [14.1.0] - 2026-11-03
 
 ### Added
@@ -2058,7 +2084,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/diki-stwn/serupa-ds/compare/v14.1.0...HEAD
+[Unreleased]: https://github.com/diki-stwn/serupa-ds/compare/v14.2.0...HEAD
+[14.2.0]: https://github.com/diki-stwn/serupa-ds/compare/v14.1.0...v14.2.0
 [14.1.0]: https://github.com/diki-stwn/serupa-ds/compare/v14.0.0...v14.1.0
 [14.0.0]: https://github.com/diki-stwn/serupa-ds/compare/v13.0.0...v14.0.0
 [13.0.0]: https://github.com/diki-stwn/serupa-ds/compare/v12.0.0...v13.0.0

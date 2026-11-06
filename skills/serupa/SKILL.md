@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.1.0
+npm install github:diki-stwn/serupa-ds#v14.2.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -159,7 +159,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Switch**: An on/off setting that takes effect at once.
 - **Textarea**: A multi-line text field, Input's sibling: a native `<textarea>` in a box.
 - **TimePicker**: A time-of-day field: people type a time, or pick one from a list.
-- **TimeZonePicker** (beta): A searchable list of time zones by city, each with its offset now and its name in the reader's language; the value is the IANA name.
+- **TimeZonePicker** (beta): A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
 - **TypeToConfirm**: A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted.
 
 ### Layout
