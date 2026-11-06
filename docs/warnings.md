@@ -70,6 +70,10 @@ A RelativeTime whose `date` isn't a date (a typo, an empty string, a format `Dat
 
 Select doesn't support `multiple` (a native multi-select is hard to use), so it was ignored. Use a group of Checkboxes instead.
 
+## select-value
+
+A controlled Select got a `value` that none of its options has, so the `<select>` shows its first option, and a form sends that, while the app holds the value it passed. Set `value` to one of the options' values, add an option for it, or use a `placeholder` (its value is `""`) for "nothing picked yet".
+
 ## server-locale
 
 A locale-dependent component (a date, a number) rendered on the server without a locale, so the server HTML uses en-US and the page switches to the browser's locale after hydration, which shows as a flash. Set `<SerupaProvider locale>` from the request. See Localization.
