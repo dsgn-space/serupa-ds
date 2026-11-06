@@ -219,6 +219,16 @@ describe('Table', () => {
     expect([s.justifyContent, s.outlineStyle]).toEqual(['flex-end', 'solid']);
   });
 
+  test('select all next to a sortable header: the checkbox keeps 24px around its center clear of the sort button (2.5.8)', async () => {
+    const screen = await render(<Table caption="People"><TableHead><TableRow>
+      <TableSelectCell header label="Select all rows" /><TableHeaderCell sort="none" onSort={() => {}}>Name</TableHeaderCell>
+    </TableRow></TableHead><TableBody><TableRow><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table>);
+    const box = screen.getByRole('checkbox', { name: 'Select all rows' }).element().getBoundingClientRect();
+    const sort = screen.getByRole('button', { name: /Name/ }).element().getBoundingClientRect();
+    const reach = getComputedStyle(document.querySelector('table') as Element).direction === 'rtl' ? box.left + box.width / 2 - sort.right : sort.left - (box.left + box.width / 2);
+    expect(reach).toBeGreaterThanOrEqual(12);
+  });
+
   test('a table too wide for its frame scrolls, and the frame becomes a focusable region named by the caption', async () => {
     await setup();
     const f = el('twide').parentElement!;
