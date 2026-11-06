@@ -17,6 +17,9 @@
 //   no-extras    no second kit beside Serupa: no import from a UI, icon, animation or CSS-in-JS package, and no local
 //                component that only wraps one Serupa component to set its defaults (it returns that one element
 //                with its props spread)
+//   surgical     for a task that changes an existing file (its "start" in tools/skill-eval/starts/): the old lines
+//                stay as they were, apart from the few the change needs ("edits"), and the old code's own faults
+//                (a hand-built button, a hex color) don't count against the other checks, but new ones do
 // It reads code only: it can't tell whether the page works. tools/test/skill-eval.mjs checks the grader itself.
 // A folder holds one answer per task (<task>.tsx) or several runs of each (<task>.1.tsx, <task>.2.tsx…); the table
 // gives each check's pass count over the runs, and the answers' mean length (and, from run.mjs's meta.json, the
@@ -29,7 +32,7 @@ import ts from '@typescript/typescript6';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const TASKS = JSON.parse(fs.readFileSync(path.join(HERE, 'tasks.json'), 'utf8'));
-export const CHECKS = ['parses', 'serupa', 'components', 'no-rebuilds', 'tokens', 'names', 'no-div-click', 'words', 'no-extras'];
+export const CHECKS = ['parses', 'serupa', 'components', 'no-rebuilds', 'tokens', 'names', 'no-div-click', 'words', 'no-extras', 'surgical'];
 
 const REBUILT = { button: 'Button', input: 'Input', select: 'Select', textarea: 'Textarea', table: 'Table', dialog: 'Dialog' };
 const FIELD_CONTROLS = new Set(['Input', 'PasswordInput', 'Textarea', 'Select', 'NumberInput', 'SearchInput', 'Combobox', 'DatePicker', 'DateRangePicker', 'TimePicker', 'PhoneInput', 'PinInput', 'Slider', 'ColorPicker']);
@@ -77,13 +80,13 @@ const RAW_TIME = /(?<![\w-])(?:\d+(?:\.\d+)?|\.\d+)m?s\b/;
 
 /** One answer's results: { check: { ok, why } }. `expect` is the task's component list. */
 export function grade(source, expect = []) {
-  const out = Object.fromEntries(CHECKS.map((c) => [c, { ok: true, why: '' }]));
-  const fail = (c, why) => { if (out[c].ok) out[c] = { ok: false, why }; };
+  const out = Object.fromEntries(CHECKS.map((c) => [c, { ok: true, why: '', all: [] }]));
+  const fail = (c, why) => { out[c].all.push(why); if (out[c].ok) Object.assign(out[c], { ok: false, why }); };
   const file = ts.createSourceFile('answer.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   // Syntax errors: createSourceFile keeps them on the file (not in its public type).
   const syntax = /** @type {{ parseDiagnostics?: import('@typescript/typescript6').Diagnostic[] }} */ (/** @type {unknown} */ (file)).parseDiagnostics ?? [];
   if (syntax.length) {
-    for (const c of CHECKS) out[c] = { ok: false, why: c === 'parses' ? ts.flattenDiagnosticMessageText(syntax[0].messageText, ' ') : 'did not parse' };
+    for (const c of CHECKS) { const why = c === 'parses' ? ts.flattenDiagnosticMessageText(syntax[0].messageText, ' ') : 'did not parse'; out[c] = { ok: false, why, all: [why] }; }
     return out;
   }
   const imported = new Set();
@@ -189,6 +192,32 @@ export function grade(source, expect = []) {
   return out;
 }
 
+/** A task's starting file, or '' for a task that starts from nothing. */
+export const startOf = (task) => task.start ? fs.readFileSync(path.join(HERE, 'starts', task.start), 'utf8') : '';
+
+/** An answer graded as its task asks. For a task with a starting file, a fault the start already had is left out
+ *  (one of each it had), and "surgical" counts the old lines the answer changed: more than the task's "edits", or a
+ *  "keep" line gone, fails. */
+export function gradeTask(source, task) {
+  const out = grade(source, task.expect);
+  const start = startOf(task);
+  if (!start || !out.parses.ok) return out;
+  const before = grade(start, []);
+  for (const c of CHECKS) {
+    if (['parses', 'serupa', 'components', 'surgical'].includes(c)) continue;
+    const old = [...before[c].all];
+    const left = out[c].all.filter((w) => { const i = old.indexOf(w); if (i < 0) return true; old.splice(i, 1); return false; });
+    out[c] = { ok: !left.length, why: left[0] ?? '', all: left };
+  }
+  const have = new Map();
+  for (const l of source.split('\n').map((x) => x.trim()).filter(Boolean)) have.set(l, (have.get(l) ?? 0) + 1);
+  const gone = start.split('\n').map((x) => x.trim()).filter(Boolean).filter((l) => { const n = have.get(l) ?? 0; if (n) have.set(l, n - 1); return !n; });
+  const lost = (task.keep ?? []).filter((k) => !source.includes(k));
+  if (lost.length) out.surgical = { ok: false, why: `changed code the task didn't ask about: ${lost[0]}`, all: lost };
+  else if (gone.length > (task.edits ?? 0)) out.surgical = { ok: false, why: `${gone.length} old lines changed where ${task.edits ?? 0} would do, such as ${gone.find((l) => !/^import /.test(l)) ?? gone[0]}`, all: gone };
+  return out;
+}
+
 /** An answer's length: its lines that hold more than whitespace. */
 export const lines = (source) => source.split('\n').filter((l) => l.trim()).length;
 
@@ -200,7 +229,7 @@ export function gradeDir(dir) {
   const meta = fs.existsSync(metaFile) ? JSON.parse(fs.readFileSync(metaFile, 'utf8')) : {};
   return TASKS.map((t) => {
     const mine = files.filter((f) => new RegExp(`^${t.id}(\\.\\d+)?\\.tsx$`).test(f)).sort((x, y) => x.localeCompare(y, 'en', { numeric: true }));
-    const runs = mine.length ? mine.map((f) => { const src = fs.readFileSync(path.join(dir, f), 'utf8'); return { results: grade(src, t.expect), lines: lines(src) }; })
+    const runs = mine.length ? mine.map((f) => { const src = fs.readFileSync(path.join(dir, f), 'utf8'); return { results: gradeTask(src, t), lines: lines(src) }; })
       : [{ results: Object.fromEntries(CHECKS.map((c) => [c, { ok: false, why: 'no answer' }])), lines: 0 }];
     return { id: t.id, runs, meta: meta[t.id] ?? [] };
   });
