@@ -39,7 +39,11 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 
 ## Rules
 
-1. **Use a component when one fits.** Pick it from the list below. Don't rebuild a button, field, dialog, menu or table out of `div`s.
+1. **Reuse before you build, in this order.** Stop at the first step that does the job:
+   1. A Serupa component from the list below. Don't rebuild a button, field, dialog, menu or table out of `div`s.
+   2. Serupa components put together: a settings page is `Stack`, `Card`, `Field` and `Switch`, not a new widget.
+   3. A native element (`<details>`, `<progress>`, `<dl>`) styled with the utility classes and tokens.
+   4. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
 2. **Tokens only.** Write no raw colors, pixel sizes, durations or shadows. Use the utility classes (`p-4`, `gap-2`, `bg-surface`, `text-text-muted`, `rounded-md`, `shadow-md`) or `var(--…)` tokens in your CSS (`var(--spacing-4)`, `var(--primary)`).
 3. **Colors by role, not hue.** Use the alias tokens, which change per theme: `primary`, `on-primary`, `surface`, `surface-muted`, `text`, `text-muted`, `border`, `danger`, `danger-text`, `success-text`, `warning-text`, `focus-ring`. A palette color like `blue-600` looks the same in every theme. Use one only when no alias fits. For text in a status color, use the `*-text` alias, never the fill.
 4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes.
@@ -48,7 +52,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 
 ## Accessibility: what the app must do
 
-The components meet their part of WCAG 2.2 AA. The page meets the rest only if you also do these:
+The components meet their part of WCAG 2.2 AA. The page meets the rest only if you also do these, in every answer, however short:
 
 - **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<Container as="main">`) and add a "Skip to content" link (`<VisuallyHidden focusable>`).
 - **Headings:** one `h1` per page and no skipped levels. Heading's `level` sets the element, and its look can differ.
