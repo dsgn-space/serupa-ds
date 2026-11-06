@@ -19,6 +19,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: "Alles uitvouwen",
+  chartKind: (type) => (type === "bar" ? "Staafdiagram" : "Lijndiagram"),
+  chartSummary: (kind, series, points, first, last) => kind + ", " + n(series) + (series === 1 ? " reeks" : " reeksen") + ", " + n(points) + (points === 1 ? " punt" : " punten") + (points > 1 ? " van " + first + " tot " + last : "") + ".",
+  chartRange: (series, low, lowAt, high, highAt) => series + ": laagste " + low + " (" + lowAt + "), hoogste " + high + " (" + highAt + ").",
+  chartPoint: (series, category, value) => (series ? series + ", " + category + ": " + value : category + ": " + value),
+  chartNoValue: "Geen waarde",
+  chartCategory: "Categorie",
+  chartShowTable: "Als tabel tonen",
+  chartShowChart: "Als diagram tonen",
   collapseAll: "Alles samenvouwen",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => n(count) + " meer",

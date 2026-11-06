@@ -50,7 +50,8 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // 223,090, so the budget went to 224,000, with room for Logo, the next new component. Illustration and Sparkline (77 and
 // CH3, 2 Nov 2026) cost about 570 each, which takes them to about 225,140, so it went to 226,000. Measured with both
 // merged (and the day's Dependabot updates) it is 226,914, so 228,000 on 2 Nov 2026.
-const BUDGET = { Types: 101000, Instantiations: 228000 };
+// Chart (CH2, 2 Nov 2026), a new component with typed series, takes them to 228,644, so 229,500.
+const BUDGET = { Types: 101000, Instantiations: 229500 };
 const diag = built && spawnSync(process.execPath, [tsc, '-p', path.join(HERE, 'types'), '--extendedDiagnostics'], { cwd: PROJECT, encoding: 'utf8' });
 for (const [what, budget] of Object.entries(BUDGET)) {
   const n = diag ? Number((diag.stdout.match(new RegExp(`^${what}:\\s+(\\d+)`, 'm')) || [])[1]) : NaN;

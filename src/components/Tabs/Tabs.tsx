@@ -181,6 +181,8 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>("
   const ctx = useTabs("TabList");
   const list = React.useRef<HTMLDivElement | null>(null);
   const [fade, setFade] = React.useState<{ before: boolean; after: boolean }>({ before: false, after: false });
+  // Where TabList itself scrolled the list to show the selected tab as it mounted, before anything else scrolled it.
+  const own = React.useRef<number | null>(null);
   // Which ends have tabs past them: before is the left (or top) edge, after the right (or bottom). In RTL,
   // scrollLeft runs from 0 down to minus the overflow.
   // Each tab carries where the selected tab's line (or fill) is, from where it sits: when it's selected next, its own
@@ -225,14 +227,16 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>("
     if (!el) return;
     measure();
     // The fades ease only once the list has been scrolled (Tabs.css): one that's there from the first frame is just there.
-    const scrolled = () => { el.setAttribute("data-scrolled", ""); measure(); };
+    // TabList's own scroll to the selected tab as it mounts doesn't count: Firefox fires its scroll event late enough
+    // that a fade measured after it would ease in on the first frame.
+    const scrolled = () => { if ((ctx.vertical ? el.scrollTop : el.scrollLeft) !== own.current) el.setAttribute("data-scrolled", ""); measure(); };
     el.addEventListener("scroll", scrolled, { passive: true });
     const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
     if (ro) { ro.observe(el); Array.from(el.children).forEach((c) => ro.observe(c)); }
     return () => { el.removeEventListener("scroll", scrolled); if (ro) ro.disconnect(); };
   }, [measure]);
   // The selected tab, scrolled into view inside the list only (the page doesn't move), with the fade's room to spare.
-  const reveal = React.useCallback(() => {
+  const reveal = React.useCallback((first?: boolean) => {
     const el = list.current;
     const tab = el && ctx.value != null ? el.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]') : null;
     if (!el || !tab) return;
@@ -243,16 +247,18 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>("
       else if (t.bottom > box.bottom - room) el.scrollTop += t.bottom - (box.bottom - room);
     } else if (t.left < box.left + room) el.scrollLeft -= box.left + room - t.left;
     else if (t.right > box.right - room) el.scrollLeft += t.right - (box.right - room);
+    if (first && !el.hasAttribute("data-scrolled")) own.current = ctx.vertical ? el.scrollTop : el.scrollLeft;
     measure();
   }, [ctx.value, ctx.vertical, measure]);
-  useIsoLayoutEffect(reveal, [reveal]);
+  const mounting = React.useRef(true);
+  useIsoLayoutEffect(() => { reveal(mounting.current); mounting.current = false; }, [reveal]);
   // Again once the web fonts have loaded: tabs drawn first in a fallback font change width when the real one
   // arrives, which can leave the selected tab part way past the end.
   React.useEffect(() => {
     const fonts = typeof document !== "undefined" ? document.fonts : undefined;
     if (!fonts || fonts.status === "loaded") return;
     let live = true;
-    fonts.ready.then(() => { if (live) reveal(); }, () => {});
+    fonts.ready.then(() => { if (live) reveal(true); }, () => {});
     return () => { live = false; };
   }, [reveal]);
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
