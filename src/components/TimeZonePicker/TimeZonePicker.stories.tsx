@@ -42,6 +42,27 @@ export const Controlled: Story = {
   },
 };
 
+const ZONES = ['Asia/Jakarta', 'Asia/Tokyo', 'Europe/Berlin', 'America/New_York'];
+const Col = ({ children }: { children: React.ReactNode }) => <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-3)' }}>{children}</div>;
+
+export const Sizes: Story = {
+  render: (args) => <Col>
+    <TimeZonePicker {...args} aria-label="Small" size="sm" zones={ZONES} defaultValue="Asia/Tokyo" />
+    <TimeZonePicker {...args} aria-label="Medium" size="md" zones={ZONES} defaultValue="Asia/Tokyo" />
+    <TimeZonePicker {...args} aria-label="Large" size="lg" zones={ZONES} defaultValue="Asia/Tokyo" />
+  </Col>,
+};
+
+// Invalid, disabled, read-only and loading, as Combobox shows them.
+export const States: Story = {
+  render: (args) => <Col>
+    <TimeZonePicker {...args} aria-label="Invalid" zones={ZONES} defaultValue="Europe/Berlin" invalid />
+    <TimeZonePicker {...args} aria-label="Disabled" zones={ZONES} defaultValue="Europe/Berlin" disabled />
+    <TimeZonePicker {...args} aria-label="Read-only" zones={ZONES} defaultValue="Europe/Berlin" readOnly />
+    <TimeZonePicker {...args} aria-label="Loading" zones={ZONES} loading />
+  </Col>,
+};
+
 // The stress story (G14): a narrow field, a long city and a long zone name.
 export const LongText: Story = {
   args: { zones: ['America/Argentina/ComodRivadavia', 'America/North_Dakota/New_Salem', 'Pacific/Port_Moresby'], defaultValue: 'America/North_Dakota/New_Salem' },

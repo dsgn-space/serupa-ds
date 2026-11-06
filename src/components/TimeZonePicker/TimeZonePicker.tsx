@@ -9,11 +9,11 @@ import { en as words } from "./labels";
 
 export interface TimeZonePickerProps extends Omit<ComboboxSingleProps, "options" | "loadOptions" | "debounce" | "filter" | "multiple"> {
   /** The time zones to offer, as IANA names ("Asia/Jakarta"). Default: every zone the browser knows, and "UTC". */
-  zones?: readonly string[];
+  zones?: readonly string[] | undefined;
   /** The moment the offsets are shown for, as they change with daylight saving time. Default: now. */
-  at?: Date | number;
+  at?: Date | number | undefined;
   /** The language of the zone names ("Waktu Indonesia Barat"); otherwise the SerupaProvider's, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
 }
 
 /** One time zone as TimeZonePicker shows it. */
@@ -39,6 +39,7 @@ export function allTimeZones(): string[] {
 /** A zone's city, offset and name at a moment, in a locale. null for a name the browser doesn't know. */
 // Each zone's two formatters, made once per zone and language: building some 800 of them was most of a mount's time,
 // and every picker on the page, and every later mount, uses the same ones.
+// module state: a formatter is the same for every request (it holds only a zone and a language, nothing of a reader's).
 const formats = new Map<string, Intl.DateTimeFormat>();
 const formatter = (locale: string, zone: string, timeZoneName: "longOffset" | "long") => {
   const key = locale + "|" + zone + "|" + timeZoneName;
