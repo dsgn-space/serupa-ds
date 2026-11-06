@@ -42,7 +42,7 @@ const RENAMED: Record<string, string> = {
   "America/Cordoba": "America/Argentina/Cordoba", "America/Jujuy": "America/Argentina/Jujuy", "America/Mendoza": "America/Argentina/Mendoza",
   "America/Indianapolis": "America/Indiana/Indianapolis", "America/Louisville": "America/Kentucky/Louisville", "America/Coral_Harbour": "America/Atikokan",
 };
-const OLD: Record<string, string> = /* @__PURE__ */ Object.fromEntries(Object.entries(RENAMED).map(([o, n]) => [n, o]));
+const oldName = (zone: string) => Object.keys(RENAMED).find((o) => RENAMED[o] === zone) || "";
 // What people type that isn't in a zone's name: abbreviations and big cities that share another city's zone.
 const ALSO: Record<string, string> = {
   UTC: "gmt", "Europe/London": "gmt bst", "America/New_York": "est edt eastern nyc", "America/Chicago": "cst cdt central",
@@ -132,7 +132,7 @@ export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZo
     if (!i || !t) return true;
     const m = /^(?:utc|gmt)?\s*([+\-−])\s*(\d{1,2})(?::?(\d{2}))?$/.exec(t);
     if (m) return i.offset === (m[1] === "+" ? 1 : -1) * (Number(m[2]) * 60 + Number(m[3] || 0));
-    return [i.city, i.name, i.zone.replace(/_/g, " "), (OLD[i.zone] || "").replace(/_/g, " "), ALSO[i.zone] || "", i.offsetText].some((s) => s && fold(s).includes(t));
+    return [i.city, i.name, i.zone.replace(/_/g, " "), oldName(i.zone).replace(/_/g, " "), ALSO[i.zone] || "", i.offsetText].some((s) => s && fold(s).includes(t));
   }, [byZone]);
   return <Combobox {...rest} ref={ref} className={cn("dk-time-zone-picker", className)} options={options} filter={filter}
     {...(value !== undefined ? { value: canon(value) } : null)} {...(defaultValue !== undefined ? { defaultValue: canon(defaultValue) } : null)} />;
