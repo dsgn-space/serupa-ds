@@ -1,3 +1,4 @@
+"use client";
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
@@ -8,7 +9,7 @@ import { Field } from '../../components/Field/Field';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { announce } from '../../internal/announce';
 
-/* Consent banner (PT13): asks once whether optional cookies may be set, and lets the answer be changed at any time.
+/* Consent banner: asks once whether optional cookies may be set, and lets the answer be changed at any time.
    For an app to copy. What it carries (WCAG 2.2):
    - 2.4.11: the banner sits at the top of the page in the normal flow, not over it, so it never hides the focused
      element, whatever is focused and however far the page is zoomed (1.4.10).
