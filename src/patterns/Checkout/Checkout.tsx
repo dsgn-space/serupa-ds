@@ -11,6 +11,7 @@ import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { announce } from '../../internal/announce';
+import { minorDigits } from '../../internal/currency';
 
 /* Checkout / payment details (PT12): delivery address, delivery speed, an optional tip and card details, the order
    summary beside them, a review step and a confirmation. For an app to copy. What it carries (WCAG 2.2):
@@ -22,8 +23,9 @@ import { announce } from '../../internal/announce';
      back with every answer kept and focus on that part's first field (3.3.7: nothing is asked twice).
    - 2.4.3, 4.1.3: each new step's heading takes focus; placing the order says so, and a failure says what to do.
    - 1.3.1 in Safari: the summary's lines keep role="list", which WebKit drops from a list without bullets (FU1).
-   - 1.4.10: long names, addresses and emails wrap inside their cards at 320 px.
-   - The tip is a NumberInput in the order's currency, in cents, so 2.50 is never read as 250.
+   - 1.4.10: long names, addresses and emails wrap inside their cards at 320 px, on every step (GR153).
+   - The tip is a NumberInput in the order's currency, in its minor units like every amount here (cents, or whole
+     yen for JPY: GR152), so 2.50 is never read as 250.
    Taking the payment (a payment provider's own fields, 3-D Secure, fraud checks) is the app's job; here
    onPlaceOrder decides. */
 
@@ -31,7 +33,7 @@ export interface OrderLine {
   id: string;
   name: string;
   quantity: number;
-  /** The price of one, in minor units (cents). */
+  /** The price of one, in the currency's minor units (cents for USD, yen for JPY). */
   price: number;
 }
 
@@ -45,7 +47,7 @@ export interface CheckoutDetails {
   email: string;
   phone: string;
   delivery: 'standard' | 'express';
-  /** In minor units (cents). */
+  /** In the currency's minor units. */
   tip: number | null;
   cardNumber: string;
   cardName: string;
@@ -56,15 +58,17 @@ export interface CheckoutDetails {
 export interface CheckoutOrder {
   details: CheckoutDetails;
   lines: readonly OrderLine[];
-  /** The total, in minor units (cents). */
+  /** The total, in the currency's minor units. */
   total: number;
 }
 
 export interface CheckoutProps {
   /** What's being bought. Default: two demo lines. */
   lines?: readonly OrderLine[] | undefined;
-  /** An ISO 4217 code. Default: "USD". */
+  /** An ISO 4217 code. Default: "USD". Every amount is in its minor units: cents for USD, yen for JPY, fils for KWD. */
   currency?: string | undefined;
+  /** What express delivery costs, in minor units. Default: 900 ($9.00 in USD). */
+  expressPrice?: number | undefined;
   /** Answers already known (a saved address), so they aren't typed again. */
   initial?: Partial<CheckoutDetails> | undefined;
   /** Starts on the review step, when every answer in `initial` is good. */
@@ -77,7 +81,6 @@ const demoLines: OrderLine[] = [
   { id: 'mug', name: 'Stoneware mug', quantity: 2, price: 1800 },
   { id: 'beans', name: 'Coffee beans, 1 kg', quantity: 1, price: 2450 },
 ];
-const EXPRESS = 900;
 const COUNTRIES = [
   { value: 'AU', label: 'Australia' }, { value: 'CA', label: 'Canada' }, { value: 'DE', label: 'Germany' },
   { value: 'ID', label: 'Indonesia' }, { value: 'GB', label: 'United Kingdom' }, { value: 'US', label: 'United States' },
@@ -112,7 +115,7 @@ type Part = 'address' | 'delivery' | 'payment';
 const FIRST: Record<Part, string> = { address: `#${id('name')}`, delivery: 'input[name="delivery"]:checked', payment: `#${id('cardNumber')}` };
 
 /** The checkout page: a skip link, a header, then main with the form (or the review, or the confirmation) and the order summary. */
-export function Checkout({ lines = demoLines, currency = 'USD', initial, startAtReview, onPlaceOrder }: CheckoutProps) {
+export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 900, initial, startAtReview, onPlaceOrder }: CheckoutProps) {
   const [d, setD] = React.useState<CheckoutDetails>(() => ({ ...blank, ...initial }));
   const [step, setStep] = React.useState<Step>(() => (startAtReview && !checkoutProblems({ ...blank, ...initial }).length ? 'review' : 'details'));
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
@@ -121,9 +124,11 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
   const [failed, setFailed] = React.useState(false);
 
   const subtotal = lines.reduce((sum, l) => sum + l.quantity * l.price, 0);
-  const deliveryCost = d.delivery === 'express' ? EXPRESS : 0;
+  const deliveryCost = d.delivery === 'express' ? expressPrice : 0;
   const total = subtotal + deliveryCost + (d.tip ?? 0);
-  const money = (cents: number) => <FormattedNumber value={cents / 100} format="currency" currency={currency} />;
+  // Amounts are in the currency's minor units (GR152): 1800 is $18.00, but ￥1,800 and 1.800 KWD.
+  const unit = 10 ** minorDigits(currency);
+  const money = (minor: number) => <FormattedNumber value={minor / unit} format="currency" currency={currency} />;
 
   // After a step changes, focus goes to its heading, or to the field a "Change" button asked for (a CSS selector).
   const focusNext = React.useRef<string | null>(null);
@@ -181,7 +186,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
         <Heading level={1}>Checkout</Heading>
         <div className="grid gap-6 lg:grid-cols-3">
-          <section aria-labelledby="checkout-step" className="flex flex-col gap-6 lg:col-span-2">
+          <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">
             <div className="flex flex-col gap-1">
               <p className="m-0 text-sm text-text-muted">{steps[step]}</p>
               <Heading level={2} id="checkout-step" ref={stepHeading} tabIndex={-1} className="outline-none">{titles[step]}</Heading>
@@ -212,7 +217,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
                   <Field label="Delivery speed" group>
                     <RadioGroup name="delivery" value={d.delivery} onValueChange={(v) => setD({ ...d, delivery: v })}>
                       <Radio value="standard" description="3 to 5 working days">Standard: free</Radio>
-                      <Radio value="express" description="Next working day, ordered before 2 pm">Express: {money(EXPRESS)}</Radio>
+                      <Radio value="express" description="Next working day, ordered before 2 pm">Express: {money(expressPrice)}</Radio>
                     </RadioGroup>
                   </Field>
                   <Field label="Tip for the courier" hint="Every cent goes to the courier." optional>
@@ -264,11 +269,11 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
                 </div>
               </div>
             ) : (
-              <p className="m-0">We've sent the receipt to {d.email}. We'll email again when it's on its way.</p>
+              <p className="m-0 wrap-anywhere">We've sent the receipt to {d.email}. We'll email again when it's on its way.</p>
             )}
           </section>
 
-          <aside aria-labelledby="checkout-summary" className="lg:col-span-1">
+          <aside aria-labelledby="checkout-summary" className="min-w-0 lg:col-span-1">
             <Card className="flex flex-col gap-3">
               <Heading level={2} id="checkout-summary" className="text-lg">Order summary</Heading>
               <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
