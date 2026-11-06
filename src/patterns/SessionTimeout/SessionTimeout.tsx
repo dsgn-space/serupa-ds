@@ -12,13 +12,16 @@ import { announce } from '../../internal/announce';
 
 /* Session time-out warning: warns well before a session ends, lets one action keep it, and loses nothing
    typed if it ends anyway. For an app to copy. What it carries (WCAG 2.2):
-   - 2.2.1: a Dialog opens `warnBefore` seconds before the end (two minutes by default, well over the 20 seconds
+   - 2.2.1: typing or clicking on the page counts as activity and keeps the session (at most once every
+     `activityEvery` seconds, through `onExtend`), so nobody writing a long message is interrupted mid-sentence.
+   - 2.2.1: with nothing happening, a Dialog opens `warnBefore` seconds before the end (two minutes by default, well over the 20 seconds
      2.2.1 asks for). "Stay signed in", focused first, is the one action that extends it; Escape extends it too,
      since pressing anything means someone is there.
    - 4.1.3: the time left is said when the warning opens, then only at each whole minute and at 30 seconds, never
      every second. The countdown on screen updates every second, outside any live region.
    - 2.2.6, 3.3.7: what's typed is kept as it's typed (here in localStorage under `saveKey`), so if the session ends,
-     signing in again brings it all back, and the page says so before and after.
+     signing in again brings it all back, and the page says so before and after. Signing out on purpose clears it, so
+     the next person on the computer doesn't find it.
    - 2.4.3: when the warning closes, focus goes back to where it was; when the session ends, to the "Signed out"
      heading.
    Keeping the session on the server (a request from `onExtend`), and signing in again, is the app's job. */
@@ -28,10 +31,13 @@ export interface SessionTimeoutProps {
   duration?: number | undefined;
   /** How long before the end the warning opens, in seconds. Default: 120. */
   warnBefore?: number | undefined;
-  /** "Stay signed in" was pressed: refresh the session on the server. A rejected promise lets the session run out. */
+  /** Refresh the session on the server: "Stay signed in" was pressed, or the person typed or clicked (at most once every
+      `activityEvery` seconds). A rejected promise lets the session run out. */
   onExtend?: (() => void | Promise<unknown>) | undefined;
   /** The session ended: sign out on the server. */
   onExpire?: (() => void) | undefined;
+  /** Typing or clicking keeps the session, at most once every this many seconds. Default: 60. */
+  activityEvery?: number | undefined;
   /** Keeps what's typed in localStorage under this key, so it survives a sign-out or a reload. */
   saveKey?: string | undefined;
 }
@@ -56,19 +62,24 @@ function load(key: string | undefined): Draft | null {
     return raw ? (JSON.parse(raw) as Draft) : null;
   } catch { return null; }
 }
+function forget(key: string | undefined) {
+  if (!key) return;
+  try { window.localStorage.removeItem(key); } catch { /* blocked: nothing was kept */ }
+}
 function save(key: string | undefined, draft: Draft) {
   if (!key) return;
   try { window.localStorage.setItem(key, JSON.stringify(draft)); } catch { /* full or blocked: the draft stays in the page */ }
 }
 
 /** A page with a form, a warning Dialog before the session ends, and a signed-out page that keeps what was typed. */
-export function SessionTimeout({ duration = 1200, warnBefore = 120, onExtend, onExpire, saveKey }: SessionTimeoutProps) {
+export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEvery = 60, onExtend, onExpire, saveKey }: SessionTimeoutProps) {
   const [deadline, setDeadline] = React.useState(() => Date.now() + duration * 1000);
   const [left, setLeft] = React.useState(duration);
   const [draft, setDraft] = React.useState<Draft>(() => load(saveKey) ?? { subject: '', message: '' });
   const expired = left <= 0;
   const warning = !expired && left <= warnBefore;
   const signedOut = React.useRef<HTMLHeadingElement | null>(null);
+  const [byChoice, setByChoice] = React.useState(false);
 
   React.useEffect(() => {
     if (expired) return;
@@ -90,8 +101,31 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, onExtend, on
 
   React.useEffect(() => { if (expired) signedOut.current?.focus(); }, [expired]);
 
-  const signOut = () => { setLeft(0); onExpire?.(); };
-  const restart = () => { setDeadline(Date.now() + duration * 1000); setLeft(duration); };
+  const restart = React.useCallback(() => { setDeadline(Date.now() + duration * 1000); setLeft(duration); setByChoice(false); }, [duration]);
+
+  // Typing or clicking is activity: it refreshes the session, at most once every activityEvery seconds. Not while
+  // the warning is open, where staying takes the warning's own answer.
+  // The session last started at deadline - duration, and one refresh is asked for at a time.
+  const asking = React.useRef(false);
+  React.useEffect(() => {
+    if (expired || warning) return;
+    const active = () => {
+      if (asking.current || Date.now() - (deadline - duration * 1000) < activityEvery * 1000) return;
+      asking.current = true;
+      Promise.resolve(onExtend?.()).then(restart, () => { /* the session runs out as warned */ }).finally(() => { asking.current = false; });
+    };
+    document.addEventListener('keydown', active, true);
+    document.addEventListener('pointerdown', active, true);
+    return () => { document.removeEventListener('keydown', active, true); document.removeEventListener('pointerdown', active, true); };
+  }, [expired, warning, deadline, duration, activityEvery, onExtend, restart]);
+
+  const signOut = () => {
+    forget(saveKey);
+    setDraft({ subject: '', message: '' });
+    setByChoice(true);
+    setLeft(0);
+    onExpire?.();
+  };
   const extend = async () => {
     try { await onExtend?.(); restart(); announce("You're still signed in."); } catch { /* the session runs out as warned */ }
   };
@@ -110,15 +144,17 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, onExtend, on
       <main id="main" className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
         {expired ? (
           <div className="flex flex-col gap-3">
-            <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">You've been signed out</Heading>
-            <p className="m-0">We signed you out because nothing happened for {timeLeft(duration)}. What you typed is kept: sign in again to carry on where you left off.</p>
+            <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? "You've signed out" : "You've been signed out"}</Heading>
+            <p className="m-0">{byChoice
+              ? 'What you typed is cleared from this computer, so nobody else finds it.'
+              : `We signed you out because nothing happened for ${timeLeft(duration)}. What you typed is kept: sign in again to carry on where you left off.`}</p>
             <div><Button onClick={restart}>Sign in again</Button></div>
           </div>
         ) : (
           <>
             <div className="flex flex-col gap-2">
               <Heading level={1}>Contact support</Heading>
-              <p className="m-0 text-text-muted">For your security, you're signed out after {timeLeft(duration)} with nothing happening. We'll warn you first, and keep what you've typed.</p>
+              <p className="m-0 text-text-muted">For your security, you're signed out after {timeLeft(duration)} with nothing happening: typing counts. We'll warn you first, and keep what you've typed.</p>
             </div>
             <Card as="section" aria-labelledby="message-title" className="flex flex-col gap-4">
               <Heading level={2} id="message-title">Your message</Heading>
@@ -140,7 +176,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, onExtend, on
           <Button data-autofocus onClick={() => void extend()}>Stay signed in</Button>
         </>}>
         <p className="m-0">You'll be signed out in <strong>{timeLeft(left)}</strong> because nothing has happened for a while.</p>
-        <p className="m-0 mt-2 text-sm text-text-muted">What you've typed is kept either way.</p>
+        <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you've typed is kept. Signing out clears it.</p>
       </Dialog>
     </div>
   );

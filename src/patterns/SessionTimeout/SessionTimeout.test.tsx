@@ -68,18 +68,45 @@ describe('Patterns/Session time-out', () => {
     await expect.element(screen.getByLabelText('Message')).toHaveValue('Charged twice in May.');
   });
 
+  test('typing keeps the session: no warning mid-sentence, and the server is told at most once per activityEvery', async () => {
+    const onExtend = vi.fn();
+    const screen = await render(<SessionTimeout duration={3} warnBefore={1} activityEvery={1} onExtend={onExtend} />);
+    await screen.getByLabelText('Message').click();
+    for (let i = 0; i < 6; i++) {
+      await userEvent.keyboard('a');
+      await new Promise((r) => setTimeout(r, 700));
+    }
+    expect(document.querySelector('dialog[open]')).toBeNull();
+    expect(active().tagName).toBe('TEXTAREA');
+    expect(onExtend.mock.calls.length).toBeGreaterThanOrEqual(2);
+    expect(onExtend.mock.calls.length).toBeLessThanOrEqual(5);
+    await screen.unmount();
+    // When the server refuses, typing doesn't hide the end: the warning still comes.
+    const refused = vi.fn(() => Promise.reject(new Error('offline')));
+    const again = await render(<SessionTimeout duration={3} warnBefore={1} activityEvery={1} onExtend={refused} />);
+    await again.getByLabelText('Message').click();
+    await new Promise((r) => setTimeout(r, 1100));
+    await userEvent.keyboard('a');
+    await vi.waitFor(() => expect(refused).toHaveBeenCalled());
+    await vi.waitFor(() => expect(document.querySelector('dialog[open]')).not.toBeNull(), WAIT);
+  });
+
   test('a draft saved before a reload comes back', async () => {
     window.localStorage.setItem(KEY, JSON.stringify({ subject: 'Saved', message: 'Before the reload' }));
     const screen = await render(<SessionTimeout saveKey={KEY} />);
     await expect.element(screen.getByLabelText('Subject')).toHaveValue('Saved');
   });
 
-  test('"Sign out" ends it at once; a refused extension lets it run out as warned', async () => {
+  test('"Sign out" ends it at once and clears the draft from the computer; a refused extension lets it run out as warned', async () => {
     const onExpire = vi.fn();
-    const first = await render(<SessionTimeout duration={3} warnBefore={2} onExpire={onExpire} />);
+    const first = await render(<SessionTimeout duration={4} warnBefore={3} saveKey={KEY} onExpire={onExpire} />);
+    await userEvent.fill(first.getByLabelText('Subject'), 'Private');
     await first.getByRole('button', { name: 'Sign out' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe("You've been signed out"));
+    await vi.waitFor(() => expect(active().textContent).toBe("You've signed out"));
     expect(onExpire).toHaveBeenCalledTimes(1);
+    expect(window.localStorage.getItem(KEY)).toBeNull();
+    await first.getByRole('button', { name: 'Sign in again' }).click();
+    await expect.element(first.getByLabelText('Subject')).toHaveValue('');
     await first.unmount();
     const onExtend = vi.fn(() => Promise.reject(new Error('offline')));
     const second = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);

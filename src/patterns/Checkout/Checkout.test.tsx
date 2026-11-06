@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { Checkout, type CheckoutDetails } from './Checkout';
 
 const active = () => document.activeElement as HTMLElement;
@@ -113,6 +113,38 @@ describe('Patterns/Checkout', () => {
     expect(bare.map((l) => l.getAttribute('role'))).toEqual(['list']);
     const main = document.querySelector('main') as HTMLElement;
     expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
+  });
+
+  test('on a phone the order summary comes before "Place order", and from lg up it sits beside the review (GR167)', async () => {
+    const at = async (width: number) => {
+      const screen = await render(<div style={{ width }}><Checkout initial={{ ...filled, delivery: 'express', tip: 250 }} startAtReview /></div>);
+      const aside = (document.querySelector('aside') as HTMLElement).getBoundingClientRect();
+      const pay = screen.getByRole('button', { name: /Place order/ }).element();
+      const button = pay.getBoundingClientRect();
+      const before = ((document.querySelector('aside') as HTMLElement).compareDocumentPosition(pay) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      await screen.unmount();
+      return { aside, button, before };
+    };
+    const phone = await at(390);
+    expect(phone.before).toBe(true);
+    expect(phone.aside.bottom).toBeLessThanOrEqual(phone.button.top);
+    // lg is a media query, so the window itself has to be wide (the tests run at 900 x 700).
+    await page.viewport(1280, 900);
+    const wide = await at(1200).finally(() => page.viewport(900, 700));
+    expect(wide.aside.left).toBeGreaterThanOrEqual(wide.button.right);
+    expect(wide.aside.top).toBeLessThan(wide.button.top);
+  });
+
+  test('a long "Place order" (a big amount, or a longer language) wraps inside 320 px, never wider than the page (GR169)', async () => {
+    const screen = await render(<div style={{ width: 320 }}><Checkout currency="IDR" initial={filled} startAtReview
+      lines={[{ id: 'a', name: 'Kursi', quantity: 9, price: 222222222222222 }]} /></div>);
+    const main = document.querySelector('main') as HTMLElement;
+    const pay = screen.getByRole('button', { name: /Place order/ }).element();
+    // The button stays inside the page's column (it wraps), and the page doesn't scroll sideways.
+    const column = pay.closest('main > div') as HTMLElement;
+    expect(pay.getBoundingClientRect().right).toBeLessThanOrEqual(column.getBoundingClientRect().right);
+    expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
+    expect(pay.textContent).toContain('Place order: pay');
   });
 
   test('amounts are in the currency\'s own minor units: yen have none, so 1800 is ￥1,800 (GR152)', async () => {
