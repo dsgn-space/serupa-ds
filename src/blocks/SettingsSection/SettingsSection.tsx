@@ -10,7 +10,8 @@ import { SaveStatus, type SaveState } from '../../components/SaveStatus/SaveStat
    - 1.3.1: a section named by its heading, so a screen reader lists it and can jump to it; the description says what
      the group is for.
    - 3.3.1 / 3.3.3: a failed save shows an ErrorSummary at the top of this section's form, which takes focus, with a
-     link to each field; each field also says its own error (the app passes it to the Field).
+     link to each field; each field also says its own error (the app passes it to the Field). A second Save with the
+     same problems takes focus again (GR163).
    - 4.1.3: SaveStatus says "Saved" politely once a save finishes, and "Couldn't save" with Try again if it fails, so
      the person doesn't have to look for a change.
    - 3.2.2: nothing saves on its own: changes wait for this section's Save, so other sections are left alone.
@@ -42,14 +43,16 @@ export interface SettingsSectionProps {
 /** One group of settings with its own heading, its own Save, its own status and its own error summary. */
 export function SettingsSection({ title, description, headingLevel = 2, onSave, errors = [], status = 'idle', savedAt, onRetry, saveLabel = 'Save', children }: SettingsSectionProps) {
   const id = React.useId();
+  // Each Save remounts the summary, so a second try with the same problems takes focus and is read again (GR163).
+  const [tries, setTries] = React.useState(0);
   return (
     <section aria-labelledby={id} className="grid grid-cols-1 gap-4 border-b border-border py-6 md:grid-cols-3 md:gap-8">
       <div className="flex flex-col gap-1">
         <Heading level={headingLevel} size="lg" id={id}>{title}</Heading>
         {description ? <p className="m-0 text-sm text-text-muted">{description}</p> : null}
       </div>
-      <form noValidate onSubmit={(e) => { e.preventDefault(); onSave(); }} className="flex min-w-0 flex-col gap-4 md:col-span-2">
-        {errors.length ? <ErrorSummary errors={errors} headingLevel={(headingLevel + 1) as 3 | 4 | 5} /> : null}
+      <form noValidate onSubmit={(e) => { e.preventDefault(); setTries((t) => t + 1); onSave(); }} className="flex min-w-0 flex-col gap-4 md:col-span-2">
+        {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={(headingLevel + 1) as 3 | 4 | 5} /> : null}
         {children}
         <div className="flex flex-wrap items-center gap-3">
           <Button type="submit" loading={status === 'saving'}>{saveLabel}</Button>

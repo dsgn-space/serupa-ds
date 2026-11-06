@@ -4,7 +4,8 @@
 // and serupaPurge() so `npm run build` ships only the classes the app uses. `npm run check` is the app's "done":
 // the types, ESLint with jsx-a11y and serupa-ds/eslint (an <Image> with no alt), and Stylelint with
 // serupa-ds/stylelint (a raw color, spacing or radius where a token belongs), so the app's coding agent can check
-// its own work and fix until it passes.
+// its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
+// node_modules/serupa-ds, which matches the installed release.
 //
 // usage:  npx --package=github:diki-stwn/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
 //
@@ -14,6 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CLAUDE, withSection } from './serupa-agents.mjs';
 
 // The versions the repository tests with: tools/test/create-app.mjs fails when they drift from its devDependencies.
 export const VERSIONS = {
@@ -203,6 +205,9 @@ export function App() {
   );
 }
 `,
+    // The app's coding agents read the skill from the installed release (serupa-agents adds the same to an existing app).
+    'AGENTS.md': withSection('', title),
+    'CLAUDE.md': CLAUDE,
     '.gitignore': 'node_modules\ndist\n',
     'README.md': `# ${title}
 
