@@ -26,7 +26,7 @@ t('serupa-ds/labels/en and /id are enLabels and idLabels', packs.en.labels === e
 const reasons = ['valueMissing', 'typeMismatch', 'badInput', 'tooShort', 'tooLong', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'patternMismatch'];
 const SAMPLES = {
   avatarStatus: ['online', 'busy', 'away', 'offline'].map((s) => [s]),
-  avatarMore: [[1], [5]], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]],
+  avatarMore: [[1], [5]], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]], sparklineSummary: [['Revenue', '12', '18', '9', '21']],
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
   contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0], [1], [5]], moreResults: [[1], [40]],
   clearValue: [['Size'], ['']], createOption: [['Research']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],
@@ -40,21 +40,23 @@ const SAMPLES = {
   itemsOf: [[1, 1, 9], [1, 10, 90]], progressComplete: [['Upload'], ['']], ratingStars: [[1], [3.5], [5]], ratingValue: [[3, 5]],
   reorderGrabbed: [['Apples', 2, 5]], reorderMoved: [['Apples', 3, 5]], reorderDropped: [['Apples', 3, 5]], reorderCancelled: [['Apples', 2, 5]],
   stepOf: [[2, 4]], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1], [3]],
-  commandsCount: [[0], [1], [5]], toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
+  commandsCount: [[0], [1], [5]],
+  chartKind: [['line'], ['bar']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
+  toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
 };
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
 const SILENT_IN_ENGLISH = new Set(['invalidValue']);
 // Words that are often the same in another language (a brand, an abbreviation, a loanword).
-const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum']);
+const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint']);
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
-  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName'],
+  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName'],
   es: ['generalShortcuts'],
   ms: ['edit'],
-  nl: ['sliderMaximum'],
+  nl: ['sliderMaximum', 'codeName'],
   sv: ['sliderMaximum', 'colorName'],
-  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page'],
+  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName'],
 };
 const sameOk = (l, k) => SAME_OK.has(k) || (SAME_IN[l] || []).includes(k);
 

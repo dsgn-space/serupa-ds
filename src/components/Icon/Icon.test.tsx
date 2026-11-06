@@ -71,7 +71,8 @@ describe('Icon', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<><Icon name="Home" /><Icon name="arrow-forward" /><Icon name="Looks3" /><Icon name="Nonsense_Thing" /></>);
     const said = (n: string) => warn.mock.calls.map((c) => String(c[0])).find((m) => m.includes(`"${n}"`));
-    await vi.waitFor(() => expect(said('Nonsense_Thing')).toBeTruthy());
+    // Each name's warning comes once its part of the table has loaded, in whatever order those arrive.
+    await vi.waitFor(() => expect(['Home', 'arrow-forward', 'Looks3', 'Nonsense_Thing'].every((n) => said(n))).toBe(true));
     expect(said('Home')).toContain('Did you mean "home"?');
     expect(said('arrow-forward')).toContain('Did you mean "arrow_forward"?');
     expect(said('Looks3')).toContain('Did you mean "looks_3"?');
@@ -88,6 +89,22 @@ describe('Icon', () => {
     </>);
     const fs = (id: string) => getComputedStyle(document.getElementById(id)!).fontSize;
     expect(['sn', 'ss', 'sd', 'sl'].map(fs)).toEqual(['20px', '20px', '18.5px', '32px']);
+  });
+
+  test('inline in running text, each size step leaves its text\'s line as tall as it was, centred on the text (GR110)', async () => {
+    const steps = [['xs', 'text-xs'], ['sm', 'text-sm'], ['md', 'text-base'], ['lg', 'text-lg']] as const;
+    await render(<>{steps.map(([s, t]) => <React.Fragment key={s}>
+      <p id={'bare-' + s} className={t} style={{ margin: 0 }}>Label</p>
+      <p id={'with-' + s} className={t} style={{ margin: 0 }}><Icon id={'i-' + s} name="close" size={s} /><span id={'t-' + s}>Label</span></p>
+    </React.Fragment>)}</>);
+    for (const [s] of steps) {
+      const h = (id: string) => document.getElementById(id)!.getBoundingClientRect();
+      const mid = (r: DOMRect) => (r.top + r.bottom) / 2;
+      // Within half a pixel: Firefox and WebKit put the icon's box on a subpixel baseline, so the line can come out
+      // 0.2px taller there (16.22 for 16), which no one sees; a line that grows by the icon is a pixel or more.
+      expect(Math.abs(h('with-' + s).height - h('bare-' + s).height), s).toBeLessThan(0.5);
+      expect(Math.abs(mid(h('i-' + s)) - mid(h('t-' + s))), s).toBeLessThanOrEqual(2);
+    }
   });
 
   test('mirror: in right-to-left text a directional icon (arrow_forward, chevron_right) flips to point the way reading goes; others don\'t; true flips any, false none', async () => {

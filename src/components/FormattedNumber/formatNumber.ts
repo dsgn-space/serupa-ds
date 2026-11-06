@@ -8,7 +8,7 @@ export type NumberFormat = 'decimal' | 'compact' | 'percent' | 'currency' | 'byt
 
 export interface FormatNumberOptions extends Intl.NumberFormatOptions {
   /** 'decimal' (default), 'compact', 'percent' (0.45 is 45%), 'currency' (with currency), 'bytes' or 'unit' (with unit). */
-  format?: NumberFormat;
+  format?: NumberFormat | undefined;
 }
 
 import { pinCurrencyDigits } from "../../internal/currency";
@@ -29,13 +29,13 @@ function resolve(value: number | bigint, o: FormatNumberOptions): [number | bigi
     case "currency": return [value, own.currency ? pinCurrencyDigits({ style: "currency", ...own }) : own];
     case "unit": return [value, own.unit ? { style: "unit", unitDisplay: "short", ...own } : own];
     case "bytes": {
-      // Steps of 1024 with the short names (kB, MB), like formatFileSize, so a size reads the same in both;
+      // Steps of 1000 (as macOS, iOS and Android count) with the short names (kB, MB), like formatFileSize, so a size reads the same in both;
       // one decimal under 10 (1.5 MB), none above (820 kB) or for bytes.
-      // A value that rounds up to 1024 steps up too, so 1,048,575 is "1 MB", not "1,024 kB".
+      // A value that rounds up to 1000 steps up too, so 999,999 is "1 MB", not "1,000 kB".
       let n = Math.abs(Number(value)), i = 0;
       const digits = () => (own.maximumFractionDigits != null ? own.maximumFractionDigits : i && n < 10 ? 1 : 0);
       const rounded = () => { const f = 10 ** Math.min(20, Math.max(0, digits())); return Math.round(n * f) / f; };
-      while ((n >= 1024 || rounded() >= 1024) && i < BYTES.length - 1) { n /= 1024; i++; }
+      while ((n >= 1000 || rounded() >= 1000) && i < BYTES.length - 1) { n /= 1000; i++; }
       const signed = Number(value) < 0 ? -n : n;
       return [signed, { style: "unit", unit: BYTES[i], unitDisplay: "short", maximumFractionDigits: digits(), ...own }];
     }

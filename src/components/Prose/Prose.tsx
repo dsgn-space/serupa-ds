@@ -5,9 +5,9 @@ import { component } from "../../internal/component";
 
 export interface ProseProps extends React.HTMLAttributes<HTMLElement> {
   /** The element. Default: 'div'. 'article' for a post or a help page that stands on its own. */
-  as?: 'div' | 'article' | 'section';
+  as?: 'div' | 'article' | 'section' | undefined;
   /** The content: HTML from Markdown or a CMS (with dangerouslySetInnerHTML), or plain elements. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 const TAGS = ["div", "article", "section"] as const;

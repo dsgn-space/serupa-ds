@@ -38,7 +38,8 @@ const KNOWN: Record<Rule, Record<string, [string, string[]]>> = {
   'will-change': {},
 };
 // Keyframes that may run once: what appears and can't be taken back mid-way, so there is nothing to reverse.
-const ONCE = new Set(['dk-loader-in', 'dk-btn-loader-in', 'dk-badge-loader-in']);
+// Chart's data draws in once, on its first paint: the line, its markers and the bars (a hover tip fades in the same way).
+const ONCE = new Set(['dk-loader-in', 'dk-btn-loader-in', 'dk-badge-loader-in', 'dk-chart-draw', 'dk-chart-fade', 'dk-chart-grow']);
 // Layout a component animates on purpose, by the animation's id, and why: where the jump it saves reads as a glitch,
 // and it's one small element while it moves. Only Web Animations a component starts itself, never a stylesheet's.
 const LAYOUT_OK: Record<string, string> = {

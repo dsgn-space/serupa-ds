@@ -19,6 +19,8 @@
   ],
   "project": [
     "src/**/*.{ts,tsx,js}!",
+    "!src/patterns/**!",
+    "!src/blocks/**!",
     "tools/**/*.mjs",
     "bin/*.mjs!",
     ".storybook/*.{ts,tsx}"

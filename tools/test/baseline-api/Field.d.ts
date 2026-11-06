@@ -3,16 +3,16 @@ interface FieldLabels {
     fieldOptional: string;
 }
 interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
-    label?: React.ReactNode;
-    hint?: React.ReactNode;
-    error?: React.ReactNode;
-    required?: boolean;
-    optional?: boolean | string;
-    disabled?: boolean;
-    group?: boolean;
-    layout?: "horizontal" | "vertical";
-    id?: string;
-    children?: React.ReactNode;
+    label?: React.ReactNode | undefined;
+    hint?: React.ReactNode | undefined;
+    error?: React.ReactNode | undefined;
+    required?: boolean | undefined;
+    optional?: boolean | string | undefined;
+    disabled?: boolean | undefined;
+    group?: boolean | undefined;
+    layout?: "horizontal" | "vertical" | undefined;
+    id?: string | undefined;
+    children?: React.ReactNode | undefined;
 }
 declare const Field: ((props: FieldProps) => React.ReactElement) & {
     displayName: string;

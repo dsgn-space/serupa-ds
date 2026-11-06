@@ -5,11 +5,11 @@ import { component } from "../../internal/component";
 
 export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** 'horizontal' (a wrapping row, default; Left and Right move focus) or 'vertical' (a column; Up and Down). */
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: 'horizontal' | 'vertical' | undefined;
   /** What the controls are for ("Text formatting"); needed when a page has more than one toolbar. */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
   /** Buttons, IconButtons, ToggleButtons, ButtonGroups, Menus, Selects and Dividers, at any depth. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 // What counts as one of the toolbar's controls: anything focusable that isn't disabled, hidden, inside a popup of

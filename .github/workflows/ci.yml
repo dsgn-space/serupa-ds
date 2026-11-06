@@ -243,12 +243,35 @@ jobs:
           name: build
       - run: node tools/test/consumer.mjs
 
+  # The package in the frameworks the README names (86, tools/test/frameworks.mjs): a Next.js App Router app, a
+  # React Router framework app and an Astro site install the packed build, run their own production builds, and their
+  # pages render on the server and hydrate in Chromium. Node 26 and npm ci: the check drives the browser through the
+  # repository's Playwright.
+  frameworks:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.build.outputs.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: build
+      - uses: ./.github/actions/playwright
+      - run: node tools/test/frameworks.mjs
   # One check that passes only when every group passed, under the name the single job used to have.
   test:
-    needs: [build, static, suite, consumer]
+    needs: [build, static, suite, consumer, frameworks]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - if: github.head_ref != 'changeset-release/main'
-        run: test "${{ needs.build.result }}" = success && test "${{ needs.static.result }}" = success && test "${{ needs.suite.result }}" = success && test "${{ needs.consumer.result }}" = success
+        run: test "${{ needs.build.result }}" = success && test "${{ needs.static.result }}" = success && test "${{ needs.suite.result }}" = success && test "${{ needs.consumer.result }}" = success && test "${{ needs.frameworks.result }}" = success

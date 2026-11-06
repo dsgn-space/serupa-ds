@@ -40,6 +40,8 @@ const KNOWN = {
   'property view-transition-name': { why: 'view transitions are progressive: the change happens without the animation' },
   'view-transition-name: none': { why: 'as view-transition-name' },
   'view-transition-name: match-element': { why: 'as view-transition-name' },
+  'property print-color-adjust': { why: 'Chart keeps its series colors and patterns when printed with background graphics off (Chrome and Edge 136); before, they print as the browser chooses' },
+  'print-color-adjust: exact': { why: 'as print-color-adjust' },
   'text-wrap: pretty': { why: 'line breaking only (Safari 26, not Firefox)' },
   'property hyphenate-limit-chars': { why: 'Card, Alert and Toast hyphenate only words of 10 letters or more (not Safari, nor Firefox before 137): shorter words hyphenate too there' },
   'property scrollbar-gutter': { why: 'Dialog and Drawer keep the page from shifting (Safari 18.2): the page shifts by the scrollbar width there' },

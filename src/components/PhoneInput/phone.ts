@@ -14,9 +14,9 @@ export interface PhoneCountry {
   /** The grouping, with # for a digit, such as "###-####-####". Digits past the last # follow it without a space. "#" leaves the digits ungrouped. */
   pattern: string;
   /** Groupings for national numbers that start with these digits, such as { "30": "## ########" } for Berlin; the longest match wins over pattern. */
-  patterns?: Record<string, string>;
+  patterns?: Record<string, string> | undefined;
   /** For a calling code shared with another country: the starts of the national numbers that are this country's, such as ["416", "604"] for Canada in +1. */
-  areas?: string[];
+  areas?: string[] | undefined;
   /** The shortest and longest national number, without the trunk prefix. */
   min: number;
   max: number;
@@ -130,11 +130,18 @@ export interface ParsedPhone {
   national: string;
 }
 
+/** The number alone, from what people paste: a tel: link's scheme and its ;parameters go (RFC 3966, "tel:+49…;ext=12"),
+    and so does an extension at the end ("ext. 12", "x12", "#12", "Durchwahl 12"), whose digits aren't the number's (GR128,
+    GR129). Anything else is left as it is. @internal */
+export function phoneOnly(value: string): string {
+  return value.replace(/^\s*tel:/i, "").replace(/;.*$/, "").replace(/\s*(?:ext\.?|extn\.?|extension|x|#|durchwahl|dw\.?|poste|anexo|ramal)\s*\d+\s*$/i, "");
+}
+
 /** Reads "+62 812-3456-7890" (or "0062…"): the country from its calling code and the national digits. Where countries share
    a calling code, the number's area picks one (+1 416 is Canada, +1 684 American Samoa), else `prefer`, else the main one.
    `countries` replaces the built-in list (PhoneInput passes its own). Undefined when no calling code matches. */
 export function parsePhone(value: string, prefer?: string, countries: readonly PhoneCountry[] = PHONE_COUNTRIES): ParsedPhone | undefined {
-  const digits = value.trim().replace(/^00/, "+").replace(/[^\d+]/g, "");
+  const digits = phoneOnly(value).trim().replace(/^00/, "+").replace(/[^\d+]/g, "");
   if (digits[0] !== "+") return undefined;
   const rest = digits.slice(1).replace(/\D/g, "");
   // The longest calling code wins (+1 against +12…).

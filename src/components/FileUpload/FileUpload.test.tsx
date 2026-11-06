@@ -28,7 +28,7 @@ const watchPicker = (root: Element) => { const w = { opened: 0 }; input(root).ad
 
 // en-US, so the sizes are written the same way under every CI locale (GR20).
 function Many(props: { rejects?: string[]; fref?: React.Ref<HTMLDivElement> }) {
-  return <SerupaProvider locale="en-US"><div style={{ width: '420px' }}><FileUpload id="many" data-testid="many" multiple accept="image/*,.pdf" maxSize={1024 * 1024} maxFiles={3} hint="Images or PDF, up to 1 MB" name="docs" ref={props.fref} className="extra"
+  return <SerupaProvider locale="en-US"><div style={{ width: '420px' }}><FileUpload id="many" data-testid="many" multiple accept="image/*,.pdf" maxSize={1_000_000} maxFiles={3} hint="Images or PDF, up to 1 MB" name="docs" ref={props.fref} className="extra"
     onReject={(r) => { if (props.rejects) props.rejects.push(r.map((x) => x.reason).join(',')); }} /></div></SerupaProvider>;
 }
 function Controlled(props: { changes: string[]; setRef: { set?: (f: File[]) => void } }) {
@@ -81,7 +81,7 @@ describe('FileUpload', () => {
   });
 
   test('refusal messages in the provider\'s words: Indonesian under id-ID, the types joined with "atau"', async () => {
-    await render(<SerupaProvider locale="id-ID" labels={idLabels}><FileUpload id="fid" multiple accept="image/*,.pdf" maxSize={1024} maxFiles={1} /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><FileUpload id="fid" multiple accept="image/*,.pdf" maxSize={1000} maxFiles={1} /></SerupaProvider>);
     const root = rootOf('fid');
     await userEvent.upload(input(root), [file('catatan.txt', 'text/plain', 10), file('besar.png', 'image/png', 4096), file('a.png', 'image/png', 10), file('b.png', 'image/png', 10)]);
     expect(errs(root)).toBe('alert: catatan.txt bukan gambar atau PDF. / besar.png lebih besar dari 1 kB. / b.png tidak ditambahkan: maksimal 1 file.');
@@ -98,10 +98,10 @@ describe('FileUpload', () => {
     const rejects: string[] = [];
     await render(<Many rejects={rejects} />);
     const el = q(many);
-    await userEvent.upload(input(el), [file('photo.png', 'image/png', 2048), file('report.pdf', 'application/pdf', 1536 * 1024 / 2)]);
+    await userEvent.upload(input(el), [file('photo.png', 'image/png', 2048), file('report.pdf', 'application/pdf', 768_000)]);
     expect(list(el)).toEqual(['photo.png 2 kB image', 'report.pdf 768 kB picture_as_pdf']);
     await expect.poll(() => [...input(el).files!].map((f) => f.name).join()).toBe('photo.png,report.pdf');
-    await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2 * 1024 * 1024), file('photo.png', 'image/png', 2048)]);
+    await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2_000_000), file('photo.png', 'image/png', 2048)]);
     expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn\'t an image or PDF. / huge.png is larger than 1 MB. / photo.png is already added.', 'type,size,duplicate']);
     await userEvent.upload(input(el), [file('a.jpg', 'image/jpeg', 100), file('b.jpg', 'image/jpeg', 100)]);
     expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn\'t added: up to 3 files.']);
@@ -113,7 +113,10 @@ describe('FileUpload', () => {
     const paste = (target: Element, ...files: File[]) => {
       const dt = new DataTransfer(); for (const f of files) dt.items.add(f);
       if (!files.length) dt.setData('text/plain', 'hello');
-      const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: dt });
+      // Firefox's ClipboardEvent constructor drops the clipboardData it's given and makes an empty one, so the files
+      // go on the event itself, where a real paste has them.
+      const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(e, 'clipboardData', { value: dt });
       target.dispatchEvent(e); return e.defaultPrevented;
     };
     choose(el).focus();
@@ -278,8 +281,8 @@ describe('FileUpload', () => {
     expect([w.opened, changes, names(el), new FormData(document.getElementById('rof') as HTMLFormElement).getAll('doc').length]).toEqual([0, [], 'a.pdf', 1]);
   });
 
-  test('formatFileSize: 0 B, 12 B, 1023 B, 1 KB, 1.5 KB, 10 MB, 3.3 GB', () => {
-    expect([0, 12, 1023, 1024, 1536, 10 * 1024 * 1024 + 1, 3.25 * 1024 ** 3].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|1023 B|1 KB|1.5 KB|10 MB|3.3 GB');
+  test('formatFileSize steps by 1000: 0 B, 12 B, 999 B, 1 kB, 1.5 kB, 10 MB, 3.3 GB; 1024 is 1 kB', () => {
+    expect([0, 12, 999, 1000, 1500, 10_000_001, 3.25e9, 1024].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|999 B|1 kB|1.5 kB|10 MB|3.3 GB|1 kB');
   });
 
   test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in all six themes', async () => {
@@ -471,15 +474,15 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
   // Each row's size: the dir="auto" span that isn't the name (the name has a title).
   const sizes = (root: Element) => [...root.querySelectorAll<HTMLElement>('li [dir=auto]:not([title])')].map((x) => [x.textContent, x.dir]);
   test.each([
-    ['en-US', ['4.8 MB', '2 kB'], 'larger than 1 kB'],
-    ['id-ID', ['4,8 MB', '2 kB'], 'lebih besar dari 1 kB'],
-    ['de-DE', ['4,8 MB', '2 kB'], 'larger than 1 kB'],
+    ['en-US', ['1.5 MB', '2 kB'], 'larger than 1 kB'],
+    ['id-ID', ['1,5 MB', '2 kB'], 'lebih besar dari 1 kB'],
+    ['de-DE', ['1,5 MB', '2 kB'], 'larger than 1 kB'],
   ] as const)('%s: each size and the size in a refusal are written as FormattedNumber writes bytes', async (locale, want, refusal) => {
-    await render(<SerupaProvider locale={locale} labels={locale === 'id-ID' ? idLabels : undefined}><FileUpload id={'sz-' + locale} multiple maxSize={1024} readOnly={false} /></SerupaProvider>);
+    await render(<SerupaProvider locale={locale} labels={locale === 'id-ID' ? idLabels : undefined}><FileUpload id={'sz-' + locale} multiple maxSize={1000} readOnly={false} /></SerupaProvider>);
     const root = rootOf('sz-' + locale);
     await userEvent.upload(input(root), [file('big.png', 'image/png', 4096)]);
     expect(errs(root)).toContain(refusal);
-    await render(<SerupaProvider locale={locale}><FileUpload id={'sl-' + locale} readOnly files={[file('a.pdf', 'application/pdf', 5_000_000), file('b.png', 'image/png', 2048)]} /></SerupaProvider>);
+    await render(<SerupaProvider locale={locale}><FileUpload id={'sl-' + locale} readOnly files={[file('a.pdf', 'application/pdf', 1_500_000), file('b.png', 'image/png', 2048)]} /></SerupaProvider>);
     expect(sizes(rootOf('sl-' + locale))).toEqual(want.map((w) => [w, 'auto']));
   });
 
@@ -489,10 +492,102 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     expect([/[\u0660-\u0669]/.test(text ?? ''), dir]).toEqual([true, 'auto']);
   });
 
-  test('formatFileSize: a size that rounds up to 1024 of a unit is written in the next one, as formatNumber bytes does', () => {
-    expect([1024 ** 2 - 1, 1024 ** 3 - 1, 1023.6 * 1024].map((b) => [formatFileSize(b), formatFileSize(b, 'en-US')])).toEqual([['1 MB', '1 MB'], ['1 GB', '1 GB'], ['1 MB', '1 MB']]);
+  test('formatFileSize: a size that rounds up to 1000 of a unit is written in the next one, as formatNumber bytes does', () => {
+    expect([1e6 - 1, 1e9 - 1, 999.6 * 1000].map((b) => [formatFileSize(b), formatFileSize(b, 'en-US')])).toEqual([['1 MB', '1 MB'], ['1 GB', '1 GB'], ['1 MB', '1 MB']]);
   });
   test('formatFileSize with a locale matches formatNumber bytes; without one it stays as it was; an index from map() is not a locale', () => {
-    expect([formatFileSize(5_000_000, 'de-DE'), formatFileSize(5_000_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['4,8 MB', '4.8 MB', '2 KB']);
+    expect([formatFileSize(1_500_000, 'de-DE'), formatFileSize(1_500_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['1,5 MB', '1.5 MB', '2 kB']);
+  });
+});
+
+describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
+  const said = () => document.querySelector('[data-dk-announcer]')?.textContent ?? '';
+  const PNG = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='), (ch) => ch.charCodeAt(0));
+  const a = file('a.png', 'image/png', 10), b = file('b.pdf', 'application/pdf', 10), c = file('c.pdf', 'application/pdf', 10);
+  type S = import('./FileUpload').FileUploadStatus;
+  function Uploads(props: { status: Map<File, S>; retried?: string[]; readOnly?: boolean; retry?: boolean }) {
+    return <SerupaProvider locale="en-US"><FileUpload id="up" multiple files={[a, b, c]} readOnly={props.readOnly} fileStatus={(f) => props.status.get(f)}
+      onRetry={props.retry === false ? undefined : (f) => props.retried?.push(f.name)} /></SerupaProvider>;
+  }
+
+  test('uploading: a bar under the name, named by the file, with its progress (or moving on its own); done: "Uploaded" after the size; error: the message and a retry button named for the file', async () => {
+    const retried: string[] = [];
+    const screen = await render(<Uploads retried={retried} status={new Map<File, S>([[a, { state: 'uploading', progress: 40 }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
+    const el = rootOf('up');
+    await expect.element(screen.getByRole('progressbar', { name: 'a.png' })).toHaveAttribute('aria-valuenow', '40');
+    await expect.element(screen.getByRole('progressbar', { name: 'b.pdf' })).not.toHaveAttribute('aria-valuenow');
+    expect([items(el)[2].querySelector(`${SIZE} > span`)!.textContent, items(el)[0].querySelector(`${SIZE} > span`)]).toEqual(['Complete', null]);
+    await screen.rerender(<Uploads retried={retried} status={new Map<File, S>([[a, { state: 'error' }], [b, { state: 'error', message: 'The server is busy.' }]])} />);
+    expect(screen.container.querySelectorAll('[role=progressbar]').length).toBe(0);
+    const retry = screen.getByRole('button', { name: 'Try again b.pdf' });
+    await expect.element(retry).toHaveAccessibleDescription('The server is busy.');
+    await expect.element(screen.getByRole('button', { name: 'Try again a.png' })).toHaveAccessibleDescription('Upload failed');
+    await userEvent.click(retry);
+    expect(retried).toEqual(['b.pdf']);
+    expect(items(el).map((li) => li.className.includes('--error'))).toEqual([true, true, false]);
+  });
+
+  test('the retry button keeps "Try again" whole beside a long failure message, which wraps instead', async () => {
+    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    const screen = await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
+    // The words' box inside the button is the one that cuts a label too long for it.
+    const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('span[id$="-retry"]')!.parentElement!;
+    expect([label.textContent, label.scrollWidth <= label.clientWidth]).toEqual(['Try again', true]);
+  });
+
+  test('no retry button without onRetry or when read-only; removing a file still moves focus to the next remove button', async () => {
+    const status = new Map<File, S>([[a, { state: 'error' }]]);
+    const screen = await render(<Uploads status={status} retry={false} />);
+    expect(screen.container.querySelectorAll('button').length).toBe(4);   // choose + three removes
+    await screen.rerender(<Uploads status={status} readOnly />);
+    await expect.element(screen.getByRole('button', { name: 'Try again a.png' })).not.toBeInTheDocument();
+    function Removable() {
+      const [files, set] = React.useState([a, b, c]);
+      return <FileUpload multiple files={files} onFilesChange={set} fileStatus={(f) => (f === a ? { state: 'error' } : null)} onRetry={() => {}} />;
+    }
+    await screen.rerender(<Removable />);
+    await userEvent.click(screen.getByRole('button', { name: 'Remove a.png' }));
+    await expect.element(screen.getByRole('button', { name: 'Remove b.pdf' })).toHaveFocus();
+  });
+
+  test('screen readers hear a file finish or fail after uploading, in the provider\'s words; a file that arrives done says nothing', async () => {
+    const screen = await render(<Uploads status={new Map<File, S>([[a, { state: 'uploading', progress: 10 }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(said()).not.toMatch(/c\.pdf/);
+    await screen.rerender(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
+    await expect.poll(said).toBe('a.png: complete');
+    await screen.rerender(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'error' }], [c, { state: 'done' }]])} />);
+    await expect.poll(said).toBe('b.pdf: Upload failed');
+    await screen.rerender(<SerupaProvider labels={idLabels}><FileUpload multiple files={[a]} fileStatus={() => ({ state: 'uploading' })} /></SerupaProvider>);
+    await screen.rerender(<SerupaProvider labels={idLabels}><FileUpload multiple files={[a]} fileStatus={() => ({ state: 'done' })} /></SerupaProvider>);
+    await expect.poll(said).toBe('a.png: selesai');
+    await expect.element(screen.getByText('Selesai')).toBeVisible();
+  });
+
+  test('thumbnails: an image file shows a decorative 40px picture (a canvas, no file URL) in place of its icon; other files, an image the browser can\'t draw, and an upload without thumbnails keep the icon', async () => {
+    const photo = new File([PNG], 'photo.png', { type: 'image/png' }), heic = new File([new Uint8Array(8)], 'phone.heic', { type: 'image/heic' });
+    const screen = await render(<FileUpload id="th" multiple thumbnails files={[photo, b, heic]} />);
+    const el = rootOf('th');
+    await expect.poll(() => items(el).map((li) => (li.firstElementChild as HTMLElement).tagName + ' ' + (li.firstElementChild as HTMLElement).hasAttribute('data-icon'))).toEqual(['CANVAS false', 'SPAN true', 'SPAN true']);
+    const pic = items(el)[0].querySelector('canvas')!;
+    expect([pic.getAttribute('aria-hidden'), Math.round(pic.getBoundingClientRect().width), Math.round(pic.getBoundingClientRect().height)]).toEqual(['true', 40, 40]);
+    await expect.poll(() => pic.width).toBeGreaterThanOrEqual(40);   // drawn, at the screen's pixel ratio
+    await screen.rerender(<FileUpload id="th" multiple files={[photo]} />);
+    expect(items(el)[0].querySelector('canvas')).toBeNull();
+  });
+
+  test('"Uploaded", the failed message and the failed outline have contrast in all six themes', async () => {
+    await render(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'error' }]])} />);
+    const el = rootOf('up'), still = document.createElement('style');
+    still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const [ok, bad] = items(el), bg = css(ok).backgroundColor;
+      const pairs: Array<[string, string, number]> = [['done', css(ok.querySelector(`${SIZE} > span`)).color, 4.5], ['failed', css(bad.querySelector(`${NAME} ~ span:last-child`)).color, 4.5], ['failed outline', css(bad).borderTopColor, 3]];
+      for (const [k, fg, min] of pairs) { const r = contrast(fg, bg); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();
+    expect(low).toEqual([]);
   });
 });

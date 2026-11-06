@@ -15,31 +15,31 @@ import { project, rubber, settleTime, speed, track as sample, type Samples } fro
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
   /** The slides, one per child (pictures, cards, anything). */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** What the carousel shows, such as "Featured products": it names the region. Required unless you give aria-label, or aria-labelledby pointing at a visible heading. */
-  label?: string;
+  label?: string | undefined;
   /** The slide shown (from 0), when you control it. */
-  index?: number;
+  index?: number | undefined;
   /** The first slide shown when you don't control it. Default: 0. */
-  defaultIndex?: number;
+  defaultIndex?: number | undefined;
   /** Called with the new slide's index when the person moves to it. */
-  onIndexChange?: (index: number) => void;
+  onIndexChange?: ((index: number) => void) | undefined;
   /** Past the last slide comes the first, and before the first the last. Default: false (the buttons stop at the ends). */
-  loop?: boolean;
+  loop?: boolean | undefined;
   /** The previous and next buttons on the sides. Default: true. */
-  arrows?: boolean;
+  arrows?: boolean | undefined;
   /** A dot for each slide under the carousel. Default: true. */
-  dots?: boolean;
+  dots?: boolean | undefined;
   /** The previous button's name. Default: "Previous slide". */
-  previousLabel?: string;
+  previousLabel?: string | undefined;
   /** The next button's name. Default: "Next slide". */
-  nextLabel?: string;
+  nextLabel?: string | undefined;
   /** Each slide's name, and its dot's, from the index (from 0) and the count. Default: the slideOf label, "2 of 5". */
-  slideLabel?: (index: number, count: number) => string;
+  slideLabel?: ((index: number, count: number) => string) | undefined;
   /** How many slides show side by side: a number, or one per screen width, { base, sm, md, lg } (from 640, 768
       and 1024px up; each one holds until the next is set). Default: 1. Previous and next still move one slide,
       and with more than one the dots count pages. */
-  perView?: number | CarouselPerView;
+  perView?: number | CarouselPerView | undefined;
 }
 export interface CarouselPerView { base?: number; sm?: number; md?: number; lg?: number }
 

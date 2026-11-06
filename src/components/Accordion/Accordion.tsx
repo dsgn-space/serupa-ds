@@ -13,36 +13,36 @@ import { en as words } from "./labels";
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
   /** 'single' (default): opening one closes the others. 'multiple': any number can be open. */
-  type?: 'single' | 'multiple';
+  type?: 'single' | 'multiple' | undefined;
   /** The open items' values (controlled). Use with onValueChange. */
-  value?: string[];
+  value?: string[] | undefined;
   /** The items open at first (uncontrolled). Default: none. */
-  defaultValue?: string[];
+  defaultValue?: string[] | undefined;
   /** Called with the open items' values when one opens or closes. */
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: ((value: string[]) => void) | undefined;
   /** With type="single": lets the open item close again, leaving none open. Default: true. */
-  collapsible?: boolean;
+  collapsible?: boolean | undefined;
   /** 'plain' (default): lines between items. 'card': a bordered, rounded frame. */
-  variant?: 'plain' | 'card';
+  variant?: 'plain' | 'card' | undefined;
   /** The heading level of the titles, to fit the page's outline. Default: 3. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** With type="multiple": an "Expand all" button above the items, which becomes "Collapse all" once every item
       is open. Disabled items stay as they are. Default: false. */
-  showExpandAll?: boolean;
+  showExpandAll?: boolean | undefined;
 }
 
 export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** Identifies the item in value. Default: its position ("0", "1"…). */
-  value?: string;
+  value?: string | undefined;
   /** The title: what the heading button says. */
   title: React.ReactNode;
   /** Can't be opened or closed. Default: false. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** The content shown when it's open. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Closed content stays in the page, keeping its state, and find-in-page searches it. false renders the content
       only while the item is open (and while it closes), for heavy content; find-in-page can't find it then. Default: true. */
-  keepMounted?: boolean;
+  keepMounted?: boolean | undefined;
 }
 
 const toMs = (t: string) => (parseFloat(t) || 0) * (t.trim().endsWith("ms") ? 1 : 1000);
