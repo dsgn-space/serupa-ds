@@ -213,8 +213,6 @@ Once it shows, a loader stays at least 500ms. Without that, work ending at 320ms
 | `delay` | number (ms) | `300` | Waits this long before showing. `0` shows it at once |
 | `loading` | boolean | `true` | Pass `false` when the work ends. Once shown, it stays at least 500ms, then renders nothing |
 
-`tone="current"`, the old name of `neutral`, was removed in 4.0.0; like any unknown tone it falls back to `neutral`, with no warning.
-
 Any other attribute (`id`, `className`, `style`, `data-*`, `ref`) goes to the outer `<span>`. Every loader has `data-component="loader"`, `data-variant` and `data-size` for tests, and a skeleton also `data-shape`, and a pixel loader `data-pattern`.
 
 ## Component tokens

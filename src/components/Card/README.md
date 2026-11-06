@@ -169,12 +169,3 @@ Each is an optional override: set it on the page, a container or one card. The l
 ## Related
 
 - [Grid](../Grid/README.md): lays out a set of cards in columns that fit the screen.
-
-## Migrating from 8.x
-
-In 9.0.0 a linked card (`href`) is no longer one `<a>`:
-
-- The card element is a `<div>` (or `as`, which `href` no longer ignores). `ref` points at it, not at a link. To reach the link, use `ref.current.querySelector('.dk-card__link')`.
-- `href`, `target`, `rel` and `aria-label` go to the link, which wraps the `CardHeader` title. Other props, including `onClick`, stay on the card; a click on the link still bubbles to it.
-- CSS that styled `a.dk-card` or `.dk-card--link:focus-visible` should target `.dk-card--link` and `.dk-card--link:has(.dk-card__link:focus-visible)`.
-- A linked card without a `CardHeader` title still works (an empty link named by the card's text), but adding a title gives the link a short name.
