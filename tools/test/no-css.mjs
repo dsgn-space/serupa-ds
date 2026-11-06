@@ -40,7 +40,8 @@ const look = () => {
     shown: all.map((e) => drawn(e) && !!(/** @type {HTMLElement} */ (e).innerText || '').trim()),
     parent: all.map((e) => all.indexOf(/** @type {Element} */ (e.parentElement))),
     cls: all.map((e) => (e.getAttribute('class') || e.tagName.toLowerCase()).split(' ')[0]),
-    wide: [...document.querySelectorAll('svg')].filter((s) => s.getBoundingClientRect().width > 2 * parseFloat(getComputedStyle(s).fontSize) + 0.5).map((s) => (s.parentElement?.closest('[class]')?.getAttribute('class') || 'svg').split(' ')[0]),
+    // Icons only: an svg with a role is a graphic with a name (Chart's plot), drawn at its width on purpose.
+    wide: [...document.querySelectorAll('svg:not([role])')].filter((s) => s.getBoundingClientRect().width > 2 * parseFloat(getComputedStyle(s).fontSize) + 0.5).map((s) => (s.parentElement?.closest('[class]')?.getAttribute('class') || 'svg').split(' ')[0]),
   };
 };
 const draw = async (html, css) => {

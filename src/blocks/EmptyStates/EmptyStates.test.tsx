@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
+import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
 import { EmptyFirstRun, EmptyLoadFailed, EmptyNoAccess, EmptyNoResults } from './EmptyStates';
 
 // Text read out by the shared polite announcer, wherever it lives on the page.
@@ -55,6 +56,21 @@ describe('Blocks/Empty states', () => {
     await expect.poll(shown).toContain('Request sent');
     expect(shown()).not.toContain("Couldn't send the request");
     expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  test('no access: the failure text is 4.5:1 on the page in all six themes (GR140)', async () => {
+    await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={() => Promise.reject(new Error('offline'))} />);
+    await userEvent.click(page.getByRole('button', { name: 'Request access' }));
+    const text = page.getByText("Couldn't send the request. Try again.");
+    await expect.element(text).toBeVisible();
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const r = contrast(getComputedStyle(text.element()).color, 'var(--surface)');
+      if (r < 4.5) low.push(`${th} ${r.toFixed(2)}`);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+    expect(low).toEqual([]);
   });
 
   test('failed to load: Try again runs, the reference is shown, and it is said once', async () => {
