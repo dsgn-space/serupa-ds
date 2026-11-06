@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Onboarding.stories';
+
+<Meta of={Stories} />
+
+# Onboarding
+
+The first page a new account sees: a welcome, a checklist of setup steps with how far along it is, and an empty project list that says what to do first. Progress is kept between visits, so nobody does a step twice.
+
+<Canvas of={Stories.FirstVisit} />
+
+## When to use it
+
+- A new account needs a few things done before the product is useful: a profile, a team, a first project.
+- The steps can be done in any order, and later. When they must be done in order before anything else works, use a multi-step form instead.
+- Not for a product tour that points at parts of the page: tours cover what someone is trying to read, and are hard to follow with a screen reader or a magnifier.
+
+## What each part is for
+
+- **The h1** welcomes the person by name. **"Set up your workspace"** (an h2) heads the checklist, and each step is an h3 in an ordered list, so a screen reader can list the steps, jump between them and hear "1 of 4" (1.3.1).
+- **A Progress bar** says how far along it is in words ("2 of 4 steps done"), not as a percentage nobody can picture.
+- **Each step** has a title that says what to do, a sentence on why, a link to where it's done, and a checkbox to mark it done. A done step says "Done" in words under its checkbox, not by color alone (1.4.1), and its link steps back from primary to secondary, so the next thing to do stands out.
+- **Ticking a step says the new count** ("2 of 4 steps done") politely, without moving focus (4.1.3). The last tick says "You're all set" once, and the page shows the way on to the dashboard.
+- **"Hide the checklist"** folds it to one line with the count. Focus moves to "Show the checklist", which takes its place; showing it again moves focus to the checklist's heading, so focus never drops to the start of the page (2.4.3).
+- **"No projects yet"**: an EmptyState that says what a project is and holds the one action that starts one. An empty page with nothing to do is a dead end.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Halfway} />
+
+<Canvas of={Stories.AllDone} />
+
+<Canvas of={Stories.Hidden} />
+
+## What stays the app's job
+
+- **Doing each step.** The links go to the app's own pages. When a step is done there, mark it done on the server, so the checklist is right when the person comes back.
+- **Keeping progress.** `saveKey` keeps it in this browser's localStorage, which is enough for a demo. Keep it on your server with `onChange`, and pass it back as `initial`, so it follows the person to another device.
+- **When the checklist goes away for good**: after every step is done, or when the person hides it, the app decides whether to show it again on the next visit.
+- **The steps themselves**: few (three to five), each one worth doing, each title a short command.
