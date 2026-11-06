@@ -3,9 +3,9 @@ interface TimeZonePickerLabels {
     timeZoneYours: string;
 }
 interface TimeZonePickerProps extends Omit<ComboboxSingleProps, "debounce" | "filter" | "loadOptions" | "multiple" | "options"> {
-    zones?: readonly string[];
-    at?: Date | number;
-    locale?: string;
+    zones?: readonly string[] | undefined;
+    at?: Date | number | undefined;
+    locale?: string | undefined;
 }
 interface TimeZoneInfo {
     zone: string;
