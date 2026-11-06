@@ -70,6 +70,10 @@ FormattedNumber or `formatNumber` got options Intl rejects, such as a currency t
 
 A NumberInput got a `min` above its `max`, so no value fits, and `aria-valuemin` is above `aria-valuemax`. Swap them, or check where they come from (a limit computed from data can cross over).
 
+## overlay-in-form
+
+A Popover, Dialog or Drawer was opened inside a `<form>` and holds a form or a text field. The panel renders where it's placed, so it sits in that form: a form of its own nests in the page's form, and Enter or its submit button reloads the page without calling either `onSubmit`; with no form of its own, Enter in its field submits the page's form. Place it after the form. A field in it that belongs to the page's form can say so with the `form` attribute (`<Input form="profile" />`).
+
 ## phone-code
 
 PhoneInput was given a number starting with `+` or `00` and a calling code it doesn't know, so it reads the digits as a number in the current country. Add the country's row to `countries`.
