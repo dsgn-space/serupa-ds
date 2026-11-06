@@ -87,7 +87,10 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const given: Intl.NumberFormatOptions | undefined = props.currency ? { style: "currency", currency: props.currency, ...props.formatOptions } : props.formatOptions;
   const formatOptions = given && pinCurrencyDigits(given);
   // With minorUnits, the props are whole cents (1999) and the field works in the currency's units (19.99).
-  const factor = props.minorUnits && formatOptions?.style === "currency" && formatOptions.currency ? 10 ** minorDigits(formatOptions.currency) : 1;
+  const minor = !!(props.minorUnits && formatOptions?.style === "currency" && formatOptions.currency);
+  const factor = minor ? 10 ** minorDigits(formatOptions.currency!) : 1;
+  // Out as whole minor units for every currency, yen (no minor digits) too: a typed 2.5 is 3, as the field shows (GR154).
+  const out = (n: number) => (minor ? Math.round(n * factor) : n);
   const major = (n: number | null | undefined) => (n == null || factor === 1 ? n : n / factor);
   const step = Number(props.step) > 0 ? Number(props.step) / factor : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
@@ -155,7 +158,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   };
   const commit = (v: number | null) => {
     if (!controlled) setOwnValue(v);
-    if (v !== value && props.onValueChange) props.onValueChange(v == null || factor === 1 ? v : Math.round(v * factor));
+    if (v !== value && props.onValueChange) props.onValueChange(v == null ? v : out(v));
   };
   const put = (v: number | null) => {   // a finished change: the field shows the value
     typing.current = false;
@@ -256,7 +259,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
         aria-describedby={cn(rest["aria-describedby"], affix.ids) || undefined}
         onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} onFocus={rest.onFocus} />
       {affix.suffix}
-      {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? "" : String(factor === 1 ? value : Math.round(value * factor))} /> : null}
+      {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? "" : String(out(value))} /> : null}
       {props.steppers !== false ? (
         <span className="dk-number-input__steppers">
           <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
