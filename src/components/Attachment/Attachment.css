@@ -1,0 +1,39 @@
+/* ---------------------------------------------------------------
+   Attachment: a file as one compact row (surface, a 1px outline, 6px corners, up to 320px wide): a 20px muted icon
+   for its kind, the name on one line cut in the middle, and under it the kind and size in small muted text. A linked
+   name is primary and underlined. While uploading, a small bar under the name; failed, a danger outline and a danger
+   message. The remove button sits at the end. Disabled: faded.
+   --------------------------------------------------------------- */
+@layer dk.components {
+/* min-inline-size 0: in a grid or flex row too, a long name is cut in place of widening it. */
+.dk-attachment {
+  display: inline-flex; align-items: center; gap: var(--attachment-gap, var(--spacing-2)); box-sizing: border-box;
+  min-inline-size: var(--spacing-0); max-inline-size: min(var(--sizing-full), var(--attachment-max-width, var(--spacing-80))); inline-size: var(--sizing-max);
+  padding: var(--attachment-padding, var(--spacing-2)); padding-inline-start: var(--attachment-padding-start, var(--spacing-3));
+  border: var(--border-width-1) solid var(--attachment-border, var(--border)); border-radius: var(--attachment-radius, var(--radius-control));
+  background: var(--attachment-bg, var(--surface)); color: var(--attachment-text, var(--text));
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;
+}
+.dk-attachment__icon { flex: none; color: var(--attachment-icon, var(--text-muted)); font-size: var(--spacing-5); }
+.dk-attachment__body { display: flex; flex-direction: column; flex: auto; min-inline-size: var(--spacing-0); }
+.dk-attachment__name { display: flex; min-inline-size: var(--spacing-0); color: inherit; font-weight: var(--font-medium); border-radius: var(--radius-inner); }
+a.dk-attachment__name { color: var(--attachment-link, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); touch-action: manipulation; }
+@media (hover: hover) { a.dk-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
+a.dk-attachment__name:focus-visible { outline: var(--focus-ring-width) solid var(--attachment-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-attachment__name-text { display: flex; min-inline-size: var(--spacing-0); white-space: pre; text-decoration: inherit; }
+.dk-attachment__name-start { overflow: hidden; text-overflow: ellipsis; min-inline-size: var(--spacing-0); text-decoration: inherit; }
+.dk-attachment__name-end { flex: none; text-decoration: inherit; }
+.dk-attachment__meta { display: flex; flex-wrap: wrap; column-gap: var(--spacing-1); color: var(--attachment-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-attachment__size { font-variant-numeric: tabular-nums; }
+/* The dot between kind and size is drawn, not text, so screen readers read "PDF 1.5 MB". */
+.dk-attachment__size { display: inline-flex; align-items: center; gap: var(--spacing-1); }
+.dk-attachment__size::before { content: ""; inline-size: var(--spacing-0\.5); block-size: var(--spacing-0\.5); border-radius: var(--rounded-full); background: currentcolor; }
+.dk-attachment__progress { margin-block-start: var(--spacing-1); }
+/* While it uploads, it's at least 192px wide, so a short name still gets a bar long enough to read. */
+.dk-attachment--uploading { min-inline-size: min(var(--sizing-full), var(--spacing-48)); }
+.dk-attachment__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--attachment-error, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
+.dk-attachment__error .dk-icon { flex: none; font-size: var(--spacing-4); }
+.dk-attachment--error { border-color: var(--attachment-border-error, var(--danger)); }
+.dk-attachment__retry, .dk-attachment__remove { flex: none; }
+.dk-attachment--disabled { opacity: var(--opacity-disabled); }
+}
