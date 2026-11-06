@@ -92,14 +92,17 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   // Out as whole minor units for every currency, yen (no minor digits) too: a typed 2.5 is 3, as the field shows (GR154).
   const out = (n: number) => (minor ? Math.round(n * factor) : n);
   const major = (n: number | null | undefined) => (n == null || factor === 1 ? n : n / factor);
-  const step = Number(props.step) > 0 ? Number(props.step) / factor : 1;
+  // A percent's value is the fraction (0.15 shows 15%), so without a step it moves one percent, not 100% (GR175).
+  const step = Number(props.step) > 0 ? Number(props.step) / factor : formatOptions?.style === "percent" ? 0.01 : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
   const min = props.min != null && isFinite(props.min) ? (major(props.min) as number) : undefined;
   const max = props.max != null && isFinite(props.max) ? (major(props.max) as number) : undefined;
-  // Money keeps the decimals it's shown with (19.99 with a step of 1), so what people see is the value.
+  // Money keeps the decimals it's shown with (19.99 with a step of 1), so what people see is the value. A percent keeps
+  // the ones it's shown with too, two more as a fraction: 12.5% with one decimal is 0.125 (GR175).
   // formatOptions by value: the memos read the options back from their key (keyed), so an inline object doesn't redo them.
   const optionsKey = formatOptions ? JSON.stringify(formatOptions) : "";
-  const shownPlaces = React.useMemo(() => { const o = keyed(optionsKey); return o?.style === "currency" ? new Intl.NumberFormat(locale, o).resolvedOptions().maximumFractionDigits ?? 0 : 0; },
+  const shownPlaces = React.useMemo(() => { const o = keyed(optionsKey); const shown = o?.style === "currency" || o?.style === "percent" ? new Intl.NumberFormat(locale, o).resolvedOptions().maximumFractionDigits ?? 0 : 0;
+    return o?.style === "percent" ? shown + 2 : shown; },
     [locale, optionsKey]);
   const places = Math.max(gridPlaces(min, step), shownPlaces);
   // What the shown number is multiplied by: 100 for the percent style, 1 otherwise.

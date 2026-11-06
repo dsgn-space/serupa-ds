@@ -262,6 +262,27 @@ describe('NumberInput', () => {
     expect([field('a').value, field('b').value]).toEqual(['1500,25', '1500.25']);
   });
 
+  test('GR175: percent without a step: leaving it unedited keeps 0.15, typing 15 gives 0.15, ArrowUp from 15% is 16%, and one shown decimal keeps 0.125', async () => {
+    const calls: (number | null)[] = [];
+    await render(<><NumberInput id="p" aria-label="Rate" locale="en-US" defaultValue={0.15} formatOptions={{ style: 'percent' }} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="q" aria-label="Fine rate" locale="en-US" defaultValue={0.1} formatOptions={{ style: 'percent', maximumFractionDigits: 1 }} onValueChange={(n) => calls.push(n)} /></>);
+    const p = document.getElementById('p') as HTMLInputElement, q = document.getElementById('q') as HTMLInputElement;
+    await userEvent.click(p);
+    await userEvent.tab();
+    expect([p.value, calls]).toEqual(['15%', []]);
+    await userEvent.click(p);
+    await userEvent.keyboard('{ArrowUp}');
+    expect([p.value, calls.at(-1)]).toEqual(['16%', 0.16]);
+    await userEvent.clear(p);
+    await userEvent.type(p, '15');
+    await userEvent.tab();
+    expect([p.value, calls.at(-1)]).toEqual(['15%', 0.15]);
+    await userEvent.clear(q);
+    await userEvent.type(q, '12.5');
+    await userEvent.tab();
+    expect([q.value, calls.at(-1)]).toEqual(['12.5%', 0.125]);
+  });
+
   test('formatOptions: IDR currency shows "Rp 1.500" with an aria-valuetext, reads "2.000" back, and ArrowUp steps from it; percent shows 15% for 0.15', async () => {
     const calls: Array<number | null> = [];
     await render(<Col>
