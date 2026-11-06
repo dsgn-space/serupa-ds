@@ -11,7 +11,8 @@ import jsxA11y from 'eslint-plugin-jsx-a11y-x';
 import { a11yComponents } from './tools/lint/a11y-components.mjs';
 
 export default tseslint.config(
-  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/'] },
+  // tools/skill-eval/results/ holds agents' answers as they wrote them, which the eval grades: not our code to lint.
+  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/', 'tools/skill-eval/results/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
