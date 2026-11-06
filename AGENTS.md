@@ -29,7 +29,7 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
-Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`) runs every job CI requires, the component tests in all four second languages included (`--skip changeset` when the pull request takes `no-changeset`).
+Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
 
 ## While the repo is on GitLab
 

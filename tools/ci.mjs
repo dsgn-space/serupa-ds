@@ -1,8 +1,9 @@
 // Every job CI requires, on this machine, in the order CI runs them: run it before pushing, so a pull request
 // doesn't go red on a check nobody ran.
-//   node tools/ci.mjs                  everything, as a push to main runs it (with all four second languages)
+//   node tools/ci.mjs                  everything, as a push to main runs it (with one second language, as CI picks it)
 //   node tools/ci.mjs --since main     as a pull request against main runs it: the components it changes and the ones
-//                                      that use them, in English and all four second languages, plus its changeset
+//                                      that use them, in English and one second language, plus its changeset
+//   node tools/ci.mjs --all-locales    the component tests in all four second languages, not just the commit's one
 //   node tools/ci.mjs --keep-going     run every step even after one fails (by default the first failure stops it,
 //                                      as on a pull request)
 //   node tools/ci.mjs --skip <names>   leave out steps, comma-separated by the name --list prints (frameworks,consumer)
@@ -15,8 +16,8 @@
 //                                      with its test counts), ready to paste under "Local checks" in a merge request
 // npm run check -- <options> is the same. Run it before every push (GitLab CI runs the same jobs as the merge gate):
 //   npm run check -- --clean --since origin/main --report local-checks.md
-// CI picks one second language per commit (LOCALES in test/lib.mjs, by the commit's hash), and a pull request's merge
-// commit can't be known here, so this runs all of them: a test that only passes in English fails here, not on main.
+// Like CI, it runs the component tests in English and in the one second language the commit's hash picks (LOCALES in
+// test/lib.mjs): each pass takes about 9 minutes on 4 cores. --all-locales runs all four, for a change to locale code.
 // The changeset step is the Changeset workflow's (a pull request labelled no-changeset skips it: --skip changeset).
 // Not here: npm audit signatures (the registry, on CI) and CodeQL.
 import { spawn, spawnSync } from 'node:child_process';
@@ -43,6 +44,11 @@ const suite = (...args) => node('tools/test/run.mjs', ...args, ...(since ? ['--s
 
 /** @type {(name: string, job: string, run: [string, string[]]) => { name: string, job: string, cmd: string, args: string[] }} */
 const step = (name, job, [cmd, args]) => ({ name, job, cmd, args });
+// The second language CI's run.mjs picks for this commit (the same hash rule).
+function commitLocale() {
+  const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
+  return LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
+}
 const all = [
   ...(clean ? [step('install', 'build', [NPM, ['ci', '--ignore-scripts', '--no-audit', '--no-fund']])] : []),
   step('tokens', 'build', node('tools/tokens/build.mjs', '--check')),
@@ -54,7 +60,7 @@ const all = [
   ...(since ? [step('changeset', 'changeset', node('tools/changeset-check.mjs', since))] : []),
   step('checks', 'suite (checks)', suite('--group', 'checks')),
   step('components', 'suite (components)', suite('--group', 'components')),
-  ...LOCALES.map((l) => step(`components-${l}`, `suite (components), in ${l}`, suite('--group', 'components', '--locale', l))),
+  ...(process.argv.includes('--all-locales') ? LOCALES : [commitLocale()]).map((l) => step(`components-${l}`, `suite (components), in ${l}`, suite('--group', 'components', '--locale', l))),
   step('visual', 'suite (visual)', suite('--group', 'visual')),
   step('storybook-check', 'suite (storybook)', suite('--group', 'storybook')),
   step('consumer', 'consumer', node('tools/test/consumer.mjs')),
