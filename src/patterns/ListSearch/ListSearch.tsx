@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabl
 import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 
-/* List with search and filters (PT2): a page of rows to search, filter, sort, select and page through. For an app to
+/* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
    - 4.1.3: the results count ("8 of 24 projects") is a status region, read out as the search or a filter changes,
      without moving focus. Bulk actions say "3 selected" the same way (TableToolbar, TableActionBar).

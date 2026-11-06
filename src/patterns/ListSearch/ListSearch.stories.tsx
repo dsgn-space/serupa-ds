@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ListSearch } from './ListSearch';
 
-/* List with search and filters (PT2): search, filters, sort, selection and pages over a table, with the view kept in
+/* List with search and filters: search, filters, sort, selection and pages over a table, with the view kept in
    the address. ListSearch.mdx says why each part is there and what stays the app's job. The stories start from a
    query string and don't write the address. */
 const meta = {
