@@ -73,5 +73,10 @@
     "id": "load-error",
     "prompt": "A projects page that loads its list from /api/projects. Show that it's loading; if loading fails, say so and let the person try again; when it works, list the projects' names, with a button to add a project.",
     "expect": ["Alert|EmptyState", "Button"]
+  },
+  {
+    "id": "notifications",
+    "prompt": "A bell button in the app's header that shows how many notifications are unread. Pressing it slides a notifications panel in from the right, with a smooth animation; each notification has an icon for its kind (comment, mention, invite). Use the same primary button style in the panel and the header.",
+    "expect": ["IconButton", "Drawer|Popover", "Badge"]
   }
 ]

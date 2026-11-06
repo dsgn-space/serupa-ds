@@ -14,6 +14,9 @@
 //                and voice in docs/foundations.md: no "OK", "Submit", "Yes" or "Click here" on a button, sentence
 //                case, no exclamation marks, emoji, "Oops" or sales words, no "Invalid input", "This field is
 //                required" or a bare "Something went wrong"
+//   no-extras    no second kit beside Serupa: no import from a UI, icon, animation or CSS-in-JS package, and no local
+//                component that only wraps one Serupa component to set its defaults (it returns that one element
+//                with its props spread)
 // It reads code only: it can't tell whether the page works. tools/test/skill-eval.mjs checks the grader itself.
 // A folder holds one answer per task (<task>.tsx) or several runs of each (<task>.1.tsx, <task>.2.tsx…); the table
 // gives each check's pass count over the runs, and the answers' mean length (and, from run.mjs's meta.json, the
@@ -26,7 +29,7 @@ import ts from '@typescript/typescript6';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const TASKS = JSON.parse(fs.readFileSync(path.join(HERE, 'tasks.json'), 'utf8'));
-export const CHECKS = ['parses', 'serupa', 'components', 'no-rebuilds', 'tokens', 'names', 'no-div-click', 'words'];
+export const CHECKS = ['parses', 'serupa', 'components', 'no-rebuilds', 'tokens', 'names', 'no-div-click', 'words', 'no-extras'];
 
 const REBUILT = { button: 'Button', input: 'Input', select: 'Select', textarea: 'Textarea', table: 'Table', dialog: 'Dialog' };
 const FIELD_CONTROLS = new Set(['Input', 'PasswordInput', 'Textarea', 'Select', 'NumberInput', 'SearchInput', 'Combobox', 'DatePicker', 'DateRangePicker', 'TimePicker', 'PhoneInput', 'PinInput', 'Slider', 'ColorPicker']);
@@ -37,6 +40,9 @@ const WIDGET_ROLES = new Set(['dialog', 'alertdialog', 'menu', 'menubar', 'menui
 // A month's grid of days: the weekday initials or names written out, or the days in a month worked out by hand.
 const DAY_GRID = /\[\s*['"](?:S|Su|Sun|Sunday|M|Mo|Mon|Monday)['"]\s*,\s*['"](?:M|Mo|Mon|Monday|T|Tu|Tue|Tuesday)['"]|new Date\([^()]*,[^()]*\+\s*1\s*,\s*0\s*\)/;
 // Style properties whose bare numbers are not lengths.
+// Packages that make a second kit beside Serupa: components, icons, animation, CSS-in-JS.
+const EXTRAS = /^(?:@mui\/|@chakra-ui\/|antd$|@mantine\/|react-bootstrap$|@radix-ui\/|@headlessui\/|@ark-ui\/|react-aria-components$|@nextui-org\/|@heroui\/|primereact$|semantic-ui-react$|lucide-react$|react-icons(?:\/|$)|@heroicons\/|@fortawesome\/|@tabler\/icons|@phosphor-icons\/|@iconify\/react$|framer-motion$|motion(?:\/|$)|react-spring$|@react-spring\/|react-transition-group$|gsap$|styled-components$|@emotion\/|@stitches\/|@vanilla-extract\/|goober$|react-hot-toast$|sonner$|react-toastify$|react-modal$|react-select$|react-datepicker$|react-day-picker$|cmdk$|vaul$)/;
+
 // UI text: the props that hold words, and the calls that say them.
 const TEXT_PROPS = new Set(['label', 'title', 'description', 'placeholder', 'hint', 'error', 'message', 'heading', 'text', 'aria-label', 'confirmLabel', 'cancelLabel', 'actionLabel', 'emptyText']);
 const SAYS = new Set(['toast', 'announce']);
@@ -56,7 +62,7 @@ export function wordsWhy(s, action = false) {
   if (/\b(?:amazing|awesome|seamless(?:ly)?|effortless(?:ly)?|supercharge\w*|revolutionary|blazing(?:ly)? fast|unleash\w*)\b/i.test(t)) return `sales words in "${t}"`;
   // Title Case: a short label whose later words are all capitalised ("Save Changes"). A word with a capital inside
   // (GitHub, iPhone) or all capitals (PDF) is a name and doesn't count; a lowercase word makes it sentence case.
-  const words = t.split(' ');
+  const words = t.split(' ').filter((w) => /\p{L}/u.test(w));   // "· Unread" starts at Unread
   if (words.length <= 6 && !/[.?:;]\s/.test(t)) {
     const rest = words.slice(1).map((w) => w.replace(/^\W+|\W+$/g, '')).filter((w) => /^\p{L}+$/u.test(w) && !/\p{Lu}/u.test(w.slice(1)));
     if (rest.length && rest.every((w) => /^\p{Lu}/u.test(w))) return `"${t}" in Title Case, not sentence case`;
@@ -86,6 +92,9 @@ export function grade(source, expect = []) {
       const b = s.importClause?.namedBindings;
       if (b && ts.isNamedImports(b)) for (const e of b.elements) imported.add((e.propertyName ?? e.name).text);
     }
+  }
+  for (const s of file.statements) {
+    if (ts.isImportDeclaration(s) && ts.isStringLiteral(s.moduleSpecifier) && EXTRAS.test(s.moduleSpecifier.text)) fail('no-extras', `imports ${s.moduleSpecifier.text} beside Serupa`);
   }
   if (!imported.size) fail('serupa', 'nothing imported from "serupa-ds"');
   const missing = expect.filter((alts) => !alts.split('|').some((a) => imported.has(a)));
@@ -126,7 +135,24 @@ export function grade(source, expect = []) {
     : ts.isBinaryExpression(e) && e.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ? shown(e.right) : [];
   const words = (list, action, where = '') => { for (const w of list) { const why = wordsWhy(w, action); if (why) return fail('words', where + why); } };
 
+  // A wrapper: a function whose body is (or returns) one Serupa element with props spread on it, and nothing else.
+  const only = (body) => {
+    let e = body;
+    if (ts.isBlock(body)) { const st = body.statements; if (st.length !== 1 || !ts.isReturnStatement(st[0])) return null; e = st[0].expression; }
+    while (e && ts.isParenthesizedExpression(e)) e = e.expression;
+    // Its children, if any, are only passed through ({children}).
+    if (e && ts.isJsxElement(e) && !e.children.every((c) => ts.isJsxText(c) ? !c.text.trim() : ts.isJsxExpression(c))) return null;
+    return e && (ts.isJsxSelfClosingElement(e) || ts.isJsxElement(e)) ? e : null;
+  };
+  const wraps = (fn) => {
+    const el = fn.body && only(fn.body), o = el && opening(el);
+    return o && imported.has(tagOf(o)) && o.attributes.properties.some(ts.isJsxSpreadAttribute) ? tagOf(o) : '';
+  };
+
   const visit = (n) => {
+    const fn = ts.isFunctionDeclaration(n) ? n : (ts.isArrowFunction(n) || ts.isFunctionExpression(n)) && ts.isVariableDeclaration(n.parent) ? n : null;
+    const name = fn && (ts.isFunctionDeclaration(fn) ? fn.name?.text : n.parent.name.getText(file));
+    if (fn && name && /^[A-Z]/.test(name) && wraps(fn)) fail('no-extras', `${name} only wraps ${wraps(fn)}: use ${wraps(fn)} directly, restyled with its tokens`);
     const o = opening(n);
     if (o) {
       const tag = tagOf(o), a = attrs(o);
