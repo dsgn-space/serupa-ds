@@ -102,16 +102,16 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
 
               <TabPanel value="overview" className="pt-4">
                 <Card>
-                  <dl className="m-0 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
+                  <dl className="m-0 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-3">
                     <dt className="font-medium">Name</dt>
-                    <dd className="m-0 min-w-0">
+                    <dd className="m-0 min-w-0 sm:col-span-2">
                       <InlineEdit label="Project name" value={name} onValueChange={save('name', setName)}
                         validate={(v) => (v.trim() ? null : 'Enter a name for the project.')} />
                     </dd>
                     <dt className="font-medium">Description</dt>
-                    <dd className="m-0 min-w-0"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></dd>
-                    <dt className="font-medium">Owner</dt><dd className="m-0">{project.owner}</dd>
-                    <dt className="font-medium">Created</dt><dd className="m-0"><time dateTime={project.created}>{project.created}</time></dd>
+                    <dd className="m-0 min-w-0 sm:col-span-2"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></dd>
+                    <dt className="font-medium">Owner</dt><dd className="m-0 sm:col-span-2">{project.owner}</dd>
+                    <dt className="font-medium">Created</dt><dd className="m-0 sm:col-span-2"><time dateTime={project.created}>{project.created}</time></dd>
                   </dl>
                 </Card>
               </TabPanel>
