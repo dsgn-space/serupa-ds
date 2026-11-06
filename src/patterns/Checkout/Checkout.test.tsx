@@ -135,6 +135,18 @@ describe('Patterns/Checkout', () => {
     expect(wide.aside.top).toBeLessThan(wide.button.top);
   });
 
+  test('a long "Place order" (a big amount, or a longer language) wraps inside 320 px, never wider than the page (GR169)', async () => {
+    const screen = await render(<div style={{ width: 320 }}><Checkout currency="IDR" initial={filled} startAtReview
+      lines={[{ id: 'a', name: 'Kursi', quantity: 9, price: 222222222222222 }]} /></div>);
+    const main = document.querySelector('main') as HTMLElement;
+    const pay = screen.getByRole('button', { name: /Place order/ }).element();
+    // The button stays inside the page's column (it wraps), and the page doesn't scroll sideways.
+    const column = pay.closest('main > div') as HTMLElement;
+    expect(pay.getBoundingClientRect().right).toBeLessThanOrEqual(column.getBoundingClientRect().right);
+    expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
+    expect(pay.textContent).toContain('Place order: pay');
+  });
+
   test('amounts are in the currency\'s own minor units: yen have none, so 1800 is ￥1,800 (GR152)', async () => {
     const onPlaceOrder = vi.fn();
     const screen = await render(<Checkout currency="JPY" expressPrice={900} onPlaceOrder={onPlaceOrder} initial={{ ...filled, delivery: 'express', tip: 300 }} startAtReview
