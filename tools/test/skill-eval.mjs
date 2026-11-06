@@ -46,6 +46,15 @@ const BAD = [
   ['names', GOOD.replace('<Checkbox label="Keep me signed in" />', '<Checkbox />')],
   ['names', GOOD.replace('<Button type="submit">', '<Input placeholder="Code" /><Button type="submit">')],
   ['no-div-click', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><div onClick={() => {}}>Row</div>')],
+  // Widgets built by hand (PN1): a role or aria-expanded on a plain element, a day grid, a dropdown placed by hand.
+  ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><div role="dialog" aria-modal="true">Sure?</div>')],
+  ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><ul role="listbox"><li role="option">One</li></ul>')],
+  ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><span role="tooltip">Edit</span>')],
+  ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><Button aria-expanded={false}>Menu</Button><nav aria-expanded="false">Links</nav>')],
+  ['no-rebuilds', GOOD.replace('export function', "const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];\nexport function")],
+  ['no-rebuilds', GOOD.replace('export function', 'const last = (y: number, m: number) => new Date(y, m + 1, 0).getDate();\nexport function')],
+  ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><div className="absolute top-full mt-1">Options</div>')],
+  ['no-rebuilds', GOOD.replace("padding: 'var(--spacing-4)'", "position: 'absolute', top: '100%'")],
 ];
 for (const [check, src] of BAD) {
   const r = grade(src, ['Field', 'Input', 'Button|Link']);
@@ -55,6 +64,14 @@ for (const [check, src] of BAD) {
   t(`a mistake fails "${check}" and nothing else (${r[check].why || 'passed'})`, !r[check].ok && !others.length,
     r[check].ok ? `"${check}" passed` : `also failed: ${others.map((c) => `${c} (${r[c].why})`).join(', ')}`);
 }
+
+// What isn't a widget built by hand: Serupa's own components with these props, a region or a status, a decorative
+// absolutely placed badge, weekday names in a sentence.
+const KEEP = GOOD.replace('<Stack gap="2">', `<Stack gap="2"><section role="region" aria-label="Help">Tips</section><p role="status">Saved</p>
+        <Button aria-expanded={false}>Details</Button><span style={{ position: 'absolute', top: 'var(--spacing-1)' }}>New</span>
+        <Text>Open Monday to Friday</Text>`);
+const kept = grade(KEEP, ['Field', 'Input', 'Button|Link']);
+t('a region, a status, a Serupa component with aria-expanded and a placed badge are not widgets built by hand', kept['no-rebuilds'].ok, kept['no-rebuilds'].why);
 
 // The tasks name components that exist, and have been run.
 const names = new Set(fs.readdirSync(path.join(PROJECT, 'src/components')));

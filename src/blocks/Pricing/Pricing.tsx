@@ -1,3 +1,4 @@
+"use client";
 import * as React from 'react';
 import { Badge } from '../../components/Badge/Badge';
 import { Button } from '../../components/Button/Button';
