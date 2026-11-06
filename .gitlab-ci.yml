@@ -15,9 +15,11 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "web"
-  # A new push to a merge request cancels the pipeline for the push before it; main's pipelines all finish.
+  # A new push cancels the pipeline for the push before it, and the first failed job cancels the rest of its
+  # pipeline: a red run stops spending CI minutes as soon as it's red.
   auto_cancel:
     on_new_commit: interruptible
+    on_job_failure: all
 
 stages: [build, test]
 

@@ -13,7 +13,7 @@
 //   node tools/ci.mjs --clean          start from a clean install (npm ci --ignore-scripts), as CI does
 //   node tools/ci.mjs --report <file>  also write the results as Markdown (commit, Node, each step's pass or fail
 //                                      with its test counts), ready to paste under "Local checks" in a merge request
-// npm run check -- <options> is the same. While the repo has no CI (the GitLab interim), this run is the merge gate:
+// npm run check -- <options> is the same. Run it before every push (GitLab CI runs the same jobs as the merge gate):
 //   npm run check -- --clean --since origin/main --report local-checks.md
 // CI picks one second language per commit (LOCALES in test/lib.mjs, by the commit's hash), and a pull request's merge
 // commit can't be known here, so this runs all of them: a test that only passes in English fails here, not on main.

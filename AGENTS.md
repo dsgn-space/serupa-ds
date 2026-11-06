@@ -31,15 +31,17 @@ node tools/test/run.mjs --since main
 
 Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`) runs every job CI requires, the component tests in all four second languages included (`--skip changeset` when the pull request takes `no-changeset`).
 
-## While the repo is on GitLab (no CI)
+## While the repo is on GitLab
 
-The repo lives on GitLab for now, with no pipelines, so the local run is the merge gate. On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for, runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Before a merge request merges, on the branch rebased onto `origin/main`, with nothing uncommitted:
+The repo lives on GitLab for now. `.gitlab-ci.yml` runs GitHub's CI jobs on every merge request and on each push to `main`, and a merge request merges itself when its pipeline passes: set auto-merge once it's ready (`PUT /merge_requests/<iid>/merge` with `auto_merge=true`, see `tools/README.md`). Never merge one whose pipeline isn't green.
+
+On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for, runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Before you push, on the branch rebased onto main:
 
 ```sh
 npm run check -- --clean --since origin/main --report local-checks.md
 ```
 
-`--clean` starts from `npm ci`, as CI did, and `--report` writes the results (commit, Node, every step with its test counts) as Markdown: paste it under **Local checks** in the merge request. Merge only when it says **All passed** on the commit you merge. A report that says "with uncommitted changes" doesn't count.
+`--clean` starts from `npm ci`, as CI does, and `--report` writes the results (commit, Node, every step with its test counts) as Markdown for the merge request's description.
 
 There is no Release workflow either: after a Release merge request (`npm run version-packages`) lands on `main`, `node tools/tag-release.mjs --make --push` tags the new version the way the workflow did (a prebuilt commit off `main`). Nothing goes to a registry.
 
