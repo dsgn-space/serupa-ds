@@ -5,7 +5,8 @@ tools/test/guides.mjs checks that every guide has the required headings, in this
 Rules:
 - Keep the headings below, in this order, spelled exactly. Required ones are marked; a test can check for them.
 - Optional sections go where shown and are left out when they have nothing to say.
-- Write for someone choosing and using the component, not someone maintaining it. Short sentences, plain words.
+- Write for someone choosing and using the component, not someone maintaining it. Short sentences, plain words, by the rules in
+  CONTRIBUTING.md's "Writing the docs": lead with the point, describe the component as it is now (history goes in the changeset).
 - Name the alternative whenever you say "don't use this": a guide that says "not for X" without saying what to use instead leaves the reader stuck.
 - Link other guides as ../<Name>/README.md; Storybook turns those into links to the component's page.
 - The page title comes from Storybook, so the "# <Name>" line is dropped there but kept for GitHub.
