@@ -253,7 +253,9 @@ describe('Table', () => {
     const f = el('tlsh').parentElement!;
     f.scrollTop = 85;
     await expect.poll(() => f.scrollTop).toBe(85);
-    const at = (name: string) => { const b = f.querySelector<HTMLElement>(`[aria-label="${name}"]`)!.getBoundingClientRect(); const x = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2) as HTMLElement; return x.getAttribute('aria-label') || x.textContent; };
+    // What is on top at a checkbox's middle, named by the checkbox of the cell it's in: WebKit hits the Checkbox's
+    // drawn box over the input, Chromium the input itself, and either is the header's own checkbox.
+    const at = (name: string) => { const b = f.querySelector<HTMLElement>(`[aria-label="${name}"]`)!.getBoundingClientRect(); const x = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2) as HTMLElement; return x.closest('th, td')?.querySelector('[aria-label]')?.getAttribute('aria-label') ?? x.textContent; };
     const edit = [...f.querySelectorAll('thead th')][2].getBoundingClientRect(), hit = document.elementFromPoint(edit.left + 12, edit.top + edit.height / 2) as HTMLElement;
     expect([at('Select all'), hit.closest('thead') !== null]).toEqual(['Select all', true]);
   });

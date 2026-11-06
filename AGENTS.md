@@ -29,6 +29,8 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
+Before you push, `node tools/ci.mjs --since main` runs every job CI requires, the component tests in all four second languages included (`--skip changeset` when the pull request takes `no-changeset`).
+
 ## Every pull request
 
 - **One change per pull request.** Fixes for the same component go in one pull request. Different components go in different ones.

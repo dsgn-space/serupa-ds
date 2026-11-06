@@ -3,12 +3,12 @@ type TextSize = "base" | "lg" | "sm" | "xl" | "xs";
 type TextTone = "danger" | "default" | "muted" | "primary";
 type TextWeight = "bold" | "medium" | "normal" | "semibold";
 interface TextProps extends React.HTMLAttributes<HTMLElement> {
-    as?: "div" | "em" | "figcaption" | "label" | "li" | "p" | "small" | "span" | "strong";
-    size?: TextSize;
-    tone?: TextTone;
-    weight?: TextWeight;
-    truncate?: boolean;
-    measure?: boolean;
-    htmlFor?: string;
+    as?: "div" | "em" | "figcaption" | "label" | "li" | "p" | "small" | "span" | "strong" | undefined;
+    size?: TextSize | undefined;
+    tone?: TextTone | undefined;
+    weight?: TextWeight | undefined;
+    truncate?: boolean | undefined;
+    measure?: boolean | undefined;
+    htmlFor?: string | undefined;
 }
 declare const Text: React.ForwardRefExoticComponent<TextProps & React.RefAttributes<HTMLElement>>;

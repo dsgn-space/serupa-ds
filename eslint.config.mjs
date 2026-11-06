@@ -112,4 +112,15 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
     rules: { 'no-undef': 'off' },
   },
+  {
+    // A URL's pathname isn't a file path on Windows ('/D:/a/…' became 'D:\\D:\\a\\…', so the Screen readers job's
+    // NVDA build couldn't find package.json): import.meta.dirname, import.meta.filename or fileURLToPath instead.
+    files: ['tools/**/*.mjs', 'bin/**/*.mjs', '*.mjs', '*.ts', '.storybook/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': ['error', {
+        selector: 'MemberExpression[property.name="pathname"] > NewExpression.object:has(MetaProperty)',
+        message: 'A file URL\'s pathname is wrong on Windows: use import.meta.dirname, import.meta.filename or fileURLToPath(new URL(…, import.meta.url)).',
+      }],
+    },
+  },
 );

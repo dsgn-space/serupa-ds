@@ -23,7 +23,7 @@
 // touches only components (SERUPA_ONLY), since a component can't change them.
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PAGES, PROJECT, browser, fixClock, inParallel, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
+import { HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
@@ -59,6 +59,15 @@ const saved = () => fs.readdirSync(DIR, { recursive: true }).map((f) => String(f
 
 const { base, close } = serve(SB);
 const b = await browser();
+// Pictures from another browser build than the baselines' differ in their text, so all would fail: say why instead.
+const want = expectedVersion();
+if (want && b.version() !== want) {
+  await b.close();
+  close();
+  fail(`Visual snapshots need the browser the baselines are drawn with, ${want} (Playwright's own), but ${b.version()} is running. `
+    + 'Run "npx playwright install". Where that download is blocked (a container whose network doesn\'t allow cdn.playwright.dev), '
+    + 'leave this step to CI: node tools/ci.mjs --skip visual. Don\'t update baselines from another build.');
+}
 // Several pages at once (PAGES), each in its own context so focus and the pointer stay its own.
 const pages = await Promise.all(Array.from({ length: PAGES }, async () => {
   const context = await b.newContext({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });

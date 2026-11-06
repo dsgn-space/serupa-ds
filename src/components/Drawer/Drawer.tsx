@@ -16,39 +16,39 @@ import { project, rubber, settleTime, speed, track, type Samples } from "../../i
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Open at first, then it closes itself (uncontrolled), for one shown on arrival. Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called with false when people ask to close it, and why: { reason: 'escape' | 'close' (the ×) | 'outside' (the backdrop) | 'swipe' | 'api' (the browser closed it) }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** The edge it slides in from: 'right' (default), 'left', 'top' or 'bottom'. */
-  side?: 'right' | 'left' | 'top' | 'bottom';
+  side?: 'right' | 'left' | 'top' | 'bottom' | undefined;
   /** The width of a left or right drawer: 'sm' 320px, 'md' 384px (default) or 'lg' 512px, at most the screen. Top and bottom drawers fit their content. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** The heading, which also names the drawer. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** A muted line under the title, read when it opens. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Buttons pinned to the bottom, under a line: the main action last. */
-  footer?: React.ReactNode;
+  footer?: React.ReactNode | undefined;
   /** Shows the × in the corner. Default: true. */
-  closeButton?: boolean;
+  closeButton?: boolean | undefined;
   /** The × button's name. Default: 'Close'. */
-  closeLabel?: string;
+  closeLabel?: string | undefined;
   /** Whether a click on the backdrop closes it. Default: true. */
-  closeOnBackdrop?: boolean;
+  closeOnBackdrop?: boolean | undefined;
   /** false: a side panel next to the page instead of over it. No backdrop, the page stays usable and scrolls, and
       focus can leave it; Escape inside it and the × still close it. Default: true. */
-  modal?: boolean;
+  modal?: boolean | undefined;
   /** A touch drag toward its edge closes it (onOpenChange(false, { reason: 'swipe' })). Top and bottom drawers
       are dragged by the header or footer, so the body still scrolls. Default: true. */
-  swipeToClose?: boolean;
+  swipeToClose?: boolean | undefined;
   /** The element that takes focus when it opens, instead of the first that can (the ×) or one marked data-autofocus: the field people came to fill. */
-  initialFocus?: React.RefObject<HTMLElement | null>;
+  initialFocus?: React.RefObject<HTMLElement | null> | undefined;
   /** Where focus goes when it closes, instead of back to what had it before (taken when that's gone): the next row after the one it deleted, say. */
-  finalFocus?: React.RefObject<HTMLElement | null>;
+  finalFocus?: React.RefObject<HTMLElement | null> | undefined;
   /** There are changes that would be lost: Escape, the ×, the backdrop, a swipe or the browser closing it first ask "Discard changes?" (an alert dialog, Keep editing focused), and onOpenChange(false) comes only after Discard. Leaving the page asks too (beforeunload). Your own Cancel button closes it directly, so ask there yourself if it should. Default: false. */
-  unsaved?: boolean;
+  unsaved?: boolean | undefined;
 }
 
 const FLICK = 0.2;   // px per ms over the last 100ms toward the edge: a let-go this fast closes it, however short (KW5a)

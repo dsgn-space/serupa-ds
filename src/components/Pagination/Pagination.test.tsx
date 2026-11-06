@@ -41,7 +41,7 @@ describe('Pagination', () => {
     ]);
   });
 
-  test('page numbers are written in the digits of the locale, as Calendar writes its days; the buttons keep their names', async () => {
+  test('page numbers are written in the digits of the locale, as Calendar writes its days, and the names say them so: "Page ٥" (WCAG 2.5.3)', async () => {
     await render(<>
       <SerupaProvider locale="ar-EG"><Pagination id="par" count={10} page={5} /></SerupaProvider>
       <SerupaProvider locale="fa"><Pagination id="pfa" count={3} page={2} /></SerupaProvider>
@@ -49,12 +49,18 @@ describe('Pagination', () => {
     const d = (l: string, n: number) => new Intl.NumberFormat(l).format(n);
     expect(shown('par')).toBe(`< ${d('ar-EG', 1)} … ${d('ar-EG', 4)} [${d('ar-EG', 5)}] ${d('ar-EG', 6)} … ${d('ar-EG', 10)} >`);
     expect([shown('par').includes('٥'), shown('pfa')]).toEqual([true, '< ۱ [۲] ۳ >']);
-    expect(named('par', 'Page 5').getAttribute('aria-current')).toBe('page');
+    expect(named('par', 'Page ' + d('ar-EG', 5)).getAttribute('aria-current')).toBe('page');
+    expect(named('pfa', 'Page ۳')).toBeTruthy();
+  });
+
+  test('a pageLabel keeps its other numbers: only the page is written in the locale\'s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Pagination id="pl" count={12} page={1} pageLabel={(n) => 'Page ' + n + ' of 12'} /></SerupaProvider>);
+    expect(named('pl', 'Page ١ of 12').getAttribute('aria-current')).toBe('page');
   });
 
   test('a <nav aria-label="Pagination"> with a list; ref, className and props reach the nav; buttons are named and the ellipsis is hidden', async () => {
     const ref = React.createRef<HTMLElement>();
-    await render(<Pagination id="pdef" count={10} ref={ref} className="extra" data-x="y" />);
+    await render(<Pagination id="pdef" count={10} ref={ref} className="extra" data-x="y" />, { wrapper: EnUS });
     const n = el('pdef');
     expect([n.tagName, n.getAttribute('aria-label'), n.className, n.dataset.component, ref.current === n, n.dataset.x, n.firstElementChild!.tagName])
       .toEqual(['NAV', 'Pagination', 'dk-pagination extra', 'pagination', true, 'y', 'UL']);
@@ -119,7 +125,7 @@ describe('Pagination', () => {
   test('size md is 32px square, sm 24px; the current page is primary with on-primary text, semibold', async () => {
     // Also in DejaVu Sans, where Inter isn't installed (CI's runners): its "1" is 8.36px, which made a 24.36px page
     // when sm kept md's 8px sides. And with the widest digits, two of them.
-    await render(<><Pagination id="pdef" count={10} /><Pagination id="psm" count={3} size="sm" /><div style={{ fontFamily: '"DejaVu Sans"' }}><Pagination id="pdv" count={3} size="sm" /><Pagination id="p88" count={88} page={88} size="sm" siblings={0} /></div></>);
+    await render(<><Pagination id="pdef" count={10} /><Pagination id="psm" count={3} size="sm" /><div style={{ fontFamily: '"DejaVu Sans"' }}><Pagination id="pdv" count={3} size="sm" /><Pagination id="p88" count={88} page={88} size="sm" siblings={0} /></div></>, { wrapper: EnUS });
     const sq = (id: string, page = 'Page 1') => { const r = named(id, page).getBoundingClientRect(); return r.width + 'x' + r.height; };
     expect([sq('pdef'), sq('psm'), sq('pdv'), sq('p88', 'Page 88')]).toEqual(['32x32', '24x24', '24x24', '24x24']);
     const cur = q('pdef', '[aria-current]');
@@ -182,7 +188,7 @@ describe('Pagination', () => {
 
   test('contrast: pages (also on hover), the current page and the ellipsis keep 4.5:1 in all six themes', async () => {
     // On page 7, as the script left it: page 1 is a plain page and there is an ellipsis.
-    await render(<Pagination id="pdef" count={10} defaultPage={7} />);
+    await render(<Pagination id="pdef" count={10} defaultPage={7} />, { wrapper: EnUS });
     const pg = named('pdef', 'Page 1'), cur = q('pdef', '[aria-current]'), ell = q('pdef', '.dk-pagination__ellipsis');
     const low: string[] = [];
     let n = 0;
@@ -201,7 +207,7 @@ describe('Pagination', () => {
   });
 
   test('pressed: a page held down fills with pressed, one step past hover', async () => {
-    await render(<Pagination id="pprs" count={10} defaultPage={7} />);
+    await render(<Pagination id="pprs" count={10} defaultPage={7} />, { wrapper: EnUS });
     const pg = named('pprs', 'Page 1');
     await press(pg, () => expect.poll(() => css(pg).backgroundColor).toBe(color('var(--pressed)')));
   });

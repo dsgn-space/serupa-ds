@@ -9,7 +9,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { parseChangeset } from './changesets.mjs';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = path.resolve(import.meta.dirname, '..');
 const DIR = path.join(P, '.changeset');
 const { name } = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
 const SECTIONS = ['Added', 'Changed', 'Deprecated', 'Removed', 'Fixed', 'Security'];

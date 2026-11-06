@@ -19,6 +19,14 @@ const cap = (t: string) => t.charAt(0).toLocaleUpperCase("tr") + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: "Tümünü genişlet",
+  chartKind: (type) => (type === "bar" ? "Çubuk grafik" : "Çizgi grafik"),
+  chartSummary: (kind, series, points, first, last) => kind + ", " + n(series) + " seri" + ", " + n(points) + " nokta" + (points > 1 ? ", " + first + " – " + last : "") + ".",
+  chartRange: (series, low, lowAt, high, highAt) => series + ": en düşük " + low + " (" + lowAt + "), en yüksek " + high + " (" + highAt + ").",
+  chartPoint: (series, category, value) => (series ? series + ", " + category + ": " + value : category + ": " + value),
+  chartNoValue: "Değer yok",
+  chartCategory: "Kategori",
+  chartShowTable: "Tablo olarak göster",
+  chartShowChart: "Grafik olarak göster",
   collapseAll: "Tümünü daralt",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => n(count) + " kişi daha",

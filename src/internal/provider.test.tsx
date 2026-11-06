@@ -19,7 +19,8 @@ const Square = { name: 'my_square', d: 'M100-100h760v-760H100z' };
 
 describe('SerupaProvider labels', () => {
   test('replace the words the components say on their own', async () => {
-    await render(<SerupaProvider labels={{ dismiss: 'Abaikan', previousPage: 'Sebelumnya', nextPage: 'Berikutnya', pagination: 'Halaman', page: (n) => 'Halaman ' + n, loading: 'Memuat' }}>
+    // en-US: a page's name is in the locale's digits, as its button shows it.
+    await render(<SerupaProvider locale="en-US" labels={{ dismiss: 'Abaikan', previousPage: 'Sebelumnya', nextPage: 'Berikutnya', pagination: 'Halaman', page: (n) => 'Halaman ' + n, loading: 'Memuat' }}>
       <Alert title="Saved" onDismiss={() => {}} />
       <Pagination count={3} defaultPage={2} />
       <Loader delay={0} />
