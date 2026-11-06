@@ -6,7 +6,7 @@ A vertical nav for an app's pages: an optional header (a logo, a workspace switc
 const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Serupa;
 
 <div style={{ display: 'flex', height: '100vh' }}>
-  <Sidebar header={<Logo />} footer={<UserButton />} collapsed={collapsed}>
+  <Sidebar header={<Logo src="/logo.svg" markSrc="/mark.svg" variant={collapsed ? "mark" : "full"} alt="Acme" />} footer={<UserButton />} collapsed={collapsed}>
     <SidebarSection>
       <SidebarItem href="/" icon="home" label="Home" active />
       <SidebarItem href="/inbox" icon="inbox" label="Inbox" badge={<Badge count={4} />} />
@@ -56,7 +56,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 - Group related items under a `SidebarSection` with a short `title`; keep nesting to one level of SidebarItems.
 - Mark the current page with `active`; a group holding it, at any depth, starts open.
 - Put settings and the signed-in user in `footer`, so they stay at the bottom.
-- Collapsed, the header and footer have the 64px rail too: pass a logo mark or an avatar then, such as `header={collapsed ? <LogoMark /> : <Logo />}`. Longer text there ends in an ellipsis rather than spilling over the page.
+- Collapsed, the header and footer have the 64px rail too: pass a logo mark or an avatar then, such as a [Logo](../Logo/README.md) with `variant={collapsed ? "mark" : "full"}`. Longer text there ends in an ellipsis rather than spilling over the page.
 - Collapsing and expanding slide over 200ms without laying out the page on every frame. The column's width changes once: at the start when expanding, and at the end when collapsing. In between, only the sidebar's visible edge moves, so a heavy page beside it doesn't stutter. Toggling again mid-way turns back from where it is. With reduced motion it switches at once.
 
 ## Accessibility

@@ -33,7 +33,7 @@ import { tokenDescriptions } from '../tokens/build.mjs';
 import { a11yComponents } from '../lint/a11y-components.mjs';
 import { PAIRS as CONTRAST_PAIRS } from '../tokens/contrast-pairs.mjs';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
+const P = path.resolve(import.meta.dirname, '..', '..');
 const D = path.join(P, 'dist');
 const { version } = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
 const read = (f) => fs.readFileSync(path.join(P, f), 'utf8');

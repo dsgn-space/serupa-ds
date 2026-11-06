@@ -18,27 +18,27 @@ const LABELABLE = new Set(["select", "button", "meter", "output", "progress", "t
 
 export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The label: a <label> linked to the control, or with group, the fieldset's <legend>. */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** Help text under the label, before the control (text-muted); added to the control's aria-describedby. */
-  hint?: React.ReactNode;
+  hint?: React.ReactNode | undefined;
   /** An error message under the control (danger-text, with an icon); makes the control invalid and is added to its aria-describedby. */
-  error?: React.ReactNode;
+  error?: React.ReactNode | undefined;
   /** A * after the label (hidden from screen readers) and aria-required on the control; with group, "Required" in words in the legend for screen readers. Add the control's own required for the browser's check. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** "(optional)" after the label, or your own words. Ignored with required. */
-  optional?: boolean | string;
+  optional?: boolean | string | undefined;
   /** Disables the control (with group, every control in the fieldset) and dims the label and hint. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** A <fieldset> with a <legend> for a set of checkboxes or radios; the hint and error describe the fieldset. */
-  group?: boolean;
+  group?: boolean | undefined;
   /** 'vertical' (default): label, hint, control and error stacked. 'horizontal': the label in a column at the start
    *  (--field-label-width) on the control's first line, with the control, hint and error beside it, for dense
    *  settings forms; it stacks again when the field is too narrow for both. Not with group. */
-  layout?: 'vertical' | 'horizontal';
+  layout?: 'vertical' | 'horizontal' | undefined;
   /** The control's id; by default the control's own id, or a generated one. */
-  id?: string;
+  id?: string | undefined;
   /** One control (Input, Textarea, Select or any element), or with group, the set. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 /* Field: a label, an optional hint and an error message around one form control. It gives the control an id

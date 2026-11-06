@@ -2,7 +2,7 @@
 interface HighlightProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
     children: string;
     query: ReadonlyArray<string> | string;
-    words?: boolean;
+    words?: boolean | undefined;
 }
 declare function highlightRanges(text: string, query: ReadonlyArray<string> | string, words?: boolean): Array<[
     number,

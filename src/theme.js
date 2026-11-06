@@ -11,6 +11,7 @@
    never contains a closing script tag or an HTML comment opener, either of which would end or break it.
 
    data-brand  blue | violet | emerald         (default: blue)
+   data-brands your own brands (serupa-brand), such as "acme"
    data-mode   auto | light | dark             (default: auto = follow the operating system)
    A page with only data-theme="violet-dark" (no data-brand or data-mode) keeps that theme as its default.
    It sets data-theme (e.g. "blue-dark"), which tokens.css reads. A choice made with
@@ -26,6 +27,7 @@
   if (window.Serupa && window.Serupa.theme) return;
   var BRANDS = ["blue", "violet", "emerald"], MODES = ["auto", "light", "dark"], KEY = "serupa-theme";
   var root = document.documentElement;
+  BRANDS = BRANDS.concat((root.getAttribute("data-brands") || "").match(/[a-z][a-z0-9]*/g) || []);
   var own = !root.hasAttribute("data-brand") && !root.hasAttribute("data-mode") && /^([a-z]+)-(light|dark)$/.exec(root.getAttribute("data-theme") || "");
   var page = own && BRANDS.indexOf(own[1]) >= 0 ? { brand: own[1], mode: own[2] }
     : { brand: pick(root.getAttribute("data-brand"), BRANDS, "blue"), mode: pick(root.getAttribute("data-mode"), MODES, "auto") };
@@ -64,13 +66,31 @@
     var b = document.body ? getComputedStyle(document.body).backgroundColor : "";
     tint.content = /\d/.test(b) && !/, 0\)$/.test(b) ? b : resolved() === "dark" ? "#18181b" : "#fff";
   }
+  // After the first paint a switch crossfades the page at once (a View Transition, type "serupa-theme").
+  var shown = false, mine = null, heard = null;
   function apply(always) {
     var i = info();
     if (root.getAttribute("data-theme") === i.theme && !always) return chrome();
-    root.setAttribute("data-theme", i.theme);
-    root.getAnimations({ subtree: true }).forEach(function (a) { if (/color|shadow|fill|stroke/.test(a.transitionProperty)) a.finish(); });
-    chrome();
-    listeners.slice().forEach(function (fn) { try { fn(i); } catch (e) { if (window.console) console.error(e); } });
+    function go(crossfade) {
+      // The newest choice (a switch skips the crossfade before it); onChange hears each theme once.
+      i = info();
+      if (root.getAttribute("data-theme") === i.theme && (!always || (crossfade && heard === i.theme))) return chrome();
+      heard = i.theme;
+      root.setAttribute("data-theme", i.theme);
+      root.getAnimations({ subtree: true }).forEach(function (a) { if (/color|shadow|fill|stroke/.test(a.transitionProperty)) a.finish(); });
+      chrome();
+      listeners.slice().forEach(function (fn) { try { fn(i); } catch (e) { if (window.console) console.error(e); } });
+    }
+    // At once, too, during the app's own View Transition, which a new one would skip.
+    var other = document.activeViewTransition && document.activeViewTransition !== mine;
+    if (!shown || !document.startViewTransition || document.hidden || other || matchMedia("(prefers-reduced-motion: reduce)").matches) return go();
+    var vt, update = function () { go(true); };
+    try { vt = document.startViewTransition({ update: update, types: ["serupa-theme"] }); } catch (e) { vt = document.startViewTransition(update); }
+    mine = vt;
+    // A skipped crossfade rejects its promises: expected, not an error.
+    var no = function () {};
+    vt.ready.catch(no); vt.updateCallbackDone.catch(no);
+    vt.finished.then(function () { if (mine === vt) mine = null; }, no);
   }
 
   if (media) {
@@ -99,7 +119,7 @@
     reset: function () { try { localStorage.removeItem(KEY); } catch (e) {} state = Object.assign({}, page); apply(true); return info(); },
     onChange: function (fn) { listeners.push(fn); return function () { listeners = listeners.filter(function (f) { return f !== fn; }); }; }
   };
-  window.addEventListener("load", chrome);
+  window.addEventListener("load", function () { shown = true; chrome(); });
   window.Serupa = window.Serupa || {};
   window.Serupa.theme = api;
   if (!window.Serupa.version) window.Serupa.version = "__VERSION__";

@@ -1,0 +1,39 @@
+# Area
+- 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
+
+# Currency
+- 'img "Revenue, last 5 days: from €1,200 to €1,480, low €990, high €1,610"'
+
+# Default
+- 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
+
+# Flat
+- 'img "Open incidents: from 5 to 5, low 5, high 5"'
+
+# InText
+- paragraph:
+  - text: Sign-ups are up 50%
+  - 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
+  - text: since the spring campaign.
+
+# LongText
+- 'img "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung claims, every day of the year, for a label long enough to wrap twice: from 50 to 66, low 20, high 90"'
+
+# OneValue
+- 'img "Deploys today: from 7 to 7, low 7, high 7"'
+
+# Playground
+- 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
+
+# SharedScale
+- table:
+  - rowgroup:
+    - 'row "North North, sales by month: from 3 to 9, low 3, high 9"':
+      - rowheader "North"
+      - 'cell "North, sales by month: from 3 to 9, low 3, high 9"':
+        - 'img "North, sales by month: from 3 to 9, low 3, high 9"'
+    - 'row "South South, sales by month: from 12 to 19, low 12, high 19"':
+      - rowheader "South"
+      - 'cell "South, sales by month: from 12 to 19, low 12, high 19"':
+        - 'img "South, sales by month: from 12 to 19, low 12, high 19"'
+

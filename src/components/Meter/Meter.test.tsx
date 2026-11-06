@@ -25,6 +25,13 @@ afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); }
 const Wrap = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US"><div style={{ width: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>{children}</div></SerupaProvider>;
 
 describe('Meter', () => {
+  test('a label with a word longer than the line wraps inside the box, so the page never scrolls sideways (GR116)', async () => {
+    const LONG = 'Datenschutzgrundverordnungskonformitätsprüfung';
+    await render(<div id="box" style={{ width: 288 }}><Meter id="m" label={LONG} value={40} showValue /></div>);
+    const box = el('box').getBoundingClientRect(), m = el('m').getBoundingClientRect();
+    expect([m.right <= box.right + 0.5, el('m').scrollWidth <= el('m').clientWidth + 1, el('m').textContent.includes(LONG)]).toEqual([true, true, true]);
+  });
+
   test('a meter with valuenow 72, min 0, max 100 and valuetext "72%", named by its label; ref, className and props reach the outer box', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Wrap><Meter id="m1" value={72} label="Storage" showValue ref={ref} className="extra" data-x="y" /></Wrap>);

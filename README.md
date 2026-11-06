@@ -14,29 +14,29 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v13.0.0
+npm install github:diki-stwn/serupa-ds#v14.1.0
 ```
 
 Or install the same release from its file on the Releases page, which needs no git on the machine and puts the file's checksum in your lockfile:
 
 ```sh
-npm install https://github.com/diki-stwn/serupa-ds/releases/download/v13.0.0/serupa-ds-13.0.0.tgz
+npm install https://github.com/diki-stwn/serupa-ds/releases/download/v14.1.0/serupa-ds-14.1.0.tgz
 ```
 
 To check a downloaded file before you install it: the release notes give its SHA-256, and releases after 10.1.0 also carry a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit. With the [GitHub CLI](https://cli.github.com):
 
 ```sh
-gh attestation verify ./serupa-ds-13.0.0.tgz --repo diki-stwn/serupa-ds
+gh attestation verify ./serupa-ds-14.1.0.tgz --repo diki-stwn/serupa-ds
 ```
 
-Always pin a tag (`#v13.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:diki-stwn/serupa-ds#v13.0.0 serupa-create my-app
+npx --package=github:diki-stwn/serupa-ds#v14.1.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -101,7 +101,7 @@ Set the brand and mode on `<html>` and load `theme.js` first in `<head>`, so the
 
 A server-rendered app can save the request by pasting the text of `dist/theme.js` into an inline `<script>` in `<head>` (give it a nonce under a strict Content Security Policy); the file is written so it works inline. If both the inline copy and the file end up on a page, the second one does nothing, so the first keeps running the theme.
 
-Or set one theme directly on any element: `data-theme="violet-dark"`. A theme switch with theme.js changes every color at once: it finishes each control's color transition, so controls don't each fade on their own, while motion runs on (a menu fading out as "Dark" is picked, a switch sliding). To switch a section yourself, do it inside `withoutTransitions(() => section.setAttribute("data-theme", "violet-dark"), section)` for the same effect. With theme.js loaded, a `data-theme` on `<html>` (and no `data-brand` or `data-mode`) is the page default, so it isn't replaced. See Foundations › Themes in Storybook (`docs/foundations.md`).
+Or set one theme directly on any element: `data-theme="violet-dark"`. A theme switch with theme.js changes every color at once: after the first paint, where the browser has View Transitions, the whole page crossfades to the new theme in one piece (style it with `:active-view-transition-type(serupa-theme)`); elsewhere, and with reduced motion, it switches at once. Either way each control's own color transition is finished, so controls don't each fade on their own, while motion runs on (a menu fading out as "Dark" is picked, a switch sliding). `onChange` runs once the new theme is on. To switch a section yourself, do it inside `withoutTransitions(() => section.setAttribute("data-theme", "violet-dark"), section)` for the same effect. With theme.js loaded, a `data-theme` on `<html>` (and no `data-brand` or `data-mode`) is the page default, so it isn't replaced. See Foundations › Themes in Storybook (`docs/foundations.md`).
 
 ### 4. Ship it
 
@@ -256,12 +256,14 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [AvatarGroup](src/components/AvatarGroup/README.md) | Avatars in an overlapping row, such as the people on a project or the assignees of a task. |
 | [Card](src/components/Card/README.md) | A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. |
 | [Carousel](src/components/Carousel/README.md) | One slide at a time, with previous and next buttons, a dot per slide and swipe. |
+| [CodeBlock](src/components/CodeBlock/README.md) (beta) | Code for people to read and copy: an install command, a config file, an example. |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
 | [Icon](src/components/Icon/README.md) | Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. |
 | [Image](src/components/Image/README.md) | A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails. |
 | [Kbd](src/components/Kbd/README.md) | Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. |
 | [List](src/components/List/README.md) | Rows of related things: people, files, notifications, settings. |
+| [Logo](src/components/Logo/README.md) (beta) | The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. |
 | [RelativeTime](src/components/RelativeTime/README.md) | Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". |
 | [SortableList](src/components/SortableList/README.md) | A list people put in their own order: tasks by priority, steps in a flow, columns in a table. |
 | [Table](src/components/Table/README.md) | A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. |
@@ -271,6 +273,8 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
+| [Chart](src/components/Chart/README.md) (beta) | A line or bar chart of a few series over the same categories, such as visitors per month or orders per region. |
+| [Sparkline](src/components/Sparkline/README.md) (beta) | A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value. |
 | [Timeline](src/components/Timeline/README.md) | An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content. |
 
 ### Feedback
@@ -281,8 +285,10 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Badge](src/components/Badge/README.md) | A short label for status, counts and categories, optionally clickable. |
 | [EmptyState](src/components/EmptyState/README.md) | What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it. |
 | [ErrorBoundary](src/components/ErrorBoundary/README.md) | Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page. |
+| [Illustration](src/components/Illustration/README.md) (beta) | A small line drawing for an empty state, an error page or a finished flow. |
 | [Loader](src/components/Loader/README.md) | Shows that something is loading when you can't say how far along it is. |
 | [Meter](src/components/Meter/README.md) | Shows a measurement within a known range: storage used, a plan's seats, a password's strength, a battery level. |
+| [OfflineBanner](src/components/OfflineBanner/README.md) (beta) | Says when the connection drops and when it comes back, on screen and to screen readers. |
 | [Progress](src/components/Progress/README.md) | Shows how far along a task is when you can tell: an upload, a setup, a quota. |
 | [SaveStatus](src/components/SaveStatus/README.md) | A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. |
 | [Toast](src/components/Toast/README.md) | A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. |
@@ -363,6 +369,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [NotificationCenter](src/components/NotificationCenter/README.md) | A drawer of past notifications with read states: newest first, unread ones with a dot and a bolder title, and buttons to mark them read or clear the list. |
 | [Popover](src/components/Popover/README.md) | A small panel next to its trigger for content people interact with: a short form, filters, details with links. |
 | [Tooltip](src/components/Tooltip/README.md) | A short hint about one element, shown while it's hovered or focused: what an icon button does, a keyboard shortcut, why something is unavailable. |
+| [Tour](src/components/Tour/README.md) (beta) | A short guided walk through a page: one step at a time, a small panel points at a part of the page, says what it's for, and offers Back, Next and Done. |
 
 <!-- components:end -->
 

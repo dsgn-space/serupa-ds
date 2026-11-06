@@ -22,50 +22,50 @@ export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
   /** What the picture shows, for people who can't see it. Required: use "" only for a decorative picture. */
   alt: string;
   /** The frame's shape: 'auto' (the picture's own, default), 'square' (1:1), '4:3', 'video' (16:9) or a number (width / height). */
-  ratio?: ImageRatio;
+  ratio?: ImageRatio | undefined;
   /** How the picture fills a fixed ratio: 'cover' (fills and crops, default) or 'contain' (fits whole). */
-  fit?: 'cover' | 'contain';
+  fit?: 'cover' | 'contain' | undefined;
   /** Rounded corners (--image-radius). Default: true. */
-  rounded?: boolean;
+  rounded?: boolean | undefined;
   /** What shows if the picture fails to load. Default: a muted broken-image icon. */
-  fallback?: React.ReactNode;
+  fallback?: React.ReactNode | undefined;
   /** Makes it a button that opens the picture full size in a viewer. Default: false. */
-  viewable?: boolean;
+  viewable?: boolean | undefined;
   /** A larger version for the viewer. Default: src. */
-  fullSrc?: string;
+  fullSrc?: string | undefined;
   /** The view button's name. Default: "View image" plus the alt text. */
-  viewLabel?: string;
+  viewLabel?: string | undefined;
   /** Shows a remove button in the corner; called when it's pressed. */
-  onRemove?: () => void;
+  onRemove?: (() => void) | undefined;
   /** The remove button's name. Default: "Remove image" plus the alt text. */
-  removeLabel?: string;
+  removeLabel?: string | undefined;
   /** The main picture at the top of a page (a hero): loads at once with high priority instead of lazily, so it
    *  shows sooner (Largest Contentful Paint). Default: false. */
-  priority?: boolean;
+  priority?: boolean | undefined;
   /** Other versions of the picture for some screens or formats (art direction, AVIF or WebP), tried in order before
    *  src: each one becomes a <source> in a <picture> around the <img>. */
-  sources?: ImageSource[];
+  sources?: ImageSource[] | undefined;
   /** A version for a dark color scheme (a chart or logo drawn on dark): shown when the page's theme is dark (a *-dark
    *  data-theme or data-mode), or, where the theme follows the screen, when the screen prefers dark. */
-  darkSrc?: string;
+  darkSrc?: string | undefined;
   /** Dims a photo a shade in a dark color scheme, so a bright one doesn't glare on a dark page (--image-dim). Default: false. */
-  dim?: boolean;
+  dim?: boolean | undefined;
   /** Props for the outer frame, such as style for its width. */
-  frameProps?: React.HTMLAttributes<HTMLSpanElement>;
+  frameProps?: React.HTMLAttributes<HTMLSpanElement> | undefined;
 }
 
 /** One <source> of a picture: srcSet, and the media query or type it's for. */
 export interface ImageSource {
   srcSet: string;
   /** A media query this version is for, such as "(max-width: 640px)". */
-  media?: string;
+  media?: string | undefined;
   /** Its format, such as "image/avif": a browser that can't show it moves on. */
-  type?: string;
+  type?: string | undefined;
   /** How wide it shows, for w descriptors in its srcSet. Default: the frame's width when lazy, as for the <img>. */
-  sizes?: string;
+  sizes?: string | undefined;
   /** Its own size, when it has another shape than src (a cropped phone version). */
-  width?: number;
-  height?: number;
+  width?: number | undefined;
+  height?: number | undefined;
 }
 
 const RATIOS = ["auto", "square", "4:3", "video"] as const;

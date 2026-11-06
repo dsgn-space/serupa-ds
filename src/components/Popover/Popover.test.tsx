@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Popover } from './Popover';
@@ -352,5 +352,83 @@ describe('Popover inside a shadow root (GR60)', () => {
       root.querySelector<HTMLElement>('button')!.click();
       await expect.poll(() => root.activeElement?.getAttribute('aria-label')).toBe('Search filters');
     } finally { host.remove(); }
+  });
+
+  describe('sheet (54)', () => {
+    function Sheet({ sheet }: { sheet: true | 'mobile' }) {
+      return <div style={{ display: 'flex', justifyContent: 'center' }}><Popover title="Filters" sheet={sheet} trigger={<Button id="tsheet" variant="outline">Filters</Button>}>
+        {(close) => <div><input id="sheet-q" aria-label="Search" /><Button id="sheet-done" onClick={close}>Done</Button></div>}
+      </Popover></div>;
+    }
+    test('sheet: the screen\'s width along its foot, top corners rounded, no border under it; still a dialog, Escape returns focus', async () => {
+      await page.viewport(900, 700);
+      await render(<Sheet sheet />);
+      await userEvent.click(el('tsheet'));
+      await expect.poll(() => isOpen('tsheet')).toBe(true);
+      await settled();
+      const p = panel('tsheet'), r = rect(p), cs = getComputedStyle(p);
+      expect([Math.round(r.left), Math.round(r.width), Math.round(r.bottom)]).toEqual([0, document.documentElement.clientWidth, window.innerHeight]);
+      expect([cs.borderTopLeftRadius, cs.borderTopRightRadius, cs.borderBottomLeftRadius, cs.borderBottomWidth]).toEqual(['12px', '12px', '0px', '0px']);
+      expect(p.classList.contains('dk-popover--sheet')).toBe(true);
+      expect(p.getAttribute('role')).toBe('dialog');
+      expect(active()).toBe('sheet-q');
+      await userEvent.keyboard('{Escape}');
+      await expect.poll(() => isOpen('tsheet')).toBe(false);
+      expect(active()).toBe('tsheet');
+    });
+    test("a tall one stops 64px short of the screen's top and scrolls inside", async () => {
+      await page.viewport(900, 500);
+      await render(<Popover title="Long" sheet defaultOpen trigger={<Button id="tlong">Long</Button>}><div style={{ height: 2000 }}>Text</div></Popover>);
+      await expect.poll(() => isOpen('tlong')).toBe(true);
+      await settled();
+      const p = panel('tlong');
+      expect(Math.round(rect(p).top)).toBe(64);
+      expect(p.scrollHeight).toBeGreaterThan(p.clientHeight);
+      await page.viewport(900, 700);
+    });
+    test('a focused sheet draws its focus ring inside its edges, where the screen would cut an outside one (GR113)', async () => {
+      await page.viewport(390, 700);
+      await render(<Popover title="Note" sheet="mobile" trigger={<Button id="tnote">Note</Button>}><p>Nothing to press here.</p></Popover>);
+      el('tnote').focus();
+      await userEvent.keyboard('{Enter}');
+      await expect.poll(() => isOpen('tnote')).toBe(true);
+      await settled();
+      const p = panel('tnote'), cs = getComputedStyle(p);
+      expect([document.activeElement === p, p.matches(':focus-visible'), cs.outlineStyle]).toEqual([true, true, 'solid']);
+      expect(parseFloat(cs.outlineOffset)).toBe(-parseFloat(cs.outlineWidth));
+      await page.viewport(900, 700);
+    });
+    test("sheet='mobile': next to its trigger on a wide screen, a sheet under 640px; it follows the screen while open", async () => {
+      await page.viewport(900, 700);
+      await render(<Sheet sheet="mobile" />);
+      await userEvent.click(el('tsheet'));
+      await expect.poll(() => isOpen('tsheet')).toBe(true);
+      await settled();
+      const p = panel('tsheet');
+      expect(p.classList.contains('dk-popover--sheet')).toBe(false);
+      expect(near(rect(p).top, rect(el('tsheet')).bottom + 8)).toBe(true);
+      await page.viewport(400, 700);
+      await expect.poll(() => p.classList.contains('dk-popover--sheet')).toBe(true);
+      await settled();
+      expect([Math.round(rect(p).left), Math.round(rect(p).width), Math.round(rect(p).bottom)]).toEqual([0, document.documentElement.clientWidth, window.innerHeight]);
+      await page.viewport(900, 700);
+      await expect.poll(() => p.classList.contains('dk-popover--sheet')).toBe(false);
+      await settled();
+      expect(near(rect(p).top, rect(el('tsheet')).bottom + 8)).toBe(true);
+      await userEvent.click(document.body, { position: { x: 5, y: 650 } });
+      await expect.poll(() => isOpen('tsheet')).toBe(false);
+    });
+    test('it rises from below as it opens, with motion', async () => {
+      await page.viewport(900, 700);
+      await withMotion(async () => {
+        await render(<Sheet sheet />);
+        await userEvent.click(el('tsheet'));
+        await expect.poll(() => isOpen('tsheet')).toBe(true);
+        const p = panel('tsheet');
+        expect(getComputedStyle(p).transitionProperty).toContain('translate');
+        await settled();
+        expect(getComputedStyle(p).translate).toMatch(/^(none|0px)$/);
+      });
+    });
   });
 });

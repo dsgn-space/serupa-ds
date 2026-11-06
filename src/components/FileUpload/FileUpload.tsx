@@ -4,6 +4,7 @@ import { cn, domId, isInvalid, omit, setRef } from "../../internal/cn";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
+import { Progress } from "../Progress/Progress";
 import { component } from "../../internal/component";
 import { useLocale, useSettings } from "../../internal/provider";
 import { formatFileSize } from "./formatFileSize";
@@ -13,49 +14,70 @@ import { useFieldControl } from "../../internal/field";
 import { delegateFocus, useAutoFocus } from "../../internal/focus";
 import { announce } from "../../internal/announce";
 import { useFormReset } from "../../internal/useFormReset";
-import { en as words } from "./labels";
+import { en as fileWords } from "./labels";
+import { en as boundary } from "../ErrorBoundary/labels";
+import { en as progress } from "../Progress/labels";
+
+// Its own words, Progress's "Complete" for a finished upload and ErrorBoundary's "Try again" for a failed one.
+const words = /* @__PURE__ */ Object.assign({}, boundary, progress, fileWords);
 
 export { formatFileSize };
 
+/** Where a file's upload has got to, from fileStatus. */
+export interface FileUploadStatus {
+  /** 'uploading': a bar under the name. 'done': "Complete" after the size. 'error': a danger message under the name, and a retry button with onRetry. */
+  state: 'uploading' | 'done' | 'error';
+  /** While uploading, how far along, from 0 to 100. Leave it out when you can't tell: the bar then moves on its own. */
+  progress?: number | undefined;
+  /** With 'error', what went wrong. Default: "Upload failed". */
+  message?: React.ReactNode | undefined;
+}
 export type FileRejection = { file: File; reason: 'type' | 'size' | 'count' | 'folder' | 'duplicate'; message: string };
 export interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'title'> {
   /** The chosen files (controlled). Use with onFilesChange. */
-  files?: File[];
+  files?: File[] | undefined;
   /** Called with the new list when files are added or removed. */
-  onFilesChange?: (files: File[]) => void;
+  onFilesChange?: ((files: File[]) => void) | undefined;
   /** Called with the files that weren't added and why. They're also listed under the drop area. */
-  onReject?: (rejections: FileRejection[]) => void;
+  onReject?: ((rejections: FileRejection[]) => void) | undefined;
   /** File types to allow, as for <input accept>: "image/*,.pdf". */
-  accept?: string;
+  accept?: string | undefined;
   /** Allows several files. Default: false (a new file replaces the old one). */
-  multiple?: boolean;
+  multiple?: boolean | undefined;
   /** The largest file allowed, in bytes. */
-  maxSize?: number;
+  maxSize?: number | undefined;
   /** The most files allowed, with multiple. */
-  maxFiles?: number;
+  maxFiles?: number | undefined;
   /** Turns the drop area and its button off, as a disabled native control. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** A danger outline on the drop area, and aria-invalid on the native input; the choose button is described by the error (a button supports neither aria-invalid nor aria-errormessage). In a Field with an error, it's set for you. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** Required for the form's check (on the native input) and aria-required on the choose button. In a required Field, aria-required is set for you. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** The chosen files are shown and submitted, but can't be changed: the choose button stays focusable (aria-disabled) and doesn't open the picker, dropped files are ignored and there are no remove buttons. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** Submits the files with a form, through the native file input. */
-  name?: string;
+  name?: string | undefined;
   /** The id of the form the files submit with, when the FileUpload sits outside it (like an input's form attribute). */
-  form?: string;
+  form?: string | undefined;
   /** The drop area's title. Default: "Drag files here" ("Drag a file here" without multiple). */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The button's text. Default: "Choose files" ("Choose a file"). */
-  buttonLabel?: string;
+  buttonLabel?: string | undefined;
   /** A muted line, such as "PNG or JPG, up to 5 MB". */
-  hint?: React.ReactNode;
+  hint?: React.ReactNode | undefined;
   /** The remove buttons' names, given the file name. Default: (name) => `Remove ${name}`. */
-  removeLabel?: (name: string) => string;
+  removeLabel?: ((name: string) => string) | undefined;
+  /** Each chosen file's upload, when you upload as files are added: return { state, progress, message } for a file, or
+      nothing when it isn't uploading. Screen readers hear when one finishes or fails. */
+  fileStatus?: ((file: File) => FileUploadStatus | null | undefined) | undefined;
+  /** Called by a failed file's retry button. Without it, a failed file has no retry button. */
+  onRetry?: ((file: File) => void) | undefined;
+  /** Shows a small picture of each image file in place of its type icon. Default: false. */
+  thumbnails?: boolean | undefined;
 }
 
-const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, form: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1, "aria-errormessage": 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1 } as const;
+const OWN = { files: 1, onFilesChange: 1, onReject: 1, accept: 1, multiple: 1, maxSize: 1, maxFiles: 1, disabled: 1, name: 1, form: 1, title: 1, buttonLabel: 1, hint: 1, removeLabel: 1, fileStatus: 1, onRetry: 1, thumbnails: 1, autoFocus: 1, className: 1, id: 1, "aria-describedby": 1, "aria-errormessage": 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1 } as const;
 
 // Extensions and types that name the same kind of file. The file picker offers all of them for any one (accept=".jpg"
 // shows photo.jpeg too), so the check takes them as well (L8E12); image/jpg isn't a registered type but is often written.
@@ -89,8 +111,8 @@ const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.t
 /* A file's name, cut in the middle when it doesn't fit, as Finder and Drive do: the start shrinks to an ellipsis and
    the last few characters and the extension stay, so "report-2025.pdf" and "report-2026.pdf" still look different
    (GR17). dir="auto" lays it out in the name's own direction. The two parts are hidden from screen readers, which
-   read the whole name once, and title shows it in full on hover. */
-function FileName({ name }: { name: string }) {
+   read the whole name once (the progress bar and retry button are named by it too), and title shows it in full on hover. */
+function FileName({ name, id }: { name: string; id?: string }) {
   const chars = Array.from(name), dot = name.lastIndexOf(".");
   const ext = dot > 0 ? Array.from(name.slice(dot)).length : 0;
   const keep = Math.min(chars.length, Math.min(ext, 10) + 6);
@@ -98,9 +120,32 @@ function FileName({ name }: { name: string }) {
     <span className="dk-file-upload__name" dir="auto" title={name}>
       <span className="dk-file-upload__name-start" aria-hidden>{chars.slice(0, chars.length - keep).join("")}</span>
       <span className="dk-file-upload__name-end" aria-hidden>{chars.slice(chars.length - keep).join("")}</span>
-      <span className="dk-visually-hidden">{name}</span>
+      <span className="dk-visually-hidden" id={id}>{name}</span>
     </span>
   );
+}
+
+/* An image file's picture, decoded with createImageBitmap and drawn on a canvas (cropped to fill it, at the screen's
+   pixel ratio), so no URL made from the file reaches the page; a file the browser can't decode (HEIC on most) keeps
+   its type icon. The name next to it says what it is, so the picture is decorative. */
+function Thumbnail({ file, children }: { file: File; children: React.ReactNode }) {
+  const canvas = React.useRef<HTMLCanvasElement | null>(null);
+  const [broken, setBroken] = React.useState<File | null>(null);
+  React.useEffect(() => {
+    const el = canvas.current, ctx = el && el.getContext("2d");
+    let live = true;
+    // Without a canvas or createImageBitmap (an older browser), the promise fails and the type icon stays.
+    (el && ctx && typeof createImageBitmap === "function" ? createImageBitmap(file) : Promise.reject(new Error("no canvas"))).then((bmp) => {
+      if (live && el && ctx) {
+        const side = el.clientWidth * (window.devicePixelRatio || 1) || 40, k = Math.max(side / bmp.width, side / bmp.height);
+        el.width = el.height = side;
+        ctx.drawImage(bmp, (side - bmp.width * k) / 2, (side - bmp.height * k) / 2, bmp.width * k, bmp.height * k);
+      }
+      bmp.close();
+    }, () => { if (live) setBroken(file); });
+    return () => { live = false; };
+  }, [file]);
+  return broken === file ? <>{children}</> : <canvas ref={canvas} className="dk-file-upload__thumbnail" aria-hidden />;
 }
 
 /* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size
@@ -192,10 +237,27 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   React.useEffect(() => {
     if (refocus == null) return;
     setRefocus(null);
-    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>("li button") : [];
+    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>("li > button:last-child") : [];
     const to = left.length ? left[Math.min(refocus, left.length - 1)] : chooser.current;
     if (to) to.focus();
   }, [refocus, files]);
+
+  // Each file's upload, as the app reports it. A file that was uploading and is now done or failed is said politely;
+  // one that arrives done (files restored from a draft) isn't.
+  const statuses = files.map((f) => (props.fileStatus && props.fileStatus(f)) || null);
+  const seen = React.useRef<WeakMap<File, string> | null>(null);
+  // every render: fileStatus is read afresh each time, so a change of status shows only as a render; the check is cheap.
+  React.useEffect(() => {
+    const was = seen.current || (seen.current = new WeakMap());
+    files.forEach((f, i) => {
+      const st = statuses[i], now = st ? st.state : "";
+      if (was.get(f) === "uploading" && now !== "uploading") {
+        if (now === "done") announce(L.progressComplete(f.name));
+        else if (now === "error") announce(f.name + ": " + L.fileError);
+      }
+      was.set(f, now);
+    });
+  });
 
   // A file dropped just outside the area would be opened by the browser in place of the page, losing what was
   // typed (FQ1): while one can be added here, a file drop nothing else took is stopped on the document.
@@ -288,16 +350,32 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       ) : null}
       {files.length ? (
         <ul ref={list} role="list" className="dk-file-upload__list" aria-label={multiple ? sds.labels.chosenFiles : sds.labels.chosenFile}>
-          {files.map((f, i) => (
-            <li key={f.name + f.size + f.lastModified + i} className="dk-file-upload__item">
-              <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />
-              <span className="dk-file-upload__file">
-                <FileName name={f.name} />
-                <span className="dk-file-upload__size" dir="auto">{formatFileSize(f.size, locale)}</span>
-              </span>
-              {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}
-            </li>
-          ))}
+          {files.map((f, i) => {
+            const st = statuses[i], id = base + "-file-" + i, icon = <Icon icon={iconFor(f)} className="dk-file-upload__file-icon" />;
+            const failed = st && st.state === "error";
+            return (
+              <li key={f.name + f.size + f.lastModified + i} className={cn("dk-file-upload__item", failed && "dk-file-upload__item--error")}>
+                {props.thumbnails && /^image\//.test(f.type) ? <Thumbnail file={f}>{icon}</Thumbnail> : icon}
+                <span className="dk-file-upload__file">
+                  <FileName name={f.name} id={id + "-name"} />
+                  <span className="dk-file-upload__size" dir="auto">
+                    {formatFileSize(f.size, locale)}
+                    {st && st.state === "done" ? <span className="dk-file-upload__done"><Icon icon={icons.CheckCircle} />{L.progressComplete("")}</span> : null}
+                  </span>
+                  {st && st.state === "uploading" ? (
+                    <Progress className="dk-file-upload__progress" size="sm" value={typeof st.progress === "number" && isFinite(st.progress) ? Math.min(100, Math.max(0, st.progress)) : null} aria-labelledby={id + "-name"} />
+                  ) : null}
+                  {failed ? <span className="dk-file-upload__failed" id={id + "-error"}><Icon icon={icons.Error} />{st.message ?? L.fileError}</span> : null}
+                </span>
+                {failed && props.onRetry && !still ? (
+                  <Button className="dk-file-upload__retry" variant="ghost" size="sm" onClick={() => props.onRetry!(f)} aria-labelledby={id + "-retry " + id + "-name"} aria-describedby={id + "-error"}>
+                    <span id={id + "-retry"}>{L.tryAgain}</span>
+                  </Button>
+                ) : null}
+                {readOnly ? null : <IconButton icon={icons.Close} label={removeLabel(f.name)} size="sm" disabled={disabled} onClick={() => remove(f)} />}
+              </li>
+            );
+          })}
         </ul>
       ) : null}
     </div>
