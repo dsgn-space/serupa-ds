@@ -32,7 +32,7 @@ if (built) {
   try {
     fs.writeFileSync(path.join(dir, 'probe.tsx'), probe);
     fs.writeFileSync(path.join(dir, 'tsconfig.json'), JSON.stringify({ extends: path.join(PROJECT, 'tools/test/types/tsconfig.json'), compilerOptions: { exactOptionalPropertyTypes: true }, files: ['probe.tsx'] }));
-    const run = spawnSync(process.execPath, [tsc, '-p', dir, '--noErrorTruncation'], { cwd: PROJECT, encoding: 'utf8' });
+    const run = spawnSync(process.execPath, [tsc, '-p', dir, '--noErrorTruncation', '--pretty', 'false'], { cwd: PROJECT, encoding: 'utf8' });
     const out = run.stdout + run.stderr;
     ran = /probe\.tsx\(/.test(out) || run.status === 0;
     // What tsc said instead, when it said nothing about the probe (a crash, a signal, an error in another file).

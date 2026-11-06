@@ -103,7 +103,7 @@ function counts(lines) {
 /** @type {(cmd: string, args: string[]) => Promise<{ status: number, lines: string[] }>} */
 function run(cmd, args) {
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { stdio: ['inherit', 'pipe', 'pipe'], cwd: PROJECT, env: { ...process.env, SERUPA_PROJECT: PROJECT, FORCE_COLOR: process.env.FORCE_COLOR ?? (process.stdout.isTTY ? '1' : '0') } });
+    const child = spawn(cmd, args, { stdio: ['inherit', 'pipe', 'pipe'], cwd: PROJECT, env: { ...process.env, SERUPA_PROJECT: PROJECT, ...(process.stdout.isTTY && !('FORCE_COLOR' in process.env) ? { FORCE_COLOR: '1' } : {}) } });
     const lines = [];
     let rest = '';
     /** @type {(out: NodeJS.WriteStream) => (chunk: Buffer) => void} */
