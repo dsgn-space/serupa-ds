@@ -92,8 +92,8 @@ Drawn from the `Open` story.
 | `items` | `{ id, title, description?, tone?, time?, read? }[]` | | The notifications, newest first. |
 | `title` | ReactNode | `"Notifications"` | The drawer's title. |
 | `onMarkRead` | `(id) => void` | | Shows "Mark as read" on unread ones. |
-| `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer. |
-| `onClear` | `() => void` | | Shows "Clear all" in the footer. |
+| `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer while one is unread. |
+| `onClear` | `() => void` | | Shows "Clear all" in the footer while the list has any. When the button chosen goes away, focus moves to the other one or to the empty line. |
 | `empty` | ReactNode | `"No notifications yet"` | What shows with none. |
 | `description`, `footer`, `unsaved` | never | | Not taken: the list is the content, the footer holds its buttons, and there is nothing to edit. |
 | `open` | boolean | | Controlled: whether it's open. |

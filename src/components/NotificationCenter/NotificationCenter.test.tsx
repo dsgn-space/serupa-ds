@@ -48,9 +48,27 @@ describe('NotificationCenter', () => {
     expect(log).toEqual(['read a']);
     await expect.poll(() => read()[0]).toEqual(['Payment failed / Card declined.', []]);
     expect(document.activeElement).toBe(rows()[0]);
-    await userEvent.click(button('Mark all as read'));
+    // Nothing unread is left, so "Mark all as read" has nothing to do and is gone (GR176).
+    expect(button('Mark all as read')).toBeUndefined();
     await userEvent.click(button('Clear all'));
-    expect(log).toEqual(['read a', 'all', 'clear']);
+    expect(log).toEqual(['read a', 'clear']);
+  });
+
+  test('GR176: each footer button shows only while it has something to do, and focus moves on when the chosen one goes: "Mark all as read" to "Clear all", "Clear all" to the empty line', async () => {
+    function Inbox() {
+      const [items, setItems] = React.useState(list);
+      return <NotificationCenter defaultOpen items={items} onMarkAllRead={() => setItems((l) => l.map((n) => ({ ...n, read: true })))} onClear={() => setItems([])} />;
+    }
+    await render(<Inbox />);
+    await expect.poll(() => drawer() !== null).toBe(true);
+    button('Mark all as read').focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => button('Mark all as read')).toBeUndefined();
+    expect(document.activeElement).toBe(button('Clear all'));
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => rows().length).toBe(0);
+    expect(button('Clear all')).toBeUndefined();
+    expect(document.activeElement).toBe(drawer()!.querySelector('.dk-notification-center__empty'));
   });
 
   test('an inbox that hides read ones: "Mark as read" takes its row away, and focus goes to the row in its place, then the last, then the empty line, not to the page', async () => {
