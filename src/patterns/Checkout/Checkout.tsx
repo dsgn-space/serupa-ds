@@ -186,7 +186,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
         <Heading level={1}>Checkout</Heading>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">
             <div className="flex flex-col gap-1">
               <p className="m-0 text-sm text-text-muted">{steps[step]}</p>
@@ -264,10 +264,6 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                   </div>
                   {change('payment', 'the payment card')}
                 </Card>
-                <div className="flex flex-wrap gap-3">
-                  <Button loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
-                  <Button variant="ghost" onClick={() => go('details')}>Back</Button>
-                </div>
               </div>
             ) : (
               <p className="m-0 wrap-anywhere">We've sent the receipt to {d.email}. We'll email again when it's on its way.</p>
@@ -292,6 +288,14 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
               </dl>
             </Card>
           </aside>
+          {/* After the summary, so on a phone every line of the total is read before the button that pays; from lg
+              up the summary sits beside the review and this row under it. */}
+          {step === 'review' ? (
+            <div className="flex flex-wrap gap-3 lg:col-span-2">
+              <Button wrap loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
+              <Button variant="ghost" onClick={() => go('details')}>Back</Button>
+            </div>
+          ) : null}
         </div>
       </main>
     </div>
