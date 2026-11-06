@@ -22,6 +22,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import { buildUtilities } from '../utilities/build.mjs';
 import { split } from '../utilities/extra.mjs';
@@ -52,7 +53,8 @@ if (tokens.status !== 0) process.exit(tokens.status || 1);
 fs.mkdirSync(D, { recursive: true });
 if (!process.argv.includes('--css')) {
   // tsup reads tsconfig.json and bundles index.d.ts with TypeScript's compiler API: TypeScript 6's (tools/typescript/api.mjs).
-  const r = spawnSync(process.execPath, ['--import', path.join(P, 'tools', 'typescript', 'api.mjs'), path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: toStderr });
+  // --import takes a URL: a Windows path ('D:\a\…') reads as a URL with the scheme 'd:', so it goes as a file URL.
+  const r = spawnSync(process.execPath, ['--import', pathToFileURL(path.join(P, 'tools', 'typescript', 'api.mjs')).href, path.join(P, 'node_modules', 'tsup', 'dist', 'cli-default.js')], { cwd: P, stdio: toStderr });
   if (r.status !== 0) process.exit(r.status || 1);
   await buildModules();
 }
