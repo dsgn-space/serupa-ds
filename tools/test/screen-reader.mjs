@@ -41,7 +41,9 @@ const said = [];
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 
-await sr.start();
+// Guidepup keeps only a reader's first "page" of speech by default: NVDA's "Project, tab control" without the tab
+// it then names. capture: true keeps all of it.
+await sr.start({ capture: true });
 const b = await engine.launch({ headless: false });
 try {
   for (const [name, tree, steps] of CASES) {
@@ -56,7 +58,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
     const misses = [];
     for (const [key, words] of steps) {
       await sr.clearSpokenPhraseLog();
-      await sr.press(key);
+      await sr.press(key, { capture: true });
       const missed = (heard) => words.filter((w) => !w.split('|').some((alt) => heard.toLowerCase().includes(alt)));
       let heard = '';
       for (const end = Date.now() + 5000; ;) {
