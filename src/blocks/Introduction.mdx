@@ -11,7 +11,7 @@ Blocks don't ship in the package. They're for copying.
 ## How to copy one
 
 1. Open the block's story and its guide. The guide says when to use it, what each part is for, and what stays your app's job.
-2. Copy `src/blocks/<Name>/<Name>.tsx` into your app. Change the imports from `../../components/<Component>/<Component>` to `serupa`.
+2. Copy `src/blocks/<Name>/<Name>.tsx` into your app. Change the imports from `../../components/<Component>/<Component>` to `serupa`. Keep its first line, `"use client";`, where it has one: it uses state or handlers, so a Next.js App Router page needs it to build.
 3. Pass your own words and data, or change the markup to fit: it's your code now.
 4. Keep the test: copy `<Name>.test.tsx` too, and run it against your copy, so a later change that breaks the block is caught.
 
