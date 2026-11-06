@@ -67,4 +67,16 @@ import { EventCalendar } from "serupa-ds";
 Each is an optional override: set it on the page, a container or one EventCalendar. The list lives in `src/components/EventCalendar/event-calendar.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from event-calendar.tokens.json by npm run tokens: edit the descriptions there) -->
+| Token | Default | Use |
+| --- | --- | --- |
+| `--event-calendar-bg` | `surface` | The background. |
+| `--event-calendar-text` | `text` | The month's title and the dates (4.5:1 on bg). |
+| `--event-calendar-muted` | `text-muted` | Weekday names, the dates of other months, "+N more" and the empty agenda (4.5:1 on bg). |
+| `--event-calendar-today` | `primary` | Today's date, in the month and the agenda. |
+| `--event-calendar-border` | `border` | The lines between days. |
+| `--event-calendar-focus-ring` | `focus-ring` | The focus ring on a day and an event. |
+| `--event-calendar-event-bg` | `primary-subtle` | A primary event's fill (other tones use their own subtle color). |
+| `--event-calendar-event-text` | `text` | An event's time and title (4.5:1 on each tone's fill). |
+| `--event-calendar-event-radius` | `radius-inner` | An event's corners. |
+| `--event-calendar-day-height` | `spacing-24` | A day's height in the month (96px): room for the date and three events. |
 <!-- token-table:end -->

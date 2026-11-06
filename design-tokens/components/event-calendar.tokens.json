@@ -1,0 +1,111 @@
+{
+  "eventCalendar": {
+    "$description": "EventCalendar's component tokens. Each one is an optional override: set the CSS variable (--event-calendar-<name>) on the page, a container or one EventCalendar, and every EventCalendar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The month's title and the dates (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Weekday names, the dates of other months, \"+N more\" and the empty agenda (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-muted"
+          }
+        }
+      },
+      "today": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Today's date, in the month and the agenda.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-today"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The lines between days.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-border"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring on a day and an event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-focus-ring"
+          }
+        }
+      },
+      "event-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A primary event's fill (other tones use their own subtle color).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-bg"
+          }
+        }
+      },
+      "event-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An event's time and title (4.5:1 on each tone's fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-text"
+          }
+        }
+      }
+    },
+    "radius": {
+      "event-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "An event's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "day-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "A day's height in the month (96px): room for the date and three events.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-day-height"
+          }
+        }
+      }
+    }
+  }
+}
