@@ -25,7 +25,7 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
      the delete, to the h1 of the page that says it's gone.
    - 4.1.3: the toast says what was removed; a saved name is shown in the h1 at once.
    - 3.3.1: a name left empty says so, and the old name stays; a delete that fails says so in the dialog, which stays
-     open with focus on its button, so it can be tried again (GR177).
+     open with focus on its button, so it can be tried again.
    Storing the changes is the app's job: onRename, onRemoveTask and onDelete get them. */
 
 export interface ProjectTask { id: string; title: string }
@@ -51,7 +51,7 @@ const demo: Project = {
 };
 
 // "14 September 2026" in the reader's locale for "2026-09-14", read as that calendar day wherever the reader is;
-// anything else as it came (GR181).
+// anything else as it came.
 function day(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return iso;
@@ -70,7 +70,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
   const [failed, setFailed] = React.useState(false);
   const locale = useLocale();
   // The Undo toasts still open, and whether the project is gone: once it is, they close without removing anything,
-  // since the delete took their tasks with it (GR178).
+  // since the delete took their tasks with it.
   const pending = React.useRef(new Set<string>());
   const gone = React.useRef(false);
   const tasksHeading = React.useRef<HTMLHeadingElement>(null);
@@ -92,9 +92,9 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
     });
     pending.current.add(id);
   };
-  // Saved without the spaces around it, as the check reads it (GR180).
+  // Saved without the spaces around it, as the check reads it.
   const save = (field: 'name' | 'description', set: (v: string) => void) => (v: string) => { const kept = v.trim(); set(kept); onRename?.(field, kept); };
-  // A delete that fails keeps the dialog open and says so, instead of leaving the rejection unhandled (GR177).
+  // A delete that fails keeps the dialog open and says so, instead of leaving the rejection unhandled.
   const confirm = () => {
     setFailed(false);
     return Promise.resolve(onDelete?.()).then(() => {
@@ -106,7 +106,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
   };
   const ask = (open: boolean) => { setAsking(open); if (!open) setFailed(false); };
   // What the dialog says will be lost: the tasks still there, with the word that fits the number: the words are
-  // English, so the rule is too; an app translating them passes its own locale (GR179).
+  // English, so the rule is too; an app translating them passes its own locale.
   const lost = tasks.length
     ? `its ${tasks.length} ${english.select(tasks.length) === 'one' ? 'task' : 'tasks'} and files`
     : 'its files';
