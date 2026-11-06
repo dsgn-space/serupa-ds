@@ -7,6 +7,7 @@ import path from 'node:path';
 import { PROJECT, report, done } from './lib.mjs';
 import { CHECKS, TASKS, grade, gradeTask, startOf } from '../skill-eval/grade.mjs';
 import { REVIEWS, gradeReview, sourceOf } from '../skill-eval/review.mjs';
+import { CHECKS as APP_CHECKS, table as appTable } from '../skill-eval/agentic.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -179,5 +180,17 @@ for (const c of REVIEWS) {
   const leak = c.planted.filter((p) => p.case && new RegExp(p.find).test(sourceOf(c)) && !['ok-button', 'submit-word'].includes(p.id)).map((p) => p.id);
   t(`review case ${c.id}: no component a fix names is already in the file`, !leak.length, leak.join(', '));
 }
+
+// Agentic mode's table (agentic.mjs): a failed check is bold, and a run graded again later, with no cost or time,
+// leaves those cells to the runs that have them.
+const pass = Object.fromEntries(APP_CHECKS.map((c) => [c, { ok: true, why: '' }]));
+const row = appTable([{ id: 'sign-in', runs: [
+  { grade: pass, cost: 0.2, ms: 60000 },
+  { grade: { ...pass, axe: { ok: false, why: 'blue-dark: color-contrast (1)' } } },
+] }]);
+t('agentic table: a failed check is bold with its reason listed', row.includes('**1/2**') && row.includes('sign-in, axe: blue-dark: color-contrast (1)'), row);
+t('agentic table: cost and time are the means of the runs that recorded them', row.includes('| 0.20 | 1.0 |'), row);
+t('agentic table: a run with no cost doesn\'t make NaN', !row.includes('NaN'), row);
+t('agentic mode has a dated run in tools/skill-eval/results/', fs.readdirSync(results).some((n) => /^\d{4}-\d{2}-\d{2}-agentic\.md$/.test(n)), 'run node tools/skill-eval/agentic.mjs and commit its results');
 
 done(report('Skill eval grader', R));

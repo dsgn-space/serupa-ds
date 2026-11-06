@@ -1,0 +1,27 @@
+{
+  "grade": {
+    "typecheck": {
+      "ok": true,
+      "why": ""
+    },
+    "lint": {
+      "ok": true,
+      "why": ""
+    },
+    "render": {
+      "ok": true,
+      "why": ""
+    },
+    "axe": {
+      "ok": true,
+      "why": ""
+    },
+    "tab": {
+      "ok": true,
+      "why": ""
+    }
+  },
+  "cost": 0.16574909999999998,
+  "ms": 35128,
+  "error": ""
+}

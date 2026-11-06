@@ -55,3 +55,25 @@ node tools/skill-eval/review.mjs --grade <reviews dir>    # grade a folder of <c
 | No alarm | runs of the clean case with nothing under Must fix |
 
 A review can find more than was planted, and that isn't counted against it. The clean case is what keeps the skill honest about that: a review that invents a Must fix in a change that has none fails it. The results go to `results/<date>-review/` and `results/<date>-review.md`.
+
+## Agentic mode
+
+`run.mjs` reads the agent's answer. `agentic.mjs` grades what the agent leaves behind instead. Each run makes a fresh app with `serupa-create`, with the packed package installed, so the agent can read `node_modules/serupa-ds`. Claude Code then works in that app with its tools: read, edit, write, and `npm run`. With the skill, the app's `AGENTS.md` and `CLAUDE.md` send the agent to it. Without the skill, the app has neither file. Then hidden checks run on the app the agent left:
+
+| Check | Passes when |
+|---|---|
+| typecheck | `npm run typecheck` is clean |
+| lint | `npm run lint` is clean |
+| render | the built page shows text in `#root`, with no page error and no console error |
+| axe | axe finds no WCAG 2.2 A or AA violation in any of the six themes |
+| tab | Tab from the top reaches every visible control. A radio group counts once, and so does a roving-tabindex widget. |
+
+```sh
+node tools/skill-eval/agentic.mjs --runs 2 --jobs 5             # every task without a start file
+node tools/skill-eval/agentic.mjs --only sign-in,filters        # some tasks
+node tools/skill-eval/agentic.mjs --grade <app dir>             # grade one app
+```
+
+Each run takes about a minute and costs about $0.25. The apps' `src/` and each run's `grade.json` go to `results/<date>-agentic/`, and the table goes to `results/<date>-agentic.md`. The tasks are `tasks.json`'s, except the surgical ones, which start from a file. The code-reading grader stays the fast mode.
+
+The first run, 2026-11-06, had five tasks, two runs each way. All 50 checks passed both with and without the skill. That means these checks don't separate the two modes on these tasks: an agent with tools fixes what typecheck and lint report, and the components carry their own accessibility. Harder tasks are what would separate them, such as a page with several widgets or a change to an existing app.
