@@ -1,4 +1,9 @@
 # GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
+# Light by default: the free plan's 400 compute minutes a month buy only about two runs of the full suite (about
+# 200 minutes each, since every parallel job counts), so merge requests and main run build, types and lint,
+# changeset, consumer and the local checks gate (tools/local-checks-gate.mjs: the description must hold a passing
+# tools/ci.mjs report for the commit). The suite and frameworks jobs run when a pipeline is started by hand
+# (Build > Pipelines > Run pipeline) or with SERUPA_FULL_CI=1.
 # Runs on merge request pipelines and on pushes to main, never twice for the same push.
 # - Merge requests test what they change (tools/test/run.mjs --since the MR's base), as GitHub's pull requests did;
 #   main tests everything after each merge.
@@ -84,7 +89,22 @@ changeset:
     - git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
     - node tools/changeset-check.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
 
+.full-suite:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
+
+local checks:
+  stage: build
+  timeout: 5m
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1"
+  cache: []
+  before_script: []
+  script:
+    - node tools/local-checks-gate.mjs
+
 suite:
+  extends: .full-suite
   stage: test
   needs: [build]
   timeout: 30m
@@ -127,6 +147,7 @@ consumer:
 
 # The packed build in a Next.js, a React Router and an Astro app, rendered on the server and hydrated in Chromium.
 frameworks:
+  extends: .full-suite
   stage: test
   needs: [build]
   timeout: 20m
