@@ -23,6 +23,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { stripVTControlCharacters } from 'node:util';
 import { LOCALES } from './test/lib.mjs';
 
 const PROJECT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -82,7 +83,6 @@ const commit = git('rev-parse', 'HEAD');
 const dirty = git('status', '--porcelain', '--untracked-files=no');
 
 // What a step's output says it ran: vitest's "Tests" lines and the PASS/FAIL lines of tools/test/run.mjs's summary.
-const ANSI = /\x1b\[[0-9;]*m/g;
 /** @type {(lines: string[]) => string} */
 function counts(lines) {
   const tests = lines.map((l) => /^\s*Tests\s+(.+)$/.exec(l)?.[1]).filter(Boolean)
@@ -103,7 +103,7 @@ function run(cmd, args) {
     /** @type {(out: NodeJS.WriteStream) => (chunk: Buffer) => void} */
     const tee = (out) => (chunk) => {
       out.write(chunk);
-      const text = rest + chunk.toString('utf8').replace(ANSI, '');
+      const text = rest + stripVTControlCharacters(chunk.toString('utf8'));
       const all = text.split(/\r?\n/);
       rest = all.pop() || '';
       for (const l of all) if (/^\s*Tests\s|^(PASS|FAIL) {2}/.test(l)) lines.push(l);
