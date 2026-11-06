@@ -6,6 +6,7 @@ import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
 import type { Placement } from "../../internal/position";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { useExit } from "../../internal/useExit";
+import { lastInputKeyboard } from "../../internal/lastInput";
 import { component } from "../../internal/component";
 import { isComposing } from "../../internal/ime";
 import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
@@ -20,28 +21,28 @@ export interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   /** What's inside: text, a form, links, buttons. A function gets close(), for a Cancel or Done button. */
   children: React.ReactNode | ((close: () => void) => React.ReactNode);
   /** A heading at the top that names the popover. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** The title's heading level, to fit the page's outline. Default: 2, as in Dialog. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** Where it goes: 'bottom' (default), 'top', 'left', 'right', with '-start' or '-end'. It flips when there's no room. */
-  placement?: Placement;
+  placement?: Placement | undefined;
   /** Open it yourself (controlled), with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Open at first (uncontrolled). Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called when it asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' | 'close' }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** Its name for screen readers when it has no title. */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
   /** Show it as a sheet along the bottom of the screen, full width, instead of next to its trigger: true always,
       'mobile' under 640px (the sm breakpoint), where a panel by a button is small to tap and covers what's around it. */
-  sheet?: boolean | 'mobile';
+  sheet?: boolean | 'mobile' | undefined;
   /** Where focus goes when it opens: 'first' (default: the first control inside, or the panel) or 'panel'. */
-  initialFocus?: 'first' | 'panel';
+  initialFocus?: 'first' | 'panel' | undefined;
   /** Classes on the panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
-  className?: string;
+  className?: string | undefined;
   /** Styles on the panel. */
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | undefined;
 }
 
 const OWN = { trigger: 1, children: 1, title: 1, "aria-label": 1, "aria-labelledby": 1, headingLevel: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, sheet: 1, initialFocus: 1, className: 1, style: 1, onKeyDown: 1, onBlur: 1 } as const;
@@ -91,8 +92,11 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>("
     if (!open || !panel) return;
     // The first control that takes focus: one hidden (display: none, in a closed <details>) or in a disabled
     // <fieldset> doesn't, and focus would have stayed on the trigger, where Escape doesn't close it (L8E22).
-    const took = focusFirst && Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).some((el) => el.tabIndex >= 0 && (el.focus(), activeIn(el) === el));   // its own root's focus, in a shadow root too (GR60)
-    if (!took) panel.focus();
+    // Opened from the keyboard, the ring shows where focus went: Firefox doesn't work that out on its own for focus
+    // moved by script inside a shadow root.
+    const how = lastInputKeyboard() ? { focusVisible: true } : undefined;
+    const took = focusFirst && Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).some((el) => el.tabIndex >= 0 && (el.focus(how), activeIn(el) === el));   // its own root's focus, in a shadow root too (GR60)
+    if (!took) panel.focus(how);
   }, [open]);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

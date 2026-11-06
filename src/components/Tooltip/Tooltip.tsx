@@ -16,23 +16,23 @@ export interface TooltipProps {
   /** One element that can take focus (a Button, a link, an IconButton). The tooltip describes it. */
   children: React.ReactElement;
   /** 'top' (default), 'bottom', 'left', 'right', or with '-start' / '-end' ('bottom-start'). It flips when there's no room. */
-  placement?: Placement;
+  placement?: Placement | undefined;
   /** Milliseconds the pointer rests before it shows. Default: 400. Keyboard focus shows it at once, and so does the pointer while another tooltip is open or closed less than 300ms ago. */
-  delay?: number;
+  delay?: number | undefined;
   /** 'description' (default): adds to the element's name (aria-describedby). 'label': is its name (aria-labelledby), for an icon-only button with no other label. */
-  role?: 'description' | 'label';
+  role?: 'description' | 'label' | undefined;
   /** Open it yourself (controlled); with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Open at first (uncontrolled). Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called when it asks to show or hide, with why: { reason: 'hover' | 'focus' | 'blur' | 'trigger' (a press on the element) | 'escape' | 'outside' }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** Never shows it, for example while the element is disabled. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Classes on the tooltip. */
-  className?: string;
+  className?: string | undefined;
   /** Styles on the tooltip. */
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | undefined;
 }
 
 /** The trigger element's props this component reads and adds to. */

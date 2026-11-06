@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { page, userEvent } from 'vitest/browser';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { Navbar, NavbarLink } from '../Navbar/Navbar';
 import { OfflineBanner } from './OfflineBanner';
 
 const q = (s: string) => document.querySelector<HTMLElement>(s);
@@ -22,6 +23,8 @@ function network(online: boolean) {
 }
 const real = () => { delete (navigator as unknown as Record<string, unknown>).onLine; };
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// Where the browser leaves a focused field under the bar (Safari), the page moves it on the next frame.
+const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
 describe('OfflineBanner', () => {
   test('online it renders nothing; offline a <div> with the words, and ref, className and other props reach it', async () => {
@@ -108,7 +111,7 @@ describe('OfflineBanner', () => {
     document.getElementById('f0')!.focus();
     const covered: string[] = [];
     for (let i = 1; i < 40; i++) {
-      await userEvent.tab();
+      await userEvent.tab(); await frame();
       const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect(), b = banner.getBoundingClientRect();
       if (r.bottom > b.top && r.top < b.bottom) covered.push(f.id);
     }
@@ -117,5 +120,62 @@ describe('OfflineBanner', () => {
     await screen.rerender(<OfflineBanner online />);
     await expect.poll(() => document.querySelector('[data-component=offline-banner]')).toBe(null);
     expect([document.documentElement.style.getPropertyValue('--dk-offline-banner-space'), getComputedStyle(document.documentElement).scrollPaddingBottom, document.body.style.paddingBlockEnd]).toEqual(['', 'auto', '']);
+  });
+  test('GR124: the room is measured where the bar comes to rest, not where it is as it slides in', async () => withMotion(async () => {
+    const screen = await render(<OfflineBanner online />);
+    await screen.rerender(<OfflineBanner online={false}>Changes are kept and sent when you're back.</OfflineBanner>);
+    const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    const space = () => parseFloat(document.documentElement.style.getPropertyValue('--dk-offline-banner-space'));
+    const early = space();
+    await wait(600);
+    const settled = Math.ceil(window.innerHeight - banner.getBoundingClientRect().top + 8);
+    expect([early, space()]).toEqual([settled, settled]);
+  }));
+  test('GR125: a top bar keeps the first fields clear at the top of the page too; nothing is added when it goes', async () => {
+    const screen = await render(<>
+      {Array.from({ length: 30 }, (_, i) => <input key={i} id={'t' + i} aria-label={'Field ' + i} style={{ display: 'block', height: 40, margin: 8 }} />)}
+      <OfflineBanner online={false} placement="top">Changes are kept and sent when you're back.</OfflineBanner>
+    </>);
+    const banner = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
+    document.getElementById('t29')!.focus();
+    const covered: string[] = [];
+    for (let i = 28; i >= 0; i--) {
+      await userEvent.tab({ shift: true }); await frame();
+      const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect(), b = banner.getBoundingClientRect();
+      if (r.top < b.bottom && r.bottom > b.top) covered.push(f.id);
+    }
+    expect([covered, document.activeElement!.id]).toEqual([[], 't0']);
+    await screen.rerender(<OfflineBanner online placement="top" />);
+    await expect.poll(() => document.querySelector('[data-component=offline-banner]'), { timeout: 5000 }).toBe(null);
+    expect(document.body.style.paddingBlockStart).toBe('');
+  });
+  test.each([390, 900])('GR134: at %ipx a top bar sits below a sticky Navbar, so its brand, links, actions and Menu button stay reachable, and the first fields still scroll clear of both', async (w) => {
+    await page.viewport(w, 700);
+    await expect.poll(() => window.innerWidth).toBe(w);
+    try {
+      await render(<>
+        <Navbar sticky brand={<a href="#home">Acme</a>} actions={<button type="button">Sign in</button>}>
+          <NavbarLink href="#dash" active>Dashboard</NavbarLink>
+          <NavbarLink href="#projects">Projects</NavbarLink>
+        </Navbar>
+        {Array.from({ length: 30 }, (_, i) => <input key={i} id={'n' + i} aria-label={'Field ' + i} style={{ display: 'block', height: 40, margin: 8 }} />)}
+        <OfflineBanner online={false} placement="top">Changes are kept and sent when you're back.</OfflineBanner>
+      </>);
+      const banner = bar()!, nav = q('.dk-navbar')!;
+      await expect.poll(() => Math.round(banner.getBoundingClientRect().top) >= Math.round(nav.getBoundingClientRect().bottom)).toBe(true);
+      // Each control in the Navbar that shows is what a tap on its middle reaches.
+      const shown = [...nav.querySelectorAll<HTMLElement>('a, button')].filter((e) => e.getClientRects().length && e.getBoundingClientRect().width > 0);
+      expect(shown.length).toBeGreaterThan(1);
+      const hidden = shown.filter((e) => { const r = e.getBoundingClientRect(), at = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !at || !e.contains(at); }).map((e) => e.textContent || e.getAttribute('aria-label'));
+      expect(hidden).toEqual([]);
+      document.getElementById('n29')!.focus();
+      const covered: string[] = [];
+      for (let i = 28; i >= 0; i--) {
+        await userEvent.tab({ shift: true }); await frame();
+        const f = document.activeElement as HTMLElement, r = f.getBoundingClientRect();
+        if (![banner, nav].every((o) => { const b = o.getBoundingClientRect(); return r.top >= b.bottom || r.bottom <= b.top; })) covered.push(f.id);
+      }
+      expect([covered, document.activeElement!.id]).toEqual([[], 'n0']);
+    } finally { await page.viewport(900, 700); }
   });
 });

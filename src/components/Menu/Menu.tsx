@@ -25,19 +25,19 @@ export interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'c
   /** MenuItem, MenuGroup and MenuSeparator. */
   children: React.ReactNode;
   /** Where the menu goes: 'bottom-start' (default), 'bottom-end', 'top-start', 'top-end', or any Tooltip placement. It flips when there's no room. */
-  placement?: Placement;
+  placement?: Placement | undefined;
   /** Open it yourself (controlled), with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Open at first (uncontrolled), such as a menu a page returns to. Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called when it asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' (Tab) | 'select' (an item chosen) }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** The menu's name for screen readers. Default: the trigger's text, by aria-labelledby. */
   'aria-label'?: string;
   /** Classes on the menu panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
-  className?: string;
+  className?: string | undefined;
   /** Styles on the menu panel. */
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | undefined;
 }
 const OWN_MENU = { trigger: 1, children: 1, "aria-label": 1, "aria-labelledby": 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
@@ -181,15 +181,15 @@ export interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   /** The menu's name for screen readers ("File actions"). Required: there's no button to take it from. */
   'aria-label': string;
   /** Open it yourself (controlled), with onOpenChange. It opens where it was last asked for, or at the target. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Called when it asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' (Tab) | 'select' (an item chosen) }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** Leaves the browser's own menu in place: the target's right-click and keys do nothing. Default: false. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Classes on the menu panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
-  className?: string;
+  className?: string | undefined;
   /** Styles on the menu panel. */
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | undefined;
 }
 const OWN_CONTEXT = { target: 1, children: 1, "aria-label": 1, open: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
@@ -278,29 +278,29 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
 /** MenuItem's own props, beside those of the element it renders. */
 export interface MenuItemOwnProps {
   /** Called when the item is chosen (click, Enter or Space). The menu then closes, unless you call event.preventDefault(). */
-  onSelect?: (event: React.SyntheticEvent) => void;
+  onSelect?: ((event: React.SyntheticEvent) => void) | undefined;
   /** An icon before the label: an icon name or any element. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** A keyboard shortcut shown at the end, such as "⌘K" or "Ctrl+Shift+P". Only a hint: wire the shortcut yourself.
       It's also given to assistive tech as aria-keyshortcuts ("Meta+K"), worked out from it; pass aria-keyshortcuts
       to set that yourself. */
-  shortcut?: string;
+  shortcut?: string | undefined;
   /** Danger colors, for deleting. */
-  destructive?: boolean;
+  destructive?: boolean | undefined;
   /** Still reachable with the keys, but can't be chosen (aria-disabled). */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 
 // Inside, and for the checkable items, an item is a <div> or a link: attributes and handlers typed for HTMLElement.
 interface MenuItemBaseProps extends MenuItemOwnProps, Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   /** Makes it a link (the configure({ link }) component, <a> by default). */
-  href?: string;
+  href?: string | undefined;
   /** Makes it a link with this component, in place of the configure({ link }) one: a router's Link, with its own props (to). */
-  as?: React.ElementType;
+  as?: React.ElementType | undefined;
   /** Where the link opens, as on <a>; with "_blank", rel defaults to "noopener noreferrer". */
-  target?: string;
+  target?: string | undefined;
   /** The link's relation to the page, as on <a>. */
-  rel?: string;
+  rel?: string | undefined;
 }
 
 const KEY_NAMES: Record<string, string> = { "⌘": "Meta", cmd: "Meta", command: "Meta", meta: "Meta", "⌥": "Alt", opt: "Alt", option: "Alt", alt: "Alt",
@@ -378,14 +378,14 @@ const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>("
 /** One action in a Menu, or with href a link. `as` renders your router's link, typed with its props. */
 export const MenuItem = MenuItemBase as {
   <C extends React.ElementType = 'a'>(props: MenuItemProps<C> & { ref?: React.Ref<HTMLElement> }): React.ReactElement | null;
-  displayName?: string;
+  displayName?: string | undefined;
 };
 
 /** MenuItem's props: its own, `as`, and the props of the element `as` names (an <a>'s by default, for href, target
  *  and rel), so <MenuItem as={RouterLink} to="/settings"> takes RouterLink's `to`. */
 export type MenuItemProps<C extends React.ElementType = 'a'> = MenuItemOwnProps & {
   /** Makes it a link with this component, in place of the configure({ link }) one: a router's Link, with its own props (to). */
-  as?: C;
+  as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof MenuItemOwnProps | 'as'>;
 
 type CheckableProps = Omit<MenuItemBaseProps, 'href' | 'as' | 'target' | 'rel' | 'destructive' | 'role' | 'aria-checked'>;
@@ -393,7 +393,7 @@ export interface MenuCheckboxItemProps extends CheckableProps {
   /** Whether it's on. The menu's items unmount while it's closed, so the state lives with you: set it in onCheckedChange. */
   checked: boolean;
   /** Called with the new state when it's chosen (click, Enter or Space). */
-  onCheckedChange?: (checked: boolean) => void;
+  onCheckedChange?: ((checked: boolean) => void) | undefined;
 }
 
 /* MenuCheckboxItem: an on/off setting in a Menu (role menuitemcheckbox, aria-checked), with a check before the
@@ -413,7 +413,7 @@ export interface MenuRadioGroupProps extends Omit<MenuGroupProps, 'defaultValue'
   /** The chosen item's value. The menu's items unmount while it's closed, so the state lives with you: set it in onValueChange. */
   value: string | undefined;
   /** Called with the item's value when one is chosen. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: ((value: string) => void) | undefined;
 }
 
 /* MenuRadioGroup: MenuRadioItems of which one is chosen (role menuitemradio, aria-checked), such as a sort order.
@@ -446,9 +446,9 @@ export interface MenuSubProps extends Omit<React.HTMLAttributes<HTMLElement>, 'c
   /** MenuItem, MenuGroup, MenuSeparator, and MenuSub again. */
   children: React.ReactNode;
   /** An icon before the label: an icon name or any element. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** Still reachable with the keys, but doesn't open (aria-disabled). */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 
 /* MenuSub: an item that opens a submenu at its end edge (to the right, or the left in rtl, flipping when there's
@@ -543,7 +543,7 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>("Men
 
 export interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** A small heading over the group, which also names it. */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
 }
 
 /** Items that belong together, with an optional heading. */

@@ -13,7 +13,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { parseChangeset } from './changesets.mjs';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = path.resolve(import.meta.dirname, '..');
 const base = process.argv[2];
 if (!base) { console.error('Usage: node tools/changeset-check.mjs <base commit>'); process.exit(2); }
 

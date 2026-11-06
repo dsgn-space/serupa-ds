@@ -50,9 +50,11 @@ fs.rmSync(dir, { recursive: true, force: true });
 
 CASES.forEach(([lang, size, lh, next], i) => {
   const g = got[i];
-  const after = (/"Inter Fallback", "([^"]+)"/.exec(g.family) || [])[1];
+  // The families one by one, unquoted: Chromium quotes a name with a space ("Inter Fallback"), Safari doesn't.
+  const fam = g.family.split(',').map((f) => f.trim().replace(/^"(.*)"$/, '$1'));
+  const after = fam[1] === 'Inter Fallback' ? fam[2] : undefined;
   t(`lang="${lang}": text-${size} has a ${lh}px line height`, Math.abs(g.lh - lh) < 0.05, `${g.lh}px`);
-  t(`lang="${lang}": ${next} comes right after Inter`, g.family.startsWith('Inter, "Inter Fallback"') && after === next, g.family);
+  t(`lang="${lang}": ${next} comes right after Inter`, fam[0] === 'Inter' && after === next, g.family);
 });
 
 done(report('Fonts by script', R));

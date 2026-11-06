@@ -1,0 +1,40 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './StatsRow.stories';
+
+<Meta of={Stories} />
+
+# Stats row
+
+A row of key numbers for the top of a dashboard. Each number shows how it changed, in words as well as color, and can have a trend line.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Two to four numbers someone checks often: revenue, sign-ups, open tickets.
+- Not for a full report: a Table, or a chart with axes, shows numbers someone needs to compare closely.
+
+## What each part is for
+
+- **A heading** over the row ("This month"), so the numbers have a context and a screen reader can jump to them. Pick `headingLevel` to fit the page's outline.
+- **A list**, so a screen reader says how many numbers there are. Each card reads its label, its value, then its change.
+- **The change in words.** "Up 12%" or "Down 4%", with an arrow, in a Badge. Its color says whether it's good news, but the words say what happened (1.4.1). Up is good by default. Set `good: false` for a number where a rise is bad news, such as refunds or errors.
+- **The period** ("vs last month") next to the change, so it's clear what it compares with.
+- **A trend line**, a Sparkline that's an image named by what it measures and its first, last, low and high values (1.1.1). Leave it out when there's no history yet.
+- **While loading**, skeleton cards, the list marked `aria-busy`, and one "Loading" for screen readers, not one per card.
+- **Another language**: pass `labels` with the badge words, the loading name and the trend line's name. The title is used as you give it, never re-cased.
+- **On a phone**, the cards stack in one column (1.4.10).
+
+<Canvas of={Stories.Plain} />
+
+<Canvas of={Stories.Loading} />
+
+## What stays your app's job
+
+- Formatting the numbers in the person's language and currency (`Intl.NumberFormat`) before passing them in.
+- Deciding, for each number, whether up is good.
+- Linking a card to its full report, if there is one: wrap the value in a Link.
+
+## Copying it
+
+Copy `StatsRow.tsx` and `StatsRow.test.tsx`. Change the imports to `serupa`, and pass your own numbers.

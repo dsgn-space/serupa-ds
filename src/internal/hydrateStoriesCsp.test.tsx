@@ -28,17 +28,32 @@ const frames = (n: number) => new Promise<void>((r) => { const f = () => (n-- > 
 // could land after one hydration was measured and before the other, so the lists came out shifted by one ("53
 // elements differ", each want the got before it). So wait for a frame in which nothing is added or removed (at most
 // about half a second) before measuring.
+// A story that opens something once it has mounted (Tour's step, an open Popover) can, on a busy machine, open it
+// during that wait or just after, and an entrance then running was measured mid-way (a popover at 12x13). So the
+// wait also counts attribute changes (open, popover, data-state) and entrances: each frame, every running animation
+// and transition is finished, and a frame that had one to finish isn't a quiet one either.
 async function boxes(host: HTMLElement) {
   await frames(2);
   await document.fonts.ready;
+  // A loop (a spinner, a ping) has no end to finish at, and finish() throws on one: those are left running.
+  const settle = () => {
+    let ran = false;
+    for (const a of document.getAnimations()) {
+      if (a.playState === 'finished' || a.effect?.getComputedTiming().endTime === Infinity) continue;
+      a.finish();
+      ran = true;
+    }
+    return ran;
+  };
   for (let tries = 0, changed = true; changed && tries < 30; tries++) {
     const seen = new MutationObserver(() => {});
-    seen.observe(host, { childList: true, subtree: true });
+    seen.observe(host, { childList: true, subtree: true, attributes: true });
     await frames(1);
-    changed = seen.takeRecords().length > 0;
+    changed = settle();
+    changed = seen.takeRecords().length > 0 || changed;
     seen.disconnect();
   }
-  for (const a of document.getAnimations()) a.finish();
+  settle();
   const o = host.getBoundingClientRect();
   return [...host.querySelectorAll('*')].map((e) => {
     const r = e.getBoundingClientRect();

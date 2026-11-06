@@ -1,0 +1,42 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './EmptyStates.stories';
+
+<Meta of={Stories} />
+
+# Empty states
+
+The four empty states most apps need. Each one says what happened in words and offers the next step as a real button or link. They're built from EmptyState.
+
+<Canvas of={Stories.FirstRun} />
+
+## Which one to use
+
+- **EmptyFirstRun**: someone's first visit, before they've made anything. Say what the place is for, and give the one button that makes the first item. A guide link is optional, for people who want to read first.
+- **EmptyNoResults**: a search or filter found nothing. The title repeats the query, so a typo is easy to spot. It can offer searches to try, such as a spelling fix, and Clear filters.
+- **EmptyNoAccess**: a page the person isn't allowed to see. Say who can let them in, offer Request access, and give a way back.
+- **EmptyLoadFailed**: loading failed. Say what to do, offer Try again, and show a reference code to give support.
+
+## What each part is for
+
+- **A heading** with what happened, so a screen reader can find it. Pick `headingLevel` to fit the page. On a page with nothing else, it's usually 2.
+- **The next step as a real control** (3.3.3). A button runs an action, and a link goes somewhere. A picture alone never carries the meaning, so the icon is hidden from screen readers.
+- **Said only when it follows an action** (4.1.3). No results and failed to load appear after the person searched or a load ran, so screen readers hear them once, politely. First run and no access are already on the page when it opens, so they aren't announced.
+- **Request access sends once.** While the request is sending, the button shows that it's working. Afterwards it says "Request sent" and does nothing more. It stays focusable (`aria-disabled`, not `disabled`), so keyboard focus isn't lost. If `onRequest` rejects, it never says "Request sent": "Couldn't send the request. Try again." shows under the description and is said once, and the button can be pressed again (`requestFailedLabel` sets the words).
+- **Nothing happens on its own.** Retrying and requesting wait for the person to press the button.
+- **Another language**: every word is a prop with an English default. `title` on EmptyNoResults is a function of the query, so the quotes and word order can follow the language.
+
+<Canvas of={Stories.NoResults} />
+
+<Canvas of={Stories.NoAccess} />
+
+<Canvas of={Stories.LoadFailed} />
+
+## What stays your app's job
+
+- Writing the first-run description for your product, and naming who owns a page you can't see.
+- Finding spelling suggestions, if your search can.
+- Sending the access request, and logging the reference code so support can find the failure.
+
+## Copying them
+
+Copy `EmptyStates.tsx` and `EmptyStates.test.tsx`. Change the imports to `serupa`, and keep the empty states you use.
