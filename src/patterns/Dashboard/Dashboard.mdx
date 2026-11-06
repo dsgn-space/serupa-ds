@@ -1,0 +1,38 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Dashboard.stories';
+
+<Meta of={Stories} />
+
+# Dashboard
+
+The page an account lands on: the key numbers for the month, how much of the plan is used, the latest projects and what the team did. It shows skeletons while the data loads, and a first-run state before there's anything to count.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- People come back to see how things stand and to pick up where they left off: a handful of numbers, the latest work, the latest changes.
+- Not for every number the app knows. Four key numbers and two or three short lists, each with a link to its full page, are easier to take in than a wall of charts.
+- Not for a report someone studies: give that its own page, with the table under each chart.
+
+## What each part is for
+
+- **The h1** greets the person, and **each part is a region named by its h2** (This month, Recent projects, Usage, Activity), so a screen reader can list the parts and jump to one (1.3.1).
+- **"This month"** is the Stats row block: each number with its change in words ("Up 12%", "Down 3%") and an arrow, not by color alone (1.4.1). Whether a rise is good is the app's call, so a rise in spend isn't shown in green.
+- **Recent projects** is a short table with "All projects" beside its heading. Each name is a link to the project, and the table scrolls inside its own box on a phone rather than pushing the page sideways (1.4.10).
+- **Usage** has a Meter for storage, which says "almost full" in words when it turns amber, and a Progress bar for the period's goal ("3 of 5 done"). "Change plan" is the way on when the meter is high.
+- **Activity** is the Activity feed block: who did what, newest first, with "Load more" that keeps focus on the button and says how many were added.
+- **While it loads**, main says it's busy and each part shows one skeleton with one name ("Loading: Usage"), so a screen reader hears it once per part, not once per grey bar (4.1.3). Nothing moves focus when the data arrives.
+- **The first run**: before any project, the page says what a project is and offers the one button that starts one, instead of a row of zeros and empty boxes.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.FirstRun} />
+
+## What stays the app's job
+
+- **The data.** Fetch it, pass `loading` until it arrives, then pass it as `data`. When a part fails to load, show the Empty states block's "Couldn't load this" in its place, with Try again.
+- **What each number counts**, and the period it compares with. Keep the labels short and the values formatted for the person's locale.
+- **More activity.** `onLoadMoreActivity` loads the next page from your server and `hasMoreActivity` says when there's no more. Without them, the demo pages through what it was given.
+- **Where the links go**: each project, "All projects", "Change plan".
