@@ -84,7 +84,7 @@ describe('DatePicker', () => {
     await type('dpi', 'soon');
     await type('dpi', '03/04/2030');
     expect([el('dpi').value, calls]).toEqual(['05/10/2026', ['soon:unreadable', '03/04/2030:unavailable']]);
-    await expect.poll(() => announcerA()?.textContent).toContain('"03/04/2030" wasn\'t accepted, so the previous value was kept.');
+    await expect.poll(() => announcerA()?.textContent).toContain('“03/04/2030” wasn\'t accepted, so the previous value was kept.');
   });
 
   test('in a 500px tall window with the field at mid-height, the calendar stays on screen and scrolls inside, so its last week can be reached', async () => {

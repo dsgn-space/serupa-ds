@@ -92,7 +92,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /20 more loaded\. Showing 40 of 134/ },
   'NumberInput: typed text that isn\'t a number': {
     ui: () => <NumberInput id="qty" aria-label="Quantity" defaultValue={5} />,
-    act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /"abc" wasn't accepted/, assertive: true },
+    act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /“abc” wasn't accepted/, assertive: true },
   'SortableList: picking an item up with Space': {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
