@@ -462,13 +462,15 @@ The class list works in HTML files. JSX's `className` and `var(--…)` inside a 
 
 ## For coding agents
 
-The package carries a skill for coding agents (Claude Code and others that read `SKILL.md`): `skills/serupa/SKILL.md`. It tells an agent how to install and theme Serupa, which component fits which job, to style with tokens only, and what the app must do for accessibility. Add it to a project with the `skills` command:
+The package carries a skill for coding agents: `skills/serupa/SKILL.md`. It tells an agent how to install and theme Serupa, which component fits which job, to style with tokens only, what the app must do for accessibility, and to run the project's check before calling a change done. Point the project's agents at it with `serupa-agents`:
 
 ```sh
-npx skills add diki-stwn/serupa-ds
+npx serupa-agents
 ```
 
-Or copy `node_modules/serupa-ds/skills/serupa/` into the project's `.claude/skills/`. Its components list is the one above, as of the installed release.
+It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Copilot and others), telling agents to read `node_modules/serupa-ds/skills/serupa/SKILL.md` before any UI work, and adds `@AGENTS.md` to `CLAUDE.md` for Claude Code. It makes either file when it's missing, and running it again changes nothing. Because the skill is read from the installed package, it always matches the release the project pinned. An app made with `serupa-create` already has both files.
+
+Or install the skill with the `skills` command, `npx skills add diki-stwn/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
 
 ## Browser support
 
