@@ -22,25 +22,25 @@ const VERBATIM_AUTOCOMPLETE = /\b(username|email|url|one-time-code)\b/;
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'children' | 'prefix'> {
   /** 'sm' (24px, text-xs), 'md' (32px, text-sm, default) or 'lg' (44px, text-base): the control heights, like Button. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger border and focus ring, and aria-invalid. Say what's wrong in text next to it, linked with aria-describedby. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
   /** A decorative icon inside the field, before the text: an icon name or an element. */
-  leftIcon?: IconSource;
+  leftIcon?: IconSource | undefined;
   /** A decorative icon inside the field, after the text. */
-  rightIcon?: IconSource;
+  rightIcon?: IconSource | undefined;
   /** Text inside the field, before what's typed, such as "https://" or "@". It's added to the field's description, so it's heard too. */
-  prefix?: React.ReactNode;
+  prefix?: React.ReactNode | undefined;
   /** Text inside the field, after what's typed, such as "kg" or ".com". It's added to the field's description too. */
-  suffix?: React.ReactNode;
+  suffix?: React.ReactNode | undefined;
   /** A character count at the end of the field, "12 / 50" with maxLength (text-colored once it's reached), read out
       only when few characters are left and at the limit. Linked to the field with aria-describedby. Default: false. */
-  showCount?: boolean;
+  showCount?: boolean | undefined;
   /** Keeps the text in a pattern as people type, paste or delete, with the caret where they left it: 9 takes a digit,
       a a letter, A a letter in capitals, * a letter or digit; \ makes the next character plain; the rest shows as it is
       ("9999 9999 9999 9999", "99/99/9999", "AA99 **** **** ****"). value, defaultValue and onChange's
       event.target.value are the masked text. A digits-only mask gets the number keyboard on phones. */
-  mask?: string;
+  mask?: string | undefined;
 }
 
 /* mask: the value shown in the pattern, and each edit put back into it with the caret after the same character it

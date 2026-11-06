@@ -37,6 +37,6 @@ export function spring(zeta) {
   return `linear(${keep.map(([x, y], i) => (i === 0 ? '0' : i === keep.length - 1 ? '1' : `${r(y, 3)} ${r(x * 100, 1)}%`)).join(', ')})`;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.filename === process.argv[1]) {
   for (const [name, zeta] of Object.entries(SPRINGS)) console.log(`${name}: ${spring(zeta)}`);
 }

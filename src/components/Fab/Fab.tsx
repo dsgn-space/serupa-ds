@@ -12,11 +12,11 @@ export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'leftIcon' 
   /** What the button does. Shown next to the icon when extended; otherwise its aria-label and title. */
   label: string;
   /** Shows the label next to the icon (an extended FAB). Default: false. */
-  extended?: boolean;
+  extended?: boolean | undefined;
   /** 'md' (default, 56px) or 'sm' (40px). */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | undefined;
   /** Where it's fixed on the screen: 'bottom-end' (default), 'bottom-start', 'top-end' or 'top-start', 24px from the corner; 'static' leaves the placing to you. */
-  position?: FabPosition;
+  position?: FabPosition | undefined;
 }
 
 /* Fab: a floating action button for a screen's main action. A round, raised primary Button fixed to a corner of

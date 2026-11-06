@@ -71,7 +71,8 @@ describe('Icon', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<><Icon name="Home" /><Icon name="arrow-forward" /><Icon name="Looks3" /><Icon name="Nonsense_Thing" /></>);
     const said = (n: string) => warn.mock.calls.map((c) => String(c[0])).find((m) => m.includes(`"${n}"`));
-    await vi.waitFor(() => expect(said('Nonsense_Thing')).toBeTruthy());
+    // Each name's warning comes once its part of the table has loaded, in whatever order those arrive.
+    await vi.waitFor(() => expect(['Home', 'arrow-forward', 'Looks3', 'Nonsense_Thing'].every((n) => said(n))).toBe(true));
     expect(said('Home')).toContain('Did you mean "home"?');
     expect(said('arrow-forward')).toContain('Did you mean "arrow_forward"?');
     expect(said('Looks3')).toContain('Did you mean "looks_3"?');
@@ -99,7 +100,9 @@ describe('Icon', () => {
     for (const [s] of steps) {
       const h = (id: string) => document.getElementById(id)!.getBoundingClientRect();
       const mid = (r: DOMRect) => (r.top + r.bottom) / 2;
-      expect(h('with-' + s).height, s).toBe(h('bare-' + s).height);
+      // Within half a pixel: Firefox and WebKit put the icon's box on a subpixel baseline, so the line can come out
+      // 0.2px taller there (16.22 for 16), which no one sees; a line that grows by the icon is a pixel or more.
+      expect(Math.abs(h('with-' + s).height - h('bare-' + s).height), s).toBeLessThan(0.5);
       expect(Math.abs(mid(h('i-' + s)) - mid(h('t-' + s))), s).toBeLessThanOrEqual(2);
     }
   });

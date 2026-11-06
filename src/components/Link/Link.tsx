@@ -11,18 +11,18 @@ import * as icons from "../../material/builtin";
 /** Link's own props, beside those of the element it renders. */
 export interface LinkOwnProps {
   /** 'primary' (default): the primary color. 'neutral': the surrounding text's color, still underlined. */
-  tone?: 'primary' | 'neutral';
+  tone?: 'primary' | 'neutral' | undefined;
   /** 'always' (default): underlined, so it's a link without relying on color. 'hover': only on hover and focus, for links whose place already says they're links (a nav bar, a footer). */
-  underline?: 'always' | 'hover';
+  underline?: 'always' | 'hover' | undefined;
   /** Opens in a new tab (target="_blank", rel="noopener noreferrer"), with a new-tab icon and "(opens in a new tab)" for screen readers (the opensInNewTab label). Default: false. */
-  external?: boolean;
+  external?: boolean | undefined;
 }
 
 /** Link's props: its own, `as`, and the props of the element `as` names (an <a>'s by default), so
  *  <Link as={RouterLink} to="/settings"> takes RouterLink's `to`, and its ref is that element's. */
 export type LinkProps<C extends React.ElementType = 'a'> = LinkOwnProps & {
   /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a' (it gets href, className and the rest). */
-  as?: C;
+  as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof LinkOwnProps | 'as'>;
 
 /* Link: an inline text link, underlined, in the primary color or the surrounding text's. external opens a new
@@ -63,5 +63,5 @@ const LinkBase = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>("Link",
 /** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. `as` renders your router's link, typed with its props. */
 export const Link = LinkBase as {
   <C extends React.ElementType = 'a'>(props: LinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
-  displayName?: string;
+  displayName?: string | undefined;
 };

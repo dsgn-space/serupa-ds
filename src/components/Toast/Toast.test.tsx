@@ -73,7 +73,8 @@ describe('Toast', () => {
     await landed();
     const x = toasts()[0], title = el(x.getAttribute('aria-labelledby')!), desc = el(x.getAttribute('aria-describedby')!);
     expect([css(title).hyphens, css(desc).hyphens, title.closest('[lang]')!.getAttribute('lang'), title.scrollWidth <= title.clientWidth, x.scrollWidth <= x.clientWidth]).toEqual(['auto', 'auto', 'de', true, true]);
-    expect(css(title).getPropertyValue('hyphenate-limit-chars')).toBe('10 4 4');
+    // WebKit writes it shortest, "10 4": a missing third value is the second (CSS Text 4).
+    expect(['10 4 4', '10 4']).toContain(css(title).getPropertyValue('hyphenate-limit-chars'));
   });
 
   test('swipe to dismiss: a touch drag sideways past a third, or a flick (even a gentle one), carries on at the finger\'s speed on ease-fling and closes it; a short slow drag, a vertical one or a mouse drag leave it', async () => {

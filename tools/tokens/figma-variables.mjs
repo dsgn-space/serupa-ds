@@ -16,7 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
+const P = path.resolve(import.meta.dirname, '..', '..');
 const NS = 'com.serupa';
 const SCALES = ['spacing', 'radius', 'borders', 'sizing', 'fontSize', 'opacity', 'transitions'];
 export const COLLECTIONS = { palette: 'Serupa palette', themes: 'Serupa themes', scales: 'Serupa scales' };
@@ -129,7 +129,7 @@ export function figmaPayload(local = { variableCollections: {}, variables: {} },
   return body;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   const send = process.argv.includes('--send');
   const { FIGMA_TOKEN: token, FIGMA_FILE: file } = process.env;
   if (!send) {

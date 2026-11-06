@@ -1,6 +1,9 @@
 node_modules
 dist/
 .test-tmp/
+.test-tmp-*/
+.bench/
+.bench-test-*/
 bundle.min.css
 .DS_Store
 *.log

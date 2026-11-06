@@ -5,7 +5,7 @@
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = path.resolve(import.meta.dirname, '..');
 const DIR = 'tools/test/baseline-visual/';
 export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
 
@@ -49,7 +49,7 @@ export function sheet({ status, base, head, repo, required, max = 20 }) {
   return out.join('\n') + '\n';
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   const [base, head = 'HEAD'] = process.argv.slice(2);
   if (!base) { console.error('node tools/design-qa.mjs <base-sha> [head]'); process.exit(2); }
   const git = (...a) => execFileSync('git', a, { cwd: P, encoding: 'utf8' }).trim();
