@@ -60,7 +60,7 @@ describe('Blocks/Settings section', () => {
     expect(document.activeElement!.getAttribute('aria-invalid')).toBe('true');
   });
 
-  test('a second Save with the same problems takes focus again, so the summary is read again (GR156)', async () => {
+  test('a second Save with the same problems takes focus again, so the summary is read again (GR163)', async () => {
     await render(<Settings />);
     const save = section('Profile').getByRole('button', { name: 'Save' });
     await userEvent.click(save);

@@ -10,7 +10,7 @@ import { SaveStatus, type SaveState } from '../../components/SaveStatus/SaveStat
      the group is for.
    - 3.3.1 / 3.3.3: a failed save shows an ErrorSummary at the top of this section's form, which takes focus, with a
      link to each field; each field also says its own error (the app passes it to the Field). A second Save with the
-     same problems takes focus again (GR156).
+     same problems takes focus again (GR163).
    - 4.1.3: SaveStatus says "Saved" politely once a save finishes, and "Couldn't save" with Try again if it fails, so
      the person doesn't have to look for a change.
    - 3.2.2: nothing saves on its own: changes wait for this section's Save, so other sections are left alone.
@@ -42,7 +42,7 @@ export interface SettingsSectionProps {
 /** One group of settings with its own heading, its own Save, its own status and its own error summary. */
 export function SettingsSection({ title, description, headingLevel = 2, onSave, errors = [], status = 'idle', savedAt, onRetry, saveLabel = 'Save', children }: SettingsSectionProps) {
   const id = React.useId();
-  // Each Save remounts the summary, so a second try with the same problems takes focus and is read again (GR156).
+  // Each Save remounts the summary, so a second try with the same problems takes focus and is read again (GR163).
   const [tries, setTries] = React.useState(0);
   return (
     <section aria-labelledby={id} className="grid grid-cols-1 gap-4 border-b border-border py-6 md:grid-cols-3 md:gap-8">
