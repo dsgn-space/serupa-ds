@@ -1,0 +1,36 @@
+[
+  {
+    "id": "invite-member",
+    "file": "invite-member.tsx",
+    "prompt": "Review this change. It adds a team members table and an invite dialog to a settings page.",
+    "planted": [
+      { "id": "hand-built-dialog", "case": true, "level": "must", "what": "a modal built from divs with onClick", "find": "\\bDialog\\b" },
+      { "id": "icon-button-label", "level": "must", "what": "an IconButton with no label", "find": "(?:IconButton[^\\n]{0,200}\\blabel\\b|\\blabel\\b[^\\n]{0,200}IconButton)" },
+      { "id": "color-alone", "level": "must", "what": "status shown by a colored dot alone", "find": "(?:colou?r alone|only (?:by|with|through) colou?r|colou?r only|by colou?r)" },
+      { "id": "raw-colors", "level": "should", "what": "hex colors and pixel sizes in a style prop", "find": "(?:#16a34a|#dc2626|raw (?:hex|colou?r|value)|hex)" },
+      { "id": "error-toast", "case": true, "level": "should", "what": "a failed invite shown in a toast, which goes away", "find": "\\bAlert\\b" },
+      { "id": "ok-button", "case": true, "level": "should", "what": "an \"OK\" button", "find": "\\bOK\\b" },
+      { "id": "title-case", "level": "should", "what": "\"Invite Member\" in Title Case", "find": "(?:sentence case|title case)" }
+    ]
+  },
+  {
+    "id": "profile-form",
+    "file": "profile-form.tsx",
+    "prompt": "Review this change. It adds a profile form to the account page.",
+    "planted": [
+      { "id": "placeholder-label", "level": "must", "what": "an email input named only by its placeholder", "find": "placeholder" },
+      { "id": "outline-none", "level": "must", "what": "outline: none on a control", "find": "outline" },
+      { "id": "error-not-at-field", "level": "must", "what": "an error below the button, not on its field, and focus not moved", "find": "(?:\\berror=|error prop|ErrorSummary|(?:move|moves|moving) focus|focus (?:to|on) the)" },
+      { "id": "invalid-input", "level": "should", "what": "\"Invalid input\" as the error", "find": "Invalid input" },
+      { "id": "submit-word", "case": true, "level": "should", "what": "a \"Submit\" button", "find": "\\bSubmit\\b" },
+      { "id": "palette-color", "level": "should", "what": "text-blue-600, a palette color, for body text", "find": "(?:blue-600|palette|alias)" },
+      { "id": "title-case", "level": "should", "what": "\"Display Name\" in Title Case", "find": "(?:sentence case|title case)" }
+    ]
+  },
+  {
+    "id": "rename-project",
+    "file": "rename-project.tsx",
+    "prompt": "Review this change. It adds a way to rename a project.",
+    "planted": []
+  }
+]

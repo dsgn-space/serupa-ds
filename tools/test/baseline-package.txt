@@ -106,6 +106,7 @@ licenses/MaterialSymbols-Apache-2.0.txt
 licenses/React-MIT.txt
 licenses/TailwindCSS-MIT.txt
 package.json
+skills/serupa-review/SKILL.md
 skills/serupa/SKILL.md
 tokens.css
 tokens.json
