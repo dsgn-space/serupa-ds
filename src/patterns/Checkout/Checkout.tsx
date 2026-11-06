@@ -263,10 +263,6 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                   </div>
                   {change('payment', 'the payment card')}
                 </Card>
-                <div className="flex flex-wrap gap-3">
-                  <Button loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
-                  <Button variant="ghost" onClick={() => go('details')}>Back</Button>
-                </div>
               </div>
             ) : (
               <p className="m-0 wrap-anywhere">We've sent the receipt to {d.email}. We'll email again when it's on its way.</p>
@@ -291,6 +287,14 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
               </dl>
             </Card>
           </aside>
+          {/* After the summary, so on a phone every line of the total is read before the button that pays (GR167); from lg
+              up the summary sits beside the review and this row under it. */}
+          {step === 'review' ? (
+            <div className="flex flex-wrap gap-3 lg:col-span-2">
+              <Button loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
+              <Button variant="ghost" onClick={() => go('details')}>Back</Button>
+            </div>
+          ) : null}
         </div>
       </main>
     </div>
