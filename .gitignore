@@ -20,3 +20,5 @@ src/styles/utilities.css
 coverage/
 src/generated/
 docs/generated/
+.ci-home/
+.npm/
