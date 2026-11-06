@@ -33,5 +33,50 @@
     "id": "filters",
     "prompt": "A product search bar with a search field, a category picker (All, Books, Music, Games), an \"In stock only\" switch and a price range slider.",
     "expect": ["SearchInput", "Select|SegmentedControl|Combobox", "Switch", "Slider"]
+  },
+  {
+    "id": "due-date",
+    "prompt": "A task form with a title and a due date the person picks from a calendar, then a Save button.",
+    "expect": ["Field", "Input", "DatePicker", "Button"]
+  },
+  {
+    "id": "command-palette",
+    "prompt": "A command palette that opens with Ctrl+K: a search box and a filtered list of actions (New file, Open settings, Invite people, Sign out) that run when picked.",
+    "expect": ["CommandPalette"]
+  },
+  {
+    "id": "wizard",
+    "prompt": "A three-step sign-up wizard: account, profile, then confirm. It shows which step you're on, with Back and Next buttons, and Finish on the last step.",
+    "expect": ["Stepper", "Button"]
+  },
+  {
+    "id": "icon-tooltip",
+    "prompt": "A row of three icon-only buttons (edit, duplicate, delete) for a document, each with a tooltip that says what it does.",
+    "expect": ["IconButton", "Tooltip"]
+  },
+  {
+    "id": "sortable-table",
+    "prompt": "An orders table with order number, customer, date and total. The columns can be sorted, and it shows 10 orders a page with page controls under it.",
+    "expect": ["Table", "Pagination"]
+  },
+  {
+    "id": "settings-tabs",
+    "prompt": "A settings page with tabs for General, Notifications and Billing. General has a display name field, Notifications has an email-updates switch, and Billing shows the current plan.",
+    "expect": ["Tabs", "Field", "Input", "Switch"]
+  },
+  {
+    "id": "contact-form",
+    "prompt": "A contact form with name, email and message, all required. When the person sends it with a field empty or an email that isn't valid, show what's wrong on that field. When it's sent, tell them it worked.",
+    "expect": ["Field", "Input", "Textarea", "Button"]
+  },
+  {
+    "id": "load-error",
+    "prompt": "A projects page that loads its list from /api/projects. Show that it's loading; if loading fails, say so and let the person try again; when it works, list the projects' names, with a button to add a project.",
+    "expect": ["Alert|EmptyState", "Button"]
+  },
+  {
+    "id": "notifications",
+    "prompt": "A bell button in the app's header that shows how many notifications are unread. Pressing it slides a notifications panel in from the right, with a smooth animation; each notification has an icon for its kind (comment, mention, invite). Use the same primary button style in the panel and the header.",
+    "expect": ["IconButton", "Drawer|Popover", "Badge"]
   }
 ]

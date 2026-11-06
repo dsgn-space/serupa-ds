@@ -193,6 +193,8 @@ async function buildModules() {
   const SRC = path.join(P, 'src');
   const entries = fs.readdirSync(SRC, { recursive: true }).map(String)
     .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$|\.d\.ts$|^browser(-icons)?\.ts$|^theme-types\.ts$/.test(f))
+    // Blocks and patterns are source for an app to copy, not part of the package: no export reaches them (GR164).
+    .filter((f) => !/^(blocks|patterns)[\\/]/.test(f))
     .map((f) => path.join(SRC, f));
   /** @type {import('esbuild').Plugin} */
   const keepImports = { name: 'keep-imports', setup(b) {
