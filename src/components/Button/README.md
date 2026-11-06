@@ -33,6 +33,16 @@ const { Button, buttonClass } = window.Serupa;
 - One choice out of a few options shown side by side: use [SegmentedControl](../SegmentedControl/README.md).
 - A list of actions behind one button: use [Menu](../Menu/README.md).
 
+## Anatomy
+
+Drawn from the `States` story.
+
+1. **Icon** (`.dk-btn__icon`): an optional picture before the label (`leftIcon`) or after it (`rightIcon`), or the whole of an icon-only button.
+2. **Label** (`.dk-btn__label`): what the button does, in words.
+3. **Loader** (`.dk-btn__loader`): the spinner while `loading`, over the label, which keeps the button's width.
+
+When an action succeeds (`success`), a check takes the loader's place for a moment.
+
 ## Usage
 
 - A button is never wider than its container. A text label that doesn't fit ends in an ellipsis and shows in full as the button's `title` on hover (the same words as its name, so screen readers don't hear it twice). Keyboard focus and touch don't show a title, so where a label may not fit (a narrow column, a long translation, 400% zoom) pass `wrap`: the label takes as many lines as it needs and the button grows from its size's height. Short labels are still best. In a flex row the long-labelled button is the one that gives way: it shrinks to its ellipsis rather than pushing the buttons next to it out of the row, and icon-only buttons keep their square. In a grid, give the column `minmax(0, 1fr)` rather than `auto`, or the row widens the column instead.
