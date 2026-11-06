@@ -211,10 +211,13 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
     const el = tipRef.current;
     if (!el || !tip) return;
     const w = el.offsetWidth, h = el.offsetHeight;
-    let left = tip.x + 12;
-    if (left + w > width) left = tip.x - 12 - w;
-    el.style.left = Math.max(0, left) + "px";
-    el.style.top = Math.min(Math.max(0, tip.y - h / 2), Math.max(0, height - h)) + "px";
+    // Physical left, as the points' x is: the CSS sets no inline side, so nothing stretches it in right to left (GR145).
+    // Beside the point when one side has room, else centered on it and above it, or below when the top is too near (GR146).
+    const after = tip.x + 12, before = tip.x - 12 - w;
+    const beside = after + w <= width ? after : before >= 0 ? before : null;
+    const top = beside != null ? tip.y - h / 2 : tip.y - 12 - h >= 0 ? tip.y - 12 - h : tip.y + 12;
+    el.style.left = (beside ?? Math.min(Math.max(0, tip.x - w / 2), Math.max(0, width - w))) + "px";
+    el.style.top = (beside != null ? Math.min(Math.max(0, top), Math.max(0, height - h)) : top) + "px";
   });
 
   const order = Array.from({ length: n }, (_, i) => i);
