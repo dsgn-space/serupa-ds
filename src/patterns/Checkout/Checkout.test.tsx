@@ -114,4 +114,23 @@ describe('Patterns/Checkout', () => {
     const main = document.querySelector('main') as HTMLElement;
     expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
   });
+
+  test('amounts are in the currency\'s own minor units: yen have none, so 1800 is ￥1,800 (GR152)', async () => {
+    const onPlaceOrder = vi.fn();
+    const screen = await render(<Checkout currency="JPY" expressPrice={900} onPlaceOrder={onPlaceOrder} initial={{ ...filled, delivery: 'express', tip: 300 }} startAtReview
+      lines={[{ id: 'a', name: 'Tea bowl', quantity: 1, price: 1800 }, { id: 'b', name: 'Tea', quantity: 2, price: 500 }]} />);
+    const values = () => [...document.querySelectorAll('aside data')].map((e) => e.getAttribute('value'));
+    expect(values()).toEqual(['1800', '1000', '2800', '900', '300', '4000']);
+    await screen.getByRole('button', { name: /Place order/ }).click();
+    expect(onPlaceOrder).toHaveBeenCalledWith(expect.objectContaining({ total: 4000 }));
+  });
+
+  test('a long email wraps on the confirmation at 320 px too (GR153)', async () => {
+    const email = 'muhammad.bin.abdullah.al-rashidi.kundendienst@beispielunternehmen-international.de';
+    const screen = await render(<div style={{ width: 320 }}><Checkout initial={{ ...filled, email }} startAtReview /></div>);
+    await screen.getByRole('button', { name: /Place order/ }).click();
+    await vi.waitFor(() => expect(active().textContent).toBe('Thank you, your order is placed'));
+    const main = document.querySelector('main') as HTMLElement;
+    expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
+  });
 });
