@@ -41,6 +41,8 @@ npm run check -- --clean --since origin/main --report local-checks.md
 
 `--clean` starts from `npm ci`, as CI did, and `--report` writes the results (commit, Node, every step with its test counts) as Markdown: paste it under **Local checks** in the merge request. Merge only when it says **All passed** on the commit you merge. A report that says "with uncommitted changes" doesn't count.
 
+There is no Release workflow either: after a Release merge request (`npm run version-packages`) lands on `main`, `node tools/tag-release.mjs --make --push` tags the new version the way the workflow did (a prebuilt commit off `main`). Nothing goes to a registry.
+
 ## Every pull request
 
 - **One change per pull request.** Fixes for the same component go in one pull request. Different components go in different ones.
