@@ -36,6 +36,7 @@ const listen = (cb: () => void) => {
 // and the last one to go puts back what the page had. Without this, the second saved the first's padding and put it
 // back after both had gone (GR172).
 type Claim = { had: string; base: string; spaces: Map<object, number> };
+// module state: only the browser fills these, from effects, keyed by page elements and mounted banners; a server render never touches them.
 const claims = new WeakMap<HTMLElement, Record<string, Claim | undefined>>(), rootSpaces = new Map<object, number>();
 const claimRoom = (el: HTMLElement, prop: "paddingBlockEnd" | "paddingBlockStart" | "marginBlockEnd", who: object) => {
   const mine = claims.get(el) || {};
