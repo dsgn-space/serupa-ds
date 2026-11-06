@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/labels/id.ts"],
+  "sourcesContent": ["// serupa-ds/labels/id: every built-in word in Indonesian (the same set as idLabels).\n//   import { labels, locale } from \"serupa-ds/labels/id\";\n//   <SerupaProvider locale={locale} labels={labels}>\nexport { idLabels as labels } from \"../internal/labels\";\n/** The locale the words are written for. */\nexport const locale = \"id\";\n"],
+  "mappings": ";AAGA,SAAqB,gBAAc;AAE5B,IAAM,SAAS;",
+  "names": []
+}

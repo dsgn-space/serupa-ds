@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/OfflineBanner/labels.ts"],
+  "sourcesContent": ["// OfflineBanner's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface OfflineBannerLabels {\n  /** OfflineBanner: shown and said when the connection drops. */\n  offline: string;\n  /** OfflineBanner: shown for a moment and said when it comes back. */\n  backOnline: string;\n}\nexport const en: OfflineBannerLabels = { offline: \"You're offline\", backOnline: \"Back online\" };\nexport const id: OfflineBannerLabels = { offline: \"Anda sedang offline\", backOnline: \"Kembali online\" };\n"],
+  "mappings": ";AAQO,IAAM,KAA0B,EAAE,SAAS,kBAAkB,YAAY,cAAc;AACvF,IAAM,KAA0B,EAAE,SAAS,uBAAuB,YAAY,iBAAiB;",
+  "names": []
+}

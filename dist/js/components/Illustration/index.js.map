@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Illustration/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Illustration } from \"./Illustration\";\nexport type { IllustrationProps, IllustrationName } from \"./Illustration\";\n"],
+  "mappings": ";AACA,SAAS,oBAAoB;",
+  "names": []
+}
