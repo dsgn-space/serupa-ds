@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './SessionTimeout.stories';
+
+<Meta of={Stories} />
+
+# Session time-out
+
+Warns well before a signed-in session ends, lets one action keep it going, and loses nothing typed if it ends anyway.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The session has to end after a time with nothing happening, for security or because the law says so (banking, health, government services).
+- Not when the session can simply last: a time limit nobody needs is the best one to remove (2.2.1).
+- Not for a time limit that is part of the task, such as an auction or a timed test: say that limit up front instead.
+
+## What each part is for
+
+- **A warning well before the end.** A Dialog opens `warnBefore` seconds before the session ends, two minutes by default. 2.2.1 asks for at least 20 seconds, but someone using a screen reader, a switch or a magnifier needs much longer to find it, read it and act.
+- **One action to stay**: "Stay signed in", focused first, so Enter keeps the session. Escape keeps it too, since pressing anything means someone is there. "Sign out" is there for someone who's finished.
+- **The time left, said at sensible steps.** When the warning opens, the time left is said once ("You'll be signed out in 2 minutes."). After that it's said only at each whole minute and at 30 seconds (4.1.3). The countdown on screen updates every second, but it's outside any live region, so a screen reader isn't interrupted every second.
+- **Nothing typed is lost.** What's typed is kept as it's typed (2.2.6, 3.3.7), here in localStorage under `saveKey`. If the session ends, signing in again brings it all back. The page says so before the warning, in the warning and after the sign-out.
+- **Focus where it was.** When the warning closes, focus goes back to the field it was on (2.4.3). When the session ends, the "You've been signed out" heading takes focus, so the change is read.
+- **A skip link** first, as on every page.
+
+<Canvas of={Stories.Warning} />
+
+## What stays the app's job
+
+- **The session on the server.** `onExtend` is called when someone stays: refresh the session there, and reject the promise if that fails. The session then runs out as warned. `onExpire` is called when it ends: sign out on the server.
+- **Matching the server's clock.** Start `duration` from the server's own time-out, and restart the page's timer whenever a request refreshes the session.
+- **Where drafts are kept.** localStorage is enough for a demo. For anything private, keep drafts on the server or in sessionStorage, and clear them once they're sent.
+- **Signing in again** on the sign-in page, then coming back to this page with the draft.
