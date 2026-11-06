@@ -5,6 +5,7 @@ import { component } from "../../internal/component";
 import { displayNumber } from "../../internal/numbers";
 import { useLocale, useSettings } from "../../internal/provider";
 import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
+import { isComposing } from "../../internal/ime";
 import { Button } from "../Button/Button";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from "../Table/Table";
 import { en as words } from "./labels";
@@ -106,6 +107,8 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
   const [width, setWidth] = React.useState(WIDTH);
   const [rtl, setRtl] = React.useState(false);
   const [hover, setHover] = React.useState<number | null>(null);
+  // Escape hid the tip (WCAG 1.4.13): it stays hidden until another point or category is shown (GR156).
+  const [hushed, setHushed] = React.useState(false);
   const [focus, setFocus] = React.useState<Focused | null>(null);
   const [last, setLast] = React.useState<Spot | null>(null);
   const [sort, setSort] = React.useState<{ col: number; dir: SortDirection }>({ col: -1, dir: "none" });
@@ -186,9 +189,18 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
     if (!n) return;
     const x = flip(e.clientX - e.currentTarget.getBoundingClientRect().left);
     const i = type === "bar" ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
-    setHover(x >= start - INSET && i >= 0 && i < n ? i : null);
+    const to = x >= start - INSET && i >= 0 && i < n ? i : null;
+    if (to !== hover) { setHover(to); setHushed(false); }
   };
-  const shown = focus ? focus.i : hover;
+  const shown = hushed ? null : focus ? focus.i : hover;
+  // Escape hides the tip from anywhere while it shows (the plot may only be hovered, not focused), and focus stays.
+  // Caught first and stopped, as Tooltip does, so a Dialog around the chart stays open.
+  React.useEffect(() => {
+    if (shown == null) return;
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); setHushed(true); } };
+    document.addEventListener("keydown", esc, true);
+    return () => document.removeEventListener("keydown", esc, true);
+  }, [shown]);
   const changeView = (v: ChartView) => { if (props.view === undefined) setOwnView(v); props.onViewChange?.(v); };
 
   // Bars: a category's group takes most of its band, a bar per series, the chart-gap color between them.
@@ -261,7 +273,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
         <>
           <div className="dk-chart__frame" ref={frame}>
             <svg className="dk-chart__plot" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="group" aria-label={kind}
-              aria-describedby={base + "-summary"} onKeyDown={onKeyDown} onPointerMove={onPointerMove} onPointerLeave={() => setHover(null)}>
+              aria-describedby={base + "-summary"} onKeyDown={onKeyDown} onPointerMove={onPointerMove} onPointerLeave={() => { setHover(null); setHushed(false); }}>
               <desc id={base + "-summary"}>{summary.join(" ")}</desc>
               {type === "bar" && series.length > 1 ? (
                 <defs>
@@ -310,7 +322,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
                         "aria-label": labels.chartPoint(series.length > 1 ? sr.name : null, categories[i], fmt(v)),
                         tabIndex: current && current.s === s && current.i === i ? 0 : -1,
                         "data-active": shown === i ? "" : undefined,
-                        onFocus: (e: React.FocusEvent<SVGElement>) => { setLast({ s, i }); setFocus({ s, i, ring: e.currentTarget.matches(":focus-visible") }); },
+                        onFocus: (e: React.FocusEvent<SVGElement>) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring: e.currentTarget.matches(":focus-visible") }); },
                         onBlur: () => setFocus(null),
                       };
                       if (type === "line") return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, xAt(i), yAt(v), MARKER)} />;
