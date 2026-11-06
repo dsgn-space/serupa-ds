@@ -91,4 +91,20 @@ describe('Patterns/Onboarding', () => {
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
   });
+
+  test('the steps keep role="list", since Safari stops calling a list without bullets a list (GR151)', async () => {
+    await render(<Onboarding steps={steps} />);
+    const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
+    expect(bare.map((l) => l.getAttribute('role'))).toEqual(['list']);
+  });
+
+  test('a long title or a URL in a description wraps inside its card at 320 px (GR150)', async () => {
+    const long: SetupStep[] = [{ id: 'kb', title: 'Kundendienstwissensdatenbank verbinden',
+      description: 'https://beispiel.de/einstellungen/integrationen/kundendienstwissensdatenbank', action: { label: 'Verbinden', href: '/kb' } }];
+    await render(<div style={{ width: 320 }}><Onboarding steps={long} /></div>);
+    const card = document.querySelector('main ol > li') as HTMLElement;
+    const main = document.querySelector('main') as HTMLElement;
+    expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+    expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
+  });
 });
