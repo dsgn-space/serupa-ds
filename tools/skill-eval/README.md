@@ -36,3 +36,22 @@ The grader reads the code only, so it can't tell whether the page works. It chec
 Each cell is how many of a task's runs passed that check, in bold when any failed. One run per task can't tell a better skill from a worse one: a check that passes 3 times in 5 shows up as a pass or a fail by chance. Compare pass counts across all the runs instead. A change to the skill is a gain when the counts go up across several tasks, not when one cell moves by one.
 
 Each row also gives the answers' mean length in lines and the agent's mean cost, tokens and seconds. Reusing components should make answers shorter as well as better, so a skill change that adds lines without adding passes is worth a second look.
+
+## The review skill's eval
+
+`review.mjs` does the same for the review skill (`skills/serupa-review/SKILL.md`). Each case in `reviews.json` is a file in `reviews/`: two have seven problems planted in them, Must fix and Should fix, and one is clean. Claude Code reviews each one five times with the two Serupa skills and five times without.
+
+```sh
+node tools/skill-eval/review.mjs                          # every case, 5 runs each way
+node tools/skill-eval/review.mjs --only invite-member     # some cases
+node tools/skill-eval/review.mjs --grade <reviews dir>    # grade a folder of <case>.<run>.md reviews again
+```
+
+| Column | Counts |
+|---|---|
+| Found | planted problems the review names. Each has a pattern a review that found it can't avoid: the component that replaces a hand-built one (`Dialog`, `Alert`), the quoted words, "placeholder" |
+| Placed | of those, the ones under the right heading, Must fix or Should fix |
+| Verdict | runs whose "Verdict:" line is right: "Not ready" when something was planted, "Ready to merge" when not |
+| No alarm | runs of the clean case with nothing under Must fix |
+
+A review can find more than was planted, and that isn't counted against it. The clean case is what keeps the skill honest about that: a review that invents a Must fix in a change that has none fails it. The results go to `results/<date>-review/` and `results/<date>-review.md`.
