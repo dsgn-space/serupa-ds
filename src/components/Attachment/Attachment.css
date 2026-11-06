@@ -2,7 +2,7 @@
    Attachment: a file as one compact row (surface, a 1px outline, 6px corners, up to 320px wide): a 20px muted icon
    for its kind, the name on one line cut in the middle, and under it the kind and size in small muted text. A linked
    name is primary and underlined. While uploading, a small bar under the name; failed, a danger outline and a danger
-   message. The remove button sits at the end. Disabled: faded.
+   message. The remove button sits at the end. Disabled: the name is plain text and the buttons are faded.
    --------------------------------------------------------------- */
 @layer dk.components {
 /* min-inline-size 0: in a grid or flex row too, a long name is cut in place of widening it. */
@@ -35,5 +35,4 @@ a.dk-attachment__name:focus-visible { outline: var(--focus-ring-width) solid var
 .dk-attachment__error .dk-icon { flex: none; font-size: var(--spacing-4); }
 .dk-attachment--error { border-color: var(--attachment-border-error, var(--danger)); }
 .dk-attachment__retry, .dk-attachment__remove { flex: none; }
-.dk-attachment--disabled { opacity: var(--opacity-disabled); }
 }

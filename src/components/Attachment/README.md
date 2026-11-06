@@ -57,7 +57,7 @@ Drawn from the `Upload` story.
 
 - A long name is cut in the middle, as Finder and Drive do: "Laporan keuangan tri…2026 final.xlsx". The last few characters and the extension stay, so files that differ only by year or version still look different. Hover shows the full name, and it's laid out in its own direction.
 - The remove button calls `onRemove`; removing the file is yours. Move focus somewhere sensible afterwards, such as the next file's remove button, since the button goes away with the file.
-- `disabled` fades it and turns off the link and both buttons.
+- `disabled` turns off the link and both buttons; the name and size stay readable.
 
 ## Accessibility
 
@@ -85,7 +85,7 @@ Drawn from the `Upload` story.
 | `onRetry` | `() => void` | | Adds "Try again" to a failed upload. |
 | `onRemove` | `() => void` | | Adds the remove button. |
 | `removeLabel` | `(name: string) => string` | `` `Remove ${name}` `` | The remove button's name. |
-| `disabled` | `boolean` | `false` | Fades it and turns the link and buttons off. |
+| `disabled` | `boolean` | `false` | Turns the link and buttons off. |
 
 `className`, `ref` and other props go to the `<div>`.
 

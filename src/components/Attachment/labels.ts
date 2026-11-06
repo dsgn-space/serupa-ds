@@ -28,7 +28,7 @@ export const en: AttachmentLabels = {
 export const id: AttachmentLabels = {
   attachmentPdf: "PDF",
   attachmentImage: "Gambar",
-  attachmentSheet: "Spreadsheet",
+  attachmentSheet: "Lembar kerja",
   attachmentDoc: "Dokumen",
   attachmentSlides: "Presentasi",
   attachmentArchive: "Arsip",

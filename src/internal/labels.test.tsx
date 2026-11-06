@@ -47,8 +47,9 @@ function said(set: Record<string, unknown>): Record<string, string> {
     return [k, text];
   }));
 }
-// Words that are the same in both languages. "Slide" and "Format" are the usual loanwords in Indonesian.
-const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint']);
+// Words that are the same in both languages. "Slide" and "Format" are the usual loanwords in Indonesian, and
+// Indonesian writes PDF, Audio, Video and File too (Attachment's kinds).
+const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'attachmentOther']);
 // English labels left empty on purpose: invalidValue's "" keeps the browser's own message, already in its user's language.
 const EMPTY_IN_EN = new Set(['invalidValue']);
 
