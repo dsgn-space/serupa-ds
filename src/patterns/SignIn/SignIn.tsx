@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { AuthCard, type AuthStep } from '../../blocks/AuthCard/AuthCard';
 
-/* Sign-in (PT1): email and password, then a one-time code, as a page of its own, for an app to copy. The card is the
+/* Sign-in: email and password, then a one-time code, as a page of its own, for an app to copy. The card is the
    Auth card block (src/blocks/AuthCard), which says what it carries for WCAG 2.2: 3.3.8 accessible authentication,
    an ErrorSummary that takes focus (3.3.1, 3.3.3), and focus on each new step's heading (2.4.3, 4.1.3). This page
    adds the skip link, main, the product's name and the one h1 (the card's heading).
