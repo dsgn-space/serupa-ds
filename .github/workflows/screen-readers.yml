@@ -38,7 +38,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Set the screen reader up for automation
-        run: npx --yes @guidepup/setup@0.29.3 --ci
+        run: npx --yes @guidepup/setup@0.29.3 setup --ci
       - run: npx playwright install ${{ matrix.browser }}
       - name: Build the package
         run: npm run build
