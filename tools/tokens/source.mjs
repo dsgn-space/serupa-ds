@@ -21,7 +21,7 @@ import path from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { typed, pathName } from './export.mjs';
 
-const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..'));
+const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(import.meta.dirname, '..', '..'));
 export const SOURCE = path.join(P, 'tokens', 'serupa.tokens.json');
 const OUT = path.join(P, 'tokens.json');
 const NS = 'com.serupa';
@@ -135,7 +135,7 @@ export function fromSource(src) {
 
 const dump = (d) => JSON.stringify(d, null, 2) + '\n';
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   if (process.argv.includes('--init')) {   // once: make the source from tokens.json
     fs.mkdirSync(path.dirname(SOURCE), { recursive: true });
     fs.writeFileSync(SOURCE, dump(toSource(JSON.parse(fs.readFileSync(OUT, 'utf8')))));

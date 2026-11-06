@@ -81,7 +81,9 @@ describe('Chart', () => {
   });
 
   test('a focused point shows its category\'s values beside it, and the focus ring', async () => {
-    await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
+    // A control after the chart, so Tab lands in the page: off the end of the test's frame, Firefox keeps the point
+    // focused in its own document and nothing blurs.
+    await render(<><Chart title="Visitors" categories={CATS} series={TWO} /><button type="button" id="after">After</button></>);
     const first = document.querySelector('g[role="group"] > [tabindex="0"]') as HTMLElement;
     await tabIn();
     expect(document.activeElement).toBe(first);
@@ -92,6 +94,7 @@ describe('Chart', () => {
     const ring = document.querySelector('svg[aria-describedby] > :is(circle, rect)') as SVGElement;
     expect([css(ring).stroke, css(ring).strokeWidth]).toEqual([css(probe).color, '3px']);
     await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(document.getElementById('after'));
     expect(document.querySelector('svg[aria-describedby] > :is(circle, rect)')).toBeNull();
     probe.remove();
   });
