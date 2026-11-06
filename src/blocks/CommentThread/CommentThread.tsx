@@ -41,10 +41,16 @@ export interface CommentThreadLabels {
   post: string;
   posted: string;
   empty: string;
+  /** Under the reply box when onReply's promise rejects. */
+  postFailed: string;
   edit: string;
   editBox: string;
   save: string;
   saved: string;
+  /** Under the edit box when it's saved empty. */
+  editEmpty: string;
+  /** Under the edit box when onEdit's promise rejects. */
+  saveFailed: string;
   cancel: string;
   delete: string;
   deleted: string;
@@ -59,10 +65,13 @@ const english: CommentThreadLabels = {
   post: 'Post reply',
   posted: 'Reply posted',
   empty: 'Write a reply first.',
+  postFailed: "Couldn't post the reply. Try again.",
   edit: 'Edit',
   editBox: 'Edit comment',
   save: 'Save',
   saved: 'Comment saved',
+  editEmpty: 'Write something, or delete the comment.',
+  saveFailed: "Couldn't save the comment. Try again.",
   cancel: 'Cancel',
   delete: 'Delete',
   deleted: 'Comment deleted',
@@ -84,7 +93,7 @@ export interface CommentThreadProps {
 }
 
 const thenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
-const settle = (out: void | PromiseLike<unknown>, done: () => void) => { if (thenable(out)) out.then(done, () => {}); else done(); };
+const settle = (out: void | PromiseLike<unknown>, done: () => void, failed: () => void) => { if (thenable(out)) out.then(done, failed); else done(); };
 
 /** Comments with who and when, a reply box with a character count, and edit and delete with undo for your own. */
 export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength = 1000, headingLevel = 2, labels }: CommentThreadProps) {
@@ -95,6 +104,9 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
   const [draft, setDraft] = React.useState('');
   const [reply, setReply] = React.useState('');
   const [error, setError] = React.useState(false);
+  const [editError, setEditError] = React.useState(false);
+  // A send that failed (the network, not the words): said once, shown under its form until the next try.
+  const [failed, setFailed] = React.useState<'post' | 'save' | null>(null);
   const heading = React.useRef<HTMLHeadingElement | null>(null);
   const shown = comments.filter((c) => !hidden.has(c.id));
   const [busy, setBusy] = React.useState(false);
@@ -107,18 +119,20 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
     e.preventDefault();
     if (busy) return;
     if (!reply.trim()) { setError(true); focus(byId(`${id}-reply`)); return; }
-    setError(false);
+    setError(false); setFailed(null);
     const out = onReply(reply.trim());
     setBusy(thenable(out));
-    settle(out, () => { setReply(''); announce(l.posted); });
+    settle(out, () => { setReply(''); announce(l.posted); }, () => { setFailed('post'); announce(l.postFailed); });
     if (thenable(out)) out.then(() => setBusy(false), () => setBusy(false));
   };
-  const startEdit = (c: ThreadComment) => { setEditing(c.id); setDraft(c.body); focus(byId(`${id}${c.id}-edit`)); };
-  const stopEdit = (cid: string) => { setEditing(null); focus(byId(`${id}${cid}-edit-button`)); };
+  const startEdit = (c: ThreadComment) => { setEditing(c.id); setDraft(c.body); setEditError(false); setFailed(null); focus(byId(`${id}${c.id}-edit`)); };
+  const stopEdit = (cid: string) => { setEditing(null); setEditError(false); setFailed(null); focus(byId(`${id}${cid}-edit-button`)); };
   const save = (c: ThreadComment) => (e: React.FormEvent) => {
     e.preventDefault();
-    if (!draft.trim() || !onEdit) return;
-    settle(onEdit(c.id, draft.trim()), () => { stopEdit(c.id); announce(l.saved); });
+    if (!onEdit) return;
+    if (!draft.trim()) { setEditError(true); focus(byId(`${id}${c.id}-edit`)); return; }
+    setFailed(null);
+    settle(onEdit(c.id, draft.trim()), () => { stopEdit(c.id); announce(l.saved); }, () => { setFailed('save'); announce(l.saveFailed); });
   };
   const remove = (c: ThreadComment) => {
     const at = shown.indexOf(c), next = shown[at + 1] || shown[at - 1];
@@ -147,14 +161,15 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
                   </p>
                   {editing === c.id ? (
                     <form onSubmit={save(c)} className="flex flex-col gap-2">
-                      <Field label={l.editBox} id={`${id}${c.id}-edit`}>
-                        <Textarea value={draft} onChange={(e) => setDraft(e.target.value)} maxLength={maxLength} showCount autoResize
+                      <Field label={l.editBox} id={`${id}${c.id}-edit`} error={editError ? l.editEmpty : undefined}>
+                        <Textarea value={draft} onChange={(e) => { setDraft(e.target.value); if (editError && e.target.value.trim()) setEditError(false); }} maxLength={maxLength} showCount autoResize
                           onKeyDown={(e) => { if (e.key === 'Escape') { e.preventDefault(); stopEdit(c.id); } }} />
                       </Field>
                       <div className="flex gap-2">
                         <Button type="submit" size="sm">{l.save}</Button>
                         <Button variant="ghost" size="sm" onClick={() => stopEdit(c.id)}>{l.cancel}</Button>
                       </div>
+                      {failed === 'save' && <p className="text-sm text-danger-text">{l.saveFailed}</p>}
                     </form>
                   ) : <p className="whitespace-pre-wrap wrap-break-word">{c.body}</p>}
                   {c.mine && editing !== c.id && (onEdit || onDelete) && (
@@ -174,6 +189,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
           <Textarea value={reply} onChange={(e) => { setReply(e.target.value); if (error && e.target.value.trim()) setError(false); }} maxLength={maxLength} showCount autoResize rows={3} />
         </Field>
         <Button type="submit" className="self-start" loading={busy}>{l.post}</Button>
+        {failed === 'post' && <p className="text-sm text-danger-text">{l.postFailed}</p>}
       </form>
     </section>
   );
