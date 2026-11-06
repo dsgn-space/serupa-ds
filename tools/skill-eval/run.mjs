@@ -10,7 +10,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFile, execFileSync } from 'node:child_process';
-import { TASKS, gradeDir, lines, table } from './grade.mjs';
+import { TASKS, gradeDir, lines, startOf, table } from './grade.mjs';
 
 const HERE = import.meta.dirname;
 const ROOT = path.resolve(HERE, '../..');
@@ -26,9 +26,12 @@ const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-eval-'));
 
 const ASK = 'Write it as one React component in TypeScript (TSX), in a project that has serupa-ds installed and its CSS loaded. '
   + 'Reply with the code only, in one ```tsx block.';
+const CHANGE = 'Reply with the whole changed file, code only, in one ```tsx block.';
 /** One answer, with what it cost: { code, cost (USD), tokens (in and out), ms }. */
 function answer(task, withSkill) {
-  const prompt = (withSkill ? `Use this skill:\n\n<skill>\n${skill}\n</skill>\n\n` : '') + `${task.prompt}\n\n${ASK}`;
+  const start = startOf(task);
+  const ask = start ? `This is the file as it is now, in a project that has serupa-ds installed and its CSS loaded:\n\n\`\`\`tsx\n${start}\`\`\`\n\n${CHANGE}` : ASK;
+  const prompt = (withSkill ? `Use this skill:\n\n<skill>\n${skill}\n</skill>\n\n` : '') + `${task.prompt}\n\n${ask}`;
   const args = ['-p', prompt, '--output-format', 'json', '--disallowedTools', 'Bash,Edit,Write,Read,Glob,Grep,WebFetch,WebSearch,Agent'];
   if (model) args.push('--model', model);
   return new Promise((resolve, reject) => {
