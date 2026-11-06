@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './SettingsForm.stories';
+
+<Meta of={Stories} />
+
+# Settings form
+
+A settings page made of sections, each with its own Save, its own errors and its own status, that asks before unsaved changes are lost.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Settings that fall into groups people change one at a time: a profile, notifications, security, billing.
+- Use one form with one Save instead when the settings only make sense together, such as a single short preferences page.
+- Not for settings that take effect as they're changed (a theme, a language): a Switch or a Select that applies at once, with no Save, is clearer there.
+
+## What each part is for
+
+- **A Settings section block per group**: a region named by its heading, a sentence on what it's for, the fields, and its own Save with SaveStatus beside it. A change in one section never saves another (3.2.2). Each Save names its section ("Save profile"), so a screen reader's list of buttons tells them apart.
+- **Errors at the top of the section.** A Save with problems shows an ErrorSummary that takes focus and links to each field, and each field says what to write (3.3.1, 3.3.3). A second Save with the same problems takes focus again, so it's read again.
+- **"Saved", said.** SaveStatus says "Saved" politely when a save finishes, or "Couldn't save" with Try again if it fails, without moving focus (4.1.3). The changes stay in the fields either way.
+- **Switches for on and off**, each with its own label and a line on what it sends, so nobody has to guess what "Weekly summary" means.
+- **"Discard changes?" before leaving.** While any section has unsaved changes, following "Back to the dashboard" asks first, with Keep editing focused, and closing the tab asks the browser's own question (`useUnsavedChanges`). With nothing unsaved, the link just goes.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SaveFails} />
+
+## What stays the app's job
+
+- **Storing the settings.** `onSave` gets one section's values; reject its promise when saving fails, and pass any field errors the server finds back into that section.
+- **Moving away inside the app.** Before your router moves, `await confirm()` from `useUnsavedChanges`, as the "Back to the dashboard" link does here.
+- **Which settings there are**, and their words: name each one for what it does, and say in its description what changes when it's on.
