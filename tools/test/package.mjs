@@ -150,9 +150,11 @@ if (D) {
   t('Server Components: every component without "use client" renders with React\'s server build, and the helpers run there', sc && !sc.errors.length && sc.server.length > 0 && sc.helpers.buttonClass === 'dk-btn dk-btn--outline dk-btn--size-md' && sc.helpers.formatFileSize === '1.5 kB', sc ? JSON.stringify(sc.errors) : rsc.stderr.slice(0, 500));
   // Each module that needs the browser (state, effects, context, event handlers) says so with "use client".
   const clientOnly = /\bReact\.(useState|useEffect|useLayoutEffect|useReducer|useRef|useContext|useSyncExternalStore|useImperativeHandle|createContext)\b|\buseFieldControl\(|\buseSerupa\(|\buseLocale\(|\bon[A-Z]\w*=\{/;
-  const unmarked = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
-    .filter((f) => { const src = read(`src/components/${f}`); return clientOnly.test(src) && !/^"use client";/.test(src); });
-  t('every component module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));
+  // Blocks and patterns don't ship, but an app pastes them into its own files, so a Next.js App Router page needs the line too (GR164).
+  const unmarked = ['components', 'blocks', 'patterns'].flatMap((dir) => fs.readdirSync(path.join(PROJECT, 'src', dir), { recursive: true }).map((f) => `${dir}/${String(f).split(path.sep).join('/')}`))
+    .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
+    .filter((f) => { const src = read(`src/${f}`); return clientOnly.test(src) && !/^"use client";/.test(src); });
+  t('every component, block and pattern module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));
   t('buttonClass and configure are exported', D.buttonClass({ variant: 'outline' }) === 'dk-btn dk-btn--outline dk-btn--size-md' && typeof D.configure === 'function');
 }
 
@@ -175,7 +177,9 @@ const shipped = pack.status === 0 ? new Set(JSON.parse(pack.stdout)[0].files.map
 // Built on their own, not as modules: the browser scripts' entries, and types only.
 const ENTRIES = new Set(['browser', 'browser-icons', 'theme-types']);
 const modules = fs.readdirSync(path.join(PROJECT, 'src'), { recursive: true }).map((f) => String(f).split(path.sep).join('/'))
-  .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$|\.d\.ts$/.test(f)).map((f) => f.replace(/\.tsx?$/, '')).filter((f) => !ENTRIES.has(f));
+  .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$|\.d\.ts$/.test(f)).map((f) => f.replace(/\.tsx?$/, '')).filter((f) => !ENTRIES.has(f))
+  // Blocks and patterns are for an app to copy, so none of them ships: a file of theirs in dist/js/ shows up as unexpected.
+  .filter((f) => !/^(blocks|patterns)\//.test(f));
 const tokenFiles = fs.readdirSync(path.join(PROJECT, 'src', 'components'), { recursive: true }).map(String).filter((f) => f.endsWith('.tokens.json')).map((f) => `design-tokens/components/${path.basename(f)}`);
 // The generated icon tables ship without a source map: icons.js, outlined.js and their parts (tools/build/build.mjs).
 const noMap = (m) => m === 'material/icons' || m === 'material/outlined' || m.startsWith('material/part/') || m.startsWith('material/outlined/');
