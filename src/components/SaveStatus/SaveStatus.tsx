@@ -25,6 +25,8 @@ export interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const STATES: readonly SaveState[] = ["idle", "saving", "saved", "error"];
+// The faces' fixed order in the page (GR127).
+const ORDER: readonly SaveState[] = ["saving", "saved", "error"];
 
 /* SaveStatus: a small line saying whether an autosaving form or document is saved: a ring and "Saving…", a check and
    "Saved 2 minutes ago" (the time kept current), or an error icon, "Couldn't save" and a Try again button. Screen
@@ -32,8 +34,6 @@ const STATES: readonly SaveState[] = ["idle", "saving", "saved", "error"];
    comes and goes with every save), and the time ticking isn't either. The wrapper keeps its place when idle, so the
    layout doesn't jump. className and other props go to the wrapper <div>. */
 /** Whether autosaved changes are saved: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with Try again; announced politely. */
-const ORDER: readonly SaveState[] = ["saving", "saved", "error"];
-
 export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusProps>("SaveStatus", function SaveStatus(props, ref) {
   const sds = useSettings(words);
   const { status: _s, savedAt, onRetry, errorText, className, ...rest } = props;
