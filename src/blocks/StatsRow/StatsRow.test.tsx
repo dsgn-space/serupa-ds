@@ -65,4 +65,10 @@ describe('Blocks/Stats row', () => {
     await screen.rerender(<StatsRow title="Dieser Monat" stats={[]} labels={de} loading loadingCount={2} />);
     await expect.poll(() => [...document.querySelectorAll('ul [aria-label]')].map((e) => e.getAttribute('aria-label'))).toEqual(['Dieser Monat wird geladen']);
   });
+
+  test('the row keeps role="list", since Safari stops calling a list without bullets a list (GR151)', async () => {
+    await render(<StatsRow title="This month" stats={STATS} />);
+    const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
+    expect(bare.map((l) => l.getAttribute('role'))).toEqual(['list']);
+  });
 });

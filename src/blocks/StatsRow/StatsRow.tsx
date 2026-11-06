@@ -10,6 +10,7 @@ import { Loader } from '../../components/Loader/Loader';
    - 1.4.1 Use of color: a change says "Up" or "Down" in words, with an arrow, as well as its color; whether up is good
      is the app's call (`good`), so a rise in costs isn't shown in green.
    - 1.1.1: each Sparkline is an image named by what it measures and its first, last, low and high values.
+   - 1.3.1 in Safari: role="list" on the lists without bullets, since WebKit stops calling them lists (FU1, GR151).
    - 1.3.1: the row is a list under its own heading, so a screen reader says how many numbers there are, and each
      card reads label, value, change in that order.
    - 4.1.3: while loading, the list says it's busy (aria-busy) and the skeletons are named once, not once per card.
@@ -77,7 +78,7 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
   return (
     <section aria-labelledby={id} className="flex flex-col gap-3">
       <Heading level={headingLevel} size="lg" id={id}>{title}</Heading>
-      <ul aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
         {loading
           ? Array.from({ length: loadingCount }, (_, i) => (
             <Card as="li" key={i} padding="md">

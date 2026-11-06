@@ -498,6 +498,14 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
   test('formatFileSize with a locale matches formatNumber bytes; without one it stays as it was; an index from map() is not a locale', () => {
     expect([formatFileSize(1_500_000, 'de-DE'), formatFileSize(1_500_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['1,5 MB', '1.5 MB', '2 kB']);
   });
+  test('GR119: the same refusal twice puts a new alert in, so a screen reader says it again', async () => {
+    await render(<FileUpload id="fr" accept="image/png" />);
+    await userEvent.upload(input(rootOf('fr')), [file('a.pdf', 'application/pdf', 10)]);
+    const first = rootOf('fr').querySelector('[role=alert]');
+    await userEvent.upload(input(rootOf('fr')), [file('a.pdf', 'application/pdf', 10)]);
+    const second = rootOf('fr').querySelector('[role=alert]');
+    expect([errs(rootOf('fr')), second !== first, first!.isConnected]).toEqual(['alert: a.pdf isn\'t a PNG.', true, false]);
+  });
 });
 
 describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {

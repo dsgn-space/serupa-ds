@@ -11,8 +11,10 @@ import { announce } from '../../internal/announce';
 /* Onboarding / first run (PT11): the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
    What it carries (WCAG 2.2):
+   - 1.3.1 in Safari: role="list" on the lists without bullets, since WebKit stops calling them lists (FU1, GR151).
    - 1.3.1: the steps are an ordered list, each a heading (h3 under the checklist's h2), so a screen reader can list
      and jump between them, and hears "1 of 4".
+   - 1.4.10: a long title or a URL in a description wraps inside its card at 320 px, not past it (GR150).
    - 1.4.1: a done step says "Done" in words beside its tick, not by color or a strike-through alone.
    - 4.1.3: ticking a step says the new count ("2 of 4 steps done") politely, without moving focus. The last tick says
      "You're all set" once, and the page shows what's next.
@@ -134,11 +136,11 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
                     actions={<Button href={dashboardHref}>Go to your dashboard</Button>} />
                 </Card>
               ) : null}
-              <ol className="m-0 flex list-none flex-col gap-3 p-0">
+              <ol role="list" className="m-0 flex list-none flex-col gap-3 p-0">
                 {steps.map((s, i) => {
                   const done = state.done.includes(s.id);
                   return (
-                    <Card as="li" key={s.id} padding="md" className="flex flex-col gap-3" aria-labelledby={`step-${s.id}`}>
+                    <Card as="li" key={s.id} padding="md" className="flex min-w-0 flex-col gap-3 wrap-anywhere" aria-labelledby={`step-${s.id}`}>
                       <div className="flex flex-col gap-1">
                         <Heading level={3} id={`step-${s.id}`} className="text-base">
                           <span className="text-text-muted">{i + 1}. </span>{s.title}
