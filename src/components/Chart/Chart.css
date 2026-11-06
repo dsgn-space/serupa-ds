@@ -45,19 +45,19 @@
 .dk-chart__focus { fill: none; stroke: var(--chart-focus-ring, var(--focus-ring)); stroke-width: var(--chart-focus-width, var(--stroke-width-3)); pointer-events: none; }
 
 .dk-chart__tip {
-  position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: var(--z-10); pointer-events: none;
+  position: absolute; inset-block-start: 0; z-index: var(--z-10); pointer-events: none;
   display: grid; grid-template-columns: auto auto auto; gap: var(--spacing-0\.5) var(--spacing-2); align-items: center;
-  padding: var(--spacing-2) var(--spacing-3); max-inline-size: var(--container-3xs);
+  padding: var(--spacing-2) var(--spacing-3); max-inline-size: min(var(--container-3xs), var(--sizing-full));
   border: var(--border-width-1) solid var(--chart-tip-border, var(--border-overlay)); border-radius: var(--chart-tip-radius, var(--rounded-md));
   background: var(--chart-tip-bg, var(--surface-overlay)); color: var(--chart-tip-text, var(--text));
   box-shadow: var(--chart-tip-shadow, var(--shadow-md));
-  font-size: var(--text-xs); line-height: var(--leading-4); white-space: nowrap;
+  font-size: var(--text-xs); line-height: var(--leading-4); overflow-wrap: anywhere;
 }
 .dk-chart__tip-title { grid-column: var(--dk-chart-all); font-weight: var(--font-semibold); }
 .dk-chart__tip-row { display: contents; }
 .dk-chart__tip-name { color: var(--chart-tip-muted, var(--text-muted)); }
 .dk-chart__tip-row:not(:has(.dk-chart__tip-name)) .dk-chart__tip-value { grid-column: var(--dk-chart-span); }
-.dk-chart__tip-value { font-variant-numeric: tabular-nums; text-align: end; }
+.dk-chart__tip-value { font-variant-numeric: tabular-nums; text-align: end; white-space: nowrap; }
 .dk-chart__tip-row--focus > * { font-weight: var(--font-semibold); color: var(--chart-tip-text, var(--text)); }
 .dk-chart__swatch { display: inline-block; flex: none; overflow: visible; }
 
@@ -65,7 +65,9 @@
 .dk-chart__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); overflow-wrap: anywhere; }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Once, on the first paint: the line draws from its start, its markers and the bars come in after. */
+  /* Once, on the first paint: the line draws from its start, its markers and the bars come in after. These are
+     inside an SVG, whose parts the browser paints whatever moves them (only the outer svg can get its own layer), so a
+     clip or a scale would cost the same as the dash; they run once, on a small box, and never under reduced motion. */
   .dk-chart__plot .dk-chart__line { stroke-dasharray: var(--dk-chart-path) var(--dk-chart-path); animation: dk-chart-draw var(--motion-enter-lg) var(--ease-enter) both; }
   .dk-chart__plot .dk-chart__marker { animation: dk-chart-fade var(--motion-enter-md) var(--ease-enter) both; animation-delay: var(--dk-chart-marker-delay); }
   .dk-chart__plot .dk-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: dk-chart-grow var(--motion-enter-lg) var(--ease-settle) both; }
