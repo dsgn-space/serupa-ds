@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PROJECT, report, done } from './lib.mjs';
-import { CHECKS, TASKS, grade } from '../skill-eval/grade.mjs';
+import { CHECKS, TASKS, grade, gradeTask, startOf } from '../skill-eval/grade.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -109,6 +109,33 @@ const own = grade(OWN, ['Field', 'Input', 'Button|Link']);
 t('composing Serupa parts or fixing props is not a wrapper', own['no-extras'].ok, own['no-extras'].why);
 
 t('names, abbreviations, sentences, "…" and strings that aren\'t UI text pass "words"', plain.words.ok, plain.words.why);
+
+// A change to an existing file (KP3): graded on what it changed. The start's own faults don't count, new ones do,
+// and old lines rewritten beyond the task's "edits", or a "keep" line gone, fail "surgical".
+const task = (id) => TASKS.find((x) => x.id === id);
+const phone = startOf(task('add-phone'))
+  .replace("const [email, setEmail] = React.useState('');", "const [email, setEmail] = React.useState('');\n  const [phone, setPhone] = React.useState('');")
+  .replace('onSave: (p: { name: string; email: string }) => void', 'onSave: (p: { name: string; email: string; phone: string }) => void')
+  .replace('onSave({ name, email });', 'onSave({ name, email, phone });')
+  .replace('<Button type="submit">', '<Field label="Phone" optional>\n          <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" />\n        </Field>\n        <Button type="submit">');
+const tidy = (src, id) => { const r = gradeTask(src, task(id)); return CHECKS.filter((c) => !r[c].ok).map((c) => `${c} (${r[c].why})`); };
+t('a change that adds only what was asked passes every check', !tidy(phone, 'add-phone').length, tidy(phone, 'add-phone').join(', '));
+const requoted = phone.replace(/'/g, '"');
+t('a change that also rewrites the old code fails "surgical" alone', tidy(requoted, 'add-phone').join() .startsWith('surgical') && tidy(requoted, 'add-phone').length === 1, tidy(requoted, 'add-phone').join(', '));
+const legacy = startOf(task('legacy-page'));
+const search = legacy.replace("import { Card, Heading, Stack, Text } from 'serupa-ds';", "import { Card, Heading, SearchInput, Stack, Text } from 'serupa-ds';")
+  .replace("export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {", "export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {\n  const [q, setQ] = React.useState('');")
+  .replace('<Heading level={1}>Items</Heading>', '<Heading level={1}>Items</Heading>\n        <SearchInput aria-label="Search items" value={q} onChange={(e) => setQ(e.target.value)} />')
+  .replace('{items.map((item) => (', '{items.filter((item) => item.name.toLowerCase().includes(q.toLowerCase())).map((item) => (');
+t("the start's own hand-built button and hex colors don't count against the change", !tidy(search, 'legacy-page').length, tidy(search, 'legacy-page').join(', '));
+const migrated = search.replace("background: '#0b3d91', color: '#ffffff'", "background: 'var(--primary)', color: 'var(--on-primary)'");
+t('a change that also restyles the old header fails "surgical"', tidy(migrated, 'legacy-page').some((x) => x.startsWith('surgical')), tidy(migrated, 'legacy-page').join(', '));
+const newHex = search.replace('<SearchInput aria-label', '<SearchInput style={{ borderColor: \'#cccccc\' }} aria-label');
+t('a new hex color in the change still fails "tokens"', tidy(newHex, 'legacy-page').some((x) => x.startsWith('tokens')), tidy(newHex, 'legacy-page').join(', '));
+for (const x of TASKS.filter((x) => x.start)) {
+  const r = grade(startOf(x), []);
+  t(`task ${x.id}: its starting file parses`, r.parses.ok, r.parses.why);
+}
 
 // The tasks name components that exist, and have been run.
 const names = new Set(fs.readdirSync(path.join(PROJECT, 'src/components')));
