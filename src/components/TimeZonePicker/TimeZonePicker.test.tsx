@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render as draw } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { SerupaProvider } from '../../internal/provider';
 import { TimeZonePicker, allTimeZones, timeZoneInfo } from './TimeZonePicker';
+
+// The tests read the names and offsets as English writes them; the second-language runs would write them otherwise.
+const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
+const render = (ui: React.ReactNode) => draw(ui, { wrapper: EnUS });
 
 const AT = new Date('2025-01-15T12:00:00Z');   // winter in the north: New York is UTC−05:00
 const input = () => document.querySelector<HTMLInputElement>('input[role="combobox"]')!;
