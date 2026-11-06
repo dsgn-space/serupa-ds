@@ -7,7 +7,7 @@ import { OfflineBanner } from "serupa-ds";
 
 <OfflineBanner />
 <OfflineBanner>Changes are kept and sent when you're back.</OfflineBanner>
-<OfflineBanner online={!syncFailing} placement="top" onChange={(online) => online && sync()} />
+<OfflineBanner online={!syncFailing} placement="top" onOnlineChange={(online) => online && sync()} />
 ```
 
 ## When to use
@@ -34,7 +34,7 @@ Drawn from the `WithMoreWords` story.
 - The browser only knows whether there's a network, not whether your server answers: on a café's sign-in page or a dead mobile connection it can say online. When your requests keep failing, set `online={false}` yourself, and leave the prop out again (or set `true`) when they work.
 - Add words after "You're offline" as children: what still works, or what happens to their changes. Keep it to a sentence.
 - It's fixed to the bottom of the screen, in the middle, by default; `placement="top"` puts it at the top, where a bottom navigation bar or a chat box sits. `placement="inline"` keeps it where you put it, under a header, say.
-- `onChange` runs when the connection drops (`false`) and comes back (`true`): a good moment to send what was waiting.
+- `onOnlineChange` runs when the connection drops (`false`) and comes back (`true`): a good moment to send what was waiting.
 - Rendered on the server it shows nothing (the server is online); in the browser it shows straight away if the page loaded offline.
 
 ## Behavior
@@ -59,7 +59,8 @@ Drawn from the `WithMoreWords` story.
 | `online` | `boolean` | follows the browser | Set it when the app knows better than `navigator.onLine`. |
 | `placement` | `'bottom' \| 'top' \| 'inline'` | `'bottom'` | Fixed to an edge of the screen, in the middle, or in the page. |
 | `children` | `ReactNode` | | More words after "You're offline". |
-| `onChange` | `(online: boolean) => void` | | Runs when it drops and when it comes back. |
+| `onOnlineChange` | `(online: boolean) => void` | | Runs when it drops and when it comes back. |
+| `onChange` | `(online: boolean) => void` | | Deprecated, removed in 15.0.0: use `onOnlineChange`. |
 
 `className`, `ref` and other props go to the `<div>`, which has `data-component="offline-banner"` and `data-state="offline"` or `"back"`.
 
