@@ -111,4 +111,18 @@ describe('SaveStatus motion (KW19)', () => {
     expect([...new Set(ran)].sort()).toEqual(['Saved filter', 'Saved opacity', 'Saved scale', 'Saving… filter', 'Saving… opacity', 'Saving… scale']);
     expect(e.textContent).toBe('Saved');
   });
+  test('GR127: a status that comes back while it fades out (saving, saved, saving) turns back where it is, not from nothing', async () => {
+    const screen = await render(<SaveStatus id="b" status="saving" />);
+    const e = el('b'), saving = e.firstElementChild as HTMLElement;
+    void getComputedStyle(saving).opacity;
+    await screen.rerender(<SaveStatus id="b" status="saved" />);
+    // Moving the face in the page (out and back in) restarts its fade from 0: the label blinked out.
+    const moved: Node[] = [];
+    const mo = new MutationObserver((list) => { for (const m of list) moved.push(...m.removedNodes); });
+    mo.observe(e, { childList: true });
+    await screen.rerender(<SaveStatus id="b" status="saving" />);
+    mo.disconnect();
+    const now = [...e.children].find((c) => !(c as HTMLElement).inert) as HTMLElement;
+    expect([now === saving, moved.includes(saving), now.textContent]).toEqual([true, false, 'Saving…']);
+  });
 });
