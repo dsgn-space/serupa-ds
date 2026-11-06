@@ -31,6 +31,32 @@ const listen = (cb: () => void) => {
   window.addEventListener("offline", cb);
   return () => { window.removeEventListener("online", cb); window.removeEventListener("offline", cb); };
 };
+// Two fixed banners can show at once (one in a layout, one in a page). Each claims the room it needs on the same
+// element: the first one saves what the page had there, every one keeps its own space, the element gets the largest,
+// and the last one to go puts back what the page had. Without this, the second saved the first's padding and put it
+// back after both had gone (GR172).
+type Claim = { had: string; base: string; spaces: Map<object, number> };
+const claims = new WeakMap<HTMLElement, Record<string, Claim | undefined>>(), rootSpaces = new Map<object, number>();
+const claimRoom = (el: HTMLElement, prop: "paddingBlockEnd" | "paddingBlockStart" | "marginBlockEnd", who: object) => {
+  const mine = claims.get(el) || {};
+  claims.set(el, mine);
+  const claim = mine[prop] || (mine[prop] = { had: el.style[prop], base: getComputedStyle(el)[prop], spaces: new Map() });
+  let gone = false;
+  return {
+    set(space: number) { if (gone) return; claim.spaces.set(who, space); el.style[prop] = "calc(" + claim.base + " + " + Math.max(...claim.spaces.values()) + "px)"; },
+    drop() {
+      gone = true;
+      claim.spaces.delete(who);
+      if (claim.spaces.size) el.style[prop] = "calc(" + claim.base + " + " + Math.max(...claim.spaces.values()) + "px)";
+      else { el.style[prop] = claim.had; mine[prop] = undefined; }
+    },
+  };
+};
+const setRootSpace = (root: HTMLElement, who: object, space: number | null) => {
+  if (space === null) rootSpaces.delete(who); else rootSpaces.set(who, space);
+  if (rootSpaces.size) root.style.setProperty("--dk-offline-banner-space", Math.max(...rootSpaces.values()) + "px");
+  else root.style.removeProperty("--dk-offline-banner-space");
+};
 const browserOnline = () => navigator.onLine;
 const serverOnline = () => true;
 
@@ -87,8 +113,8 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
     const nav = placement === "top" ? document.querySelector<HTMLElement>(".dk-navbar--sticky") : null;
     // The room goes on the page's edge, or after the Navbar, which is in the page's flow: padding the body would move
     // the Navbar down with the page.
-    const room = nav || body, prop = nav ? "marginBlockEnd" : side;
-    const had = room.style[prop], base = getComputedStyle(room)[prop];
+    const room = nav || body, prop = nav ? "marginBlockEnd" : side, me = {};
+    const claim = claimRoom(room, prop, me);
     const set = () => {
       // Its settled place, not where it is now: as it slides in, translate moves it a few pixels toward its edge, and
       // nothing measures again when that ends (a ResizeObserver doesn't see translate), so the room came out short
@@ -98,8 +124,8 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
       const gap = /rem$/.test(g) ? parseFloat(g) * parseFloat(getComputedStyle(root).fontSize) : parseFloat(g) || 8;
       const inset = parseFloat(placement === "bottom" ? cs.bottom : cs.top) || 0;
       const space = Math.ceil(n.offsetHeight + inset + gap);
-      root.style.setProperty("--dk-offline-banner-space", space + "px");
-      room.style[prop] = "calc(" + base + " + " + Math.max(0, space - (nav ? Math.floor(nav.getBoundingClientRect().height) : 0)) + "px)";
+      setRootSpace(root, me, space);
+      claim.set(Math.max(0, space - (nav ? Math.floor(nav.getBoundingClientRect().height) : 0)));
     };
     set();
     const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(set);
@@ -126,8 +152,8 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
       cancelAnimationFrame(raf);
       document.removeEventListener("focusin", onFocus);
       window.removeEventListener("resize", set);
-      root.style.removeProperty("--dk-offline-banner-space");
-      room.style[prop] = had;
+      setRootSpace(root, me, null);
+      claim.drop();
     };
   }, [open, placement]);
   if (!open && !leaving) return null;
