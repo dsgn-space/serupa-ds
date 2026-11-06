@@ -12,6 +12,9 @@ const TAGS = {
 // Where the element type doesn't say: Button is typed HTMLElement because it renders a button, or an a when given
 // href (a control either way), and a table cell's type is the same for td and th.
 const BY_NAME = { Button: 'button', TableHeaderCell: 'th' };
+// Rendered as an a, but with its own href and words, so <SkipLink /> is complete: read as an a, jsx-a11y would ask an
+// app for both (anchor-has-content, anchor-is-valid).
+const COMPLETE = ['SkipLink'];
 
 export function a11yComponents(root) {
   const dir = path.join(root, 'src', 'components');
@@ -30,5 +33,6 @@ export function a11yComponents(root) {
       if (alias && TAGS[alias[1]]) map[m[2]] = TAGS[alias[1]];
     }
   }
+  for (const name of COMPLETE) delete map[name];
   return { ...map, ...BY_NAME };
 }
