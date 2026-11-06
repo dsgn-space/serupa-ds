@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PROJECT, report, done } from './lib.mjs';
 import { CHECKS, TASKS, grade, gradeTask, startOf } from '../skill-eval/grade.mjs';
+import { REVIEWS, gradeReview, sourceOf } from '../skill-eval/review.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -147,5 +148,36 @@ for (const task of TASKS) {
 const results = path.join(PROJECT, 'tools/skill-eval/results');
 const runs = fs.existsSync(results) ? fs.readdirSync(results).filter((n) => /^\d{4}-\d{2}-\d{2}\.md$/.test(n)) : [];
 t('the eval has at least one dated run in tools/skill-eval/results/', runs.length > 0, 'run node tools/skill-eval/run.mjs and commit its results');
+
+// The review skill's eval (review.mjs): a review that names a planted problem under its heading finds and places it,
+// one that names it elsewhere only finds it, the verdict has to match, and a clean change's review raises no alarm.
+const invite = REVIEWS.find((c) => c.id === 'invite-member'), clean = REVIEWS.find((c) => !c.planted.length);
+const GOOD_REVIEW = `### Must fix
+1. **invite-member.tsx:52: a modal built from divs**
+   Problem: focus isn't kept in it. Fix: use Dialog. If skipped: keyboard users get lost.
+2. **invite-member.tsx:45: the delete IconButton has no label**
+   Fix: add label="Remove member".
+3. **invite-member.tsx:44: status shown by color alone**
+
+### Should fix
+1. The dot uses #16a34a. Use a token.
+2. A failed invite goes away with the toast: use an Alert.
+3. "OK" says nothing: "Send invite".
+4. "Invite Member" should be sentence case.
+
+Verdict: Not ready: 3 must fix, 4 should fix.`;
+const g = gradeReview(GOOD_REVIEW, invite);
+t('a review that names every planted problem under its heading finds and places them all', g.found.length === invite.planted.length && g.placed.length === invite.planted.length && g.verdict, JSON.stringify(g));
+const loose = gradeReview('This modal should be a Dialog, and the OK button needs a verb. Looks fine otherwise.', invite);
+t('one that names them without headings finds them but places none, and has no verdict', loose.found.join() === 'hand-built-dialog,ok-button' && !loose.placed.length && !loose.verdict, JSON.stringify(loose));
+t('a case-sensitive pattern doesn\'t match the plain word ("dialog" isn\'t Dialog)', !gradeReview('The invite dialog is fine.', invite).found.includes('hand-built-dialog'));
+t('a clean change\'s review passes with "Ready to merge" and nothing under Must fix', (() => { const r = gradeReview('No findings.\n\nVerdict: Ready to merge.', clean); return r.verdict && !r.alarm; })());
+t('and fails with a Must fix heading or "Not ready"', (() => { const r = gradeReview('### Must fix\n1. x\n\nVerdict: Not ready: 1 must fix.', clean); return !r.verdict && r.alarm; })());
+for (const c of REVIEWS) {
+  t(`review case ${c.id}: its file exists and every pattern compiles`, (() => { try { sourceOf(c); c.planted.forEach((p) => new RegExp(p.find)); return true; } catch { return false; } })());
+  // A pattern the file already matches would count as found for any review that quotes the code.
+  const leak = c.planted.filter((p) => p.case && new RegExp(p.find).test(sourceOf(c)) && !['ok-button', 'submit-word'].includes(p.id)).map((p) => p.id);
+  t(`review case ${c.id}: no component a fix names is already in the file`, !leak.length, leak.join(', '));
+}
 
 done(report('Skill eval grader', R));

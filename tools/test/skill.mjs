@@ -1,4 +1,4 @@
-// The coding agents' skill (skills/serupa/SKILL.md): it loads (a name and a description in its front matter), and
+// The coding agents' skills (skills/serupa/SKILL.md, and serupa-review beside it): each loads (a name and a description in its front matter), and
 // what it tells an agent is true of the package. Every component it lists exists (dist/components.json), every
 // export, utility class and token it names is real, and it installs the version package.json is at. Its components
 // index is rewritten from the component folders on each release (tools/build/registry.mjs), like README.md's. Build
@@ -57,5 +57,26 @@ t(`it installs the current version (v${version}; tools/release.mjs stamps it)`, 
 const BUDGET = 3500;
 const wordCount = skill.replace(/^---\n[\s\S]*?\n---\n/, '').split(/\s+/).filter(Boolean).length;
 t(`it stays within ${BUDGET.toLocaleString('en')} words, so agents read all of it`, wordCount <= BUDGET, `${wordCount} words`);
+
+// The review skill beside it (skills/serupa-review/SKILL.md, PN6): it loads, it names only real exports, classes and
+// tokens, and it stays short, since an agent reads it on top of the main skill for every review.
+const review = read('skills/serupa-review/SKILL.md');
+const rFront = /^---\n([\s\S]*?)\n---\n/.exec(review)?.[1] ?? '';
+const rField = (k) => new RegExp(`^${k}:\\s*(.+)$`, 'm').exec(rFront)?.[1].trim() ?? '';
+t('the review skill has front matter naming it "serupa-review", as its folder is', rField('name') === 'serupa-review', `name: ${rField('name') || '(none)'}`);
+const rDescription = rField('description');
+t('the review skill\'s description says when to use it, in at most 1024 characters and without angle brackets', rDescription && rDescription.length <= 1024 && !/[<>]/.test(rDescription), `${rDescription.length} characters`);
+const rNames = [...new Set([...review.matchAll(/`<?([A-Z][A-Za-z]+)\b/g), ...review.matchAll(/`([a-z]\w*)\(/g)].map((m) => m[1]))];
+// CSS functions it names as raw values to replace aren't exports.
+const rMissing = rNames.filter((n) => !['var', 'rgb', 'hsl'].includes(n) && !exported.has(n) && !components[n]);
+t('every export the review skill names is one the package has', !rMissing.length, rMissing.join(', '));
+const rClasses = [...new Set([...review.matchAll(/`([a-z][a-z0-9-]*-[a-z0-9-]+)`/g)].map((m) => m[1]).filter((c) => /^(p|m|gap|bg|text|rounded|shadow|outline|border|flex|grid|sr)-/.test(c)))];
+const rTokens = [...new Set([...review.matchAll(/var\(--([a-z0-9-]+)\)/g)].map((m) => m[1]))];
+const rUnknown = [...rClasses.filter((c) => !(c in utilities) && !css.includes(`--${c}:`)), ...rTokens.filter((n) => !css.includes(`--${n}:`))];
+t('every utility class and token the review skill names exists', !rUnknown.length, rUnknown.join(', '));
+t('the review skill points at the main skill, whose rules it checks', review.includes('skills/serupa/SKILL.md'));
+const REVIEW_BUDGET = 1500;
+const rWords = review.replace(/^---\n[\s\S]*?\n---\n/, '').split(/\s+/).filter(Boolean).length;
+t(`the review skill stays within ${REVIEW_BUDGET.toLocaleString('en')} words`, rWords <= REVIEW_BUDGET, `${rWords} words`);
 
 done(report('Agent skill', R));
