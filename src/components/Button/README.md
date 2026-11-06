@@ -192,7 +192,7 @@ Small motion that confirms what happened, all built in:
 | Disabled | 50% opacity, no shadow, no hover change, ignores clicks | `not-allowed` |
 | Loading | Full color, the content fades into a spinner, no hover change, no press, ignores clicks, keeps focus | `progress` |
 
-**Loading details.** `loading` shows the [Loader](../Loader/README.md) (ring, decorative, at the button's icon size) while an action runs. The spinner sits in the center of every loading button — label only, with a left or right icon, or icon only — over the hidden content, so the button keeps its width and nothing around it shifts. The button sets `aria-busy` and `aria-disabled` so screen readers announce it as busy. Under reduced motion the ring's arc holds still and it turns slower.
+**Loading details.** `loading` shows the [Loader](../Loader/README.md) (ring, decorative, at the button's icon size) while an action runs. The spinner sits in the center of every loading button (label only, with a left or right icon, or icon only), over the hidden content, so the button keeps its width and nothing around it shifts. The button sets `aria-busy` and `aria-disabled` so screen readers announce it as busy. Under reduced motion the ring's arc holds still and it turns slower.
 
 ## Accessibility
 

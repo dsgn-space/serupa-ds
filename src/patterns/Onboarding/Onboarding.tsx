@@ -8,13 +8,13 @@ import { Progress } from '../../components/Progress/Progress';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { announce } from '../../internal/announce';
 
-/* Onboarding / first run (PT11): the first page a new account sees. A checklist of setup steps with how far along it
+/* Onboarding / first run: the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
    What it carries (WCAG 2.2):
-   - 1.3.1 in Safari: role="list" on the lists without bullets, since WebKit stops calling them lists (FU1, GR151).
+   - 1.3.1 in Safari: role="list" on the lists without bullets, since WebKit stops calling them lists.
    - 1.3.1: the steps are an ordered list, each a heading (h3 under the checklist's h2), so a screen reader can list
      and jump between them, and hears "1 of 4".
-   - 1.4.10: a long title or a URL in a description wraps inside its card at 320 px, not past it (GR150).
+   - 1.4.10: a long title or a URL in a description wraps inside its card at 320 px, not past it.
    - 1.4.1: a done step says "Done" in words beside its tick, not by color or a strike-through alone.
    - 4.1.3: ticking a step says the new count ("2 of 4 steps done") politely, without moving focus. The last tick says
      "You're all set" once, and the page shows what's next.

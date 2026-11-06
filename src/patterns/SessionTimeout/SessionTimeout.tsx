@@ -9,7 +9,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Card } from '../../components/Card/Card';
 import { announce } from '../../internal/announce';
 
-/* Session time-out warning (PT14): warns well before a session ends, lets one action keep it, and loses nothing
+/* Session time-out warning: warns well before a session ends, lets one action keep it, and loses nothing
    typed if it ends anyway. For an app to copy. What it carries (WCAG 2.2):
    - 2.2.1: a Dialog opens `warnBefore` seconds before the end (two minutes by default, well over the 20 seconds
      2.2.1 asks for). "Stay signed in", focused first, is the one action that extends it; Escape extends it too,
