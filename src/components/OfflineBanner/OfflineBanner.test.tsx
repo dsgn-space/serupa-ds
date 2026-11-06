@@ -68,7 +68,7 @@ describe('OfflineBanner', () => {
   test('the deprecated onChange is called as onOnlineChange is, and onOnlineChange wins when both are given', async () => {
     const old = vi.fn(), both = vi.fn(), next = vi.fn();
     try {
-      await render(<><OfflineBanner onChange={old} /><OfflineBanner onChange={both} onOnlineChange={next} /></>);
+      await render(<><OfflineBanner placement="inline" onChange={old} /><OfflineBanner placement="inline" onChange={both} onOnlineChange={next} /></>);
       await React.act(async () => network(false));
       await React.act(async () => network(true));
       expect([old.mock.calls, both.mock.calls, next.mock.calls]).toEqual([[[false], [true]], [], [[false], [true]]]);
