@@ -13,7 +13,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { announce } from '../../internal/announce';
 import { minorDigits } from '../../internal/currency';
 
-/* Checkout / payment details (PT12): delivery address, delivery speed, an optional tip and card details, the order
+/* Checkout / payment details: delivery address, delivery speed, an optional tip and card details, the order
    summary beside them, a review step and a confirmation. For an app to copy. What it carries (WCAG 2.2):
    - 1.3.5: every field about the person has its autocomplete token (name, address-line1, postal-code, country, email,
      tel, cc-number, cc-exp…), so the browser and password managers fill them and nobody types an address twice.
@@ -22,8 +22,8 @@ import { minorDigits } from '../../internal/currency';
    - 3.3.4: the review step shows everything before the order is placed, each part with a "Change" button that goes
      back with every answer kept and focus on that part's first field (3.3.7: nothing is asked twice).
    - 2.4.3, 4.1.3: each new step's heading takes focus; placing the order says so, and a failure says what to do.
-   - 1.3.1 in Safari: the summary's lines keep role="list", which WebKit drops from a list without bullets (FU1).
-   - 1.4.10: long names, addresses and emails wrap inside their cards at 320 px, on every step (GR153).
+   - 1.3.1 in Safari: the summary's lines keep role="list", which WebKit drops from a list without bullets.
+   - 1.4.10: long names, addresses and emails wrap inside their cards at 320 px, on every step.
    - The tip is a NumberInput in the order's currency, in its minor units like every amount here (cents, or whole
      yen for JPY: GR152), so 2.50 is never read as 250.
    Taking the payment (a payment provider's own fields, 3-D Secure, fraud checks) is the app's job; here
@@ -126,7 +126,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
   const subtotal = lines.reduce((sum, l) => sum + l.quantity * l.price, 0);
   const deliveryCost = d.delivery === 'express' ? expressPrice : 0;
   const total = subtotal + deliveryCost + (d.tip ?? 0);
-  // Amounts are in the currency's minor units (GR152): 1800 is $18.00, but ￥1,800 and 1.800 KWD.
+  // Amounts are in the currency's minor units: 1800 is $18.00, but ￥1,800 and 1.800 KWD.
   const unit = 10 ** minorDigits(currency);
   const money = (minor: number) => <FormattedNumber value={minor / unit} format="currency" currency={currency} />;
 

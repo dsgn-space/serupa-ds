@@ -51,4 +51,11 @@ const { version } = JSON.parse(read('package.json'));
 const pinned = [...prose.matchAll(/serupa-ds#v(\d+\.\d+\.\d+)/g)].map((m) => m[1]);
 t(`it installs the current version (v${version}; tools/release.mjs stamps it)`, pinned.length && pinned.every((v) => v === version), pinned.join(', ') || 'no serupa-ds#v… install line');
 
+// Length: an agent reads the whole skill before it writes a line, so every word costs each task it's used for, and a
+// long one gets skimmed. 3,000 words on 2026-11-06, the components index included; the budget leaves room for the
+// index to grow. Over it, cut or move detail into the component READMEs it links, rather than raising the number.
+const BUDGET = 3500;
+const wordCount = skill.replace(/^---\n[\s\S]*?\n---\n/, '').split(/\s+/).filter(Boolean).length;
+t(`it stays within ${BUDGET.toLocaleString('en')} words, so agents read all of it`, wordCount <= BUDGET, `${wordCount} words`);
+
 done(report('Agent skill', R));
