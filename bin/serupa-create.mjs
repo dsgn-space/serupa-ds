@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 // Start a new app with Serupa set up (135): Vite, React and TypeScript, the stylesheets in order, theme.js first in
 // <head> so the page never flashes the wrong theme, a skip link and main landmark, a theme switch, a small form,
-// and serupaPurge() so `npm run build` ships only the classes the app uses.
+// and serupaPurge() so `npm run build` ships only the classes the app uses. `npm run check` is the app's "done":
+// the types, ESLint with jsx-a11y and serupa-ds/eslint (an <Image> with no alt), and Stylelint with
+// serupa-ds/stylelint (a raw color, spacing or radius where a token belongs), so the app's coding agent can check
+// its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
+// node_modules/serupa-ds, which matches the installed release.
 //
 // usage:  npx --package=github:diki-stwn/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
 //
@@ -11,6 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CLAUDE, withSection } from './serupa-agents.mjs';
 
 // The versions the repository tests with: tools/test/create-app.mjs fails when they drift from its devDependencies.
 export const VERSIONS = {
@@ -21,6 +26,11 @@ export const VERSIONS = {
   '@types/react': '19.3.0',
   '@types/react-dom': '19.3.0',
   '@types/node': '26.6.5',
+  eslint: '10.13.0',
+  'typescript-eslint': '8.72.1',
+  '@typescript/typescript6': '6.0.2',
+  'eslint-plugin-jsx-a11y-x': '0.2.0',
+  stylelint: '17.16.0',
 };
 const BRANDS = ['blue', 'violet', 'emerald'];
 
@@ -38,10 +48,44 @@ export function files({ name, serupa, brand }) {
       private: true,
       version: '0.0.0',
       type: 'module',
-      scripts: { dev: 'vite', build: 'vite build', preview: 'vite preview', typecheck: 'tsc --noEmit' },
+      scripts: {
+        dev: 'vite',
+        build: 'vite build',
+        preview: 'vite preview',
+        typecheck: 'tsc --noEmit',
+        lint: 'eslint . && stylelint "src/**/*.css" --allow-empty-input',
+        check: 'npm run typecheck && npm run lint',
+      },
       dependencies: { react: VERSIONS.react, 'react-dom': VERSIONS['react-dom'], 'serupa-ds': serupa },
-      devDependencies: { '@types/node': VERSIONS['@types/node'], '@types/react': VERSIONS['@types/react'], '@types/react-dom': VERSIONS['@types/react-dom'], typescript: VERSIONS.typescript, vite: VERSIONS.vite },
+      devDependencies: Object.fromEntries(Object.entries(VERSIONS).filter(([k]) => !k.startsWith('react')).sort(([a], [b]) => a.localeCompare(b))),
+      // typescript-eslint asks for TypeScript 6 or older; eslint.config.js gives it TypeScript 6's API (see there).
+      overrides: { 'typescript-eslint': { typescript: '$typescript' } },
     }),
+    'eslint.config.js': `import { registerHooks } from 'node:module';
+import jsxA11y from 'eslint-plugin-jsx-a11y-x';
+import serupa from 'serupa-ds/eslint';
+
+// TypeScript 7 (tsc, npm run typecheck) has no compiler API yet, so typescript-eslint reads TypeScript 6's, from
+// @typescript/typescript6. Remove these lines, and that package, once typescript-eslint supports TypeScript 7.
+registerHooks({
+  resolve: (specifier, context, next) => next(/^typescript(\\/|$)/.test(specifier) ? specifier.replace('typescript', '@typescript/typescript6') : specifier, context),
+});
+const { default: tseslint } = await import('typescript-eslint');
+
+// npm run lint: TypeScript's recommended rules, and jsx-a11y's on every component. serupa-ds/eslint tells jsx-a11y
+// what each Serupa component renders, so an <Image> with no alt or an <IconButton> with no label fails like the
+// plain element would.
+export default [
+  { ignores: ['dist'] },
+  ...tseslint.configs.recommended,
+  { files: ['**/*.tsx'], plugins: { 'jsx-a11y-x': jsxA11y }, rules: jsxA11y.configs.recommended.rules },
+  serupa,
+];
+`,
+    'stylelint.config.js': `// npm run lint: the app's own CSS uses Serupa's tokens, not a raw color, spacing or radius that ignores the theme.
+// A line that needs a raw value takes /* stylelint-disable-next-line serupa/no-raw-color -- why */ above it.
+export default { extends: ['serupa-ds/stylelint'] };
+`,
     'index.html': `<!doctype html>
 <html lang="en" data-brand="${brand}" data-mode="auto">
 <head>
@@ -161,6 +205,9 @@ export function App() {
   );
 }
 `,
+    // The app's coding agents read the skill from the installed release (serupa-agents adds the same to an existing app).
+    'AGENTS.md': withSection('', title),
+    'CLAUDE.md': CLAUDE,
     '.gitignore': 'node_modules\ndist\n',
     'README.md': `# ${title}
 
@@ -169,6 +216,7 @@ Made with \`serupa-create\`: React, Vite and TypeScript, with the Serupa design 
 - \`npm run dev\` starts it at http://localhost:5173
 - \`npm run build\` builds it into \`dist/\`, with Serupa's CSS trimmed to the classes the app uses
 - \`npm run typecheck\` checks the types
+- \`npm run check\` checks the types, then lints: jsx-a11y on every component (an \`<Image>\` needs \`alt\`) and Serupa's tokens in your CSS (\`var(--text-muted)\`, not \`#6b7280\`). Run it before you call a change done.
 
 To update Serupa, change the tag of \`serupa-ds\` in \`package.json\`, run \`npm install\`, and read its CHANGELOG.md entries in between.
 `,

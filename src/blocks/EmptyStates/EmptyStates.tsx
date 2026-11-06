@@ -1,3 +1,4 @@
+"use client";
 import * as React from 'react';
 import { Button } from '../../components/Button/Button';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
