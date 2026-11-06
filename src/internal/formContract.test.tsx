@@ -117,7 +117,7 @@ const CONTROLS: { [K in Named]: Control | string } = {
   FileUpload: { el: (form) => <FileUpload name="attachment" form={form} files={[file]} onFilesChange={() => {}} />, initial: { attachment: 'notes.txt' } },
   // A button's name and value go only with the button that submits the form, as with <button name>.
   CopyButton: 'a button', Fab: 'a button', Tab: 'a button', ToggleButton: 'a button',
-  Attachment: "the file's name, shown and read", Avatar: "the person's name, shown as initials", Icon: "the icon's name", Illustration: "the picture's name",
+  Attachment: "the file's name, shown and read", ChatComposer: "the <form> element's own name attribute, not a value", Avatar: "the person's name, shown as initials", Icon: "the icon's name", Illustration: "the picture's name",
 };
 const TABLE = Object.entries(CONTROLS).filter((e): e is [string, Control] => typeof e[1] !== 'string').map(([name, c]) => ({ name, ...c }));
 

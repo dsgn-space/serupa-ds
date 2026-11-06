@@ -1,0 +1,92 @@
+# ComposerWithFiles
+- text: Site photo.jpg Image 3.4 MB
+- progressbar "Site photo.jpg"
+- button "Remove Site photo.jpg"
+- text: Floor plan.png Image 820 kB
+- button "Remove Floor plan.png"
+- textbox "Message": Both photos attached.
+- button "Send"
+
+# Disabled
+- textbox "Message" [disabled]:
+  - /placeholder: This conversation is closed
+- button "Send" [disabled]
+
+# Empty
+- log "Conversation with Support"
+- textbox "Message":
+  - /placeholder: Ask anything
+- button "Send" [disabled]
+
+# LoadingOlder
+- log "Conversation with Support":
+  - button "Loading earlier messages" [disabled]
+  - text: 24 Oct 2026 Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Hi! How can I help you today? You
+  - time: Oct 24, 2026
+  - text: My invoice for March shows the wrong address. You Here it is.
+  - link "Invoice March 2026.pdf":
+    - /url: "#invoice"
+  - text: PDF 1.5 MB Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox.
+
+# LongText
+- log "Conversation with Support":
+  - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung Raden Ajeng Kartini Djojo Adhiningrat Soerjaningrat
+  - time: Oct 24, 2026
+  - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung 🎉🎉 and a sentence long enough to wrap twice in a narrow conversation. You
+  - time: Oct 24, 2026
+  - text: Line one Line two after a break سارة مرحبا، كيف يمكنني مساعدتك؟
+
+# Older
+- log "Conversation with Support":
+  - button "Load earlier messages"
+  - text: 24 Oct 2026 Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Hi! How can I help you today? You
+  - time: Oct 24, 2026
+  - text: My invoice for March shows the wrong address. You Here it is.
+  - link "Invoice March 2026.pdf":
+    - /url: "#invoice"
+  - text: PDF 1.5 MB Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox.
+
+# Playground
+- log "Conversation with Support":
+  - text: 24 Oct 2026 Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Hi! How can I help you today? You
+  - time: Oct 24, 2026
+  - text: My invoice for March shows the wrong address. You Here it is.
+  - link "Invoice March 2026.pdf":
+    - /url: "#invoice"
+  - text: PDF 1.5 MB Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox.
+- textbox "Message"
+- button "Send" [disabled]
+
+# Statuses
+- log "Conversation with Support":
+  - text: 24 Oct 2026 Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Hi! How can I help you today? You
+  - time: Oct 24, 2026
+  - text: My invoice for March shows the wrong address. You Here it is.
+  - link "Invoice March 2026.pdf":
+    - /url: "#invoice"
+  - text: PDF 1.5 MB Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta. Rina Kusuma A new invoice is on its way to your inbox. You Great, thank you! Sending… You Can you also send the receipt? Not sent
+  - button "Retry"
+- textbox "Message": Draft reply
+- button "Send"
+
+# Streaming
+- log "Conversation with Support": You Summarise this contract in three points. Assistant 1. The term is 12 months, renewing
+- textbox "Message"
+- button "Stop"
+

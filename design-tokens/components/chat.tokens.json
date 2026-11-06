@@ -1,0 +1,153 @@
+{
+  "chat": {
+    "$description": "Chat's component tokens, for Chat, ChatMessage, ChatDivider and ChatComposer. Each one is an optional override: set the CSS variable (--chat-<name>) on the page, a container or one Chat, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Message text and authors (4.5:1 on both bubbles).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Times, day dividers and \"Sending…\" (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-muted"
+          }
+        }
+      },
+      "bubble-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "Others' message bubbles.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-bubble-bg"
+          }
+        }
+      },
+      "own-bubble-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The reader's own message bubbles.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-own-bubble-bg"
+          }
+        }
+      },
+      "failed-border": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The outline of a message that didn't go.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-failed-border"
+          }
+        }
+      },
+      "error": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "\"Not sent\" (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-error"
+          }
+        }
+      },
+      "divider": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The day divider's lines.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-divider"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around the focused conversation.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "bubble-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xl}",
+        "$description": "A bubble's corners (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-bubble-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space around the conversation and the composer (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between messages (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-gap"
+          }
+        }
+      },
+      "bubble-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space at a bubble's sides (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-bubble-padding-x"
+          }
+        }
+      },
+      "bubble-padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space above and below a bubble's text (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-bubble-padding-y"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "message-max-width": {
+        "$type": "dimension",
+        "$value": "{sizing.sizing-4-5}",
+        "$description": "The widest a message grows: 80% of the conversation.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-message-max-width"
+          }
+        }
+      }
+    }
+  }
+}
