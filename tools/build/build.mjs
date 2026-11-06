@@ -99,9 +99,10 @@ for (const n of IMPORTS) {
 }
 // Utility classes the components put on elements themselves (the announcer's sr-only): serupa-purge keeps them
 // whatever the sources use. Any word in a string in src/ that names a utility class counts, which keeps a few extra
-// ("hidden" from type="hidden"), never too few.
+// ("hidden" from type="hidden"), never too few. Blocks and patterns are left out: they're source an app copies, so the
+// app's own files carry their classes, and counting them here kept every pattern's classes in every project's CSS.
 const code = [];
-const scan = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) scan(f); else if (/\.tsx?$/.test(e.name) && !/\.(test|stories)\.tsx?$/.test(e.name)) code.push(fs.readFileSync(f, 'utf8')); } };
+const scan = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) { if (!(dir === path.join(P, 'src') && /^(blocks|patterns)$/.test(e.name))) scan(f); } else if (/\.tsx?$/.test(e.name) && !/\.(test|stories)\.tsx?$/.test(e.name)) code.push(fs.readFileSync(f, 'utf8')); } };
 scan(path.join(P, 'src'));
 // Component classes a utility rule names (the focus ring on a Card inside a fill, GR80) are not utilities.
 const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')).filter((n) => !n.startsWith('dk-')));
