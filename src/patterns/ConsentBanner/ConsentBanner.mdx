@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ConsentBanner.stories';
+
+<Meta of={Stories} />
+
+# Consent banner
+
+Asks once whether optional cookies may be set, with accepting and rejecting equally easy, and lets the answer be changed at any time. It sits at the top of the page, in the flow, so it never covers what someone is reading or the control they're on.
+
+<Canvas of={Stories.FirstVisit} />
+
+## When to use it
+
+- The site sets cookies, or loads scripts, that it doesn't need to work (analytics, ads, embedded videos), and the law asks for consent first.
+- Not for essential cookies alone (sign-in, the basket): say what they are on the cookie settings page, and don't ask.
+- Not as a dialog that blocks the page until it's answered: the page has to work without an answer.
+
+## What each part is for
+
+- **At the top, in the flow.** The banner is the first thing after the skip link, a region named by its heading, and it pushes the page down rather than lying over it. A bar fixed to the bottom of the screen hides whatever scrolls under it, often the focused link, and at 400% zoom it can take half the screen (2.4.11, 1.4.10).
+- **No focus trap.** It isn't a dialog. Tab goes through its buttons and on into the page, and nothing on the page waits for an answer (2.1.2). No optional cookie is set until there is one.
+- **Accept and reject alike**: the same kind of button, the same size and color, side by side, in the same words. Neither answer is hidden behind a link, a paler color or a second screen. "Choose your cookies" goes to the settings.
+- **The answer, said.** After accepting or rejecting, the banner says what was chosen and where to change it, and focus moves to that message so it's read (4.1.3). "Hide this message" puts focus on main, not back at the top of the page (2.4.3).
+- **Cookie settings** on their own page (here a section), linked from the banner, the message and the footer, so the answer can be changed later. Saving there is announced.
+- **A skip link** first, as on every page; it also skips the banner.
+
+<Canvas of={Stories.AlreadyAnswered} />
+
+## What stays the app's job
+
+- **The cookies themselves.** `onChange` gets each answer: set or clear the analytics cookies, and load the analytics script only after "accept". Keep the answer in a cookie of its own (here `saveKey` uses localStorage, enough for a demo) and pass it back as `initial`, so the banner doesn't ask on every page.
+- **The words.** Name what each optional cookie does, in plain words, and link to the full cookie policy from the settings page.
+- **More kinds of cookie**: add a Yes/No question for each (analytics, ads, videos) on the settings page, and keep the banner's two buttons for all of them at once.
+- **Asking again** when the cookies change, or after a year, as your law requires.
