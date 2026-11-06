@@ -127,7 +127,8 @@
     "test:aria:update": "SERUPA_UPDATE_ARIA=1 vitest run --project components src/internal/ariaStories.test.tsx",
     "test:server-html:update": "SERUPA_UPDATE_SERVER_HTML=1 vitest run --project components src/internal/serverHtml.test.tsx",
     "test:checks": "vitest run --project checks",
-    "test:watch": "vitest --project components"
+    "test:watch": "vitest --project components",
+    "check": "node tools/ci.mjs"
   },
   "peerDependencies": {
     "@types/react": "^19.0.0",

@@ -29,7 +29,17 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
-Before you push, `node tools/ci.mjs --since main` runs every job CI requires, the component tests in all four second languages included (`--skip changeset` when the pull request takes `no-changeset`).
+Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`) runs every job CI requires, the component tests in all four second languages included (`--skip changeset` when the pull request takes `no-changeset`).
+
+## While the repo is on GitLab (no CI)
+
+The repo lives on GitLab for now, with no pipelines, so the local run is the merge gate. Before a merge request merges, on the branch rebased onto `origin/main`, with nothing uncommitted:
+
+```sh
+npm run check -- --clean --since origin/main --report local-checks.md
+```
+
+`--clean` starts from `npm ci`, as CI did, and `--report` writes the results (commit, Node, every step with its test counts) as Markdown: paste it under **Local checks** in the merge request. Merge only when it says **All passed** on the commit you merge. A report that says "with uncommitted changes" doesn't count.
 
 ## Every pull request
 
