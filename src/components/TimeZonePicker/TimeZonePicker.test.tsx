@@ -5,8 +5,9 @@ import { userEvent } from 'vitest/browser';
 import { TimeZonePicker, allTimeZones, timeZoneInfo } from './TimeZonePicker';
 
 const AT = new Date('2025-01-15T12:00:00Z');   // winter in the north: New York is UTC−05:00
-const input = () => document.querySelector<HTMLInputElement>('.dk-time-zone-picker input')!;
-const shown = () => [...document.querySelectorAll('[role="option"]')].map((o) => o.querySelector('.dk-combobox__label')!.textContent);
+const input = () => document.querySelector<HTMLInputElement>('input[role="combobox"]')!;
+// An option's city: the first line of its text (its offset and name are the second).
+const shown = () => [...document.querySelectorAll('[role="option"]')].map((o) => o.firstElementChild!.firstElementChild!.textContent);
 
 describe('TimeZonePicker', () => {
   test('timeZoneInfo: the city, the offset at the moment, and the name in the locale', () => {
