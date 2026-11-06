@@ -13,7 +13,7 @@ import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummar
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 
-/* Settings form (PT3): a settings page of sections, each with its own Save, errors and status, and a question before
+/* Settings form: a settings page of sections, each with its own Save, errors and status, and a question before
    unsaved changes are lost. For an app to copy. What it carries (WCAG 2.2):
    - 1.3.1: each section is a region named by its heading; the switches are real checkboxes (role="switch") with
      their own labels and descriptions.

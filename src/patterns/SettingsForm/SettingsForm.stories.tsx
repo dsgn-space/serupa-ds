@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SettingsForm } from './SettingsForm';
 
-/* Settings form (PT3): sections with their own Save, errors and status, and a question before unsaved changes are
+/* Settings form: sections with their own Save, errors and status, and a question before unsaved changes are
    lost. SettingsForm.mdx says why each part is there and what stays the app's job. Saving succeeds here. */
 const meta = {
   title: 'Patterns/Settings form',
