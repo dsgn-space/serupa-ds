@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Fab } from './Fab';
+import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 
 const meta = {
   title: 'Components/Actions/Fab',
@@ -58,6 +59,17 @@ export const Positions: Story = {
       <Fab icon="chat" label="Chat (bottom-start)" position="bottom-start" />
       <Fab icon="search" label="Search (top-end)" size="sm" position="top-end" />
       <Fab icon="edit" label="Compose" extended position="top-start" />
+    </div>
+  ),
+};
+
+// With an OfflineBanner at the same edge, the Fab sits above the bar instead of under it (GR157).
+export const WithOfflineBanner: Story = {
+  parameters: { layout: 'fullscreen' },
+  render: (args) => (
+    <div style={{ minHeight: 320 }}>
+      <Fab {...args} />
+      <OfflineBanner online={false} />
     </div>
   ),
 };
