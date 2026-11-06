@@ -21,7 +21,8 @@ for (const f of ['.github/workflows/ci.yml', 'tools/test/lib.mjs', 'tools/test/s
 const deps = withDependents(new Set(['Button']));
 t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
-t('a component nothing uses brings only itself', list(withDependents(new Set(['Meter']))) === 'Meter', list(withDependents(new Set(['Meter']))));
+t('a component nothing uses brings only itself', list(withDependents(new Set(['Splitter']))) === 'Splitter', list(withDependents(new Set(['Splitter']))));
+t('a pattern that shows a component comes with it (Meter: Dashboard)', list(withDependents(new Set(['Meter']))) === 'Dashboard, Meter', list(withDependents(new Set(['Meter']))));
 const pattern = affectedComponents(['src/patterns/Checkout/Checkout.tsx', 'src/patterns/Introduction.mdx', 'tools/test/baseline-visual/Checkout/Default-blue-light-rest.png', 'src/blocks/StatsRow/StatsRow.tsx']);
 t('a block or pattern folder covers that block or pattern, and its Introduction page that page', list(pattern) === 'Checkout, Introduction.mdx, StatsRow', list(pattern));
 t('a pattern brings no component', list(withDependents(new Set(['Checkout']))) === 'Checkout', list(withDependents(new Set(['Checkout']))));
