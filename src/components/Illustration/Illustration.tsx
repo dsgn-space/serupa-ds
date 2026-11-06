@@ -8,12 +8,12 @@ export type IllustrationName = (typeof NAMES)[number];
 export interface IllustrationProps extends Omit<React.SVGAttributes<SVGSVGElement>, "name"> {
   /** Which picture: 'empty' (default, an open box), 'search' (nothing found), 'error' (something broke), 'offline'
       (no connection), 'no-access' (a lock) or 'success' (a check). */
-  name?: IllustrationName;
+  name?: IllustrationName | undefined;
   /** 'sm' (96px wide), 'md' (default, 160px) or 'lg' (224px). The height is three quarters of the width. */
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | undefined;
   /** What the picture says, for a screen reader, when it adds something the text beside it doesn't. Without one
       (the usual case, next to an EmptyState title) it's hidden from screen readers. */
-  label?: string;
+  label?: string | undefined;
 }
 
 type Part = [kind: "fill" | "line" | "accent", d: string];

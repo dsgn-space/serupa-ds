@@ -4,11 +4,11 @@ import { component } from "../../internal/component";
 
 export interface DividerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** 'horizontal' (default) or 'vertical' (between items in a row: it takes the row's height). */
-  orientation?: 'horizontal' | 'vertical';
+  orientation?: 'horizontal' | 'vertical' | undefined;
   /** Text in the middle of a horizontal line, such as "or". */
-  label?: React.ReactNode;
+  label?: React.ReactNode | undefined;
   /** Leaves it out of the accessibility tree, when it's only decoration. Default: false. */
-  decorative?: boolean;
+  decorative?: boolean | undefined;
 }
 
 /* Divider: a 1px line between content, horizontal (an <hr>) or vertical, with an optional label in the middle.

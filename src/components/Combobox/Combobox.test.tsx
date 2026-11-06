@@ -138,8 +138,10 @@ describe('Combobox', () => {
     expect(list().querySelectorAll('[role=option]').length).toBe(0);
     await open();
     const rows = () => [...list().querySelectorAll('[role=option]')];
+    // The rows in view are drawn once the list has read its height. Firefox and WebKit can report it (a ResizeObserver)
+    // a frame after the popup opens, and drew 5 rows until then.
+    await expect.poll(() => rows().length).toBeGreaterThan(5);
     const drawn = rows().length;
-    expect(drawn).toBeGreaterThan(5);
     expect(drawn).toBeLessThan(30);
     expect([st('cb').active, rows()[0].getAttribute('aria-posinset'), rows()[0].getAttribute('aria-setsize')]).toEqual(['Option 0', '1', '2000']);
     // No "keep typing" line: every match is in reach.
@@ -197,7 +199,7 @@ describe('Combobox', () => {
     await userEvent.keyboard('{ArrowDown}{Enter}');
     expect([st('cb').text, st('cb').open]).toEqual(['Kenya', 'false']);
     await userEvent.click(el('cb'));
-    expect(list.querySelector('[role=option][aria-disabled=true]')!.textContent).toBe('Atlantis');
+    await expect.poll(() => list.querySelector('[role=option][aria-disabled=true]')?.textContent).toBe('Atlantis');
   });
 
   test('groups with a long list: the headings are drawn as rows and only the rows in view are drawn; a picked option far down opens in view inside its group (185, 51)', async () => {
@@ -395,7 +397,7 @@ describe('Combobox', () => {
   test('a click on the field opens it (all options); a click on an option picks it and keeps focus in the field', async () => {
     await render(<Countries />);
     await userEvent.click(el('cb'));
-    expect([st('cb').open, st('cb').opts.length]).toEqual(['true', 7]);
+    await expect.poll(() => [st('cb').open, st('cb').opts.length]).toEqual(['true', 7]);
     await userEvent.click(popOf('cb').querySelectorAll('[role=option]')[1]);
     const s = st('cb');
     expect([s.text, s.open, s.focus]).toEqual(['Brazil', 'false', true]);

@@ -20,34 +20,34 @@ const words = /* @__PURE__ */ Object.assign({}, stepper, tour);
 export interface TourStep {
   /** What the step points at: a CSS selector ("#new-project"), an element, or a ref to one. Leave it out (or give one
    *  not on the page) for a step in the middle of the screen, such as a welcome. */
-  target?: string | Element | React.RefObject<Element | null> | null;
+  target?: string | Element | React.RefObject<Element | null> | null | undefined;
   /** The step's heading, which also names its panel for screen readers. */
   title: React.ReactNode;
   /** What the step says: a sentence or two. */
-  content?: React.ReactNode;
+  content?: React.ReactNode | undefined;
   /** Where the panel goes next to the target: 'bottom' (default), 'top', 'left', 'right', with '-start' or '-end'. It flips when there's no room. */
-  placement?: Placement;
+  placement?: Placement | undefined;
 }
 
 export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "title" | "role" | "content"> {
   /** The steps, in order. */
   steps: readonly TourStep[];
   /** Show it yourself (controlled), with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** Show it at first (uncontrolled). Default: false. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** Called when it asks to close, with why: { reason: 'escape' (Escape) | 'close' (the close button, or Done) }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** The step shown, from 0 (controlled), with onStepChange. */
-  step?: number;
+  step?: number | undefined;
   /** The step shown each time it opens, from 0 (uncontrolled). Default: 0. */
-  defaultStep?: number;
+  defaultStep?: number | undefined;
   /** Called with the new step when Back or Next is pressed. */
-  onStepChange?: (step: number) => void;
+  onStepChange?: ((step: number) => void) | undefined;
   /** Called when Done is pressed on the last step, before it closes: the tour was seen to the end. */
-  onFinish?: () => void;
+  onFinish?: (() => void) | undefined;
   /** The heading level of each step's title, to fit the page's outline. Default: 2. */
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
 }
 
 const OWN = { steps: 1, open: 1, defaultOpen: 1, onOpenChange: 1, step: 1, defaultStep: 1, onStepChange: 1, onFinish: 1, headingLevel: 1, className: 1, id: 1 } as const;

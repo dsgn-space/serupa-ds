@@ -15,21 +15,21 @@ export type AvatarStatus = 'online' | 'busy' | 'away' | 'offline';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** The picture's URL. Without one, or when it fails to load, the initials (or the person icon) show instead. */
-  src?: string;
+  src?: string | undefined;
   /** The person's or thing's name: the initials come from it, and it's the accessible name. */
-  name?: string;
+  name?: string | undefined;
   /** The accessible name, when it isn't the name. Pass alt="" when the name is already written next to it. */
-  alt?: string;
+  alt?: string | undefined;
   /** 'xs' 24px, 'sm' 32px, 'md' 40px (default), 'lg' 48px or 'xl' 64px. */
-  size?: AvatarSize;
+  size?: AvatarSize | undefined;
   /** 'circle' (default, people) or 'square' (teams, projects, organisations). */
-  shape?: 'circle' | 'square';
+  shape?: 'circle' | 'square' | undefined;
   /** A dot at the bottom end: 'online', 'busy', 'away' or 'offline'. Added to the accessible name. */
-  status?: AvatarStatus;
+  status?: AvatarStatus | undefined;
   /** What a screen reader hears for the status. Default: the avatarStatus label ("online", "daring" in idLabels). */
-  statusLabel?: string;
+  statusLabel?: string | undefined;
   /** Props for the <img>, such as loading="eager" for an avatar above the fold, or referrerPolicy. Default: loading="lazy", decoding="async". */
-  imgProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+  imgProps?: React.ImgHTMLAttributes<HTMLImageElement> | undefined;
 }
 
 /* Avatar: a picture of a person (circle) or a team or project (square), with initials or a person icon when

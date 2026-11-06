@@ -34,8 +34,17 @@
   inline-size: max-content;
   max-inline-size: calc(var(--sizing-full) - var(--offline-banner-offset, var(--spacing-4)) - var(--offline-banner-offset, var(--spacing-4)));
 }
+/* What the keyboard focuses, or a #link jumps to, scrolls into view clear of the bar, not under it (GR122, WCAG
+   2.4.11): OfflineBanner measures the bar, its gap from the edge and --dk-offline-gap of room into
+   --dk-offline-banner-space while it shows. A top bar sits below a sticky Navbar (GR134), so its space holds both. */
+.dk-offline-banner { --dk-offline-gap: var(--spacing-2); }
+:root:has(.dk-offline-banner--bottom:not([data-leaving])) { scroll-padding-bottom: var(--dk-offline-banner-space, var(--spacing-16)); }
+:root:has(.dk-offline-banner--top:not([data-leaving])) { scroll-padding-top: var(--dk-offline-banner-space, calc(var(--dk-navbar-offset, var(--spacing-0)) + var(--spacing-16))); }
 .dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom)); }
 .dk-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
+/* Below a sticky Navbar, which already keeps clear of the notch: over it, the bar hid its brand, its actions and the
+   Menu button, so the phone's navigation couldn't be opened while offline (GR134). */
+:root:has(.dk-navbar--sticky) .dk-offline-banner--top { inset-block-start: calc(var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16))) + var(--offline-banner-offset, var(--spacing-4))); }
 .dk-offline-banner[data-leaving] { opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-exit-md) var(--ease-exit), translate var(--motion-exit-md) var(--ease-exit); }
 /* Not when it's there from the first render (offline as the page loads, data-instant): it only moves when it comes. */
 @starting-style { .dk-offline-banner:not([data-instant]) { opacity: var(--opacity-0); } }

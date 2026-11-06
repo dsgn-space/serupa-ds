@@ -13,7 +13,9 @@ const describedBy = (id: string) => (input(id).getAttribute('aria-describedby') 
 describe('Patterns/Sign in', () => {
   test('the fields say what they hold, so a password manager and a phone fill them in, and paste is never blocked', async () => {
     await render(<SignIn />);
-    expect([input('sign-in-email').autocomplete, input('sign-in-email').type, input('sign-in-password').autocomplete]).toEqual(['username', 'email', 'current-password']);
+    // The attributes, which password managers and phones read: Firefox's .autocomplete property was '' for them.
+    const ac = (id: string) => input(id).getAttribute('autocomplete');
+    expect([ac('sign-in-email'), input('sign-in-email').type, ac('sign-in-password')]).toEqual(['username', 'email', 'current-password']);
     const paste = new Event('paste', { bubbles: true, cancelable: true });
     input('sign-in-password').dispatchEvent(paste);
     expect(paste.defaultPrevented).toBe(false);
@@ -48,7 +50,7 @@ describe('Patterns/Sign in', () => {
     await userEvent.type(input('sign-in-password'), 'correct horse{Enter}');
     // The new step's heading takes focus, so a screen reader says where it is and the next Tab goes on from there.
     expect([active().tagName, active().textContent]).toEqual(['H1', 'Enter your sign-in code']);
-    expect(input('sign-in-code').autocomplete).toBe('one-time-code');
+    expect(input('sign-in-code').getAttribute('autocomplete')).toBe('one-time-code');
   });
 
   test('the code step: a short or wrong code is said on the field, and the right one ends on the signed-in heading', async () => {
@@ -61,6 +63,20 @@ describe('Patterns/Sign in', () => {
     await userEvent.clear(input('sign-in-code'));
     await userEvent.keyboard('123456{Enter}');
     expect([active().tagName, active().textContent]).toEqual(['H1', "You're signed in"]);
+  });
+
+  test('"Send a new code" says on screen and to a screen reader that it went, each time, and clears the code typed so far', async () => {
+    const screen = await render(<SignIn start="code" />);
+    await userEvent.click(input('sign-in-code'));
+    await userEvent.keyboard('12');
+    const status = document.querySelector('main [role="status"]')!;
+    expect(status.textContent).toBe('');
+    await screen.getByRole('button', { name: 'Send a new code' }).click();
+    expect([status.textContent, input('sign-in-code').value]).toEqual(['We sent a new code to your phone. It works for 10 minutes.', '']);
+    // A second ask adds a new line, so it is said again rather than left unchanged.
+    const first = status.firstElementChild;
+    await screen.getByRole('button', { name: 'Send a new code' }).click();
+    expect([status.childElementCount, status.firstElementChild === first]).toEqual([1, false]);
   });
 
   test('there is one h1 and one main on every step', async () => {

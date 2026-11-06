@@ -1,8 +1,9 @@
 "use client";
 import * as React from "react";
-import { cn, omit, setRef } from "../../internal/cn";
+import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { announce } from "../../internal/announce";
+import { activeIn } from "../../internal/root";
 import { useSettings } from "../../internal/provider";
 import { feedbackHold } from "../../internal/timing";
 import { useExit } from "../../internal/useExit";
@@ -13,13 +14,13 @@ import { en as words } from "./labels";
 export interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** Whether the app can reach its server. Leave it out to follow the browser (navigator.onLine and its online and
       offline events); set it when the app knows better, such as when its requests fail on a network that's "online". */
-  online?: boolean;
+  online?: boolean | undefined;
   /** 'bottom' (default) or 'top': fixed to that edge of the screen, in the middle. 'inline': where you put it. */
-  placement?: "bottom" | "top" | "inline";
+  placement?: "bottom" | "top" | "inline" | undefined;
   /** More words after "You're offline", such as what still works: "Changes are kept and sent when you're back." */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Called when the connection drops (false) or comes back (true). */
-  onChange?: (online: boolean) => void;
+  onChange?: ((online: boolean) => void) | undefined;
 }
 
 const listen = (cb: () => void) => {
@@ -67,8 +68,66 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
   const { leaving } = useExit(open, bar);
   const [shown, setShown] = React.useState<"offline" | "back">("offline");
   if (open && shown !== (online ? "back" : "offline")) setShown(online ? "back" : "offline");
-  if (!open && !leaving) return null;
   const placement = props.placement === "top" || props.placement === "inline" ? props.placement : "bottom";
+  // While the fixed bar shows, the page keeps what it covers clear of it (GR122, WCAG 2.4.11): its height and its gap
+  // from the edge, plus a little room, go to --dk-offline-banner-space on the root, which OfflineBanner.css makes the
+  // root's scroll-padding on that edge, so a field Tab moves to scrolls into view clear of the bar, not under it.
+  // At the foot of the page there's nothing left to scroll, so a bottom bar also adds its space to the end of the
+  // body: the last field (a form's Submit) can scroll up clear of it too. A top bar adds it to the start, so the first
+  // fields aren't under it at the top of the page (GR125); below a sticky Navbar, after the Navbar (GR134). What was
+  // there is put back after.
+  useIsoLayoutEffect(() => {
+    const n = bar.current, root = document.documentElement, body = document.body;
+    if (!open || !n || placement === "inline") return;
+    const side = placement === "bottom" ? "paddingBlockEnd" : "paddingBlockStart";
+    // A top bar sits below a sticky Navbar, not over its links and Menu button (GR134), so its room counts from there.
+    const nav = placement === "top" ? document.querySelector<HTMLElement>(".dk-navbar--sticky") : null;
+    // The room goes on the page's edge, or after the Navbar, which is in the page's flow: padding the body would move
+    // the Navbar down with the page.
+    const room = nav || body, prop = nav ? "marginBlockEnd" : side;
+    const had = room.style[prop], base = getComputedStyle(room)[prop];
+    const set = () => {
+      // Its settled place, not where it is now: as it slides in, translate moves it a few pixels toward its edge, and
+      // nothing measures again when that ends (a ResizeObserver doesn't see translate), so the room came out short
+      // (GR124). Its height and its inset from the edge are where it comes to rest.
+      // The room past it, --dk-offline-gap, reads as the token wrote it ("0.5rem"), not in pixels.
+      const cs = getComputedStyle(n), g = cs.getPropertyValue("--dk-offline-gap").trim();
+      const gap = /rem$/.test(g) ? parseFloat(g) * parseFloat(getComputedStyle(root).fontSize) : parseFloat(g) || 8;
+      const inset = parseFloat(placement === "bottom" ? cs.bottom : cs.top) || 0;
+      const space = Math.ceil(n.offsetHeight + inset + gap);
+      root.style.setProperty("--dk-offline-banner-space", space + "px");
+      room.style[prop] = "calc(" + base + " + " + Math.max(0, space - (nav ? Math.floor(nav.getBoundingClientRect().height) : 0)) + "px)";
+    };
+    set();
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(set);
+    if (ro) { ro.observe(n); if (nav) ro.observe(nav); }
+    window.addEventListener("resize", set);
+    // Safari doesn't take scroll-padding when it scrolls a field Tab moves to into view, and leaves it under the bar.
+    // After the browser's own focus scroll, the page moves by what's still covered, plus the gap. Not for the bar's own
+    // controls, or a field in a dialog or popover: those sit above the page.
+    let raf = 0;
+    const onFocus = (e: FocusEvent) => {
+      const t = typeof e.composedPath === "function" ? e.composedPath()[0] : e.target;
+      if (!(t instanceof Element) || n.contains(t) || t.closest("dialog, [popover]")) return;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        // A top bar's edge is its bottom, below a sticky Navbar too: a field under either is above it.
+        const b = n.getBoundingClientRect(), r = t.getBoundingClientRect(), pad = 8;
+        const by = placement === "bottom" ? Math.max(0, r.bottom - b.top + pad) : Math.min(0, r.top - b.bottom - pad);
+        if (activeIn(t) === t && (placement === "bottom" ? r.bottom > b.top : r.top < b.bottom)) window.scrollBy(0, by);
+      });
+    };
+    document.addEventListener("focusin", onFocus);
+    return () => {
+      if (ro) ro.disconnect();
+      cancelAnimationFrame(raf);
+      document.removeEventListener("focusin", onFocus);
+      window.removeEventListener("resize", set);
+      root.style.removeProperty("--dk-offline-banner-space");
+      room.style[prop] = had;
+    };
+  }, [open, placement]);
+  if (!open && !leaving) return null;
   return (
     <div {...rest} ref={(n) => { bar.current = n; setRef(ref, n); }} className={cn("dk-offline-banner", `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? "" : undefined}
       data-state={shown} data-leaving={open ? undefined : ""} inert={open ? undefined : true}>

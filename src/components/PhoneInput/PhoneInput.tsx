@@ -14,7 +14,7 @@ import * as icons from "../../material/builtin";
 import { warnOnce } from "../../internal/warn";
 import { useFormReset } from "../../internal/useFormReset";
 import { latinDigits } from "../../internal/digits";
-import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, stripTrunk, toE164, type PhoneCountry } from "./phone";
+import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, phoneOnly, stripTrunk, toE164, type PhoneCountry } from "./phone";
 import { en as words } from "./labels";
 
 /** What onValueChange reports with the E.164 number. */
@@ -29,23 +29,23 @@ export interface PhoneValueDetails {
 
 export interface PhoneInputProps extends Omit<InputProps, "type" | "showCount" | "prefix" | "suffix" | "value" | "defaultValue" | "onChange" | "leftIcon" | "rightIcon"> {
   /** The number in E.164, such as "+6281234567890", or "" (controlled). Use with onValueChange. */
-  value?: string;
+  value?: string | undefined;
   /** The number at first (uncontrolled), in E.164. */
-  defaultValue?: string;
+  defaultValue?: string | undefined;
   /** Called with the E.164 number ("" when empty) as people type, paste or change the country. */
-  onValueChange?: (value: string, details: PhoneValueDetails) => void;
+  onValueChange?: ((value: string, details: PhoneValueDetails) => void) | undefined;
   /** The picked country, an ISO code such as "ID" (controlled). Use with onCountryChange. */
-  country?: string;
+  country?: string | undefined;
   /** The country at first (uncontrolled). Default: the locale's region when it's known, else "US". */
-  defaultCountry?: string;
+  defaultCountry?: string | undefined;
   /** Called with the ISO code when the country changes, from the menu or a pasted "+…" number. */
-  onCountryChange?: (country: string) => void;
+  onCountryChange?: ((country: string) => void) | undefined;
   /** The countries in the menu, as ISO codes or your own PhoneCountry rows (which replace the built-in row with the same code); the menu sorts them by name. Default: every country PhoneInput knows. */
-  countries?: Array<string | PhoneCountry>;
+  countries?: Array<string | PhoneCountry> | undefined;
   /** The country menu's name. Default: "Country". */
-  countryLabel?: string;
+  countryLabel?: string | undefined;
   /** Submits the E.164 number under this name in a hidden input. */
-  name?: string;
+  name?: string | undefined;
 }
 
 const own = { size: 1, invalid: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, country: 1, defaultCountry: 1,
@@ -178,7 +178,8 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   const onChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     // Digits in any script as ASCII, and full-width "＋" and digits as the usual ones: an Arabic or Persian keyboard
     // types ٠٨١٢, a Japanese IME ０８１２, and they're the same number (GR43). One character stays one, so the caret holds.
-    const raw = latinDigits(e.target.value.normalize("NFKC")), at = e.target.selectionStart ?? raw.length;
+    // A pasted tel: link or a number with an extension keeps only the number (GR128, GR129).
+    const raw = phoneOnly(latinDigits(e.target.value.normalize("NFKC"))), at = Math.min(e.target.selectionStart ?? raw.length, raw.length);
     let before = raw.slice(0, at).replace(/\D/g, "").length;
     // A lone "0" waits as typed, so the "00" of "0044" can come together: where it's the trunk prefix (Germany) it
     // stripped to nothing, and the +1 pattern wrote it "(0" (GR85). The next digit decides what it was: "06" is still

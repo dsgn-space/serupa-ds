@@ -18,6 +18,14 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: "全部展开",
+  chartKind: (type) => (type === "bar" ? "柱状图" : "折线图"),
+  chartSummary: (kind, series, points, first, last) => kind + "，" + n(series) + " 个系列，" + n(points) + " 个数据点" + (points > 1 ? "，从 " + first + " 到 " + last : "") + "。",
+  chartRange: (series, low, lowAt, high, highAt) => series + "：最低 " + low + "（" + lowAt + "），最高 " + high + "（" + highAt + "）。",
+  chartPoint: (series, category, value) => (series ? series + "，" + category + "：" + value : category + "：" + value),
+  chartNoValue: "无值",
+  chartCategory: "类别",
+  chartShowTable: "以表格显示",
+  chartShowChart: "以图表显示",
   collapseAll: "全部收起",
   avatarStatus: (status) => STATUS[status],
   avatarMore: (count) => "另外 " + n(count) + " 人",

@@ -16,22 +16,22 @@ import * as icons from "../../material/builtin";
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** Above the items: a logo, a workspace switcher. */
-  header?: React.ReactNode;
+  header?: React.ReactNode | undefined;
   /** Pinned to the bottom: settings, the signed-in user. */
-  footer?: React.ReactNode;
+  footer?: React.ReactNode | undefined;
   /** Narrows it to icons only (64px). Labels show as tooltips, and groups open their items in a menu. Default: false. */
-  collapsed?: boolean;
+  collapsed?: boolean | undefined;
   /** The nav's accessible name. Default: "Main". */
-  "aria-label"?: string;
+  "aria-label"?: string | undefined;
 }
 
 export interface SidebarSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /** A small heading over the section's items. Hidden when the sidebar is collapsed. */
-  title?: React.ReactNode;
+  title?: React.ReactNode | undefined;
   /** SidebarItems. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 /** SidebarItem's own props, beside those of the element it renders. */
@@ -39,19 +39,19 @@ export interface SidebarItemOwnProps {
   /** The item's text. */
   label: React.ReactNode;
   /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
-  icon?: IconSource;
+  icon?: IconSource | undefined;
   /** The current page: shaded, with aria-current="page". Default: false. */
-  active?: boolean;
+  active?: boolean | undefined;
   /** Something at the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read it. */
-  badge?: React.ReactNode;
+  badge?: React.ReactNode | undefined;
   /** Nested SidebarItems: the item becomes a button that shows and hides them. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** With children: open at first. Default: open when one of them is active. */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
   /** With children: whether the group is open, controlled. Pair it with onOpenChange. */
-  open?: boolean;
+  open?: boolean | undefined;
   /** With children: called when the group's button asks to open or close it, with why: { reason: 'trigger' }. */
-  onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
 /** SidebarItem's props: its own, `as`, and the props of the element `as` names (an <a>'s by default), so
@@ -59,7 +59,7 @@ export interface SidebarItemOwnProps {
  *  gets those attributes and handlers too. */
 export type SidebarItemProps<C extends React.ElementType = 'a'> = SidebarItemOwnProps & {
   /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. */
-  as?: C;
+  as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof SidebarItemOwnProps | 'as'>;
 
 // Inside, the item is a link or a button, so its attributes and handlers are typed for HTMLElement, which both are.
@@ -250,5 +250,5 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("Sideb
 /** An item in a Sidebar: a link, or a group of nested items. `as` renders your router's link, typed with its props. */
 export const SidebarItem = SidebarItemBase as {
   <C extends React.ElementType = 'a'>(props: SidebarItemProps<C> & { ref?: React.Ref<HTMLElement> }): React.ReactElement | null;
-  displayName?: string;
+  displayName?: string | undefined;
 };

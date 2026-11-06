@@ -280,7 +280,9 @@ describe('Density axis', () => {
       <p id="ft-x" className="text-xl">Text</p>
       <div data-type-scale="fixed"><h1 id="ft-f" className="type-heading-1">Title</h1></div>
     </div>);
-    const px = (id: string) => parseFloat(getComputedStyle(document.getElementById(id)!).fontSize);
+    // To a tenth of a pixel: WebKit computes 70% of 128px as 89.599998px, and Firefox, which keeps lengths in sixtieths
+    // of a pixel, as 89.63px.
+    const px = (id: string) => Math.round(parseFloat(getComputedStyle(document.getElementById(id)!).fontSize) * 10) / 10;
     try {
       await page.viewport(320, 700);
       expect(['ft-h', 'ft-9', 'ft-b', 'ft-x', 'ft-f'].map(px)).toEqual([21, 89.6, 16, 20, 30]);

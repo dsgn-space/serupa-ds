@@ -16,7 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
+const P = path.resolve(import.meta.dirname, '..', '..');
 const OUT = path.join(P, 'design-tokens');
 const NS = 'com.serupa';
 const BASE_FILE = 'serupa.tokens.json';
@@ -151,7 +151,7 @@ export function componentTokenFiles(root = P) {
 
 const dump = (d) => JSON.stringify(d, null, 2) + '\n';
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   const { files, counts } = exportTokens(JSON.parse(fs.readFileSync(path.join(P, 'tokens.json'), 'utf8')), componentTokenFiles());
   if (process.argv.includes('--check')) {
     const stale = Object.entries(files).filter(([f, d]) => !fs.existsSync(path.join(OUT, f)) || fs.readFileSync(path.join(OUT, f), 'utf8') !== dump(d)).map(([f]) => f);
