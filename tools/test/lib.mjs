@@ -189,11 +189,16 @@ const NEUTRAL = new RegExp('^(' + [
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,
 // tokens, tooling, Storybook's setup) could change any of them. Their tests, visual baselines, API baseline,
-// server-render case and size budgets count as theirs; the NEUTRAL files touch none.
+// server-render case and size budgets count as theirs; the NEUTRAL files touch none. A block or pattern
+// (src/blocks/<Name>/, src/patterns/<Name>/) counts as one too: nothing in the package imports it, so only its own
+// stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
+// own, named by file as storybook.mjs names a page ("Introduction.mdx").
+export const FOLDERS = ['components', 'blocks', 'patterns'];
 export function affectedComponents(files) {
   const names = new Set();
   for (const f of files) {
-    const m = /^src\/components\/([A-Z]\w*)\//.exec(f) || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
+    const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
+      || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
       || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
     if (m) names.add(m[1]);
     else if (!NEUTRAL.test(f)) return null;
@@ -205,11 +210,16 @@ export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? nul
 // The components plus every component that uses one of them, since a change to Button can change how ButtonGroup
 // looks: its code imports from that folder (directly or through another component), or its stories or tests show one
 // (Field's stories show an Input).
+// Blocks and patterns count as users too: a Button change re-checks the patterns that show a Button.
 export function withDependents(names) {
-  const COMP = path.join(PROJECT, 'src', 'components');
-  const imports = (n, test) => new Set(fs.readdirSync(path.join(COMP, n)).filter((f) => /\.tsx?$/.test(f) && test(f))
-    .flatMap((f) => [...fs.readFileSync(path.join(COMP, n, f), 'utf8').matchAll(/from ["']\.\.\/([A-Z]\w*)/g)].map((m) => m[1])));
-  const folders = fs.readdirSync(COMP).filter((n) => fs.statSync(path.join(COMP, n)).isDirectory());
+  const dirs = new Map(FOLDERS.flatMap((d) => {
+    const DIR = path.join(PROJECT, 'src', d);
+    return fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((n) => fs.statSync(path.join(DIR, n)).isDirectory()).map((n) => [n, path.join(DIR, n)]) : [];
+  }));
+  // "../Button" from a component, "../../components/Button" or "../../blocks/AuthCard" from a block or pattern.
+  const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
+  const folders = [...dirs.keys()];
   const code = new Map(folders.map((n) => [n, imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f))]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));
   const all = new Set(names);
@@ -222,6 +232,8 @@ export function withDependents(names) {
 }
 // The shared tests in src/internal/ that render one of the components (announceContract, formContract, nameCheck, …),
 // so a pull request that changes LoadMore runs announceContract's LoadMore case too, not only LoadMore's own folder.
+// The folder of a component, block or pattern ("src/patterns/Checkout/"), or null for a name with none.
+export const folderOf = (n) => FOLDERS.map((d) => `src/${d}/${n}/`).find((f) => fs.existsSync(path.join(PROJECT, f))) ?? null;
 export function internalTestsFor(names) {
   const DIR = path.join(PROJECT, 'src', 'internal');
   return fs.readdirSync(DIR).filter((f) => /\.test\.tsx?$/.test(f)).sort()
