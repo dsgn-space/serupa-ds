@@ -53,13 +53,13 @@ export function timeZoneInfo(zone: string, locale: string, at: Date = new Date()
     offsetPart = part(formatter("en-US", zone, "longOffset"), at);
     name = part(formatter(locale, zone, "long"), at);
   } catch { return null; }
-  const m = /([+-−])(\d{1,2}):?(\d{2})?/.exec(offsetPart);
+  const m = /([+\-−])(\d{1,2}):?(\d{2})?/.exec(offsetPart);
   const offset = m ? (m[1] === "+" ? 1 : -1) * (Number(m[2]) * 60 + Number(m[3] || 0)) : 0;
   const abs = Math.abs(offset);
   const offsetText = `UTC${offset < 0 ? "−" : "+"}${String(Math.floor(abs / 60)).padStart(2, "0")}:${String(abs % 60).padStart(2, "0")}`;
   const city = zone === "UTC" ? "UTC" : (zone.split("/").pop() || zone).replace(/_/g, " ");
   // A name that's only the offset again ("GMT+07:00") says nothing more.
-  return { zone, city, offset, offsetText, name: /^(GMT|UTC)([+-−]|$)/.test(name) ? "" : name };
+  return { zone, city, offset, offsetText, name: /^(GMT|UTC)([+\-−]|$)/.test(name) ? "" : name };
 }
 
 /* TimeZonePicker: a Combobox of time zones. Each option is its city ("Jakarta"), with its offset now and its name in
