@@ -96,6 +96,36 @@ describe('Chart', () => {
     probe.remove();
   });
 
+  test('right to left: the tip sits beside the point, not stretched to the right edge (GR145)', async () => {
+    await render(<div dir="rtl" style={{ width: 390 }}><Chart title="Visitors" categories={CATS} series={TWO} /></div>);
+    const frame = (document.querySelector('svg[aria-describedby]') as SVGElement).parentElement!.getBoundingClientRect();
+    await tabIn();
+    for (const key of ['', '{End}']) {
+      if (key) await userEvent.keyboard(key);
+      const point = (document.activeElement as Element).getBoundingClientRect();
+      const tip = (document.querySelector('svg[aria-describedby] + div') as HTMLElement).getBoundingClientRect();
+      // Beside it: wholly on one side of the point, and not reaching to the frame's right edge unless it must.
+      expect(tip.right <= point.left || tip.left >= point.right).toBe(true);
+      expect(tip.width).toBeLessThan(frame.width / 2);
+    }
+  });
+
+  test('a narrow chart: long names and values wrap inside the tip, which never covers the point (GR146)', async () => {
+    const eur = (v: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(v);
+    const series = [{ name: 'Besucherinnen und Besucher', values: [1200000, 1500000, 900000, 1100000] }, { name: 'Sign-ups', values: [1200, 900, 1500, 1300] }];
+    await render(<div style={{ width: 320 }}><Chart title="Visitors" categories={CATS} series={series} formatValue={eur} /></div>);
+    await tabIn();
+    for (const key of ['', '{ArrowRight}', '{End}']) {
+      if (key) await userEvent.keyboard(key);
+      const point = (document.activeElement as Element).getBoundingClientRect();
+      const el = document.querySelector('svg[aria-describedby] + div') as HTMLElement;
+      const tip = el.getBoundingClientRect();
+      expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth);
+      const apart = tip.right <= point.left || tip.left >= point.right || tip.bottom <= point.top || tip.top >= point.bottom;
+      expect(apart).toBe(true);
+    }
+  });
+
   test('the pointer over a category shows its values and a line there; leaving hides them', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
     const pt = document.querySelectorAll('g[role="group"] > [role="img"]')[1] as SVGElement;
