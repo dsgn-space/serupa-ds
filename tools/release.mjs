@@ -16,7 +16,7 @@ import path from 'node:path';
 import { stampReadme } from './build/registry.mjs';
 import { repoUrl, withLinks } from './changelog.mjs';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = path.resolve(import.meta.dirname, '..');
 const V = '(\\d+\\.\\d+\\.\\d+)';
 // file -> patterns whose group 1 is the version. The built files (dist/, with base.css and theme.js, which say
 // __VERSION__ in src/) take it from package.json at build time.
