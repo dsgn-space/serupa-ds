@@ -33,7 +33,7 @@ Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since 
 
 ## While the repo is on GitLab (no CI)
 
-The repo lives on GitLab for now, with no pipelines, so the local run is the merge gate. Before a merge request merges, on the branch rebased onto `origin/main`, with nothing uncommitted:
+The repo lives on GitLab for now, with no pipelines, so the local run is the merge gate. On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for, runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Before a merge request merges, on the branch rebased onto `origin/main`, with nothing uncommitted:
 
 ```sh
 npm run check -- --clean --since origin/main --report local-checks.md

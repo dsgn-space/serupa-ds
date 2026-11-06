@@ -72,7 +72,7 @@ if (process.argv.includes('--list')) { for (const { name, job, cmd, args } of st
 const pkg = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8'));
 const wantNode = Number(/(\d+)/.exec(pkg.devEngines?.runtime?.version || '')?.[1] || 0);
 if (Number(process.versions.node.split('.')[0]) < wantNode) {
-  console.error(`This repo needs Node ${wantNode} or newer (devEngines in package.json), but this is Node ${process.versions.node}.`);
+  console.error(`This repo needs Node ${wantNode} or newer (devEngines in package.json), but this is Node ${process.versions.node}. node tools/setup.mjs fetches it.`);
   process.exit(2);
 }
 
