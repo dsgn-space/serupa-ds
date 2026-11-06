@@ -10,6 +10,7 @@ import { announce } from '../../internal/announce';
 
 /* Comment thread (BL8): comments with who and when, a reply box with a character count, and edit and delete for
    your own, for an app to copy. What it carries (WCAG 2.2):
+   - 1.3.1 in Safari: role="list" on the lists without bullets, since WebKit stops calling them lists (FU1, GR151).
    - 1.3.1: the thread is a region named by its heading; the comments are an ordered list of articles, each named by
      its author and time, so Edit and Delete inside one are heard in its context.
    - 3.3.1 / 3.3.2: the reply box has a visible label, the limit in its hint and a count that is read out near the
@@ -149,7 +150,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} id={id} ref={heading} tabIndex={-1} className="outline-none">{l.title}</Heading>
       {shown.length === 0 ? <p className="text-sm text-text-muted">{l.noComments}</p> : (
-        <ol className="m-0 flex list-none flex-col gap-4 p-0">
+        <ol role="list" className="m-0 flex list-none flex-col gap-4 p-0">
           {shown.map((c) => (
             <li key={c.id}>
               <article aria-labelledby={`${id}${c.id}-who`} id={`${id}${c.id}-comment`} tabIndex={-1} className="flex gap-3 rounded-md">
