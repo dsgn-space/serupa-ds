@@ -55,6 +55,25 @@ const BAD = [
   ['no-rebuilds', GOOD.replace('export function', 'const last = (y: number, m: number) => new Date(y, m + 1, 0).getDate();\nexport function')],
   ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><div className="absolute top-full mt-1">Options</div>')],
   ['no-rebuilds', GOOD.replace("padding: 'var(--spacing-4)'", "position: 'absolute', top: '100%'")],
+  // Words (PN5): the tells of UI text an agent wrote, in text, in text props and in toast().
+  ['words', GOOD.replace('>Sign in</Button>', '>Submit</Button>')],
+  ['words', GOOD.replace('>Sign in</Button>', '>{"OK"}</Button>')],
+  ['words', GOOD.replace('>Sign in</Button>', '>Sign In</Button>')],
+  ['words', GOOD.replace('label="Keep me signed in"', 'label="Keep me signed in!"')],
+  ['words', GOOD.replace('label="Keep me signed in"', 'label="Keep me signed in 🔒"')],
+  ['words', GOOD.replace("'Enter your email'", "'This field is required'")],
+  ['words', GOOD.replace("'Enter your email'", "'Invalid input'")],
+  ['words', GOOD.replace('<Checkbox>Or with children</Checkbox>', '<Text>Oops, that didn\'t work</Text>')],
+  ['words', GOOD.replace('<Checkbox>Or with children</Checkbox>', '<Text>Click here to reset it</Text>')],
+  ['words', GOOD.replace('<Checkbox>Or with children</Checkbox>', '<Text>Sign in seamlessly</Text>')],
+  ['words', GOOD.replace('const [email', 'const save = () => toast("Saved!");\n  const [email')],
+  ['words', GOOD.replace('const [email', 'const fail = () => toast.error("Something went wrong");\n  const [email')],
+  // A second kit (KP2): a UI, icon or animation package beside Serupa, and a component that only wraps one of Serupa's.
+  ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport { Mail } from 'lucide-react';")],
+  ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport { motion } from 'framer-motion';")],
+  ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport styled from 'styled-components';")],
+  ['no-extras', GOOD.replace('export function', "const PrimaryButton = (props: React.ComponentProps<typeof Button>) => <Button variant=\"primary\" size=\"lg\" {...props} />;\nexport function")],
+  ['no-extras', GOOD.replace('export function', "function AppField({ children, ...rest }: React.ComponentProps<typeof Field>) {\n  return (\n    <Field {...rest}>{children}</Field>\n  );\n}\nexport function")],
 ];
 for (const [check, src] of BAD) {
   const r = grade(src, ['Field', 'Input', 'Button|Link']);
@@ -72,6 +91,24 @@ const KEEP = GOOD.replace('<Stack gap="2">', `<Stack gap="2"><section role="regi
         <Text>Open Monday to Friday</Text>`);
 const kept = grade(KEEP, ['Field', 'Input', 'Button|Link']);
 t('a region, a status, a Serupa component with aria-expanded and a placed badge are not widgets built by hand', kept['no-rebuilds'].ok, kept['no-rebuilds'].why);
+
+// Words that are fine: a name with a capital inside, an abbreviation, a lowercase word, a full sentence, an ellipsis,
+// "!" in code, and strings that aren't UI text (classes, values, keys).
+const PLAIN = GOOD.replace('<Stack gap="2">', `<Stack gap="2"><Button>Connect GitHub</Button><Button>Export PDF</Button><Heading level={2}>Open Monday to Friday</Heading>
+        <Text>We couldn't save your changes. Try again.</Text><Text>Saving…</Text><Text>· Unread</Text><Text>{email !== '' ? 'Ready' : 'Empty'}</Text>
+        <Badge variant="New Feature" data-x="Big Deal!">New</Badge>`).replace('const [email', 'const ok = () => toast("Invite sent");\n  const [email');
+const plain = grade(PLAIN, ['Field', 'Input', 'Button|Link']);
+// Not a second kit: a component that puts several Serupa parts together, one that sets props without spreading
+// the caller's, React itself, and a local module.
+const OWN = GOOD.replace('export function', `function EmailField(props: { value: string }) {
+  return <Field label="Email"><Input {...props} /></Field>;
+}
+const Save = () => <Button variant="primary">Save</Button>;
+export function`);
+const own = grade(OWN, ['Field', 'Input', 'Button|Link']);
+t('composing Serupa parts or fixing props is not a wrapper', own['no-extras'].ok, own['no-extras'].why);
+
+t('names, abbreviations, sentences, "…" and strings that aren\'t UI text pass "words"', plain.words.ok, plain.words.why);
 
 // The tasks name components that exist, and have been run.
 const names = new Set(fs.readdirSync(path.join(PROJECT, 'src/components')));
