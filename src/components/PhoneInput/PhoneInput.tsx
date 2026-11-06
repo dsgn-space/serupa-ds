@@ -14,7 +14,7 @@ import * as icons from "../../material/builtin";
 import { warnOnce } from "../../internal/warn";
 import { useFormReset } from "../../internal/useFormReset";
 import { latinDigits } from "../../internal/digits";
-import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, stripTrunk, toE164, type PhoneCountry } from "./phone";
+import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, phoneOnly, stripTrunk, toE164, type PhoneCountry } from "./phone";
 import { en as words } from "./labels";
 
 /** What onValueChange reports with the E.164 number. */
@@ -178,7 +178,8 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   const onChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     // Digits in any script as ASCII, and full-width "＋" and digits as the usual ones: an Arabic or Persian keyboard
     // types ٠٨١٢, a Japanese IME ０８１２, and they're the same number (GR43). One character stays one, so the caret holds.
-    const raw = latinDigits(e.target.value.normalize("NFKC")), at = e.target.selectionStart ?? raw.length;
+    // A pasted tel: link or a number with an extension keeps only the number (GR128, GR129).
+    const raw = phoneOnly(latinDigits(e.target.value.normalize("NFKC"))), at = Math.min(e.target.selectionStart ?? raw.length, raw.length);
     let before = raw.slice(0, at).replace(/\D/g, "").length;
     // A lone "0" waits as typed, so the "00" of "0044" can come together: where it's the trunk prefix (Germany) it
     // stripped to nothing, and the +1 pattern wrote it "(0" (GR85). The next digit decides what it was: "06" is still

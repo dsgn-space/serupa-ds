@@ -70,6 +70,9 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   const page = Math.min(Math.max(int(controlled ? props.page : own, 1, 1), 1), Math.max(count, 1));
   const size = oneOf(["sm", "md"] as const, props.size, "md");
   const label = props.pageLabel || sds.labels.page;
+  // The name says the number as the button shows it, "١٠" in ar-EG and "1,000" in en-US, so it holds the visible
+  // text, as WCAG 2.5.3 asks: "Page ١٠", not "Page 10".
+  const said = (n: number) => { const shown = displayNumber(n, locale), l = label(n); return shown === String(n) ? l : l.replace(new RegExp("(?<!\\d)" + n + "(?!\\d)", "g"), shown); };
   // ET1: the row stays on one line. When it's wider than its box, siblings and then boundaries step down (cut) until
   // it fits, before paint; when the box grows they start over from what was asked.
   const siblings = int(props.siblings, 0, 1), boundaries = int(props.boundaries, 0, 1);
@@ -151,7 +154,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
       <ul className="dk-pagination__list" ref={list}>
         {arrow("prev")}
         {paginationRange(page, count, Math.max(siblings - cut, 0), Math.max(boundaries - Math.max(cut - siblings, 0), 0)).map((e) => typeof e === "number"
-          ? <li key={e}>{item(e, displayNumber(e, locale), { "aria-label": label(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
+          ? <li key={e}>{item(e, displayNumber(e, locale), { "aria-label": said(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
           : <li key={e} className="dk-pagination__ellipsis" aria-hidden="true">…</li>)}
         {arrow("next")}
       </ul>
