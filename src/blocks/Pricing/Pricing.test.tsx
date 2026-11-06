@@ -81,4 +81,11 @@ describe('Blocks/Pricing', () => {
     expect(text('pro').replace(/\s/g, ' ')).toContain('Rp 125.000per bulan');
     expect(text('pro').replace(/\s/g, ' ')).toContain('Rp 1.500.000 ditagih per tahun');
   });
+
+  test('the plans and each plan\'s features keep role="list", since Safari stops calling a list without bullets a list (GR151)', async () => {
+    await render(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} /></SerupaProvider>);
+    const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
+    expect(bare.length).toBe(1 + plans.length);
+    expect(bare.map((l) => l.getAttribute('role'))).toEqual(bare.map(() => 'list'));
+  });
 });
