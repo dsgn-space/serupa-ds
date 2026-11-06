@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.0.0
+npm install github:diki-stwn/serupa-ds#v14.1.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -103,6 +103,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 ### Data display
 
+- **Chart** (beta): A line or bar chart of a few series over the same categories, such as visitors per month or orders per region.
 - **Sparkline** (beta): A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value.
 - **Timeline**: An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content.
 
