@@ -39,6 +39,8 @@ jobs:
       - run: npm ci
       - name: Set the screen reader up for automation
         run: npx --yes @guidepup/setup@0.29.3 setup --ci
+      - name: Install the screen reader
+        run: npx --yes @guidepup/setup@0.29.3 install
       - run: npx playwright install ${{ matrix.browser }}
       - name: Build the package
         run: npm run build
