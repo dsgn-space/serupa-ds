@@ -19,7 +19,7 @@ export const Locales: Story = {
   render: () => <div style={{ display: 'grid', gap: 'var(--spacing-3)' }}>
     <Field label="Harga (id-ID, rupiah)"><NumberInput locale="id-ID" defaultValue={1500000} step={500} min={0} formatOptions={{ style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }} /></Field>
     <Field label="Gewicht (de-DE)" hint="9,5 or 9.5 both work"><NumberInput locale="de-DE" defaultValue={9.5} step={0.1} /></Field>
-    <Field label="Rate (en-US, percent)"><NumberInput locale="en-US" defaultValue={0.15} step={0.01} min={0} max={1} formatOptions={{ style: 'percent' }} /></Field>
+    <Field label="Rate (en-US, percent)"><NumberInput locale="en-US" defaultValue={0.15} min={0} max={1} formatOptions={{ style: 'percent' }} /></Field>
   </div>,
 };
 export const Controlled: Story = {
