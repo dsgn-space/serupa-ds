@@ -68,6 +68,28 @@ Run once on a new component before the release that first ships it, with the pul
 5. **A screen reader pass** (VoiceOver or NVDA): its name, role, state and every change it announces, once with the keyboard and once by touch.
 6. **Touch:** on a real phone, every target is at least 24px, a tap does what a click does, and a swipe or drag has a button alternative (`node tools/test/drag-alternatives.mjs`).
 
+## Writing the docs
+
+These rules are for the words contributors write: READMEs, usage guides, doc comments, changesets and migration notes. [Content and voice](docs/foundations.md) is for the words in the product. Agents write much of this prose, so most rules name an agent's habit. `node tools/test/voice.mjs` checks the ones a script can.
+
+1. **Lead with the point.** The first sentence says what it is or what changed.
+   Before: "When building forms, it's often useful to be able to group related fields." After: "Fieldset groups related fields under one legend."
+2. **Every sentence adds something the reader doesn't have yet.** Cut a closing line that repeats the paragraph.
+   Before: "…so it never covers the page. This keeps the content readable at all times." After: "…so it never covers the page."
+3. **State it; don't stage it.** Write "not X" only when readers really believe X. Badge's line ("Failed", not just a red badge) earns its "not": people do lean on color alone.
+   Before: "This isn't just a spinner, it's a loading state." After: "Loader shows that something is loading."
+4. **"Is" and "has", not "serves as" and "features".**
+   Before: "Card serves as a container and features an optional header." After: "Card is a container with an optional header."
+5. **Bold a list label only when the label carries information** the reader scans for (a prop, a key, a review step). A bullet that's just a sentence stays plain.
+   Before: "- **Note:** the hint is read after the label." After: "- The hint is read after the label."
+6. **A README says how the component is now.** History goes in the changeset, which becomes CHANGELOG.md and, for a major, the Upgrading page.
+   Before: "In 9.0.0 a linked card is no longer one `<a>`…" in Card's README. After: that note in the 9.0.0 changelog entry only.
+7. **Text for people using the package names no work-queue id and doesn't tell how the work was done.**
+   Before: "Fixed the Safari press bug (GR95) after a bisect." After: "Card: in Safari, pressing a linked card near its edge no longer makes it spring back."
+8. **A changeset leads with the component and what someone using it sees change.**
+   Before: "Refactored the positioning helper." After: "Chart: the tooltip sits beside its point in right-to-left pages."
+9. **Keep exact identifiers, numbers and WCAG references.** Rewording never turns `aria-describedby` into "the description attribute", 24px into "small", or 2.5.8 into "the target size rule".
+
 ## API conventions
 
 Every component names the same things the same way, so learning one teaches the rest (the README's [shared conventions](README.md#components) are the short version for people using the package). A new prop follows these; a name that doesn't is deprecated in favour of one that does, never just renamed.
