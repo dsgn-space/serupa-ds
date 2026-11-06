@@ -129,6 +129,23 @@ describe('Chart', () => {
     }
   });
 
+  test('Escape hides the tip, focused or hovered, without moving focus; the next point shows it again (GR156)', async () => {
+    await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
+    const tip = () => document.querySelector('svg[aria-describedby] + div');
+    await tabIn();
+    expect([focused(), tip() != null]).toEqual(['Visitors, Jan: 10', true]);
+    await userEvent.keyboard('{Escape}');
+    expect([focused(), tip()]).toEqual(['Visitors, Jan: 10', null]);
+    await userEvent.keyboard('{ArrowRight}');
+    expect([focused(), tip()?.textContent]).toEqual(['Visitors, Feb: 20', 'FebVisitors20Sign-ups2']);
+    (document.activeElement as HTMLElement).blur();
+    const pt = document.querySelectorAll('g[role="group"] > [role="img"]')[2] as SVGElement;   // Visitors, Apr (Mar has none)
+    await userEvent.hover(pt);
+    await expect.poll(() => tip()?.textContent).toBe('AprVisitors40Sign-ups4');
+    await userEvent.keyboard('{Escape}');
+    expect(tip()).toBeNull();
+  });
+
   test('the pointer over a category shows its values and a line there; leaving hides them', async () => {
     await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
     const pt = document.querySelectorAll('g[role="group"] > [role="img"]')[1] as SVGElement;
