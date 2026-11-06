@@ -158,6 +158,7 @@ export const labels: SerupaLabels = {
   markRead: "Okundu olarak işaretle",
   markAllRead: "Tümünü okundu olarak işaretle",
   clearNotifications: "Tümünü temizle",
+  notificationsUnread: (count) => (count ? "Bildirimler, " + n(count) + " okunmamış" : "Bildirimler"),
   decrease: "Azalt",
   increase: "Artır",
   pagination: "Sayfalandırma",

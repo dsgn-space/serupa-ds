@@ -162,6 +162,7 @@ export const labels: SerupaLabels = {
   markRead: "تعليم كمقروء",
   markAllRead: "تعليم الكل كمقروء",
   clearNotifications: "مسح الكل",
+  notificationsUnread: (count) => (count ? "الإشعارات، " + n(count) + " غير مقروءة" : "الإشعارات"),
   decrease: "إنقاص",
   increase: "زيادة",
   pagination: "ترقيم الصفحات",

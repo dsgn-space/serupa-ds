@@ -158,6 +158,7 @@ export const labels: SerupaLabels = {
   markRead: "Tandai sebagai dibaca",
   markAllRead: "Tandai semua sebagai dibaca",
   clearNotifications: "Kosongkan semua",
+  notificationsUnread: (count) => (count ? "Pemberitahuan, " + n(count) + " belum dibaca" : "Pemberitahuan"),
   decrease: "Kurangkan",
   increase: "Tambah",
   pagination: "Penomboran halaman",

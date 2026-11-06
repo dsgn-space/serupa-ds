@@ -8,7 +8,7 @@
   - button "Clear all"
 
 # LongText
-- button "Notifications 1"
+- button "Notifications, 1 unread": Notifications
 - dialog "Notifications for the Donaudampfschifffahrtsgesellschaft workspace":
   - heading "Notifications for the Donaudampfschifffahrtsgesellschaft workspace" [level=2]
   - button "Close"
@@ -22,7 +22,7 @@
   - button "Clear all"
 
 # Open
-- button "Notifications 2"
+- button "Notifications, 2 unread": Notifications
 - dialog "Notifications":
   - heading "Notifications" [level=2]
   - button "Close"
@@ -50,7 +50,7 @@
   - button "Clear all"
 
 # Playground
-- button "Notifications 2"
+- button "Notifications, 2 unread": Notifications
 
 # ToastHistory
 - region "Notifications":

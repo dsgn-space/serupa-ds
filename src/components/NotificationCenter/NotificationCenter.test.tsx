@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
-import { idLabels } from '../../internal/labels';
+import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { toast } from '../Toast/Toast';
 import { NotificationCenter, useToastHistory, type NotificationItem, type ToastHistory } from './NotificationCenter';
 
@@ -163,5 +163,15 @@ describe('useToastHistory', () => {
     await expect.poll(() => history.unread).toBe(0);
     history.clear();
     await expect.poll(() => history.items).toEqual([]);
+  });
+
+  test('GR176: the opening button\'s name has the count in words, in English, Indonesian and every pack', async () => {
+    expect([0, 1, 1200].map((c) => DEFAULT_LABELS.notificationsUnread(c))).toEqual(['Notifications', 'Notifications, 1 unread', 'Notifications, 1,200 unread']);
+    expect([0, 3].map((c) => idLabels.notificationsUnread(c))).toEqual(['Notifikasi', 'Notifikasi, 3 belum dibaca']);
+    const packs = import.meta.glob<{ labels: typeof DEFAULT_LABELS }>('../../labels/*.ts', { eager: true });
+    for (const [f, m] of Object.entries(packs)) {
+      expect(m.labels.notificationsUnread(0), f).toBe(m.labels.notificationCenter);
+      expect(m.labels.notificationsUnread(7), f).toMatch(/7/);
+    }
   });
 });

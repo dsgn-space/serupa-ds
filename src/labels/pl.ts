@@ -161,6 +161,7 @@ export const labels: SerupaLabels = {
   markRead: "Oznacz jako przeczytane",
   markAllRead: "Oznacz wszystkie jako przeczytane",
   clearNotifications: "Wyczyść wszystkie",
+  notificationsUnread: (count) => (count ? "Powiadomienia, nieprzeczytane: " + n(count) : "Powiadomienia"),
   decrease: "Zmniejsz",
   increase: "Zwiększ",
   pagination: "Podział na strony",

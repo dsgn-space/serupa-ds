@@ -6,6 +6,7 @@ interface NotificationCenterLabels {
     markRead: string;
     markAllRead: string;
     clearNotifications: string;
+    notificationsUnread: (count: number) => string;
 }
 interface NotificationItem {
     id: string;

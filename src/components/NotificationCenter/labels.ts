@@ -13,6 +13,8 @@ export interface NotificationCenterLabels {
   markAllRead: string;
   /** NotificationCenter: the footer button that empties the list. */
   clearNotifications: string;
+  /** NotificationCenter: a name for the button that opens it, with the unread count in words. Hide the count Badge. */
+  notificationsUnread: (count: number) => string;
 }
 export const en: NotificationCenterLabels = {
   notificationCenter: "Notifications",
@@ -21,6 +23,7 @@ export const en: NotificationCenterLabels = {
   markRead: "Mark as read",
   markAllRead: "Mark all as read",
   clearNotifications: "Clear all",
+  notificationsUnread: (count) => (count ? "Notifications, " + count.toLocaleString("en") + " unread" : "Notifications"),
 };
 export const id: NotificationCenterLabels = {
   notificationCenter: "Notifikasi",
@@ -29,4 +32,5 @@ export const id: NotificationCenterLabels = {
   markRead: "Tandai sudah dibaca",
   markAllRead: "Tandai semua sudah dibaca",
   clearNotifications: "Hapus semua",
+  notificationsUnread: (count) => (count ? "Notifikasi, " + count.toLocaleString("id") + " belum dibaca" : "Notifikasi"),
 };

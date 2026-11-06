@@ -164,6 +164,7 @@ export const labels: SerupaLabels = {
   markRead: "Отметить как прочитанное",
   markAllRead: "Отметить все как прочитанные",
   clearNotifications: "Очистить все",
+  notificationsUnread: (count) => (count ? "Уведомления, непрочитанных: " + n(count) : "Уведомления"),
   decrease: "Уменьшить",
   increase: "Увеличить",
   pagination: "Страницы",
