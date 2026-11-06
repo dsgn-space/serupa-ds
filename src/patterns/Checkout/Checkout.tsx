@@ -288,7 +288,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
               </dl>
             </Card>
           </aside>
-          {/* After the summary, so on a phone every line of the total is read before the button that pays (GR167); from lg
+          {/* After the summary, so on a phone every line of the total is read before the button that pays; from lg
               up the summary sits beside the review and this row under it. */}
           {step === 'review' ? (
             <div className="flex flex-wrap gap-3 lg:col-span-2">
