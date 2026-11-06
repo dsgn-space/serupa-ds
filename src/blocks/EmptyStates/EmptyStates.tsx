@@ -97,7 +97,7 @@ export function EmptyNoAccess({ title = "You don't have access", description, on
   } : undefined;
   return (
     <EmptyState icon="lock" title={title} headingLevel={headingLevel}
-      description={failed ? <>{description}<br /><span className="text-danger">{requestFailedLabel}</span></> : description}
+      description={failed ? <>{description}<br /><span className="text-danger-text">{requestFailedLabel}</span></> : description}
       actions={<>{request ? <Button onClick={request} aria-disabled={sent || undefined}>{sent ? requestedLabel : requestLabel}</Button> : null}{backHref ? <Link href={backHref}>{backLabel}</Link> : null}</>} />
   );
 }
