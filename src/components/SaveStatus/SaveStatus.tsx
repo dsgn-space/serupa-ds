@@ -4,6 +4,7 @@ import { cn, oneOf, setRef } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { useSettings } from "../../internal/provider";
 import { announce } from "../../internal/announce";
+import { activeIn } from "../../internal/root";
 import { Icon } from "../Icon/Icon";
 import { Loader } from "../Loader/Loader";
 import { Button } from "../Button/Button";
@@ -62,7 +63,7 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
   const root = React.useRef<HTMLDivElement | null>(null);
   const focusedIn = React.useRef(false);
   React.useLayoutEffect(() => {
-    const r = root.current, a = document.activeElement;
+    const r = root.current, a = activeIn(r);   // in its own document or shadow root, where document.activeElement is the host (GR60)
     const lost = !a || a === document.body || !a.isConnected || (r && r.contains(a) && a.closest("[inert]"));
     if (!r || !focusedIn.current || !lost) return;
     r.tabIndex = -1;
