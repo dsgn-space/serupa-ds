@@ -8,15 +8,15 @@ interface SplitterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chil
         React.ReactNode,
         React.ReactNode
     ];
-    direction?: "horizontal" | "vertical";
-    size?: number;
-    defaultSize?: number;
-    onSizeChange?: (size: number) => void;
-    min?: number;
-    max?: number;
-    step?: number;
-    collapsible?: boolean;
-    storageKey?: string;
-    separatorLabel?: string;
+    direction?: "horizontal" | "vertical" | undefined;
+    size?: number | undefined;
+    defaultSize?: number | undefined;
+    onSizeChange?: ((size: number) => void) | undefined;
+    min?: number | undefined;
+    max?: number | undefined;
+    step?: number | undefined;
+    collapsible?: boolean | undefined;
+    storageKey?: string | undefined;
+    separatorLabel?: string | undefined;
 }
 declare const Splitter: React.ForwardRefExoticComponent<SplitterProps & React.RefAttributes<HTMLDivElement>>;

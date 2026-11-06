@@ -65,6 +65,22 @@ describe('CodeBlock', () => {
     expect(pre().style.getPropertyValue('--dk-code-digits')).toBe('2');
   });
 
+  test('copied by hand, the code keeps its blank lines and indents, with line numbers or without (GR114)', async () => {
+    const code = 'a = 1\n\n\nb = 2\n  c\n';
+    await render(<><CodeBlock id="n" code={code} lineNumbers /><CodeBlock id="p" code={code} /><CodeBlock id="h" code={code} lineNumbers highlight={[2]} /></>);
+    const copied = (id: string) => {
+      const r = document.createRange();
+      r.selectNodeContents(el(id).querySelector('code')!);
+      const sel = getSelection()!;
+      sel.removeAllRanges(); sel.addRange(r);
+      // Safari ends a selection that runs to the end of a block line with a line break; code ends with one anyway.
+      const text = sel.toString().replace(/\n$/, '');
+      sel.removeAllRanges();
+      return text;
+    };
+    expect(['n', 'p', 'h'].map(copied)).toEqual(Array(3).fill('a = 1\n\n\nb = 2\n  c'));
+  });
+
   test('wrap breaks long lines instead of scrolling', async () => {
     await render(<div style={{ width: 200 }}><CodeBlock code={'word '.repeat(40)} wrap /></div>);
     expect(pre().scrollWidth).toBeLessThanOrEqual(pre().clientWidth + 1);

@@ -36,6 +36,11 @@ const walk = (dir, keep) => fs.readdirSync(dir, { withFileTypes: true }).flatMap
 });
 const rel = (p) => path.relative(PROJECT, p);
 const sources = walk(path.join(PROJECT, 'src'), (n) => /\.tsx?$/.test(n) && !/\.(test|stories)\.tsx?$/.test(n));
+// Right after a major (14.0.0 removed every deprecation and used up every changeset) the loops below find nothing,
+// so these always run: the search reaches the code, and the major is read the way the loops read it.
+t(`finds the source files to search (${sources.length})`, sources.length > 50, 'walk src/ for .ts and .tsx files');
+t('reads the major from "removed in N.0.0", and nothing from a text without one',
+  removedIn('Deprecated: removed in 15.0.0.') === 15 && removedIn('Removed In 9.0.0') === 9 && removedIn('goes in the next major') === null, 'removedIn');
 const warnings = read('docs/warnings.md');
 const history = read('CHANGELOG.md') + fs.readdirSync(path.join(PROJECT, '.changeset')).filter((n) => n.endsWith('.md')).map((n) => read(path.join('.changeset', n))).join('\n');
 const named = (name) => new RegExp('`' + name + '`').test(history);

@@ -25,43 +25,43 @@ const words = /* @__PURE__ */ Object.assign({}, NumberInputWords, DatePickerWord
 
 export interface NumberInputProps extends Omit<InputProps, "type" | "showCount" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
-  value?: number | null;
+  value?: number | null | undefined;
   /** The number at first (uncontrolled). */
-  defaultValue?: number | null;
+  defaultValue?: number | null | undefined;
   /** Called with the new number, or null when emptied: as people type (numbers within min..max), on blur (clamped), and from the arrow keys and buttons. */
-  onValueChange?: (value: number | null) => void;
+  onValueChange?: ((value: number | null) => void) | undefined;
   /** Called when typed text isn't kept as it is, with the text and why: "range" when a number outside min..max is
       brought back within them (on blur or Enter), so a form can say "Quantity was reduced to 100"; "unreadable" when
       the text isn't a number and the previous one comes back, which is also said to screen readers. */
-  onInvalidInput?: (text: string, reason: "range" | "unreadable") => void;
+  onInvalidInput?: ((text: string, reason: "range" | "unreadable") => void) | undefined;
   /** The smallest allowed number. The field snaps to it when it loses focus. */
-  min?: number;
+  min?: number | undefined;
   /** The largest allowed number. */
-  max?: number;
+  max?: number | undefined;
   /** How much the arrow keys and buttons change it. Default: 1. Its decimals set how many the value keeps (step 0.25: two). */
-  step?: number;
+  step?: number | undefined;
   /** How many steps PageUp, PageDown and Shift with an arrow move. Default: 10. */
-  largeStep?: number;
+  largeStep?: number | undefined;
   /** Shows the − and + buttons at the end. Default: true. */
-  steppers?: boolean;
+  steppers?: boolean | undefined;
   /** The buttons' names. Default: "Decrease" and "Increase". */
-  decrementLabel?: string;
+  decrementLabel?: string | undefined;
   /** The increase button's name. Default: "Increase". */
-  incrementLabel?: string;
+  incrementLabel?: string | undefined;
   /** The locale whose decimal and group marks are read and written ("1.500,25" in id-ID). Default: the nearest SerupaProvider's locale, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
   /** How the number is shown, as Intl.NumberFormat options: `{ style: "currency", currency: "IDR" }`, `{ useGrouping: true }`,
       or the percent style (the value is the fraction: 0.15 shows 15%). Default: no grouping and every decimal the value has. */
-  formatOptions?: Intl.NumberFormatOptions;
+  formatOptions?: Intl.NumberFormatOptions | undefined;
   /** The digits the value is written in. Default: the locale's own, as other components write numbers (١٬٢٥٠ in ar-EG,
       ۱۲۵۰ in fa-IR); "latn" for Latin digits. Typed digits are read in any script either way. */
-  numberingSystem?: string;
+  numberingSystem?: string | undefined;
   /** An ISO 4217 code ("IDR", "USD", "JPY"): shows the amount as money, with the symbol where the locale puts it, and keeps
       the currency's decimals (19.99, not 20). Short for formatOptions { style: "currency", currency }; formatOptions still wins. */
-  currency?: string;
+  currency?: string | undefined;
   /** With currency: value, defaultValue, onValueChange, min, max and step are whole minor units (cents), so 1999 is
       $19.99 and ¥1999 is ¥1,999. Store money this way to avoid floating-point sums. */
-  minorUnits?: boolean;
+  minorUnits?: boolean | undefined;
 }
 
 // Format options back from their JSON key, so a memo can depend on the options by value.

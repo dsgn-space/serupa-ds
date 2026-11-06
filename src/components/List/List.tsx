@@ -8,36 +8,36 @@ import { component } from "../../internal/component";
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** 'plain' (default) or 'card': inside a bordered, rounded frame. */
-  variant?: 'plain' | 'card';
+  variant?: 'plain' | 'card' | undefined;
   /** Lines between items. Default: true. */
-  divided?: boolean;
+  divided?: boolean | undefined;
   /** 'ul' (default) or 'ol' when the order matters. */
-  as?: 'ul' | 'ol';
+  as?: 'ul' | 'ol' | undefined;
 }
 
 export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "title" | "onClick"> {
   /** The item's main line. */
   title: React.ReactNode;
   /** A second, muted line. */
-  description?: React.ReactNode;
+  description?: React.ReactNode | undefined;
   /** Before the text: an Avatar, an icon name or an image. */
-  leading?: IconSource;
+  leading?: IconSource | undefined;
   /** After the text: meta (a date, a Badge) or actions (an IconButton, a Menu). Stays outside the link or button. */
-  trailing?: React.ReactNode;
+  trailing?: React.ReactNode | undefined;
   /** Makes the item's main area a link. */
-  href?: string;
+  href?: string | undefined;
   /** Makes the item's main area a button (when there's no href). */
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick?: ((event: React.MouseEvent<HTMLElement>) => void) | undefined;
   /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. Its props go in linkProps. */
-  as?: React.ElementType;
+  as?: React.ElementType | undefined;
   /** Extra props for the link or button (to for a router link, target, aria-*). */
-  linkProps?: Record<string, unknown>;
+  linkProps?: Record<string, unknown> | undefined;
   /** Shaded with a primary bar at its start, and aria-current="true" (or aria-pressed for a button). For the current page in a nav list, also pass linkProps={{ "aria-current": "page" }}, which wins. Default: false. */
-  selected?: boolean;
+  selected?: boolean | undefined;
   /** Dims a link or button item and stops it. Default: false. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
 }
 
 /* List: rows of related things (people, files, settings), each a title with an optional description, leading

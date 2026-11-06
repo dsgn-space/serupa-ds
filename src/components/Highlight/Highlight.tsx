@@ -11,7 +11,7 @@ export interface HighlightProps extends Omit<React.HTMLAttributes<HTMLSpanElemen
   query: string | ReadonlyArray<string>;
   /** Marks every word of a query on its own ("new york" marks "New" and "York" wherever they are). Default: false,
       the query as one phrase. */
-  words?: boolean;
+  words?: boolean | undefined;
 }
 
 // module state: a sticky pattern; its lastIndex is set before each use.

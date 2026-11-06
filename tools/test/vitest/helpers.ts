@@ -1,5 +1,6 @@
-import { afterAll, beforeAll } from 'vitest';
+import { afterAll, beforeAll, expect } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
+import { TOUCH } from './touch';
 
 declare module 'vitest/browser' {
   interface BrowserCommands {
@@ -12,6 +13,7 @@ declare module 'vitest/browser' {
     ariaSnapshot: (selector: string) => Promise<string>;
     ariaMode: () => Promise<'check' | 'update' | 'off'>;
     writeAriaBaseline: (name: string, text: string) => Promise<void>;
+    recordBench: (suite: 'mount' | 'inp', times: Record<string, number>) => Promise<void>;
   }
 }
 
@@ -144,6 +146,9 @@ export async function forcedColors<T>(during: (active: boolean) => Promise<T> | 
 /** Runs `during` on a touch screen ((pointer: coarse), as on a phone), then turns it off. `active` is false where
  *  the engine can't emulate one, so a test can skip its touch checks there. */
 export async function coarsePointer<T>(during: (active: boolean) => Promise<T> | T): Promise<T> {
+  // Its page keeps (hover: none) afterwards, so only the files in their own instance may use it.
+  const file = expect.getState().testPath || '';
+  if (!TOUCH.some((t) => file.endsWith(t))) throw new Error(`coarsePointer: add ${file} to TOUCH in tools/test/vitest/touch.ts, so it runs in pages of its own`);
   let on = true;
   try { await commands.coarsePointer(true); } catch { on = false; }
   try {

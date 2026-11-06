@@ -17,14 +17,16 @@ export interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Where saving is: 'idle' (nothing to say, renders empty), 'saving', 'saved' or 'error'. */
   status: SaveState;
   /** When the last save finished, for "Saved 2 minutes ago" (kept up to date). Without it, just "Saved". */
-  savedAt?: Date | number;
+  savedAt?: Date | number | undefined;
   /** Shows a Try again button after an error; called when it's pressed. */
-  onRetry?: () => void;
+  onRetry?: (() => void) | undefined;
   /** What went wrong, in place of "Couldn't save" ("Couldn't save: you're offline"). */
-  errorText?: React.ReactNode;
+  errorText?: React.ReactNode | undefined;
 }
 
 const STATES: readonly SaveState[] = ["idle", "saving", "saved", "error"];
+// The faces' fixed order in the page (GR127).
+const ORDER: readonly SaveState[] = ["saving", "saved", "error"];
 
 /* SaveStatus: a small line saying whether an autosaving form or document is saved: a ring and "Saving…", a check and
    "Saved 2 minutes ago" (the time kept current), or an error icon, "Couldn't save" and a Try again button. Screen
@@ -98,7 +100,10 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
   );
   return (
     <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} onFocus={onFocus} onBlur={onBlur} className={cn("dk-save-status", "dk-save-status--" + status, className)} data-component="save-status" data-state={status}>
-      {[gone && gone !== status ? face(gone, true) : null, face(status, false)]}
+      {/* In one fixed order, not "leaving, then coming": a status that comes back while it's still fading out
+          (saving, saved, saving within a moment) would otherwise be moved in the page, which starts its fade over
+          from nothing, and the label blinked out for a few frames (GR127). Kept where it is, it turns back. */}
+      {ORDER.map((st) => (st === status ? face(st, false) : st === gone ? face(st, true) : null))}
     </div>
   );
 });

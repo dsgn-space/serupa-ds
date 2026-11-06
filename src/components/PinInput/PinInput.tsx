@@ -9,23 +9,23 @@ import { latinDigits } from "../../internal/digits";
 
 export interface PinInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'value' | 'defaultValue' | 'onChange' | 'maxLength' | 'children'> {
   /** How many characters the code has, one box each. Default: 6. */
-  length?: number;
+  length?: number | undefined;
   /** The code typed so far (controlled). */
-  value?: string;
+  value?: string | undefined;
   /** The code at first (uncontrolled). */
-  defaultValue?: string;
+  defaultValue?: string | undefined;
   /** Called with the code as it changes, after characters that don't fit `type` are dropped. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: ((value: string) => void) | undefined;
   /** Called with the code once every box is filled, by typing, pasting or a one-time code the phone offers. */
-  onComplete?: (value: string) => void;
+  onComplete?: ((value: string) => void) | undefined;
   /** 'numeric' (digits only and a number keypad, default) or 'alphanumeric' (letters and digits). */
-  type?: 'numeric' | 'alphanumeric';
+  type?: 'numeric' | 'alphanumeric' | undefined;
   /** Shows a dot in each filled box instead of the character, and makes the field a password field. Default: false. */
-  mask?: boolean;
+  mask?: boolean | undefined;
   /** 'sm', 'md' (default) or 'lg': square boxes at the control heights, 24, 32 and 44px. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger border on every box, and aria-invalid. Say what's wrong in text next to it; Field's error does both. */
-  invalid?: boolean;
+  invalid?: boolean | undefined;
 }
 
 const KEEP = { numeric: /[^0-9]/g, alphanumeric: /[^0-9A-Za-z]/g } as const;

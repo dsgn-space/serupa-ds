@@ -19,6 +19,19 @@ export const WithFiles: Story = {
     return <FileUpload {...args} files={files} onFilesChange={setFiles} />;
   },
 };
+// Each file's upload, as an app reports it from its own state (here, fixed so the screenshot holds still).
+const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+export const Uploading: Story = {
+  render: function Render(args) {
+    const [files, setFiles] = React.useState<File[]>(() => [
+      new File([Uint8Array.from(atob(PNG), (c) => c.charCodeAt(0))], 'site-photo.png', { type: 'image/png' }),
+      new File([new Uint8Array(240 * 1024)], 'site-plan.pdf', { type: 'application/pdf' }),
+      new File([new Uint8Array(1.6 * 1024 * 1024)], 'invoice-0412.pdf', { type: 'application/pdf' }),
+    ]);
+    const status = (f: File) => f.name === 'site-photo.png' ? { state: 'done' as const } : f.name === 'site-plan.pdf' ? { state: 'uploading' as const, progress: 45 } : { state: 'error' as const, message: 'The server didn\'t answer. Try again in a moment.' };
+    return <FileUpload {...args} files={files} onFilesChange={setFiles} fileStatus={status} onRetry={() => {}} thumbnails />;
+  },
+};
 export const Disabled: Story = { args: { disabled: true } };
 export const Invalid: Story = { args: { invalid: true, required: true, hint: 'Add at least one image or PDF' } };
 export const ReadOnly: Story = { ...WithFiles, args: { readOnly: true } };

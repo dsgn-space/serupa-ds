@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Progress } from './Progress';
+import { Button } from '../Button/Button';
 
 const meta = {
   title: 'Components/Feedback/Progress',
@@ -43,7 +44,8 @@ export const AnnounceComplete: Story = {
     React.useEffect(() => { if (v <= 0 || v >= 100) return; const t = setTimeout(() => setV(Math.min(100, v + 20)), 400); return () => clearTimeout(t); }, [v]);
     return <div style={{ display: 'grid', gap: 'var(--spacing-3)', maxWidth: 320 }}>
       <Progress label="Upload" value={v} showValue announceComplete />
-      <button type="button" onClick={() => setV(20)}>Start</button>
+      {/* The system's Button, not a bare <button>: WebKit draws a bare one in the dark themes with text that fails contrast. */}
+      <Button variant="secondary" onClick={() => setV(20)}>Start</Button>
     </div>;
   },
 };

@@ -3,8 +3,8 @@ type Without<T> = T extends unknown ? Omit<T, "aria-label" | "children" | "icon"
 interface IconButtonOwnProps {
     icon: IconSource;
     label: string;
-    shape?: "round" | "square";
-    hideTitle?: boolean;
+    shape?: "round" | "square" | undefined;
+    hideTitle?: boolean | undefined;
 }
 type IconButtonProps = (Without<ButtonAsButtonProps> & IconButtonOwnProps) | (Without<ButtonAsLinkProps> & IconButtonOwnProps);
 type IconButtonElement = HTMLAnchorElement | HTMLButtonElement;
