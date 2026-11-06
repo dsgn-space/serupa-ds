@@ -12,7 +12,8 @@ import { a11yComponents } from './tools/lint/a11y-components.mjs';
 
 export default tseslint.config(
   // tools/skill-eval/results/ holds agents' answers as they wrote them, which the eval grades: not our code to lint.
-  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/', 'tools/skill-eval/results/'] },
+  // tools/skill-eval/starts/ holds the files an eval task starts from, faults included on purpose.
+  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/', 'tools/skill-eval/results/', 'tools/skill-eval/starts/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
