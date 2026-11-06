@@ -144,12 +144,19 @@ describe('Navbar', () => {
       <Navbar id="nlift" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
       <div style={{ height: '2000px' }} />
     </div>);
-    const n = el('nlift'), shadow = () => css(n).boxShadow;
+    const n = el('nlift'), shadow = () => css(n).boxShadow, lifts = CSS.supports('animation-timeline: scroll()');
     // At the start of the range the shadow is there at zero strength: fully transparent, nothing drawn.
     const shows = () => shadow() !== 'none' && !/^rgba\(0, 0, 0, 0\) 0px 0px 0px 0px(, rgba\(0, 0, 0, 0\) 0px 0px 0px 0px)*$/.test(shadow());
     window.scrollTo(0, 0);
     await expect.poll(() => window.scrollY).toBe(0);
     expect(shows()).toBe(false);
+    // Without scroll-driven animations (Firefox), the line under the bar alone: no shadow however far it scrolls.
+    if (!lifts) {
+      window.scrollTo(0, 600);
+      await expect.poll(() => window.scrollY).toBe(600);
+      expect(shows()).toBe(false);
+      return;
+    }
     // Half a bar height down (64px bar), half the shadow: it follows the scroll.
     window.scrollTo(0, 32);
     await expect.poll(() => window.scrollY).toBe(32);
@@ -173,14 +180,15 @@ describe('Navbar', () => {
       <Navbar id="ndark" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
       <div style={{ height: '2000px' }} />
     </div>);
-    const n = el('ndark'), paint = (v: string) => { const d = document.createElement('div'); d.style.background = `var(--${v})`; document.body.append(d); const c = css(d).backgroundColor; d.remove(); return c; };
+    const n = el('ndark'), lifts = CSS.supports('animation-timeline: scroll()'), paint = (v: string) => { const d = document.createElement('div'); d.style.background = `var(--${v})`; document.body.append(d); const c = css(d).backgroundColor; d.remove(); return c; };
     try {
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);
         window.scrollTo(0, 0);
         await expect.poll(() => css(n).backgroundColor, { message: th }).toBe(paint('surface'));
         window.scrollTo(0, 600);
-        await expect.poll(() => css(n).backgroundColor, { message: th }).toBe(paint('surface-raised'));
+        // Without scroll-driven animations (Firefox), the bar stays the page's surface.
+        await expect.poll(() => css(n).backgroundColor, { message: th }).toBe(paint(lifts ? 'surface-raised' : 'surface'));
         if (th.endsWith('dark')) expect(paint('surface-raised'), th).not.toBe(paint('surface'));
       }
     } finally { window.scrollTo(0, 0); }
