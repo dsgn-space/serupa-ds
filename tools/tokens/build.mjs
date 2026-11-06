@@ -21,7 +21,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..'));
+const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(import.meta.dirname, '..', '..'));
 const OUT = path.join(P, 'tokens.css');
 // A contrastMore keyed by theme id ({ "blue-light": …, "violet-dark": … }) rather than { light, dark }.
 const perTheme = (x) => !!x.contrastMore && typeof x.contrastMore === 'object' && !('light' in x.contrastMore);
@@ -214,7 +214,7 @@ function fluidType(all, styles, line) {
   return css;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   const css = buildTokensCss(JSON.parse(fs.readFileSync(path.join(P, 'tokens.json'), 'utf8')));
   const now = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : null;
   if (process.argv.includes('--check')) {
