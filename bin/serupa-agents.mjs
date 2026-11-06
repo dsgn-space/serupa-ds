@@ -24,7 +24,7 @@ export const SECTION = `${START}
 This project's UI is built with Serupa (\`serupa-ds\`). Before any UI work, read \`node_modules/serupa-ds/skills/serupa/SKILL.md\`
 and follow it. It comes with the installed release, so every component, prop and token it names exists here. Before
 you call a UI change done, run the project's check (\`npm run check\` in an app \`serupa-create\` made) and fix what it
-finds.
+finds. To review a UI change, follow \`node_modules/serupa-ds/skills/serupa-review/SKILL.md\`.
 ${END}
 `;
 
