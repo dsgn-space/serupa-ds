@@ -36,6 +36,11 @@
   border: var(--checkbox-border-width, var(--border-width-1)) solid var(--dk-checkbox-bd);
   border-radius: var(--checkbox-radius, var(--radius-inner));
   cursor: inherit;
+}
+/* The fill and border ease only under the pointer or keyboard focus: the box being clicked or pressed. A box that
+   changes from elsewhere (select all ticking 1,000 rows) changes at once, as a native checkbox does, so the page
+   doesn't start 2,000 transitions in one frame (GR168). */
+.dk-checkbox:hover .dk-checkbox__input, .dk-checkbox__input:focus-visible {
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
 @media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input:not(:disabled, [readonly]) { --dk-checkbox-bd: var(--checkbox-border-hover, var(--field-border-hover)); --dk-checkbox-fill: var(--checkbox-bg-checked-hover, var(--primary-hover)); } }
