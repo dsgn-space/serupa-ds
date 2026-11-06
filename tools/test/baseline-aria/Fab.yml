@@ -38,3 +38,7 @@
 # Small
 - button "New project"
 
+# WithOfflineBanner
+- button "New project"
+- strong: You're offline
+

@@ -380,6 +380,21 @@ export const Toaster = /* @__PURE__ */ named("Toaster", function Toaster(props: 
     const tall = live.reduce((h, e) => h + e.getBoundingClientRect().height, 0) + gap * (live.length - 1);
     if (tall > window.innerHeight - 2 * edge + 0.5) setRoom(toastsLive - 1);
   });
+  const spaceVar = "--dk-toaster-space-" + pos;
+  // The room the toasts take at their edge, so a Fab there rises above them rather than under them (GR157): the
+  // Toaster's offset from the edge, the toasts' heights and gaps (laid out, so a toast still sliding in counts in
+  // full) and 8px, in --dk-toaster-space-<position> on the root while one shows. Fab.css reads it.
+  // every render: a toast's height changes with its text and count.
+  useIsoLayoutEffect(() => {
+    const region = self.current, root = document.documentElement;
+    const live = region ? [...region.querySelectorAll<HTMLElement>("[data-toast]:not([data-leaving]), .dk-toaster__more:not([data-leaving])")] : [];
+    if (!region || !live.some((e) => e.hasAttribute("data-toast"))) { root.style.removeProperty(spaceVar); return; }
+    const cs = getComputedStyle(region), gap = parseFloat(getComputedStyle(region.firstElementChild as Element).rowGap) || 0;
+    const edge = parseFloat(pos.startsWith("top") ? cs.top : cs.bottom) || 0;
+    const tall = live.reduce((h, e) => h + e.offsetHeight, 0) + gap * (live.length - 1);
+    root.style.setProperty(spaceVar, Math.ceil(edge + tall + 8) + "px");
+  });
+  React.useEffect(() => () => { document.documentElement.style.removeProperty(spaceVar); }, [spaceVar]);
   // While a Dialog or Drawer is open the page behind it is inert and under it, so the toasts move into it: a
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
