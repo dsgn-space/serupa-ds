@@ -35,7 +35,7 @@ default:
     - key: { files: [package-lock.json] }
       paths: [.npm/]
       policy: pull-push
-    - key: node-and-chromium-$CI_JOB_IMAGE
+    - key: node-and-chromium-v1
       paths: [.ci-home/]
   before_script:
     # tools/setup.mjs keeps Node under $HOME/.local; a HOME inside the project lets the cache keep it between jobs.
