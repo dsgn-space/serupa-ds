@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>EventCalendar — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  var events = [
+    { id: 'a', title: 'Team standup', start: '2025-03-03T09:30', end: '2025-03-03T09:45', repeating: true },
+    { id: 'b', title: 'Design review', start: '2025-03-04T14:00', end: '2025-03-04T15:00', tone: 'info' },
+    { id: 'c', title: 'Launch day', start: '2025-03-12', allDay: true, tone: 'success' }
+  ];
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.EventCalendar, { events: events, defaultMonth: new Date(2025, 2, 1) }));
+</script>
+</body>
+</html>
