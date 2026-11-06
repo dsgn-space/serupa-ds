@@ -70,7 +70,7 @@ const english: AuthCardLabels = {
   failed: "Couldn't check that. Check your connection and try again.",
   resend: 'Send a new code',
   resent: 'We sent a new code to your phone. It works for 10 minutes.',
-  doneTitle: "You're signed in",
+  doneTitle: "You’re signed in",
   doneMessage: 'Welcome back. Taking you to your dashboard.',
   doneLink: 'Go to your dashboard',
 };

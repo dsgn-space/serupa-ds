@@ -62,7 +62,7 @@ describe('Patterns/Sign in', () => {
     expect(describedBy('sign-in-code')).toContain('That code is not right');
     await userEvent.clear(input('sign-in-code'));
     await userEvent.keyboard('123456{Enter}');
-    expect([active().tagName, active().textContent]).toEqual(['H1', "You're signed in"]);
+    expect([active().tagName, active().textContent]).toEqual(['H1', "You’re signed in"]);
   });
 
   test('"Send a new code" says on screen and to a screen reader that it went, each time, and clears the code typed so far', async () => {
