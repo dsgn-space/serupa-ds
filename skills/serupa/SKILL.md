@@ -45,6 +45,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes.
 5. **Shared props.** `size` is `'sm' | 'md' | 'lg'`, at heights of 24, 32 and 44px. Form controls take `invalid` and `disabled`, and get their label, hint and error from `Field`.
 6. **Pick feedback by how long it stays.** To confirm that something worked ("Saved", "Invite sent"), call `toast("Saved")`, and render one `<Toaster />` near the app's root. It goes away on its own and screen readers hear it. Use an `Alert` for a message that must stay on the page until it's dealt with, and `SaveStatus` for autosave.
+7. **Words.** Every button starts with a verb that says what it does ("Save changes", "Send message"), never "OK", "Submit" or "Click here", and a dialog's title uses the same verb ("Delete project?" has a "Delete" button). Sentence case everywhere. No exclamation marks, emoji or "Oops". An error says what to do: "Enter your email", not "This field is required" or "Invalid input"; "We couldn't load your projects. Try again.", not "Something went wrong". An empty state says what goes here and offers to add the first one. The rest is in Content and voice: https://github.com/diki-stwn/serupa-ds/blob/main/docs/foundations.md#content-and-voice
 
 ## Accessibility: what the app must do
 
