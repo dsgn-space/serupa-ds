@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render as mount } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
@@ -514,5 +514,16 @@ describe('NumberInput', () => {
     const t = document.getElementById('mk') as HTMLInputElement;
     t.focus();
     expect([modified(t, 'ArrowUp'), modified(t, 'PageDown'), modified(t, 'Home'), t.value]).toEqual([[false, false, false], [false, false, false], [false, false, false], '5']);
+  });
+
+  test('GR161: min above max warns once in development (aria-valuemin was above aria-valuemax); a range the right way round doesn\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const said = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => /number-range/.test(m));
+      await mount(<NumberInput aria-label="Fine" min={1} max={10} />);
+      expect(said()).toEqual([]);
+      await mount(<NumberInput aria-label="Backwards" min={10} max={1} />);
+      expect(said()).toEqual([expect.stringMatching(/min \(10\) is above max \(1\)/)]);
+    } finally { warn.mockRestore(); }
   });
 });

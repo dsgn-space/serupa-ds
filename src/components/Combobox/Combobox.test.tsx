@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
@@ -958,5 +958,17 @@ describe('Combobox loadOptions (DG1)', () => {
     await expect.poll(() => activeOf('ac')?.textContent).toContain('Zz');
     await userEvent.keyboard('{Enter}');
     expect([made, st('ac').text]).toEqual([['Zz'], 'Zz']);
+  });
+
+  test('GR161: options that share a value warn once in development (picking the second showed the first one\'s label); distinct values don\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const said = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => /combobox-duplicate-value/.test(m));
+      const screen = await render(<Combobox aria-label="Pick" options={[{ value: 'x', label: 'One' }, { value: 'y', label: 'Two' }]} />);
+      expect(said()).toEqual([]);
+      await screen.rerender(<Combobox aria-label="Pick" options={[{ value: 'x', label: 'One' }, { label: 'More', options: [{ value: 'x', label: 'Two' }] }]} />);
+      await expect.poll(said).toHaveLength(1);
+      expect(said()[0]).toMatch(/more than one option has the value "x"/);
+    } finally { warn.mockRestore(); }
   });
 });

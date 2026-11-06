@@ -19,6 +19,7 @@ import * as icons from "../../material/builtin";
 import { en as NumberInputWords } from "./labels";
 import { en as DatePickerWords } from "../DatePicker/labels";
 import { windowBlur } from "../../internal/focus";
+import { warnOnce } from "../../internal/warn";
 import { holdDelay, holdRepeat } from "../../internal/timing";
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, NumberInputWords, DatePickerWords);
@@ -97,6 +98,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
   const min = props.min != null && isFinite(props.min) ? (major(props.min) as number) : undefined;
   const max = props.max != null && isFinite(props.max) ? (major(props.max) as number) : undefined;
+  // min above max: no value can be entered, and assistive tech hears a range that runs backwards (GR161).
+  if (process.env.NODE_ENV !== "production" && min != null && max != null && min > max) warnOnce("number-range", `NumberInput: min (${props.min}) is above max (${props.max}), so no value fits. Swap them, or check where they come from.`);
   // Money keeps the decimals it's shown with (19.99 with a step of 1), so what people see is the value. A percent keeps
   // the ones it's shown with too, two more as a fraction: 12.5% with one decimal is 0.125 (GR175).
   // formatOptions by value: the memos read the options back from their key (keyed), so an inline object doesn't redo them.
