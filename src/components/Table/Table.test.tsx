@@ -100,6 +100,19 @@ describe('Table', () => {
     expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
   });
 
+  test('a row\'s background eases only while the pointer is over the body, so select all from the header repaints every row at once (GR168)', async () => {
+    await withMotion(async () => {
+      await render(<Table id="gr168"><TableHead><TableRow><TableHeaderCell id="gr168h">Name</TableHeaderCell></TableRow></TableHead>
+        <TableBody><TableRow id="gr168a"><TableCell>Ada</TableCell></TableRow><TableRow id="gr168b"><TableCell>Bo</TableCell></TableRow></TableBody></Table>);
+      const row = (id: string) => document.getElementById(id) as HTMLElement;
+      await userEvent.hover(document.getElementById('gr168h')!);
+      expect([css(row('gr168a')).transitionDuration, css(row('gr168b')).transitionDuration]).toEqual(['0s', '0s']);
+      await userEvent.hover(row('gr168a'));
+      expect(css(row('gr168a')).transitionProperty).toBe('background-color');
+      expect(css(row('gr168a')).transitionDuration).not.toBe('0s');
+    });
+  });
+
   test('selected: shaded, a 2px primary bar at its start; no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
