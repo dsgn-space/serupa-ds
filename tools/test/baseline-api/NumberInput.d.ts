@@ -4,21 +4,21 @@ interface NumberInputLabels {
     increase: string;
 }
 interface NumberInputProps extends Omit<InputProps, "defaultValue" | "max" | "min" | "rightIcon" | "showCount" | "step" | "type" | "value"> {
-    value?: null | number;
-    defaultValue?: null | number;
-    onValueChange?: (value: null | number) => void;
-    onInvalidInput?: (text: string, reason: "range" | "unreadable") => void;
-    min?: number;
-    max?: number;
-    step?: number;
-    largeStep?: number;
-    steppers?: boolean;
-    decrementLabel?: string;
-    incrementLabel?: string;
-    locale?: string;
-    formatOptions?: Intl.NumberFormatOptions;
-    numberingSystem?: string;
-    currency?: string;
-    minorUnits?: boolean;
+    value?: null | number | undefined;
+    defaultValue?: null | number | undefined;
+    onValueChange?: ((value: null | number) => void) | undefined;
+    onInvalidInput?: ((text: string, reason: "range" | "unreadable") => void) | undefined;
+    min?: number | undefined;
+    max?: number | undefined;
+    step?: number | undefined;
+    largeStep?: number | undefined;
+    steppers?: boolean | undefined;
+    decrementLabel?: string | undefined;
+    incrementLabel?: string | undefined;
+    locale?: string | undefined;
+    formatOptions?: Intl.NumberFormatOptions | undefined;
+    numberingSystem?: string | undefined;
+    currency?: string | undefined;
+    minorUnits?: boolean | undefined;
 }
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;

@@ -15,15 +15,15 @@ import { en as words } from "./labels";
 
 export interface PasswordInputProps extends Omit<InputProps, "type" | "showCount" | "prefix" | "suffix" | "rightIcon"> {
   /** Shows the password as text (controlled). Use with onVisibleChange. */
-  visible?: boolean;
+  visible?: boolean | undefined;
   /** Shows it as text at first (uncontrolled). Default: false. */
-  defaultVisible?: boolean;
+  defaultVisible?: boolean | undefined;
   /** Called with the new state when the show/hide button is pressed. */
-  onVisibleChange?: (visible: boolean) => void;
+  onVisibleChange?: ((visible: boolean) => void) | undefined;
   /** The show/hide button's name. Default: "Show password" (its aria-pressed says whether it's shown). */
-  toggleLabel?: string;
+  toggleLabel?: string | undefined;
   /** While Caps Lock is on and the field has focus, "Caps Lock is on" shows at the end of the field and is read out once. Default: true. */
-  capsLockHint?: boolean;
+  capsLockHint?: boolean | undefined;
 }
 
 const SIZES = ["sm", "md", "lg"] as const;

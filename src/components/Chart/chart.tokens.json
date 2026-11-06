@@ -1,0 +1,245 @@
+{
+  "chart": {
+    "$description": "Chart's component tokens. Each one is an optional override: set the CSS variable (--chart-<name>) on the page, a container or one Chart, and every Chart inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The series and axis colors are the chart color tokens (chart-1 to chart-8, chart-grid, chart-axis, chart-label, chart-gap), shared with any chart on the page.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title and the table's text (4.5:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-text"
+          }
+        }
+      },
+      "tip-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The tooltip's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-bg"
+          }
+        }
+      },
+      "tip-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The tooltip's text (4.5:1 on tip-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-text"
+          }
+        }
+      },
+      "series-1": {
+        "$type": "color",
+        "$value": "{color.chart-1}",
+        "$description": "Series 1's line, markers and bars. Unset, the page's chart-1.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-1"
+          }
+        }
+      },
+      "series-2": {
+        "$type": "color",
+        "$value": "{color.chart-2}",
+        "$description": "Series 2's line, markers and bars. Unset, the page's chart-2.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-2"
+          }
+        }
+      },
+      "series-3": {
+        "$type": "color",
+        "$value": "{color.chart-3}",
+        "$description": "Series 3's line, markers and bars. Unset, the page's chart-3.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-3"
+          }
+        }
+      },
+      "series-4": {
+        "$type": "color",
+        "$value": "{color.chart-4}",
+        "$description": "Series 4's line, markers and bars. Unset, the page's chart-4.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-4"
+          }
+        }
+      },
+      "series-5": {
+        "$type": "color",
+        "$value": "{color.chart-5}",
+        "$description": "Series 5's line, markers and bars. Unset, the page's chart-5.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-5"
+          }
+        }
+      },
+      "series-6": {
+        "$type": "color",
+        "$value": "{color.chart-6}",
+        "$description": "Series 6's line, markers and bars. Unset, the page's chart-6.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-6"
+          }
+        }
+      },
+      "series-7": {
+        "$type": "color",
+        "$value": "{color.chart-7}",
+        "$description": "Series 7's line, markers and bars. Unset, the page's chart-7.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-7"
+          }
+        }
+      },
+      "series-8": {
+        "$type": "color",
+        "$value": "{color.chart-8}",
+        "$description": "Series 8's line, markers and bars. Unset, the page's chart-8.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-series-8"
+          }
+        }
+      },
+      "grid-line": {
+        "$type": "color",
+        "$value": "{color.chart-grid}",
+        "$description": "The grid lines.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-grid-line"
+          }
+        }
+      },
+      "axis-line": {
+        "$type": "color",
+        "$value": "{color.chart-axis}",
+        "$description": "The zero line, the baseline and the hover cursor (3:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-axis-line"
+          }
+        }
+      },
+      "label-text": {
+        "$type": "color",
+        "$value": "{color.chart-label}",
+        "$description": "The axis labels and the legend (4.5:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-label-text"
+          }
+        }
+      },
+      "separator": {
+        "$type": "color",
+        "$value": "{color.chart-gap}",
+        "$description": "The ring around markers and bars and the marks in a bar's pattern: the page color, so each series has 3:1 against it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-separator"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a focused point or bar.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-focus-ring"
+          }
+        }
+      },
+      "tip-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The tooltip's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-border"
+          }
+        }
+      },
+      "tip-muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A series' name in the tooltip (4.5:1 on tip-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-muted"
+          }
+        }
+      }
+    },
+    "radius": {
+      "tip-radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-md}",
+        "$description": "The tooltip's corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-radius"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "tip-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.shadow-md}",
+        "$description": "The tooltip's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-shadow"
+          }
+        }
+      }
+    },
+    "borders": {
+      "line-width": {
+        "$type": "number",
+        "$value": "{borders.stroke-width-2}",
+        "$description": "A line's thickness (2).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-line-width"
+          }
+        }
+      },
+      "focus-width": {
+        "$type": "number",
+        "$value": "{borders.stroke-width-3}",
+        "$description": "The focus ring around a focused point or bar (3).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-focus-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between the title, the plot and the legend (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-gap-size"
+          }
+        }
+      }
+    }
+  }
+}

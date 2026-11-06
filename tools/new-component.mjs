@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = path.resolve(import.meta.dirname, '..');
 const args = process.argv.slice(2);
 const arg = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 const name = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--group' && args[i - 1] !== '--root');

@@ -7,31 +7,31 @@ interface StepperLabels {
 }
 interface StepperStep {
     title: React.ReactNode;
-    description?: React.ReactNode;
-    optional?: boolean;
-    status?: "error" | "warning";
+    description?: React.ReactNode | undefined;
+    optional?: boolean | undefined;
+    status?: "error" | "warning" | undefined;
 }
 interface StepperProps extends React.HTMLAttributes<HTMLElement> {
     steps: StepperStep[];
     current: number;
-    orientation?: "horizontal" | "vertical";
-    size?: "md" | "sm";
-    onStepClick?: (index: number) => void;
-    clickable?: "all" | "completed";
-    labels?: {
+    orientation?: "horizontal" | "vertical" | undefined;
+    size?: "md" | "sm" | undefined;
+    onStepClick?: ((index: number) => void) | undefined;
+    clickable?: "all" | "completed" | undefined;
+    labels?: ({
         completed?: string;
         error?: string;
         warning?: string;
         optional?: string;
         stepOf?: (step: number, total: number) => string;
-    };
+    }) | undefined;
 }
 declare const Stepper: React.ForwardRefExoticComponent<StepperProps & React.RefAttributes<HTMLElement>>;
 interface UseStepsOptions {
     steps: StepperStep[];
-    validate?: (index: number) => boolean | Promise<boolean>;
-    onComplete?: () => void;
-    defaultStep?: number;
+    validate?: ((index: number) => boolean | Promise<boolean>) | undefined;
+    onComplete?: (() => void) | undefined;
+    defaultStep?: number | undefined;
 }
 interface UseSteps {
     current: number;

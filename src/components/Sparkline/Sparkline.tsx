@@ -12,13 +12,13 @@ export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>,
   /** What it measures, in a few words ("Revenue, last 12 weeks"). Screen readers hear it before the numbers. */
   label: string;
   /** How the numbers read in the summary: Intl.NumberFormat options ({ style: 'currency', currency: 'EUR' }). */
-  format?: Intl.NumberFormatOptions;
+  format?: Intl.NumberFormatOptions | undefined;
   /** Fills the space under the line. Default: false. */
-  area?: boolean;
+  area?: boolean | undefined;
   /** The bottom of the scale. Default: the lowest number. Set min and max to compare several sparklines on one scale. */
-  min?: number;
+  min?: number | undefined;
   /** The top of the scale. Default: the highest number. */
-  max?: number;
+  max?: number | undefined;
 }
 
 // The drawing's grid: 100 wide and 30 high, stretched to the box (preserveAspectRatio none); the strokes keep their

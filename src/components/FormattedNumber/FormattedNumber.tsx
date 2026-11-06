@@ -12,15 +12,15 @@ export interface FormattedNumberProps extends Omit<React.DataHTMLAttributes<HTML
   /** The number. NaN renders an empty element. */
   value: number | bigint;
   /** 'decimal' (default), 'compact' (1.2K), 'percent' (0.45 is 45%), 'currency' (with currency), 'bytes' (1.5 MB) or 'unit' (with unit). */
-  format?: NumberFormat;
+  format?: NumberFormat | undefined;
   /** With format="currency": an ISO 4217 code, "IDR", "USD", "EUR". */
-  currency?: string;
+  currency?: string | undefined;
   /** With format="unit": a unit Intl knows, "kilometer-per-hour", "celsius", "liter". */
-  unit?: string;
+  unit?: string | undefined;
   /** Any other Intl.NumberFormat options (maximumFractionDigits, signDisplay, currencyDisplay...); these win. */
-  options?: Intl.NumberFormatOptions;
+  options?: Intl.NumberFormatOptions | undefined;
   /** A locale for this one; otherwise the SerupaProvider's, else the browser's. */
-  locale?: string;
+  locale?: string | undefined;
 }
 
 /* FormattedNumber: a <data value> holding the number for machines and the locale's words for people: 1.234,5 in

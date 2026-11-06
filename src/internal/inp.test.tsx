@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 import { stories } from '../../tools/test/vitest/stories';
 import { Combobox } from '../components/Combobox/Combobox';
 
@@ -43,6 +43,8 @@ describe('interaction to next paint', () => {
       await act();
       await settle();
       const slow = timings.filter((t) => t.interactionId && t.duration > BUDGET).map((t) => `${t.name}: ${t.duration} ms`);
+      // The slowest answer, for the nightly Benchmarks run (tools/test/bench.mjs). 0: every one under 16 ms.
+      await commands.recordBench('inp', { [`${component}: ${what}`]: Math.max(0, ...timings.filter((t) => t.interactionId).map((t) => t.duration)) });
       expect(slow).toEqual([]);
       await r.unmount();
     });

@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ActivityFeed.stories';
+
+<Meta of={Stories} />
+
+# Activity feed
+
+Who did what and when, newest first, with Load more at the end. It's built from Timeline, Avatar, RelativeTime and LoadMore.
+
+<Canvas of={Stories.Default} />
+
+## What each part is for
+
+- **A region named by its heading** (1.3.1). Screen reader users can jump straight to "Activity". Pick `headingLevel` to fit the page.
+- **The events are an ordered list**, so a screen reader says how many there are and can move between them.
+- **Who did it is in words.** Each line reads as a sentence, "Ana Putri commented on Checkout redesign". The avatar beside the name is decoration, so it's hidden from screen readers and the name isn't said twice.
+- **When is a real time** (RelativeTime). People read "5 minutes ago", machines read the exact moment, and the full date is in the tooltip. Older events show the date instead.
+- **The marker's color is extra.** `status` colors an event's marker by its kind, but the words already say what happened.
+- **Load more keeps your place** (2.4.3, 4.1.3). New events land above the button, focus stays on it, and screen readers hear "2 more loaded. Showing 6 of 6." After the last page the button gives way to "You've reached the end", and focus moves there, so it's never lost.
+- **Another language**: `title`, `emptyText`, `loadMoreLabel` and `endText` are props, and each event's `action` is your own words. When the language puts the target inside the sentence, make `action` a function that gets the target, link included: `action: (t) => <>hat {t} kommentiert</>`. LoadMore's announcement follows the locale.
+
+<Canvas of={Stories.AllLoaded} />
+
+<Canvas of={Stories.Empty} />
+
+## What stays your app's job
+
+- Fetching the events and the next page, and keeping them when people come back.
+- Writing each action in words that fit your product: "commented on", "closed", "joined the team".
+- Telling people when a load fails, with an Alert and a way to try again.
+
+## Copying it
+
+Copy `ActivityFeed.tsx` and `ActivityFeed.test.tsx`, and change the imports to `serupa`.

@@ -17,33 +17,33 @@ export interface InlineEditProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   /** What the text is ("Project name"): the field's name while editing, and part of the button's name ("Project name: Apollo, Edit"). */
   label: string;
   /** The text (controlled). Use with onValueChange. */
-  value?: string;
+  value?: string | undefined;
   /** The text at first (uncontrolled). */
-  defaultValue?: string;
+  defaultValue?: string | undefined;
   /** Called with the new text when it's saved (Enter, or leaving the field) and has changed. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: ((value: string) => void) | undefined;
   /** Called when editing ends without saving (Escape). */
-  onCancel?: () => void;
+  onCancel?: (() => void) | undefined;
   /** Checks the text before it's saved: return an error message to keep the field open and show it, or nothing to save. It can return a Promise for a check on the server: the field stays open, aria-busy, until it settles. Leaving the field with a failing text keeps it open with the message, which is said, and leaves focus where it went. */
-  validate?: (value: string) => React.ReactNode | Promise<React.ReactNode>;
+  validate?: ((value: string) => React.ReactNode | Promise<React.ReactNode>) | undefined;
   /** Shown (in the muted color) when the text is empty. */
-  placeholder?: string;
+  placeholder?: string | undefined;
   /** 'sm', 'md' (default) or 'lg': Input's heights and text sizes, in both modes, so nothing moves when it opens. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Whether the field is open (controlled). Use with onEditingChange. */
-  editing?: boolean;
+  editing?: boolean | undefined;
   /** Open at first (uncontrolled), with the field focused, such as a new row's name. Default: false. */
-  defaultEditing?: boolean;
+  defaultEditing?: boolean | undefined;
   /** Called with true when it opens and false when it closes. */
-  onEditingChange?: (editing: boolean) => void;
+  onEditingChange?: ((editing: boolean) => void) | undefined;
   /** Shows the text without an edit button. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** Shows the text without an edit button, in the full text color. */
-  readOnly?: boolean;
+  readOnly?: boolean | undefined;
   /** The word after the text in the button's name. Default: "Edit" (from SerupaProvider labels). */
-  editLabel?: string;
+  editLabel?: string | undefined;
   /** Props for the <input> while editing: maxLength, autoComplete, spellCheck, inputMode… */
-  inputProps?: Omit<InputProps, 'value' | 'defaultValue' | 'size' | 'aria-label'>;
+  inputProps?: Omit<InputProps, 'value' | 'defaultValue' | 'size' | 'aria-label'> | undefined;
 }
 
 const isThenable = (v: unknown): v is Promise<React.ReactNode> => !!v && typeof (v as { then?: unknown }).then === "function";

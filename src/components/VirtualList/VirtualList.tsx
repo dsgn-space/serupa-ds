@@ -10,17 +10,17 @@ export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListEle
   /** Draws row `index`: a ListItem (or another element that passes its props and style on to an <li>). */
   renderItem: (index: number) => React.ReactElement;
   /** A stable key for row `index` (its id), so a row keeps its state when rows are added or removed. Default: the index. */
-  itemKey?: (index: number) => React.Key;
+  itemKey?: ((index: number) => React.Key) | undefined;
   /** A guess at a row's height in px, for rows not drawn yet. Rows are measured once drawn. Default: 56. */
-  estimatedItemHeight?: number;
+  estimatedItemHeight?: number | undefined;
   /** Rows drawn beyond each edge of the view, so a fast scroll doesn't show a gap. Default: 4. */
-  overscan?: number;
+  overscan?: number | undefined;
   /** 'plain' (default) or 'card': inside a bordered, rounded frame, as List. */
-  variant?: "plain" | "card";
+  variant?: "plain" | "card" | undefined;
   /** Lines between rows. Default: true. */
-  divided?: boolean;
+  divided?: boolean | undefined;
   /** 'ul' (default) or 'ol' when the order matters. */
-  as?: "ul" | "ol";
+  as?: "ul" | "ol" | undefined;
 }
 
 /* VirtualList: a List of any length that draws only the rows in view, plus a few either side (useVirtual in
@@ -62,7 +62,15 @@ export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualLi
     "data-component": "virtual-list", role: rest.role ?? "list", tabIndex: rest.tabIndex ?? 0,
     className: cn("dk-list", "dk-virtual-list", variant === "card" && "dk-list--card", props.divided !== false && "dk-list--divided", props.className),
     style: { ...props.style, "--dk-vl-before": r.before + "px", "--dk-vl-after": r.after + "px" } as React.CSSProperties,
-    onFocus: (e: React.FocusEvent<HTMLUListElement>) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); },
+    // A row Tab reaches is scrolled into view by the list, not only the browser: Firefox scrolled with the guessed
+    // heights, and the rows measured on the way left the focused one below the view. scrollToIndex keeps it in view
+    // while they're measured; a row already in view doesn't move.
+    onFocus: (e: React.FocusEvent<HTMLUListElement>) => {
+      const i = indexOf(e.target, e.currentTarget);
+      setFocused(i);
+      if (i != null) r.scrollToIndex(i);
+      if (props.onFocus) props.onFocus(e);
+    },
     onBlur: (e: React.FocusEvent<HTMLUListElement>) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); },
   }), rows);
 });

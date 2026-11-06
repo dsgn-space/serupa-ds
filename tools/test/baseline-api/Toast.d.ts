@@ -10,16 +10,16 @@ type ToastTone = "danger" | "info" | "neutral" | "success" | "warning";
 type ToasterPosition = "bottom-center" | "bottom-end" | "bottom-start" | "top-center" | "top-end" | "top-start";
 interface ToastOptions {
     title: React.ReactNode;
-    description?: React.ReactNode;
-    tone?: ToastTone;
-    action?: {
+    description?: React.ReactNode | undefined;
+    tone?: ToastTone | undefined;
+    action?: ({
         label: string;
         onClick: () => void;
-    };
-    duration?: number;
-    autoDismiss?: boolean;
-    announcement?: string;
-    id?: string;
+    }) | undefined;
+    duration?: number | undefined;
+    autoDismiss?: boolean | undefined;
+    announcement?: string | undefined;
+    id?: string | undefined;
 }
 declare function show(options: string | ToastOptions): string;
 declare function dismiss(id?: string): void;
@@ -32,8 +32,8 @@ interface ToastPromiseMessages<T> {
 declare function promise<T>(work: (() => Promise<T>) | Promise<T>, messages: ToastPromiseMessages<T>): Promise<T>;
 interface ToastUndoOptions extends Omit<ToastOptions, "action" | "autoDismiss"> {
     commit: () => void;
-    onUndo?: () => void;
-    undoLabel?: string;
+    onUndo?: (() => void) | undefined;
+    undoLabel?: string | undefined;
 }
 declare function undo(options: ToastUndoOptions): string;
 declare const toast: typeof show & {
@@ -42,12 +42,12 @@ declare const toast: typeof show & {
     undo: typeof undo;
 };
 interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
-    position?: ToasterPosition;
-    label?: string;
-    dismissLabel?: string;
-    limit?: number;
-    duration?: number;
-    autoDismiss?: boolean;
+    position?: ToasterPosition | undefined;
+    label?: string | undefined;
+    dismissLabel?: string | undefined;
+    limit?: number | undefined;
+    duration?: number | undefined;
+    autoDismiss?: boolean | undefined;
 }
 declare const Toaster: ((props: ToasterProps) => React.ReactElement) & {
     displayName: string;

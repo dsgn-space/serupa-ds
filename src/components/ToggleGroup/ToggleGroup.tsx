@@ -8,23 +8,23 @@ import type { ToggleButtonProps } from "../ToggleButton/ToggleButton";
 
 export interface ToggleGroupProps extends Omit<ButtonGroupProps, "defaultValue" | "onChange"> {
   /** 'single' (default): turning one on turns the others off, and pressing the one that's on turns it off. 'multiple': each turns on and off by itself. */
-  type?: 'single' | 'multiple';
+  type?: 'single' | 'multiple' | undefined;
   /** The values of the buttons that are on (controlled). Use with onValueChange. */
-  value?: string[];
+  value?: string[] | undefined;
   /** The values of the buttons that are on at first (uncontrolled). */
-  defaultValue?: string[];
+  defaultValue?: string[] | undefined;
   /** Called with the values of the buttons that are on, when one is pressed. */
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: ((value: string[]) => void) | undefined;
   /** With type="single": one button always stays on, so pressing the one that's on does nothing. Default: false. */
-  required?: boolean;
+  required?: boolean | undefined;
   /** Turns every button off and out of use. */
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   /** The buttons' size, for those that don't set their own. */
-  size?: ToggleButtonProps["size"];
+  size?: ToggleButtonProps["size"] | undefined;
   /** The buttons' variant, for those that don't set their own: 'outline' (default) or 'ghost'. */
-  variant?: ToggleButtonProps["variant"];
+  variant?: ToggleButtonProps["variant"] | undefined;
   /** ToggleButtons, each with a value ("bold", "left"). Other children render as they are. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 /* ToggleGroup: a ButtonGroup whose ToggleButtons share one value. With type="single" it works like a set of

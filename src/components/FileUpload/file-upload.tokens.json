@@ -92,6 +92,16 @@
           }
         }
       },
+      "done-color": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "A finished upload's \"Complete\" and its check (fileStatus).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-done-color"
+          }
+        }
+      },
       "item-bg": {
         "$type": "color",
         "$value": "{color.surface}",

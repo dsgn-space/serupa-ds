@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v13.0.0
+npm install github:diki-stwn/serupa-ds#v14.1.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -87,14 +87,15 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Avatar**: A small picture of a person (a circle) or of a team, project or organisation (a square).
 - **AvatarGroup**: Avatars in an overlapping row, such as the people on a project or the assignees of a task.
 - **Card**: A surface that groups related content and its actions: a summary, a settings panel, an item in a grid.
-- **CodeBlock**: Shows code to read or copy: an install command, a config file, an example, with a copy button, line numbers and marked lines.
 - **Carousel**: One slide at a time, with previous and next buttons, a dot per slide and swipe.
+- **CodeBlock** (beta): Code for people to read and copy: an install command, a config file, an example.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette.
 - **Icon**: Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons.
 - **Image**: A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails.
 - **Kbd**: Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states.
 - **List**: Rows of related things: people, files, notifications, settings.
+- **Logo** (beta): The product's logo at a set height, with a version for dark themes and a small mark for narrow screens.
 - **RelativeTime**: Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours".
 - **SortableList**: A list people put in their own order: tasks by priority, steps in a flow, columns in a table.
 - **Table**: A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide.
@@ -102,6 +103,8 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 ### Data display
 
+- **Chart** (beta): A line or bar chart of a few series over the same categories, such as visitors per month or orders per region.
+- **Sparkline** (beta): A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value.
 - **Timeline**: An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content.
 
 ### Feedback
@@ -110,8 +113,10 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Badge**: A short label for status, counts and categories, optionally clickable.
 - **EmptyState**: What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it.
 - **ErrorBoundary**: Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page.
+- **Illustration** (beta): A small line drawing for an empty state, an error page or a finished flow.
 - **Loader**: Shows that something is loading when you can't say how far along it is.
 - **Meter**: Shows a measurement within a known range: storage used, a plan's seats, a password's strength, a battery level.
+- **OfflineBanner** (beta): Says when the connection drops and when it comes back, on screen and to screen readers.
 - **Progress**: Shows how far along a task is when you can tell: an upload, a setup, a quota.
 - **SaveStatus**: A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button.
 - **Toast**: A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way.
@@ -182,5 +187,6 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **NotificationCenter**: A drawer of past notifications with read states: newest first, unread ones with a dot and a bolder title, and buttons to mark them read or clear the list.
 - **Popover**: A small panel next to its trigger for content people interact with: a short form, filters, details with links.
 - **Tooltip**: A short hint about one element, shown while it's hovered or focused: what an icon button does, a keyboard shortcut, why something is unavailable.
+- **Tour** (beta): A short guided walk through a page: one step at a time, a small panel points at a part of the page, says what it's for, and offers Back, Next and Done.
 
 <!-- components:end -->

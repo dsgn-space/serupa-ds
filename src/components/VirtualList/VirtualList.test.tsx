@@ -97,6 +97,40 @@ describe('VirtualList', () => {
     await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
   });
 
+  test('GR139: with rows of mixed heights, End reaches the last row and Home then the first, each in one press', async () => {
+    // Taller than the guess on the way up, so the rows measured as the view goes back move the top it aimed for.
+    const mixed = (i: number) => <ListItem title={'Row ' + (i + 1)} description={i % 3 ? 'A longer line under the title that wraps onto a second line in a narrow list. '.repeat(i % 3) : undefined} />;
+    await render(<div style={{ width: 280 }}><VirtualList id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
+    el('v').focus();
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
+    await userEvent.keyboard('{Home}');
+    await expect.poll(() => [el('v').scrollTop, titles('v')[0]]).toEqual([0, 'Row 1']);
+    await new Promise((r) => setTimeout(r, 300));
+    expect([el('v').scrollTop, titles('v')[0]]).toEqual([0, 'Row 1']);
+  });
+
+  test('GR142: after End, the first PageUp moves the view up a screen, with rows of mixed heights', async () => {
+    const mixed = (i: number) => <ListItem title={'Row ' + (i + 1)} style={{ minHeight: [40, 64, 96][i % 3] }} />;
+    await render(<div style={{ width: 320 }}><VirtualList id="v" aria-label="Rows" count={1000} renderItem={mixed} style={{ height: 400 }} /></div>);
+    el('v').focus();
+    for (const k of ['{End}', '{Home}', '{End}']) {
+      await userEvent.keyboard(k);
+      await expect.poll(() => k === '{Home}' ? titles('v')[0] : titles('v').at(-1)).toBe(k === '{Home}' ? 'Row 1' : 'Row 1000');
+    }
+    await new Promise((r) => setTimeout(r, 300));
+    // The first row in view, by its number.
+    const first = () => { const v = el('v').getBoundingClientRect(); const r = rows('v').find((x) => x.getBoundingClientRect().bottom > v.top + 1)!; return Number(title(r).slice(4)); };
+    const at = first();
+    await userEvent.keyboard('{PageUp}');
+    // A screen (400px) of rows 40 to 96px tall is four or more of them; the browser's smooth scroll went back one.
+    await expect.poll(() => at - first()).toBeGreaterThanOrEqual(4);
+    await new Promise((r) => setTimeout(r, 300));
+    expect(at - first()).toBeGreaterThanOrEqual(4);
+    await userEvent.keyboard('{PageDown}');
+    await expect.poll(() => titles('v').at(-1)).toBe('Row 1000');
+  });
+
   test('fewer rows, or none, after a change; itemKey keeps a row\'s element when rows before it go', async () => {
     const ids = Array.from({ length: 50 }, (_, i) => 'id' + i);
     const page = (list: string[]) => <VirtualList id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]} renderItem={(i) => <ListItem title={list[i]} />} />;
@@ -133,7 +167,9 @@ describe('VirtualList', () => {
     await render(<><button id="b">b</button><VirtualList id="v" aria-label="Rows" count={10000} renderItem={link} /></>);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
     el('b').focus();
-    for (let k = 0; k < 20; k++) await userEvent.tab();
+    // Two frames after each press, as a person's presses come: the rows past the last one drawn are drawn on the scroll
+    // that brings it into view, and WebKit sends that scroll a frame later, so a press sent at once left the list.
+    for (let k = 0; k < 20; k++) { await userEvent.tab(); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); }
     const box = el('v').getBoundingClientRect(), r = document.activeElement!.getBoundingClientRect();
     expect(document.activeElement!.closest('[data-index]')?.getAttribute('data-index')).toBe('18');
     expect([r.top >= box.top - 1, r.bottom <= box.bottom + 1, el('v').scrollTop > 0]).toEqual([true, true, true]);
