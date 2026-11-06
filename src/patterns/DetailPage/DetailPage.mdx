@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './DetailPage.stories';
+
+<Meta of={Stories} />
+
+# Detail page
+
+One thing, here a project: where it sits, its name and details, its parts in tabs, small removals you can undo, and a delete you can't, behind typing its name.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A page for one record people come back to and change: a project, a customer, an order.
+- Not for a list of records: that's the List with search and filters pattern, with each row linking here.
+- Not for a long form filled in once: that's a settings or multi-step form.
+
+## What each part is for
+
+- **The breadcrumb** says where the page sits and leads back up (2.4.8). The last item is the page itself, not a link.
+- **The h1 is the record's name.** A new name saved in Overview shows in the h1 and the breadcrumb at once.
+- **Overview** edits each detail in place with Inline edit: Enter saves, Escape puts it back. An empty name says "Enter a name for the project." and keeps the old one (3.3.1).
+- **Tabs** split the parts, and each panel is named by its tab (1.3.1). Keep them few: three or four.
+- **Removing a task happens at once**, with Undo in a toast. It's removed for good only when the toast goes, so nothing needs "Are you sure?" first (3.3.4). Focus goes to the next task's Remove, or to the list's heading when none are left, never to the top of the page (2.4.3).
+- **Deleting the project can't be undone**, so it sits apart in Settings, and its dialog says what will be lost and asks for the project's name before the button works (Type to confirm). Pasting the name is fine (3.3.8).
+- **After the delete**, the page says the project is gone, with its h1 focused and a link back to the projects.
+- **A skip link** first, into main, as on every page.
+
+## What stays the app's job
+
+- **Storing the changes.** `onRename` gets a saved name or description, `onRemoveTask` a task once its Undo has passed, and `onDelete` the delete: return its promise, and the button shows it's busy until it settles.
+- **Where it goes after the delete.** Here the page says so in place. An app may go to the list instead, with a toast that says what was deleted.
+- **Who may delete.** Hide or disable the danger zone for people who can't, with a line that says who can.
