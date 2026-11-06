@@ -4,6 +4,27 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [14.1.0] - 2026-11-03
+
+### Added
+
+- **Added: Chart (beta, CH2).** A line or bar chart of up to eight series over the same categories, drawn as SVG at its box's width. The plot is a group with a summary a screen reader hears first (the kind, the series, each one's lowest and highest value); every point is one tab stop away, named with its series, category and value, with arrow keys along and across series (mirrored right to left), and its values in a tooltip. Each series has its own marker shape or bar pattern as well as its chart color, and "Show as table" shows the same numbers as a sortable Table. The line draws in and the bars grow once, unless motion is reduced. Missing values leave a gap; `formatValue` sets how a value is written everywhere.
+
+### Fixed
+
+- Pagination's page buttons and AvatarGroup's "+N" are named in the digits they show: "Page ١٠" and "٣ more" in ar-EG, not "Page 10" and "3 more", so the name holds the visible text (WCAG 2.5.3). A pageLabel or moreLabel keeps its other numbers.
+- ErrorSummary: takes focus again when a later failed submit changes what an error says, not only which fields have errors. A sign-in whose "Enter your password" became "The email or password is not right" kept focus in the password field, and a screen reader heard nothing.
+- Navbar (sticky): in Safari, a field focused inside a shadow root now scrolls into view. Safari left it below the window. The page now brings it up, clear of the bar.
+- OfflineBanner: with a sticky Navbar, a top bar now sits just below it instead of over its brand, links, actions and Menu button, which a tap or a Tab couldn't reach while offline. The page's room and scroll padding count both bars.
+- OfflineBanner: in Safari, a field Tab moves to no longer stays under the bar. Safari doesn't use scroll-padding when it scrolls a focused field into view, so after its scroll the page moves the field clear of the bar (and of a sticky Navbar above a top bar).
+- OfflineBanner: a top bar adds its room to the start of the page, as a bottom bar does at the end, so the first fields aren't hidden under it at the top of the page. With a sticky Navbar, which already holds that edge, nothing is added.
+- PhoneInput and parsePhone: a pasted `tel:` link reads as its number (`tel:+4930123456` is +49 30 123456, not +49 4930123456), and an extension at the end ("ext. 12", "x12", "#12", "Durchwahl 12", ";ext=12") is left off instead of being joined onto the number and marking it complete.
+- Table: with `stickyHeader`, a link row's checkbox and buttons scrolled under the header stay under it in Safari too, instead of painting over the header's own checkbox.
+- VirtualList (and a virtual Table): End goes to the last row and keeps it at the bottom while the rows on the way are measured. In Safari it used to stop partway, when those rows turned out taller than the guess.
+- Combobox: in Safari, an opened list draws all the options in view at once, not just the first few until the next frame.
+- VirtualList (and the lists built on it): Home goes back to the first row in one press after End, as End reaches the last. With rows of mixed heights, the rows measured on the way up moved the top it aimed for, and it stopped about a dozen rows short.
+- VirtualList: a row Tab reaches stays in view in Firefox. The list now scrolls the focused row into view itself and keeps it there while the rows on the way are measured, instead of leaving it to the browser's scroll, which used the guessed heights.
+
 ## [14.0.0] - 2026-11-03
 
 ### Added
@@ -2037,7 +2058,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/diki-stwn/serupa-ds/compare/v14.0.0...HEAD
+[Unreleased]: https://github.com/diki-stwn/serupa-ds/compare/v14.1.0...HEAD
+[14.1.0]: https://github.com/diki-stwn/serupa-ds/compare/v14.0.0...v14.1.0
 [14.0.0]: https://github.com/diki-stwn/serupa-ds/compare/v13.0.0...v14.0.0
 [13.0.0]: https://github.com/diki-stwn/serupa-ds/compare/v12.0.0...v13.0.0
 [12.0.0]: https://github.com/diki-stwn/serupa-ds/compare/v11.0.0...v12.0.0
