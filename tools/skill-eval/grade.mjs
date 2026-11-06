@@ -10,6 +10,10 @@
 //   names        every form control sits in a Field or has its own name, every IconButton has a label, every
 //                picture has alt
 //   no-div-click no onClick on an element that isn't interactive (div, span, li, tr, td, p, img, section)
+//   words        the UI text (JSX text, text props such as label and title, toast() and announce()) follows Content
+//                and voice in docs/foundations.md: no "OK", "Submit", "Yes" or "Click here" on a button, sentence
+//                case, no exclamation marks, emoji, "Oops" or sales words, no "Invalid input", "This field is
+//                required" or a bare "Something went wrong"
 // It reads code only: it can't tell whether the page works. tools/test/skill-eval.mjs checks the grader itself.
 // A folder holds one answer per task (<task>.tsx) or several runs of each (<task>.1.tsx, <task>.2.tsx…); the table
 // gives each check's pass count over the runs, and the answers' mean length (and, from run.mjs's meta.json, the
@@ -22,7 +26,7 @@ import ts from '@typescript/typescript6';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const TASKS = JSON.parse(fs.readFileSync(path.join(HERE, 'tasks.json'), 'utf8'));
-export const CHECKS = ['parses', 'serupa', 'components', 'no-rebuilds', 'tokens', 'names', 'no-div-click'];
+export const CHECKS = ['parses', 'serupa', 'components', 'no-rebuilds', 'tokens', 'names', 'no-div-click', 'words'];
 
 const REBUILT = { button: 'Button', input: 'Input', select: 'Select', textarea: 'Textarea', table: 'Table', dialog: 'Dialog' };
 const FIELD_CONTROLS = new Set(['Input', 'PasswordInput', 'Textarea', 'Select', 'NumberInput', 'SearchInput', 'Combobox', 'DatePicker', 'DateRangePicker', 'TimePicker', 'PhoneInput', 'PinInput', 'Slider', 'ColorPicker']);
@@ -33,6 +37,33 @@ const WIDGET_ROLES = new Set(['dialog', 'alertdialog', 'menu', 'menubar', 'menui
 // A month's grid of days: the weekday initials or names written out, or the days in a month worked out by hand.
 const DAY_GRID = /\[\s*['"](?:S|Su|Sun|Sunday|M|Mo|Mon|Monday)['"]\s*,\s*['"](?:M|Mo|Mon|Monday|T|Tu|Tue|Tuesday)['"]|new Date\([^()]*,[^()]*\+\s*1\s*,\s*0\s*\)/;
 // Style properties whose bare numbers are not lengths.
+// UI text: the props that hold words, and the calls that say them.
+const TEXT_PROPS = new Set(['label', 'title', 'description', 'placeholder', 'hint', 'error', 'message', 'heading', 'text', 'aria-label', 'confirmLabel', 'cancelLabel', 'actionLabel', 'emptyText']);
+const SAYS = new Set(['toast', 'announce']);
+const ACTIONS = new Set(['Button', 'button', 'Link', 'a', 'MenuItem', 'Tab']);
+const VAGUE_ACTION = /^(?:ok|okay|submit|yes|no)$/i;
+/** What's wrong with one piece of UI text, or ''. */
+export function wordsWhy(s, action = false) {
+  const t = s.replace(/\s+/g, ' ').trim();
+  if (!t || !/\p{L}/u.test(t)) return '';
+  if (/\p{Extended_Pictographic}/u.test(t)) return `an emoji in "${t}"`;
+  if (/!(?=\s|$|["')])/.test(t)) return `an exclamation mark in "${t}"`;
+  if (/\boops\b/i.test(t)) return `"${t}"`;
+  if (/\bclick here\b/i.test(t)) return `"${t}" says how to click, not where it goes`;
+  if (action && VAGUE_ACTION.test(t)) return `a "${t}" button: say what it does`;
+  if (/^invalid (?:input|value|entry|data)\.?$/i.test(t) || /\bthis field is required\b/i.test(t)) return `"${t}" doesn't say how to fix it`;
+  if (/^(?:oops,? )?something went wrong\.?$/i.test(t)) return `"${t}" doesn't say what happened`;
+  if (/\b(?:amazing|awesome|seamless(?:ly)?|effortless(?:ly)?|supercharge\w*|revolutionary|blazing(?:ly)? fast|unleash\w*)\b/i.test(t)) return `sales words in "${t}"`;
+  // Title Case: a short label whose later words are all capitalised ("Save Changes"). A word with a capital inside
+  // (GitHub, iPhone) or all capitals (PDF) is a name and doesn't count; a lowercase word makes it sentence case.
+  const words = t.split(' ');
+  if (words.length <= 6 && !/[.?:;]\s/.test(t)) {
+    const rest = words.slice(1).map((w) => w.replace(/^\W+|\W+$/g, '')).filter((w) => /^\p{L}+$/u.test(w) && !/\p{Lu}/u.test(w.slice(1)));
+    if (rest.length && rest.every((w) => /^\p{Lu}/u.test(w))) return `"${t}" in Title Case, not sentence case`;
+  }
+  return '';
+}
+
 const UNITLESS = new Set(['opacity', 'flex', 'flexGrow', 'flexShrink', 'zIndex', 'lineHeight', 'fontWeight', 'order', 'gridColumn', 'gridRow', 'aspectRatio']);
 const RAW_COLOR = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklch)\(/i;
 const RAW_LENGTH = /(?<![\w-])-?(?:\d+(?:\.\d+)?|\.\d+)(?:px|rem|em)\b|\[\d+(?:px|rem)\]/;
@@ -87,6 +118,14 @@ export function grade(source, expect = []) {
     else if (RAW_TIME.test(s) && /transition|animation|duration|delay/i.test(s)) fail('tokens', `${where}: ${RAW_TIME.exec(s)[0]}`);
   };
 
+  // The strings an expression can show: itself, either branch of a ?:, the fallback of || and ??, the end of &&.
+  const shown = (e) => !e ? [] : ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e) ? [e.text]
+    : ts.isParenthesizedExpression(e) || ts.isJsxExpression(e) ? shown(e.expression)
+    : ts.isConditionalExpression(e) ? [...shown(e.whenTrue), ...shown(e.whenFalse)]
+    : ts.isBinaryExpression(e) && [ts.SyntaxKind.BarBarToken, ts.SyntaxKind.QuestionQuestionToken].includes(e.operatorToken.kind) ? [...shown(e.left), ...shown(e.right)]
+    : ts.isBinaryExpression(e) && e.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken ? shown(e.right) : [];
+  const words = (list, action, where = '') => { for (const w of list) { const why = wordsWhy(w, action); if (why) return fail('words', where + why); } };
+
   const visit = (n) => {
     const o = opening(n);
     if (o) {
@@ -105,11 +144,15 @@ export function grade(source, expect = []) {
       if (SELF_LABELLED.has(tag) && !named && !a.has('label') && !hasChildren(n) && !inField(n)) fail('names', `${tag} with no label`);
       if (tag === 'IconButton' && !a.has('label')) fail('names', 'IconButton with no label');
       if ((tag === 'img' || tag === 'Image') && !a.has('alt')) fail('names', `<${tag}> with no alt`);
+      for (const [k, v] of a) if (TEXT_PROPS.has(k)) words(shown(v.initializer), ACTIONS.has(tag) && k === 'aria-label', `${k}: `);
       const style = a.get('style')?.initializer;
       if (style && ts.isJsxExpression(style) && style.expression && ts.isObjectLiteralExpression(style.expression)) {
         for (const p of style.expression.properties) if (ts.isPropertyAssignment(p)) styleValue(p);
       }
     }
+    // Words: text between tags (and a string in braces there), and what toast() and announce() say.
+    if ((ts.isJsxText(n) || ts.isJsxExpression(n)) && ts.isJsxElement(n.parent)) words(ts.isJsxText(n) ? [n.text] : shown(n.expression), ACTIONS.has(tagOf(n.parent.openingElement)));
+    if (ts.isCallExpression(n) && SAYS.has(n.expression.getText(file).split('.')[0])) words(shown(n.arguments[0]), false);
     if (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n) || ts.isTemplateHead(n) || ts.isTemplateMiddle(n) || ts.isTemplateTail(n)) {
       if (!(ts.isImportDeclaration(n.parent) || ts.isExternalModuleReference(n.parent))) text(n.text, 'text "' + n.text.slice(0, 40) + '"');
     }

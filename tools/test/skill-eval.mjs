@@ -55,6 +55,19 @@ const BAD = [
   ['no-rebuilds', GOOD.replace('export function', 'const last = (y: number, m: number) => new Date(y, m + 1, 0).getDate();\nexport function')],
   ['no-rebuilds', GOOD.replace('<Stack gap="2">', '<Stack gap="2"><div className="absolute top-full mt-1">Options</div>')],
   ['no-rebuilds', GOOD.replace("padding: 'var(--spacing-4)'", "position: 'absolute', top: '100%'")],
+  // Words (PN5): the tells of UI text an agent wrote, in text, in text props and in toast().
+  ['words', GOOD.replace('>Sign in</Button>', '>Submit</Button>')],
+  ['words', GOOD.replace('>Sign in</Button>', '>{"OK"}</Button>')],
+  ['words', GOOD.replace('>Sign in</Button>', '>Sign In</Button>')],
+  ['words', GOOD.replace('label="Keep me signed in"', 'label="Keep me signed in!"')],
+  ['words', GOOD.replace('label="Keep me signed in"', 'label="Keep me signed in 🔒"')],
+  ['words', GOOD.replace("'Enter your email'", "'This field is required'")],
+  ['words', GOOD.replace("'Enter your email'", "'Invalid input'")],
+  ['words', GOOD.replace('<Checkbox>Or with children</Checkbox>', '<Text>Oops, that didn\'t work</Text>')],
+  ['words', GOOD.replace('<Checkbox>Or with children</Checkbox>', '<Text>Click here to reset it</Text>')],
+  ['words', GOOD.replace('<Checkbox>Or with children</Checkbox>', '<Text>Sign in seamlessly</Text>')],
+  ['words', GOOD.replace('const [email', 'const save = () => toast("Saved!");\n  const [email')],
+  ['words', GOOD.replace('const [email', 'const fail = () => toast.error("Something went wrong");\n  const [email')],
 ];
 for (const [check, src] of BAD) {
   const r = grade(src, ['Field', 'Input', 'Button|Link']);
@@ -72,6 +85,14 @@ const KEEP = GOOD.replace('<Stack gap="2">', `<Stack gap="2"><section role="regi
         <Text>Open Monday to Friday</Text>`);
 const kept = grade(KEEP, ['Field', 'Input', 'Button|Link']);
 t('a region, a status, a Serupa component with aria-expanded and a placed badge are not widgets built by hand', kept['no-rebuilds'].ok, kept['no-rebuilds'].why);
+
+// Words that are fine: a name with a capital inside, an abbreviation, a lowercase word, a full sentence, an ellipsis,
+// "!" in code, and strings that aren't UI text (classes, values, keys).
+const PLAIN = GOOD.replace('<Stack gap="2">', `<Stack gap="2"><Button>Connect GitHub</Button><Button>Export PDF</Button><Heading level={2}>Open Monday to Friday</Heading>
+        <Text>We couldn't save your changes. Try again.</Text><Text>Saving…</Text><Text>{email !== '' ? 'Ready' : 'Empty'}</Text>
+        <Badge variant="New Feature" data-x="Big Deal!">New</Badge>`).replace('const [email', 'const ok = () => toast("Invite sent");\n  const [email');
+const plain = grade(PLAIN, ['Field', 'Input', 'Button|Link']);
+t('names, abbreviations, sentences, "…" and strings that aren\'t UI text pass "words"', plain.words.ok, plain.words.why);
 
 // The tasks name components that exist, and have been run.
 const names = new Set(fs.readdirSync(path.join(PROJECT, 'src/components')));
