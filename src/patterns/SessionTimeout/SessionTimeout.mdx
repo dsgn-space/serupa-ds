@@ -17,10 +17,11 @@ Warns well before a signed-in session ends, lets one action keep it going, and l
 
 ## What each part is for
 
+- **Typing or clicking counts.** Activity on the page keeps the session, through `onExtend`, at most once every `activityEvery` seconds (a minute by default). Someone writing a long message is never interrupted mid-sentence, and the server isn't asked on every key.
 - **A warning well before the end.** A Dialog opens `warnBefore` seconds before the session ends, two minutes by default. 2.2.1 asks for at least 20 seconds, but someone using a screen reader, a switch or a magnifier needs much longer to find it, read it and act.
 - **One action to stay**: "Stay signed in", focused first, so Enter keeps the session. Escape keeps it too, since pressing anything means someone is there. "Sign out" is there for someone who's finished.
 - **The time left, said at sensible steps.** When the warning opens, the time left is said once ("You'll be signed out in 2 minutes."). After that it's said only at each whole minute and at 30 seconds (4.1.3). The countdown on screen updates every second, but it's outside any live region, so a screen reader isn't interrupted every second.
-- **Nothing typed is lost.** What's typed is kept as it's typed (2.2.6, 3.3.7), here in localStorage under `saveKey`. If the session ends, signing in again brings it all back. The page says so before the warning, in the warning and after the sign-out.
+- **Nothing typed is lost.** What's typed is kept as it's typed (2.2.6, 3.3.7), here in localStorage under `saveKey`. If the session ends, signing in again brings it all back. The page says so before the warning, in the warning and after the sign-out. Signing out on purpose clears it, so the next person on the computer doesn't find it.
 - **Focus where it was.** When the warning closes, focus goes back to the field it was on (2.4.3). When the session ends, the "You've been signed out" heading takes focus, so the change is read.
 - **A skip link** first, as on every page.
 
