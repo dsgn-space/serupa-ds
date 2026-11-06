@@ -113,7 +113,10 @@ describe('FileUpload', () => {
     const paste = (target: Element, ...files: File[]) => {
       const dt = new DataTransfer(); for (const f of files) dt.items.add(f);
       if (!files.length) dt.setData('text/plain', 'hello');
-      const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: dt });
+      // Firefox's ClipboardEvent constructor drops the clipboardData it's given and makes an empty one, so the files
+      // go on the event itself, where a real paste has them.
+      const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(e, 'clipboardData', { value: dt });
       target.dispatchEvent(e); return e.defaultPrevented;
     };
     choose(el).focus();
