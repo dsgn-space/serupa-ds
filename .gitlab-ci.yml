@@ -40,6 +40,8 @@ default:
   before_script:
     # tools/setup.mjs keeps Node under $HOME/.local; a HOME inside the project lets the cache keep it between jobs.
     - export HOME="$CI_PROJECT_DIR/.ci-home" && mkdir -p "$HOME"
+    # Playwright's image has no unzip, which tools/setup.mjs needs for Chrome for Testing's archives.
+    - command -v unzip >/dev/null || (apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null)
     - node tools/setup.mjs
     - export PATH="$(ls -d "$HOME"/.local/node-v*/bin | tail -1):$PATH" && node --version
     - |

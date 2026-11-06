@@ -8,7 +8,7 @@
 //   (or ~/.cache/ms-playwright), from Chrome for Testing on storage.googleapis.com, so it works where Playwright's own
 //   download host is blocked. Laid out as `npx playwright install chromium` would, so Playwright finds it.
 // Linux and macOS, x64 and arm64. It never writes outside ~/.local and the browsers folder.
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -26,6 +26,7 @@ async function download(url, to) {
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
   fs.writeFileSync(to, Buffer.from(await res.arrayBuffer()));
 }
+if (spawnSync('unzip', ['-v'], { stdio: 'ignore' }).error) { console.error('tools/setup.mjs needs unzip (apt-get install unzip) to unpack Chromium.'); process.exit(2); }
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-setup-'));
 /** @type {(cmd: string, args: string[], opts?: import('node:child_process').ExecFileSyncOptions) => void} */
 const sh = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: 'inherit', ...opts });
