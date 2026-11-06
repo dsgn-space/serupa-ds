@@ -33,6 +33,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "すべてのページを表示",
   morePages: "他のページ",
   previousMonth: "前の月",
+  timeZoneYours: "お使いのタイムゾーン",
   nextMonth: "次の月",
   month: "月",
   year: "年",

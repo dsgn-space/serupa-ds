@@ -34,6 +34,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "Tüm sayfaları göster",
   morePages: "Diğer sayfalar",
   previousMonth: "Önceki ay",
+  timeZoneYours: "Saat diliminiz",
   nextMonth: "Sonraki ay",
   month: "Ay",
   year: "Yıl",

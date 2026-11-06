@@ -3,7 +3,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, affectedComponents, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, affectedComponents, folderOf, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -19,7 +19,7 @@ const GROUPS = {
   visual: [['Visual snapshots', 'visual.mjs', ...update]],
   storybook: [['Storybook', 'storybook.mjs']],
 };
-// --since <ref> (CI on a pull request): when every changed file belongs to a component folder, the component tests,
+// --since <ref> (CI on a pull request): when every changed file belongs to a component, block or pattern folder, the component tests,
 // visual snapshots and Storybook checks cover only those components and the ones that use them (SERUPA_ONLY). The checks always run whole.
 // The components the change itself touches (without the ones that use them), on a narrowed run.
 let direct = null;
@@ -39,7 +39,8 @@ const STORY_WIDE = ['hydrateStories', 'hydrateStoriesCsp', 'serverHtml', 'ariaSt
 const storied = !!only && [...only].some((n) => n !== 'ErrorBoundary' && fs.existsSync(path.join(PROJECT, 'src', 'components', n, `${n}.stories.tsx`)));
 // The components' own folders and the shared tests in src/internal/ that render one of them; with SERUPA_ONLY the
 // component tests (in English and in the second language) cover these.
-const covered = only ? [...[...only].map((n) => `src/components/${n}/`), ...internalTestsFor(only)] : [];
+// A block or pattern brings its own folder (src/patterns/<Name>/); an Introduction page has none.
+const covered = only ? [...[...only].map(folderOf).filter(Boolean), ...internalTestsFor(only)] : [];
 const node = (g) => ([name, f, ...args]) => [name, 'node', [path.join(HERE, f), ...args], g];
 const vitest = (name, project, g, ...args) => [name, process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run', '--project', project, ...args], g];
 const steps = [
@@ -52,7 +53,7 @@ const steps = [
   ...(process.env.CI && (!arg('--since') || only?.size) && !arg('--locale') ? (() => {
     const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
     const locale = LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
-    const own = direct?.size ? [...[...direct].map((n) => `src/components/${n}/`), ...internalTestsFor(direct)] : [];
+    const own = direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : [];
     return [
       [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...covered), { SERUPA_LOCALE: locale }],
       ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(',') }]) : []),
@@ -72,6 +73,8 @@ if (arg('--group')) {
 }
 // No component changed (a changeset alone): nothing for the component, visual or Storybook steps to cover.
 if (only && !only.size) steps.splice(0, steps.length, ...steps.filter((step) => step[3] === 'checks'));
+// Only an Introduction page changed: no folder of tests to run, and the component step with no paths would run them all.
+if (only && only.size && !covered.length) steps.splice(0, steps.length, ...steps.filter((step) => step[3] !== 'components'));
 if (arg('--compat')) steps.push([`Cross-browser (${arg('--compat')})`, 'node', [path.join(HERE, 'compat.mjs'), '--engine', arg('--compat'), ...(arg('--driver') ? ['--driver', arg('--driver')] : [])]]);
 // --list prints the steps (of the --group, if one is given) without running them.
 if (process.argv.includes('--list')) { for (const [name, , args, g] of steps) console.log(`${g}\t${name}\t${path.basename(args[0])}`); process.exit(0); }

@@ -15,11 +15,11 @@ const RAW_EASE = /(?<![\w-])(?:linear|ease|ease-in|ease-out|ease-in-out)(?![\w-]
 // The scale itself (duration-150, ease-in-out) in component CSS (FI1): a component names what moves, with a role,
 // so a change to the role reaches it. Allowed: duration-0 (no transition at all) and ease-linear (a spinner or a
 // bar turning at constant speed, as the Motion page says). What still uses the scale is in KNOWN, by component,
-// under the queue item that moves it onto a role; a KNOWN token no longer used fails too.
+// with why; a KNOWN token no longer used fails too.
 const SCALE = /var\(--((?:duration-(?!0\))\d+)|ease-(?:in-out|in|out)(?:-(?:cubic|quart|expo|back))?|ease-spring-(?:soft|snappy)|ease-elastic)\)/g;
 const KNOWN = Object.fromEntries(Object.entries({
   Loader: ['duration-1000', 'duration-500', 'ease-in-out', 'duration-1200', 'duration-150', 'duration-300', 'duration-75', 'duration-200', 'duration-100', 'duration-700'],   // its own art and rhythms: each animation is a sum of scale steps, tuned per variant
-}).flatMap(([c, ts]) => ts.map((t) => [`${c}:${t}`, 'FI1'])));
+}).flatMap(([c, ts]) => ts.map((t) => [`${c}:${t}`, 'its own art, tuned per variant'])));
 
 const dir = path.join(PROJECT, 'src', 'components');
 const found = [];
@@ -53,7 +53,7 @@ const exitsShorter = ['sm', 'md', 'lg'].filter((s) => !(badRoles.length === 0 &&
 
 done(report('Motion tokens', [
   { name: 'component CSS takes its durations, delays and easings from the motion tokens', ok: found.length === 0, detail: `raw values: ${found.join(' | ')}. Use a motion role (motion-enter-sm, ease-enter, …) or a duration-*/ease-* token` },
-  ...[...scale].map(([k, at]) => ({ name: KNOWN[k] ? `${k.replace(':', ': ')} from the scale, not a role yet (${KNOWN[k]})` : `${k.replace(':', ': ')} comes from a motion role`, ok: !!KNOWN[k],
+  ...[...scale].map(([k, at]) => ({ name: KNOWN[k] ? `${k.replace(':', ': ')} from the scale on purpose (${KNOWN[k]})` : `${k.replace(':', ': ')} comes from a motion role`, ok: !!KNOWN[k],
     detail: `${at} uses var(--${k.split(':')[1]}): use the role for what moves (motion-hover with ease-move for a hover color, motion-enter-sm with ease-enter for a popup, motion-change-md for a panel opening, ease-settle for a press, …)` })),
   ...Object.keys(KNOWN).filter((k) => !scale.has(k)).map((k) => ({ name: `${k.replace(':', ': ')} still from the scale`, ok: false, detail: 'it uses a role now; take it out of KNOWN in tools/test/motion-tokens.mjs' })),
   { name: 'every motion role names a token of the duration or easing scale', ok: badRoles.length === 0, detail: badRoles.join(', ') },
