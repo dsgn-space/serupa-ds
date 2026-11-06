@@ -18,10 +18,10 @@ A color token's name is also its class suffix: `blue-500` is `bg-blue-500` / `te
 
 ## Using the shades
 
-- **50–200** — tinted backgrounds, hover fills, subtle badges.
-- **300–400** — borders, dividers, decorative accents.
-- **500–600** — solid fills, primary buttons, icons.
-- **700–950** — text, dark surfaces, text on light tints.
+- **50–200**: tinted backgrounds, hover fills, subtle badges.
+- **300–400**: borders, dividers, decorative accents.
+- **500–600**: solid fills, primary buttons, icons.
+- **700–950**: text, dark surfaces, text on light tints.
 
 ## Contrast
 
@@ -29,9 +29,9 @@ Every token's usage note gives its contrast against white or black text. Rules o
 
 Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the two are the same pair):
 
-- **500+** — the neutrals: `slate`, `gray`, `zinc`, `neutral`, `stone`.
-- **600+** — `red`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`.
-- **700+** — `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`.
+- **500+**: the neutrals: `slate`, `gray`, `zinc`, `neutral`, `stone`.
+- **600+**: `red`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`.
+- **700+**: `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`.
 - On a `-50` / `-100` tint, set text in the same family at **700–900**.
 
 ## Themes
@@ -49,7 +49,7 @@ Six themes share **one set of foundations**: the same palette, type, spacing, ra
 
 Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
-**Brand and mode without JavaScript** — `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
+**Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
 ```html
 <html data-brand="violet" data-mode="auto">           <!-- follows the operating system from the first paint -->
@@ -59,15 +59,15 @@ Switch themes with the `data-theme` attribute on any element, e.g. `<html data-t
 
 Each color that changes between themes is a `light-dark()` pair, and `data-mode` sets `color-scheme` (`auto` is `light dark`), so the light or dark value is chosen where the color is used. Server-rendered and React apps get dark mode with nothing to inject and no flash. With `base.css`, a section with its own `data-mode`, `data-brand` or `data-theme` also takes that theme's text color and `surface` background, so its plain text switches with it (a class on the section still sets its background). When printing, a `data-mode` page or section prints its light colors, since printers drop backgrounds; a flat `*-dark` theme has no light values, so it prints with its backgrounds. A page with neither attribute stays light. An element with `data-theme` keeps that flat theme, so it still wins; inside such a page, give a section both `data-brand` and `data-mode` to switch it. Needs `light-dark()`: Chrome and Edge 123, Safari 17.5, Firefox 120. Older browsers lose the colors of a page or section themed only by `data-brand` and `data-mode`; one with `data-theme` (which `theme.js` sets on the page) keeps them, since the flat themes don't use `light-dark()`.
 
-**More contrast** — `data-contrast="more"` gives 7:1 body text (muted text and placeholders included), stronger borders and field outlines, and a 3px focus ring instead of 2px, in every theme. Status text (`success-text`, `warning-text`, `danger-text`, `info-text`) reaches 7:1 too, on the page, on cards and on its own subtle fill, and the status icon colors step up with it. The brand color steps up within its own hue (brand 800 in light themes, brand 300 in dark, so violet stays violet): links and secondary button labels reach 7:1 on the page and on the brand tint, so does the text on a primary fill, and the focus ring takes brand 700 / 300. Subtle badge labels keep their normal 4.5:1 colors for now. It also applies on its own when the visitor's system asks for more contrast (`prefers-contrast: more`); a page can opt out with `data-contrast="normal"` on `<html>`.
+**More contrast**: `data-contrast="more"` gives 7:1 body text (muted text and placeholders included), stronger borders and field outlines, and a 3px focus ring instead of 2px, in every theme. Status text (`success-text`, `warning-text`, `danger-text`, `info-text`) reaches 7:1 too, on the page, on cards and on its own subtle fill, and the status icon colors step up with it. The brand color steps up within its own hue (brand 800 in light themes, brand 300 in dark, so violet stays violet): links and secondary button labels reach 7:1 on the page and on the brand tint, so does the text on a primary fill, and the focus ring takes brand 700 / 300. Subtle badge labels keep their normal 4.5:1 colors for now. It also applies on its own when the visitor's system asks for more contrast (`prefers-contrast: more`); a page can opt out with `data-contrast="normal"` on `<html>`.
 
-**Density** — `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
+**Density**: `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
 
-**Shadows** — `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
+**Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
-**Fluid type** — `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Line heights stay as they are. `data-type-scale="fixed"` puts the fixed sizes back for one section.
+**Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Line heights stay as they are. `data-type-scale="fixed"` puts the fixed sizes back for one section.
 
-**Automatic dark mode** — `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
+**Automatic dark mode**: `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
 ```html
 <html data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
@@ -153,7 +153,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 ### Adding an alias
 
 1. Name it after its job, not its colour (`danger`, not `red`).
-2. Set its value to `{palette-token}` — the target must exist; an alias of a missing token, or of itself, is dropped.
+2. Set its value to `{palette-token}`. The target must exist; an alias of a missing token, or of itself, is dropped.
 3. Check contrast: text aliases need 4.5:1 on the surface they sit on (3:1 for icons, borders and focus rings). The palette tokens' usage notes give the ratios.
 4. Only colours can be aliases: spacing, radius, shadow and type tokens hold their own values.
 
@@ -191,9 +191,9 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 
 Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
-**Sizes** — each size carries its own line height. Both are tokens in the `fontSize` group (`var(--text-sm)`, `var(--text-sm--line-height)`) that the `text-*` classes and the components read. A `text-*` class sets only size and line height.
+**Sizes**: each size carries its own line height. Both are tokens in the `fontSize` group (`var(--text-sm)`, `var(--text-sm--line-height)`) that the `text-*` classes and the components read. A `text-*` class sets only size and line height.
 
-**Type styles** — `type-xs` … `type-9xl` (generated into `tokens.css` from the Type scale) set the whole style at once: family, size, line height, weight and letter spacing. From `type-2xl` up they carry `tracking-tight`, and from `type-6xl` up `tracking-tighter`, so a large style reads as set as tightly as a Heading of that size. Use one for a block of plain text; combine `text-*`, `font-*` and `tracking-*` when you need to vary one property. The two sets never conflict, whatever order the stylesheets load in.
+**Type styles**: `type-xs` … `type-9xl` (generated into `tokens.css` from the Type scale) set the whole style at once: family, size, line height, weight and letter spacing. From `type-2xl` up they carry `tracking-tight`, and from `type-6xl` up `tracking-tighter`, so a large style reads as set as tightly as a Heading of that size. Use one for a block of plain text; combine `text-*`, `font-*` and `tracking-*` when you need to vary one property. The two sets never conflict, whatever order the stylesheets load in.
 
 | Class | Size | Line height |
 | --- | --- | --- |
@@ -207,7 +207,7 @@ Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (
 | `text-4xl` | 36px | 40px |
 | `text-5xl` – `text-9xl` | 48, 60, 72, 96, 128px | 1 (tight) |
 
-**Type roles** — styles named for what the text is for, built from the same sizes, weights and tracking. Prefer a role to a size style: it carries the weight and tracking the system uses for that job, so a page title set with a class matches a `<Heading level={1}>`.
+**Type roles**: styles named for what the text is for, built from the same sizes, weights and tracking. Prefer a role to a size style: it carries the weight and tracking the system uses for that job, so a page title set with a class matches a `<Heading level={1}>`.
 
 | Class | Size / line height | Weight | Tracking | Use |
 | --- | --- | --- | --- | --- |
@@ -226,7 +226,7 @@ Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (
 
 Each role is also a `font` shorthand token (`var(--text-type-label)`) and a typography token in `design-tokens/`.
 
-**Weights** — three defaults:
+**Weights**: three defaults:
 
 | Token | Weight | Use |
 | --- | --- | --- |
@@ -353,10 +353,10 @@ Every spacing step works as padding and margin, as classes in `bundle.css`.
 | `pbs-` / `pbe-` | `mbs-` / `mbe-` | Block start / end: follows the writing mode |
 | `pt-` `pr-` `pb-` `pl-` | `mt-` `mr-` `mb-` `ml-` | One physical side |
 
-- **Values** — every spacing step: `p-4` is `spacing-4` (16px), `mt-0.5` is 2px, `px-px` is 1px.
-- **Auto margins** — `m-auto`, `mx-auto` (center a block), `ms-auto` (push to the end of a flex row), and the other sides.
-- **Negative margins** — prefix with `-`: `-mt-2` (-8px), `-mx-4`. Use them sparingly, to pull an element into its parent's padding.
-- **Space between** — `space-x-4` and `space-y-4` add a gap between children (on every child but the last). Prefer `gap` on flex and grid; use `space-*` for plain stacks. Negative versions exist (`-space-x-2`) for overlapping avatars, and `space-x-reverse` / `space-y-reverse` put the gap on the other side for `flex-row-reverse` and `flex-col-reverse`. These rules have zero specificity, so a margin class on a child still wins.
+- **Values**: every spacing step: `p-4` is `spacing-4` (16px), `mt-0.5` is 2px, `px-px` is 1px.
+- **Auto margins**: `m-auto`, `mx-auto` (center a block), `ms-auto` (push to the end of a flex row), and the other sides.
+- **Negative margins**: prefix with `-`: `-mt-2` (-8px), `-mx-4`. Use them sparingly, to pull an element into its parent's padding.
+- **Space between**: `space-x-4` and `space-y-4` add a gap between children (on every child but the last). Prefer `gap` on flex and grid; use `space-*` for plain stacks. Negative versions exist (`-space-x-2`) for overlapping avatars, and `space-x-reverse` / `space-y-reverse` put the gap on the other side for `flex-row-reverse` and `flex-col-reverse`. These rules have zero specificity, so a margin class on a child still wins.
 
 Rules of thumb:
 
@@ -453,7 +453,7 @@ Rules of thumb:
 - Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border-raised` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary — use `text-muted`.
+- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary: use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 
@@ -651,7 +651,7 @@ Use spacing to show what belongs together: the closer two things are, the more r
 
 Layout scales as tokens, and layout utilities as classes in `bundle.css` (`.container`, `.flex`, `.grid`, `.sticky`, `.z-30`, `.aspect-video`, `.overflow-hidden`…).
 
-**Breakpoints** — mobile first: styles apply from the breakpoint up.
+**Breakpoints**: mobile first: styles apply from the breakpoint up.
 
 | Token | Min width | Typical screens |
 | --- | --- | --- |
@@ -661,7 +661,7 @@ Layout scales as tokens, and layout utilities as classes in `bundle.css` (`.cont
 | `screen-xl` | 1280px | Desktops |
 | `screen-2xl` | 1536px | Large desktops |
 
-**Responsive classes** — put a breakpoint in front of a layout class to apply it from that width up: `sm:` `md:` `lg:` `xl:`. These four are the only prefixes: there are no `hover:`, `focus:`, `active:` or `dark:` classes, so write those states in your own CSS (the themes already handle dark). Start with the phone layout and add what changes on wider screens:
+**Responsive classes**: put a breakpoint in front of a layout class to apply it from that width up: `sm:` `md:` `lg:` `xl:`. These four are the only prefixes: there are no `hover:`, `focus:`, `active:` or `dark:` classes, so write those states in your own CSS (the themes already handle dark). Start with the phone layout and add what changes on wider screens:
 
 ```html
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">…</div>
@@ -671,9 +671,9 @@ Layout scales as tokens, and layout utilities as classes in `bundle.css` (`.cont
 
 Responsive versions exist for the classes that shape a layout: display; flex direction, wrap, grow and shrink; `grid-cols-*`, `col-span-*`, `order-*`; `items-*`, `justify-*`, `self-*`; `gap-*` and padding (`p-`, `px-`, `py-`, `pt-`, `pr-`, `pb-`, `pl-`) at every spacing step; auto margins; `w-auto`, `w-full`, `w-fit`, width fractions, `max-w-*`, `h-auto`, `h-full`; `text-xs` … `text-9xl` and text alignment; position and overflow. Colors, borders and effects have none: they rarely change with screen width, and components handle their own states. For anything else, write a media query with the breakpoint's value (`@media (min-width: 768px)`); CSS variables don't work inside `@media`.
 
-**Container** — `.container` is full width and snaps its max-width to the current breakpoint (640, 768, 1024, 1280, 1536px). It isn't centered and has no padding: add `margin-inline: auto` and a side padding such as `spacing-4` (16px), or `spacing-6` from `md` up.
+**Container**: `.container` is full width and snaps its max-width to the current breakpoint (640, 768, 1024, 1280, 1536px). It isn't centered and has no padding: add `margin-inline: auto` and a side padding such as `spacing-4` (16px), or `spacing-6` from `md` up.
 
-**Z-index layers** — page-level layers have names, so every menu, dialog and toast stacks the same way. Use them as classes (`z-modal`) or in CSS (`var(--z-modal)`):
+**Z-index layers**: page-level layers have names, so every menu, dialog and toast stacks the same way. Use them as classes (`z-modal`) or in CSS (`var(--z-modal)`):
 
 | Token | Value | Layer |
 | --- | --- | --- |
@@ -687,9 +687,9 @@ Responsive versions exist for the classes that shape a layout: display; flex dir
 
 The numbered steps `z-0` … `z-50` and `z-auto` are for local stacking inside one component (a badge over an avatar), not for page layers.
 
-**Aspect ratio** — `aspect-auto`, `aspect-square` (1 / 1) for avatars and thumbnails, `aspect-video` (16 / 9) for media.
+**Aspect ratio**: `aspect-auto`, `aspect-square` (1 / 1) for avatars and thumbnails, `aspect-video` (16 / 9) for media.
 
-**Columns** — `columns-1` to `columns-12` set a column count; `columns-3xs` (256px) to `columns-7xl` (1280px) fit as many columns as possible of at least that width. Use them for masonry-style lists; use grid for app layouts.
+**Columns**: `columns-1` to `columns-12` set a column count; `columns-3xs` (256px) to `columns-7xl` (1280px) fit as many columns as possible of at least that width. Use them for masonry-style lists; use grid for app layouts.
 
 **Every layout utility** in `bundle.css`:
 
@@ -764,10 +764,10 @@ Inline and block sizes follow the writing direction: in left-to-right horizontal
 
 **The scale**
 
-- **Numbers** — the spacing scale: `w-4` = `spacing-4` (16px), `h-10` = 40px, `block-8` = 32px. Every spacing step from `0` to `96` exists for every prefix.
-- **Container sizes** (width-axis prefixes only) — tokens `container-3xs` (256px) to `container-7xl` (1280px): `max-w-md`, `inline-lg`, `min-w-xs`…
-- **Fractions** — `1/2`, thirds, quarters, fifths, sixths and twelfths (tokens `sizing-1-2` … `sizing-11-12`). In CSS the slash is escaped: `.w-1\/2`.
-- **Keywords** — `auto` (not for max), `px`, `full`, `screen` (100vw on the inline axis, 100vh on the block axis), `dvw`/`dvh`, `lvw`/`lvh`, `svw`/`svh`, `min`, `max`, `fit`, `none` (max only) and `lh` (one line, height axis).
+- **Numbers**: the spacing scale: `w-4` = `spacing-4` (16px), `h-10` = 40px, `block-8` = 32px. Every spacing step from `0` to `96` exists for every prefix.
+- **Container sizes** (width-axis prefixes only): tokens `container-3xs` (256px) to `container-7xl` (1280px): `max-w-md`, `inline-lg`, `min-w-xs`…
+- **Fractions**: `1/2`, thirds, quarters, fifths, sixths and twelfths (tokens `sizing-1-2` … `sizing-11-12`). In CSS the slash is escaped: `.w-1\/2`.
+- **Keywords**: `auto` (not for max), `px`, `full`, `screen` (100vw on the inline axis, 100vh on the block axis), `dvw`/`dvh`, `lvw`/`lvh`, `svw`/`svh`, `min`, `max`, `fit`, `none` (max only) and `lh` (one line, height axis).
 
 **Container scale**
 
@@ -797,7 +797,7 @@ Rules of thumb:
 - Give flex and grid children that hold text `min-w-0`, so long words wrap instead of overflowing.
 
 
-**Control heights** — every control at one size is the same height, so buttons, inputs and selects line up in a row. Components read these tokens; in your own markup use `h-control-sm`, `min-h-control-md` or `size-control-lg` (a square, for icon buttons).
+**Control heights**: every control at one size is the same height, so buttons, inputs and selects line up in a row. Components read these tokens; in your own markup use `h-control-sm`, `min-h-control-md` or `size-control-lg` (a square, for icon buttons).
 
 | Token | Value | Use |
 | --- | --- | --- |
@@ -924,9 +924,9 @@ Transition and animation scales are tokens in one `transitions` group (`var(--du
 - **Easing:** `ease-linear`, `ease-in` (`cubic-bezier(0.4, 0, 1, 1)`), `ease-out` (the same curve as `ease-out-quart`), and `ease-in-out` (the same curve as `ease-in-out-cubic`, the default for the `transition` classes); `ease-out-cubic`, `-quart`, `-expo`, `ease-in-cubic`, `-quart`, `-expo` and `ease-in-out-cubic`, `-quart`, `-expo`; `ease-out-back`; and the springs `ease-spring-soft`, `ease-spring-snappy` and `ease-elastic`.
 - **Delay:** `delay-0` to `delay-1000`, in the same steps as duration, plus `delay-50` for a stagger step.
 
-**Transition properties** — `transition` (the default set: colors, outline and gradient stops, opacity, shadow, transform and translate/scale/rotate, filters, and discrete properties like `display`), `transition-colors`, `transition-opacity`, `transition-shadow`, `transition-transform`, `transition-all`, `transition-none`. Each animates at `duration-150` with `ease-in-out` unless a `duration-*` or `ease-*` class says otherwise, whatever the class order; `duration-initial` and `ease-initial` go back to those defaults. Name the properties you animate; avoid `transition-all` in components because it also animates layout.
+**Transition properties**: `transition` (the default set: colors, outline and gradient stops, opacity, shadow, transform and translate/scale/rotate, filters, and discrete properties like `display`), `transition-colors`, `transition-opacity`, `transition-shadow`, `transition-transform`, `transition-all`, `transition-none`. Each animates at `duration-150` with `ease-in-out` unless a `duration-*` or `ease-*` class says otherwise, whatever the class order; `duration-initial` and `ease-initial` go back to those defaults. Name the properties you animate; avoid `transition-all` in components because it also animates layout.
 
-**Transition behavior** — `transition-normal`, `transition-discrete`. `transition-discrete` lets `display`, `visibility` and other discrete properties take part, for fading an element in from `hidden`.
+**Transition behavior**: `transition-normal`, `transition-discrete`. `transition-discrete` lets `display`, `visibility` and other discrete properties take part, for fading an element in from `hidden`.
 
 **Animations**
 
@@ -1143,6 +1143,6 @@ Accessibility utilities, as classes in `bundle.css`. They add no tokens.
 - Leave `forced-color-adjust-auto` almost everywhere. Use `forced-color-adjust-none` only where the color *is* the content: color swatches and pickers, palette previews, charts with a legend, brand logos.
 - Inside a `forced-color-adjust-none` element, add a border or text label so the meaning doesn't rely on color alone.
 - Shadows and fills disappear, so anything that is only separated by a shadow or background needs a border too (`border` with a `transparent` color still draws in forced colors).
-- Focus: use outlines (`outline-2 outline-focus-ring`) or `outline-hidden`, never `outline-none` alone — rings and shadows vanish in forced colors. Button keeps its ring and adds a transparent 2px outline on focus, which only shows in forced colors; its transparent border shows there too.
+- Focus: use outlines (`outline-2 outline-focus-ring`) or `outline-hidden`, never `outline-none` alone, because rings and shadows vanish in forced colors. Button keeps its ring and adds a transparent 2px outline on focus, which only shows in forced colors; its transparent border shows there too.
 
 **Screen-reader text.** Give icon-only controls a name: an `aria-label`, or a `sr-only` span inside the button. For a "Skip to content" link, wrap it in `<VisuallyHidden focusable>`, which hides it until it's tabbed to and then shows it.

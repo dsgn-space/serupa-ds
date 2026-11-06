@@ -5,7 +5,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
 
-/* Error pages (PT7): not found, offline, server error and no access, built from the components only, for an app to copy.
+/* Error pages: not found, offline, server error and no access, built from the components only, for an app to copy.
    What they carry (WCAG 2.2):
    - 2.4.2 Page titled: the page's <title> says what happened ("Page not found – Acme"), so it's the first thing a
      screen reader reads and what a tab or the history shows. The old title comes back when the page goes.
