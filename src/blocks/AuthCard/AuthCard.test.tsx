@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { AuthCard } from './AuthCard';
 
 const active = () => document.activeElement as HTMLElement;
+const said = () => [...document.querySelectorAll('[aria-live="polite"]')].map((e) => e.textContent || '').join(' ');
 const later = <T,>(value: T) => new Promise<T>((resolve) => { window.setTimeout(() => resolve(value), 50); });
 
 // Auth card (BL9): the sign-in card as a block, for an app's own page. The Sign-in pattern's tests cover the steps in
@@ -45,7 +46,33 @@ describe('Blocks/Auth card', () => {
     fail();
     await expect.poll(() => page.getByRole('button', { name: 'Sign in' }).element().getAttribute('aria-busy')).not.toBe('true');
     await expect.element(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
+    await expect.element(page.getByText("Couldn't check that. Check your connection and try again.")).toBeVisible();
+    await expect.poll(said).toContain("Couldn't check that");
     expect(check).toHaveBeenCalledTimes(1);
+  });
+
+  test('a second wrong password takes focus to the summary again, so it is said again (GR148)', async () => {
+    await render(<AuthCard check={() => false} verify={() => true} forgotHref="#" />);
+    await userEvent.fill(page.getByRole('textbox', { name: 'Email' }), 'ada@example.com');
+    await userEvent.fill(page.getByLabelText('Password', { exact: true }), 'nope');
+    await userEvent.click(page.getByRole('button', { name: 'Sign in' }));
+    await expect.poll(() => active().getAttribute('data-component')).toBe('error-summary');
+    await userEvent.fill(page.getByLabelText('Password', { exact: true }), 'still nope');
+    await userEvent.click(page.getByRole('button', { name: 'Sign in' }));
+    await expect.poll(() => active().getAttribute('data-component')).toBe('error-summary');
+    expect(active().textContent).toContain('The email or password is not right');
+  });
+
+  test('a code check that fails says so under Verify, and the next try clears it (GR149)', async () => {
+    const verify = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(true);
+    await render(<AuthCard check={() => true} verify={verify} forgotHref="#" start="code" />);
+    await userEvent.click(page.getByRole('textbox').first());
+    await userEvent.keyboard('123456');
+    await userEvent.click(page.getByRole('button', { name: 'Verify' }));
+    await expect.element(page.getByText("Couldn't check that. Check your connection and try again.")).toBeVisible();
+    await userEvent.click(page.getByRole('button', { name: 'Verify' }));
+    await expect.poll(() => [active().tagName, active().textContent]).toEqual(['H1', "You're signed in"]);
+    expect(verify).toHaveBeenCalledTimes(2);
   });
 
   test('without verify there is no code step: a right password ends on done, and onSignedIn runs once', async () => {
