@@ -21,6 +21,8 @@ import { announce } from '../../internal/announce';
    - 3.3.4: the review step shows everything before the order is placed, each part with a "Change" button that goes
      back with every answer kept and focus on that part's first field (3.3.7: nothing is asked twice).
    - 2.4.3, 4.1.3: each new step's heading takes focus; placing the order says so, and a failure says what to do.
+   - 1.3.1 in Safari: the summary's lines keep role="list", which WebKit drops from a list without bullets (FU1).
+   - 1.4.10: long names, addresses and emails wrap inside their cards at 320 px.
    - The tip is a NumberInput in the order's currency, in cents, so 2.50 is never read as 250.
    Taking the payment (a payment provider's own fields, 3-D Secure, fraud checks) is the app's job; here
    onPlaceOrder decides. */
@@ -234,7 +236,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
               <div className="flex flex-col gap-4">
                 {failed ? <p className="m-0 text-danger-text">Your order wasn't placed. Nothing was charged. Try again, or use another card.</p> : null}
                 <Card className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Delivery address</Heading>
                     <p className="m-0 whitespace-pre-line text-sm">{[d.name, d.line1, d.line2, `${d.city} ${d.postcode}`, country].filter(Boolean).join('\n')}</p>
                     <p className="m-0 text-sm text-text-muted">{[d.email, d.phone].filter(Boolean).join(' · ')}</p>
@@ -242,7 +244,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
                   {change('address', 'the delivery address')}
                 </Card>
                 <Card className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Delivery</Heading>
                     <p className="m-0 text-sm">{d.delivery === 'express' ? 'Express, next working day' : 'Standard, 3 to 5 working days'}</p>
                     {d.tip ? <p className="m-0 text-sm">Tip for the courier: {money(d.tip)}</p> : null}
@@ -250,7 +252,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
                   {change('delivery', 'the delivery')}
                 </Card>
                 <Card className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Payment</Heading>
                     <p className="m-0 text-sm">Card ending in {last4}, expires {d.cardExpiry}</p>
                   </div>
@@ -269,10 +271,10 @@ export function Checkout({ lines = demoLines, currency = 'USD', initial, startAt
           <aside aria-labelledby="checkout-summary" className="lg:col-span-1">
             <Card className="flex flex-col gap-3">
               <Heading level={2} id="checkout-summary" className="text-lg">Order summary</Heading>
-              <ul className="m-0 flex list-none flex-col gap-2 p-0">
+              <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
                 {lines.map((l) => (
                   <li key={l.id} className="flex justify-between gap-3 text-sm">
-                    <span>{l.name} × {l.quantity}</span>{money(l.quantity * l.price)}
+                    <span className="min-w-0 wrap-anywhere">{l.name} × {l.quantity}</span>{money(l.quantity * l.price)}
                   </li>
                 ))}
               </ul>
