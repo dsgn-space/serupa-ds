@@ -9,6 +9,7 @@ import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 
 /* Pricing (BL6): plans side by side, for an app to copy. What it carries (WCAG 2.2):
+   - 1.3.1 in Safari: role="list" on the lists without bullets, since WebKit stops calling them lists (FU1, GR151).
    - 1.3.1: the plans are a list, each plan's name is a heading, and what a plan includes is a real list named after it.
    - 1.4.1 / 1.3.3: the current plan and the recommended one say so in words, not only with a color or a border.
    - 2.4.6 / 2.5.3: each plan has one action, named after the plan ("Choose Pro"), so a list of buttons still makes
@@ -103,7 +104,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
     <div className="flex flex-col gap-6">
       <SegmentedControl<PricingPeriod> aria-label={l.period} value={shown} onValueChange={change} className="self-center"
         options={[{ value: 'monthly', label: l.monthly }, { value: 'yearly', label: l.yearly(best, saved.some((x) => x !== best)) }]} />
-      <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-3">
+      <ul role="list" className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-3">
         {plans.map((plan) => {
           const perMonth = shown === 'yearly' ? plan.yearly / 12 : plan.monthly;
           return (
@@ -119,7 +120,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
                 <span className="text-sm text-text-muted">{l.perMonth}</span>
                 {shown === 'yearly' && plan.yearly > 0 && <span className="w-full text-sm text-text-muted">{l.billedYearly(money(plan.yearly))}</span>}
               </p>
-              <ul aria-label={l.included(plan.name)} className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
+              <ul role="list" aria-label={l.included(plan.name)} className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
                 {plan.features.map((f) => <li key={f} className="flex items-center gap-2"><Icon name="check" className="shrink-0 text-success" />{f}</li>)}
               </ul>
               <div className="mt-auto">

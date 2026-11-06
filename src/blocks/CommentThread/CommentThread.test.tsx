@@ -161,4 +161,11 @@ describe('Blocks/Comment thread', () => {
     await expect.element(page.getByRole('textbox', { name: 'Balas' })).toHaveAccessibleDescription(/Paling banyak 1000 karakter/);
     await expect.element(page.getByRole('button', { name: 'Kirim balasan' })).toBeVisible();
   });
+
+  test('the comments keep role="list", since Safari stops calling a list without bullets a list (GR151)', async () => {
+    await render(<CommentThread comments={start} onReply={() => {}} />);
+    const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
+    expect(bare.length).toBeGreaterThan(0);
+    expect(bare.map((l) => l.getAttribute('role'))).toEqual(bare.map(() => 'list'));
+  });
 });
