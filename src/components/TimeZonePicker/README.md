@@ -28,6 +28,7 @@ import { TimeZonePicker } from "serupa-ds";
 - Each option shows its offset at the moment: in March, New York is UTC−05:00 before the 9th and UTC−04:00 after. Set `at` to show the offsets on another date, such as the meeting's.
 - `zones` limits the list to the zones you pass, in the same order.
 - Typing finds a city ("jakarta"), a zone's name in the reader's language ("Waktu Indonesia"), the IANA name ("argentina") or an offset ("+7", "07:00", "utc-5", "−3:30").
+- Zones go by their current names ("Europe/Kyiv", "Asia/Kolkata", "Asia/Ho_Chi_Minh"), the ones servers, databases and `Temporal` use, even where the browser still lists an older spelling. A value under an old name ("Europe/Kiev") shows too, and the picker hands back the current one. Typing the old name ("kiev") still finds it, as do common abbreviations and big cities that share a zone ("pst", "wib", "mumbai").
 - The cities are as the IANA names spell them, in English ("New York"); the zone names are the browser's, in the locale (`locale`, the provider's, or the browser's).
 
 ## Accessibility

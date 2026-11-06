@@ -55,3 +55,26 @@ describe('TimeZonePicker', () => {
     await expect.poll(() => document.querySelector('[role="option"]')?.getAttribute('aria-description') ?? '').toMatch(/· Your time zone$/);
   });
 });
+
+describe('TimeZonePicker: current names (GR174)', () => {
+  test('a value under its current name shows, whatever spelling the browser lists; the list and timeZoneInfo use the current names', async () => {
+    expect(allTimeZones()).toEqual(expect.arrayContaining(['Europe/Kyiv', 'Asia/Kolkata', 'Asia/Ho_Chi_Minh']));
+    expect(allTimeZones()).not.toContain('Europe/Kiev');
+    expect(timeZoneInfo('Europe/Kiev', 'en-US', AT)!.city).toBe('Kyiv');
+    const onValueChange = vi.fn();
+    await render(<><TimeZonePicker aria-label="Kyiv" at={AT} defaultValue="Europe/Kyiv" onValueChange={onValueChange} /><TimeZonePicker aria-label="Old" at={AT} defaultValue="Asia/Calcutta" /></>);
+    const [kyiv, old] = [...document.querySelectorAll<HTMLInputElement>('input[role="combobox"]')];
+    expect([kyiv.value, old.value]).toEqual(['Kyiv', 'Kolkata']);
+  });
+
+  test('typing finds a city by its current name, its old name, or a common abbreviation or big city', async () => {
+    await render(<TimeZonePicker aria-label="Time zone" at={AT} />);
+    const find = async (text: string) => { await userEvent.clear(input()); await userEvent.type(input(), text); return shown(); };
+    expect(await find('kyiv')).toContain('Kyiv');
+    expect(await find('kiev')).toContain('Kyiv');
+    expect(await find('ho chi minh')).toContain('Ho Chi Minh');
+    expect(await find('mumbai')).toEqual(['Kolkata']);
+    expect(await find('pst')).toContain('Los Angeles');
+    expect(await find('wib')).toContain('Jakarta');
+  });
+});
