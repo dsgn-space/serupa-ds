@@ -104,4 +104,14 @@ describe('Patterns/Checkout', () => {
     const screen = await render(<Checkout initial={{ name: 'Ada' }} startAtReview />);
     await expect.element(screen.getByRole('heading', { name: 'Delivery and payment' })).toBeVisible();
   });
+
+  test('the order summary keeps role="list", and long words wrap inside the review cards at 320 px', async () => {
+    const long = 'Kundendienstwissensdatenbankabteilung';
+    await render(<div style={{ width: 320 }}><Checkout lines={[{ id: 'x', name: long + 'sbecher', quantity: 1, price: 100 }]}
+      initial={{ ...filled, line1: long + 'straße 1', email: long.toLowerCase() + '@beispiel.example' }} startAtReview /></div>);
+    const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
+    expect(bare.map((l) => l.getAttribute('role'))).toEqual(['list']);
+    const main = document.querySelector('main') as HTMLElement;
+    expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
+  });
 });
