@@ -8,6 +8,7 @@ import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Alert } from '../../components/Alert/Alert';
+import { announce } from '../../internal/announce';
 
 /* Auth card (BL9): the sign-in card, email and password and then a one-time code, as a block an app places on its own
    page. The Sign-in pattern (src/patterns/SignIn) is this card on a page of its own. What it carries (WCAG 2.2):
@@ -40,6 +41,8 @@ export interface AuthCardLabels {
   verify: string;
   codeShort: string;
   codeWrong: string;
+  /** When check or verify rejects (the network, not the answer): shown under the button and said once. */
+  failed: string;
   resend: string;
   resent: string;
   doneTitle: string;
@@ -63,6 +66,7 @@ const english: AuthCardLabels = {
   verify: 'Verify',
   codeShort: 'Enter the 6-digit code',
   codeWrong: 'That code is not right. Check the latest message, or send a new code',
+  failed: "Couldn't check that. Check your connection and try again.",
   resend: 'Send a new code',
   resent: 'We sent a new code to your phone. It works for 10 minutes.',
   doneTitle: "You're signed in",
@@ -103,10 +107,10 @@ export interface AuthCardProps {
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const thenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 /** Runs `then` with the answer: now when it's a boolean, so nothing waits a tick; when it settles when it's a promise. */
-function answer(out: boolean | PromiseLike<boolean>, then: (ok: boolean) => void, busy: (on: boolean) => void) {
+function answer(out: boolean | PromiseLike<boolean>, then: (ok: boolean) => void, busy: (on: boolean) => void, failed: () => void) {
   if (!thenable(out)) { then(out); return; }
   busy(true);
-  out.then((ok) => { busy(false); then(ok); }, () => busy(false));
+  out.then((ok) => { busy(false); then(ok); }, () => { busy(false); failed(); });
 }
 
 /** The sign-in card: email and password, then a one-time code, then signed in. */
@@ -130,6 +134,12 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
   const [code, setCode] = React.useState('');
   const [codeError, setCodeError] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
+  // A check that couldn't run: its words under the button, until the next try.
+  const [failure, setFailure] = React.useState(false);
+  // Each failed try remounts the error summary, so it takes focus and is read again even when its errors are the
+  // same as last time (a second wrong password).
+  const [tries, setTries] = React.useState(0);
+  const fail = () => { setFailure(true); announce(l.failed); };
   // How many times a new code was asked for. Each ask puts a new line in the status region below, so it is said every time.
   const [sent, setSent] = React.useState(0);
   // A new step puts focus on its heading (tabIndex -1), so the change is said and the next Tab goes on from there.
@@ -142,23 +152,25 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
   const signIn = (e: React.FormEvent) => {
     e.preventDefault();
     if (busy) return;
+    setFailure(false);
     const found = problems(email, password);
-    if (found.length) { setErrors(found); return; }
+    if (found.length) { setErrors(found); setTries((n) => n + 1); return; }
+    setErrors([]);
     answer(check(email.trim(), password), (ok) => {
-      if (!ok) { setErrors(wrong); return; }
-      setErrors([]);
+      if (!ok) { setErrors(wrong); setTries((n) => n + 1); return; }
       go(verify ? 'code' : 'done');
-    }, setBusy);
+    }, setBusy, fail);
   };
   const confirm = (e: React.FormEvent) => {
     e.preventDefault();
     if (busy || !verify) return;
+    setFailure(false);
     if (code.length < 6) { setCodeError(l.codeShort); return; }
+    setCodeError(null);
     answer(verify(code), (ok) => {
       if (!ok) { setCodeError(l.codeWrong); return; }
-      setCodeError(null);
       go('done');
-    }, setBusy);
+    }, setBusy, fail);
   };
   const title = (text: string) => <Heading level={headingLevel} id={ids.title} ref={heading} tabIndex={-1} className="outline-none">{text}</Heading>;
   const card = 'flex flex-col gap-6 rounded-lg border border-border bg-surface p-6';
@@ -166,7 +178,7 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
   return step === 'password' ? (
     <section aria-labelledby={ids.title} className={card}>
       {title(l.title)}
-      {errors.length ? <ErrorSummary errors={errors} headingLevel={(headingLevel + 1) as 2 | 3 | 4} /> : null}
+      {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={(headingLevel + 1) as 2 | 3 | 4} /> : null}
       <form noValidate onSubmit={signIn} className="flex flex-col gap-4" aria-labelledby={ids.title}>
         <Field label={l.email} error={fieldError(ids.email)}>
           <Input id={ids.email} name="email" type="email" autoComplete="username" spellCheck={false} autoCapitalize="none" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -176,6 +188,7 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
         </Field>
         <Link href={forgotHref} className="self-start text-sm">{l.forgot}</Link>
         <Button type="submit" loading={busy}>{l.signIn}</Button>
+        {failure ? <p className="m-0 text-sm text-danger-text">{l.failed}</p> : null}
       </form>
     </section>
   ) : step === 'code' ? (
@@ -187,6 +200,7 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
           <PinInput id={ids.code} name="code" length={6} value={code} onValueChange={setCode} />
         </Field>
         <Button type="submit" loading={busy}>{l.verify}</Button>
+        {failure ? <p className="m-0 text-sm text-danger-text">{l.failed}</p> : null}
         <div className="flex flex-col">
           <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); setSent((n) => n + 1); onResend?.(); }}>{l.resend}</Button>
           {/* Always there, so a reader is listening before the first ask; a new keyed line is added for each ask.

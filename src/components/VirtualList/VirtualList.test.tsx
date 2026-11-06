@@ -146,7 +146,9 @@ describe('VirtualList', () => {
     await render(<><button id="b">b</button><VirtualList id="v" aria-label="Rows" count={10000} renderItem={link} /></>);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
     el('b').focus();
-    for (let k = 0; k < 20; k++) await userEvent.tab();
+    // Two frames after each press, as a person's presses come: the rows past the last one drawn are drawn on the scroll
+    // that brings it into view, and WebKit sends that scroll a frame later, so a press sent at once left the list.
+    for (let k = 0; k < 20; k++) { await userEvent.tab(); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); }
     const box = el('v').getBoundingClientRect(), r = document.activeElement!.getBoundingClientRect();
     expect(document.activeElement!.closest('[data-index]')?.getAttribute('data-index')).toBe('18');
     expect([r.top >= box.top - 1, r.bottom <= box.bottom + 1, el('v').scrollTop > 0]).toEqual([true, true, true]);

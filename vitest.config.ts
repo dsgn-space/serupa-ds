@@ -4,6 +4,7 @@
 //   focus and keyboard behave as they do for people.
 // - checks (npm run test:checks): the scripts in tools/test/ that check the package, tokens, icons, guides and
 //   API in Node, each result a test. Build first (npm run build). Each still runs alone with node, too.
+import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import { configDefaults, defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
@@ -14,9 +15,9 @@ import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, point
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
-buildUtilities(new URL('.', import.meta.url).pathname);
+buildUtilities(fileURLToPath(new URL('.', import.meta.url)));
 // …and the export, style and label lists from the component folders (src/generated/).
-buildRegistry(new URL('.', import.meta.url).pathname);
+buildRegistry(fileURLToPath(new URL('.', import.meta.url)));
 
 const BROWSER = (process.env.SERUPA_BROWSER as 'chromium' | 'firefox' | 'webkit') || 'chromium';
 

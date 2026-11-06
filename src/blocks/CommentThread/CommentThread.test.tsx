@@ -123,7 +123,35 @@ describe('Blocks/Comment thread', () => {
     fail();
     await expect.poll(() => (page.getByRole('button', { name: 'Post reply' }).element() as HTMLButtonElement).getAttribute('aria-busy')).not.toBe('true');
     await expect.element(page.getByRole('textbox', { name: 'Reply' })).toHaveValue('Still here');
+    await expect.element(page.getByText("Couldn't post the reply. Try again.")).toBeVisible();
+    await expect.poll(said).toContain("Couldn't post the reply");
     expect(said()).not.toContain('Reply posted');
+  });
+
+  test('saving an emptied comment says what to do on the box and keeps focus there (GR143)', async () => {
+    const onEdit = vi.fn();
+    await render(<CommentThread comments={start} onReply={() => {}} onEdit={onEdit} />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    const box = page.getByRole('textbox', { name: 'Edit comment' });
+    await userEvent.fill(box, '   ');
+    await userEvent.click(page.getByRole('button', { name: 'Save' }));
+    await expect.element(box).toHaveAttribute('aria-invalid', 'true');
+    await expect.element(box).toHaveAccessibleDescription(/Write something, or delete the comment\./);
+    await expect.element(box).toHaveFocus();
+    expect(onEdit).not.toHaveBeenCalled();
+    await userEvent.fill(box, 'Back again');
+    await expect.element(box).not.toHaveAttribute('aria-invalid', 'true');
+  });
+
+  test('a save that fails keeps the box open with its words, and says so once (GR144)', async () => {
+    await render(<CommentThread comments={start} onReply={() => {}} onEdit={() => Promise.reject(new Error('offline'))} />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
+    await userEvent.click(page.getByRole('button', { name: 'Save' }));
+    await expect.element(page.getByText("Couldn't save the comment. Try again.")).toBeVisible();
+    await expect.poll(said).toContain("Couldn't save the comment");
+    await expect.element(page.getByRole('textbox', { name: 'Edit comment' })).toHaveValue('Yes, 24px.');
+    expect(said()).not.toContain('Comment saved');
   });
 
   test('every word can be given in the page language', async () => {

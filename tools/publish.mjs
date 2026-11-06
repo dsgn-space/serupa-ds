@@ -16,7 +16,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { previousTag, screenshotNotes } from './release-screenshots.mjs';
 
-const P = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const P = path.resolve(import.meta.dirname, '..');
 const run = (cmd, args, opts = {}) => (execFileSync(cmd, args, { cwd: P, encoding: 'utf8', ...opts }) ?? '').trim();   // null when stdio is inherited
 // The Release workflow's checkout keeps no token in .git/config, so the git calls that reach GitHub get GH_TOKEN
 // for themselves only, through the environment. Not when git already has a token for GitHub (a second one would
