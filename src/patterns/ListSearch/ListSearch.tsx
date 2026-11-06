@@ -1,0 +1,156 @@
+"use client";
+import * as React from 'react';
+import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { Heading } from '../../components/Heading/Heading';
+import { Button } from '../../components/Button/Button';
+import { Pagination } from '../../components/Pagination/Pagination';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from '../../components/Table/Table';
+import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
+import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
+
+/* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
+   copy. What it carries (WCAG 2.2):
+   - 4.1.3: the results count ("8 of 24 projects") is a status region, read out as the search or a filter changes,
+     without moving focus. Bulk actions say "3 selected" the same way (TableToolbar, TableActionBar).
+   - 1.3.1, 4.1.2: the sort is on the column headers (aria-sort, a button each), the selection is real checkboxes named
+     after their row, and the table has a caption.
+   - 3.3.1-ish: a search that finds nothing says so in words, with the query, and offers "Clear filters", the way out.
+     Clearing puts focus on the search field, since the button that was pressed goes away (2.4.3).
+   - 2.4.8, 3.2.3: the search, filters, sort and page are kept in the address (`?q=&status=&sort=&page=`), so Back,
+     a reload and a shared link all show the same list. Writing the address is the app's job: `onSearchChange`
+     gets the new query string.
+   - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3. */
+
+export interface Project { name: string; status: 'Active' | 'Paused' | 'Done'; owner: string; updated: string }
+type SortKey = 'name' | 'updated';
+interface View { q: string; status: string; owner: string; sort: SortKey; dir: Exclude<SortDirection, 'none'>; page: number }
+
+export interface ListSearchProps {
+  /** The rows. Default: 24 demo projects. */
+  projects?: readonly Project[] | undefined;
+  /** The address's query string to start from: "?q=app&status=Active&sort=updated&dir=descending&page=2". */
+  search?: string | undefined;
+  /** Called with the new query string whenever the view changes: write it with history.replaceState (or your router). */
+  onSearchChange?: ((search: string) => void) | undefined;
+  /** Rows on a page. Default: 10. */
+  pageSize?: number | undefined;
+}
+
+const OWNERS = ['Ana', 'Budi', 'Chen', 'Dewi'];
+const STATUSES: Project['status'][] = ['Active', 'Paused', 'Done'];
+const NAMES = ['Website redesign', 'Mobile app', 'Billing migration', 'Help center', 'Onboarding emails', 'Data export',
+  'Status page', 'Search ranking', 'Invoice templates', 'Team calendar', 'Single sign-on', 'Dark theme', 'Audit log',
+  'Usage reports', 'Partner portal', 'Price page', 'Referral program', 'API keys', 'Mobile push', 'Accessibility review',
+  'Translations', 'Release notes', 'Support chat', 'Backup restore'];
+const demo: Project[] = NAMES.map((name, i) => ({
+  name, status: STATUSES[i % 3], owner: OWNERS[(i * 3) % 4],
+  updated: new Date(Date.UTC(2026, 9, 28 - i)).toISOString().slice(0, 10),
+}));
+
+/** The view from a query string, with anything missing or unknown at its default. */
+export function readView(search: string): View {
+  const p = new URLSearchParams(search);
+  const page = Number(p.get('page'));
+  return {
+    q: p.get('q') ?? '', status: p.get('status') ?? '', owner: p.get('owner') ?? '',
+    sort: p.get('sort') === 'updated' ? 'updated' : 'name',
+    dir: p.get('dir') === 'descending' ? 'descending' : 'ascending',
+    page: Number.isInteger(page) && page > 0 ? page : 1,
+  };
+}
+/** The query string for a view, leaving out what's at its default, so a plain list has a plain address. */
+export function writeView(v: View): string {
+  const p = new URLSearchParams();
+  if (v.q) p.set('q', v.q);
+  if (v.status) p.set('status', v.status);
+  if (v.owner) p.set('owner', v.owner);
+  if (v.sort !== 'name') p.set('sort', v.sort);
+  if (v.dir !== 'ascending') p.set('dir', v.dir);
+  if (v.page > 1) p.set('page', String(v.page));
+  const s = p.toString();
+  return s ? `?${s}` : '';
+}
+
+/** The list page: a skip link, a header, then main with the h1, the search and filters, the table and the pages. */
+export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10 }: ListSearchProps) {
+  const [view, setView] = React.useState<View>(() => readView(search));
+  const [picked, setPicked] = React.useState<string[]>([]);
+  const change = (next: Partial<View>, keepPage = false) => {
+    const v = { ...view, ...next, page: keepPage ? next.page ?? view.page : 1 };
+    setView(v);
+    onSearchChange?.(writeView(v));
+  };
+
+  const q = view.q.trim().toLowerCase();
+  const found = projects
+    .filter((p) => (!q || p.name.toLowerCase().includes(q)) && (!view.status || p.status === view.status) && (!view.owner || p.owner === view.owner))
+    .sort((a, b) => (view.dir === 'ascending' ? 1 : -1) * a[view.sort].localeCompare(b[view.sort]));
+  const pages = Math.max(1, Math.ceil(found.length / pageSize));
+  const page = Math.min(view.page, pages);
+  const rows = found.slice((page - 1) * pageSize, page * pageSize);
+  const all = rows.length > 0 && rows.every((p) => picked.includes(p.name));
+  const toggle = (n: string) => setPicked(picked.includes(n) ? picked.filter((x) => x !== n) : [...picked, n]);
+  const sortBy = (key: SortKey) => change({ sort: key, dir: view.sort === key && view.dir === 'ascending' ? 'descending' : 'ascending' });
+  const dir = (key: SortKey): SortDirection => (view.sort === key ? view.dir : 'none');
+  const clear = () => change({ q: '', status: '', owner: '' });
+
+  return (
+    <div className="min-h-screen bg-surface text-text">
+      <SkipLink />
+      <header className="border-b border-border px-4 py-3">
+        <p className="m-0 text-base font-semibold">Acme</p>
+      </header>
+      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Heading level={1}>Projects</Heading>
+          <Button href="#new-project">New project</Button>
+        </div>
+        <TableToolbar
+          noun="projects"
+          query={view.q}
+          onQueryChange={(value) => change({ q: value })}
+          filters={[
+            { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
+            { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
+          ]}
+          results={found.length === projects.length ? `${found.length} projects` : `${found.length} of ${projects.length} projects`}
+          onClearFilters={clear}
+          selectedCount={picked.length}
+          onClearSelection={() => setPicked([])}
+          bulkActions={<><Button size="sm" variant="outline">Export</Button><Button size="sm" variant="outline" onClick={() => setPicked([])}>Archive</Button></>}
+        >
+          {found.length ? (
+            <Table caption="Projects" hideCaption>
+              <TableHead><TableRow>
+                <TableSelectCell header label="Select all projects on this page" checked={all}
+                  indeterminate={!all && rows.some((p) => picked.includes(p.name))}
+                  onChange={() => setPicked(all ? picked.filter((n) => !rows.some((p) => p.name === n)) : [...new Set([...picked, ...rows.map((p) => p.name)])])} />
+                <TableHeaderCell sort={dir('name')} onSort={() => sortBy('name')}>Name</TableHeaderCell>
+                <TableHeaderCell>Status</TableHeaderCell>
+                <TableHeaderCell>Owner</TableHeaderCell>
+                <TableHeaderCell sort={dir('updated')} onSort={() => sortBy('updated')}>Updated</TableHeaderCell>
+              </TableRow></TableHead>
+              <TableBody>{rows.map((p) => (
+                <TableRow key={p.name} selected={picked.includes(p.name)}>
+                  <TableSelectCell label={`Select ${p.name}`} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
+                  <TableCell>{p.name}</TableCell><TableCell>{p.status}</TableCell><TableCell>{p.owner}</TableCell>
+                  <TableCell><time dateTime={p.updated}>{p.updated}</time></TableCell>
+                </TableRow>
+              ))}</TableBody>
+            </Table>
+          ) : (
+            <EmptyNoResults query={view.q} title={(text) => (text ? `No projects match “${text}”` : 'No projects match these filters')}
+              description="Check the spelling, or clear the filters to see every project." headingLevel={2} onClearFilters={() => {
+              clear();
+              document.querySelector<HTMLInputElement>('main form[role="search"] input')?.focus();
+            }} />
+          )}
+        </TableToolbar>
+        {pages > 1 ? (
+          <Pagination count={pages} page={page} onPageChange={(n) => change({ page: n }, true)} total={found.length} pageSize={pageSize}
+            aria-label="Projects pages" />
+        ) : null}
+      </main>
+    </div>
+  );
+}

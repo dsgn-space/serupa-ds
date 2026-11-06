@@ -68,6 +68,7 @@ const NAMING_GAPS = {
   'ComboboxProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
   'ComboboxSingleProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
   'ComboboxMultipleProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
+  'TimeZonePickerProps.onInputChange': "Combobox's, passed through: the typed text has no prop of its own",
 };
 // A callback's second argument, when it has one, is a details object ({ event?, reason?, iso? … }), never a bare event,
 // string or number, so a project can read one more field without a new signature (TF7). These came before the rule;

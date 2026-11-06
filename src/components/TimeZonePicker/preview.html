@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TimeZonePicker — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: 384 } },
+    h(T.TimeZonePicker, { 'aria-label': 'Time zone', defaultValue: 'Asia/Jakarta', at: new Date('2025-03-12T10:00:00Z') })));
+</script>
+</body>
+</html>
