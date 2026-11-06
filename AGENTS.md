@@ -34,6 +34,8 @@ Before you push, `node tools/ci.mjs --since main` runs every job CI requires, th
 ## Every pull request
 
 - **One change per pull request.** Fixes for the same component go in one pull request. Different components go in different ones.
+- **A fix starts with a test that fails on main.** Write the bug as a user meets it, see the test fail, then fix it. CI runs the changed tests against the base commit's `src/` (`tools/fix-proof.mjs`) and fails when they all pass there; a fix only the screenshots show takes the `no-repro-test` label.
+- **Stay in your lane.** Something else you notice goes in an issue or the work queue, not in this pull request. Remove only what your own change left unused.
 - **A changeset** (`npx changeset`) when a project using the package gets something different. Otherwise the `no-changeset` label: only tests, tools, docs or workflows changed.
 - **Baselines move only on purpose, in the same pull request, with the reason:**
   - Roles, names or structure: `npm run test:aria:update` (`tools/test/baseline-aria/`).

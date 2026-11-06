@@ -1,7 +1,7 @@
-// Which components a pull request's CI covers (run.mjs --since): only changes inside component folders narrow it,
+// Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, internalTestsFor, withDependents, report, done } from './lib.mjs';
+import { affectedComponents, folderOf, internalTestsFor, withDependents, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -21,7 +21,14 @@ for (const f of ['.github/workflows/ci.yml', 'tools/test/lib.mjs', 'tools/test/s
 const deps = withDependents(new Set(['Button']));
 t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
-t('a component nothing uses brings only itself', list(withDependents(new Set(['Meter']))) === 'Meter', list(withDependents(new Set(['Meter']))));
+t('a component nothing uses brings only itself', list(withDependents(new Set(['Splitter']))) === 'Splitter', list(withDependents(new Set(['Splitter']))));
+t('a pattern that shows a component comes with it (Meter: Dashboard)', list(withDependents(new Set(['Meter']))) === 'Dashboard, Meter', list(withDependents(new Set(['Meter']))));
+const pattern = affectedComponents(['src/patterns/Checkout/Checkout.tsx', 'src/patterns/Introduction.mdx', 'tools/test/baseline-visual/Checkout/Default-blue-light-rest.png', 'src/blocks/StatsRow/StatsRow.tsx']);
+t('a block or pattern folder covers that block or pattern, and its Introduction page that page', list(pattern) === 'Checkout, Introduction.mdx, StatsRow', list(pattern));
+t('a pattern brings no component', list(withDependents(new Set(['Checkout']))) === 'Checkout', list(withDependents(new Set(['Checkout']))));
+t('a block brings the patterns that show it (AuthCard: SignIn)', withDependents(new Set(['AuthCard'])).has('SignIn'), list(withDependents(new Set(['AuthCard']))));
+t('a component brings the blocks and patterns that use it (Heading: Checkout, StatsRow)', ['Checkout', 'StatsRow'].every((n) => withDependents(new Set(['Heading'])).has(n)), list(withDependents(new Set(['Heading']))));
+t('each name runs its own folder\'s tests, and an Introduction page none', folderOf('Checkout') === 'src/patterns/Checkout/' && folderOf('StatsRow') === 'src/blocks/StatsRow/' && folderOf('Meter') === 'src/components/Meter/' && folderOf('Introduction.mdx') === null);
 const shared = internalTestsFor(new Set(['LoadMore']));
 t('a component brings the shared src/internal tests that render it (LoadMore: announceContract), not the others', shared.includes('src/internal/announceContract.test.tsx') && !shared.includes('src/internal/typeahead.test.tsx'), shared.join(', '));
 

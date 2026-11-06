@@ -18,17 +18,29 @@
 @media (hover: hover) { .dk-btn.dk-fab:hover:not(:disabled):not([aria-disabled="true"]) { --dk-btn-shadow: var(--fab-shadow-hover, var(--shadow-xl)); } }
 .dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start { position: fixed; z-index: var(--fab-z-index, var(--z-30)); }
 /* --fab-offset from the corner of the safe area, so a phone's home bar or notch doesn't cover it (env() is 0 elsewhere). */
-.dk-fab--bottom-end { inset-block-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)); inset-inline-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-right)); }
-.dk-fab--bottom-start { inset-block-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)); inset-inline-start: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-left)); }
-.dk-fab--top-end { inset-block-start: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)); inset-inline-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-right)); }
-.dk-fab--top-start { inset-block-start: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)); inset-inline-start: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-left)); }
+.dk-fab--bottom-end { inset-block-end: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-bottom-end, var(--spacing-0))); inset-inline-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-right)); }
+.dk-fab--bottom-start { inset-block-end: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-bottom-start, var(--spacing-0))); inset-inline-start: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-left)); }
+.dk-fab--top-end { inset-block-start: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-top-end, var(--spacing-0))); inset-inline-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-right)); }
+.dk-fab--top-start { inset-block-start: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-top-start, var(--spacing-0))); inset-inline-start: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-left)); }
+/* Above an OfflineBanner or the toasts at its edge, not under them, so a focused FAB is never hidden (WCAG 2.4.11,
+   GR157): the bar puts the room it takes in --dk-offline-banner-space, and a Toaster with toasts showing puts its
+   own in --dk-toaster-space-<position>. A toast in the other corner, or the middle, reaches it only on a narrow screen. */
+:root:has(.dk-offline-banner--bottom:not([data-leaving])) :is(.dk-fab--bottom-end, .dk-fab--bottom-start),
+:root:has(.dk-offline-banner--top:not([data-leaving])) :is(.dk-fab--top-end, .dk-fab--top-start) { --dk-fab-bar: var(--dk-offline-banner-space, var(--spacing-0)); }
+@media (max-width: 639.98px) {
+  .dk-fab--bottom-end, .dk-fab--bottom-start { inset-block-end: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-bottom-end, var(--spacing-0)), var(--dk-toaster-space-bottom-center, var(--spacing-0)), var(--dk-toaster-space-bottom-start, var(--spacing-0))); }
+  .dk-fab--top-end, .dk-fab--top-start { inset-block-start: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-top-end, var(--spacing-0)), var(--dk-toaster-space-top-center, var(--spacing-0)), var(--dk-toaster-space-top-start, var(--spacing-0))); }
+}
 /* An extended FAB in a corner is never wider than the screen less its offset on both sides (and the safe area), so a
    long label takes its ellipsis rather than pushing the icon off the screen (GR14). */
 .dk-fab--extended:is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start) { max-inline-size: calc(var(--sizing-screen-w) - var(--fab-offset, var(--spacing-6)) - var(--fab-offset, var(--spacing-6)) - env(safe-area-inset-left) - env(safe-area-inset-right)); }
 /* What the keyboard focuses, or a #link jumps to, scrolls into view clear of a fixed FAB, not under it (WCAG 2.4.11):
    the page keeps the FAB's size, its offset and the same again as a gap free at that edge. With a sticky Navbar
-   at the top too, the larger of the two wins. */
+   at the top too, the larger of the two wins; with an OfflineBanner at its edge, the FAB's room starts above the bar
+   (GR157). */
 :root:has(.dk-fab--bottom-end, .dk-fab--bottom-start) { scroll-padding-bottom: calc(var(--fab-size, var(--spacing-14)) + var(--fab-offset, var(--spacing-6)) + var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)); }
 :root:has(.dk-fab--top-end, .dk-fab--top-start) { scroll-padding-top: calc(var(--fab-size, var(--spacing-14)) + var(--fab-offset, var(--spacing-6)) + var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)); }
 :root:has(.dk-fab--top-end, .dk-fab--top-start):has(.dk-navbar--sticky) { scroll-padding-top: max(var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16))), calc(var(--fab-size, var(--spacing-14)) + var(--fab-offset, var(--spacing-6)) + var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top))); }
+:root:has(.dk-fab--bottom-end, .dk-fab--bottom-start):has(.dk-offline-banner--bottom:not([data-leaving])) { scroll-padding-bottom: calc(var(--fab-size, var(--spacing-14)) + var(--fab-offset, var(--spacing-6)) + max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)), var(--dk-offline-banner-space, var(--spacing-0)))); }
+:root:has(.dk-fab--top-end, .dk-fab--top-start):has(.dk-offline-banner--top:not([data-leaving])) { scroll-padding-top: calc(var(--fab-size, var(--spacing-14)) + var(--fab-offset, var(--spacing-6)) + max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-top)), var(--dk-offline-banner-space, var(--spacing-0)))); }
 }

@@ -4,6 +4,8 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { css } from '../../../tools/test/vitest/helpers';
 import { Fab } from './Fab';
+import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
+import { toast, Toaster } from '../Toast/Toast';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const box = (id: string) => { const r = el(id).getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); };
@@ -140,5 +142,28 @@ describe('Fab: an extended FAB with a long label on a phone (GR14)', () => {
         }
       }
     } finally { await page.viewport(800, 600); }
+  });
+});
+
+describe('Fab above what shares its edge (GR157)', () => {
+  const rect = (q: string) => document.querySelector(q)!.getBoundingClientRect();
+  test('a bottom OfflineBanner: the Fab rises above it, and the page keeps room for both when it scrolls to a field', async () => {
+    const screen = await render(<><Fab id="up" icon="add" label="Neues Projekt" /><OfflineBanner online={false}>Sie sind offline. Änderungen werden gespeichert, sobald die Verbindung zurück ist.</OfflineBanner></>);
+    const bar = () => rect('[data-component="offline-banner"]');
+    await expect.poll(() => Math.round(el('up').getBoundingClientRect().bottom) <= Math.round(bar().top)).toBe(true);
+    const fab = el('up').getBoundingClientRect();
+    expect(parseFloat(css(document.documentElement).scrollPaddingBottom)).toBeGreaterThanOrEqual(Math.round(window.innerHeight - fab.top));
+    await screen.rerender(<><Fab id="up" icon="add" label="Neues Projekt" /><OfflineBanner online /></>);
+    await expect.poll(() => document.querySelector('[data-component="offline-banner"]'), { timeout: 5000 }).toBe(null);
+    await expect.poll(() => Math.round(window.innerHeight - el('up').getBoundingClientRect().bottom)).toBe(24);
+  });
+
+  test('toasts at its corner: the Fab rises above them while they show, and comes back down', async () => {
+    await render(<><Fab id="up2" icon="add" label="New project" /><Toaster /></>);
+    React.act(() => { toast('Project saved'); });
+    await expect.poll(() => document.querySelector('[data-toast]')).not.toBe(null);
+    await expect.poll(() => Math.round(el('up2').getBoundingClientRect().bottom) <= Math.round(rect('[data-toast]').top)).toBe(true);
+    React.act(() => { toast.dismiss(); });
+    await expect.poll(() => Math.round(window.innerHeight - el('up2').getBoundingClientRect().bottom), { timeout: 5000 }).toBe(24);
   });
 });

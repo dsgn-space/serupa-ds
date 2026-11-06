@@ -78,5 +78,27 @@
     "id": "notifications",
     "prompt": "A bell button in the app's header that shows how many notifications are unread. Pressing it slides a notifications panel in from the right, with a smooth animation; each notification has an icon for its kind (comment, mention, invite). Use the same primary button style in the panel and the header.",
     "expect": ["IconButton", "Drawer|Popover", "Badge"]
+  },
+  {
+    "id": "add-phone",
+    "start": "add-phone.tsx",
+    "prompt": "Add an optional phone number field to this profile form, under Email, and include it in what onSave gets.",
+    "expect": ["Field", "PhoneInput|Input"],
+    "edits": 4
+  },
+  {
+    "id": "row-delete",
+    "start": "row-delete.tsx",
+    "prompt": "Add a Delete item to each row's menu. It calls a new onDelete prop with the document's id.",
+    "expect": ["Menu"],
+    "edits": 4
+  },
+  {
+    "id": "legacy-page",
+    "start": "legacy-page.tsx",
+    "prompt": "Add a search field above the list of items that filters them by name as you type.",
+    "expect": ["SearchInput|Input"],
+    "edits": 4,
+    "keep": ["background: '#0b3d91'", "<button style={{ background: '#ffb000'"]
   }
 ]

@@ -37,6 +37,7 @@ export const labels: SerupaLabels = {
   showHiddenPages: "Pokaż wszystkie strony",
   morePages: "Więcej stron",
   previousMonth: "Poprzedni miesiąc",
+  timeZoneYours: "Twoja strefa czasowa",
   nextMonth: "Następny miesiąc",
   month: "Miesiąc",
   year: "Rok",
