@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Checkout.stories';
+
+<Meta of={Stories} />
+
+# Checkout
+
+The page where an order is paid for: a delivery address, a delivery speed, an optional tip and card details, with the order summary beside them. "Review your order" checks everything at once, then shows it all before anything is charged.
+
+<Canvas of={Stories.Details} />
+
+## When to use it
+
+- Someone is paying for something they've chosen, and it has to reach them.
+- Use it for a single order. A subscription sign-up has a plan choice first; a donation is one amount and a card.
+- Not for collecting card details to keep without a payment: say so on the page, and leave out the order summary.
+
+## What each part is for
+
+- **The autocomplete tokens** on every field about the person (`shipping name`, `shipping address-line1`, `shipping postal-code`, `shipping country`, `email`, `tel`, `cc-number`, `cc-name`, `cc-exp`, `cc-csc`). The browser and password managers fill them, so nobody types an address or a card number they've typed before (1.3.5).
+- **Labels that stay**, and hints for what's hard: where the card number is, the expiry date's form ("MM/YY, like 08/27"), where the security code is. Optional fields say "optional", so every other one is needed.
+- **One check, all at once.** "Review your order" checks every field. An ErrorSummary takes focus and links to each field, and each field says what to write, not just that it's wrong (3.3.1, 3.3.3). A second try with the same problems takes focus again.
+- **A Radio group for the delivery speed**, with the price in the label and the days in the description, and **a NumberInput for the tip** in the order's currency, in cents (`minorUnits`), so $2.50 is never read as 250 and the sums don't drift.
+- **The order summary** beside the form (below it on a phone) with every line, the delivery, the tip and the total, updated as they change.
+- **A review step** before anything is charged: the address, the delivery and the card (only its last four digits), each with a "Change" button that goes back with every answer kept and focus on that part's first field (3.3.4, 3.3.7). "Place order" says the amount.
+- **Focus on each new step's heading**, so a screen reader reads where it is (2.4.3). Placing the order is announced; a failure keeps the review and says nothing was charged.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Review} />
+
+## What stays the app's job
+
+- **Taking the payment.** Use your payment provider's own card fields where it requires them (they keep card numbers off your server), its 3-D Secure step, and its own error messages, put into words a person can act on. `onPlaceOrder` gets the order; reject its promise when the payment fails.
+- **Checking the address** with a postcode lookup, and the countries you deliver to, with each country's own address fields.
+- **Prices, taxes and the order number**, from your server. The summary here adds up what it's given.
+- **Saved addresses and cards**: pass them as `initial`, so a returning customer goes straight to the review.
