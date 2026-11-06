@@ -63,6 +63,12 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 - **Route changes:** call `announcePage()` after a client-side route change. Say status changes with `announce("Saved")`, not with a visual change alone.
 - **Motion:** use the motion tokens, and don't animate anything that `prefers-reduced-motion` would want still.
 
+## Before you finish
+
+1. **Run the check and fix until it passes.** In an app `serupa-create` made, that's `npm run check`: the types, ESLint with jsx-a11y and `serupa-ds/eslint` (an Image with no `alt`, an IconButton with no `label`), and Stylelint with `serupa-ds/stylelint` (a raw color, spacing or radius). In another app, add `serupa-ds/eslint` after jsx-a11y in `eslint.config.js` and `extends: ['serupa-ds/stylelint']` to its Stylelint config, then run its lint.
+2. **Tab through the page once.** Every control is reached in reading order, shows its focus ring, and works from the keyboard.
+3. **Look at it in dark mode** (`data-mode="dark"` on `<html>`). Nothing you wrote should stay light.
+
 ## Components
 
 Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. It's on the component's Storybook page and in the repository at `src/components/<Name>/README.md` (https://github.com/diki-stwn/serupa-ds).
