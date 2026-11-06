@@ -60,6 +60,15 @@ describe('Blocks/Settings section', () => {
     expect(document.activeElement!.getAttribute('aria-invalid')).toBe('true');
   });
 
+  test('a second Save with the same problems takes focus again, so the summary is read again (GR163)', async () => {
+    await render(<Settings />);
+    const save = section('Profile').getByRole('button', { name: 'Save' });
+    await userEvent.click(save);
+    await expect.poll(() => document.activeElement?.closest('section')?.textContent?.includes('Enter your name') && document.activeElement !== save.element()).toBe(true);
+    await userEvent.click(save);
+    await expect.poll(() => document.activeElement !== save.element() && section('Profile').element().contains(document.activeElement)).toBe(true);
+  });
+
   test('a good save shows Saving on its own button, then Saved, and leaves the other section alone', async () => {
     await render(<Settings />);
     await userEvent.type(page.getByRole('textbox', { name: 'Name' }), 'Dewi');
