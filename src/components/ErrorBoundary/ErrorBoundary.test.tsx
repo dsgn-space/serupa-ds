@@ -30,7 +30,7 @@ describe('ErrorBoundary', () => {
     await render(<div><p id="other">Still here</p><ErrorBoundary onError={onError} className="extra"><Widget /></ErrorBoundary></div>);
     const box = document.querySelector('[data-component="error-boundary"]') as HTMLElement;
     expect([box.className, box.querySelector('[role=alert]')?.textContent]).toEqual(['dk-error-boundary extra', expect.stringContaining('Something went wrong')]);
-    expect(box.textContent).toContain("This part of the page couldn't load.");
+    expect(box.textContent).toContain("This part of the page couldn’t load.");
     await expect.element(page.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
     expect([(onError.mock.calls[0]?.[0] as Error).message, typeof onError.mock.calls[0]?.[1].componentStack]).toEqual(['boom', 'string']);
     expect(document.getElementById('other')!.textContent).toBe('Still here');

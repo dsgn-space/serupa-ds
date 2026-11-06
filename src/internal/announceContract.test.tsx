@@ -77,7 +77,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /Enter an email address with an @/ },
   'OfflineBanner: the connection drops': {
     ui: (s) => <OfflineBanner online={s !== 1} />,
-    act: (next) => next(), says: /You're offline/ },
+    act: (next) => next(), says: /You’re offline/ },
   'FileUpload: a file added': {
     ui: () => <FileUpload id="fu" />,
     act: async () => { await userEvent.upload($('#fu'), [new File(['x'], 'report.pdf', { type: 'application/pdf' })]); }, says: /report\.pdf added/ },
@@ -92,7 +92,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /20 more loaded\. Showing 40 of 134/ },
   'NumberInput: typed text that isn\'t a number': {
     ui: () => <NumberInput id="qty" aria-label="Quantity" defaultValue={5} />,
-    act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /“abc” wasn't accepted/, assertive: true },
+    act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /“abc” wasn’t accepted/, assertive: true },
   'SortableList: picking an item up with Space': {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
@@ -122,7 +122,7 @@ const SITES: Record<string, Site> = {
     act: async () => { await userEvent.click($('#copy')); }, says: /Copied/ },
   'CopyButton: copying failed': {
     ui: () => <CopyButton id="copy" value="https://serupa.dev" />,
-    act: async () => { writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError')); vi.spyOn(document, 'execCommand').mockReturnValue(false); await userEvent.click($('#copy')); }, says: /Couldn't copy/, assertive: true },
+    act: async () => { writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError')); vi.spyOn(document, 'execCommand').mockReturnValue(false); await userEvent.click($('#copy')); }, says: /Couldn’t copy/, assertive: true },
 };
 
 let writeText: ReturnType<typeof vi.fn>;

@@ -8,10 +8,10 @@ export interface DialogLabels {
   keepEditing: string;
 }
 export const en: DialogLabels = {
-  discardTitle: 'Discard changes?',
-  discardDescription: "What you changed here hasn't been saved.",
-  discard: 'Discard',
-  keepEditing: 'Keep editing',
+  discardTitle: "Discard changes?",
+  discardDescription: "What you changed here hasn’t been saved.",
+  discard: "Discard",
+  keepEditing: "Keep editing",
 };
 export const id: DialogLabels = {
   discardTitle: 'Buang perubahan?',

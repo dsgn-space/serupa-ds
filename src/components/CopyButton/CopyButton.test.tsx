@@ -131,7 +131,7 @@ describe('CopyButton', () => {
     </>);
     await userEvent.click(el('bad'));
     await expect.poll(() => errs.length).toBe(1);
-    await expect.poll(() => announcerIdle() && shout()).toBe("Couldn't copy. Select the text and copy it yourself.");
+    await expect.poll(() => announcerIdle() && shout()).toBe("Couldn’t copy. Select the text and copy it yourself.");
     expect([el('bad').hasAttribute('data-copied'), clicks]).toEqual([false, ['bad']]);
     writeText.mockReset();
     await userEvent.click(el('stop'));

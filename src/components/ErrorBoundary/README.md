@@ -53,7 +53,7 @@ import { ErrorBoundary } from "serupa-ds";
 | `children` | `ReactNode` | | The part of the page to guard. |
 | `fallback` | `ReactNode \| ({ error, reset }) => ReactNode` | a danger Alert with Try again | What to show instead. |
 | `title` | `ReactNode` | "Something went wrong" | The default fallback's title. |
-| `description` | `ReactNode` | "This part of the page couldn't load." | The default fallback's message. |
+| `description` | `ReactNode` | "This part of the page couldn’t load." | The default fallback's message. |
 | `onError` | `(error, info) => void` | | Called with the error and React's `componentStack`. |
 | `onReset` | `() => void` | | Called when the error is cleared (Try again, `reset()` or `resetKeys`). |
 | `resetKeys` | `unknown[]` | | When a value changes, the error clears. |

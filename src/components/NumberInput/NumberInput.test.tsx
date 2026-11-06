@@ -453,7 +453,7 @@ describe('NumberInput', () => {
     expect([seen, field('inv').value]).toEqual([['250:range', '-4:range', 'abc:unreadable'], '42']);
     await fill('inv', 'xyz');
     await blur('inv');
-    await expect.poll(() => announcerIdle() && document.querySelector('[data-dk-announcer-assertive]')!.textContent).toMatch(/“xyz” wasn't accepted/);
+    await expect.poll(() => announcerIdle() && document.querySelector('[data-dk-announcer-assertive]')!.textContent).toMatch(/“xyz” wasn’t accepted/);
   });
 
   test('steppers={false}: no buttons', async () => {

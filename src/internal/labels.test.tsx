@@ -65,6 +65,12 @@ describe('labels', () => {
     const enSaid = Object.fromEntries(Object.entries(en).filter(([k]) => !EMPTY_IN_EN.has(k)));
     expect([bad(enSaid), bad(id)]).toEqual([[], []]);
   });
+  // GR165: one apostrophe and one pair of quotes in every label, the typographic ones (’ “ ”), so "Couldn’t save" and
+  // "Couldn't copy" don't look different on the same page.
+  test('apostrophes and quotes are curly in both sets', () => {
+    const straight = (set: Record<string, string>) => Object.entries(set).filter(([, t]) => /['"]/.test(t)).map(([k, t]) => k + ': ' + t);
+    expect([straight(en), straight(id)]).toEqual([[], []]);
+  });
   test('no Indonesian label is still in English', () => {
     expect(Object.keys(en).filter((k) => !SAME.has(k) && en[k] === id[k] && /[a-z]{3}/i.test(en[k])).map((k) => k + ': ' + en[k])).toEqual([]);
   });
