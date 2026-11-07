@@ -4,8 +4,6 @@
   - heading "Notifications" [level=2]
   - button "Close"
   - paragraph: No notifications yet
-  - button "Mark all as read"
-  - button "Clear all"
 
 # LongText
 - button "Notifications, 1 unread": Notifications
