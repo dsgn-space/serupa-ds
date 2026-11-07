@@ -62,6 +62,8 @@ describe('Chat', () => {
     await expect.poll(top).toBeGreaterThan(at);
     await userEvent.keyboard('{Home}');
     await expect.poll(top).toBe(0);
+    // Let Home's smooth scroll finish: a PageDown that arrives while it's still running can be dropped (GR202).
+    await settled();
     await userEvent.keyboard('{PageDown}');
     await expect.poll(top).toBeGreaterThan(0);
     await userEvent.keyboard('{End}');
