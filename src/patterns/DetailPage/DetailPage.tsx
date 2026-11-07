@@ -10,6 +10,8 @@ import { InlineEdit } from '../../components/InlineEdit/InlineEdit';
 import { Tabs, TabList, Tab, TabPanel } from '../../components/Tabs/Tabs';
 import { TypeToConfirm } from '../../components/TypeToConfirm/TypeToConfirm';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { Alert } from '../../components/Alert/Alert';
+import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Detail page: one thing (a project) with where it sits, its name and details editable in place, its parts in tabs,
@@ -22,7 +24,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
    - 2.4.3: after a removal, focus goes to the next task (or the list's heading), never to the top of the page; after
      the delete, to the h1 of the page that says it's gone.
    - 4.1.3: the toast says what was removed; a saved name is shown in the h1 at once.
-   - 3.3.1: a name left empty says so, and the old name stays.
+   - 3.3.1: a name left empty says so, and the old name stays; a delete that fails says so in the dialog, which stays
+     open with focus on its button, so it can be tried again.
    Storing the changes is the app's job: onRename, onRemoveTask and onDelete get them. */
 
 export interface ProjectTask { id: string; title: string }
@@ -47,6 +50,16 @@ const demo: Project = {
   ],
 };
 
+// "14 September 2026" in the reader's locale for "2026-09-14", read as that calendar day wherever the reader is;
+// anything else as it came.
+function day(iso: string, locale: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return iso;
+  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+}
+
+const english = /* @__PURE__ */ new Intl.PluralRules('en');
+
 /** The detail page: a skip link, a header, then main with the breadcrumb, the h1, the tabs and the danger zone. */
 export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }: DetailPageProps) {
   const [name, setName] = React.useState(project.name);
@@ -54,6 +67,12 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
   const [asking, setAsking] = React.useState(false);
   const [deleted, setDeleted] = React.useState(false);
+  const [failed, setFailed] = React.useState(false);
+  const locale = useLocale();
+  // The Undo toasts still open, and whether the project is gone: once it is, they close without removing anything,
+  // since the delete took their tasks with it.
+  const pending = React.useRef(new Set<string>());
+  const gone = React.useRef(false);
   const tasksHeading = React.useRef<HTMLHeadingElement>(null);
   const goneHeading = React.useRef<HTMLHeadingElement>(null);
   const tasks = project.tasks.filter((t) => !hidden.has(t.id));
@@ -66,14 +85,32 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
     const at = tasks.indexOf(t), next = tasks[at + 1] || tasks[at - 1];
     setHidden((h) => new Set(h).add(t.id));
     later(next ? removeButton(next.id) : () => tasksHeading.current?.focus());
-    toast.undo({
+    const id: string = toast.undo({
       title: `Removed “${t.title}”`,
-      commit: () => onRemoveTask?.(t.id),
-      onUndo: () => { setHidden((h) => { const n = new Set(h); n.delete(t.id); return n; }); later(removeButton(t.id)); },
+      commit: () => { pending.current.delete(id); if (!gone.current) onRemoveTask?.(t.id); },
+      onUndo: () => { pending.current.delete(id); setHidden((h) => { const n = new Set(h); n.delete(t.id); return n; }); later(removeButton(t.id)); },
     });
+    pending.current.add(id);
   };
-  const save = (field: 'name' | 'description', set: (v: string) => void) => (v: string) => { set(v); onRename?.(field, v); };
-  const confirm = () => Promise.resolve(onDelete?.()).then(() => { setAsking(false); setDeleted(true); });
+  // Saved without the spaces around it, as the check reads it.
+  const save = (field: 'name' | 'description', set: (v: string) => void) => (v: string) => { const kept = v.trim(); set(kept); onRename?.(field, kept); };
+  // A delete that fails, by rejecting or by throwing, keeps the dialog open and says so, instead of leaving the error
+  // unhandled. The promise goes back to the button, which shows it's busy while a slow delete runs.
+  const confirm = () => {
+    setFailed(false);
+    return Promise.resolve().then(() => onDelete?.()).then(() => {
+      gone.current = true;
+      for (const id of [...pending.current]) toast.dismiss(id);
+      setAsking(false);
+      setDeleted(true);
+    }, () => setFailed(true));
+  };
+  const ask = (open: boolean) => { setAsking(open); if (!open) setFailed(false); };
+  // What the dialog says will be lost: the tasks still there, with the word that fits the number: the words are
+  // English, so the rule is too; an app translating them passes its own locale.
+  const lost = tasks.length
+    ? `its ${tasks.length} ${english.select(tasks.length) === 'one' ? 'task' : 'tasks'} and files`
+    : 'its files';
 
   return (
     <div className="min-h-screen bg-surface-muted text-text">
@@ -111,7 +148,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
                     <dt className="font-medium">Description</dt>
                     <dd className="m-0 min-w-0 sm:col-span-2"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></dd>
                     <dt className="font-medium">Owner</dt><dd className="m-0 sm:col-span-2">{project.owner}</dd>
-                    <dt className="font-medium">Created</dt><dd className="m-0 sm:col-span-2"><time dateTime={project.created}>{project.created}</time></dd>
+                    <dt className="font-medium">Created</dt><dd className="m-0 sm:col-span-2"><time dateTime={project.created}>{day(project.created, locale)}</time></dd>
                   </dl>
                 </Card>
               </TabPanel>
@@ -136,14 +173,17 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
                 <section aria-labelledby="danger" className="flex flex-col gap-3 rounded-lg border border-danger bg-surface p-4">
                   <Heading level={2} size="lg" id="danger">Delete this project</Heading>
                   <p className="m-0 max-w-prose">Deleting removes the project with its tasks and files for everyone. It can't be undone.</p>
-                  <div><Button destructive variant="outline" onClick={() => setAsking(true)}>Delete project</Button></div>
+                  <div><Button destructive variant="outline" onClick={() => ask(true)}>Delete project</Button></div>
                 </section>
               </TabPanel>
             </Tabs>
 
-            <Dialog alert open={asking} onOpenChange={setAsking} title={`Delete ${name}?`}
-              description={`This deletes the project and its ${project.tasks.length} tasks and files for everyone. It can't be undone.`}>
-              <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />
+            <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
+              description={`This deletes the project and ${lost} for everyone. It can't be undone.`}>
+              <div className="flex flex-col gap-4">
+                {failed ? <Alert tone="danger">Couldn't delete {name}. Try again.</Alert> : null}
+                <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />
+              </div>
             </Dialog>
           </>
         )}
