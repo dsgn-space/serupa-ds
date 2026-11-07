@@ -293,7 +293,7 @@ if (!jsBrands) brandIssues.push('src/theme.js: no "var BRANDS = [...]" found');
 else if (!same(listOf(jsBrands[1]), BRANDS)) brandIssues.push(`src/theme.js: BRANDS is [${listOf(jsBrands[1]).join(', ')}], tokens.json gives [${BRANDS.join(', ')}]`);
 const jsDoc = /data-brand\s+([a-z0-9 |]+?)\s+\(default: ([a-z0-9]+)\)/.exec(themeJs);
 if (!jsDoc || !same(jsDoc[1].split('|').map((s) => s.trim()), BRANDS) || jsDoc[2] !== BRANDS[0]) brandIssues.push(`src/theme.js: the header should read "data-brand  ${BRANDS.join(' | ')}  (default: ${BRANDS[0]})"`);
-const jsDefault = /pick\(root\.getAttribute\("data-brand"\), BRANDS, "([^"]+)"\)/.exec(themeJs);
+const jsDefault = /pick\(root\.getAttribute\(["']data-brand["']\), BRANDS, ["']([^"']+)["']\)/.exec(themeJs);
 if (!jsDefault || jsDefault[1] !== BRANDS[0]) brandIssues.push(`src/theme.js: the default brand should be "${BRANDS[0]}" (the first theme's brand)`);
 const tsType = /export type ThemeBrand\s*=\s*([^;]+);/.exec(read('src/theme-types.ts'));
 if (!tsType) brandIssues.push('src/theme-types.ts: no ThemeBrand type found');
