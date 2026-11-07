@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
+import { warnOnce } from "../../internal/warn";
 import { IconButton } from "../IconButton/IconButton";
 import { Discard } from "../Dialog/Dialog";
 import { component } from "../../internal/component";
@@ -113,6 +114,9 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     if (!d) return;
     if (open && !d.open) {
       if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
+      // It renders where it's placed: inside a page <form>, its own form nests in that one (Enter reloads the page) and
+      // Enter in its field submits the page's form, as with Popover.
+      if (process.env.NODE_ENV !== "production" && d.parentElement?.closest("form") && d.querySelector("form, textarea, input:not([type=checkbox], [type=radio], [type=hidden])")) warnOnce("overlay-in-form", "Drawer: it's inside a <form> and holds a form or a field, so Enter there submits the page's form, or reloads the page. Place the Drawer after the form.", "Drawer:overlay-in-form");
       // Non-modal: shown in place (not the top layer), so it isn't on the modal stack and the page stays usable.
       if (!modal) { if (typeof d.show === "function") d.show(); else d.setAttribute("open", ""); }
       else {

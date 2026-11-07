@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { flushSync } from 'react-dom';
-import { afterAll, beforeEach, describe, expect, test } from 'vitest';
+import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
@@ -693,5 +693,18 @@ describe('Dialog: motion (DZ1)', () => {
       expect(seen.length).toBeGreaterThan(1);
       expect(seen.filter(([x, y]) => Math.abs(x - at[0]) > 1 || Math.abs(y - at[1]) > 1)).toEqual([]);
     });
+  });
+
+  test('opened inside a <form> with a field or form in it, it warns once (overlay-in-form); outside a form, or with only text, it doesn\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const calls = () => warn.mock.calls.filter(([m]) => /overlay-in-form/.test(String(m)) && /^Dialog:/.test(String(m)));
+    try {
+      const { rerender } = await render(<><Dialog open title="Share" onOpenChange={() => {}}><input aria-label="Email" /></Dialog><form><Dialog open title="Info" onOpenChange={() => {}}>Plain words.</Dialog></form></>);
+      expect(calls()).toHaveLength(0);
+      await rerender(<></>);
+      await render(<form><Dialog open title="Rename" onOpenChange={() => {}}><input aria-label="Name" /></Dialog></form>);
+      expect(calls()).toHaveLength(1);
+      expect(String(calls()[0][0])).toMatch(/^Dialog: it's inside a <form>/);
+    } finally { warn.mockRestore(); }
   });
 });

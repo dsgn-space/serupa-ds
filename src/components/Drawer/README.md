@@ -43,6 +43,7 @@ Drawn from the `Bottom` story.
 - Put the actions in `footer` so they stay in view, with the main action last.
 - Set `closeOnBackdrop={false}` when closing would lose work, such as unsaved edits.
 - Set `modal={false}` for a panel people use alongside the page, such as an item's details next to a list they keep clicking through.
+- Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 
 ## Behavior
 
