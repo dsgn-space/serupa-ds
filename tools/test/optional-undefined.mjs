@@ -15,7 +15,9 @@ const BASELINE = path.join(PROJECT, 'tools/test/baseline-optional-undefined.json
 const tsc = path.join(PROJECT, 'node_modules', 'typescript', 'bin', 'tsc');
 const built = fs.existsSync(path.join(PROJECT, 'dist', 'index.d.ts'));
 const COMP = path.join(PROJECT, 'src', 'components');
-const names = fs.readdirSync(COMP).filter((n) => /^[A-Z]/.test(n) && fs.existsSync(path.join(COMP, n, 'index.ts'))).sort();
+// The folders whose name is an export (Toast's folder exports toast() and Toaster, not Toast).
+const exported = built ? new Set(Object.keys(await import(path.join(PROJECT, 'dist', 'index.js')))) : new Set();
+const names = fs.readdirSync(COMP).filter((n) => /^[A-Z]/.test(n) && fs.existsSync(path.join(COMP, n, 'index.ts')) && exported.has(n)).sort();
 
 // The keys of P that are optional and whose type, once the optional marker is gone, doesn't include undefined. As a
 // template literal type, so the error message spells the union out. ComponentProps of an overloaded component
@@ -41,8 +43,10 @@ if (built) {
     for (const m of out.matchAll(/probe\.tsx\((\d+),\d+\): error TS\d+: ([^\n]*(?:\n(?!\S*probe\.tsx\()[^\n]*)*)/g)) {
       const n = /p_(\w+):/.exec(lines[Number(m[1]) - 1])?.[1];
       const target = m[2].split('to type ').pop() || '';
-      const keys = [...target.matchAll(/"([A-Za-z]\w*)"/g)].map((k) => k[1]);
-      if (n && keys.length) found[n] = [...new Set(keys)].sort();
+      // Names with hyphens too (aria-label, data-*): a name it can't read must not drop the error (GR197).
+      const keys = [...target.matchAll(/"([A-Za-z][\w-]*)"/g)].map((k) => k[1]);
+      // "… to type 'never'" is the probe's own error for a component with no such prop.
+      if (n && !/to type 'never'\.?\s*$/.test(m[2])) found[n] = keys.length ? [...new Set([...(found[n] || []), ...keys])].sort() : [...(found[n] || []), `(unread: ${m[2].split('\n')[0].slice(0, 120)})`];
     }
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 }
