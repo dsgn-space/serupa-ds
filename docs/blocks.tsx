@@ -275,7 +275,11 @@ const labelUse: Record<string, string> = {};
     if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
   }
 }
-const word = (v: SerupaLabels[keyof SerupaLabels]) => (typeof v === 'function' ? v('n' as unknown as number) : v);
+// A function label is shown with "n" for its first argument; one that takes a list (cascadePath) can't, so it says so.
+const word = (v: SerupaLabels[keyof SerupaLabels]) => {
+  if (typeof v !== 'function') return v;
+  try { return v('n' as unknown as number); } catch { return '(built from its arguments)'; }
+};
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {
   return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
