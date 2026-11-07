@@ -14,29 +14,29 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.1.0
+npm install github:diki-stwn/serupa-ds#v14.2.0
 ```
 
 Or install the same release from its file on the Releases page, which needs no git on the machine and puts the file's checksum in your lockfile:
 
 ```sh
-npm install https://github.com/diki-stwn/serupa-ds/releases/download/v14.1.0/serupa-ds-14.1.0.tgz
+npm install https://github.com/diki-stwn/serupa-ds/releases/download/v14.2.0/serupa-ds-14.2.0.tgz
 ```
 
 To check a downloaded file before you install it: the release notes give its SHA-256, and releases after 10.1.0 also carry a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit. With the [GitHub CLI](https://cli.github.com):
 
 ```sh
-gh attestation verify ./serupa-ds-14.1.0.tgz --repo diki-stwn/serupa-ds
+gh attestation verify ./serupa-ds-14.2.0.tgz --repo diki-stwn/serupa-ds
 ```
 
-Always pin a tag (`#v14.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.2.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:diki-stwn/serupa-ds#v14.1.0 serupa-create my-app
+npx --package=github:diki-stwn/serupa-ds#v14.2.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -252,10 +252,12 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | Component | What it's for |
 | --- | --- |
 | [Accordion](src/components/Accordion/README.md) | A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. |
+| [Attachment](src/components/Attachment/README.md) (beta) | A file shown as one compact row: an icon for its kind, the name, the kind and size, and, while it uploads, a bar. |
 | [Avatar](src/components/Avatar/README.md) | A small picture of a person (a circle) or of a team, project or organisation (a square). |
 | [AvatarGroup](src/components/AvatarGroup/README.md) | Avatars in an overlapping row, such as the people on a project or the assignees of a task. |
 | [Card](src/components/Card/README.md) | A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. |
 | [Carousel](src/components/Carousel/README.md) | One slide at a time, with previous and next buttons, a dot per slide and swipe. |
+| [Chat](src/components/Chat/README.md) (beta) | A conversation: messages in a log that stays at the newest one while the reader is there, day dividers, and a composer where Enter sends. |
 | [CodeBlock](src/components/CodeBlock/README.md) (beta) | Code for people to read and copy: an install command, a config file, an example. |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
@@ -321,6 +323,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Switch](src/components/Switch/README.md) | An on/off setting that takes effect at once. |
 | [Textarea](src/components/Textarea/README.md) | A multi-line text field, Input's sibling: a native `<textarea>` in a box. |
 | [TimePicker](src/components/TimePicker/README.md) | A time-of-day field: people type a time, or pick one from a list. |
+| [TimeZonePicker](src/components/TimeZonePicker/README.md) (beta) | A searchable list of time zones, by city, with each one's offset now and its name in the reader's language. |
 | [TypeToConfirm](src/components/TypeToConfirm/README.md) | A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted. |
 
 ### Layout

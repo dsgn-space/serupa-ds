@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.1.0
+npm install github:diki-stwn/serupa-ds#v14.2.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -96,10 +96,12 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 ### Content
 
 - **Accordion**: A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections.
+- **Attachment** (beta): A file shown as one compact row: an icon for its kind, the name, the kind and size, and, while it uploads, a bar.
 - **Avatar**: A small picture of a person (a circle) or of a team, project or organisation (a square).
 - **AvatarGroup**: Avatars in an overlapping row, such as the people on a project or the assignees of a task.
 - **Card**: A surface that groups related content and its actions: a summary, a settings panel, an item in a grid.
 - **Carousel**: One slide at a time, with previous and next buttons, a dot per slide and swipe.
+- **Chat** (beta): A conversation: messages in a log that stays at the newest one while the reader is there, day dividers, and a composer where Enter sends.
 - **CodeBlock** (beta): Code for people to read and copy: an install command, a config file, an example.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette.
@@ -159,7 +161,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Switch**: An on/off setting that takes effect at once.
 - **Textarea**: A multi-line text field, Input's sibling: a native `<textarea>` in a box.
 - **TimePicker**: A time-of-day field: people type a time, or pick one from a list.
-- **TimeZonePicker** (beta): A searchable list of time zones by city, each with its offset now and its name in the reader's language; the value is the IANA name.
+- **TimeZonePicker** (beta): A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
 - **TypeToConfirm**: A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted.
 
 ### Layout

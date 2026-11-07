@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PROJECT, read, report, done } from './lib.mjs';
-import { parseChangeset } from '../changesets.mjs';
+import { entriesOf, parseChangeset } from '../changesets.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -39,5 +39,9 @@ const pkg = JSON.parse(read('package.json')).name;
 const pending = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.md') && f !== 'README.md') : [];
 const unreadable = pending.map((f) => [f, parseChangeset(fs.readFileSync(path.join(dir, f), 'utf8'), pkg).error]).filter(([, e]) => e);
 t(`every pending changeset has a bump for ${pkg} (${pending.length})`, !unreadable.length, unreadable.map(([f, e]) => `.changeset/${f}: ${e}`).join('; '));
+
+// GR195: a lead sentence with bullets stays one entry, the bullets nested; bullets alone are one entry each.
+t('a lead sentence keeps its bullets nested under it', JSON.stringify(entriesOf('Four mistakes warn.\n\n- Select: a.\n- NumberInput: b.\n')) === JSON.stringify(['Four mistakes warn.\n  - Select: a.\n  - NumberInput: b.']), JSON.stringify(entriesOf('Four mistakes warn.\n\n- Select: a.\n- NumberInput: b.\n')));
+t('bullets alone are one entry each, and plain text is one', JSON.stringify(entriesOf('- Fixed: a.\n- Added: b.')) === JSON.stringify(['Fixed: a.', 'Added: b.']) && JSON.stringify(entriesOf('One\nline.')) === JSON.stringify(['One line.']));
 
 done(report('Changesets', R));
