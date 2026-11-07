@@ -12,7 +12,7 @@ const root = (id: string) => document.getElementById(id) as HTMLElement;
 // the message an id ending -error, the name the element titled with it, the icon the first one.
 const part = (el: HTMLElement, which: 'meta' | 'error') => el.querySelector(`[id$="-${which}"]`) as HTMLElement;
 const meta = (el: HTMLElement) => part(el, 'meta').textContent;
-const nameParts = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[title] > [aria-hidden]')];
+const nameParts = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[dir="auto"][title] > [aria-hidden]')];
 const visible = (el: HTMLElement) => nameParts(el).map((x) => x.textContent).join('');
 
 describe('Attachment', () => {
@@ -48,11 +48,44 @@ describe('Attachment', () => {
   test('a long name keeps its extension and last characters, and doesn\'t widen its container', async () => {
     const long = 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung-2026.pdf';
     await render(<div style={{ width: '200px' }}><Attachment id="l" name={long} onRemove={() => {}} /></div>);
-    const e = root('l'), end = nameParts(e)[1];
-    expect(end.textContent).toBe('nversicherung-2026.pdf'.slice(-10));
+    const e = root('l');
+    await expect.poll(() => nameParts(e).length).toBe(2);
+    expect(nameParts(e)[1].textContent).toBe('nversicherung-2026.pdf'.slice(-10));
     expect(e.getBoundingClientRect().width).toBeLessThanOrEqual(200);
     const start = nameParts(e)[0];
     expect(start.scrollWidth).toBeGreaterThan(start.clientWidth);
+  });
+
+  test('a name that fits is one run of text, and is cut again only when it stops fitting', async () => {
+    await render(<div id="box" style={{ width: '420px' }}><Attachment id="w" name="Quarterly report final version.pdf" /></div>);
+    const e = root('w');
+    expect(nameParts(e).map((x) => x.textContent)).toEqual(['Quarterly report final version.pdf']);
+    (document.getElementById('box') as HTMLElement).style.width = '160px';
+    await expect.poll(() => nameParts(e).length).toBe(2);
+    (document.getElementById('box') as HTMLElement).style.width = '420px';
+    await expect.poll(() => nameParts(e).length).toBe(1);
+  });
+
+  // GR188: a Devanagari conjunct with its vowel sign, a ZWJ family emoji and a decomposed accent are each one character.
+  const NAMES = ['राष्ट्रीय रिपोर्ट.pdf', '👨‍👩‍👧‍👦.png', 'Cafe\u0301 menu.pdf'];
+  test('Devanagari, a ZWJ emoji and a decomposed accent show whole: one run while they fit', async () => {
+    await render(<div style={{ width: '420px' }}>{NAMES.map((n, i) => <Attachment key={n} id={'g' + i} name={n} />)}</div>);
+    NAMES.forEach((n, i) => expect(nameParts(root('g' + i)).map((x) => x.textContent)).toEqual([n]));
+  });
+
+  test('when they don\'t fit, the cut falls between characters people see; an Arabic name is cut before a word, not inside it', async () => {
+    const all = [...NAMES.map((n) => 'Lampiran panjang sekali untuk rapat bulanan ' + n), 'تقرير المبيعات السنوي للربع الأخير.pdf'];
+    await render(<div style={{ width: '120px' }}>{all.map((n, i) => <Attachment key={n} id={'c' + i} name={n} />)}</div>);
+    const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+    for (const [i, n] of all.entries()) {
+      const e = root('c' + i);
+      await expect.poll(() => nameParts(e).length).toBe(2);
+      const [a, b] = nameParts(e).map((x) => x.textContent);
+      expect(a + b).toBe(n);
+      expect(Array.from(seg.segment(n), (x) => x.index)).toContain(a.length);
+    }
+    const [a] = nameParts(root('c3')).map((x) => x.textContent);
+    expect(a.endsWith(' ')).toBe(true);
   });
 
   test('an emoji or a name in another script isn\'t split inside a character', async () => {
