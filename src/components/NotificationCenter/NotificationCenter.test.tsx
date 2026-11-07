@@ -68,7 +68,8 @@ describe('NotificationCenter', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => rows().length).toBe(0);
     expect(button('Clear all')).toBeUndefined();
-    expect(document.activeElement).toBe(drawer()!.querySelector('.dk-notification-center__empty'));
+    expect(drawer()!.contains(document.activeElement)).toBe(true);
+    expect(document.activeElement!.textContent).toBe(DEFAULT_LABELS.noNotifications);
   });
 
   test('an inbox that hides read ones: "Mark as read" takes its row away, and focus goes to the row in its place, then the last, then the empty line, not to the page', async () => {
