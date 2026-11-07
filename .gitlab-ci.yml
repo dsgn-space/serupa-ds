@@ -1,8 +1,8 @@
 # GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
-# Light by default: the free plan's 400 compute minutes a month buy only about two runs of the full suite (about
-# 200 minutes each, since every parallel job counts), so merge requests and main run build, types and lint,
-# changeset, consumer and the local checks gate (tools/local-checks-gate.mjs: the description must hold a passing
-# tools/ci.mjs report for the commit). The suite and frameworks jobs run when a pipeline is started by hand
+# Minimal by default: the free plan has 400 compute minutes a month, shared by every lane. A merge request's
+# pipeline is one job, local checks (tools/local-checks-gate.mjs on a small Node image, no install, about half a
+# minute): its description must hold a passing tools/ci.mjs report for the commit, which already ran everything
+# below on the author's machine. Pushes to main run nothing. Every other job runs only in a pipeline started by hand
 # (Build > Pipelines > Run pipeline) or with SERUPA_FULL_CI=1.
 # Runs on merge request pipelines and on pushes to main, never twice for the same push.
 # - Merge requests test what they change (tools/test/run.mjs --since the MR's base), as GitHub's pull requests did;
@@ -18,7 +18,6 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "web"
   # A new push cancels the pipeline for the push before it, and the first failed job cancels the rest of its
   # pipeline: a red run stops spending CI minutes as soon as it's red.
@@ -58,6 +57,7 @@ default:
       fi
 
 build:
+  extends: .full-suite
   stage: build
   timeout: 20m
   script:
@@ -69,6 +69,7 @@ build:
     expire_in: 3 days
 
 types and lint:
+  extends: .full-suite
   stage: build
   timeout: 20m
   script:
@@ -82,7 +83,7 @@ changeset:
   timeout: 10m
   rules:
     # A merge request that ships nothing new takes the "no-changeset" label, as on GitHub.
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-changeset(,|$)/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI == "1" && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-changeset(,|$)/
   cache: []
   before_script: []
   script:
@@ -96,6 +97,10 @@ changeset:
 local checks:
   stage: build
   timeout: 5m
+  # Only the script and the description: a small image, one commit of history, no cache, no install.
+  image: node:26-alpine
+  variables:
+    GIT_DEPTH: "1"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1"
   cache: []
@@ -133,6 +138,7 @@ suite:
 # The package installed into an empty project on the oldest Node package.json allows, and the one between
 # (tools/test/consumer.mjs). No npm ci: the repo's dependencies ask for Node 26, and the check needs only Node and dist/.
 consumer:
+  extends: .full-suite
   stage: test
   needs: [build]
   timeout: 10m

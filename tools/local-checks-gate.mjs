@@ -1,5 +1,5 @@
-// The GitLab merge gate while CI runs only the light jobs (the free plan's 400 minutes a month buy about two runs of
-// the full suite): a merge request merges only when its description holds a tools/ci.mjs report that passed on the
+// The GitLab merge gate, and a merge request's whole pipeline (the free plan's 400 minutes a month are shared by
+// every lane): a merge request merges only when its description holds a tools/ci.mjs report that passed on the
 // commit the pipeline runs, from a clean tree, with nothing left out.
 //   node tools/local-checks-gate.mjs            in GitLab CI (reads CI_MERGE_REQUEST_DESCRIPTION and CI_COMMIT_SHA)
 //   node tools/local-checks-gate.mjs <file> <commit>    the same check on a saved description
