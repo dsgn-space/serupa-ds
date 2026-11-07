@@ -94,10 +94,11 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
   };
   // Saved without the spaces around it, as the check reads it.
   const save = (field: 'name' | 'description', set: (v: string) => void) => (v: string) => { const kept = v.trim(); set(kept); onRename?.(field, kept); };
-  // A delete that fails keeps the dialog open and says so, instead of leaving the rejection unhandled.
+  // A delete that fails, by rejecting or by throwing, keeps the dialog open and says so, instead of leaving the error
+  // unhandled. The promise goes back to the button, which shows it's busy while a slow delete runs.
   const confirm = () => {
     setFailed(false);
-    return Promise.resolve(onDelete?.()).then(() => {
+    return Promise.resolve().then(() => onDelete?.()).then(() => {
       gone.current = true;
       for (const id of [...pending.current]) toast.dismiss(id);
       setAsking(false);

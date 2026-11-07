@@ -123,6 +123,41 @@ describe('Patterns/Detail page', () => {
     } finally { window.removeEventListener('unhandledrejection', seen); }
   });
 
+  test('GR184: an onDelete that throws instead of rejecting says so in the alert too, with no uncaught error', async () => {
+    const errors: unknown[] = [];
+    const seen = (e: ErrorEvent) => errors.push(e.error);
+    window.addEventListener('error', seen);
+    try {
+      const screen = await render(<DetailPage onDelete={() => { throw new Error('server down'); }} />);
+      await screen.getByRole('tab', { name: 'Settings' }).click();
+      await screen.getByRole('button', { name: 'Delete project' }).click();
+      const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
+      await dialog.getByRole('textbox').fill('Website redesign');
+      await dialog.getByRole('button', { name: 'Delete this project' }).click();
+      await expect.element(dialog.getByRole('alert')).toHaveTextContent("Couldn't delete Website redesign. Try again.");
+      expect(h1()).toBe('Website redesign');
+      await new Promise((r) => setTimeout(r, 50));
+      expect(errors).toEqual([]);
+    } finally { window.removeEventListener('error', seen); }
+  });
+
+  test('GR184: while a slow delete runs, its button is busy and takes no second press', async () => {
+    let finish = () => {};
+    const onDelete = vi.fn(() => new Promise<void>((r) => { finish = r; }));
+    const screen = await render(<DetailPage onDelete={onDelete} />);
+    await screen.getByRole('tab', { name: 'Settings' }).click();
+    await screen.getByRole('button', { name: 'Delete project' }).click();
+    const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
+    await dialog.getByRole('textbox').fill('Website redesign');
+    const button = dialog.getByRole('button', { name: 'Delete this project' });
+    await button.click();
+    await expect.element(button).toHaveAttribute('aria-busy', 'true');
+    (button.element() as HTMLButtonElement).click();
+    expect(onDelete).toHaveBeenCalledTimes(1);
+    finish();
+    await expect.poll(h1).toBe('Website redesign was deleted');
+  });
+
   test('GR177: the failure message goes when the dialog is closed and opened again', async () => {
     const screen = await render(<DetailPage onDelete={() => Promise.reject(new Error('server down'))} />);
     await screen.getByRole('tab', { name: 'Settings' }).click();
