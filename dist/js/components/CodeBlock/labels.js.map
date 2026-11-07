@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/CodeBlock/labels.ts"],
+  "sourcesContent": ["// CodeBlock's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface CodeBlockLabels {\n  /** CodeBlock: the copy button's name. */\n  codeCopy: string;\n  /** CodeBlock: the name of the code's scroll area when it has no title or language. */\n  codeName: string;\n}\nexport const en: CodeBlockLabels = { codeCopy: \"Copy code\", codeName: \"Code\" };\nexport const id: CodeBlockLabels = { codeCopy: \"Salin kode\", codeName: \"Kode\" };\n"],
+  "mappings": ";AAQO,IAAM,KAAsB,EAAE,UAAU,aAAa,UAAU,OAAO;AACtE,IAAM,KAAsB,EAAE,UAAU,cAAc,UAAU,OAAO;",
+  "names": []
+}
