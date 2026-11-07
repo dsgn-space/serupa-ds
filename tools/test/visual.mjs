@@ -97,11 +97,12 @@ if (process.platform === 'linux') {
   }
 }
 // Several pages at once (PAGES), each in its own context so focus and the pointer stay its own.
-const pages = await Promise.all(Array.from({ length: PAGES }, async () => {
+async function newPage() {
   const context = await b.newContext({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });
   await fixClock(context);   // today is CLOCK, so a story that shows today draws the same picture every day
   return context.newPage();
-}));
+}
+const pages = await Promise.all(Array.from({ length: PAGES }, newPage));
 const R = [];
 
 async function diff(page, a, bb) {   // share of differing pixels and the box they fall in, computed in the browser (no image libraries needed)
@@ -235,8 +236,25 @@ async function checkStory(e, page) {
   }
   return out;
 }
+// Each page starts a new context every RECYCLE stories: the browser keeps memory from story to story, and a long
+// run crashed a tab (Slider's Read only, emerald-dark, 7 Nov 2026), which ended the whole step. A tab that crashes
+// anyway now fails only its story, and the page is replaced.
+const RECYCLE = 40;
+const slots = pages.map((page) => ({ page, used: 0 }));
+/** @type {(s: { page: import('playwright').Page, used: number }) => Promise<void>} */
+const renew = async (s) => { await s.page.context().close().catch(() => {}); s.page = await newPage(); s.used = 0; };
+const guarded = async (e, s) => {
+  if (++s.used > RECYCLE) await renew(s);
+  try { return await checkStory(e, s.page); }
+  catch (err) {
+    if (!/crash|closed/i.test(String(err?.message))) throw err;
+    await renew(s);
+    return [{ name: `${component(e)}/${e.exportName}`, ok: false, detail: `the tab crashed: ${String(err.message).split('\n')[0]}` }];
+  }
+};
 // A story that fails is shot once more (not with --update, which writes what it shoots).
-R.push(...(await (update ? inParallel(stories, pages, checkStory) : inParallelRetry(stories, pages, checkStory, (e) => e.id))).flat());
+R.push(...(await (update ? inParallel(stories, slots, guarded) : inParallelRetry(stories, slots, guarded, (e) => e.id))).flat());
+pages.splice(0, pages.length, ...slots.map((s) => s.page));
 
 // The token sheets: each Foundations page, one picture per data-token-sheet element.
 const sheetPages = shard === 1 && !only ? Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
