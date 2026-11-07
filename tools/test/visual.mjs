@@ -215,7 +215,8 @@ async function checkStory(e, page) {
   for (const [th, state] of [...THEMES.map((th) => [th, 'rest']), [THEMES[0], 'hover'], [THEMES[0], 'focus']]) {
     {
       const name = `${c}/${e.exportName}-${th}-${state}`;
-      const notReady = (atRest && state === 'rest' && !(await switchTo(page, th))) ? '' : await open(page, e, th);
+      const switched = atRest && state === 'rest' && !(await switchTo(page, th));
+      const notReady = switched ? '' : await open(page, e, th);
       atRest = !notReady && state === 'rest';
       if (notReady) { out.push({ name, ok: false, detail: notReady }); continue; }
       if (state !== 'rest') {
@@ -234,7 +235,10 @@ async function checkStory(e, page) {
           continue;
         }
       }
-      const r = await compare(page, name);
+      let r = await compare(page, name);
+      // A story that keeps state across a re-render (an open context menu, a timer's warning, a playground's own
+      // state) can differ after a switch: the fresh load decides, as it did before switching.
+      if (switched && r && !r.ok && !(await open(page, e, th))) r = await compare(page, name);
       if (r) out.push(r);
     }
   }

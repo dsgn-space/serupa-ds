@@ -198,27 +198,39 @@ async function pageRules(page) {
   });
   return landed ? [...out, `page: ${landed}`] : out;
 }
+// One theme of a story: switched in place when the page is already loaded, else opened. Its problems, whether it was
+// switched, whether the page is loaded now, and whether axe ran.
+async function themeRun(w, e, th, loaded) {
+  const switched = loaded && !(await switchTo(w, th));
+  const notReady = switched ? '' : await open(w, e, th);
+  if (notReady) return { switched, loaded: false, checked: false, problems: [`${th}: ${notReady}`] };
+  const shown = await w.page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th.split('+')[0] && (document.documentElement.getAttribute('data-contrast') === 'more') === th.endsWith('+more') && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
+  if (!shown || w.errors.length) return { switched, loaded: true, checked: false, problems: [`${th}: ${w.errors[0] || 'did not render'}`] };
+  if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
+  const v = await w.page.evaluate(async () => {
+    const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
+    // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
+    const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
+    return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
+      .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
+  });
+  return { switched, loaded: true, checked: true, problems: v.length ? [`${th}: ${v.join('; ')}`] : [] };
+}
 async function checkStory(e, w) {
   const out = [];
   const problems = [];
-  // The first run opens the page, the others switch it in place, and the extra checks of the first theme (they add
-  // style sheets and resize the page) come last, after switching back to it.
+  // The first run opens the page and the others switch it in place; the first theme and its extra checks (they add
+  // style sheets and resize the page) come last, on a fresh load.
   let loaded = false;
   for (const th of [...RUNS.slice(1), RUNS[0]]) {
-    const notReady = (loaded && !(await switchTo(w, th))) ? '' : await open(w, e, th);
-    if (notReady) { problems.push(`${th}: ${notReady}`); loaded = false; continue; }
-    loaded = true;
-    const shown = await w.page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th.split('+')[0] && (document.documentElement.getAttribute('data-contrast') === 'more') === th.endsWith('+more') && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
-    if (!shown || w.errors.length) { problems.push(`${th}: ${w.errors[0] || 'did not render'}`); continue; }
-    if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
-    const v = await w.page.evaluate(async () => {
-      const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
-      // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
-      const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
-      return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
-        .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
-    });
-    if (v.length) problems.push(`${th}: ${v.join('; ')}`);
+    // A story that keeps state across a re-render can look different after a switch: a fresh load decides, as it did
+    // before switching.
+    // The first theme, with its extra checks, always starts from a fresh load.
+    let found = await themeRun(w, e, th, loaded && th !== RUNS[0]);
+    if (found.switched && found.problems.length) found = await themeRun(w, e, th, false);
+    loaded = found.loaded;
+    problems.push(...found.problems);
+    if (!found.checked) continue;
     if (th === RUNS[0] && e.title.startsWith('Patterns/')) problems.push(...(await pageRules(w.page)));
     if (th === RUNS[0]) {
       await w.page.setViewportSize({ width: 320, height: 256 });
