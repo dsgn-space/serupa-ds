@@ -51,6 +51,29 @@ describe('SaveStatus', () => {
     expect(el('sr').hasAttribute('tabindex')).toBe(false);
   });
 
+  test('inside a shadow root, Try again from the keyboard keeps focus in the status too', async () => {
+    function Own() {
+      const [st, setSt] = React.useState<'error' | 'saving' | 'saved'>('error');
+      return <><button id="sbefore">Before</button><SaveStatus id="ssr" status={st} onRetry={() => { setSt('saving'); setTimeout(() => setSt('saved'), 50); }} /></>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Own />, { container: inner });
+      const root = host.shadowRoot!, sr = root.getElementById('ssr')!;
+      (root.getElementById('sbefore') as HTMLElement).focus();
+      await userEvent.tab();
+      expect(root.activeElement?.textContent).toBe('Try again');
+      await userEvent.keyboard('{Enter}');
+      await expect.poll(() => sr.dataset.state).toBe('saving');
+      await expect.poll(() => root.activeElement).toBe(sr);
+      await expect.poll(() => sr.dataset.state).toBe('saved');
+      expect(root.activeElement).toBe(sr);
+    } finally { host.remove(); }
+  });
+
   test('saved with savedAt says how long ago, in a <time>', async () => {
     await render(<SerupaProvider locale="en-US"><SaveStatus id="s" status="saved" savedAt={Date.now() - 2 * 60 * 1000} /></SerupaProvider>);   // pinned: the time follows the browser's language
     expect(el('s').textContent).toBe('Saved 2 minutes ago');
