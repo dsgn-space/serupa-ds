@@ -35,8 +35,8 @@ describe('EventCalendar', () => {
     await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} />);
     expect(cell('2025-03-04').getAttribute('aria-label')).toBe('Tuesday, March 4, 2025, 2 events');
     expect(cell('2025-03-05').getAttribute('aria-label')).toBe('Wednesday, March 5, 2025, No events');
-    expect(names('2025-03-04')).toEqual(['Team standup, 9:30 AM to 9:45 AM, Repeats', 'Design review, 2:00 PM to 3:00 PM']);
-    expect(names('2025-03-12')).toEqual(['Launch day, All day']);
+    expect(names('2025-03-04')).toEqual(['Team standup, Tuesday, March 4, 9:30 AM to 9:45 AM, Repeats', 'Design review, Tuesday, March 4, 2:00 PM to 3:00 PM']);
+    expect(names('2025-03-12')).toEqual(['Launch day, Wednesday, March 12, All day']);
     // A three-day event shows on each of its days.
     expect(['2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21'].map((d) => names(d).length)).toEqual([1, 1, 1, 0]);
   });
@@ -52,13 +52,29 @@ describe('EventCalendar', () => {
     await userEvent.keyboard('{ArrowUp}{ArrowRight}');
     expect(document.activeElement).toBe(cell('2025-03-04'));
     await userEvent.keyboard('{Tab}');
-    expect(document.activeElement!.getAttribute('aria-label')).toBe('Team standup, 9:30 AM to 9:45 AM, Repeats');
+    expect(document.activeElement!.getAttribute('aria-label')).toBe('Team standup, Tuesday, March 4, 9:30 AM to 9:45 AM, Repeats');
     await userEvent.keyboard('{Escape}');
     expect(document.activeElement).toBe(cell('2025-03-04'));
     await userEvent.keyboard('{PageDown}');
     expect(document.activeElement).toBe(cell('2025-04-04'));
     expect(months).toEqual([new Date(2025, 3, 1).toDateString()]);
     await expect.element(page.getByRole('grid', { name: 'April 2025' })).toBeInTheDocument();
+    await userEvent.keyboard('{PageUp}');
+    expect(document.activeElement).toBe(cell('2025-03-04'));
+    await userEvent.keyboard('{Home}');
+    expect(document.activeElement).toBe(cell('2025-03-02'));
+    await userEvent.keyboard('{End}');
+    expect(document.activeElement).toBe(cell('2025-03-08'));
+  });
+
+  test('keyboard: Enter and Space on an event open it', async () => {
+    const opened: string[] = [];
+    await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onEventClick={(e) => opened.push(e.id)} />);
+    cell('2025-03-04').focus();
+    await userEvent.keyboard('{Tab}{Enter}');
+    await userEvent.keyboard('{Tab}');
+    await userEvent.keyboard(' ');
+    expect(opened).toEqual(['a', 'b']);
   });
 
   test('Previous, Next and Today change the month, said through the title (a polite live region)', async () => {
@@ -78,9 +94,9 @@ describe('EventCalendar', () => {
     const clicked = vi.fn();
     const busy: CalendarEvent[] = Array.from({ length: 5 }, (_, i) => ({ id: 'e' + i, title: 'Call ' + (i + 1), start: `2025-03-06T1${i}:00` }));
     await render(<EventCalendar events={busy} defaultMonth={MARCH} maxPerDay={3} onEventClick={clicked} />);
-    expect(names('2025-03-06')).toEqual(['Call 1, 10:00 AM', 'Call 2, 11:00 AM', '+3 more']);
+    expect(names('2025-03-06')).toEqual(['Call 1, Thursday, March 6, 10:00 AM', 'Call 2, Thursday, March 6, 11:00 AM', '+3 more']);
     cell('2025-03-06').focus();
-    await userEvent.click(page.getByRole('button', { name: 'Call 2, 11:00 AM' }));
+    await userEvent.click(page.getByRole('button', { name: 'Call 2, Thursday, March 6, 11:00 AM' }));
     expect(clicked).toHaveBeenCalledWith(busy[1]);
     await userEvent.click(page.getByRole('button', { name: '+3 more' }));
     const dialog = page.getByRole('dialog', { name: 'Thursday, March 6, 2025' });
@@ -95,9 +111,11 @@ describe('EventCalendar', () => {
     expect(views).toEqual(['agenda']);
     const days = [...document.querySelectorAll('ol > li h3')].map((h) => h.textContent);
     expect(days).toEqual(['Tuesday, March 4, 2025', 'Wednesday, March 12, 2025', 'Tuesday, March 18, 2025', 'Wednesday, March 19, 2025', 'Thursday, March 20, 2025']);
-    await expect.element(page.getByRole('button', { name: 'Design review, 2:00 PM to 3:00 PM' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: 'Design review, Tuesday, March 4, 2:00 PM to 3:00 PM' })).toBeInTheDocument();
     await rerender(<EnUS><EventCalendar events={[]} defaultMonth={MARCH} view="agenda" /></EnUS>);
     await expect.element(page.getByText('No events this month.')).toBeInTheDocument();
+    await rerender(<EnUS><EventCalendar events={EVENTS} defaultMonth={MARCH} view="month" /></EnUS>);
+    await expect.element(page.getByRole('grid', { name: 'March 2025' })).toBeInTheDocument();
   });
 
   test('its text reads 4.5:1 on its background, and an event\'s on each tone, in all six themes', async () => {

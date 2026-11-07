@@ -166,6 +166,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     full: new Intl.DateTimeFormat(locale, { calendar: "gregory", numberingSystem: "latn", weekday: "long", year: "numeric", month: "long", day: "numeric" }),
     short: new Intl.DateTimeFormat(locale, { weekday: "short" }),
     long: new Intl.DateTimeFormat(locale, { weekday: "long" }),
+    day: new Intl.DateTimeFormat(locale, { calendar: "gregory", numberingSystem: "latn", weekday: "long", month: "long", day: "numeric" }),
     time: new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }),
   }), [locale]);
   const titleId = domId("dk-evc", React.useId()) + "-title";
@@ -179,9 +180,10 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     if (sameDay(s.from, s.to)) return s.to.getTime() === s.from.getTime() ? a : sds.labels.eventTime(a, b);
     return sds.labels.eventTime(fmt.full.format(s.from) + " " + a, fmt.full.format(s.to) + " " + b);
   };
-  const nameOf = (s: Shown) => [s.e.title, timeOf(s), s.e.repeating ? sds.labels.repeats : ""].filter(Boolean).join(", ");
-  const eventButton = (s: Shown, tab: 0 | -1, detail: boolean) => (
-    <button type="button" tabIndex={tab} aria-label={nameOf(s)} data-event-id={s.e.id} onClick={() => props.onEventClick?.(s.e)}
+  // The day it shows on is in the name, so a repeating or multi-day event isn't several buttons of one name.
+  const nameOf = (s: Shown, day: Date) => [s.e.title, fmt.day.format(day), timeOf(s), s.e.repeating ? sds.labels.repeats : ""].filter(Boolean).join(", ");
+  const eventButton = (s: Shown, day: Date, tab: 0 | -1, detail: boolean) => (
+    <button type="button" tabIndex={tab} aria-label={nameOf(s, day)} data-event-id={s.e.id} onClick={() => props.onEventClick?.(s.e)}
       className={cn("dk-event-calendar__event", "dk-event-calendar__event--" + (s.e.tone || "primary"), s.allDay && "dk-event-calendar__event--all-day")}>
       {s.allDay && !detail ? null : <span className="dk-event-calendar__time">{detail ? timeOf(s) : fmt.time.format(s.from)}</span>}
       <span className="dk-event-calendar__title">{s.e.title}</span>
@@ -228,10 +230,10 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
                       className={cn("dk-event-calendar__day", !sameMonth(d, month) && "dk-event-calendar__day--outside", isToday && "dk-event-calendar__day--today")}
                       onFocus={(e) => { if (e.target === e.currentTarget && !here) setFocus(d); }}>
                       <span className="dk-event-calendar__date" aria-hidden>{d.getDate()}</span>
-                      {fits.length ? <ul className="dk-event-calendar__events" role="list">{fits.map((s) => <li key={s.e.id}>{eventButton(s, here ? 0 : -1, false)}</li>)}</ul> : null}
+                      {fits.length ? <ul className="dk-event-calendar__events" role="list">{fits.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
                       {more > 0 ? (
                         <Popover title={fmt.full.format(d)} placement="bottom-start" trigger={<button type="button" tabIndex={here ? 0 : -1} className="dk-event-calendar__more">{sds.labels.moreEvents(more)}</button>}>
-                          <ul className="dk-event-calendar__events dk-event-calendar__events--all" role="list">{mine.map((s) => <li key={s.e.id}>{eventButton(s, 0, true)}</li>)}</ul>
+                          <ul className="dk-event-calendar__events dk-event-calendar__events--all" role="list">{mine.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
                         </Popover>
                       ) : null}
                     </td>
@@ -246,7 +248,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
           {busy.map(([d, l]) => (
             <li key={d.getTime()} className={cn("dk-event-calendar__agenda-day", sameDay(d, today) && "dk-event-calendar__agenda-day--today")} aria-current={sameDay(d, today) ? "date" : undefined}>
               <H2 className="dk-event-calendar__agenda-date">{fmt.full.format(d)}</H2>
-              <ul className="dk-event-calendar__events" role="list">{l.map((s) => <li key={s.e.id}>{eventButton(s, 0, true)}</li>)}</ul>
+              <ul className="dk-event-calendar__events" role="list">{l.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
             </li>
           ))}
         </ol>

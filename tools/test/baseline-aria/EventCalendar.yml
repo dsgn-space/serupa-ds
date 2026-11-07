@@ -11,48 +11,48 @@
     - heading "Monday, March 3, 2025" [level=3]
     - list:
       - listitem:
-        - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM to 9:45 AM Team standup
+        - button "Team standup, Monday, March 3, 9:30 AM to 9:45 AM, Repeats": 9:30 AM to 9:45 AM Team standup
   - listitem:
     - heading "Tuesday, March 4, 2025" [level=3]
     - list:
       - listitem:
-        - button "Design review, 2:00 PM to 3:00 PM": 2:00 PM to 3:00 PM Design review
+        - button "Design review, Tuesday, March 4, 2:00 PM to 3:00 PM": 2:00 PM to 3:00 PM Design review
   - listitem:
     - heading "Monday, March 10, 2025" [level=3]
     - list:
       - listitem:
-        - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM to 9:45 AM Team standup
+        - button "Team standup, Monday, March 10, 9:30 AM to 9:45 AM, Repeats": 9:30 AM to 9:45 AM Team standup
   - listitem:
     - heading "Wednesday, March 12, 2025" [level=3]
     - list:
       - listitem:
-        - button "Launch day, All day": All day Launch day
+        - button "Launch day, Wednesday, March 12, All day": All day Launch day
   - listitem:
     - heading "Tuesday, March 18, 2025" [level=3]
     - list:
       - listitem:
-        - button "Team offsite, All day": All day Team offsite
+        - button "Team offsite, Tuesday, March 18, All day": All day Team offsite
       - listitem:
-        - button "Lunch with Sari, 12:00 PM to 1:00 PM": 12:00 PM to 1:00 PM Lunch with Sari
+        - button "Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM": 12:00 PM to 1:00 PM Lunch with Sari
       - listitem:
-        - button "Customer demo, 3:00 PM to 4:00 PM": 3:00 PM to 4:00 PM Customer demo
+        - button "Customer demo, Tuesday, March 18, 3:00 PM to 4:00 PM": 3:00 PM to 4:00 PM Customer demo
       - listitem:
-        - button "Sprint retro, 4:30 PM to 5:00 PM": 4:30 PM to 5:00 PM Sprint retro
+        - button "Sprint retro, Tuesday, March 18, 4:30 PM to 5:00 PM": 4:30 PM to 5:00 PM Sprint retro
   - listitem:
     - heading "Wednesday, March 19, 2025" [level=3]
     - list:
       - listitem:
-        - button "Team offsite, All day": All day Team offsite
+        - button "Team offsite, Wednesday, March 19, All day": All day Team offsite
   - listitem:
     - heading "Thursday, March 20, 2025" [level=3]
     - list:
       - listitem:
-        - button "Team offsite, All day": All day Team offsite
+        - button "Team offsite, Thursday, March 20, All day": All day Team offsite
   - listitem:
     - heading "Monday, March 31, 2025" [level=3]
     - list:
       - listitem:
-        - button "Tax filing deadline, All day": All day Tax filing deadline
+        - button "Tax filing deadline, Monday, March 31, All day": All day Tax filing deadline
 
 # Empty
 - button "Today"
@@ -95,11 +95,11 @@
       - gridcell "Senin, 3 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9.30 to 9.45, Repeats": 9.30 Team standup
+            - button "Team standup, Senin, 3 Maret, 9.30 to 9.45, Repeats": 9.30 Team standup
       - gridcell "Selasa, 4 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Design review, 14.00 to 15.00": 14.00 Design review
+            - button "Design review, Selasa, 4 Maret, 14.00 to 15.00": 14.00 Design review
       - gridcell "Rabu, 5 Maret 2025, No events"
       - gridcell "Kamis, 6 Maret 2025, No events"
       - gridcell "Jumat, 7 Maret 2025, No events"
@@ -109,12 +109,12 @@
       - gridcell "Senin, 10 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9.30 to 9.45, Repeats": 9.30 Team standup
+            - button "Team standup, Senin, 10 Maret, 9.30 to 9.45, Repeats": 9.30 Team standup
       - gridcell "Selasa, 11 Maret 2025, No events"
       - gridcell "Rabu, 12 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Launch day, All day": Launch day
+            - button "Launch day, Rabu, 12 Maret, All day": Launch day
       - gridcell "Kamis, 13 Maret 2025, No events"
       - gridcell "Jumat, 14 Maret 2025, No events"
       - gridcell "Sabtu, 15 Maret 2025, No events"
@@ -124,18 +124,18 @@
       - gridcell "Selasa, 18 Maret 2025, 4 events":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Selasa, 18 Maret, All day": Team offsite
           - listitem:
-            - button "Lunch with Sari, 12.00 to 13.00": 12.00 Lunch with Sari
+            - button "Lunch with Sari, Selasa, 18 Maret, 12.00 to 13.00": 12.00 Lunch with Sari
         - button "+2 more"
       - gridcell "Rabu, 19 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Rabu, 19 Maret, All day": Team offsite
       - gridcell "Kamis, 20 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Kamis, 20 Maret, All day": Team offsite
       - gridcell "Jumat, 21 Maret 2025, No events"
       - gridcell "Sabtu, 22 Maret 2025, No events"
       - gridcell "Minggu, 23 Maret 2025, No events"
@@ -151,7 +151,7 @@
       - gridcell "Senin, 31 Maret 2025, 1 event":
         - list:
           - listitem:
-            - button "Tax filing deadline, All day": Tax filing deadline
+            - button "Tax filing deadline, Senin, 31 Maret, All day": Tax filing deadline
       - gridcell "Selasa, 1 April 2025, No events"
       - gridcell "Rabu, 2 April 2025, No events"
       - gridcell "Kamis, 3 April 2025, No events"
@@ -191,16 +191,16 @@
       - gridcell "Monday, March 3, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
+            - button "Team standup, Monday, March 3, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
       - gridcell "Tuesday, March 4, 2025, 1 event":
         - list:
           - listitem:
-            - button "Design review, 2:00 PM to 3:00 PM": 2:00 PM Design review
+            - button "Design review, Tuesday, March 4, 2:00 PM to 3:00 PM": 2:00 PM Design review
       - gridcell "Wednesday, March 5, 2025, No events"
       - gridcell "Thursday, March 6, 2025, 1 event":
         - list:
           - listitem:
-            - button "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung annual general meeting, 10:00 AM to 12:00 PM": 10:00 AM Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung annual general meeting
+            - button "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung annual general meeting, Thursday, March 6, 10:00 AM to 12:00 PM": 10:00 AM Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung annual general meeting
       - gridcell "Friday, March 7, 2025, No events"
       - gridcell "Saturday, March 8, 2025, No events"
     - row "Sunday, March 9, 2025, No events Monday, March 10, 2025, 1 event Tuesday, March 11, 2025, No events Wednesday, March 12, 2025, 1 event Thursday, March 13, 2025, No events Friday, March 14, 2025, No events Saturday, March 15, 2025, No events":
@@ -208,12 +208,12 @@
       - gridcell "Monday, March 10, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
+            - button "Team standup, Monday, March 10, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
       - gridcell "Tuesday, March 11, 2025, No events"
       - gridcell "Wednesday, March 12, 2025, 1 event":
         - list:
           - listitem:
-            - button "Launch day, All day": Launch day
+            - button "Launch day, Wednesday, March 12, All day": Launch day
       - gridcell "Thursday, March 13, 2025, No events"
       - gridcell "Friday, March 14, 2025, No events"
       - gridcell "Saturday, March 15, 2025, No events"
@@ -223,18 +223,18 @@
       - gridcell "Tuesday, March 18, 2025, 4 events":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Tuesday, March 18, All day": Team offsite
           - listitem:
-            - button "Lunch with Sari, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
+            - button "Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
         - button "+2 more"
       - gridcell "Wednesday, March 19, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Wednesday, March 19, All day": Team offsite
       - gridcell "Thursday, March 20, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Thursday, March 20, All day": Team offsite
       - gridcell "Friday, March 21, 2025, No events"
       - gridcell "Saturday, March 22, 2025, No events"
     - row "Sunday, March 23, 2025, No events Monday, March 24, 2025, No events Tuesday, March 25, 2025, 6 events Wednesday, March 26, 2025, No events Thursday, March 27, 2025, No events Friday, March 28, 2025, No events Saturday, March 29, 2025, No events":
@@ -243,9 +243,9 @@
       - gridcell "Tuesday, March 25, 2025, 6 events":
         - list:
           - listitem:
-            - button "Interview 1, 9:00 AM": 9:00 AM Interview 1
+            - button "Interview 1, Tuesday, March 25, 9:00 AM": 9:00 AM Interview 1
           - listitem:
-            - button "Interview 2, 10:00 AM": 10:00 AM Interview 2
+            - button "Interview 2, Tuesday, March 25, 10:00 AM": 10:00 AM Interview 2
         - button "+4 more"
       - gridcell "Wednesday, March 26, 2025, No events"
       - gridcell "Thursday, March 27, 2025, No events"
@@ -256,7 +256,7 @@
       - gridcell "Monday, March 31, 2025, 1 event":
         - list:
           - listitem:
-            - button "Tax filing deadline, All day": Tax filing deadline
+            - button "Tax filing deadline, Monday, March 31, All day": Tax filing deadline
       - gridcell "Tuesday, April 1, 2025, No events"
       - gridcell "Wednesday, April 2, 2025, No events"
       - gridcell "Thursday, April 3, 2025, No events"
@@ -295,11 +295,11 @@
       - gridcell "Monday, March 3, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
+            - button "Team standup, Monday, March 3, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
       - gridcell "Tuesday, March 4, 2025, 1 event":
         - list:
           - listitem:
-            - button "Design review, 2:00 PM to 3:00 PM": 2:00 PM Design review
+            - button "Design review, Tuesday, March 4, 2:00 PM to 3:00 PM": 2:00 PM Design review
       - gridcell "Wednesday, March 5, 2025, No events"
       - gridcell "Thursday, March 6, 2025, No events"
       - gridcell "Friday, March 7, 2025, No events"
@@ -309,12 +309,12 @@
       - gridcell "Monday, March 10, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
+            - button "Team standup, Monday, March 10, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
       - gridcell "Tuesday, March 11, 2025, No events"
       - gridcell "Wednesday, March 12, 2025, 1 event":
         - list:
           - listitem:
-            - button "Launch day, All day": Launch day
+            - button "Launch day, Wednesday, March 12, All day": Launch day
       - gridcell "Thursday, March 13, 2025, No events"
       - gridcell "Friday, March 14, 2025, No events"
       - gridcell "Saturday, March 15, 2025, No events"
@@ -324,18 +324,18 @@
       - gridcell "Tuesday, March 18, 2025, 4 events":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Tuesday, March 18, All day": Team offsite
           - listitem:
-            - button "Lunch with Sari, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
+            - button "Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
         - button "+2 more"
       - gridcell "Wednesday, March 19, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Wednesday, March 19, All day": Team offsite
       - gridcell "Thursday, March 20, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Thursday, March 20, All day": Team offsite
       - gridcell "Friday, March 21, 2025, No events"
       - gridcell "Saturday, March 22, 2025, No events"
     - row "Sunday, March 23, 2025, No events Monday, March 24, 2025, No events Tuesday, March 25, 2025, No events Wednesday, March 26, 2025, No events Thursday, March 27, 2025, No events Friday, March 28, 2025, No events Saturday, March 29, 2025, No events":
@@ -351,7 +351,7 @@
       - gridcell "Monday, March 31, 2025, 1 event":
         - list:
           - listitem:
-            - button "Tax filing deadline, All day": Tax filing deadline
+            - button "Tax filing deadline, Monday, March 31, All day": Tax filing deadline
       - gridcell "Tuesday, April 1, 2025, No events"
       - gridcell "Wednesday, April 2, 2025, No events"
       - gridcell "Thursday, April 3, 2025, No events"
@@ -390,11 +390,11 @@
       - gridcell "Monday, March 3, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
+            - button "Team standup, Monday, March 3, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
       - gridcell "Tuesday, March 4, 2025, 1 event":
         - list:
           - listitem:
-            - button "Design review, 2:00 PM to 3:00 PM": 2:00 PM Design review
+            - button "Design review, Tuesday, March 4, 2:00 PM to 3:00 PM": 2:00 PM Design review
       - gridcell "Wednesday, March 5, 2025, No events"
       - gridcell "Thursday, March 6, 2025, No events"
       - gridcell "Friday, March 7, 2025, No events"
@@ -404,12 +404,12 @@
       - gridcell "Monday, March 10, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team standup, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
+            - button "Team standup, Monday, March 10, 9:30 AM to 9:45 AM, Repeats": 9:30 AM Team standup
       - gridcell "Tuesday, March 11, 2025, No events"
       - gridcell "Wednesday, March 12, 2025, 1 event":
         - list:
           - listitem:
-            - button "Launch day, All day": Launch day
+            - button "Launch day, Wednesday, March 12, All day": Launch day
       - gridcell "Thursday, March 13, 2025, No events"
       - gridcell "Friday, March 14, 2025, No events"
       - gridcell "Saturday, March 15, 2025, No events"
@@ -419,18 +419,18 @@
       - gridcell "Tuesday, March 18, 2025, 4 events":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Tuesday, March 18, All day": Team offsite
           - listitem:
-            - button "Lunch with Sari, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
+            - button "Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
         - button "+2 more"
       - gridcell "Wednesday, March 19, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Wednesday, March 19, All day": Team offsite
       - gridcell "Thursday, March 20, 2025, 1 event":
         - list:
           - listitem:
-            - button "Team offsite, All day": Team offsite
+            - button "Team offsite, Thursday, March 20, All day": Team offsite
       - gridcell "Friday, March 21, 2025, No events"
       - gridcell "Saturday, March 22, 2025, No events"
     - row "Sunday, March 23, 2025, No events Monday, March 24, 2025, No events Tuesday, March 25, 2025, No events Wednesday, March 26, 2025, No events Thursday, March 27, 2025, No events Friday, March 28, 2025, No events Saturday, March 29, 2025, No events":
@@ -446,7 +446,7 @@
       - gridcell "Monday, March 31, 2025, 1 event":
         - list:
           - listitem:
-            - button "Tax filing deadline, All day": Tax filing deadline
+            - button "Tax filing deadline, Monday, March 31, All day": Tax filing deadline
       - gridcell "Tuesday, April 1, 2025, No events"
       - gridcell "Wednesday, April 2, 2025, No events"
       - gridcell "Thursday, April 3, 2025, No events"

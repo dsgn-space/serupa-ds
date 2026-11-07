@@ -24,6 +24,17 @@ import { EventCalendar } from "serupa-ds";
 - To pick a date or a range: use [DatePicker](../DatePicker/README.md), [DateRangePicker](../DateRangePicker/README.md) or [Calendar](../Calendar/README.md).
 - For a few upcoming items with no need for the month around them: a list or a [Timeline](../Timeline/README.md) says it in less space.
 
+## Anatomy
+
+Drawn from the `Month` story.
+
+1. **Toolbar** (`.dk-event-calendar__toolbar`): Today, Previous and Next, the month's title and the Month and Agenda switch.
+2. **Title** (`.dk-event-calendar__heading`): the month shown, said when it changes.
+3. **Grid** (`.dk-event-calendar__grid`): the weeks of the month, with the weekday names above.
+4. **Day** (`.dk-event-calendar__day`): one date and its events; today's date is marked.
+5. **Event** (`.dk-event-calendar__event`): a button with the event's time and title, and a bar of its tone at its start.
+6. **More** (`.dk-event-calendar__more`): "+N more", which opens the rest of the day's events.
+
 ## Usage
 
 - Pass the events of the shown month (more is fine: the rest aren't drawn). Use `onMonthChange` to load each month as people move.
@@ -43,6 +54,17 @@ import { EventCalendar } from "serupa-ds";
 - **Contrast:** dates, weekday names and event text read 4.5:1 in all six themes (`EventCalendar.test.tsx`).
 - **What's still yours:** the event details, and returning focus to the event when they close.
 
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | Into the grid at the focused day (one stop), then to that day's events and "+N more" |
+| Arrow keys | A day left or right, a week up or down; past the month shows the next one |
+| Home, End | The start or end of the week |
+| PageUp, PageDown | The same day a month before or after |
+| Enter, Space (on an event) | Opens it (`onEventClick`) |
+| Escape (on an event) | Back to its day |
+
 ## Props
 
 | Prop | Type | Default | Notes |
@@ -60,7 +82,7 @@ import { EventCalendar } from "serupa-ds";
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
 | `headingLevel` | `2`–`6` | `2` | The title's level. The agenda's days are one below. |
 
-`className`, `ref` and other props go to the outer `<div>`.
+`id`, `className`, `ref` and other props go to the outer `<div>`.
 
 ## Component tokens
 
@@ -77,6 +99,16 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-focus-ring` | `focus-ring` | The focus ring on a day and an event. |
 | `--event-calendar-event-bg` | `primary-subtle` | A primary event's fill (other tones use their own subtle color). |
 | `--event-calendar-event-text` | `text` | An event's time and title (4.5:1 on each tone's fill). |
+| `--event-calendar-event-tone` | `primary` | The bar at the start of an event with no tone. |
+| `--event-calendar-info-tone` | `info` | The bar at the start of a tone="info" event. |
+| `--event-calendar-info-bg` | `info-subtle` | The fill of a tone="info" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-success-tone` | `success` | The bar at the start of a tone="success" event. |
+| `--event-calendar-success-bg` | `success-subtle` | The fill of a tone="success" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-warning-tone` | `warning` | The bar at the start of a tone="warning" event. |
+| `--event-calendar-warning-bg` | `warning-subtle` | The fill of a tone="warning" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-danger-tone` | `danger` | The bar at the start of a tone="danger" event. |
+| `--event-calendar-danger-bg` | `danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
+| `--event-calendar-more-bg-hover` | `surface-muted` | "+N more" under the pointer. |
 | `--event-calendar-event-radius` | `radius-inner` | An event's corners. |
 | `--event-calendar-day-height` | `spacing-24` | A day's height in the month (96px): room for the date and three events. |
 <!-- token-table:end -->

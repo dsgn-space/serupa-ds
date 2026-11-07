@@ -81,6 +81,106 @@
             "cssVar": "--event-calendar-event-text"
           }
         }
+      },
+      "event-tone": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The bar at the start of an event with no tone.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-tone"
+          }
+        }
+      },
+      "info-tone": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "The bar at the start of a tone=\"info\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-info-tone"
+          }
+        }
+      },
+      "info-bg": {
+        "$type": "color",
+        "$value": "{color.info-subtle}",
+        "$description": "The fill of a tone=\"info\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-info-bg"
+          }
+        }
+      },
+      "success-tone": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The bar at the start of a tone=\"success\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-success-tone"
+          }
+        }
+      },
+      "success-bg": {
+        "$type": "color",
+        "$value": "{color.success-subtle}",
+        "$description": "The fill of a tone=\"success\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-success-bg"
+          }
+        }
+      },
+      "warning-tone": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The bar at the start of a tone=\"warning\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-warning-tone"
+          }
+        }
+      },
+      "warning-bg": {
+        "$type": "color",
+        "$value": "{color.warning-subtle}",
+        "$description": "The fill of a tone=\"warning\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-warning-bg"
+          }
+        }
+      },
+      "danger-tone": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The bar at the start of a tone=\"danger\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-danger-tone"
+          }
+        }
+      },
+      "danger-bg": {
+        "$type": "color",
+        "$value": "{color.danger-subtle}",
+        "$description": "The fill of a tone=\"danger\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-danger-bg"
+          }
+        }
+      },
+      "more-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "\"+N more\" under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-more-bg-hover"
+          }
+        }
       }
     },
     "radius": {
