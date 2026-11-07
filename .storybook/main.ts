@@ -28,8 +28,9 @@ const config: StorybookConfig = {
       propFilter: (prop) => {
         // A tag in the TSDoc ("renders a <button>") is code here, not HTML the docs page should render.
         prop.description = prop.description.replace(/(?<!`)<\/?[a-z][\w-]*(?:\s[^<>]*)?>(?!`)/g, '`$&`');
-        // Props typed only as undefined (href on the <button> form of Button) exist to rule a combination out.
-        return prop.type.name !== 'undefined' && (!prop.parent || !/node_modules/.test(prop.parent.fileName));
+        // Props typed only as undefined (href on the <button> form of Button) exist to rule a combination out, and
+        // @internal ones (Calendar's plumbing for DateRangePicker) aren't in the package's public types.
+        return prop.type.name !== 'undefined' && !('internal' in (prop.tags ?? {})) && (!prop.parent || !/node_modules/.test(prop.parent.fileName));
       },
     },
   },
