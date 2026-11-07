@@ -3,7 +3,7 @@ interface KanbanLabels {
     kanbanMove: string;
     kanbanInstructions: string;
     kanbanMoveTo: (card: string) => string;
-    kanbanCount: (count: number, limit: null | number) => string;
+    kanbanCount: (count: number, limit: number) => string;
     kanbanOverLimit: string;
     kanbanGrabbed: (card: string, column: string, position: number, total: number) => string;
     kanbanMoved: (card: string, column: string, position: number, total: number) => string;
