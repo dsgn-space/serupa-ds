@@ -102,6 +102,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-title-color` | `text` | The month and year. |
 | `--calendar-menu-border` | `field-border` | The Month and Year menus' border (`monthYearPicker`). |
 | `--calendar-menu-bg` | `field` | The Month and Year menus' fill (`monthYearPicker`). |
+| `--calendar-presets-border` | `border` | The line between the days and the `presets` shortcuts. |
 | `--calendar-weekday-color` | `text-muted` | The weekday names (4.5:1 on surface). |
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |
