@@ -1,0 +1,282 @@
+import * as React from 'react';
+import { describe, expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { page, userEvent } from 'vitest/browser';
+import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
+import { idLabels } from '../../internal/labels';
+import { Chat, ChatComposer, ChatDivider, ChatMessage } from './Chat';
+
+const log = () => document.querySelector('[role=log]') as HTMLElement;
+const atBottom = (el: HTMLElement) => el.scrollHeight - el.scrollTop - el.clientHeight <= 4;
+const msgs = (from: number, to: number) => Array.from({ length: to - from }, (_, i) => <ChatMessage key={'m' + (from + i)} author="Rina">Message {from + i}</ChatMessage>);
+
+function Live({ api }: { api: { add?: (n: number) => void; older?: (n: number) => void } }) {
+  const [range, setRange] = React.useState([10, 30]);
+  api.add = (n) => setRange(([a, b]) => [a, b + n]);
+  api.older = (n) => setRange(([a, b]) => [a - n, b]);
+  return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat aria-label="Support" style={{ flex: 'auto' }}>{msgs(range[0], range[1])}</Chat></div>;
+}
+
+// The innermost element whose text is (or matches) this: parts found by what they say, not by class.
+function find(root: Element, text: string | RegExp): HTMLElement | null {
+  const ok = (e: Element) => (typeof text === 'string' ? e.textContent === text : text.test(e.textContent));
+  const all = [...root.querySelectorAll<HTMLElement>('*')].filter(ok);
+  return all.find((e) => !all.some((x) => x !== e && e.contains(x))) || null;
+}
+const jumpButton = () => page.getByRole('button', { name: /new message/ }).query();
+
+describe('Chat', () => {
+  test('a named log that Tab reaches; ref, className and other props reach the outer <div>', async () => {
+    const ref = React.createRef<HTMLDivElement>();
+    await render(<><button>before</button><Chat ref={ref} id="c" className="extra" data-x="y" aria-label="Support"><ChatMessage author="Rina">Hi</ChatMessage></Chat></>);
+    const e = document.getElementById('c')!;
+    expect([ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual([true, 'dk-chat extra', 'y', 'chat']);
+    await expect.element(page.getByRole('log', { name: 'Support' })).toBeVisible();
+    await userEvent.click(page.getByRole('button', { name: 'before' }));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(log());
+    expect(css(log()).outlineStyle).toBe('solid');
+  });
+
+  test('opens at the newest message', async () => {
+    await render(<Live api={{}} />);
+    await expect.poll(() => atBottom(log())).toBe(true);
+  });
+
+  test('with focus on the log, the arrow keys, PageUp, PageDown, Home and End scroll it', async () => {
+    await render(<Live api={{}} />);
+    await expect.poll(() => atBottom(log())).toBe(true);
+    log().focus();
+    const top = () => log().scrollTop;
+    // A key scrolls smoothly: wait until it stops before reading where it stopped.
+    const settled = async () => { let last = -1; await expect.poll(async () => { const now = top(); const same = now === last; last = now; await new Promise((r) => setTimeout(r, 60)); return same; }).toBe(true); return top(); };
+    let at = await settled();
+    await userEvent.keyboard('{ArrowUp}');
+    await expect.poll(top).toBeLessThan(at);
+    at = await settled();
+    await userEvent.keyboard('{PageUp}');
+    await expect.poll(top).toBeLessThan(at);
+    at = await settled();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(top).toBeGreaterThan(at);
+    await userEvent.keyboard('{Home}');
+    await expect.poll(top).toBe(0);
+    await userEvent.keyboard('{PageDown}');
+    await expect.poll(top).toBeGreaterThan(0);
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => atBottom(log())).toBe(true);
+  });
+
+  test('at the bottom, a new message keeps it at the bottom, with no jump button', async () => {
+    const api: { add?: (n: number) => void } = {};
+    await render(<Live api={api} />);
+    React.act(() => api.add!(2));
+    await expect.poll(() => atBottom(log())).toBe(true);
+    expect(jumpButton()).toBe(null);
+  });
+
+  test('scrolled up, new messages leave the reader where they are and show "2 new messages", which jumps down and focuses the log', async () => {
+    const api: { add?: (n: number) => void } = {};
+    await render(<Live api={api} />);
+    log().scrollTop = 0;
+    log().dispatchEvent(new Event('scroll'));
+    React.act(() => api.add!(2));
+    const jump = page.getByRole('button', { name: '2 new messages' });
+    await expect.element(jump).toBeVisible();
+    expect(log().scrollTop).toBe(0);
+    await userEvent.click(jump);
+    await expect.poll(() => atBottom(log())).toBe(true);
+    expect([document.activeElement === log(), jumpButton()]).toEqual([true, null]);
+  });
+
+  test('earlier messages loaded at the top keep the message the reader was on in place', async () => {
+    const api: { older?: (n: number) => void } = {};
+    await render(<Live api={api} />);
+    log().scrollTop = 100;
+    log().dispatchEvent(new Event('scroll'));
+    const on = [...log().children].find((c) => c.getBoundingClientRect().top >= log().getBoundingClientRect().top)!;
+    const before = on.getBoundingClientRect().top;
+    React.act(() => api.older!(5));
+    await expect.poll(() => Math.abs(on.getBoundingClientRect().top - before)).toBeLessThanOrEqual(1);
+    expect(jumpButton()).toBe(null);
+  });
+
+  test('hasOlder adds "Load earlier messages", which calls onLoadOlder; loadingOlder says it is loading and doesn\'t call again', async () => {
+    let calls = 0;
+    const { rerender } = await render(<Chat aria-label="S" hasOlder onLoadOlder={() => calls++}><ChatMessage>Hi</ChatMessage></Chat>);
+    await userEvent.click(page.getByRole('button', { name: 'Load earlier messages' }));
+    await rerender(<Chat aria-label="S" hasOlder loadingOlder onLoadOlder={() => calls++}><ChatMessage>Hi</ChatMessage></Chat>);
+    await expect.element(page.getByRole('button', { name: /Loading earlier messages/ })).toBeVisible();
+    expect(calls).toBe(1);
+  });
+  test('keyboard: when "Load earlier messages" brings the last of them, focus moves to the log, not the page; the outer <div> takes no name', async () => {
+    function Older() {
+      const [from, setFrom] = React.useState(20);
+      return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat id="c" aria-label="Support" style={{ flex: 'auto' }} hasOlder={from > 0} onLoadOlder={() => setFrom((f) => f - 10)}>{msgs(from, 30)}</Chat></div>;
+    }
+    await render(<Older />);
+    expect(document.getElementById('c')!.hasAttribute('aria-label')).toBe(false);
+    const button = page.getByRole('button', { name: 'Load earlier messages' });
+    // An earlier batch with more behind it: focus goes to the log, which is in view (the button is now above it).
+    (button.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => document.activeElement).toBe(log());
+    expect(find(log(), 'Message 10')).not.toBe(null);
+    // The last batch: the button goes away, and focus stays on the log.
+    (button.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => button.query()).toBe(null);
+    expect(document.activeElement).toBe(log());
+    expect(find(log(), 'Message 0')).not.toBe(null);
+  });
+});
+
+describe('ChatMessage', () => {
+  test('author, time and text; text keeps its line breaks and wraps a long word', async () => {
+    await render(<div style={{ width: '240px' }}><ChatMessage id="m" author="Rina" time={new Date()}>{'Line one\nDonaudampfschifffahrtsgesellschaftskapitän'}</ChatMessage></div>);
+    const m = document.getElementById('m')!;
+    expect([m.dataset.component, !!find(m, 'Rina'), m.querySelector('time') != null, css(find(m, /^Line one/)).whiteSpace]).toEqual(['chat-message', true, true, 'pre-wrap']);
+    expect(m.getBoundingClientRect().width).toBeLessThanOrEqual(240);
+  });
+
+  test('own: at the end, in the primary tint, and authored "You" unless named', async () => {
+    await render(<div style={{ display: 'flex', flexDirection: 'column', width: '400px' }}><ChatMessage id="o" own>Hi</ChatMessage><ChatMessage id="t">Hi</ChatMessage></div>);
+    const o = document.getElementById('o')!, t = document.getElementById('t')!;
+    expect(find(o, 'You')).not.toBe(null);
+    expect(o.getBoundingClientRect().right).toBeGreaterThan(t.getBoundingClientRect().right);
+    expect(css(find(o, 'Hi')).backgroundColor).not.toBe(css(find(t, 'Hi')).backgroundColor);
+  });
+
+  test('hideAuthor leaves out the author and avatar on screen but still says who wrote it', async () => {
+    await render(<ChatMessage id="h" author="Rina" avatar={<span>R</span>} hideAuthor>Second</ChatMessage>);
+    const h = document.getElementById('h')!;
+    // The name is there for screen readers only: clipped to nothing on screen; the avatar's place is empty.
+    const name = find(h, 'Rina')!;
+    expect([name.getBoundingClientRect().width <= 1, h.querySelector('[aria-hidden]')!.textContent]).toEqual([true, '']);
+  });
+
+  test('the avatar is hidden from screen readers', async () => {
+    await render(<ChatMessage id="a" author="Rina" avatar={<span>R</span>}>Hi</ChatMessage>);
+    expect(find(document.getElementById('a')!, 'R')!.closest('[aria-hidden]')!.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  test('status: "Sending…", and "Not sent" with a Retry button that calls onRetry', async () => {
+    let tries = 0;
+    await render(<><ChatMessage id="s" own status="sending">A</ChatMessage><ChatMessage id="f" own status="failed" onRetry={() => tries++}>B</ChatMessage></>);
+    expect(find(document.getElementById('s')!, 'Sending…')).not.toBe(null);
+    expect(document.getElementById('f')!.classList.contains('dk-chat-message--failed')).toBe(true);
+    await userEvent.click(page.getByRole('button', { name: 'Retry' }));
+    expect(tries).toBe(1);
+  });
+
+  test('streaming marks it aria-busy; attachments sit under the text', async () => {
+    await render(<ChatMessage id="st" streaming attachments={<span id="file">a.pdf</span>}>Partial</ChatMessage>);
+    const st = document.getElementById('st')!;
+    expect([st.getAttribute('aria-busy'), !!(find(st, 'Partial')!.compareDocumentPosition(document.getElementById('file')!) & Node.DOCUMENT_POSITION_FOLLOWING)]).toEqual(['true', true]);
+  });
+
+  test('its words come from the labels', async () => {
+    await render(<SerupaProvider labels={idLabels}><ChatMessage id="i" own status="failed" onRetry={() => {}}>A</ChatMessage></SerupaProvider>);
+    expect(find(document.getElementById('i')!, 'Anda')).not.toBe(null);
+    await expect.element(page.getByRole('button', { name: 'Coba lagi' })).toBeVisible();
+  });
+
+  test('text, authors, times and "Not sent" read 4.5:1 in all six themes, on both bubbles and the page', async () => {
+    await render(<><ChatMessage id="x" author="Rina" time={new Date()}>Hi</ChatMessage><ChatMessage id="y" own status="failed">Me</ChatMessage><ChatDivider id="d">Today</ChatDivider></>);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const pg = css(document.body).backgroundColor, x = document.getElementById('x')!, y = document.getElementById('y')!;
+      for (const [name, el] of [['others', x], ['own', y]] as const) {
+        const b = find(el, name === 'own' ? 'Me' : 'Hi')!;
+        expect(contrast(css(b).color, css(b).backgroundColor), th + ' ' + name).toBeGreaterThanOrEqual(4.5);
+      }
+      expect(contrast(css(x.querySelector('time')).color, pg), th + ' time').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(find(y, /Not sent/)).color, pg), th + ' not sent').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(find(y, 'Me')).borderTopColor, pg), th + ' failed outline').toBeGreaterThanOrEqual(3);
+      expect(contrast(css(document.getElementById('d')).color, pg), th + ' divider').toBeGreaterThanOrEqual(4.5);
+    }
+    document.documentElement.removeAttribute('data-theme');
+  });
+});
+
+describe('ChatDivider', () => {
+  test('a date reads "Today", "Yesterday" or the date in the locale\'s words; children replace it', async () => {
+    const day = 86_400_000;
+    await render(<SerupaProvider locale="en-US"><ChatDivider id="a" date={new Date()} /><ChatDivider id="b" date={Date.now() - day} /><ChatDivider id="c" date={new Date(2026, 0, 5)} /><ChatDivider id="d">New messages</ChatDivider></SerupaProvider>);
+    expect(['a', 'b', 'c', 'd'].map((i) => document.getElementById(i)!.textContent)).toEqual(['Today', 'Yesterday', 'Jan 5, 2026', 'New messages']);
+  });
+});
+
+describe('ChatComposer', () => {
+  test('a field named "Message"; Enter sends the text and empties it, keeping focus there', async () => {
+    const sent: string[] = [];
+    await render(<ChatComposer onSend={(t) => sent.push(t)} />);
+    const field = page.getByRole('textbox', { name: 'Message' });
+    await userEvent.click(field);
+    await userEvent.keyboard('Hello{Enter}');
+    expect(sent).toEqual(['Hello']);
+    await expect.element(field).toHaveValue('');
+    expect(document.activeElement).toBe(field.element());
+  });
+
+  test('Shift+Enter starts a new line; the send button sends it all', async () => {
+    const sent: string[] = [];
+    await render(<ChatComposer onSend={(t) => sent.push(t)} />);
+    await userEvent.click(page.getByRole('textbox', { name: 'Message' }));
+    await userEvent.keyboard('One{Shift>}{Enter}{/Shift}Two');
+    await userEvent.click(page.getByRole('button', { name: 'Send' }));
+    expect(sent).toEqual(['One\nTwo']);
+  });
+
+  test('an empty or blank field sends nothing, and the send button says it is unavailable', async () => {
+    const sent: string[] = [];
+    await render(<ChatComposer onSend={(t) => sent.push(t)} />);
+    await expect.element(page.getByRole('button', { name: 'Send' })).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(page.getByRole('textbox', { name: 'Message' }));
+    await userEvent.keyboard('   {Enter}');
+    expect(sent).toEqual([]);
+  });
+
+  test('Enter while an input method composes doesn\'t send', async () => {
+    const sent: string[] = [];
+    await render(<ChatComposer defaultValue="にほん" onSend={(t) => sent.push(t)} />);
+    const field = page.getByRole('textbox', { name: 'Message' }).element();
+    field.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true, cancelable: true }));
+    expect(sent).toEqual([]);
+  });
+
+  test('controlled: value and onValueChange; the app empties it', async () => {
+    const changes: string[] = [];
+    function C() { const [v, setV] = React.useState('Hi'); return <ChatComposer value={v} onValueChange={(x) => { changes.push(x); setV(x); }} onSend={() => setV('')} />; }
+    await render(<C />);
+    await userEvent.click(page.getByRole('textbox', { name: 'Message' }));
+    await userEvent.keyboard('!');
+    expect(changes).toEqual(['Hi!']);
+    await userEvent.keyboard('{Enter}');
+    await expect.element(page.getByRole('textbox', { name: 'Message' })).toHaveValue('');
+  });
+
+  test('streaming: a Stop button in place of Send calls onStop, and Enter doesn\'t send', async () => {
+    let stops = 0; const sent: string[] = [];
+    await render(<ChatComposer streaming defaultValue="Next" onStop={() => stops++} onSend={(t) => sent.push(t)} />);
+    expect(document.querySelector('button[type=submit]')).toBe(null);
+    await userEvent.click(page.getByRole('button', { name: 'Stop' }));
+    await userEvent.click(page.getByRole('textbox', { name: 'Message' }));
+    await userEvent.keyboard('{Enter}');
+    expect([stops, sent]).toEqual([1, []]);
+  });
+
+  test('disabled turns the field and button off; aria-label renames the field', async () => {
+    await render(<ChatComposer disabled aria-label="Reply to Rina" />);
+    await expect.element(page.getByRole('textbox', { name: 'Reply to Rina' })).toBeDisabled();
+    await expect.element(page.getByRole('button', { name: 'Send' })).toBeDisabled();
+  });
+
+  test('attachments sit above the field, actions before the send button', async () => {
+    await render(<ChatComposer attachments={<span id="att">a.pdf</span>} actions={<button id="act">Attach</button>} />);
+    const att = document.getElementById('att')!, act = document.getElementById('act')!, send = page.getByRole('button', { name: 'Send' }).element();
+    expect(att.getBoundingClientRect().bottom).toBeLessThanOrEqual(page.getByRole('textbox').element().getBoundingClientRect().top);
+    expect(act.compareDocumentPosition(send) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
