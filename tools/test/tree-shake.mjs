@@ -9,12 +9,15 @@
 // Bundlers: esbuild, Rollup (reading "sideEffects" the way @rollup/plugin-node-resolve does, and again without it),
 // Rolldown (what Vite 8 builds with) and webpack (production mode). The full icon set, a dynamic import(), stays a chunk of its own here;
 // size.mjs measures a build that doesn't split it off (DM1). esbuild must also print no warnings while bundling (FD1).
+import { execFile } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import * as esbuild from 'esbuild';
 import { rollup } from 'rollup';
 import { rolldown } from 'rolldown';
 import webpack from 'webpack';
+import { fileURLToPath } from 'node:url';
 import { PROJECT, done, report } from './lib.mjs';
 
 const JS = path.join(PROJECT, 'dist', 'js');
@@ -81,6 +84,22 @@ async function rollupEach(groups, moduleSideEffects) {
   return out;
 }
 
+const ROLLUP = { rollup: (id) => !id.startsWith(JS) || hasEffects(id), 'rollup-all-effects': true };
+// Rollup builds one export at a time, about 150 ms each, single-threaded: most of this check's time. So its builds are
+// split across processes, one per core (this file again, with SERUPA_TREE_SHAKE_PART=<variant>:<k>/<n>: groups k,
+// k+n, k+2n, …), started before the other bundlers run.
+const PARTS = Math.max(1, Math.min(8, os.availableParallelism()));
+/** @type {Record<string, Promise<[string, number][][]>>} */
+const started = {};
+function startParts() {
+  for (const variant of Object.keys(ROLLUP)) {
+    const parts = Array.from({ length: PARTS }, (_, k) => new Promise((resolve, reject) => execFile(process.execPath, [fileURLToPath(import.meta.url)],
+      { env: { ...process.env, SERUPA_TREE_SHAKE_PART: `${variant}:${k}/${PARTS}` }, maxBuffer: 256 * 1024 * 1024 },
+      (err, stdout) => err ? reject(err) : resolve(JSON.parse(stdout)))));
+    started[variant] = Promise.all(parts).then((done) => { const out = []; for (const [i, kept] of done.flat()) out[i] = kept; return out; });
+  }
+}
+
 // What a bundler warned about while building, which a project bundling the package would see too: esbuild's
 // "Ignoring this import because … marked as having no side effects" is a bare import left by import { type X } (FD1).
 const warned = {};
@@ -94,10 +113,10 @@ const BUNDLERS = {
     warned.esbuild = r.warnings.filter((w) => !w.location || !path.resolve(PROJECT, w.location.file).startsWith(DIR));
     return files.map((f) => ours(Object.entries(by[f]).map(([k, v]) => [k, v.bytesInOutput])));
   },
-  rollup: (groups) => rollupEach(groups, (id) => !id.startsWith(JS) || hasEffects(id)),
+  rollup: () => started.rollup,
   // A bundler that doesn't read "sideEffects" (Rollup without the resolve plugin, a CDN that bundles each package)
   // judges each module by its code: every top-level call needs /*#__PURE__*/, or it keeps the module.
-  'rollup without "sideEffects"': (groups) => rollupEach(groups, true),
+  'rollup without "sideEffects"': () => started['rollup-all-effects'],
   async rolldown(groups) {
     const out = [];
     for (const list of groups) {
@@ -126,6 +145,16 @@ const CLAUSE = 64;
 
 const short = (f) => path.relative(JS, f);
 const groups = [[], ...exported.map((x) => [x])];
+const part = /^([\w-]+):(\d+)\/(\d+)$/.exec(process.env.SERUPA_TREE_SHAKE_PART || '');
+if (part) {
+  const [, variant, k, n] = part;
+  const mine = groups.map((g, i) => [i, g]).filter(([i]) => i % Number(n) === Number(k));
+  const kept = await rollupEach(mine.map(([, g]) => g), ROLLUP[variant]);
+  // Exit once the output is written: process.exit() alone can cut a large write to a pipe short.
+  await new Promise((resolve) => process.stdout.write(JSON.stringify(mine.map(([i], j) => [i, kept[j]])), resolve));
+  process.exit(0);
+}
+startParts();
 const lost = exported.filter((x) => !where[x]);
 const results = [{ name: `found where each of the ${exported.length} exports is declared`, ok: exported.length > 100 && !lost.length, detail: lost.length ? `not found: ${lost.join(', ')}` : `only ${exported.length} exports` }];
 for (const [name, run] of Object.entries(BUNDLERS)) {
