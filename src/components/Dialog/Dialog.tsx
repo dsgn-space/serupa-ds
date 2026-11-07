@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
+import { warnOnce } from "../../internal/warn";
 import { IconButton } from "../IconButton/IconButton";
 import { Button } from "../Button/Button";
 import { en as words } from "./labels";
@@ -105,6 +106,9 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
     if (!d) return;
     if (open && !d.open) {
       if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
+      // It renders where it's placed: inside a page <form>, its own form nests in that one (Enter reloads the page) and
+      // Enter in its field submits the page's form, as with Popover.
+      if (process.env.NODE_ENV !== "production" && d.parentElement?.closest("form") && d.querySelector("form, textarea, input:not([type=checkbox], [type=radio], [type=hidden])")) warnOnce("overlay-in-form", "Dialog: it's inside a <form> and holds a form or a field, so Enter there submits the page's form, or reloads the page. Place the Dialog after the form.", "Dialog:overlay-in-form");
       modalOpening();
       if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
       modalOpened(d);

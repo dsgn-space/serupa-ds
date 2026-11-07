@@ -49,6 +49,7 @@ Drawn from the `FullScreen` story.
 - Use `alert` only for decisions people must make. It hides the × and stops a backdrop click from closing it.
 - Keep the body short. Pick `size="sm"` for a confirmation and `lg` only when the content needs the width.
 - For a long form on a phone, use `fullScreen="mobile"`. Under 640px the panel fills the screen with square corners, and the footer sits at the bottom, clear of the home bar.
+- Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 
 ## Behavior
 
