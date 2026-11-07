@@ -35,7 +35,7 @@ Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since 
 
 The repo lives on GitLab for now, on the free plan's 400 CI minutes a month, which buy only about two runs of the full suite. So a merge request's pipeline is a single job of about half a minute, and everything else runs on your machine (nothing runs on pushes to `main`): the merge request's description must hold a passing `npm run check` report for its head commit (`tools/local-checks-gate.mjs` fails the pipeline otherwise). A merge request merges itself when its pipeline passes: set auto-merge once it's ready (`PUT /merge_requests/<iid>/merge` with `auto_merge=true`, see `tools/README.md`). Never merge one whose pipeline isn't green. The full suite runs on GitLab only in a pipeline started by hand.
 
-On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for, runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Before you push, on the branch rebased onto main:
+On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for (checked against nodejs.org's SHASUMS256.txt), runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Before you push, on the branch rebased onto main:
 
 ```sh
 npm run check -- --clean --since origin/main --report local-checks.md
