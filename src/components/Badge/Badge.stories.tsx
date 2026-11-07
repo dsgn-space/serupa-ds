@@ -57,7 +57,7 @@ export const LongLabel: Story = {
   render: (args) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, width: 160 }}>
       <Badge {...args}>Waiting for approval from finance</Badge>
-      <Badge {...args}>{"Donaudampfschifffahrtsgesellschaft"}</Badge>
+      <Badge {...args}>{'Donaudampfschifffahrtsgesellschaft'}</Badge>
     </div>
   ),
 };

@@ -9,16 +9,16 @@ export interface DateRangePickerLabels {
   chooseEndDate: string;
 }
 export const en: DateRangePickerLabels = {
-  chooseDates: "Choose dates",
-  startDate: "Start date",
-  endDate: "End date",
-  chooseStartDate: "Choose the start date",
-  chooseEndDate: "Choose the end date",
+  chooseDates: 'Choose dates',
+  startDate: 'Start date',
+  endDate: 'End date',
+  chooseStartDate: 'Choose the start date',
+  chooseEndDate: 'Choose the end date',
 };
 export const id: DateRangePickerLabels = {
-  chooseDates: "Pilih rentang tanggal",
-  startDate: "Tanggal mulai",
-  endDate: "Tanggal selesai",
-  chooseStartDate: "Pilih tanggal mulai",
-  chooseEndDate: "Pilih tanggal selesai",
+  chooseDates: 'Pilih rentang tanggal',
+  startDate: 'Tanggal mulai',
+  endDate: 'Tanggal selesai',
+  chooseStartDate: 'Pilih tanggal mulai',
+  chooseEndDate: 'Pilih tanggal selesai',
 };

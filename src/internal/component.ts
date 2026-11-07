@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 // Every component is made through these two, called with a /* @__PURE__ */ mark, so a bundler can drop the
 // components a project doesn't import. A bare `X.displayName = "X"` statement is a side effect that keeps

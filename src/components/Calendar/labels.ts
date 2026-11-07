@@ -9,14 +9,14 @@ export interface CalendarLabels {
   year: string;
 }
 export const en: CalendarLabels = {
-  previousMonth: "Previous month",
-  nextMonth: "Next month",
-  month: "Month",
-  year: "Year",
+  previousMonth: 'Previous month',
+  nextMonth: 'Next month',
+  month: 'Month',
+  year: 'Year',
 };
 export const id: CalendarLabels = {
-  previousMonth: "Bulan sebelumnya",
-  nextMonth: "Bulan berikutnya",
-  month: "Bulan",
-  year: "Tahun",
+  previousMonth: 'Bulan sebelumnya',
+  nextMonth: 'Bulan berikutnya',
+  month: 'Bulan',
+  year: 'Tahun',
 };

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';

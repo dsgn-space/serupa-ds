@@ -1,7 +1,7 @@
-"use client";
-import * as React from "react";
-import { setRef } from "../../internal/cn";
-import { useAutoFocus } from "../../internal/focus";
+'use client';
+import * as React from 'react';
+import { setRef } from '../../internal/cn';
+import { useAutoFocus } from '../../internal/focus';
 
 /* The element Link renders when it has autoFocus. React only autofocuses form controls, so this focuses the link
    once it's mounted. It's a client module of its own, so Link stays a Server Component without autoFocus. */

@@ -1,17 +1,17 @@
-"use client";
-import * as React from "react";
-import { announce, ensureAnnouncer } from "../../internal/announce";
-import { cn, domId, omit, oneOf, SIZES } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { deepActive } from "../../internal/root";
-import { useAutoFocus } from "../../internal/focus";
-import { isComposing } from "../../internal/ime";
-import { useSettings } from "../../internal/provider";
-import { Icon } from "../Icon/Icon";
-import { Input, type InputProps } from "../Input/Input";
-import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { announce, ensureAnnouncer } from '../../internal/announce';
+import { cn, domId, omit, oneOf, SIZES } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { deepActive } from '../../internal/root';
+import { useAutoFocus } from '../../internal/focus';
+import { isComposing } from '../../internal/ime';
+import { useSettings } from '../../internal/provider';
+import { Icon } from '../Icon/Icon';
+import { Input, type InputProps } from '../Input/Input';
+import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
 
 export interface InlineEditProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'> {
   /** What the text is ("Project name"): the field's name while editing, and part of the button's name ("Project name: Apollo, Edit"). */
@@ -46,20 +46,20 @@ export interface InlineEditProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   inputProps?: Omit<InputProps, 'value' | 'defaultValue' | 'size' | 'aria-label'> | undefined;
 }
 
-const isThenable = (v: unknown): v is Promise<React.ReactNode> => !!v && typeof (v as { then?: unknown }).then === "function";
+const isThenable = (v: unknown): v is Promise<React.ReactNode> => !!v && typeof (v as { then?: unknown }).then === 'function';
 
 /* InlineEdit: text that turns into a field in place. It shows the text in a button (with a pencil); a click, Enter or
    Space opens an Input with the text selected. Enter or leaving the field saves (after validate, which can keep it
    open with an error), Escape puts the text back. Keyboard saves and cancels return focus to the button. Both modes
    share Input's height and padding, so the page doesn't move. className and other props go to the outer <div>. */
 /** Text people can click to edit in place: Enter or leaving saves, Escape cancels. */
-export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditProps>("InlineEdit", function InlineEdit(props, ref) {
+export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditProps>('InlineEdit', function InlineEdit(props, ref) {
   const rest = omit(props, { label: 1, value: 1, defaultValue: 1, onValueChange: 1, onCancel: 1, validate: 1, placeholder: 1, size: 1, editing: 1, defaultEditing: 1,
     onEditingChange: 1, disabled: 1, readOnly: 1, editLabel: 1, inputProps: 1, className: 1, autoFocus: 1 } as const);
   const sds = useSettings(words);
-  const size = oneOf(SIZES, props.size, "md");
+  const size = oneOf(SIZES, props.size, 'md');
   const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState(props.defaultValue ?? "");
+  const [own, setOwn] = React.useState(props.defaultValue ?? '');
   const value = controlled ? (props.value as string) : own;
   const [ownEditing, setOwnEditing] = React.useState(!!props.defaultEditing);
   const locked = !!props.disabled || !!props.readOnly;
@@ -77,7 +77,7 @@ export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditPr
   const view = React.useRef<HTMLButtonElement | null>(null);
   const refocus = React.useRef(false);   // a keyboard save or cancel puts focus back on the button
   const closing = React.useRef(false);   // saved or cancelled: the blur from the field going away saves nothing
-  const errorId = domId("dk-ie", React.useId()) + "-error";
+  const errorId = domId('dk-ie', React.useId()) + '-error';
   // A failed save keeps focus in the field, and screen readers don't read a focused field's description again, so
   // the error is said (politely, as Field says its errors), on every failed try, even with the same words.
   const [tries, setTries] = React.useState(0);
@@ -100,7 +100,7 @@ export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditPr
   const [checking, setChecking] = React.useState(false);
   React.useEffect(() => () => { check.current++; }, []);
   const finish = (problem: React.ReactNode, text: string, keyboard: boolean) => {
-    if (problem != null && problem !== false && problem !== "") { setError(problem); setTries((n) => n + 1); return; }
+    if (problem != null && problem !== false && problem !== '') { setError(problem); setTries((n) => n + 1); return; }
     refocus.current = keyboard; closing.current = true;
     if (text !== value) {
       if (!controlled) setOwn(text);
@@ -130,9 +130,9 @@ export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditPr
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (ip.onKeyDown) ip.onKeyDown(e);
     if (e.defaultPrevented || isComposing(e)) return;
-    if (e.key === "Enter") { e.preventDefault(); save(true); }
+    if (e.key === 'Enter') { e.preventDefault(); save(true); }
     // Escape cancels the edit only: a Dialog or Drawer around it stays open.
-    else if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); cancel(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); cancel(); }
   };
   const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (ip.onBlur) ip.onBlur(e);
@@ -142,20 +142,20 @@ export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditPr
     if (editing && !closing.current && !checking && deepActive() !== e.currentTarget) save(false);
   };
 
-  const empty = value === "";
-  const text = <span className={cn("dk-inline-edit__text", empty && "dk-inline-edit__text--placeholder")}>{empty ? props.placeholder : value}</span>;
-  const cls = cn("dk-inline-edit", "dk-inline-edit--size-" + size, editing && "dk-inline-edit--editing", props.disabled && "dk-inline-edit--disabled", error != null && "dk-inline-edit--invalid", props.className);
+  const empty = value === '';
+  const text = <span className={cn('dk-inline-edit__text', empty && 'dk-inline-edit__text--placeholder')}>{empty ? props.placeholder : value}</span>;
+  const cls = cn('dk-inline-edit', 'dk-inline-edit--size-' + size, editing && 'dk-inline-edit--editing', props.disabled && 'dk-inline-edit--disabled', error != null && 'dk-inline-edit--invalid', props.className);
   return (
-    <div {...rest} ref={ref} className={cls} data-component="inline-edit" data-size={size} data-state={editing ? "editing" : "viewing"}>
+    <div {...rest} ref={ref} className={cls} data-component="inline-edit" data-size={size} data-state={editing ? 'editing' : 'viewing'}>
       {editing ? (
         <Input {...ip} ref={field} size={size} aria-label={props.label} value={draft} invalid={error != null || ip.invalid}
-          aria-describedby={cn(ip["aria-describedby"], error != null && errorId) || undefined}
+          aria-describedby={cn(ip['aria-describedby'], error != null && errorId) || undefined}
           aria-busy={checking || undefined}
           onChange={(e) => { setDraft(e.target.value); if (checking) { check.current++; setChecking(false); } if (error != null) setError(null); if (ip.onChange) ip.onChange(e); }} onKeyDown={onKeyDown} onBlur={onBlur} />
       ) : locked ? (
         <span className="dk-inline-edit__view dk-inline-edit__view--static">{text}</span>
       ) : (
-        <button type="button" ref={view} className={cn("dk-inline-edit__view", empty && !props.placeholder && "dk-inline-edit__view--blank")} onClick={open}>
+        <button type="button" ref={view} className={cn('dk-inline-edit__view', empty && !props.placeholder && 'dk-inline-edit__view--blank')} onClick={open}>
           <VisuallyHidden>{props.label}: </VisuallyHidden>
           {text}
           <VisuallyHidden>, {props.editLabel || sds.labels.edit}</VisuallyHidden>

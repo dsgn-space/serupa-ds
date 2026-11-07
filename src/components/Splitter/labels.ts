@@ -7,10 +7,10 @@ export interface SplitterLabels {
   splitterPlace: string;
 }
 export const en: SplitterLabels = {
-  resizePanes: "Resize panes",
-  splitterPlace: "Press where the handle should go, or press the handle again to cancel.",
+  resizePanes: 'Resize panes',
+  splitterPlace: 'Press where the handle should go, or press the handle again to cancel.',
 };
 export const id: SplitterLabels = {
-  resizePanes: "Ubah ukuran panel",
-  splitterPlace: "Tekan di tempat pegangan harus berada, atau tekan pegangan lagi untuk batal.",
+  resizePanes: 'Ubah ukuran panel',
+  splitterPlace: 'Tekan di tempat pegangan harus berada, atau tekan pegangan lagi untuk batal.',
 };

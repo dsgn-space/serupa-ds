@@ -13,16 +13,16 @@ export interface ToastLabels {
   undo: string;
 }
 export const en: ToastLabels = {
-  notifications: "Notifications",
-  toastShortcut: (key) => "Press " + key + " to reach it.",
-  moreToasts: (n) => "+" + n + " more",
-  toastRepeated: (n) => n + " times",
-  undo: "Undo",
+  notifications: 'Notifications',
+  toastShortcut: (key) => 'Press ' + key + ' to reach it.',
+  moreToasts: (n) => '+' + n + ' more',
+  toastRepeated: (n) => n + ' times',
+  undo: 'Undo',
 };
 export const id: ToastLabels = {
-  notifications: "Notifikasi",
-  toastShortcut: (key) => "Tekan " + key + " untuk menjangkaunya.",
-  moreToasts: (n) => "+" + n + " lainnya",
-  toastRepeated: (n) => n + " kali",
-  undo: "Urungkan",
+  notifications: 'Notifikasi',
+  toastShortcut: (key) => 'Tekan ' + key + ' untuk menjangkaunya.',
+  moreToasts: (n) => '+' + n + ' lainnya',
+  toastRepeated: (n) => n + ' kali',
+  undo: 'Urungkan',
 };

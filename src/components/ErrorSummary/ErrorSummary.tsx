@@ -1,10 +1,10 @@
-"use client";
-import * as React from "react";
-import { cn, setRef } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { summaryTookFocus } from "../../internal/summaryFocus";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, setRef } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { summaryTookFocus } from '../../internal/summaryFocus';
+import { en as words } from './labels';
 
 /** One error in the summary: the field it's about and what's wrong. */
 export interface ErrorSummaryItem {
@@ -14,7 +14,7 @@ export interface ErrorSummaryItem {
   message: React.ReactNode;
 }
 
-export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** The errors, in the order of the fields on the page. With none, nothing renders. */
   errors: readonly ErrorSummaryItem[];
   /** The heading. Default: "There is a problem", or "There are N problems". */
@@ -33,7 +33,7 @@ export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElem
    and the page scrolls to it. A link moves focus to its field and scrolls the field's label into view, not just the
    control, so the question shows above the answer. className and other props go to the box. */
 /** After a failed submit: a heading and a list of the form's errors, each a link that moves focus to its field. */
-export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSummaryProps>("ErrorSummary", function ErrorSummary(props, ref) {
+export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSummaryProps>('ErrorSummary', function ErrorSummary(props, ref) {
   const sds = useSettings(words);
   const { errors, title, headingLevel, description, autoFocus, className, ...rest } = props;
   const box = React.useRef<HTMLDivElement | null>(null);
@@ -42,11 +42,11 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
   // Focus when the summary appears and whenever its errors change (another failed submit): a field added or gone, or
   // a message that says something new ("Enter your password", then "The email or password is not right") (GR120).
   // Messages can be elements, so what they say is read from the rendered links.
-  const said = React.useRef("");
+  const said = React.useRef('');
   // every render: compares what the errors say now with what they said, and takes focus only when that changed.
   React.useEffect(() => {
-    const n = box.current, links = n && n.querySelector("ul");
-    const now = n ? list.map((e) => e.field).join("\n") + "\n" + (links ? links.textContent : "") : "";
+    const n = box.current, links = n && n.querySelector('ul');
+    const now = n ? list.map((e) => e.field).join('\n') + '\n' + (links ? links.textContent : '') : '';
     if (now === said.current) return;
     said.current = now;
     if (now && autoFocus !== false && n) { n.focus(); summaryTookFocus(n); }
@@ -54,13 +54,13 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
   if (!list.length) return null;
   const level = [2, 3, 4, 5, 6].indexOf(headingLevel as number) < 0 ? 2 : (headingLevel as number);
   return (
-    <div tabIndex={-1} aria-labelledby={heading} {...rest} ref={(n) => { box.current = n; setRef(ref, n); }} className={cn("dk-error-summary", className)} data-component="error-summary">
-      {React.createElement("h" + level, { id: heading, className: "dk-error-summary__title" }, title != null ? title : sds.labels.errorSummaryTitle(list.length))}
+    <div tabIndex={-1} aria-labelledby={heading} {...rest} ref={(n) => { box.current = n; setRef(ref, n); }} className={cn('dk-error-summary', className)} data-component="error-summary">
+      {React.createElement('h' + level, { id: heading, className: 'dk-error-summary__title' }, title != null ? title : sds.labels.errorSummaryTitle(list.length))}
       {description != null ? <div className="dk-error-summary__description">{description}</div> : null}
       <ul className="dk-error-summary__list" role="list">
         {list.map((e, k) => (
           <li key={e.field + k} className="dk-error-summary__item">
-            <a className="dk-error-summary__link" href={"#" + e.field} onClick={(ev) => go(ev, e.field)}>{e.message}</a>
+            <a className="dk-error-summary__link" href={'#' + e.field} onClick={(ev) => go(ev, e.field)}>{e.message}</a>
           </li>
         ))}
       </ul>
@@ -79,17 +79,17 @@ function go(ev: React.MouseEvent<HTMLAnchorElement>, field: string) {
   // (find-in-page, a #link), fire beforematch, which opens the item or selects the tab, and show it; then focus it
   // once that has rendered. The link did nothing, as nothing hidden takes focus (L8E98).
   let hid = 0;
-  for (let h; (h = to.closest("[hidden=until-found]")); hid = 1) { h.dispatchEvent(new Event("beforematch")); h.removeAttribute("hidden"); }
+  for (let h; (h = to.closest('[hidden=until-found]')); hid = 1) { h.dispatchEvent(new Event('beforematch')); h.removeAttribute('hidden'); }
   if (hid) setTimeout(() => land(to)); else land(to);
 }
 function land(to: HTMLElement) {
   // The control that takes focus decides: a link to a RadioGroup's root lands on a radio, and shows its legend too (L8E56).
-  const target = inner(to), input = target as HTMLInputElement, set = target.closest("fieldset");
-  const legend = set && (input.type === "radio" || input.type === "checkbox") ? set.querySelector("legend") : null;
+  const target = inner(to), input = target as HTMLInputElement, set = target.closest('fieldset');
+  const legend = set && (input.type === 'radio' || input.type === 'checkbox') ? set.querySelector('legend') : null;
   // A group outside a fieldset shows itself, not the one radio's label.
   const shown = legend || (target === to && input.labels && input.labels[0]) || to;
   // jsdom (where apps run unit tests) has no scrollIntoView: the link still moves focus there (L8E46).
-  if (typeof shown.scrollIntoView === "function") shown.scrollIntoView({ block: "start" });
+  if (typeof shown.scrollIntoView === 'function') shown.scrollIntoView({ block: 'start' });
   target.focus({ preventScroll: true });
 }
 
@@ -98,5 +98,5 @@ function land(to: HTMLElement) {
 const FOCUSABLE = "input:not(:disabled):not([type=hidden]), select:not(:disabled), textarea:not(:disabled), button:not(:disabled), a[href], [tabindex]:not([tabindex='-1'])";
 function inner(to: HTMLElement): HTMLElement {
   if (to.matches(FOCUSABLE) || to.isContentEditable) return to;
-  return to.querySelector<HTMLElement>("input:checked:not(:disabled), [aria-checked=true]:not([aria-disabled=true])") || to.querySelector<HTMLElement>(FOCUSABLE) || to;
+  return to.querySelector<HTMLElement>('input:checked:not(:disabled), [aria-checked=true]:not([aria-disabled=true])') || to.querySelector<HTMLElement>(FOCUSABLE) || to;
 }

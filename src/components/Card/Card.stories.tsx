@@ -75,7 +75,7 @@ export const FooterLayouts: Story = {
 export const LongText: Story = {
   render: (args) => (
     <Card {...args} style={{ maxWidth: 280 }}>
-      <CardHeader title="Enterprise plan for the whole organisation, billed yearly" description={"Donaudampfschifffahrtsgesellschaftskapitänskajüte"} action={<Badge tone="warning">Renewing soon</Badge>} />
+      <CardHeader title="Enterprise plan for the whole organisation, billed yearly" description={'Donaudampfschifffahrtsgesellschaftskapitänskajüte'} action={<Badge tone="warning">Renewing soon</Badge>} />
       <CardBody>Renews on 1 March. You're using 96 of 100 seats across 14 teams, and 3 invitations are still waiting for an answer.</CardBody>
       <CardFooter>
         <Button variant="secondary">Manage every seat</Button>

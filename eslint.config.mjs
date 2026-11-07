@@ -26,11 +26,20 @@ export default tseslint.config(
       // (FD1); import type { X } leaves nothing.
       '@typescript-eslint/no-import-type-side-effects': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }],
+      // One quote style (SG5): single, or double where the text has a single quote in it. Template literals stay.
+      // ESLint's own rule (deprecated, still shipped): the only formatting rule the code needs, without a formatter.
+      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
       // New in ESLint 10's recommended set; off so the upgrade keeps lint behaving as it did on ESLint 9.
       'no-unassigned-vars': 'off',
       'no-useless-assignment': 'off',
       'preserve-caught-error': 'off',
     },
+  },
+  {
+    // Generated, quoted with JSON (double quotes): the icon tables (tools/icons/material.py) and the registries
+    // the build writes (src/generated/, docs/generated/, not committed).
+    files: ['src/material/{builtin,icons,named,parts}.ts', 'src/material/{part,outlined}/*.ts', 'src/generated/**', 'docs/generated/**'],
+    rules: { quotes: 'off' },
   },
   {
     files: ['src/**/*.{ts,tsx,js}', 'docs/**/*.tsx', '.storybook/**/*.{ts,tsx}'],

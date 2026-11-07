@@ -4,5 +4,5 @@ export interface PhoneInputLabels {
   /** PhoneInput's country menu. */
   country: string;
 }
-export const en: PhoneInputLabels = { country: "Country" };
-export const id: PhoneInputLabels = { country: "Negara" };
+export const en: PhoneInputLabels = { country: 'Country' };
+export const id: PhoneInputLabels = { country: 'Negara' };

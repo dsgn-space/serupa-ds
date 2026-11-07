@@ -1,20 +1,20 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { config } from "../../internal/config";
-import { Icon } from "../Icon/Icon";
-import { Select } from "../Select/Select";
-import { component } from "../../internal/component";
-import { displayNumber } from "../../internal/numbers";
-import { useLocale, useSettings } from "../../internal/provider";
-import { paginationRange } from "./paginationRange";
-import { useFocusHandover } from "../../internal/focus";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { config } from '../../internal/config';
+import { Icon } from '../Icon/Icon';
+import { Select } from '../Select/Select';
+import { component } from '../../internal/component';
+import { displayNumber } from '../../internal/numbers';
+import { useLocale, useSettings } from '../../internal/provider';
+import { paginationRange } from './paginationRange';
+import { useFocusHandover } from '../../internal/focus';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
 
 export { paginationRange };
 
-export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
+export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   /** How many pages there are. */
   count: number;
   /** The current page, from 1 (controlled). Use with onPageChange. */
@@ -34,7 +34,7 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   /** 'md' (default, 32px) or 'sm' (24px). */
   size?: 'sm' | 'md' | undefined;
   /** The nav's accessible name. Default: "Pagination". */
-  "aria-label"?: string | undefined;
+  'aria-label'?: string | undefined;
   /** Default: "Previous page". */
   previousLabel?: string | undefined;
   /** Default: "Next page". */
@@ -53,14 +53,14 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
 
 
 function int(v: unknown, min: number, fallback: number): number {
-  return typeof v === "number" && isFinite(v) && v >= min ? Math.floor(v) : fallback;
+  return typeof v === 'number' && isFinite(v) && v >= min ? Math.floor(v) : fallback;
 }
 
 /* Pagination: previous and next arrows around page numbers, with … where pages are skipped. Pages are buttons
    (onPageChange) or, with getHref, links. The current page has aria-current="page". className and every other
    prop go to the <nav>. */
 /** Moves through pages of results: previous, next, and page numbers with … where pages are skipped. */
-export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps>("Pagination", function Pagination(props, ref) {
+export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps>('Pagination', function Pagination(props, ref) {
   const sds = useSettings(words);
   const locale = useLocale();
   const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, linkAs: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, total: 1, pageSize: 1, pageSizeOptions: 1, onPageSizeChange: 1, className: 1 });
@@ -68,11 +68,11 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   const [own, setOwn] = React.useState(() => int(props.defaultPage, 1, 1));
   const controlled = props.page !== undefined;
   const page = Math.min(Math.max(int(controlled ? props.page : own, 1, 1), 1), Math.max(count, 1));
-  const size = oneOf(["sm", "md"] as const, props.size, "md");
+  const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const label = props.pageLabel || sds.labels.page;
   // The name says the number as the button shows it, "١٠" in ar-EG and "1,000" in en-US, so it holds the visible
   // text, as WCAG 2.5.3 asks: "Page ١٠", not "Page 10".
-  const said = (n: number) => { const shown = displayNumber(n, locale), l = label(n); return shown === String(n) ? l : l.replace(new RegExp("(?<!\\d)" + n + "(?!\\d)", "g"), shown); };
+  const said = (n: number) => { const shown = displayNumber(n, locale), l = label(n); return shown === String(n) ? l : l.replace(new RegExp('(?<!\\d)' + n + '(?!\\d)', 'g'), shown); };
   // ET1: the row stays on one line. When it's wider than its box, siblings and then boundaries step down (cut) until
   // it fits, before paint; when the box grows they start over from what was asked.
   const siblings = int(props.siblings, 0, 1), boundaries = int(props.boundaries, 0, 1);
@@ -86,7 +86,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   useIsoLayoutEffect(function () { setCut(0); }, [page, count]);
   // GR62: until this runs (server HTML before hydration, or with no JavaScript) nothing can cut the row, so it wraps
   // onto more lines rather than running off the page. From here on it stays on one line, and is cut to fit.
-  useIsoLayoutEffect(function () { if (list.current) list.current.setAttribute("data-fit", ""); }, []);
+  useIsoLayoutEffect(function () { if (list.current) list.current.setAttribute('data-fit', ''); }, []);
   // every render: any change (page, count, labels, the locale's digits, the box) can change the room, so it is measured each time.
   useIsoLayoutEffect(function () {
     const l = list.current;
@@ -98,7 +98,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   const [, remeasure] = React.useReducer((n: number) => n + 1, 0);
   useIsoLayoutEffect(function () {
     const l = list.current;
-    if (!l || typeof ResizeObserver === "undefined") return;
+    if (!l || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(remeasure);
     ro.observe(l);
     return () => ro.disconnect();
@@ -106,33 +106,33 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   // GR66: a row first measured in a fallback font keeps its cuts when the web font (narrower or wider) arrives, since
   // the box doesn't change size. Once fonts load, the cuts start over and the row is measured again, as Stepper does.
   useIsoLayoutEffect(function () {
-    const fonts = typeof document !== "undefined" ? document.fonts : undefined;
+    const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
     if (!fonts) return;
     let live = true;
     const again = () => { if (!live) return; setCut(0); remeasure(); };
-    if (fonts.status !== "loaded") fonts.ready.then(again, () => {});
-    fonts.addEventListener("loadingdone", again);
-    return () => { live = false; fonts.removeEventListener("loadingdone", again); };
+    if (fonts.status !== 'loaded') fonts.ready.then(again, () => {});
+    fonts.addEventListener('loadingdone', again);
+    return () => { live = false; fonts.removeEventListener('loadingdone', again); };
   }, []);
   // An arrow that takes you to the first or last page turns disabled under focus (FJ1): focus goes to the other one.
   const handover = useFocusHandover();
   const go = (n: number, e: React.MouseEvent) => {
     if (n < 1 || n > count || n === page) { if (!props.getHref || n === page) e.preventDefault(); return; }
     const from = e.currentTarget as HTMLElement;
-    if (from.classList.contains("dk-pagination__arrow")) handover(from, () => { const all = from.closest("nav")?.querySelectorAll<HTMLElement>(".dk-pagination__arrow"); return all && all[n < page ? all.length - 1 : 0]; });
+    if (from.classList.contains('dk-pagination__arrow')) handover(from, () => { const all = from.closest('nav')?.querySelectorAll<HTMLElement>('.dk-pagination__arrow'); return all && all[n < page ? all.length - 1 : 0]; });
     if (!controlled) setOwn(n);
     if (props.onPageChange) props.onPageChange(n);
   };
   const item = (n: number, content: React.ReactNode, aria: React.AriaAttributes & { rel?: string }, disabled: boolean, cls: string) => {
-    const common = Object.assign({ className: cn("dk-pagination__item", cls), onClick: (e: React.MouseEvent) => go(n, e) }, aria);
+    const common = Object.assign({ className: cn('dk-pagination__item', cls), onClick: (e: React.MouseEvent) => go(n, e) }, aria);
     if (props.getHref) return disabled ? <a {...common} role="link" aria-disabled="true">{content}</a> : React.createElement(props.linkAs || config.link, Object.assign(common, { href: props.getHref(n) }), content);
     return <button type="button" {...common} disabled={disabled}>{content}</button>;
   };
-  const arrow = (dir: "prev" | "next") => {
-    const n = dir === "prev" ? page - 1 : page + 1;
+  const arrow = (dir: 'prev' | 'next') => {
+    const n = dir === 'prev' ? page - 1 : page + 1;
     // The chevrons flip in right-to-left text by themselves (Icon's mirror).
-    const arrows = <Icon icon={dir === "prev" ? icons.ChevronLeft : icons.ChevronRight} />;
-    return <li key={dir}>{item(n, arrows, { "aria-label": dir === "prev" ? props.previousLabel || sds.labels.previousPage : props.nextLabel || sds.labels.nextPage, rel: props.getHref ? dir : undefined }, n < 1 || n > count, "dk-pagination__arrow")}</li>;
+    const arrows = <Icon icon={dir === 'prev' ? icons.ChevronLeft : icons.ChevronRight} />;
+    return <li key={dir}>{item(n, arrows, { 'aria-label': dir === 'prev' ? props.previousLabel || sds.labels.previousPage : props.nextLabel || sds.labels.nextPage, rel: props.getHref ? dir : undefined }, n < 1 || n > count, 'dk-pagination__arrow')}</li>;
   };
   // O7: with total and pageSize, which items this page shows, in the locale's digits and grouping ("1,001–1,010 of 12,345").
   const total = int(props.total, 0, -1), per = int(props.pageSize, 1, 0);
@@ -147,16 +147,16 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   };
   const bar = summary != null || sizes != null;
   return (
-    <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn("dk-pagination", size === "sm" && "dk-pagination--sm", bar && "dk-pagination--summary", props.className)}>
+    <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn('dk-pagination', size === 'sm' && 'dk-pagination--sm', bar && 'dk-pagination--summary', props.className)}>
       {summary != null ? <p className="dk-pagination__summary">{summary}</p> : null}
       {sizes ? <span className="dk-pagination__page-size"><label htmlFor={sizeId}>{sds.labels.perPage}</label>
         <Select id={sizeId} size={size} value={String(per)} onChange={resize} options={(sizes.indexOf(per) < 0 ? sizes.concat(per).sort((a, b) => a - b) : sizes).map((n) => ({ value: String(n), label: displayNumber(n, locale) }))} /></span> : null}
       <ul className="dk-pagination__list" ref={list}>
-        {arrow("prev")}
-        {paginationRange(page, count, Math.max(siblings - cut, 0), Math.max(boundaries - Math.max(cut - siblings, 0), 0)).map((e) => typeof e === "number"
-          ? <li key={e}>{item(e, displayNumber(e, locale), { "aria-label": said(e), "aria-current": e === page ? "page" : undefined }, false, e === page ? "dk-pagination__item--current" : "")}</li>
+        {arrow('prev')}
+        {paginationRange(page, count, Math.max(siblings - cut, 0), Math.max(boundaries - Math.max(cut - siblings, 0), 0)).map((e) => typeof e === 'number'
+          ? <li key={e}>{item(e, displayNumber(e, locale), { 'aria-label': said(e), 'aria-current': e === page ? 'page' : undefined }, false, e === page ? 'dk-pagination__item--current' : '')}</li>
           : <li key={e} className="dk-pagination__ellipsis" aria-hidden="true">…</li>)}
-        {arrow("next")}
+        {arrow('next')}
       </ul>
     </nav>
   );

@@ -5,8 +5,8 @@ export interface AvatarGroupLabels {
   avatarMore: (count: number) => string;
 }
 export const en: AvatarGroupLabels = {
-  avatarMore: (count) => count + " more",
+  avatarMore: (count) => count + ' more',
 };
 export const id: AvatarGroupLabels = {
-  avatarMore: (count) => count + " lainnya",
+  avatarMore: (count) => count + ' lainnya',
 };

@@ -1,8 +1,8 @@
-import * as React from "react";
-import type { IconSource } from "../Icon/Icon";
-import { cn } from "../../internal/cn";
-import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from "../Button/Button";
-import { component } from "../../internal/component";
+import * as React from 'react';
+import type { IconSource } from '../Icon/Icon';
+import { cn } from '../../internal/cn';
+import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from '../Button/Button';
+import { component } from '../../internal/component';
 
 type Without<T> = T extends unknown ? Omit<T, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'aria-label'> : never;
 
@@ -27,14 +27,14 @@ type IconButtonElement = HTMLButtonElement | HTMLAnchorElement;
    Variant defaults to "ghost"; shape "square" (default) or "round". Every other Button prop (size, destructive,
    loading, href, onClick, ref…) works the same. */
 /** A Button that shows only an icon, with a required label for screen readers. Default variant: ghost. */
-export const IconButton = /* @__PURE__ */ component<IconButtonElement, IconButtonProps>("IconButton", function IconButton(props, ref) {
+export const IconButton = /* @__PURE__ */ component<IconButtonElement, IconButtonProps>('IconButton', function IconButton(props, ref) {
   const { icon, label, shape, hideTitle, className, ...rest } = props;
-  const round = shape === "round";
+  const round = shape === 'round';
   // No title when a Tooltip (or anything else) already describes or names it: the native tooltip would show on top of it.
-  const shown = hideTitle || rest["aria-describedby"] != null || rest["aria-labelledby"] != null;
+  const shown = hideTitle || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;
   // aria-label isn't in the props, but from JavaScript (or a spread) it's taken as label, as Button takes it.
-  const name = label || (rest as { "aria-label"?: string })["aria-label"];
+  const name = label || (rest as { 'aria-label'?: string })['aria-label'];
   const title = !shown && rest.title == null ? name : rest.title;
-  return <ButtonBase variant="ghost" {...rest} aria-label={name} data-shape={round ? "round" : "square"} title={title}
-    ref={ref} icon={icon} className={cn("dk-icon-btn", round && "dk-icon-btn--round", className)} />;
+  return <ButtonBase variant="ghost" {...rest} aria-label={name} data-shape={round ? 'round' : 'square'} title={title}
+    ref={ref} icon={icon} className={cn('dk-icon-btn', round && 'dk-icon-btn--round', className)} />;
 });

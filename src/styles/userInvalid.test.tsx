@@ -22,9 +22,9 @@ const border = (sel: string, v: string) => getComputedStyle($(sel)).getPropertyV
 
 function Fields({ prefix, invalid }: { prefix: string; invalid?: boolean }) {
   return <>
-    <Input className={prefix + '-input'} aria-label={prefix + " email"} type="email" required invalid={invalid} />
-    <Textarea className={prefix + '-textarea'} aria-label={prefix + " note"} required invalid={invalid} />
-    <Select className={prefix + '-select'} aria-label={prefix + " size"} required invalid={invalid} defaultValue="" options={[{ value: '', label: 'Pick one' }, 's', 'm']} />
+    <Input className={prefix + '-input'} aria-label={prefix + ' email'} type="email" required invalid={invalid} />
+    <Textarea className={prefix + '-textarea'} aria-label={prefix + ' note'} required invalid={invalid} />
+    <Select className={prefix + '-select'} aria-label={prefix + ' size'} required invalid={invalid} defaultValue="" options={[{ value: '', label: 'Pick one' }, 's', 'm']} />
     <Checkbox className={prefix + '-checkbox'} required invalid={invalid}>I agree</Checkbox>
     <Radio className={prefix + '-radio'} name={prefix + '-r'} value="a" required invalid={invalid}>A</Radio>
   </>;
@@ -45,9 +45,9 @@ describe('native constraints show as invalid after interaction (171)', () => {
     ($('form') as HTMLFormElement).requestSubmit();
     for (const [k, sel, v] of PARTS) await expect.poll(() => border(sel, v), { message: k }).toBe(danger[k]);
     // A fix takes the danger off again.
-    await screen.getByLabelText("u email").fill('a@b.co');
+    await screen.getByLabelText('u email').fill('a@b.co');
     await expect.poll(() => border('.u-input', '--dk-input-bd')).not.toBe(danger.input);
-    await screen.getByLabelText("u email").fill('not an email');
+    await screen.getByLabelText('u email').fill('not an email');
     await expect.poll(() => border('.u-input', '--dk-input-bd')).toBe(danger.input);
   });
 

@@ -11,14 +11,14 @@ export interface TableLabels {
   clearSelection: string;
 }
 export const en: TableLabels = {
-  table: "Table",
-  tableSorted: (column, direction) => "Sorted by " + column + ", " + direction + ".",
-  tableSelected: (n) => n + " selected",
-  clearSelection: "Clear selection",
+  table: 'Table',
+  tableSorted: (column, direction) => 'Sorted by ' + column + ', ' + direction + '.',
+  tableSelected: (n) => n + ' selected',
+  clearSelection: 'Clear selection',
 };
 export const id: TableLabels = {
-  table: "Tabel",
-  tableSorted: (column, direction) => "Diurutkan menurut " + column + ", " + (direction === "ascending" ? "naik" : "turun") + ".",
-  tableSelected: (n) => n + " dipilih",
-  clearSelection: "Hapus pilihan",
+  table: 'Tabel',
+  tableSorted: (column, direction) => 'Diurutkan menurut ' + column + ', ' + (direction === 'ascending' ? 'naik' : 'turun') + '.',
+  tableSelected: (n) => n + ' dipilih',
+  clearSelection: 'Hapus pilihan',
 };

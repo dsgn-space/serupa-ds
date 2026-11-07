@@ -5,8 +5,8 @@ export interface ErrorSummaryLabels {
   errorSummaryTitle: (count: number) => string;
 }
 export const en: ErrorSummaryLabels = {
-  errorSummaryTitle: (count) => (count === 1 ? "There is a problem" : "There are " + count + " problems"),
+  errorSummaryTitle: (count) => (count === 1 ? 'There is a problem' : 'There are ' + count + ' problems'),
 };
 export const id: ErrorSummaryLabels = {
-  errorSummaryTitle: (count) => (count === 1 ? "Ada satu masalah" : "Ada " + count + " masalah"),
+  errorSummaryTitle: (count) => (count === 1 ? 'Ada satu masalah' : 'Ada ' + count + ' masalah'),
 };

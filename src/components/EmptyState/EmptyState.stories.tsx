@@ -56,7 +56,7 @@ export const DashedSmall: Story = {
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 280 }}>
-      <EmptyState {...args} title="No projects match every one of the filters you picked" description={"Try fewer filters, or search for Donaudampfschifffahrtsgesellschaftskapitänskajüte by name instead."}
+      <EmptyState {...args} title="No projects match every one of the filters you picked" description={'Try fewer filters, or search for Donaudampfschifffahrtsgesellschaftskapitänskajüte by name instead.'}
         suggestions={['Donaudampfschifffahrtsgesellschaft', 'quarterly planning for the whole organisation']} onSuggestion={() => undefined} onClearFilters={() => undefined} />
     </div>
   ),

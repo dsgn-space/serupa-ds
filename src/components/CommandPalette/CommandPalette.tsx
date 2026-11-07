@@ -1,20 +1,20 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { announce } from "../../internal/announce";
-import { isComposing } from "../../internal/ime";
-import { fold } from "../../internal/fold";
-import { announcePause } from "../../internal/timing";
-import type { OpenChangeDetails } from "../../internal/openChange";
-import type { IconData } from "../../material/types";
-import { asIcon } from "../Icon/asIcon";
-import { Dialog, type DialogProps } from "../Dialog/Dialog";
-import { Highlight } from "../Highlight/Highlight";
-import { Kbd } from "../Kbd/Kbd";
-import { useShortcut } from "../KeyboardShortcuts/KeyboardShortcuts";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { announce } from '../../internal/announce';
+import { isComposing } from '../../internal/ime';
+import { fold } from '../../internal/fold';
+import { announcePause } from '../../internal/timing';
+import type { OpenChangeDetails } from '../../internal/openChange';
+import type { IconData } from '../../material/types';
+import { asIcon } from '../Icon/asIcon';
+import { Dialog, type DialogProps } from '../Dialog/Dialog';
+import { Highlight } from '../Highlight/Highlight';
+import { Kbd } from '../Kbd/Kbd';
+import { useShortcut } from '../KeyboardShortcuts/KeyboardShortcuts';
+import { en as words } from './labels';
 
 /** One command or page in the palette. */
 export interface Command {
@@ -38,7 +38,7 @@ export interface Command {
   onSelect?: (() => void) | undefined;
 }
 
-export interface CommandPaletteProps extends Omit<DialogProps, "title" | "description" | "footer" | "alert" | "children" | "size" | "fullScreen" | "initialFocus" | "closeButton" | "closeLabel" | "onSelect" | "unsaved"> {
+export interface CommandPaletteProps extends Omit<DialogProps, 'title' | 'description' | 'footer' | 'alert' | 'children' | 'size' | 'fullScreen' | 'initialFocus' | 'closeButton' | 'closeLabel' | 'onSelect' | 'unsaved'> {
   /** The commands and pages it searches, in the order they're listed before anything is typed. */
   commands: Command[];
   /** Runs for any command chosen, after the palette has closed and after the command's own onSelect. */
@@ -75,7 +75,7 @@ function score(c: Command, q: string): number {
    and ref go to the Dialog's <dialog>. */
 /** A ⌘K search over commands and pages in a dialog: type to filter, arrows to move, Enter to run.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>("CommandPalette", function CommandPalette(props, ref) {
+export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>('CommandPalette', function CommandPalette(props, ref) {
   const sds = useSettings(words), labels = sds.labels;
   const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
   const [own, setOwn] = React.useState(!!props.defaultOpen);
@@ -86,14 +86,14 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
     if (!controlled) setOwn(next);
     if (onOpenChange) onOpenChange(next, details);
   }, [onOpenChange, controlled]);
-  const keys = props.hotkey === false ? null : props.hotkey && props.hotkey.length ? props.hotkey : ["mod", "K"];
-  useShortcut(keys || [], () => change(true, { reason: "trigger" }), { description: labels.commandPalette, enabled: !!keys && !open });
+  const keys = props.hotkey === false ? null : props.hotkey && props.hotkey.length ? props.hotkey : ['mod', 'K'];
+  useShortcut(keys || [], () => change(true, { reason: 'trigger' }), { description: labels.commandPalette, enabled: !!keys && !open });
 
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState('');
   const [active, setActive] = React.useState(0);
   // Each opening starts from an empty field, at the top of the list.
   const [was, setWas] = React.useState(open);
-  if (was !== open) { setWas(open); if (open) { setQuery(""); setActive(0); } }
+  if (was !== open) { setWas(open); if (open) { setQuery(''); setActive(0); } }
 
   const q = fold(query.trim());
   const { commands, limit } = props;
@@ -111,20 +111,20 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
   const usable = groups.flatMap(([, rs]) => rs).filter((r) => !r.c.disabled);   // in the order listed, which is the arrows' order
   const current = usable.length ? usable[Math.min(active, usable.length - 1)] : null;
 
-  const base = domId("dk-cmdk", React.useId());
-  const optId = (r: Row) => base + "-opt-" + r.i;
+  const base = domId('dk-cmdk', React.useId());
+  const optId = (r: Row) => base + '-opt-' + r.i;
   const list = React.useRef<HTMLDivElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
   const currentId = current ? optId(current) : null;
   React.useEffect(() => {
     if (!open || !currentId || !list.current) return;
-    const el = list.current.querySelector<HTMLElement>("#" + currentId);
-    if (el && typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest" });
+    const el = list.current.querySelector<HTMLElement>('#' + currentId);
+    if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ block: 'nearest' });
   }, [open, currentId]);
 
   // How many match, said once typing stops (the rows change in silence otherwise).
-  const empty = typeof props.emptyText === "string" ? props.emptyText : labels.noCommands;
-  const said = !query.trim() ? "" : usable.length ? labels.commandsCount(usable.length) : empty;
+  const empty = typeof props.emptyText === 'string' ? props.emptyText : labels.noCommands;
+  const said = !query.trim() ? '' : usable.length ? labels.commandsCount(usable.length) : empty;
   React.useEffect(() => {
     if (!open || !said) return;
     const t = setTimeout(() => announce(said), announcePause);
@@ -141,45 +141,45 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
     setChosen(null);
     const c = chosen.c;
     if (c.onSelect) c.onSelect();
-    else if (c.href && typeof window !== "undefined") window.location.assign(c.href);
+    else if (c.href && typeof window !== 'undefined') window.location.assign(c.href);
     if (done.current) done.current(c);
   }, [chosen]);
   const choose = (r: Row | null) => {
     if (!r || r.c.disabled) return;
-    change(false, { reason: "select" });
+    change(false, { reason: 'select' });
     setChosen({ c: r.c });
   };
   const move = (to: number) => { if (usable.length) setActive((to + usable.length) % usable.length); };
   const at = current ? usable.indexOf(current) : 0;
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (isComposing(e)) return;
-    if (e.key === "ArrowDown") { e.preventDefault(); move(at + 1); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); move(at - 1); }
-    else if (e.key === "PageDown") { e.preventDefault(); move(usable.length - 1); }
-    else if (e.key === "PageUp") { e.preventDefault(); move(0); }
-    else if (e.key === "Enter") { e.preventDefault(); choose(current); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); move(at + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); move(at - 1); }
+    else if (e.key === 'PageDown') { e.preventDefault(); move(usable.length - 1); }
+    else if (e.key === 'PageUp') { e.preventDefault(); move(0); }
+    else if (e.key === 'Enter') { e.preventDefault(); choose(current); }
   };
 
   return (
-    <Dialog {...rest} ref={ref} className={cn("dk-command-palette", props.className)} aria-label={rest["aria-label"] || labels.commandPalette}
+    <Dialog {...rest} ref={ref} className={cn('dk-command-palette', props.className)} aria-label={rest['aria-label'] || labels.commandPalette}
       open={open} onOpenChange={change} closeButton={false} initialFocus={field} closeOnBackdrop={props.closeOnBackdrop} finalFocus={props.finalFocus}>
-      <input ref={field} className="dk-command-palette__field" type="text" role="combobox" aria-expanded="true" aria-controls={base + "-list"}
+      <input ref={field} className="dk-command-palette__field" type="text" role="combobox" aria-expanded="true" aria-controls={base + '-list'}
         aria-autocomplete="list" aria-activedescendant={currentId || undefined} aria-label={props.placeholder || labels.searchCommands}
         placeholder={props.placeholder || labels.searchCommands} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
         value={query} onChange={(e) => { setQuery(e.currentTarget.value); setActive(0); }} onKeyDown={onKeyDown} />
-      <div ref={list} id={base + "-list"} role="listbox" aria-label={labels.commandPalette} className="dk-command-palette__list">
+      <div ref={list} id={base + '-list'} role="listbox" aria-label={labels.commandPalette} className="dk-command-palette__list">
         {groups.map(([name, rs], g) => (
-          <div key={name} role="group" aria-labelledby={base + "-g" + g} className="dk-command-palette__group">
-            <div id={base + "-g" + g} role="presentation" className="dk-command-palette__heading">{name}</div>
+          <div key={name} role="group" aria-labelledby={base + '-g' + g} className="dk-command-palette__group">
+            <div id={base + '-g' + g} role="presentation" className="dk-command-palette__heading">{name}</div>
             {rs.map((r) => {
               const on = current === r;
               return (
                 // Focus stays in the field (a press doesn't take it); an option focused some other way, as a screen
                 // reader can, is chosen with Enter or Space.
                 <div key={r.c.id} id={optId(r)} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined}
-                  className={cn("dk-command-palette__option", on && "dk-command-palette__option--active", r.c.disabled && "dk-command-palette__option--disabled")}
+                  className={cn('dk-command-palette__option', on && 'dk-command-palette__option--active', r.c.disabled && 'dk-command-palette__option--disabled')}
                   onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (!r.c.disabled && !on) setActive(usable.indexOf(r)); }} onClick={() => choose(r)}
-                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose(r); } }}>
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(r); } }}>
                   {r.c.icon != null ? <span className="dk-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
                   <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>
                   {r.c.shortcut && r.c.shortcut.length ? <Kbd className="dk-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}

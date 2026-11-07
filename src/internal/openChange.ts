@@ -5,7 +5,7 @@
     'select': an item in it was chosen, as a MenuItem is.
     'hover': the pointer came onto its element or left it. 'focus': its element took focus from the keyboard.
     'swipe': a touch drag flung it back toward its edge, as on a Drawer. */
-export type OpenChangeReason = "trigger" | "escape" | "outside" | "blur" | "close" | "api" | "select" | "hover" | "focus" | "swipe";
+export type OpenChangeReason = 'trigger' | 'escape' | 'outside' | 'blur' | 'close' | 'api' | 'select' | 'hover' | 'focus' | 'swipe';
 
 /** The second argument of onOpenChange. */
 export interface OpenChangeDetails { reason: OpenChangeReason }

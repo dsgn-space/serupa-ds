@@ -5,8 +5,8 @@ export interface LinkLabels {
   opensInNewTab: string;
 }
 export const en: LinkLabels = {
-  opensInNewTab: "(opens in a new tab)",
+  opensInNewTab: '(opens in a new tab)',
 };
 export const id: LinkLabels = {
-  opensInNewTab: "(terbuka di tab baru)",
+  opensInNewTab: '(terbuka di tab baru)',
 };

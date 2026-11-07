@@ -10,14 +10,14 @@ export interface StepperLabels {
   stepOf: (step: number, total: number) => string;
 }
 export const en: StepperLabels = {
-  completed: "completed",
-  hasError: "has an error",
-  hasWarning: "needs attention",
-  stepOf: (step, total) => "Step " + step + " of " + total,
+  completed: 'completed',
+  hasError: 'has an error',
+  hasWarning: 'needs attention',
+  stepOf: (step, total) => 'Step ' + step + ' of ' + total,
 };
 export const id: StepperLabels = {
-  completed: "selesai",
-  hasError: "ada kesalahan",
-  hasWarning: "perlu diperhatikan",
-  stepOf: (step, total) => "Langkah " + step + " dari " + total,
+  completed: 'selesai',
+  hasError: 'ada kesalahan',
+  hasWarning: 'perlu diperhatikan',
+  stepOf: (step, total) => 'Langkah ' + step + ' dari ' + total,
 };

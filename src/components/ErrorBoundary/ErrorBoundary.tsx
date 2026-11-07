@@ -1,13 +1,13 @@
-"use client";
-import * as React from "react";
-import { cn } from "../../internal/cn";
-import { deepActive } from "../../internal/root";
-import { named } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import type { ErrorBoundaryLabels } from "./labels";
-import { Alert } from "../Alert/Alert";
-import { Button } from "../Button/Button";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn } from '../../internal/cn';
+import { deepActive } from '../../internal/root';
+import { named } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import type { ErrorBoundaryLabels } from './labels';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { en as words } from './labels';
 
 export interface ErrorBoundaryFallbackProps {
   /** What was thrown. */
@@ -48,7 +48,7 @@ const spot = (el: Element): Spot => { const out: Spot = []; for (let n: Node | n
  *  from script only (tabIndex -1) for this one move. */
 /** In the Tab order and shown: not a roving tab that isn't the current one (tabindex -1), or a hidden control (L8E24),
  *  or a control a disabled <fieldset> turns off, which matches the selector but can't take focus (L8E76). */
-const reach = (el: HTMLElement) => el.tabIndex >= 0 && !el.matches(":disabled") && el.getClientRects().length > 0;
+const reach = (el: HTMLElement) => el.tabIndex >= 0 && !el.matches(':disabled') && el.getClientRects().length > 0;
 function recovered(was: Spot): HTMLElement | null {
   const i = was.findIndex((x) => x.node.isConnected);
   if (i <= 0) return null;   // the focused element is still there (focus wasn't in the fallback), or nothing is
@@ -63,9 +63,9 @@ function recovered(was: Spot): HTMLElement | null {
     if (inner) return inner;
     if (!first) first = n;
   }
-  if (first && !first.hasAttribute("tabindex")) {
+  if (first && !first.hasAttribute('tabindex')) {
     first.tabIndex = -1;
-    first.addEventListener("blur", () => first.removeAttribute("tabindex"), { once: true });
+    first.addEventListener('blur', () => first.removeAttribute('tabindex'), { once: true });
   }
   return first;
 }
@@ -109,10 +109,10 @@ const Boundary = /* @__PURE__ */ (() => class Boundary extends React.Component<B
   override render() {
     if (!this.state.failed) return this.props.children;
     const p = this.props;
-    if (typeof p.fallback === "function") return p.fallback({ error: this.state.error, reset: this.reset });
+    if (typeof p.fallback === 'function') return p.fallback({ error: this.state.error, reset: this.reset });
     if (p.fallback !== undefined) return p.fallback;
     return (
-      <div ref={this.box} tabIndex={-1} className={cn("dk-error-boundary", p.className)} data-component="error-boundary">
+      <div ref={this.box} tabIndex={-1} className={cn('dk-error-boundary', p.className)} data-component="error-boundary">
         <Alert tone="danger" title={p.title ?? p.labels.errorTitle}
           actions={<Button size="sm" variant="outline" onClick={this.reset}>{p.labels.tryAgain}</Button>}>
           {p.description ?? p.labels.errorDescription}
@@ -128,7 +128,7 @@ const Boundary = /* @__PURE__ */ (() => class Boundary extends React.Component<B
    clear the error when they change. It can't catch errors in event handlers or async code (React doesn't
    route those to boundaries): handle those where they happen. */
 /** Catches a render error in its children and shows a fallback with "Try again", so one broken part doesn't take the page down. */
-export const ErrorBoundary = /* @__PURE__ */ named("ErrorBoundary", function ErrorBoundary(props: ErrorBoundaryProps): React.ReactElement {
+export const ErrorBoundary = /* @__PURE__ */ named('ErrorBoundary', function ErrorBoundary(props: ErrorBoundaryProps): React.ReactElement {
   const labels = useSettings(words).labels;
   return <Boundary {...props} labels={labels} />;
 });

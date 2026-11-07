@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 /* Field names its control with <label for>, which only reaches native inputs. A control drawn another way (Slider's
    role="slider" thumbs, SegmentedControl's radiogroup, FileUpload's button) reads Field's label id here and names

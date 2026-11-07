@@ -1,10 +1,10 @@
-import * as React from "react";
-import { announce } from "./announce";
-import { graphemeCount, limitEdit } from "./graphemes";
-import { useSettings } from "./provider";
-import { useFormReset } from "./useFormReset";
-import { useIsoLayoutEffect } from "./cn";
-import { en as inputWords } from "../components/Input/labels";
+import * as React from 'react';
+import { announce } from './announce';
+import { graphemeCount, limitEdit } from './graphemes';
+import { useSettings } from './provider';
+import { useFormReset } from './useFormReset';
+import { useIsoLayoutEffect } from './cn';
+import { en as inputWords } from '../components/Input/labels';
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
 const never = () => () => {}, yes = () => true, no = () => false;
@@ -25,7 +25,7 @@ export function useTextLimit<E extends Field, P extends Handlers<E>>(input: P, f
   const rest = input;   // read only; the result is a copy, built at the end
   const labels = useSettings(inputWords).labels;
   const controlled = rest.value != null;
-  const initial = String(controlled ? rest.value : rest.defaultValue != null ? rest.defaultValue : "");
+  const initial = String(controlled ? rest.value : rest.defaultValue != null ? rest.defaultValue : '');
   const [len, setLen] = React.useState(function () { return graphemeCount(initial); });
   const length = controlled ? graphemeCount(String(rest.value)) : len;
   const max = rest.maxLength != null && rest.maxLength > 0 ? rest.maxLength : null;
@@ -38,7 +38,7 @@ export function useTextLimit<E extends Field, P extends Handlers<E>>(input: P, f
   // Mid-composition a render leaves last alone, so a dependency list would miss the value held once it ends.
   // every render: the value the parent holds now, before any event of this render's field can run.
   useIsoLayoutEffect(() => { if (held != null && !composing.current) last.current = held; });
-  const defaultText = String(rest.defaultValue != null ? rest.defaultValue : "");
+  const defaultText = String(rest.defaultValue != null ? rest.defaultValue : '');
   useFormReset(field, function () {
     if (controlled) return;
     last.current = defaultText;
@@ -80,8 +80,8 @@ export function useTextLimit<E extends Field, P extends Handlers<E>>(input: P, f
     if (limit(el)) {
       const cut = el.value;
       el.value = before;
-      Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), "value")!.set!.call(el, cut);
-      el.dispatchEvent(new Event("input", { bubbles: true }));
+      Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value')!.set!.call(el, cut);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
     } else {
       tell(graphemeCount(last.current), graphemeCount(el.value));
       last.current = el.value;

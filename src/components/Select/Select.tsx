@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, isInvalid, oneOf, omit, setRef, SIZES } from "../../internal/cn";
-import { useFormReset } from "../../internal/useFormReset";
-import { warnOnce } from "../../internal/warn";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import * as icons from "../../material/builtin";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
+'use client';
+import * as React from 'react';
+import { cn, isInvalid, oneOf, omit, setRef, SIZES } from '../../internal/cn';
+import { useFormReset } from '../../internal/useFormReset';
+import { warnOnce } from '../../internal/warn';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import * as icons from '../../material/builtin';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 
 export type SelectOption = string | number | { value: string | number; label?: React.ReactNode; disabled?: boolean };
 export interface SelectOptionGroup { label: string; options: SelectOption[]; disabled?: boolean }
@@ -34,24 +34,24 @@ const OWN = { size: 1, invalid: 1, leftIcon: 1, placeholder: 1, options: 1, chil
 
 function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined): React.ReactNode[] {
   return (list || []).map(function (o, i) {
-    if (o != null && typeof o === "object" && "options" in o && Array.isArray(o.options)) return <optgroup key={"g" + i} label={o.label} disabled={o.disabled}>{optionNodes(o.options)}</optgroup>;
-    const v = o != null && typeof o === "object" ? (o as Exclude<SelectOption, string | number>) : { value: o, label: o, disabled: undefined };
+    if (o != null && typeof o === 'object' && 'options' in o && Array.isArray(o.options)) return <optgroup key={'g' + i} label={o.label} disabled={o.disabled}>{optionNodes(o.options)}</optgroup>;
+    const v = o != null && typeof o === 'object' ? (o as Exclude<SelectOption, string | number>) : { value: o, label: o, disabled: undefined };
     return <option key={String(v.value)} value={v.value} disabled={v.disabled}>{v.label != null ? v.label : v.value}</option>;
   });
 }
 
 /** A native <select> styled like Input (ref, value, onChange and every select attribute go to it), with a chevron; className and style go to the box. Label it with <label htmlFor>, aria-label or Field. multiple isn't supported. */
-export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>("Select", function Select(props, ref) {
-  const nameRef = useNameCheck("Select", NAME_HOW.field);   // warns when it has no accessible name
+export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>('Select', function Select(props, ref) {
+  const nameRef = useNameCheck('Select', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
-  if (process.env.NODE_ENV !== "production" && (props as { multiple?: boolean }).multiple) warnOnce("select-multiple", "Serupa.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
-  const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  if (invalid) rest["aria-invalid"] = true;
-  const hasPh = props.placeholder != null && props.placeholder !== "";
+  if (process.env.NODE_ENV !== 'production' && (props as { multiple?: boolean }).multiple) warnOnce('select-multiple', "Serupa.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
+  const size = oneOf(SIZES, props.size, 'md');
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  if (invalid) rest['aria-invalid'] = true;
+  const hasPh = props.placeholder != null && props.placeholder !== '';
   const controlled = rest.value !== undefined;
-  if (hasPh && !controlled && rest.defaultValue === undefined) rest.defaultValue = "";   // start on the placeholder
+  if (hasPh && !controlled && rest.defaultValue === undefined) rest.defaultValue = '';   // start on the placeholder
   const [picked, setPicked] = React.useState(controlled ? rest.value : rest.defaultValue), cur = controlled ? rest.value : picked;
   const onChange = rest.onChange;
   rest.onChange = function (e: React.ChangeEvent<HTMLSelectElement>) { if (!controlled) setPicked(e.target.value); if (onChange) onChange(e); };
@@ -64,12 +64,12 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
   // value (GR161). Read from the <select> itself, so options passed as children count too.
   React.useEffect(() => {
     const s = own.current;
-    if (process.env.NODE_ENV !== "production" && controlled && cur != null && s && ![...s.options].some((o) => o.value === String(cur))) warnOnce("select-value", `Select: value "${String(cur)}" matches no option, so it shows "${s.value}" and a form sends that. Set value to one of the options' values, or add an option for it.`);
+    if (process.env.NODE_ENV !== 'production' && controlled && cur != null && s && ![...s.options].some((o) => o.value === String(cur))) warnOnce('select-value', `Select: value "${String(cur)}" matches no option, so it shows "${s.value}" and a form sends that. Set value to one of the options' values, or add an option for it.`);
   }, [controlled, cur]);
-  const empty = hasPh && (cur == null || cur === "");
+  const empty = hasPh && (cur == null || cur === '');
   const left = asIcon(props.leftIcon);
   return (
-    <span className={cn("dk-select", "dk-select--size-" + size, invalid && "dk-select--invalid", rest.disabled && "dk-select--disabled", empty && "dk-select--empty", left != null && left !== false && "dk-select--has-icon", props.className)} style={props.style} data-component="select" data-size={size}>
+    <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', rest.disabled && 'dk-select--disabled', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
       {left == null || left === false ? null : <span className="dk-select__icon dk-select__icon--left" aria-hidden key="left">{left}</span>}
       <select {...rest} ref={setRefs} className="dk-select__field" key="field">
         {hasPh ? <option value="" disabled key="__placeholder">{props.placeholder}</option> : null}

@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
 /** Joins the truthy class names with spaces. */
 export function cn(...names: unknown[]): string {
-  return names.filter(Boolean).join(" ");
+  return names.filter(Boolean).join(' ');
 }
 
 /** A React id made safe for HTML ids and CSS selectors, with a prefix: "dk-ta" + useId(). */
 export function domId(prefix: string, reactId: string): string {
-  return prefix + reactId.replace(/[^A-Za-z0-9_-]/g, "");
+  return prefix + reactId.replace(/[^A-Za-z0-9_-]/g, '');
 }
 
 /** The value when it's one of the allowed ones, otherwise the default. */
@@ -29,13 +29,13 @@ export function omit<P extends object, K extends PropertyKey>(props: P, own: { r
 }
 
 /** invalid, or aria-invalid passed as true or "true". */
-export function isInvalid(invalid: boolean | undefined, ariaInvalid: React.AriaAttributes["aria-invalid"]): boolean {
-  return !!invalid || ariaInvalid === true || ariaInvalid === "true";
+export function isInvalid(invalid: boolean | undefined, ariaInvalid: React.AriaAttributes['aria-invalid']): boolean {
+  return !!invalid || ariaInvalid === true || ariaInvalid === 'true';
 }
 
 /** Sets a forwarded ref, a function or an object. */
 export function setRef<T>(ref: React.ForwardedRef<T>, node: T | null): void {
-  if (typeof ref === "function") ref(node);
+  if (typeof ref === 'function') ref(node);
   else if (ref) ref.current = node;
 }
 
@@ -45,7 +45,7 @@ export function elementRef<T>(el: React.ReactElement): React.ForwardedRef<T> | u
   return (r ?? undefined) as React.ForwardedRef<T> | undefined;
 }
 
-export const SIZES = ["sm", "md", "lg"] as const;
+export const SIZES = ['sm', 'md', 'lg'] as const;
 
 /** useLayoutEffect in the browser; on the server (where it can't run, and React warns) useEffect. */
-export const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+export const useIsoLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;

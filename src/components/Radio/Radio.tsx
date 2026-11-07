@@ -1,11 +1,11 @@
-"use client";
-import * as React from "react";
-import { cn, domId, isInvalid, omit, oneOf, setRef, SIZES } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useFormReset } from "../../internal/useFormReset";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { warnOnce } from "../../internal/warn";
-import { delegateFocus, useAutoFocus } from "../../internal/focus";
+'use client';
+import * as React from 'react';
+import { cn, domId, isInvalid, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useFormReset } from '../../internal/useFormReset';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { warnOnce } from '../../internal/warn';
+import { delegateFocus, useAutoFocus } from '../../internal/focus';
 
 /** V is the radios' value type: string (or number) as you use them, inferred from value or onValueChange. */
 export interface RadioGroupProps<V extends string | number = string | number> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
@@ -59,14 +59,14 @@ const RadioContext = /* @__PURE__ */ React.createContext<RadioContextValue | nul
 const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, invalid: 1, disabled: 1, required: 1, children: 1, className: 1, autoFocus: 1 } as const;
 
 /** One choice from a set of Radios: a <div role="radiogroup"> that names them, holds the value and passes size, invalid, disabled and required down. Label it with Field group, aria-label or aria-labelledby. */
-export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupProps>("RadioGroup", function RadioGroup(props: RadioGroupProps, ref) {
-  const nameRef = useNameCheck("RadioGroup", NAME_HOW.group);   // warns when it has no accessible name
+export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupProps>('RadioGroup', function RadioGroup(props: RadioGroupProps, ref) {
+  const nameRef = useNameCheck('RadioGroup', NAME_HOW.group);   // warns when it has no accessible name
   const rest = omit(props, GROUP_OWN);
-  const autoName = domId("dk-rg", React.useId());
+  const autoName = domId('dk-rg', React.useId());
   const controlled = props.value !== undefined;
   const [picked, setPicked] = React.useState<string | number | null | undefined>(props.defaultValue), cur = controlled ? props.value : picked;
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  const orientation = props.orientation === "horizontal" ? "horizontal" : "vertical";
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  const orientation = props.orientation === 'horizontal' ? 'horizontal' : 'vertical';
   const onValueChange = props.onValueChange;
   // A form reset checks the radio that was checked first; the group's choice follows it (a controlled one shows its value again).
   const root = React.useRef<HTMLDivElement | null>(null);
@@ -81,9 +81,9 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
   rest.onKeyDown = function (e: React.KeyboardEvent<HTMLDivElement>) {
     if (own) own(e);
     const t = e.target as HTMLInputElement, k = e.key;
-    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || t.type !== "radio" || k.indexOf("Arrow") !== 0) return;
-    const all = Array.prototype.filter.call(root.current!.querySelectorAll("input[type=radio]"), function (r: HTMLInputElement) { return r.name === t.name && !r.disabled && r.getClientRects().length > 0; }) as HTMLInputElement[];
-    const fwd = k === "ArrowDown" || k === (getComputedStyle(t).direction === "rtl" ? "ArrowLeft" : "ArrowRight"), i = all.indexOf(t);
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || t.type !== 'radio' || k.indexOf('Arrow') !== 0) return;
+    const all = Array.prototype.filter.call(root.current!.querySelectorAll('input[type=radio]'), function (r: HTMLInputElement) { return r.name === t.name && !r.disabled && r.getClientRects().length > 0; }) as HTMLInputElement[];
+    const fwd = k === 'ArrowDown' || k === (getComputedStyle(t).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight'), i = all.indexOf(t);
     const to = fwd ? (i === all.length - 1 ? all[0] : null) : (i === 0 ? all[all.length - 1] : null);
     if (!to || to === t) return;
     e.preventDefault();
@@ -97,10 +97,10 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
       // ref.current.focus() (a form library focusing the first invalid field) lands on the radio in the Tab order, the
       // checked one or else the first that can be picked; the <div> took no focus. aria-required given to the group
       // is kept, not overwritten by the required prop (L8E90).
-      delegateFocus(n, () => n && (n.querySelector<HTMLElement>("input:checked:enabled") || n.querySelector<HTMLElement>("input:enabled")));
+      delegateFocus(n, () => n && (n.querySelector<HTMLElement>('input:checked:enabled') || n.querySelector<HTMLElement>('input:enabled')));
       nameRef(n); setRef(ref, n);
-    }} role="radiogroup" aria-invalid={invalid || undefined} aria-required={props.required || rest["aria-required"] || undefined} aria-disabled={props.disabled || undefined}
-      className={cn("dk-radio-group", "dk-radio-group--" + orientation, invalid && "dk-radio-group--invalid", props.className)} data-component="radio-group" data-orientation={orientation}>
+    }} role="radiogroup" aria-invalid={invalid || undefined} aria-required={props.required || rest['aria-required'] || undefined} aria-disabled={props.disabled || undefined}
+      className={cn('dk-radio-group', 'dk-radio-group--' + orientation, invalid && 'dk-radio-group--invalid', props.className)} data-component="radio-group" data-orientation={orientation}>
       <RadioContext.Provider value={ctx}>{props.children}</RadioContext.Provider>
     </div>
   );
@@ -113,14 +113,14 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
 const OWN = { size: 1, invalid: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
 /** A native radio with its label (ref, value and every input attribute go to the <input>); className and style go to the <label> around it. In a RadioGroup, the group sets name and checked. */
-export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>("Radio", function Radio(props, ref) {
-  const nameRef = useNameCheck("Radio", NAME_HOW.label, ref);   // warns when it has no accessible name
-  if (process.env.NODE_ENV !== "production" && (props as { label?: unknown }).label != null) warnOnce("label-prop", "Radio: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", "label-prop:Radio");
+export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>('Radio', function Radio(props, ref) {
+  const nameRef = useNameCheck('Radio', NAME_HOW.label, ref);   // warns when it has no accessible name
+  if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Radio: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Radio');
   const ctx = React.useContext(RadioContext);
   const rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx && ctx.size, "md"));
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  if (invalid) rest["aria-invalid"] = true;   // a group's invalid is on the group
+  const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx && ctx.size, 'md'));
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  if (invalid) rest['aria-invalid'] = true;   // a group's invalid is on the group
   if (ctx) {
     const own = rest.onChange;
     rest.name = ctx.name;
@@ -130,13 +130,13 @@ export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>("Ra
     if (ctx.disabled) rest.disabled = true;
     if (ctx.required) rest.required = true;
   }
-  const base = domId("dk-rd", React.useId()), labelId = base + "-label", descId = base + "-desc";
-  const hasLabel = props.children != null && props.children !== false && props.children !== "";
-  const hasDesc = props.description != null && props.description !== false && props.description !== "";
-  if (hasDesc) rest["aria-describedby"] = cn(rest["aria-describedby"], descId);
-  if (hasDesc && hasLabel && rest["aria-label"] == null && rest["aria-labelledby"] == null) rest["aria-labelledby"] = labelId;   // the description stays out of the name
+  const base = domId('dk-rd', React.useId()), labelId = base + '-label', descId = base + '-desc';
+  const hasLabel = props.children != null && props.children !== false && props.children !== '';
+  const hasDesc = props.description != null && props.description !== false && props.description !== '';
+  if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
+  if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;   // the description stays out of the name
   return (
-    <label className={cn("dk-radio", "dk-radio--size-" + size, (invalid || (ctx && ctx.invalid)) && "dk-radio--invalid", rest.disabled && "dk-radio--disabled", !hasLabel && !hasDesc && "dk-radio--bare", props.className)} style={props.style} data-component="radio" data-size={size as string}>
+    <label className={cn('dk-radio', 'dk-radio--size-' + size, (invalid || (ctx && ctx.invalid)) && 'dk-radio--invalid', rest.disabled && 'dk-radio--disabled', !hasLabel && !hasDesc && 'dk-radio--bare', props.className)} style={props.style} data-component="radio" data-size={size as string}>
       <span className="dk-radio__control" key="control">
         <input {...rest} ref={nameRef} type="radio" className="dk-radio__input" key="input" />
         <span className="dk-radio__dot" aria-hidden key="dot" />

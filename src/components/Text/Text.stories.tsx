@@ -38,7 +38,7 @@ export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 200 }}>
       <Text {...args}>Invite people to work on this project with you, and give each of them only the access they need.</Text>
-      <Text {...args}>{"Donaudampfschifffahrtsgesellschaftskapitänskajüte"}</Text>
+      <Text {...args}>{'Donaudampfschifffahrtsgesellschaftskapitänskajüte'}</Text>
     </div>
   ),
 };

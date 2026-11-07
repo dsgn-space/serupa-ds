@@ -1,13 +1,13 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit } from "../../internal/cn";
-import { addDays, addMonths, compare, day, firstDayOfWeek, isoDate, isValid, sameDay, sameMonth, startOfMonth, startOfWeek, toDay } from "../../internal/dates";
-import { IconButton } from "../IconButton/IconButton";
-import { component } from "../../internal/component";
-import { useLocale, useOwnLang, useSettings } from "../../internal/provider";
-import * as icons from "../../material/builtin";
-import { useFocusHandover } from "../../internal/focus";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit } from '../../internal/cn';
+import { addDays, addMonths, compare, day, firstDayOfWeek, isoDate, isValid, sameDay, sameMonth, startOfMonth, startOfWeek, toDay } from '../../internal/dates';
+import { IconButton } from '../IconButton/IconButton';
+import { component } from '../../internal/component';
+import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import * as icons from '../../material/builtin';
+import { useFocusHandover } from '../../internal/focus';
+import { en as words } from './labels';
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. A Date, or a plain "yyyy-mm-dd" string for that local day. */
@@ -64,11 +64,11 @@ const FORMATS = new Map<string, Formats>();
 // Not where narrow falls back to English letters (Urdu, Pashto), which would read as another language.
 function header(locale: string): Intl.DateTimeFormat {
   const fmt = (o: Intl.DateTimeFormatOptions, at = locale) => new Intl.DateTimeFormat(at, o);
-  const short = fmt({ weekday: "short" }), long = fmt({ weekday: "long" }), narrow = fmt({ weekday: "narrow" });
+  const short = fmt({ weekday: 'short' }), long = fmt({ weekday: 'long' }), narrow = fmt({ weekday: 'narrow' });
   const week = Array.from({ length: 7 }, (_, i) => new Date(2025, 2, 2 + i));
-  const names = (f: Intl.DateTimeFormat) => week.map((d) => f.format(d)).join("|");
+  const names = (f: Intl.DateTimeFormat) => week.map((d) => f.format(d)).join('|');
   const wide = week.some((d) => short.format(d) === long.format(d) || /\s/.test(short.format(d))) || names(short).length > 7 * 5 - 1;
-  const english = names(narrow) === names(fmt({ weekday: "narrow" }, "en")) && names(short) !== names(fmt({ weekday: "short" }, "en"));
+  const english = names(narrow) === names(fmt({ weekday: 'narrow' }, 'en')) && names(short) !== names(fmt({ weekday: 'short' }, 'en'));
   return wide && !english ? narrow : short;
 }
 
@@ -77,13 +77,13 @@ function formats(locale: string): Formats {
   if (!f) {
     // The grid is Gregorian with Latin digits, so the title and day labels are too (a Thai or Persian title would
     // otherwise name another month and year). Month and weekday names stay localized.
-    const greg = { calendar: "gregory", numberingSystem: "latn" } as const;
+    const greg = { calendar: 'gregory', numberingSystem: 'latn' } as const;
     f = {
-      title: new Intl.DateTimeFormat(locale, { ...greg, month: "long", year: "numeric" }),
+      title: new Intl.DateTimeFormat(locale, { ...greg, month: 'long', year: 'numeric' }),
       short: header(locale),
-      long: new Intl.DateTimeFormat(locale, { weekday: "long" }),
-      full: new Intl.DateTimeFormat(locale, { ...greg, weekday: "long", year: "numeric", month: "long", day: "numeric" }),
-      month: new Intl.DateTimeFormat(locale, { ...greg, month: "long" }),
+      long: new Intl.DateTimeFormat(locale, { weekday: 'long' }),
+      full: new Intl.DateTimeFormat(locale, { ...greg, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+      month: new Intl.DateTimeFormat(locale, { ...greg, month: 'long' }),
     };
     FORMATS.set(locale, f);
   }
@@ -97,15 +97,15 @@ const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMont
    Shift, a year), Enter or Space picks. Moving past the month shows the next one. Days outside min..max or
    refused by isDateDisabled are aria-disabled and can't be picked. Month and weekday names follow the locale. */
 /** A month of days to pick one from, with keyboard navigation; used by DatePicker. */
-export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>("Calendar", function Calendar(props, ref) {
+export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>('Calendar', function Calendar(props, ref) {
   const sds = useSettings(words);
   const rest = omit(props, OWN);
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const controlledValue = props.value !== undefined;
-  const [ownValue, setOwnValue] = React.useState<Date | null>(() => toDay(props.defaultValue, "Calendar"));
-  const value = controlledValue ? toDay(props.value, "Calendar") : ownValue;
-  const min = toDay(props.min, "Calendar"), max = toDay(props.max, "Calendar");
+  const [ownValue, setOwnValue] = React.useState<Date | null>(() => toDay(props.defaultValue, 'Calendar'));
+  const value = controlledValue ? toDay(props.value, 'Calendar') : ownValue;
+  const min = toDay(props.min, 'Calendar'), max = toDay(props.max, 'Calendar');
   // Today moves at midnight, also while the calendar stays open with nothing else re-rendering it.
   const [, setTick] = React.useState(0);
   const today = day(new Date());
@@ -162,18 +162,18 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const onKeyDown = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
     let n: Date | null = null;
     switch (e.key) {
-      case "ArrowLeft": n = addDays(focus, rtl ? 1 : -1); break;
-      case "ArrowRight": n = addDays(focus, rtl ? -1 : 1); break;
-      case "ArrowUp": n = addDays(focus, -7); break;
-      case "ArrowDown": n = addDays(focus, 7); break;
-      case "Home": n = startOfWeek(focus, ws); break;
-      case "End": n = addDays(startOfWeek(focus, ws), 6); break;
-      case "PageUp": n = addMonths(focus, e.shiftKey ? -12 : -1); break;
-      case "PageDown": n = addMonths(focus, e.shiftKey ? 12 : 1); break;
-      case "Enter": case " ": e.preventDefault(); pick(focus); return;
+      case 'ArrowLeft': n = addDays(focus, rtl ? 1 : -1); break;
+      case 'ArrowRight': n = addDays(focus, rtl ? -1 : 1); break;
+      case 'ArrowUp': n = addDays(focus, -7); break;
+      case 'ArrowDown': n = addDays(focus, 7); break;
+      case 'Home': n = startOfWeek(focus, ws); break;
+      case 'End': n = addDays(startOfWeek(focus, ws), 6); break;
+      case 'PageUp': n = addMonths(focus, e.shiftKey ? -12 : -1); break;
+      case 'PageDown': n = addMonths(focus, e.shiftKey ? 12 : 1); break;
+      case 'Enter': case ' ': e.preventDefault(); pick(focus); return;
       default: return;
     }
     e.preventDefault();
@@ -189,17 +189,17 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
   const { short, long, full, month: monthName } = formats(locale);
   const title = formats(locale).title.format(month);
-  const titleId = domId("dk-cal", React.useId()) + "-title";
+  const titleId = domId('dk-cal', React.useId()) + '-title';
   const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   // A month arrow that reaches min or max turns disabled under focus (FJ1): focus goes to the other arrow.
   const handover = useFocusHandover();
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
-    <div {...rest} ref={ref} className={cn("dk-calendar", props.className)} data-component="calendar">
+    <div {...rest} ref={ref} className={cn('dk-calendar', props.className)} data-component="calendar">
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
-        <h2 className={cn("dk-calendar__title", props.monthYearPicker && "dk-visually-hidden")} id={titleId} lang={lang} aria-live="polite">{title}</h2>
+        <h2 className={cn('dk-calendar__title', props.monthYearPicker && 'dk-visually-hidden')} id={titleId} lang={lang} aria-live="polite">{title}</h2>
         {props.monthYearPicker ? <MonthYear month={month} min={min} max={max} today={today} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
         <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
           disabled={!!max && compare(addMonths(month, 1), max) > 0} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); showMonth(addMonths(month, 1)); }} ref={nextNav} />
@@ -216,9 +216,9 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
                 if (outside && props.hideOutside) return <td key={d.getTime()} role="gridcell" className="dk-calendar__blank" />;
                 return (
                   <td key={d.getTime()} aria-selected={sel} role="gridcell">
-                    <button type="button" tabIndex={sameDay(d, focus) ? 0 : -1} aria-label={full.format(d)} aria-disabled={off || undefined} aria-current={sameDay(d, today) ? "date" : undefined}
-                      className={cn("dk-calendar__day", outside && "dk-calendar__day--outside", sel && "dk-calendar__day--selected", sameDay(d, today) && "dk-calendar__day--today", off && "dk-calendar__day--disabled", props.dayClassName && props.dayClassName(d))}
-                      data-date={d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0")}
+                    <button type="button" tabIndex={sameDay(d, focus) ? 0 : -1} aria-label={full.format(d)} aria-disabled={off || undefined} aria-current={sameDay(d, today) ? 'date' : undefined}
+                      className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', sameDay(d, today) && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', props.dayClassName && props.dayClassName(d))}
+                      data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
                       onClick={() => pick(d)} onFocus={() => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }}
                       onMouseEnter={props.onDayHover ? () => props.onDayHover!(d) : undefined}>
                       {d.getDate()}

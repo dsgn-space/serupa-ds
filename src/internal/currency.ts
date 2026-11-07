@@ -4,9 +4,9 @@
 // Built by a function marked pure, so a bundler leaves the table out of a project that never reads it.
 const DIGITS: Record<string, number> = /* @__PURE__ */ (() => {
   const t: Record<string, number> = {};
-  for (const c of "BIF CLP DJF GNF ISK JPY KMF KRW PYG RWF UGX UYI VND VUV XAF XOF XPF".split(" ")) t[c] = 0;
-  for (const c of "BHD IQD JOD KWD LYD OMR TND".split(" ")) t[c] = 3;
-  for (const c of "CLF UYW".split(" ")) t[c] = 4;
+  for (const c of 'BIF CLP DJF GNF ISK JPY KMF KRW PYG RWF UGX UYI VND VUV XAF XOF XPF'.split(' ')) t[c] = 0;
+  for (const c of 'BHD IQD JOD KWD LYD OMR TND'.split(' ')) t[c] = 3;
+  for (const c of 'CLF UYW'.split(' ')) t[c] = 4;
   return t;
 })();
 
@@ -19,7 +19,7 @@ export const minorDigits = (currency: string): number => DIGITS[currency.toUpper
 // tools/test/currency.mjs fails when that Node's CLDR says otherwise.
 const SHOWN: Record<string, number> = /* @__PURE__ */ (() => {
   const t: Record<string, number> = {};
-  for (const c of "AFN ALL COP HUF IDR IQD IRR KPW LAK LBP MGA MMK PKR SLL SOS SYP YER".split(" ")) t[c] = 0;
+  for (const c of 'AFN ALL COP HUF IDR IQD IRR KPW LAK LBP MGA MMK PKR SLL SOS SYP YER'.split(' ')) t[c] = 0;
   return t;
 })();
 
@@ -30,7 +30,7 @@ export const shownDigits = (currency: string): number => SHOWN[currency.toUpperC
  *  significant digits, an increment) or are compact, so a number is written the same in every engine. */
 export function pinCurrencyDigits<T extends Intl.NumberFormatOptions>(o: T): T {
   const r = o as Intl.NumberFormatOptions & { roundingIncrement?: number };
-  if (r.style !== "currency" || !r.currency || r.notation === "compact" || r.minimumFractionDigits !== undefined || r.maximumFractionDigits !== undefined
+  if (r.style !== 'currency' || !r.currency || r.notation === 'compact' || r.minimumFractionDigits !== undefined || r.maximumFractionDigits !== undefined
     || r.minimumSignificantDigits !== undefined || r.maximumSignificantDigits !== undefined || r.roundingIncrement !== undefined) return o;
   const d = shownDigits(r.currency);
   return { ...o, minimumFractionDigits: d, maximumFractionDigits: d };

@@ -1,6 +1,6 @@
-"use client";
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
+'use client';
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
 
 /* useVirtual: the windowing behind VirtualList (and, later, any long list that draws only what's in view). Given the
    scrolling element, how many rows there are and a guess at a row's height, it says which rows to draw (start to end,
@@ -169,15 +169,15 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       // the end of the range as it stands, and in WebKit the rows then measured taller than the guess left the view at
       // row 408 of 1,000 (FW1). Home the same way: back from the end, rows measured on the way up moved the top it
       // aimed for, and it stopped at row 13 (GR139).
-      if ((e.key === "End" || e.key === "Home") && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      if ((e.key === 'End' || e.key === 'Home') && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
-        toEdge.current(e.key === "End");
+        toEdge.current(e.key === 'End');
         return;
       }
       // PageUp and PageDown: a screen at once, not the browser's smooth scroll. The rows it measures on the way move
       // the view's row, the list scrolls by as much to keep it, and the animation then carried on from there: the first
       // PageUp after End went back one row of eight (GR142).
-      if ((e.key === "PageUp" || e.key === "PageDown") && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      if ((e.key === 'PageUp' || e.key === 'PageDown') && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
         scroller.scrollTop += by(scroller.clientHeight);
         read();
@@ -195,12 +195,12 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       e.preventDefault();
       step(d);
     };
-    scroller.addEventListener("scroll", read, { passive: true });
-    scroller.addEventListener("keydown", onKey);
-    scroller.addEventListener("wheel", onWheel, { passive: false });
-    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => { read(); remeasured(); }) : null;
+    scroller.addEventListener('scroll', read, { passive: true });
+    scroller.addEventListener('keydown', onKey);
+    scroller.addEventListener('wheel', onWheel, { passive: false });
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => { read(); remeasured(); }) : null;
     if (ro) ro.observe(scroller);
-    return () => { scroller.removeEventListener("scroll", read); scroller.removeEventListener("keydown", onKey); scroller.removeEventListener("wheel", onWheel); if (ro) ro.disconnect(); };
+    return () => { scroller.removeEventListener('scroll', read); scroller.removeEventListener('keydown', onKey); scroller.removeEventListener('wheel', onWheel); if (ro) ro.disconnect(); };
   }, [scroller]);
 
   // Forget sizes past the end when rows go away, and the pinned row when the rows change.
@@ -243,7 +243,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     }
     let changed = false;
     const holder = (options.rows && options.rows()) || el;
-    for (const r of holder.querySelectorAll<HTMLElement>(":scope > [data-index], :scope > [role=group] > [data-index]")) {
+    for (const r of holder.querySelectorAll<HTMLElement>(':scope > [data-index], :scope > [role=group] > [data-index]')) {
       const i = Number(r.dataset.index), h = r.getBoundingClientRect().height;
       if (!(i < count) || !h) continue;
       if (sizes.has(i) && Math.abs((sizes.get(i) ?? 0) - h) < 0.5) continue;

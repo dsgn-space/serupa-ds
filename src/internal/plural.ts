@@ -1,4 +1,4 @@
-import { canonicalLocale } from "./locale";
+import { canonicalLocale } from './locale';
 
 /** The words for a count in each plural category a language has (CLDR: zero, one, two, few, many, other). Only
  *  `other` is required; a category left out falls back to it. A `#` stands for the count, written the locale's way. */
@@ -17,7 +17,7 @@ const rules = new Map<string, [Intl.PluralRules, Intl.NumberFormat]>();
 function toolsFor(locale: string): [Intl.PluralRules, Intl.NumberFormat] {
   let t = rules.get(locale);
   if (!t) {
-    const l = canonicalLocale(locale) ?? "en";
+    const l = canonicalLocale(locale) ?? 'en';
     t = [new Intl.PluralRules(l), new Intl.NumberFormat(l)];
     if (rules.size > 50) rules.clear();
     rules.set(locale, t);
@@ -32,5 +32,5 @@ function toolsFor(locale: string): [Intl.PluralRules, Intl.NumberFormat] {
 export function plural(locale: string, count: number, forms: PluralForms): string {
   const [pr, nf] = toolsFor(locale);
   const words = forms[pr.select(count)] ?? forms.other;
-  return words.includes("#") ? words.replace(/#/g, nf.format(count)) : words;
+  return words.includes('#') ? words.replace(/#/g, nf.format(count)) : words;
 }

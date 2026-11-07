@@ -11,14 +11,14 @@ export interface SaveStatusLabels {
   retrySave: string;
 }
 export const en: SaveStatusLabels = {
-  saving: "Saving…",
-  saved: "Saved",
-  saveFailed: "Couldn’t save",
-  retrySave: "Try again",
+  saving: 'Saving…',
+  saved: 'Saved',
+  saveFailed: 'Couldn’t save',
+  retrySave: 'Try again',
 };
 export const id: SaveStatusLabels = {
-  saving: "Menyimpan…",
-  saved: "Tersimpan",
-  saveFailed: "Gagal menyimpan",
-  retrySave: "Coba lagi",
+  saving: 'Menyimpan…',
+  saved: 'Tersimpan',
+  saveFailed: 'Gagal menyimpan',
+  retrySave: 'Coba lagi',
 };

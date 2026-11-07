@@ -34,7 +34,7 @@ export const Filtering: Story = {
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 200 }}>
-      <SearchInput {...args} defaultValue={"Donaudampfschifffahrtsgesellschaftskapitänskajüte"} />
+      <SearchInput {...args} defaultValue={'Donaudampfschifffahrtsgesellschaftskapitänskajüte'} />
     </div>
   ),
 };

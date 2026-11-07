@@ -1,20 +1,20 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { config } from "../../internal/config";
-import { displayNumber } from "../../internal/numbers";
-import { useLocale, useSettings } from "../../internal/provider";
-import { useShowAfter } from "../../internal/showAfter";
-import { announce, ensureAnnouncer } from "../../internal/announce";
-import { block, both, chain, pressKey, releaseKey } from "../../internal/interactions";
-import { warnOnce } from "../../internal/warn";
-import { removeAndRefocus } from "../../internal/removeFocus";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { Loader } from "../Loader/Loader";
-import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
-import { component } from "../../internal/component";
-import * as icons from "../../material/builtin";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { config } from '../../internal/config';
+import { displayNumber } from '../../internal/numbers';
+import { useLocale, useSettings } from '../../internal/provider';
+import { useShowAfter } from '../../internal/showAfter';
+import { announce, ensureAnnouncer } from '../../internal/announce';
+import { block, both, chain, pressKey, releaseKey } from '../../internal/interactions';
+import { warnOnce } from '../../internal/warn';
+import { removeAndRefocus } from '../../internal/removeFocus';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { Loader } from '../Loader/Loader';
+import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
+import { component } from '../../internal/component';
+import * as icons from '../../material/builtin';
 
 export type BadgeVariant = 'subtle' | 'solid' | 'outline';
 export type BadgeTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
@@ -67,18 +67,18 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
    with href a link (the configured link component, like Button), and only then has hover, focus and active
    states and Button's micro-interactions (the press). loading cross-fades the content to a centered ring (the width stays), sets aria-busy, announces
    loadingText ("Loading") and, on an interactive badge, blocks clicks while keeping focus. */
-const VARIANTS: readonly BadgeVariant[] = ["subtle", "solid", "outline"];
-const TONES: readonly BadgeTone[] = ["neutral", "primary", "success", "warning", "danger", "info", "red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal", "cyan", "sky", "blue", "indigo", "violet", "purple", "fuchsia", "pink", "rose"];
+const VARIANTS: readonly BadgeVariant[] = ['subtle', 'solid', 'outline'];
+const TONES: readonly BadgeTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 const PLAIN = { useGrouping: false } as const;
 const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingText: 1, className: 1, children: 1 } as const;
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
-export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge", function Badge(props, ref) {
+export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge', function Badge(props, ref) {
   const sds = useSettings();
   const locale = useLocale();
   const rest = omit(props, OWN);
-  const variant = oneOf(VARIANTS, props.variant, "subtle");
-  const tone = oneOf(TONES, props.tone, "neutral");
+  const variant = oneOf(VARIANTS, props.variant, 'subtle');
+  const tone = oneOf(TONES, props.tone, 'neutral');
   // Once it shows, the ring stays at least spinnerMinShown, so loading that ends a moment later doesn't flash it (EB1).
   const loading = useShowAfter(!!props.loading, 0);
   const loadingText = props.loadingText == null ? sds.labels.loading : props.loadingText;
@@ -93,16 +93,16 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
   const isCount = props.count != null;
   // A text label cut with an ellipsis shows in full as the badge's title on hover, as Button's does (DV1): the same
   // words as its text, so nothing is read twice. Not for a count, or a badge with a title or name of its own.
-  const text = !isCount && (typeof props.children === "string" || typeof props.children === "number") ? String(props.children) : "";
-  const tipOk = !!text && rest.title == null && !rest["aria-label"] && !rest["aria-labelledby"];
+  const text = !isCount && (typeof props.children === 'string' || typeof props.children === 'number') ? String(props.children) : '';
+  const tipOk = !!text && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'];
   const node = React.useRef<HTMLElement | null>(null);
   const [cut, setCut] = React.useState(false);
   useIsoLayoutEffect(function () {
-    const own = node.current && node.current.querySelector<HTMLElement>(".dk-badge__label");
+    const own = node.current && node.current.querySelector<HTMLElement>('.dk-badge__label');
     if (!tipOk || !own) { setCut(false); return; }
     const check = () => setCut(own.scrollWidth > own.clientWidth);
     check();
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(check);
     ro.observe(own);
     return () => ro.disconnect();
@@ -113,7 +113,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
     const n = Math.max(0, Math.floor(Number(props.count)) || 0);
     const max = Math.max(1, Math.floor(Number(props.max)) || 99);
     if (n === 0 && !props.showZero) return null;   // nothing to count: no badge
-    label = displayNumber(Math.min(n, max), locale, PLAIN) + (n > max ? "+" : "");   // the locale's digits, as Calendar's
+    label = displayNumber(Math.min(n, max), locale, PLAIN) + (n > max ? '+' : '');   // the locale's digits, as Calendar's
     if (n > max) {
       // "99+" is what shows; screen readers and the tooltip get the real count.
       const full = displayNumber(n, locale, PLAIN);
@@ -121,34 +121,34 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
       if (rest.title == null) rest.title = full;
     }
   }
-  const isLink = rest.href != null, interactive = isLink || typeof rest.onClick === "function";
-  let removable = !isCount && typeof props.onRemove === "function";
+  const isLink = rest.href != null, interactive = isLink || typeof rest.onClick === 'function';
+  let removable = !isCount && typeof props.onRemove === 'function';
   if (removable && interactive) {   // a button inside a button (or link) isn't valid: the badge's own click wins
-    if (process.env.NODE_ENV !== "production") warnOnce("badge-remove-interactive", "Badge: onRemove is ignored on a badge with onClick or href (a button can't hold another button).");
+    if (process.env.NODE_ENV !== 'production') warnOnce('badge-remove-interactive', "Badge: onRemove is ignored on a badge with onClick or href (a button can't hold another button).");
     removable = false;
   }
   // Indicator: dot with no label, icon or count is a lone dot ("something new", no number): a solid circle in the
   // tone with a ring in the surface color, for the corner of an icon or avatar. Decorative unless you name it.
-  const hasLabel = !(label == null || label === false || label === "");
+  const hasLabel = !(label == null || label === false || label === '');
   if (!isCount && props.dot && !hasLabel && (props.leftIcon == null || props.leftIcon === false)) {
-    if (process.env.NODE_ENV !== "production" && (interactive || typeof props.onRemove === "function")) warnOnce("badge-indicator", "Badge: a dot indicator can't be clicked or removed (it's too small to target); name and handle the control it sits on.");
+    if (process.env.NODE_ENV !== 'production' && (interactive || typeof props.onRemove === 'function')) warnOnce('badge-indicator', "Badge: a dot indicator can't be clicked or removed (it's too small to target); name and handle the control it sits on.");
     delete rest.href; delete rest.onClick; delete rest.type; delete rest.disabled; delete rest.target; delete rest.rel;
-    rest["data-component"] = "badge";
-    rest["data-variant"] = "indicator";
-    rest["data-tone"] = tone;
-    if (rest["aria-label"] || rest["aria-labelledby"]) rest.role = rest.role || "img"; else rest["aria-hidden"] = true;
-    return <span {...rest} ref={ref} className={cn("dk-badge", "dk-badge--indicator", "dk-badge--tone-" + tone, props.ping && "dk-badge--ping", props.className)} />;
+    rest['data-component'] = 'badge';
+    rest['data-variant'] = 'indicator';
+    rest['data-tone'] = tone;
+    if (rest['aria-label'] || rest['aria-labelledby']) rest.role = rest.role || 'img'; else rest['aria-hidden'] = true;
+    return <span {...rest} ref={ref} className={cn('dk-badge', 'dk-badge--indicator', 'dk-badge--tone-' + tone, props.ping && 'dk-badge--ping', props.className)} />;
   }
   if (cut && tipOk) rest.title = text;
-  rest["data-component"] = "badge";
-  rest["data-variant"] = variant;
-  rest["data-tone"] = tone;
-  if (interactive) rest["data-interactive"] = "";
+  rest['data-component'] = 'badge';
+  rest['data-variant'] = variant;
+  rest['data-tone'] = tone;
+  if (interactive) rest['data-interactive'] = '';
   if (loading) {
-    rest["aria-busy"] = true;
-    rest["data-loading"] = "";
+    rest['aria-busy'] = true;
+    rest['data-loading'] = '';
     if (interactive) {
-      rest["aria-disabled"] = true;   // stays focusable, announced as unavailable
+      rest['aria-disabled'] = true;   // stays focusable, announced as unavailable
       rest.onClick = block;           // clicks, Space and Enter do nothing while it loads
     }
   }
@@ -156,14 +156,14 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
     ? <span className="dk-badge__icon" aria-hidden key="icon">{asIcon(props.leftIcon)}</span> : null;
   const dot = !isCount && !icon && props.dot   // in an icon-sized box, so a dot badge lines up with icon badges
     ? <span className="dk-badge__icon dk-badge__icon--dot" aria-hidden key="dot"><span className="dk-badge__dot" /></span> : null;
-  const named = typeof label === "string" || typeof label === "number" ? " " + label : "";
+  const named = typeof label === 'string' || typeof label === 'number' ? ' ' + label : '';
   const remove = removable
-    ? <button type="button" className="dk-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, ".dk-badge", ".dk-badge__remove")} disabled={loading || undefined}
+    ? <button type="button" className="dk-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, '.dk-badge', '.dk-badge__remove')} disabled={loading || undefined}
         aria-label={(props.removeLabel || sds.labels.remove) + named}><Icon icon={icons.Close} /></button>
     : null;
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingText)
   const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><Loader label="" delay={0} /></span> : null;
-  const classes = cn("dk-badge", "dk-badge--" + variant, "dk-badge--tone-" + tone, isCount && "dk-badge--count", (icon || dot) && "dk-badge--lead", dot && props.ping && "dk-badge--ping", removable && "dk-badge--removable", interactive && "dk-badge--interactive", loading && "dk-badge--loading", props.className);
+  const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
   const content: React.ReactNode[] = [dot, icon, <span className="dk-badge__label" key="label">{label}</span>, remove, spin];
   if (interactive) {
     // Micro-interactions, as on Button: Enter shows the press like Space (your handlers run first)
@@ -172,19 +172,19 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>("Badge",
     rest.onBlur = both(rest.onBlur, releaseKey);
   }
   if (isLink) {
-    if (rest.target === "_blank" && rest.rel == null) rest.rel = "noopener noreferrer";
+    if (rest.target === '_blank' && rest.rel == null) rest.rel = 'noopener noreferrer';
     delete rest.type;
     if (rest.disabled) {
       // Links have no disabled state: as Button does, drop href so it can't be followed or focused, and say what it is
       // with role="link" and aria-disabled (L8E73).
       delete rest.href; delete rest.disabled;
-      rest.role = "link";
-      rest["aria-disabled"] = true;
+      rest.role = 'link';
+      rest['aria-disabled'] = true;
       rest.onClick = block;
-      return React.createElement("a", Object.assign(rest, { ref: setNode, className: classes }), ...content);
+      return React.createElement('a', Object.assign(rest, { ref: setNode, className: classes }), ...content);
     }
     return React.createElement(config.link, Object.assign(rest, { ref: setNode, className: classes }), ...content);
   }
-  if (interactive && rest.type === undefined) rest.type = "button";   // never submits a form by accident
-  return React.createElement(interactive ? "button" : "span", Object.assign(rest, { ref: setNode, className: classes }), ...content);
+  if (interactive && rest.type === undefined) rest.type = 'button';   // never submits a form by accident
+  return React.createElement(interactive ? 'button' : 'span', Object.assign(rest, { ref: setNode, className: classes }), ...content);
 });

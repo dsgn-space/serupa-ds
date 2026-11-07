@@ -1,13 +1,13 @@
-"use client";
-import * as React from "react";
-import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { component } from "../../internal/component";
+'use client';
+import * as React from 'react';
+import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { component } from '../../internal/component';
 
 export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** 'horizontal' (a wrapping row, default; Left and Right move focus) or 'vertical' (a column; Up and Down). */
   orientation?: 'horizontal' | 'vertical' | undefined;
   /** What the controls are for ("Text formatting"); needed when a page has more than one toolbar. */
-  "aria-label"?: string | undefined;
+  'aria-label'?: string | undefined;
   /** Buttons, IconButtons, ToggleButtons, ButtonGroups, Menus, Selects and Dividers, at any depth. */
   children?: React.ReactNode | undefined;
 }
@@ -17,7 +17,7 @@ export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
 const ITEMS = 'button, a[href], input:not([type="hidden"]), select, textarea, [role="button"], [role="checkbox"], [role="radio"], [role="switch"], [contenteditable="true"]';
 const POPUP = '[popover], [role="menu"], [role="listbox"], [role="dialog"], [role="tooltip"], [role="toolbar"], [hidden], [inert]';
 const itemsOf = (root: HTMLElement, all?: boolean): HTMLElement[] => Array.from(root.querySelectorAll<HTMLElement>(ITEMS)).filter(function (it) {
-  if (!all && it.matches(":disabled")) return false;
+  if (!all && it.matches(':disabled')) return false;
   const p = it.parentElement && it.parentElement.closest(POPUP);
   return !p || p === root || !root.contains(p);
 });
@@ -33,9 +33,9 @@ const typing = (e: HTMLElement) => e.isContentEditable || e instanceof HTMLTextA
    and Down in a column), Home and End go to the first and last, and they wrap. Tab leaves it, and coming back
    lands on the control used last. Disabled controls are skipped. In a text field the keys stay the field's. */
 /** A set of controls with one Tab stop, where the arrow keys move between them. */
-export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>("Toolbar", function Toolbar(props, ref) {
+export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('Toolbar', function Toolbar(props, ref) {
   const rest = omit(props, { orientation: 1, className: 1, children: 1 });
-  const vertical = props.orientation === "vertical";
+  const vertical = props.orientation === 'vertical';
   const root = React.useRef<HTMLDivElement | null>(null);
   const active = React.useRef<HTMLElement | null>(null);
   // One control has tabIndex 0 (the one used last, or else the first) and the rest -1, disabled ones too, so one
@@ -57,11 +57,11 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>("
   React.useEffect(function () {
     const r = root.current;
     if (!r) return;
-    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(sync);
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(sync);
     const watch = function () { if (ro) { ro.disconnect(); for (const it of itemsOf(r, true)) ro.observe(it); } };
     watch();
-    const mo = typeof MutationObserver === "undefined" ? null : new MutationObserver(function () { watch(); sync(); });
-    if (mo) mo.observe(r, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled", "hidden", "inert"] });
+    const mo = typeof MutationObserver === 'undefined' ? null : new MutationObserver(function () { watch(); sync(); });
+    if (mo) mo.observe(r, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'hidden', 'inert'] });
     return function () { if (mo) mo.disconnect(); if (ro) ro.disconnect(); };
   }, [sync]);
 
@@ -77,15 +77,15 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>("
     if (e.defaultPrevented || !r || !(t instanceof HTMLElement) || e.altKey || e.ctrlKey || e.metaKey) return;
     const items = itemsOf(r).filter(shown), i = items.indexOf(t);
     if (i < 0 || typing(t)) return;
-    const rtl = getComputedStyle(r).direction === "rtl";
+    const rtl = getComputedStyle(r).direction === 'rtl';
     let n: number;
     switch (e.key) {
-      case "ArrowRight": if (vertical) return; n = i + (rtl ? -1 : 1); break;
-      case "ArrowLeft": if (vertical) return; n = i + (rtl ? 1 : -1); break;
-      case "ArrowDown": if (!vertical) return; n = i + 1; break;
-      case "ArrowUp": if (!vertical) return; n = i - 1; break;
-      case "Home": n = 0; break;
-      case "End": n = items.length - 1; break;
+      case 'ArrowRight': if (vertical) return; n = i + (rtl ? -1 : 1); break;
+      case 'ArrowLeft': if (vertical) return; n = i + (rtl ? 1 : -1); break;
+      case 'ArrowDown': if (!vertical) return; n = i + 1; break;
+      case 'ArrowUp': if (!vertical) return; n = i - 1; break;
+      case 'Home': n = 0; break;
+      case 'End': n = items.length - 1; break;
       default: return;
     }
     e.preventDefault();
@@ -95,8 +95,8 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>("
     next.focus();
   };
   return (
-    <div {...rest} ref={function (n) { root.current = n; setRef(ref, n); }} role="toolbar" aria-orientation={vertical ? "vertical" : "horizontal"}
-      className={cn("dk-toolbar", vertical && "dk-toolbar--vertical", props.className)} data-component="toolbar" data-orientation={vertical ? "vertical" : "horizontal"}
+    <div {...rest} ref={function (n) { root.current = n; setRef(ref, n); }} role="toolbar" aria-orientation={vertical ? 'vertical' : 'horizontal'}
+      className={cn('dk-toolbar', vertical && 'dk-toolbar--vertical', props.className)} data-component="toolbar" data-orientation={vertical ? 'vertical' : 'horizontal'}
       onFocus={onFocus} onKeyDown={onKeyDown}>
       {props.children}
     </div>

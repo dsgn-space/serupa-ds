@@ -1,7 +1,7 @@
 // Text folded for matching what people type against labels: case, accents and width ignored, so "lodz" finds "Łódź",
 // "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo" and "トウキョウ" finds "ﾄｳｷｮｳ" (and "とうきょう"). NFKD splits accents off
 // and maps full- and half-width forms to the usual ones; a few letters don't decompose and get a table.
-const LETTERS: Record<string, string> = { "ł": "l", "đ": "d", "ð": "d", "ø": "o", "æ": "ae", "œ": "oe", "ß": "ss", "ħ": "h", "ı": "i", "þ": "th", "ŧ": "t", "ŋ": "n", "ĸ": "k", "ς": "σ" };
+const LETTERS: Record<string, string> = { 'ł': 'l', 'đ': 'd', 'ð': 'd', 'ø': 'o', 'æ': 'ae', 'œ': 'oe', 'ß': 'ss', 'ħ': 'h', 'ı': 'i', 'þ': 'th', 'ŧ': 't', 'ŋ': 'n', 'ĸ': 'k', 'ς': 'σ' };
 
 // The marks that are accents, dropped: the combining diacritics (Latin, Greek, Cyrillic, Vietnamese), Hebrew points
 // and Arabic harakat. Not every mark: in Devanagari, Bengali, Tamil, Thai and the like a mark is a vowel or a tone
@@ -19,6 +19,6 @@ const CYRILLIC = /[иИуУ]\u0306|[іІ]\u0308/g;
 /** Lowercased, without accents or width differences, with ł→l, ø→o, æ→ae, ß→ss, ς→σ and the like. Vowel signs and tone
     marks (Hindi, Thai…) and Japanese voicing marks are kept: they make a different word. */
 export function fold(s: string): string {
-  return s.normalize("NFKD").replace(CYRILLIC, (m) => m.normalize("NFC")).replace(ACCENTS, "").toLowerCase().replace(/[łđðøæœßħıþŧŋĸς]/g, (c) => LETTERS[c])
+  return s.normalize('NFKD').replace(CYRILLIC, (m) => m.normalize('NFC')).replace(ACCENTS, '').toLowerCase().replace(/[łđðøæœßħıþŧŋĸς]/g, (c) => LETTERS[c])
     .replace(/[\u30a1-\u30f6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
 }

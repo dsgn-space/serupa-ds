@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { component } from "../../internal/component";
-import { isComposing } from "../../internal/ime";
-import { typeahead, typing, type Typed } from "../../internal/typeahead";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { useServerStyles } from "../../internal/serverStyles";
-import { asIcon } from "../Icon/asIcon";
-import * as icons from "../../material/builtin";
+'use client';
+import * as React from 'react';
+import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { component } from '../../internal/component';
+import { isComposing } from '../../internal/ime';
+import { typeahead, typing, type Typed } from '../../internal/typeahead';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { useServerStyles } from '../../internal/serverStyles';
+import { asIcon } from '../Icon/asIcon';
+import * as icons from '../../material/builtin';
 
 export interface TreeViewItem {
   /** Identifies the item in value and expanded. Unique in the whole tree. */
@@ -25,7 +25,7 @@ export interface TreeViewItem {
   disabled?: boolean | undefined;
 }
 
-export interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "defaultValue" | "onChange"> {
+export interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'defaultValue' | 'onChange'> {
   /** The items at the top level, each with its own children. */
   items: TreeViewItem[];
   /** 'single' (default): one item is picked at a time. 'multiple': any number, toggled with Space or a click. 'none': items are only opened and closed. */
@@ -43,7 +43,7 @@ export interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElemen
   /** Called with the open items' ids when one opens or closes. */
   onExpandedChange?: ((expanded: string[]) => void) | undefined;
   /** What the tree holds ("Files"). Needed, unless aria-labelledby names it. */
-  "aria-label"?: string | undefined;
+  'aria-label'?: string | undefined;
 }
 
 interface Row { item: TreeViewItem; level: number; parent: string | null }
@@ -54,7 +54,7 @@ interface Store { open: Set<string>; value: Set<string>; tab: string | null; mod
 interface Api { focus: (id: string) => void; press: (item: TreeViewItem, e: React.MouseEvent) => void; toggle: (item: TreeViewItem) => void }
 const TreeContext = /* @__PURE__ */ React.createContext<{ store: Store; api: React.RefObject<Api> } | null>(null);
 
-const textOf = (it: TreeViewItem) => it.textValue ?? (typeof it.label === "string" || typeof it.label === "number" ? String(it.label) : "");
+const textOf = (it: TreeViewItem) => it.textValue ?? (typeof it.label === 'string' || typeof it.label === 'number' ? String(it.label) : '');
 const opens = (it: TreeViewItem) => it.children !== undefined;
 const within = (item: TreeViewItem, id: string): boolean => !!item.children && item.children.some((c) => c.id === id || within(c, id));
 
@@ -67,18 +67,18 @@ const within = (item: TreeViewItem, id: string): boolean => !!item.children && i
    Shift+Space or Shift+click picks a range, and Ctrl+A picks every item in view. Closed items' children aren't
    in the page. */
 /** Nested items that open and close, such as folders and files, with one item or many picked. */
-export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProps>("TreeView", function TreeView(props, ref) {
-  const nameRef = useNameCheck("TreeView", NAME_HOW.label);   // warns when it has no accessible name
+export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProps>('TreeView', function TreeView(props, ref) {
+  const nameRef = useNameCheck('TreeView', NAME_HOW.label);   // warns when it has no accessible name
   const rest = omit(props, { items: 1, selectionMode: 1, value: 1, defaultValue: 1, onValueChange: 1, expanded: 1, defaultExpanded: 1, onExpandedChange: 1, className: 1, onKeyDown: 1 });
-  const mode = props.selectionMode || "single";
-  const multi = mode === "multiple";
+  const mode = props.selectionMode || 'single';
+  const multi = mode === 'multiple';
   const [ownValue, setOwnValue] = React.useState<string[]>(props.defaultValue || []);
   const value = props.value !== undefined ? props.value : ownValue;
   const [ownOpen, setOwnOpen] = React.useState<string[]>(props.defaultExpanded || []);
   const open = props.expanded !== undefined ? props.expanded : ownOpen;
   const root = React.useRef<HTMLUListElement | null>(null);
   const styled = useServerStyles<HTMLUListElement>();   // each row's level, from server HTML under a strict CSP (GR11)
-  const typed = React.useRef<Typed>({ text: "", at: 0 });
+  const typed = React.useRef<Typed>({ text: '', at: 0 });
   const anchor = React.useRef<string | null>(null);   // where a Shift range starts
   const [focusId, setFocusId] = React.useState<string | null>(null);
   const moveFocus = React.useRef(false);
@@ -148,7 +148,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     if (was && focusId && within(item, focusId)) go(item.id);
   };
   const choose = (item: TreeViewItem, range = false) => {
-    if (item.disabled || mode === "none") return;
+    if (item.disabled || mode === 'none') return;
     const id = item.id;
     if (!multi) { if (value.length !== 1 || value[0] !== id) pick([id]); anchor.current = id; return; }
     const a = index(anchor.current);
@@ -166,38 +166,38 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   // Your onKeyDown runs first, so preventDefault() in it keeps the tree from acting on that key.
   const onKeyDown = function (e: React.KeyboardEvent<HTMLUListElement>) {
     if (props.onKeyDown) props.onKeyDown(e);
-    const t = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>("[role=treeitem]") : null;
+    const t = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>('[role=treeitem]') : null;
     if (e.defaultPrevented || !t || !root.current || e.altKey || isComposing(e)) return;
     const i = index(t.dataset.id || null);
     if (i < 0) return;
     const r = rows[i], item = r.item;
-    const rtl = getComputedStyle(root.current).direction === "rtl";
+    const rtl = getComputedStyle(root.current).direction === 'rtl';
     const isOpen = openSet.has(item.id);
     let to = -1;
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      to = Math.min(rows.length - 1, Math.max(0, i + (e.key === "ArrowDown" ? 1 : -1)));
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      to = Math.min(rows.length - 1, Math.max(0, i + (e.key === 'ArrowDown' ? 1 : -1)));
       if (multi && e.shiftKey && to !== i) choose(rows[to].item);
     }
-    else if (e.key === (rtl ? "ArrowLeft" : "ArrowRight")) {
+    else if (e.key === (rtl ? 'ArrowLeft' : 'ArrowRight')) {
       if (opens(item) && !isOpen) toggleOpen(item);
       else if (isOpen && item.children && item.children.length) to = i + 1;
     }
-    else if (e.key === (rtl ? "ArrowRight" : "ArrowLeft")) {
+    else if (e.key === (rtl ? 'ArrowRight' : 'ArrowLeft')) {
       if (isOpen && !item.disabled) toggleOpen(item);
       else if (r.parent != null) to = index(r.parent);
     }
-    else if (e.key === "Home") to = 0;
-    else if (e.key === "End") to = rows.length - 1;
+    else if (e.key === 'Home') to = 0;
+    else if (e.key === 'End') to = rows.length - 1;
     // Space while a word is being typed is part of it ("my files"), so it goes to typeahead below.
-    else if (e.key === "Enter" || (e.key === " " && !typing(typed.current))) {
-      if (mode === "none") toggleOpen(item); else choose(item, multi && e.shiftKey);
+    else if (e.key === 'Enter' || (e.key === ' ' && !typing(typed.current))) {
+      if (mode === 'none') toggleOpen(item); else choose(item, multi && e.shiftKey);
     }
-    else if (e.key === "*") {
+    else if (e.key === '*') {
       const shut = rows.filter((x) => x.parent === r.parent && opens(x.item) && !x.item.disabled && !openSet.has(x.item.id));
       if (shut.length) setOpen(open.concat(shut.map((x) => x.item.id)));
     }
     // Ctrl+A on a Russian, Greek or Arabic layout sends "ф", "α" or "ش", so a key that isn't Latin goes by its position.
-    else if (multi && (e.ctrlKey || e.metaKey) && (/^[\x20-\x7e]$/.test(e.key) ? e.key.toLowerCase() === "a" : e.code === "KeyA")) pick(rows.filter((x) => !x.item.disabled).map((x) => x.item.id));
+    else if (multi && (e.ctrlKey || e.metaKey) && (/^[\x20-\x7e]$/.test(e.key) ? e.key.toLowerCase() === 'a' : e.code === 'KeyA')) pick(rows.filter((x) => !x.item.disabled).map((x) => x.item.id));
     else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) to = typeahead(typed.current, e.key, rows.map((x) => textOf(x.item)), i);
     else return;
     e.preventDefault();
@@ -213,7 +213,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   const api = React.useRef<Api>({ focus: () => {}, press: () => {}, toggle: () => {} });
   api.current = {
     focus: (id) => { if (focusId !== id) setFocusId(id); },
-    press: (item, e) => { setFocusId(item.id); if (mode === "none") toggleOpen(item); else choose(item, multi && e.shiftKey); },
+    press: (item, e) => { setFocusId(item.id); if (mode === 'none') toggleOpen(item); else choose(item, multi && e.shiftKey); },
     toggle: (item) => { setFocusId(item.id); toggleOpen(item); },
   };
   const ctx = React.useMemo(() => ({ store: st, api: api }), [st]);
@@ -221,7 +221,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   return (
     <ul {...rest} ref={function (n) { root.current = n; nameRef(n); styled(n); setRef(ref, n); }} role="tree"
       aria-multiselectable={multi || undefined}
-      className={cn("dk-tree-view", props.className)} data-component="tree-view" onKeyDown={onKeyDown}
+      className={cn('dk-tree-view', props.className)} data-component="tree-view" onKeyDown={onKeyDown}
       onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}
       onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) focusedIn.current = false; if (rest.onBlur) rest.onBlur(e); }}>
       <TreeContext.Provider value={ctx}><Rows list={props.items} level={1} /></TreeContext.Provider>
@@ -240,19 +240,19 @@ const TreeRow = /* @__PURE__ */ React.memo(function TreeRow(props: { item: TreeV
   const { item, level } = props, id = item.id;
   const subscribe = React.useCallback((l: () => void) => { store.listeners.add(l); return () => { store.listeners.delete(l); }; }, [store]);
   // One string, so React compares a primitive: open, picked, Tab stop, mode.
-  const snap = () => (store.open.has(id) ? "o" : "-") + (store.value.has(id) ? "p" : "-") + (store.tab === id ? "t" : "-") + store.mode;
+  const snap = () => (store.open.has(id) ? 'o' : '-') + (store.value.has(id) ? 'p' : '-') + (store.tab === id ? 't' : '-') + store.mode;
   const key = React.useSyncExternalStore(subscribe, snap, snap);
-  const canOpen = opens(item), isOpen = canOpen && key[0] === "o", picked = key[1] === "p", mode = key.slice(3);
+  const canOpen = opens(item), isOpen = canOpen && key[0] === 'o', picked = key[1] === 'p', mode = key.slice(3);
   const icon = item.icon != null ? asIcon(item.icon) : null;
   return (
-    <li role="treeitem" data-id={id} tabIndex={key[2] === "t" ? 0 : -1}
+    <li role="treeitem" data-id={id} tabIndex={key[2] === 't' ? 0 : -1}
       aria-level={level} aria-posinset={props.pos} aria-setsize={props.size}
-      aria-expanded={canOpen ? isOpen : undefined} data-state={canOpen ? (isOpen ? "open" : "closed") : undefined}
-      aria-selected={mode === "none" ? undefined : mode === "multiple" ? picked : picked || undefined}
+      aria-expanded={canOpen ? isOpen : undefined} data-state={canOpen ? (isOpen ? 'open' : 'closed') : undefined}
+      aria-selected={mode === 'none' ? undefined : mode === 'multiple' ? picked : picked || undefined}
       aria-disabled={item.disabled || undefined}
-      className={cn("dk-tree-view__item", picked && "dk-tree-view__item--selected", item.disabled && "dk-tree-view__item--disabled")}
+      className={cn('dk-tree-view__item', picked && 'dk-tree-view__item--selected', item.disabled && 'dk-tree-view__item--disabled')}
       onFocus={(e) => { if (e.target === e.currentTarget) api.current.focus(id); }}>
-      <div className="dk-tree-view__row" style={{ "--dk-tree-level": level - 1 } as React.CSSProperties}
+      <div className="dk-tree-view__row" style={{ '--dk-tree-level': level - 1 } as React.CSSProperties}
         onClick={(e) => api.current.press(item, e)}>
         <span className="dk-tree-view__toggle" aria-hidden="true"
           onClick={canOpen ? (e) => { e.stopPropagation(); api.current.toggle(item); } : undefined}>

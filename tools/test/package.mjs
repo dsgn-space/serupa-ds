@@ -33,7 +33,7 @@ const exported = [...index.matchAll(/^export \{ ([^}]*) \};/gm), ...read('src/ge
 const typed = new Set([...index.matchAll(/(\w+): typeof \w+;/g), ...read('src/generated/globals.ts').matchAll(/(\w+): typeof \w+;/g)].map((m) => m[1]));
 const browserTs = read('src/browser.ts');
 // browser.ts puts the whole package on window.Serupa, so nothing can be left out of it by hand.
-const bundlesAll = /import \* as Serupa from "\.\/index";/.test(browserTs) && /Object\.assign\(window\.Serupa \|\| \{\}, Serupa\)/.test(browserTs);
+const bundlesAll = /import \* as Serupa from ["']\.\/index["'];/.test(browserTs) && /Object\.assign\(window\.Serupa \|\| \{\}, Serupa\)/.test(browserTs);
 const untyped = exported.filter((n) => !typed.has(n));
 t('every export is on window.Serupa (src/browser.ts) and in its type (src/index.ts)', !untyped.length && bundlesAll, `not typed: ${untyped.join(', ')}; ${bundlesAll ? '' : 'browser.ts must assign everything from ./index to window.Serupa'}`);
 t('react and react-dom are peer dependencies (one React in the app)', pkg.peerDependencies && pkg.peerDependencies.react && pkg.peerDependencies['react-dom'] && !(pkg.dependencies || {}).react);
@@ -113,7 +113,7 @@ if (D) {
   t('version matches package.json', D.version === pkg.version, D.version);
   // base.css and theme.js say __VERSION__ in src/, which the build replaces (tools/build/build.mjs).
   const unstamped = ['dist/base.css', 'dist/theme.js'].filter((f) => read(f).includes('__VERSION__') || !read(f).includes(`Serupa v${pkg.version} `));
-  t('dist/base.css and dist/theme.js carry package.json\'s version (stamped at build)', !unstamped.length && read('dist/theme.js').includes(`version = "${pkg.version}"`), unstamped.join(', '));
+  t('dist/base.css and dist/theme.js carry package.json\'s version (stamped at build)', !unstamped.length && [`version = "${pkg.version}"`, `version = '${pkg.version}'`].some((v) => read('dist/theme.js').includes(v)), unstamped.join(', '));
   // Server-rendered apps paste theme.js into an inline <script> to avoid a flash of the wrong theme: a closing script tag
   // anywhere in it (a comment included) ends that script early, and an HTML comment opener changes how the rest is read.
   const inlineBreakers = ['</script', '<!--'].filter((x) => read('dist/theme.js').toLowerCase().includes(x));
@@ -155,7 +155,7 @@ if (D) {
   // Blocks and patterns don't ship, but an app pastes them into its own files, so a Next.js App Router page needs the line too (GR164).
   const unmarked = ['components', 'blocks', 'patterns'].flatMap((dir) => fs.readdirSync(path.join(PROJECT, 'src', dir), { recursive: true }).map((f) => `${dir}/${String(f).split(path.sep).join('/')}`))
     .filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))
-    .filter((f) => { const src = read(`src/${f}`); return clientOnly.test(src) && !/^"use client";/.test(src); });
+    .filter((f) => { const src = read(`src/${f}`); return clientOnly.test(src) && !/^(["'])use client\1;/.test(src); });
   t('every component, block and pattern module that uses state, effects, context or event handlers starts with "use client"', !unmarked.length, unmarked.join(', '));
   t('buttonClass and configure are exported', D.buttonClass({ variant: 'outline' }) === 'dk-btn dk-btn--outline dk-btn--size-md' && typeof D.configure === 'function');
 }

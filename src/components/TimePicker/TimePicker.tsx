@@ -1,22 +1,22 @@
-"use client";
-import * as React from "react";
-import { pressFocuses } from "../../internal/affix";
-import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { formatTime, parseTime, timePattern, toHHmm, toMinutes, uses12h } from "../../internal/times";
-import { reject } from "../../internal/rejectInput";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { useExit } from "../../internal/useExit";
-import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import { useLocale, useOwnLang, useSettings } from "../../internal/provider";
-import { useFormReset } from "../../internal/useFormReset";
-import * as icons from "../../material/builtin";
-import { isComposing } from "../../internal/ime";
-import { en as TimePickerWords } from "./labels";
-import { en as DatePickerWords } from "../DatePicker/labels";
-import { windowBlur } from "../../internal/focus";
+'use client';
+import * as React from 'react';
+import { pressFocuses } from '../../internal/affix';
+import { cn, domId, isInvalid, oneOf, setRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { formatTime, parseTime, timePattern, toHHmm, toMinutes, uses12h } from '../../internal/times';
+import { reject } from '../../internal/rejectInput';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { useExit } from '../../internal/useExit';
+import { Icon } from '../Icon/Icon';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import { useFormReset } from '../../internal/useFormReset';
+import * as icons from '../../material/builtin';
+import { isComposing } from '../../internal/ime';
+import { en as TimePickerWords } from './labels';
+import { en as DatePickerWords } from '../DatePicker/labels';
+import { windowBlur } from '../../internal/focus';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, TimePickerWords, DatePickerWords);
 
@@ -29,7 +29,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   onValueChange?: ((value: string | null) => void) | undefined;
   /** Called when typed text is put back on blur or Enter: "unreadable" when it isn't a time, "unavailable" when it
       is one that can't be chosen (outside min..max). The field also says so to screen readers. */
-  onInvalidInput?: ((text: string, reason: "unreadable" | "unavailable") => void) | undefined;
+  onInvalidInput?: ((text: string, reason: 'unreadable' | 'unavailable') => void) | undefined;
   /** The earliest and latest times, as "HH:mm". */
   min?: string | undefined;
   /** The latest time, as "HH:mm". */
@@ -55,31 +55,31 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
    text that isn't a time, or one outside min..max, puts back the last good value. Values are "HH:mm", the form
    <input type="time"> uses; with name a hidden input sends it. */
 /** A time field: type a time or pick one from a list. Values are "HH:mm". */
-export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>("TimePicker", function TimePicker(props, ref) {
-  const nameRef = useNameCheck("TimePicker", NAME_HOW.field);   // warns when it has no accessible name
+export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>('TimePicker', function TimePicker(props, ref) {
+  const nameRef = useNameCheck('TimePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
   const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
-  const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
+  const size = oneOf(SIZES, props.size, 'md');
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const h12 = props.hour12 ?? uses12h(locale);
   const step = props.step && Math.round(props.step) >= 1 ? Math.round(props.step) : 30;
   const lo = toMinutes(min) ?? 0, hi = toMinutes(max) ?? 24 * 60 - 1;
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<number | null>(toMinutes(props.defaultValue));
   const value = controlled ? toMinutes(props.value) : own;
-  const fmt = (n: number | null) => (n == null ? "" : formatTime(n, locale, h12));
+  const fmt = (n: number | null) => (n == null ? '' : formatTime(n, locale, h12));
   const [text, setText] = React.useState(fmt(value));
   const shown = React.useRef(value);
-  const shownFmt = React.useRef(locale + "|" + h12);
-  if (value !== shown.current || shownFmt.current !== locale + "|" + h12) {   // a new value, or a new locale or hour12
-    shown.current = value; shownFmt.current = locale + "|" + h12;
+  const shownFmt = React.useRef(locale + '|' + h12);
+  if (value !== shown.current || shownFmt.current !== locale + '|' + h12) {   // a new value, or a new locale or hour12
+    shown.current = value; shownFmt.current = locale + '|' + h12;
     if (fmt(value) !== text) setText(fmt(value));
   }
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(0);
-  const id = domId("dk-tp", React.useId());
+  const id = domId('dk-tp', React.useId());
   const box = React.useRef<HTMLSpanElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
   useFormReset(field, () => {
@@ -105,18 +105,18 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     if (onValueChange) onValueChange(n == null ? null : toHHmm(n));
   };
   const read = () => {
-    if (text.trim() === "") return commit(null);
+    if (text.trim() === '') return commit(null);
     const n = parseTime(text, locale);
     if (n != null && n >= lo && n <= hi) return commit(n);
-    reject(text, n != null ? "unavailable" : "unreadable", onInvalidInput, sds.labels.inputNotAccepted);
+    reject(text, n != null ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted);
     commit(value);
   };
   const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text, locale); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
   // The list is at least as wide as the field.
-  useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + "px"; }, [open]);
+  useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + 'px'; }, [open]);
   // Closing: the times stay (inert) while the list fades out, as Menu's and DatePicker's do (GK1).
   const exit = useExit(open, list);
-  useAnchoredLayer(open, list, box, { placement: "bottom-start", offsetVar: "--dk-tp-offset", onOutside: () => setOpen(false), inside: box });
+  useAnchoredLayer(open, list, box, { placement: 'bottom-start', offsetVar: '--dk-tp-offset', onOutside: () => setOpen(false), inside: box });
   // On open, the active time sits near the top; after that, moving keeps it in view.
   const wasOpen = React.useRef(false);
   React.useEffect(() => {
@@ -140,28 +140,28 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     const last = times.length - 1, page = 4;
     const move = (i: number) => { e.preventDefault(); typed.current = false; setActive(i); };
     if (!open) {
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); show(); }
-      else if (e.key === "Enter") read();
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); show(); }
+      else if (e.key === 'Enter') read();
       return;
     }
     switch (e.key) {
-      case "ArrowDown": move(Math.min(last, active + 1)); break;
-      case "ArrowUp": move(Math.max(0, active - 1)); break;
-      case "PageDown": move(Math.min(last, active + page)); break;
-      case "PageUp": move(Math.max(0, active - page)); break;
-      case "Home": if (e.altKey || e.ctrlKey) move(0); break;
-      case "End": if (e.altKey || e.ctrlKey) move(last); break;
-      case "Enter": e.preventDefault(); if (typed.current) { read(); setOpen(false); } else pick(times[active]); break;   // what was typed wins over the highlight
-      case "Escape": e.preventDefault(); e.stopPropagation(); setOpen(false); break;
-      case "Tab": setOpen(false); break;
+      case 'ArrowDown': move(Math.min(last, active + 1)); break;
+      case 'ArrowUp': move(Math.max(0, active - 1)); break;
+      case 'PageDown': move(Math.min(last, active + page)); break;
+      case 'PageUp': move(Math.max(0, active - page)); break;
+      case 'Home': if (e.altKey || e.ctrlKey) move(0); break;
+      case 'End': if (e.altKey || e.ctrlKey) move(last); break;
+      case 'Enter': e.preventDefault(); if (typed.current) { read(); setOpen(false); } else pick(times[active]); break;   // what was typed wins over the highlight
+      case 'Escape': e.preventDefault(); e.stopPropagation(); setOpen(false); break;
+      case 'Tab': setOpen(false); break;
     }
   };
   const label = listLabel || sds.labels.chooseTime;
   return (
-    <span ref={box} className={cn("dk-input", "dk-input--size-" + size, "dk-time-picker", invalid && "dk-input--invalid", disabled && "dk-input--disabled", readOnly && "dk-input--readonly", className)} style={style} data-component="time-picker" data-state={open ? "open" : "closed"} data-size={size} onMouseDown={pressFocuses(field)}>
+    <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-time-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
       <input {...rest} ref={(n) => { field.current = n; nameRef(n); setRef(ref, n); }}
-        lang={rest.lang ?? lang} type="text" role="combobox" autoComplete={rest.autoComplete || "off"} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? "off"} autoCapitalize={rest.autoCapitalize ?? "off"} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
-        placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest["aria-describedby"], id + "-format")}
+        lang={rest.lang ?? lang} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
+        placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format')}
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
         onChange={(e) => {
           setText(e.target.value);
@@ -172,12 +172,12 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
         <Icon icon={icons.Schedule} />
       </button>
       {/* The format to type, read after the field's name (a placeholder is gone once something is typed). */}
-      <span id={id + "-format"} hidden>{sds.labels.formatHint(timePattern(locale, h12))}</span>
-      {name ? <input type="hidden" name={name} form={rest.form} value={value == null ? "" : toHHmm(value)} disabled={disabled} /> : null}
-      <ul ref={list} id={id} role="listbox" aria-label={label} {...{ popover: "manual" }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? "" : undefined} className="dk-time-picker__list">
+      <span id={id + '-format'} hidden>{sds.labels.formatHint(timePattern(locale, h12))}</span>
+      {name ? <input type="hidden" name={name} form={rest.form} value={value == null ? '' : toHHmm(value)} disabled={disabled} /> : null}
+      <ul ref={list} id={id} role="listbox" aria-label={label} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-time-picker__list">
         {open || exit.leaving ? times.map((n, i) => (
           <li key={n} id={`${id}-${i}`} lang={lang} role="option" aria-selected={n === value} data-value={toHHmm(n)}
-            className={cn("dk-time-picker__option", i === active && "dk-time-picker__option--active", n === value && "dk-time-picker__option--selected")}
+            className={cn('dk-time-picker__option', i === active && 'dk-time-picker__option--active', n === value && 'dk-time-picker__option--selected')}
             onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (i !== active) { typed.current = false; setActive(i); } }} onClick={() => pick(n)}>
             <span className="dk-time-picker__time">{fmt(n)}</span>
             {n === value ? <Icon icon={icons.Check} className="dk-time-picker__check" /> : null}

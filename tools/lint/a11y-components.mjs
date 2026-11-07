@@ -23,12 +23,12 @@ export function a11yComponents(root) {
     const file = path.join(dir, name, name + '.tsx');
     if (!fs.existsSync(file)) continue;
     // The first element of a union (HTMLButtonElement | HTMLAnchorElement for IconButton) is the one it renders by default.
-    for (const m of fs.readFileSync(file, 'utf8').matchAll(/component<(?:\w+ \| )*?HTML(\w+)Element\b[^(]*\(\s*"(\w+)"/g)) {
+    for (const m of fs.readFileSync(file, 'utf8').matchAll(/component<(?:\w+ \| )*?HTML(\w+)Element\b[^(]*\(\s*["'](\w+)["']/g)) {
       if (TAGS[m[1]]) map[m[2]] = TAGS[m[1]];
     }
     // A local alias: type IconButtonElement = HTMLButtonElement | HTMLAnchorElement.
     const src = fs.readFileSync(file, 'utf8');
-    for (const m of src.matchAll(/component<(\w+), \w+>\(\s*"(\w+)"/g)) {
+    for (const m of src.matchAll(/component<(\w+), \w+>\(\s*["'](\w+)["']/g)) {
       const alias = new RegExp(`type ${m[1]} = HTML(\\w+)Element`).exec(src);
       if (alias && TAGS[alias[1]]) map[m[2]] = TAGS[alias[1]];
     }
