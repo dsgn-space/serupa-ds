@@ -47,7 +47,7 @@ Drawn from the `Month` story.
 
 ## Accessibility
 
-- **Role and name:** the month is a `role="grid"` named by its title ("March 2025"). Each day is a cell named by its full date and how many events it has ("Tuesday, March 4, 2025, 1 event"). Today has `aria-current="date"`. Each event is a button named by its title, its time and "Repeats" ("Design review, 2:00 PM to 3:00 PM").
+- **Role and name:** the month is a `role="grid"` named by its title ("March 2025"). Each day is a cell that starts with its full date and how many events it has ("Tuesday, March 4, 2025, 1 event"), as hidden text so the name never hides the events. Today has `aria-current="date"`. Each event is a button named by what it shows (its time and title), then its day, its whole time and "Repeats" ("2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM").
 - **Keyboard:** one Tab stop on the days. Arrow keys move a day or a week, Home and End go to the week's start and end, and PageUp and PageDown go a month. Moving past the month shows the next one. Tab from a day goes to its events and "+N more", and Escape on an event goes back to its day. Previous, Next and Today are buttons before the grid.
 - **Changes are said:** the month's title is a polite live region, so Previous, Next, Today and paging say the new month.
 - **Reading order:** the agenda is an ordered list of days, each with a heading one level below the title, so a screen reader can jump by day.

@@ -161,13 +161,14 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     move(n);
   };
 
+  // Gregorian with Latin digits, as Calendar: the dates and times in the grid match the day numbers.
   const fmt = React.useMemo(() => ({
     title: new Intl.DateTimeFormat(locale, { calendar: "gregory", numberingSystem: "latn", month: "long", year: "numeric" }),
     full: new Intl.DateTimeFormat(locale, { calendar: "gregory", numberingSystem: "latn", weekday: "long", year: "numeric", month: "long", day: "numeric" }),
     short: new Intl.DateTimeFormat(locale, { weekday: "short" }),
     long: new Intl.DateTimeFormat(locale, { weekday: "long" }),
     day: new Intl.DateTimeFormat(locale, { calendar: "gregory", numberingSystem: "latn", weekday: "long", month: "long", day: "numeric" }),
-    time: new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }),
+    time: new Intl.DateTimeFormat(locale, { numberingSystem: "latn", hour: "numeric", minute: "2-digit" }),
   }), [locale]);
   const titleId = domId("dk-evc", React.useId()) + "-title";
   const level = props.headingLevel && props.headingLevel >= 2 && props.headingLevel <= 6 ? props.headingLevel : 2;
@@ -180,12 +181,15 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     if (sameDay(s.from, s.to)) return s.to.getTime() === s.from.getTime() ? a : sds.labels.eventTime(a, b);
     return sds.labels.eventTime(fmt.full.format(s.from) + " " + a, fmt.full.format(s.to) + " " + b);
   };
-  // The day it shows on is in the name, so a repeating or multi-day event isn't several buttons of one name.
-  const nameOf = (s: Shown, day: Date) => [s.e.title, fmt.day.format(day), timeOf(s), s.e.repeating ? sds.labels.repeats : ""].filter(Boolean).join(", ");
+  // What the button shows (its time, then its title), then the day it's on, so a repeating or multi-day event isn't
+  // several buttons of one name, then the whole time where only its start shows, and "Repeats". The name starts with
+  // the visible text, so voice control finds the button by what it says.
+  const shownTime = (s: Shown, detail: boolean) => (s.allDay && !detail ? "" : detail ? timeOf(s) : fmt.time.format(s.from));
+  const nameOf = (s: Shown, day: Date, detail: boolean) => [[shownTime(s, detail), s.e.title].filter(Boolean).join(" "), fmt.day.format(day), detail || timeOf(s) === shownTime(s, detail) ? "" : timeOf(s), s.e.repeating ? sds.labels.repeats : ""].filter(Boolean).join(", ");
   const eventButton = (s: Shown, day: Date, tab: 0 | -1, detail: boolean) => (
-    <button type="button" tabIndex={tab} aria-label={nameOf(s, day)} data-event-id={s.e.id} onClick={() => props.onEventClick?.(s.e)}
+    <button type="button" tabIndex={tab} aria-label={nameOf(s, day, detail)} data-event-id={s.e.id} onClick={() => props.onEventClick?.(s.e)}
       className={cn("dk-event-calendar__event", "dk-event-calendar__event--" + (s.e.tone || "primary"), s.allDay && "dk-event-calendar__event--all-day")}>
-      {s.allDay && !detail ? null : <span className="dk-event-calendar__time">{detail ? timeOf(s) : fmt.time.format(s.from)}</span>}
+      {s.allDay && !detail ? null : <><span className="dk-event-calendar__time">{shownTime(s, detail)}</span>{" "}</>}
       <span className="dk-event-calendar__title">{s.e.title}</span>
       {s.e.repeating ? <span className="dk-event-calendar__repeat" aria-hidden>↻</span> : null}
     </button>
@@ -225,10 +229,12 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
                   const mine = onDay(list, d), here = sameDay(d, focus), isToday = sameDay(d, today);
                   const fits = mine.length > max ? mine.slice(0, max - 1) : mine, more = mine.length - fits.length;
                   return (
-                    <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1} aria-label={fmt.full.format(d) + ", " + sds.labels.eventCount(mine.length)}
+                    <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1}
                       aria-current={isToday ? "date" : undefined} data-date={iso(d)}
                       className={cn("dk-event-calendar__day", !sameMonth(d, month) && "dk-event-calendar__day--outside", isToday && "dk-event-calendar__day--today")}
                       onFocus={(e) => { if (e.target === e.currentTarget && !here) setFocus(d); }}>
+                      {/* The day's name is its text, not an aria-label, so it never hides what the cell shows (its events). */}
+                      <span className="dk-visually-hidden">{fmt.full.format(d) + ", " + sds.labels.eventCount(mine.length)}</span>
                       <span className="dk-event-calendar__date" aria-hidden>{d.getDate()}</span>
                       {fits.length ? <ul className="dk-event-calendar__events" role="list">{fits.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
                       {more > 0 ? (
@@ -244,7 +250,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
           </tbody>
         </table>
       ) : busy.length ? (
-        <ol className="dk-event-calendar__agenda" aria-labelledby={titleId} lang={lang}>
+        <ol className="dk-event-calendar__agenda" role="list" aria-labelledby={titleId} lang={lang}>
           {busy.map(([d, l]) => (
             <li key={d.getTime()} className={cn("dk-event-calendar__agenda-day", sameDay(d, today) && "dk-event-calendar__agenda-day--today")} aria-current={sameDay(d, today) ? "date" : undefined}>
               <H2 className="dk-event-calendar__agenda-date">{fmt.full.format(d)}</H2>
