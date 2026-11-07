@@ -56,6 +56,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 
 - Opens at the newest message. A message that grows (a streamed reply, a picture that loads) keeps the conversation at the bottom when the reader was there.
 - The jump button scrolls to the newest message and moves focus to the conversation, so the next arrow key reads on from there.
+- When "Load earlier messages" had focus and the load is done, focus moves to the conversation, which stays where the reader was. The button may be gone (nothing more to load) or above the messages that came in.
 - Enter sends, Shift+Enter starts a new line, and Enter that confirms an input method's text (Japanese, Chinese, Korean) doesn't send. A field that's empty or only spaces sends nothing. Uncontrolled, the field empties after sending and keeps focus.
 - While `streaming`, Send becomes Stop; the person can keep typing their next message, and Enter waits until it's done.
 - The field grows from one line to `maxRows` (6), then scrolls.

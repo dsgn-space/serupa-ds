@@ -4,6 +4,7 @@ import { cn, omit, setRef } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { useLocale, useSettings } from "../../internal/provider";
 import { isComposing } from "../../internal/ime";
+import { activeIn } from "../../internal/root";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Icon } from "../Icon/Icon";
@@ -41,7 +42,7 @@ const toEnd = (el: HTMLElement) => { el.scrollTop = el.scrollHeight; };
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat", function Chat(props, ref) {
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { children: 1, hasOlder: 1, onLoadOlder: 1, loadingOlder: 1, className: 1 } as const);
+  const rest = omit(props, { children: 1, hasOlder: 1, onLoadOlder: 1, loadingOlder: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const);
   const scroller = React.useRef<HTMLDivElement | null>(null);
   const items = React.Children.toArray(props.children).filter(React.isValidElement);
   const keys = items.map((c) => String(c.key));
@@ -67,6 +68,19 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
     }
     was.current = { bottom: atBottom(el), first, last, height: el.scrollHeight, top: el.scrollTop, messages };
   }, [all, first, last, messages]);
+  // A load the reader asked for with "Load earlier messages": the first key when they pressed it.
+  const asked = React.useRef<string | null>(null);
+  const older = React.useRef<HTMLDivElement | null>(null);
+  // When that load is done (earlier messages came in, or there are none left): if focus was on the button, it goes to
+  // the conversation, which stays in view where the reader was. The button may be gone (no more to load), which would
+  // drop focus to the page, or scrolled out of view above the messages that came in.
+  React.useLayoutEffect(() => {
+    const el = scroller.current;
+    if (asked.current == null || !el || props.loadingOlder || (first === asked.current && props.hasOlder)) return;
+    asked.current = null;
+    const active = activeIn(el);
+    if (!active || active === el.ownerDocument.body || (older.current && older.current.contains(active))) el.focus({ preventScroll: true });
+  }, [first, props.hasOlder, props.loadingOlder]);
   // A message that grows (a streamed reply) or a picture that loads keeps the reader at the bottom if they were there.
   // every render: the messages it watches are the children of this render.
   React.useEffect(() => {
@@ -92,8 +106,8 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
       {/* A region that scrolls is focusable, so keyboard people can scroll it; role="log" reads new messages politely. */}
       <div ref={scroller} className="dk-chat__log" role="log" {...SCROLL_STOP} aria-label={props["aria-label"]} aria-labelledby={props["aria-labelledby"]} onScroll={onScroll}>
         {props.hasOlder ? (
-          <div className="dk-chat__older">
-            <Button variant="ghost" size="sm" loading={!!props.loadingOlder} onClick={() => { if (!props.loadingOlder && props.onLoadOlder) props.onLoadOlder(); }}>
+          <div className="dk-chat__older" ref={older}>
+            <Button variant="ghost" size="sm" loading={!!props.loadingOlder} onClick={() => { if (!props.loadingOlder && props.onLoadOlder) { asked.current = first; props.onLoadOlder(); } }}>
               {props.loadingOlder ? L.chatLoadingOlder : L.chatLoadOlder}
             </Button>
           </div>

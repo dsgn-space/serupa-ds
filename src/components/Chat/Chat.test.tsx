@@ -110,6 +110,26 @@ describe('Chat', () => {
     await expect.element(page.getByRole('button', { name: /Loading earlier messages/ })).toBeVisible();
     expect(calls).toBe(1);
   });
+  test('keyboard: when "Load earlier messages" brings the last of them, focus moves to the log, not the page; the outer <div> takes no name', async () => {
+    function Older() {
+      const [from, setFrom] = React.useState(20);
+      return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat id="c" aria-label="Support" style={{ flex: 'auto' }} hasOlder={from > 0} onLoadOlder={() => setFrom((f) => f - 10)}>{msgs(from, 30)}</Chat></div>;
+    }
+    await render(<Older />);
+    expect(document.getElementById('c')!.hasAttribute('aria-label')).toBe(false);
+    const button = page.getByRole('button', { name: 'Load earlier messages' });
+    // An earlier batch with more behind it: focus goes to the log, which is in view (the button is now above it).
+    (button.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => document.activeElement).toBe(log());
+    expect(find(log(), 'Message 10')).not.toBe(null);
+    // The last batch: the button goes away, and focus stays on the log.
+    (button.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => button.query()).toBe(null);
+    expect(document.activeElement).toBe(log());
+    expect(find(log(), 'Message 0')).not.toBe(null);
+  });
 });
 
 describe('ChatMessage', () => {
