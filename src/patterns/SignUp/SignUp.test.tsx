@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { SignUp, passwordRules, signUpProblems } from './SignUp';
 
 const active = () => document.activeElement as HTMLElement;
@@ -64,11 +64,13 @@ describe('Patterns/Sign-up', () => {
     expect(input('sign-up-code').getAttribute('autocomplete')).toBe('one-time-code');
 
     await screen.getByRole('button', { name: 'Verify email' }).click();
-    await expect.element(screen.getByText('Enter the 6-digit code from the email')).toBeVisible();
+    // In the form, not the page's live region, which may still hold the same words for a moment (GR204).
+    const form = page.elementLocator(screen.container);
+    await expect.element(form.getByText('Enter the 6-digit code from the email')).toBeVisible();
     await userEvent.click(input('sign-up-code'));
     await userEvent.keyboard('111111');
     await screen.getByRole('button', { name: 'Verify email' }).click();
-    await expect.element(screen.getByText(/That code isn’t right/)).toBeVisible();
+    await expect.element(form.getByText(/That code isn’t right/)).toBeVisible();
 
     await screen.getByRole('button', { name: 'Change email' }).click();
     await expect.poll(() => active().textContent).toBe('Create your account');
