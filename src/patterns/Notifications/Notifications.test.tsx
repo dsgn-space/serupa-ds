@@ -50,6 +50,25 @@ describe('Patterns/Notifications', () => {
     await expect.element(screen.getByText(/You’re all caught up/)).toBeVisible();
   });
 
+  test('All: marking one read keeps the row and puts focus on the next unread one, then an earlier one, then the heading', async () => {
+    const screen = await render(<Notifications />);
+    await screen.getByRole('button', { name: /^Mark as read: Your export is ready/ }).click();
+    expect(titles()).toHaveLength(5);
+    await expect.poll(() => active().id).toBe('read-n3');
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => active().id).toBe('read-n1');
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => active().tagName).toBe('H1');
+    expect(status()).toBe('All caught up');
+  });
+
+  test('Mark all as read puts focus on the heading, not the top of the page, as the button turns disabled', async () => {
+    const screen = await render(<Notifications />);
+    await screen.getByRole('button', { name: 'Mark all as read' }).click();
+    await expect.element(screen.getByRole('button', { name: 'Mark all as read' })).toBeDisabled();
+    await expect.poll(() => active().tagName).toBe('H1');
+  });
+
   test('the bell opens the drawer with the latest five, and Mark as read there counts on the page too', async () => {
     const screen = await render(<Notifications />);
     await screen.getByRole('button', { name: 'Notifications, 3 unread' }).click();
