@@ -157,6 +157,7 @@ export const labels: SerupaLabels = {
   markRead: "既読にする",
   markAllRead: "すべて既読にする",
   clearNotifications: "すべてクリア",
+  notificationsUnread: (count) => (count ? "通知、未読 " + n(count) + " 件" : "通知"),
   decrease: "減らす",
   increase: "増やす",
   pagination: "ページ送り",

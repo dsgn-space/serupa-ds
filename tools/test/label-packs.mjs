@@ -42,7 +42,7 @@ const SAMPLES = {
   stepOf: [[2, 4]], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1], [3]],
   commandsCount: [[0], [1], [5]],
   chartKind: [['line'], ['bar']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
-  chatNewMessages: [[1], [3]],
+  chatNewMessages: [[1], [3]], notificationsUnread: [[1], [2]],
   toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
 };
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.

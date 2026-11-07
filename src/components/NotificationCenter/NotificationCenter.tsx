@@ -45,9 +45,9 @@ export interface NotificationCenterProps extends DrawerProps {
   items: NotificationItem[];
   /** Called with an unread one's id when its "Mark as read" is chosen. Without it, there's no button. */
   onMarkRead?: ((id: string) => void) | undefined;
-  /** Called when "Mark all as read" in the footer is chosen. Without it, there's no button. */
+  /** Called when "Mark all as read" in the footer is chosen; the button shows while one is unread. Without it, there's no button. */
   onMarkAllRead?: (() => void) | undefined;
-  /** Called when "Clear all" in the footer is chosen. Without it, there's no button. */
+  /** Called when "Clear all" in the footer is chosen; the button shows while the list has any. Without it, there's no button. */
   onClear?: (() => void) | undefined;
   /** What shows with no notifications. Default: "No notifications yet" (labels.noNotifications). */
   empty?: React.ReactNode | undefined;
@@ -100,9 +100,14 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
   const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, empty: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
     side: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1 } as const);
   const { items, onMarkRead, onMarkAllRead, onClear } = props;
-  const footer = onMarkAllRead || onClear ? <>
-    {onMarkAllRead ? <Button variant="ghost" size="sm" onClick={onMarkAllRead}>{labels.markAllRead}</Button> : null}
-    {onClear ? <Button variant="ghost" size="sm" onClick={onClear}>{labels.clearNotifications}</Button> : null}
+  // Each footer button only while it has something to do: "Mark all as read" while one is unread, "Clear all" while
+  // the list has any (GR176). The one chosen may go away with it, so focus moves on (see below) instead of dropping.
+  const markAll = !!onMarkAllRead && items.some((n) => !n.read), clear = !!onClear && items.length > 0;
+  const clearButton = React.useRef<HTMLButtonElement | null>(null);
+  const fromFooter = React.useRef(false);
+  const footer = markAll || clear ? <>
+    {markAll ? <Button variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onMarkAllRead?.(); }}>{labels.markAllRead}</Button> : null}
+    {clear ? <Button ref={clearButton} variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onClear?.(); }}>{labels.clearNotifications}</Button> : null}
   </> : null;
   // The row focus is in, if any. When the app takes that row away (an inbox that hides read ones, so "Mark as read"
   // removes the row it just focused), focus goes to the row now in its place, else the last, else the empty line,
@@ -112,6 +117,12 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
   const at = React.useRef(-1);
   const rowOf = (t: EventTarget | null) => { const l = list.current, li = t instanceof Element ? t.closest("li") : null; return l && li && li.parentElement === l ? Array.prototype.indexOf.call(l.children, li) : -1; };
   useIsoLayoutEffect(() => {
+    if (fromFooter.current) {
+      fromFooter.current = false;
+      const active = document.activeElement;
+      if (!active || active === document.body || !active.isConnected) (clearButton.current || list.current?.firstElementChild as HTMLElement | null || none.current)?.focus();
+      return;
+    }
     if (at.current < 0) return;
     const active = document.activeElement, l = list.current;
     if (active && active !== document.body && active.isConnected) { at.current = rowOf(active); return; }
@@ -126,7 +137,7 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
       title={props.title != null ? props.title : labels.notificationCenter} footer={footer}>
       {items.length ? (
         <ul role="list" className="dk-notification-center__list" ref={list}
-          onFocus={(e) => { at.current = rowOf(e.target); }} onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) at.current = -1; }}>
+          onFocus={(e) => { at.current = rowOf(e.target); fromFooter.current = false; }} onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) at.current = -1; }}>
           {items.map((n, i) => {
             const tone = oneOf(TONES, n.tone, "neutral"), icon = ICONS[tone], titleId = base + "-" + i;
             return (

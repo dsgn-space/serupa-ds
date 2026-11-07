@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NotificationCenter, useToastHistory, type NotificationCenterProps, type NotificationItem } from './NotificationCenter';
 import { Button } from '../Button/Button';
 import { Badge } from '../Badge/Badge';
+import { useSerupa } from '../../internal/provider';
 import { toast, Toaster } from '../Toast/Toast';
 
 const ago = (minutes: number) => Date.now() - minutes * 60000;
@@ -24,7 +25,7 @@ const meta = {
     const [items, setItems] = React.useState(args.items);
     const unread = items.filter((n) => !n.read).length;
     return <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Notifications {unread ? <Badge count={unread} /> : null}</Button>
+      <OpenButton variant="outline" count={unread} onClick={() => setOpen(true)} />
       <NotificationCenter {...args} items={items} open={open} onOpenChange={setOpen}
         onMarkRead={(id) => setItems((l) => l.map((n) => (n.id === id ? { ...n, read: true } : n)))}
         onMarkAllRead={() => setItems((l) => l.map((n) => ({ ...n, read: true })))}
@@ -32,6 +33,12 @@ const meta = {
     </>;
   },
 } satisfies Meta<typeof NotificationCenter>;
+// The button that opens it: the count in words in its name ("Notifications, 2 unread", translated), the Badge hidden
+// so it isn't read twice (GR176).
+function OpenButton({ count, ...props }: { count: number; variant?: "outline"; onClick: () => void }) {
+  const { labels } = useSerupa();
+  return <Button {...props} aria-label={labels.notificationsUnread(count)}>{labels.notificationCenter} {count ? <Badge count={count} aria-hidden="true" /> : null}</Button>;
+}
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -46,7 +53,7 @@ export const ToastHistory: Story = {
       <Toaster />
       <Button variant="outline" onClick={() => toast({ title: 'Saved', tone: 'success' })}>Show a toast</Button>{' '}
       <Button variant="outline" onClick={() => toast({ title: "Couldn't sync", description: 'Check your connection.', tone: 'danger' })}>Show an error</Button>{' '}
-      <Button onClick={() => setOpen(true)}>Notifications {history.unread ? <Badge count={history.unread} /> : null}</Button>
+      <OpenButton count={history.unread} onClick={() => setOpen(true)} />
       <NotificationCenter {...args} items={history.items} open={open} onOpenChange={setOpen}
         onMarkRead={history.markRead} onMarkAllRead={() => history.markRead()} onClear={history.clear} />
     </>;

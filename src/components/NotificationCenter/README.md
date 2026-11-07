@@ -3,15 +3,17 @@
 A drawer of past notifications with read states: newest first, unread ones with a dot and a bolder title, and buttons to mark them read or clear the list. `useToastHistory` keeps the toasts already shown for it, so a message missed while it was up can be found again.
 
 ```tsx
-import { Badge, Button, NotificationCenter, Toaster, useToastHistory } from "serupa-ds";
+import { Badge, Button, NotificationCenter, Toaster, useSerupa, useToastHistory } from "serupa-ds";
 
 function Layout() {
   const [open, setOpen] = React.useState(false);
   const history = useToastHistory();
+  const { labels } = useSerupa();
   return <>
     <Toaster />
-    <Button variant="ghost" onClick={() => setOpen(true)}>
-      Notifications {history.unread ? <Badge count={history.unread} /> : null}
+    {/* The count in words in the name ("Notifications, 2 unread"), so the Badge is hidden and isn't read as a bare "2". */}
+    <Button variant="ghost" aria-label={labels.notificationsUnread(history.unread)} onClick={() => setOpen(true)}>
+      {labels.notificationCenter} {history.unread ? <Badge count={history.unread} aria-hidden="true" /> : null}
     </Button>
     <NotificationCenter items={history.items} open={open} onOpenChange={setOpen}
       onMarkRead={history.markRead} onMarkAllRead={() => history.markRead()} onClear={history.clear} />
@@ -45,7 +47,7 @@ Drawn from the `Open` story.
 
 - Call `useToastHistory()` once, in the layout that renders the `<Toaster>`, and pass its `items` to the NotificationCenter. It keeps up to `limit` (50) toasts shown while it's mounted.
 - Or pass your own `items` (from a server, say): `{ id, title, description?, tone?, time?, read? }`, newest first. Keep `read` in your state and set it in `onMarkRead` and `onMarkAllRead`.
-- Show the unread count on the button that opens it, with a [Badge](../Badge/README.md) `count`, and name the button so the count is heard too ("Notifications, 3 unread").
+- Show the unread count on the button that opens it, with a [Badge](../Badge/README.md) `count`, and name the button so the count is heard too ("Notifications, 3 unread"): `labels.notificationsUnread(count)` from `useSerupa()` writes it in the page's language. Hide the Badge (`aria-hidden="true"`) so the number isn't read twice.
 - Give `onMarkRead`, `onMarkAllRead` and `onClear` for the buttons you want; without a handler, its button isn't shown.
 
 ## Behavior
@@ -90,8 +92,8 @@ Drawn from the `Open` story.
 | `items` | `{ id, title, description?, tone?, time?, read? }[]` | | The notifications, newest first. |
 | `title` | ReactNode | `"Notifications"` | The drawer's title. |
 | `onMarkRead` | `(id) => void` | | Shows "Mark as read" on unread ones. |
-| `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer. |
-| `onClear` | `() => void` | | Shows "Clear all" in the footer. |
+| `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer while one is unread. |
+| `onClear` | `() => void` | | Shows "Clear all" in the footer while the list has any. When the button chosen goes away, focus moves to the other one or to the empty line. |
 | `empty` | ReactNode | `"No notifications yet"` | What shows with none. |
 | `description`, `footer`, `unsaved` | never | | Not taken: the list is the content, the footer holds its buttons, and there is nothing to edit. |
 | `open` | boolean | | Controlled: whether it's open. |

@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
-import { idLabels } from '../../internal/labels';
+import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { toast } from '../Toast/Toast';
 import { NotificationCenter, useToastHistory, type NotificationItem, type ToastHistory } from './NotificationCenter';
 
@@ -48,9 +48,28 @@ describe('NotificationCenter', () => {
     expect(log).toEqual(['read a']);
     await expect.poll(() => read()[0]).toEqual(['Payment failed / Card declined.', []]);
     expect(document.activeElement).toBe(rows()[0]);
-    await userEvent.click(button('Mark all as read'));
+    // Nothing unread is left, so "Mark all as read" has nothing to do and is gone (GR176).
+    expect(button('Mark all as read')).toBeUndefined();
     await userEvent.click(button('Clear all'));
-    expect(log).toEqual(['read a', 'all', 'clear']);
+    expect(log).toEqual(['read a', 'clear']);
+  });
+
+  test('GR176: each footer button shows only while it has something to do, and focus moves on when the chosen one goes: "Mark all as read" to "Clear all", "Clear all" to the empty line', async () => {
+    function Inbox() {
+      const [items, setItems] = React.useState(list);
+      return <NotificationCenter defaultOpen items={items} onMarkAllRead={() => setItems((l) => l.map((n) => ({ ...n, read: true })))} onClear={() => setItems([])} />;
+    }
+    await render(<Inbox />);
+    await expect.poll(() => drawer() !== null).toBe(true);
+    button('Mark all as read').focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => button('Mark all as read')).toBeUndefined();
+    expect(document.activeElement).toBe(button('Clear all'));
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => rows().length).toBe(0);
+    expect(button('Clear all')).toBeUndefined();
+    expect(drawer()!.contains(document.activeElement)).toBe(true);
+    expect(document.activeElement!.textContent).toBe(DEFAULT_LABELS.noNotifications);
   });
 
   test('an inbox that hides read ones: "Mark as read" takes its row away, and focus goes to the row in its place, then the last, then the empty line, not to the page', async () => {
@@ -163,5 +182,15 @@ describe('useToastHistory', () => {
     await expect.poll(() => history.unread).toBe(0);
     history.clear();
     await expect.poll(() => history.items).toEqual([]);
+  });
+
+  test('GR176: the opening button\'s name has the count in words, in English, Indonesian and every pack', async () => {
+    expect([0, 1, 1200].map((c) => DEFAULT_LABELS.notificationsUnread(c))).toEqual(['Notifications', 'Notifications, 1 unread', 'Notifications, 1,200 unread']);
+    expect([0, 3].map((c) => idLabels.notificationsUnread(c))).toEqual(['Notifikasi', 'Notifikasi, 3 belum dibaca']);
+    const packs = import.meta.glob<{ labels: typeof DEFAULT_LABELS }>('../../labels/*.ts', { eager: true });
+    for (const [f, m] of Object.entries(packs)) {
+      expect(m.labels.notificationsUnread(0), f).toBe(m.labels.notificationCenter);
+      expect(m.labels.notificationsUnread(7), f).toMatch(/7/);
+    }
   });
 });
