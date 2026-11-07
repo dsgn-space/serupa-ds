@@ -6,7 +6,7 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-sidebar {
-  box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0;
+  box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0; max-inline-size: var(--sizing-full);
   background: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
   transition: clip-path var(--motion-change-md) var(--ease-move);
 }

@@ -72,6 +72,13 @@ describe('Sidebar', () => {
       .toEqual([true, true, true, '#router/r', 'page', 'BUTTON']);
   });
 
+  test('in a container narrower than its width (320 px at 125% text), it fits the container instead of overflowing it', async () => {
+    await render(<div id="narrow" style={{ width: 200, height: 300, display: 'flex' }}><Sidebar id="sbn" aria-label="Main"><I href="#a" label="Inbox" /></Sidebar></div>);
+    const nav = document.getElementById('sbn')!;
+    expect(nav.getBoundingClientRect().width).toBeLessThanOrEqual(200);
+    expect(document.getElementById('narrow')!.scrollWidth).toBeLessThanOrEqual(200);
+  });
+
   test('a <nav aria-label="Main">, 256px wide, the parent\'s height, a 1px inner edge; refs and props reach it', async () => {
     const sref = React.createRef<HTMLElement>(), iref = React.createRef<HTMLAnchorElement>();
     await render(<App sref={sref} iref={iref} />);
