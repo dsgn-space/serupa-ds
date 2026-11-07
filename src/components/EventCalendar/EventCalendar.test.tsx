@@ -106,7 +106,7 @@ describe('EventCalendar', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       expect(contrast(css(el('c')).color, bg()), th).toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(document.querySelector('th')!).color, bg()), th + ' weekday').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(document.querySelector('th')).color, bg()), th + ' weekday').toBeGreaterThanOrEqual(4.5);
       for (const b of document.querySelectorAll<HTMLElement>('button[data-event-id]')) expect(contrast(css(b).color, css(b).backgroundColor), th + ' ' + b.className).toBeGreaterThanOrEqual(4.5);
     }
   });
