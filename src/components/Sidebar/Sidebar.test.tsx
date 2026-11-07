@@ -242,15 +242,19 @@ describe('Sidebar', () => {
         React.act(() => setCollapsed(to));
         const widths = new Set<number>(), props = new Set<string>();
         const t0 = performance.now();
+        let frames = 0;
         while (n.dataset.slide !== undefined && performance.now() - t0 < 1000) {
           widths.add(Math.round(page.getBoundingClientRect().left));
           for (const a of n.getAnimations({ subtree: true })) if (a instanceof CSSTransition && (a.effect as KeyframeEffect).target === n) props.add(a.transitionProperty);
+          frames++;
           await new Promise((r) => requestAnimationFrame(r));
         }
         // While it slides the page sits still: one position (expanding, the new one; collapsing, the old one).
         expect([widths.size, [...props].sort(), Math.round(rect(n).width), n.dataset.slide]).toEqual([1, ['clip-path', 'translate'], w, undefined]);
-        // The class and clip changes at the start and end each lay out once; a width transition laid out on every frame.
-        if (session) expect((await layouts()) - before).toBeLessThanOrEqual(6);
+        // The class and clip changes at the start and end each lay out once; a width transition laid out on every frame
+        // (at least frames + 2). Idle this is 3 to 6 over about 16 frames; on a loaded machine 7 or 8, from style
+        // changes that land in separate frames, so the limit is 10 and holds only when there were frames enough to tell.
+        if (session && frames >= 12) expect((await layouts()) - before, `${frames} frames`).toBeLessThanOrEqual(10);
       }
       React.act(() => setCollapsed(true));
       await new Promise((r) => setTimeout(r, 60));

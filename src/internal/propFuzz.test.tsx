@@ -147,10 +147,18 @@ const everyone = Object.entries(files)
   .sort(([a], [b]) => a.localeCompare(b));
 const list = everyone.filter(([name]) => only === null || only.split(',').includes(name));
 
+// Only the ones with an option or boolean prop to vary; a run that covers none of those (--since on, say, a change
+// to TimeZonePicker alone) gets one test saying so instead, since Vitest fails a suite with no test in it.
+const fuzzed = list.flatMap(([name, mod]) => {
+  const from = base(mod), s = shape(name);
+  return from && (s.options.size || s.booleans.size) ? [{ name, from, s }] : [];
+});
+
 describe(`random prop combinations draw without a throw, a console.error or an axe violation (seed ${SEED})`, () => {
-  for (const [name, mod] of list) {
-    const from = base(mod), s = shape(name);
-    if (!from || (!s.options.size && !s.booleans.size)) continue;
+  if (!fuzzed.length) test(`nothing to vary: ${list.map(([name]) => name).join(', ') || 'no component'} has no option or boolean prop`, () => {
+    expect(list.map(([name, mod]) => [name, !!base(mod), shape(name).options.size + shape(name).booleans.size]).filter(([, b, n]) => b && n)).toEqual([]);
+  });
+  for (const { name, from, s } of fuzzed) {
     test(`${name}: ${COMBOS} combinations`, async () => {
       // One generator per component, so adding a component doesn't change another's combinations.
       const r = random(SEED + [...name].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 0));
