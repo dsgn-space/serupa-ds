@@ -1,9 +1,11 @@
 // Gets a fresh machine (a cloud session, a new laptop) ready for `npm run check`, with whatever Node is already there:
 //   node tools/setup.mjs            the Node major devEngines asks for, then npm ci, then Playwright's Chromium
 //   node tools/setup.mjs --no-ci    leave node_modules as it is
+//   node tools/setup.mjs --no-browsers   no Chromium, for jobs that never start one (build, types and lint)
 // Then put the Node it names first on PATH (it prints the export line) and run the checks.
 // - Node: when the one running this is older than devEngines in package.json, the newest release of that major from
-//   nodejs.org goes to ~/.local/node-v<version>-<platform>-<arch>.
+//   nodejs.org goes to ~/.local/node-v<version>-<platform>-<arch>, after its SHA-256 matches the release's
+//   SHASUMS256.txt. (Chrome for Testing publishes no checksums; its URL is the one browsers.json pins.)
 // - Chromium: the revision node_modules/playwright-core/browsers.json pins, when it isn't in PLAYWRIGHT_BROWSERS_PATH
 //   (or ~/.cache/ms-playwright), from Chrome for Testing on storage.googleapis.com, so it works where Playwright's own
 //   download host is blocked. Laid out as `npx playwright install chromium` would, so Playwright finds it.
@@ -14,6 +16,7 @@
 //   to ~/.local/share/serupa-ds/fontconfig-disabled/; otherwise it prints the command.
 // Linux and macOS, x64 and arm64. Apart from that rule, it never writes outside ~/.local and the browsers folder.
 import { execFileSync, spawnSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -49,6 +52,11 @@ if (Number(process.versions.node.split('.')[0]) < want) {
     fs.mkdirSync(path.dirname(dir), { recursive: true });
     const tar = path.join(tmp, `${name}.tar.gz`);
     await download(`https://nodejs.org/dist/${version}/${name}.tar.gz`, tar);
+    const sums = await (await fetch(`https://nodejs.org/dist/${version}/SHASUMS256.txt`)).text();
+    const expected = new RegExp(`^([0-9a-f]{64})\\s+${name}\\.tar\\.gz$`, 'm').exec(sums)?.[1];
+    const got = crypto.createHash('sha256').update(fs.readFileSync(tar)).digest('hex');
+    if (!expected || got !== expected) { console.error(`${name}.tar.gz: SHA-256 ${got} doesn't match SHASUMS256.txt (${expected || 'not listed'}); not unpacking it.`); process.exit(1); }
+    console.log(`${name}.tar.gz: SHA-256 matches SHASUMS256.txt`);
     sh('tar', ['xzf', tar, '-C', path.dirname(dir)]);
   } else console.log(`Node ${version} is already in ${dir}`);
   nodeBin = path.join(dir, 'bin');
@@ -59,7 +67,9 @@ const env = { ...process.env, PATH: `${nodeBin}${path.delimiter}${process.env.PA
 if (!process.argv.includes('--no-ci')) sh(path.join(nodeBin, 'npm'), ['ci', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: P, env });
 
 // 3. Chromium, the revision this Playwright pins
-const browsers = JSON.parse(fs.readFileSync(path.join(P, 'node_modules/playwright-core/browsers.json'), 'utf8')).browsers;
+const skipBrowsers = process.argv.includes('--no-browsers');
+const browsers = skipBrowsers ? [] : JSON.parse(fs.readFileSync(path.join(P, 'node_modules/playwright-core/browsers.json'), 'utf8')).browsers;
+if (skipBrowsers) console.log('Chromium: skipped (--no-browsers)');
 const root = process.env.PLAYWRIGHT_BROWSERS_PATH || (plat === 'darwin' ? path.join(os.homedir(), 'Library/Caches/ms-playwright') : path.join(os.homedir(), '.cache/ms-playwright'));
 const cft = { linux: 'linux64', darwin: arch === 'arm64' ? 'mac-arm64' : 'mac-x64' }[plat];
 for (const [name, dirName, zip] of [['chromium', 'chromium', 'chrome'], ['chromium-headless-shell', 'chromium_headless_shell', 'chrome-headless-shell']]) {

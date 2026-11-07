@@ -39,6 +39,7 @@ node tools/test/run.mjs --since main      # only the components changed since ma
 node tools/ci.mjs --since main            # every job CI requires on a pull request, here, before you push (below)
 node tools/tag-release.mjs                # released versions with no tag yet (--make --push tags them, prebuilt, as the release did)
 node tools/setup.mjs                      # a fresh machine: the Node devEngines asks for, npm ci, Playwright's Chromium
+node tools/setup.mjs --no-browsers        # the same without Chromium, for jobs that never start a browser
 npm run check -- --clean --since origin/main --report local-checks.md  # the same from a clean install, with a report for the merge request
 npm run test:unit                         # only the component tests (Vitest), straight from src/, in a few seconds
 npm run test:watch                        # the same, re-running as you edit
