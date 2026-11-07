@@ -37,8 +37,9 @@ Drawn from the `Statuses` story.
 3. **Message** (`.dk-chat-message`): avatar, then author and time, the bubble, files and status.
 4. **Bubble** (`.dk-chat-message__bubble`): what the message says; own messages are tinted and sit at the end.
 5. **Status** (`.dk-chat-message__status`): "Sending…", or "Not sent" with Retry.
-6. **Jump button** (`.dk-chat__jump`): "3 new messages", while the reader is further up.
-7. **Composer** (`.dk-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
+6. **Composer** (`.dk-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
+
+While the reader is further up and new messages arrive, a "3 new messages" button (`.dk-chat__jump`) sits at the bottom of the log; it scrolls down and focuses the log.
 
 ## Usage
 
@@ -68,6 +69,15 @@ Drawn from the `Statuses` story.
 - **Send:** an icon button named "Send" (and "Stop"); with nothing to send it's `aria-disabled` rather than removed from the Tab order.
 - **Contrast:** message text reads 4.5:1 on both bubbles, and times, dividers and "Not sent" 4.5:1 on the page, in all six themes (`Chat.test.tsx`).
 - **What's still yours:** announcing a failure out loud if it matters right then (the log reads only additions), and moving focus after a send fails.
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | To the log, then through its buttons and links, then the composer |
+| ↑ ↓, Page Up, Page Down, Home, End | Scroll the log while it has focus |
+| Enter (in the composer) | Sends the message |
+| Shift+Enter | A new line in the message |
 
 ## Props
 
