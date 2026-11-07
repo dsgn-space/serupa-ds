@@ -9,6 +9,10 @@
 //   render     `vite build`, then the page in Chromium: something rendered, and no page error or console error
 //   axe        no WCAG 2.2 A or AA violation from axe-core, in each of the six themes
 //   tab        Tab from the top of the page reaches every visible control
+//   task       the agent did the task: src/App.tsx is no longer the starter's, and it imports at least half of the
+//              components the task expects (tasks.json, "A|B" for either) from serupa-ds
+// The starter app already passes the other five, so a run whose agent failed (not signed in, timed out, no JSON)
+// fails every check, with the error as the reason, rather than scoring the untouched starter.
 // The code-reading grader (run.mjs, grade.mjs) stays the fast mode: these runs take minutes each.
 // Results go to tools/skill-eval/results/<date>-agentic/{with,without}/<task>.<run>/ (the app's src/ and grade.json)
 // and the table to results/<date>-agentic.md.
@@ -27,7 +31,7 @@ import { TASKS } from './grade.mjs';
 
 const HERE = import.meta.dirname;
 const ROOT = path.resolve(HERE, '../..');
-export const CHECKS = ['typecheck', 'lint', 'render', 'axe', 'tab'];
+export const CHECKS = ['typecheck', 'lint', 'render', 'axe', 'tab', 'task'];
 const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
 const AXE = fs.readFileSync(path.join(ROOT, 'node_modules', 'axe-core', 'axe.min.js'), 'utf8');
 const npm = (args, cwd) => spawnSync('npm', args, { cwd, encoding: 'utf8', timeout: 300_000 });
@@ -50,6 +54,19 @@ export function makeApp(dir, unpacked, withSkill) {
   // The repository's tools (tsc, eslint, stylelint, vite), as npm run finds them.
   const bins = path.join(ROOT, 'node_modules', '.bin');
   for (const bin of fs.readdirSync(bins)) fs.symlinkSync(fs.realpathSync(path.join(bins, bin)), path.join(modules, '.bin', bin));
+}
+
+/** Whether the app in dir (or a results folder with its src/) did the task: { ok, why }. */
+export function didTask(dir, task) {
+  const src = path.join(dir, 'src');
+  const code = fs.existsSync(src) ? fs.readdirSync(src, { recursive: true }).filter((f) => /\.tsx?$/.test(String(f))).map((f) => fs.readFileSync(path.join(src, String(f)), 'utf8')) : [];
+  const starter = files({ name: 'eval-app', serupa: 'file:serupa-ds.tgz', brand: 'blue' })['src/App.tsx'];
+  const app = fs.existsSync(path.join(src, 'App.tsx')) ? fs.readFileSync(path.join(src, 'App.tsx'), 'utf8') : '';
+  if (app.trim() === String(starter).trim()) return { ok: false, why: 'src/App.tsx is still the starter' };
+  const used = new Set(code.flatMap((c) => [...c.matchAll(/import\s*\{([^}]*)\}\s*from\s*["']serupa-ds["']/g)].flatMap((m) => m[1].split(',').map((n) => n.trim().split(/\s+as\s+/)[0]).filter(Boolean))));
+  const expect = task?.expect ?? [];
+  const missing = expect.filter((n) => !n.split('|').some((alt) => used.has(alt)));   // "Dialog|AlertDialog": either one
+  return { ok: expect.length - missing.length >= Math.ceil(expect.length / 2), why: missing.length ? `doesn't use ${missing.join(', ')}` : '' };
 }
 
 /** The hidden checks on an app folder: { check: { ok, why } }. */
@@ -174,7 +191,11 @@ export function readDir(dir) {
     if (!fs.existsSync(f)) continue;
     const id = name.replace(/\.\d+$/, '');
     if (!byTask.has(id)) byTask.set(id, []);
-    byTask.get(id).push(JSON.parse(fs.readFileSync(f, 'utf8')));
+    const run = JSON.parse(fs.readFileSync(f, 'utf8'));
+    // A run graded before the task check (or before a failed agent run failed every check) is graded on its files.
+    if (run.error) run.grade = Object.fromEntries(CHECKS.map((c) => [c, { ok: false, why: `the agent run failed: ${run.error}` }]));
+    else if (!run.grade.task) run.grade.task = didTask(path.join(dir, name), TASKS.find((t) => t.id === id));
+    byTask.get(id).push(run);
   }
   return [...byTask].map(([id, runs]) => ({ id, runs }));
 }
@@ -199,7 +220,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       const app = path.join(tmp, `${mode}-${t.id}-${n}`);
       makeApp(app, unpacked, mode === 'with');
       const a = await work(app, t, model);
-      const grade = await gradeApp(app);
+      const grade = a.error ? Object.fromEntries(CHECKS.map((c) => [c, { ok: false, why: `the agent run failed: ${a.error}` }])) : { ...(await gradeApp(app)), task: didTask(app, t) };
       const dest = path.join(out, mode, `${t.id}.${n}`);
       fs.mkdirSync(dest, { recursive: true });
       fs.cpSync(path.join(app, 'src'), path.join(dest, 'src'), { recursive: true });
@@ -208,6 +229,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
   };
   await Promise.all(Array.from({ length: Math.min(jobs, queue.length) }, worker));
+  fs.rmSync(tmp, { recursive: true, force: true });
   const version = execFileSync('claude', ['--version'], { encoding: 'utf8' }).trim();
   fs.writeFileSync(path.join(HERE, 'results', `${date}-agentic.md`), [`# Skill eval, agentic mode, ${date}`, '',
     `Claude Code ${version}${model ? `, model ${model}` : ''}. ${runs} runs of each task per mode, each in a fresh serupa-create app with its tools. `

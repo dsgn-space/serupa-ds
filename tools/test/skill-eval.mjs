@@ -7,7 +7,9 @@ import path from 'node:path';
 import { PROJECT, report, done } from './lib.mjs';
 import { CHECKS, TASKS, grade, gradeTask, startOf } from '../skill-eval/grade.mjs';
 import { REVIEWS, gradeReview, sourceOf } from '../skill-eval/review.mjs';
-import { CHECKS as APP_CHECKS, table as appTable } from '../skill-eval/agentic.mjs';
+import os from 'node:os';
+import { CHECKS as APP_CHECKS, table as appTable, didTask, readDir } from '../skill-eval/agentic.mjs';
+import { files as createFiles } from '../../bin/serupa-create.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -191,6 +193,20 @@ const row = appTable([{ id: 'sign-in', runs: [
 t('agentic table: a failed check is bold with its reason listed', row.includes('**1/2**') && row.includes('sign-in, axe: blue-dark: color-contrast (1)'), row);
 t('agentic table: cost and time are the means of the runs that recorded them', row.includes('| 0.20 | 1.0 |'), row);
 t('agentic table: a run with no cost doesn\'t make NaN', !row.includes('NaN'), row);
+// The task check (GR191): the starter app passes the other checks by itself, so a run must have changed it and used
+// what the task asks for, and a run whose agent failed fails every check.
+{
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-didtask-'));
+  const app = (body) => { fs.mkdirSync(path.join(tmp, 'r.1', 'src'), { recursive: true }); fs.writeFileSync(path.join(tmp, 'r.1', 'src', 'App.tsx'), body); return path.join(tmp, 'r.1'); };
+  const starter = didTask(app(createFiles({ name: 'eval-app', serupa: 'file:serupa-ds.tgz', brand: 'blue' })['src/App.tsx']), { expect: ['Button'] });
+  t('agentic task check: the untouched starter fails', !starter.ok && /starter/.test(starter.why), JSON.stringify(starter));
+  const half = didTask(app("import { Field, Input as I } from 'serupa-ds';\nexport default () => null;\n"), { expect: ['Field', 'Input', 'AlertDialog|Dialog', 'Button'] });
+  t('agentic task check: half the expected components (an alias counts) pass, and the rest are named', half.ok && half.why === "doesn't use AlertDialog|Dialog, Button", JSON.stringify(half));
+  fs.writeFileSync(path.join(tmp, 'r.1', 'grade.json'), JSON.stringify({ grade: Object.fromEntries(APP_CHECKS.map((c) => [c, { ok: true, why: '' }])), error: 'Command failed: claude -p' }));
+  const failed = readDir(tmp)[0].runs[0].grade;
+  t('agentic: a run whose agent failed fails every check, with the error', APP_CHECKS.every((c) => !failed[c].ok && /agent run failed/.test(failed[c].why)), JSON.stringify(failed));
+  fs.rmSync(tmp, { recursive: true, force: true });
+}
 t('agentic mode has a dated run in tools/skill-eval/results/', fs.readdirSync(results).some((n) => /^\d{4}-\d{2}-\d{2}-agentic\.md$/.test(n)), 'run node tools/skill-eval/agentic.mjs and commit its results');
 
 done(report('Skill eval grader', R));

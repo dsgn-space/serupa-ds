@@ -67,6 +67,9 @@ A review can find more than was planted, and that isn't counted against it. The 
 | render | the built page shows text in `#root`, with no page error and no console error |
 | axe | axe finds no WCAG 2.2 A or AA violation in any of the six themes |
 | tab | Tab from the top reaches every visible control. A radio group counts once, and so does a roving-tabindex widget. |
+| task | the agent did the task: `src/App.tsx` is no longer the starter, and it imports at least half the components the task expects from `serupa-ds` |
+
+The starter app passes the first five checks by itself. So a run whose agent failed (not signed in, timed out, no JSON) fails every check, with the error as the reason, and `task` catches an agent that changed nothing.
 
 ```sh
 node tools/skill-eval/agentic.mjs --runs 2 --jobs 5             # every task without a start file
