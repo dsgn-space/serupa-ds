@@ -62,6 +62,17 @@ Drawn from the `Default` story.
 - **Contrast:** titles, counts, "Over limit" and card text read 4.5:1, and the handle 3:1, in all six themes (`Kanban.test.tsx`).
 - **What's still yours:** the content of each card, and saying so if a move fails to save.
 
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | To each card's handle and its "Move to…" menu button |
+| Space, Enter (on a handle) | Picks the card up; again, drops it where it is |
+| ↑ ↓ | Moves the picked-up card within its column |
+| ← → | Moves it to the column before or after (mirrored right to left) |
+| Home, End | To the top or bottom of its column |
+| Escape, Tab | Puts it back where it was |
+
 ## Props
 
 | Prop | Type | Default | Notes |
