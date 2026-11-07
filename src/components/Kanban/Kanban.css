@@ -19,7 +19,7 @@
 .dk-kanban__count { display: inline-flex; flex: none; align-items: center; gap: var(--spacing-1); color: var(--kanban-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
 .dk-kanban__count--over { color: var(--kanban-over, var(--danger-text)); font-weight: var(--font-medium); }
 .dk-kanban__count .dk-icon { font-size: var(--spacing-4); }
-.dk-kanban__cards { display: flex; flex-direction: column; gap: var(--spacing-2); min-block-size: var(--spacing-12); margin: var(--spacing-0); padding: var(--kanban-padding, var(--spacing-3)); padding-block-start: var(--spacing-1); list-style: none; overflow-y: auto; }
+.dk-kanban__cards { display: flex; flex-direction: column; gap: var(--spacing-2); min-block-size: var(--spacing-12); margin: var(--spacing-0); padding: var(--kanban-padding, var(--spacing-3)); padding-block-start: var(--spacing-1); list-style: none; overflow-y: auto; overscroll-behavior-block: contain; }
 .dk-kanban__card {
   position: relative; display: flex; align-items: flex-start; gap: var(--spacing-1); padding: var(--kanban-card-padding, var(--spacing-2));
   border: var(--border-width-1) solid var(--kanban-card-border, var(--border)); border-radius: var(--kanban-card-radius, var(--radius-control)); background: var(--kanban-card-bg, var(--surface));
@@ -31,6 +31,7 @@
   border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--kanban-muted, var(--text-muted)); cursor: grab; touch-action: none; font-size: var(--spacing-5);
 }
 .dk-kanban__handle:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-kanban:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-kanban__handle[aria-pressed="true"] { background: var(--kanban-handle-active, var(--primary-subtle)); color: var(--kanban-text, var(--text)); }
 .dk-kanban--moving .dk-kanban__handle { cursor: grabbing; }
 .dk-kanban__menu { flex: none; }
