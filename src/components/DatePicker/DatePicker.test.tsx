@@ -319,4 +319,18 @@ describe('DatePicker: motion (DZ1)', () => {
       expect([p.hidden, getComputedStyle(p).display, p.getAnimations().length, document.activeElement]).toEqual([true, 'none', 0, el('mo')]);
     });
   });
+
+  test('GR161: a value it can\'t read ("tomorrow", month 13, 31 February) warns once per component in development, as no date is shown; "" and a real day don\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const said = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => /date-string/.test(m));
+      await render(<form><DatePicker id="ds0" aria-label="Z" locale="en-US" value="" onValueChange={() => {}} /><DatePicker id="ds1" aria-label="A" locale="en-US" defaultValue="2026-02-28" /></form>);
+      expect(said()).toEqual([]);
+      await render(<DatePicker id="ds2" aria-label="B" locale="en-US" value="2026-02-31" onValueChange={() => {}} />);
+      expect(el('ds2').value).toBe('');
+      expect(said()).toEqual([expect.stringMatching(/DatePicker: "2026-02-31" is not a day of the calendar/)]);
+      await render(<><DatePicker id="ds3" aria-label="C" value="tomorrow" onValueChange={() => {}} /><Calendar aria-label="D" value="2026-13-01" /></>);
+      expect(said()).toEqual([expect.anything(), expect.stringMatching(/Calendar: "2026-13-01" is not a day of the calendar/)]);
+    } finally { warn.mockRestore(); }
+  });
 });

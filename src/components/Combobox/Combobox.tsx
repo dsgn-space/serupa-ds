@@ -4,6 +4,7 @@ import { pressFocuses } from "../../internal/affix";
 import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { useExit } from "../../internal/useExit";
+import { warnOnce } from "../../internal/warn";
 import { Icon } from "../Icon/Icon";
 import { asIcon } from "../Icon/asIcon";
 import { Loader } from "../Loader/Loader";
@@ -174,6 +175,14 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   // Every option seen, by value, so a picked one keeps its label when a later answer doesn't include it.
   const seen = React.useRef(new Map<string, string>());
   for (const o of opts) seen.current.set(o.value, o.label);
+  // Two options with one value: picking the second shows the first's label and marks both as selected (GR161).
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      const had = new Set<string>();
+      const twice = opts.find((o) => (had.has(o.value) ? true : (had.add(o.value), false)));
+      if (twice) warnOnce("combobox-duplicate-value", `Combobox: more than one option has the value "${twice.value}", so picking one shows the first one's label and marks them all as selected. Give every option its own value.`);
+    }
+  }, [opts]);
   const creatable = !!props.onCreate;
   // loadOptions: one request at a time. A new one (after the debounce) aborts the one before, and an answer that
   // isn't for the latest request is dropped, so a slow answer never overwrites a newer one.

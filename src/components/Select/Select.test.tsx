@@ -143,6 +143,18 @@ describe('Select', () => {
     expect(box('dis').className).toMatch(/disabled/);
   });
 
+  test('GR161: a controlled value that matches no option warns once (the <select> shows the first option and a form sends it); one that matches, a placeholder\'s "" or a child <option> doesn\'t', async () => {
+    const said = () => warnings.mock.calls.filter((c: unknown[]) => /select-value/.test(String(c[0]))).map((c: unknown[]) => String(c[0]));
+    const screen = await render(<Select aria-label="Fruit" value="pear" onChange={() => {}} options={['apple', 'pear']}><option value="kiwi">Kiwi</option></Select>);
+    await screen.rerender(<Select aria-label="Fruit" value="kiwi" onChange={() => {}} options={['apple', 'pear']}><option value="kiwi">Kiwi</option></Select>);
+    await screen.rerender(<Select aria-label="Fruit" value="" placeholder="Pick one" onChange={() => {}} options={['apple', 'pear']} />);
+    expect(said()).toEqual([]);
+    await screen.rerender(<Select aria-label="Fruit" value="mango" onChange={() => {}} options={['apple', 'pear']} />);
+    await expect.poll(said).toHaveLength(1);
+    expect(said()[0]).toMatch(/value "mango" matches no option, so it shows "apple"/);
+    expect((document.querySelector('select') as HTMLSelectElement).value).toBe('apple');
+  });
+
   test('in a Field: labelled, described and invalid with the error', async () => {
     await render(<Grid><Field label="Country" error="Pick a country."><Select id="fld" placeholder="Choose" options={['DK']} /></Field></Grid>);
     const i = field('fld');

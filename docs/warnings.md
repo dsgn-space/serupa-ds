@@ -22,6 +22,14 @@ A Badge with `onClick` or `href` is a button or a link, which can't hold another
 
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.
 
+## combobox-duplicate-value
+
+Two or more of a Combobox's options have the same value. Picking the second one shows the first one's label in the field, and both are marked as selected. Give every option its own value; an id is a good one when labels repeat.
+
+## date-string
+
+A date component (Calendar, DatePicker, DateRangePicker) got a string it can't read as a day, such as "tomorrow", "2026-13-01" or "2026-02-31", so it shows no date and the app holds a value nobody sees. Pass the day as "yyyy-mm-dd" or as a Date. An empty string is read as no date and doesn't warn. What people type is reported through `onInvalidInput` instead.
+
 ## datetime-string
 
 A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as an API often sends a date). It's read as the day it writes, 24 October, and the time is ignored, so the day doesn't move with the reader's time zone. Pass the `"yyyy-mm-dd"` day itself (`value.slice(0, 10)`) to say that's what you mean.
@@ -58,6 +66,10 @@ A control (a slider, a dialog, a group…) has no accessible name, so a screen r
 
 FormattedNumber or `formatNumber` got options Intl rejects, such as a currency that isn't an ISO code ("US" for "USD"), a unit Intl doesn't know ("km/h" for "kilometer-per-hour"), or `minimumFractionDigits` above `maximumFractionDigits`. Rather than throw and unmount the page, the number is written in the locale's plain form. Fix the options; see FormattedNumber.
 
+## number-range
+
+A NumberInput got a `min` above its `max`, so no value fits, and `aria-valuemin` is above `aria-valuemax`. Swap them, or check where they come from (a limit computed from data can cross over).
+
 ## phone-code
 
 PhoneInput was given a number starting with `+` or `00` and a calling code it doesn't know, so it reads the digits as a number in the current country. Add the country's row to `countries`.
@@ -69,6 +81,10 @@ A RelativeTime whose `date` isn't a date (a typo, an empty string, a format `Dat
 ## select-multiple
 
 Select doesn't support `multiple` (a native multi-select is hard to use), so it was ignored. Use a group of Checkboxes instead.
+
+## select-value
+
+A controlled Select got a `value` that none of its options has, so the `<select>` shows its first option, and a form sends that, while the app holds the value it passed. Set `value` to one of the options' values, add an option for it, or use a `placeholder` (its value is `""`) for "nothing picked yet".
 
 ## server-locale
 

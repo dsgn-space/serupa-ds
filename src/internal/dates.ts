@@ -27,11 +27,17 @@ export const isoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 
 export function toDay(v: unknown, who?: string): Date | null {
   if (typeof v === "string") {
     const m = /^(\d{4})-(\d{2})-(\d{2})([T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/.exec(v.trim());
-    if (!m) return null;
+    // A string it can't read, or a day that doesn't exist (2026-02-31), shows as an empty field (GR161).
+    if (!m) {
+      if (process.env.NODE_ENV !== "production" && who && v.trim()) warnOnce("date-string", `${who}: "${v.trim()}" isn't a "yyyy-mm-dd" day, so no date is shown. Pass the day as "yyyy-mm-dd" or a Date.`, who + ":string");
+      return null;
+    }
     if (process.env.NODE_ENV !== "production" && who && m[4])
       warnOnce("datetime-string", `${who}: "${v.trim()}" is a date and time; it's read as ${m[1]}-${m[2]}-${m[3]}, the day it writes, and its time is ignored. Pass the "yyyy-mm-dd" day itself.`, who + ":datetime");
     const d = new Date(2000, +m[2] - 1, +m[3]); d.setFullYear(+m[1]);
-    return d.getMonth() === +m[2] - 1 && d.getDate() === +m[3] ? d : null;
+    const real = d.getMonth() === +m[2] - 1 && d.getDate() === +m[3];
+    if (process.env.NODE_ENV !== "production" && who && !real) warnOnce("date-string", `${who}: "${v.trim()}" is not a day of the calendar, so no date is shown. Check the month and the day.`, who + ":string");
+    return real ? d : null;
   }
   if (!isValid(v)) return null;
   if (process.env.NODE_ENV !== "production" && who && v.getTimezoneOffset() > 0 && v.getUTCHours() + v.getUTCMinutes() + v.getUTCSeconds() + v.getUTCMilliseconds() === 0)

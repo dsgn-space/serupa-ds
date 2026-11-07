@@ -60,6 +60,12 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
   const setRefs = React.useCallback(function (node: HTMLSelectElement | null) { own.current = node; nameRef(node); setRef(ref, node); }, [ref, nameRef]);
   const start = rest.defaultValue;
   useFormReset(own, () => { if (!controlled) setPicked(start); });
+  // A value that matches no option shows the first one instead, and a form sends that, while the app holds its own
+  // value (GR161). Read from the <select> itself, so options passed as children count too.
+  React.useEffect(() => {
+    const s = own.current;
+    if (process.env.NODE_ENV !== "production" && controlled && cur != null && s && ![...s.options].some((o) => o.value === String(cur))) warnOnce("select-value", `Select: value "${String(cur)}" matches no option, so it shows "${s.value}" and a form sends that. Set value to one of the options' values, or add an option for it.`);
+  }, [controlled, cur]);
   const empty = hasPh && (cur == null || cur === "");
   const left = asIcon(props.leftIcon);
   return (
