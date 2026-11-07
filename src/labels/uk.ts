@@ -94,7 +94,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Перемістити",
   kanbanInstructions: "Натисніть Пробіл, щоб узяти картку, стрілки, щоб переміщати її в колонці й між колонками, знову Пробіл, щоб покласти, або Escape, щоб скасувати.",
   kanbanMoveTo: (card) => "Перемістити " + card + " до…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " з " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " з " + n(limit),
   kanbanOverLimit: "Перевищено ліміт",
   kanbanGrabbed: (card, column, p, t) => card + ": узято." + " " + column + ", позиція " + n(p) + " з " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", позиція " + n(p) + " з " + n(t) + ".",

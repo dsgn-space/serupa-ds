@@ -92,7 +92,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Sposta",
   kanbanInstructions: "Premi Spazio per prenderla, le frecce per spostarla nelle colonne e tra colonne, di nuovo Spazio per rilasciarla o Esc per annullare.",
   kanbanMoveTo: (card) => "Sposta " + card + " in…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " di " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " di " + n(limit),
   kanbanOverLimit: "Oltre il limite",
   kanbanGrabbed: (card, column, p, t) => card + " presa." + " " + column + ", posizione " + n(p) + " di " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", posizione " + n(p) + " di " + n(t) + ".",

@@ -4,7 +4,8 @@ import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
 import { announce } from "../../internal/announce";
 import { isComposing } from "../../internal/ime";
-import { useSettings } from "../../internal/provider";
+import { useLocale, useSettings } from "../../internal/provider";
+import { displayNumber } from "../../internal/numbers";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { Menu, MenuItem } from "../Menu/Menu";
@@ -72,7 +73,7 @@ function moveCard<T>(columns: readonly KanbanColumn<T>[], from: Place, to: Place
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unknown>>("Kanban", function Kanban(props, ref) {
   const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, className: 1 } as const);
-  const sds = useSettings(words), L = sds.labels;
+  const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const { getKey, getLabel } = props;
   const columns = props.columns || [];
   const base = domId("dk-kb", React.useId());
@@ -272,7 +273,8 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   });
 
   return (<>
-    <div {...rest} ref={(n) => { board.current = n; setRef(ref, n); }} role={rest.role ?? "group"}
+    {/* Disabled, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
+    <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={(n) => { board.current = n; setRef(ref, n); }} role={rest.role ?? "group"}
       className={cn("dk-kanban", drag && "dk-kanban--moving", props.disabled && "dk-kanban--disabled", props.className)} data-component="kanban">
       {shown.map((col, c) => {
         const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + "-col-" + c;
@@ -282,7 +284,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
               <H className="dk-kanban__title" id={titleId}>{col.title}</H>
               <span className={cn("dk-kanban__count", over && "dk-kanban__count--over")}>
                 {over ? <Icon icon={icons.Warning} /> : null}
-                {L.kanbanCount(count, col.limit ?? null)}
+                {col.limit == null ? displayNumber(count, locale) : L.kanbanCount(count, col.limit)}
                 {over ? <span className="dk-kanban__over">{L.kanbanOverLimit}</span> : null}
               </span>
             </div>

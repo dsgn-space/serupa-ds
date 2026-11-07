@@ -89,7 +89,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Taşı",
   kanbanInstructions: "Almak için Boşluk'a, sütun içinde ve sütunlar arasında taşımak için ok tuşlarına, bırakmak için yeniden Boşluk'a, iptal için Escape'e basın.",
   kanbanMoveTo: (card) => card + " şuraya taşı…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " / " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " / " + n(limit),
   kanbanOverLimit: "Sınır aşıldı",
   kanbanGrabbed: (card, column, p, t) => card + " alındı." + " " + column + ", konum " + n(p) + " / " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", konum " + n(p) + " / " + n(t) + ".",

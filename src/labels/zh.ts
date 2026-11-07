@@ -88,7 +88,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "移动",
   kanbanInstructions: "按空格键拿起卡片，用方向键在列内和列间移动，再按空格键放下，或按 Escape 取消。",
   kanbanMoveTo: (card) => "将 " + card + " 移动到…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " / " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " / " + n(limit),
   kanbanOverLimit: "超出上限",
   kanbanGrabbed: (card, column, p, t) => "已拿起 " + card + "。" + " " + column + ", 位置 " + n(p) + " / " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", 位置 " + n(p) + " / " + n(t) + ".",

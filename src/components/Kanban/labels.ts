@@ -6,8 +6,8 @@ export interface KanbanLabels {
   kanbanInstructions: string;
   /** Kanban: the "Move to…" menu button's name, given the card ("Move Fix login to…"), and the menu's heading. */
   kanbanMoveTo: (card: string) => string;
-  /** Kanban: a column's count, with its limit when it has one ("3 of 5"), and the words when it's over the limit. */
-  kanbanCount: (count: number, limit: number | null) => string;
+  /** Kanban: a column's count against its limit ("3 of 5"). A column without a limit shows its count alone, in the locale's digits. */
+  kanbanCount: (count: number, limit: number) => string;
   kanbanOverLimit: string;
   /** Kanban: what's said as a card is picked up, moved, dropped or put back. */
   kanbanGrabbed: (card: string, column: string, position: number, total: number) => string;
@@ -21,7 +21,7 @@ export const en: KanbanLabels = {
   kanbanMove: "Move",
   kanbanInstructions: "Press Space to pick it up, the arrow keys to move it within and across columns, Space again to drop it, or Escape to cancel.",
   kanbanMoveTo: (card) => "Move " + card + " to…",
-  kanbanCount: (count, limit) => limit == null ? String(count) : count + " of " + limit,
+  kanbanCount: (count, limit) => count + " of " + limit,
   kanbanOverLimit: "Over limit",
   kanbanGrabbed: (card, column, p, n) => "Picked up " + card + ". " + column + ", position " + p + " of " + n + ".",
   kanbanMoved: (card, column, p, n) => card + ", " + column + ", position " + p + " of " + n + ".",
@@ -33,7 +33,7 @@ export const id: KanbanLabels = {
   kanbanMove: "Pindahkan",
   kanbanInstructions: "Tekan Spasi untuk mengangkatnya, tombol panah untuk memindahkannya di dalam dan antarkolom, Spasi lagi untuk meletakkannya, atau Escape untuk batal.",
   kanbanMoveTo: (card) => "Pindahkan " + card + " ke…",
-  kanbanCount: (count, limit) => limit == null ? String(count) : count + " dari " + limit,
+  kanbanCount: (count, limit) => count + " dari " + limit,
   kanbanOverLimit: "Melebihi batas",
   kanbanGrabbed: (card, column, p, n) => card + " diangkat. " + column + ", posisi " + p + " dari " + n + ".",
   kanbanMoved: (card, column, p, n) => card + ", " + column + ", posisi " + p + " dari " + n + ".",

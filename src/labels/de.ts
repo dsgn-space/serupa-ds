@@ -92,7 +92,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Verschieben",
   kanbanInstructions: "Drücken Sie die Leertaste, um sie aufzunehmen, die Pfeiltasten, um sie innerhalb und zwischen Spalten zu verschieben, erneut die Leertaste, um sie abzulegen, oder Escape zum Abbrechen.",
   kanbanMoveTo: (card) => card + " verschieben nach…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " von " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " von " + n(limit),
   kanbanOverLimit: "Über dem Limit",
   kanbanGrabbed: (card, column, p, t) => card + " aufgenommen." + " " + column + ", Position " + n(p) + " von " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", Position " + n(p) + " von " + n(t) + ".",

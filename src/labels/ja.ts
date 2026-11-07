@@ -88,7 +88,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "移動",
   kanbanInstructions: "Space で持ち上げ、矢印キーで列内や列の間を移動し、もう一度 Space で置きます。Escape でキャンセルします。",
   kanbanMoveTo: (card) => card + " の移動先…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " / " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " / " + n(limit),
   kanbanOverLimit: "上限超過",
   kanbanGrabbed: (card, column, p, t) => card + " を持ち上げました。" + " " + column + ", 位置 " + n(p) + " / " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", 位置 " + n(p) + " / " + n(t) + ".",

@@ -89,7 +89,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Verplaatsen",
   kanbanInstructions: "Druk op Spatie om hem op te pakken, de pijltjestoetsen om hem binnen en tussen kolommen te verplaatsen, nogmaals Spatie om hem neer te zetten, of Escape om te annuleren.",
   kanbanMoveTo: (card) => card + " verplaatsen naar…",
-  kanbanCount: (count, limit) => limit == null ? n(count) : n(count) + " van " + n(limit),
+  kanbanCount: (count, limit) => n(count) + " van " + n(limit),
   kanbanOverLimit: "Boven de limiet",
   kanbanGrabbed: (card, column, p, t) => card + " opgepakt." + " " + column + ", positie " + n(p) + " van " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", positie " + n(p) + " van " + n(t) + ".",
