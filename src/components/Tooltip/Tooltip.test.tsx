@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, settled, withMotion } from '../../../tools/test/vitest/helpers';
+import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
@@ -355,5 +356,27 @@ describe('Tooltip content is plain text (PT5)', () => {
     expect(calls()).toHaveLength(1);
     expect(String(calls()[0][0])).toMatch(/use a Popover/);
     warn.mockRestore();
+  });
+  test('a Button label cut with an ellipsis shows in full over the hint, hidden from screen readers, and the Button gets no title', async () => {
+    const long = 'Benachrichtigungseinstellungen öffnen und anpassen';
+    await render(<div style={{ width: 200, padding: 40 }}>
+      <Tooltip content="Strg + ," defaultOpen><Button id="cut">{long}</Button></Tooltip>
+    </div>);
+    await settled();
+    const tip = () => document.getElementById(el('cut').getAttribute('aria-describedby')!)!;
+    const full = tip().querySelector('[aria-hidden="true"]');
+    expect([full && full.textContent, tip().textContent, el('cut').getAttribute('title')]).toEqual([long, long + 'Strg + ,', null]);
+    expect(full!.getBoundingClientRect().bottom).toBeLessThanOrEqual(tip().getBoundingClientRect().bottom);
+  });
+
+  test('a label that fits, and role="label", show only the content', async () => {
+    await render(<div style={{ width: 400, padding: 40 }}>
+      <Tooltip content="Strg + ," defaultOpen><Button id="fit">Settings</Button></Tooltip>
+      <Tooltip content="Named" role="label" defaultOpen><Button id="lab" style={{ maxWidth: 40 }}>Benachrichtigungseinstellungen</Button></Tooltip>
+    </div>);
+    await settled();
+    const fit = document.getElementById(el('fit').getAttribute('aria-describedby')!)!;
+    const lab = document.getElementById(el('lab').getAttribute('aria-labelledby')!.split(' ').pop()!)!;
+    expect([fit.textContent, lab.textContent]).toEqual(['Strg + ,', 'Named']);
   });
 });
