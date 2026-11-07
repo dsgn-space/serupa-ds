@@ -5,6 +5,8 @@ A board of columns of cards, such as a sprint or a sales pipeline, that people m
 ```tsx
 import { Kanban, type KanbanColumn } from "serupa-ds";
 
+interface Task { id: string; title: string }
+
 const [columns, setColumns] = useState<KanbanColumn<Task>[]>([
   { id: "todo", title: "To do", items: tasks.todo },
   { id: "doing", title: "In progress", limit: 3, items: tasks.doing },

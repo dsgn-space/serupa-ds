@@ -63,6 +63,19 @@ describe('Kanban', () => {
     expect(document.activeElement).toBe(handle('Alpha').element());
   });
 
+  test('keyboard: Enter picks a card up and Enter again drops it where it is; nothing is reported', async () => {
+    const moves: KanbanMove<T>[] = [];
+    await render(<Board moves={moves} />);
+    handle('Bravo').element().focus();
+    await userEvent.keyboard('{Enter}');
+    await said('Picked up Bravo. To do, position 2 of 3.');
+    await expect.element(handle('Bravo')).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.keyboard('{Enter}');
+    await said('Bravo moved to To do, position 2 of 3.');
+    await expect.element(handle('Bravo')).toHaveAttribute('aria-pressed', 'false');
+    expect(moves).toEqual([]);
+  });
+
   test('Escape puts the card back and says so; nothing is reported', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
