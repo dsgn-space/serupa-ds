@@ -89,7 +89,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Flytta",
   kanbanInstructions: "Tryck på blanksteg för att plocka upp det, piltangenterna för att flytta det inom och mellan kolumner, blanksteg igen för att släppa det eller Escape för att avbryta.",
   kanbanMoveTo: (card) => "Flytta " + card + " till…",
-  kanbanCount: (count, limit) => n(count) + " av " + n(limit),
+  kanbanCount: (count, limit) => count + " av " + limit,
   kanbanOverLimit: "Över gränsen",
   kanbanGrabbed: (card, column, p, t) => card + " upplockat." + " " + column + ", position " + n(p) + " av " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", position " + n(p) + " av " + n(t) + ".",

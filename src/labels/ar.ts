@@ -93,7 +93,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "نقل",
   kanbanInstructions: "اضغط مسافة لالتقاطها، ومفاتيح الأسهم لنقلها داخل الأعمدة وبينها، ومسافة مرة أخرى لإفلاتها، أو Escape للإلغاء.",
   kanbanMoveTo: (card) => "نقل " + card + " إلى…",
-  kanbanCount: (count, limit) => n(count) + " من " + n(limit),
+  kanbanCount: (count, limit) => count + " من " + limit,
   kanbanOverLimit: "تجاوز الحد",
   kanbanGrabbed: (card, column, p, t) => "تم التقاط " + card + "." + " " + column + ", الموضع " + n(p) + " من " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", الموضع " + n(p) + " من " + n(t) + ".",

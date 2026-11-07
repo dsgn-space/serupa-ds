@@ -94,7 +94,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Déplacer",
   kanbanInstructions: "Appuyez sur Espace pour la saisir, sur les flèches pour la déplacer dans et entre les colonnes, de nouveau sur Espace pour la déposer, ou sur Échap pour annuler.",
   kanbanMoveTo: (card) => "Déplacer " + card + " vers…",
-  kanbanCount: (count, limit) => n(count) + " sur " + n(limit),
+  kanbanCount: (count, limit) => count + " sur " + limit,
   kanbanOverLimit: "Limite dépassée",
   kanbanGrabbed: (card, column, p, t) => card + " saisie." + " " + column + ", position " + n(p) + " sur " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", position " + n(p) + " sur " + n(t) + ".",
