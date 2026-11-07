@@ -7,7 +7,12 @@
 // - Chromium: the revision node_modules/playwright-core/browsers.json pins, when it isn't in PLAYWRIGHT_BROWSERS_PATH
 //   (or ~/.cache/ms-playwright), from Chrome for Testing on storage.googleapis.com, so it works where Playwright's own
 //   download host is blocked. Laid out as `npx playwright install chromium` would, so Playwright finds it.
-// Linux and macOS, x64 and arm64. It never writes outside ~/.local and the browsers folder.
+// - Text rendering (Linux): the visual baselines are drawn with fontconfig's stock settings (sub-pixel colour,
+//   slight hinting), as on GitHub's runners and in Playwright's image. A rule in /etc/fonts/conf.d that assigns
+//   grayscale or no hinting (some cloud images ship 12-unhinted-grayscale.conf) makes every picture with text
+//   differ. Chromium reads /etc/fonts itself (FONTCONFIG_FILE doesn't reach it), so as root setup moves such a rule
+//   to ~/.local/share/serupa-ds/fontconfig-disabled/; otherwise it prints the command.
+// Linux and macOS, x64 and arm64. Apart from that rule, it never writes outside ~/.local and the browsers folder.
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -77,5 +82,22 @@ for (const [name, dirName, zip] of [['chromium', 'chromium', 'chrome'], ['chromi
   fs.writeFileSync(path.join(dir, 'DEPENDENCIES_VALIDATED'), '');
 }
 fs.rmSync(tmp, { recursive: true, force: true });
+
+// 4. Text rendering as the baselines have it (Linux): no fontconfig rule that forces grayscale or unhinted text.
+if (plat === 'linux' && fs.existsSync('/etc/fonts/conf.d')) {
+  const forcing = fs.readdirSync('/etc/fonts/conf.d').filter((f) => f.endsWith('.conf')).map((f) => path.join('/etc/fonts/conf.d', f))
+    // A <match> with no <test> applies to every font; the stock files only assign for one family or small sizes.
+    .filter((f) => [...fs.readFileSync(f, 'utf8').matchAll(/<match\b[^>]*>([\s\S]*?)<\/match>/g)]
+      .some((m) => !/<test\b/.test(m[1]) && /<edit\s+name="(rgba|hinting|hintstyle)"\s+mode="assign"/.test(m[1])));
+  if (forcing.length) {
+    const aside = path.join(os.homedir(), '.local/share/serupa-ds/fontconfig-disabled');
+    if (process.getuid?.() === 0) {
+      fs.mkdirSync(aside, { recursive: true });
+      for (const f of forcing) { fs.renameSync(f, path.join(aside, path.basename(f))); console.log(`fontconfig: moved ${f} to ${aside} (it changes how text is drawn, so screenshots would differ from the baselines)`); }
+    } else {
+      console.log(`fontconfig: ${forcing.join(', ')} change how text is drawn, so every screenshot would differ from the baselines. Move them aside:\n  sudo mkdir -p ${aside} && sudo mv ${forcing.join(' ')} ${aside}/`);
+    }
+  } else console.log('fontconfig: stock text rendering, as the baselines have it');
+}
 
 console.log(`\nReady. In this shell:\n  export PATH="${nodeBin}:$PATH"\nthen: npm run check -- --clean --since origin/main --report local-checks.md`);

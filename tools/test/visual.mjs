@@ -68,6 +68,34 @@ if (want && b.version() !== want) {
     + 'Run "npx playwright install". Where that download is blocked (a container whose network doesn\'t allow cdn.playwright.dev), '
     + 'leave this step to CI: node tools/ci.mjs --skip visual. Don\'t update baselines from another build.');
 }
+// The baselines' text is drawn with sub-pixel colour (fontconfig's stock settings on Linux). A machine whose
+// fontconfig forces grayscale draws every picture with text differently: say so once instead of failing them all.
+if (process.platform === 'linux') {
+  const probe = await b.newPage({ viewport: { width: 200, height: 40 } });
+  await probe.setContent('<p style="font:16px sans-serif;margin:8px">Sub-pixel text</p>');
+  const png = (await probe.screenshot()).toString('base64');
+  const colour = await probe.evaluate(async (src) => {
+    const img = new Image();
+    img.src = `data:image/png;base64,${src}`;
+    await img.decode();
+    const c = document.createElement('canvas');
+    Object.assign(c, { width: img.width, height: img.height });
+    const g = /** @type {CanvasRenderingContext2D} */ (c.getContext('2d'));
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) > 20) n++;
+    return n;
+  }, png);
+  await probe.close();
+  if (!colour) {
+    await b.close();
+    close();
+    fail('Text is drawn in grayscale here, but the baselines have sub-pixel colour (fontconfig\'s stock settings, as on CI), '
+      + 'so every picture with text would fail. A rule in /etc/fonts/conf.d forces it (some cloud images ship '
+      + '12-unhinted-grayscale.conf): node tools/setup.mjs moves it aside. Don\'t update baselines from this machine.');
+  }
+}
 // Several pages at once (PAGES), each in its own context so focus and the pointer stay its own.
 const pages = await Promise.all(Array.from({ length: PAGES }, async () => {
   const context = await b.newContext({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });
