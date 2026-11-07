@@ -500,7 +500,7 @@ describe('Sidebar', () => {
     await settled();
     expect([el('late').getAttribute('title'), el('tipped').getAttribute('title')]).toEqual([null, null]);
     // A wider font in the same box: the label's size doesn't change, so only the font event says so.
-    (el('late').querySelector('.dk-sidebar__label') as HTMLElement).style.letterSpacing = '12px';
+    [...el('late').querySelectorAll('span')].find((n) => n.textContent === 'Notifications')!.style.letterSpacing = '12px';
     document.fonts.dispatchEvent(new Event('loadingdone'));
     await expect.poll(() => el('late').title).toBe('Notifications');
   });
