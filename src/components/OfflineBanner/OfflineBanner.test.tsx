@@ -189,4 +189,24 @@ describe('OfflineBanner', () => {
       expect([covered, document.activeElement!.id]).toEqual([[], 'n0']);
     } finally { await page.viewport(900, 700); }
   });
+
+  test('GR172: two bottom bars at once: the page gets the larger room, keeps it while one shows, and gets its own padding back after both, in either order', async () => {
+    const room = () => Number(/^calc\((\d+)px\)$/.exec(document.body.style.paddingBlockEnd)?.[1] ?? 0);
+    const space = () => document.documentElement.style.getPropertyValue('--dk-offline-banner-space');
+    const A = <OfflineBanner key="a" online={false}>Changes are kept.</OfflineBanner>, B = <OfflineBanner key="b" online={false} />;
+    document.body.style.paddingBlockEnd = '3px';
+    try {
+      const { rerender } = await render(<>{A}{B}</>);
+      expect(room()).toBeGreaterThan(40);
+      await rerender(<>{null}{B}</>);
+      expect([room() > 40, /^\d+px$/.test(space())], 'a went first').toEqual([true, true]);
+      await rerender(<>{null}{null}</>);
+      expect([document.body.style.paddingBlockEnd, space()], 'a went first').toEqual(['3px', '']);
+      await rerender(<>{A}{B}</>);
+      await rerender(<>{A}{null}</>);
+      expect([room() > 40, /^\d+px$/.test(space())], 'b went first').toEqual([true, true]);
+      await rerender(<>{null}{null}</>);
+      expect([document.body.style.paddingBlockEnd, space()], 'b went first').toEqual(['3px', '']);
+    } finally { document.body.style.paddingBlockEnd = ''; }
+  });
 });
