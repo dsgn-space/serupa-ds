@@ -5,6 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { List, ListItem } from '../../components/List/List';
 import { Splitter } from '../../components/Splitter/Splitter';
+import { useLocale } from '../../internal/provider';
 
 /* List and detail: a list of messages beside the one that's open, in two panes on a wide screen and one at a time on
    a phone. For an app to copy. What it carries (WCAG 2.2):
@@ -34,6 +35,14 @@ const demo: Message[] = [
   { id: 'm4', from: 'Dewi Lestari', subject: 'Help center: new articles', date: '2026-11-02', body: 'Four new articles are ready for review: billing, exports, teams and sign-in.' },
 ];
 
+// "6 Nov 2026" (medium) or "6 November 2026" (long) in the reader's locale for "2026-11-06", read as that calendar
+// day wherever the reader is; anything else as it came.
+function day(iso: string, locale: string, style: 'medium' | 'long'): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return iso;
+  try { return new Intl.DateTimeFormat(locale, { dateStyle: style }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+}
+
 const WIDE = '(min-width: 48rem)';
 const subscribe = (f: () => void) => { const m = matchMedia(WIDE); m.addEventListener('change', f); return () => m.removeEventListener('change', f); };
 /** Whether the screen is wide enough for both panes. */
@@ -41,6 +50,7 @@ function useWide() { return React.useSyncExternalStore(subscribe, () => matchMed
 
 /** The list-and-detail page: a skip link, a header, then main with the list and the open message. */
 export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListDetailProps) {
+  const locale = useLocale();
   const wide = useWide();
   const [picked, setPicked] = React.useState<string | undefined>(defaultSelected);
   const [showing, setShowing] = React.useState(false);
@@ -69,7 +79,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
       <Heading level={2} size="lg" id="messages-title">Messages ({messages.length})</Heading>
       <List divided>
         {messages.map((m) => (
-          <ListItem key={m.id} title={m.subject} description={`${m.from} · ${m.date}`} href={`#${m.id}`}
+          <ListItem key={m.id} title={m.subject} description={<>{m.from} · <time dateTime={m.date}>{day(m.date, locale, 'medium')}</time></>} href={`#${m.id}`}
             linkProps={{ id: `message-${m.id}` }} selected={open?.id === m.id} onClick={choose(m)} />
         ))}
       </List>
@@ -79,7 +89,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
     <section aria-labelledby="message-title" className="flex min-w-0 flex-col gap-3 p-4">
       {wide ? null : <div><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to messages</Button></div>}
       <Heading level={2} size="lg" id="message-title" ref={heading} tabIndex={-1} className="outline-none">{open.subject}</Heading>
-      <p className="m-0 text-sm text-text-muted">From {open.from}, <time dateTime={open.date}>{open.date}</time></p>
+      <p className="m-0 text-sm text-text-muted">From {open.from}, <time dateTime={open.date}>{day(open.date, locale, 'long')}</time></p>
       <p className="m-0 max-w-prose">{open.body}</p>
     </section>
   ) : (

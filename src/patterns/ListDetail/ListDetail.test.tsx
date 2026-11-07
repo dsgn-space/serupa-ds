@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ListDetail } from './ListDetail';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const current = () => document.querySelector('[aria-current="true"]')?.id;
@@ -50,6 +51,14 @@ describe('Patterns/List and detail', () => {
     } finally {
       await page.viewport(900, 700);
     }
+  });
+
+  test('dates read in the reader\'s locale, short in the list and long on the message, and keep the ISO day in dateTime', async () => {
+    await render(<SerupaProvider locale="en-GB"><ListDetail /></SerupaProvider>);
+    const times = [...document.querySelectorAll('main time')].map((t) => [t.textContent, (t as HTMLTimeElement).dateTime]);
+    expect(times[0]).toEqual(['6 Nov 2026', '2026-11-06']);
+    expect(times.at(-1)).toEqual(['6 November 2026', '2026-11-06']);
+    expect(document.querySelector('main')!.textContent).not.toMatch(/\d{4}-\d{2}-\d{2}/);
   });
 
   test('phone, nothing to open: a note instead of an empty pane', async () => {
