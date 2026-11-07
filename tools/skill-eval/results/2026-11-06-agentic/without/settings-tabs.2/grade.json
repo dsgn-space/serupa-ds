@@ -1,0 +1,25 @@
+{
+  "grade": {
+    "typecheck": {
+      "ok": true,
+      "why": ""
+    },
+    "lint": {
+      "ok": true,
+      "why": ""
+    },
+    "render": {
+      "ok": true,
+      "why": ""
+    },
+    "axe": {
+      "ok": true,
+      "why": ""
+    },
+    "tab": {
+      "ok": true,
+      "why": ""
+    }
+  },
+  "note": "graded again after the first grading hung on an endless animation; cost and time not recorded"
+}
