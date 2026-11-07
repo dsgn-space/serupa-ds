@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { HERE, read, writePage, browser, cleanup, suffix, ENGINE, report, done } from './lib.mjs';
+import { HERE, read, writePage, browser, cleanup, suffix, ENGINE, report, done, inParallel } from './lib.mjs';
 
 const BASE = path.join(HERE, `baseline-utilities${suffix}.json`);
 const update = process.argv.includes('--update');
@@ -26,9 +26,14 @@ const classes = [...new Set([...css.matchAll(/(?:^|[\s,}(])\.((?:[a-z0-9-]|\\[0-
 const internal = [...new Set([...css.matchAll(/--dk-[a-z0-9-]+/g)].map((m) => m[0]))];
 
 const b = await browser();
-const page = await b.newPage({ viewport: { width: 1200, height: 800 } });
-await page.goto(writePage('utilities.html', '<div id="host" style="position:relative;width:1000px;line-height:20px"></div>', { extra: true }));
-await page.evaluate(() => document.fonts.ready);
+// Four tabs measure a share of the classes each (they're independent: every chunk starts from an empty host).
+const url = writePage('utilities.html', '<div id="host" style="position:relative;width:1000px;line-height:20px"></div>', { extra: true });
+const pages = await Promise.all([0, 1, 2, 3].map(async () => {
+  const p = await b.newPage({ viewport: { width: 1200, height: 800 } });
+  await p.goto(url);
+  await p.evaluate(() => document.fonts.ready);
+  return p;
+}));
 
 const measure = ([list, internal]) => {
   const host = document.getElementById('host');
@@ -56,16 +61,17 @@ const measure = ([list, internal]) => {
 
 const MAX = 200;
 const now = {}, text = {};
-for (let i = 0; i < classes.length; i += 1000) {
-  const chunk = classes.slice(i, i + 1000);
-  const out = await page.evaluate(measure, [chunk, internal]);
+const chunks = []; for (let i = 0; i < classes.length; i += 500) chunks.push(classes.slice(i, i + 500));
+const outs = await inParallel(chunks, pages, (chunk, page) => page.evaluate(measure, [chunk, internal]));
+chunks.forEach((chunk, k) => {
+  const out = outs[k];
   chunk.forEach((c, j) => {
     // -webkit- longhands repeat the standard ones (-webkit-mask-position-x and mask-position).
     const t = out[j].split(';').filter((d) => d && !/^(child )?-webkit-/.test(d)).join(';');
     text[c] = t;
     now[c] = !t ? '(no effect)' : t.length <= MAX ? t : '#' + crypto.createHash('sha1').update(t).digest('hex').slice(0, 12);
   });
-}
+});
 await b.close();
 cleanup();
 
