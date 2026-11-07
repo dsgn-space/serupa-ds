@@ -21,15 +21,15 @@ export interface ComboboxLabels {
   valueRemoved: (label: string) => string;
 }
 export const en: ComboboxLabels = {
-  loadingResults: "Loading…",
-  loadFailed: "Couldn’t load options. Type to try again.",
-  noResults: "No results",
-  resultsCount: (count) => count === 1 ? "1 result" : count + " results",
-  showOptions: "Show options",
-  clearValue: (label) => label ? "Clear " + label : "Clear",
-  createOption: (text) => "Add \u201c" + text + "\u201d",
-  valueAdded: (label) => label + " added",
-  valueRemoved: (label) => label + " removed",
+  loadingResults: 'Loading…',
+  loadFailed: 'Couldn’t load options. Type to try again.',
+  noResults: 'No results',
+  resultsCount: (count) => count === 1 ? '1 result' : count + ' results',
+  showOptions: 'Show options',
+  clearValue: (label) => label ? 'Clear ' + label : 'Clear',
+  createOption: (text) => 'Add \u201c' + text + '\u201d',
+  valueAdded: (label) => label + ' added',
+  valueRemoved: (label) => label + ' removed',
 };
 export const id: ComboboxLabels = {
   loadingResults: 'Memuat…',
