@@ -8,8 +8,12 @@ import { idLabels } from '../../internal/labels';
 import { Attachment, attachmentKind } from './Attachment';
 
 const root = (id: string) => document.getElementById(id) as HTMLElement;
-const meta = (el: HTMLElement) => el.querySelector('.dk-attachment__meta')!.textContent;
-const visible = (el: HTMLElement) => [...el.querySelectorAll('[aria-hidden]')].filter((x) => x.closest('.dk-attachment__name')).map((x) => x.textContent).join('');
+// Parts found as people and screen readers meet them: the kind and size are the name's description (an id ending -meta),
+// the message an id ending -error, the name the element titled with it, the icon the first one.
+const part = (el: HTMLElement, which: 'meta' | 'error') => el.querySelector(`[id$="-${which}"]`) as HTMLElement;
+const meta = (el: HTMLElement) => part(el, 'meta').textContent;
+const nameParts = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[title] > [aria-hidden]')];
+const visible = (el: HTMLElement) => nameParts(el).map((x) => x.textContent).join('');
 
 describe('Attachment', () => {
   test('a <div> with the name, kind and size; ref, className and other props reach it', async () => {
@@ -19,7 +23,7 @@ describe('Attachment', () => {
     expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.kind]).toEqual(['DIV', true, 'dk-attachment extra', 'y', 'attachment', 'pdf']);
     expect([visible(e), meta(e)]).toEqual(['Invoice.pdf', 'PDF1.5 MB']);
     // The name is read once: the two cut parts are hidden and a full copy is there for screen readers.
-    expect(e.querySelector('.dk-visually-hidden')!.textContent).toBe('Invoice.pdf');
+    expect(e.querySelector('[title] > :not([aria-hidden])')!.textContent).toBe('Invoice.pdf');
     expect(e.querySelector('[title]')!.getAttribute('title')).toBe('Invoice.pdf');
   });
 
@@ -33,21 +37,21 @@ describe('Attachment', () => {
 
   test('kind sets the icon and word when the file says nothing', async () => {
     await render(<Attachment id="k" name="Floor plan" kind="image" />);
-    expect([root('k').dataset.kind, meta(root('k')), root('k').querySelector('.dk-attachment__icon')!.getAttribute('data-icon')]).toEqual(['image', 'Image', 'image']);
+    expect([root('k').dataset.kind, meta(root('k')), root('k').querySelector('[data-icon]')!.getAttribute('data-icon')]).toEqual(['image', 'Image', 'image']);
   });
 
   test('without bytes there is no size, and no separator dot', async () => {
     await render(<Attachment id="n" name="backup.bin" />);
-    expect([meta(root('n')), root('n').querySelector('.dk-attachment__size')]).toEqual(['File', null]);
+    expect([meta(root('n')), part(root('n'), 'meta').children.length]).toEqual(['File', 1]);
   });
 
   test('a long name keeps its extension and last characters, and doesn\'t widen its container', async () => {
     const long = 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung-2026.pdf';
     await render(<div style={{ width: '200px' }}><Attachment id="l" name={long} onRemove={() => {}} /></div>);
-    const e = root('l'), end = e.querySelector('.dk-attachment__name-end')!;
+    const e = root('l'), end = nameParts(e)[1];
     expect(end.textContent).toBe('nversicherung-2026.pdf'.slice(-10));
     expect(e.getBoundingClientRect().width).toBeLessThanOrEqual(200);
-    const start = e.querySelector('.dk-attachment__name-start') as HTMLElement;
+    const start = nameParts(e)[0];
     expect(start.scrollWidth).toBeGreaterThan(start.clientWidth);
   });
 
@@ -74,7 +78,7 @@ describe('Attachment', () => {
     await render(<><button>before</button><Attachment name="Q3.xlsx" href="#q3" /></>);
     await userEvent.click(page.getByRole('button', { name: 'before' }));
     await userEvent.tab();
-    const link = document.querySelector('a.dk-attachment__name') as HTMLElement;
+    const link = page.getByRole('link', { name: 'Q3.xlsx' }).element() as HTMLElement;
     expect(document.activeElement).toBe(link);
     expect(css(link).outlineStyle).toBe('solid');
   });
@@ -102,13 +106,13 @@ describe('Attachment', () => {
   test('error: a danger outline and "Upload failed" (or its own message), no bar; "Try again" with onRetry, named with the file', async () => {
     let tries = 0;
     await render(<><Attachment id="f" name="Pitch.pptx" progress={50} error onRetry={() => tries++} /><Attachment id="g" name="Demo.mp4" error="Larger than 100 MB" /></>);
-    expect([root('f').classList.contains('dk-attachment--error'), root('f').querySelector('[role=progressbar]'), root('f').querySelector('.dk-attachment__error')!.textContent.replace(/^error/, '')])
+    expect([root('f').classList.contains('dk-attachment--error'), root('f').querySelector('[role=progressbar]'), part(root('f'), 'error').textContent.replace(/^error/, '')])
       .toEqual([true, null, 'Upload failed']);
     const retry = page.getByRole('button', { name: 'Try again Pitch.pptx' });
     await expect.element(retry).toHaveAccessibleDescription(/Upload failed/);
     await userEvent.click(retry);
     expect(tries).toBe(1);
-    expect([root('g').querySelector('.dk-attachment__error')!.textContent.replace(/^error/, ''), root('g').querySelectorAll('button').length]).toEqual(['Larger than 100 MB', 0]);
+    expect([part(root('g'), 'error').textContent.replace(/^error/, ''), root('g').querySelectorAll('button').length]).toEqual(['Larger than 100 MB', 0]);
   });
 
   test('error={false} and error="" are not a failure', async () => {
@@ -129,10 +133,10 @@ describe('Attachment', () => {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(root('c')).backgroundColor, page = css(document.body).backgroundColor;
       expect(contrast(css(root('c')).color, bg), th + ' name').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(root('c').querySelector('.dk-attachment__meta')).color, bg), th + ' meta').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(part(root('c'), 'meta')).color, bg), th + ' meta').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(root('cl').querySelector('a')).color, bg), th + ' link').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(root('ce').querySelector('.dk-attachment__error')).color, bg), th + ' error').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(root('c').querySelector('.dk-attachment__icon')).color, bg), th + ' icon').toBeGreaterThanOrEqual(3);
+      expect(contrast(css(part(root('ce'), 'error')).color, bg), th + ' error').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(root('c').querySelector('[data-icon]')).color, bg), th + ' icon').toBeGreaterThanOrEqual(3);
       expect(contrast(css(root('ce')).borderTopColor, page), th + ' error outline').toBeGreaterThanOrEqual(3);
     }
     document.documentElement.removeAttribute('data-theme');

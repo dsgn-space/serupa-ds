@@ -32,7 +32,8 @@ Drawn from the `Upload` story.
 3. **Kind and size** (`.dk-attachment__meta`): "PDF · 1.5 MB", in the locale's digits and units.
 4. **Bar** (`.dk-attachment__progress`): the upload, while `progress` is set.
 5. **Message** (`.dk-attachment__error`): why the upload failed.
-6. **Buttons** (`.dk-attachment__retry`, `.dk-attachment__remove`): try again, and remove.
+6. **Try again** (`.dk-attachment__retry`): starts the upload again, after an error with `onRetry`.
+7. **Remove** (`.dk-attachment__remove`): takes the file away, with `onRemove`.
 
 ## Usage
 
@@ -86,6 +87,7 @@ Drawn from the `Upload` story.
 | `onRemove` | `() => void` | | Adds the remove button. |
 | `removeLabel` | `(name: string) => string` | `` `Remove ${name}` `` | The remove button's name. |
 | `disabled` | `boolean` | `false` | Turns the link and buttons off. |
+| `id` | `string` | | Goes to the root `<div>`. |
 
 `className`, `ref` and other props go to the `<div>`.
 
