@@ -472,3 +472,14 @@ describe('Slider at 320px (GM2)', () => {
     expect([said('se1'), said('se2'), root('se1').getAttribute('aria-errormessage'), root('se2').getAttribute('aria-errormessage')]).toEqual([['Too loud'], ['Too wide', 'Too wide'], null, null]);
   });
 });
+
+test('the value bubble writes its digits at one width, so it keeps its width as the number changes (GR162)', async () => {
+  const widths: number[] = [];
+  const screen = await render(<Slider aria-label="Volume" showValue value={11} />);
+  for (const v of [11, 18, 41, 88]) {
+    await screen.rerender(<Slider aria-label="Volume" showValue value={v} />);
+    const bubble = document.querySelector('[role="slider"] > [aria-hidden] > span') as HTMLElement;
+    widths.push(Math.round(bubble.getBoundingClientRect().width * 10) / 10);
+  }
+  expect(new Set(widths).size).toBe(1);
+});
