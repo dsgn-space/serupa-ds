@@ -67,9 +67,9 @@ function find(t: TourStep['target'], near: Node | null): HTMLElement | null {
    ends it and focus goes back to where it was. */
 /** A guided tour: steps that point at parts of the page, one at a time, with Back, Next and Done.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-const TABBABLE = "a[href], button:not(:disabled), input:not(:disabled):not([type=hidden]), select:not(:disabled), textarea:not(:disabled), [tabindex], [contenteditable=\"true\"]";
+const TABBABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type=hidden]), select:not(:disabled), textarea:not(:disabled), [tabindex], [contenteditable="true"]';
 
-export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour", function Tour(props, ref) {
+export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour', function Tour(props, ref) {
   const sds = useSettings(words);
   const own = domId('dk-tour', React.useId());
   const id = props.id || own;
@@ -147,7 +147,7 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
     if (!open || !p) return;
     const esc = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.isComposing) return;
-      if (e.key === "Tab" && !e.altKey && !e.ctrlKey && !e.metaKey) {
+      if (e.key === 'Tab' && !e.altKey && !e.ctrlKey && !e.metaKey) {
         const stops = Array.prototype.filter.call(p.querySelectorAll(TABBABLE), (n: HTMLElement) => n.tabIndex >= 0 && n.getClientRects().length > 0) as HTMLElement[];
         if (!stops.length) return;
         const now = deepActive(), first = stops[0], end = stops[stops.length - 1];
@@ -155,8 +155,8 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
         if (to) { e.preventDefault(); to.focus(); }
         return;
       }
-      if (e.key !== "Escape") return;
-      e.preventDefault(); e.stopPropagation(); close("escape");
+      if (e.key !== 'Escape') return;
+      e.preventDefault(); e.stopPropagation(); close('escape');
     };
     p.addEventListener('keydown', esc);
     return () => p.removeEventListener('keydown', esc);
