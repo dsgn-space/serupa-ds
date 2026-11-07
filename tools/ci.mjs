@@ -11,6 +11,10 @@
 //                                      command); the steps before it are taken as passed, and dist/ as built
 //   node tools/ci.mjs --only <names>   just those steps, comma-separated (--keep-going's failures, run again)
 //   node tools/ci.mjs --list           the steps it would run
+//   node tools/ci.mjs --resume         with --report: after a run was stopped (the machine restarted) or failed on a
+//                                      flake, run again with the same options plus --resume. On the same commit, from a
+//                                      clean tree, the test steps the report already passed are kept, not run again; the
+//                                      build steps always run. The report says which steps came from the earlier run.
 //   node tools/ci.mjs --clean          start from a clean install (npm ci --ignore-scripts), as CI does
 //   node tools/ci.mjs --report <file>  also write the results as Markdown (commit, Node, each step's pass or fail
 //                                      with its test counts), ready to paste under "Local checks" in a merge request
@@ -121,25 +125,33 @@ function run(cmd, args) {
   });
 }
 
-const summary = [];
-for (const { name, job, cmd, args } of steps) {
-  console.log(`\n━━ ${name} (${job}) ━━`);
-  const t0 = Date.now();
-  const r = await run(cmd, args);
-  summary.push([name, job, r.status === 0, Date.now() - t0, counts(r.lines)]);
-  if (r.status !== 0 && !keepGoing) break;
+// --resume: the passing test steps of the report's earlier run on this same commit, by name.
+/** @type {Map<string, [string, string, boolean, number, string]>} */
+const earlier = new Map();
+if (process.argv.includes('--resume') && report && fs.existsSync(path.resolve(report)) && !dirty) {
+  const old = fs.readFileSync(path.resolve(report), 'utf8');
+  const head = /\*\*(?:All passed|FAILED|Running)\*\* on `([0-9a-f]{7,})`/.exec(old);
+  const sameRun = /^Command: `(.*)`$/m.exec(old)?.[1].replace(/\s--resume\b/g, '') === `node tools/ci.mjs ${process.argv.slice(2).join(' ')}`.replace(/\s--resume\b/g, '');
+  if (head && commit.startsWith(head[1]) && !/uncommitted changes/.test(old) && sameRun) {
+    for (const m of old.matchAll(/^\| ([\w-]+) \| ([^|]+?) \| PASS \| (\d+)s \| ([^|]*?) \|$/gm)) earlier.set(m[1], [m[1], m[2], true, Number(m[3]) * 1000, m[4]]);
+  }
+  console.log(earlier.size ? `Resuming: ${[...earlier.keys()].filter((n) => all.find((st) => st.name === n)?.job !== 'build').join(', ')} passed earlier on this commit.` : 'Nothing to resume: the report is for another commit, another command or a changed tree.');
 }
-console.log('\n━━ Summary ━━');
-for (const [name, job, ok, ms, detail] of summary) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name} (${job})  ${(ms / 1000).toFixed(1)}s${detail ? `  ${detail}` : ''}`);
-const left = steps.length - summary.length;
-if (left) console.log(`Stopped after the first failure: ${left} step${left === 1 ? '' : 's'} not run (--keep-going runs them).`);
-if (report) {
+const kept = [];
+/** @type {[string, string, boolean, number, string][]} */
+const summary = [];
+// The report, rewritten after every step while the run goes on ("Running", which the gate doesn't take), so a run the
+// machine stopped halfway leaves the steps it finished for --resume.
+/** @type {(running: boolean) => void} */
+function writeReport(running) {
+  if (!report) return;
+  const left = steps.length - summary.length;
   const passed = summary.every(([, , ok]) => ok) && !left;
   const skipped = all.filter((st) => !steps.includes(st)).map((st) => st.name);
   const md = [
     '## Local checks',
     '',
-    `**${passed ? 'All passed' : 'FAILED'}** on \`${commit.slice(0, 9)}\`${dirty ? ' **with uncommitted changes** (these results don\'t stand for the commit)' : ''}, `
+    `**${running ? 'Running' : passed ? 'All passed' : 'FAILED'}** on \`${commit.slice(0, 9)}\`${dirty ? ' **with uncommitted changes** (these results don\'t stand for the commit)' : ''}, `
       + `Node ${process.versions.node}, ${new Date().toISOString().replace(/\.\d+Z$/, 'Z')}.`,
     '',
     `Command: \`node tools/ci.mjs ${process.argv.slice(2).join(' ')}\``,
@@ -147,13 +159,27 @@ if (report) {
     '| Step | Job | Result | Time | What ran |',
     '| --- | --- | --- | --- | --- |',
     ...summary.map(([name, job, ok, ms, detail]) => `| ${name} | ${job} | ${ok ? 'PASS' : '**FAIL**'} | ${(ms / 1000).toFixed(0)}s | ${detail || ''} |`),
-    ...(left ? [`| ${left} more | | not run | | stopped after the first failure |`] : []),
+    ...(left ? [`| ${left} more | | not run | | ${running ? 'still to run' : 'stopped after the first failure'} |`] : []),
     ...(skipped.length ? ['', `Left out: ${skipped.join(', ')}.`] : []),
+    ...(kept.length ? ['', `Resumed: ${kept.join(', ')} passed in the earlier run on this commit and weren't run again.`] : []),
     '',
   ].join('\n');
   fs.writeFileSync(path.resolve(report), md);
-  console.log(`Report: ${report}`);
 }
+for (const { name, job, cmd, args } of steps) {
+  if (job !== 'build' && earlier.has(name)) { summary.push(/** @type {[string, string, boolean, number, string]} */ (earlier.get(name))); kept.push(name); continue; }
+  console.log(`\n━━ ${name} (${job}) ━━`);
+  const t0 = Date.now();
+  const r = await run(cmd, args);
+  summary.push([name, job, r.status === 0, Date.now() - t0, counts(r.lines)]);
+  writeReport(true);
+  if (r.status !== 0 && !keepGoing) break;
+}
+console.log('\n━━ Summary ━━');
+for (const [name, job, ok, ms, detail] of summary) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name} (${job})  ${(ms / 1000).toFixed(1)}s${detail ? `  ${detail}` : ''}`);
+const left = steps.length - summary.length;
+if (left) console.log(`Stopped after the first failure: ${left} step${left === 1 ? '' : 's'} not run (--keep-going runs them).`);
+if (report) { writeReport(false); console.log(`Report: ${report}`); }
 // The command that picks up where this run failed, with the same options: from the step that stopped it, or, after
 // --keep-going, just the steps that failed.
 const failed = summary.filter(([, , ok]) => !ok).map(([name]) => name);
@@ -161,6 +187,7 @@ if (failed.length) {
   const keep = [];
   for (let i = 2; i < process.argv.length; i++) {
     if (['--from', '--only'].includes(process.argv[i])) { i++; continue; }
+    if (process.argv[i] === '--resume') continue;
     keep.push(process.argv[i]);
   }
   const again = left ? ['--from', failed[0]] : ['--only', failed.join(',')];

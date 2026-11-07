@@ -3,7 +3,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, affectedComponents, folderOf, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -19,28 +19,34 @@ const GROUPS = {
   visual: [['Visual snapshots', 'visual.mjs', ...update]],
   storybook: [['Storybook', 'storybook.mjs']],
 };
+// The tests that check every story against a baseline or a rule: a change to one component can break its line in them.
+const STORY_WIDE = ['hydrateStories', 'hydrateStoriesCsp', 'serverHtml', 'ariaStories', 'tabWalk', 'leaks', 'mountTime', 'network', 'strictCsp', 'trustedTypes', 'activity', 'motion', 'listRole', 'digitsStories', 'layoutShift', 'propFuzz'].map((f) => `src/internal/${f}.test.tsx`);
 // --since <ref> (CI on a pull request): when every changed file belongs to a component, block or pattern folder, the component tests,
 // visual snapshots and Storybook checks cover only those components and the ones that use them (SERUPA_ONLY). The checks always run whole.
 // The components the change itself touches (without the ones that use them), on a narrowed run.
 let direct = null;
+// The shared tests the change edits: they run on a narrowed run whatever components it covers.
+let sharedTests = [];
 if (arg('--since')) {
-  const diff = spawnSync('git', ['diff', '--name-only', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
-  const changed = diff.status === 0 ? affectedComponents(diff.stdout.split('\n').filter(Boolean)) : null;
+  // Lines only added to shared files (a new component's labels, icons and export) don't widen it (ADDITIVE in lib.mjs).
+  const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
+  // A story-wide test (STORY_WIDE) goes through the covered components' stories, so a change to one tests everything.
+  const storyWide = diff.stdout.split('\n').some((l) => STORY_WIDE.includes(l.split('\t')[2]));
+  const changed = diff.status === 0 && !storyWide ? affectedComponents(scopeFiles(diff.stdout)) : null;
+  sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
   direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
 }
 const only = onlyComponents();
-// The tests that check every story against a baseline or a rule: a change to one component can break its line in them.
-const STORY_WIDE = ['hydrateStories', 'hydrateStoriesCsp', 'serverHtml', 'ariaStories', 'tabWalk', 'leaks', 'mountTime', 'network', 'strictCsp', 'trustedTypes', 'activity', 'motion', 'listRole', 'digitsStories', 'layoutShift', 'propFuzz'].map((f) => `src/internal/${f}.test.tsx`);
 // They go through the covered components' stories, so with none to go through (ErrorBoundary alone: its stories are
 // left out there, SKIP in vitest/stories.tsx) most would find no test at all and fail for it.
 const storied = !!only && [...only].some((n) => n !== 'ErrorBoundary' && fs.existsSync(path.join(PROJECT, 'src', 'components', n, `${n}.stories.tsx`)));
 // The components' own folders and the shared tests in src/internal/ that render one of them; with SERUPA_ONLY the
 // component tests (in English and in the second language) cover these.
 // A block or pattern brings its own folder (src/patterns/<Name>/); an Introduction page has none.
-const covered = only ? [...[...only].map(folderOf).filter(Boolean), ...internalTestsFor(only)] : [];
+const covered = only ? [...new Set([...[...only].map(folderOf).filter(Boolean), ...internalTestsFor(only), ...sharedTests])] : [];
 const node = (g) => ([name, f, ...args]) => [name, 'node', [path.join(HERE, f), ...args], g];
 const vitest = (name, project, g, ...args) => [name, process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run', '--project', project, ...args], g];
 const steps = [
@@ -72,7 +78,8 @@ if (arg('--group')) {
   steps.splice(0, steps.length, ...steps.filter((step) => step[3] === g));
 }
 // No component changed (a changeset alone): nothing for the component, visual or Storybook steps to cover.
-if (only && !only.size) steps.splice(0, steps.length, ...steps.filter((step) => step[3] === 'checks'));
+// A changed shared test still runs, in the component steps, with nothing else there.
+if (only && !only.size) steps.splice(0, steps.length, ...steps.filter((step) => step[3] === 'checks' || (sharedTests.length && step[3] === 'components')));
 // Only an Introduction page changed: no folder of tests to run, and the component step with no paths would run them all.
 if (only && only.size && !covered.length) steps.splice(0, steps.length, ...steps.filter((step) => step[3] !== 'components'));
 if (arg('--compat')) steps.push([`Cross-browser (${arg('--compat')})`, 'node', [path.join(HERE, 'compat.mjs'), '--engine', arg('--compat'), ...(arg('--driver') ? ['--driver', arg('--driver')] : [])]]);

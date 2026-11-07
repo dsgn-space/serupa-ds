@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { PAGES, PROJECT, browser, fixClock, inParallel, openUrl, report, serve, onlyComponents } from './lib.mjs';
+import { PAGES, PROJECT, browser, fixClock, inParallel, inParallelRetry, openUrl, report, serve, onlyComponents } from './lib.mjs';
 
 const DIR = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(DIR, 'index.json'))) {
@@ -220,7 +220,7 @@ async function checkStory(e, w) {
   out.push(t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in all six themes and with more contrast, with text at 200%, wider text spacing and at 320px`, !problems.length, problems.slice(0, 3).join('\n      ')));
   return out;
 }
-R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(await inParallel(stories, workers, recycled(checkStory))).flat());
+R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(await inParallelRetry(stories, workers, recycled(checkStory), (e) => e.id)).flat());
 await b.close();
 close();
 console.log(`(${docs.length} docs pages, ${stories.length} stories × ${RUNS.length} runs: six themes and more contrast; 200% text, text spacing and 320px in the first)`);
