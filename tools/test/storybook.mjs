@@ -62,6 +62,26 @@ async function open(w, e, run) {
   return '';
 }
 
+// The story already open in another run: the theme and contrast change in place, through Storybook's own channel, as
+// its toolbar changes them, instead of loading the page again (a load is most of a story's time, and axe-core is
+// added again with each one). '' when it rendered; anything else and the caller opens the page as usual.
+async function switchTo(w, run) {
+  const [theme, contrast = 'default'] = run.split('+');
+  const [brand, mode] = theme.split('-');
+  w.errors = [];
+  const ok = await w.page.evaluate(({ brand, mode, contrast }) => new Promise((done) => {
+    const ch = /** @type {any} */ (window).__STORYBOOK_ADDONS_CHANNEL__;
+    if (!ch) { done(false); return; }
+    const timer = setTimeout(() => done(false), 10000);
+    ch.once('storyRendered', () => { clearTimeout(timer); done(true); });
+    ch.emit('updateGlobals', { globals: { brand, mode, contrast } });
+  }), { brand, mode, contrast }).catch(() => false);
+  if (!ok) return 'did not switch';
+  await w.page.evaluate(() => document.fonts.ready.then(() => undefined));
+  await w.page.waitForTimeout(150);
+  return '';
+}
+
 // SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
 // the docs pages are checked in the first shard.
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
@@ -181,12 +201,16 @@ async function pageRules(page) {
 async function checkStory(e, w) {
   const out = [];
   const problems = [];
-  for (const th of RUNS) {
-    const notReady = await open(w, e, th);
-    if (notReady) { problems.push(`${th}: ${notReady}`); continue; }
+  // The first run opens the page, the others switch it in place, and the extra checks of the first theme (they add
+  // style sheets and resize the page) come last, after switching back to it.
+  let loaded = false;
+  for (const th of [...RUNS.slice(1), RUNS[0]]) {
+    const notReady = (loaded && !(await switchTo(w, th))) ? '' : await open(w, e, th);
+    if (notReady) { problems.push(`${th}: ${notReady}`); loaded = false; continue; }
+    loaded = true;
     const shown = await w.page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th.split('+')[0] && (document.documentElement.getAttribute('data-contrast') === 'more') === th.endsWith('+more') && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
     if (!shown || w.errors.length) { problems.push(`${th}: ${w.errors[0] || 'did not render'}`); continue; }
-    await w.page.addScriptTag({ content: axe });
+    if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
     const v = await w.page.evaluate(async () => {
       const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
       // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").

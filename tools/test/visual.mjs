@@ -166,6 +166,23 @@ async function open(page, e, theme, more = '') {
   return '';
 }
 
+// The story already open at rest: the theme changes in place, through Storybook's own channel, as its toolbar changes
+// it, instead of loading the page again (a load was three quarters of this check's time). '' when it rendered.
+async function switchTo(page, theme) {
+  const [brand, mode] = theme.split('-');
+  const ok = await page.evaluate(({ brand, mode }) => new Promise((done) => {
+    const ch = /** @type {any} */ (window).__STORYBOOK_ADDONS_CHANNEL__;
+    if (!ch) { done(false); return; }
+    const timer = setTimeout(() => done(false), 10000);
+    ch.once('storyRendered', () => { clearTimeout(timer); done(true); });
+    ch.emit('updateGlobals', { globals: { brand, mode } });
+  }), { brand, mode }).catch(() => false);
+  if (!ok || (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) !== theme) return 'did not switch';
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+  await page.waitForTimeout(150);
+  return '';
+}
+
 // Shoots the page (or one element of it) and compares it with baseline-visual/<name>.png (or writes it, with --update).
 // null when nothing to report.
 async function compare(page, name, el) {
@@ -192,10 +209,14 @@ async function checkStory(e, page) {
   const out = [];
   const c = component(e);
   fs.mkdirSync(path.join(DIR, c), { recursive: true });
-  for (const th of THEMES) {
-    for (const state of th === THEMES[0] ? ['rest', 'hover', 'focus'] : ['rest']) {
+  // Every theme at rest first, on one page load (each next theme switched in place), then hover and focus, which
+  // each start from a fresh load.
+  let atRest = false;
+  for (const [th, state] of [...THEMES.map((th) => [th, 'rest']), [THEMES[0], 'hover'], [THEMES[0], 'focus']]) {
+    {
       const name = `${c}/${e.exportName}-${th}-${state}`;
-      const notReady = await open(page, e, th);
+      const notReady = (atRest && state === 'rest' && !(await switchTo(page, th))) ? '' : await open(page, e, th);
+      atRest = !notReady && state === 'rest';
       if (notReady) { out.push({ name, ok: false, detail: notReady }); continue; }
       if (state !== 'rest') {
         // What to hover and focus: the element marked data-visual-target="hover" / ="focus" for this state, else the one
