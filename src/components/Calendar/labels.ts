@@ -16,22 +16,22 @@ export interface CalendarLabels {
   inAWeek: string;
 }
 export const en: CalendarLabels = {
-  previousMonth: "Previous month",
-  nextMonth: "Next month",
-  month: "Month",
-  year: "Year",
-  presets: "Shortcuts",
-  today: "Today",
-  tomorrow: "Tomorrow",
-  inAWeek: "In a week",
+  previousMonth: 'Previous month',
+  nextMonth: 'Next month',
+  month: 'Month',
+  year: 'Year',
+  presets: 'Shortcuts',
+  today: 'Today',
+  tomorrow: 'Tomorrow',
+  inAWeek: 'In a week',
 };
 export const id: CalendarLabels = {
-  previousMonth: "Bulan sebelumnya",
-  nextMonth: "Bulan berikutnya",
-  month: "Bulan",
-  year: "Tahun",
-  presets: "Pintasan",
-  today: "Hari ini",
-  tomorrow: "Besok",
-  inAWeek: "Seminggu lagi",
+  previousMonth: 'Bulan sebelumnya',
+  nextMonth: 'Bulan berikutnya',
+  month: 'Bulan',
+  year: 'Tahun',
+  presets: 'Pintasan',
+  today: 'Hari ini',
+  tomorrow: 'Besok',
+  inAWeek: 'Seminggu lagi',
 };

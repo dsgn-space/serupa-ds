@@ -1,5 +1,5 @@
-import * as React from "react";
-import { addDays, day, sameDay } from "./dates";
+import * as React from 'react';
+import { addDays, day, sameDay } from './dates';
 
 // Preset shortcuts beside a calendar (RU11): "Today", "Last 7 days", "This month" or the app's own. Calendar and
 // DatePicker take single days, DateRangePicker ranges; both draw the same list here. A preset whose day (or either

@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit } from "../../internal/cn";
-import { addDays, addMonths, compare, day, firstDayOfWeek, isoDate, isValid, sameDay, sameMonth, startOfMonth, startOfWeek, toDay } from "../../internal/dates";
-import { IconButton } from "../IconButton/IconButton";
-import { component } from "../../internal/component";
-import { useLocale, useOwnLang, useSettings } from "../../internal/provider";
-import * as icons from "../../material/builtin";
-import { useFocusHandover } from "../../internal/focus";
-import { dayPresets, PresetList, type PresetItem } from "../../internal/datePresets";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit } from '../../internal/cn';
+import { addDays, addMonths, compare, day, firstDayOfWeek, isoDate, isValid, sameDay, sameMonth, startOfMonth, startOfWeek, toDay } from '../../internal/dates';
+import { IconButton } from '../IconButton/IconButton';
+import { component } from '../../internal/component';
+import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import * as icons from '../../material/builtin';
+import { useFocusHandover } from '../../internal/focus';
+import { dayPresets, PresetList, type PresetItem } from '../../internal/datePresets';
+import { en as words } from './labels';
 
 /** A shortcut beside the days (Calendar and DatePicker presets): its name and the day it picks, as a Date, a
     "yyyy-mm-dd" string, or a function that gives one when the list draws (so "Next Monday" follows today). */
@@ -211,10 +211,10 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   // A month arrow that reaches min or max turns disabled under focus (FJ1): focus goes to the other arrow.
   const handover = useFocusHandover();
   const presets: PresetItem[] | null = props.presets === true ? dayPresets(sds.labels)
-    : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === "function" ? p.value() : p.value, "Calendar"), end: null })) : null;
+    : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === 'function' ? p.value() : p.value, 'Calendar'), end: null })) : null;
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
-    <div {...rest} ref={ref} className={cn("dk-calendar", presets && "dk-calendar--presets", props.className)} data-component="calendar">
+    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.className)} data-component="calendar">
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />

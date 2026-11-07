@@ -1,23 +1,23 @@
-"use client";
-import * as React from "react";
-import { cn, domId, isInvalid, oneOf, SIZES } from "../../internal/cn";
-import { addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, startOfMonth, toDay } from "../../internal/dates";
-import { reject } from "../../internal/rejectInput";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { useExit } from "../../internal/useExit";
-import { Calendar } from "../Calendar/Calendar";
-import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import { useLocale, useSettings } from "../../internal/provider";
-import { useFormReset } from "../../internal/useFormReset";
-import * as icons from "../../material/builtin";
-import { isComposing } from "../../internal/ime";
-import { delegateFocus, useAutoFocus, windowBlur } from "../../internal/focus";
-import { en as DateRangePickerWords } from "./labels";
-import { en as DatePickerWords } from "../DatePicker/labels";
-import { en as CalendarWords } from "../Calendar/labels";
-import { PresetList, rangePresets, type PresetItem } from "../../internal/datePresets";
+'use client';
+import * as React from 'react';
+import { cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
+import { addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, startOfMonth, toDay } from '../../internal/dates';
+import { reject } from '../../internal/rejectInput';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { useExit } from '../../internal/useExit';
+import { Calendar } from '../Calendar/Calendar';
+import { Icon } from '../Icon/Icon';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import { useLocale, useSettings } from '../../internal/provider';
+import { useFormReset } from '../../internal/useFormReset';
+import * as icons from '../../material/builtin';
+import { isComposing } from '../../internal/ime';
+import { delegateFocus, useAutoFocus, windowBlur } from '../../internal/focus';
+import { en as DateRangePickerWords } from './labels';
+import { en as DatePickerWords } from '../DatePicker/labels';
+import { en as CalendarWords } from '../Calendar/labels';
+import { PresetList, rangePresets, type PresetItem } from '../../internal/datePresets';
 // This component's words and the ones it shares with DatePicker and Calendar (the presets' "Today" and their name).
 const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, CalendarWords);
 
@@ -184,10 +184,10 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const isSel = (d: Date) => sameDay(d, value.start) || sameDay(d, value.end);
   const off = !!disabled || !!readOnly;
   const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels)
-    : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === "function" ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
+    : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === 'function' ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
   // A preset sets both ends and brings its start's month into view; the popup stays open to show it (RU11).
-  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(startOfMonth(it.start)); setPicking("start"); setHover(null); };
-  const field = (which: "start" | "end") => (
+  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(startOfMonth(it.start)); setPicking('start'); setHover(null); };
+  const field = (which: 'start' | 'end') => (
     <input type="text" inputMode="numeric" autoComplete="off" className="dk-input__field dk-date-range-picker__field"
       ref={which === 'start' ? startField : undefined} id={which === 'start' ? id : undefined}
       aria-label={which === 'start' ? startLabel || sds.labels.startDate : endLabel || sds.labels.endDate} aria-describedby={cn(describedBy, popId + '-format')} aria-errormessage={invalid ? errorMessage : undefined} aria-required={required} aria-invalid={invalid || undefined}
@@ -226,7 +226,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
             <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>
             <PresetList label={sds.labels.presets} items={presets} allowed={allowed} current={value} onPick={choose} />
           </div> : <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>}
-          <p className="dk-date-range-picker__status" aria-live="polite">{picking === "start" ? sds.labels.chooseStartDate : sds.labels.chooseEndDate}</p>
+          <p className="dk-date-range-picker__status" aria-live="polite">{picking === 'start' ? sds.labels.chooseStartDate : sds.labels.chooseEndDate}</p>
         </> : null}
       </div>
     </span>

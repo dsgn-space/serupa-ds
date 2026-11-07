@@ -1,22 +1,22 @@
-"use client";
-import * as React from "react";
-import { pressFocuses } from "../../internal/affix";
-import { cn, domId, isInvalid, oneOf, SIZES } from "../../internal/cn";
-import { compare, datePattern, formatDate, isoDate, parseDate, toDay } from "../../internal/dates";
-import { reject } from "../../internal/rejectInput";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { useExit } from "../../internal/useExit";
-import { Calendar, type DatePreset } from "../Calendar/Calendar";
-import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import { useLocale, useOwnLang, useSettings } from "../../internal/provider";
-import { useFormReset } from "../../internal/useFormReset";
-import * as icons from "../../material/builtin";
-import { isComposing } from "../../internal/ime";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { en as words } from "./labels";
-import { windowBlur } from "../../internal/focus";
+'use client';
+import * as React from 'react';
+import { pressFocuses } from '../../internal/affix';
+import { cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
+import { compare, datePattern, formatDate, isoDate, parseDate, toDay } from '../../internal/dates';
+import { reject } from '../../internal/rejectInput';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { useExit } from '../../internal/useExit';
+import { Calendar, type DatePreset } from '../Calendar/Calendar';
+import { Icon } from '../Icon/Icon';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import { useFormReset } from '../../internal/useFormReset';
+import * as icons from '../../material/builtin';
+import { isComposing } from '../../internal/ime';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { en as words } from './labels';
+import { windowBlur } from '../../internal/focus';
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'children'> {
   /** The chosen day (controlled), or null. Use with onValueChange. A "yyyy-mm-dd" string is that day, wherever the
@@ -131,10 +131,10 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
         <Icon icon={icons.CalendarToday} />
       </button>
       {/* The format to type, read after the field's name: a placeholder is gone once something is typed, and not every screen reader reads it. */}
-      <span id={id + "-format"} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
-      {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ""} disabled={disabled} /> : null}
-      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: "manual" }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? "" : undefined} className="dk-date-picker__popup"
-        onKeyDown={(e) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}>
+      <span id={id + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
+      {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}
+      <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup"
+        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}>
         {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} presets={presets} autoFocus
           onValueChange={(d) => { commit(d); close(true); }} /> : null}
       </div>
