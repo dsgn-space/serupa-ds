@@ -15,8 +15,9 @@ import { SegmentedControl } from '../../components/SegmentedControl/SegmentedCon
    - 4.1.2, 1.3.1: the bell is named with its count ("Notifications, 3 unread"), so the number is heard, not only seen.
    - 1.4.1: an unread notification says "Unread" in words and has a bolder title, not only a colored dot.
    - 4.1.3: the count above the list is a status, so marking one read or changing the filter is said politely.
-   - 2.4.3: under "Unread", marking one read takes it out of the list; focus goes to the next one's button, or the
-     heading when none are left, never to the top of the page.
+   - 2.4.3: marking one read on the page takes its button away (and, under "Unread", the notification too), so focus
+     goes to the next unread one's button, or the heading when none are left; after Mark all as read it goes to the
+     heading. Never to the top of the page. In the drawer, focus stays in the drawer.
    Storing what's read is the app's job: onMarkRead and onMarkAllRead hear it. */
 
 export interface NotificationsProps {
@@ -60,15 +61,21 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead }: Notif
     else if (to) document.getElementById(`read-${to}`)?.focus();
   });
 
-  const markRead = (id: string) => {
-    if (filter === 'unread') {
-      const at = shown.findIndex((n) => n.id === id), next = shown[at + 1] || shown[at - 1];
+  // onPage: pressed on the page, whose button goes away with it; the drawer keeps focus itself.
+  const markRead = (id: string, onPage?: boolean) => {
+    if (onPage) {
+      const at = shown.findIndex((n) => n.id === id);
+      const next = shown.slice(at + 1).find((n) => !n.read) || shown.slice(0, at).reverse().find((n) => !n.read);
       focusTo.current = next ? next.id : 'heading';
     }
     setRead((r) => new Set(r).add(id));
     onMarkRead?.(id);
   };
-  const markAll = () => { setRead(new Set(items.map((n) => n.id))); onMarkAllRead?.(); };
+  const markAll = (onPage?: boolean) => {
+    if (onPage) focusTo.current = 'heading';
+    setRead(new Set(items.map((n) => n.id)));
+    onMarkAllRead?.();
+  };
   const bellName = unread ? `Notifications, ${unread} unread` : 'Notifications';
 
   return (
@@ -83,12 +90,12 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead }: Notif
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#notifications" active>Notifications</NavbarLink>
       </Navbar>
-      <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={markRead} onMarkAllRead={markAll} />
+      <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={(id) => markRead(id)} onMarkAllRead={() => markAll()} />
 
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8 outline-none">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Heading level={1} ref={heading} tabIndex={-1} className="outline-none">Notifications</Heading>
-          <Button variant="outline" disabled={!unread} onClick={markAll}>Mark all as read</Button>
+          <Button variant="outline" disabled={!unread} onClick={() => markAll(true)}>Mark all as read</Button>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
@@ -100,7 +107,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead }: Notif
             {shown.map((n) => (
               <ListItem key={n.id} title={<span className={n.read ? undefined : 'font-semibold'}>{n.title}</span>}
                 description={<>{n.description ? <>{n.description} · </> : null}<RelativeTime date={n.time ?? now} />{n.read ? null : <> · Unread</>}</>}
-                trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id)}>Mark as read</Button>} />
+                trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id, true)}>Mark as read</Button>} />
             ))}
           </List>
         ) : (
