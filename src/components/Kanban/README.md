@@ -74,7 +74,7 @@ Drawn from the `Default` story.
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | The column headings' level. |
 | `disabled` | `boolean` | `false` | Shows the cards without handles or menus. |
 
-`className`, `ref` and other props go to the board's `<div>`.
+`id`, `className`, `ref` and other props go to the board's `<div>`.
 
 ## Component tokens
 

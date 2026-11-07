@@ -14,7 +14,10 @@ const START = (): KanbanColumn<T>[] => [
   { id: 'done', title: 'Done', items: [] },
 ];
 const said = (text: string | RegExp) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(text);
-const names = () => [...document.querySelectorAll<HTMLElement>('.dk-kanban__column')].map((c) => c.querySelector('h3')!.textContent + ': ' + [...c.querySelectorAll<HTMLElement>('li[data-key]')].map((li) => li.dataset.key).join(''));
+// Columns are the board's sections; a column's count sits after its heading.
+const columns = () => [...document.querySelectorAll<HTMLElement>('section[data-column]')];
+const count = (col: Element) => col.querySelector('h1, h2, h3, h4, h5, h6')!.nextElementSibling!;
+const names = () => columns().map((c) => c.querySelector('h3')!.textContent + ': ' + [...c.querySelectorAll<HTMLElement>('li[data-key]')].map((li) => li.dataset.key).join(''));
 const handle = (name: string) => page.getByRole('button', { name: 'Move ' + name, exact: true });
 
 function Board({ moves, dir, start }: { moves?: KanbanMove<T>[]; dir?: 'rtl'; start?: KanbanColumn<T>[] }) {
@@ -37,9 +40,9 @@ describe('Kanban', () => {
 
   test('each column shows its count; over its limit it says "Over limit" in words; an empty column says "No cards"', async () => {
     await render(<Board start={[...START().slice(0, 2), { id: 'done', title: 'Done', items: [] }].map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c)} />);
-    const counts = [...document.querySelectorAll('.dk-kanban__count')].map((c) => c.textContent);
+    const counts = columns().map((c) => count(c).textContent);
     expect(counts).toEqual(['3', '2 of 1Over limit', '0']);
-    expect(document.querySelector('.dk-kanban__empty')!.textContent).toBe('No cards');
+    expect(document.querySelector('li:not([data-key])')!.textContent).toBe('No cards');
   });
 
   test('keyboard: Space picks a card up, Down moves it, Right moves it to the next column, Space drops it; each step is said and onMove gets the move', async () => {
@@ -122,7 +125,7 @@ describe('Kanban', () => {
   test('pointer: dragging a handle onto another column drops the card there', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
-    const h = handle('Alpha').element(), target = document.querySelectorAll('.dk-kanban__cards')[2];
+    const h = handle('Alpha').element(), target = document.querySelectorAll('ul[role=list]')[2];
     const a = h.getBoundingClientRect(), b = target.getBoundingClientRect();
     h.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 1, clientX: a.x + 4, clientY: a.y + 4 }));
     for (let i = 1; i <= 5; i++) window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 1, clientX: a.x + 4 + (b.x + 40 - a.x) * i / 5, clientY: a.y + 4 + (b.y + 10 - a.y) * i / 5 }));
@@ -155,7 +158,7 @@ describe('Kanban', () => {
   test('its words come from the labels', async () => {
     await render(<SerupaProvider labels={idLabels}><Board /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Pindahkan Alpha', exact: true })).toBeVisible();
-    expect(document.querySelectorAll('.dk-kanban__count')[1].textContent).toBe('1 dari 1');
+    expect(count(columns()[1]).textContent).toBe('1 dari 1');
   });
 
   test('a narrow board scrolls sideways in its own box, not the page', async () => {
@@ -168,13 +171,13 @@ describe('Kanban', () => {
     await render(<Board start={START().map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c)} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const col = document.querySelector('.dk-kanban__column')!, card = document.querySelector('.dk-kanban__card')!;
+      const col = columns()[0], card = document.querySelector('li[data-key]')!;
       const colBg = css(col).backgroundColor, cardBg = css(card).backgroundColor;
       expect(contrast(css(col.querySelector('h3')).color, colBg), th + ' title').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(col.querySelector('.dk-kanban__count')).color, colBg), th + ' count').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(document.querySelector('.dk-kanban__count--over')).color, colBg), th + ' over').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(card.querySelector('.dk-kanban__content')).color, cardBg), th + ' card').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(card.querySelector('.dk-kanban__handle')).color, cardBg), th + ' handle').toBeGreaterThanOrEqual(3);
+      expect(contrast(css(count(col)).color, colBg), th + ' count').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(count(columns()[1])).color, colBg), th + ' over').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(card.lastElementChild).color, cardBg), th + ' card').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(card.querySelector('button')).color, cardBg), th + ' handle').toBeGreaterThanOrEqual(3);
     }
     document.documentElement.removeAttribute('data-theme');
   });
