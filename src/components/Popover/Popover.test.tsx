@@ -443,7 +443,7 @@ describe('Popover inside a form (GR170)', () => {
       await rerender(<></>);
       await render(<form><Popover title="Rename" defaultOpen trigger={<Button>Rename</Button>}><input aria-label="Name" /></Popover></form>);
       expect(calls()).toHaveLength(1);
-      expect(String(calls()[0]![0])).toMatch(/^Popover: it's inside a <form>/);
+      expect(String(calls()[0][0])).toMatch(/^Popover: it's inside a <form>/);
     } finally { warn.mockRestore(); }
   });
 });
