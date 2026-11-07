@@ -90,6 +90,27 @@ describe('Tour', () => {
     expect(document.activeElement).toBe(el('go'));
   });
 
+  test('inside a shadow root, a selector finds its target there, and focus goes back to the button that opened it', async () => {
+    function Opened() {
+      const [open, setOpen] = React.useState(false);
+      return <><button id="sgo" onClick={() => setOpen(true)}>Go</button><Page open={open} onOpenChange={setOpen} /></>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Opened />, { container: inner });
+      const root = host.shadowRoot!, tour = root.getElementById('t')!;
+      await userEvent.click(root.getElementById('sgo')!);
+      expect(root.activeElement).toBe(tour);
+      expect(root.getElementById('a')!.hasAttribute('data-tour-target')).toBe(true);
+      await userEvent.keyboard('{Escape}');
+      expect(tour.hidden).toBe(true);
+      expect(root.activeElement?.id).toBe('sgo');
+    } finally { host.remove(); }
+  });
+
   test('keyboard: Tab moves between the close button, Back and Next; Enter and Space press them', async () => {
     const onStepChange = vi.fn<(step: number) => void>();
     await render(<Page defaultOpen defaultStep={1} onStepChange={onStepChange} />);

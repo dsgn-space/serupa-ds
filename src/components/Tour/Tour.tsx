@@ -4,6 +4,7 @@ import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
 import { component } from "../../internal/component";
 import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
 import { showLayer, type Placement } from "../../internal/position";
+import { deepActive, rootOf } from "../../internal/root";
 import { useSettings } from "../../internal/provider";
 import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
 import { useExit } from "../../internal/useExit";
@@ -52,9 +53,10 @@ export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
 
 const OWN = { steps: 1, open: 1, defaultOpen: 1, onOpenChange: 1, step: 1, defaultStep: 1, onStepChange: 1, onFinish: 1, headingLevel: 1, className: 1, id: 1 } as const;
 
-// The element a step points at, if it's on the page now.
-function find(t: TourStep["target"]): HTMLElement | null {
-  const el = typeof t === "string" ? document.querySelector(t) : t && "current" in t ? t.current : t;
+// The element a step points at, if it's on the page now. A selector is looked up in the tour's own document or
+// shadow root, so a tour inside a shadow root finds its targets there.
+function find(t: TourStep["target"], near: Node | null): HTMLElement | null {
+  const el = typeof t === "string" ? rootOf(near).querySelector(t) : t && "current" in t ? t.current : t;
   return el instanceof Element ? (el as HTMLElement) : null;
 }
 
@@ -103,7 +105,7 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
 
   // The step's element: found each time a step shows (it may have appeared since), brought into view and ringed.
   useIsoLayoutEffect(() => {
-    const el = open && step ? find(step.target) : null;
+    const el = open && step ? find(step.target, panel.current) : null;
     anchor.current = el;
     setTarget(el);
     if (!el) return;
@@ -125,12 +127,12 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
   useIsoLayoutEffect(() => {
     const p = panel.current;
     if (!open || !p) return;
-    if (!opener.current) opener.current = document.activeElement;
+    if (!opener.current) opener.current = deepActive();   // inside a shadow root, what had focus there, not its host
     p.focus({ preventScroll: true });
   }, [open, at]);
   useIsoLayoutEffect(() => {
     if (open) return;
-    const back = opener.current as HTMLElement | null, p = panel.current, now = document.activeElement;
+    const back = opener.current as HTMLElement | null, p = panel.current, now = deepActive();
     opener.current = null;
     if (back && back.isConnected && typeof back.focus === "function" && (!now || now === document.body || (!!p && p.contains(now)))) back.focus({ preventScroll: true });
   }, [open]);
