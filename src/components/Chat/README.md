@@ -75,7 +75,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 | Key | Does |
 | --- | --- |
 | Tab | To the log, then through its buttons and links, then the composer |
-| ↑ ↓, Page Up, Page Down, Home, End | Scroll the log while it has focus |
+| ↑ ↓, PageUp, PageDown, Home, End | Scroll the log while it has focus |
 | Enter (in the composer) | Sends the message |
 | Shift+Enter | A new line in the message |
 
@@ -151,5 +151,4 @@ Each is an optional override: set it on the page, a container or one Chat. The l
 | `--chat-gap` | `spacing-3` | Space between messages (12px). |
 | `--chat-bubble-padding-x` | `spacing-3` | Space at a bubble's sides (12px). |
 | `--chat-bubble-padding-y` | `spacing-2` | Space above and below a bubble's text (8px). |
-| `--chat-message-max-width` | `sizing-4-5` | The widest a message grows: 80% of the conversation. |
 <!-- token-table:end -->

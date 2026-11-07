@@ -30,6 +30,10 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
   loadingOlder?: boolean | undefined;
 }
 
+// Whether the log shows its newest message (within NEAR px), and scrolling it there.
+const atBottom = (el: HTMLElement) => el.scrollHeight - el.scrollTop - el.clientHeight <= NEAR;
+const toEnd = (el: HTMLElement) => { el.scrollTop = el.scrollHeight; };
+
 /* Chat: the conversation, as a log (role="log", so screen readers read each new message as it comes) that scrolls by
    itself. It sticks to the bottom only while the reader is there: scrolled up, new messages don't move the page, and
    a "3 new messages" button at the bottom jumps down. Earlier messages loaded at the top keep the reader's place. */
@@ -45,25 +49,26 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
   // Where things were at the last render: whether the reader was at the bottom, the first and last keys, the height.
   const was = React.useRef<{ bottom: boolean; first: string; last: string; height: number; top: number; messages: number } | null>(null);
   const [unread, setUnread] = React.useState(0);
-  const atBottom = (el: HTMLElement) => el.scrollHeight - el.scrollTop - el.clientHeight <= NEAR;
-  const toBottom = () => { const el = scroller.current; if (el) el.scrollTop = el.scrollHeight; };
+  const toBottom = () => { const el = scroller.current; if (el) toEnd(el); };
+  const first = keys[0] || "", last = keys[keys.length - 1] || "", all = "\n" + keys.join("\n") + "\n";
 
+  // When the messages change: where the reader was decides where they stay.
   React.useLayoutEffect(() => {
     const el = scroller.current;
     if (!el) return;
-    const before = was.current, first = keys[0] || "", last = keys[keys.length - 1] || "";
-    if (!before) toBottom();   // opens at the newest message
-    else if (first !== before.first && last === before.last && keys.includes(before.first)) {
+    const before = was.current;
+    if (!before) toEnd(el);   // opens at the newest message
+    else if (first !== before.first && last === before.last && all.includes("\n" + before.first + "\n")) {
       // earlier messages came in at the top: keep what the reader was looking at where it was
       el.scrollTop = before.top + (el.scrollHeight - before.height);
     } else if (last !== before.last) {
-      if (before.bottom) toBottom();
+      if (before.bottom) toEnd(el);
       else if (messages > before.messages) setUnread((n) => n + messages - before.messages);
     }
     was.current = { bottom: atBottom(el), first, last, height: el.scrollHeight, top: el.scrollTop, messages };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- runs when the messages change; the refs it reads are current
-  }, [keys.join("\n"), messages]);
+  }, [all, first, last, messages]);
   // A message that grows (a streamed reply) or a picture that loads keeps the reader at the bottom if they were there.
+  // every render: the messages it watches are the children of this render.
   React.useEffect(() => {
     const el = scroller.current;
     if (!el || typeof ResizeObserver === "undefined") return;

@@ -14,11 +14,11 @@
 }
 /* The ring sits just inside the log, so a parent that clips (a panel, a drawer) doesn't cut it off. */
 /* stylelint-disable-next-line serupa/no-raw-value -- -1 turns the ring width into an inward offset */
-.dk-chat__log:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: calc(var(--focus-ring-width) * -1); }
+.dk-chat__log:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-chat__older { display: flex; justify-content: center; }
 .dk-chat__jump { position: absolute; inset-block-end: var(--spacing-3); inset-inline: var(--spacing-0); inline-size: var(--sizing-fit); margin-inline: auto; box-shadow: var(--shadow-md); }
 
-.dk-chat-message { display: flex; align-items: flex-end; gap: var(--spacing-2); max-inline-size: var(--chat-message-max-width, var(--sizing-4-5)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-chat-message { display: flex; align-items: flex-end; gap: var(--spacing-2); max-inline-size: var(--sizing-4-5); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-chat-message--own { flex-direction: row-reverse; align-self: flex-end; }
 .dk-chat-message--follow { margin-block-start: calc(var(--spacing-1) - var(--chat-gap, var(--spacing-3))); }
 .dk-chat-message__avatar { display: flex; flex: none; inline-size: var(--spacing-8); }

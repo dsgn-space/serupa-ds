@@ -44,6 +44,30 @@ describe('Chat', () => {
     await expect.poll(() => atBottom(log())).toBe(true);
   });
 
+  test('with focus on the log, the arrow keys, PageUp, PageDown, Home and End scroll it', async () => {
+    await render(<Live api={{}} />);
+    await expect.poll(() => atBottom(log())).toBe(true);
+    log().focus();
+    const top = () => log().scrollTop;
+    // A key scrolls smoothly: wait until it stops before reading where it stopped.
+    const settled = async () => { let last = -1; await expect.poll(async () => { const now = top(); const same = now === last; last = now; await new Promise((r) => setTimeout(r, 60)); return same; }).toBe(true); return top(); };
+    let at = await settled();
+    await userEvent.keyboard('{ArrowUp}');
+    await expect.poll(top).toBeLessThan(at);
+    at = await settled();
+    await userEvent.keyboard('{PageUp}');
+    await expect.poll(top).toBeLessThan(at);
+    at = await settled();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(top).toBeGreaterThan(at);
+    await userEvent.keyboard('{Home}');
+    await expect.poll(top).toBe(0);
+    await userEvent.keyboard('{PageDown}');
+    await expect.poll(top).toBeGreaterThan(0);
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => atBottom(log())).toBe(true);
+  });
+
   test('at the bottom, a new message keeps it at the bottom, with no jump button', async () => {
     const api: { add?: (n: number) => void } = {};
     await render(<Live api={api} />);

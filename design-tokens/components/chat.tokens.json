@@ -136,18 +136,6 @@
           }
         }
       }
-    },
-    "sizing": {
-      "message-max-width": {
-        "$type": "dimension",
-        "$value": "{sizing.sizing-4-5}",
-        "$description": "The widest a message grows: 80% of the conversation.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--chat-message-max-width"
-          }
-        }
-      }
     }
   }
 }
