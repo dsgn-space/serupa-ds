@@ -6,6 +6,7 @@ import { config, configure } from '../../internal/config';
 import { cdp, server, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press, tabTo, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { Sidebar, SidebarItem as I, SidebarSection as S } from './Sidebar';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
@@ -489,6 +490,19 @@ describe('Sidebar', () => {
     await userEvent.click(el('gfix'));
     expect(el('gfix').getAttribute('aria-expanded')).toBe('true');
     expect(calls).toEqual([[true, 'trigger'], [false, 'trigger']]);
+  });
+  test('a label cut later, by a font that loads or changes, gets its title then; in a Tooltip, which shows the cut label itself, none', async () => {
+    const long = 'Benachrichtigungseinstellungen und Datenschutz';
+    await render(<div style={{ height: 600 }}><Sidebar aria-label="Late">
+      <S><I id="late" href="#a" icon="settings" label="Notifications" />
+        <Tooltip content="Opens in a new tab"><I id="tipped" href="#b" icon="mail" label={long} /></Tooltip></S>
+    </Sidebar></div>);
+    await settled();
+    expect([el('late').getAttribute('title'), el('tipped').getAttribute('title')]).toEqual([null, null]);
+    // A wider font in the same box: the label's size doesn't change, so only the font event says so.
+    (el('late').querySelector('.dk-sidebar__label') as HTMLElement).style.letterSpacing = '12px';
+    document.fonts.dispatchEvent(new Event('loadingdone'));
+    await expect.poll(() => el('late').title).toBe('Notifications');
   });
   test('a label cut with an ellipsis shows in full as the item\'s title (GR117); a short one, a title of its own and the rail have none', async () => {
     const long = 'Benachrichtigungseinstellungen und Datenschutz';
