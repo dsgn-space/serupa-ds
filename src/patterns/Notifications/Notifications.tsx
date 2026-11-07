@@ -52,6 +52,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead }: Notif
   const unread = all.filter((n) => !n.read).length;
   const shown = filter === 'unread' ? all.filter((n) => !n.read) : all;
 
+  // every render: a focus asked for by a handler (focusTo) moves once the render it caused is on screen.
   React.useEffect(() => {
     const to = focusTo.current;
     focusTo.current = null;
