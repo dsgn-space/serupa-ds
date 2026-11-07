@@ -357,7 +357,7 @@ describe('Tooltip content is plain text (PT5)', () => {
     expect(String(calls()[0][0])).toMatch(/use a Popover/);
     warn.mockRestore();
   });
-  test('GR118: a Button label cut with an ellipsis shows in full over the hint, hidden from screen readers, and the Button gets no title', async () => {
+  test('a Button label cut with an ellipsis shows in full over the hint, hidden from screen readers, and the Button gets no title', async () => {
     const long = 'Benachrichtigungseinstellungen öffnen und anpassen';
     await render(<div style={{ width: 200, padding: 40 }}>
       <Tooltip content="Strg + ," defaultOpen><Button id="cut">{long}</Button></Tooltip>
@@ -369,7 +369,7 @@ describe('Tooltip content is plain text (PT5)', () => {
     expect(full!.getBoundingClientRect().bottom).toBeLessThanOrEqual(tip().getBoundingClientRect().bottom);
   });
 
-  test('GR118: a label that fits, and role="label", show only the content', async () => {
+  test('a label that fits, and role="label", show only the content', async () => {
     await render(<div style={{ width: 400, padding: 40 }}>
       <Tooltip content="Strg + ," defaultOpen><Button id="fit">Settings</Button></Tooltip>
       <Tooltip content="Named" role="label" defaultOpen><Button id="lab" style={{ maxWidth: 40 }}>Benachrichtigungseinstellungen</Button></Tooltip>

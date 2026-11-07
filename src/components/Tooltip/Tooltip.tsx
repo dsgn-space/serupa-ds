@@ -121,7 +121,7 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   }, [open, set]);
 
   // A label in the element cut with an ellipsis (a long Button label in a narrow column) shows in full at the top of
-  // the tooltip, which would otherwise hide the title the Button gives it (GR118). Hidden from screen readers: it is
+  // the tooltip, which would otherwise hide the title the Button gives it. Hidden from screen readers: it is
   // already the element's name. Not with role="label", whose content is the name.
   const [full, setFull] = React.useState("");
   useIsoLayoutEffect(() => {
@@ -192,7 +192,7 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
       <div ref={tipRef} id={id} role="tooltip" {...{ popover: "manual" }} hidden={!open || undefined}
         className={cn("dk-tooltip", props.className)} style={props.style} data-component="tooltip" data-state={open ? "open" : "closed"} data-warm={(open && instant) || (!open && handed) ? "" : undefined}
         onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
-        {full && props.role !== "label" ? <span className="dk-tooltip__full" aria-hidden="true">{full}</span> : null}
+        {full && props.role !== "label" ? <span data-full="" aria-hidden="true">{full}</span> : null}
         {props.content}
       </div>
     </>
