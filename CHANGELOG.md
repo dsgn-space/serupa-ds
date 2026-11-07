@@ -36,11 +36,10 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 - Meter: a label with a word longer than the line ("Datenschutzgrundverordnungskonformitätsprüfung") wraps inside the meter, as Progress's does, instead of running out of it and making a narrow page scroll sideways.
 - `serupa-migrate` no longer says only "Nothing to change." to a 13.x project that 14.0.0 breaks. With `--from 13` it now lists, as file:line to check by hand, the files that use the mask and gradient classes that moved to `utilities-extra.css` (skipping a file that already imports it), and any `moreResults` label or `.dk-combobox__more` rule, which 14.0.0 removed. `--list --from 13` shows both. Every run ends by pointing at the Upgrading page and the changelog's Breaking entries for what a script can't find.
 - Four common mistakes now warn once in development, as Tabs already does for a value that matches no tab. Production builds don't change.
-
-- Select: a controlled `value` that matches none of its options (`select-value`). The `<select>` shows its first option then, and a form sends that, while the app holds the value it passed.
-- Combobox: two options with the same value (`combobox-duplicate-value`). Picking the second one showed the first one's label and marked both as selected.
-- Calendar, DatePicker and DateRangePicker: a date string that isn't a real `yyyy-mm-dd` day, such as `"tomorrow"`, `"2026-13-01"` or `"2026-02-31"` (`date-string`). The field showed no date and said nothing.
-- NumberInput: `min` above `max` (`number-range`), which no value fits.
+  - Select: a controlled `value` that matches none of its options (`select-value`). The `<select>` shows its first option then, and a form sends that, while the app holds the value it passed.
+  - Combobox: two options with the same value (`combobox-duplicate-value`). Picking the second one showed the first one's label and marked both as selected.
+  - Calendar, DatePicker and DateRangePicker: a date string that isn't a real `yyyy-mm-dd` day, such as `"tomorrow"`, `"2026-13-01"` or `"2026-02-31"` (`date-string`). The field showed no date and said nothing.
+  - NumberInput: `min` above `max` (`number-range`), which no value fits.
 - Notifications pattern: on the All view, Mark as read puts focus on the next unread one's button, or the heading when none are left, instead of dropping it to the top of the page. Mark all as read puts focus on the heading as it turns disabled.
 - NumberInput with `formatOptions={{ style: 'percent' }}` and no `step`: tabbing through the field no longer turns 15% into 0%, typing 15 gives 0.15 instead of 0, and ArrowUp moves one percent instead of jumping to 100%. A percent keeps the decimals its format shows (12.5% with `maximumFractionDigits: 1` is 0.125).
 - NumberInput: with minorUnits and a currency that has no minor digits (JPY, KRW), a typed fraction now reaches onValueChange and the form rounded to a whole unit, as the field shows it: 2.50 is ¥3 and 3, not 2.5.

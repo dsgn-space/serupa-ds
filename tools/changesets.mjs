@@ -11,3 +11,14 @@ export function parseChangeset(text, name) {
   if (!bump) return { error: `no bump for ${name} ("${name}": major, minor or patch)` };
   return { bump, body: m[2] };
 }
+
+// A changeset's body as changelog entries: each "- " line is one (its indented lines go with it), and text with no
+// bullets is one. A lead sentence followed by bullets is one entry with the bullets nested under it, so "Four
+// mistakes now warn…" keeps its four cases rather than filing each as a change of its own (GR195).
+export function entriesOf(raw) {
+  const body = raw.trim();
+  if (!/^- /m.test(body)) return [body.replace(/\n+/g, ' ')];
+  const [first, ...rest] = body.split(/\n(?=- )/);
+  if (/^- /.test(first)) return [first, ...rest].map((e) => e.replace(/^- /, ''));
+  return [`${first.trim().replace(/\n+/g, ' ')}\n${rest.map((e) => e.trim().split('\n').map((l) => `  ${l}`).join('\n')).join('\n')}`];
+}
