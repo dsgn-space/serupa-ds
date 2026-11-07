@@ -101,8 +101,10 @@ local checks:
   image: node:26-alpine
   variables:
     GIT_DEPTH: "1"
+  # Only once the description holds a report: while the full check runs locally (an hour or more), the MR has no
+  # pipeline rather than a red one. Put the report in, then start a pipeline (or push).
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1" && $CI_MERGE_REQUEST_DESCRIPTION =~ /## Local checks/
   cache: []
   before_script: []
   script:
