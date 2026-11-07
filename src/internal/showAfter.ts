@@ -1,5 +1,5 @@
-import * as React from "react";
-import { spinnerMinShown } from "./timing";
+import * as React from 'react';
+import { spinnerMinShown } from './timing';
 
 /* Delay, then minimum (EB1): true once `on` has lasted `delay` ms, then for at least spinnerMinShown ms even if `on` ends
    sooner. A wait shorter than the delay shows nothing; a longer one never flickers on for a frame or two. Turning

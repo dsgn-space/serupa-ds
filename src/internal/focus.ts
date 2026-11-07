@@ -1,6 +1,6 @@
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
-import { activeIn } from "./root";
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
+import { activeIn } from './root';
 
 /* A control drawn inside a wrapper (Slider's thumbs, SegmentedControl's segments) keeps its ref on the wrapper, so
    ref.current.focus() would land nowhere: a form library that focuses the first invalid field after a failed submit

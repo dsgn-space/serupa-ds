@@ -7,10 +7,10 @@ export interface EmptyStateLabels {
   clearFilters: string;
 }
 export const en: EmptyStateLabels = {
-  didYouMean: "Did you mean:",
-  clearFilters: "Clear filters",
+  didYouMean: 'Did you mean:',
+  clearFilters: 'Clear filters',
 };
 export const id: EmptyStateLabels = {
-  didYouMean: "Mungkin maksud Anda:",
-  clearFilters: "Hapus filter",
+  didYouMean: 'Mungkin maksud Anda:',
+  clearFilters: 'Hapus filter',
 };

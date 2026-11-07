@@ -13,16 +13,16 @@ export interface CommandPaletteLabels {
   otherCommands: string;
 }
 export const en: CommandPaletteLabels = {
-  commandPalette: "Command palette",
-  searchCommands: "Search commands and pages",
-  noCommands: "No matching commands",
-  commandsCount: (count) => count === 1 ? "1 command" : count + " commands",
-  otherCommands: "Commands",
+  commandPalette: 'Command palette',
+  searchCommands: 'Search commands and pages',
+  noCommands: 'No matching commands',
+  commandsCount: (count) => count === 1 ? '1 command' : count + ' commands',
+  otherCommands: 'Commands',
 };
 export const id: CommandPaletteLabels = {
-  commandPalette: "Palet perintah",
-  searchCommands: "Cari perintah dan halaman",
-  noCommands: "Tidak ada perintah yang cocok",
-  commandsCount: (count) => count + " perintah",
-  otherCommands: "Perintah",
+  commandPalette: 'Palet perintah',
+  searchCommands: 'Cari perintah dan halaman',
+  noCommands: 'Tidak ada perintah yang cocok',
+  commandsCount: (count) => count + ' perintah',
+  otherCommands: 'Perintah',
 };

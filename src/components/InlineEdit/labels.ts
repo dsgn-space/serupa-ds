@@ -4,5 +4,5 @@ export interface InlineEditLabels {
   /** InlineEdit: after the text in its button's name ("Project name: Apollo, Edit"). */
   edit: string;
 }
-export const en: InlineEditLabels = { edit: "Edit" };
-export const id: InlineEditLabels = { edit: "Ubah" };
+export const en: InlineEditLabels = { edit: 'Edit' };
+export const id: InlineEditLabels = { edit: 'Ubah' };

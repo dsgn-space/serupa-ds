@@ -5,8 +5,8 @@ export interface TimePickerLabels {
   chooseTime: string;
 }
 export const en: TimePickerLabels = {
-  chooseTime: "Choose a time",
+  chooseTime: 'Choose a time',
 };
 export const id: TimePickerLabels = {
-  chooseTime: "Pilih waktu",
+  chooseTime: 'Pilih waktu',
 };

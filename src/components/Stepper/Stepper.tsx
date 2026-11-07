@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { Icon } from "../Icon/Icon";
-import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden";
-import { component } from "../../internal/component";
-import { displayNumber } from "../../internal/numbers";
-import { useLocale, useSettings } from "../../internal/provider";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
-import { activeIn } from "../../internal/root";
+'use client';
+import * as React from 'react';
+import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { Icon } from '../Icon/Icon';
+import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
+import { component } from '../../internal/component';
+import { displayNumber } from '../../internal/numbers';
+import { useLocale, useSettings } from '../../internal/provider';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
+import { activeIn } from '../../internal/root';
 
 export interface StepperStep {
   title: React.ReactNode;
@@ -49,59 +49,59 @@ const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, cli
    Stepper is too narrow for its titles side by side (a phone, 400% zoom), it keeps the circles and shows one line
    under them, "Step 2 of 4: Profile"; the titles stay in the list for screen readers. */
 /** Where people are in a task split into steps: numbered circles joined by lines. */
-export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Stepper", function Stepper(props, ref) {
+export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Stepper', function Stepper(props, ref) {
   const sds = useSettings(words);
   const locale = useLocale();
   const rest = omit(props, OWN);
   const steps = props.steps || [];
   const current = Math.max(0, Math.min(steps.length, Math.floor(Number(props.current)) || 0));
-  const vertical = props.orientation === "vertical";
-  const size = props.size === "sm" ? "sm" : "md";
+  const vertical = props.orientation === 'vertical';
+  const size = props.size === 'sm' ? 'sm' : 'md';
   const L = { completed: sds.labels.completed, error: sds.labels.hasError, warning: sds.labels.hasWarning, optional: sds.labels.optional, stepOf: sds.labels.stepOf, ...(props.labels || {}) };
   const nav = React.useRef<HTMLElement | null>(null);
   const [compact, setCompact] = React.useState(false);
   const [tight, setTight] = React.useState(false);
   // What the measure depends on: the steps' text when it is plain text, so an inline steps array (a new array each
   // render) doesn't measure again; titles that are elements are compared by the array itself.
-  const text = (n: React.ReactNode) => (n == null || typeof n === "string" || typeof n === "number" || typeof n === "boolean" ? String(n) : null);
-  const parts = steps.map((s) => [text(s.title), text(s.description), String(!!s.optional), s.status || ""]);
-  const shape = parts.every((p) => p[0] != null && p[1] != null) ? parts.map((p) => p.join("\u0001")).join("\u0000") : steps;
+  const text = (n: React.ReactNode) => (n == null || typeof n === 'string' || typeof n === 'number' || typeof n === 'boolean' ? String(n) : null);
+  const parts = steps.map((s) => [text(s.title), text(s.description), String(!!s.optional), s.status || '']);
+  const shape = parts.every((p) => p[0] != null && p[1] != null) ? parts.map((p) => p.join('\u0001')).join('\u0000') : steps;
   // Measure the titles side by side (at their full width, with the shortest lines) against the width there is.
   useIsoLayoutEffect(() => {
     const el = nav.current;
     if (!el || vertical) { setCompact(false); return; }
     // GR62: from here the script fits the row (compact when the titles don't fit), so the no-script layout below in
     // Stepper.css, which wraps the steps, gives way.
-    el.setAttribute("data-fit", "");
+    el.setAttribute('data-fit', '');
     const fit = () => {
       const list = el.firstElementChild as HTMLElement, has = (c: string) => el.classList.contains(c);
-      el.classList.add("dk-stepper--measure");
+      el.classList.add('dk-stepper--measure');
       const need = list.scrollWidth;
-      el.classList.remove("dk-stepper--measure");
+      el.classList.remove('dk-stepper--measure');
       const narrow = need > el.clientWidth;
       // Circles only and still too wide (many steps): the sm circles (GN2). Lay the row out compact with md circles
       // for a moment to tell.
       let small = false;
-      if (narrow && size === "md") {
-        const was = [has("dk-stepper--compact"), has("dk-stepper--tight")];
-        el.classList.add("dk-stepper--compact"); el.classList.remove("dk-stepper--tight");
+      if (narrow && size === 'md') {
+        const was = [has('dk-stepper--compact'), has('dk-stepper--tight')];
+        el.classList.add('dk-stepper--compact'); el.classList.remove('dk-stepper--tight');
         small = list.scrollWidth > el.clientWidth;
-        el.classList.toggle("dk-stepper--compact", was[0]); el.classList.toggle("dk-stepper--tight", was[1]);
+        el.classList.toggle('dk-stepper--compact', was[0]); el.classList.toggle('dk-stepper--tight', was[1]);
       }
       setCompact(narrow); setTight(small);
     };
     fit();
     // Again when web fonts load: titles drawn first in a fallback font change width when the real one arrives
     // (font-display: swap), and the nav's own width doesn't, so the ResizeObserver doesn't fire (GR65).
-    const fonts = typeof document !== "undefined" ? document.fonts : undefined;
+    const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
     let live = true;
     if (fonts) {
-      if (fonts.status !== "loaded") fonts.ready.then(() => { if (live) fit(); }, () => {});
-      fonts.addEventListener("loadingdone", fit);
+      if (fonts.status !== 'loaded') fonts.ready.then(() => { if (live) fit(); }, () => {});
+      fonts.addEventListener('loadingdone', fit);
     }
-    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(fit);
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit);
     if (ro) ro.observe(el);
-    return () => { live = false; if (fonts) fonts.removeEventListener("loadingdone", fit); if (ro) ro.disconnect(); };
+    return () => { live = false; if (fonts) fonts.removeEventListener('loadingdone', fit); if (ro) ro.disconnect(); };
   }, [vertical, shape, size]);
   // Going to a step makes its button the current step's plain head, so React replaces the element that has focus
   // and focus would drop to the page: put it on the new current head instead (GN1).
@@ -114,30 +114,30 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
     // is read in the stepper's own document or shadow root, where document.activeElement is the shadow host (GR95).
     const active = activeIn(el);
     if (active && active !== document.body) return;
-    const head = el.querySelectorAll<HTMLElement>(".dk-stepper__head")[current];
+    const head = el.querySelectorAll<HTMLElement>('.dk-stepper__head')[current];
     if (head) head.focus();
   }, [current]);
   const shown = Math.min(current, steps.length - 1);
   return (
-    <nav {...rest} ref={(node) => { nav.current = node; setRef(ref, node); }} aria-label={rest["aria-label"] || (rest["aria-labelledby"] ? undefined : sds.labels.progress)}
-      className={cn("dk-stepper", vertical ? "dk-stepper--vertical" : "dk-stepper--horizontal", compact && "dk-stepper--compact", compact && tight && "dk-stepper--tight", "dk-stepper--size-" + size, props.className)}
-      data-component="stepper" data-orientation={vertical ? "vertical" : "horizontal"} data-size={size}>
+    <nav {...rest} ref={(node) => { nav.current = node; setRef(ref, node); }} aria-label={rest['aria-label'] || (rest['aria-labelledby'] ? undefined : sds.labels.progress)}
+      className={cn('dk-stepper', vertical ? 'dk-stepper--vertical' : 'dk-stepper--horizontal', compact && 'dk-stepper--compact', compact && tight && 'dk-stepper--tight', 'dk-stepper--size-' + size, props.className)}
+      data-component="stepper" data-orientation={vertical ? 'vertical' : 'horizontal'} data-size={size}>
       <ol className="dk-stepper__list">
         {steps.map((s, i) => {
-          const state = s.status === "error" || s.status === "warning" ? s.status : i < current ? "complete" : i === current ? "current" : "upcoming";
-          const clickable = !!props.onStepClick && (props.clickable === "all" ? i !== current : i < current);
-          const Head: React.ElementType = clickable ? "button" : "div";
-          const hasDesc = s.description != null && s.description !== "";
+          const state = s.status === 'error' || s.status === 'warning' ? s.status : i < current ? 'complete' : i === current ? 'current' : 'upcoming';
+          const clickable = !!props.onStepClick && (props.clickable === 'all' ? i !== current : i < current);
+          const Head: React.ElementType = clickable ? 'button' : 'div';
+          const hasDesc = s.description != null && s.description !== '';
           return (
-            <li key={i} className={cn("dk-stepper__step", "dk-stepper__step--" + state, i < current && "dk-stepper__step--done")} data-state={state} aria-current={i === current ? "step" : undefined}>
-              <Head className="dk-stepper__head" {...(clickable ? { type: "button", onClick: () => { going.current = i; props.onStepClick!(i); } } : props.onStepClick && i === current ? { tabIndex: -1 } : {})}>
+            <li key={i} className={cn('dk-stepper__step', 'dk-stepper__step--' + state, i < current && 'dk-stepper__step--done')} data-state={state} aria-current={i === current ? 'step' : undefined}>
+              <Head className="dk-stepper__head" {...(clickable ? { type: 'button', onClick: () => { going.current = i; props.onStepClick!(i); } } : props.onStepClick && i === current ? { tabIndex: -1 } : {})}>
                 <span className="dk-stepper__indicator" aria-hidden>
-                  {state === "complete" ? <Icon icon={icons.Check} /> : state === "error" ? <Icon icon={icons.PriorityHigh} /> : state === "warning" ? <Icon icon={icons.Warning} /> : displayNumber(i + 1, locale)}
+                  {state === 'complete' ? <Icon icon={icons.Check} /> : state === 'error' ? <Icon icon={icons.PriorityHigh} /> : state === 'warning' ? <Icon icon={icons.Warning} /> : displayNumber(i + 1, locale)}
                 </span>
                 <span className="dk-stepper__text">
                   <span className="dk-stepper__title">
                     {s.title}
-                    {state === "complete" ? <VisuallyHidden>{", " + L.completed}</VisuallyHidden> : state === "error" ? <VisuallyHidden>{", " + L.error}</VisuallyHidden> : state === "warning" ? <VisuallyHidden>{", " + L.warning}</VisuallyHidden> : null}
+                    {state === 'complete' ? <VisuallyHidden>{', ' + L.completed}</VisuallyHidden> : state === 'error' ? <VisuallyHidden>{', ' + L.error}</VisuallyHidden> : state === 'warning' ? <VisuallyHidden>{', ' + L.warning}</VisuallyHidden> : null}
                   </span>
                   {hasDesc ? <span className="dk-stepper__description">{s.description}</span> : null}
                   {s.optional ? <span className="dk-stepper__description dk-stepper__optional">{L.optional}</span> : null}
@@ -148,7 +148,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>("Ste
           );
         })}
       </ol>
-      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length) + ": "}<span className="dk-stepper__title">{steps[shown].title}</span></p> : null}
+      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length) + ': '}<span className="dk-stepper__title">{steps[shown].title}</span></p> : null}
     </nav>
   );
 });

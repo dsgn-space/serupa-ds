@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, domId, oneOf, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { displayNumber } from "../../internal/numbers";
-import { useLocale, useSettings } from "../../internal/provider";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { isComposing } from "../../internal/ime";
-import { Button } from "../Button/Button";
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from "../Table/Table";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, oneOf, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { displayNumber } from '../../internal/numbers';
+import { useLocale, useSettings } from '../../internal/provider';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { isComposing } from '../../internal/ime';
+import { Button } from '../Button/Button';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from '../Table/Table';
+import { en as words } from './labels';
 
 export type ChartType = 'line' | 'bar';
 export type ChartView = 'chart' | 'table';
@@ -68,7 +68,7 @@ export function niceTicks(lo: number, hi: number, count: number): number[] {
 
 // The marker shapes, one per series, so a line is told apart by its shape as well as its color (WCAG 1.4.1).
 const at = (n: number) => +n.toFixed(2);
-const poly = (cx: number, cy: number, pts: Array<[number, number]>) => "M" + pts.map(([x, y]) => `${at(cx + x)} ${at(cy + y)}`).join("L") + "Z";
+const poly = (cx: number, cy: number, pts: Array<[number, number]>) => 'M' + pts.map(([x, y]) => `${at(cx + x)} ${at(cy + y)}`).join('L') + 'Z';
 const around = (k: number, r: number, turn = -90): Array<[number, number]> => Array.from({ length: k }, (_, i) => { const a = ((turn + (360 / k) * i) * Math.PI) / 180; return [r * Math.cos(a), r * Math.sin(a)]; });
 /** The SVG path of series shape's marker at (cx, cy), r across: circle, square, triangle, diamond, triangle down, hexagon, star, plus. */
 export function markerPath(shape: number, cx: number, cy: number, r: number): string {
@@ -90,19 +90,19 @@ type Focused = Spot & { ring: boolean };
 
 /** A line or bar chart of a few series over the same categories, drawn as SVG, with a summary, keyboard focus on each point and the same numbers as a table.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart", function Chart(props, ref) {
-  const nameRef = useNameCheck<HTMLElement>("Chart", NAME_HOW.title, ref);
+export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart', function Chart(props, ref) {
+  const nameRef = useNameCheck<HTMLElement>('Chart', NAME_HOW.title, ref);
   const rest = omit(props, OWN);
   const locale = useLocale();
   const labels = useSettings(words).labels;
-  const base = domId("dk-chart", React.useId());
-  const type = oneOf(TYPES, props.type, "line");
+  const base = domId('dk-chart', React.useId());
+  const type = oneOf(TYPES, props.type, 'line');
   const categories = props.categories || [];
   const series = (props.series || []).slice(0, COLORS);
   const n = categories.length;
   const height = Math.max(80, Math.round(Number(props.height) || 240));
   const fmt = (v: number) => (props.formatValue ? props.formatValue(v) : displayNumber(v, locale));
-  const [ownView, setOwnView] = React.useState<ChartView>(() => oneOf(VIEWS, props.defaultView, "chart"));
+  const [ownView, setOwnView] = React.useState<ChartView>(() => oneOf(VIEWS, props.defaultView, 'chart'));
   const view = oneOf(VIEWS, props.view, ownView);
   const [width, setWidth] = React.useState(WIDTH);
   const [rtl, setRtl] = React.useState(false);
@@ -111,11 +111,11 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
   const [hushed, setHushed] = React.useState(false);
   const [focus, setFocus] = React.useState<Focused | null>(null);
   const [last, setLast] = React.useState<Spot | null>(null);
-  const [sort, setSort] = React.useState<{ col: number; dir: SortDirection }>({ col: -1, dir: "none" });
+  const [sort, setSort] = React.useState<{ col: number; dir: SortDirection }>({ col: -1, dir: 'none' });
   const frame = React.useRef<HTMLDivElement>(null);
   const tipRef = React.useRef<HTMLDivElement>(null);
   const points = React.useRef(new Map<string, SVGElement>());
-  const hasTitle = props.title != null && props.title !== false && props.title !== "";
+  const hasTitle = props.title != null && props.title !== false && props.title !== '';
 
   // The width is the box's, measured before the first paint and again when it changes; the direction is the page's.
   useIsoLayoutEffect(() => {
@@ -124,22 +124,22 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
     const measure = () => {
       const w = Math.round(el.getBoundingClientRect().width);
       if (w > 0) setWidth(w);
-      setRtl(getComputedStyle(el).direction === "rtl");
+      setRtl(getComputedStyle(el).direction === 'rtl');
     };
     measure();
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, [view]);
 
-  const val = (s: number, i: number): number | null => { const v = series[s]?.values[i]; return typeof v === "number" && isFinite(v) ? v : null; };
+  const val = (s: number, i: number): number | null => { const v = series[s]?.values[i]; return typeof v === 'number' && isFinite(v) ? v : null; };
   const all: Point[] = [];
   series.forEach((_, s) => { for (let i = 0; i < n; i++) { const v = val(s, i); if (v != null) all.push({ s, i, v }); } });
   let lo = all.length ? Math.min(...all.map((p) => p.v)) : 0, hi = all.length ? Math.max(...all.map((p) => p.v)) : 1;
   // Bars stand on zero. A line starts at zero too, unless its values sit so far from it that zero would flatten them.
-  if (type === "bar" || (lo >= 0 && lo <= hi / 2)) lo = Math.min(lo, 0);
-  if (type === "bar" || (hi <= 0 && hi >= lo / 2)) hi = Math.max(hi, 0);
+  if (type === 'bar' || (lo >= 0 && lo <= hi / 2)) lo = Math.min(lo, 0);
+  if (type === 'bar' || (hi <= 0 && hi >= lo / 2)) hi = Math.max(hi, 0);
   const ticks = niceTicks(lo, hi, Math.max(2, Math.floor((height - PAD_TOP - AXIS) / 48)));
   const t0 = ticks[0], tN = ticks[ticks.length - 1];
   const tickText = ticks.map(fmt);
@@ -148,14 +148,14 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
   const band = pw / Math.max(1, n);
   // x from the start edge, mirrored on a right-to-left page so the first category is on the right.
   const flip = (x: number) => (rtl ? width - x : x);
-  const xAt = (i: number) => flip(type === "bar" ? start + band * (i + 0.5) : n === 1 ? start + pw / 2 : start + INSET + (i * (pw - 2 * INSET)) / (n - 1));
+  const xAt = (i: number) => flip(type === 'bar' ? start + band * (i + 0.5) : n === 1 ? start + pw / 2 : start + INSET + (i * (pw - 2 * INSET)) / (n - 1));
   const yAt = (v: number) => PAD_TOP + ph * (1 - (v - t0) / (tN - t0 || 1));
-  const step = type === "bar" ? band : n > 1 ? (pw - 2 * INSET) / (n - 1) : pw;
+  const step = type === 'bar' ? band : n > 1 ? (pw - 2 * INSET) / (n - 1) : pw;
   // Every category gets a label when they fit side by side; else every second, third…, from the first.
   const every = Math.max(1, Math.ceil((Math.max(1, ...categories.map((c) => c.length)) * CHAR + 8) / Math.max(1, step)));
 
   const kind = labels.chartKind(type);
-  const summary = [labels.chartSummary(kind, series.length, n, categories[0] ?? "", categories[n - 1] ?? "")];
+  const summary = [labels.chartSummary(kind, series.length, n, categories[0] ?? '', categories[n - 1] ?? '')];
   series.forEach((sr, s) => {
     const mine = all.filter((p) => p.s === s);
     if (!mine.length) return;
@@ -173,22 +173,22 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
     const ahead = rtl ? -1 : 1;
     let k: number | null, to: Spot | null = null;
     switch (e.key) {
-      case "ArrowRight": k = along(i, ahead); if (k != null) to = { s, i: k }; break;
-      case "ArrowLeft": k = along(i, -ahead); if (k != null) to = { s, i: k }; break;
-      case "ArrowDown": k = across(1); if (k != null) to = { s: k, i }; break;
-      case "ArrowUp": k = across(-1); if (k != null) to = { s: k, i }; break;
-      case "Home": k = along(-1, 1); if (k != null) to = { s, i: k }; break;
-      case "End": k = along(n, -1); if (k != null) to = { s, i: k }; break;
+      case 'ArrowRight': k = along(i, ahead); if (k != null) to = { s, i: k }; break;
+      case 'ArrowLeft': k = along(i, -ahead); if (k != null) to = { s, i: k }; break;
+      case 'ArrowDown': k = across(1); if (k != null) to = { s: k, i }; break;
+      case 'ArrowUp': k = across(-1); if (k != null) to = { s: k, i }; break;
+      case 'Home': k = along(-1, 1); if (k != null) to = { s, i: k }; break;
+      case 'End': k = along(n, -1); if (k != null) to = { s, i: k }; break;
       default: return;
     }
     e.preventDefault();
-    if (to) { setLast(to); points.current.get(to.s + ":" + to.i)?.focus(); }
+    if (to) { setLast(to); points.current.get(to.s + ':' + to.i)?.focus(); }
   };
   // The category under the pointer: the nearest point (line) or the band it's in (bar).
   const onPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     if (!n) return;
     const x = flip(e.clientX - e.currentTarget.getBoundingClientRect().left);
-    const i = type === "bar" ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
+    const i = type === 'bar' ? Math.floor((x - start) / band) : n === 1 ? 0 : Math.round(((x - start - INSET) * (n - 1)) / Math.max(1, pw - 2 * INSET));
     const to = x >= start - INSET && i >= 0 && i < n ? i : null;
     if (to !== hover) { setHover(to); setHushed(false); }
   };
@@ -197,9 +197,9 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
   // Caught first and stopped, as Tooltip does, so a Dialog around the chart stays open.
   React.useEffect(() => {
     if (shown == null) return;
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); setHushed(true); } };
-    document.addEventListener("keydown", esc, true);
-    return () => document.removeEventListener("keydown", esc, true);
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); setHushed(true); } };
+    document.addEventListener('keydown', esc, true);
+    return () => document.removeEventListener('keydown', esc, true);
   }, [shown]);
   const changeView = (v: ChartView) => { if (props.view === undefined) setOwnView(v); props.onViewChange?.(v); };
 
@@ -228,13 +228,13 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
     const after = tip.x + 12, before = tip.x - 12 - w;
     const beside = after + w <= width ? after : before >= 0 ? before : null;
     const top = beside != null ? tip.y - h / 2 : tip.y - 12 - h >= 0 ? tip.y - 12 - h : tip.y + 12;
-    el.style.left = (beside ?? Math.min(Math.max(0, tip.x - w / 2), Math.max(0, width - w))) + "px";
-    el.style.top = (beside != null ? Math.min(Math.max(0, top), Math.max(0, height - h)) : top) + "px";
+    el.style.left = (beside ?? Math.min(Math.max(0, tip.x - w / 2), Math.max(0, width - w))) + 'px';
+    el.style.top = (beside != null ? Math.min(Math.max(0, top), Math.max(0, height - h)) : top) + 'px';
   });
 
   const order = Array.from({ length: n }, (_, i) => i);
-  if (sort.dir !== "none") {
-    const sign = sort.dir === "ascending" ? 1 : -1;
+  if (sort.dir !== 'none') {
+    const sign = sort.dir === 'ascending' ? 1 : -1;
     order.sort((a, b) => {
       if (sort.col < 0) return (a - b) * sign;
       const va = val(sort.col, a), vb = val(sort.col, b);
@@ -242,22 +242,22 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
       return (va - vb) * sign || a - b;
     });
   }
-  const onSort = (col: number) => setSort((was) => ({ col, dir: was.col === col && was.dir === "ascending" ? "descending" : "ascending" }));
+  const onSort = (col: number) => setSort((was) => ({ col, dir: was.col === col && was.dir === 'ascending' ? 'descending' : 'ascending' }));
   const lineX = [flip(start), flip(width - PAD_END)].sort((a, b) => a - b);
 
   return (
-    <figure {...rest} ref={nameRef} className={cn("dk-chart", "dk-chart--" + type, props.className)} data-component="chart" data-type={type} data-view={view}
-      aria-labelledby={rest["aria-labelledby"] || (hasTitle && !rest["aria-label"] ? base + "-title" : undefined)}>
-      {hasTitle ? <figcaption className="dk-chart__title" id={base + "-title"}>{props.title}</figcaption> : null}
-      <Button className="dk-chart__toggle" variant="ghost" size="sm" onClick={() => changeView(view === "chart" ? "table" : "chart")}>
-        {view === "chart" ? labels.chartShowTable : labels.chartShowChart}
+    <figure {...rest} ref={nameRef} className={cn('dk-chart', 'dk-chart--' + type, props.className)} data-component="chart" data-type={type} data-view={view}
+      aria-labelledby={rest['aria-labelledby'] || (hasTitle && !rest['aria-label'] ? base + '-title' : undefined)}>
+      {hasTitle ? <figcaption className="dk-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
+      <Button className="dk-chart__toggle" variant="ghost" size="sm" onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
+        {view === 'chart' ? labels.chartShowTable : labels.chartShowChart}
       </Button>
-      {view === "table" ? (
-        <Table className="dk-chart__table" size="sm" caption={hasTitle ? props.title : rest["aria-label"]} hideCaption>
+      {view === 'table' ? (
+        <Table className="dk-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
           <TableHead>
             <TableRow>
-              <TableHeaderCell scope="col" sort={sort.col === -1 ? sort.dir : "none"} onSort={() => onSort(-1)}>{props.categoryLabel || labels.chartCategory}</TableHeaderCell>
-              {series.map((sr, s) => <TableHeaderCell key={s} scope="col" align="end" sort={sort.col === s ? sort.dir : "none"} onSort={() => onSort(s)}>{sr.name}</TableHeaderCell>)}
+              <TableHeaderCell scope="col" sort={sort.col === -1 ? sort.dir : 'none'} onSort={() => onSort(-1)}>{props.categoryLabel || labels.chartCategory}</TableHeaderCell>
+              {series.map((sr, s) => <TableHeaderCell key={s} scope="col" align="end" sort={sort.col === s ? sort.dir : 'none'} onSort={() => onSort(s)}>{sr.name}</TableHeaderCell>)}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -273,17 +273,17 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
         <>
           <div className="dk-chart__frame" ref={frame}>
             <svg className="dk-chart__plot" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="group" aria-label={kind}
-              aria-describedby={base + "-summary"} onKeyDown={onKeyDown} onPointerMove={onPointerMove} onPointerLeave={() => { setHover(null); setHushed(false); }}>
-              <desc id={base + "-summary"}>{summary.join(" ")}</desc>
-              {type === "bar" && series.length > 1 ? (
+              aria-describedby={base + '-summary'} onKeyDown={onKeyDown} onPointerMove={onPointerMove} onPointerLeave={() => { setHover(null); setHushed(false); }}>
+              <desc id={base + '-summary'}>{summary.join(' ')}</desc>
+              {type === 'bar' && series.length > 1 ? (
                 <defs>
                   {series.map((_, s) => (s ? (
-                    <pattern key={s} id={`${base}-p${s}`} className={"dk-chart__pattern dk-chart--s" + (s + 1)} patternUnits="userSpaceOnUse" width="6" height="6"
-                      patternTransform={s === 1 || s === 4 ? "rotate(45)" : s === 2 ? "rotate(-45)" : undefined}>
+                    <pattern key={s} id={`${base}-p${s}`} className={'dk-chart__pattern dk-chart--s' + (s + 1)} patternUnits="userSpaceOnUse" width="6" height="6"
+                      patternTransform={s === 1 || s === 4 ? 'rotate(45)' : s === 2 ? 'rotate(-45)' : undefined}>
                       <rect className="dk-chart__pattern-fill" width="6" height="6" />
                       {s <= 3 ? <rect className="dk-chart__pattern-mark" width={s === 3 ? 1.5 : 6} height={s === 3 ? 6 : 1.5} x={s === 3 ? 2.25 : 0} y={s === 3 ? 0 : 2.25} />
                         : s <= 5 ? <circle className="dk-chart__pattern-mark" cx="3" cy="3" r={s === 4 ? 1.1 : 1.7} />
-                        : <path className="dk-chart__pattern-mark" d={s === 6 ? "M0 2.25H6V3.75H0ZM2.25 0H3.75V6H2.25Z" : "M0 0H3V3H0ZM3 3H6V6H3Z"} />}
+                        : <path className="dk-chart__pattern-mark" d={s === 6 ? 'M0 2.25H6V3.75H0ZM2.25 0H3.75V6H2.25Z' : 'M0 0H3V3H0ZM3 3H6V6H3Z'} />}
                     </pattern>
                   ) : null))}
                 </defs>
@@ -291,50 +291,50 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
               <g className="dk-chart__grid" aria-hidden>
                 {ticks.map((t, k) => (
                   <g key={k}>
-                    <line className={t === 0 && t0 < 0 ? "dk-chart__zero" : "dk-chart__gridline"} x1={lineX[0]} x2={lineX[1]} y1={at(yAt(t))} y2={at(yAt(t))} />
-                    <text className="dk-chart__label" x={flip(start - 6)} y={at(yAt(t))} dy="0.32em" textAnchor={rtl ? "start" : "end"}>{tickText[k]}</text>
+                    <line className={t === 0 && t0 < 0 ? 'dk-chart__zero' : 'dk-chart__gridline'} x1={lineX[0]} x2={lineX[1]} y1={at(yAt(t))} y2={at(yAt(t))} />
+                    <text className="dk-chart__label" x={flip(start - 6)} y={at(yAt(t))} dy="0.32em" textAnchor={rtl ? 'start' : 'end'}>{tickText[k]}</text>
                   </g>
                 ))}
               </g>
               <g className="dk-chart__axis" aria-hidden>
-                <line className="dk-chart__baseline" x1={lineX[0]} x2={lineX[1]} y1={at(type === "bar" ? zero : PAD_TOP + ph)} y2={at(type === "bar" ? zero : PAD_TOP + ph)} />
+                <line className="dk-chart__baseline" x1={lineX[0]} x2={lineX[1]} y1={at(type === 'bar' ? zero : PAD_TOP + ph)} y2={at(type === 'bar' ? zero : PAD_TOP + ph)} />
                 {categories.map((c, i) => (i % every ? null : <text key={i} className="dk-chart__label" x={at(xAt(i))} y={PAD_TOP + ph + AXIS - 6} textAnchor="middle">{c}</text>))}
               </g>
               {shown != null ? <line className="dk-chart__cursor" aria-hidden x1={at(xAt(shown))} x2={at(xAt(shown))} y1={PAD_TOP} y2={PAD_TOP + ph} /> : null}
               {series.map((sr, s) => {
-                let d = "", open = false;
+                let d = '', open = false;
                 for (let i = 0; i < n; i++) {
                   const v = val(s, i);
                   if (v == null) { open = false; continue; }
-                  d += `${open ? "L" : "M"}${at(xAt(i))} ${at(yAt(v))}`;
+                  d += `${open ? 'L' : 'M'}${at(xAt(i))} ${at(yAt(v))}`;
                   open = true;
                 }
                 return (
-                  <g key={s} className={"dk-chart__series dk-chart--s" + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
-                    {type === "line" && d ? <path className="dk-chart__line" d={d} pathLength={1} aria-hidden /> : null}
+                  <g key={s} className={'dk-chart__series dk-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
+                    {type === 'line' && d ? <path className="dk-chart__line" d={d} pathLength={1} aria-hidden /> : null}
                     {Array.from({ length: n }, (_, i) => {
                       const v = val(s, i);
                       if (v == null) return null;
-                      const key = s + ":" + i;
+                      const key = s + ':' + i;
                       const common = {
                         ref: (el: SVGElement | null) => { if (el) points.current.set(key, el); else points.current.delete(key); },
-                        role: "img",
-                        "aria-label": labels.chartPoint(series.length > 1 ? sr.name : null, categories[i], fmt(v)),
+                        role: 'img',
+                        'aria-label': labels.chartPoint(series.length > 1 ? sr.name : null, categories[i], fmt(v)),
                         tabIndex: current && current.s === s && current.i === i ? 0 : -1,
-                        "data-active": shown === i ? "" : undefined,
-                        onFocus: (e: React.FocusEvent<SVGElement>) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring: e.currentTarget.matches(":focus-visible") }); },
+                        'data-active': shown === i ? '' : undefined,
+                        onFocus: (e: React.FocusEvent<SVGElement>) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring: e.currentTarget.matches(':focus-visible') }); },
                         onBlur: () => setFocus(null),
                       };
-                      if (type === "line") return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, xAt(i), yAt(v), MARKER)} />;
+                      if (type === 'line') return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, xAt(i), yAt(v), MARKER)} />;
                       const b = bar(s, i);
-                      return <rect key={i} {...common} className={cn("dk-chart__bar dk-chart__point", b.neg && "dk-chart__bar--neg")} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)} fill={fill(s)} />;
+                      return <rect key={i} {...common} className={cn('dk-chart__bar dk-chart__point', b.neg && 'dk-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)} fill={fill(s)} />;
                     })}
                   </g>
                 );
               })}
               {focus && focus.ring && val(focus.s, focus.i) != null ? (() => {
                 // The focus ring, a gap away from the point so it shows against the series' own color.
-                if (type === "line") return <circle className="dk-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(yAt(val(focus.s, focus.i)!))} r={MARKER + 5} />;
+                if (type === 'line') return <circle className="dk-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(yAt(val(focus.s, focus.i)!))} r={MARKER + 5} />;
                 const b = bar(focus.s, focus.i);
                 return <rect className="dk-chart__focus" aria-hidden x={at(b.x - 3)} y={at(b.y - 3)} width={at(b.w + 6)} height={at(b.h + 6)} rx="2" />;
               })() : null}
@@ -343,9 +343,9 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
               <div ref={tipRef} className="dk-chart__tip" aria-hidden>
                 <div className="dk-chart__tip-title">{categories[tip.i]}</div>
                 {tipRows.map((r) => (
-                  <div key={r.s} className={cn("dk-chart__tip-row", "dk-chart--s" + (r.s + 1), focus && focus.s === r.s && "dk-chart__tip-row--focus")}>
+                  <div key={r.s} className={cn('dk-chart__tip-row', 'dk-chart--s' + (r.s + 1), focus && focus.s === r.s && 'dk-chart__tip-row--focus')}>
                     <svg className="dk-chart__swatch" width="12" height="12" viewBox="0 0 12 12" aria-hidden focusable="false">
-                      {type === "line" ? <path className="dk-chart__marker" d={markerPath(r.s, 6, 6, MARKER)} /> : <rect className="dk-chart__bar" x="1" y="1" width="10" height="10" fill={fill(r.s)} />}
+                      {type === 'line' ? <path className="dk-chart__marker" d={markerPath(r.s, 6, 6, MARKER)} /> : <rect className="dk-chart__bar" x="1" y="1" width="10" height="10" fill={fill(r.s)} />}
                     </svg>
                     {series.length > 1 ? <span className="dk-chart__tip-name">{r.name}</span> : null}
                     <span className="dk-chart__tip-value">{fmt(r.v!)}</span>
@@ -357,9 +357,9 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>("Chart",
           {!props.hideLegend && series.length ? (
             <ul role="list" className="dk-chart__legend" aria-hidden>
               {series.map((sr, s) => (
-                <li key={s} className={"dk-chart__key dk-chart--s" + (s + 1)}>
+                <li key={s} className={'dk-chart__key dk-chart--s' + (s + 1)}>
                   <svg className="dk-chart__swatch" width="20" height="12" viewBox="0 0 20 12" aria-hidden focusable="false">
-                    {type === "line"
+                    {type === 'line'
                       ? <><path className="dk-chart__line" d="M1 6H19" /><path className="dk-chart__marker" d={markerPath(s, 10, 6, MARKER)} /></>
                       : <rect className="dk-chart__bar" x="3" y="1" width="14" height="10" fill={fill(s)} />}
                   </svg>

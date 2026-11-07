@@ -56,7 +56,7 @@ export const LongLabels: Story = {
       <ButtonGroup {...args}>
         <Button variant="outline">Copy every selected row</Button>
         <Button variant="outline">Cut</Button>
-        <Button variant="outline">{"Donaudampfschifffahrtsgesellschaft"}</Button>
+        <Button variant="outline">{'Donaudampfschifffahrtsgesellschaft'}</Button>
       </ButtonGroup>
     </div>
   ),

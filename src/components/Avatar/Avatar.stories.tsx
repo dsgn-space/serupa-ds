@@ -44,7 +44,7 @@ export const LongName: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 8 }}>
       <Avatar {...args} name="Maria Magdalena Wilhelmina von Hohenzollern-Sigmaringen" />
-      <Avatar {...args} name={"Donaudampfschifffahrtsgesellschaftskapitänskajüte"} />
+      <Avatar {...args} name={'Donaudampfschifffahrtsgesellschaftskapitänskajüte'} />
     </div>
   ),
 };

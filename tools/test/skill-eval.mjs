@@ -76,8 +76,8 @@ const BAD = [
   ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport { Mail } from 'lucide-react';")],
   ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport { motion } from 'framer-motion';")],
   ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport styled from 'styled-components';")],
-  ['no-extras', GOOD.replace('export function', "const PrimaryButton = (props: React.ComponentProps<typeof Button>) => <Button variant=\"primary\" size=\"lg\" {...props} />;\nexport function")],
-  ['no-extras', GOOD.replace('export function', "function AppField({ children, ...rest }: React.ComponentProps<typeof Field>) {\n  return (\n    <Field {...rest}>{children}</Field>\n  );\n}\nexport function")],
+  ['no-extras', GOOD.replace('export function', 'const PrimaryButton = (props: React.ComponentProps<typeof Button>) => <Button variant="primary" size="lg" {...props} />;\nexport function')],
+  ['no-extras', GOOD.replace('export function', 'function AppField({ children, ...rest }: React.ComponentProps<typeof Field>) {\n  return (\n    <Field {...rest}>{children}</Field>\n  );\n}\nexport function')],
 ];
 for (const [check, src] of BAD) {
   const r = grade(src, ['Field', 'Input', 'Button|Link']);
@@ -128,7 +128,7 @@ const requoted = phone.replace(/'/g, '"');
 t('a change that also rewrites the old code fails "surgical" alone', tidy(requoted, 'add-phone').join() .startsWith('surgical') && tidy(requoted, 'add-phone').length === 1, tidy(requoted, 'add-phone').join(', '));
 const legacy = startOf(task('legacy-page'));
 const search = legacy.replace("import { Card, Heading, Stack, Text } from 'serupa-ds';", "import { Card, Heading, SearchInput, Stack, Text } from 'serupa-ds';")
-  .replace("export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {", "export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {\n  const [q, setQ] = React.useState('');")
+  .replace('export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {', "export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {\n  const [q, setQ] = React.useState('');")
   .replace('<Heading level={1}>Items</Heading>', '<Heading level={1}>Items</Heading>\n        <SearchInput aria-label="Search items" value={q} onChange={(e) => setQ(e.target.value)} />')
   .replace('{items.map((item) => (', '{items.filter((item) => item.name.toLowerCase().includes(q.toLowerCase())).map((item) => (');
 t("the start's own hand-built button and hex colors don't count against the change", !tidy(search, 'legacy-page').length, tidy(search, 'legacy-page').join(', '));

@@ -44,7 +44,7 @@ export function editorData(utilitiesCss, tokensCss, descriptions) {
     globalAttributes: [
       { name: 'class', description: 'Serupa utility classes', values: [...utilityClasses(utilitiesCss)].map(([name, description]) => ({ name, description })) },
       { name: 'data-theme', description: 'A Serupa theme for this element and what it holds', values: values([...tokensCss.matchAll(/\[data-theme="([a-z-]+)"\]/g)].map((m) => m[1])) },
-      { name: 'data-brand', description: "The Serupa brand, read by theme.js with data-mode (it sets data-theme)", values: values([...tokensCss.matchAll(/\[data-brand="([a-z]+)"\]/g)].map((m) => m[1])) },
+      { name: 'data-brand', description: 'The Serupa brand, read by theme.js with data-mode (it sets data-theme)', values: values([...tokensCss.matchAll(/\[data-brand="([a-z]+)"\]/g)].map((m) => m[1])) },
       { name: 'data-mode', description: "Light, dark, or the visitor's setting (auto), read by theme.js with data-brand", values: values([...tokensCss.matchAll(/\[data-mode="([a-z]+)"\]/g)].map((m) => m[1])) },
     ],
   };

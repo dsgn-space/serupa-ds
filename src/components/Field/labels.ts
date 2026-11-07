@@ -5,8 +5,8 @@ export interface FieldLabels {
   fieldOptional: string;
 }
 export const en: FieldLabels = {
-  fieldOptional: "(optional)",
+  fieldOptional: '(optional)',
 };
 export const id: FieldLabels = {
-  fieldOptional: "(opsional)",
+  fieldOptional: '(opsional)',
 };

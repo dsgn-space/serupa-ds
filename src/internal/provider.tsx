@@ -1,11 +1,11 @@
-"use client";
-import * as React from "react";
-import type { IconData } from "../material/types";
-import { isIconData } from "../icons";
-import { DEFAULT_LABELS, SHARED_LABELS, type SerupaLabels, type SharedLabels } from "./labels";
-import type { ComponentLabels } from "../generated/labels";
-import { canonicalLocale } from "./locale";
-import { warnOnce } from "./warn";
+'use client';
+import * as React from 'react';
+import type { IconData } from '../material/types';
+import { isIconData } from '../icons';
+import { DEFAULT_LABELS, SHARED_LABELS, type SerupaLabels, type SharedLabels } from './labels';
+import type { ComponentLabels } from '../generated/labels';
+import { canonicalLocale } from './locale';
+import { warnOnce } from './warn';
 
 export interface SerupaProviderProps {
   /** A BCP 47 locale (such as "id-ID") for Calendar, DatePicker, DateRangePicker, TimePicker and NumberInput: how dates, times and numbers
@@ -35,7 +35,7 @@ export interface SerupaSettings {
 
 /** What the context holds: the shared English words and whatever providers set. A component's own English words
     aren't in it (useSettings(en) adds them), so a bundle carries only the words of the components in it (GL4). */
-interface Settings extends Omit<SerupaSettings, "labels"> {
+interface Settings extends Omit<SerupaSettings, 'labels'> {
   /** At run time it also holds the component words a provider set; typed as the shared ones so a component can't
       read its own words without passing them to useSettings. */
   labels: SharedLabels;
@@ -57,7 +57,7 @@ export function SerupaProvider(props: SerupaProviderProps): React.ReactElement {
     const merged: SharedLabels & Partial<ComponentLabels> = { ...outer.labels };
     if (labels) for (const k of Object.keys(labels) as (keyof SerupaLabels)[]) {
       const v = labels[k];
-      if (v != null && v !== "") (merged as unknown as Record<string, unknown>)[k] = v;
+      if (v != null && v !== '') (merged as unknown as Record<string, unknown>)[k] = v;
     }
     let map = outer.icons;
     if (icons) {
@@ -68,18 +68,18 @@ export function SerupaProvider(props: SerupaProviderProps): React.ReactElement {
       }
       map = m;
     }
-    return { locale: locale || outer.locale, labels: merged, icons: map, platform: platform === "apple" || platform === "other" ? platform : outer.platform };
+    return { locale: locale || outer.locale, labels: merged, icons: map, platform: platform === 'apple' || platform === 'other' ? platform : outer.platform };
   }, [outer, locale, labels, icons, platform]);
   return <Context.Provider value={value}>{props.children}</Context.Provider>;
 }
-SerupaProvider.displayName = "SerupaProvider";
+SerupaProvider.displayName = 'SerupaProvider';
 
 // The same keys holding the same values (===, or compared the same way depth levels further down): an object or
 // array written inline again with the same contents. A key missing on one side and undefined on the other counts as
 // the same, as it does when the settings are merged.
 function same(a: unknown, b: unknown, depth: number): boolean {
   if (a === b) return true;
-  if (!a || !b || typeof a != "object" || typeof b != "object") return false;
+  if (!a || !b || typeof a != 'object' || typeof b != 'object') return false;
   const x = a as Record<string, unknown>, y = b as Record<string, unknown>, keys = Object.keys(x);
   return keys.length == Object.keys(y).length && keys.every((k) => (depth ? same(x[k], y[k], depth - 1) : x[k] === y[k]));
 }
@@ -95,7 +95,7 @@ function useSameAsBefore<T>(v: T, depth: number): T {
     provider set them; pass the component's English (its labels.ts en) as own to have them under the providers' words.
     own must be the same object every render (a module constant), so the merge is kept between renders. */
 export function useSettings(): Settings;
-export function useSettings<T extends object>(own: T): Settings & { labels: T & Settings["labels"] };
+export function useSettings<T extends object>(own: T): Settings & { labels: T & Settings['labels'] };
 export function useSettings(own?: object): Settings {
   const settings = React.useContext(Context);
   return React.useMemo(() => (own ? { ...settings, labels: Object.assign({}, own, settings.labels) } : settings), [settings, own]);
@@ -110,7 +110,7 @@ export function useSerupa(): SerupaSettings {
 /* With no locale from a prop or a provider, a component follows the browser's. The server can't know it, so
    server HTML and the first client render use SERVER_LOCALE, and React switches to the browser's right after
    hydration (useSyncExternalStore's server snapshot). A client-only render uses the browser's from the start. */
-const SERVER_LOCALE = "en-US";
+const SERVER_LOCALE = 'en-US';
 // module state: the browser's locale, read once and kept until the browser says it changed (languagechange). It is
 // the visitor's own browser setting, never a request's: the server doesn't read it (its snapshot is SERVER_LOCALE).
 // Building a DateTimeFormat to ask costs about 0.6ms on a slow phone, and useSyncExternalStore asks at least twice a
@@ -122,16 +122,16 @@ let forgetting = false;
 const browserLocale = () => {
   if (seenLocale === undefined) {
     seenLocale = new Intl.DateTimeFormat().resolvedOptions().locale;
-    if (!forgetting) { forgetting = true; window.addEventListener("languagechange", () => { seenLocale = undefined; }); }
+    if (!forgetting) { forgetting = true; window.addEventListener('languagechange', () => { seenLocale = undefined; }); }
   }
   return seenLocale;
 };
-const onLanguageChange = (cb: () => void) => { window.addEventListener("languagechange", cb); return () => window.removeEventListener("languagechange", cb); };
+const onLanguageChange = (cb: () => void) => { window.addEventListener('languagechange', cb); return () => window.removeEventListener('languagechange', cb); };
 /** A locale given to a component or provider, made safe for Intl: canonical, else undefined with a warning in development. */
 function usable(locale: string | undefined): string | undefined {
   if (!locale) return undefined;
   const ok = canonicalLocale(locale);
-  if (!ok && process.env.NODE_ENV !== "production") warnOnce("bad-locale", `Serupa: "${locale}" isn't a locale Intl can read, so it's ignored. Use a BCP 47 tag such as "en-US" or "id-ID".`, "bad-locale:" + locale);
+  if (!ok && process.env.NODE_ENV !== 'production') warnOnce('bad-locale', `Serupa: "${locale}" isn't a locale Intl can read, so it's ignored. Use a BCP 47 tag such as "en-US" or "id-ID".`, 'bad-locale:' + locale);
   return ok;
 }
 /** The locale a component uses: its own prop, else the nearest SerupaProvider's, else the browser's (en-US until hydrated).
@@ -140,7 +140,7 @@ export function useLocale(own?: string): string {
   const fromProvider = React.useContext(Context).locale;
   const browser = React.useSyncExternalStore(onLanguageChange, browserLocale, () => SERVER_LOCALE);
   // Said on the server, where the switch after hydration can't be seen yet; once per process.
-  if (process.env.NODE_ENV !== "production" && !own && !fromProvider && typeof window === "undefined") warnOnce("server-locale", `Serupa: rendered on the server without a locale, so dates and numbers are ${SERVER_LOCALE} until hydration, then the browser's. Set <SerupaProvider locale> from the request.`);
+  if (process.env.NODE_ENV !== 'production' && !own && !fromProvider && typeof window === 'undefined') warnOnce('server-locale', `Serupa: rendered on the server without a locale, so dates and numbers are ${SERVER_LOCALE} until hydration, then the browser's. Set <SerupaProvider locale> from the request.`);
   return usable(own) || usable(fromProvider) || browser;
 }
 /** The lang for text a component writes in its own locale prop, when that differs from the locale it would use

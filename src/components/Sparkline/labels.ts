@@ -5,8 +5,8 @@ export interface SparklineLabels {
   sparklineSummary: (label: string, first: string, last: string, min: string, max: string) => string;
 }
 export const en: SparklineLabels = {
-  sparklineSummary: (label, first, last, min, max) => label + ": from " + first + " to " + last + ", low " + min + ", high " + max,
+  sparklineSummary: (label, first, last, min, max) => label + ': from ' + first + ' to ' + last + ', low ' + min + ', high ' + max,
 };
 export const id: SparklineLabels = {
-  sparklineSummary: (label, first, last, min, max) => label + ": dari " + first + " ke " + last + ", terendah " + min + ", tertinggi " + max,
+  sparklineSummary: (label, first, last, min, max) => label + ': dari ' + first + ' ke ' + last + ', terendah ' + min + ', tertinggi ' + max,
 };

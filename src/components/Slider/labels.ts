@@ -6,10 +6,10 @@ export interface SliderLabels {
   sliderMaximum: string;
 }
 export const en: SliderLabels = {
-  sliderMinimum: "Minimum",
-  sliderMaximum: "Maximum",
+  sliderMinimum: 'Minimum',
+  sliderMaximum: 'Maximum',
 };
 export const id: SliderLabels = {
-  sliderMinimum: "Minimum",
-  sliderMaximum: "Maksimum",
+  sliderMinimum: 'Minimum',
+  sliderMaximum: 'Maksimum',
 };

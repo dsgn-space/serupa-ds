@@ -40,7 +40,7 @@ export const LongLabels: Story = {
       <RadioGroup {...args}>
         <Radio value="free">Free, for one person working on a handful of projects</Radio>
         <Radio value="pro" description="Everything in Free, plus unlimited projects, guests and a full year of version history">Pro</Radio>
-        <Radio value="team">{"Donaudampfschifffahrtsgesellschaft"}</Radio>
+        <Radio value="team">{'Donaudampfschifffahrtsgesellschaft'}</Radio>
       </RadioGroup>
     </div>
   ),

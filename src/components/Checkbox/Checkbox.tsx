@@ -1,16 +1,16 @@
-"use client";
-import * as React from "react";
-import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from "../../internal/cn";
-import { useFormReset } from "../../internal/useFormReset";
-import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import { useSettings } from "../../internal/provider";
-import * as icons from "../../material/builtin";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { warnOnce } from "../../internal/warn";
-import { delegateFocus, useAutoFocus } from "../../internal/focus";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
+import { useFormReset } from '../../internal/useFormReset';
+import { Icon } from '../Icon/Icon';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import { useSettings } from '../../internal/provider';
+import * as icons from '../../material/builtin';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { warnOnce } from '../../internal/warn';
+import { delegateFocus, useAutoFocus } from '../../internal/focus';
+import { en as words } from './labels';
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** 'sm' (14px box, text-xs), 'md' (16px, text-sm, default) or 'lg' (20px, text-base). */
@@ -82,22 +82,22 @@ const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orient
 function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<string, boolean>()): Map<string, boolean> {
   React.Children.forEach(children, (c) => {
     if (!React.isValidElement<CheckboxProps & { children?: React.ReactNode }>(c)) return;
-    if (c.type === Checkbox) { if (!c.props.selectAll && c.props.value != null && String(c.props.value) !== "") out.set(String(c.props.value), disabled || !!c.props.disabled); }
+    if (c.type === Checkbox) { if (!c.props.selectAll && c.props.value != null && String(c.props.value) !== '') out.set(String(c.props.value), disabled || !!c.props.disabled); }
     else childBoxes(c.props.children, disabled, out);
   });
   return out;
 }
 
 /** Any number of choices from a set of Checkboxes: a <div role="group"> that names them, holds the checked values and passes size, invalid, disabled and required down. A Checkbox with selectAll checks or clears the rest. */
-export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxGroupProps>("CheckboxGroup", function CheckboxGroup(props: CheckboxGroupProps, ref) {
+export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxGroupProps>('CheckboxGroup', function CheckboxGroup(props: CheckboxGroupProps, ref) {
   const rest = omit(props, GROUP_OWN);
-  const autoName = domId("dk-cbg", React.useId());
+  const autoName = domId('dk-cbg', React.useId());
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<readonly (string | number)[]>(props.defaultValue || []);
   const raw = (controlled ? props.value : own) || [];
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  delete rest["aria-invalid"];   // it goes on the boxes
-  const orientation = props.orientation === "horizontal" ? "horizontal" : "vertical";
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  delete rest['aria-invalid'];   // it goes on the boxes
+  const orientation = props.orientation === 'horizontal' ? 'horizontal' : 'vertical';
   const root = React.useRef<HTMLDivElement | null>(null);
   const [, rerender] = React.useState(0);
   useFormReset(root, function () { if (!controlled) setOwn(props.defaultValue || []); rerender(function (n) { return n + 1; }); });
@@ -131,9 +131,9 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
     <div {...rest} ref={function (n) {
       // ref.current.focus() (a form library focusing the first invalid field) lands on the first box that can be
       // checked; the <div> took no focus (L8E91).
-      root.current = n; delegateFocus(n, () => n && n.querySelector<HTMLElement>("input:enabled")); setRef(ref, n);
+      root.current = n; delegateFocus(n, () => n && n.querySelector<HTMLElement>('input:enabled')); setRef(ref, n);
     }} role="group" aria-disabled={props.disabled || undefined}
-      className={cn("dk-checkbox-group", "dk-checkbox-group--" + orientation, invalid && "dk-checkbox-group--invalid", props.className)} data-component="checkbox-group" data-orientation={orientation}>
+      className={cn('dk-checkbox-group', 'dk-checkbox-group--' + orientation, invalid && 'dk-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
       <GroupContext.Provider value={ctx}>{props.children}</GroupContext.Provider>
     </div>
   );
@@ -147,23 +147,23 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
 const OWN = { size: 1, invalid: 1, indeterminate: 1, selectAll: 1, onCheckedChange: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
 /** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
-export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>("Checkbox", function Checkbox(props, ref) {
-  const nameRef = useNameCheck("Checkbox", NAME_HOW.label);   // warns when it has no accessible name
-  if (process.env.NODE_ENV !== "production" && (props as { label?: unknown }).label != null) warnOnce("label-prop", "Checkbox: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", "label-prop:Checkbox");
+export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>('Checkbox', function Checkbox(props, ref) {
+  const nameRef = useNameCheck('Checkbox', NAME_HOW.label);   // warns when it has no accessible name
+  if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Checkbox: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Checkbox');
   const group = React.useContext(GroupContext);
   // In a group, the group's Field labels and describes the group, not each box.
   const fromField = useFieldControl(props);
   if (!group) props = fromField;
   const rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, oneOf(SIZES, group && group.size, "md"));
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
+  const size = oneOf(SIZES, props.size, oneOf(SIZES, group && group.size, 'md'));
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   // A group's invalid goes on each box: role="group" can't carry aria-invalid (TF1a).
-  if (invalid || (group && group.invalid)) rest["aria-invalid"] = true;
+  if (invalid || (group && group.invalid)) rest['aria-invalid'] = true;
   let mixed = !!props.indeterminate;
   let need = false;
-  const key = props.value == null ? "" : String(props.value);
+  const key = props.value == null ? '' : String(props.value);
   const all = !!(group && props.selectAll);
-  const counted = !!group && !all && key !== "";
+  const counted = !!group && !all && key !== '';
   const labels = useSettings(words).labels;
   const boxDisabled = !!(rest.disabled || (group && group.disabled));
   useIsoLayoutEffect(function () { return counted && group ? group.register(props.value as string | number, boxDisabled) : undefined; }, [counted, key, boxDisabled]);
@@ -199,7 +199,7 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   // puts the box back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
   const readOnly = !!rest.readOnly;
   if (readOnly) {
-    rest["aria-readonly"] = true;
+    rest['aria-readonly'] = true;
     delete rest.onChange;
     const onClick = rest.onClick;
     rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
@@ -212,24 +212,24 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   }, [ref, nameRef]);
   // The server markup can't carry the DOM property, so the box also renders data-indeterminate, which draws the
   // dash until this runs (GI3); from then on the property alone draws it.
-  useIsoLayoutEffect(function () { const i = own.current; if (i) { i.indeterminate = mixed; i.removeAttribute("data-indeterminate"); } });   // every render: a click clears it natively
+  useIsoLayoutEffect(function () { const i = own.current; if (i) { i.indeterminate = mixed; i.removeAttribute('data-indeterminate'); } });   // every render: a click clears it natively
   const said = React.useRef(false);   // only clears a message it set
   // every render: whether the group needs a box checked changes with any box's state, not with this box's props.
   useIsoLayoutEffect(function () {
     if (!own.current || (!need && !said.current)) return;
-    own.current.setCustomValidity(need ? labels.selectAtLeastOne : "");
+    own.current.setCustomValidity(need ? labels.selectAtLeastOne : '');
     said.current = need;
   });
-  const base = domId("dk-cb", React.useId()), labelId = base + "-label", descId = base + "-desc";
-  const hasLabel = props.children != null && props.children !== false && props.children !== "";
-  const hasDesc = props.description != null && props.description !== false && props.description !== "";
-  if (hasDesc) rest["aria-describedby"] = cn(rest["aria-describedby"], descId);
+  const base = domId('dk-cb', React.useId()), labelId = base + '-label', descId = base + '-desc';
+  const hasLabel = props.children != null && props.children !== false && props.children !== '';
+  const hasDesc = props.description != null && props.description !== false && props.description !== '';
+  if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
   // the description sits inside the <label> (so it's clickable too); naming by the label text alone keeps it out of the name
-  if (hasDesc && hasLabel && rest["aria-label"] == null && rest["aria-labelledby"] == null) rest["aria-labelledby"] = labelId;
+  if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;
   return (
-    <label className={cn("dk-checkbox", "dk-checkbox--size-" + size, (invalid || (group && group.invalid)) && "dk-checkbox--invalid", rest.disabled && "dk-checkbox--disabled", readOnly && "dk-checkbox--readonly", !hasLabel && !hasDesc && "dk-checkbox--bare", props.className)} style={props.style} data-component="checkbox" data-size={size}>
+    <label className={cn('dk-checkbox', 'dk-checkbox--size-' + size, (invalid || (group && group.invalid)) && 'dk-checkbox--invalid', rest.disabled && 'dk-checkbox--disabled', readOnly && 'dk-checkbox--readonly', !hasLabel && !hasDesc && 'dk-checkbox--bare', props.className)} style={props.style} data-component="checkbox" data-size={size}>
       <span className="dk-checkbox__control" key="control">
-        <input {...rest} ref={setRefs} type="checkbox" className="dk-checkbox__input" data-indeterminate={mixed ? "" : undefined} key="input" />
+        <input {...rest} ref={setRefs} type="checkbox" className="dk-checkbox__input" data-indeterminate={mixed ? '' : undefined} key="input" />
         <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>
       </span>
       {hasLabel || hasDesc ? <span className="dk-checkbox__text" key="text">

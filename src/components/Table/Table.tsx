@@ -1,20 +1,20 @@
-"use client";
-import * as React from "react";
-import { flushSync } from "react-dom";
-import { announce } from "../../internal/announce";
-import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { Icon } from "../Icon/Icon";
-import { Checkbox, type CheckboxProps } from "../Checkbox/Checkbox";
-import { Button } from "../Button/Button";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { warnOnce } from "../../internal/warn";
-import { useLocale, useSettings } from "../../internal/provider";
-import { displayNumber } from "../../internal/numbers";
-import { useVirtual } from "../../internal/virtual";
-import * as icons from "../../material/builtin";
-import type { IconData } from "../../material/types";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { flushSync } from 'react-dom';
+import { announce } from '../../internal/announce';
+import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { Icon } from '../Icon/Icon';
+import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
+import { Button } from '../Button/Button';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { warnOnce } from '../../internal/warn';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
+import { useVirtual } from '../../internal/virtual';
+import * as icons from '../../material/builtin';
+import type { IconData } from '../../material/types';
+import { en as words } from './labels';
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
   /** 'md' (default): 12px cell padding. 'sm': 8px top and bottom, for dense data. */
@@ -84,22 +84,22 @@ export interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement
   children?: React.ReactNode | undefined;
 }
 
-const ALIGN = ["start", "center", "end"] as const;
+const ALIGN = ['start', 'center', 'end'] as const;
 
 /* Table: a native <table> in a frame that scrolls sideways when it's too wide (and then takes keyboard focus
    so it can be scrolled with the arrows). size, striped and stickyHeader style the rows; caption names it.
    className and every other prop go to the <table>; containerProps go to the frame. */
 /** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
-export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>("Table", function Table(props, ref) {
+export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Table', function Table(props, ref) {
   const sds = useSettings(words);
   const rest = omit(props, { size: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, className: 1, children: 1 });
-  const size = oneOf(["sm", "md"] as const, props.size, "md");
+  const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const frame = React.useRef<HTMLDivElement>(null);
   const [scrolls, setScrolls] = React.useState(false);
-  const cid = domId("dk-tc", React.useId());
+  const cid = domId('dk-tc', React.useId());
   React.useEffect(() => {
     const el = frame.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
+    if (!el || typeof ResizeObserver === 'undefined') return;
     const check = () => setScrolls(el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1);
     const ro = new ResizeObserver(check);
     ro.observe(el);
@@ -110,9 +110,9 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>("Ta
   // A sticky header covers the top of the frame: measure it, so focus scrolls in below it (the CSS reads --dk-table-head).
   const sticky = !!props.stickyHeader;
   React.useEffect(() => {
-    const el = frame.current, head = el && el.querySelector<HTMLElement>(".dk-table__head");
-    if (!el || !sticky || !head || typeof ResizeObserver === "undefined") return;
-    const set = () => el.style.setProperty("--dk-table-head", head.getBoundingClientRect().height + "px");
+    const el = frame.current, head = el && el.querySelector<HTMLElement>('.dk-table__head');
+    if (!el || !sticky || !head || typeof ResizeObserver === 'undefined') return;
+    const set = () => el.style.setProperty('--dk-table-head', head.getBoundingClientRect().height + 'px');
     const ro = new ResizeObserver(set);
     ro.observe(head);
     set();
@@ -128,18 +128,18 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>("Ta
         if (covered > 0) el.scrollTop -= covered;
       });
     };
-    el.addEventListener("focusin", onFocus);
-    return () => { ro.disconnect(); cancelAnimationFrame(raf); el.removeEventListener("focusin", onFocus); el.style.removeProperty("--dk-table-head"); };
+    el.addEventListener('focusin', onFocus);
+    return () => { ro.disconnect(); cancelAnimationFrame(raf); el.removeEventListener('focusin', onFocus); el.style.removeProperty('--dk-table-head'); };
   }, [sticky]);
   // A name on the frame belongs to its region role: a plain div that doesn't scroll can't carry one (axe aria-prohibited-attr).
-  const { "aria-label": frameLabel, "aria-labelledby": frameLabelledBy, ...cp } = props.containerProps || {};
-  const hasCaption = props.caption != null && props.caption !== false && props.caption !== "";
-  const region = !scrolls ? {} : hasCaption ? { tabIndex: 0, role: "region", "aria-labelledby": cid }
-    : { tabIndex: 0, role: "region", "aria-labelledby": frameLabelledBy, "aria-label": frameLabelledBy ? undefined : frameLabel || sds.labels.table };
+  const { 'aria-label': frameLabel, 'aria-labelledby': frameLabelledBy, ...cp } = props.containerProps || {};
+  const hasCaption = props.caption != null && props.caption !== false && props.caption !== '';
+  const region = !scrolls ? {} : hasCaption ? { tabIndex: 0, role: 'region', 'aria-labelledby': cid }
+    : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
-    <div {...cp} {...region} ref={frame} data-component="table" className={cn("dk-table", size === "sm" && "dk-table--sm", props.striped && "dk-table--striped", props.stickyHeader && "dk-table--sticky", cp.className)}>
-      <table {...rest} ref={ref} className={cn("dk-table__table", props.className)}>
-        {hasCaption ? <caption id={cid} className={cn("dk-table__caption", props.hideCaption && "dk-visually-hidden")}>{props.caption}</caption> : null}
+    <div {...cp} {...region} ref={frame} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', cp.className)}>
+      <table {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
+        {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
       </table>
     </div>
@@ -151,13 +151,13 @@ export type TableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>;
 export type TableFootProps = React.HTMLAttributes<HTMLTableSectionElement>;
 
 /** The header rows (<thead>). */
-export const TableHead = /* @__PURE__ */ component<HTMLTableSectionElement, TableHeadProps>("TableHead", function TableHead(props, ref) {
-  return <thead {...props} ref={ref} className={cn("dk-table__head", props.className)} />;
+export const TableHead = /* @__PURE__ */ component<HTMLTableSectionElement, TableHeadProps>('TableHead', function TableHead(props, ref) {
+  return <thead {...props} ref={ref} className={cn('dk-table__head', props.className)} />;
 });
 
 /** The body rows (<tbody>). */
-export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableBodyProps>("TableBody", function TableBody(props, ref) {
-  return <tbody {...props} ref={ref} className={cn("dk-table__body", props.className)} />;
+export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableBodyProps>('TableBody', function TableBody(props, ref) {
+  return <tbody {...props} ref={ref} className={cn('dk-table__body', props.className)} />;
 });
 
 export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
@@ -186,7 +186,7 @@ const PRINT_ROWS = 5000;
    aria-rowcount, so screen readers say "row 5,002 of 10,001". A row with focus stays drawn when it scrolls away. */
 /** A table body of thousands of rows that draws only the ones in view of the Table's scrolling frame.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableVirtualBodyProps>("TableVirtualBody", function TableVirtualBody(props, ref) {
+export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableVirtualBodyProps>('TableVirtualBody', function TableVirtualBody(props, ref) {
   const rest = omit(props, { count: 1, renderRow: 1, itemKey: 1, estimatedRowHeight: 1, overscan: 1, className: 1, onFocus: 1, onBlur: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
   const body = React.useRef<HTMLTableSectionElement | null>(null);
@@ -197,7 +197,7 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
     rows: () => body.current,
     // The rows start under the caption and the header: where this body starts in the frame's scrolling content.
     origin: () => {
-      const b = body.current, f = b && b.closest<HTMLElement>(".dk-table");
+      const b = body.current, f = b && b.closest<HTMLElement>('.dk-table');
       return b && f ? b.getBoundingClientRect().top - f.getBoundingClientRect().top - f.clientTop + f.scrollTop : 0;
     },
   });
@@ -205,14 +205,14 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
   const attach = r.ref;
   const [head, setHead] = React.useState(0);
   useIsoLayoutEffect(() => {
-    const b = body.current, f = b && b.closest<HTMLElement>(".dk-table"), t = b && b.closest("table");
+    const b = body.current, f = b && b.closest<HTMLElement>('.dk-table'), t = b && b.closest('table');
     attach(f);
-    setSmall(!!f && f.classList.contains("dk-table--sm"));
+    setSmall(!!f && f.classList.contains('dk-table--sm'));
     // The rows of the head and foot, by their <tr>s (a DOM without HTMLTableSectionElement.rows, as happy-dom, has these).
-    const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(":scope > tr").length : 0);
-    const h = t ? rowsOf(t.querySelector(":scope > thead")) : 0;
+    const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(':scope > tr').length : 0);
+    const h = t ? rowsOf(t.querySelector(':scope > thead')) : 0;
     setHead(h);
-    if (t) t.setAttribute("aria-rowcount", String(h + count + rowsOf(t.querySelector(":scope > tfoot"))));
+    if (t) t.setAttribute('aria-rowcount', String(h + count + rowsOf(t.querySelector(':scope > tfoot'))));
   }, [attach, count]);
   const [focused, setFocused] = React.useState<number | null>(null);
   // Print: every row (the first PRINT_ROWS), drawn from beforeprint to afterprint, so the printout is the whole table
@@ -221,15 +221,15 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
   const [printing, setPrinting] = React.useState(false);
   React.useEffect(() => {
     const on = () => flushSync(() => setPrinting(true)), off = () => setPrinting(false);
-    window.addEventListener("beforeprint", on);
-    window.addEventListener("afterprint", off);
-    return () => { window.removeEventListener("beforeprint", on); window.removeEventListener("afterprint", off); };
+    window.addEventListener('beforeprint', on);
+    window.addEventListener('afterprint', off);
+    return () => { window.removeEventListener('beforeprint', on); window.removeEventListener('afterprint', off); };
   }, []);
   const { renderRow, itemKey } = props;
   const row = (i: number, out: boolean) => {
     const el = renderRow(i) as React.ReactElement<{ style?: React.CSSProperties }>;
-    const style = out ? { ...el.props.style, position: "absolute" as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
-    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, "data-index": printing ? undefined : i, "aria-rowindex": head + i + 1, style } as React.Attributes);
+    const style = out ? { ...el.props.style, position: 'absolute' as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
+    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, 'data-index': printing ? undefined : i, 'aria-rowindex': head + i + 1, style } as React.Attributes);
   };
   const rows: React.ReactElement[] = [];
   const keep = !printing && focused != null && focused < count && (focused < r.start || focused >= r.end) ? focused : null;
@@ -243,15 +243,15 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
   if (!printing && r.before > 0) lead.push(r.before);
   if ((lead.length + (keep != null && keep < start ? 1 : 0)) % 2 !== start % 2) lead.push(0);
   const indexOf = (t: EventTarget | null, tb: Element) => {
-    const tr = t instanceof HTMLElement ? t.closest<HTMLElement>("[data-index]") : null;
+    const tr = t instanceof HTMLElement ? t.closest<HTMLElement>('[data-index]') : null;
     return tr && tr.parentElement === tb ? Number(tr.dataset.index) : null;
   };
   const setNode = React.useCallback((n: HTMLTableSectionElement | null) => { body.current = n; setRef(ref, n); }, [ref]);
   return (
-    <tbody {...rest} ref={setNode} className={cn("dk-table__body", "dk-table__body--virtual", props.className)}
+    <tbody {...rest} ref={setNode} className={cn('dk-table__body', 'dk-table__body--virtual', props.className)}
       onFocus={(e) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); }}
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); }}>
-      {lead.map((h, n) => <tr key={"lead" + n} aria-hidden="true" className="dk-table__spacer" style={{ height: h }} />)}
+      {lead.map((h, n) => <tr key={'lead' + n} aria-hidden="true" className="dk-table__spacer" style={{ height: h }} />)}
       {rows}
       {!printing && r.after > 0 ? <tr aria-hidden="true" className="dk-table__spacer" style={{ height: r.after }} /> : null}
     </tbody>
@@ -259,8 +259,8 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
 });
 
 /** Footer rows such as totals (<tfoot>). */
-export const TableFoot = /* @__PURE__ */ component<HTMLTableSectionElement, TableFootProps>("TableFoot", function TableFoot(props, ref) {
-  return <tfoot {...props} ref={ref} className={cn("dk-table__foot", props.className)} />;
+export const TableFoot = /* @__PURE__ */ component<HTMLTableSectionElement, TableFootProps>('TableFoot', function TableFoot(props, ref) {
+  return <tfoot {...props} ref={ref} className={cn('dk-table__foot', props.className)} />;
 });
 
 type RowLink = { href: string; target?: string; rel?: string };
@@ -270,12 +270,12 @@ const RowLinkContext = /* @__PURE__ */ React.createContext<RowLink | null>(null)
    TableCell child), whose ::after covers the row (Table.css). A real link, so Ctrl/Cmd and middle click, "Copy link"
    and the status bar work, with nothing re-dispatched. onClick on a row without href reaches the mouse only. */
 /** A row (<tr>). selected shades it, with a bar at its start; a TableSelectCell in it says so to screen readers. With href, the whole row is a link. */
-export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowProps>("TableRow", function TableRow(props, ref) {
+export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowProps>('TableRow', function TableRow(props, ref) {
   const rest = omit(props, { selected: 1, className: 1, href: 1, target: 1, rel: 1, children: 1 });
   const isLink = props.href != null;
-  if (process.env.NODE_ENV !== "production" && props.onClick && !isLink) warnOnce("table-row-click", "TableRow: onClick on a row reaches mouse users only: the keyboard and screen readers can't press a row. To open something, give the row an href (the whole row becomes a link); for an action, put a button in a cell.");
+  if (process.env.NODE_ENV !== 'production' && props.onClick && !isLink) warnOnce('table-row-click', "TableRow: onClick on a row reaches mouse users only: the keyboard and screen readers can't press a row. To open something, give the row an href (the whole row becomes a link); for an action, put a button in a cell.");
   const link = React.useMemo(function () {
-    return isLink ? { href: props.href!, target: props.target, rel: props.target === "_blank" && props.rel == null ? "noopener noreferrer" : props.rel } : null;
+    return isLink ? { href: props.href!, target: props.target, rel: props.target === '_blank' && props.rel == null ? 'noopener noreferrer' : props.rel } : null;
   }, [isLink, props.href, props.target, props.rel]);
   let children = props.children;
   if (isLink) {
@@ -286,7 +286,7 @@ export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowP
       if (first >= 0) children = kids.map(function (k, i) { return i === first ? React.cloneElement(k as React.ReactElement<TableCellProps>, { link: true }) : k; });
     }
   }
-  return <tr {...rest} ref={ref} className={cn("dk-table__row", props.selected && "dk-table__row--selected", isLink && "dk-table__row--link", props.className)}>
+  return <tr {...rest} ref={ref} className={cn('dk-table__row', props.selected && 'dk-table__row--selected', isLink && 'dk-table__row--link', props.className)}>
     {link ? <RowLinkContext.Provider value={link}>{children}</RowLinkContext.Provider> : children}
   </tr>;
 });
@@ -296,21 +296,21 @@ export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowP
    cellProps to the cell. A row whose checkbox is checked is shaded like a selected row, so an uncontrolled one
    works too; set the row's selected as well when you keep the selection yourself. */
 /** A cell with a checkbox for selecting its row (or, with header, every row); the checkbox carries the selected state for screen readers. */
-export const TableSelectCell = /* @__PURE__ */ component<HTMLInputElement, TableSelectCellProps>("TableSelectCell", function TableSelectCell(props, ref) {
+export const TableSelectCell = /* @__PURE__ */ component<HTMLInputElement, TableSelectCellProps>('TableSelectCell', function TableSelectCell(props, ref) {
   const { label, header, cellProps, ...rest } = props;   // the rest is the Checkbox's
   const cp = cellProps || {};
   const box = <Checkbox {...rest} ref={ref} aria-label={label} />;
-  const cls = cn("dk-table__cell dk-table__select", cp.className);
-  return header ? <th scope="col" {...cp} className={cn(cls, "dk-table__header")}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
+  const cls = cn('dk-table__cell dk-table__select', cp.className);
+  return header ? <th scope="col" {...cp} className={cn(cls, 'dk-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
 });
 
 const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
 
 /** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. */
-export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>("TableHeaderCell", function TableHeaderCell(props, ref) {
+export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>('TableHeaderCell', function TableHeaderCell(props, ref) {
   const rest = omit(props, { align: 1, sort: 1, onSort: 1, className: 1, children: 1 });
-  const align = oneOf(ALIGN, props.align, "start");
-  const sort = props.sort !== undefined ? oneOf(["ascending", "descending", "none"] as const, props.sort, "none") : null;
+  const align = oneOf(ALIGN, props.align, 'start');
+  const sort = props.sort !== undefined ? oneOf(['ascending', 'descending', 'none'] as const, props.sort, 'none') : null;
   // A new order is read out ("Sorted by Amount, ascending"): aria-sort alone is only heard when focus reaches the
   // header again, and the button keeps focus. Not on the first render.
   const labels = useSettings(words).labels;
@@ -319,15 +319,15 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
   React.useEffect(function () {
     if (sort === was.current) return;
     was.current = sort;
-    if ((sort === "ascending" || sort === "descending") && button.current) announce(labels.tableSorted((button.current.textContent || "").trim(), sort));
+    if ((sort === 'ascending' || sort === 'descending') && button.current) announce(labels.tableSorted((button.current.textContent || '').trim(), sort));
   }, [sort, labels]);
   return (
-    <th scope="col" {...rest} ref={ref} aria-sort={sort && sort !== "none" ? sort : undefined}
-      className={cn("dk-table__cell dk-table__header", align !== "start" && "dk-table__cell--" + align, sort && "dk-table__header--sortable", props.className)}>
+    <th scope="col" {...rest} ref={ref} aria-sort={sort && sort !== 'none' ? sort : undefined}
+      className={cn('dk-table__cell dk-table__header', align !== 'start' && 'dk-table__cell--' + align, sort && 'dk-table__header--sortable', props.className)}>
       {sort ? (
         <button type="button" ref={button} className="dk-table__sort" onClick={props.onSort}>
           <span>{props.children}</span>
-          <Icon icon={NEXT_ICON[sort]} className={cn("dk-table__sort-icon", sort === "none" && "dk-table__sort-icon--idle")} />
+          <Icon icon={NEXT_ICON[sort]} className={cn('dk-table__sort-icon', sort === 'none' && 'dk-table__sort-icon--idle')} />
         </button>
       ) : props.children}
     </th>
@@ -337,14 +337,14 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
 const PLAIN = { useGrouping: false } as const;
 /** A data cell (<td>). align="end" for numbers. A number as its child is written in the locale's digits (ungrouped,
  *  as given: 1204 stays 1204 in en-US and is ١٢٠٤ in ar-EG); for grouping, currency or units, pass FormattedNumber. */
-export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCellProps>("TableCell", function TableCell(props, ref) {
+export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCellProps>('TableCell', function TableCell(props, ref) {
   const rest = omit(props, { align: 1, className: 1, children: 1, link: 1 });
-  const align = oneOf(ALIGN, props.align, "start");
+  const align = oneOf(ALIGN, props.align, 'start');
   const locale = useLocale();
   const row = React.useContext(RowLinkContext);
   const n = props.children;
-  const content = typeof n === "number" && Number.isFinite(n) ? displayNumber(n, locale, PLAIN) : n;
-  return <td {...rest} ref={ref} className={cn("dk-table__cell", align !== "start" && "dk-table__cell--" + align, props.className)}>
+  const content = typeof n === 'number' && Number.isFinite(n) ? displayNumber(n, locale, PLAIN) : n;
+  return <td {...rest} ref={ref} className={cn('dk-table__cell', align !== 'start' && 'dk-table__cell--' + align, props.className)}>
     {row && props.link ? <a className="dk-table__row-link" href={row.href} target={row.target} rel={row.rel}>{content}</a> : content}
   </td>;
 });
@@ -354,13 +354,13 @@ export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCe
    politely. When it hides with focus in it (Clear, or an action that empties the selection), focus moves to the first
    checkbox of the table after it (the header's "Select all"), so it isn't lost: render it just before the Table. */
 /** The bar of actions for a table's selected rows: "3 selected", your buttons, and "Clear selection". */
-export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableActionBarProps>("TableActionBar", function TableActionBar(props, ref) {
+export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableActionBarProps>('TableActionBar', function TableActionBar(props, ref) {
   const labels = useSettings(words).labels;
   const rest = omit(props, { count: 1, onClear: 1, clearLabel: 1, className: 1, children: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
   const self = React.useRef<HTMLDivElement | null>(null);
   const setRefs = React.useCallback((e: HTMLDivElement | null) => { self.current = e; setRef(ref, e); }, [ref]);
-  const id = domId("dk-tab", React.useId());
+  const id = domId('dk-tab', React.useId());
   const said = labels.tableSelected(count);
   // Hidden (not removed) at 0, so focus is still in it here and can go to the table's "Select all" before it's lost.
   useIsoLayoutEffect(() => {
@@ -378,7 +378,7 @@ export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableAct
     if (count) announce(said);   // not 0: the hidden bar says nothing, and the checkbox that cleared it says its own state
   }, [count, said]);
   return (
-    <div role="group" aria-labelledby={id} {...rest} ref={setRefs} hidden={!count || undefined} data-component="table-action-bar" className={cn("dk-table-action-bar", props.className)}>
+    <div role="group" aria-labelledby={id} {...rest} ref={setRefs} hidden={!count || undefined} data-component="table-action-bar" className={cn('dk-table-action-bar', props.className)}>
       <span id={id} className="dk-table-action-bar__count">{said}</span>
       <div className="dk-table-action-bar__actions">{props.children}</div>
       {props.onClear ? <Button variant="ghost" size="sm" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}

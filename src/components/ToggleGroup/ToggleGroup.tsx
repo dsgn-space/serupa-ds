@@ -1,12 +1,12 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, omit, setRef } from "../../internal/cn";
-import { useRowWrap } from "../../internal/useRowWrap";
-import { component } from "../../internal/component";
-import type { ButtonGroupProps } from "../ButtonGroup/ButtonGroup";
-import type { ToggleButtonProps } from "../ToggleButton/ToggleButton";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { useRowWrap } from '../../internal/useRowWrap';
+import { component } from '../../internal/component';
+import type { ButtonGroupProps } from '../ButtonGroup/ButtonGroup';
+import type { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
-export interface ToggleGroupProps extends Omit<ButtonGroupProps, "defaultValue" | "onChange"> {
+export interface ToggleGroupProps extends Omit<ButtonGroupProps, 'defaultValue' | 'onChange'> {
   /** 'single' (default): turning one on turns the others off, and pressing the one that's on turns it off. 'multiple': each turns on and off by itself. */
   type?: 'single' | 'multiple' | undefined;
   /** The values of the buttons that are on (controlled). Use with onValueChange. */
@@ -20,9 +20,9 @@ export interface ToggleGroupProps extends Omit<ButtonGroupProps, "defaultValue" 
   /** Turns every button off and out of use. */
   disabled?: boolean | undefined;
   /** The buttons' size, for those that don't set their own. */
-  size?: ToggleButtonProps["size"] | undefined;
+  size?: ToggleButtonProps['size'] | undefined;
   /** The buttons' variant, for those that don't set their own: 'outline' (default) or 'ghost'. */
-  variant?: ToggleButtonProps["variant"] | undefined;
+  variant?: ToggleButtonProps['variant'] | undefined;
   /** ToggleButtons, each with a value ("bold", "left"). Other children render as they are. */
   children?: React.ReactNode | undefined;
 }
@@ -32,10 +32,10 @@ export interface ToggleGroupProps extends Omit<ButtonGroupProps, "defaultValue" 
    own setting but the group reports them together (bold, italic, underline). Each button keeps aria-pressed and
    its own Tab stop, as in a ButtonGroup; inside a Toolbar the arrow keys move between them. */
 /** ToggleButtons that share one value: one on at a time, or any number. */
-export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroupProps>("ToggleGroup", function ToggleGroup(props, ref) {
+export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroupProps>('ToggleGroup', function ToggleGroup(props, ref) {
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, required: 1, disabled: 1, size: 1, variant: 1, attached: 1, orientation: 1, className: 1, children: 1 });
-  const vertical = oneOf(["horizontal", "vertical"] as const, props.orientation, "horizontal") === "vertical";
-  const single = props.type !== "multiple";
+  const vertical = oneOf(['horizontal', 'vertical'] as const, props.orientation, 'horizontal') === 'vertical';
+  const single = props.type !== 'multiple';
   const [own, setOwn] = React.useState<string[]>(props.defaultValue || []);
   const value = props.value !== undefined ? props.value : own;
   const change = (next: string[]) => {
@@ -62,9 +62,9 @@ export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroup
   const wrapped = useRowWrap(root, props.attached !== false && !vertical, props.children);
   return (
     // ButtonGroup's markup and classes, so it looks and lays out the same.
-    <div role="group" {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} data-component="toggle-group" data-orientation={vertical ? "vertical" : "horizontal"} data-type={single ? "single" : "multiple"}
+    <div role="group" {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} data-component="toggle-group" data-orientation={vertical ? 'vertical' : 'horizontal'} data-type={single ? 'single' : 'multiple'}
       data-wrapped={wrapped || undefined}
-      className={cn("dk-button-group dk-toggle-group", vertical && "dk-button-group--vertical", props.attached !== false && !wrapped && "dk-button-group--attached", props.className)}>
+      className={cn('dk-button-group dk-toggle-group', vertical && 'dk-button-group--vertical', props.attached !== false && !wrapped && 'dk-button-group--attached', props.className)}>
       {children}
     </div>
   );

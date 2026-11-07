@@ -42,7 +42,7 @@ export const LongLabel: Story = {
   render: (args) => (
     <div style={{ width: 240 }}>
       <Switch {...args} description="Updates install overnight while the device is charging and connected to Wi-Fi.">
-        Install updates automatically, including {"Donaudampfschifffahrtsgesellschaft"} add-ons
+        Install updates automatically, including {'Donaudampfschifffahrtsgesellschaft'} add-ons
       </Switch>
     </div>
   ),

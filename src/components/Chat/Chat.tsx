@@ -1,17 +1,17 @@
-"use client";
-import * as React from "react";
-import { cn, omit, setRef } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useLocale, useSettings } from "../../internal/provider";
-import { isComposing } from "../../internal/ime";
-import { activeIn } from "../../internal/root";
-import { Button } from "../Button/Button";
-import { IconButton } from "../IconButton/IconButton";
-import { Icon } from "../Icon/Icon";
-import { RelativeTime } from "../RelativeTime/RelativeTime";
-import { Textarea } from "../Textarea/Textarea";
-import * as icons from "../../material/builtin";
-import { en as ownWords } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, omit, setRef } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useLocale, useSettings } from '../../internal/provider';
+import { isComposing } from '../../internal/ime';
+import { activeIn } from '../../internal/root';
+import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
+import { Icon } from '../Icon/Icon';
+import { RelativeTime } from '../RelativeTime/RelativeTime';
+import { Textarea } from '../Textarea/Textarea';
+import * as icons from '../../material/builtin';
+import { en as ownWords } from './labels';
 
 const words = /* @__PURE__ */ Object.assign({}, ownWords);
 
@@ -40,9 +40,9 @@ const toEnd = (el: HTMLElement) => { el.scrollTop = el.scrollHeight; };
    a "3 new messages" button at the bottom jumps down. Earlier messages loaded at the top keep the reader's place. */
 /** A conversation that stays at its newest message while the reader is there, with day dividers and earlier messages loaded on request.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat", function Chat(props, ref) {
+export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat', function Chat(props, ref) {
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { children: 1, hasOlder: 1, onLoadOlder: 1, loadingOlder: 1, className: 1, "aria-label": 1, "aria-labelledby": 1 } as const);
+  const rest = omit(props, { children: 1, hasOlder: 1, onLoadOlder: 1, loadingOlder: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
   const scroller = React.useRef<HTMLDivElement | null>(null);
   const items = React.Children.toArray(props.children).filter(React.isValidElement);
   const keys = items.map((c) => String(c.key));
@@ -51,7 +51,7 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
   const was = React.useRef<{ bottom: boolean; first: string; last: string; height: number; top: number; messages: number } | null>(null);
   const [unread, setUnread] = React.useState(0);
   const toBottom = () => { const el = scroller.current; if (el) toEnd(el); };
-  const first = keys[0] || "", last = keys[keys.length - 1] || "", all = "\n" + keys.join("\n") + "\n";
+  const first = keys[0] || '', last = keys[keys.length - 1] || '', all = '\n' + keys.join('\n') + '\n';
 
   // When the messages change: where the reader was decides where they stay.
   React.useLayoutEffect(() => {
@@ -59,7 +59,7 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
     if (!el) return;
     const before = was.current;
     if (!before) toEnd(el);   // opens at the newest message
-    else if (first !== before.first && last === before.last && all.includes("\n" + before.first + "\n")) {
+    else if (first !== before.first && last === before.last && all.includes('\n' + before.first + '\n')) {
       // earlier messages came in at the top: keep what the reader was looking at where it was
       el.scrollTop = before.top + (el.scrollHeight - before.height);
     } else if (last !== before.last) {
@@ -85,7 +85,7 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
   // every render: the messages it watches are the children of this render.
   React.useEffect(() => {
     const el = scroller.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
+    if (!el || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => { if (was.current && was.current.bottom) toBottom(); });
     for (const c of Array.from(el.children)) ro.observe(c);
     return () => ro.disconnect();
@@ -102,9 +102,9 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>("Chat",
     if (el) el.focus({ preventScroll: true });
   };
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn("dk-chat", props.className)} data-component="chat">
+    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat', props.className)} data-component="chat">
       {/* A region that scrolls is focusable, so keyboard people can scroll it; role="log" reads new messages politely. */}
-      <div ref={scroller} className="dk-chat__log" role="log" {...SCROLL_STOP} aria-label={props["aria-label"]} aria-labelledby={props["aria-labelledby"]} onScroll={onScroll}>
+      <div ref={scroller} className="dk-chat__log" role="log" {...SCROLL_STOP} aria-label={props['aria-label']} aria-labelledby={props['aria-labelledby']} onScroll={onScroll}>
         {props.hasOlder ? (
           <div className="dk-chat__older" ref={older}>
             <Button variant="ghost" size="sm" loading={!!props.loadingOlder} onClick={() => { if (!props.loadingOlder && props.onLoadOlder) { asked.current = first; props.onLoadOlder(); } }}>
@@ -148,13 +148,13 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 
 /** One message in a Chat: author, avatar, time, text and attachments, with sending and failed states.
  *  @beta */
-export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessageProps>("ChatMessage", function ChatMessage(props, ref) {
+export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessageProps>('ChatMessage', function ChatMessage(props, ref) {
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { children: 1, author: 1, avatar: 1, time: 1, own: 1, hideAuthor: 1, status: 1, onRetry: 1, attachments: 1, streaming: 1, className: 1 } as const);
-  const own = !!props.own, failed = props.status === "failed";
+  const own = !!props.own, failed = props.status === 'failed';
   const showAuthor = !props.hideAuthor && (props.author != null || own);
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn("dk-chat-message", own && "dk-chat-message--own", failed && "dk-chat-message--failed", props.hideAuthor && "dk-chat-message--follow", props.className)}
+    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat-message', own && 'dk-chat-message--own', failed && 'dk-chat-message--failed', props.hideAuthor && 'dk-chat-message--follow', props.className)}
       data-component="chat-message" aria-busy={props.streaming || undefined}>
       <span className="dk-chat-message__avatar" aria-hidden>{props.hideAuthor ? null : props.avatar}</span>
       <div className="dk-chat-message__main">
@@ -164,9 +164,9 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
             {props.time != null ? <RelativeTime className="dk-chat-message__time" date={props.time} /> : null}
           </div>
         ) : props.hideAuthor ? <span className="dk-visually-hidden">{own ? L.chatYou : props.author}</span> : null}
-        {props.children != null && props.children !== "" ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
+        {props.children != null && props.children !== '' ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
         {props.attachments ? <div className="dk-chat-message__attachments">{props.attachments}</div> : null}
-        {props.status === "sending" ? <span className="dk-chat-message__status">{L.chatSending}</span> : null}
+        {props.status === 'sending' ? <span className="dk-chat-message__status">{L.chatSending}</span> : null}
         {failed ? (
           <span className="dk-chat-message__status dk-chat-message__status--failed">
             <Icon icon={icons.Error} />{L.chatNotSent}
@@ -190,21 +190,21 @@ const dayStart = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(
 
 /** A line between messages that names the day they were sent, or says what follows.
  *  @beta */
-export const ChatDivider = /* @__PURE__ */ component<HTMLDivElement, ChatDividerProps>("ChatDivider", function ChatDivider(props, ref) {
+export const ChatDivider = /* @__PURE__ */ component<HTMLDivElement, ChatDividerProps>('ChatDivider', function ChatDivider(props, ref) {
   const locale = useLocale();
   const rest = omit(props, { date: 1, children: 1, className: 1 } as const);
   let text: React.ReactNode = props.children;
   if (text == null && props.date != null) {
     const d = new Date(props.date), days = Math.round((dayStart(d) - dayStart(new Date())) / DAY);
-    if (!isFinite(d.getTime())) text = "";
+    if (!isFinite(d.getTime())) text = '';
     else if (Math.abs(days) <= 1) {
       // "today", "yesterday", "tomorrow" in the locale's words, starting with a capital as a heading does
-      const word = new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(days, "day");
+      const word = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(days, 'day');
       text = word.charAt(0).toLocaleUpperCase(locale) + word.slice(1);
-    } else text = new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(d);
+    } else text = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
   }
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn("dk-chat-divider", props.className)} data-component="chat-divider">
+    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat-divider', props.className)} data-component="chat-divider">
       <span className="dk-chat-divider__text">{text}</span>
     </div>
   );
@@ -237,11 +237,11 @@ export interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFor
 
 /** The field and send button under a Chat: Enter sends, Shift+Enter starts a new line, and a stop button while a reply streams.
  *  @beta */
-export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatComposerProps>("ChatComposer", function ChatComposer(props, ref) {
+export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatComposerProps>('ChatComposer', function ChatComposer(props, ref) {
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, onSend: 1, streaming: 1, onStop: 1, placeholder: 1, disabled: 1, attachments: 1, actions: 1, maxRows: 1, className: 1, "aria-label": 1 } as const);
+  const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, onSend: 1, streaming: 1, onStop: 1, placeholder: 1, disabled: 1, attachments: 1, actions: 1, maxRows: 1, className: 1, 'aria-label': 1 } as const);
   const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState(props.defaultValue || "");
+  const [own, setOwn] = React.useState(props.defaultValue || '');
   const value = controlled ? props.value! : own;
   const field = React.useRef<HTMLTextAreaElement | null>(null);
   const disabled = !!props.disabled;
@@ -250,19 +250,19 @@ export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatCompo
   const send = () => {
     if (disabled || empty || props.streaming) return;
     if (props.onSend) props.onSend(value);
-    if (!controlled) setOwn("");
+    if (!controlled) setOwn('');
     if (field.current) field.current.focus();
   };
   return (
-    <form {...rest} ref={(n) => setRef(ref, n)} className={cn("dk-chat-composer", props.className)} data-component="chat-composer"
+    <form {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat-composer', props.className)} data-component="chat-composer"
       onSubmit={(e) => { e.preventDefault(); send(); }}>
       {props.attachments ? <div className="dk-chat-composer__attachments">{props.attachments}</div> : null}
       <div className="dk-chat-composer__row">
         <Textarea ref={field} className="dk-chat-composer__field" rows={1} autoResize maxRows={props.maxRows ?? 6} resize="none"
-          aria-label={props["aria-label"] || L.chatMessage} placeholder={props.placeholder} disabled={disabled} value={value}
+          aria-label={props['aria-label'] || L.chatMessage} placeholder={props.placeholder} disabled={disabled} value={value}
           onChange={(e) => set(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey && !isComposing(e)) { e.preventDefault(); send(); }
+            if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey && !isComposing(e)) { e.preventDefault(); send(); }
           }} />
         {props.actions}
         {props.streaming

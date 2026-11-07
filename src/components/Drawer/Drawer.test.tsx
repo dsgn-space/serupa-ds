@@ -307,7 +307,7 @@ describe('Drawer', () => {
     await trace(p, [[-40, 100], [-120, 100], [-200, 100]], false);
     const moved = -parseFloat(p.style.translate);
     const behind = getComputedStyle(p, '::after');
-    expect([moved > 10 && moved < 24, behind.content, behind.translate, behind.backgroundColor === getComputedStyle(p).backgroundColor]).toEqual([true, '""', "100%", true]);   // a copy just past its edge
+    expect([moved > 10 && moved < 24, behind.content, behind.translate, behind.backgroundColor === getComputedStyle(p).backgroundColor]).toEqual([true, '""', '100%', true]);   // a copy just past its edge
     p.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerId: 8, isPrimary: true, pointerType: 'touch', clientX: 0, clientY: 0 }));
     await expect.poll(() => p.style.translate).toBe('');
     await expect.poll(() => getComputedStyle(p, '::after').content).toBe('none');   // back in place: no copy, so nothing spills

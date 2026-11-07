@@ -6,10 +6,10 @@ export interface AccordionLabels {
   collapseAll: string;
 }
 export const en: AccordionLabels = {
-  expandAll: "Expand all",
-  collapseAll: "Collapse all",
+  expandAll: 'Expand all',
+  collapseAll: 'Collapse all',
 };
 export const id: AccordionLabels = {
-  expandAll: "Buka semua",
-  collapseAll: "Tutup semua",
+  expandAll: 'Buka semua',
+  collapseAll: 'Tutup semua',
 };

@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { oneElement, useTriggerRef } from "../../internal/trigger";
-import type { Placement } from "../../internal/position";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { named } from "../../internal/component";
-import { isComposing } from "../../internal/ime";
-import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
-import { hoverIntent, hoverLeave, hoverWarm } from "../../internal/timing";
-import { warnOnce } from "../../internal/warn";
+'use client';
+import * as React from 'react';
+import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { oneElement, useTriggerRef } from '../../internal/trigger';
+import type { Placement } from '../../internal/position';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { named } from '../../internal/component';
+import { isComposing } from '../../internal/ime';
+import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
+import { hoverIntent, hoverLeave, hoverWarm } from '../../internal/timing';
+import { warnOnce } from '../../internal/warn';
 
 export interface TooltipProps {
   /** What the tooltip says: a short line of text. Keep links and buttons out (people can't reach them). */
@@ -52,8 +52,8 @@ const OWN = { content: 1, children: 1, placement: 1, delay: 1, role: 1, open: 1,
    it in the top layer. Escape hides it; the pointer can move onto the tooltip without it closing (WCAG 1.4.13).
    It describes the element (aria-describedby) or, with role="label", names it. */
 /** A short hint about one element, shown on hover and keyboard focus. */
-export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: TooltipProps): React.ReactElement {
-  const id = domId("dk-tip", React.useId());
+export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: TooltipProps): React.ReactElement {
+  const id = domId('dk-tip', React.useId());
   const [inner, setInner] = React.useState(!!props.defaultOpen);
   const controlled = props.open !== undefined;
   const open = !props.disabled && (controlled ? !!props.open : inner);
@@ -74,14 +74,14 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   // Escape while a hover is waiting out the delay cancels the show (GR89): it was dismissed before it appeared.
   // Nothing is on screen yet, so that Escape goes on to whatever else handles it.
   const armed = React.useRef<((e: KeyboardEvent) => void) | null>(null);
-  const unarm = () => { if (armed.current) document.removeEventListener("keydown", armed.current, true); armed.current = null; };
+  const unarm = () => { if (armed.current) document.removeEventListener('keydown', armed.current, true); armed.current = null; };
   const later = (v: boolean, ms: number) => {
     window.clearTimeout(timer.current); unarm();
-    timer.current = window.setTimeout(() => { unarm(); set(v, "hover"); }, ms);
+    timer.current = window.setTimeout(() => { unarm(); set(v, 'hover'); }, ms);
     if (!v || shown.current) return;
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && !isComposing(e)) { window.clearTimeout(timer.current); unarm(); } };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { window.clearTimeout(timer.current); unarm(); } };
     armed.current = esc;
-    document.addEventListener("keydown", esc, true);
+    document.addEventListener('keydown', esc, true);
   };
   React.useEffect(() => () => { window.clearTimeout(timer.current); unarm(); }, []);
   // Interest invokers (174): the element points at the tooltip with interestfor, so where the browser has them, a
@@ -90,16 +90,16 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   // focus is one this component already handles (with its delay, its warm-up and Escape cancelling a waiting hover),
   // so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
-  const fromInterest = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, "hover"); } };
+  const fromInterest = () => { if (!hovered.current && !focused.current) { setInstant(true); set(true, 'hover'); } };
   const interest = React.useRef(fromInterest); interest.current = fromInterest;
   React.useEffect(() => {
     const tip = tipRef.current;
     if (!tip) return;
     const on = (e: Event) => { e.preventDefault(); interest.current(); };
     const lose = (e: Event) => { e.preventDefault(); };
-    tip.addEventListener("interest", on);
-    tip.addEventListener("loseinterest", lose);
-    return () => { tip.removeEventListener("interest", on); tip.removeEventListener("loseinterest", lose); };
+    tip.addEventListener('interest', on);
+    tip.addEventListener('loseinterest', lose);
+    return () => { tip.removeEventListener('interest', on); tip.removeEventListener('loseinterest', lose); };
   }, []);
   // The open tooltip is the warm one: opening another closes it, and closing it keeps others warm for hoverWarm.
   const self = React.useRef({});
@@ -113,7 +113,7 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
     if (!open) return;
     const me = self.current;
     if (warm.close && warm.owner !== me) warm.close();
-    warm.owner = me; warm.close = () => { setHanded(true); set(false, "hover"); };
+    warm.owner = me; warm.close = () => { setHanded(true); set(false, 'hover'); };
     return () => {
       if (warm.owner === me) { warm.owner = null; warm.close = null; }
       warm.until = Date.now() + hoverWarm;
@@ -123,56 +123,56 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
   // A label in the element cut with an ellipsis (a long Button label in a narrow column) shows in full at the top of
   // the tooltip, which would otherwise hide the title the Button gives it. Hidden from screen readers: it is
   // already the element's name. Not with role="label", whose content is the name.
-  const [full, setFull] = React.useState("");
+  const [full, setFull] = React.useState('');
   useIsoLayoutEffect(() => {
     const a = anchorRef.current;
-    if (!open || !a || props.role === "label") return;
-    let cut = "";
-    for (const n of [a].concat(Array.prototype.slice.call(a.querySelectorAll("*")))) {
-      if (n.scrollWidth > n.clientWidth && getComputedStyle(n).textOverflow === "ellipsis") cut = n.textContent || "";
+    if (!open || !a || props.role === 'label') return;
+    let cut = '';
+    for (const n of [a].concat(Array.prototype.slice.call(a.querySelectorAll('*')))) {
+      if (n.scrollWidth > n.clientWidth && getComputedStyle(n).textOverflow === 'ellipsis') cut = n.textContent || '';
     }
     setFull(cut.trim());
   }, [open, props.role]);
 
   // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes. A press outside hides it.
-  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: "top", offsetVar: "--dk-tooltip-offset", watch: full || props.content, onOutside: () => set(false, "outside") });
+  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: 'top', offsetVar: '--dk-tooltip-offset', watch: full || props.content, onOutside: () => set(false, 'outside') });
 
   /* Its content is plain text: the keyboard can't reach a link or button in it (focus leaving the element hides it),
      and on its inverse fill a link's color measures under 4.5:1 in every theme. Warn when one is there, rendered or not. */
   React.useEffect(() => {
     const tip = tipRef.current;
-    if (process.env.NODE_ENV !== "production" && tip && tip.querySelector("a[href], button, input, select, textarea, summary, [tabindex], [contenteditable]")) warnOnce("tooltip-interactive", "Tooltip: its content holds a link, button or field, and nobody can use it: focus leaving the element hides the tooltip, so the keyboard can't reach it, and touch screens never show it. Keep content to plain text; for anything people press, use a Popover.");
+    if (process.env.NODE_ENV !== 'production' && tip && tip.querySelector('a[href], button, input, select, textarea, summary, [tabindex], [contenteditable]')) warnOnce('tooltip-interactive', "Tooltip: its content holds a link, button or field, and nobody can use it: focus leaving the element hides the tooltip, so the keyboard can't reach it, and touch screens never show it. Keep content to plain text; for anything people press, use a Popover.");
   }, [props.content]);
 
   // Escape hides it from anywhere while it's open (the element may not have focus when hovered). It's the top
   // layer, so it takes that Escape: caught first (capture) and stopped, so a Dialog or Menu around it stays open.
   React.useEffect(() => {
     if (!open) return;
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); set(false, "escape"); } };
-    document.addEventListener("keydown", esc, true);
-    return () => document.removeEventListener("keydown", esc, true);
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); set(false, 'escape'); } };
+    document.addEventListener('keydown', esc, true);
+    return () => document.removeEventListener('keydown', esc, true);
   }, [open, set]);
 
-  const child = oneElement<TriggerProps>(props.children, "Tooltip", "child");
-  useTriggerRef(anchorRef, "Tooltip");
+  const child = oneElement<TriggerProps>(props.children, 'Tooltip', 'child');
+  useTriggerRef(anchorRef, 'Tooltip');
   /* A Menu, Popover or other component that clones its trigger may be handed this Tooltip as the trigger: the
      props and ref it adds land here, so they go on to the element, with handlers chained after the element's own. */
   const passed = omit(props as TooltipProps & TriggerProps, OWN) as Record<string, unknown>;
   const fwd: Record<string, unknown> = {};
   for (const k in passed) {
     const own = (child.props as Record<string, unknown>)[k], add = passed[k];
-    fwd[k] = typeof own === "function" && typeof add === "function" ? (e: React.SyntheticEvent<HTMLElement>) => { (own as Handler)(e); (add as Handler)(e); }
-      : k === "id" && own ? own   // the element's own id stays: other things may point at it
-      : (k === "aria-describedby" || k === "aria-labelledby") && typeof own === "string" && typeof add === "string" ? own + " " + add : add;
+    fwd[k] = typeof own === 'function' && typeof add === 'function' ? (e: React.SyntheticEvent<HTMLElement>) => { (own as Handler)(e); (add as Handler)(e); }
+      : k === 'id' && own ? own   // the element's own id stays: other things may point at it
+      : (k === 'aria-describedby' || k === 'aria-labelledby') && typeof own === 'string' && typeof add === 'string' ? own + ' ' + add : add;
   }
   const cp: TriggerProps = { ...child.props, ...fwd };
   const passedRef = (props as { ref?: React.Ref<HTMLElement> }).ref;
   const delay = props.delay == null ? hoverIntent : props.delay;
-  const touch = (e: React.SyntheticEvent) => "pointerType" in e && e.pointerType === "touch";
-  const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own: unknown = cp[name]; if (typeof own === "function") (own as Handler)(e); fn(e); };
+  const touch = (e: React.SyntheticEvent) => 'pointerType' in e && e.pointerType === 'touch';
+  const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own: unknown = cp[name]; if (typeof own === 'function') (own as Handler)(e); fn(e); };
   const childRef = elementRef<HTMLElement>(child);
-  const aria = props.role === "label" ? "aria-labelledby" : "aria-describedby";
-  const merged = [cp[aria], id].filter(Boolean).join(" ");
+  const aria = props.role === 'label' ? 'aria-labelledby' : 'aria-describedby';
+  const merged = [cp[aria], id].filter(Boolean).join(' ');
   const trigger = React.cloneElement(child, {
     ...fwd,
     ref: (n: HTMLElement | null) => { anchorRef.current = n; if (childRef) setRef(childRef, n); if (passedRef) setRef(passedRef, n); },
@@ -180,19 +180,19 @@ export const Tooltip = /* @__PURE__ */ named("Tooltip", function Tooltip(props: 
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter after its pointerdown and never a mouseleave, so the
     // tooltip opened 400ms after a tap and stayed. A touch pointer doesn't hover; focus still shows it from the keyboard.
-    onPointerEnter: chain("onPointerEnter", (e) => { if (!touch(e)) { hovered.current = true; const w = !!warm.owner || Date.now() < warm.until; setInstant(w); if (w) set(true, "hover"); else later(true, delay); } }),
-    onPointerLeave: chain("onPointerLeave", (e) => { if (!touch(e)) { hovered.current = false; later(false, hoverLeave); } }),
-    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(":focus-visible")) { focused.current = true; setInstant(!!warm.owner || Date.now() < warm.until); set(true, "focus"); } }),
-    onBlur: chain("onBlur", () => { focused.current = false; set(false, "blur"); }),
-    onPointerDown: chain("onPointerDown", () => set(false, "trigger")),
+    onPointerEnter: chain('onPointerEnter', (e) => { if (!touch(e)) { hovered.current = true; const w = !!warm.owner || Date.now() < warm.until; setInstant(w); if (w) set(true, 'hover'); else later(true, delay); } }),
+    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hovered.current = false; later(false, hoverLeave); } }),
+    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (!t.matches || t.matches(':focus-visible')) { focused.current = true; setInstant(!!warm.owner || Date.now() < warm.until); set(true, 'focus'); } }),
+    onBlur: chain('onBlur', () => { focused.current = false; set(false, 'blur'); }),
+    onPointerDown: chain('onPointerDown', () => set(false, 'trigger')),
   });
   return (
     <>
       {trigger}
-      <div ref={tipRef} id={id} role="tooltip" {...{ popover: "manual" }} hidden={!open || undefined}
-        className={cn("dk-tooltip", props.className)} style={props.style} data-component="tooltip" data-state={open ? "open" : "closed"} data-warm={(open && instant) || (!open && handed) ? "" : undefined}
+      <div ref={tipRef} id={id} role="tooltip" {...{ popover: 'manual' }} hidden={!open || undefined}
+        className={cn('dk-tooltip', props.className)} style={props.style} data-component="tooltip" data-state={open ? 'open' : 'closed'} data-warm={(open && instant) || (!open && handed) ? '' : undefined}
         onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
-        {full && props.role !== "label" ? <span data-full="" aria-hidden="true">{full}</span> : null}
+        {full && props.role !== 'label' ? <span data-full="" aria-hidden="true">{full}</span> : null}
         {props.content}
       </div>
     </>

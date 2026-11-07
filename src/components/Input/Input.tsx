@@ -1,19 +1,19 @@
-"use client";
-import * as React from "react";
-import { useValidityMessages } from "../../internal/validity";
-import { cn, domId, isInvalid, omit, oneOf, setRef, SIZES } from "../../internal/cn";
-import type { IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { useFieldControl } from "../../internal/field";
-import { displayNumber } from "../../internal/numbers";
-import { useLocale } from "../../internal/provider";
-import { useTextLimit } from "../../internal/textLimit";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { pressFocuses, useAffixes } from "../../internal/affix";
-import { applyMask, digitsOnly, isPlain, parseMask, unmask } from "../../internal/mask";
-import { isComposing } from "../../internal/ime";
+'use client';
+import * as React from 'react';
+import { useValidityMessages } from '../../internal/validity';
+import { cn, domId, isInvalid, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import type { IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { useFieldControl } from '../../internal/field';
+import { displayNumber } from '../../internal/numbers';
+import { useLocale } from '../../internal/provider';
+import { useTextLimit } from '../../internal/textLimit';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { pressFocuses, useAffixes } from '../../internal/affix';
+import { applyMask, digitsOnly, isPlain, parseMask, unmask } from '../../internal/mask';
+import { isComposing } from '../../internal/ime';
 
 const PLAIN = { useGrouping: false } as const;
 // Fields whose text isn't words: the phone keyboard shouldn't capitalize, correct or underline it.
@@ -53,7 +53,7 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
   const show = (v: unknown) => applyMask(slots, unmask(slots, String(v))).text;
   if (rest.value != null && !Array.isArray(rest.value)) rest.value = show(rest.value);
   if (rest.defaultValue != null && !Array.isArray(rest.defaultValue)) rest.defaultValue = show(rest.defaultValue);
-  if (rest.inputMode === undefined && digitsOnly(slots)) rest.inputMode = "numeric";
+  if (rest.inputMode === undefined && digitsOnly(slots)) rest.inputMode = 'numeric';
   const change = rest.onChange, key = rest.onKeyDown;
   rest.onChange = function (e) {
     const el = e.target, v = el.value, at = el.selectionStart != null ? el.selectionStart : v.length;
@@ -70,8 +70,8 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
     // an input method is composing, whose Backspace edits the composition (L8E31).
     if (key) key(e);
     const el = e.currentTarget, at = el.selectionStart;
-    if (!e.defaultPrevented && !isComposing(e) && (e.key === "Backspace" || e.key === "Delete") && at != null && at === el.selectionEnd) {
-      const back = e.key === "Backspace";
+    if (!e.defaultPrevented && !isComposing(e) && (e.key === 'Backspace' || e.key === 'Delete') && at != null && at === el.selectionEnd) {
+      const back = e.key === 'Backspace';
       let p = at;
       while (back ? p > 0 && isPlain(slots, el.value, p - 1) : p < el.value.length && isPlain(slots, el.value, p)) p += back ? -1 : 1;
       if (p !== at && (back ? p > 0 : p < el.value.length)) el.setSelectionRange(p, p);
@@ -87,24 +87,24 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
    Renders <span class="dk-input"> around a native <input>: className and style go to the wrapper, every other
    prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
 /** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */
-export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>("Input", function Input(props, ref) {
-  const nameRef = useNameCheck("Input", NAME_HOW.field);   // warns when it has no accessible name
+export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('Input', function Input(props, ref) {
+  const nameRef = useNameCheck('Input', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, className: 1, style: 1 } as const);
-  const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  if (invalid) rest["aria-invalid"] = true;
-  if (rest.type === undefined) rest.type = "text";
-  if (VERBATIM.test(rest.type) || VERBATIM_AUTOCOMPLETE.test(rest.autoComplete || "")) {
-    if (rest.autoCapitalize === undefined) rest.autoCapitalize = "off";
-    if (rest.autoCorrect === undefined) rest.autoCorrect = "off";
+  const size = oneOf(SIZES, props.size, 'md');
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  if (invalid) rest['aria-invalid'] = true;
+  if (rest.type === undefined) rest.type = 'text';
+  if (VERBATIM.test(rest.type) || VERBATIM_AUTOCOMPLETE.test(rest.autoComplete || '')) {
+    if (rest.autoCapitalize === undefined) rest.autoCapitalize = 'off';
+    if (rest.autoCorrect === undefined) rest.autoCorrect = 'off';
     if (rest.spellCheck === undefined) rest.spellCheck = false;
   }
   const own = React.useRef<HTMLInputElement | null>(null);
   rest = useMask(rest, props.mask);
   const limited = useTextLimit(rest, own, { announce: !!props.showCount }), { length, max } = limited;
   rest = useValidityMessages(limited.props, own);   // the browser's message for a failed constraint, in the provider's words
-  const countId = domId("dk-in", React.useId());
+  const countId = domId('dk-in', React.useId());
   const locale = useLocale();
   const num = (n: number) => displayNumber(n, locale, PLAIN);   // the locale's digits, as Textarea's
   const setRefs = React.useCallback(function (node: HTMLInputElement | null) {
@@ -113,19 +113,19 @@ export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>("In
     setRef(ref, node);
   }, [ref, nameRef]);
   const affix = useAffixes(props.prefix, props.suffix, countId, own);
-  if (affix.ids || props.showCount) rest["aria-describedby"] = cn(rest["aria-describedby"], affix.ids, props.showCount && countId);
+  if (affix.ids || props.showCount) rest['aria-describedby'] = cn(rest['aria-describedby'], affix.ids, props.showCount && countId);
   const icon = function (source: IconSource, side: string) {
     const node = asIcon(source);
-    return node == null || node === false ? null : <span className={"dk-input__icon dk-input__icon--" + side} aria-hidden key={side}>{node}</span>;
+    return node == null || node === false ? null : <span className={'dk-input__icon dk-input__icon--' + side} aria-hidden key={side}>{node}</span>;
   };
   return (
-    <span className={cn("dk-input", "dk-input--size-" + size, invalid && "dk-input--invalid", rest.disabled && "dk-input--disabled", rest.readOnly && "dk-input--readonly", props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={pressFocuses(own)}>
-      {icon(props.leftIcon, "left")}
+    <span className={cn('dk-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)} style={props.style} data-component="input" data-size={size} onMouseDown={pressFocuses(own)}>
+      {icon(props.leftIcon, 'left')}
       {affix.prefix}
       <input {...rest} ref={setRefs} className="dk-input__field" key="field" />
       {affix.suffix}
-      {props.showCount ? <span className={cn("dk-input__count", max != null && length >= max && "dk-input__count--full")} id={countId} key="count">{max != null ? num(length) + " / " + num(max) : num(length)}</span> : null}
-      {icon(props.rightIcon, "right")}
+      {props.showCount ? <span className={cn('dk-input__count', max != null && length >= max && 'dk-input__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span> : null}
+      {icon(props.rightIcon, 'right')}
     </span>
   );
 });

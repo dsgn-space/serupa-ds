@@ -1,15 +1,15 @@
-"use client";
-import * as React from "react";
-import { cn, omit } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { isComposing } from "../../internal/ime";
-import { warnOnce } from "../../internal/warn";
-import { topModal } from "../../internal/layers";
-import type { OpenChangeDetails } from "../../internal/openChange";
-import { Dialog, type DialogProps } from "../Dialog/Dialog";
-import { Kbd, isApple } from "../Kbd/Kbd";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, omit } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { isComposing } from '../../internal/ime';
+import { warnOnce } from '../../internal/warn';
+import { topModal } from '../../internal/layers';
+import type { OpenChangeDetails } from '../../internal/openChange';
+import { Dialog, type DialogProps } from '../Dialog/Dialog';
+import { Kbd, isApple } from '../Kbd/Kbd';
+import { en as words } from './labels';
 
 /** One shortcut in the help dialog. */
 export interface Shortcut {
@@ -33,7 +33,7 @@ export interface ShortcutOptions {
   inInputs?: boolean | undefined;
 }
 
-export interface KeyboardShortcutsProps extends Omit<DialogProps, "title" | "description" | "footer" | "alert" | "children" | "size" | "fullScreen" | "initialFocus" | "finalFocus" | "closeButton" | "closeOnBackdrop" | "closeLabel" | "unsaved"> {
+export interface KeyboardShortcutsProps extends Omit<DialogProps, 'title' | 'description' | 'footer' | 'alert' | 'children' | 'size' | 'fullScreen' | 'initialFocus' | 'finalFocus' | 'closeButton' | 'closeOnBackdrop' | 'closeLabel' | 'unsaved'> {
   /** The dialog's title. Default: "Keyboard shortcuts" (labels.keyboardShortcuts). */
   title?: React.ReactNode | undefined;
   /** Shortcuts to list that aren't set up with useShortcut, such as the browser's or another library's. */
@@ -47,20 +47,20 @@ interface Combo { key: string; mod: boolean; ctrl: boolean; meta: boolean; alt: 
 interface Registered extends Combo { keys: string[]; run: { current: (e: KeyboardEvent) => void }; description?: string; group?: string; inInputs: boolean; apple: boolean }
 
 const NAMED: Record<string, string> = {
-  esc: "Escape", escape: "Escape", enter: "Enter", return: "Enter", space: " ", tab: "Tab", backspace: "Backspace",
-  delete: "Delete", up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", home: "Home", end: "End",
-  pageup: "PageUp", pgup: "PageUp", pagedown: "PageDown", pgdn: "PageDown", insert: "Insert", ins: "Insert",
+  esc: 'Escape', escape: 'Escape', enter: 'Enter', return: 'Enter', space: ' ', tab: 'Tab', backspace: 'Backspace',
+  delete: 'Delete', up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', home: 'Home', end: 'End',
+  pageup: 'PageUp', pgup: 'PageUp', pagedown: 'PageDown', pgdn: 'PageDown', insert: 'Insert', ins: 'Insert',
 };
-const MODIFIER: Record<string, keyof Omit<Combo, "key">> = {
-  mod: "mod", cmd: "meta", meta: "meta", ctrl: "ctrl", control: "ctrl", alt: "alt", option: "alt", shift: "shift",
+const MODIFIER: Record<string, keyof Omit<Combo, 'key'>> = {
+  mod: 'mod', cmd: 'meta', meta: 'meta', ctrl: 'ctrl', control: 'ctrl', alt: 'alt', option: 'alt', shift: 'shift',
 };
 // null unless there's exactly one key besides the modifiers: ["G", "I"] can't be pressed together, and matching only
 // its last key ran it on a lone "I" (GQ3).
 function parse(keys: string[]): Combo | null {
-  const c: Combo = { key: "", mod: false, ctrl: false, meta: false, alt: false, shift: false };
+  const c: Combo = { key: '', mod: false, ctrl: false, meta: false, alt: false, shift: false };
   let n = 0;
   for (const k of keys) {
-    const name = k.length > 1 ? k.toLowerCase().replace(/[\s_-]/g, "") : k.toLowerCase();
+    const name = k.length > 1 ? k.toLowerCase().replace(/[\s_-]/g, '') : k.toLowerCase();
     const m = MODIFIER[name];
     if (m) c[m] = true;
     else { c.key = NAMED[name] || (k.length === 1 ? k.toLowerCase() : k); n++; }
@@ -76,11 +76,11 @@ function matches(c: Combo, e: KeyboardEvent, apple: boolean): boolean {
   // Option changes the character a letter types on a Mac (⌥K is "˚"), and a Cyrillic or Greek layout types "л" there,
   // so letters and digits also match by position. Not when the key typed another Latin character: on AZERTY the key
   // in Q's place types "a", and Ctrl+A was running a Ctrl+Q shortcut (L8E16).
-  return /^[a-z]$/.test(c.key) ? !/^[\x20-\x7e]$/.test(e.key) && e.code === "Key" + c.key.toUpperCase() : /^[0-9]$/.test(c.key) ? e.code === "Digit" + c.key : false;
+  return /^[a-z]$/.test(c.key) ? !/^[\x20-\x7e]$/.test(e.key) && e.code === 'Key' + c.key.toUpperCase() : /^[0-9]$/.test(c.key) ? e.code === 'Digit' + c.key : false;
 }
 const NOT_TYPED = /^(checkbox|radio|button|submit|reset|range|color|file|image)$/;
 const typing = (t: EventTarget | null): boolean =>
-  t instanceof HTMLElement && (t.isContentEditable || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || (t.tagName === "INPUT" && !NOT_TYPED.test((t as HTMLInputElement).type)));
+  t instanceof HTMLElement && (t.isContentEditable || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || (t.tagName === 'INPUT' && !NOT_TYPED.test((t as HTMLInputElement).type)));
 
 // module state: browser only: the shortcuts set up now, newest last; replaced (not changed) so it's a stable snapshot.
 let entries: Registered[] = [];
@@ -103,12 +103,12 @@ function onKey(e: KeyboardEvent): void {
   }
 }
 function add(x: Registered): () => void {
-  if (!entries.length) document.addEventListener("keydown", onKey);
+  if (!entries.length) document.addEventListener('keydown', onKey);
   entries = entries.concat(x);
   changed();
   return () => {
     entries = entries.filter((y) => y !== x);
-    if (!entries.length) document.removeEventListener("keydown", onKey);
+    if (!entries.length) document.removeEventListener('keydown', onKey);
     changed();
   };
 }
@@ -127,15 +127,15 @@ export function useShortcut(keys: string | string[], handler: (event: KeyboardEv
   const run = React.useRef(handler);
   // every render: the newest handler runs, without setting the shortcut up again.
   React.useEffect(() => { run.current = handler; });
-  const list = typeof keys === "string" ? [keys] : keys;
+  const list = typeof keys === 'string' ? [keys] : keys;
   const id = JSON.stringify(list);
   const { description, group, enabled = true, inInputs = false } = options || {};
-  const apple = sds.platform ? sds.platform === "apple" : null;
+  const apple = sds.platform ? sds.platform === 'apple' : null;
   React.useEffect(() => {
     if (!enabled) return;
     const k = JSON.parse(id) as string[], combo = parse(k);
     if (!combo) {
-      if (process.env.NODE_ENV !== "production") warnOnce("shortcut-keys", `useShortcut: ${id} isn't one key with its modifiers, so it's not set up. Give one key, plus mod, ctrl, cmd, alt or shift if it needs them, such as ["mod", "K"].`, "shortcut-keys" + id);
+      if (process.env.NODE_ENV !== 'production') warnOnce('shortcut-keys', `useShortcut: ${id} isn't one key with its modifiers, so it's not set up. Give one key, plus mod, ctrl, cmd, alt or shift if it needs them, such as ["mod", "K"].`, 'shortcut-keys' + id);
       return;
     }
     return add(Object.assign(combo, { keys: k, run, description, group, inInputs, apple: apple != null ? apple : isApple() }));
@@ -147,7 +147,7 @@ export function useShortcut(keys: string | string[], handler: (event: KeyboardEv
    in Kbd. Put one in the app's layout. Open it yourself too (open and onOpenChange), from a help menu, so people who
    don't know "?" find it. Other props go to the Dialog. */
 /** The help dialog listing the page's keyboard shortcuts in Kbd, opened with "?"; set them up with useShortcut. */
-export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, KeyboardShortcutsProps>("KeyboardShortcuts", function KeyboardShortcuts(props, ref) {
+export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, KeyboardShortcutsProps>('KeyboardShortcuts', function KeyboardShortcuts(props, ref) {
   const sds = useSettings(words), labels = sds.labels;
   const rest = omit(props, { title: 1, shortcuts: 1, helpKeys: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1 } as const);
   const [own, setOwn] = React.useState(!!props.defaultOpen);
@@ -157,8 +157,8 @@ export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, Ke
     setOwn(next);
     if (onOpenChange) onOpenChange(next, details);
   }, [onOpenChange]);
-  const help = props.helpKeys === false ? null : props.helpKeys && props.helpKeys.length ? props.helpKeys : ["?"];
-  useShortcut(help || [], () => change(true, { reason: "trigger" }), { description: labels.showShortcuts, enabled: !!help && !open });
+  const help = props.helpKeys === false ? null : props.helpKeys && props.helpKeys.length ? props.helpKeys : ['?'];
+  useShortcut(help || [], () => change(true, { reason: 'trigger' }), { description: labels.showShortcuts, enabled: !!help && !open });
   const live = React.useSyncExternalStore(watch, current, none);
   // By group, in the order each first appears; the same keys and words listed once.
   const groups = new Map<string, Shortcut[]>();
@@ -167,10 +167,10 @@ export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, Ke
     const name = s.group || labels.generalShortcuts, key = JSON.stringify([name, s.keys, s.description]);
     if (seen.has(key)) continue;
     seen.add(key);
-    groups.set(name, (groups.get(name) || []).concat({ keys: s.keys, description: s.description || "" }));
+    groups.set(name, (groups.get(name) || []).concat({ keys: s.keys, description: s.description || '' }));
   }
   return (
-    <Dialog {...rest} ref={ref} className={cn("dk-keyboard-shortcuts", props.className)}
+    <Dialog {...rest} ref={ref} className={cn('dk-keyboard-shortcuts', props.className)}
       title={props.title != null ? props.title : labels.keyboardShortcuts} open={open} onOpenChange={change}>
       {[...groups].map(([name, items]) => (
         <section key={name} className="dk-keyboard-shortcuts__group">

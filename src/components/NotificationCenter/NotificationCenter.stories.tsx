@@ -35,7 +35,7 @@ const meta = {
 } satisfies Meta<typeof NotificationCenter>;
 // The button that opens it: the count in words in its name ("Notifications, 2 unread", translated), the Badge hidden
 // so it isn't read twice (GR176).
-function OpenButton({ count, ...props }: { count: number; variant?: "outline"; onClick: () => void }) {
+function OpenButton({ count, ...props }: { count: number; variant?: 'outline'; onClick: () => void }) {
   const { labels } = useSerupa();
   return <Button {...props} aria-label={labels.notificationsUnread(count)}>{labels.notificationCenter} {count ? <Badge count={count} aria-hidden="true" /> : null}</Button>;
 }

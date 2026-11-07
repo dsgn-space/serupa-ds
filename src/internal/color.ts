@@ -5,16 +5,16 @@
     tools and token files export it ("#1d4ed8ff", "#14df") or as a browser's devtools copy it ("rgb(29, 78, 216)",
     "rgb(29 78 216 / 100%)"), reads too; a see-through one is null, as the picker has no alpha (L8E11). */
 export function normalizeHex(text: string): string | null {
-  const t = text.normalize("NFKC").trim();
+  const t = text.normalize('NFKC').trim();
   const rgb = /^rgba?\(\s*(\d{1,3})\s*[,\s]\s*(\d{1,3})\s*[,\s]\s*(\d{1,3})\s*(?:[,/]\s*(1|1\.0+|100%)\s*)?\)$/i.exec(t);
   if (rgb) {
     const c = rgb.slice(1, 4).map(Number);
-    return c.every((v) => v < 256) ? "#" + c.map((v) => v.toString(16).padStart(2, "0")).join("") : null;
+    return c.every((v) => v < 256) ? '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('') : null;
   }
   const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})(f|ff)?$/i.exec(t);
   if (!m || (m[2] && m[2].length !== (m[1].length === 3 ? 1 : 2))) return null;
   const h = m[1].length === 3 ? m[1].replace(/./g, (c) => c + c) : m[1];
-  return "#" + h.toLowerCase();
+  return '#' + h.toLowerCase();
 }
 
 /** The relative luminance of a hex color (0 for black, 1 for white). */
@@ -47,12 +47,12 @@ export function colorName(hex: string): { hue: ColorHue; tone: ColorTone } | nul
   const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map((v) => v / 255);
   const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min;
   const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
-  const tone: ColorTone = l < 0.36 ? "dark" : l > 0.75 ? "light" : "";
-  if (l < 0.1) return { hue: "black", tone: "" };
-  if (l > 0.94) return { hue: "white", tone: "" };
-  if (s < 0.12) return { hue: "gray", tone };
+  const tone: ColorTone = l < 0.36 ? 'dark' : l > 0.75 ? 'light' : '';
+  if (l < 0.1) return { hue: 'black', tone: '' };
+  if (l > 0.94) return { hue: 'white', tone: '' };
+  if (s < 0.12) return { hue: 'gray', tone };
   const h = d === 0 ? 0 : max === r ? ((g - b) / d + 6) % 6 * 60 : max === g ? ((b - r) / d + 2) * 60 : ((r - g) / d + 4) * 60;
-  const hue: ColorHue = h < 15 || h >= 345 ? "red" : h < 45 ? (l < 0.4 ? "brown" : "orange") : h < 66 ? (l < 0.35 ? "brown" : "yellow")
-    : h < 165 ? "green" : h < 195 ? "teal" : h < 255 ? "blue" : h < 290 ? "purple" : "pink";
-  return { hue, tone: hue === "brown" ? "" : tone };
+  const hue: ColorHue = h < 15 || h >= 345 ? 'red' : h < 45 ? (l < 0.4 ? 'brown' : 'orange') : h < 66 ? (l < 0.35 ? 'brown' : 'yellow')
+    : h < 165 ? 'green' : h < 195 ? 'teal' : h < 255 ? 'blue' : h < 290 ? 'purple' : 'pink';
+  return { hue, tone: hue === 'brown' ? '' : tone };
 }

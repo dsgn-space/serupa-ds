@@ -70,7 +70,7 @@ one('CommonIconName → IconName, without importing it twice', "import { type Co
 one('CommonIconName next to IconName in one import is one name', "import type { CommonIconName, IconName } from 'serupa-ds';", "import type { IconName } from 'serupa-ds';");
 one('bundle.js → serupa.iife.js in a page; bundle.css stays', '<script src="node_modules/serupa-ds/dist/bundle.js"></script><link href="node_modules/serupa-ds/dist/bundle.css">', '<script src="node_modules/serupa-ds/dist/serupa.iife.js"></script><link href="node_modules/serupa-ds/dist/bundle.css">', 'index.html');
 one('a file type it doesn\'t read is left', 'serupa-ds/bundle.js', 'serupa-ds/bundle.js', 'notes.txt');
-const left = fix("const props = { noTitle: true };\nexport const X = () => <IconButton {...props} />;");
+const left = fix('const props = { noTitle: true };\nexport const X = () => <IconButton {...props} />;');
 t('a noTitle it can\'t rename is listed with its line', left.notes.length === 1 && left.notes[0].line === 1 && left.notes[0].id === 'icon-button-hide-title', JSON.stringify(left.notes));
 const css = fix('.x { --badge-ripple-opacity: 0; }\n.dk-btn__ripples { display: none }', 'app.css');
 t('a removed ripple token or class is listed, not changed', css.notes.length === 2 && css.text.includes('--badge-ripple-opacity'), JSON.stringify(css.notes));

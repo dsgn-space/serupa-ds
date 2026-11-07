@@ -1,5 +1,5 @@
-"use client";
-import { flushSync } from "react-dom";
+'use client';
+import { flushSync } from 'react-dom';
 
 // Smooth layout changes (FLIP) with the browser's View Transitions: the page is captured before and after `update`,
 // and everything with a view-transition-name glides from where it was to where it is, resizing as it goes, while
@@ -15,7 +15,7 @@ import { flushSync } from "react-dom";
  *  without one). */
 export function withViewTransition(update: () => void, options: { types?: string[] } = {}): Promise<void> {
   const run = () => flushSync(update);
-  if (typeof document === "undefined" || !("startViewTransition" in document)) { run(); return Promise.resolve(); }
+  if (typeof document === 'undefined' || !('startViewTransition' in document)) { run(); return Promise.resolve(); }
   let t: ViewTransition;
   try { t = document.startViewTransition(options.types ? { update: run, types: options.types } : run); }
   catch { t = document.startViewTransition(run); }   // a browser with View Transitions but not yet their types

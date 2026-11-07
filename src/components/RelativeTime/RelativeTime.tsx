@@ -1,12 +1,12 @@
-"use client";
-import * as React from "react";
-import { cn, omit } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { isoDate, toDay } from "../../internal/dates";
-import { canonicalLocale } from "../../internal/locale";
-import { useLocale, useOwnLang } from "../../internal/provider";
-import { warnOnce } from "../../internal/warn";
-import { relativeTick } from "../../internal/timing";
+'use client';
+import * as React from 'react';
+import { cn, omit } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { isoDate, toDay } from '../../internal/dates';
+import { canonicalLocale } from '../../internal/locale';
+import { useLocale, useOwnLang } from '../../internal/provider';
+import { warnOnce } from '../../internal/warn';
+import { relativeTick } from '../../internal/timing';
 
 export interface RelativeTimeProps extends Omit<React.TimeHTMLAttributes<HTMLTimeElement>, 'children' | 'dateTime'> {
   /** The moment: a Date, a timestamp in ms, or a string Date can read ("2026-10-24T09:30:00Z"). A day on its own,
@@ -34,17 +34,17 @@ let now = Date.now();
 const listeners = new Set<() => void>();
 let timer: ReturnType<typeof setInterval> | null = null;
 const tick = () => { now = Date.now(); listeners.forEach((l) => l()); };
-const onVisible = () => { if (document.visibilityState === "visible") tick(); };
+const onVisible = () => { if (document.visibilityState === 'visible') tick(); };
 function subscribe(cb: () => void) {
   listeners.add(cb);
   if (!timer) {
     timer = setInterval(tick, relativeTick);
-    document.addEventListener("visibilitychange", onVisible);
+    document.addEventListener('visibilitychange', onVisible);
     if (Date.now() - now > 1000) tick();   // the clock stood still while nothing was mounted
   }
   return () => {
     listeners.delete(cb);
-    if (!listeners.size && timer) { clearInterval(timer); timer = null; document.removeEventListener("visibilitychange", onVisible); }
+    if (!listeners.size && timer) { clearInterval(timer); timer = null; document.removeEventListener('visibilitychange', onVisible); }
   };
 }
 const getNow = () => { if (!timer && Date.now() - now > relativeTick) now = Date.now(); return now; };
@@ -58,32 +58,32 @@ const getServerNow = () => { const t = Date.now(); if (t - serverNow > 1000 || t
 
 const UNITS: Array<[Intl.RelativeTimeFormatUnit, number, number]> = [
   // [unit, its length in seconds, use it while the gap is under this many seconds]
-  ["second", 1, 45], ["minute", 60, 45 * 60], ["hour", 3600, 22 * 3600], ["day", 86400, 26 * 86400], ["month", 2629800, 320 * 86400], ["year", 31557600, Infinity],
+  ['second', 1, 45], ['minute', 60, 45 * 60], ['hour', 3600, 22 * 3600], ['day', 86400, 26 * 86400], ['month', 2629800, 320 * 86400], ['year', 31557600, Infinity],
 ];
 
 /* A day on its own ("2026-10-24", as a date column or <input type="date"> gives it) is that local day. Date reads it
    as UTC midnight, the day before west of Greenwich, so "yesterday" came out as "2 days ago" there, and a day from
    this morning as "14 hours ago" (L8E13). */
 const dayOf = (date: Date | number | string): Date | null =>
-  typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date.trim()) ? toDay(date) || new Date(NaN) : null;
+  typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date.trim()) ? toDay(date) || new Date(NaN) : null;
 
 /** The words for a moment relative to now, as RelativeTime writes them: "3 minutes ago", "in 2 days", "now". A day
     on its own ("2026-10-24") is counted in calendar days or more: "today", "yesterday", "in 3 days". */
 export function relativeTime(date: Date | number | string, now: number, locale?: string, options?: { format?: 'long' | 'short' | 'narrow'; numeric?: 'auto' | 'always' }): string {
   const day = dayOf(date);
   const t = (day || new Date(date)).getTime();
-  if (!isFinite(t)) return "";
+  if (!isFinite(t)) return '';
   const secs = (t - now) / 1000, abs = Math.abs(secs);
-  const rtf = new Intl.RelativeTimeFormat(locale ? canonicalLocale(locale) : undefined, { style: options?.format || "long", numeric: options?.numeric || "auto" });
+  const rtf = new Intl.RelativeTimeFormat(locale ? canonicalLocale(locale) : undefined, { style: options?.format || 'long', numeric: options?.numeric || 'auto' });
   let i = UNITS.findIndex(([, , under]) => abs < under);
   if (day) i = Math.max(i, 3);
   // Under 45 seconds is "now" ("0 seconds ago" with numeric always): a timer every 15s can't keep seconds honest.
-  if (i === 0) return rtf.format(0, "second");
+  if (i === 0) return rtf.format(0, 'second');
   // With numeric "auto", "yesterday", "last month" and "last year" are calendar words: days, months and years are
   // counted on the viewer's calendar, not by elapsed time, and a moment on the same calendar day (month, year)
   // falls back to the unit below (GL2). 01:00 seen at 23:00 is "22 hours ago", not "yesterday".
   // A day on its own is always counted on the calendar, and is "today" on its own day.
-  if (options?.numeric !== "always" || day) {
+  if (options?.numeric !== 'always' || day) {
     const a = new Date(t), b = new Date(now);
     for (; i >= 3; i--) {
       const n = i === 3 ? Math.round((Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) - Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())) / 86400000)
@@ -99,23 +99,23 @@ export function relativeTime(date: Date | number | string, now: number, locale?:
    tooltip (title). format "long" (default), "short" or "narrow"; numeric "auto" (default) or "always". More than
    absoluteAfter days away (7 by default) it shows the date instead. */
 /** How long ago a moment was, in words ("3 minutes ago"), kept up to date; the exact date in its tooltip. */
-export const RelativeTime = /* @__PURE__ */ component<HTMLTimeElement, RelativeTimeProps>("RelativeTime", function RelativeTime(props, ref) {
+export const RelativeTime = /* @__PURE__ */ component<HTMLTimeElement, RelativeTimeProps>('RelativeTime', function RelativeTime(props, ref) {
   const rest = omit(props, { date: 1, format: 1, numeric: 1, titleFormat: 1, absoluteAfter: 1, absoluteFormat: 1, locale: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const current = React.useSyncExternalStore(subscribe, getNow, getServerNow);
   const day = dayOf(props.date), d = day || new Date(props.date), valid = isFinite(d.getTime());
   React.useEffect(() => {   // in the browser only, once per page
-    if (process.env.NODE_ENV !== "production" && !valid) warnOnce("relative-time-date", "RelativeTime: date " + JSON.stringify(String(props.date)) + " isn't a date, so it shows nothing. Pass a Date, a timestamp in ms, or a string Date can read, such as \"2026-10-24T09:30:00Z\".");
+    if (process.env.NODE_ENV !== 'production' && !valid) warnOnce('relative-time-date', 'RelativeTime: date ' + JSON.stringify(String(props.date)) + " isn't a date, so it shows nothing. Pass a Date, a timestamp in ms, or a string Date can read, such as \"2026-10-24T09:30:00Z\".");
   }, [valid, props.date]);
   // Far off, a date says more than "340 days ago" (KW8); the tooltip keeps the exact date either way.
   // A day on its own counts calendar days from today, as its words do: from now, 7 days ago (that day's midnight) was
   // over 7 days, so it showed the date a day earlier than "in 7 days" did (L8E97).
   const gap = (d.getTime() - (day ? new Date(current).setHours(0, 0, 0, 0) : current)) / 864e5;   // in days (rounded for a day: DST)
   const after = props.absoluteAfter ?? 7, far = valid && after !== false && Math.abs(day ? Math.round(gap) : gap) > after;
-  const text = !valid ? "" : far ? new Intl.DateTimeFormat(locale, props.absoluteFormat || { dateStyle: "medium" }).format(d)
+  const text = !valid ? '' : far ? new Intl.DateTimeFormat(locale, props.absoluteFormat || { dateStyle: 'medium' }).format(d)
     : relativeTime(day ? props.date : d, current, locale, { format: props.format, numeric: props.numeric });
   // A day has no time of day to show, and its datetime is the day itself.
-  const title = !valid || props.titleFormat === false ? undefined : new Intl.DateTimeFormat(locale, props.titleFormat || { dateStyle: "long", timeStyle: day ? undefined : "short" }).format(d);
-  return <time lang={lang} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn("dk-relative-time", props.className)}
+  const title = !valid || props.titleFormat === false ? undefined : new Intl.DateTimeFormat(locale, props.titleFormat || { dateStyle: 'long', timeStyle: day ? undefined : 'short' }).format(d);
+  return <time lang={lang} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('dk-relative-time', props.className)}
     data-component="relative-time" suppressHydrationWarning>{text}</time>;
 });

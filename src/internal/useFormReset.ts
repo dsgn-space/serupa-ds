@@ -1,6 +1,6 @@
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
-import { byId } from "./root";
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
+import { byId } from './root';
 
 /* Custom inputs submit through a hidden input whose value comes from React state, and form.reset() (or React 19
    resetting a form after its action) doesn't touch state: the form kept submitting and showing the old choice.
@@ -16,12 +16,12 @@ export function useFormReset(el: React.RefObject<HTMLElement | null>, reset: () 
     const named = formId ? byId(node, formId) : null;   // in node's document or shadow root (GR60)
     // Last, a group (a div) outside any form whose controls name one with their form attribute: RadioGroup and
     // CheckboxGroup kept the old choice when that form reset (L8E54).
-    const inner = node && node.querySelector<HTMLInputElement>("input[form], select[form], textarea[form]");
-    const form = node && ((named instanceof HTMLFormElement ? named : null) || (node as HTMLInputElement).form || node.closest("form") || (inner && inner.form));
+    const inner = node && node.querySelector<HTMLInputElement>('input[form], select[form], textarea[form]');
+    const form = node && ((named instanceof HTMLFormElement ? named : null) || (node as HTMLInputElement).form || node.closest('form') || (inner && inner.form));
     if (!form) return;
     // The browser resets the fields right after this event; the state update renders after that, so it wins.
     const on = () => run.current();
-    form.addEventListener("reset", on);
-    return () => form.removeEventListener("reset", on);
+    form.addEventListener('reset', on);
+    return () => form.removeEventListener('reset', on);
   }, [el, formId]);
 }

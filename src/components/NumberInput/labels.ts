@@ -6,10 +6,10 @@ export interface NumberInputLabels {
   increase: string;
 }
 export const en: NumberInputLabels = {
-  decrease: "Decrease",
-  increase: "Increase",
+  decrease: 'Decrease',
+  increase: 'Increase',
 };
 export const id: NumberInputLabels = {
-  decrease: "Kurangi",
-  increase: "Tambah",
+  decrease: 'Kurangi',
+  increase: 'Tambah',
 };

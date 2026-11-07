@@ -1,12 +1,12 @@
-"use client";
-import * as React from "react";
-import { cn } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { useLocale, useSettings } from "../../internal/provider";
-import { announce } from "../../internal/announce";
-import { Button } from "../Button/Button";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { useLocale, useSettings } from '../../internal/provider';
+import { announce } from '../../internal/announce';
+import { Button } from '../Button/Button';
+import { en as words } from './labels';
 
 export interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Loads the next page. Return a promise: the button shows loading and takes no second press until it settles. */
@@ -28,7 +28,7 @@ export interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
   endText?: React.ReactNode | undefined;
 }
 
-const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === "function";
+const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
 /* LoadMore: the end of a list that loads in pages: "Showing 20 of 134" over a Load more button, which gives way to
    "You've reached the end". What a load added is said politely ("20 more loaded. Showing 40 of 134."), since new
@@ -36,7 +36,7 @@ const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeo
    only when count changes, so a load that adds nothing can't loop. Focus stays on the button, which moves down below
    the new items; when the last page leaves no button, focus goes to the end text instead of the page. */
 /** The end of a paged list: "Showing 20 of 134", a Load more button (or infinite scroll), and an announcement of what each load added. */
-export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>("LoadMore", function LoadMore(props, ref) {
+export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>('LoadMore', function LoadMore(props, ref) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
   const { onLoadMore, hasMore: more, loading, count, total, infinite, label, endText, className, ...rest } = props;
   const hasMore = more !== false;
@@ -72,7 +72,7 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
     if (count == null || was == null || count <= was) return;
     const { labels: l, total: all, locale: at } = latest.current, n = (x: number) => x.toLocaleString(at);
     const added = l.loadedMore(n(count - was));
-    announce(all != null ? added + ". " + l.showingOf(n(count), n(all)) + "." : added);
+    announce(all != null ? added + '. ' + l.showingOf(n(count), n(all)) + '.' : added);
   }, [count]);
 
   // The last page took the focused button away: focus the end text, not the page (with endText={null}, the summary;
@@ -93,14 +93,14 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
     if (busy || !follow.current || count != null && count === follow.current.from) return;
     follow.current = null;
     const at = activeIn(box.current) as HTMLElement | null;
-    if (at && box.current && box.current.contains(at) && typeof at.scrollIntoView === "function") at.scrollIntoView({ block: "nearest" });
+    if (at && box.current && box.current.contains(at) && typeof at.scrollIntoView === 'function') at.scrollIntoView({ block: 'nearest' });
   }, [busy, count]);
 
   // infinite: load as it nears the viewport, once per approach, and again only when count changes.
   const [near, setNear] = React.useState(false);
   React.useEffect(() => {
-    if (!infinite || !box.current || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver((es) => setNear(es[es.length - 1].isIntersecting), { rootMargin: "0px 0px 200px 0px" });
+    if (!infinite || !box.current || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver((es) => setNear(es[es.length - 1].isIntersecting), { rootMargin: '0px 0px 200px 0px' });
     io.observe(box.current);
     return () => io.disconnect();
   }, [infinite]);
@@ -114,12 +114,12 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
 
   const setRef = React.useCallback((node: HTMLDivElement | null) => {
     box.current = node;
-    if (typeof ref === "function") ref(node); else if (ref) ref.current = node;
+    if (typeof ref === 'function') ref(node); else if (ref) ref.current = node;
   }, [ref]);
 
   return (
-    <div {...rest} ref={setRef} className={cn("dk-load-more", className)} data-component="load-more"
-      onBlur={(e) => { if (rest.onBlur) rest.onBlur(e); if (e.target === e.currentTarget) e.currentTarget.removeAttribute("tabindex"); }}>
+    <div {...rest} ref={setRef} className={cn('dk-load-more', className)} data-component="load-more"
+      onBlur={(e) => { if (rest.onBlur) rest.onBlur(e); if (e.target === e.currentTarget) e.currentTarget.removeAttribute('tabindex'); }}>
       {count != null && total != null ? <p ref={summary} className="dk-load-more__summary" tabIndex={!hasMore && endText === null ? -1 : undefined}>{labels.showingOf(num(count), num(total))}</p> : null}
       {hasMore
         ? <Button variant="outline" className="dk-load-more__button" wrap loading={busy} loadingText="" onClick={run}>{label != null ? label : labels.loadMore}</Button>

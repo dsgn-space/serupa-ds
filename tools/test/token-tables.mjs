@@ -17,7 +17,7 @@ for (const c of components()) {
 }
 // Badge's palette tones are made from tokens.json too (F15): every chromatic family, its light solid step by contrast.
 const b = badge.render();
-R.push({ name: "Badge.css: its palette tones match tokens.json", ok: !b.error && b.text === b.old, detail: b.error || 'src/components/Badge/Badge.css is out of date: run npm run tokens' });
+R.push({ name: 'Badge.css: its palette tones match tokens.json', ok: !b.error && b.text === b.old, detail: b.error || 'src/components/Badge/Badge.css is out of date: run npm run tokens' });
 const fams = (() => { try { return badge.families(JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8'))); } catch (e) { return String(e); } })();
 R.push({ name: 'Badge: 17 chromatic families, no grays, white on the light solid fill', ok: Array.isArray(fams) && fams.length === 17 && !fams.some((f) => /gray|slate|zinc|neutral|stone/.test(f.name)) && fams.find((f) => f.name === 'red')?.solid === 600 && fams.find((f) => f.name === 'amber')?.solid === 700, detail: JSON.stringify(fams) });
 // The table itself: one row per token, the shared token as the default, and a heading per group on a long one.

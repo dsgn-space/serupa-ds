@@ -1,19 +1,19 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, setRef } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useLocale, useSettings } from "../../internal/provider";
-import { Button } from "../Button/Button";
-import { IconButton } from "../IconButton/IconButton";
-import { Icon } from "../Icon/Icon";
-import { Progress } from "../Progress/Progress";
-import { formatFileSize } from "../FileUpload/formatFileSize";
-import * as icons from "../../material/builtin";
-import { attachmentKind, type AttachmentKind } from "./attachmentKind";
-import { en as ownWords } from "./labels";
-import { en as fileWords } from "../FileUpload/labels";
-import { en as boundary } from "../ErrorBoundary/labels";
-import { graphemes } from "../../internal/graphemes";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit, setRef } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useLocale, useSettings } from '../../internal/provider';
+import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
+import { Icon } from '../Icon/Icon';
+import { Progress } from '../Progress/Progress';
+import { formatFileSize } from '../FileUpload/formatFileSize';
+import * as icons from '../../material/builtin';
+import { attachmentKind, type AttachmentKind } from './attachmentKind';
+import { en as ownWords } from './labels';
+import { en as fileWords } from '../FileUpload/labels';
+import { en as boundary } from '../ErrorBoundary/labels';
+import { graphemes } from '../../internal/graphemes';
 
 // Its own words, FileUpload's "Upload failed" for a failed one and ErrorBoundary's "Try again" for its retry button.
 const words = /* @__PURE__ */ Object.assign({}, boundary, fileWords, ownWords);
@@ -55,8 +55,8 @@ const ICONS = {
   archive: icons.FolderZip, code: icons.Code, audio: icons.AudioFile, video: icons.Movie, other: icons.Draft,
 } as const;
 const WORD = {
-  pdf: "attachmentPdf", image: "attachmentImage", sheet: "attachmentSheet", doc: "attachmentDoc", slides: "attachmentSlides",
-  archive: "attachmentArchive", code: "attachmentCode", audio: "attachmentAudio", video: "attachmentVideo", other: "attachmentOther",
+  pdf: 'attachmentPdf', image: 'attachmentImage', sheet: 'attachmentSheet', doc: 'attachmentDoc', slides: 'attachmentSlides',
+  archive: 'attachmentArchive', code: 'attachmentCode', audio: 'attachmentAudio', video: 'attachmentVideo', other: 'attachmentOther',
 } as const;
 
 // Scripts whose letters join to the next one: a cut between two of them would show both in their unjoined forms.
@@ -83,7 +83,7 @@ function FileName({ name, id }: { name: string; id: string }) {
   const [el, setEl] = React.useState<HTMLSpanElement | null>(null);
   const [cut, setCut] = React.useState(false);
   React.useEffect(() => {
-    if (!el || typeof ResizeObserver === "undefined") return;
+    if (!el || typeof ResizeObserver === 'undefined') return;
     const check = () => {
       const part = el.firstElementChild;
       // Whole: cut once it overflows. Cut: the start part still shrinks while the name doesn't fit; once it shows in
@@ -96,14 +96,14 @@ function FileName({ name, id }: { name: string; id: string }) {
     check();
     return () => ro.disconnect();
   }, [el, name, cut]);
-  const chars = cut ? graphemes(name) : [], dot = name.lastIndexOf(".");
+  const chars = cut ? graphemes(name) : [], dot = name.lastIndexOf('.');
   const at = cut ? nameCut(chars, dot > 0 ? graphemes(name.slice(dot)).length : 0) : 0;
   return (
     <span ref={setEl} className="dk-attachment__name-text" dir="auto" title={name}>
       {cut && at > 0 ? (
         <>
-          <span className="dk-attachment__name-start" aria-hidden>{chars.slice(0, at).join("")}</span>
-          <span className="dk-attachment__name-end" aria-hidden>{chars.slice(at).join("")}</span>
+          <span className="dk-attachment__name-start" aria-hidden>{chars.slice(0, at).join('')}</span>
+          <span className="dk-attachment__name-end" aria-hidden>{chars.slice(at).join('')}</span>
         </>
       ) : <span className="dk-attachment__name-start" aria-hidden>{name}</span>}
       <span className="dk-visually-hidden" id={id}>{name}</span>
@@ -116,35 +116,35 @@ function FileName({ name, id }: { name: string; id: string }) {
    It says nothing by itself as the upload moves: the app that uploads says when one finishes or fails. */
 /** A file as a compact item: its type icon, name, kind and size, with upload progress, an error and a remove button.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Attachment = /* @__PURE__ */ component<HTMLDivElement, AttachmentProps>("Attachment", function Attachment(props, ref) {
+export const Attachment = /* @__PURE__ */ component<HTMLDivElement, AttachmentProps>('Attachment', function Attachment(props, ref) {
   const sds = useSettings(words), locale = useLocale(), L = sds.labels;
   const rest = omit(props, OWN);
-  const base = domId("dk-at", React.useId());
+  const base = domId('dk-at', React.useId());
   const kind = props.kind || attachmentKind(props.name, props.type);
   const disabled = !!props.disabled;
-  const failed = props.error != null && props.error !== false && props.error !== "";
+  const failed = props.error != null && props.error !== false && props.error !== '';
   const uploading = props.progress !== undefined && !failed;
-  const size = props.bytes != null ? formatFileSize(props.bytes, locale) : "";
-  const value = typeof props.progress === "number" && isFinite(props.progress) ? Math.min(100, Math.max(0, props.progress)) : null;
-  const name = <FileName name={props.name} id={base + "-name"} />;
-  const removeLabel = props.removeLabel || ((n: string) => L.remove + " " + n);
+  const size = props.bytes != null ? formatFileSize(props.bytes, locale) : '';
+  const value = typeof props.progress === 'number' && isFinite(props.progress) ? Math.min(100, Math.max(0, props.progress)) : null;
+  const name = <FileName name={props.name} id={base + '-name'} />;
+  const removeLabel = props.removeLabel || ((n: string) => L.remove + ' ' + n);
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn("dk-attachment", failed && "dk-attachment--error", uploading && "dk-attachment--uploading", disabled && "dk-attachment--disabled", props.className)} data-component="attachment" data-kind={kind}>
+    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-attachment', failed && 'dk-attachment--error', uploading && 'dk-attachment--uploading', disabled && 'dk-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
       <Icon icon={ICONS[kind]} className="dk-attachment__icon" />
       <span className="dk-attachment__body">
         {props.href && !disabled ? (
-          <a className="dk-attachment__name" href={props.href} download={props.download === true ? "" : props.download || undefined} aria-describedby={cn(base + "-meta", failed && base + "-error")}>{name}</a>
+          <a className="dk-attachment__name" href={props.href} download={props.download === true ? '' : props.download || undefined} aria-describedby={cn(base + '-meta', failed && base + '-error')}>{name}</a>
         ) : <span className="dk-attachment__name">{name}</span>}
-        <span className="dk-attachment__meta" id={base + "-meta"} dir="auto">
+        <span className="dk-attachment__meta" id={base + '-meta'} dir="auto">
           <span className="dk-attachment__kind">{L[WORD[kind]]}</span>
           {size ? <span className="dk-attachment__size">{size}</span> : null}
         </span>
-        {uploading ? <Progress className="dk-attachment__progress" size="sm" value={value} aria-labelledby={base + "-name"} /> : null}
-        {failed ? <span className="dk-attachment__error" id={base + "-error"}><Icon icon={icons.Error} />{props.error === true ? L.fileError : props.error}</span> : null}
+        {uploading ? <Progress className="dk-attachment__progress" size="sm" value={value} aria-labelledby={base + '-name'} /> : null}
+        {failed ? <span className="dk-attachment__error" id={base + '-error'}><Icon icon={icons.Error} />{props.error === true ? L.fileError : props.error}</span> : null}
       </span>
       {failed && props.onRetry ? (
-        <Button className="dk-attachment__retry" variant="ghost" size="sm" disabled={disabled} onClick={props.onRetry} aria-labelledby={base + "-retry " + base + "-name"} aria-describedby={base + "-error"}>
-          <span id={base + "-retry"}>{L.tryAgain}</span>
+        <Button className="dk-attachment__retry" variant="ghost" size="sm" disabled={disabled} onClick={props.onRetry} aria-labelledby={base + '-retry ' + base + '-name'} aria-describedby={base + '-error'}>
+          <span id={base + '-retry'}>{L.tryAgain}</span>
         </Button>
       ) : null}
       {props.onRemove ? <IconButton className="dk-attachment__remove" icon={icons.Close} label={removeLabel(props.name)} size="sm" variant="ghost" disabled={disabled} onClick={props.onRemove} /> : null}

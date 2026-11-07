@@ -1,16 +1,16 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { announce } from "../../internal/announce";
-import { isComposing } from "../../internal/ime";
-import { useLocale, useSettings } from "../../internal/provider";
-import { displayNumber } from "../../internal/numbers";
-import { Icon } from "../Icon/Icon";
-import { IconButton } from "../IconButton/IconButton";
-import { Menu, MenuItem } from "../Menu/Menu";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { announce } from '../../internal/announce';
+import { isComposing } from '../../internal/ime';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
+import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
+import { Menu, MenuItem } from '../Menu/Menu';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
 
 /** One column of a Kanban board. */
 export interface KanbanColumn<T> {
@@ -71,20 +71,20 @@ function moveCard<T>(columns: readonly KanbanColumn<T>[], from: Place, to: Place
    edge scrolls the board or the column. */
 /** A board of columns of cards that people move by dragging, by keyboard or from a "Move to…" menu, with every move announced.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unknown>>("Kanban", function Kanban(props, ref) {
+export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unknown>>('Kanban', function Kanban(props, ref) {
   const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, className: 1 } as const);
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const { getKey, getLabel } = props;
   const columns = props.columns || [];
-  const base = domId("dk-kb", React.useId());
+  const base = domId('dk-kb', React.useId());
   const [drag, setDrag] = React.useState<Drag | null>(null);
   const current = React.useRef(drag);
   current.current = drag;
   const board = React.useRef<HTMLDivElement | null>(null);
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 3 : (props.headingLevel as number);
-  const H = ("h" + level) as "h3";
-  const rtl = () => !!board.current && getComputedStyle(board.current).direction === "rtl";
+  const H = ('h' + level) as 'h3';
+  const rtl = () => !!board.current && getComputedStyle(board.current).direction === 'rtl';
 
   const find = (key: string | number): Place | null => {
     for (let c = 0; c < columns.length; c++) {
@@ -130,17 +130,17 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!drag || drag.pointer || !from || isComposing(e)) return;
-    const k = e.key, back = rtl() ? "ArrowRight" : "ArrowLeft", on = rtl() ? "ArrowLeft" : "ArrowRight";
+    const k = e.key, back = rtl() ? 'ArrowRight' : 'ArrowLeft', on = rtl() ? 'ArrowLeft' : 'ArrowRight';
     let to = drag.to;
     const last = (c: number) => sizeAt({ column: c, index: 0 }, true) - 1;
-    if (k === "ArrowUp") to = { ...to, index: Math.max(0, to.index - 1) };
-    else if (k === "ArrowDown") to = { ...to, index: Math.min(last(to.column), to.index + 1) };
+    if (k === 'ArrowUp') to = { ...to, index: Math.max(0, to.index - 1) };
+    else if (k === 'ArrowDown') to = { ...to, index: Math.min(last(to.column), to.index + 1) };
     else if (k === back && to.column > 0) to = { column: to.column - 1, index: Math.min(to.index, last(to.column - 1)) };
     else if (k === on && to.column < columns.length - 1) to = { column: to.column + 1, index: Math.min(to.index, last(to.column + 1)) };
-    else if (k === "Home") to = { ...to, index: 0 };
-    else if (k === "End") to = { ...to, index: last(to.column) };
-    else if (k === "Escape") { e.preventDefault(); e.stopPropagation(); finish(drag, false); return; }
-    else if (k === "Tab") { finish(drag, false); return; }
+    else if (k === 'Home') to = { ...to, index: 0 };
+    else if (k === 'End') to = { ...to, index: last(to.column) };
+    else if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(drag, false); return; }
+    else if (k === 'Tab') { finish(drag, false); return; }
     else if (k !== back && k !== on) return;
     e.preventDefault();
     if (to.column !== drag.to.column || to.index !== drag.to.index) {
@@ -161,7 +161,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     if (key == null) return;
     const h = handles.current.get(key);
     if (h && document.activeElement !== h) h.focus({ preventScroll: true });
-    if (h && typeof h.scrollIntoView === "function" && (drag ? drag.to !== drag.from : true)) h.closest("li")!.scrollIntoView({ block: "nearest", inline: "nearest" });
+    if (h && typeof h.scrollIntoView === 'function' && (drag ? drag.to !== drag.from : true)) h.closest('li')!.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     if (refocus != null && !drag) setRefocus(null);
   });
 
@@ -180,9 +180,9 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   const onPointerDown = (key: string | number) => (e: React.PointerEvent<HTMLButtonElement>) => {
     dragged.current = false;
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
-    const card = e.currentTarget.closest("li")!.getBoundingClientRect();
+    const card = e.currentTarget.closest('li')!.getBoundingClientRect();
     pointer.current = { id: e.pointerId, key, sx: e.clientX, sy: e.clientY, x: e.clientX, y: e.clientY, gx: e.clientX - card.left, gy: e.clientY - card.top, moved: false };
-    const lists = () => board.current ? [...board.current.querySelectorAll<HTMLElement>(".dk-kanban__cards")] : [];
+    const lists = () => board.current ? [...board.current.querySelectorAll<HTMLElement>('.dk-kanban__cards')] : [];
     const placeAt = (p: NonNullable<typeof pointer.current>): Drag | undefined => {
       const at = latest.current.find(p.key);
       if (!at) return undefined;
@@ -253,36 +253,36 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     const off = () => {
       pointer.current = null; stop.current = null;
       if (frame) { cancelAnimationFrame(frame); frame = 0; }
-      window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", cancel);
+      window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', cancel);
     };
     if (stop.current) stop.current();
     stop.current = off;
-    window.addEventListener("pointermove", move); window.addEventListener("pointerup", up); window.addEventListener("pointercancel", cancel);
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', cancel);
   };
   // The dragged card sits under the pointer, wherever the board has placed it.
   // every render: each pointer move re-renders; outside a drag it only clears a transform left behind.
   useIsoLayoutEffect(() => {
-    const p = pointer.current, cards = board.current ? [...board.current.querySelectorAll<HTMLElement>("li[data-key]")] : [];
+    const p = pointer.current, cards = board.current ? [...board.current.querySelectorAll<HTMLElement>('li[data-key]')] : [];
     for (const li of cards) {
       if (p && p.moved && drag && drag.pointer && li.dataset.key === String(drag.key)) {
-        li.style.transform = "";
+        li.style.transform = '';
         const b = li.getBoundingClientRect();
-        li.style.transform = "translate(" + Math.round(p.x - p.gx - b.left) + "px, " + Math.round(p.y - p.gy - b.top) + "px)";
-      } else if (li.style.transform) li.style.transform = "";
+        li.style.transform = 'translate(' + Math.round(p.x - p.gx - b.left) + 'px, ' + Math.round(p.y - p.gy - b.top) + 'px)';
+      } else if (li.style.transform) li.style.transform = '';
     }
   });
 
   return (<>
     {/* Disabled, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
-    <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={(n) => { board.current = n; setRef(ref, n); }} role={rest.role ?? "group"}
-      className={cn("dk-kanban", drag && "dk-kanban--moving", props.disabled && "dk-kanban--disabled", props.className)} data-component="kanban">
+    <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={(n) => { board.current = n; setRef(ref, n); }} role={rest.role ?? 'group'}
+      className={cn('dk-kanban', drag && 'dk-kanban--moving', props.disabled && 'dk-kanban--disabled', props.className)} data-component="kanban">
       {shown.map((col, c) => {
-        const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + "-col-" + c;
+        const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;
         return (
-          <section key={col.id} className={cn("dk-kanban__column", drag && drag.to.column === c && "dk-kanban__column--target", over && "dk-kanban__column--over")} aria-labelledby={titleId} data-column={col.id}>
+          <section key={col.id} className={cn('dk-kanban__column', drag && drag.to.column === c && 'dk-kanban__column--target', over && 'dk-kanban__column--over')} aria-labelledby={titleId} data-column={col.id}>
             <div className="dk-kanban__header">
               <H className="dk-kanban__title" id={titleId}>{col.title}</H>
-              <span className={cn("dk-kanban__count", over && "dk-kanban__count--over")}>
+              <span className={cn('dk-kanban__count', over && 'dk-kanban__count--over')}>
                 {over ? <Icon icon={icons.Warning} /> : null}
                 {col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
                 {over ? <span className="dk-kanban__over">{L.kanbanOverLimit}</span> : null}
@@ -292,9 +292,9 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
               {col.items.map((it, index) => {
                 const key = getKey(it), dragging = !!drag && drag.key === key, name = getLabel(it);
                 return (
-                  <li key={key} data-key={String(key)} className={cn("dk-kanban__card", dragging && "dk-kanban__card--dragging")} data-state={dragging ? "dragging" : undefined}>
+                  <li key={key} data-key={String(key)} className={cn('dk-kanban__card', dragging && 'dk-kanban__card--dragging')} data-state={dragging ? 'dragging' : undefined}>
                     {props.disabled ? null : (
-                      <button type="button" className="dk-kanban__handle" aria-label={L.kanbanMove + " " + name} aria-describedby={base + "-hint"} aria-pressed={dragging && !drag.pointer}
+                      <button type="button" className="dk-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={base + '-hint'} aria-pressed={dragging && !drag.pointer}
                         ref={(n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); }}
                         onClick={onClick(key)} onKeyDown={onKeyDown} onBlur={onBlur} onPointerDown={onPointerDown(key)}>
                         <Icon icon={icons.DragIndicator} />
@@ -315,6 +315,6 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
         );
       })}
     </div>
-    {props.disabled ? null : <span hidden id={base + "-hint"}>{L.kanbanInstructions}</span>}
+    {props.disabled ? null : <span hidden id={base + '-hint'}>{L.kanbanInstructions}</span>}
   </>);
 }) as <T>(props: KanbanProps<T> & { ref?: React.Ref<HTMLDivElement> | undefined }) => React.ReactElement;
