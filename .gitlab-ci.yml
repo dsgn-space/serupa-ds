@@ -23,8 +23,8 @@ workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
-    # The cross-browser run (below): started through the API or a pipeline schedule with SERUPA_CROSS=1.
-    - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule") && $SERUPA_CROSS == "1"
+    # The cross-browser run (below): a pipeline started through the API or by a schedule.
+    - if: $CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule"
   # A new push cancels the pipeline for the push before it, and the first failed job cancels the rest of its
   # pipeline: a red run stops spending CI minutes as soon as it's red.
   auto_cancel:
@@ -140,7 +140,7 @@ changeset:
 # The cross-browser run needs build's dist/ and storybook-static/, and nothing else of the full suite.
 .full-suite-or-cross:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1" || $SERUPA_CROSS == "1"
+    - if: $CI_PIPELINE_SOURCE =~ /^(web|api|schedule)$/ || $SERUPA_FULL_CI == "1" || $SERUPA_CROSS == "1"
 
 local checks:
   stage: build
@@ -216,14 +216,16 @@ frameworks:
 # Cross-browser (GitHub's nightly Cross-browser workflow): the component tests, the checks and the Storybook checks in
 # Firefox and WebKit (Safari's engine), whose builds the Playwright image already has. A red job is a browser
 # difference to look at, not a broken main, so nothing waits on it. It costs CI minutes (six jobs; the free plan has
-# 400 a month for every lane), so it never runs on its own: start it with SERUPA_CROSS=1 from Build > Pipelines >
-# Run pipeline, the API, or a pipeline schedule, and pick groups with SERUPA_CROSS_GROUPS (default: all three).
+# 400 a month for every lane), so it never runs on its own: a pipeline started through the API (POST
+# /projects/:id/pipeline, which a token with "Pipeline create" can do) or by a schedule runs build and this, nothing
+# else; one started by hand from Build > Pipelines > Run pipeline runs it with SERUPA_CROSS=1. SERUPA_CROSS_GROUPS
+# picks the groups (default: all three).
 cross-browser:
   stage: test
   needs: [build]
   timeout: 75m
   rules:
-    - if: $SERUPA_CROSS == "1"
+    - if: $CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1"
   parallel:
     matrix:
       - BROWSER: [firefox, webkit]
