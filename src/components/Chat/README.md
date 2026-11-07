@@ -80,7 +80,7 @@ Drawn from the `Statuses` story.
 | `onLoadOlder` | `() => void` | | Called by that button. |
 | `loadingOlder` | `boolean` | `false` | The button says it's loading. |
 
-`className`, `ref` and other props go to the outer `<div>`; `aria-label` and `aria-labelledby` name the log.
+`id`, `className`, `ref` and other props go to the outer `<div>`; `aria-label` and `aria-labelledby` name the log.
 
 ### ChatMessage
 

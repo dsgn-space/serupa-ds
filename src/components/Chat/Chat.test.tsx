@@ -18,6 +18,14 @@ function Live({ api }: { api: { add?: (n: number) => void; older?: (n: number) =
   return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat aria-label="Support" style={{ flex: 'auto' }}>{msgs(range[0], range[1])}</Chat></div>;
 }
 
+// The innermost element whose text is (or matches) this: parts found by what they say, not by class.
+function find(root: Element, text: string | RegExp): HTMLElement | null {
+  const ok = (e: Element) => (typeof text === 'string' ? e.textContent === text : text.test(e.textContent));
+  const all = [...root.querySelectorAll<HTMLElement>('*')].filter(ok);
+  return all.find((e) => !all.some((x) => x !== e && e.contains(x))) || null;
+}
+const jumpButton = () => page.getByRole('button', { name: /new message/ }).query();
+
 describe('Chat', () => {
   test('a named log that Tab reaches; ref, className and other props reach the outer <div>', async () => {
     const ref = React.createRef<HTMLDivElement>();
@@ -41,7 +49,7 @@ describe('Chat', () => {
     await render(<Live api={api} />);
     React.act(() => api.add!(2));
     await expect.poll(() => atBottom(log())).toBe(true);
-    expect(document.querySelector('.dk-chat__jump')).toBe(null);
+    expect(jumpButton()).toBe(null);
   });
 
   test('scrolled up, new messages leave the reader where they are and show "2 new messages", which jumps down and focuses the log', async () => {
@@ -55,7 +63,7 @@ describe('Chat', () => {
     expect(log().scrollTop).toBe(0);
     await userEvent.click(jump);
     await expect.poll(() => atBottom(log())).toBe(true);
-    expect([document.activeElement === log(), document.querySelector('.dk-chat__jump')]).toEqual([true, null]);
+    expect([document.activeElement === log(), jumpButton()]).toEqual([true, null]);
   });
 
   test('earlier messages loaded at the top keep the message the reader was on in place', async () => {
@@ -67,7 +75,7 @@ describe('Chat', () => {
     const before = on.getBoundingClientRect().top;
     React.act(() => api.older!(5));
     await expect.poll(() => Math.abs(on.getBoundingClientRect().top - before)).toBeLessThanOrEqual(1);
-    expect(document.querySelector('.dk-chat__jump')).toBe(null);
+    expect(jumpButton()).toBe(null);
   });
 
   test('hasOlder adds "Load earlier messages", which calls onLoadOlder; loadingOlder says it is loading and doesn\'t call again', async () => {
@@ -84,33 +92,35 @@ describe('ChatMessage', () => {
   test('author, time and text; text keeps its line breaks and wraps a long word', async () => {
     await render(<div style={{ width: '240px' }}><ChatMessage id="m" author="Rina" time={new Date()}>{'Line one\nDonaudampfschifffahrtsgesellschaftskapitän'}</ChatMessage></div>);
     const m = document.getElementById('m')!;
-    expect([m.dataset.component, m.querySelector('.dk-chat-message__author')!.textContent, m.querySelector('time') != null, css(m.querySelector('.dk-chat-message__bubble')).whiteSpace]).toEqual(['chat-message', 'Rina', true, 'pre-wrap']);
+    expect([m.dataset.component, !!find(m, 'Rina'), m.querySelector('time') != null, css(find(m, /^Line one/)).whiteSpace]).toEqual(['chat-message', true, true, 'pre-wrap']);
     expect(m.getBoundingClientRect().width).toBeLessThanOrEqual(240);
   });
 
   test('own: at the end, in the primary tint, and authored "You" unless named', async () => {
     await render(<div style={{ display: 'flex', flexDirection: 'column', width: '400px' }}><ChatMessage id="o" own>Hi</ChatMessage><ChatMessage id="t">Hi</ChatMessage></div>);
     const o = document.getElementById('o')!, t = document.getElementById('t')!;
-    expect(o.querySelector('.dk-chat-message__author')!.textContent).toBe('You');
+    expect(find(o, 'You')).not.toBe(null);
     expect(o.getBoundingClientRect().right).toBeGreaterThan(t.getBoundingClientRect().right);
-    expect(css(o.querySelector('.dk-chat-message__bubble')).backgroundColor).not.toBe(css(t.querySelector('.dk-chat-message__bubble')).backgroundColor);
+    expect(css(find(o, 'Hi')).backgroundColor).not.toBe(css(find(t, 'Hi')).backgroundColor);
   });
 
   test('hideAuthor leaves out the author and avatar on screen but still says who wrote it', async () => {
     await render(<ChatMessage id="h" author="Rina" avatar={<span>R</span>} hideAuthor>Second</ChatMessage>);
     const h = document.getElementById('h')!;
-    expect([h.querySelector('.dk-chat-message__author'), h.querySelector('.dk-chat-message__avatar')!.textContent, h.querySelector('.dk-visually-hidden')!.textContent]).toEqual([null, '', 'Rina']);
+    // The name is there for screen readers only: clipped to nothing on screen; the avatar's place is empty.
+    const name = find(h, 'Rina')!;
+    expect([name.getBoundingClientRect().width <= 1, h.querySelector('[aria-hidden]')!.textContent]).toEqual([true, '']);
   });
 
   test('the avatar is hidden from screen readers', async () => {
     await render(<ChatMessage id="a" author="Rina" avatar={<span>R</span>}>Hi</ChatMessage>);
-    expect(document.getElementById('a')!.querySelector('.dk-chat-message__avatar')!.getAttribute('aria-hidden')).toBe('true');
+    expect(find(document.getElementById('a')!, 'R')!.closest('[aria-hidden]')!.getAttribute('aria-hidden')).toBe('true');
   });
 
   test('status: "Sending…", and "Not sent" with a Retry button that calls onRetry', async () => {
     let tries = 0;
     await render(<><ChatMessage id="s" own status="sending">A</ChatMessage><ChatMessage id="f" own status="failed" onRetry={() => tries++}>B</ChatMessage></>);
-    expect(document.getElementById('s')!.querySelector('.dk-chat-message__status')!.textContent).toBe('Sending…');
+    expect(find(document.getElementById('s')!, 'Sending…')).not.toBe(null);
     expect(document.getElementById('f')!.classList.contains('dk-chat-message--failed')).toBe(true);
     await userEvent.click(page.getByRole('button', { name: 'Retry' }));
     expect(tries).toBe(1);
@@ -119,12 +129,12 @@ describe('ChatMessage', () => {
   test('streaming marks it aria-busy; attachments sit under the text', async () => {
     await render(<ChatMessage id="st" streaming attachments={<span id="file">a.pdf</span>}>Partial</ChatMessage>);
     const st = document.getElementById('st')!;
-    expect([st.getAttribute('aria-busy'), document.getElementById('file')!.parentElement!.className]).toEqual(['true', 'dk-chat-message__attachments']);
+    expect([st.getAttribute('aria-busy'), !!(find(st, 'Partial')!.compareDocumentPosition(document.getElementById('file')!) & Node.DOCUMENT_POSITION_FOLLOWING)]).toEqual(['true', true]);
   });
 
   test('its words come from the labels', async () => {
     await render(<SerupaProvider labels={idLabels}><ChatMessage id="i" own status="failed" onRetry={() => {}}>A</ChatMessage></SerupaProvider>);
-    expect(document.getElementById('i')!.querySelector('.dk-chat-message__author')!.textContent).toBe('Anda');
+    expect(find(document.getElementById('i')!, 'Anda')).not.toBe(null);
     await expect.element(page.getByRole('button', { name: 'Coba lagi' })).toBeVisible();
   });
 
@@ -134,12 +144,12 @@ describe('ChatMessage', () => {
       document.documentElement.setAttribute('data-theme', th);
       const pg = css(document.body).backgroundColor, x = document.getElementById('x')!, y = document.getElementById('y')!;
       for (const [name, el] of [['others', x], ['own', y]] as const) {
-        const b = el.querySelector('.dk-chat-message__bubble')!;
+        const b = find(el, name === 'own' ? 'Me' : 'Hi')!;
         expect(contrast(css(b).color, css(b).backgroundColor), th + ' ' + name).toBeGreaterThanOrEqual(4.5);
       }
       expect(contrast(css(x.querySelector('time')).color, pg), th + ' time').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(y.querySelector('.dk-chat-message__status')).color, pg), th + ' not sent').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(y.querySelector('.dk-chat-message__bubble')).borderTopColor, pg), th + ' failed outline').toBeGreaterThanOrEqual(3);
+      expect(contrast(css(find(y, /Not sent/)).color, pg), th + ' not sent').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(find(y, 'Me')).borderTopColor, pg), th + ' failed outline').toBeGreaterThanOrEqual(3);
       expect(contrast(css(document.getElementById('d')).color, pg), th + ' divider').toBeGreaterThanOrEqual(4.5);
     }
     document.documentElement.removeAttribute('data-theme');
