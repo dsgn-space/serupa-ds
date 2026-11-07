@@ -1,20 +1,20 @@
-"use client";
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { cn, type DataAttributes, domId, omit, oneOf, setRef, SIZES } from "../../internal/cn";
-import { useCut } from "../../internal/useCut";
-import { config } from "../../internal/config";
-import { useShowAfter } from "../../internal/showAfter";
-import { useSettings } from "../../internal/provider";
-import { announce, ensureAnnouncer } from "../../internal/announce";
-import { block, both, chain, pressKey, releaseKey } from "../../internal/interactions";
-import { warnOnce } from "../../internal/warn";
-import type { IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { Loader } from "../Loader/Loader";
-import { component } from "../../internal/component";
-import { BUTTON_VARIANTS, buttonClass } from "./buttonClass";
-import { feedbackHold, spinnerDelay } from "../../internal/timing";
+'use client';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { cn, type DataAttributes, domId, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { useCut } from '../../internal/useCut';
+import { config } from '../../internal/config';
+import { useShowAfter } from '../../internal/showAfter';
+import { useSettings } from '../../internal/provider';
+import { announce, ensureAnnouncer } from '../../internal/announce';
+import { block, both, chain, pressKey, releaseKey } from '../../internal/interactions';
+import { warnOnce } from '../../internal/warn';
+import type { IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { Loader } from '../Loader/Loader';
+import { component } from '../../internal/component';
+import { BUTTON_VARIANTS, buttonClass } from './buttonClass';
+import { feedbackHold, spinnerDelay } from '../../internal/timing';
 // React 19's form status, read off the namespace: Preact's compat layer has no useFormStatus (and no form actions), so
 // a named import would stop the whole package loading there. Without it a submit button is never pending on its own.
 // Whether it's there never changes while the page runs, so the hook is called on every render or on none. No fallback
@@ -192,7 +192,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   const text = typeof props.children === 'string' || typeof props.children === 'number' ? String(props.children) : '';
   const tipOk = !!text && !iconOnly && !props.wrap && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
-  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>(".dk-btn__label"));
+  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-btn__label'));
   if (cut && tipOk) rest.title = text;
   const setNode = React.useCallback(function (n: HTMLElement | null) { node.current = n; setRef(ref, n); }, [ref]);
 

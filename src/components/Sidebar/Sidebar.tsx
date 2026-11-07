@@ -1,19 +1,19 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { useCut } from "../../internal/useCut";
-import { useExit } from "../../internal/useExit";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { Tooltip } from "../Tooltip/Tooltip";
-import { config } from "../../internal/config";
-import { Menu, MenuItem, MenuSub } from "../Menu/Menu";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { flattenChildren } from "../../internal/children";
-import { useSettings } from "../../internal/provider";
-import type { OpenChangeDetails } from "../../internal/openChange";
-import * as icons from "../../material/builtin";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { useCut } from '../../internal/useCut';
+import { useExit } from '../../internal/useExit';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { Tooltip } from '../Tooltip/Tooltip';
+import { config } from '../../internal/config';
+import { Menu, MenuItem, MenuSub } from '../Menu/Menu';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { flattenChildren } from '../../internal/children';
+import { useSettings } from '../../internal/provider';
+import type { OpenChangeDetails } from '../../internal/openChange';
+import * as icons from '../../material/builtin';
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -204,13 +204,13 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   const dot = rail && props.badge != null && props.badge !== false;
   // There the tooltip is the item's name (aria-labelledby replaces its text), so the badge is read as its
   // description: "Inbox", then "4".
-  const badgeId = listId + "-badge";
-  const described = !!rest["aria-describedby"];
-  if (dot) rest["aria-describedby"] = cn(rest["aria-describedby"], badgeId);
+  const badgeId = listId + '-badge';
+  const described = !!rest['aria-describedby'];
+  if (dot) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   // A text label cut with an ellipsis shows in full as the item's title on hover, as Button's does (GR117). Not in
   // the rail, where the tooltip already names it, with a title of its own, or in a Tooltip (its aria-describedby, given
   // before the rail's badge adds one), which shows the cut label itself.
-  const text = typeof props.label === "string" || typeof props.label === "number" ? String(props.label) : "";
+  const text = typeof props.label === 'string' || typeof props.label === 'number' ? String(props.label) : '';
   const tipOk = !!text && !rail && rest.title == null && !described;
   const labelEl = React.useRef<HTMLSpanElement | null>(null);
   const cut = useCut(tipOk, text, () => labelEl.current);
