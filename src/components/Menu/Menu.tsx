@@ -33,7 +33,7 @@ export interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'c
   /** Called when it asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' (Tab) | 'select' (an item chosen) }. */
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** The menu's name for screen readers. Default: the trigger's text, by aria-labelledby. */
-  'aria-label'?: string;
+  'aria-label'?: string | undefined;
   /** Classes on the menu panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
   className?: string | undefined;
   /** Styles on the menu panel. */

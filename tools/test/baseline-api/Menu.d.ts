@@ -6,7 +6,7 @@ interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children
     open?: boolean | undefined;
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
-    "aria-label"?: string;
+    "aria-label"?: string | undefined;
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }
