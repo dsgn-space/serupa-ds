@@ -30,13 +30,41 @@ export interface TimeZoneInfo {
   name: string;
 }
 
+// Zones renamed since the browser's list was made (tzdata's "backward" file): Chromium still lists Europe/Kiev,
+// Asia/Calcutta and Asia/Saigon, while servers, Postgres, Temporal and Firefox give Europe/Kyiv, Asia/Kolkata and
+// Asia/Ho_Chi_Minh. The picker shows, searches and hands back the current name, and still finds the old spelling (GR174).
+const RENAMED: Record<string, string> = {
+  "Europe/Kiev": "Europe/Kyiv", "Asia/Calcutta": "Asia/Kolkata", "Asia/Katmandu": "Asia/Kathmandu", "Asia/Saigon": "Asia/Ho_Chi_Minh",
+  "America/Godthab": "America/Nuuk", "Asia/Rangoon": "Asia/Yangon", "Asia/Ulan_Bator": "Asia/Ulaanbaatar", "Asia/Dacca": "Asia/Dhaka",
+  "Asia/Thimbu": "Asia/Thimphu", "Asia/Macao": "Asia/Macau", "Asia/Ujung_Pandang": "Asia/Makassar", "Atlantic/Faeroe": "Atlantic/Faroe",
+  "Africa/Asmera": "Africa/Asmara", "Pacific/Truk": "Pacific/Chuuk", "Pacific/Ponape": "Pacific/Pohnpei", "Pacific/Enderbury": "Pacific/Kanton",
+  "America/Buenos_Aires": "America/Argentina/Buenos_Aires", "America/Catamarca": "America/Argentina/Catamarca",
+  "America/Cordoba": "America/Argentina/Cordoba", "America/Jujuy": "America/Argentina/Jujuy", "America/Mendoza": "America/Argentina/Mendoza",
+  "America/Indianapolis": "America/Indiana/Indianapolis", "America/Louisville": "America/Kentucky/Louisville", "America/Coral_Harbour": "America/Atikokan",
+};
+const oldName = (zone: string) => Object.keys(RENAMED).find((o) => RENAMED[o] === zone) || "";
+// What people type that isn't in a zone's name: abbreviations and big cities that share another city's zone.
+const ALSO: Record<string, string> = {
+  UTC: "gmt", "Europe/London": "gmt bst", "America/New_York": "est edt eastern nyc", "America/Chicago": "cst cdt central",
+  "America/Denver": "mst mdt mountain", "America/Los_Angeles": "pst pdt pacific san francisco", "Asia/Kolkata": "ist india mumbai delhi bengaluru bangalore",
+  "Asia/Shanghai": "china beijing", "Asia/Jakarta": "wib", "Asia/Makassar": "wita bali", "Asia/Jayapura": "wit", "Asia/Tokyo": "jst",
+  "Asia/Seoul": "kst", "Europe/Paris": "cet cest", "Europe/Berlin": "cet cest", "Australia/Sydney": "aest aedt", "Asia/Karachi": "pkt",
+};
+/** A zone's current IANA name: the browser's own form of what it's given, then its newer name if it has been renamed
+    ("Europe/Kiev" and "Europe/Kyiv" are both "Europe/Kyiv"). A name the browser doesn't know comes back as it is. */
+function currentTimeZone(zone: string): string {
+  let listed = zone;
+  try { listed = new Intl.DateTimeFormat("en-US", { timeZone: zone }).resolvedOptions().timeZone || zone; } catch { /* not a zone */ }
+  return RENAMED[listed] || RENAMED[zone] || listed;
+}
+
 const part = (f: Intl.DateTimeFormat, d: Date) => f.formatToParts(d).find((p) => p.type === "timeZoneName")?.value || "";
 /** Every zone the browser knows (Intl.supportedValuesOf), with UTC, or a short list where it can't say. */
 export function allTimeZones(): string[] {
-  const list = typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : [];
-  return list.includes("UTC") ? list.slice() : ["UTC", ...list];
+  const list = typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone").map((z) => RENAMED[z] || z) : [];
+  return [...new Set(list.includes("UTC") ? list : ["UTC", ...list])];
 }
-/** A zone's city, offset and name at a moment, in a locale. null for a name the browser doesn't know. */
+/** A zone's city, offset and name at a moment, in a locale, under its current name. null for a name the browser doesn't know. */
 // Each zone's two formatters, made once per zone and language: building some 800 of them was most of a mount's time,
 // and every picker on the page, and every later mount, uses the same ones.
 // module state: a formatter is the same for every request (it holds only a zone and a language, nothing of a reader's).
@@ -48,6 +76,7 @@ const formatter = (locale: string, zone: string, timeZoneName: "longOffset" | "l
   return f;
 };
 export function timeZoneInfo(zone: string, locale: string, at: Date = new Date()): TimeZoneInfo | null {
+  zone = RENAMED[zone] || zone;
   let offsetPart: string, name: string;
   try {
     offsetPart = part(formatter("en-US", zone, "longOffset"), at);
@@ -70,14 +99,16 @@ export function timeZoneInfo(zone: string, locale: string, at: Date = new Date()
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZonePickerProps>("TimeZonePicker", function TimeZonePicker(props, ref) {
   // Everything else is Combobox's, which keeps its own props off the DOM.
-  const { zones, at, locale: ownLocale, className, ...rest } = props;
+  const { zones, at, locale: ownLocale, className, value, defaultValue, ...rest } = props;
+  // A value under an old or other spelling of a listed zone matches it ("Europe/Kiev", "Asia/Calcutta").
+  const canon = (v: string | null | undefined) => (typeof v === "string" && v ? currentTimeZone(v) : v);
   const locale = useLocale(ownLocale);
   const labels = useSettings(words).labels;
   // The reader's own zone, known only in the browser: read after hydrating, so the server's list matches.
   const [mine, setMine] = React.useState<string | null>(null);
-  React.useEffect(() => { try { setMine(new Intl.DateTimeFormat().resolvedOptions().timeZone || null); } catch { /* none */ } }, []);
+  React.useEffect(() => { try { const z = new Intl.DateTimeFormat().resolvedOptions().timeZone; setMine(z ? currentTimeZone(z) : null); } catch { /* none */ } }, []);
   const atTime = at == null ? null : new Date(at).getTime();
-  const zonesKey = zones ? zones.join(",") : "";
+  const zonesKey = zones ? [...new Set(zones.map(currentTimeZone))].join(",") : "";
   const infos = React.useMemo(() => {
     const moment = atTime == null ? new Date() : new Date(atTime);
     const collator = new Intl.Collator(locale);
@@ -101,7 +132,8 @@ export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZo
     if (!i || !t) return true;
     const m = /^(?:utc|gmt)?\s*([+\-−])\s*(\d{1,2})(?::?(\d{2}))?$/.exec(t);
     if (m) return i.offset === (m[1] === "+" ? 1 : -1) * (Number(m[2]) * 60 + Number(m[3] || 0));
-    return [i.city, i.name, i.zone.replace(/_/g, " "), i.offsetText].some((s) => fold(s).includes(t));
+    return [i.city, i.name, i.zone.replace(/_/g, " "), oldName(i.zone).replace(/_/g, " "), ALSO[i.zone] || "", i.offsetText].some((s) => s && fold(s).includes(t));
   }, [byZone]);
-  return <Combobox {...rest} ref={ref} className={cn("dk-time-zone-picker", className)} options={options} filter={filter} />;
+  return <Combobox {...rest} ref={ref} className={cn("dk-time-zone-picker", className)} options={options} filter={filter}
+    {...(value !== undefined ? { value: canon(value) } : null)} {...(defaultValue !== undefined ? { defaultValue: canon(defaultValue) } : null)} />;
 });
