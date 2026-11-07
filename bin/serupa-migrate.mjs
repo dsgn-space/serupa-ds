@@ -10,7 +10,9 @@
 // Each change is one breaking entry of the changelog that can be made without reading the code around it: a prop
 // renamed on one component, a type or a file renamed. What a script can't decide (a removed token with nothing to
 // put instead, a prop passed in an object rather than written on the tag) is listed at the end as file:line to
-// check by hand. The upgrade guide (docs/Upgrading.mdx) lists every breaking entry, made here or not.
+// check by hand, and a note-only change points at the lines a breaking entry touches when there is nothing to rename
+// (a class that moved to another stylesheet, a removed label). The upgrade guide (docs/Upgrading.mdx) lists every
+// breaking entry, made here or not, and the command ends by saying so.
 //
 // It reads the text, without a parser, so it needs nothing installed: a tag is found from its name to the `>` that
 // closes it, skipping what's inside {…} and quotes. It never touches node_modules, dist or build output.
@@ -76,6 +78,8 @@ export function main(argv) {
   const what = Object.entries(total).map(([k, v]) => `${k} ×${v}`).join(', ');
   console.log(changed ? `${changed} file${changed === 1 ? '' : 's'} ${write ? 'changed' : 'to change'} (${what}).${write ? '' : ' Run again with --write to change them.'}` : 'Nothing to change.');
   if (notes.length) console.log(`\nTo check by hand (${notes.length}):\n${notes.join('\n')}`);
+  // Some breaking changes can't be seen in code at all (a changed default, a new peer version), so say where they are.
+  if (transforms.length) console.log(`\nThis covers what a script can find. The Upgrading page in the docs (and the changelog's Breaking entries) lists every breaking change${from ? ` since ${major(from)}.x` : ''}, with what to do.`);
   return 0;
 }
 

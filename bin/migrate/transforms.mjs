@@ -95,6 +95,13 @@ export function removeProp(src, component, prop) {
   return { text: src, count: n };
 }
 
+// A utility class that 14.0.0 moved to utilities-extra.css, as written in a class list: with its variants (md:, hover:),
+// not part of a longer word, and not a CSS property (mask-image:). A gradient stop counts only with a value that is
+// clearly a color or a position (to-blue-500, from-transparent, via-[#fff], from-10%), since "to-" and "from-" are
+// common in other words.
+const STOP = '(?:from|via|to)-(?:(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\\d|(?:transparent|current|black|white|inherit)(?![\\w-])|\\[|\\(|\\d+%)';
+const MOVED = new RegExp(`(?<![\\w$./-])(?:[a-z0-9@[\\]-]+:)*-?(?:mask-[a-z0-9]|bg-(?:linear|radial|conic)(?![a-z])|${STOP})[^\\s"'\`{}<>]*(?<!:)(?![\\w-]*\\s*:)`, 'g');
+
 const lineOf = (src, index) => src.slice(0, index).split('\n').length;
 const notesFor = (src, re, message) => [...src.matchAll(re)].map((m) => ({ line: lineOf(src, m.index), message }));
 
@@ -160,6 +167,27 @@ export const TRANSFORMS = [
   },
   propRename('13.0.0', 'icon-button-hide-title', 'IconButton', 'noTitle', 'hideTitle'),
   propRename('13.0.0', 'table-hide-caption', 'Table', 'captionHidden', 'hideCaption'),
+  {
+    version: '14.0.0', id: 'utilities-extra', exts: [...CODE, ...MARKUP],
+    title: 'Masks and gradients (`mask-*`, `bg-linear-*`, `bg-radial*`, `bg-conic*`, `from-*`, `via-*`, `to-*`) move to `utilities-extra.css`',
+    run(src) {
+      // A file that imports or links the extra file already has them.
+      if (/utilities-extra\.css/.test(src)) return { text: src, count: 0, notes: [] };
+      const found = [...src.matchAll(MOVED)];
+      if (!found.length) return { text: src, count: 0, notes: [] };
+      const names = [...new Set(found.map((m) => m[0]))];
+      return { text: src, count: 0, notes: [{ line: lineOf(src, found[0].index),
+        message: `${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''} ${names.length === 1 ? 'is' : 'are'} no longer in bundle.css: import 'serupa-ds/utilities-extra.css' after the bundle (once, where the app imports it), or the masks and gradients don't show` }] };
+    },
+  },
+  {
+    version: '14.0.0', id: 'combobox-more-results', exts: ALL,
+    title: 'Combobox: the `moreResults` label and `.dk-combobox__more` are removed',
+    run: (src) => ({ text: src, count: 0, notes: [
+      ...notesFor(src, /\bmoreResults\b/g, 'the moreResults label is gone (Combobox now draws every match as you scroll): remove it from the labels you pass to <SerupaProvider labels>'),
+      ...notesFor(src, /\bdk-combobox__more\b/g, 'the "Keep typing to narrow" line is gone: remove this rule'),
+    ] }),
+  },
 ];
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);
