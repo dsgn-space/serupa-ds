@@ -476,6 +476,8 @@ describe('Slider at 320px (GM2)', () => {
 test('the value bubble writes its digits at one width, so it keeps its width as the number changes (GR162)', async () => {
   const widths: number[] = [];
   const screen = await render(<Slider aria-label="Volume" showValue value={11} />);
+  // The first bubble starts the text font loading: measure once it has, or the first width is the fallback font's.
+  await document.fonts.ready;
   for (const v of [11, 18, 41, 88]) {
     await screen.rerender(<Slider aria-label="Volume" showValue value={v} />);
     const bubble = document.querySelector('[role="slider"] > [aria-hidden] > span') as HTMLElement;
