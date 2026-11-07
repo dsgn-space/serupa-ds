@@ -1,0 +1,155 @@
+# GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
+# Light by default: the free plan's 400 compute minutes a month buy only about two runs of the full suite (about
+# 200 minutes each, since every parallel job counts), so merge requests and main run build, types and lint,
+# changeset, consumer and the local checks gate (tools/local-checks-gate.mjs: the description must hold a passing
+# tools/ci.mjs report for the commit). The suite and frameworks jobs run when a pipeline is started by hand
+# (Build > Pipelines > Run pipeline) or with SERUPA_FULL_CI=1.
+# Runs on merge request pipelines and on pushes to main, never twice for the same push.
+# - Merge requests test what they change (tools/test/run.mjs --since the MR's base), as GitHub's pull requests did;
+#   main tests everything after each merge.
+# - Every job runs in Playwright's Ubuntu 24.04 image (the fonts and system libraries Chromium needs, as GitHub's
+#   ubuntu-24.04 runners had them), and tools/setup.mjs adds the Node major devEngines asks for and the Chromium
+#   revision this Playwright pins. The image's own Node and browsers are only a starting point.
+# - build makes dist/ and storybook-static/ once; the test jobs take them as artifacts.
+# - The suite's groups run in parallel, with visual and storybook in four shards each (SERUPA_SHARD).
+# Not here: npm audit signatures needs nothing CI-only and runs in static; CodeQL, release and the nightly workflows
+# stay GitHub-only until the repo goes back (tools/tag-release.mjs tags versions meanwhile).
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "web"
+  # A new push cancels the pipeline for the push before it, and the first failed job cancels the rest of its
+  # pipeline: a red run stops spending CI minutes as soon as it's red.
+  auto_cancel:
+    on_new_commit: interruptible
+    on_job_failure: all
+
+stages: [build, test]
+
+variables:
+  # Matches Playwright's own image; tools/setup.mjs installs the pinned Chromium revision beside its browsers.
+  PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+  npm_config_cache: $CI_PROJECT_DIR/.npm
+  # Merge requests need the history back to their base for --since and the changeset check.
+  GIT_DEPTH: "0"
+
+default:
+  image: mcr.microsoft.com/playwright:v1.63.0-noble
+  interruptible: true
+  cache:
+    - key: { files: [package-lock.json] }
+      paths: [.npm/]
+      policy: pull-push
+    - key: node-and-chromium-v1
+      paths: [.ci-home/]
+  before_script:
+    # tools/setup.mjs keeps Node under $HOME/.local; a HOME inside the project lets the cache keep it between jobs.
+    - export HOME="$CI_PROJECT_DIR/.ci-home" && mkdir -p "$HOME"
+    # Playwright's image has no unzip, which tools/setup.mjs needs for Chrome for Testing's archives.
+    - command -v unzip >/dev/null || (apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null)
+    - node tools/setup.mjs
+    - export PATH="$(ls -d "$HOME"/.local/node-v*/bin | tail -1):$PATH" && node --version
+    - |
+      if [ "$CI_PIPELINE_SOURCE" = merge_request_event ]; then
+        git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+        export SINCE="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+      fi
+
+build:
+  stage: build
+  timeout: 20m
+  script:
+    - node tools/tokens/build.mjs --check
+    - npm run build
+    - npm run build-storybook
+  artifacts:
+    paths: [dist/, storybook-static/]
+    expire_in: 3 days
+
+types and lint:
+  stage: build
+  timeout: 20m
+  script:
+    - npm audit signatures
+    - node tools/release.mjs --check
+    - npm run typecheck
+    - npm run lint
+
+changeset:
+  stage: build
+  timeout: 10m
+  rules:
+    # A merge request that ships nothing new takes the "no-changeset" label, as on GitHub.
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-changeset(,|$)/
+  cache: []
+  before_script: []
+  script:
+    - git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - node tools/changeset-check.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+
+.full-suite:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
+
+local checks:
+  stage: build
+  timeout: 5m
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1"
+  cache: []
+  before_script: []
+  script:
+    - node tools/local-checks-gate.mjs
+
+suite:
+  extends: .full-suite
+  stage: test
+  needs: [build]
+  timeout: 30m
+  parallel:
+    matrix:
+      - GROUP: checks
+      - GROUP: components
+      - GROUP: [visual, storybook]
+        SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
+  variables:
+    SERUPA_COVERAGE: ""
+  script:
+    - if [ "$GROUP" = components ]; then export SERUPA_COVERAGE=1; fi
+    - set -o pipefail
+    - node tools/test/run.mjs --group "$GROUP" ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
+  after_script:
+    - if [ "$GROUP" = components ]; then node tools/test/vitest/coverage-summary.mjs || true; fi
+  artifacts:
+    when: on_failure
+    expire_in: 7 days
+    paths:
+      - test-output.txt
+      - .test-tmp/
+      - tools/test/baseline-visual/**/*.actual.png
+
+# The package installed into an empty project on the oldest Node package.json allows, and the one between
+# (tools/test/consumer.mjs). No npm ci: the repo's dependencies ask for Node 26, and the check needs only Node and dist/.
+consumer:
+  stage: test
+  needs: [build]
+  timeout: 10m
+  image: node:${NODE}
+  parallel:
+    matrix:
+      - NODE: ["22", "24"]
+  cache: []
+  before_script: []
+  script:
+    - node tools/test/consumer.mjs
+
+# The packed build in a Next.js, a React Router and an Astro app, rendered on the server and hydrated in Chromium.
+frameworks:
+  extends: .full-suite
+  stage: test
+  needs: [build]
+  timeout: 20m
+  script:
+    - node tools/test/frameworks.mjs

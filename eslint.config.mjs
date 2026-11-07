@@ -14,7 +14,7 @@ export default tseslint.config(
   // tools/skill-eval/results/ holds agents' answers as they wrote them, which the eval grades: not our code to lint.
   // tools/skill-eval/starts/ holds the files an eval task starts from, and reviews/ the changes the review eval
   // grades a review of: faults included on purpose.
-  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/', 'tools/skill-eval/results/', 'tools/skill-eval/starts/', 'tools/skill-eval/reviews/'] },
+  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/', '.ci-home/', '.npm/', 'tools/skill-eval/results/', 'tools/skill-eval/starts/', 'tools/skill-eval/reviews/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
