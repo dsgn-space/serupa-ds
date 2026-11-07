@@ -342,6 +342,16 @@ describe('CheckboxGroup', () => {
       await press(el('pd').closest('label')!, () => expect(css(box('pd')).scale).toBe('none'));
     });
   });
+  test('the fill eases only under the pointer or focus; a box changed from elsewhere changes at once, so select all on 1,000 rows starts no transitions (GR168)', async () => {
+    await withMotion(async () => {
+      await render(<><Checkbox id="far">Far</Checkbox><Checkbox id="near">Near</Checkbox></>);
+      const input = (id: string) => document.getElementById(id) as HTMLElement;
+      expect(css(input('far')).transitionDuration.split(', ').every((d) => d === '0s')).toBe(true);
+      await userEvent.hover(input('near').closest('label')!);
+      expect(css(input('near')).transitionProperty).toBe('background-color, border-color');
+      expect(css(input('far')).transitionDuration.split(', ').every((d) => d === '0s')).toBe(true);
+    });
+  });
   test('server markup: an indeterminate box, and a select-all box with some checked, show the dash on the fill before the script runs; once it runs, the native state takes over (GI3)', async () => {
     const tree = <><Checkbox id="ssr-m" indeterminate>Some</Checkbox>
       <CheckboxGroup aria-label="Toppings" defaultValue={['ham']}><Checkbox id="ssr-all" selectAll>All</Checkbox><Checkbox value="ham">Ham</Checkbox><Checkbox value="cheese">Cheese</Checkbox></CheckboxGroup></>;
