@@ -72,6 +72,13 @@ describe('Sidebar', () => {
       .toEqual([true, true, true, '#router/r', 'page', 'BUTTON']);
   });
 
+  test('in a container narrower than its width (320 px at 125% text), it fits the container instead of overflowing it', async () => {
+    await render(<div id="narrow" style={{ width: 200, height: 300, display: 'flex' }}><Sidebar id="sbn" aria-label="Main"><I href="#a" label="Inbox" /></Sidebar></div>);
+    const nav = document.getElementById('sbn')!;
+    expect(nav.getBoundingClientRect().width).toBeLessThanOrEqual(200);
+    expect(document.getElementById('narrow')!.scrollWidth).toBeLessThanOrEqual(200);
+  });
+
   test('a <nav aria-label="Main">, 256px wide, the parent\'s height, a 1px inner edge; refs and props reach it', async () => {
     const sref = React.createRef<HTMLElement>(), iref = React.createRef<HTMLAnchorElement>();
     await render(<App sref={sref} iref={iref} />);
@@ -482,5 +489,19 @@ describe('Sidebar', () => {
     await userEvent.click(el('gfix'));
     expect(el('gfix').getAttribute('aria-expanded')).toBe('true');
     expect(calls).toEqual([[true, 'trigger'], [false, 'trigger']]);
+  });
+  test('a label cut with an ellipsis shows in full as the item\'s title (GR117); a short one, a title of its own and the rail have none', async () => {
+    const long = 'Benachrichtigungseinstellungen und Datenschutz';
+    const { rerender } = await render(<div style={{ height: 600 }}><Sidebar aria-label="Cut">
+      <S><I id="long" href="#a" icon="settings" label={long} /><I id="short" href="#b" icon="home" label="Home" /><I id="own" href="#c" icon="mail" label={long} title="Mine" />
+        <I id="grp" icon="folder" label={long}><I href="#d" label="Child" /></I></S>
+    </Sidebar></div>);
+    await settled();
+    expect([el('long').title, el('short').getAttribute('title'), el('own').title, el('grp').title]).toEqual([long, null, 'Mine', long]);
+    await rerender(<div style={{ height: 600 }}><Sidebar aria-label="Cut" collapsed>
+      <S><I id="long" href="#a" icon="settings" label={long} /></S>
+    </Sidebar></div>);
+    await settled();
+    expect(el('long').getAttribute('title')).toBe(null);
   });
 });
