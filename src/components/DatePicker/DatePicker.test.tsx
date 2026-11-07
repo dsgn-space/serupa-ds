@@ -330,7 +330,7 @@ describe('DatePicker: motion (DZ1)', () => {
       expect(el('ds2').value).toBe('');
       expect(said()).toEqual([expect.stringMatching(/DatePicker: "2026-02-31" is not a day of the calendar/)]);
       await render(<><DatePicker id="ds3" aria-label="C" value="tomorrow" onValueChange={() => {}} /><Calendar aria-label="D" value="2026-13-01" /></>);
-      expect(said()).toEqual([expect.anything(), expect.stringMatching(/Calendar: "2026-13-01" isn't a "yyyy-mm-dd" day/)]);
+      expect(said()).toEqual([expect.anything(), expect.stringMatching(/Calendar: "2026-13-01" is not a day of the calendar/)]);
     } finally { warn.mockRestore(); }
   });
 });
