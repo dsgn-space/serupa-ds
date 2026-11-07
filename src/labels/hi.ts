@@ -88,7 +88,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "ले जाएँ",
   kanbanInstructions: "उठाने के लिए Space, कॉलम के भीतर और बीच ले जाने के लिए तीर कुंजियाँ, रखने के लिए फिर से Space, या रद्द करने के लिए Escape दबाएँ।",
   kanbanMoveTo: (card) => card + " को यहाँ ले जाएँ…",
-  kanbanCount: (count, limit) => n(count) + " में से " + n(limit),
+  kanbanCount: (count, limit) => count + " में से " + limit,
   kanbanOverLimit: "सीमा से अधिक",
   kanbanGrabbed: (card, column, p, t) => card + " उठाया गया।" + " " + column + ", स्थान " + n(p) + " में से " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", स्थान " + n(p) + " में से " + n(t) + ".",

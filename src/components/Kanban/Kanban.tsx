@@ -284,7 +284,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
               <H className="dk-kanban__title" id={titleId}>{col.title}</H>
               <span className={cn("dk-kanban__count", over && "dk-kanban__count--over")}>
                 {over ? <Icon icon={icons.Warning} /> : null}
-                {col.limit == null ? displayNumber(count, locale) : L.kanbanCount(count, col.limit)}
+                {col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
                 {over ? <span className="dk-kanban__over">{L.kanbanOverLimit}</span> : null}
               </span>
             </div>

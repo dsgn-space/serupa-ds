@@ -91,7 +91,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "이동",
   kanbanInstructions: "Space로 집고, 화살표 키로 열 안과 열 사이를 옮기고, 다시 Space로 놓거나 Escape로 취소하세요.",
   kanbanMoveTo: (card) => card + " 이동 위치…",
-  kanbanCount: (count, limit) => n(count) + " / " + n(limit),
+  kanbanCount: (count, limit) => count + " / " + limit,
   kanbanOverLimit: "한도 초과",
   kanbanGrabbed: (card, column, p, t) => card + "을(를) 집었습니다." + " " + column + ", 위치 " + n(p) + " / " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", 위치 " + n(p) + " / " + n(t) + ".",

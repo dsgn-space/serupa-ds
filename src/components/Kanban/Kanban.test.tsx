@@ -39,9 +39,12 @@ describe('Kanban', () => {
   });
 
   test('each column shows its count; over its limit it says "Over limit" in words; an empty column says "No cards"', async () => {
-    await render(<Board start={[...START().slice(0, 2), { id: 'done', title: 'Done', items: [] }].map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c)} />);
-    const counts = columns().map((c) => count(c).textContent);
-    expect(counts).toEqual(['3', '2 of 1Over limit', '0']);
+    const start = [...START().slice(0, 2), { id: 'done', title: 'Done', items: [] }].map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c);
+    const { rerender } = await render(<SerupaProvider locale="en-US"><Board start={start} /></SerupaProvider>);
+    expect(columns().map((c) => count(c).textContent)).toEqual(['3', '2 of 1Over limit', '0']);
+    // Every number in the locale's digits, the ones in "2 of 1" too (the label gets them written already).
+    await rerender(<SerupaProvider locale="ar-EG"><Board start={start} /></SerupaProvider>);
+    await expect.poll(() => columns().map((c) => count(c).textContent)).toEqual(['٣', '٢ of ١Over limit', '٠']);
     expect(document.querySelector('li:not([data-key])')!.textContent).toBe('No cards');
   });
 
@@ -169,7 +172,7 @@ describe('Kanban', () => {
   });
 
   test('its words come from the labels', async () => {
-    await render(<SerupaProvider labels={idLabels}><Board /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Board /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Pindahkan Alpha', exact: true })).toBeVisible();
     expect(count(columns()[1]).textContent).toBe('1 dari 1');
   });

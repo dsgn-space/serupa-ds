@@ -6,8 +6,8 @@ export interface KanbanLabels {
   kanbanInstructions: string;
   /** Kanban: the "Move to…" menu button's name, given the card ("Move Fix login to…"), and the menu's heading. */
   kanbanMoveTo: (card: string) => string;
-  /** Kanban: a column's count against its limit ("3 of 5"). A column without a limit shows its count alone, in the locale's digits. */
-  kanbanCount: (count: number, limit: number) => string;
+  /** Kanban: a column's count against its limit ("3 of 5"), both already written in the locale's digits. A column without a limit shows its count alone. */
+  kanbanCount: (count: string, limit: string) => string;
   kanbanOverLimit: string;
   /** Kanban: what's said as a card is picked up, moved, dropped or put back. */
   kanbanGrabbed: (card: string, column: string, position: number, total: number) => string;

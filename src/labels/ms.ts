@@ -89,7 +89,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Alih",
   kanbanInstructions: "Tekan Space untuk mengangkatnya, kekunci anak panah untuk mengalihkannya dalam dan antara lajur, Space lagi untuk meletakkannya, atau Escape untuk batal.",
   kanbanMoveTo: (card) => "Alih " + card + " ke…",
-  kanbanCount: (count, limit) => n(count) + " daripada " + n(limit),
+  kanbanCount: (count, limit) => count + " daripada " + limit,
   kanbanOverLimit: "Melebihi had",
   kanbanGrabbed: (card, column, p, t) => card + " diangkat." + " " + column + ", kedudukan " + n(p) + " daripada " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", kedudukan " + n(p) + " daripada " + n(t) + ".",

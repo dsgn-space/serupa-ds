@@ -89,7 +89,7 @@ export const labels: SerupaLabels = {
   kanbanMove: "Di chuyển",
   kanbanInstructions: "Nhấn Space để nhấc lên, phím mũi tên để di chuyển trong và giữa các cột, Space lần nữa để thả, hoặc Escape để hủy.",
   kanbanMoveTo: (card) => "Chuyển " + card + " đến…",
-  kanbanCount: (count, limit) => n(count) + " / " + n(limit),
+  kanbanCount: (count, limit) => count + " / " + limit,
   kanbanOverLimit: "Vượt giới hạn",
   kanbanGrabbed: (card, column, p, t) => "Đã nhấc " + card + "." + " " + column + ", vị trí " + n(p) + " / " + n(t) + ".",
   kanbanMoved: (card, column, p, t) => card + ", " + column + ", vị trí " + n(p) + " / " + n(t) + ".",
