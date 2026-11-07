@@ -97,7 +97,7 @@ describe('TimePicker', () => {
     await fill('tpi', 'lunch');
     await fill('tpi', '22:00');
     expect([el('tpi').value, calls]).toEqual(['09:00', ['lunch:unreadable', '22:00:unavailable']]);
-    await expect.poll(() => announcerA()?.textContent).toContain('“22:00” wasn\'t accepted');
+    await expect.poll(() => announcerA()?.textContent).toContain('“22:00” wasn’t accepted');
   });
 
   test('a role="combobox" field (aria-haspopup="listbox", collapsed) in a dk-input box, labelled by Field; a "Choose a time" clock button out of the tab order; ref and className', async () => {

@@ -102,9 +102,9 @@ describe('FileUpload', () => {
     expect(list(el)).toEqual(['photo.png 2 kB image', 'report.pdf 768 kB picture_as_pdf']);
     await expect.poll(() => [...input(el).files!].map((f) => f.name).join()).toBe('photo.png,report.pdf');
     await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2_000_000), file('photo.png', 'image/png', 2048)]);
-    expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn\'t an image or PDF. / huge.png is larger than 1 MB. / photo.png is already added.', 'type,size,duplicate']);
+    expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn’t an image or PDF. / huge.png is larger than 1 MB. / photo.png is already added.', 'type,size,duplicate']);
     await userEvent.upload(input(el), [file('a.jpg', 'image/jpeg', 100), file('b.jpg', 'image/jpeg', 100)]);
-    expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn\'t added: up to 3 files.']);
+    expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn’t added: up to 3 files.']);
   });
 
   test('N9: pasting files with focus on the choose button adds them, checked like dropped ones; a paste with no files, or read-only, adds nothing', async () => {
@@ -122,7 +122,7 @@ describe('FileUpload', () => {
     choose(el).focus();
     expect(paste(choose(el), file('image.png', 'image/png', 40), file('notes.txt', 'text/plain', 10))).toBe(true);
     await expect.poll(() => names(el)).toBe('image.png');
-    expect([input(el).files!.length, errs(el)]).toEqual([1, 'alert: notes.txt isn\'t an image or PDF.']);
+    expect([input(el).files!.length, errs(el)]).toEqual([1, 'alert: notes.txt isn’t an image or PDF.']);
     expect(paste(choose(el))).toBe(false);
     expect(names(el)).toBe('image.png');
     const ro = rootOf('ro');
@@ -353,7 +353,7 @@ describe('FileUpload', () => {
       await userEvent.upload(input(rootOf(id)), [file('photo.heic', 'image/heic', 10)]);
       msgs.push(errs(rootOf(id))!);
     }
-    expect(msgs).toEqual(['alert: photo.heic isn\'t a PNG or JPG.', 'alert: photo.heic isn\'t an SVG.', 'alert: photo.heic isn\'t an audio file or MP4.', 'alert: photo.heic: this type of file isn\'t accepted.']);
+    expect(msgs).toEqual(['alert: photo.heic isn’t a PNG or JPG.', 'alert: photo.heic isn’t an SVG.', 'alert: photo.heic isn’t an audio file or MP4.', 'alert: photo.heic: this type of file isn’t accepted.']);
   });
   test('L8E12: accept takes the names a file picker treats as one: .jpg lets photo.jpeg in, image/jpg a JPEG, .tiff a .tif', async () => {
     await render(<><FileUpload id="ax" multiple accept=".jpg,.tiff" /><FileUpload id="am" multiple accept="image/jpg" /></>);
@@ -504,7 +504,7 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     const first = rootOf('fr').querySelector('[role=alert]');
     await userEvent.upload(input(rootOf('fr')), [file('a.pdf', 'application/pdf', 10)]);
     const second = rootOf('fr').querySelector('[role=alert]');
-    expect([errs(rootOf('fr')), second !== first, first!.isConnected]).toEqual(['alert: a.pdf isn\'t a PNG.', true, false]);
+    expect([errs(rootOf('fr')), second !== first, first!.isConnected]).toEqual(['alert: a.pdf isn’t a PNG.', true, false]);
   });
 });
 
