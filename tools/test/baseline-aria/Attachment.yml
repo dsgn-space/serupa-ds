@@ -1,0 +1,61 @@
+# Disabled
+- text: Invoice March 2026.pdf PDF 1.5 MB
+- button "Remove Invoice March 2026.pdf" [disabled]
+- text: Pitch.pptx Slides 13 MB Upload failed
+- button "Try again Pitch.pptx" [disabled]: Try again
+- button "Remove Pitch.pptx" [disabled]
+
+# InARow
+- list:
+  - listitem:
+    - text: Contract signed.pdf PDF 240 kB
+    - button "Remove Contract signed.pdf"
+  - listitem:
+    - text: Site photo.jpg Image 240 kB
+    - button "Remove Site photo.jpg"
+  - listitem:
+    - text: Q3 budget.xlsx Spreadsheet 240 kB
+    - button "Remove Q3 budget.xlsx"
+  - listitem:
+    - text: Notes.docx Document 240 kB
+    - button "Remove Notes.docx"
+
+# Kinds
+- text: Contract signed.pdf PDF 482 kB Site photo.jpg Image 3.4 MB Q3 budget.xlsx Spreadsheet 88 kB Meeting notes.docx Document 24 kB Pitch.pptx Slides 13 MB Assets.zip Archive 48 MB checkout.tsx Code 6.2 kB Voice note.m4a Audio 920 kB Demo.mp4 Video 210 MB backup.bin File 512 byte scan-0042 PDF Floor plan Image
+
+# Linked
+- link "Invoice March 2026.pdf":
+  - /url: "#invoice"
+- text: PDF 1.5 MB
+- link "Q3 budget.xlsx":
+  - /url: "#budget"
+- text: Spreadsheet 88 kB
+- button "Remove Q3 budget.xlsx"
+
+# LongText
+- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung-2026.pdf PDF 1.5 MB
+- button "Remove Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung-2026.pdf"
+- link "Laporan keuangan triwulan ketiga PT Sumber Makmur Sejahtera 2026 final revisi.xlsx":
+  - /url: "#x"
+- text: Spreadsheet 88 kB 🎉 Ulang tahun.jpg Image 2 MB The server took too long to answer. Check your connection and try once more.
+- button "Try again 🎉 Ulang tahun.jpg": Try again
+- button "Remove 🎉 Ulang tahun.jpg"
+- text: تقرير.pdf PDF 1 kB a File
+
+# Playground
+- text: Invoice March 2026.pdf PDF 1.5 MB
+- button "Remove Invoice March 2026.pdf"
+
+# Upload
+- text: Site photo.jpg Image 3.4 MB
+- progressbar "Site photo.jpg"
+- button "Remove Site photo.jpg"
+- text: Assets.zip Archive 48 MB
+- progressbar "Assets.zip"
+- button "Remove Assets.zip"
+- text: Demo.mp4 Video 210 MB Larger than 100 MB
+- button "Remove Demo.mp4"
+- text: Pitch.pptx Slides 13 MB Upload failed
+- button "Try again Pitch.pptx": Try again
+- button "Remove Pitch.pptx"
+

@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Attachment — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement, F = React.Fragment;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(F, null,
+    h(T.Attachment, { name: 'Invoice March 2026.pdf', bytes: 1482000, href: '#invoice', onRemove: function () {} }),
+    h(T.Attachment, { name: 'Site photo.jpg', bytes: 3400000, progress: 45 }),
+    h(T.Attachment, { name: 'Pitch.pptx', bytes: 12600000, error: true, onRetry: function () {} })));
+</script>
+</body>
+</html>

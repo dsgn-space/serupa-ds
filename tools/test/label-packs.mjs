@@ -47,16 +47,20 @@ const SAMPLES = {
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
 const SILENT_IN_ENGLISH = new Set(['invalidValue']);
 // Words that are often the same in another language (a brand, an abbreviation, a loanword).
-const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint']);
+const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf']);
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
-  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName'],
-  es: ['generalShortcuts'],
-  ms: ['edit'],
-  nl: ['sliderMaximum', 'codeName'],
-  sv: ['sliderMaximum', 'colorName'],
-  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName'],
+  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
+  es: ['generalShortcuts', 'attachmentAudio'],
+  ms: ['edit', 'attachmentAudio', 'attachmentVideo'],
+  nl: ['sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
+  sv: ['sliderMaximum', 'colorName', 'attachmentVideo'],
+  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName', 'attachmentImage', 'attachmentDoc', 'attachmentArchive', 'attachmentCode', 'attachmentAudio'],
+  it: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],
+  id: ['attachmentAudio', 'attachmentVideo'],
+  tr: ['attachmentVideo'],
+  vi: ['attachmentVideo'],
 };
 const sameOk = (l, k) => SAME_OK.has(k) || (SAME_IN[l] || []).includes(k);
 
