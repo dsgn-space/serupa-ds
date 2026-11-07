@@ -255,7 +255,13 @@ export function withDependents(names) {
   const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
     .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
   const folders = [...dirs.keys()];
-  const code = new Map(folders.map((n) => [n, imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f))]));
+  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .dk-input box, Fab
+  // reads .dk-navbar--sticky. "dk-date-picker__x" is DatePicker's; a class no component is named after counts for none.
+  const kebab = new Map(folders.map((n) => [n.replace(/[A-Z]/g, (c, i) => (i ? '-' : '') + c.toLowerCase()), n]));
+  const classes = (n) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.(tsx?|css)$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => kebab.get(m[1])))
+    .filter((c) => c && c !== n));
+  const code = new Map(folders.map((n) => [n, new Set([...imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f)), ...classes(n)])]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));
   const all = new Set(names);
   for (let grew = true; grew;) {

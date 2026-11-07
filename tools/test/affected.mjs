@@ -40,6 +40,10 @@ t('a new component\'s added lines in shared files cover only it', list(affectedC
 t('a component\'s tokens file is that component\'s (avatar-group is AvatarGroup)', list(affectedComponents(['design-tokens/components/avatar-group.tokens.json'])) === 'AvatarGroup');
 for (const row of ['2\t1\tsrc/labels/en.ts', '0\t3\tsrc/index.ts', '-\t-\tsrc/material/named.ts']) t(`a shared file with a line removed or changed (${row.replace(/\t/g, ' ')}) still tests everything`, affectedComponents(scopeFiles(row)) === null);
 
+// GR192: a component that draws with another's classes counts as using it.
+const input = withDependents(new Set(['Input'])), navbar = withDependents(new Set(['Navbar']));
+t('Input brings DatePicker and DateRangePicker (they use .dk-input), and Navbar brings Fab (.dk-navbar--sticky)', input.has('DatePicker') && input.has('DateRangePicker') && navbar.has('Fab'), `${list(input)}; ${list(navbar)}`);
+
 // A story that fails once is tried again on its own, and one that fails twice stays failed.
 {
   const seen = new Map();
