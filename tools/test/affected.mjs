@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, folderOf, internalTestsFor, withDependents, report, done } from './lib.mjs';
+import { affectedComponents, folderOf, inParallelRetry, internalTestsFor, scopeFiles, withDependents, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -32,5 +32,21 @@ t('a component brings the blocks and patterns that use it (Heading: Checkout, St
 t('each name runs its own folder\'s tests, and an Introduction page none', folderOf('Checkout') === 'src/patterns/Checkout/' && folderOf('StatsRow') === 'src/blocks/StatsRow/' && folderOf('Meter') === 'src/components/Meter/' && folderOf('Introduction.mdx') === null);
 const shared = internalTestsFor(new Set(['LoadMore']));
 t('a component brings the shared src/internal tests that render it (LoadMore: announceContract), not the others', shared.includes('src/internal/announceContract.test.tsx') && !shared.includes('src/internal/typeahead.test.tsx'), shared.join(', '));
+
+// A new component adds lines to shared files (its labels in every language, its icons, its export) and a case to a
+// shared test: with nothing removed there, only its own folder decides what runs.
+const added = scopeFiles(['3\t0\tsrc/labels/en.ts', '3\t0\tsrc/labels/id.ts', '4\t0\tsrc/material/named.ts', '1\t0\tsrc/index.ts', '3\t2\tsrc/internal/labels.test.tsx', '40\t0\tsrc/components/Attachment/Attachment.tsx', '12\t0\tdesign-tokens/components/attachment.tokens.json', '8\t0\ttools/test/baseline-aria/Attachment.yml', '9\t0\ttools/test/baseline-server/Attachment.html'].join('\n'));
+t('a new component\'s added lines in shared files cover only it', list(affectedComponents(added)) === 'Attachment', `${added.join(', ')} -> ${list(affectedComponents(added))}`);
+t('a component\'s tokens file is that component\'s (avatar-group is AvatarGroup)', list(affectedComponents(['design-tokens/components/avatar-group.tokens.json'])) === 'AvatarGroup');
+for (const row of ['2\t1\tsrc/labels/en.ts', '0\t3\tsrc/index.ts', '-\t-\tsrc/material/named.ts']) t(`a shared file with a line removed or changed (${row.replace(/\t/g, ' ')}) still tests everything`, affectedComponents(scopeFiles(row)) === null);
+
+// A story that fails once is tried again on its own, and one that fails twice stays failed.
+{
+  const seen = new Map();
+  const check = async (id) => { seen.set(id, (seen.get(id) || 0) + 1); return [{ name: id, ok: id === 'steady' || (id === 'flaky' && seen.get(id) > 1) }]; };
+  const log = console.log; console.log = () => {};
+  const out = await inParallelRetry(['steady', 'flaky', 'broken'], [0, 1], check, (x) => x).finally(() => { console.log = log; });
+  t('a failed story is tried once more: a flake passes, a real failure stays', out.map((r) => r[0].ok).join() === 'true,true,false' && seen.get('steady') === 1 && seen.get('broken') === 2, JSON.stringify([...seen]));
+}
 
 done(report('Affected components', R));

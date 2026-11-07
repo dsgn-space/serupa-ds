@@ -23,7 +23,7 @@
 // touches only components (SERUPA_ONLY), since a component can't change them.
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
+import { HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
@@ -235,7 +235,8 @@ async function checkStory(e, page) {
   }
   return out;
 }
-R.push(...(await inParallel(stories, pages, checkStory)).flat());
+// A story that fails is shot once more (not with --update, which writes what it shoots).
+R.push(...(await (update ? inParallel(stories, pages, checkStory) : inParallelRetry(stories, pages, checkStory, (e) => e.id))).flat());
 
 // The token sheets: each Foundations page, one picture per data-token-sheet element.
 const sheetPages = shard === 1 && !only ? Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
