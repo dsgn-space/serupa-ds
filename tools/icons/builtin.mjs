@@ -30,7 +30,7 @@ export function builtin() {
       if (e.isDirectory()) { if (e.name !== 'material') scan(f); continue; }
       if (!/\.tsx?$/.test(e.name) || /\.(stories|test)\./.test(e.name)) continue;
       const src = fs.readFileSync(f, 'utf8');
-      if (!/import \* as icons from "[./]+material\/builtin"/.test(src)) continue;
+      if (!/import \* as icons from ["'][./]+material\/builtin["']/.test(src)) continue;
       for (const m of src.matchAll(/\bicons\.([A-Z]\w*)/g)) {
         if (icons.has(m[1])) keep.add(m[1]);
         else unknown.push(`${path.relative(P, f)}: icons.${m[1]} isn't a Material Symbol`);

@@ -74,13 +74,14 @@ const tone = (s) => [...(s.includes('!') ? ['"!"'] : []), ...[...s.matchAll(PLEA
 const shortStop = (s) => /^[^.!?]+\.$/.test(s) && s.trim().split(/\s+/).length <= 3;
 for (const f of labelFiles) {
   const code = fs.readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
-  for (const [, s] of code.matchAll(/"((?:[^"\\\n]|\\.)*)"/g)) {
+  // Single or double quotes: double only where the text holds an apostrophe (the lint's quotes rule).
+  for (const [, , s] of code.matchAll(/(["'])((?:(?!\1)[^\\\n]|\\.)*)\1/g)) {
     strings++;
     for (const w of [...hits(rel(f), s, WORDS), ...hits(rel(f), s, POINTING)]) said.push(`${rel(f)} "${s}" (${w})`);
     for (const w of tone(s)) toneHits.push(`${rel(f)} "${s}" (${w})`);
   }
   // A label that's a name, not a sentence: a property set straight to a short string.
-  for (const [, key, s] of code.matchAll(/^\s+(\w+): "((?:[^"\\\n]|\\.)*)",?\s*$/gm)) if (shortStop(s)) toneHits.push(`${rel(f)} ${key}: "${s}" (full stop)`);
+  for (const [, key, , s] of code.matchAll(/^\s+(\w+): (["'])((?:(?!\2)[^\\\n]|\\.)*)\2,?\s*$/gm)) if (shortStop(s)) toneHits.push(`${rel(f)} ${key}: "${s}" (full stop)`);
 }
 t(`the labels (${labelFiles.length} files, ${strings} strings) name things, not their shape, color, position or sound, and leave out "just" and the rest`, !said.length && strings > 100,
   strings <= 100 ? `only ${strings} strings found: the labels.ts files moved or changed shape` : said.join('; '));
