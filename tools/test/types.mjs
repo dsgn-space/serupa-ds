@@ -53,7 +53,8 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // Chart (CH2, 2 Nov 2026), a new component with typed series, takes them to 228,644, so 229,500.
 // TimeZonePicker (56, 6 Nov 2026), a new component over Combobox's props, takes them to 229,672, so 229,800.
 // Chat (RU4, 7 Nov 2026), a new component, takes them to 230,647, so 231,000.
-const BUDGET = { Types: 101000, Instantiations: 231000 };
+// Kanban (RU1, 7 Nov 2026), a new component generic over its card type, takes them to 231,542, so 232,000.
+const BUDGET = { Types: 101000, Instantiations: 232000 };
 const diag = built && spawnSync(process.execPath, [tsc, '-p', path.join(HERE, 'types'), '--extendedDiagnostics'], { cwd: PROJECT, encoding: 'utf8' });
 for (const [what, budget] of Object.entries(BUDGET)) {
   const n = diag ? Number((diag.stdout.match(new RegExp(`^${what}:\\s+(\\d+)`, 'm')) || [])[1]) : NaN;

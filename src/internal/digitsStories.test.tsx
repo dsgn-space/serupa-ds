@@ -40,6 +40,7 @@ const LATIN: Record<string, string> = {
   // A label pack's text (the provider's labels, English and Indonesian) is the app's words: an app with an Arabic
   // pack writes its own digits there.
   ErrorSummary: 'the title is the label pack\'s errorSummaryTitle(n)', Stepper: "the compact summary is the label pack's stepOf(n, total)", Tour: "the step count is the label pack's stepOf(n, total), as Stepper's",
+  Kanban: "a count against a limit is the label pack's kanbanCount(count, limit), as Stepper's (a count alone uses the locale's digits)",
 };
 // What still writes ASCII digits, until its fix lands. None now.
 const KNOWN = new Set<string>([]);

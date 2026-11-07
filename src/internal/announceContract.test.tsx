@@ -27,6 +27,7 @@ import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
+import { Kanban } from '../components/Kanban/Kanban';
 import { SortableList } from '../components/SortableList/SortableList';
 import { Splitter } from '../components/Splitter/Splitter';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../components/Table/Table';
@@ -95,6 +96,9 @@ const SITES: Record<string, Site> = {
   'SortableList: picking an item up with Space': {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
+  'Kanban: picking a card up with Space': {
+    ui: () => <Kanban aria-label="Board" columns={[{ id: 'a', title: 'To do', items: ITEMS }, { id: 'b', title: 'Done', items: [] }]} getKey={(t) => t.id} getLabel={(t) => t.name} renderCard={(t) => t.name} onMove={() => {}} />,
+    act: async () => { $('button[aria-label="Move Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*To do.*2.*3/ },
   'Splitter: a press on the handle that starts placing it': {
     ui: () => <Splitter style={{ width: '400px', height: '100px' }}><p>Start</p><p>End</p></Splitter>,
     act: async () => { await userEvent.click($('[role=separator]')); }, says: /Press where the handle should go/ },
