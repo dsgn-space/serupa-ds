@@ -1,0 +1,19 @@
+/* ---------------------------------------------------------------
+   TableOfContents: a small muted title, then a list of links in text-sm, each 28px tall at least, with a 2px line
+   along its start edge. Deeper entries step in 12px a level. The current section's link is in the text color and
+   medium weight, its line in primary; the others are muted, darkening under the pointer.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-toc { font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--table-of-contents-muted, var(--text-muted)); }
+.dk-toc__title { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); color: var(--table-of-contents-title, var(--text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-semibold); }
+.dk-toc__list { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.dk-toc__link {
+  display: flex; align-items: center; min-block-size: var(--spacing-7); padding-block: var(--spacing-1); padding-inline: calc(var(--spacing-3) + var(--spacing-3) * var(--dk-toc-depth, 0)) var(--spacing-2);
+  border-inline-start: var(--border-width-2) solid var(--table-of-contents-line, var(--border)); color: inherit; text-decoration: none; overflow-wrap: anywhere;
+  transition: color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
+}
+@media (hover: hover) { .dk-toc__link:hover { color: var(--table-of-contents-title, var(--text)); } }
+.dk-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
+.dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); font-weight: var(--font-medium); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
+@media (forced-colors: active) { .dk-toc__link[aria-current="location"] { border-inline-start-color: Highlight; } }
+}

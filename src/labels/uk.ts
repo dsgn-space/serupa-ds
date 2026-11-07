@@ -118,6 +118,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Прибрати фільтр: ' + field,
   filterDone: 'Готово',
   filterResults: (count) => (count === 1 ? '1 результат' : 'Результатів: ' + n(count)),
+  tocTitle: 'На цій сторінці',
   discardTitle: 'Скасувати зміни?',
   discardDescription: 'Зміни тут не збережено.',
   discard: 'Скасувати зміни',

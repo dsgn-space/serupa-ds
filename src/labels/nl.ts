@@ -113,6 +113,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Filter verwijderen: ' + field,
   filterDone: 'Klaar',
   filterResults: (count) => (count === 1 ? '1 resultaat' : n(count) + ' resultaten'),
+  tocTitle: 'Op deze pagina',
   discardTitle: 'Wijzigingen weggooien?',
   discardDescription: 'Wat je hier hebt gewijzigd, is nog niet opgeslagen.',
   discard: 'Weggooien',

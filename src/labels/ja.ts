@@ -112,6 +112,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'フィルターを削除: ' + field,
   filterDone: '完了',
   filterResults: (count) => (count === 1 ? '1 件の結果' : n(count) + ' 件の結果'),
+  tocTitle: 'このページの内容',
   discardTitle: '変更を破棄しますか？',
   discardDescription: 'ここでの変更はまだ保存されていません。',
   discard: '破棄',

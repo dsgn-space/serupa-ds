@@ -113,6 +113,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Ta bort filter: ' + field,
   filterDone: 'Klar',
   filterResults: (count) => (count === 1 ? '1 resultat' : n(count) + ' resultat'),
+  tocTitle: 'På den här sidan',
   discardTitle: 'Vill du ignorera ändringarna?',
   discardDescription: 'Det du har ändrat här är inte sparat.',
   discard: 'Ignorera',

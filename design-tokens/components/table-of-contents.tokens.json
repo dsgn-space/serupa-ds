@@ -1,0 +1,67 @@
+{
+  "table-of-contents": {
+    "$description": "TableOfContents's component tokens. Each one is an optional override: set the CSS variable (--table-of-contents-<name>) on the page, a container or one TableOfContents, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The links (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-muted"
+          }
+        }
+      },
+      "title": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The title, and a link under the pointer (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-title"
+          }
+        }
+      },
+      "current": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The current section's link (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-current"
+          }
+        }
+      },
+      "line": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line along the links.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-line"
+          }
+        }
+      },
+      "line-current": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The line beside the current section's link (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-line-current"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a focused link.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-focus-ring"
+          }
+        }
+      }
+    }
+  }
+}

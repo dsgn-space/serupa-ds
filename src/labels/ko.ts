@@ -115,6 +115,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => '필터 삭제: ' + field,
   filterDone: '완료',
   filterResults: (count) => (count === 1 ? '결과 1개' : '결과 ' + n(count) + '개'),
+  tocTitle: '이 페이지의 내용',
   discardTitle: '변경 사항을 버릴까요?',
   discardDescription: '여기서 바꾼 내용은 아직 저장되지 않았습니다.',
   discard: '버리기',
