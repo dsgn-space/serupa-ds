@@ -48,6 +48,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
   const focus = React.useRef<'detail' | string | null>(null);
   const open = messages.find((m) => m.id === picked) || (wide ? messages[0] : undefined);
 
+  // every render: a focus asked for by a handler (focus) moves once the render it caused is on screen.
   React.useEffect(() => {
     const to = focus.current;
     focus.current = null;
