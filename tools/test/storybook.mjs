@@ -224,4 +224,4 @@ R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(awa
 await b.close();
 close();
 console.log(`(${docs.length} docs pages, ${stories.length} stories × ${RUNS.length} runs: six themes and more contrast; 200% text, text spacing and 320px in the first)`);
-process.exit(report('Storybook', R) ? 0 : 1);
+process.exitCode = report('Storybook', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe

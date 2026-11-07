@@ -230,4 +230,4 @@ try {
   if (drv) drv.stop();
   cleanup();
 }
-process.exit(report(`Compat (${engine})`, R) ? 0 : 1);
+process.exitCode = report(`Compat (${engine})`, R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe

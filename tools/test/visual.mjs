@@ -275,4 +275,4 @@ if (update) {
 }
 if (shard === 1) R.push({ name: 'every baseline belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}; add the "update-visual-baselines" label to remove them` });
 console.log(`(${stories.length} stories, ${sheetPages.length} Foundations pages)`);
-process.exit(report('Visual', R) ? 0 : 1);
+process.exitCode = report('Visual', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe

@@ -185,6 +185,10 @@ const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(release|codeql|changeset|visual-baselines|cross-browser)\.yml)`, 'licenses/.*',
   String.raw`tools/test/(?!(lib|run|visual|storybook)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`,
+  // The skill eval's tasks and graded apps, the local-check and release tooling, the GitLab pipeline, and the notes
+  // no story shows (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
+  'tools/skill-eval/.*', String.raw`tools/(ci|local-checks-gate|setup|tag-release)\.mjs`, String.raw`\.gitlab-ci\.yml`,
+  String.raw`(AGENTS|CLAUDE|ROADMAP|SECURITY)\.md`, 'skills/.*',
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,

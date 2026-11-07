@@ -15,9 +15,10 @@ for (const f of ['src/internal/labels.ts', 'tokens.json', 'src/styles/cascade.tx
   t(`a change to ${f} tests everything`, affectedComponents(['src/components/Meter/Meter.tsx', f]) === null, list(affectedComponents([f])));
 }
 t('a changeset alone covers no component', affectedComponents(['.changeset/x.md'])?.size === 0);
-const none = ['CONTRIBUTING.md', '.github/pull_request_template.md', 'tools/test/size.mjs', 'tools/publish.mjs', '.github/dependabot.yml', '.github/workflows/release.yml', 'tools/test/baseline-utilities.json', 'licenses/inter.txt'];
+const none = ['CONTRIBUTING.md', '.github/pull_request_template.md', 'tools/test/size.mjs', 'tools/publish.mjs', '.github/dependabot.yml', '.github/workflows/release.yml', 'tools/test/baseline-utilities.json', 'licenses/inter.txt',
+  'tools/skill-eval/results/2026-11-06-agentic/with/sign-in.1/src/App.tsx', 'tools/ci.mjs', 'tools/local-checks-gate.mjs', '.gitlab-ci.yml', 'AGENTS.md', 'skills/serupa/references/forms.md'];
 t('the release scripts, the Node checks and the other workflows cover no component', affectedComponents(none)?.size === 0, list(affectedComponents(none)));
-for (const f of ['.github/workflows/ci.yml', 'tools/test/lib.mjs', 'tools/test/storybook.mjs', 'tools/test/vitest/setup.ts', 'CHANGELOG.md']) t(`a change to ${f} tests everything`, affectedComponents([f]) === null);
+for (const f of ['.github/workflows/ci.yml', 'tools/test/lib.mjs', 'tools/test/storybook.mjs', 'tools/test/vitest/setup.ts', 'CHANGELOG.md', 'README.md']) t(`a change to ${f} tests everything`, affectedComponents([f]) === null);
 const deps = withDependents(new Set(['Button']));
 t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));

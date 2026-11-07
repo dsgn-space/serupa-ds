@@ -101,8 +101,11 @@ local checks:
   image: node:26-alpine
   variables:
     GIT_DEPTH: "1"
+  # A draft MR gets no pipeline until its description holds a report, so it isn't red while the full check runs
+  # locally (an hour or more). A ready MR always runs the gate, and fails without a report: whether GitLab requires
+  # a passing pipeline to merge is a project setting nobody can check from here.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1" && ($CI_MERGE_REQUEST_DRAFT != "true" || $CI_MERGE_REQUEST_DESCRIPTION =~ /## Local checks/)
   cache: []
   before_script: []
   script:
