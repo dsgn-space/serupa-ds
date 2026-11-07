@@ -21,6 +21,15 @@ import { CopyButton } from "serupa-ds";
 - For sharing to another app: use the Web Share API (`navigator.share`) where it's offered.
 - For text people will edit first: put it in an Input and let them select it.
 
+## Anatomy
+
+Drawn from the `VariantsAndSizes` story.
+
+1. **Icons** (`.dk-copy-btn__icons`): the copy icon and, in the same place, the check that replaces it once copied.
+2. **Copy icon** (`.dk-copy-btn__icon--copy`): shown until a copy.
+3. **Copied icon** (`.dk-copy-btn__icon--done`): shown for a moment after a copy.
+4. **Labels** (`.dk-copy-btn__labels`): "Copy" and "Copied" in the same place, so the button keeps the width of the longer one.
+
 ## Usage
 
 - Show the text next to the button too, so people can see what they copy and select it themselves if copying fails.

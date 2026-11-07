@@ -28,6 +28,15 @@ import { SegmentedControl } from "serupa-ds";
 - Independent on/off buttons: use [ButtonGroup](../ButtonGroup/README.md) with [ToggleButton](../ToggleButton/README.md).
 - More than about five options: use [RadioGroup](../Radio/README.md) or [Select](../Select/README.md).
 
+## Anatomy
+
+Drawn from the `WithIcons` story.
+
+1. **Item** (`.dk-segmented__item`): one choice, a radio in a group.
+2. **Selected item** (`.dk-segmented__item--selected`): the choice that's on, on a raised surface.
+3. **Icon** (`.dk-segmented__icon`): an optional picture of the choice.
+4. **Label** (`.dk-segmented__label`): the choice, in words.
+
 ## Usage
 
 - Keep labels to one or two words, so the segments stay short and even.
