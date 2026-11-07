@@ -172,7 +172,7 @@ describe('Kanban', () => {
   });
 
   test('its words come from the labels', async () => {
-    await render(<SerupaProvider labels={idLabels}><Board /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Board /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Pindahkan Alpha', exact: true })).toBeVisible();
     expect(count(columns()[1]).textContent).toBe('1 dari 1');
   });
