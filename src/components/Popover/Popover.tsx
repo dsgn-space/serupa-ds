@@ -9,6 +9,7 @@ import { useExit } from "../../internal/useExit";
 import { lastInputKeyboard } from "../../internal/lastInput";
 import { component } from "../../internal/component";
 import { isComposing } from "../../internal/ime";
+import { warnOnce } from "../../internal/warn";
 import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
 import { activeIn } from "../../internal/root";
 
@@ -90,6 +91,9 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>("
   useIsoLayoutEffect(() => {
     const panel = panelRef.current;
     if (!open || !panel) return;
+    // The panel renders where it's placed: inside a page <form>, its own form nests in that one (Enter reloads the
+    // page) and Enter in its field submits the page's form (GR170).
+    if (process.env.NODE_ENV !== "production" && panel.parentElement?.closest("form") && panel.querySelector("form, textarea, input:not([type=checkbox], [type=radio], [type=hidden])")) warnOnce("overlay-in-form", "Popover: it's inside a <form> and holds a form or a field, so Enter there submits the page's form, or reloads the page. Place the Popover after the form.");
     // The first control that takes focus: one hidden (display: none, in a closed <details>) or in a disabled
     // <fieldset> doesn't, and focus would have stayed on the trigger, where Escape doesn't close it (L8E22).
     // Opened from the keyboard, the ring shows where focus went: Firefox doesn't work that out on its own for focus

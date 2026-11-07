@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
@@ -430,5 +430,20 @@ describe('Popover inside a shadow root (GR60)', () => {
         expect(getComputedStyle(p).translate).toMatch(/^(none|0px)$/);
       });
     });
+  });
+});
+
+describe('Popover inside a form (GR170)', () => {
+  test('opened inside a <form> with a field or form in it, it warns once (overlay-in-form); outside a form, or with only text, it doesn\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const calls = () => warn.mock.calls.filter(([m]) => /overlay-in-form/.test(String(m)));
+    try {
+      const { rerender } = await render(<><Popover title="Share" defaultOpen trigger={<Button>Share</Button>}><input aria-label="Email" /></Popover><form><Popover title="Info" defaultOpen trigger={<Button>Info</Button>}>Plain words.</Popover></form></>);
+      expect(calls()).toHaveLength(0);
+      await rerender(<></>);
+      await render(<form><Popover title="Rename" defaultOpen trigger={<Button>Rename</Button>}><input aria-label="Name" /></Popover></form>);
+      expect(calls()).toHaveLength(1);
+      expect(String(calls()[0][0])).toMatch(/^Popover: it's inside a <form>/);
+    } finally { warn.mockRestore(); }
   });
 });
