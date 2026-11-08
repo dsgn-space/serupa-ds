@@ -3,6 +3,7 @@ interface TooltipProps {
     content: React.ReactNode;
     children: React.ReactElement;
     placement?: Placement | undefined;
+    openDelay?: number | undefined;
     delay?: number | undefined;
     role?: "description" | "label" | undefined;
     open?: boolean | undefined;

@@ -72,7 +72,7 @@ describe('Splitter', () => {
 
   test('vertical: stacked panes, ArrowDown and ArrowUp move the handle; right to left: ArrowLeft grows the first pane, which is on the right', async () => {
     await render(<div>
-      <Splitter id="v" direction="vertical" style={{ width: '300px', height: '408px' }}><p>Top</p><p>Bottom</p></Splitter>
+      <Splitter id="v" orientation="vertical" style={{ width: '300px', height: '408px' }}><p>Top</p><p>Bottom</p></Splitter>
       <div dir="rtl"><Splitter id="r" style={{ width: '408px', height: '100px' }}><p>Start</p><p>End</p></Splitter></div>
     </div>);
     expect([handle('v').getAttribute('aria-orientation'), Math.round(first('v').getBoundingClientRect().height)]).toEqual(['horizontal', 204]);
@@ -268,5 +268,16 @@ describe('Splitter inside a shadow root (GR60)', () => {
       React.act(() => set(0));
       await expect.poll(() => root.activeElement?.getAttribute('role')).toBe('separator');
     } finally { host.remove(); }
+  });
+});
+
+describe('Splitter: direction, the old name of orientation', () => {
+  test('still stacks the panes as orientation does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Splitter id="old-dir" direction="vertical" style={{ height: '200px' }}><p>Top</p><p>Bottom</p></Splitter>);
+      expect(el('old-dir').getAttribute('data-direction')).toBe('vertical');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('splitter-direction'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

@@ -54,9 +54,9 @@ export const LongText: Story = {
 export const Horizontal: Story = {
   name: 'Horizontal (a settings form)',
   render: () => <div className="flex flex-col gap-4">
-    <Field layout="horizontal" label="Display name" hint="Shown on your profile."><Input defaultValue="Ani" /></Field>
-    <Field layout="horizontal" label="Language"><Select options={['Bahasa Indonesia', 'English']} /></Field>
-    <Field layout="horizontal" label="Bio" optional error="Keep it under 160 characters."><Textarea rows={2} /></Field>
+    <Field orientation="horizontal" label="Display name" hint="Shown on your profile."><Input defaultValue="Ani" /></Field>
+    <Field orientation="horizontal" label="Language"><Select options={['Bahasa Indonesia', 'English']} /></Field>
+    <Field orientation="horizontal" label="Bio" optional error="Keep it under 160 characters."><Textarea rows={2} /></Field>
   </div>,
   decorators: [(Story) => <div style={{ maxWidth: 560 }}><Story /></div>],
 };
