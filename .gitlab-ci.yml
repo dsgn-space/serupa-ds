@@ -1,6 +1,6 @@
 # GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
 # SERUPA_CI_MODE picks where a merge request's checks run:
-# - runner (default): on the project's own runner (a Hetzner server, see tools/README.md), with no minute limit.
+# - runner (default): on the project's own runner (an x86 server, see tools/README.md), with no minute limit.
 #   A merge request runs the whole pipeline below: build, types and lint, the changeset check, the suite (what the
 #   MR changes, tools/test/run.mjs --since its base), consumer and frameworks. The runner keeps the cache and the
 #   pulled images between jobs, so setup costs seconds.
@@ -13,7 +13,9 @@
 #   ubuntu-24.04 runners had them), and tools/setup.mjs adds the Node major devEngines asks for and the Chromium
 #   revision this Playwright pins. The image's own Node and browsers are only a starting point.
 # - build makes dist/ and storybook-static/ once; the test jobs take them as artifacts.
-# - The suite's groups run in parallel, with visual and storybook in four shards each (SERUPA_SHARD).
+# - The suite's groups run in parallel: checks in three shards, visual and storybook in four each (SERUPA_SHARD).
+# - Results are kept (.result-cache): a job that passed on the same tree, against the same base, passes again at
+#   once without running. The same commit's next pipeline (a label, a description, auto-merge) costs seconds.
 # Not here: npm audit signatures needs nothing CI-only and runs in static; CodeQL, release and the nightly workflows
 # stay GitHub-only until the repo goes back (tools/tag-release.mjs tags versions meanwhile).
 
@@ -30,8 +32,10 @@ workflow:
 stages: [build, test]
 
 variables:
-  # Matches Playwright's own image; tools/setup.mjs installs the pinned Chromium revision beside its browsers.
-  PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+  # The Chromium the baselines are drawn with: Chrome for Testing at the version browsers.json names, which
+  # tools/setup.mjs installs. The image's own /ms-playwright holds a later patch of that revision (156.0.8078.80
+  # for .4), which tools/test/visual.mjs refuses. Kept in the cache, so it downloads once.
+  PLAYWRIGHT_BROWSERS_PATH: $CI_PROJECT_DIR/.ci-home/ms-playwright
   npm_config_cache: $CI_PROJECT_DIR/.npm
   # Merge requests need the history back to their base for --since and the changeset check.
   GIT_DEPTH: "0"
@@ -39,28 +43,53 @@ variables:
   SERUPA_CI_MODE: runner
 
 default:
-  # The Playwright version in package-lock.json, so the image's Chromium is the pinned revision and setup.mjs
-  # downloads none. Bump it with Playwright.
+  # The Playwright version in package-lock.json, for the system libraries and fonts its Chromium needs (and Node 26).
+  # Bump it with Playwright.
   image: mcr.microsoft.com/playwright:v1.64.1-noble
   interruptible: true
   cache:
     - key: { files: [package-lock.json] }
       paths: [.npm/]
       policy: pull-push
-    - key: node-and-chromium-v1
+    - key: node-and-chromium-v2
       paths: [.ci-home/]
+    # One per job (matrix jobs included), so parallel jobs never overwrite each other's results.
+    - key: results-$CI_JOB_NAME_SLUG
+      paths: [.result-cache/]
   before_script:
+    - !reference [.result-cache, check]
     # tools/setup.mjs keeps Node under $HOME/.local; a HOME inside the project lets the cache keep it between jobs.
     - export HOME="$CI_PROJECT_DIR/.ci-home" && mkdir -p "$HOME"
-    # Playwright's image has no unzip, which tools/setup.mjs needs for Chrome for Testing's archives.
-    - command -v unzip >/dev/null || (apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null)
+    # The image already has Node 26. Unzip only for a first Chromium download, when the cache doesn't have it yet.
+    - |
+      if [ "$SETUP_FLAGS" != --no-browsers ] && ! command -v unzip >/dev/null && ! ls "$PLAYWRIGHT_BROWSERS_PATH"/chromium-*/INSTALLATION_COMPLETE >/dev/null 2>&1; then
+        apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null
+      fi
     - node tools/setup.mjs $SETUP_FLAGS
-    - export PATH="$(ls -d "$HOME"/.local/node-v*/bin | tail -1):$PATH" && node --version
+    - NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | tail -1 || true)"; if [ -n "$NODE_DIR" ]; then export PATH="$NODE_DIR:$PATH"; fi; node --version
     - |
       if [ "$CI_PIPELINE_SOURCE" = merge_request_event ]; then
         git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
         export SINCE="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
       fi
+  after_script:
+    - !reference [.result-cache, record]
+
+# A job's result, by what it tested: the tree of the commit, the base a merge request is tested against, and the job.
+# A pipeline started by hand (web) always runs everything, and so does a job whose output later jobs take
+# (RESULT_CACHE: "off", build): a skipped build would leave them without dist/.
+.result-cache:
+  check:
+    - export RESULT="$(git rev-parse HEAD^{tree})-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
+    - find .result-cache -type f -mtime +14 -delete 2>/dev/null || true
+    - |
+      if [ "$CI_PIPELINE_SOURCE" != web ] && [ "${RESULT_CACHE:-on}" = on ] && [ -f ".result-cache/$RESULT" ]; then
+        echo "Passed on this same tree and base in job $(cat ".result-cache/$RESULT"); not running it again."
+        exit 0
+      fi
+  record:
+    - RESULT="$(git rev-parse HEAD^{tree})-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
+    - if [ "$CI_JOB_STATUS" = success ]; then mkdir -p .result-cache && echo "$CI_JOB_URL" > ".result-cache/$RESULT"; fi
 
 build:
   extends: .full-suite
@@ -68,6 +97,7 @@ build:
   timeout: 20m
   variables:
     SETUP_FLAGS: --no-browsers
+    RESULT_CACHE: "off"
   script:
     - node tools/tokens/build.mjs --check
     - npm run build
@@ -130,6 +160,7 @@ suite:
   parallel:
     matrix:
       - GROUP: checks
+        SERUPA_SHARD: [1/3, 2/3, 3/3]
       - GROUP: components
       - GROUP: [visual, storybook]
         SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
@@ -141,6 +172,7 @@ suite:
     - node tools/test/run.mjs --group "$GROUP" ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
   after_script:
     - if [ "$GROUP" = components ]; then node tools/test/vitest/coverage-summary.mjs || true; fi
+    - !reference [.result-cache, record]
   artifacts:
     when: on_failure
     expire_in: 7 days

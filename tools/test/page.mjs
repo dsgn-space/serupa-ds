@@ -312,7 +312,17 @@ for (const scheme of ['light', 'dark']) {
     const p = await b.newPage({ viewport: { width: 1000, height: 700 } });
     await p.goto(url);
     await p.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
-    await p.waitForTimeout(150);   // previews that open a popover do it on a 50 ms timer
+    // Settled: React has mounted (the page renders it from a script) and nothing changed for 300 ms, which also
+    // covers previews that open a popover on a 50 ms timer. A fixed wait wasn't enough on a busy CI runner, where
+    // the trimmed page was compared while still half-rendered.
+    await p.waitForLoadState('networkidle');
+    await p.evaluate(() => new Promise((resolve) => {
+      let quiet = setTimeout(done, 300);
+      const mo = new MutationObserver(() => { clearTimeout(quiet); quiet = setTimeout(done, 300); });
+      const cap = setTimeout(done, 10000);
+      function done() { mo.disconnect(); clearTimeout(cap); requestAnimationFrame(() => requestAnimationFrame(() => resolve(undefined))); }
+      mo.observe(document, { subtree: true, childList: true, attributes: true, characterData: true });
+    }));
     const r = await p.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e); const o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return e.className + ' ' + o.sort().join(';'); }));
     await p.close(); return r;
   };
