@@ -1,17 +1,24 @@
-// exports: type SortDirection, Table, TableActionBar, type TableActionBarProps, TableBody, type TableBodyProps, TableCell, type TableCellProps, TableFoot, type TableFootProps, TableHead, TableHeaderCell, type TableHeaderCellProps, type TableHeadProps, type TableProps, TableRow, type TableRowProps, TableSelectCell, type TableSelectCellProps, TableVirtualBody, type TableVirtualBodyProps
+// exports: type SortDirection, Table, TableActionBar, type TableActionBarProps, TableBody, type TableBodyProps, TableCell, type TableCellProps, type TableColumnOption, TableColumnsMenu, type TableColumnsMenuProps, TableDetailRow, type TableDetailRowProps, TableExpandCell, type TableExpandCellProps, TableFoot, type TableFootProps, TableHead, TableHeaderCell, type TableHeaderCellProps, type TableHeadProps, type TableProps, TableRow, type TableRowProps, TableSelectCell, type TableSelectCellProps, TableVirtualBody, type TableVirtualBodyProps
 interface TableLabels {
     table: string;
     tableSorted: (column: string, direction: "ascending" | "descending") => string;
     tableSelected: (count: number) => string;
     clearSelection: string;
+    tableResizeColumn: (column: string) => string;
+    tableColumns: string;
+    tableDetails: string;
+    tableRowDetails: (row: string) => string;
 }
 interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
     size?: "md" | "sm" | undefined;
     striped?: boolean | undefined;
+    layout?: "auto" | "fixed" | undefined;
     stickyHeader?: boolean | undefined;
     caption?: React.ReactNode | undefined;
     hideCaption?: boolean | undefined;
     containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
+    pinStart?: boolean | undefined;
+    pinEnd?: boolean | undefined;
 }
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     selected?: boolean | undefined;
@@ -29,6 +36,11 @@ interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTableCell
     align?: "center" | "end" | "start" | undefined;
     sort?: SortDirection | undefined;
     onSort?: (() => void) | undefined;
+    width?: number | string | undefined;
+    resizable?: boolean | undefined;
+    minWidth?: number | undefined;
+    maxWidth?: number | undefined;
+    onWidthChange?: ((width: number) => void) | undefined;
 }
 interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, "align"> {
     align?: "center" | "end" | "start" | undefined;
@@ -61,3 +73,29 @@ declare const TableSelectCell: React.ForwardRefExoticComponent<TableSelectCellPr
 declare const TableHeaderCell: React.ForwardRefExoticComponent<TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableCell: React.ForwardRefExoticComponent<TableCellProps & React.RefAttributes<HTMLTableCellElement>>;
 declare const TableActionBar: React.ForwardRefExoticComponent<TableActionBarProps & React.RefAttributes<HTMLDivElement>>;
+interface TableColumnOption {
+    id: string;
+    label: React.ReactNode;
+    visible: boolean;
+    required?: boolean | undefined;
+}
+interface TableColumnsMenuProps {
+    columns: TableColumnOption[];
+    onVisibleChange: (id: string, visible: boolean) => void;
+    label?: string | undefined;
+    placement?: React.ComponentProps<typeof Popover>["placement"];
+}
+declare function TableColumnsMenu(props: TableColumnsMenuProps): React.JSX.Element;
+interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
+    expanded?: boolean | undefined;
+    onExpandedChange?: ((expanded: boolean) => void) | undefined;
+    label?: string | undefined;
+    controls?: string | undefined;
+    header?: boolean | undefined;
+}
+declare const TableExpandCell: React.ForwardRefExoticComponent<TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>>;
+interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+    open: boolean;
+    colSpan: number;
+}
+declare const TableDetailRow: React.ForwardRefExoticComponent<TableDetailRowProps & React.RefAttributes<HTMLTableRowElement>>;

@@ -48,6 +48,90 @@
       - cell "Active"
       - cell "1,204"
 
+# ColumnToolsStory
+- button "Columns"
+- region "Orders":
+  - table "Orders":
+    - caption: Orders
+    - rowgroup:
+      - row "Details Customer Resize Customer column City Resize City column Items Resize Items column Total Resize Total column Status Resize Status column Actions":
+        - columnheader "Details"
+        - columnheader "Customer Resize Customer column":
+          - text: Customer
+          - separator "Resize Customer column"
+        - columnheader "City Resize City column":
+          - text: City
+          - separator "Resize City column"
+        - columnheader "Items Resize Items column":
+          - text: Items
+          - separator "Resize Items column"
+        - columnheader "Total Resize Total column":
+          - text: Total
+          - separator "Resize Total column"
+        - columnheader "Status Resize Status column":
+          - text: Status
+          - separator "Resize Status column"
+        - columnheader "Actions"
+    - rowgroup:
+      - row "Details, Order 1001 Ada Lovelace London 3 IDR 1,240,000 Paid Edit":
+        - cell "Details, Order 1001":
+          - button "Details, Order 1001"
+        - cell "Ada Lovelace"
+        - cell "London"
+        - cell "3"
+        - cell "IDR 1,240,000"
+        - cell "Paid"
+        - cell "Edit":
+          - button "Edit"
+      - row "Details, Order 1002 Grace Hopper Arlington 1 IDR 85,000 Pending Edit":
+        - cell "Details, Order 1002":
+          - button "Details, Order 1002"
+        - cell "Grace Hopper"
+        - cell "Arlington"
+        - cell "1"
+        - cell "IDR 85,000"
+        - cell "Pending"
+        - cell "Edit":
+          - button "Edit"
+      - row "Details, Order 1003 Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Paid Edit":
+        - cell "Details, Order 1003":
+          - button "Details, Order 1003" [expanded]
+        - cell "Raden Ajeng Kartini"
+        - cell "Jepara"
+        - cell "12"
+        - cell "IDR 4,520,000"
+        - cell "Paid"
+        - cell "Edit":
+          - button "Edit"
+      - row "Split into two boxes.":
+        - cell "Split into two boxes."
+
+# FixedLayout
+- table "Team members":
+  - caption: Team members
+  - rowgroup:
+    - row "Name Role Calls":
+      - columnheader "Name"
+      - columnheader "Role"
+      - columnheader "Calls"
+  - rowgroup:
+    - row "Ada Lovelace Admin 1,204":
+      - cell "Ada Lovelace"
+      - cell "Admin"
+      - cell "1,204"
+    - row "Grace Hopper Editor 318":
+      - cell "Grace Hopper"
+      - cell "Editor"
+      - cell "318"
+    - row "Linus Torvalds Viewer 0":
+      - cell "Linus Torvalds"
+      - cell "Viewer"
+      - cell "0"
+    - row "Margaret Hamilton Editor 87":
+      - cell "Margaret Hamilton"
+      - cell "Editor"
+      - cell "87"
+
 # Overflow
 - region "Team members, with every role and how many calls each made this quarter":
   - table "Team members, with every role and how many calls each made this quarter":
@@ -66,6 +150,40 @@
         - cell "Donaudampfschifffahrtsgesellschaftskapitänskajüte"
         - cell "Editor"
         - cell "0"
+
+# PinnedColumns
+- region "Orders":
+  - table "Orders":
+    - caption: Orders
+    - rowgroup:
+      - row "Customer City Items Total Actions":
+        - columnheader "Customer"
+        - columnheader "City"
+        - columnheader "Items"
+        - columnheader "Total"
+        - columnheader "Actions"
+    - rowgroup:
+      - row "Ada Lovelace London 3 IDR 1,240,000 Edit":
+        - cell "Ada Lovelace"
+        - cell "London"
+        - cell "3"
+        - cell "IDR 1,240,000"
+        - cell "Edit":
+          - button "Edit"
+      - row "Grace Hopper Arlington 1 IDR 85,000 Edit":
+        - cell "Grace Hopper"
+        - cell "Arlington"
+        - cell "1"
+        - cell "IDR 85,000"
+        - cell "Edit":
+          - button "Edit"
+      - row "Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Edit":
+        - cell "Raden Ajeng Kartini"
+        - cell "Jepara"
+        - cell "12"
+        - cell "IDR 4,520,000"
+        - cell "Edit":
+          - button "Edit"
 
 # Playground
 - table "Team members":
@@ -314,6 +432,64 @@
       - cell "Editor"
       - cell "Active"
       - cell "87"
+
+# StripedDetails
+- button "Columns"
+- region "Orders":
+  - table "Orders":
+    - caption: Orders
+    - rowgroup:
+      - row "Details Customer Resize Customer column City Resize City column Items Resize Items column Total Resize Total column Status Resize Status column Actions":
+        - columnheader "Details"
+        - columnheader "Customer Resize Customer column":
+          - text: Customer
+          - separator "Resize Customer column"
+        - columnheader "City Resize City column":
+          - text: City
+          - separator "Resize City column"
+        - columnheader "Items Resize Items column":
+          - text: Items
+          - separator "Resize Items column"
+        - columnheader "Total Resize Total column":
+          - text: Total
+          - separator "Resize Total column"
+        - columnheader "Status Resize Status column":
+          - text: Status
+          - separator "Resize Status column"
+        - columnheader "Actions"
+    - rowgroup:
+      - row "Details, Order 1001 Ada Lovelace London 3 IDR 1,240,000 Paid Edit":
+        - cell "Details, Order 1001":
+          - button "Details, Order 1001"
+        - cell "Ada Lovelace"
+        - cell "London"
+        - cell "3"
+        - cell "IDR 1,240,000"
+        - cell "Paid"
+        - cell "Edit":
+          - button "Edit"
+      - row "Details, Order 1002 Grace Hopper Arlington 1 IDR 85,000 Pending Edit":
+        - cell "Details, Order 1002":
+          - button "Details, Order 1002"
+        - cell "Grace Hopper"
+        - cell "Arlington"
+        - cell "1"
+        - cell "IDR 85,000"
+        - cell "Pending"
+        - cell "Edit":
+          - button "Edit"
+      - row "Details, Order 1003 Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Paid Edit":
+        - cell "Details, Order 1003":
+          - button "Details, Order 1003" [expanded]
+        - cell "Raden Ajeng Kartini"
+        - cell "Jepara"
+        - cell "12"
+        - cell "IDR 4,520,000"
+        - cell "Paid"
+        - cell "Edit":
+          - button "Edit"
+      - row "Split into two boxes.":
+        - cell "Split into two boxes."
 
 # Virtual
 - region "Ten thousand invoices, drawn a window at a time":

@@ -39,7 +39,7 @@ const SAMPLES = {
   keyName: [['Up arrow'], ['Space'], ['Enter']], showingOf: [[10, 50]], loadedMore: [[1], [10]], meterZone: [['92%', 'high'], ['10%', 'low'], ['50%', 'medium']],
   itemsOf: [[1, 1, 9], [1, 10, 90]], progressComplete: [['Upload'], ['']], ratingStars: [[1], [3.5], [5]], ratingValue: [[3, 5]],
   reorderGrabbed: [['Apples', 2, 5]], reorderMoved: [['Apples', 3, 5]], reorderDropped: [['Apples', 3, 5]], reorderCancelled: [['Apples', 2, 5]],
-  stepOf: [[2, 4]], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1], [3]],
+  stepOf: [[2, 4]], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1], [3]], tableResizeColumn: [['Name']], tableRowDetails: [['Order 1001']],
   commandsCount: [[0], [1], [5]],
   chartKind: [['line'], ['bar']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
   chatNewMessages: [[1], [3]], notificationsUnread: [[1], [2]], eventCount: [[0], [1], [3]], moreEvents: [[1], [2]], eventTime: [['9:30 AM', '10:00 AM']],
@@ -55,10 +55,10 @@ const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
-  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
+  de: ['tableDetails', 'fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
   es: ['generalShortcuts', 'attachmentAudio'],
   ms: ['edit', 'attachmentAudio', 'attachmentVideo'],
-  nl: ['sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],
+  nl: ['tableDetails', 'sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],
   sv: ['sliderMaximum', 'colorName', 'attachmentVideo'],
   fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName', 'attachmentImage', 'attachmentDoc', 'attachmentArchive', 'attachmentCode', 'attachmentAudio', 'chatMessage'],
   it: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],

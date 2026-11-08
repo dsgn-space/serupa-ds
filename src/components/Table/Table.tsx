@@ -6,6 +6,8 @@ import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../intern
 import { Icon } from '../Icon/Icon';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
 import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
+import { Popover } from '../Popover/Popover';
 import { component } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { warnOnce } from '../../internal/warn';
@@ -33,6 +35,10 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   hideCaption?: boolean | undefined;
   /** Props for the scrolling frame around the table (style with a maxHeight for stickyHeader). */
   containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
+  /** Keeps the first column in view while the table scrolls sideways, such as the column that names each row. Default: false. */
+  pinStart?: boolean | undefined;
+  /** Keeps the last column in view while the table scrolls sideways, such as a column of row actions. Default: false. */
+  pinEnd?: boolean | undefined;
 }
 
 export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -67,8 +73,18 @@ export interface TableHeaderCellProps extends Omit<React.ThHTMLAttributes<HTMLTa
   sort?: SortDirection | undefined;
   /** Called when the sort button is pressed (decide the next order yourself). */
   onSort?: (() => void) | undefined;
-  /** The column's width, for a Table with layout="fixed": a CSS length ("12rem", "30%") or a number of pixels. */
+  /** The column's width, for a Table with layout="fixed": a CSS length ("12rem", "30%") or a number of pixels. With
+      resizable and onWidthChange, a number of pixels is the controlled width; else it's where the column starts. */
   width?: string | number | undefined;
+  /** Adds a handle at the header's end edge that changes the column's width: drag it, use the arrow keys on it, or
+      double-click it to fit the column's content. Best in a Table with layout="fixed". Default: false. */
+  resizable?: boolean | undefined;
+  /** The narrowest a resizable column gets, in pixels. Default: 48. */
+  minWidth?: number | undefined;
+  /** The widest a resizable column gets, in pixels. Default: 800. */
+  maxWidth?: number | undefined;
+  /** Called with the new width in pixels as the column is resized: keep it to remember widths, or to control them. */
+  onWidthChange?: ((width: number) => void) | undefined;
 }
 
 export interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, 'align'> {
@@ -98,7 +114,7 @@ const ALIGN = ['start', 'center', 'end'] as const;
 /** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
 export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Table', function Table(props, ref) {
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, className: 1, children: 1 });
+  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const frame = React.useRef<HTMLDivElement>(null);
   const [scrolls, setScrolls] = React.useState(false);
@@ -143,7 +159,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   const region = !scrolls ? {} : hasCaption ? { tabIndex: 0, role: 'region', 'aria-labelledby': cid }
     : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
-    <div {...cp} {...region} ref={frame} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', cp.className)}>
+    <div {...cp} {...region} ref={frame} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', props.pinStart && 'dk-table--pin-start', props.pinEnd && 'dk-table--pin-end', cp.className)}>
       <table {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
         {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
@@ -312,10 +328,19 @@ export const TableSelectCell = /* @__PURE__ */ component<HTMLInputElement, Table
 
 const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
 
-/** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. */
+const STEP = 16;   // px per arrow key on a resize handle
+
+/** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. With resizable, a handle at its end changes the column's width. */
 export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>('TableHeaderCell', function TableHeaderCell(props, ref) {
-  const rest = omit(props, { align: 1, sort: 1, onSort: 1, width: 1, style: 1, className: 1, children: 1 });
-  const style = props.width != null ? { ...props.style, width: typeof props.width === 'number' ? props.width + 'px' : props.width } : props.style;
+  const rest = omit(props, { align: 1, sort: 1, onSort: 1, width: 1, resizable: 1, minWidth: 1, maxWidth: 1, onWidthChange: 1, style: 1, className: 1, children: 1 });
+  const resizable = !!props.resizable;
+  const min = props.minWidth != null && props.minWidth > 0 ? props.minWidth : 48;
+  const max = Math.max(min, props.maxWidth != null && props.maxWidth > 0 ? props.maxWidth : 800);
+  const controlled = resizable && typeof props.width === 'number' && !!props.onWidthChange;
+  const [own, setOwn] = React.useState<number | null>(() => (typeof props.width === 'number' ? props.width : null));
+  const current = controlled ? (props.width as number) : resizable ? own : null;
+  const width = current != null ? current : props.width;
+  const style = width != null ? { ...props.style, width: typeof width === 'number' ? width + 'px' : width } : props.style;
   const align = oneOf(ALIGN, props.align, 'start');
   const sort = props.sort !== undefined ? oneOf(['ascending', 'descending', 'none'] as const, props.sort, 'none') : null;
   // A new order is read out ("Sorted by Amount, ascending"): aria-sort alone is only heard when focus reaches the
@@ -328,15 +353,96 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
     was.current = sort;
     if ((sort === 'ascending' || sort === 'descending') && button.current) announce(labels.tableSorted((button.current.textContent || '').trim(), sort));
   }, [sort, labels]);
+  const th = React.useRef<HTMLTableCellElement | null>(null);
+  const setTh = React.useCallback((n: HTMLTableCellElement | null) => { th.current = n; setRef(ref, n); }, [ref]);
+  const handle = React.useRef<HTMLSpanElement | null>(null);
+  // The handle's keys, drag and double-click, as native listeners: the newest width and callback through a ref.
+  const live = React.useRef({ min, max, current, controlled, onWidthChange: props.onWidthChange });
+  live.current = { min, max, current, controlled, onWidthChange: props.onWidthChange };
+  React.useEffect(() => {
+    const h = handle.current, cell = th.current;
+    if (!resizable || !h || !cell) return;
+    const now = () => (live.current.current != null ? live.current.current : Math.round(cell.getBoundingClientRect().width));
+    const set = (n: number) => {
+      const l = live.current, w = Math.round(Math.min(l.max, Math.max(l.min, n)));
+      if (!l.controlled) setOwn(w);
+      if (l.onWidthChange) l.onWidthChange(w);
+    };
+    const rtl = () => getComputedStyle(cell).direction === 'rtl';
+    const onKey = (e: KeyboardEvent) => {
+      const grow = rtl() ? 'ArrowLeft' : 'ArrowRight', shrink = rtl() ? 'ArrowRight' : 'ArrowLeft';
+      if (e.key === grow) set(now() + STEP);
+      else if (e.key === shrink) set(now() - STEP);
+      else if (e.key === 'Home') set(live.current.min);
+      else if (e.key === 'End') set(live.current.max);
+      else return;
+      e.preventDefault();
+    };
+    let from = 0, start = 0, id: number | null = null;
+    const onDown = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      from = e.clientX; start = now(); id = e.pointerId;
+      try { h.setPointerCapture(id); } catch { /* a pointer that's already gone: the drag still follows moves over the handle */ }
+      h.focus({ preventScroll: true });
+    };
+    const onMove = (e: PointerEvent) => { if (id === e.pointerId) set(start + (rtl() ? from - e.clientX : e.clientX - from)); };
+    const onUp = (e: PointerEvent) => { if (id !== e.pointerId) return; id = null; if (h.hasPointerCapture(e.pointerId)) h.releasePointerCapture(e.pointerId); };
+    // Fit: the widest cell of the column on one line, measured with its text unwrapped for a moment.
+    const onFit = () => {
+      const table = cell.closest('table'), at = cell.cellIndex;
+      if (!table || at < 0) return;
+      let widest = 0;
+      for (const row of Array.from(table.rows)) {
+        const c = row.cells[at];
+        if (!c || c.colSpan > 1 || row.hidden) continue;
+        const was = c.style.whiteSpace, cs = getComputedStyle(c), range = document.createRange();
+        c.style.whiteSpace = 'nowrap';
+        range.selectNodeContents(c);
+        const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+        widest = Math.max(widest, Math.ceil(range.getBoundingClientRect().width + pad));
+        c.style.whiteSpace = was;
+      }
+      if (widest) set(widest + 1);
+    };
+    h.addEventListener('keydown', onKey);
+    h.addEventListener('pointerdown', onDown);
+    h.addEventListener('pointermove', onMove);
+    h.addEventListener('pointerup', onUp);
+    h.addEventListener('pointercancel', onUp);
+    h.addEventListener('dblclick', onFit);
+    return () => {
+      h.removeEventListener('keydown', onKey);
+      h.removeEventListener('pointerdown', onDown);
+      h.removeEventListener('pointermove', onMove);
+      h.removeEventListener('pointerup', onUp);
+      h.removeEventListener('pointercancel', onUp);
+      h.removeEventListener('dblclick', onFit);
+    };
+  }, [resizable]);
+  // The handle's name: the column's text, read once it's drawn.
+  const [name, setName] = React.useState('');
+  useIsoLayoutEffect(() => {
+    const cell = th.current;
+    if (!resizable || !cell) return;
+    const own = cell.querySelector('.dk-table__resize');
+    const text = Array.from(cell.childNodes).filter((n) => n !== own).map((n) => n.textContent || '').join('').trim();
+    if (text !== name) setName(text);
+  });
+  const separator = resizable ? {
+    role: 'separator', 'aria-orientation': 'vertical' as const, 'aria-label': labels.tableResizeColumn(name),
+    'aria-valuemin': min, 'aria-valuemax': max, 'aria-valuenow': current != null ? current : undefined, tabIndex: 0,
+  } : null;
   return (
-    <th scope="col" {...rest} ref={ref} style={style} aria-sort={sort && sort !== 'none' ? sort : undefined}
-      className={cn('dk-table__cell dk-table__header', align !== 'start' && 'dk-table__cell--' + align, sort && 'dk-table__header--sortable', props.className)}>
+    <th scope="col" {...rest} ref={setTh} style={style} aria-sort={sort && sort !== 'none' ? sort : undefined}
+      className={cn('dk-table__cell dk-table__header', align !== 'start' && 'dk-table__cell--' + align, sort && 'dk-table__header--sortable', resizable && 'dk-table__header--resizable', props.className)}>
       {sort ? (
         <button type="button" ref={button} className="dk-table__sort" onClick={props.onSort}>
           <span>{props.children}</span>
           <Icon icon={NEXT_ICON[sort]} className={cn('dk-table__sort-icon', sort === 'none' && 'dk-table__sort-icon--idle')} />
         </button>
       ) : props.children}
+      {separator ? <span {...separator} ref={handle} className="dk-table__resize" /> : null}
     </th>
   );
 });
@@ -390,5 +496,93 @@ export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableAct
       <div className="dk-table-action-bar__actions">{props.children}</div>
       {props.onClear ? <Button variant="ghost" size="sm" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}
     </div>
+  );
+});
+
+export interface TableColumnOption {
+  /** Your id for the column, passed back to onVisibleChange. */
+  id: string;
+  /** The column's name, as its header says it. */
+  label: React.ReactNode;
+  /** Shown now. */
+  visible: boolean;
+  /** Always shown, such as the column that names each row: its box is checked and can't be cleared. Default: false. */
+  required?: boolean | undefined;
+}
+
+export interface TableColumnsMenuProps {
+  /** Every column that can be shown, in the table's order. */
+  columns: TableColumnOption[];
+  /** Called when a column is checked or cleared: show or hide it in the table. */
+  onVisibleChange: (id: string, visible: boolean) => void;
+  /** The button's text, and the panel's title. Default: "Columns" (labels.tableColumns). */
+  label?: string | undefined;
+  /** Where the panel opens. Default: "bottom-end". */
+  placement?: React.ComponentProps<typeof Popover>['placement'];
+}
+
+/* TableColumnsMenu: a "Columns" button that opens a Popover of checkboxes, one per column, to show or hide them. The
+   table is yours to draw from the same list. The last column shown can't be cleared, so the table is never empty. */
+/** A "Columns" button with a checkbox for each of a table's columns, to show or hide them. */
+export function TableColumnsMenu(props: TableColumnsMenuProps) {
+  const labels = useSettings(words).labels;
+  const label = props.label || labels.tableColumns;
+  const shown = props.columns.filter((c) => c.visible).length;
+  return (
+    <Popover title={label} placement={props.placement || 'bottom-end'}
+      trigger={<Button variant="outline" size="sm">{label}</Button>}>
+      <div className="dk-table-columns">
+        {props.columns.map((c) => (
+          <Checkbox key={c.id} checked={c.visible || !!c.required} disabled={!!c.required || (c.visible && shown <= 1)}
+            onChange={(e) => props.onVisibleChange(c.id, e.currentTarget.checked)}>{c.label}</Checkbox>
+        ))}
+      </div>
+    </Popover>
+  );
+}
+
+export interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  /** The row's details are open. */
+  expanded?: boolean | undefined;
+  /** Called with the new state when the button is pressed. */
+  onExpandedChange?: ((expanded: boolean) => void) | undefined;
+  /** The row's name, for the button's: "Details, Order 1001" (labels.tableRowDetails). */
+  label?: string | undefined;
+  /** The id of the row's TableDetailRow, for aria-controls. */
+  controls?: string | undefined;
+  /** In the header row: a <th> named "Details" for screen readers, with nothing shown. Default: false. */
+  header?: boolean | undefined;
+}
+
+/** A cell with a button that shows or hides its row's details (a TableDetailRow after it), or, with header, the heading of that column. */
+export const TableExpandCell = /* @__PURE__ */ component<HTMLTableCellElement, TableExpandCellProps>('TableExpandCell', function TableExpandCell(props, ref) {
+  const labels = useSettings(words).labels;
+  const rest = omit(props, { expanded: 1, onExpandedChange: 1, label: 1, controls: 1, header: 1, className: 1, children: 1 });
+  const cls = cn('dk-table__cell dk-table__expand', props.className);
+  if (props.header) return <th scope="col" {...rest} ref={ref} className={cn(cls, 'dk-table__header')}><span className="dk-visually-hidden">{labels.tableDetails}</span></th>;
+  const open = !!props.expanded;
+  return (
+    <td {...rest} ref={ref} className={cls}>
+      <IconButton icon={<Icon icon={icons.ChevronRight} mirror />} label={props.label ? labels.tableRowDetails(props.label) : labels.tableDetails} variant="ghost" size="sm"
+        className={cn('dk-table__expand-button', open && 'dk-table__expand-button--open')} aria-expanded={open} aria-controls={props.controls}
+        onClick={() => { if (props.onExpandedChange) props.onExpandedChange(!open); }} />
+    </td>
+  );
+});
+
+export interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  /** Shown. Closed, the row stays in the page, hidden, so its id still answers the button's aria-controls. */
+  open: boolean;
+  /** How many columns it spans: all of the table's. */
+  colSpan: number;
+}
+
+/** A full-width row under a TableRow with its details, shown while that row's TableExpandCell is expanded. */
+export const TableDetailRow = /* @__PURE__ */ component<HTMLTableRowElement, TableDetailRowProps>('TableDetailRow', function TableDetailRow(props, ref) {
+  const rest = omit(props, { open: 1, colSpan: 1, className: 1, children: 1 });
+  return (
+    <tr {...rest} ref={ref} hidden={!props.open} className={cn('dk-table__detail', props.className)}>
+      <td colSpan={props.colSpan} className="dk-table__cell dk-table__detail-cell">{props.children}</td>
+    </tr>
   );
 });

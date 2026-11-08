@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table, TableActionBar, TableBody, TableVirtualBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from './Table';
+import { Table, TableActionBar, TableBody, TableVirtualBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from './Table';
 import { Text } from '../Text/Text';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
@@ -195,3 +195,75 @@ export const Align: Story = {
     <TableBody><TableRow><TableCell align="start">Ada</TableCell><TableCell align="center">Active</TableCell><TableCell align="end">1,204</TableCell></TableRow></TableBody>
   </Table>,
 };
+
+// Column tools: resize a column by its header's edge, keep the name and actions in view while scrolling sideways,
+// choose the columns, and open a row's details.
+const ORDERS = [
+  { id: '1001', customer: 'Ada Lovelace', city: 'London', items: 3, total: 1240000, status: 'Paid', note: 'Gift wrap, deliver after 5pm.' },
+  { id: '1002', customer: 'Grace Hopper', city: 'Arlington', items: 1, total: 85000, status: 'Pending', note: 'Leave with the building\u2019s front desk.' },
+  { id: '1003', customer: 'Raden Ajeng Kartini', city: 'Jepara', items: 12, total: 4520000, status: 'Paid', note: 'Split into two boxes.' },
+];
+const COLS = [
+  { id: 'city', label: 'City' }, { id: 'items', label: 'Items' }, { id: 'total', label: 'Total' }, { id: 'status', label: 'Status' },
+];
+function ColumnTools(args: React.ComponentProps<typeof Table>) {
+  const [shown, setShown] = React.useState<Record<string, boolean>>({ city: true, items: true, total: true, status: true });
+  const [open, setOpen] = React.useState<Record<string, boolean>>({ '1003': true });
+  const cols = COLS.filter((c) => shown[c.id]);
+  return (
+    <div className="flex flex-col items-end gap-2" style={{ maxWidth: 560 }}>
+      <TableColumnsMenu columns={[{ id: 'customer', label: 'Customer', visible: true, required: true }, ...COLS.map((c) => ({ ...c, visible: shown[c.id] }))]}
+        onVisibleChange={(id, v) => setShown({ ...shown, [id]: v })} />
+      <Table {...args} caption="Orders" hideCaption layout="fixed" pinEnd containerProps={{ style: { width: '100%' } }}>
+        <TableHead>
+          <TableRow>
+            <TableExpandCell header />
+            <TableHeaderCell resizable width={180}>Customer</TableHeaderCell>
+            {cols.map((c) => <TableHeaderCell key={c.id} resizable width={c.id === 'status' ? 120 : 140} align={c.id === 'items' || c.id === 'total' ? 'end' : 'start'}>{c.label}</TableHeaderCell>)}
+            <TableHeaderCell width={96}><VisuallyHidden>Actions</VisuallyHidden></TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {ORDERS.map((o) => (
+            <React.Fragment key={o.id}>
+              <TableRow>
+                <TableExpandCell label={'Order ' + o.id} expanded={!!open[o.id]} controls={'order-' + o.id} onExpandedChange={(v) => setOpen({ ...open, [o.id]: v })} />
+                <TableCell>{o.customer}</TableCell>
+                {cols.map((c) => c.id === 'city' ? <TableCell key={c.id}>{o.city}</TableCell>
+                  : c.id === 'items' ? <TableCell key={c.id} align="end">{o.items}</TableCell>
+                  : c.id === 'total' ? <TableCell key={c.id} align="end"><FormattedNumber value={o.total} format="currency" currency="IDR" options={{ maximumFractionDigits: 0 }} /></TableCell>
+                  : <TableCell key={c.id}><Badge tone={o.status === 'Paid' ? 'success' : 'neutral'}>{o.status}</Badge></TableCell>)}
+                <TableCell><Button variant="ghost" size="sm">Edit</Button></TableCell>
+              </TableRow>
+              <TableDetailRow id={'order-' + o.id} open={!!open[o.id]} colSpan={cols.length + 3}><Text as="span" tone="muted">{o.note}</Text></TableDetailRow>
+            </React.Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+export const ColumnToolsStory: Story = { name: 'Column tools', render: (args) => <ColumnTools {...args} /> };
+export const StripedDetails: Story = { name: 'Striped, with details', args: { striped: true }, render: (args) => <ColumnTools {...args} /> };
+// pinStart and pinEnd: the name and the actions stay put while the columns between them scroll.
+function Pinned(args: React.ComponentProps<typeof Table>) {
+  const frame = React.useRef<HTMLTableElement>(null);
+  React.useEffect(() => { const f = frame.current && frame.current.parentElement; if (f) f.scrollLeft = 160; }, []);
+  return (
+    <div style={{ maxWidth: 480 }}>
+      <Table {...args} ref={frame} caption="Orders" hideCaption layout="fixed" pinStart pinEnd>
+        <TableHead><TableRow><TableHeaderCell width={180}>Customer</TableHeaderCell><TableHeaderCell width={140}>City</TableHeaderCell><TableHeaderCell width={100} align="end">Items</TableHeaderCell><TableHeaderCell width={160} align="end">Total</TableHeaderCell><TableHeaderCell width={80}><VisuallyHidden>Actions</VisuallyHidden></TableHeaderCell></TableRow></TableHead>
+        <TableBody>
+          {ORDERS.map((o, i) => (
+            <TableRow key={o.id} selected={i === 1}>
+              <TableCell>{o.customer}</TableCell><TableCell>{o.city}</TableCell><TableCell align="end">{o.items}</TableCell>
+              <TableCell align="end"><FormattedNumber value={o.total} format="currency" currency="IDR" options={{ maximumFractionDigits: 0 }} /></TableCell>
+              <TableCell><Button variant="ghost" size="sm">Edit</Button></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+export const PinnedColumns: Story = { name: 'Pinned columns', render: (args) => <Pinned {...args} /> };
