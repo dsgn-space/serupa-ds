@@ -149,4 +149,18 @@ describe('FilterBar', () => {
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
+
+  test('a malformed value, as from an edited URL, leaves those filters out and keeps the rest, with a warning naming each (GR283)', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const bad = { status: 'open', owner: ['Ana', 3], due: { start: 'abc', end: null }, archived: 'yes', q: '   ', ghost: 'x' } as unknown as FilterValues;
+    await render(<SerupaProvider locale="en-US"><FilterBar id="bad" fields={fields} defaultValue={bad} /></SerupaProvider>);
+    const chips = [...document.getElementById('bad')!.querySelectorAll('li')].map((li) => li.querySelector('button')!.textContent);
+    // A lone string for a multiple select is read as one choice; blank text counts as no filter yet.
+    expect(chips).toEqual(['Status is Open', 'Title: any', 'Add filter']);
+    const said = warn.mock.calls.map((c) => String(c[0]).match(/"(\w+)"/)![1]).sort();
+    expect(said).toEqual(['archived', 'due', 'ghost', 'owner']);
+    await render(<SerupaProvider locale="en-US"><FilterBar id="day" fields={fields} defaultValue={{ due: { start: '2026-02-30', end: '2026-03-01' } }} /></SerupaProvider>);
+    expect(document.getElementById('day')!.querySelector('li button')!.textContent).toBe('Add filter');
+    warn.mockRestore();
+  });
 });

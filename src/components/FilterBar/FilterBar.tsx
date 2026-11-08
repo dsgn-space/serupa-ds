@@ -14,6 +14,7 @@ import { Switch } from '../Switch/Switch';
 import { Input } from '../Input/Input';
 import { DateRangePicker } from '../DateRangePicker/DateRangePicker';
 import * as icons from '../../material/builtin';
+import { warnOnce } from '../../internal/warn';
 import { en as words } from './labels';
 
 /** One choice in a select filter: a string is both its value and its label. */
@@ -50,7 +51,7 @@ const labelOf = (o: FilterOption) => (typeof o === 'string' ? o : o.label);
 const valueOf = (o: FilterOption) => (typeof o === 'string' ? o : o.value);
 /** A filter with nothing chosen is left out of the value when its editor closes. */
 function isEmpty(v: FilterValue | undefined): boolean {
-  if (v == null || v === false || v === '') return true;
+  if (v == null || v === false || (typeof v === 'string' && !v.trim())) return true;
   if (Array.isArray(v)) return v.length === 0;
   if (typeof v === 'object') return !v.start && !v.end;
   return false;
@@ -62,6 +63,38 @@ function emptyFor(f: FilterField): FilterValue {
   return '';
 }
 const toDate = (iso: string) => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
+// A "yyyy-mm-dd" that names a real day (not 2026-02-30), or null.
+const isDay = (x: unknown) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x) && toDate(x).getDate() === Number(x.slice(8));
+const isDayOrNull = (x: unknown) => x == null || isDay(x);
+
+/* The value checked against each field, as one read from a URL may be anything (GR283): a select takes a string, or
+   strings with multiple; a date range "yyyy-mm-dd" ends or null; a boolean true; a text a string. A filter
+   for an unknown field, or with a value its field can't take, is left out (with a development warning naming it), so
+   the bar never throws. */
+function clean(fields: FilterField[], raw: FilterValues): FilterValues {
+  const out: FilterValues = {};
+  for (const id of Object.keys(raw)) {
+    const f = fields.find((x) => x.id === id), v: unknown = raw[id];
+    let ok: FilterValue | undefined;
+    if (f?.type === 'select') {
+      if (Array.isArray(v) && v.every((x) => typeof x === 'string')) ok = f.multiple ? v : v[0] ?? '';
+      else if (typeof v === 'string') ok = f.multiple ? (v ? [v] : []) : v;
+    } else if (f?.type === 'date-range') {
+      const r = v as { start?: unknown; end?: unknown } | null;
+      if (r && typeof r === 'object' && !Array.isArray(r) && isDayOrNull(r.start) && isDayOrNull(r.end)) ok = { start: (r.start as string | null | undefined) ?? null, end: (r.end as string | null | undefined) ?? null };
+    } else if (f?.type === 'boolean') {
+      if (v === true) ok = true;
+    } else if (f?.type === 'text') {
+      if (typeof v === 'string') ok = v;
+    }
+    if (ok === undefined) {
+      if (process.env.NODE_ENV !== 'production') warnOnce('filter-value', 'FilterBar: the value for "' + id + '" ' + (f ? "isn't one its " + f.type + ' field can take' : 'names no field') + ', so that filter is left out.', 'filter-value:' + id);
+      continue;
+    }
+    out[id] = ok;
+  }
+  return out;
+}
 
 /* FilterBar: the filters on a list or table, as a row of chips. "Add filter" opens a menu of the fields not yet in
    use; each chip says its filter in words ("Status is Open or Closed") and opens its editor in a Popover (checkboxes
@@ -76,7 +109,8 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
   const base = domId('dk-fb', React.useId());
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<FilterValues>(props.defaultValue || {});
-  const value = controlled ? props.value! : own;
+  const raw = controlled ? props.value! : own;
+  const value = React.useMemo(() => clean(props.fields, raw), [props.fields, raw]);
   const [editing, setEditing] = React.useState<string | null>(null);
   const root = React.useRef<HTMLDivElement | null>(null);
   // Where focus goes after a render: a chip's button (by field id), or "add".
@@ -123,7 +157,7 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
     const v = value[f.id];
     if (isEmpty(v)) return L.filterAny(f.label);
     if (f.type === 'boolean') return f.label;
-    if (f.type === 'text') return L.filterContains(f.label, typeof v === 'string' ? v : '');
+    if (f.type === 'text') return L.filterContains(f.label, typeof v === 'string' ? v.trim() : '');
     if (f.type === 'date-range') {
       const r = v as { start: string | null; end: string | null };
       const fmt = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });

@@ -38,6 +38,10 @@ A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as a
 
 A Field's label points at its control by id, and nothing on the page has that id, so the label names nothing. Put the control inside the Field, or pass the control's `id`.
 
+## filter-value
+
+FilterBar was given a value its field can't take, or one for a field it doesn't have, as can happen when the value is read from a URL someone edited or that arrived cut short. That filter is left out, and the bar shows the rest. A select field takes a string, or an array of strings with `multiple`; a date range `{ start, end }`, each a `"yyyy-mm-dd"` day or null; a boolean field `true`; a text field a string. Check the value where you read it if you need to tell people a filter was dropped.
+
 ## icon-load
 
 The icons drawn by name come from a chunk loaded on demand (on a plain page, `serupa-icons.iife.js` from beside `serupa.iife.js`), and that load failed: a network error, a deploy that removed the chunk the page asked for, or `serupa.iife.js` copied without `serupa-icons.iife.js`. The box stays empty; the next Icon tries again, and each empty one tries again when the browser is back online. To draw an icon without loading anything, import it and pass `icon={…}`, or register the icons first.
