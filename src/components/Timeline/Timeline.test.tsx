@@ -136,12 +136,24 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
     expect(rect(q(el('h1'), '.dk-timeline__marker')).top).toBe(rect(q(el('h2'), '.dk-timeline__marker')).top);
   });
 
-  test('className, style and the name go to a scrolling region around the <ol>; the rest and ref to the <ol>', async () => {
+  test('className and style go to the box around the <ol>; ref and the rest to the <ol>', async () => {
     const ref = React.createRef<HTMLOListElement>();
     await render(<Timeline id="r" ref={ref} orientation="horizontal" aria-label="Phases" className="mine" style={{ maxWidth: 300 }} data-x="y"><TimelineItem title="One" /></Timeline>);
     const box = el('r').parentElement!;
+    expect([ref.current === el('r'), el('r').dataset.x, box.classList.contains('mine'), box.style.maxWidth, box.dataset.orientation]).toEqual([true, 'y', true, '300px', 'horizontal']);
+  });
+
+  test('while it scrolls, the box is a Tab stop and a region with the name (or "Timeline"); when it fits, or is stacked, it isn\'t, and the list keeps the name (GR281)', async () => {
+    await render(<div style={{ width: 300 }}><Timeline id="s1" orientation="horizontal" aria-label="Phases"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
     await expect.element(page.getByRole('region', { name: 'Phases' })).toBeInTheDocument();
-    expect([ref.current === el('r'), el('r').dataset.x, el('r').hasAttribute('aria-label'), box.classList.contains('mine'), box.style.maxWidth, box.dataset.orientation]).toEqual([true, 'y', false, true, '300px', 'horizontal']);
+    expect(el('s1').parentElement!.tabIndex).toBe(0);
+    await render(<div style={{ width: 300 }}><Timeline id="s2" orientation="horizontal"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    await expect.element(page.getByRole('region', { name: 'Timeline' })).toBeInTheDocument();
+    await render(<div style={{ width: 900 }}><Timeline id="s3" orientation="horizontal" aria-label="Fits"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    await render(<div style={{ width: 360 }}><Timeline id="s4" orientation="horizontal" stackWhenNarrow aria-label="Stacked"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    for (const id of ['s3', 's4']) expect([el(id).parentElement!.hasAttribute('tabindex'), el(id).parentElement!.getAttribute('role')]).toEqual([false, null]);
+    await expect.element(page.getByRole('list', { name: 'Fits' })).toBeInTheDocument();
+    await expect.element(page.getByRole('list', { name: 'Stacked' })).toBeInTheDocument();
   });
 
   test('past its width it scrolls sideways in its own box, not the page; Tab reaches the box and an arrow key scrolls it', async () => {

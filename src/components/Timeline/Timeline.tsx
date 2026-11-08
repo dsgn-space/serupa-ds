@@ -4,6 +4,9 @@ import { cn, oneOf } from '../../internal/cn';
 import { component } from '../../internal/component';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
+import { useSettings } from '../../internal/provider';
+import { useScrolls } from '../../internal/useScrolls';
+import { en as words } from './labels';
 
 export type TimelineAlign = 'start' | 'alternate';
 export type TimelineOrientation = 'vertical' | 'horizontal';
@@ -47,18 +50,23 @@ export interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIEle
 export const Timeline = /* @__PURE__ */ component<HTMLOListElement, TimelineProps>('Timeline', function Timeline(props, ref) {
   const { className, align, orientation, stackWhenNarrow, style, ...rest } = props;
   const a = oneOf(ALIGNS, align, 'start');
-  if (oneOf(ORIENTATIONS, orientation, 'vertical') === 'vertical') {
+  const horizontal = oneOf(ORIENTATIONS, orientation, 'vertical') === 'horizontal';
+  const L = useSettings(words).labels;
+  const [box, setBox] = React.useState<HTMLDivElement | null>(null);
+  const scrolls = useScrolls(horizontal ? box : null);
+  if (!horizontal) {
     return <ol role="list" {...rest} style={style} ref={ref} className={cn('dk-timeline', a === 'alternate' && 'dk-timeline--alternate', className)} data-component="timeline" />;
   }
-  /* Horizontal: the list in a box that scrolls sideways (and is a container, for stackWhenNarrow). The box takes
-     focus, so a keyboard can scroll it (WCAG 2.1.1), and is a region named as the list was; className and style go
-     to it, as the outermost element. */
+  /* Horizontal: the list in a box that scrolls sideways (and is a container, for stackWhenNarrow). While it scrolls,
+     the box takes focus, so a keyboard can scroll it (WCAG 2.1.1), as a region named as the list was, or "Timeline"
+     (as Table's frame does); when everything fits, or stackWhenNarrow has stacked it, it's no Tab stop. className
+     and style go to it, as the outermost element, and the name stays on the list. */
   const { 'aria-label': label, 'aria-labelledby': labelledBy, ...list } = rest;
-  const named = label != null || labelledBy != null;
+  const region = scrolls ? { tabIndex: 0, role: 'region', 'aria-labelledby': labelledBy, 'aria-label': labelledBy ? undefined : label || L.timeline } : {};
   return (
-    <div className={cn('dk-timeline-scroll', stackWhenNarrow && 'dk-timeline-scroll--stack', className)} style={style} tabIndex={0}
-      role={named ? 'region' : undefined} aria-label={label} aria-labelledby={labelledBy} data-component="timeline" data-orientation="horizontal">
-      <ol role="list" {...list} ref={ref} className="dk-timeline dk-timeline--horizontal" />
+    <div ref={setBox} className={cn('dk-timeline-scroll', stackWhenNarrow && 'dk-timeline-scroll--stack', className)} style={style}
+      {...region} data-component="timeline" data-orientation="horizontal">
+      <ol role="list" {...list} aria-label={scrolls ? undefined : label} aria-labelledby={scrolls ? undefined : labelledBy} ref={ref} className="dk-timeline dk-timeline--horizontal" />
     </div>
   );
 });

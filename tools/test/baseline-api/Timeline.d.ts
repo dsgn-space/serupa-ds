@@ -1,4 +1,7 @@
 // exports: Timeline, type TimelineAlign, TimelineItem, type TimelineItemProps, type TimelineProps, type TimelineStatus
+interface TimelineLabels {
+    timeline: string;
+}
 type TimelineAlign = "alternate" | "start";
 type TimelineOrientation = "horizontal" | "vertical";
 type TimelineStatus = "danger" | "info" | "neutral" | "primary" | "success" | "warning";

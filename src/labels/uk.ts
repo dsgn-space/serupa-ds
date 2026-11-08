@@ -215,6 +215,7 @@ export const labels: SerupaLabels = {
   tourDone: 'Готово',
   sparklineSummary: (label, first, last, min, max) => label + ': від ' + first + ' до ' + last + ', мінімум ' + min + ', максимум ' + max,
   table: 'Таблиця',
+  timeline: 'Хронологія',
   tableSorted: (column, direction) => 'Сортування: ' + column + ', ' + (direction === 'ascending' ? 'за зростанням' : 'за спаданням') + '.',
   tableSelected: (count) => 'Вибрано: ' + n(count),
   clearSelection: 'Зняти виділення',

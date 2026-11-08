@@ -213,6 +213,7 @@ export const labels: SerupaLabels = {
   tourDone: 'Fertig',
   sparklineSummary: (label, first, last, min, max) => label + ': von ' + first + ' auf ' + last + ', Minimum ' + min + ', Maximum ' + max,
   table: 'Tabelle',
+  timeline: 'Zeitleiste',
   tableSorted: (column, direction) => 'Sortiert nach ' + column + ', ' + (direction === 'ascending' ? 'aufsteigend' : 'absteigend') + '.',
   tableSelected: (count) => n(count) + ' ausgewählt',
   clearSelection: 'Auswahl aufheben',

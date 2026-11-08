@@ -210,6 +210,7 @@ export const labels: SerupaLabels = {
   tourDone: 'Selesai',
   sparklineSummary: (label, first, last, min, max) => label + ': dari ' + first + ' hingga ' + last + ', terendah ' + min + ', tertinggi ' + max,
   table: 'Jadual',
+  timeline: 'Garis masa',
   tableSorted: (column, direction) => 'Diisih mengikut ' + column + ', ' + (direction === 'ascending' ? 'menaik' : 'menurun') + '.',
   tableSelected: (count) => n(count) + ' dipilih',
   clearSelection: 'Kosongkan pilihan',

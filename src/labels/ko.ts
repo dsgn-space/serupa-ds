@@ -212,6 +212,7 @@ export const labels: SerupaLabels = {
   tourDone: '완료',
   sparklineSummary: (label, first, last, min, max) => label + ': ' + first + '에서 ' + last + '까지, 최저 ' + min + ', 최고 ' + max,
   table: '표',
+  timeline: '타임라인',
   tableSorted: (column, direction) => column + ' 기준 ' + (direction === 'ascending' ? '오름차순' : '내림차순') + '으로 정렬했습니다.',
   tableSelected: (count) => n(count) + '개 선택됨',
   clearSelection: '선택 해제',

@@ -51,7 +51,7 @@ Drawn from the `Alternate` story.
 ## Accessibility
 
 - **Role and name:** an `<ol>`: screen readers announce a list and how many events it has (with `role="list"`, so Safari does too). Name it with `aria-label` or `aria-labelledby` when the page has more than one list.
-- **Keyboard:** nothing in a vertical timeline is focusable. Links and buttons you put in the content keep their own focus. A horizontal timeline's scrolling box takes focus, with a focus ring, so arrow keys scroll it (WCAG 2.1.1). It's a region named by the `aria-label` or `aria-labelledby` you give the Timeline.
+- **Keyboard:** nothing in a vertical timeline is focusable. Links and buttons you put in the content keep their own focus. While a horizontal timeline scrolls, its box takes focus, with a focus ring, so arrow keys scroll it (WCAG 2.1.1), and it's a region named by the `aria-label` or `aria-labelledby` you give the Timeline, or by the `timeline` label ("Timeline"). When the events fit, or `stackWhenNarrow` has stacked them, it's no Tab stop, and the name stays on the list.
 - **Contrast:** titles and content read 4.5:1 on the page, and times do too, in all six themes (`Timeline.test.tsx`).
 - **Markers:** the marker and line are `aria-hidden`. Color is decoration, so the title has to carry the status. In forced colors, the dots and line draw in the system text color.
 - **What's still yours:** a meaningful order, a title for every event, and a `dateTime` when the shown time is relative.
@@ -74,7 +74,7 @@ Drawn from the `Alternate` story.
 
 | Key | Does |
 | --- | --- |
-| Tab | To a horizontal timeline's scrolling box, then to any links or buttons in its events |
+| Tab | To a horizontal timeline's box while it scrolls, then to any links or buttons in its events |
 | ← → | Scroll a focused horizontal timeline sideways |
 
 ### TimelineItem
