@@ -91,7 +91,7 @@ Each is an optional override: set it on the page, a container or one meter. The 
 | --- | --- | --- |
 | `--meter-track` | `surface` | The empty part of the bar, inside its edge. |
 | `--meter-track-border` | `field-border` | The track's 1px edge, which marks the whole scale at 3:1 on the page (WCAG 1.4.11). |
-| `--meter-fill` | `primary` | The filled part, without low and high zones (3:1 on the track and the page). |
+| `--meter-fill` | `primary` | The filled part, without low and high zones (3:1 on the track and the surface). |
 | `--meter-fill-optimum` | `success` | The filled part in the best zone. |
 | `--meter-fill-suboptimal` | `warning` | The filled part in the next zone. |
 | `--meter-fill-poor` | `danger` | The filled part in the worst zone. |
