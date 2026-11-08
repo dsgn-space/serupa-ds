@@ -203,12 +203,18 @@ describe('Badge', () => {
     expect(n).toBe(TONES.length * 3 * 6);
   });
 
-  test('palette tones each have their own color, and the status tones map to green, amber, red and sky; primary is the theme\'s primary', async () => {
+  test('palette tones each have their own color; the status tones follow their roles (GR249) and primary is the theme\'s primary', async () => {
     await show();
     const pal = ['violet', 'teal', 'amber'].map((t) => VARIANTS.map((v) => { const s = css(tv(t, v)); return v === 'outline' ? s.borderTopColor : s.backgroundColor; }));
     for (const k of [0, 1, 2]) expect(new Set(pal.map((x) => x[k])).size).toBe(3);
-    expect(css(tv('success', 'solid')).backgroundColor).toBe(css(tv('green', 'solid')).backgroundColor);
-    expect(css(tv('warning', 'subtle')).color).toBe(css(tv('amber', 'subtle')).color);
+    expect(css(tv('success', 'solid')).backgroundColor).toBe(color('var(--success)'));
+    expect(css(tv('success', 'solid')).color).toBe(color('var(--on-success)'));
+    expect(css(tv('warning', 'subtle')).color).toBe(color('var(--warning-text)'));
+    expect(css(tv('info', 'subtle')).backgroundColor).toBe(color('var(--info-subtle)'));
+    expect(css(tv('danger', 'outline')).borderTopColor).toBe(color('var(--danger)'));
+    // A page that sets the role moves its badges.
+    document.documentElement.style.setProperty('--success', 'rgb(1, 2, 3)');
+    try { expect(css(tv('success', 'solid')).backgroundColor).toBe('rgb(1, 2, 3)'); } finally { document.documentElement.style.removeProperty('--success'); }
     expect(css(tv('primary', 'solid')).backgroundColor).toBe(color('var(--primary)'));
   });
 

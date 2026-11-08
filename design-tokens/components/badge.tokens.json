@@ -1,6 +1,6 @@
 {
   "badge": {
-    "$description": "Badge's component tokens. Each one is an optional override: set the CSS variable (--badge-<name>) on the page, a container or one badge, and every Badge inside follows. Unset, it uses the shared token it references here. Badge colors come from the alias colors (neutral, primary) and the palette (every other tone), with contrast checked in every theme; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "$description": "Badge's component tokens. Each one is an optional override: set the CSS variable (--badge-<name>) on the page, a container or one badge, and every Badge inside follows. Unset, it uses the shared token it references here. Badge colors come from the alias colors (neutral, primary, and the status roles success, warning, danger and info) and the palette (every other tone), with contrast checked in every theme; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
       "neutral-subtle-bg": {
         "$type": "color",
@@ -119,6 +119,286 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--badge-primary-outline-border"
+          }
+        }
+      },
+      "success-subtle-bg": {
+        "$type": "color",
+        "$value": "{color.success-subtle}",
+        "$description": "Success subtle: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-subtle-bg"
+          }
+        }
+      },
+      "success-subtle-text": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "Success subtle: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-subtle-text"
+          }
+        }
+      },
+      "success-solid-bg": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "Success solid: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-solid-bg"
+          }
+        }
+      },
+      "success-solid-text": {
+        "$type": "color",
+        "$value": "{color.on-success}",
+        "$description": "Success solid: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-solid-text"
+          }
+        }
+      },
+      "success-outline-text": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "Success outline: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-outline-text"
+          }
+        }
+      },
+      "success-outline-border": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "Success outline: border",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-outline-border"
+          }
+        }
+      },
+      "success-solid-hover": {
+        "$type": "color",
+        "$value": "{color.success-hover}",
+        "$description": "Success solid: the color a clickable badge moves toward on hover and press",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-success-solid-hover"
+          }
+        }
+      },
+      "warning-subtle-bg": {
+        "$type": "color",
+        "$value": "{color.warning-subtle}",
+        "$description": "Warning subtle: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-subtle-bg"
+          }
+        }
+      },
+      "warning-subtle-text": {
+        "$type": "color",
+        "$value": "{color.warning-text}",
+        "$description": "Warning subtle: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-subtle-text"
+          }
+        }
+      },
+      "warning-solid-bg": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "Warning solid: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-solid-bg"
+          }
+        }
+      },
+      "warning-solid-text": {
+        "$type": "color",
+        "$value": "{color.on-warning}",
+        "$description": "Warning solid: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-solid-text"
+          }
+        }
+      },
+      "warning-outline-text": {
+        "$type": "color",
+        "$value": "{color.warning-text}",
+        "$description": "Warning outline: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-outline-text"
+          }
+        }
+      },
+      "warning-outline-border": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "Warning outline: border",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-outline-border"
+          }
+        }
+      },
+      "warning-solid-hover": {
+        "$type": "color",
+        "$value": "{color.warning-hover}",
+        "$description": "Warning solid: the color a clickable badge moves toward on hover and press",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-warning-solid-hover"
+          }
+        }
+      },
+      "danger-subtle-bg": {
+        "$type": "color",
+        "$value": "{color.danger-subtle}",
+        "$description": "Danger subtle: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-subtle-bg"
+          }
+        }
+      },
+      "danger-subtle-text": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "Danger subtle: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-subtle-text"
+          }
+        }
+      },
+      "danger-solid-bg": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "Danger solid: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-solid-bg"
+          }
+        }
+      },
+      "danger-solid-text": {
+        "$type": "color",
+        "$value": "{color.on-danger}",
+        "$description": "Danger solid: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-solid-text"
+          }
+        }
+      },
+      "danger-outline-text": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "Danger outline: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-outline-text"
+          }
+        }
+      },
+      "danger-outline-border": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "Danger outline: border",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-outline-border"
+          }
+        }
+      },
+      "danger-solid-hover": {
+        "$type": "color",
+        "$value": "{color.danger-hover}",
+        "$description": "Danger solid: the color a clickable badge moves toward on hover and press",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-danger-solid-hover"
+          }
+        }
+      },
+      "info-subtle-bg": {
+        "$type": "color",
+        "$value": "{color.info-subtle}",
+        "$description": "Info subtle: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-subtle-bg"
+          }
+        }
+      },
+      "info-subtle-text": {
+        "$type": "color",
+        "$value": "{color.info-text}",
+        "$description": "Info subtle: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-subtle-text"
+          }
+        }
+      },
+      "info-solid-bg": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "Info solid: fill",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-solid-bg"
+          }
+        }
+      },
+      "info-solid-text": {
+        "$type": "color",
+        "$value": "{color.on-info}",
+        "$description": "Info solid: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-solid-text"
+          }
+        }
+      },
+      "info-outline-text": {
+        "$type": "color",
+        "$value": "{color.info-text}",
+        "$description": "Info outline: text and icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-outline-text"
+          }
+        }
+      },
+      "info-outline-border": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "Info outline: border",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-outline-border"
+          }
+        }
+      },
+      "info-solid-hover": {
+        "$type": "color",
+        "$value": "{color.info-hover}",
+        "$description": "Info solid: the color a clickable badge moves toward on hover and press",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-info-solid-hover"
           }
         }
       },
