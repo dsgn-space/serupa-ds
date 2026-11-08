@@ -341,7 +341,7 @@ describe('server-rendered on another day than the visitor\'s', () => {
       try {
         expect(r.errors).toEqual([]);
         expect(today(r.host)).toEqual(['2026-11-08']);
-        expect(r.host.querySelectorAll('.dk-calendar__day--today').length).toBe(1);
+        expect([...r.host.querySelectorAll('button')].filter((b) => b.classList.contains('dk-calendar__day--today')).map((b) => b.dataset.date)).toEqual(['2026-11-08']);
       } finally { r.done(); }
     });
   }
