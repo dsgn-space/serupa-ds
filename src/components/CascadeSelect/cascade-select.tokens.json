@@ -1,0 +1,277 @@
+{
+  "cascade-select": {
+    "$description": "CascadeSelect's component tokens. Each one is an optional override: set the CSS variable (--cascade-select-<name>) on the page, a container or one CascadeSelect, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "The button's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The chosen path and the options (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-text"
+          }
+        }
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.placeholder}",
+        "$description": "The placeholder (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-placeholder"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The button's outline (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-border"
+          }
+        }
+      },
+      "border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "Its outline under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-border-hover"
+          }
+        }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The outline when invalid.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-invalid"
+          }
+        }
+      },
+      "bg-disabled": {
+        "$type": "color",
+        "$value": "{color.field-readonly}",
+        "$description": "The button's background when disabled.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-bg-disabled"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The chevron (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-icon"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Level names, notes and the children chevrons (4.5:1 on the panel).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-muted"
+          }
+        }
+      },
+      "check": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The chosen last step's check (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-check"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around the focused button, column or option.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-focus-ring"
+          }
+        }
+      },
+      "panel-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The panel's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-panel-bg"
+          }
+        }
+      },
+      "panel-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The panel's outline.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-panel-border"
+          }
+        }
+      },
+      "divider": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line between columns.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-divider"
+          }
+        }
+      },
+      "option-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "An option under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-option-hover"
+          }
+        }
+      },
+      "option-on": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The highlighted option in each column.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-option-on"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "The button's corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-radius"
+          }
+        }
+      },
+      "panel-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The panel's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-panel-radius"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "panel-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "The panel's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-panel-shadow"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space at the button's sides at size md (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-padding-x"
+          }
+        }
+      },
+      "column-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-56}",
+        "$description": "A column's width (224px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-column-width"
+          }
+        }
+      },
+      "column-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-72}",
+        "$description": "The tallest a column grows before it scrolls (288px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-column-height"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-sm}",
+        "$description": "The button's height at size sm (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "At size md (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "At size lg (44px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-height-lg"
+          }
+        }
+      }
+    },
+    "z-index": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-popover}",
+        "$description": "The panel's layer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-z-index"
+          }
+        }
+      }
+    }
+  }
+}
