@@ -465,7 +465,7 @@ describe('FileUpload: long file names (GR17)', () => {
     const long = NAMES.map((n) => 'Lampiran panjang sekali untuk rapat bulanan ' + n);
     await render(<><div style={{ width: 460 }}><FileUpload id="gw" readOnly files={NAMES.map((n) => file(n, 'application/pdf', 10))} /></div>
       <div style={{ width: 320 }}><FileUpload id="gc" readOnly files={long.map((n) => file(n, 'application/pdf', 10))} /></div></>);
-    const parts = (id: string) => items(rootOf(id)).map((li) => [...li.querySelector('[title]')!.children].filter((c) => c.getAttribute('aria-hidden') === 'true').map((c) => c.textContent!));
+    const parts = (id: string) => items(rootOf(id)).map((li) => [...li.querySelector('[title]')!.children].filter((c) => c.getAttribute('aria-hidden') === 'true').map((c) => c.textContent));
     expect(parts('gw')).toEqual(NAMES.map((n) => [n]));
     await expect.poll(() => parts('gc').map((p) => p.length)).toEqual([2, 2, 2]);
     const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
