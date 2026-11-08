@@ -1,0 +1,159 @@
+{
+  "icon-tile": {
+    "$description": "IconTile's component tokens. Each one is an optional override: set the CSS variable (--icon-tile-<name>) on the page, a container or one tile, and every IconTile inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "neutral-bg": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "A neutral tile's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-neutral-bg"
+          }
+        }
+      },
+      "neutral-icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A neutral tile's icon (3:1 on its fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-neutral-icon"
+          }
+        }
+      },
+      "primary-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A primary tile's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-primary-bg"
+          }
+        }
+      },
+      "primary-icon": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A primary tile's icon (3:1 on its fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-primary-icon"
+          }
+        }
+      },
+      "success-bg": {
+        "$type": "color",
+        "$value": "{color.success-subtle}",
+        "$description": "A success tile's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-success-bg"
+          }
+        }
+      },
+      "success-icon": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "A success tile's icon (3:1 on its fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-success-icon"
+          }
+        }
+      },
+      "warning-bg": {
+        "$type": "color",
+        "$value": "{color.warning-subtle}",
+        "$description": "A warning tile's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-warning-bg"
+          }
+        }
+      },
+      "warning-icon": {
+        "$type": "color",
+        "$value": "{color.warning-text}",
+        "$description": "A warning tile's icon (3:1 on its fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-warning-icon"
+          }
+        }
+      },
+      "danger-bg": {
+        "$type": "color",
+        "$value": "{color.danger-subtle}",
+        "$description": "A danger tile's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-danger-bg"
+          }
+        }
+      },
+      "danger-icon": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "A danger tile's icon (3:1 on its fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-danger-icon"
+          }
+        }
+      },
+      "info-bg": {
+        "$type": "color",
+        "$value": "{color.info-subtle}",
+        "$description": "An info tile's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-info-bg"
+          }
+        }
+      },
+      "info-icon": {
+        "$type": "color",
+        "$value": "{color.info-text}",
+        "$description": "An info tile's icon (3:1 on its fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-info-icon"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The corners at sizes md and lg (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-radius"
+          }
+        }
+      },
+      "radius-sm": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "The corners at size sm (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-radius-sm"
+          }
+        }
+      },
+      "radius-xl": {
+        "$type": "dimension",
+        "$value": "{radius.radius-container}",
+        "$description": "The corners at size xl (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--icon-tile-radius-xl"
+          }
+        }
+      }
+    }
+  }
+}
