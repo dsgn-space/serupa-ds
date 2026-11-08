@@ -111,7 +111,7 @@ export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c ==
                 <Field label="Name" error={error('sign-up-name')}>
                   <Input id="sign-up-name" name="name" autoComplete="name" value={v.name} onChange={(e) => set('name')(e.target.value)} />
                 </Field>
-                <Field label="Email" hint="We'll send a code here to check it's yours." error={error('sign-up-email')}>
+                <Field label="Email" hint="We’ll send a code here to check it’s yours." error={error('sign-up-email')}>
                   <Input id="sign-up-email" name="email" type="email" autoComplete="email" spellCheck={false} autoCapitalize="none" value={v.email} onChange={(e) => set('email')(e.target.value)} />
                 </Field>
                 <Field label="Phone" optional hint="For signing in if you lose your password.">

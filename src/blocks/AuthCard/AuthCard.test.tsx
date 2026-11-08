@@ -46,8 +46,8 @@ describe('Blocks/Auth card', () => {
     fail();
     await expect.poll(() => page.getByRole('button', { name: 'Sign in' }).element().getAttribute('aria-busy')).not.toBe('true');
     await expect.element(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
-    await expect.element(page.getByText("Couldn't check that. Check your connection and try again.")).toBeVisible();
-    await expect.poll(said).toContain("Couldn't check that");
+    await expect.element(page.getByText('Couldn’t check that. Check your connection and try again.')).toBeVisible();
+    await expect.poll(said).toContain('Couldn’t check that');
     expect(check).toHaveBeenCalledTimes(1);
   });
 
@@ -69,7 +69,7 @@ describe('Blocks/Auth card', () => {
     await userEvent.click(page.getByRole('textbox').first());
     await userEvent.keyboard('123456');
     await userEvent.click(page.getByRole('button', { name: 'Verify' }));
-    await expect.element(page.getByText("Couldn't check that. Check your connection and try again.")).toBeVisible();
+    await expect.element(page.getByText('Couldn’t check that. Check your connection and try again.')).toBeVisible();
     await userEvent.click(page.getByRole('button', { name: 'Verify' }));
     await expect.poll(() => [active().tagName, active().textContent]).toEqual(['H1', 'You’re signed in']);
     expect(verify).toHaveBeenCalledTimes(2);

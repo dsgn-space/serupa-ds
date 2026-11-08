@@ -104,7 +104,7 @@ function checkoutProblems(d: CheckoutDetails): ErrorSummaryItem[] {
     ['country', !d.country, 'Choose your country'],
     ['email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim()), 'Enter an email address, like name@example.com'],
     ['cardNumber', !/^\d{13,19}$/.test(digits), 'Enter the long number on the front of the card: 13 to 19 digits'],
-    ['cardName', !d.cardName.trim(), "Enter the name as it's written on the card"],
+    ['cardName', !d.cardName.trim(), 'Enter the name as it’s written on the card'],
     ['cardExpiry', !/^(0[1-9]|1[0-2]) ?\/ ?\d{2}$/.test(d.cardExpiry.trim()), 'Enter the expiry date as MM/YY, like 08/27'],
     ['cardCode', !/^\d{3,4}$/.test(d.cardCode.trim()), 'Enter the 3 or 4 digit security code from the back of the card'],
   ];
@@ -166,7 +166,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
       announce('Order placed');
     } catch {
       setFailed(true);
-      announce("Your order wasn't placed. Nothing was charged. Try again.");
+      announce('Your order wasn’t placed. Nothing was charged. Try again.');
     } finally { setBusy(false); }
   };
 
@@ -240,7 +240,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
               </form>
             ) : step === 'review' ? (
               <div className="flex flex-col gap-4">
-                {failed ? <p className="m-0 text-danger-text">Your order wasn't placed. Nothing was charged. Try again, or use another card.</p> : null}
+                {failed ? <p className="m-0 text-danger-text">Your order wasn’t placed. Nothing was charged. Try again, or use another card.</p> : null}
                 <Card className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Delivery address</Heading>
