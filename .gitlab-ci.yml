@@ -570,7 +570,7 @@ renovate:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1" && $RENOVATE_TOKEN
   timeout: 30m
-  image: ghcr.io/renovatebot/renovate:41
+  image: renovate/renovate:41
   variables:
     RENOVATE_PLATFORM: gitlab
     RENOVATE_ENDPOINT: $CI_API_V4_URL
