@@ -1177,6 +1177,70 @@
         }
       }
     },
+    "success-hover": {
+      "$type": "color",
+      "$value": "{color.green-500}",
+      "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-400}",
+            "violet-light": "{green-500}",
+            "violet-dark": "{green-400}",
+            "emerald-light": "{green-500}",
+            "emerald-dark": "{green-400}"
+          }
+        }
+      }
+    },
+    "on-success": {
+      "$type": "color",
+      "$value": "{color.green-950}",
+      "$description": "Alias. Text and icons on `success` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-950}",
+            "violet-light": "{green-950}",
+            "violet-dark": "{green-950}",
+            "emerald-light": "{green-950}",
+            "emerald-dark": "{green-950}"
+          }
+        }
+      }
+    },
+    "success-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.green-100}",
+      "$description": "Alias. Hover fill of an interactive `success-subtle` surface; `success-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-900}",
+            "violet-light": "{green-100}",
+            "violet-dark": "{green-900}",
+            "emerald-light": "{green-100}",
+            "emerald-dark": "{green-900}"
+          }
+        }
+      }
+    },
+    "success-border": {
+      "$type": "color",
+      "$value": "{color.green-300}",
+      "$description": "Alias. Border of a success outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-800}",
+            "violet-light": "{green-300}",
+            "violet-dark": "{green-800}",
+            "emerald-light": "{green-300}",
+            "emerald-dark": "{green-800}"
+          }
+        }
+      }
+    },
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
@@ -1229,6 +1293,70 @@
           "contrastMore": {
             "light": "{amber-900}",
             "dark": "{amber-200}"
+          }
+        }
+      }
+    },
+    "warning-hover": {
+      "$type": "color",
+      "$value": "{color.amber-500}",
+      "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-400}",
+            "violet-light": "{amber-500}",
+            "violet-dark": "{amber-400}",
+            "emerald-light": "{amber-500}",
+            "emerald-dark": "{amber-400}"
+          }
+        }
+      }
+    },
+    "on-warning": {
+      "$type": "color",
+      "$value": "{color.amber-950}",
+      "$description": "Alias. Text and icons on `warning` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-950}",
+            "violet-light": "{amber-950}",
+            "violet-dark": "{amber-950}",
+            "emerald-light": "{amber-950}",
+            "emerald-dark": "{amber-950}"
+          }
+        }
+      }
+    },
+    "warning-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.amber-100}",
+      "$description": "Alias. Hover fill of an interactive `warning-subtle` surface; `warning-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-900}",
+            "violet-light": "{amber-100}",
+            "violet-dark": "{amber-900}",
+            "emerald-light": "{amber-100}",
+            "emerald-dark": "{amber-900}"
+          }
+        }
+      }
+    },
+    "warning-border": {
+      "$type": "color",
+      "$value": "{color.amber-300}",
+      "$description": "Alias. Border of a warning outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-800}",
+            "violet-light": "{amber-300}",
+            "violet-dark": "{amber-800}",
+            "emerald-light": "{amber-300}",
+            "emerald-dark": "{amber-800}"
           }
         }
       }
@@ -1401,6 +1529,70 @@
           "contrastMore": {
             "light": "{sky-900}",
             "dark": "{sky-200}"
+          }
+        }
+      }
+    },
+    "info-hover": {
+      "$type": "color",
+      "$value": "{color.sky-800}",
+      "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-300}",
+            "violet-light": "{sky-800}",
+            "violet-dark": "{sky-300}",
+            "emerald-light": "{sky-800}",
+            "emerald-dark": "{sky-300}"
+          }
+        }
+      }
+    },
+    "on-info": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-950}",
+            "violet-light": "{white}",
+            "violet-dark": "{sky-950}",
+            "emerald-light": "{white}",
+            "emerald-dark": "{sky-950}"
+          }
+        }
+      }
+    },
+    "info-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.sky-100}",
+      "$description": "Alias. Hover fill of an interactive `info-subtle` surface; `info-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-900}",
+            "violet-light": "{sky-100}",
+            "violet-dark": "{sky-900}",
+            "emerald-light": "{sky-100}",
+            "emerald-dark": "{sky-900}"
+          }
+        }
+      }
+    },
+    "info-border": {
+      "$type": "color",
+      "$value": "{color.sky-300}",
+      "$description": "Alias. Border of a info outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-800}",
+            "violet-light": "{sky-300}",
+            "violet-dark": "{sky-800}",
+            "emerald-light": "{sky-300}",
+            "emerald-dark": "{sky-800}"
           }
         }
       }
