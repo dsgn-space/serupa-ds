@@ -73,7 +73,7 @@ describe('Patterns/Error pages', () => {
         <Page />
       </ErrorBoundary>,
     );
-    expect(document.querySelector('main')!.textContent).toContain("It isn't something you did. If it keeps happening, contact support and give them this reference: ERR-1.");
+    expect(document.querySelector('main')!.textContent).toContain('It isn’t something you did. If it keeps happening, contact support and give them this reference: ERR-1.');
     broken = false;
     await screen.getByRole('button', { name: 'Try again' }).click();
     await expect.poll(() => document.querySelector('h1')?.textContent).toBe('Dashboard');

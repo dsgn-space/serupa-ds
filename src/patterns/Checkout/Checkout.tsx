@@ -266,7 +266,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                 </Card>
               </div>
             ) : (
-              <p className="m-0 wrap-anywhere">We've sent the receipt to {d.email}. We'll email again when it's on its way.</p>
+              <p className="m-0 wrap-anywhere">We’ve sent the receipt to {d.email}. We’ll email again when it’s on its way.</p>
             )}
           </section>
 

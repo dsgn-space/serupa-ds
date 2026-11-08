@@ -97,7 +97,7 @@ describe('Patterns/Checkout', () => {
     await screen.getByRole('button', { name: /Place order/ }).click();
     await vi.waitFor(() => expect(active().textContent).toBe('Thank you, your order is placed'));
     await vi.waitFor(() => expect(said()).toContain('Order placed'));
-    expect(document.querySelector('main')!.textContent).toContain("We've sent the receipt to ada@example.com");
+    expect(document.querySelector('main')!.textContent).toContain('We’ve sent the receipt to ada@example.com');
   });
 
   test('startAtReview with answers missing starts on the details', async () => {
