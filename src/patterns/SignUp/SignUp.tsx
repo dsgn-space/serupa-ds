@@ -13,6 +13,7 @@ import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { PinInput } from '../../components/PinInput/PinInput';
 import { Icon } from '../../components/Icon/Icon';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
+import { Alert } from '../../components/Alert/Alert';
 
 /* Sign-up: name, email, an optional phone, a password whose rules are shown before typing, and the terms; then a
    code sent by email; then done. For an app to copy. What it carries (WCAG 2.2):
@@ -73,6 +74,8 @@ export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c ==
   const [code, setCode] = React.useState('');
   const [codeError, setCodeError] = React.useState('');
   const [busy, setBusy] = React.useState(false);
+  // onSubmit rejected (the server refused, or the network failed): say so over the button, and keep what was typed.
+  const [failed, setFailed] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement>(null);
   const moved = React.useRef(false);
   React.useEffect(() => { if (moved.current) heading.current?.focus(); }, [step]);
@@ -88,7 +91,8 @@ export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c ==
     setTries((t) => t + 1);
     if (found.length) return;
     setBusy(true);
-    Promise.resolve(onSubmit?.(v)).then(() => go('code'), () => {}).finally(() => setBusy(false));
+    setFailed(false);
+    Promise.resolve().then(() => onSubmit?.(v)).then(() => go('code'), () => setFailed(true)).finally(() => setBusy(false));
   };
   const check = (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +139,7 @@ export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c ==
                     I agree to the <Link href="#terms">terms</Link> and the <Link href="#privacy">privacy notice</Link>
                   </Checkbox>
                 </Field>
+                {failed ? <Alert tone="danger">Couldn’t create your account. Check your connection and try again.</Alert> : null}
                 <Button type="submit" loading={busy}>Create account</Button>
               </form>
               <p className="m-0 text-sm">Already have an account? <Link href="#sign-in">Sign in</Link></p>
