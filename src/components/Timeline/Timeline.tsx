@@ -6,13 +6,22 @@ import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 
 export type TimelineAlign = 'start' | 'alternate';
+export type TimelineOrientation = 'vertical' | 'horizontal';
 export type TimelineStatus = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
 const ALIGNS: readonly TimelineAlign[] = ['start', 'alternate'];
+const ORIENTATIONS: readonly TimelineOrientation[] = ['vertical', 'horizontal'];
 const STATUSES: readonly TimelineStatus[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
 
 export interface TimelineProps extends React.OlHTMLAttributes<HTMLOListElement> {
   /** 'start' (default): every event on one side of the line. 'alternate': from 768px up, events take turns on either side of a centered line; narrower, they stay on one side. */
   align?: TimelineAlign | undefined;
+  /** 'vertical' (default): events down a line. 'horizontal': events along a line, left to right (right to left in
+      right-to-left text), for milestones and order tracking; past the width it has, it scrolls sideways in its own box,
+      which takes keyboard focus so arrow keys scroll it. align doesn't apply. */
+  orientation?: TimelineOrientation | undefined;
+  /** With orientation="horizontal": when the box it's in is under 480px wide (a phone, a narrow card), show the
+      events down a line instead of scrolling sideways. Default: false. */
+  stackWhenNarrow?: boolean | undefined;
   /** TimelineItems, in the order they happened (or newest first: the list keeps whatever order you give). */
   children?: React.ReactNode | undefined;
 }
@@ -36,9 +45,22 @@ export interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIEle
    time and optional content. align="alternate" puts events on both sides of a centered line from 768px up. */
 /** An ordered list of events, for activity feeds and order history. */
 export const Timeline = /* @__PURE__ */ component<HTMLOListElement, TimelineProps>('Timeline', function Timeline(props, ref) {
-  const { className, align, ...rest } = props;
+  const { className, align, orientation, stackWhenNarrow, style, ...rest } = props;
   const a = oneOf(ALIGNS, align, 'start');
-  return <ol role="list" {...rest} ref={ref} className={cn('dk-timeline', a === 'alternate' && 'dk-timeline--alternate', className)} data-component="timeline" />;
+  if (oneOf(ORIENTATIONS, orientation, 'vertical') === 'vertical') {
+    return <ol role="list" {...rest} style={style} ref={ref} className={cn('dk-timeline', a === 'alternate' && 'dk-timeline--alternate', className)} data-component="timeline" />;
+  }
+  /* Horizontal: the list in a box that scrolls sideways (and is a container, for stackWhenNarrow). The box takes
+     focus, so a keyboard can scroll it (WCAG 2.1.1), and is a region named as the list was; className and style go
+     to it, as the outermost element. */
+  const { 'aria-label': label, 'aria-labelledby': labelledBy, ...list } = rest;
+  const named = label != null || labelledBy != null;
+  return (
+    <div className={cn('dk-timeline-scroll', stackWhenNarrow && 'dk-timeline-scroll--stack', className)} style={style} tabIndex={0}
+      role={named ? 'region' : undefined} aria-label={label} aria-labelledby={labelledBy} data-component="timeline" data-orientation="horizontal">
+      <ol role="list" {...list} ref={ref} className="dk-timeline dk-timeline--horizontal" />
+    </div>
+  );
 });
 
 /* TimelineItem: an <li> with the marker (aria-hidden: the title says what happened), the title, a <time> and

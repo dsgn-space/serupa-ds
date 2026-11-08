@@ -37,6 +37,25 @@
   .dk-timeline--alternate .dk-timeline__body { grid-area: after; }
   .dk-timeline--alternate .dk-timeline__item:nth-child(even) .dk-timeline__body { grid-area: before; text-align: end; }
 }
+/* orientation="horizontal": the items in a row, each a column: the rail across the top (the marker, then the line
+   on to the next marker), the body under it. In a box that scrolls sideways on its own (no scroll chaining to the
+   page), with a focus ring when the keyboard is in it. stackWhenNarrow: under 480px of container, back to the
+   vertical layout. The row follows the text direction, so right-to-left runs right to left. */
+.dk-timeline-scroll { container: dk-timeline / inline-size; max-inline-size: var(--sizing-full); overflow-x: auto; overscroll-behavior-inline: contain; border-radius: var(--timeline-radius, var(--radius-inner)); }
+.dk-timeline-scroll:focus-visible { outline: var(--focus-ring-width) solid var(--timeline-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-timeline--horizontal { display: flex; align-items: start; inline-size: max-content; min-inline-size: var(--sizing-full); }
+.dk-timeline--horizontal .dk-timeline__item { flex: 1 0 var(--timeline-item-width, var(--spacing-48)); inline-size: var(--timeline-item-width, var(--spacing-48)); grid-template-columns: minmax(var(--spacing-0), 1fr); grid-template-areas: "rail" "body"; row-gap: var(--timeline-gap, var(--spacing-3)); }
+.dk-timeline--horizontal .dk-timeline__rail { flex-direction: row; }
+.dk-timeline--horizontal .dk-timeline__rail::after { inline-size: auto; block-size: var(--timeline-line-width, var(--border-width-2)); margin-block: var(--spacing-0); margin-inline: var(--spacing-1); }
+.dk-timeline--horizontal .dk-timeline__body { padding-block-end: var(--spacing-0); padding-inline-end: var(--timeline-gap, var(--spacing-3)); }
+@container dk-timeline (max-width: 480px) {
+  .dk-timeline-scroll--stack .dk-timeline--horizontal { display: block; inline-size: auto; min-inline-size: var(--spacing-0); }
+  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__item { inline-size: auto; grid-template-columns: var(--timeline-marker-size, var(--spacing-6)) minmax(var(--spacing-0), auto); grid-template-areas: "rail body"; row-gap: var(--spacing-0); }
+  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__rail { flex-direction: column; }
+  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__rail::after { inline-size: var(--timeline-line-width, var(--border-width-2)); block-size: auto; margin-block: var(--spacing-1); margin-inline: var(--spacing-0); }
+  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__body { padding-block-end: var(--timeline-item-gap, var(--spacing-6)); padding-inline-end: var(--spacing-0); }
+  .dk-timeline-scroll--stack .dk-timeline--horizontal .dk-timeline__item:last-child .dk-timeline__body { padding-block-end: var(--spacing-0); }
+}
 @media (forced-colors: active) {
   .dk-timeline__marker::before, .dk-timeline__rail::after { background: CanvasText; }
   .dk-timeline__marker--icon { border: var(--border-width-1) solid CanvasText; }

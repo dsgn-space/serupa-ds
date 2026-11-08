@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { page, userEvent } from 'vitest/browser';
+import { THEMES, contrast, css, lowContrast } from '../../../tools/test/vitest/helpers';
 import { Timeline, TimelineItem } from './Timeline';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -112,5 +112,65 @@ describe('Timeline', () => {
     const body = q(el('lw'), '.dk-timeline__body');
     expect([el('box').scrollWidth <= 241, body.scrollWidth <= body.clientWidth + 1, rect(body).right <= rect(el('box')).right + 1]).toEqual([true, true, true]);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+  });
+});
+
+describe('Timeline orientation="horizontal" (RU12)', () => {
+  const Row = (p: { stack?: boolean; dir?: 'rtl' }) => <div dir={p.dir}>
+    <Timeline id="h" orientation="horizontal" stackWhenNarrow={p.stack} aria-label="Order tracking" className="mine">
+      <TimelineItem id="h1" title="Ordered" time="12 Mar">Two items, paid by card, packed at the warehouse.</TimelineItem>
+      <TimelineItem id="h2" title="Shipped" time="13 Mar" />
+      <TimelineItem id="h3" title="Out for delivery" time="15 Mar" />
+      <TimelineItem id="h4" title="Delivered" time="16 Mar" />
+    </Timeline>
+  </div>;
+
+  test('events in a row along the line, each 192px wide, the rail above the body; the list is still a list', async () => {
+    await render(<div style={{ width: 1000 }}><Row /></div>);
+    await expect.element(page.getByRole('list')).toBeInTheDocument();
+    expect(page.getByRole('listitem').all().length).toBe(4);
+    const [a, b] = [rect(el('h1')), rect(el('h2'))];
+    expect([a.top, Math.round(b.left - a.left), Math.round(a.width) >= 192]).toEqual([b.top, Math.round(a.width), true]);
+    expect(rect(q(el('h1'), '.dk-timeline__rail')).bottom).toBeLessThanOrEqual(rect(q(el('h1'), '.dk-timeline__body')).top);
+    // Every marker on one line, however long an event's text.
+    expect(rect(q(el('h1'), '.dk-timeline__marker')).top).toBe(rect(q(el('h2'), '.dk-timeline__marker')).top);
+  });
+
+  test('className, style and the name go to a scrolling region around the <ol>; the rest and ref to the <ol>', async () => {
+    const ref = React.createRef<HTMLOListElement>();
+    await render(<Timeline id="r" ref={ref} orientation="horizontal" aria-label="Phases" className="mine" style={{ maxWidth: 300 }} data-x="y"><TimelineItem title="One" /></Timeline>);
+    const box = el('r').parentElement!;
+    await expect.element(page.getByRole('region', { name: 'Phases' })).toBeInTheDocument();
+    expect([ref.current === el('r'), el('r').dataset.x, el('r').hasAttribute('aria-label'), box.classList.contains('mine'), box.style.maxWidth, box.dataset.orientation]).toEqual([true, 'y', false, true, '300px', 'horizontal']);
+  });
+
+  test('past its width it scrolls sideways in its own box, not the page; Tab reaches the box and an arrow key scrolls it', async () => {
+    await render(<div style={{ width: 320 }}><Row /></div>);
+    const box = el('h').parentElement!;
+    expect([box.scrollWidth > box.clientWidth, Math.round(rect(box).width), css(box).overscrollBehaviorInline]).toEqual([true, 320, 'contain']);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(box);
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.poll(() => box.scrollLeft).toBeGreaterThan(0);
+  });
+
+  test('right to left, the first event is at the right', async () => {
+    await render(<div style={{ width: 1000 }}><Row dir="rtl" /></div>);
+    expect(rect(el('h1')).left).toBeGreaterThan(rect(el('h2')).left);
+  });
+
+  test('stackWhenNarrow: under 480px of box the events go down a line; wider, they stay in a row', async () => {
+    await render(<div style={{ width: 360 }}><Row stack /></div>);
+    const box = el('h').parentElement!;
+    expect([rect(el('h2')).top > rect(el('h1')).bottom - 1, box.scrollWidth <= box.clientWidth]).toEqual([true, true]);
+  });
+
+  test('stackWhenNarrow in a box 480px or wider: the events stay in a row', async () => {
+    await render(<div style={{ width: 1000 }}><Row stack /></div>);
+    expect(rect(el('h1')).top).toBe(rect(el('h2')).top);
+  });
+
+  test('the scrolling box\'s focus ring keeps 3:1 on the page in all six themes', () => {
+    expect(lowContrast([['focus ring', 'var(--focus-ring)', 'var(--surface)', 3]])).toEqual([]);
   });
 });
