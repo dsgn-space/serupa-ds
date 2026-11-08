@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { cdp, page, server, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -233,15 +233,35 @@ describe('ChatDivider', () => {
     } finally { root?.unmount(); host.remove(); }
   });
 
+  // The clock runs on from a second before midnight (only Date is faked, so the component's own timer is real).
+  async function atMidnight(day: Date, id: string) {
+    vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 59));
+    const r = await render(<SerupaProvider locale="en-US"><ChatDivider id={id} date={new Date(day.getFullYear(), day.getMonth(), day.getDate(), 9, 0)} /></SerupaProvider>);
+    return r;
+  }
   test('"Today" becomes "Yesterday" at midnight, with no other render', async () => {
-    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
     try {
-      vi.setSystemTime(new Date(2026, 10, 8, 23, 59, 30));
-      await render(<SerupaProvider locale="en-US"><ChatDivider id="mid" date={new Date(2026, 10, 8, 9, 0)} /></SerupaProvider>);
+      await atMidnight(new Date(2026, 10, 8), 'mid');
       expect(document.getElementById('mid')!.textContent).toBe('Today');
-      await React.act(async () => { vi.advanceTimersByTime(60_000); });
-      expect(document.getElementById('mid')!.textContent).toBe('Yesterday');
+      await expect.poll(() => document.getElementById('mid')!.textContent, { timeout: 4000 }).toBe('Yesterday');
     } finally { vi.useRealTimers(); }
+  });
+
+  test('across a clock change (Europe/London), "Today" turns at midnight, not an hour late', async () => {
+    const session = server.browser === 'chromium' ? (cdp() as unknown as { send: (m: string, p?: object) => Promise<unknown> }) : null;
+    if (!session) return;
+    await session.send('Emulation.setTimezoneOverride', { timezoneId: 'Europe/London' });
+    try {
+      // 29 March 2026 has 23 hours (clocks forward at 1am): today's start plus 24 hours is 1am on the 30th.
+      const { unmount } = await atMidnight(new Date(2026, 2, 29), 'dst');
+      expect(document.getElementById('dst')!.textContent).toBe('Today');
+      await expect.poll(() => document.getElementById('dst')!.textContent, { timeout: 4000 }).toBe('Yesterday');
+      unmount();
+    } finally {
+      vi.useRealTimers();
+      await session.send('Emulation.setTimezoneOverride', { timezoneId: '' });
+    }
   });
 });
 

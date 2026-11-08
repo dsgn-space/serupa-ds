@@ -192,7 +192,8 @@ const dayStart = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(
    The visitor's words follow right after hydration. It moves on at the visitor's midnight, with no other render. */
 const subscribeDay = (cb: () => void) => {
   let t: ReturnType<typeof setTimeout>;
-  const next = () => { t = setTimeout(() => { cb(); next(); }, dayStart(new Date()) + DAY + 1000 - Date.now()); };
+  // The next midnight by the calendar, not today's start plus 24 hours, which a DST change makes 23 or 25 hours.
+  const next = () => { const n = new Date(); t = setTimeout(() => { cb(); next(); }, new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1).getTime() + 1000 - n.getTime()); };
   next();
   return () => clearTimeout(t);
 };
