@@ -5,10 +5,10 @@
 - button "Copy invite link"
 - textbox "Filter": Bandung
 - button "Clear filter"
-- textbox "Coupon code, large": SAVE20
-- button "Apply"
-- textbox "Disabled coupon code" [disabled]: WELCOME10
-- button "Apply" [disabled]
+- textbox "Gift card number": GC-4417
+- button "Redeem"
+- textbox "Referral code" [disabled]: ANA-2026
+- button "Check" [disabled]
 
 # Count
 - textbox "Title": Quarterly report

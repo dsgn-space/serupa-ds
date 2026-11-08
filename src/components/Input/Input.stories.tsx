@@ -78,8 +78,8 @@ function ActionsDemo() {
       <Input aria-label="Coupon code" value={code} onChange={(e) => setCode(e.target.value)} actions={<InputAction label="Apply" />} />
       <Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />
       <Input size="sm" aria-label="Filter" defaultValue="Bandung" actions={<InputAction icon="close" label="Clear filter" />} />
-      <Input size="lg" aria-label="Coupon code, large" defaultValue="SAVE20" actions={<InputAction label="Apply" />} />
-      <Input aria-label="Disabled coupon code" disabled defaultValue="WELCOME10" actions={<InputAction label="Apply" />} />
+      <Input size="lg" aria-label="Gift card number" defaultValue="GC-4417" actions={<InputAction label="Redeem" />} />
+      <Input aria-label="Referral code" disabled defaultValue="ANA-2026" actions={<InputAction label="Check" />} />
     </Col>;
 }
 export const Actions: Story = { render: () => <ActionsDemo /> };
