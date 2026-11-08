@@ -8,7 +8,7 @@
 // truncates or scrolls.
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PROJECT, tokensCss, report, done } from './lib.mjs';
+import { HERE, PROJECT, kebab, tokensCss, report, done } from './lib.mjs';
 import { componentIndex } from '../build/registry.mjs';
 
 const SKIP = [];
@@ -25,7 +25,6 @@ const EXEMPT = {
 const GAPS = {};
 const COMP = path.join(PROJECT, 'src', 'components');
 const comps = fs.readdirSync(COMP).filter((c) => fs.statSync(path.join(COMP, c)).isDirectory() && !SKIP.includes(c)).sort();
-const kebab = (c) => c.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 const { themes } = tokensCss();
 // baseline-visual/<Name>/<Story>-<theme>-<state>.png (tools/test/visual.mjs).
 const baselines = (c) => { const d = path.join(HERE, 'baseline-visual', c); return fs.existsSync(d) ? fs.readdirSync(d) : []; };

@@ -5,6 +5,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
+import { ESLint } from 'eslint';
 import { PROJECT, report, done } from './lib.mjs';
 
 const R = [];
@@ -35,9 +37,9 @@ if (made.status === 0) {
   t('and the server-render case package.mjs runs', fs.existsSync(path.join(root, 'tools', 'test', 'ssr', 'DateBadge.mjs')));
 
   const code = read('DateBadge.tsx');
-  t('the component goes through component() and is marked pure, so it tree-shakes', /\/\* @__PURE__ \*\/ component<[^>]+>\("DateBadge"/.test(code) && !/forwardRef|displayName/.test(code));
+  t('the component goes through component() and is marked pure, so it tree-shakes', /\/\* @__PURE__ \*\/ component<[^>]+>\('DateBadge'/.test(code) && !/forwardRef|displayName/.test(code));
   t('it starts as beta: @beta in the doc comment on its export (tools/build/registry.mjs reads it)', /@beta[^*]*\*\/\nexport const DateBadge\b/.test(code));
-  t('its class and data-component are the kebab-case name', code.includes('"dk-date-badge"') && code.includes('data-component="date-badge"'));
+  t('its class and data-component are the kebab-case name', code.includes("'dk-date-badge'") && code.includes('data-component="date-badge"'));
   t('the stories sit in the group asked for', read('DateBadge.stories.tsx').includes("title: 'Components/Forms/DateBadge'"));
 
   // The tokens file, the CSS and the guide's table agree: every token's CSS variable is read in the CSS, with the
@@ -57,6 +59,22 @@ if (made.status === 0) {
   t('the guide has the headings guides.mjs requires, in order', JSON.stringify(headings) === JSON.stringify(REQUIRED), headings.join(', '));
   const marked = fs.readdirSync(dir).filter((f) => f !== 'index.ts' && f !== 'date-badge.tokens.json' && f !== 'DateBadge.mdx' && f !== 'preview.html' && !read(f).includes('TODO(new-component)'));
   t('every file that needs its author\'s words says TODO(new-component), so contract.mjs holds it back', !marked.length, marked.join(', '));
+
+  // The generated code passes the repository's ESLint config as it is, so a new style rule can't drift from the
+  // templates (R1: the SG5 single-quote rule failed every new component). The rules that need TypeScript's type
+  // information are left out: the folder is outside the project, so there are no types to read.
+  const config = (await import(pathToFileURL(path.join(PROJECT, 'eslint.config.mjs')).href)).default;
+  const typed = Object.fromEntries(config.flatMap((c) => Object.entries(c.plugins || {}).flatMap(([p, plugin]) => Object.entries(plugin.rules || {})
+    .filter(([, rule]) => rule.meta?.docs?.requiresTypeChecking).map(([r]) => [`${p}/${r}`, 'off']))));
+  const untyped = config.map((c) => (c.languageOptions?.parserOptions?.projectService ? { ...c, languageOptions: { ...c.languageOptions, parserOptions: { ...c.languageOptions.parserOptions, projectService: false } } } : c));
+  const eslint = new ESLint({ cwd: PROJECT, overrideConfigFile: true, overrideConfig: [...untyped, { rules: typed }] });
+  const problems = [];
+  for (const f of fs.readdirSync(dir).filter((f) => /\.(tsx?|mjs)$/.test(f))) {
+    for (const r of await eslint.lintText(read(f), { filePath: path.join(PROJECT, 'src', 'components', 'DateBadge', f) })) {
+      problems.push(...r.messages.map((m) => `${f}:${m.line} ${m.ruleId}: ${m.message}`));
+    }
+  }
+  t('what it writes passes ESLint, as npm run lint runs it', !problems.length, problems.slice(0, 10).join('; '));
 
   const again = make('DateBadge');
   t('it won\'t overwrite a component that exists', again.status === 1 && /already exists/.test(again.stderr), again.stderr);

@@ -11,6 +11,7 @@
 // so it never merges: pick, delete it, then make the component.
 import fs from 'node:fs';
 import path from 'node:path';
+import { kebab as toKebab } from './test/lib.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 const args = process.argv.slice(2);
@@ -20,7 +21,7 @@ const root = path.resolve(arg('--root') || P);   // another checkout to write in
 const group = arg('--group') || 'Content';
 if (!name || !/^[A-Z][A-Za-z0-9]*$/.test(name)) { console.error('usage: npm run new-component -- <Name> [--group <Storybook group>]   (Name in PascalCase, e.g. Rating)'); process.exit(2); }
 const dir = path.join(root, 'src', 'components', name);
-const kebab = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+const kebab = toKebab(name);
 const camel = name[0].toLowerCase() + name.slice(1);
 const TODO = 'TODO(new-component)';
 
@@ -64,10 +65,10 @@ if (fs.existsSync(dir)) { console.error(`src/components/${name}/ already exists`
 const token = (type, value, description, cssVar) => ({ $type: type, $value: value, $description: description, $extensions: { 'com.serupa': { cssVar } } });
 
 const files = {
-  [`${name}.tsx`]: `"use client";
-import * as React from "react";
-import { cn } from "../../internal/cn";
-import { component } from "../../internal/component";
+  [`${name}.tsx`]: `'use client';
+import * as React from 'react';
+import { cn } from '../../internal/cn';
+import { component } from '../../internal/component';
 
 export interface ${name}Props extends React.HTMLAttributes<HTMLDivElement> {
   /** ${TODO}: describe each prop here; Storybook and the API baseline read these comments. */
@@ -76,14 +77,14 @@ export interface ${name}Props extends React.HTMLAttributes<HTMLDivElement> {
 
 /** ${TODO}: one line on what ${name} is for.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const ${name} = /* @__PURE__ */ component<HTMLDivElement, ${name}Props>("${name}", function ${name}(props, ref) {
+export const ${name} = /* @__PURE__ */ component<HTMLDivElement, ${name}Props>('${name}', function ${name}(props, ref) {
   const { className, ...rest } = props;
-  return <div {...rest} ref={ref} className={cn("dk-${kebab}", className)} data-component="${kebab}" />;
+  return <div {...rest} ref={ref} className={cn('dk-${kebab}', className)} data-component="${kebab}" />;
 });
 `,
   'index.ts': `// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.
-export { ${name} } from "./${name}";
-export type { ${name}Props } from "./${name}";
+export { ${name} } from './${name}';
+export type { ${name}Props } from './${name}';
 `,
   [`${name}.css`]: `/* ---------------------------------------------------------------
    ${name}: ${TODO} what it looks like, in a sentence or two. Every value reads one of its own tokens
