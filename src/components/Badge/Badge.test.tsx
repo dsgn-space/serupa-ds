@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, css, keepMotion, press, tabTo, settled } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
+import { Tooltip } from '../Tooltip/Tooltip';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
 const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
@@ -621,6 +622,11 @@ describe('focus after removing a tag (179)', () => {
     await userEvent.keyboard('{Enter}');
     await new Promise((r) => setTimeout(r, 30));
     expect(focused()).toBe('Remove Kept');
+  });
+  test('in a Tooltip, which shows the cut label itself, a cut badge has no title of its own', async () => {
+    await render(<div style={{ width: '120px' }}><Tooltip content="Takes a minute"><Badge id="tipped" onClick={() => {}}>Export every report as a spreadsheet</Badge></Tooltip></div>);
+    await settled();
+    expect([el('tipped').hasAttribute('aria-describedby'), el('tipped').getAttribute('title')]).toEqual([true, null]);
   });
   test('a cut label shows in full as the title (EV1); one that fits, a count, or a badge with its own title or name gets none', async () => {
     const LONG = 'Waiting for the design review to finish';

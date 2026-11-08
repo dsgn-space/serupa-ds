@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { useCut } from '../../internal/useCut';
 import { config } from '../../internal/config';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -92,21 +93,12 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
   }, [loading, loadingText]);
   const isCount = props.count != null;
   // A text label cut with an ellipsis shows in full as the badge's title on hover, as Button's does (DV1): the same
-  // words as its text, so nothing is read twice. Not for a count, or a badge with a title or name of its own.
+  // words as its text, so nothing is read twice. Not for a count, or a badge with a title or name of its own, or a
+  // Tooltip (its aria-describedby), which shows the cut label itself.
   const text = !isCount && (typeof props.children === 'string' || typeof props.children === 'number') ? String(props.children) : '';
-  const tipOk = !!text && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'];
+  const tipOk = !!text && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
-  const [cut, setCut] = React.useState(false);
-  useIsoLayoutEffect(function () {
-    const own = node.current && node.current.querySelector<HTMLElement>('.dk-badge__label');
-    if (!tipOk || !own) { setCut(false); return; }
-    const check = () => setCut(own.scrollWidth > own.clientWidth);
-    check();
-    if (typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(check);
-    ro.observe(own);
-    return () => ro.disconnect();
-  }, [tipOk, text]);
+  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-badge__label'));
   const setNode = React.useCallback(function (n: HTMLElement | null) { node.current = n; setRef(ref, n); }, [ref]);
   let label: React.ReactNode = props.children;
   if (isCount) {

@@ -91,6 +91,8 @@ function formats(locale: string): Formats {
 }
 
 const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, className: 1 } as const;
+// For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
+const never = () => () => {}, yes = () => true, no = () => false;
 
 /* Calendar: a month of days to pick one from. Follows the ARIA date grid pattern: one Tab stop on the days,
    arrows move a day or a week, Home and End to the week's start and end, PageUp and PageDown a month (with
@@ -110,6 +112,12 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const [, setTick] = React.useState(0);
   const today = day(new Date());
   const todayTime = today.getTime();
+  // A server's today isn't always the visitor's (a UTC server, a visitor in Jakarta before 7am), so the server render
+  // and hydration mark no day as today, and put the Tab stop on the value or the month's first day: both sides
+  // agree, whatever their clocks say. The visitor's today, and the Tab stop on it, follow right after hydration. A
+  // render in the browser alone has them at once.
+  const hydrated = React.useSyncExternalStore(never, yes, no);
+  const marked = hydrated ? today : null;
   React.useEffect(() => {
     const t = setTimeout(() => setTick((n) => n + 1), addDays(new Date(todayTime), 1).getTime() - Date.now() + 50);
     return () => clearTimeout(t);
@@ -184,6 +192,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
     move(n);
   };
 
+  const stop = hydrated ? focus : value && sameMonth(value, month) ? value : month;
   const first = startOfWeek(month, ws);
   const weeks: Date[][] = [];
   for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
@@ -212,12 +221,12 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
           {weeks.map((row, w) => (
             <tr key={w}>
               {row.map((d) => {
-                const off = !!disabled(d), sel = selected(d), outside = !sameMonth(d, month);
+                const off = !!disabled(d), sel = selected(d), outside = !sameMonth(d, month), now = !!marked && sameDay(d, marked);
                 if (outside && props.hideOutside) return <td key={d.getTime()} role="gridcell" className="dk-calendar__blank" />;
                 return (
                   <td key={d.getTime()} aria-selected={sel} role="gridcell">
-                    <button type="button" tabIndex={sameDay(d, focus) ? 0 : -1} aria-label={full.format(d)} aria-disabled={off || undefined} aria-current={sameDay(d, today) ? 'date' : undefined}
-                      className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', sameDay(d, today) && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', props.dayClassName && props.dayClassName(d))}
+                    <button type="button" tabIndex={sameDay(d, stop) ? 0 : -1} aria-label={full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
+                      className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', now && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', props.dayClassName && props.dayClassName(d))}
                       data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
                       onClick={() => pick(d)} onFocus={() => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }}
                       onMouseEnter={props.onDayHover ? () => props.onDayHover!(d) : undefined}>

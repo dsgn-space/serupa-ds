@@ -33,9 +33,11 @@ import { SegmentedControl } from "serupa-ds";
 Drawn from the `WithIcons` story.
 
 1. **Item** (`.dk-segmented__item`): one choice, a radio in a group.
-2. **Selected item** (`.dk-segmented__item--selected`): the choice that's on, on a raised surface.
+2. **Selected item** (`.dk-segmented__item--selected`): the choice that's on, in the text color (`--segmented-control-text-selected`) rather than the muted one.
 3. **Icon** (`.dk-segmented__icon`): an optional picture of the choice.
 4. **Label** (`.dk-segmented__label`): the choice, in words.
+
+Once the script runs, the raised surface under the selected item is the **indicator** (`.dk-segmented__indicator`), its own element that slides to the new choice and that the `--segmented-control-indicator*` tokens style. Before that, in the page's first paint from the server, the selected item draws the surface itself, so style the surface through those tokens rather than on `.dk-segmented__item--selected`.
 
 ## Usage
 

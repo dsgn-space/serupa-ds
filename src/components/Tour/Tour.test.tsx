@@ -133,6 +133,18 @@ describe('Tour', () => {
     expect(onStepChange).toHaveBeenLastCalledWith(1);
   });
 
+  test('keyboard: Tab goes round the panel, never on to the page under it', async () => {
+    await render(<Page defaultOpen defaultStep={1} />);
+    await userEvent.tab({ shift: true });
+    expect(document.activeElement).toBe(button('Next'));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(button('Close'));
+    await userEvent.tab({ shift: true });
+    expect(document.activeElement).toBe(button('Next'));
+    await userEvent.tab({ shift: true });
+    expect(document.activeElement).toBe(button('Back'));
+  });
+
   test('opened again, an uncontrolled tour starts over at defaultStep', async () => {
     function Reopen() {
       const [open, setOpen] = React.useState(true);
