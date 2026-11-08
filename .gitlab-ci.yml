@@ -86,12 +86,13 @@ default:
 # (RESULT_CACHE: "off", build): a skipped build would leave them without dist/.
 .result-cache:
   check:
-    # Visual and Storybook shoot storybook-static, which no test file, changeset or other check script goes into:
+    # Visual and Storybook shoot storybook-static, which no test file or other check script goes into (changesets do:
+    # the Upgrading page renders them, GR284):
     # their key leaves those out, so a push that only fixes a test or a check doesn't shoot every story again.
     - |
       tree() {
         case "$GROUP" in
-          visual|storybook) git ls-tree -r HEAD | grep -vP '\t(.*\.test\.tsx?|\.changeset/.*|tools/test/vitest/.*|tools/test/(?!(lib|run|visual|storybook)\.mjs$)[^/]+\.mjs)$' | git hash-object --stdin ;;
+          visual|storybook) git ls-tree -r HEAD | grep -vP '\t(.*\.test\.tsx?|tools/test/vitest/.*|tools/test/(?!(lib|run|visual|storybook)\.mjs$)[^/]+\.mjs)$' | git hash-object --stdin ;;
           *) git rev-parse HEAD^{tree} ;;
         esac
       }
@@ -213,7 +214,7 @@ suite:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
       changes:
         # What storybook-static is built from (src, docs and Storybook's setup, with the tools and files they import:
-        # docs/blocks.tsx reads tokens.json, package.json, README.md and CHANGELOG.md, the registry, the token
+        # docs/blocks.tsx reads tokens.json, package.json, README.md, CHANGELOG.md and the changesets, the registry, the token
         # contrast pairs, the TypeScript API reader, the utilities and serupa-migrate's transforms), what shoots and
         # checks it, its baselines, and the pipeline itself.
         - src/**/*
@@ -231,6 +232,7 @@ suite:
         - .nvmrc
         - README.md
         - CHANGELOG.md
+        - .changeset/*.md
         - .gitlab-ci.yml
         - bin/migrate/**/*
         - tools/build/**/*
