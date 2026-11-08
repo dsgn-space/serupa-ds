@@ -362,6 +362,16 @@ describe('SegmentedControl', () => {
       expect(off('sl')).toEqual([0, 0]);
     });
   });
+  test('the indicator sits exactly on its segment, to the fraction of a pixel, at any text width', async () => {
+    const labels = ['Board view', 'Timeline', 'Calendar views', 'Mi', 'Ünïcödé widths', 'Week', 'Agenda list', 'Quarterly'];
+    await document.fonts.ready;
+    await render(<div>{labels.map((l, i) => <SegmentedControl key={l} id={'fr' + i} aria-label="View" options={[{ value: 'a', label: 'List ' + i }, { value: 'b', label: l }]} defaultValue="b" />)}</div>);
+    const gaps = labels.flatMap((_, i) => {
+      const ind = el('fr' + i).querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('fr' + i).querySelector('[aria-checked=true]')!.getBoundingClientRect();
+      return [Math.abs(ind.left - c.left), Math.abs(ind.width - c.width)];
+    });
+    expect(gaps.every((g) => g < 0.02), gaps.map((g) => g.toFixed(3)).join(' ')).toBe(true);
+  });
   test('from the keyboard (KW1): an arrow moves the indicator at once, with no slide', async () => {
     await withMotion(async () => {
       await render(<SegmentedControl id="sk" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }]} defaultValue="a" />);

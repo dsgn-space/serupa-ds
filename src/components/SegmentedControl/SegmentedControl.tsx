@@ -116,7 +116,9 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
     setCut(c);
     setTight(!!props.fullWidth && n > 0 && most > total / n + 0.5);
     if (!r || !b) { setBox(null); return; }
-    const x = b.offsetLeft, w = b.offsetWidth;
+    // From the boxes, not offsetLeft and offsetWidth: those round to whole pixels, and segments are as wide as their
+    // text, so the indicator sat up to half a pixel off its segment.
+    const rb = r.getBoundingClientRect(), bb = b.getBoundingClientRect(), x = bb.left - rb.left - r.clientLeft, w = bb.width;
     setBox((p) => (p && p.x === x && p.w === w ? p : { x, w }));   // the same box when nothing moved, so a slide under way runs on
   }, [value, props.fullWidth]);
   useIsoLayoutEffect(measure, [measure, options.length, size, tight]);
