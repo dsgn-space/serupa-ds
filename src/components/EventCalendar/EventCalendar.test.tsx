@@ -87,6 +87,27 @@ describe('EventCalendar', () => {
     expect(cell('2025-04-02').textContent).toMatch(/^Wednesday, April 2, 2025, No events/);
   });
 
+  test('at 360px the agenda shows an event over midnight and a long title whole, without scrolling sideways (GR208)', async () => {
+    const [w, h] = [window.innerWidth, window.innerHeight];
+    await page.viewport(360, 700);
+    try {
+      await render(<EventCalendar defaultMonth={MARCH} events={[
+        { id: 'n', title: 'Release night', start: '2025-03-21T22:00', end: '2025-03-22T02:00' },
+        { id: 'l', title: 'Design review with the whole platform group', start: '2025-03-24T14:00', end: '2025-03-24T15:00' },
+      ]} />);
+      await expect.element(page.getByText('Release night').first()).toBeInTheDocument();
+      expect(document.querySelector('.dk-event-calendar__agenda')).not.toBeNull();
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
+      const right = document.querySelector('.dk-event-calendar')!.getBoundingClientRect().right;
+      for (const t of document.querySelectorAll<HTMLElement>('.dk-event-calendar__time, .dk-event-calendar__title')) {
+        expect(Math.floor(t.getBoundingClientRect().right)).toBeLessThanOrEqual(Math.ceil(right));
+        expect(t.scrollWidth).toBeLessThanOrEqual(t.clientWidth + 1);   // nothing cut off
+      }
+    } finally {
+      await page.viewport(w, h);
+    }
+  });
+
   test('keyboard: Enter and Space on an event open it', async () => {
     const opened: string[] = [];
     await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onEventClick={(e) => opened.push(e.id)} />);

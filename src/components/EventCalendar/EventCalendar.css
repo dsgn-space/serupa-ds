@@ -54,9 +54,13 @@
   color: var(--event-calendar-muted, var(--text-muted)); font: inherit; font-size: var(--text-xs); font-weight: var(--font-medium); cursor: pointer; touch-action: manipulation;
 }
 @media (hover: hover) { .dk-event-calendar__more:hover { background: var(--event-calendar-more-bg-hover, var(--surface-muted)); color: var(--event-calendar-text, var(--text)); } }
-/* In the "+N more" Popover and the agenda, an event shows its whole time and wraps its title. */
+/* In the "+N more" Popover and the agenda, an event shows its whole time and its whole title. */
 .dk-event-calendar__events--all { min-width: calc(var(--spacing-24) + var(--spacing-24)); }
-.dk-event-calendar__events--all .dk-event-calendar__title, .dk-event-calendar__agenda .dk-event-calendar__title { white-space: normal; }
+/* Both wrap, so an event over midnight ("Friday, March 21, 2025 10:00 PM to Saturday, …") and a long title fit a
+   360px screen without scrolling sideways (1.4.10, GR208). */
+.dk-event-calendar__events--all .dk-event-calendar__event { flex-wrap: wrap; }
+.dk-event-calendar__events--all .dk-event-calendar__time, .dk-event-calendar__agenda .dk-event-calendar__time { flex: initial; min-width: var(--spacing-0); }
+.dk-event-calendar__events--all .dk-event-calendar__title, .dk-event-calendar__agenda .dk-event-calendar__title { overflow: visible; white-space: normal; overflow-wrap: anywhere; }
 
 .dk-event-calendar__agenda { display: flex; flex-direction: column; gap: var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-event-calendar__agenda-date { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); }
