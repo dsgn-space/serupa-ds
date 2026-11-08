@@ -22,9 +22,9 @@ describe('Patterns/Error pages', () => {
     }
     expect(seen).toEqual([
       ['Page not found – Acme', 'Page not found'],
-      ["You're offline – Acme", "You're offline"],
+      ['You’re offline – Acme', 'You’re offline'],
       ['Something went wrong on our side – Acme', 'Something went wrong on our side'],
-      ["You don't have access to this page – Acme", "You don't have access to this page"],
+      ['You don’t have access to this page – Acme', 'You don’t have access to this page'],
     ]);
   });
 
@@ -57,7 +57,7 @@ describe('Patterns/Error pages', () => {
     const status = document.querySelector('main [role="status"]')!;
     expect(status.textContent).toBe('');
     window.dispatchEvent(new Event('online'));
-    await expect.poll(() => status.textContent).toBe("You're back online. Try again to load the page.");
+    await expect.poll(() => status.textContent).toBe('You’re back online. Try again to load the page.');
     expect(tries).toBe(0);
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(tries).toBe(1);

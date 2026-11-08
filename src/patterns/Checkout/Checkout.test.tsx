@@ -90,7 +90,7 @@ describe('Patterns/Checkout', () => {
     const onPlaceOrder = vi.fn(() => (fail ? Promise.reject(new Error('declined')) : Promise.resolve()));
     const screen = await render(<Checkout initial={filled} startAtReview onPlaceOrder={onPlaceOrder} />);
     await screen.getByRole('button', { name: /Place order/ }).click();
-    await vi.waitFor(() => expect(said()).toContain("Your order wasn't placed. Nothing was charged."));
+    await vi.waitFor(() => expect(said()).toContain('Your order wasn’t placed. Nothing was charged.'));
     expect(document.querySelector('main')!.textContent).toContain('Check your order');
     expect(onPlaceOrder).toHaveBeenCalledWith(expect.objectContaining({ total: 2450 + 1800 * 2 }));
     fail = false;

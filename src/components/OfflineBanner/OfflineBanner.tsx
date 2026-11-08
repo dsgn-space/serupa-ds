@@ -17,7 +17,7 @@ export interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivEle
   online?: boolean | undefined;
   /** 'bottom' (default) or 'top': fixed to that edge of the screen, in the middle. 'inline': where you put it. */
   placement?: 'bottom' | 'top' | 'inline' | undefined;
-  /** More words after "You're offline", such as what still works: "Changes are kept and sent when you're back." */
+  /** More words after "You’re offline", such as what still works: "Changes are kept and sent when you're back." */
   children?: React.ReactNode | undefined;
   /** Called when the connection drops (false) or comes back (true). */
   onOnlineChange?: ((online: boolean) => void) | undefined;
@@ -61,7 +61,7 @@ const setRootSpace = (root: HTMLElement, who: object, space: number | null) => {
 const browserOnline = () => navigator.onLine;
 const serverOnline = () => true;
 
-/* OfflineBanner: nothing while the app is online. When the connection drops, a bar ("You're offline", and your own
+/* OfflineBanner: nothing while the app is online. When the connection drops, a bar ("You’re offline", and your own
    words after it) slides in and the shared polite live region says so; when it comes back the bar says "Back
    online" for feedbackHold, is said too, and slides away. The bar itself isn't a live region, so it's said once. */
 /** Says when the connection drops and when it comes back, on screen and to screen readers.

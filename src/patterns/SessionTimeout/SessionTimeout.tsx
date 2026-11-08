@@ -95,7 +95,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
   const opened = React.useRef(false);
   React.useEffect(() => {
     if (!warning) { opened.current = false; return; }
-    if (!opened.current) { opened.current = true; announce(`You'll be signed out in ${timeLeft(left)}.`); }
+    if (!opened.current) { opened.current = true; announce(`You’ll be signed out in ${timeLeft(left)}.`); }
     else if (worthSaying(left)) announce(`${timeLeft(left)} left.`);
   }, [warning, left]);
 
@@ -127,7 +127,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
     onExpire?.();
   };
   const extend = async () => {
-    try { await onExtend?.(); restart(); announce("You're still signed in."); } catch { /* the session runs out as warned */ }
+    try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch { /* the session runs out as warned */ }
   };
   const type = (k: keyof Draft) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const next = { ...draft, [k]: e.target.value };
@@ -144,7 +144,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
       <main id="main" className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
         {expired ? (
           <div className="flex flex-col gap-3">
-            <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? "You've signed out" : "You've been signed out"}</Heading>
+            <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? 'You’ve signed out' : 'You’ve been signed out'}</Heading>
             <p className="m-0">{byChoice
               ? 'What you typed is cleared from this computer, so nobody else finds it.'
               : `We signed you out because nothing happened for ${timeLeft(duration)}. What you typed is kept: sign in again to carry on where you left off.`}</p>
@@ -169,14 +169,14 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
           </>
         )}
       </main>
-      <Dialog open={warning} alert size="sm" title="You'll be signed out soon"
+      <Dialog open={warning} alert size="sm" title="You’ll be signed out soon"
         onOpenChange={(open) => { if (!open) void extend(); }}
         footer={<>
           <Button variant="secondary" onClick={signOut}>Sign out</Button>
           <Button data-autofocus onClick={() => void extend()}>Stay signed in</Button>
         </>}>
-        <p className="m-0">You'll be signed out in <strong>{timeLeft(left)}</strong> because nothing has happened for a while.</p>
-        <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you've typed is kept. Signing out clears it.</p>
+        <p className="m-0">You’ll be signed out in <strong>{timeLeft(left)}</strong> because nothing has happened for a while.</p>
+        <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you’ve typed is kept. Signing out clears it.</p>
       </Dialog>
     </div>
   );

@@ -10,11 +10,11 @@ export interface DatePickerLabels {
 }
 export const en: DatePickerLabels = {
   chooseDate: 'Choose a date',
-  inputNotAccepted: (text) => `"${text}" wasn't accepted, so the previous value was kept.`,
+  inputNotAccepted: (text) => `“${text}” wasn’t accepted, so the previous value was kept.`,
   formatHint: (pattern) => 'Format: ' + pattern,
 };
 export const id: DatePickerLabels = {
   chooseDate: 'Pilih tanggal',
-  inputNotAccepted: (text) => `"${text}" tidak diterima, jadi nilai sebelumnya dipertahankan.`,
+  inputNotAccepted: (text) => `“${text}” tidak diterima, jadi nilai sebelumnya dipertahankan.`,
   formatHint: (pattern) => 'Format: ' + pattern,
 };

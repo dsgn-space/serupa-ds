@@ -123,8 +123,8 @@ describe('Blocks/Comment thread', () => {
     fail();
     await expect.poll(() => (page.getByRole('button', { name: 'Post reply' }).element() as HTMLButtonElement).getAttribute('aria-busy')).not.toBe('true');
     await expect.element(page.getByRole('textbox', { name: 'Reply' })).toHaveValue('Still here');
-    await expect.element(page.getByText("Couldn't post the reply. Try again.")).toBeVisible();
-    await expect.poll(said).toContain("Couldn't post the reply");
+    await expect.element(page.getByText('Couldn’t post the reply. Try again.')).toBeVisible();
+    await expect.poll(said).toContain('Couldn’t post the reply');
     expect(said()).not.toContain('Reply posted');
   });
 
@@ -148,8 +148,8 @@ describe('Blocks/Comment thread', () => {
     await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
     await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
     await userEvent.click(page.getByRole('button', { name: 'Save' }));
-    await expect.element(page.getByText("Couldn't save the comment. Try again.")).toBeVisible();
-    await expect.poll(said).toContain("Couldn't save the comment");
+    await expect.element(page.getByText('Couldn’t save the comment. Try again.')).toBeVisible();
+    await expect.poll(said).toContain('Couldn’t save the comment');
     await expect.element(page.getByRole('textbox', { name: 'Edit comment' })).toHaveValue('Yes, 24px.');
     expect(said()).not.toContain('Comment saved');
   });

@@ -1067,7 +1067,7 @@ Say what happened and how to fix it, in that order, next to the thing that needs
 | Error 413 | report.pdf is larger than 10 MB |
 | This field is required | Enter your email |
 | Something went wrong | We couldn't save your changes. Try again. |
-| photo.heic: this type of file isn't accepted. | photo.heic isn't a PNG or JPG. |
+| photo.heic: this type of file isn’t accepted. | photo.heic isn’t a PNG or JPG. |
 
 - Put a field's error in Field's `error`, so it's tied to the control and read with it.
 - If nothing the person does will fix it, say so and say what happens next: "We couldn't reach the server. Your changes are kept and will be sent when you're back online."

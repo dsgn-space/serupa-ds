@@ -14,7 +14,7 @@ Four pages for when the page someone asked for can't be shown: not found (404), 
 - **Not found**: the address doesn't match a page, or the page was deleted or moved.
 - **Offline**: the app knows there's no connection (a service worker, or `navigator.onLine` is false when a fetch fails).
 - **Server error**: the server failed, or the whole page threw while rendering. Put an ErrorBoundary around the page with this as its fallback.
-- **No access**: the person is signed in but isn't allowed to see this page. When they aren't signed in at all, send them to sign in instead.
+- **No access**: the person is signed in but isn't allowed to see this page. When they aren’t signed in at all, send them to sign in instead.
 - Not for a part of a page that failed: an ErrorBoundary's own fallback, or an Alert in that part, keeps the rest of the page working.
 
 ## What each part is for
@@ -24,7 +24,7 @@ Four pages for when the page someone asked for can't be shown: not found (404), 
 - **A way back on every page**: a header link to the home page, and in main "Go to the home page" plus the page's own next step: "Go back", "Try again" or "Sign in as someone else". No one is left at a dead end.
 - **Words that don't blame.** The server page says "It isn't something you did." The not-found page says the link may have a typo, not that the person typed it wrong.
 - **A reference on the server page**, for support to find what failed. Pass your own as `reference`.
-- **"You're back online"** on the offline page, in a status region that is always there, so a screen reader reads it when the connection returns (4.1.3). The page doesn't reload by itself: a change nobody asked for loses their place (3.2.2).
+- **"You’re back online"** on the offline page, in a status region that is always there, so a screen reader reads it when the connection returns (4.1.3). The page doesn't reload by itself: a change nobody asked for loses their place (3.2.2).
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.Offline} />
