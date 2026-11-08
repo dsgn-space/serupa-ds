@@ -561,3 +561,24 @@ design qa:
     expose_as: Design QA
     expire_in: 30 days
     paths: [design-qa.md]
+
+# Dependency updates (Renovate, in place of GitHub's Dependabot; its rules are in renovate.json): nightly, once a
+# GitLab token is saved as the masked CI/CD variable RENOVATE_TOKEN. Each update is a merge request through the
+# same pipeline as any other.
+renovate:
+  extends: .nightly
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1" && $RENOVATE_TOKEN
+  timeout: 30m
+  image: ghcr.io/renovatebot/renovate:41
+  variables:
+    RENOVATE_PLATFORM: gitlab
+    RENOVATE_ENDPOINT: $CI_API_V4_URL
+    RENOVATE_REPOSITORIES: $CI_PROJECT_PATH
+    RENOVATE_ONBOARDING: "false"
+    RENOVATE_REQUIRE_CONFIG: required
+    LOG_LEVEL: info
+  cache: []
+  before_script: []
+  script:
+    - renovate
