@@ -193,7 +193,7 @@ describe('VirtualList', () => {
     const step = async (move: () => unknown, by: number, what: string) => {
       const was = await steady();
       await move();
-      await expect.poll(() => Math.abs(first() - was - by), what).toBeLessThanOrEqual(1);
+      await expect.poll(() => Math.abs(first() - was - by), { message: what }).toBeLessThanOrEqual(1);
     };
     const key = (k: string) => () => userEvent.keyboard(k);
     await step(key('{ArrowDown}'), 40 / h, 'ArrowDown');
