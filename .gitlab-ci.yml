@@ -54,6 +54,11 @@ default:
   # Bump it with Playwright.
   image: mcr.microsoft.com/playwright:v1.64.1-noble
   interruptible: true
+  # Once more when the machine, not the code, failed: a runner restart, a lost connection, GitLab's API. A failing
+  # test is never retried here (inParallelRetry in tools/test/lib.mjs names the rare story retried and passed).
+  retry:
+    max: 1
+    when: [runner_system_failure, stuck_or_timeout_failure, api_failure, scheduler_failure, data_integrity_failure]
   cache:
     - key: { files: [package-lock.json] }
       paths: [.npm/]
@@ -111,6 +116,7 @@ default:
     - if [ "$CI_JOB_STATUS" = success ] && [ -n "$RESULT" ]; then mkdir -p .result-cache && echo "$CI_JOB_URL" > ".result-cache/$RESULT"; fi
 
 build:
+  tags: [arm]
   extends: .full-suite-or-cross
   stage: build
   timeout: 20m
@@ -155,6 +161,7 @@ changeset:
 # test that fails on the base commit's src/. Anything else passes in seconds, before the browser is used. A fix only
 # the screenshots can show takes the "no-repro-test" label.
 fix proof:
+  tags: [arm]
   stage: build
   timeout: 20m
   rules:
@@ -274,8 +281,9 @@ suite:
       - .test-tmp/
       - tools/test/baseline-visual/**/*.actual.png
 
-# The checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow) take no screenshot and
-# have no timing budget, so they run on serupa-arm (Oracle's Always Free Ampere, tag arm) next to serupa-runner: the
+# build (dist/ and storybook-static/ are the same files on either machine), fix proof (one test against the base), and
+# the checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow): none takes a screenshot
+# or has a timing budget, so they run on serupa-arm (Oracle's Always Free Ampere, tag arm) next to serupa-runner: the
 # same image, the same rules, the same Chromium revision (Playwright's own arm64 build, tools/setup.mjs).
 suite arm:
   extends: suite
