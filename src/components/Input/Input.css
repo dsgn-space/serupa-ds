@@ -83,7 +83,10 @@
   .dk-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--secondary)); color: var(--input-action-hover, var(--text)); }
 }
 .dk-input-action:focus-visible { outline: var(--focus-ring-width) solid var(--input-action-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.dk-input-action:disabled { cursor: not-allowed; }
+/* Disabled on its own (an Apply waiting for a code), it dims as Button does, with no hover shade. In a disabled
+   field the whole box is dimmed already, so the action isn't dimmed twice. */
+.dk-input-action:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-input--disabled .dk-input-action:disabled, .dk-input:where(:has(.dk-input__field:disabled)) .dk-input-action:disabled { opacity: var(--opacity-100); }
 .dk-input-action::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
 @media (prefers-reduced-motion: reduce) { .dk-input-action { transition: none; } }
 }

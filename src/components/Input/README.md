@@ -114,7 +114,7 @@ Drawn from the `Icons` story.
 | --- | --- | --- | --- |
 | `label` | string | required | The action's name: the words on a text action, the accessible name of an icon action |
 | `icon` | icon name or element | | Makes it an icon action: the icon, at the field's icon size, in `text-muted` |
-| `disabled` | boolean | the Input's | Disabled on its own; a disabled Input disables it anyway |
+| `disabled` | boolean | the Input's | Disabled on its own, dimmed to 50% as a disabled Button is; a disabled Input disables it anyway |
 
 Every other button attribute (`onClick`, `aria-*`) and `ref` go to the `<button>`, which has `data-component="input-action"`.
 

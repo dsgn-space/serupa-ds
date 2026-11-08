@@ -482,12 +482,14 @@ describe('Input actions (RU15)', () => {
     expect([n, document.activeElement === field('pr')]).toEqual([1, false]);
   });
 
-  test('a disabled Input disables its actions; an action can still be disabled on its own', async () => {
+  test('a disabled Input disables its actions; an action can still be disabled on its own, and then looks it', async () => {
     await render(<>
       <Input id="ds" aria-label="Off" disabled actions={<InputAction label="Apply" />} />
       <Input id="on" aria-label="On" actions={<><InputAction label="Apply" disabled /><InputAction label="Keep" /></>} />
     </>);
     expect([actions('ds')[0].disabled, actions('on')[0].disabled, actions('on')[1].disabled]).toEqual([true, true, false]);
+    // Disabled alone, it dims as Button does; in a disabled field the box is dimmed already, so it isn't twice (GR282).
+    expect([css(actions('on')[0]).opacity, css(actions('on')[1]).opacity, css(actions('ds')[0]).opacity, css(box('ds')).opacity]).toEqual(['0.5', '1', '1', '0.5']);
   });
 
   test('each action is the field\'s height less its border and a 2px inset at every size, and at least 24px to press', async () => {
