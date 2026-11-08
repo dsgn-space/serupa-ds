@@ -43,9 +43,13 @@ let current = null;
 for (const line of u[1].split('\n')) {
   const h = /^### (\w+)/.exec(line);
   if (h) { current = SECTIONS.includes(h[1]) ? h[1] : (have[h[1]] = have[h[1]] || [], h[1]); continue; }
-  if (current && line.trim()) {
-    if (/^- /.test(line)) have[current].push(line.slice(2)); else have[current][have[current].length - 1] += '\n' + line;
-  }
+  if (!line.trim()) continue;
+  // A note outside a "### Section", or text before a section's first "- ", has nowhere to go: stop rather than drop
+  // it (T8). tools/README.md says notes can be written under [Unreleased] by hand.
+  if (!current) throw new Error(`CHANGELOG.md: "${line.trim()}" under [Unreleased] is outside a "### Added/Changed/…" section`);
+  if (/^- /.test(line)) have[current].push(line.slice(2));
+  else if (!have[current].length) throw new Error(`CHANGELOG.md: "${line.trim()}" under [Unreleased] "### ${current}" comes before its first "- " note`);
+  else have[current][have[current].length - 1] += '\n' + line;
 }
 const order = [...SECTIONS, ...Object.keys(have).filter((s) => !SECTIONS.includes(s))];
 const merged = order.map((s) => /** @type {[string, string[]]} */ ([s, [...(have[s] || []), ...(notes[s] || [])]])).filter(([, list]) => list.length)

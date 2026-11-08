@@ -33,6 +33,22 @@ import { LOCALES } from './test/lib.mjs';
 
 const PROJECT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
+// --help prints the usage above; an option it doesn't know (a typo like --sinse) stops before anything runs, since a
+// whole run takes an hour and would quietly ignore it (GR275).
+const VALUED = ['--since', '--skip', '--from', '--only', '--report'];
+const FLAGS = ['--all-locales', '--keep-going', '--list', '--resume', '--clean'];
+if (process.argv.includes('--help') || process.argv.includes('-h')) {
+  const usage = fs.readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//   ') || l.startsWith('//  ')).map((l) => l.slice(3));
+  console.log(usage.join('\n'));
+  process.exit(0);
+}
+for (let i = 2; i < process.argv.length; i++) {
+  const a = process.argv[i];
+  if (VALUED.includes(a)) {
+    if (process.argv[i + 1] === undefined || process.argv[i + 1].startsWith('--')) { console.error(`${a} needs a value (node tools/ci.mjs --help)`); process.exit(2); }
+    i++;
+  } else if (!FLAGS.includes(a)) { console.error(`Unknown option: ${a} (node tools/ci.mjs --help)`); process.exit(2); }
+}
 const since = arg('--since');
 const skip = new Set((arg('--skip') || '').split(',').filter(Boolean));
 const keepGoing = process.argv.includes('--keep-going');
@@ -74,8 +90,13 @@ const from = arg('--from');
 const only = arg('--only') ? new Set(arg('--only').split(',').filter(Boolean)) : null;
 const unknown = [...skip, ...(from ? [from] : []), ...(only || [])].filter((s) => s !== 'changeset' && !all.some((st) => st.name === s));
 if (unknown.length) { console.error(`Unknown step: ${unknown.join(', ')} (see --list)`); process.exit(2); }
+// changeset is a step only with --since: naming it without one would silently run from the top (R8).
+const asked = [...(from ? [from] : []), ...(only || [])].filter((st) => st === 'changeset');
+if (asked.length && !since) { console.error('The changeset step runs only with --since <base> (as CI runs it against the merge request\'s base).'); process.exit(2); }
 const start = from ? Math.max(0, all.findIndex((st) => st.name === from)) : 0;
 const steps = all.slice(start).filter((st) => !skip.has(st.name) && (!only || only.has(st.name)));
+// Nothing to run is not a pass: an empty summary would say "All passed" (R8).
+if (!steps.length && !process.argv.includes('--list')) { console.error('No steps to run: --skip, --only and --from left none (see --list).'); process.exit(2); }
 if (process.argv.includes('--list')) { for (const { name, job, cmd, args } of steps) console.log(`${name}\t${job}\t${path.basename(cmd)} ${args.join(' ')}`); process.exit(0); }
 
 // The Node the repo asks for (devEngines in package.json): an older one fails npm ci and some steps in ways that

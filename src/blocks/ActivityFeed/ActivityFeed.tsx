@@ -56,7 +56,7 @@ export interface ActivityFeedProps {
   emptyText?: string | undefined;
   /** The button's words. Default: LoadMore's "Load more". */
   loadMoreLabel?: string | undefined;
-  /** Shown after the last page. Default: LoadMore's "You've reached the end". */
+  /** Shown after the last page. Default: LoadMore's "You’ve reached the end". */
   endText?: string | undefined;
 }
 

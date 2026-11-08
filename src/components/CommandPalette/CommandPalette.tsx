@@ -15,6 +15,17 @@ import { Highlight } from '../Highlight/Highlight';
 import { Kbd } from '../Kbd/Kbd';
 import { useShortcut } from '../KeyboardShortcuts/KeyboardShortcuts';
 import { en as words } from './labels';
+import { warnOnce } from '../../internal/warn';
+
+/* A command's href leaves by location.assign, which React's block on javascript: URLs doesn't cover: only a web
+   page (http, https, or a path on this site), mailto: or tel: goes. Anything else (javascript:, data:, vbscript:)
+   does nothing, and warns in development. */
+function go(href: string) {
+  let u: URL;
+  try { u = new URL(href, window.location.href); } catch { return; }
+  if (/^(https?|mailto|tel):$/.test(u.protocol)) window.location.assign(u.href);
+  else if (process.env.NODE_ENV !== 'production') warnOnce('command-palette-href', 'CommandPalette: a command\'s href ' + JSON.stringify(href) + " isn't a web page, mailto: or tel: link, so choosing it does nothing. Use onSelect to run code.");
+}
 
 /** One command or page in the palette. */
 export interface Command {
@@ -141,7 +152,7 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
     setChosen(null);
     const c = chosen.c;
     if (c.onSelect) c.onSelect();
-    else if (c.href && typeof window !== 'undefined') window.location.assign(c.href);
+    else if (c.href && typeof window !== 'undefined') go(c.href);
     if (done.current) done.current(c);
   }, [chosen]);
   const choose = (r: Row | null) => {

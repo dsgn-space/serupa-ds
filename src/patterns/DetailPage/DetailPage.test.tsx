@@ -86,7 +86,7 @@ describe('Patterns/Detail page', () => {
     await screen.getByRole('button', { name: 'Delete project' }).click();
     const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
     await expect.element(dialog).toBeVisible();
-    expect(dialog.element().textContent).toMatch(/4 tasks and files .*can't be undone/);
+    expect(dialog.element().textContent).toMatch(/4 tasks and files .*can’t be undone/);
     // Before the name is typed the button is aria-disabled (focusable, but it does nothing).
     (dialog.getByRole('button', { name: 'Delete this project' }).element() as HTMLElement).click();
     expect(onDelete).not.toHaveBeenCalled();

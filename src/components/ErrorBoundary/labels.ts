@@ -8,7 +8,7 @@ export interface ErrorBoundaryLabels {
 }
 export const en: ErrorBoundaryLabels = {
   errorTitle: 'Something went wrong',
-  errorDescription: "This part of the page couldn't load.",
+  errorDescription: 'This part of the page couldn’t load.',
   tryAgain: 'Try again',
 };
 export const id: ErrorBoundaryLabels = {

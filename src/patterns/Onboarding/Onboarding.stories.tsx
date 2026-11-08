@@ -17,7 +17,7 @@ export const FirstVisit: Story = {};
 /** Coming back halfway: the done steps say "Done" and their links step back to secondary. */
 export const Halfway: Story = { args: { initial: { done: ['profile', 'team'] } } };
 
-/** Every step done: "You're all set" and the way on to the dashboard. */
+/** Every step done: "You’re all set" and the way on to the dashboard. */
 export const AllDone: Story = { args: { initial: { done: ['profile', 'team', 'project', 'notifications'] } } };
 
 /** Folded away: one line with the count, and a button to show the checklist again. */

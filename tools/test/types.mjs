@@ -56,7 +56,8 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // Kanban (RU1, 7 Nov 2026), a new component generic over its card type, takes them to 231,542, so 232,000.
 // CascadeSelect (RU3, 7 Nov 2026), a new component, takes them to 232,458, so 234,000, with room for FilterBar,
 // StatusTracker and TableOfContents (RU2, RU7, RU5), queued behind it with about 500 each.
-const BUDGET = { Types: 101000, Instantiations: 234000 };
+// Input's actions and InputAction (RU15, 8 Nov 2026) add about 450 on top, so 235,000.
+const BUDGET = { Types: 101000, Instantiations: 235000 };
 const diag = built && spawnSync(process.execPath, [tsc, '-p', path.join(HERE, 'types'), '--extendedDiagnostics'], { cwd: PROJECT, encoding: 'utf8' });
 for (const [what, budget] of Object.entries(BUDGET)) {
   const n = diag ? Number((diag.stdout.match(new RegExp(`^${what}:\\s+(\\d+)`, 'm')) || [])[1]) : NaN;

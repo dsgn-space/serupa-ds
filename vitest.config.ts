@@ -60,6 +60,10 @@ export default defineConfig({
         // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
         // one file landed in the middle of a drag in another. One file at a time there.
         fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
+        // With coverage on (CI's full runs and the nightly), V8 collects for the whole shared page between tests, and on
+        // a busy runner that can stall a test of 80 ms past the default limit (T6: CommandPalette's "limit caps the rows"
+        // and Chat's six-theme contrast). Only the time limit moves; every assertion still holds.
+        ...(process.env.SERUPA_COVERAGE ? { testTimeout: 60_000 } : {}),
         browser: {
           enabled: true,
           headless: true,
