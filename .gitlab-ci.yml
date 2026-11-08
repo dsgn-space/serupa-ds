@@ -32,8 +32,10 @@ workflow:
 stages: [build, test]
 
 variables:
-  # Matches Playwright's own image; tools/setup.mjs installs the pinned Chromium revision beside its browsers.
-  PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+  # The Chromium the baselines are drawn with: Chrome for Testing at the version browsers.json names, which
+  # tools/setup.mjs installs. The image's own /ms-playwright holds a later patch of that revision (156.0.8078.80
+  # for .4), which tools/test/visual.mjs refuses. Kept in the cache, so it downloads once.
+  PLAYWRIGHT_BROWSERS_PATH: $CI_PROJECT_DIR/.ci-home/ms-playwright
   npm_config_cache: $CI_PROJECT_DIR/.npm
   # Merge requests need the history back to their base for --since and the changeset check.
   GIT_DEPTH: "0"
@@ -41,15 +43,15 @@ variables:
   SERUPA_CI_MODE: runner
 
 default:
-  # The Playwright version in package-lock.json, so the image's Chromium is the pinned revision and setup.mjs
-  # downloads none. Bump it with Playwright.
+  # The Playwright version in package-lock.json, for the system libraries and fonts its Chromium needs (and Node 26).
+  # Bump it with Playwright.
   image: mcr.microsoft.com/playwright:v1.64.1-noble
   interruptible: true
   cache:
     - key: { files: [package-lock.json] }
       paths: [.npm/]
       policy: pull-push
-    - key: node-and-chromium-v1
+    - key: node-and-chromium-v2
       paths: [.ci-home/]
     # One per job (matrix jobs included), so parallel jobs never overwrite each other's results.
     - key: results-$CI_JOB_NAME_SLUG
@@ -58,7 +60,11 @@ default:
     - !reference [.result-cache, check]
     # tools/setup.mjs keeps Node under $HOME/.local; a HOME inside the project lets the cache keep it between jobs.
     - export HOME="$CI_PROJECT_DIR/.ci-home" && mkdir -p "$HOME"
-    # The image already has Node 26 and the pinned Chromium, so setup only runs npm ci (and needs no unzip).
+    # The image already has Node 26. Unzip only for a first Chromium download, when the cache doesn't have it yet.
+    - |
+      if [ "$SETUP_FLAGS" != --no-browsers ] && ! command -v unzip >/dev/null && ! ls "$PLAYWRIGHT_BROWSERS_PATH"/chromium-*/INSTALLATION_COMPLETE >/dev/null 2>&1; then
+        apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null
+      fi
     - node tools/setup.mjs $SETUP_FLAGS
     - NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | tail -1)"; if [ -n "$NODE_DIR" ]; then export PATH="$NODE_DIR:$PATH"; fi; node --version
     - |

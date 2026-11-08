@@ -76,7 +76,7 @@ for (const [name, dirName, zip] of [['chromium', 'chromium', 'chrome'], ['chromi
   if (!b) continue;
   const dir = path.join(root, `${dirName}-${b.revision}`);
   if (fs.existsSync(path.join(dir, 'INSTALLATION_COMPLETE'))) { console.log(`${name} ${b.revision} is already in ${dir}`); continue; }
-  // unzip only matters here: Playwright's CI image already holds the pinned Chromium and has no unzip.
+  // unzip only matters here, for a browser that isn't installed yet.
   if (spawnSync('unzip', ['-v'], { stdio: 'ignore' }).error) { console.error('tools/setup.mjs needs unzip (apt-get install unzip) to unpack Chromium.'); process.exit(2); }
   console.log(`${name} ${b.revision} (Chrome for Testing ${b.browserVersion}) → ${dir}`);
   const file = path.join(tmp, `${zip}-${cft}.zip`);
