@@ -35,11 +35,7 @@ Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since 
 
 The repo lives on GitLab for now. CI runs on the project's own runner (a Hetzner server, see "The CI runner" in `tools/README.md`), so a merge request's pipeline runs the whole check: build, types and lint, the changeset check, the suite (what the merge request changes), consumer and frameworks. Nothing runs on pushes to `main`. A merge request merges itself when its pipeline passes: set auto-merge once it's ready (`PUT /merge_requests/<iid>/merge` with `auto_merge=true`, see `tools/README.md`). Never merge one whose pipeline isn't green.
 
-On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for (checked against nodejs.org's SHASUMS256.txt), runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Before you push, run what your change touches, so CI is rarely the first to see a failure:
-
-```sh
-npm run check -- --since origin/main
-```
+On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for (checked against nodejs.org's SHASUMS256.txt), runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. No local check is required before pushing: the runner runs it. To try one step locally first (a quick test while you work), `npm run check -- --since origin/main --only <steps>`.
 
 If the runner is gone for a while, set `SERUPA_CI_MODE: local` in `.gitlab-ci.yml`: a merge request's pipeline is then one job on GitLab's shared runners (400 free minutes a month), and its description must hold a passing report for its head commit, from `npm run check -- --clean --since origin/main --report local-checks.md` (`tools/local-checks-gate.mjs` checks it). In that mode, commit first, run it, put the report in the description (`PUT /merge_requests/<iid>` with `description`), then push; open the merge request as a draft (`-o merge_request.draft`) while the check runs, and add `--resume` to pick up a run the machine stopped.
 
