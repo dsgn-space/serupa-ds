@@ -257,7 +257,7 @@ describe('ChatDivider', () => {
       const { unmount } = await atMidnight(new Date(2026, 2, 29), 'dst');
       expect(document.getElementById('dst')!.textContent).toBe('Today');
       await expect.poll(() => document.getElementById('dst')!.textContent, { timeout: 4000 }).toBe('Yesterday');
-      unmount();
+      await unmount();
     } finally {
       vi.useRealTimers();
       await session.send('Emulation.setTimezoneOverride', { timezoneId: '' });
