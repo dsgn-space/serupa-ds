@@ -143,6 +143,7 @@ changeset:
 .full-suite-or-cross:
   rules:
     - if: $CI_PIPELINE_SOURCE =~ /^(web|api|schedule)$/ || $SERUPA_FULL_CI == "1" || $SERUPA_CROSS == "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
 
 local checks:
   stage: build
