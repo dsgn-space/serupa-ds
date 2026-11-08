@@ -7,7 +7,7 @@ export interface CopyButtonLabels {
 }
 export const en: CopyButtonLabels = {
   copied: 'Copied',
-  copyFailed: "Couldn't copy. Select the text and copy it yourself.",
+  copyFailed: 'Couldn’t copy. Select the text and copy it yourself.',
 };
 export const id: CopyButtonLabels = {
   copied: 'Disalin',

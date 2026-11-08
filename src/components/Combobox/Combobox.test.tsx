@@ -819,7 +819,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await expect.poll(() => s.calls.length).toBe(2);
     expect(s.calls[1].text).toBe('per');
     s.calls[1].fail();
-    await expect.poll(() => status('d')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('d')).toBe('Couldn’t load options. Type to try again.');
     await userEvent.keyboard('u');
     await expect.poll(() => s.calls.length).toBe(3);
     s.calls[2].ok(['Peru']);
@@ -842,7 +842,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await render(<div style={{ width: '320px' }}><Combobox id="y" aria-label="Country" loadOptions={thrown} debounce={0} /></div>);
     el('y').focus();
     await userEvent.keyboard('a');
-    await expect.poll(() => status('y')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('y')).toBe('Couldn’t load options. Type to try again.');
   });
 
   test('a picked option keeps its label when later answers leave it out; unmounting aborts the request in flight', async () => {
@@ -924,7 +924,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await expect.poll(() => [st('w2').text, got]).toEqual(['Bandung', ['Bandung', 'Bandung']]);
     await userEvent.keyboard('{Control>}a{/Control}x{Enter}');
     s.calls.at(-1)!.fail();
-    await expect.poll(() => status('w2')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('w2')).toBe('Couldn’t load options. Type to try again.');
     expect(st('w2').text).toBe('x');
   });
 

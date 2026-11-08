@@ -24,7 +24,7 @@ export const en: CascadeSelectLabels = {
   cascadeBack: 'Back',
   cascadeLoading: 'Loading…',
   cascadeEmpty: 'No options',
-  cascadeFailed: "Couldn't load the options",
+  cascadeFailed: 'Couldn’t load the options',
 };
 export const id: CascadeSelectLabels = {
   cascadePlaceholder: 'Pilih…',

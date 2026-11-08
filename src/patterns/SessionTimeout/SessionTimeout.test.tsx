@@ -32,12 +32,12 @@ describe('Patterns/Session time-out', () => {
     const screen = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
     await screen.getByLabelText('Message').click();
     await vi.waitFor(() => expect(active().textContent).toBe('Stay signed in'), WAIT);
-    await expect.element(screen.getByRole('alertdialog', { name: "You'll be signed out soon" })).toBeVisible();
-    await vi.waitFor(() => expect(said()).toContain("You'll be signed out in 2 seconds."));
+    await expect.element(screen.getByRole('alertdialog', { name: 'You’ll be signed out soon' })).toBeVisible();
+    await vi.waitFor(() => expect(said()).toContain('You’ll be signed out in 2 seconds.'));
     await userEvent.keyboard('{Enter}');
     expect(onExtend).toHaveBeenCalledTimes(1);
     await vi.waitFor(() => expect(document.querySelector('dialog[open]')).toBeNull());
-    await vi.waitFor(() => expect(said()).toContain("You're still signed in."));
+    await vi.waitFor(() => expect(said()).toContain('You’re still signed in.'));
     expect(active().tagName).toBe('TEXTAREA');
   });
 
@@ -60,7 +60,7 @@ describe('Patterns/Session time-out', () => {
     const screen = await render(<SessionTimeout duration={3} warnBefore={1} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(screen.getByLabelText('Subject'), 'Invoice is wrong');
     await userEvent.fill(screen.getByLabelText('Message'), 'Charged twice in May.');
-    await vi.waitFor(() => expect(active().textContent).toBe("You've been signed out"), WAIT);
+    await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
     expect(onExpire).toHaveBeenCalledTimes(1);
     expect(JSON.parse(window.localStorage.getItem(KEY)!)).toEqual({ subject: 'Invoice is wrong', message: 'Charged twice in May.' });
     await screen.getByRole('button', { name: 'Sign in again' }).click();
@@ -102,7 +102,7 @@ describe('Patterns/Session time-out', () => {
     const first = await render(<SessionTimeout duration={4} warnBefore={3} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(first.getByLabelText('Subject'), 'Private');
     await first.getByRole('button', { name: 'Sign out' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe("You've signed out"));
+    await vi.waitFor(() => expect(active().textContent).toBe('You’ve signed out'));
     expect(onExpire).toHaveBeenCalledTimes(1);
     expect(window.localStorage.getItem(KEY)).toBeNull();
     await first.getByRole('button', { name: 'Sign in again' }).click();
@@ -111,7 +111,7 @@ describe('Patterns/Session time-out', () => {
     const onExtend = vi.fn(() => Promise.reject(new Error('offline')));
     const second = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
     await second.getByRole('button', { name: 'Stay signed in' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe("You've been signed out"), WAIT);
+    await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
   });
 
   test('a storage that throws is ignored', async () => {

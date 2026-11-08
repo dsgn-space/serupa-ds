@@ -6,5 +6,5 @@ export interface OfflineBannerLabels {
   /** OfflineBanner: shown for a moment and said when it comes back. */
   backOnline: string;
 }
-export const en: OfflineBannerLabels = { offline: "You're offline", backOnline: 'Back online' };
+export const en: OfflineBannerLabels = { offline: 'You’re offline', backOnline: 'Back online' };
 export const id: OfflineBannerLabels = { offline: 'Anda sedang offline', backOnline: 'Kembali online' };

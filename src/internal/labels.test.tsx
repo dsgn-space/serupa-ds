@@ -65,7 +65,33 @@ describe('labels', () => {
     const enSaid = Object.fromEntries(Object.entries(en).filter(([k]) => !EMPTY_IN_EN.has(k)));
     expect([bad(enSaid), bad(id)]).toEqual([[], []]);
   });
+  // GR165: one apostrophe and one pair of quotes in every label, the typographic ones (’ “ ”), so "Couldn’t save" and
+  // "Couldn't copy" don't look different on the same page.
+  test('apostrophes and quotes are curly in both sets', () => {
+    const straight = (set: Record<string, string>) => Object.entries(set).filter(([, t]) => /['"]/.test(t)).map(([k, t]) => k + ': ' + t);
+    expect([straight(en), straight(id)]).toEqual([[], []]);
+  });
   test('no Indonesian label is still in English', () => {
     expect(Object.keys(en).filter((k) => !SAME.has(k) && en[k] === id[k] && /[a-z]{3}/i.test(en[k])).map((k) => k + ': ' + en[k])).toEqual([]);
   });
+});
+
+// GR205: blocks and patterns keep their own words in their source, not in the label sets, so the test above doesn't
+// see them. Every string they show ("…", '…' or `…` in code, or text between JSX tags) uses the curly apostrophe too.
+// Comments and developer warnings (warnOnce) are left out.
+const PARTS = import.meta.glob<string>(['../blocks/*/*.tsx', '../patterns/*/*.tsx', '!../**/*.test.tsx', '!../**/*.stories.tsx'], { eager: true, query: '?raw', import: 'default' });
+test('blocks and patterns show curly apostrophes', () => {
+  const found: string[] = [];
+  for (const [file, src] of Object.entries(PARTS)) {
+    let inComment = false;
+    src.split('\n').forEach((line, i) => {
+      const t = line.trim();
+      if (inComment) { inComment = !t.includes('*/'); return; }
+      if (t.startsWith('/*')) { inComment = !t.includes('*/'); return; }
+      if (t.startsWith('//') || t.startsWith('*') || line.includes('warnOnce')) return;
+      const code = line.replace(/\s\/\/ .*$/, '');
+      if (/"[^"]*[A-Za-z]'[A-Za-z][^"]*"|`[^`]*[A-Za-z]'[A-Za-z][^`]*`|>[^<>{}]*[A-Za-z]'[A-Za-z][^<>{}]*</.test(code)) found.push(file.replace('../', '') + ':' + (i + 1) + ': ' + t);
+    });
+  }
+  expect(found).toEqual([]);
 });

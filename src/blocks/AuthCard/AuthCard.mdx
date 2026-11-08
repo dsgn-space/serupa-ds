@@ -21,7 +21,7 @@ The [Sign-in pattern](?path=/docs/patterns-sign-in--docs) explains each field, t
 
 - **Fits under your heading.** `headingLevel` sets the card's heading: 1 when the card is the page, 2 under your own h1. The error summary's heading is one below it.
 - **Waits for your server.** `check` and `verify` can return a promise. The button shows that it's working until it settles, and takes no second press.
-- **Skips the code step without `verify`.** A right password then ends on "You're signed in".
+- **Skips the code step without `verify`.** A right password then ends on "You’re signed in".
 - **Tells you when it's done.** `onSignedIn` runs once, as the done step appears. `onResend` runs each time "Send a new code" is pressed.
 - **Keeps its ids yours.** `idPrefix` starts each field's id, which the error summary's links point at. Without it, the ids are React's own, so two cards on a page never clash.
 - **Another language**: every word is in `labels`, with English defaults, the error messages too.

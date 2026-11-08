@@ -61,7 +61,7 @@ export function EmptyNoResults({ query, title = (q) => `No results for “${q}�
 }
 
 export interface EmptyNoAccessProps {
-  /** Default: "You don't have access". */
+  /** Default: "You don’t have access". */
   title?: string | undefined;
   /** Who can give access, in a sentence: "Ana Putri owns this project. Ask them, or request access here." */
   description: string;
@@ -72,7 +72,7 @@ export interface EmptyNoAccessProps {
   /** Said and shown on the button once the request is sent. Default: "Request sent". */
   requestedLabel?: string | undefined;
   /** Said and shown under the description when onRequest rejects; the button can be pressed again.
-      Default: "Couldn't send the request. Try again." */
+      Default: "Couldn’t send the request. Try again." */
   requestFailedLabel?: string | undefined;
   /** Where to go instead: the list this page belongs to. */
   backHref?: string | undefined;
@@ -82,7 +82,7 @@ export interface EmptyNoAccessProps {
 }
 
 /** A page the person can't see: who can let them in, Request access, and a way back. */
-export function EmptyNoAccess({ title = "You don't have access", description, onRequest, requestLabel = 'Request access', requestedLabel = 'Request sent', requestFailedLabel = "Couldn't send the request. Try again.", backHref, backLabel = 'Go back', headingLevel }: EmptyNoAccessProps) {
+export function EmptyNoAccess({ title = 'You don’t have access', description, onRequest, requestLabel = 'Request access', requestedLabel = 'Request sent', requestFailedLabel = 'Couldn’t send the request. Try again.', backHref, backLabel = 'Go back', headingLevel }: EmptyNoAccessProps) {
   // Once sent, the button keeps saying so and does nothing more, so one person can't send the same request twice.
   // It stays focusable (aria-disabled, not disabled), so focus isn't lost from under the keyboard.
   // A request that fails says so, in words under the description and once to a screen reader, and the button stays
@@ -104,7 +104,7 @@ export function EmptyNoAccess({ title = "You don't have access", description, on
 }
 
 export interface EmptyLoadFailedProps {
-  /** Default: "Couldn't load this". */
+  /** Default: "Couldn’t load this". */
   title?: string | undefined;
   /** What happened and what to do. Default: "Check your connection, then try again." */
   description?: string | undefined;
@@ -120,7 +120,7 @@ export interface EmptyLoadFailedProps {
 }
 
 /** Loading failed: what to do, Try again, and a reference for support. Said once. */
-export function EmptyLoadFailed({ title = "Couldn't load this", description = 'Check your connection, then try again.', onRetry, retryLabel = 'Try again', reference, referenceLabel = 'Reference', headingLevel }: EmptyLoadFailedProps) {
+export function EmptyLoadFailed({ title = 'Couldn’t load this', description = 'Check your connection, then try again.', onRetry, retryLabel = 'Try again', reference, referenceLabel = 'Reference', headingLevel }: EmptyLoadFailedProps) {
   return (
     <EmptyState icon="cloud_off" announce title={title} headingLevel={headingLevel}
       description={reference ? <>{description}<br />{referenceLabel}: <span className="font-mono">{reference}</span></> : description}
