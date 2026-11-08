@@ -69,4 +69,10 @@ export const PAIRS = [
   ['chart-axis', 'surface', 3, 'Chart axis lines and ticks'],
   ['chart-label', 'surface', 4.5, 'Chart labels and legend text'],
   ['chart-label', 'surface-raised', 4.5, 'Chart labels on a raised card'],
+  ['success', 'surface', 3, 'A Meter or Progress fill in success, on the page (its track is the page with a field-border edge)'],
+  ['warning', 'surface', 3, 'A Meter or Progress fill in warning, on the page'],
+  ['primary', 'surface-muted', 3, 'A Meter fill on a muted surface'],
+  ['danger', 'surface-muted', 3, 'A Meter fill in danger on a muted surface'],
+  ['field-border', 'surface-muted', 3, 'A field border, or a Meter track edge, on a muted surface'],
+  ['field-border', 'surface-raised', 3, 'A field border, or a Meter track edge, on a raised card'],
 ];

@@ -61,7 +61,7 @@ Without `low` and `high` the bar is primary and `data-state` is `none`. `meterSt
 
 - `role="meter"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext` (the shown value). It's named by its `label`.
 - Outside the best zone, the value also says where it falls, shown with `showValue` and read out, so the warning the color gives is seen and heard in words too (WCAG 1.4.1): "92%, high", "12%, low" or "45%, medium". The words come from the `meterZone` label in `SerupaProvider`. With `formatValue`, your words are read as they are, so say the zone in them.
-- Every zone's fill keeps 3:1 on the page, and the label and value 4.5:1, in all six themes (`Meter.test.tsx`). In forced-colors mode the track gets a border and the fill uses Highlight.
+- The track has a 1px `field-border` edge at 3:1 on the page, so the whole scale shows, and its inside is the page's surface. Every zone's fill keeps 3:1 against it, and the label and value 4.5:1, in all six themes (`Meter.test.tsx`). In forced-colors mode the track gets a border and the fill uses Highlight.
 - **Keyboard:** none: it shows a value and isn't focusable. Use a Slider for a value people set.
 
 ## Props
@@ -89,8 +89,9 @@ Each is an optional override: set it on the page, a container or one meter. The 
 <!-- token-table:start (made from meter.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--meter-track` | `secondary` | The empty part of the bar. |
-| `--meter-fill` | `primary` | The filled part, without low and high zones (3:1 on the track and the surface). |
+| `--meter-track` | `surface` | The empty part of the bar, inside its edge. |
+| `--meter-track-border` | `field-border` | The track's 1px edge, which marks the whole scale at 3:1 on the page (WCAG 1.4.11). |
+| `--meter-fill` | `primary` | The filled part, without low and high zones (3:1 on the track and the page). |
 | `--meter-fill-optimum` | `success` | The filled part in the best zone. |
 | `--meter-fill-suboptimal` | `warning` | The filled part in the next zone. |
 | `--meter-fill-poor` | `danger` | The filled part in the worst zone. |
