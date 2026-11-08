@@ -70,6 +70,7 @@ const noSubscribe = () => () => {};
 const subscribeNarrow = (on: () => void) => { const m = window.matchMedia(NARROW); m.addEventListener('change', on); return () => m.removeEventListener('change', on); };
 const isNarrow = () => window.matchMedia(NARROW).matches;
 const notNarrow = () => false;
+const yes = () => true;
 const DAY_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
 // A start or end as a Date: a "yyyy-mm-dd" string is that local day (new Date() would make it UTC midnight).
@@ -122,12 +123,17 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const list = React.useMemo(() => toShown(props.events), [props.events]);
   const max = Math.max(1, Math.floor(props.maxPerDay ?? 3));
 
-  // The day with the grid's Tab stop: today in today's month, else the 1st, kept inside the shown month (adjusted
-  // during render, so a new month never draws without its Tab stop).
-  const [focus, setFocus] = React.useState<Date>(() => (sameMonth(today, month) ? today : month));
+  // Today is the reader's, so it's marked only once the page runs in their browser: the server's today may be
+  // another day, and the server's HTML would mark it, and put the Tab stop on it, until hydration (GR210).
+  const hydrated = React.useSyncExternalStore(noSubscribe, yes, notNarrow);
+  const marked = hydrated ? today : null;
+  // The day with the grid's Tab stop: the one the keys or a click chose, kept inside the shown month (adjusted during
+  // render, so a new month never draws without its Tab stop), else today in today's month, else the 1st.
+  const [chosenDay, setFocus] = React.useState<Date | null>(null);
+  const focus = chosenDay ?? (marked && sameMonth(marked, month) ? marked : month);
   const monthTime = month.getTime();
   const [focusMonth, setFocusMonth] = React.useState(monthTime);
-  if (focusMonth !== monthTime) { setFocusMonth(monthTime); if (!sameMonth(focus, month)) setFocus(sameMonth(today, month) ? today : month); }
+  if (focusMonth !== monthTime) { setFocusMonth(monthTime); if (chosenDay && !sameMonth(chosenDay, month)) setFocus(null); }
   const grid = React.useRef<HTMLTableElement | null>(null);
   const wantFocus = React.useRef(false);
   // A key that moves to another day asks for focus. With a controlled month, the app may show the new month a render
@@ -208,7 +214,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     weeks.push(row);
   }
   // The Tab stop: the focused day, or while a month the keys asked for isn't shown yet, today or the 1st.
-  const stop = weeks.some((r) => r.some((d) => sameDay(d, focus))) ? focus : sameMonth(today, month) ? today : month;
+  const stop = weeks.some((r) => r.some((d) => sameDay(d, focus))) ? focus : marked && sameMonth(marked, month) ? marked : month;
   const days = Array.from({ length: new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate() }, (_, i) => new Date(month.getFullYear(), month.getMonth(), i + 1));
   const busy = view === 'agenda' ? days.map((d) => [d, onDay(list, d)] as const).filter(([, l]) => l.length) : [];
 
@@ -234,7 +240,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
             {weeks.map((row) => (
               <tr key={row[0].getTime()}>
                 {row.map((d) => {
-                  const mine = sameMonth(d, month) ? onDay(list, d) : [], here = sameDay(d, stop), isToday = sameDay(d, today);
+                  const mine = sameMonth(d, month) ? onDay(list, d) : [], here = sameDay(d, stop), isToday = marked !== null && sameDay(d, marked);
                   const fits = mine.length > max ? mine.slice(0, max - 1) : mine, more = mine.length - fits.length;
                   return (
                     <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1}
@@ -260,7 +266,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
       ) : busy.length ? (
         <ol className="dk-event-calendar__agenda" role="list" aria-labelledby={titleId} lang={lang}>
           {busy.map(([d, l]) => (
-            <li key={d.getTime()} className={cn('dk-event-calendar__agenda-day', sameDay(d, today) && 'dk-event-calendar__agenda-day--today')} aria-current={sameDay(d, today) ? 'date' : undefined}>
+            <li key={d.getTime()} className={cn('dk-event-calendar__agenda-day', marked && sameDay(d, marked) && 'dk-event-calendar__agenda-day--today')} aria-current={marked && sameDay(d, marked) ? 'date' : undefined}>
               <H2 className="dk-event-calendar__agenda-date">{fmt.full.format(d)}</H2>
               <ul className="dk-event-calendar__events" role="list">{l.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
             </li>

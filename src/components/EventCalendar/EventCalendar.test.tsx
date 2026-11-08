@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
+import { renderToString } from 'react-dom/server';
 import { render as draw } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
@@ -107,6 +108,13 @@ describe('EventCalendar', () => {
     } finally {
       await page.viewport(w, h);
     }
+  });
+
+  test('the server\'s HTML marks no day as today and puts the Tab stop on the 1st: its today may not be the reader\'s (GR210)', () => {
+    const html = renderToString(<EnUS><EventCalendar events={EVENTS} /></EnUS>);
+    expect(html).not.toContain('aria-current');
+    const now = new Date(), first = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-01';
+    expect(html).toMatch(new RegExp('tabindex="0"[^>]*data-date="' + first + '"|data-date="' + first + '"[^>]*tabindex="0"'));
   });
 
   test('keyboard: Enter and Space on an event open it', async () => {
