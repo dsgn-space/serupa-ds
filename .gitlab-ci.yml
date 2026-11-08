@@ -200,10 +200,51 @@ local checks:
       fi
 
 suite:
-  extends: .full-suite
   stage: test
   needs: [build]
   timeout: 30m
+  # .full-suite's rules, except that on a merge request Visual and Storybook (eight jobs) exist only when it changes
+  # something a story's picture or Storybook's pages are built from. Without that, they would each start, set up and
+  # find nothing to shoot; GitLab also caps the jobs all waiting pipelines may hold, which every job counts towards.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $GROUP =~ /^(checks|components)$/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
+      changes:
+        # What storybook-static is built from (src, docs and Storybook's setup, with the tools and files they import:
+        # docs/blocks.tsx reads tokens.json, package.json, README.md and CHANGELOG.md, the registry, the token
+        # contrast pairs, the TypeScript API reader, the utilities and serupa-migrate's transforms), what shoots and
+        # checks it, its baselines, and the pipeline itself.
+        - src/**/*
+        - docs/**/*
+        - .storybook/**/*
+        - design-tokens/**/*
+        - tokens/**/*
+        - tokens.css
+        - tokens.json
+        - fonts/**/*
+        - package.json
+        - package-lock.json
+        - tsconfig.json
+        - tsup.config.mjs
+        - .nvmrc
+        - README.md
+        - CHANGELOG.md
+        - .gitlab-ci.yml
+        - bin/migrate/**/*
+        - tools/build/**/*
+        - tools/tokens/**/*
+        - tools/utilities/**/*
+        - tools/typescript/**/*
+        - tools/icons/**/*
+        - tools/fonts/**/*
+        - tools/setup.mjs
+        - tools/test/lib.mjs
+        - tools/test/run.mjs
+        - tools/test/visual.mjs
+        - tools/test/storybook.mjs
+        - tools/test/baseline-visual/**/*
   parallel:
     matrix:
       - GROUP: checks
