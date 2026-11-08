@@ -68,6 +68,8 @@ export const labels: SerupaLabels = {
   valueAdded: (label) => 'Đã thêm ' + label,
   valueRemoved: (label) => 'Đã bỏ ' + label,
   copied: 'Đã sao chép',
+  contextualHelp: 'Trợ giúp',
+  contextualInfo: 'Thông tin',
   copyFailed: 'Không sao chép được. Hãy chọn văn bản và tự sao chép.',
   chatNewMessages: (count) => n(count) + ' tin nhắn mới',
   chatLoadOlder: 'Tải tin nhắn trước đó',

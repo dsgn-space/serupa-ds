@@ -1,0 +1,32 @@
+# Default
+- paragraph:
+  - text: Workspace
+  - button "Help" [expanded]
+  - dialog "What is a workspace?":
+    - heading "What is a workspace?" [level=3]
+    - text: A workspace holds your team’s projects, members and billing. Most companies need only one.
+
+# InAField
+- text: Tax ID
+- 'button "Help: tax ID"'
+- 'textbox "Tax ID Help: tax ID"'
+
+# Info
+- paragraph:
+  - text: Workspace
+  - button "About the exchange rate" [expanded]
+  - dialog "About the exchange rate": Rates update every hour from Bank Indonesia. The amount you pay is fixed when you confirm.
+
+# LongText
+- paragraph:
+  - text: Workspace
+  - button "Help" [expanded]
+  - dialog "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung settings explained":
+    - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung settings explained" [level=3]
+    - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a sentence long enough to wrap several times inside the panel, so you can see where it stops.
+
+# Playground
+- paragraph:
+  - text: Workspace
+  - button "Help"
+

@@ -71,6 +71,8 @@ export const labels: SerupaLabels = {
   valueAdded: (label) => label + ' hinzugefügt',
   valueRemoved: (label) => label + ' entfernt',
   copied: 'Kopiert',
+  contextualHelp: 'Hilfe',
+  contextualInfo: 'Informationen',
   copyFailed: 'Kopieren nicht möglich. Markieren Sie den Text und kopieren Sie ihn selbst.',
   chatNewMessages: (count) => count === 1 ? '1 neue Nachricht' : n(count) + ' neue Nachrichten',
   chatLoadOlder: 'Frühere Nachrichten laden',

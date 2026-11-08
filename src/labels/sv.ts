@@ -68,6 +68,8 @@ export const labels: SerupaLabels = {
   valueAdded: (label) => label + ' har lagts till',
   valueRemoved: (label) => label + ' har tagits bort',
   copied: 'Kopierat',
+  contextualHelp: 'Hjälp',
+  contextualInfo: 'Information',
   copyFailed: 'Det gick inte att kopiera. Markera texten och kopiera den själv.',
   chatNewMessages: (count) => count === 1 ? '1 nytt meddelande' : n(count) + ' nya meddelanden',
   chatLoadOlder: 'Läs in tidigare meddelanden',

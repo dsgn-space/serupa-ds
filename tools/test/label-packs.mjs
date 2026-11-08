@@ -59,7 +59,7 @@ const SAME_IN = {
   es: ['generalShortcuts', 'attachmentAudio', 'chartTotal'],
   ms: ['edit', 'attachmentAudio', 'attachmentVideo'],
   nl: ['tableDetails', 'sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],
-  sv: ['sliderMaximum', 'colorName', 'attachmentVideo'],
+  sv: ['sliderMaximum', 'colorName', 'attachmentVideo', 'contextualInfo'],
   fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName', 'attachmentImage', 'attachmentDoc', 'attachmentArchive', 'attachmentCode', 'attachmentAudio', 'chatMessage'],
   it: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],
   id: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],   // "File": the loanword Content and voice keeps, as FileUpload says

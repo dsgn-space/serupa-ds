@@ -1,0 +1,11 @@
+/* ---------------------------------------------------------------
+   ContextualHelp: a 24px round ghost button with a muted "?" or "i" that sits inline beside a label or value, and a
+   Popover panel in small text, for a sentence or two. Every value reads one of its own tokens
+   (contextual-help.tokens.json), which fall back to the shared ones.
+   Structure: .dk-contextual-help__button (the IconButton) and .dk-contextual-help (the Popover panel).
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-contextual-help__button { vertical-align: middle; color: var(--contextual-help-icon, var(--text-muted)); }
+.dk-contextual-help__button--info { color: var(--contextual-help-info-icon, var(--info)); }
+.dk-contextual-help { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+}

@@ -70,6 +70,8 @@ export const labels: SerupaLabels = {
   valueAdded: (label) => label + ' 추가됨',
   valueRemoved: (label) => label + ' 삭제됨',
   copied: '복사됨',
+  contextualHelp: '도움말',
+  contextualInfo: '정보',
   copyFailed: '복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요.',
   chatNewMessages: (count) => '새 메시지 ' + n(count) + '개',
   chatLoadOlder: '이전 메시지 불러오기',
