@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { color, css, forcedColors, iconPoints, press } from '../../../tools/test/vitest/helpers';
@@ -307,4 +307,42 @@ describe('Calendar follows a value set from outside (L8E103)', () => {
     await r.rerender(<Cal value={new Date(2025, 3, 2)} month={new Date(2025, 4, 1)} months={months} />);
     expect([title(), stop()]).toEqual(['May 2025', '2025-05-20']);
   });
+});
+
+// A server whose date isn't the visitor's (a UTC server, a visitor in Jakarta before 7am): the page must hydrate
+// with no mismatch, and today is the visitor's (GR210).
+describe('server-rendered on another day than the visitor\'s', () => {
+  async function hydrateFrom(serverDay: Date, visitorDay: Date, ui: React.ReactElement) {
+    const { renderToString } = await import('react-dom/server');
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(serverDay);
+      const host = document.createElement('div');
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      vi.setSystemTime(visitorDay);
+      const errors: string[] = [], logError = console.error;
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      let root: ReturnType<typeof hydrateRoot> | undefined;
+      try {
+        flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+        await new Promise((r) => setTimeout(r, 30));
+      } finally { console.error = logError; }
+      return { host, errors, done: () => { root?.unmount(); host.remove(); } };
+    } finally { vi.useRealTimers(); }
+  }
+  const today = (host: HTMLElement) => [...host.querySelectorAll('[aria-current="date"]')].map((b) => (b as HTMLElement).dataset.date);
+
+  for (const [name, ui] of [['with a value', <Calendar key="v" aria-label="Day" defaultValue={new Date(2026, 10, 3)} />], ['with no value', <Calendar key="n" aria-label="Day" />]] as const) {
+    test(`${name}: no mismatch, and today is the visitor's day`, async () => {
+      const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), ui);
+      try {
+        expect(r.errors).toEqual([]);
+        expect(today(r.host)).toEqual(['2026-11-08']);
+        expect([...r.host.querySelectorAll('button')].filter((b) => b.classList.contains('dk-calendar__day--today')).map((b) => b.dataset.date)).toEqual(['2026-11-08']);
+      } finally { r.done(); }
+    });
+  }
 });
