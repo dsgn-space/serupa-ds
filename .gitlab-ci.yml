@@ -76,13 +76,14 @@ default:
     - !reference [.result-cache, record]
 
 # A job's result, by what it tested: the tree of the commit, the base a merge request is tested against, and the job.
-# A pipeline started by hand (web) always runs everything.
+# A pipeline started by hand (web) always runs everything, and so does a job whose output later jobs take
+# (RESULT_CACHE: "off", build): a skipped build would leave them without dist/.
 .result-cache:
   check:
     - export RESULT="$(git rev-parse HEAD^{tree})-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
     - find .result-cache -type f -mtime +14 -delete 2>/dev/null || true
     - |
-      if [ "$CI_PIPELINE_SOURCE" != web ] && [ -f ".result-cache/$RESULT" ]; then
+      if [ "$CI_PIPELINE_SOURCE" != web ] && [ "${RESULT_CACHE:-on}" = on ] && [ -f ".result-cache/$RESULT" ]; then
         echo "Passed on this same tree and base in job $(cat ".result-cache/$RESULT"); not running it again."
         exit 0
       fi
@@ -96,6 +97,7 @@ build:
   timeout: 20m
   variables:
     SETUP_FLAGS: --no-browsers
+    RESULT_CACHE: "off"
   script:
     - node tools/tokens/build.mjs --check
     - npm run build
