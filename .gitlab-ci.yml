@@ -17,7 +17,7 @@
 # - The suite's groups run in parallel: checks in three shards, visual and storybook in four each (SERUPA_SHARD).
 # - Results are kept (.result-cache): a job that passed on the same tree, against the same base, passes again at
 #   once without running. The same commit's next pipeline (a label, a description, auto-merge) costs seconds.
-# - Nightly: a pipeline schedule on main with SERUPA_NIGHTLY=1 (Build > Pipeline schedules) runs the whole suite
+# - Nightly: the pipeline schedule on main (Build > Pipeline schedules, 02:00 Jakarta) runs the whole suite
 #   unnarrowed, mutation testing and the benchmarks (bottom of this file), and the cross-browser run.
 # - In place of GitHub's CodeQL and dependency review: GitLab's secret detection and SAST, and npm audit (bottom).
 # - Nightly also: canary (TypeScript next, React canary), a flake hunt (components and checks twice more) and the SBOM.
@@ -185,9 +185,9 @@ fix proof:
     - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
-    # The nightly run on main (a schedule with SERUPA_NIGHTLY=1): everything, unnarrowed, as the backstop for what a
+    # The nightly run on main (the schedule): everything, unnarrowed, as the backstop for what a
     # merge request's narrowed run left out.
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 # The cross-browser run needs build's dist/ and storybook-static/, and nothing else of the full suite.
 .full-suite-or-cross:
@@ -230,7 +230,7 @@ suite:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $GROUP =~ /^(checks|components)$/
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
       changes:
@@ -370,7 +370,7 @@ cross-browser:
     expire_in: 14 days
     paths: [test-output.txt]
 
-# Nightly (a schedule on main with SERUPA_NIGHTLY=1; Build > Pipeline schedules). Besides the whole suite above:
+# Nightly (the schedule on main, 02:00 Jakarta; Build > Pipeline schedules). Besides the whole suite above:
 # Mutation testing (tools/test/mutation.mjs --rotate): five components picked by the day, then every src/internal file
 # with a test; a score below tools/test/baseline-mutation.json fails, and the survivors it prints are tests to write.
 mutation:
@@ -378,7 +378,7 @@ mutation:
   needs: []
   timeout: 2h
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   after_script: []
   script:
     - node tools/test/mutation.mjs --rotate --minutes 100 --json mutation.json
@@ -394,7 +394,7 @@ benchmarks:
   needs: []
   timeout: 45m
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   cache:
     - key: { files: [package-lock.json] }
       paths: [.npm/]
@@ -419,7 +419,7 @@ benchmarks:
   stage: test
   needs: []
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   after_script: []
 
 canary types:
@@ -504,7 +504,7 @@ semgrep-sast:
   cache: []
   needs: []
   rules:
-    - if: ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) || ($CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1")
+    - if: ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) || ($CI_PIPELINE_SOURCE == "schedule")
 
 # Every SAST analyzer the template may add (only Semgrep's applies to this repo).
 .sast-analyzer:
@@ -568,7 +568,7 @@ design qa:
 renovate:
   extends: .nightly
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1" && $RENOVATE_TOKEN
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $RENOVATE_TOKEN
   timeout: 30m
   image: renovate/renovate:41
   variables:
