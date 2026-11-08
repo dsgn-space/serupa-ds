@@ -181,6 +181,7 @@ function undo(options: ToastUndoOptions): string {
 /* An undo toast that no Toaster shows (none is mounted, or the last one unmounted, as a page's own does when it's
    left) can never be undone: its action is done for good, a moment later, so a Toaster mounting in the same commit
    (or React's development remount) still takes it. Warns in development. */
+// module state: the browser's one pending check of the toast queue above; toast() runs in event handlers, not on a server.
 let unseenTimer: ReturnType<typeof setTimeout> | undefined;
 function unseen() {
   clearTimeout(unseenTimer);
