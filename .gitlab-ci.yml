@@ -16,8 +16,10 @@
 # - The suite's groups run in parallel: checks in three shards, visual and storybook in four each (SERUPA_SHARD).
 # - Results are kept (.result-cache): a job that passed on the same tree, against the same base, passes again at
 #   once without running. The same commit's next pipeline (a label, a description, auto-merge) costs seconds.
-# Not here: npm audit signatures needs nothing CI-only and runs in static; CodeQL, release and the nightly workflows
-# stay GitHub-only until the repo goes back (tools/tag-release.mjs tags versions meanwhile).
+# - Nightly: a pipeline schedule on main with SERUPA_NIGHTLY=1 (Build > Pipeline schedules) runs the whole suite
+#   unnarrowed, mutation testing and the benchmarks (bottom of this file), and the cross-browser run.
+# Not here: CodeQL and release stay GitHub-only until the repo goes back (tools/tag-release.mjs tags versions
+# meanwhile).
 
 workflow:
   rules:
@@ -84,7 +86,17 @@ default:
 # (RESULT_CACHE: "off", build): a skipped build would leave them without dist/.
 .result-cache:
   check:
-    - export RESULT="$(git rev-parse HEAD^{tree})-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
+    # Visual and Storybook shoot storybook-static, which no test file, changeset or other check script goes into:
+    # their key leaves those out, so a push that only fixes a test or a check doesn't shoot every story again.
+    - |
+      tree() {
+        case "$GROUP" in
+          visual|storybook) git ls-tree -r HEAD | grep -vP '\t(.*\.test\.tsx?|\.changeset/.*|tools/test/vitest/.*|tools/test/(?!(lib|run|visual|storybook)\.mjs$)[^/]+\.mjs)$' | git hash-object --stdin ;;
+          *) git rev-parse HEAD^{tree} ;;
+        esac
+      }
+      export RESULT="$GROUP${SERUPA_SHARD:+-${SERUPA_SHARD%/*}}-$(tree)-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
+      mkdir -p .ci-home && echo "$RESULT" > .ci-home/result-key
     - find .result-cache -type f -mtime +14 -delete 2>/dev/null || true
     - |
       if [ "$CI_PIPELINE_SOURCE" != web ] && [ "${RESULT_CACHE:-on}" = on ] && [ -f ".result-cache/$RESULT" ]; then
@@ -92,8 +104,9 @@ default:
         exit 0
       fi
   record:
-    - RESULT="$(git rev-parse HEAD^{tree})-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
-    - if [ "$CI_JOB_STATUS" = success ]; then mkdir -p .result-cache && echo "$CI_JOB_URL" > ".result-cache/$RESULT"; fi
+    # RESULT from check (before_script runs in the same shell as script; after_script doesn't, so it's in the file).
+    - RESULT="$(cat .ci-home/result-key 2>/dev/null)"
+    - if [ "$CI_JOB_STATUS" = success ] && [ -n "$RESULT" ]; then mkdir -p .result-cache && echo "$CI_JOB_URL" > ".result-cache/$RESULT"; fi
 
 build:
   extends: .full-suite-or-cross
@@ -134,10 +147,27 @@ changeset:
     - git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
     - node tools/changeset-check.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
 
+# A fix proves its test (tools/fix-proof.mjs): a merge request with a patch changeset that changes src/ must change a
+# test that fails on the base commit's src/. Anything else passes in seconds, before the browser is used. A fix only
+# the screenshots can show takes the "no-repro-test" label.
+fix proof:
+  stage: build
+  timeout: 20m
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && ($SERUPA_CI_MODE == "runner" || $SERUPA_FULL_CI == "1") && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-repro-test(,|$)/
+  after_script: []
+  script:
+    - git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - if node tools/fix-proof.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --needed | grep -q '^needed=false'; then echo "Not a patch to src/, nothing to prove."; exit 0; fi
+    - node tools/fix-proof.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+
 .full-suite:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
+    # The nightly run on main (a schedule with SERUPA_NIGHTLY=1): everything, unnarrowed, as the backstop for what a
+    # merge request's narrowed run left out.
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
 
 # The cross-browser run needs build's dist/ and storybook-static/, and nothing else of the full suite.
 .full-suite-or-cross:
@@ -151,7 +181,8 @@ local checks:
   # Only the script and the description: a small image, one commit of history, no cache, no install.
   image: node:26-alpine
   variables:
-    GIT_DEPTH: "1"
+    # The changeset check (below) reads the history back to the merge request's base.
+    GIT_DEPTH: "0"
   # A draft MR gets no pipeline until its description holds a report, so it isn't red while the full check runs
   # locally (an hour or more). A ready MR always runs the gate, and fails without a report: whether GitLab requires
   # a passing pipeline to merge is a project setting nobody can check from here.
@@ -161,6 +192,12 @@ local checks:
   before_script: []
   script:
     - node tools/local-checks-gate.mjs
+    # The changeset check runs here too, so a report that left it out (no --since, --skip changeset) can't pass
+    # without one. A merge request that ships nothing new takes the "no-changeset" label.
+    - |
+      if echo ",$CI_MERGE_REQUEST_LABELS," | grep -q ',no-changeset,'; then echo "no-changeset label: no changeset check."; else
+        apk add --no-cache --quiet git >/dev/null && git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" && node tools/changeset-check.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+      fi
 
 suite:
   extends: .full-suite
@@ -252,3 +289,46 @@ cross-browser:
     when: always
     expire_in: 14 days
     paths: [test-output.txt]
+
+# Nightly (a schedule on main with SERUPA_NIGHTLY=1; Build > Pipeline schedules). Besides the whole suite above:
+# Mutation testing (tools/test/mutation.mjs --rotate): five components picked by the day, then every src/internal file
+# with a test; a score below tools/test/baseline-mutation.json fails, and the survivors it prints are tests to write.
+mutation:
+  stage: test
+  needs: []
+  timeout: 2h
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+  after_script: []
+  script:
+    - node tools/test/mutation.mjs --rotate --minutes 100 --json mutation.json
+  artifacts:
+    when: always
+    expire_in: 30 days
+    paths: [mutation.json]
+
+# Benchmarks over time (tools/test/bench.mjs): the mount-time and INP tests twice into one folder, then compared with
+# the last night's that passed (kept in the cache), so a story that slowly gets slower shows up on one night.
+benchmarks:
+  stage: test
+  needs: []
+  timeout: 45m
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SERUPA_NIGHTLY == "1"
+  cache:
+    - key: { files: [package-lock.json] }
+      paths: [.npm/]
+    - key: node-and-chromium-v2
+      paths: [.ci-home/]
+    - key: bench-history
+      paths: [.bench-history/]
+  after_script: []
+  script:
+    - for i in 1 2; do SERUPA_BENCH=.bench npx vitest run --project components --no-file-parallelism src/internal/mountTime.test.tsx src/internal/inp.test.tsx; done
+    - if [ -f .bench-history/last.json ]; then PREVIOUS="--previous .bench-history/last.json"; fi
+    - node tools/test/bench.mjs .bench --json bench.json $PREVIOUS
+    - mkdir -p .bench-history && cp bench.json .bench-history/last.json
+  artifacts:
+    when: always
+    expire_in: 30 days
+    paths: [bench.json]
