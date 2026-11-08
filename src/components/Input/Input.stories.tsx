@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Input } from './Input';
+import { Input, InputAction } from './Input';
 import { NumberInput } from '../NumberInput/NumberInput';
 import { iconArg } from '../../../.storybook/icon-arg';
 
@@ -29,6 +29,7 @@ export const Icons: Story = {
   render: () => <Col>
     <Input leftIcon="search" aria-label="Search" placeholder="Search" />
     <Input type="url" rightIcon="link" aria-label="Website" placeholder="https://" />
+    <Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />
   </Col>,
 };
 
@@ -68,6 +69,20 @@ export const Masked: Story = {
     <Input mask="AA99 **** **** **** **** **" aria-label="IBAN" defaultValue="de89370400440532013000" />
   </Col>,
 };
+
+/** Buttons inside the box, at the end: an icon action named by its label, or a text action such as Apply. Each comes
+    after the field in the Tab order, and a disabled Input disables them too. */
+function ActionsDemo() {
+  const [code, setCode] = React.useState('WELCOME10');
+  return <Col>
+      <Input aria-label="Coupon code" value={code} onChange={(e) => setCode(e.target.value)} actions={<InputAction label="Apply" />} />
+      <Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />
+      <Input size="sm" aria-label="Filter" defaultValue="Bandung" actions={<InputAction icon="close" label="Clear filter" />} />
+      <Input size="lg" aria-label="Coupon code, large" defaultValue="SAVE20" actions={<InputAction label="Apply" />} />
+      <Input aria-label="Disabled coupon code" disabled defaultValue="WELCOME10" actions={<InputAction label="Apply" />} />
+    </Col>;
+}
+export const Actions: Story = { render: () => <ActionsDemo /> };
 
 /** A <fieldset disabled> disables the fields inside, and they look disabled too. */
 export const InDisabledFieldset: Story = {

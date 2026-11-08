@@ -1,3 +1,15 @@
+# Actions
+- textbox "Coupon code": WELCOME10
+- button "Apply"
+- textbox "Invite link": https://serupa.app/join/7f3k2
+- button "Copy invite link"
+- textbox "Filter": Bandung
+- button "Clear filter"
+- textbox "Coupon code, large": SAVE20
+- button "Apply"
+- textbox "Disabled coupon code" [disabled]: WELCOME10
+- button "Apply" [disabled]
+
 # Count
 - textbox "Title": Quarterly report
 - text: 16 / 30
@@ -10,6 +22,8 @@
 - textbox "Search"
 - textbox "Website":
   - /placeholder: https://
+- textbox "Invite link": https://serupa.app/join/7f3k2
+- button "Copy invite link"
 
 # InDisabledFieldset
 - group:

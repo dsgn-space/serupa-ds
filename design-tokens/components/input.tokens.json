@@ -121,6 +121,66 @@
             "cssVar": "--input-invalid"
           }
         }
+      },
+      "action": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An icon action's icon (3:1 on the field).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action"
+          }
+        }
+      },
+      "action-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An icon action's icon on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-hover"
+          }
+        }
+      },
+      "action-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "An icon action's background on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-bg-hover"
+          }
+        }
+      },
+      "action-text": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A text action's words, such as Apply (4.5:1 on the field).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-text"
+          }
+        }
+      },
+      "action-text-bg-hover": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A text action's background on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-text-bg-hover"
+          }
+        }
+      },
+      "action-focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a focused action.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-focus-ring"
+          }
+        }
       }
     },
     "sizing": {
@@ -225,6 +285,26 @@
             "cssVar": "--input-gap"
           }
         }
+      },
+      "actions-inset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Space between the actions and the box's edge (2px), so an action is the field's height less 6px.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-actions-inset"
+          }
+        }
+      },
+      "action-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space at a text action's sides (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-padding-x"
+          }
+        }
       }
     },
     "border": {
@@ -245,6 +325,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--input-radius"
+          }
+        }
+      },
+      "action-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "An action's corners (4px), inside the box's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-radius"
           }
         }
       }
