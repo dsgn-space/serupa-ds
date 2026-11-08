@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { useCut } from '../../internal/useCut';
 import { useExit } from '../../internal/useExit';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
@@ -204,23 +205,15 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   // There the tooltip is the item's name (aria-labelledby replaces its text), so the badge is read as its
   // description: "Inbox", then "4".
   const badgeId = listId + '-badge';
+  const described = !!rest['aria-describedby'];
   if (dot) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   // A text label cut with an ellipsis shows in full as the item's title on hover, as Button's does (GR117). Not in
-  // the rail, where the tooltip already names it, or with a title of its own.
+  // the rail, where the tooltip already names it, with a title of its own, or in a Tooltip (its aria-describedby, given
+  // before the rail's badge adds one), which shows the cut label itself.
   const text = typeof props.label === 'string' || typeof props.label === 'number' ? String(props.label) : '';
-  const tipOk = !!text && !rail && rest.title == null;
+  const tipOk = !!text && !rail && rest.title == null && !described;
   const labelEl = React.useRef<HTMLSpanElement | null>(null);
-  const [cut, setCut] = React.useState(false);
-  useIsoLayoutEffect(() => {
-    const label = labelEl.current;
-    if (!tipOk || !label) { setCut(false); return; }
-    const check = () => setCut(label.scrollWidth > label.clientWidth);
-    check();
-    if (typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(check);
-    ro.observe(label);
-    return () => ro.disconnect();
-  }, [tipOk, text]);
+  const cut = useCut(tipOk, text, () => labelEl.current);
   if (cut && tipOk) rest.title = text;
   const inner = (chevron: boolean) => <>
     {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}{dot ? <span className="dk-sidebar__dot" aria-hidden="true" /> : null}</span> : null}
