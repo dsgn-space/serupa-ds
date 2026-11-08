@@ -66,5 +66,5 @@ export function serverBaseline(name: string, html: Record<string, string>): stri
 
 // What serverStories.ts hands the browser tests (inject('serverStories')).
 declare module 'vitest' {
-  export interface ProvidedContext { serverStories: Record<string, string>; only: string | null; bench: boolean }
+  export interface ProvidedContext { serverStories: Record<string, string>; only: string | null; bench: boolean; coverage: boolean }
 }
