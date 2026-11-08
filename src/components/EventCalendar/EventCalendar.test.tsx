@@ -91,15 +91,16 @@ describe('EventCalendar', () => {
     const [w, h] = [window.innerWidth, window.innerHeight];
     await page.viewport(360, 700);
     try {
-      await render(<EventCalendar defaultMonth={MARCH} events={[
+      await render(<EventCalendar id="cal" defaultMonth={MARCH} events={[
         { id: 'n', title: 'Release night', start: '2025-03-21T22:00', end: '2025-03-22T02:00' },
         { id: 'l', title: 'Design review with the whole platform group', start: '2025-03-24T14:00', end: '2025-03-24T15:00' },
       ]} />);
       await expect.element(page.getByText('Release night').first()).toBeInTheDocument();
-      expect(document.querySelector('.dk-event-calendar__agenda')).not.toBeNull();
+      expect(document.querySelector('[role=grid]')).toBeNull();   // below 640px the month shows as the agenda
       expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
-      const right = document.querySelector('.dk-event-calendar')!.getBoundingClientRect().right;
-      for (const t of document.querySelectorAll<HTMLElement>('.dk-event-calendar__time, .dk-event-calendar__title')) {
+      const right = el('cal').getBoundingClientRect().right;
+      // Each event's time and title (the button's spans).
+      for (const t of [...el('cal').querySelectorAll<HTMLElement>('li button')].flatMap((b) => [...b.querySelectorAll<HTMLElement>('span')])) {
         expect(Math.floor(t.getBoundingClientRect().right)).toBeLessThanOrEqual(Math.ceil(right));
         expect(t.scrollWidth).toBeLessThanOrEqual(t.clientWidth + 1);   // nothing cut off
       }

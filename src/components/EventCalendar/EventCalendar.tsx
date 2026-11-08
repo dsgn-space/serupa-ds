@@ -130,9 +130,10 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   if (focusMonth !== monthTime) { setFocusMonth(monthTime); if (!sameMonth(focus, month)) setFocus(sameMonth(today, month) ? today : month); }
   const grid = React.useRef<HTMLTableElement | null>(null);
   const wantFocus = React.useRef(false);
-  // every render: a key that moves to another day asks for focus, and that day's cell is there only after the render.
-  // With a controlled month, the app may show the new month a render or more later (after loading its events): the
-  // request waits for the day's cell, so focus isn't left on a cell that goes away (GR206).
+  // A key that moves to another day asks for focus. With a controlled month, the app may show the new month a render
+  // or more later (after loading its events): the request waits for the day's cell, so focus isn't left on a cell
+  // that goes away (GR206).
+  // every render: that day's cell is there only after the render, and maybe not until a later one.
   React.useEffect(() => {
     if (!wantFocus.current || !grid.current) return;
     const cell = grid.current.querySelector<HTMLElement>('td[data-date="' + iso(focus) + '"]');
