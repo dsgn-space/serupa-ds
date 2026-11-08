@@ -345,6 +345,14 @@ describe('server-rendered on another day than the visitor\'s', () => {
       } finally { r.done(); }
     });
   }
+
+  test('presets: no mismatch, and the pressed preset follows the visitor\'s today, not the server\'s (GR286)', async () => {
+    const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), <Calendar aria-label="Day" locale="en-US" presets defaultValue={new Date(2026, 10, 8)} />);
+    try {
+      expect(r.errors).toEqual([]);
+      expect([...r.host.querySelectorAll('.dk-calendar__preset[aria-pressed="true"]')].map((b) => b.textContent)).toEqual(['Today']);
+    } finally { r.done(); }
+  });
 });
 
 describe('Calendar presets (RU11)', () => {
