@@ -11,7 +11,8 @@
 //                                                in parallel)
 // A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
 // Left out: the Playground stories (the default story with Storybook's controls, which another story shows), the
-// components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file).
+// components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file, which takes away the
+// "visual" tag .storybook/preview.tsx gives every story: index.json lists the tags left, never the "!" ones).
 // Hover and focus act on the element a story marks with data-visual-target (both states), or
 // data-visual-target="hover" / ="focus" (one each); without one, hover is on the story's first enabled button, link
 // or field, and focus wherever the first Tab lands. Focus comes from pressing Tab, so :focus-visible applies.
@@ -44,7 +45,7 @@ if (!fs.existsSync(path.join(SB, 'index.json'))) {
 const component = (e) => e.importPath.split('/')[3];   // ./src/components/<Name>/<Name>.stories.tsx
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 const all = Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
-  .filter((e) => e.type === 'story' && e.exportName !== 'Playground' && !(e.tags || []).includes('!visual') && !SKIP.includes(component(e)))
+  .filter((e) => e.type === 'story' && e.exportName !== 'Playground' && (e.tags || []).includes('visual') && !SKIP.includes(component(e)))
   .sort((a, b) => a.id.localeCompare(b.id));
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories of the components the change touches.
 const only = onlyComponents();
