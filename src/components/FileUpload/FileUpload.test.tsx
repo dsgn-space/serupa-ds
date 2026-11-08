@@ -447,13 +447,32 @@ describe('FileUpload: long file names (GR17)', () => {
   const fits = (el: Element) => el.scrollWidth <= el.clientWidth + 0.5;
   test.each(['ltr', 'rtl'])('a long name is cut in the middle in a %s page: the year and extension stay, the whole name is its title and is read once', async (dir) => {
     await render(<div dir={dir} style={{ width: 320 }}><FileUpload id={'gr17-' + dir} readOnly files={[file(LONG + '2025.pdf', 'application/pdf', 10), file(LONG + '2026.pdf', 'application/pdf', 10), file('a b.pdf', 'application/pdf', 10)]} /></div>);
-    // Each name holds the start (cut), the end (kept) and the whole name for screen readers, in that order.
+    // A cut name holds the start (cut), the end (kept) and the whole name for screen readers, in that order; one that
+    // fits is one run of text, then the whole name.
     const rows = items(rootOf('gr17-' + dir)).map((li) => li.querySelector('[title]')!);
-    const shown = rows.map((n) => { const [start, end] = n.children; return [end.textContent, fits(end), fits(start), css(n).direction]; });
-    expect(shown).toEqual([['t-2025.pdf', true, false, 'ltr'], ['t-2026.pdf', true, false, 'ltr'], ['a b.pdf', true, true, 'ltr']]);
-    // The start ends where the end begins, with nothing lost or doubled, and a short name isn't cut at all.
-    expect(rows.map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start.textContent + end.textContent, whole.textContent, start.getAttribute('aria-hidden'), end.getAttribute('aria-hidden')]; })).toEqual(
-      [LONG + '2025.pdf', LONG + '2026.pdf', 'a b.pdf'].map((n) => [n, n, n, 'true', 'true']));
+    await expect.poll(() => rows.map((n) => n.children.length)).toEqual([3, 3, 2]);
+    const shown = rows.slice(0, 2).map((n) => { const [start, end] = n.children; return [end.textContent, fits(end), fits(start), css(n).direction]; });
+    expect(shown).toEqual([['t-2025.pdf', true, false, 'ltr'], ['t-2026.pdf', true, false, 'ltr']]);
+    expect([rows[2].children[0].textContent, fits(rows[2].children[0] as HTMLElement)]).toEqual(['a b.pdf', true]);
+    // The start ends where the end begins, with nothing lost or doubled.
+    expect(rows.slice(0, 2).map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start.textContent + end.textContent, whole.textContent, start.getAttribute('aria-hidden'), end.getAttribute('aria-hidden')]; })).toEqual(
+      [LONG + '2025.pdf', LONG + '2026.pdf'].map((n) => [n, n, n, 'true', 'true']));
+  });
+
+  // A Devanagari conjunct with its vowel sign, a ZWJ family emoji and a decomposed accent are each one character.
+  const NAMES = ['राष्ट्रीय रिपोर्ट.pdf', '👨‍👩‍👧‍👦.pdf', 'Cafe\u0301 menu.pdf'];
+  test('Devanagari, a ZWJ emoji and a decomposed accent show whole while they fit, and are cut between characters people see when they don\'t', async () => {
+    const long = NAMES.map((n) => 'Lampiran panjang sekali untuk rapat bulanan ' + n);
+    await render(<><div style={{ width: 460 }}><FileUpload id="gw" readOnly files={NAMES.map((n) => file(n, 'application/pdf', 10))} /></div>
+      <div style={{ width: 320 }}><FileUpload id="gc" readOnly files={long.map((n) => file(n, 'application/pdf', 10))} /></div></>);
+    const parts = (id: string) => items(rootOf(id)).map((li) => [...li.querySelector('[title]')!.children].filter((c) => c.getAttribute('aria-hidden') === 'true').map((c) => c.textContent!));
+    expect(parts('gw')).toEqual(NAMES.map((n) => [n]));
+    await expect.poll(() => parts('gc').map((p) => p.length)).toEqual([2, 2, 2]);
+    const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+    for (const [i, [a, b]] of parts('gc').entries()) {
+      expect(a + b).toBe(long[i]);
+      expect(Array.from(seg.segment(long[i]), (x) => x.index)).toContain(a.length);
+    }
   });
 });
 

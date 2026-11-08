@@ -8,6 +8,7 @@ import { Progress } from '../Progress/Progress';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { formatFileSize } from './formatFileSize';
+import { MiddleCutName } from '../../internal/middleCutName';
 import * as icons from '../../material/builtin';
 import { useFieldLabel } from '../../internal/fieldLabel';
 import { useFieldControl } from '../../internal/field';
@@ -108,22 +109,8 @@ function acceptedTypes(accept: string): string[] | null {
 const iconFor = (f: File) => /^image\//.test(f.type) ? icons.Image : f.type === 'application/pdf' ? icons.PictureAsPdf : /^video\//.test(f.type) ? icons.Movie : /^audio\//.test(f.type) ? icons.AudioFile : /zip|compressed|tar/.test(f.type) ? icons.FolderZip : icons.Draft;
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
-/* A file's name, cut in the middle when it doesn't fit, as Finder and Drive do: the start shrinks to an ellipsis and
-   the last few characters and the extension stay, so "report-2025.pdf" and "report-2026.pdf" still look different
-   (GR17). dir="auto" lays it out in the name's own direction. The two parts are hidden from screen readers, which
-   read the whole name once (the progress bar and retry button are named by it too), and title shows it in full on hover. */
-function FileName({ name, id }: { name: string; id?: string }) {
-  const chars = Array.from(name), dot = name.lastIndexOf('.');
-  const ext = dot > 0 ? Array.from(name.slice(dot)).length : 0;
-  const keep = Math.min(chars.length, Math.min(ext, 10) + 6);
-  return (
-    <span className="dk-file-upload__name" dir="auto" title={name}>
-      <span className="dk-file-upload__name-start" aria-hidden>{chars.slice(0, chars.length - keep).join('')}</span>
-      <span className="dk-file-upload__name-end" aria-hidden>{chars.slice(chars.length - keep).join('')}</span>
-      <span className="dk-visually-hidden" id={id}>{name}</span>
-    </span>
-  );
-}
+// A file's name, cut in the middle when it doesn't fit (internal/middleCutName.tsx).
+const NAME = { root: 'dk-file-upload__name', start: 'dk-file-upload__name-start', end: 'dk-file-upload__name-end' };
 
 /* An image file's picture, decoded with createImageBitmap and drawn on a canvas (cropped to fill it, at the screen's
    pixel ratio), so no URL made from the file reaches the page; a file the browser can't decode (HEIC on most) keeps
@@ -361,7 +348,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
               <li key={f.name + f.size + f.lastModified + i} className={cn('dk-file-upload__item', failed && 'dk-file-upload__item--error')}>
                 {props.thumbnails && /^image\//.test(f.type) ? <Thumbnail file={f}>{icon}</Thumbnail> : icon}
                 <span className="dk-file-upload__file">
-                  <FileName name={f.name} id={id + '-name'} />
+                  <MiddleCutName name={f.name} id={id + '-name'} cls={NAME} />
                   <span className="dk-file-upload__size" dir="auto">
                     {formatFileSize(f.size, locale)}
                     {st && st.state === 'done' ? <span className="dk-file-upload__done"><Icon icon={icons.CheckCircle} />{L.progressComplete('')}</span> : null}
