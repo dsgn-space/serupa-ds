@@ -22,7 +22,7 @@ export interface ComboboxLabels {
 }
 export const en: ComboboxLabels = {
   loadingResults: 'Loading…',
-  loadFailed: "Couldn't load options. Type to try again.",
+  loadFailed: 'Couldn’t load options. Type to try again.',
   noResults: 'No results',
   resultsCount: (count) => count === 1 ? '1 result' : count + ' results',
   showOptions: 'Show options',

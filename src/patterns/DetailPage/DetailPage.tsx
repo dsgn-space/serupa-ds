@@ -172,14 +172,14 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
               <TabPanel value="settings" className="pt-4">
                 <section aria-labelledby="danger" className="flex flex-col gap-3 rounded-lg border border-danger bg-surface p-4">
                   <Heading level={2} size="lg" id="danger">Delete this project</Heading>
-                  <p className="m-0 max-w-prose">Deleting removes the project with its tasks and files for everyone. It can't be undone.</p>
+                  <p className="m-0 max-w-prose">Deleting removes the project with its tasks and files for everyone. It can’t be undone.</p>
                   <div><Button destructive variant="outline" onClick={() => ask(true)}>Delete project</Button></div>
                 </section>
               </TabPanel>
             </Tabs>
 
             <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
-              description={`This deletes the project and ${lost} for everyone. It can't be undone.`}>
+              description={`This deletes the project and ${lost} for everyone. It can’t be undone.`}>
               <div className="flex flex-col gap-4">
                 {failed ? <Alert tone="danger">Couldn't delete {name}. Try again.</Alert> : null}
                 <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />

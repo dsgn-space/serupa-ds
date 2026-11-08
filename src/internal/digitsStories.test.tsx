@@ -28,6 +28,7 @@ const LATIN: Record<string, string> = {
   'Chart/Formatted': "the story's formatValue writes the text (Intl in 'en')", 'Chart/LongText': "the story's generated categories and values ('Day ' + n)",
   CodeBlock: 'the code is the story\'s, in ASCII as a program is written (its line numbers are CSS counters, not text)',
   Calendar: 'the grid is Gregorian with Latin digits, so its title and days are too (Calendar.tsx, formats())',
+  EventCalendar: 'Gregorian with Latin digits, as Calendar: its dates and times match the day numbers (EventCalendar.tsx, fmt)',
   'CommandPalette/LongText': "the story's own generated labels ('Project number ' + n)",
   'CascadeSelect/LongText': "the story's own generated labels ('Provinsi ' + n)",
   'FormattedNumber/Locales': 'each number passes its own locale',

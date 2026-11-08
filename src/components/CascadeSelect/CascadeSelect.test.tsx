@@ -169,7 +169,7 @@ describe('CascadeSelect', () => {
     await userEvent.click(option('A'));
     const note = () => panel().querySelector<HTMLElement>('[role=status]');
     expect([note()?.textContent, note()?.getAttribute('aria-busy')]).toEqual(['Loading…', 'true']);
-    await until(() => note()?.textContent === "Couldn't load the options");
+    await until(() => note()?.textContent === 'Couldn’t load the options');
     fail = false;
     await userEvent.click(option('A'));
     await userEvent.click(option('A'));

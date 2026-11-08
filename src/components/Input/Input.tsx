@@ -41,7 +41,21 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
       ("9999 9999 9999 9999", "99/99/9999", "AA99 **** **** ****"). value, defaultValue and onChange's
       event.target.value are the masked text. A digits-only mask gets the number keyboard on phones. */
   mask?: string | undefined;
+  /** Buttons at the end of the field, inside its box: InputAction elements (copy, clear, show, "Apply" for a coupon).
+      They come after the field in the Tab order, and are disabled with it. */
+  actions?: React.ReactNode | undefined;
 }
+
+export interface InputActionProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+  /** An icon for an icon-only action: an icon name or an element. Name it with label. */
+  icon?: IconSource | undefined;
+  /** The action's name. With an icon it's the button's accessible name; without one it's the
+      words on the button, such as "Apply". */
+  label: string;
+}
+
+// Set by Input around its actions: a disabled field disables them too, and they take its size.
+const InputBox = /* @__PURE__ */ React.createContext<{ disabled: boolean }>({ disabled: false });
 
 /* mask: the value shown in the pattern, and each edit put back into it with the caret after the same character it
    was after (so typing in the middle, pasting or deleting doesn't throw it to the end). Backspace or Delete next to the
@@ -90,7 +104,7 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
 export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('Input', function Input(props, ref) {
   const nameRef = useNameCheck('Input', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
-  let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, className: 1, style: 1 } as const);
+  let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
   const size = oneOf(SIZES, props.size, 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
@@ -126,6 +140,26 @@ export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('In
       {affix.suffix}
       {props.showCount ? <span className={cn('dk-input__count', max != null && length >= max && 'dk-input__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span> : null}
       {icon(props.rightIcon, 'right')}
+      {props.actions != null && props.actions !== false ? <span className="dk-input__actions" key="actions"><InputBox.Provider value={{ disabled: !!rest.disabled }}>{props.actions}</InputBox.Provider></span> : null}
     </span>
+  );
+});
+
+/* InputAction: a button inside an Input's box, at the end, sized to the field (its height less the box's border and
+   a 2px inset). An icon action (icon + label) is a muted icon named by label, shaded on hover; a text action (label
+   alone, such as "Apply") is in the primary color. type="button", so it never sends a form; disabled with the Input. */
+/** A button inside an Input, at the end of its box: copy, clear, show or "Apply". Pass it in Input's actions.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const InputAction = /* @__PURE__ */ component<HTMLButtonElement, InputActionProps>('InputAction', function InputAction(props, ref) {
+  const box = React.useContext(InputBox);
+  const rest = omit(props, { icon: 1, label: 1, className: 1 } as const);
+  const node = props.icon != null ? asIcon(props.icon) : null;
+  const iconOnly = node != null && node !== false;
+  return (
+    <button type="button" {...rest} ref={ref} disabled={rest.disabled ?? box.disabled}
+      className={cn('dk-input-action', iconOnly ? 'dk-input-action--icon' : 'dk-input-action--text', props.className)} data-component="input-action"
+      aria-label={iconOnly ? rest['aria-label'] ?? props.label : rest['aria-label']}>
+      {iconOnly ? <span className="dk-input-action__icon" aria-hidden>{node}</span> : props.label}
+    </button>
   );
 });

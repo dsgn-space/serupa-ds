@@ -48,20 +48,20 @@ describe('Blocks/Empty states', () => {
     const send = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
     await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={send} />);
     await userEvent.click(page.getByRole('button', { name: 'Request access' }));
-    await expect.element(page.getByText("Couldn't send the request. Try again.")).toBeVisible();
-    await expect.poll(said).toContain("Couldn't send the request");
+    await expect.element(page.getByText('Couldn’t send the request. Try again.')).toBeVisible();
+    await expect.poll(said).toContain('Couldn’t send the request');
     expect(document.body.textContent).not.toContain('Request sent');
     await userEvent.click(page.getByRole('button', { name: 'Request access' }));
     const shown = () => document.querySelector('[data-component="empty-state"]')!.textContent || '';   // not the announcer
     await expect.poll(shown).toContain('Request sent');
-    expect(shown()).not.toContain("Couldn't send the request");
+    expect(shown()).not.toContain('Couldn’t send the request');
     expect(send).toHaveBeenCalledTimes(2);
   });
 
   test('no access: the failure text is 4.5:1 on the page in all six themes (GR140)', async () => {
     await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={() => Promise.reject(new Error('offline'))} />);
     await userEvent.click(page.getByRole('button', { name: 'Request access' }));
-    const text = page.getByText("Couldn't send the request. Try again.");
+    const text = page.getByText('Couldn’t send the request. Try again.');
     await expect.element(text).toBeVisible();
     const low: string[] = [];
     for (const th of THEMES) {
@@ -76,7 +76,7 @@ describe('Blocks/Empty states', () => {
   test('failed to load: Try again runs, the reference is shown, and it is said once', async () => {
     const retry = vi.fn();
     await render(<EmptyLoadFailed onRetry={retry} reference="7F3A-91" />);
-    await expect.poll(said).toContain("Couldn't load this");
+    await expect.poll(said).toContain('Couldn’t load this');
     expect(document.body.textContent).toContain('Reference: 7F3A-91');
     await userEvent.click(page.getByRole('button', { name: 'Try again' }));
     expect(retry).toHaveBeenCalledTimes(1);

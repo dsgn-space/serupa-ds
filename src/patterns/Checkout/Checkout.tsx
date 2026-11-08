@@ -104,7 +104,7 @@ function checkoutProblems(d: CheckoutDetails): ErrorSummaryItem[] {
     ['country', !d.country, 'Choose your country'],
     ['email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim()), 'Enter an email address, like name@example.com'],
     ['cardNumber', !/^\d{13,19}$/.test(digits), 'Enter the long number on the front of the card: 13 to 19 digits'],
-    ['cardName', !d.cardName.trim(), "Enter the name as it's written on the card"],
+    ['cardName', !d.cardName.trim(), 'Enter the name as it’s written on the card'],
     ['cardExpiry', !/^(0[1-9]|1[0-2]) ?\/ ?\d{2}$/.test(d.cardExpiry.trim()), 'Enter the expiry date as MM/YY, like 08/27'],
     ['cardCode', !/^\d{3,4}$/.test(d.cardCode.trim()), 'Enter the 3 or 4 digit security code from the back of the card'],
   ];
@@ -166,15 +166,18 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
       announce('Order placed');
     } catch {
       setFailed(true);
-      announce("Your order wasn't placed. Nothing was charged. Try again.");
+      announce('Your order wasn’t placed. Nothing was charged. Try again.');
     } finally { setBusy(false); }
   };
 
   const steps: Record<Step, string> = { details: 'Step 1 of 2', review: 'Step 2 of 2', placed: 'Done' };
   const titles: Record<Step, string> = { details: 'Delivery and payment', review: 'Check your order', placed: 'Thank you, your order is placed' };
   const change = (part: Part, label: string) => (
-    <Button variant="secondary" size="sm" onClick={() => go('details', FIRST[part])} aria-label={`Change ${label}`}>Change</Button>
+    <Button variant="secondary" size="sm" onClick={() => go('details', FIRST[part])} aria-label={`Change ${label}`} disabled={busy} disabledReason={placing}>Change</Button>
   );
+  // While the order is being placed, nothing in it can change: going back then would show "Thank you" with details
+  // that were since changed, or edit an order already sent.
+  const placing = busy ? 'Your order is being placed' : undefined;
   const last4 = d.cardNumber.replace(/\D/g, '').slice(-4);
   const country = COUNTRIES.find((c) => c.value === d.country)?.label;
 
@@ -240,7 +243,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
               </form>
             ) : step === 'review' ? (
               <div className="flex flex-col gap-4">
-                {failed ? <p className="m-0 text-danger-text">Your order wasn't placed. Nothing was charged. Try again, or use another card.</p> : null}
+                {failed ? <p className="m-0 text-danger-text">Your order wasn’t placed. Nothing was charged. Try again, or use another card.</p> : null}
                 <Card className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Delivery address</Heading>
@@ -293,7 +296,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
           {step === 'review' ? (
             <div className="flex flex-wrap gap-3 lg:col-span-2">
               <Button wrap loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
-              <Button variant="ghost" onClick={() => go('details')}>Back</Button>
+              <Button variant="ghost" onClick={() => go('details')} disabled={busy} disabledReason={placing}>Back</Button>
             </div>
           ) : null}
         </div>
