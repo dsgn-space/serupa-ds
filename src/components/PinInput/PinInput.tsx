@@ -6,6 +6,7 @@ import { component } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useFormReset } from '../../internal/useFormReset';
 import { latinDigits } from '../../internal/digits';
+import { isComposing } from '../../internal/ime';
 
 export interface PinInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'value' | 'defaultValue' | 'onChange' | 'maxLength' | 'children'> {
   /** How many characters the code has, one box each. Default: 6. */
@@ -88,7 +89,7 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
         onFocus={function (e) { setFocused(true); if (rest.onFocus) rest.onFocus(e); }}
         onBlur={function (e) { setFocused(false); if (rest.onBlur) rest.onBlur(e); }}
         // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E29).
-        onKeyDown={function (e) { if (rest.onKeyDown) rest.onKeyDown(e); if (e.defaultPrevented) return; if (!(e.altKey || e.ctrlKey || e.metaKey) && /^(Arrow(Left|Right|Up|Down)|Home|End|PageUp|PageDown)$/.test(e.key)) e.preventDefault(); else toEnd(e); }}
+        onKeyDown={function (e) { if (rest.onKeyDown) rest.onKeyDown(e); if (e.defaultPrevented || isComposing(e)) return; if (!(e.altKey || e.ctrlKey || e.metaKey) && /^(Arrow(Left|Right|Up|Down)|Home|End|PageUp|PageDown)$/.test(e.key)) e.preventDefault(); else toEnd(e); }}
         onSelect={function (e) { toEnd(e); if (rest.onSelect) rest.onSelect(e); }}
         // A whole code pasted over a part typed (two digits, then the code copied from a message) replaces it,
         // instead of being added after them and cut off: "12" and a pasted 483 921 gave 124839 (L8E105).
