@@ -1,0 +1,83 @@
+/* ---------------------------------------------------------------
+   CascadeSelect: a button like Select (the field background, a field-border outline, the control heights) showing the
+   chosen path or a placeholder, with a chevron. It opens a panel (surface-overlay, an outline, 8px corners, the
+   overlay shadow) of columns side by side, each up to 224px wide and 288px tall, scrolling on its own: a muted level
+   name on top, then its options. The highlighted option in each column is primary-subtle; an option with children
+   ends in a chevron (mirrored right to left), the chosen last step in a check. Narrower than three columns, one column shows at a time, with a
+   Back button beside its level name.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-cascade-select {
+  --dk-cs-h: var(--cascade-select-height-md, var(--control-height-md));
+  --dk-cs-px: var(--cascade-select-padding-x, var(--spacing-3));
+  --dk-cs-bd: var(--cascade-select-border, var(--field-border));
+  --dk-cs-offset: var(--spacing-1);
+  position: relative; display: inline-flex; inline-size: var(--sizing-full); min-inline-size: var(--spacing-0); vertical-align: middle;
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+}
+.dk-cascade-select--size-sm { --dk-cs-h: var(--cascade-select-height-sm, var(--control-height-sm)); --dk-cs-px: var(--spacing-2); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-cascade-select--size-lg { --dk-cs-h: var(--cascade-select-height-lg, var(--control-height-lg)); --dk-cs-px: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-cascade-select__button {
+  display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; inline-size: var(--sizing-full); min-block-size: var(--dk-cs-h); margin: var(--spacing-0);
+  padding-block: var(--spacing-0); padding-inline: var(--dk-cs-px); border: var(--border-width-1) solid var(--dk-cs-bd); border-radius: var(--cascade-select-radius, var(--radius-control));
+  background: var(--cascade-select-bg, var(--field)); color: var(--cascade-select-text, var(--text)); font: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
+  transition: border-color var(--motion-hover) var(--ease-move);
+}
+@media (hover: hover) { .dk-cascade-select__button:hover:not(:disabled, :focus-visible) { --dk-cs-bd: var(--cascade-select-border-hover, var(--field-border-hover)); border-color: var(--dk-cs-bd); } }
+.dk-cascade-select__button:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-cascade-select--invalid { --dk-cs-bd: var(--cascade-select-invalid, var(--danger)); }
+.dk-cascade-select--disabled .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-cascade-select__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-cascade-select__value--empty { color: var(--cascade-select-placeholder, var(--placeholder)); }
+.dk-cascade-select__chevron { flex: none; color: var(--cascade-select-icon, var(--text-muted)); font-size: var(--spacing-4); }
+
+.dk-cascade-select__panel {
+  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--cascade-select-z-index, var(--z-popover));
+  display: flex; max-inline-size: calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4)); margin: var(--spacing-0); padding: var(--spacing-1); overflow-x: auto; overscroll-behavior-inline: contain;
+  border: var(--border-width-1) solid var(--cascade-select-panel-border, var(--border-overlay)); border-radius: var(--cascade-select-panel-radius, var(--radius-surface));
+  background: var(--cascade-select-panel-bg, var(--surface-overlay)); color: var(--cascade-select-text, var(--text)); box-shadow: var(--cascade-select-panel-shadow, var(--elevation-overlay));
+  cursor: default; transform-origin: var(--dk-layer-origin, top);
+}
+/* Motion, as DatePicker's popup: in from @starting-style, out with a fade kept in the top layer; gone at once when
+   closed from the keyboard (data-instant). */
+.dk-cascade-select__panel { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
+.dk-cascade-select__panel:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+@supports (overlay: auto) {
+  .dk-cascade-select__panel[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+}
+.dk-cascade-select__panel[hidden] { display: none; opacity: var(--opacity-0); pointer-events: none; }
+.dk-cascade-select__panel[hidden][data-instant] { transition: none; }
+@starting-style { .dk-cascade-select__panel:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dk-cascade-select__panel[hidden] { scale: var(--scale-95); }
+  @starting-style { .dk-cascade-select__panel:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
+}
+.dk-cascade-select__column { display: flex; flex-direction: column; flex: none; inline-size: var(--cascade-select-column-width, var(--spacing-56)); }
+.dk-cascade-select__column + .dk-cascade-select__column { border-inline-start: var(--border-width-1) solid var(--cascade-select-divider, var(--border)); }
+.dk-cascade-select__level { display: flex; align-items: center; gap: var(--spacing-1); padding: var(--spacing-1) var(--spacing-2); color: var(--cascade-select-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
+.dk-cascade-select__back { display: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: inherit; cursor: pointer; touch-action: manipulation; font-size: var(--spacing-4); }
+.dk-cascade-select__list { display: flex; flex-direction: column; max-block-size: var(--cascade-select-column-height, var(--spacing-72)); overflow-y: auto; overscroll-behavior-block: contain; padding: var(--spacing-1); outline: none; border-radius: var(--radius-inner); }
+.dk-cascade-select__list:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-cascade-select__option {
+  display: flex; flex: none; align-items: center; gap: var(--spacing-2); min-block-size: var(--control-height-md); padding: var(--spacing-1) var(--spacing-2); border-radius: var(--radius-inner);
+  cursor: pointer; overflow-wrap: anywhere; touch-action: manipulation;
+}
+@media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--surface-muted)); } }
+.dk-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); font-weight: var(--font-medium); }
+.dk-cascade-select__option:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-cascade-select__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-cascade-select__label { flex: auto; min-inline-size: var(--spacing-0); }
+.dk-cascade-select__more, .dk-cascade-select__check { flex: none; font-size: var(--spacing-4); color: var(--cascade-select-muted, var(--text-muted)); }
+.dk-cascade-select__check { color: var(--cascade-select-check, var(--primary)); }
+.dk-cascade-select__note { padding: var(--spacing-3) var(--spacing-2); color: var(--cascade-select-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+/* One column at a time on a phone (narrower than 640px, as DateRangePicker): the focused one, with Back to the one before. */
+@media (max-width: 639.98px) {
+  .dk-cascade-select__panel { inline-size: min(var(--spacing-80), calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4))); }
+  .dk-cascade-select__column { flex: auto; inline-size: auto; min-inline-size: var(--spacing-0); }
+  .dk-cascade-select__column:not([data-active]) { display: none; }
+  .dk-cascade-select__column + .dk-cascade-select__column { border-inline-start: var(--spacing-0); }
+  .dk-cascade-select__back { display: inline-flex; }
+}
+@media (forced-colors: active) { .dk-cascade-select__panel { border-color: CanvasText; } .dk-cascade-select__option--on { outline: var(--border-width-1) solid Highlight; } }
+@media print { .dk-cascade-select__panel { display: none; } }
+}

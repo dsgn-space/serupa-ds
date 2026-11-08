@@ -9,6 +9,8 @@ import { DEFAULT_LABELS, idLabels } from './labels';
 // pull requests that each add a label don't edit the same line.
 const ARGS: Record<string, unknown[]> = {
   avatarStatus: ['online'],
+  cascadeHasMore: [false],
+  cascadePath: [['Jawa Barat', 'Kota Bandung']],
   clearValue: ['Email'],
   colorName: ['blue', 'dark'],
   contrast: ['4.5'],
@@ -48,8 +50,8 @@ function said(set: Record<string, unknown>): Record<string, string> {
   }));
 }
 // Words that are the same in both languages. "Slide" and "Format" are the usual loanwords in Indonesian, and
-// Indonesian writes PDF, Audio and Video too (Attachment's kinds).
-const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo']);
+// Indonesian writes PDF, Audio and Video too (Attachment's kinds). cascadePath only joins the names it's given.
+const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'cascadePath']);
 // English labels left empty on purpose: invalidValue's "" keeps the browser's own message, already in its user's language.
 const EMPTY_IN_EN = new Set(['invalidValue']);
 

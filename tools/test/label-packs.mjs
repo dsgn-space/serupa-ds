@@ -44,12 +44,13 @@ const SAMPLES = {
   chartKind: [['line'], ['bar']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
   chatNewMessages: [[1], [3]], notificationsUnread: [[1], [2]],
   kanbanMoveTo: [['Fix login']], kanbanCount: [['6', '5']], kanbanGrabbed: [['Fix login', 'To do', 1, 3]], kanbanMoved: [['Fix login', 'Done', 2, 5]], kanbanDropped: [['Fix login', 'Done', 2, 5]], kanbanCancelled: [['Fix login', 'To do', 1, 3]],
+  cascadePath: [[['Jawa Barat', 'Kota Bandung']]], cascadeLevel: [[1], [3]], cascadeHasMore: [[false], [true]],
   toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
 };
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
 const SILENT_IN_ENGLISH = new Set(['invalidValue']);
 // Words that are often the same in another language (a brand, an abbreviation, a loanword).
-const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf']);
+const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf', 'cascadePath']);
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
