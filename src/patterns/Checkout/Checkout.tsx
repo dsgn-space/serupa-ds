@@ -173,8 +173,11 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
   const steps: Record<Step, string> = { details: 'Step 1 of 2', review: 'Step 2 of 2', placed: 'Done' };
   const titles: Record<Step, string> = { details: 'Delivery and payment', review: 'Check your order', placed: 'Thank you, your order is placed' };
   const change = (part: Part, label: string) => (
-    <Button variant="secondary" size="sm" onClick={() => go('details', FIRST[part])} aria-label={`Change ${label}`}>Change</Button>
+    <Button variant="secondary" size="sm" onClick={() => go('details', FIRST[part])} aria-label={`Change ${label}`} disabled={busy} disabledReason={placing}>Change</Button>
   );
+  // While the order is being placed, nothing in it can change: going back then would show "Thank you" with details
+  // that were since changed, or edit an order already sent.
+  const placing = busy ? 'Your order is being placed' : undefined;
   const last4 = d.cardNumber.replace(/\D/g, '').slice(-4);
   const country = COUNTRIES.find((c) => c.value === d.country)?.label;
 
@@ -293,7 +296,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
           {step === 'review' ? (
             <div className="flex flex-wrap gap-3 lg:col-span-2">
               <Button wrap loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
-              <Button variant="ghost" onClick={() => go('details')}>Back</Button>
+              <Button variant="ghost" onClick={() => go('details')} disabled={busy} disabledReason={placing}>Back</Button>
             </div>
           ) : null}
         </div>
