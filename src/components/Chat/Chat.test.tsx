@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
@@ -207,6 +207,41 @@ describe('ChatDivider', () => {
     const day = 86_400_000;
     await render(<SerupaProvider locale="en-US"><ChatDivider id="a" date={new Date()} /><ChatDivider id="b" date={Date.now() - day} /><ChatDivider id="c" date={new Date(2026, 0, 5)} /><ChatDivider id="d">New messages</ChatDivider></SerupaProvider>);
     expect(['a', 'b', 'c', 'd'].map((i) => document.getElementById(i)!.textContent)).toEqual(['Today', 'Yesterday', 'Jan 5, 2026', 'New messages']);
+  });
+
+  test('server-rendered on another day than the visitor\'s: no mismatch, and "Today" is the visitor\'s today', async () => {
+    const { renderToString } = await import('react-dom/server');
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    const sent = new Date(2026, 10, 8, 4, 30);   // this morning, for the visitor
+    const ui = <SerupaProvider locale="en-US"><ChatDivider id="srv" date={sent} /></SerupaProvider>;
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const host = document.createElement('div');
+    const errors: string[] = [], logError = console.error;
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      vi.setSystemTime(new Date(2026, 10, 9, 1, 0));   // the server is a day on: it would have said "Yesterday"
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      vi.setSystemTime(new Date(2026, 10, 8, 5, 0));
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+      await new Promise((r) => setTimeout(r, 30));
+    } finally { console.error = logError; vi.useRealTimers(); }
+    try {
+      expect([errors, document.getElementById('srv')!.textContent]).toEqual([[], 'Today']);
+    } finally { root?.unmount(); host.remove(); }
+  });
+
+  test('"Today" becomes "Yesterday" at midnight, with no other render', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    try {
+      vi.setSystemTime(new Date(2026, 10, 8, 23, 59, 30));
+      await render(<SerupaProvider locale="en-US"><ChatDivider id="mid" date={new Date(2026, 10, 8, 9, 0)} /></SerupaProvider>);
+      expect(document.getElementById('mid')!.textContent).toBe('Today');
+      await React.act(async () => { vi.advanceTimersByTime(60_000); });
+      expect(document.getElementById('mid')!.textContent).toBe('Yesterday');
+    } finally { vi.useRealTimers(); }
   });
 });
 

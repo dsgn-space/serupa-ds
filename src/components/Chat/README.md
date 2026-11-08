@@ -47,6 +47,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 - Give every message and divider a stable `key`, oldest first. Chat tells a message added at the end from earlier ones added at the start by their keys.
 - Add new messages at the end. When the reader is at the bottom, the conversation follows them; when they've scrolled up, it stays put and offers "N new messages".
 - Earlier messages: set `hasOlder` and load them in `onLoadOlder`, with `loadingOlder` while they come. Put them at the start: the message the reader was on stays where it was.
+- A `ChatDivider` with a `date` says "Today" and "Yesterday" by the visitor's clock and moves on at their midnight. A server-rendered page shows the date until it hydrates, because the server's day can differ from the visitor's.
 - In a row of messages from the same person, set `hideAuthor` on the second and later ones. The name is still read out.
 - Own messages: `own`, with `status="sending"` until the server confirms and `status="failed"` plus `onRetry` when it doesn't.
 - Files: pass [Attachment](../Attachment/README.md) elements to `attachments`, on a message or on the composer.
