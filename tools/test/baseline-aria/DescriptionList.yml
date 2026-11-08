@@ -1,0 +1,79 @@
+# Default
+- term: Name
+- definition: Northwind redesign
+- term: Owner
+- definition: Ayu Lestari
+- term: Status
+- definition: Active
+- term: Created
+- definition:
+  - time: 14 March 2026
+
+# Dividers
+- term: Name
+- definition: Northwind redesign
+- term: Owner
+- definition: Ayu Lestari
+- term: Status
+- definition: Active
+- term: Created
+- definition:
+  - time: 14 March 2026
+
+# LongText
+- term: Donaudampfschifffahrtsgesellschaft
+- definition: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung
+- term: A label long enough to wrap twice in a narrow column
+- definition: https://example.com/a/very/long/path/that/has/no/spaces/at/all/and/keeps/going
+- term: Empty
+- definition: —
+
+# Narrow
+- term: Name
+- definition: Northwind redesign
+- term: Owner
+- definition: Ayu Lestari
+- term: Status
+- definition: Active
+- term: Created
+- definition:
+  - time: 14 March 2026
+
+# Playground
+- term: Name
+- definition: Northwind redesign
+- term: Owner
+- definition: Ayu Lestari
+- term: Status
+- definition: Active
+- term: Created
+- definition:
+  - time: 14 March 2026
+
+# RightToLeft
+- term: الاسم
+- definition: إعادة تصميم نورثويند
+- term: المالك
+- definition: أيو ليستاري
+- term: المجموع
+- definition: ١٢٠ ر.س
+
+# Split
+- term: Subtotal
+- definition: Rp 240.000
+- term: Delivery
+- definition: Free
+- term: Total
+- definition: Rp 240.000
+
+# Stacked
+- term: Name
+- definition: Northwind redesign
+- term: Owner
+- definition: Ayu Lestari
+- term: Status
+- definition: Active
+- term: Created
+- definition:
+  - time: 14 March 2026
+

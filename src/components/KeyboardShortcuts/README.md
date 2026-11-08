@@ -32,8 +32,8 @@ Drawn from the `LongText` story.
 1. **Group** (`.dk-keyboard-shortcuts__group`): the shortcuts for one part of the app.
 2. **Heading** (`.dk-keyboard-shortcuts__heading`): names the group.
 3. **Shortcut** (`.dk-keyboard-shortcuts__row`): one shortcut: what it does and its keys.
-4. **What it does** (`.dk-keyboard-shortcuts__description`): the action, in words.
-5. **Keys** (`.dk-keyboard-shortcuts__keys`): the keys to press.
+4. **What it does** (the row's `.dk-description-list__term`): the action, in words.
+5. **Keys** (its `.dk-description-list__details`): the keys to press.
 
 ## Usage
 
