@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { graphemes } from './graphemes';
 
-/* Shared by Attachment and FileUpload, so both cut a file's name the same way. */
+/* Shared by Attachment and FileUpload, so both cut a file's name the same way. Each passes its class names, all of
+   them written out in its own file, where the build finds the styles it needs (dist/components.json). */
 // Scripts whose letters join to the next one: a cut between two of them would show both in their unjoined forms.
 const JOINS = /[\p{Script=Arabic}\p{Script=Syriac}\p{Script=Nko}\p{Script=Mongolian}\p{Script=Mandaic}\p{Script=Adlam}\p{Script=Hanifi_Rohingya}]/u;
 const LETTER = /[\p{L}\p{M}]/u;
@@ -22,7 +23,7 @@ function nameCut(chars: string[], ext: number): number {
    on grapheme boundaries (graphemes.ts), so letters with their vowel signs, ZWJ emoji and accents stay whole.
    dir="auto" lays it out in the name's own direction. The parts are hidden from screen readers, which read the
    whole name once, and title shows it in full on hover. */
-export function MiddleCutName({ name, id, cls }: { name: string; id?: string | undefined; cls: { root: string; start: string; end: string } }) {
+export function MiddleCutName({ name, id, cls }: { name: string; id?: string | undefined; cls: { root: string; start: string; end: string; hidden: string } }) {
   const [el, setEl] = React.useState<HTMLSpanElement | null>(null);
   const [cut, setCut] = React.useState(false);
   React.useEffect(() => {
@@ -49,7 +50,7 @@ export function MiddleCutName({ name, id, cls }: { name: string; id?: string | u
           <span className={cls.end} aria-hidden>{chars.slice(at).join('')}</span>
         </>
       ) : <span className={cls.start} aria-hidden>{name}</span>}
-      <span className="dk-visually-hidden" id={id}>{name}</span>
+      <span className={cls.hidden} id={id}>{name}</span>
     </span>
   );
 }

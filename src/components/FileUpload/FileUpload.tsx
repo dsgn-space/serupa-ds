@@ -110,7 +110,7 @@ const iconFor = (f: File) => /^image\//.test(f.type) ? icons.Image : f.type === 
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
 // A file's name, cut in the middle when it doesn't fit (internal/middleCutName.tsx).
-const NAME = { root: 'dk-file-upload__name', start: 'dk-file-upload__name-start', end: 'dk-file-upload__name-end' };
+const NAME = { root: 'dk-file-upload__name', start: 'dk-file-upload__name-start', end: 'dk-file-upload__name-end', hidden: 'dk-visually-hidden' };
 
 /* An image file's picture, decoded with createImageBitmap and drawn on a canvas (cropped to fill it, at the screen's
    pixel ratio), so no URL made from the file reaches the page; a file the browser can't decode (HEIC on most) keeps

@@ -59,7 +59,7 @@ const WORD = {
   archive: 'attachmentArchive', code: 'attachmentCode', audio: 'attachmentAudio', video: 'attachmentVideo', other: 'attachmentOther',
 } as const;
 
-const NAME = { root: 'dk-attachment__name-text', start: 'dk-attachment__name-start', end: 'dk-attachment__name-end' };
+const NAME = { root: 'dk-attachment__name-text', start: 'dk-attachment__name-start', end: 'dk-attachment__name-end', hidden: 'dk-visually-hidden' };
 
 /* Attachment: a file as one compact row: an icon for its kind, the name (a link with href), its kind and size in
    muted text, an upload bar while progress is set, a danger message with error, and a remove button with onRemove.
