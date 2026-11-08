@@ -188,7 +188,7 @@ When a test fails, it names what changed. If the change is intended, run with `-
 
 ### The CI runner
 
-On GitLab, every job runs on the project's own runner: an x86 Hetzner server (8 vCPU, 16 GB, Ubuntu 24.04) with Docker and `gitlab-runner`, registered as a project runner that takes untagged jobs, with GitLab's instance runners turned off for the project. It must be x86: Chrome for Testing, which `setup.mjs` installs and the baselines were rendered with, has no Linux ARM build. On a fresh server, as root:
+On GitLab, every job runs on the project's own runner: an x86 Hetzner server (CX33: 4 vCPU, 8 GB, Ubuntu 24.04; CX43 doubles both if it gets slow) with Docker and `gitlab-runner`, registered as a project runner that takes untagged jobs, with GitLab's instance runners turned off for the project. It must be x86: Chrome for Testing, which `setup.mjs` installs and the baselines were rendered with, has no Linux ARM build. On a fresh server, as root:
 
 ```sh
 curl -fsSL https://get.docker.com | sh
@@ -198,11 +198,11 @@ read -rsp 'Runner token (glrt-...): ' RT; echo
 gitlab-runner register --non-interactive --url https://gitlab.com --token "$RT" --executor docker \
   --docker-image node:26-alpine --docker-pull-policy if-not-present --docker-shm-size 2147483648 --description hetzner
 unset RT
-sed -i 's/^concurrent = .*/concurrent = 4/' /etc/gitlab-runner/config.toml && gitlab-runner restart
+sed -i 's/^concurrent = .*/concurrent = 2/' /etc/gitlab-runner/config.toml && gitlab-runner restart
 echo '0 4 * * 0 root docker system prune -af --filter until=168h' > /etc/cron.d/docker-prune
 ```
 
-The token comes from Settings > CI/CD > Runners > New project runner, is typed only on the server, and lives only in its `/etc/gitlab-runner/config.toml`. `if-not-present` keeps Playwright's image (about 2 GB) between jobs, and the runner keeps the jobs' cache (npm's, and Node and Chromium under `.ci-home/`) on its own disk, so a job's setup takes seconds. Four jobs at a time leaves each test job two cores for its pages. To replace the server, make a new one, run the above, and delete the old runner in the same settings page.
+The token comes from Settings > CI/CD > Runners > New project runner, is typed only on the server, and lives only in its `/etc/gitlab-runner/config.toml`. `if-not-present` keeps Playwright's image (about 2 GB) between jobs, and the runner keeps the jobs' cache (npm's, and Node and Chromium under `.ci-home/`) on its own disk, so a job's setup takes seconds. Two jobs at a time leaves each test job two cores and 4 GB for its pages. To replace the server, make a new one, run the above, and delete the old runner in the same settings page.
 
 **Baselines belong to CI.** Screenshots and computed styles differ a little between machines (fonts, anti-aliasing), so `baseline-visual/` and `baseline-utilities.json` are rendered on GitHub's runner: add the `update-visual-baselines` label to a pull request and the Update baselines workflow commits new ones to its branch. The Design QA workflow then shows each changed story in all six themes, before and after, in its job summary, to look at before merging; with the repository variable `DESIGN_QA` set to `required` it also waits for the `design-qa` label, added after the last change to a picture. Locally, Visual snapshots can fail for that reason alone. Utility classes don't depend on the installed fonts (the page's line height is fixed), and a CHANGED class prints what changed, property by property, or what it does now when its effect is too long to keep as text.
 
