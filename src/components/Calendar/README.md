@@ -47,6 +47,7 @@ Drawn from the `MonthYearPicker` story.
 - Today is in primary and semibold. The selected day is filled in primary.
 - With `monthYearPicker`, the header shows a Month and a Year menu in place of the title, so people can jump years at once (a date of birth, an expiry). Years run from `min` to `max`, or from 100 years back to 10 ahead when unset; months outside `min` and `max` are disabled. Off by default.
 - Today follows the clock: a calendar left open past midnight moves today to the new day without needing a re-render.
+- Today is the visitor's day, not the server's. A server-rendered page marks it once it hydrates, since the server's date can differ (a UTC server and a visitor in Jakarta before 7am). Until then, the Tab stop is on the value or on the month's first day. With no value, the month shown at first is today's on each side. Around a month's turn, that can differ between the server and the visitor, so a server-rendered Calendar with no value should get a `defaultMonth`.
 
 ## Accessibility
 
