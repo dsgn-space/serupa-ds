@@ -90,7 +90,7 @@ describe('Patterns/Checkout', () => {
     const onPlaceOrder = vi.fn(() => (fail ? Promise.reject(new Error('declined')) : Promise.resolve()));
     const screen = await render(<Checkout initial={filled} startAtReview onPlaceOrder={onPlaceOrder} />);
     await screen.getByRole('button', { name: /Place order/ }).click();
-    await vi.waitFor(() => expect(said()).toContain("Your order wasn't placed. Nothing was charged."));
+    await vi.waitFor(() => expect(said()).toContain('Your order wasn’t placed. Nothing was charged.'));
     expect(document.querySelector('main')!.textContent).toContain('Check your order');
     expect(onPlaceOrder).toHaveBeenCalledWith(expect.objectContaining({ total: 2450 + 1800 * 2 }));
     fail = false;
@@ -98,6 +98,20 @@ describe('Patterns/Checkout', () => {
     await vi.waitFor(() => expect(active().textContent).toBe('Thank you, your order is placed'));
     await vi.waitFor(() => expect(said()).toContain('Order placed'));
     expect(document.querySelector('main')!.textContent).toContain("We've sent the receipt to ada@example.com");
+  });
+
+  test('while the order is being placed, Back and Change do nothing and say why', async () => {
+    let finish = () => {};
+    const onPlaceOrder = vi.fn(() => new Promise<void>((r) => { finish = r; }));
+    const screen = await render(<Checkout initial={filled} startAtReview onPlaceOrder={onPlaceOrder} />);
+    await screen.getByRole('button', { name: /Place order/ }).click();
+    const back = screen.getByRole('button', { name: 'Back' }).element() as HTMLButtonElement;
+    const changes = [...document.querySelectorAll<HTMLButtonElement>('button[aria-label^="Change "]')];
+    expect([back.getAttribute('aria-disabled'), changes.length > 0, changes.every((b) => b.getAttribute('aria-disabled') === 'true')]).toEqual(['true', true, true]);
+    back.click(); changes[0].click();
+    expect(document.querySelector('main')!.textContent).toContain('Check your order');
+    finish();
+    await vi.waitFor(() => expect(active().textContent).toBe('Thank you, your order is placed'));
   });
 
   test('startAtReview with answers missing starts on the details', async () => {

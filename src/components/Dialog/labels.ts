@@ -9,7 +9,7 @@ export interface DialogLabels {
 }
 export const en: DialogLabels = {
   discardTitle: 'Discard changes?',
-  discardDescription: "What you changed here hasn't been saved.",
+  discardDescription: 'What you changed here hasn’t been saved.',
   discard: 'Discard',
   keepEditing: 'Keep editing',
 };

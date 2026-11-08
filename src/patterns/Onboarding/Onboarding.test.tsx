@@ -50,8 +50,8 @@ describe('Patterns/Onboarding', () => {
   test('the last tick says "You\'re all set" and shows the way on', async () => {
     const screen = await render(<Onboarding steps={steps} initial={{ done: ['a'] }} dashboardHref="/home" />);
     await screen.getByRole('checkbox', { name: 'Mark “Invite your team” as done' }).click();
-    await vi.waitFor(() => expect(said()).toContain("2 of 2 steps done. You're all set."));
-    await expect.element(screen.getByRole('heading', { name: "You're all set", level: 3 })).toBeVisible();
+    await vi.waitFor(() => expect(said()).toContain('2 of 2 steps done. You’re all set.'));
+    await expect.element(screen.getByRole('heading', { name: 'You’re all set', level: 3 })).toBeVisible();
     await expect.element(screen.getByRole('link', { name: 'Go to your dashboard' })).toHaveAttribute('href', '/home');
   });
 

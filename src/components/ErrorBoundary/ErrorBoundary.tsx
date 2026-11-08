@@ -24,7 +24,7 @@ export interface ErrorBoundaryProps {
   fallback?: (React.ReactNode | ((props: ErrorBoundaryFallbackProps) => React.ReactNode)) | undefined;
   /** The default fallback's title. Default: "Something went wrong" (the errorTitle label). */
   title?: React.ReactNode | undefined;
-  /** The default fallback's message. Default: "This part of the page couldn't load." (errorDescription). */
+  /** The default fallback's message. Default: "This part of the page couldn’t load." (errorDescription). */
   description?: React.ReactNode | undefined;
   /** Called with the error and React's component stack, for logging or reporting. */
   onError?: ((error: unknown, info: React.ErrorInfo) => void) | undefined;

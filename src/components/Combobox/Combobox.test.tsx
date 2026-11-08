@@ -814,12 +814,18 @@ describe('Combobox loadOptions (DG1)', () => {
     expect(s.calls.map((c) => c.text)).toEqual(['']);
     s.calls[0].ok(['Argentina', 'Brazil']);
     await expect.poll(() => st('d').opts).toEqual(['Argentina', 'Brazil']);
-    await userEvent.keyboard('per');
-    expect(s.calls.length).toBe(1);   // still typing
-    await expect.poll(() => s.calls.length).toBe(2);
+    // The pause runs on a fake clock, so slow keystrokes (a busy runner) can't outlast it and load early.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      await userEvent.keyboard('per');
+      await React.act(async () => { vi.advanceTimersByTime(149); });
+      expect(s.calls.length).toBe(1);   // still typing
+      await React.act(async () => { vi.advanceTimersByTime(1); });
+    } finally { vi.useRealTimers(); }
+    expect(s.calls.length).toBe(2);
     expect(s.calls[1].text).toBe('per');
     s.calls[1].fail();
-    await expect.poll(() => status('d')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('d')).toBe('Couldn’t load options. Type to try again.');
     await userEvent.keyboard('u');
     await expect.poll(() => s.calls.length).toBe(3);
     s.calls[2].ok(['Peru']);
@@ -842,7 +848,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await render(<div style={{ width: '320px' }}><Combobox id="y" aria-label="Country" loadOptions={thrown} debounce={0} /></div>);
     el('y').focus();
     await userEvent.keyboard('a');
-    await expect.poll(() => status('y')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('y')).toBe('Couldn’t load options. Type to try again.');
   });
 
   test('a picked option keeps its label when later answers leave it out; unmounting aborts the request in flight', async () => {
@@ -868,10 +874,14 @@ describe('Combobox loadOptions (DG1)', () => {
   test('entry: the list fades in and grows from its top edge with a transition, not keyframes; only the fade under reduced motion (EF1)', async () => {
     await withMotion(async () => {
       await render(<Countries />);
+      // Caught as each starts, so a busy runner that lets the fade end before the click returns still sees it.
+      const pop = popOf('cb'), started: string[] = [], keyframes: string[] = [];
+      pop.addEventListener('transitionrun', (e) => { if (e.target === pop) started.push(e.propertyName); });
+      pop.addEventListener('animationstart', (e) => { keyframes.push(e.animationName); });
       await userEvent.click(toggleOf('cb'));
-      const pop = popOf('cb');
-      const moves = pop.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort();
-      expect([moves, pop.getAnimations().some((a) => a instanceof CSSAnimation), pop.dataset.side, css(pop).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
+      await expect.poll(() => started.length).toBeGreaterThanOrEqual(2);
+      const moves = [...started].sort();
+      expect([moves, keyframes.length > 0 || pop.getAnimations().some((a) => a instanceof CSSAnimation), pop.dataset.side, css(pop).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
       await Promise.all(pop.getAnimations().map((a) => a.finished));
       expect([css(pop).opacity, css(pop).scale]).toEqual(['1', 'none']);
     });
@@ -924,7 +934,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await expect.poll(() => [st('w2').text, got]).toEqual(['Bandung', ['Bandung', 'Bandung']]);
     await userEvent.keyboard('{Control>}a{/Control}x{Enter}');
     s.calls.at(-1)!.fail();
-    await expect.poll(() => status('w2')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('w2')).toBe('Couldn’t load options. Type to try again.');
     expect(st('w2').text).toBe('x');
   });
 
