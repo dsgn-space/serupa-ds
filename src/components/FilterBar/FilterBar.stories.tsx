@@ -47,5 +47,5 @@ export const LongText: Story = {
     defaultValue: { long: ['A label long enough to wrap twice in a narrow column', 'Another one'], status: ['open', 'pending', 'closed'], owner: 'Dewi', archived: true },
     resultsCount: 12345,
   },
-  decorators: [(Story) => <div style={{ width: 320 }}><Story /></div>],
+  decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 };
