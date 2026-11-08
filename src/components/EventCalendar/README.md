@@ -37,7 +37,7 @@ Drawn from the `Month` story.
 
 ## Usage
 
-- Pass the events of the shown month (more is fine: the rest aren't drawn). Use `onMonthChange` to load each month as people move.
+- Pass the events of the shown month (more is fine: the rest aren't drawn, and the days of the months before and after show only their dates). Use `onMonthChange` to load each month as people move.
 - `start` and `end` take a Date or an ISO string. A plain `"2025-03-12"` is that whole day, wherever the browser is. An event that runs over several days shows on each of them.
 - Repeating events are your app's to expand: pass each occurrence, with `repeating: true`, and it's said and marked as repeating.
 - `tone` colors an event (`primary`, `info`, `success`, `warning`, `danger`). Say what it means in the title too: color alone doesn't reach everyone.

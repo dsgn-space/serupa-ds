@@ -131,10 +131,14 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const grid = React.useRef<HTMLTableElement | null>(null);
   const wantFocus = React.useRef(false);
   // every render: a key that moves to another day asks for focus, and that day's cell is there only after the render.
+  // With a controlled month, the app may show the new month a render or more later (after loading its events): the
+  // request waits for the day's cell, so focus isn't left on a cell that goes away (GR206).
   React.useEffect(() => {
     if (!wantFocus.current || !grid.current) return;
+    const cell = grid.current.querySelector<HTMLElement>('td[data-date="' + iso(focus) + '"]');
+    if (!cell) return;
     wantFocus.current = false;
-    grid.current.querySelector<HTMLElement>('td[tabindex="0"]')?.focus();
+    cell.focus();
   });
   const move = (d: Date) => { setFocus(d); if (!sameMonth(d, month)) showMonth(d); wantFocus.current = true; };
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
@@ -202,6 +206,8 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     if (w > 0 && !sameMonth(row[0], month)) break;   // as many weeks as the month reaches
     weeks.push(row);
   }
+  // The Tab stop: the focused day, or while a month the keys asked for isn't shown yet, today or the 1st.
+  const stop = weeks.some((r) => r.some((d) => sameDay(d, focus))) ? focus : sameMonth(today, month) ? today : month;
   const days = Array.from({ length: new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate() }, (_, i) => new Date(month.getFullYear(), month.getMonth(), i + 1));
   const busy = view === 'agenda' ? days.map((d) => [d, onDay(list, d)] as const).filter(([, l]) => l.length) : [];
 
@@ -223,10 +229,11 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
             <tr>{weeks[0].map((d) => <th key={d.getDay()} scope="col" abbr={fmt.long.format(d)}><span aria-hidden>{fmt.short.format(d)}</span><span className="dk-visually-hidden">{fmt.long.format(d)}</span></th>)}</tr>
           </thead>
           <tbody>
-            {weeks.map((row, w) => (
-              <tr key={w}>
+            {/* Weeks are keyed by their first day, so a day at the grid's edge keeps its cell, and focus, when its month shows. */}
+            {weeks.map((row) => (
+              <tr key={row[0].getTime()}>
                 {row.map((d) => {
-                  const mine = onDay(list, d), here = sameDay(d, focus), isToday = sameDay(d, today);
+                  const mine = sameMonth(d, month) ? onDay(list, d) : [], here = sameDay(d, stop), isToday = sameDay(d, today);
                   const fits = mine.length > max ? mine.slice(0, max - 1) : mine, more = mine.length - fits.length;
                   return (
                     <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1}

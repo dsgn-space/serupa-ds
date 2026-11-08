@@ -67,6 +67,26 @@ describe('EventCalendar', () => {
     expect(document.activeElement).toBe(cell('2025-03-08'));
   });
 
+  test('keyboard: with a controlled month the app shows a moment later, focus waits for the new month\'s day (GR206)', async () => {
+    function Late() {
+      const [month, setMonth] = React.useState(MARCH);
+      return <EventCalendar events={EVENTS} month={month} weekStartsOn={0} onMonthChange={(m) => { setTimeout(() => setMonth(m), 100); }} />;
+    }
+    await render(<Late />);
+    cell('2025-03-12').focus();   // April 12 isn't in March's grid
+    await userEvent.keyboard('{PageDown}');
+    // Before April shows, the grid keeps one Tab stop.
+    expect(document.querySelectorAll('td[tabindex="0"]')).toHaveLength(1);
+    await vi.waitFor(() => expect(document.activeElement).toBe(cell('2025-04-12')));
+    await expect.element(page.getByRole('grid', { name: 'April 2025' })).toBeInTheDocument();
+  });
+
+  test('the days of the months before and after show their dates but not their events, as the README says (GR207)', async () => {
+    await render(<EventCalendar events={[...EVENTS, { id: 'e', title: 'Planning', start: '2025-04-02T10:00', end: '2025-04-02T11:00' }]} defaultMonth={MARCH} weekStartsOn={0} />);
+    expect(cell('2025-04-02').querySelectorAll('button')).toHaveLength(0);
+    expect(cell('2025-04-02').textContent).toMatch(/^Wednesday, April 2, 2025, No events/);
+  });
+
   test('keyboard: Enter and Space on an event open it', async () => {
     const opened: string[] = [];
     await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onEventClick={(e) => opened.push(e.id)} />);
