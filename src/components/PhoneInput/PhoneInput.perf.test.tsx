@@ -18,7 +18,13 @@ async function typing(id: string, countries?: string[]): Promise<number> {
 
 describe('PhoneInput re-render cost (AY2)', () => {
   test('a keystroke costs about the same with all 244 countries as with one: the options aren\'t rebuilt on each render', async () => {
-    const one = await typing('p1', ['ID']), all = await typing('pall');
+    // Three rounds, one and all in turn, and the fastest median of each: a burst of load on the runner during one
+    // run (it once measured all at 5.0) can't decide it, while a real regression is slow in every round.
+    let one = Infinity, all = Infinity;
+    for (let i = 0; i < 3; i++) {
+      one = Math.min(one, await typing('p1-' + i, ['ID']));
+      all = Math.min(all, await typing('pall-' + i));
+    }
     // With the options rebuilt on each render, all 244 took about six times as long as one. A busy CI runner has
     // measured three and a half times (0.6 and 2.1) with the options kept, so the line is at four: still well short
     // of six. The browser rounds these times to 0.1ms, hence the 0.1 on top.
