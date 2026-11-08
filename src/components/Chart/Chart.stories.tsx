@@ -14,7 +14,7 @@ const meta = {
       { name: 'Sign-ups', values: [20, 42, 31, 54, 60, 73, 80, 64, 71, 94, 110, 142] },
     ],
   },
-  argTypes: { type: { control: 'inline-radio', options: ['line', 'bar'] } },
+  argTypes: { type: { control: 'inline-radio', options: ['line', 'bar', 'area', 'donut'] } },
   decorators: [(Story) => <div style={{ maxWidth: 'var(--container-md)' }}><Story /></div>],
 } satisfies Meta<typeof Chart>;
 export default meta;
@@ -26,6 +26,29 @@ export const Bar: Story = {
   args: {
     type: 'bar', title: 'Orders by region', categories: ['North', 'South', 'East', 'West'],
     series: [{ name: '2025', values: [420, 380, 510, 290] }, { name: '2026', values: [460, 350, 580, 340] }, { name: '2027 target', values: [500, 400, 600, 380] }],
+  },
+};
+export const Area: Story = { args: { type: 'area' } };
+export const AreaStacked: Story = {
+  name: 'Area, stacked',
+  args: {
+    type: 'area', stacked: true, title: 'Orders by channel',
+    series: [
+      { name: 'Shop', values: [40, 42, 45, 50, 52, 60, 58, 62, 66, 70, 82, 95] },
+      { name: 'App', values: [20, 24, 30, 34, 40, 46, 50, 56, 60, 66, 74, 88] },
+      { name: 'Partners', values: [10, 12, 11, 14, 16, 18, 17, 20, 22, 24, 28, 30] },
+    ],
+  },
+};
+export const Donut: Story = {
+  args: { type: 'donut', title: 'Traffic by source', categories: ['Search', 'Direct', 'Social', 'Email', 'Referral'], series: [{ name: 'Visits', values: [4200, 2600, 1800, 900, 500] }] },
+};
+export const DonutOther: Story = {
+  name: 'Donut, more than eight categories',
+  args: {
+    type: 'donut', title: 'Orders by province',
+    categories: ['Jawa Barat', 'Jawa Timur', 'Jawa Tengah', 'DKI Jakarta', 'Banten', 'Sumatera Utara', 'Sulawesi Selatan', 'Bali', 'Riau', 'Lampung'],
+    series: [{ name: 'Orders', values: [920, 780, 640, 610, 330, 280, 210, 180, 120, 90] }],
   },
 };
 export const OneSeries: Story = {
