@@ -372,6 +372,11 @@ describe('SegmentedControl', () => {
     });
     expect(gaps.every((g) => g < 0.02), gaps.map((g) => g.toFixed(3)).join(' ')).toBe(true);
   });
+  test('inside a scaled container, the indicator still sits on its segment', async () => {
+    await render(<div style={{ transform: 'scale(0.5)', transformOrigin: '0 0' }}><SegmentedControl id="sc" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }, { value: 'c', label: 'Timeline' }]} defaultValue="c" /></div>);
+    const ind = el('sc').querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('sc').querySelector('[aria-checked=true]')!.getBoundingClientRect();
+    expect([Math.abs(ind.left - c.left) < 0.5, Math.abs(ind.width - c.width) < 0.5], `${ind.left}/${ind.width} against ${c.left}/${c.width}`).toEqual([true, true]);
+  });
   test('from the keyboard (KW1): an arrow moves the indicator at once, with no slide', async () => {
     await withMotion(async () => {
       await render(<SegmentedControl id="sk" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }]} defaultValue="a" />);
