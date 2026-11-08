@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { cdp, page, server, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -62,6 +62,8 @@ describe('Chat', () => {
     await expect.poll(top).toBeGreaterThan(at);
     await userEvent.keyboard('{Home}');
     await expect.poll(top).toBe(0);
+    // Let Home's smooth scroll finish: a PageDown that arrives while it's still running can be dropped (GR202).
+    await settled();
     await userEvent.keyboard('{PageDown}');
     await expect.poll(top).toBeGreaterThan(0);
     await userEvent.keyboard('{End}');
@@ -205,6 +207,61 @@ describe('ChatDivider', () => {
     const day = 86_400_000;
     await render(<SerupaProvider locale="en-US"><ChatDivider id="a" date={new Date()} /><ChatDivider id="b" date={Date.now() - day} /><ChatDivider id="c" date={new Date(2026, 0, 5)} /><ChatDivider id="d">New messages</ChatDivider></SerupaProvider>);
     expect(['a', 'b', 'c', 'd'].map((i) => document.getElementById(i)!.textContent)).toEqual(['Today', 'Yesterday', 'Jan 5, 2026', 'New messages']);
+  });
+
+  test('server-rendered on another day than the visitor\'s: no mismatch, and "Today" is the visitor\'s today', async () => {
+    const { renderToString } = await import('react-dom/server');
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    const sent = new Date(2026, 10, 8, 4, 30);   // this morning, for the visitor
+    const ui = <SerupaProvider locale="en-US"><ChatDivider id="srv" date={sent} /></SerupaProvider>;
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const host = document.createElement('div');
+    const errors: string[] = [], logError = console.error;
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      vi.setSystemTime(new Date(2026, 10, 9, 1, 0));   // the server is a day on: it would have said "Yesterday"
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      vi.setSystemTime(new Date(2026, 10, 8, 5, 0));
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+      await new Promise((r) => setTimeout(r, 30));
+    } finally { console.error = logError; vi.useRealTimers(); }
+    try {
+      expect([errors, document.getElementById('srv')!.textContent]).toEqual([[], 'Today']);
+    } finally { root?.unmount(); host.remove(); }
+  });
+
+  // The clock runs on from a second before midnight (only Date is faked, so the component's own timer is real).
+  async function atMidnight(day: Date, id: string) {
+    vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 59));
+    const r = await render(<SerupaProvider locale="en-US"><ChatDivider id={id} date={new Date(day.getFullYear(), day.getMonth(), day.getDate(), 9, 0)} /></SerupaProvider>);
+    return r;
+  }
+  test('"Today" becomes "Yesterday" at midnight, with no other render', async () => {
+    try {
+      await atMidnight(new Date(2026, 10, 8), 'mid');
+      expect(document.getElementById('mid')!.textContent).toBe('Today');
+      await expect.poll(() => document.getElementById('mid')!.textContent, { timeout: 4000 }).toBe('Yesterday');
+    } finally { vi.useRealTimers(); }
+  });
+
+  test('across a clock change (Europe/London), "Today" turns at midnight, not an hour late', async () => {
+    const session = server.browser === 'chromium' ? (cdp() as unknown as { send: (m: string, p?: object) => Promise<unknown> }) : null;
+    if (!session) return;
+    await session.send('Emulation.setTimezoneOverride', { timezoneId: 'Europe/London' });
+    try {
+      // 29 March 2026 has 23 hours (clocks forward at 1am): today's start plus 24 hours is 1am on the 30th.
+      const { unmount } = await atMidnight(new Date(2026, 2, 29), 'dst');
+      expect(document.getElementById('dst')!.textContent).toBe('Today');
+      await expect.poll(() => document.getElementById('dst')!.textContent, { timeout: 4000 }).toBe('Yesterday');
+      await unmount();
+    } finally {
+      vi.useRealTimers();
+      await session.send('Emulation.setTimezoneOverride', { timezoneId: '' });
+    }
   });
 });
 

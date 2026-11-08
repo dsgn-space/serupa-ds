@@ -1,12 +1,14 @@
 # GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
-# Minimal by default: the free plan has 400 compute minutes a month, shared by every lane. A merge request's
-# pipeline is one job, local checks (tools/local-checks-gate.mjs on a small Node image, no install, about half a
-# minute): its description must hold a passing tools/ci.mjs report for the commit, which already ran everything
-# below on the author's machine. Pushes to main run nothing. Every other job runs only in a pipeline started by hand
-# (Build > Pipelines > Run pipeline) or with SERUPA_FULL_CI=1.
-# Runs on merge request pipelines and on pushes to main, never twice for the same push.
-# - Merge requests test what they change (tools/test/run.mjs --since the MR's base), as GitHub's pull requests did;
-#   main tests everything after each merge.
+# SERUPA_CI_MODE picks where a merge request's checks run:
+# - runner (default): on the project's own runner (a Hetzner server, see tools/README.md), with no minute limit.
+#   A merge request runs the whole pipeline below: build, types and lint, the changeset check, the suite (what the
+#   MR changes, tools/test/run.mjs --since its base), consumer and frameworks. The runner keeps the cache and the
+#   pulled images between jobs, so setup costs seconds.
+# - local: the fallback for GitLab's shared runners and their 400 minutes a month. A merge request's pipeline is one
+#   job, local checks (tools/local-checks-gate.mjs on a small Node image, about half a minute): its description must
+#   hold a passing tools/ci.mjs report for the commit, which already ran everything below on the author's machine.
+# Pushes to main run nothing. A pipeline started by hand (Build > Pipelines > Run pipeline) runs everything.
+# - Merge requests test what they change (tools/test/run.mjs --since the MR's base), as GitHub's pull requests did.
 # - Every job runs in Playwright's Ubuntu 24.04 image (the fonts and system libraries Chromium needs, as GitHub's
 #   ubuntu-24.04 runners had them), and tools/setup.mjs adds the Node major devEngines asks for and the Chromium
 #   revision this Playwright pins. The image's own Node and browsers are only a starting point.
@@ -33,6 +35,8 @@ variables:
   npm_config_cache: $CI_PROJECT_DIR/.npm
   # Merge requests need the history back to their base for --since and the changeset check.
   GIT_DEPTH: "0"
+  # runner or local, see the top of this file. Switch back to local if the runner is gone for a while.
+  SERUPA_CI_MODE: runner
 
 default:
   # The Playwright version in package-lock.json, so the image's Chromium is the pinned revision and setup.mjs
@@ -89,7 +93,7 @@ changeset:
   timeout: 10m
   rules:
     # A merge request that ships nothing new takes the "no-changeset" label, as on GitHub.
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI == "1" && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-changeset(,|$)/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && ($SERUPA_CI_MODE == "runner" || $SERUPA_FULL_CI == "1") && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-changeset(,|$)/
   cache: []
   before_script: []
   script:
@@ -99,6 +103,7 @@ changeset:
 .full-suite:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
 
 local checks:
   stage: build
@@ -111,7 +116,7 @@ local checks:
   # locally (an hour or more). A ready MR always runs the gate, and fails without a report: whether GitLab requires
   # a passing pipeline to merge is a project setting nobody can check from here.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_FULL_CI != "1" && ($CI_MERGE_REQUEST_DRAFT != "true" || $CI_MERGE_REQUEST_DESCRIPTION =~ /## Local checks/)
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "local" && $SERUPA_FULL_CI != "1" && ($CI_MERGE_REQUEST_DRAFT != "true" || $CI_MERGE_REQUEST_DESCRIPTION =~ /## Local checks/)
   cache: []
   before_script: []
   script:

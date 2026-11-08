@@ -187,16 +187,29 @@ export interface ChatDividerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 
 const DAY = 86_400_000;
 const dayStart = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+/* Today, for "Today" and "Yesterday": the visitor's, never the server's (a UTC server and a visitor in Jakarta
+   before 7am disagree on it), so the server render and hydration have none, and say the date in UTC on both sides.
+   The visitor's words follow right after hydration. It moves on at the visitor's midnight, with no other render. */
+const subscribeDay = (cb: () => void) => {
+  let t: ReturnType<typeof setTimeout>;
+  // The next midnight by the calendar, not today's start plus 24 hours, which a DST change makes 23 or 25 hours.
+  const next = () => { const n = new Date(); t = setTimeout(() => { cb(); next(); }, new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1).getTime() + 1000 - n.getTime()); };
+  next();
+  return () => clearTimeout(t);
+};
+const getDay = () => dayStart(new Date()), getServerDay = () => null;
 
 /** A line between messages that names the day they were sent, or says what follows.
  *  @beta */
 export const ChatDivider = /* @__PURE__ */ component<HTMLDivElement, ChatDividerProps>('ChatDivider', function ChatDivider(props, ref) {
   const locale = useLocale();
   const rest = omit(props, { date: 1, children: 1, className: 1 } as const);
+  const today = React.useSyncExternalStore(subscribeDay, getDay, getServerDay);
   let text: React.ReactNode = props.children;
   if (text == null && props.date != null) {
-    const d = new Date(props.date), days = Math.round((dayStart(d) - dayStart(new Date())) / DAY);
+    const d = new Date(props.date), days = today == null ? NaN : Math.round((dayStart(d) - today) / DAY);
     if (!isFinite(d.getTime())) text = '';
+    else if (today == null) text = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(d);
     else if (Math.abs(days) <= 1) {
       // "today", "yesterday", "tomorrow" in the locale's words, starting with a capital as a heading does
       const word = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(days, 'day');

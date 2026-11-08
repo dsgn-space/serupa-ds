@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { cn, type DataAttributes, domId, omit, oneOf, setRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, type DataAttributes, domId, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { useCut } from '../../internal/useCut';
 import { config } from '../../internal/config';
 import { useShowAfter } from '../../internal/showAfter';
 import { useSettings } from '../../internal/provider';
@@ -191,17 +192,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   const text = typeof props.children === 'string' || typeof props.children === 'number' ? String(props.children) : '';
   const tipOk = !!text && !iconOnly && !props.wrap && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
-  const [cut, setCut] = React.useState(false);
-  useIsoLayoutEffect(function () {
-    const label = node.current && node.current.querySelector<HTMLElement>('.dk-btn__label');
-    if (!tipOk || !label) { setCut(false); return; }
-    const check = () => setCut(label.scrollWidth > label.clientWidth);
-    check();
-    if (typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(check);
-    ro.observe(label);
-    return () => ro.disconnect();
-  }, [tipOk, text]);
+  const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-btn__label'));
   if (cut && tipOk) rest.title = text;
   const setNode = React.useCallback(function (n: HTMLElement | null) { node.current = n; setRef(ref, n); }, [ref]);
 

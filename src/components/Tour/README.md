@@ -58,7 +58,7 @@ The element the step points at gets a 2px primary ring (`[data-tour-target]`), s
 
 | Key | Does |
 | --- | --- |
-| Tab, Shift+Tab | Moves between the close button, Back and Next. |
+| Tab, Shift+Tab | Moves between the close button, Back and Next, and any link in the step; from Next it goes round to the close button, so focus never lands on the page under the panel. Click the page to leave the tour open and work there. |
 | Enter, Space | Presses the focused button. |
 | Escape | Ends the tour; focus goes back. |
 
