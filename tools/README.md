@@ -190,7 +190,7 @@ When a test fails, it names what changed. If the change is intended, run with `-
 
 ### The CI runner
 
-On GitLab, every job runs on the project's own runner: a Google Cloud VM (`n2d-standard-8`: 8 vCPU, 32 GB, Ubuntu 24.04, in `asia-southeast2`; the free trial allows 8 vCPU in all) with Docker and `gitlab-runner`, registered as a project runner that takes untagged jobs, with GitLab's instance runners turned off for the project. It must be x86: Chrome for Testing, which `setup.mjs` installs and the baselines were rendered with, has no Linux ARM build. On a fresh server, as root:
+On GitLab, every job runs on the project's own runner: a Google Cloud VM (`n2d-standard-8`: 8 vCPU, 32 GB, Ubuntu 24.04, in `asia-southeast2`; the free trial allows 8 vCPU in all) with Docker and `gitlab-runner`, registered as a project runner that takes untagged jobs, with GitLab's instance runners turned off for the project. It must be x86: Chrome for Testing, which `setup.mjs` installs and the baselines were rendered with, has no Linux ARM build. A second runner, `serupa-arm` (Oracle Cloud's Always Free Ampere A1: 4 OCPU, 24 GB, Ubuntu 24.04, in `ap-batam-1`, with a 1 SGD budget alert), takes only jobs tagged `arm`: the checks, the Storybook checks, types and lint, the changeset check, consumer and frameworks, none of which takes a screenshot or has a timing budget. There `setup.mjs` installs Playwright's own arm64 build of the same Chromium revision. It is set up the same way, with `--tag-list arm --run-untagged=false` (or the tag set on the GitLab page), `--description serupa-arm`. If it is down, its jobs wait: give serupa-runner the `arm` tag in Settings > CI/CD > Runners until it is back. On a fresh server, as root:
 
 ```sh
 curl -fsSL https://get.docker.com | sh

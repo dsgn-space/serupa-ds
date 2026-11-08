@@ -1,6 +1,7 @@
 # GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
 # SERUPA_CI_MODE picks where a merge request's checks run:
-# - runner (default): on the project's own runner (an x86 server, see tools/README.md), with no minute limit.
+# - runner (default): on the project's own runners (an x86 server, and an ARM one for the jobs tagged arm, which take
+#   no screenshot; see tools/README.md), with no minute limit.
 #   A merge request runs the whole pipeline below: build, types and lint, the changeset check, the suite (what the
 #   MR changes, tools/test/run.mjs --since its base), consumer and frameworks. The runner keeps the cache and the
 #   pulled images between jobs, so setup costs seconds.
@@ -125,6 +126,7 @@ build:
     expire_in: 3 days
 
 types and lint:
+  tags: [arm]
   extends: .full-suite
   stage: build
   timeout: 20m
@@ -137,6 +139,7 @@ types and lint:
     - npm run lint
 
 changeset:
+  tags: [arm]
   stage: build
   timeout: 10m
   rules:
@@ -247,12 +250,12 @@ suite:
         - tools/test/visual.mjs
         - tools/test/storybook.mjs
         - tools/test/baseline-visual/**/*
+  # Here, on serupa-runner (x64): the component tests, whose timing budgets were measured on it, and Visual, whose
+  # baselines are drawn with Chrome for Testing on x64. The other groups are in "suite arm", below.
   parallel:
     matrix:
-      - GROUP: checks
-        SERUPA_SHARD: [1/3, 2/3, 3/3]
       - GROUP: components
-      - GROUP: [visual, storybook]
+      - GROUP: visual
         SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
   variables:
     SERUPA_COVERAGE: ""
@@ -271,9 +274,23 @@ suite:
       - .test-tmp/
       - tools/test/baseline-visual/**/*.actual.png
 
+# The checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow) take no screenshot and
+# have no timing budget, so they run on serupa-arm (Oracle's Always Free Ampere, tag arm) next to serupa-runner: the
+# same image, the same rules, the same Chromium revision (Playwright's own arm64 build, tools/setup.mjs).
+suite arm:
+  extends: suite
+  tags: [arm]
+  parallel:
+    matrix:
+      - GROUP: checks
+        SERUPA_SHARD: [1/3, 2/3, 3/3]
+      - GROUP: storybook
+        SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
+
 # The package installed into an empty project on the oldest Node package.json allows, and the one between
 # (tools/test/consumer.mjs). No npm ci: the repo's dependencies ask for Node 26, and the check needs only Node and dist/.
 consumer:
+  tags: [arm]
   extends: .full-suite
   stage: test
   needs: [build]
@@ -289,6 +306,7 @@ consumer:
 
 # The packed build in a Next.js, a React Router and an Astro app, rendered on the server and hydrated in Chromium.
 frameworks:
+  tags: [arm]
   extends: .full-suite
   stage: test
   needs: [build]
