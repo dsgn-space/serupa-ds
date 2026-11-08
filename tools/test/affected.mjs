@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, folderOf, inParallelRetry, internalTestsFor, scopeFiles, withDependents, report, done } from './lib.mjs';
+import { affectedComponents, folderForKebab, folderOf, inParallelRetry, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -38,6 +38,10 @@ t('a component brings the shared src/internal tests that render it (LoadMore: an
 const added = scopeFiles(['3\t0\tsrc/labels/en.ts', '3\t0\tsrc/labels/id.ts', '4\t0\tsrc/material/named.ts', '1\t0\tsrc/index.ts', '3\t2\tsrc/internal/labels.test.tsx', '40\t0\tsrc/components/Attachment/Attachment.tsx', '12\t0\tdesign-tokens/components/attachment.tokens.json', '8\t0\ttools/test/baseline-aria/Attachment.yml', '9\t0\ttools/test/baseline-server/Attachment.html'].join('\n'));
 t('a new component\'s added lines in shared files cover only it', list(affectedComponents(added)) === 'Attachment', `${added.join(', ')} -> ${list(affectedComponents(added))}`);
 t('a component\'s tokens file is that component\'s (avatar-group is AvatarGroup)', list(affectedComponents(['design-tokens/components/avatar-group.tokens.json'])) === 'AvatarGroup');
+const cases = { DatePicker: 'date-picker', AvatarGroup: 'avatar-group', OTPInput: 'otp-input', QRCode: 'qr-code', Heading2: 'heading2', Button: 'button' };
+const wrong = Object.entries(cases).filter(([n, k]) => kebab(n) !== k).map(([n]) => `${n} -> ${kebab(n)}`);
+t('one kebab case for every tool: a run of capitals stays one word (OTPInput is otp-input, R7)', !wrong.length, wrong.join(', '));
+t('and back to its folder by the folders there are (date-picker is DatePicker; a name with none is null)', folderForKebab('date-picker') === 'DatePicker' && folderForKebab('no-such-thing') === null);
 for (const row of ['2\t1\tsrc/labels/en.ts', '0\t3\tsrc/index.ts', '-\t-\tsrc/material/named.ts']) t(`a shared file with a line removed or changed (${row.replace(/\t/g, ' ')}) still tests everything`, affectedComponents(scopeFiles(row)) === null);
 
 // GR192: a component that draws with another's classes counts as using it.

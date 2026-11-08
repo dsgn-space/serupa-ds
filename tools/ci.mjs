@@ -74,8 +74,13 @@ const from = arg('--from');
 const only = arg('--only') ? new Set(arg('--only').split(',').filter(Boolean)) : null;
 const unknown = [...skip, ...(from ? [from] : []), ...(only || [])].filter((s) => s !== 'changeset' && !all.some((st) => st.name === s));
 if (unknown.length) { console.error(`Unknown step: ${unknown.join(', ')} (see --list)`); process.exit(2); }
+// changeset is a step only with --since: naming it without one would silently run from the top (R8).
+const asked = [...(from ? [from] : []), ...(only || [])].filter((st) => st === 'changeset');
+if (asked.length && !since) { console.error('The changeset step runs only with --since <base> (as CI runs it against the merge request\'s base).'); process.exit(2); }
 const start = from ? Math.max(0, all.findIndex((st) => st.name === from)) : 0;
 const steps = all.slice(start).filter((st) => !skip.has(st.name) && (!only || only.has(st.name)));
+// Nothing to run is not a pass: an empty summary would say "All passed" (R8).
+if (!steps.length && !process.argv.includes('--list')) { console.error('No steps to run: --skip, --only and --from left none (see --list).'); process.exit(2); }
 if (process.argv.includes('--list')) { for (const { name, job, cmd, args } of steps) console.log(`${name}\t${job}\t${path.basename(cmd)} ${args.join(' ')}`); process.exit(0); }
 
 // The Node the repo asks for (devEngines in package.json): an older one fails npm ci and some steps in ways that
