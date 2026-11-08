@@ -1,4 +1,4 @@
-// exports: Timeline, type TimelineAlign, TimelineItem, type TimelineItemProps, type TimelineProps, type TimelineStatus
+// exports: Timeline, type TimelineAlign, TimelineItem, type TimelineItemProps, type TimelineOrientation, type TimelineProps, type TimelineStatus
 interface TimelineLabels {
     timeline: string;
 }
