@@ -34,7 +34,6 @@ async function download(url, to) {
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
   fs.writeFileSync(to, Buffer.from(await res.arrayBuffer()));
 }
-if (spawnSync('unzip', ['-v'], { stdio: 'ignore' }).error) { console.error('tools/setup.mjs needs unzip (apt-get install unzip) to unpack Chromium.'); process.exit(2); }
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-setup-'));
 /** @type {(cmd: string, args: string[], opts?: import('node:child_process').ExecFileSyncOptions) => void} */
 const sh = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: 'inherit', ...opts });
@@ -77,6 +76,8 @@ for (const [name, dirName, zip] of [['chromium', 'chromium', 'chrome'], ['chromi
   if (!b) continue;
   const dir = path.join(root, `${dirName}-${b.revision}`);
   if (fs.existsSync(path.join(dir, 'INSTALLATION_COMPLETE'))) { console.log(`${name} ${b.revision} is already in ${dir}`); continue; }
+  // unzip only matters here, for a browser that isn't installed yet.
+  if (spawnSync('unzip', ['-v'], { stdio: 'ignore' }).error) { console.error('tools/setup.mjs needs unzip (apt-get install unzip) to unpack Chromium.'); process.exit(2); }
   console.log(`${name} ${b.revision} (Chrome for Testing ${b.browserVersion}) → ${dir}`);
   const file = path.join(tmp, `${zip}-${cft}.zip`);
   await download(`https://storage.googleapis.com/chrome-for-testing-public/${b.browserVersion}/${cft}/${zip}-${cft}.zip`, file);
