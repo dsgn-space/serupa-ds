@@ -111,6 +111,56 @@
             "cssVar": "--navbar-link-bg-pressed"
           }
         }
+      },
+      "menu-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "A dropdown panel's background (NavbarMenu).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-bg"
+          }
+        }
+      },
+      "menu-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A dropdown panel's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-border"
+          }
+        }
+      },
+      "menu-title-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A group's title in a dropdown panel (4.5:1 on menu-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-title-text"
+          }
+        }
+      },
+      "menu-link-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A dropdown link's text (4.5:1 on menu-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-link-text"
+          }
+        }
+      },
+      "menu-desc-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A dropdown link's description (4.5:1 on menu-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-desc-text"
+          }
+        }
       }
     },
     "typography": {
@@ -233,6 +283,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--navbar-shadow-scrolled"
+          }
+        }
+      },
+      "menu-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "A dropdown panel's shadow on wide screens.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-shadow"
           }
         }
       }

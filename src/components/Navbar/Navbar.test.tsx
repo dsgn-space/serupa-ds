@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, forcedColors, keepMotion, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
-import { Navbar, NavbarLink } from './Navbar';
+import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
@@ -410,5 +410,88 @@ describe('Navbar panel motion (GH2)', () => {
     expect(fades()).toMatch(/opacity/);
     await expect.poll(() => !!(toggle().compareDocumentPosition(nav()) & Node.DOCUMENT_POSITION_PRECEDING)).toBe(true);
     expect([vis('#nav nav'), nav().inert]).toEqual([false, false]);
+  });
+});
+
+describe('NavbarMenu (RU14)', () => {
+  function Mega() {
+    return <><Navbar id="mega" brand={<a href="#home">Serupa</a>}>
+      <NavbarLink href="#dash">Dashboard</NavbarLink>
+      <NavbarMenu label="Products">
+        <NavbarMenuGroup title="Analytics">
+          <NavbarMenuLink href="#dashboards" description="Charts and reports for your team">Dashboards</NavbarMenuLink>
+          <NavbarMenuLink href="#alerts" active>Alerts</NavbarMenuLink>
+        </NavbarMenuGroup>
+        <NavbarMenuGroup title="Payments">
+          <NavbarMenuLink href="#billing" description="Invoices and plans">Billing</NavbarMenuLink>
+        </NavbarMenuGroup>
+      </NavbarMenu>
+      <NavbarMenu label="Resources">
+        <NavbarMenuLink href="#docs">Docs</NavbarMenuLink>
+        <NavbarMenuLink href="#blog">Blog</NavbarMenuLink>
+      </NavbarMenu>
+    </Navbar><button type="button">After</button><p style={{ marginTop: 480 }}>Page</p></>;
+  }
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const expanded = (name: string) => button(name).element().getAttribute('aria-expanded');
+
+  test('a disclosure: a button with aria-expanded that shows a panel of titled groups; each link is named by its text and described by its line', async () => {
+    await render(<Mega />);
+    const b = button('Products').element();
+    expect([b.tagName, expanded('Products'), document.getElementById(b.getAttribute('aria-controls')!)!.hidden]).toEqual(['BUTTON', 'false', true]);
+    expect(page.getByRole('menu').elements()).toHaveLength(0);
+    await userEvent.click(b);
+    expect(expanded('Products')).toBe('true');
+    await expect.element(page.getByRole('group', { name: 'Analytics' })).toBeVisible();
+    const link = page.getByRole('link', { name: 'Dashboards' });
+    await expect.element(link).toHaveAccessibleDescription('Charts and reports for your team');
+    await expect.element(page.getByRole('link', { name: 'Alerts' })).toHaveAttribute('aria-current', 'page');
+    // Wide, the panel spans the bar, under it.
+    const bar = el('mega').getBoundingClientRect(), panel = document.getElementById(b.getAttribute('aria-controls')!)!.getBoundingClientRect();
+    expect(Math.round(panel.width)).toBe(Math.round(bar.width));
+    expect(Math.abs(panel.top - bar.bottom)).toBeLessThanOrEqual(1);
+  });
+
+  test('Tab goes from the button into its links; Escape closes it and puts focus back on the button', async () => {
+    await render(<Mega />);
+    button('Products').element().focus();
+    await userEvent.keyboard('{Enter}');
+    expect(expanded('Products')).toBe('true');
+    await userEvent.tab();
+    expect(document.activeElement).toBe(page.getByRole('link', { name: 'Dashboards' }).element());
+    await userEvent.keyboard('{Escape}');
+    expect(expanded('Products')).toBe('false');
+    expect(document.activeElement).toBe(button('Products').element());
+  });
+
+  test('one open at a time; a press outside, focus leaving it or following a link closes it', async () => {
+    await render(<Mega />);
+    await userEvent.click(button('Products'));
+    await userEvent.click(button('Resources'));
+    expect([expanded('Products'), expanded('Resources')]).toEqual(['false', 'true']);
+    await userEvent.click(page.getByText('Page'));
+    expect(expanded('Resources')).toBe('false');
+    await userEvent.click(button('Resources'));
+    page.getByRole('link', { name: 'Blog' }).element().focus();
+    await userEvent.tab();   // past the last link, to the button after the bar
+    expect(expanded('Resources')).toBe('false');
+    await userEvent.click(button('Resources'));
+    await userEvent.click(page.getByRole('link', { name: 'Docs' }));
+    expect(expanded('Resources')).toBe('false');
+  });
+
+  test('in the small-screen menu it opens in place, and Escape closes it but leaves the menu open', async () => {
+    await resize(375);
+    await render(<Mega />);
+    await userEvent.click(page.getByRole('button', { name: 'Menu' }));
+    await userEvent.click(button('Products'));
+    const link = page.getByRole('link', { name: 'Billing' }).element();
+    const b = button('Products').element().getBoundingClientRect();
+    expect(link.getBoundingClientRect().top).toBeGreaterThan(b.bottom - 1);   // under its button, in the flow
+    expect(link.getBoundingClientRect().right).toBeLessThanOrEqual(375);
+    link.focus();
+    await userEvent.keyboard('{Escape}');
+    expect(expanded('Products')).toBe('false');
+    expect(page.getByRole('button', { name: 'Menu' }).element().getAttribute('aria-expanded')).toBe('true');
   });
 });

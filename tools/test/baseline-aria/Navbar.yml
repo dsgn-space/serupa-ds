@@ -1,3 +1,41 @@
+# Menus
+- banner:
+  - link "Acme":
+    - /url: "#"
+  - navigation "Main":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#m1"
+      - listitem:
+        - button "Products"
+      - listitem:
+        - button "Resources"
+      - listitem:
+        - link "Team":
+          - /url: "#m8"
+  - button "Docs"
+  - img "Ada Lovelace"
+
+# MenusSmallScreen
+- banner:
+  - link "Acme":
+    - /url: "#"
+  - navigation "Main":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#m1"
+      - listitem:
+        - button "Products"
+      - listitem:
+        - button "Resources"
+      - listitem:
+        - link "Team":
+          - /url: "#m8"
+  - button "Docs"
+  - img "Ada Lovelace"
+
 # Overflow
 - banner:
   - link "Acme Corporation International":

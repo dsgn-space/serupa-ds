@@ -1,6 +1,6 @@
 # Navbar
 
-The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). Below 768px wide the links fold into a menu button that opens them in a panel under the bar.
+The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). Below 768px wide the links fold into a menu button that opens them in a panel under the bar. A NavbarMenu in the bar opens a panel of grouped links with a line about each (a mega menu).
 
 ```jsx
 const { Navbar, NavbarLink, Button, Avatar } = window.Serupa;
@@ -20,6 +20,7 @@ const { Navbar, NavbarLink, Button, Avatar } = window.Serupa;
 
 - The top level of an app or site with a handful of main pages.
 - A place for the brand and app-wide actions, such as search, a user menu or sign in.
+- A few top-level sections that each hold several pages worth a line of explanation, such as Products or Resources on a marketing site: a `NavbarMenu` with `NavbarMenuGroup`s of `NavbarMenuLink`s.
 
 ## When not to use
 
@@ -36,6 +37,13 @@ Drawn from the `Playground` story.
 3. **Current link** (`.dk-navbar__link--active`): the section you're in.
 4. **Actions** (`.dk-navbar__actions`): search, account or other actions at the end.
 
+From the `Menus` story, a NavbarMenu (`.dk-navbar__menu`) adds:
+
+5. **Menu button** (`.dk-navbar__menu-button`): the section's name and a chevron (`.dk-navbar__chevron`) that turns when it's open.
+6. **Panel** (`.dk-navbar__menu-panel`): across the bar, under it, with its groups side by side.
+7. **Group** (`.dk-navbar__menu-group`): a title (`.dk-navbar__menu-title`) over a list of links.
+8. **Menu link** (`.dk-navbar__menu-link`): its name (`.dk-navbar__menu-name`) and a muted line about it (`.dk-navbar__menu-desc`).
+
 ## Usage
 
 - Keep the links to the main pages, a few short words each; below 768px they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
@@ -43,6 +51,8 @@ Drawn from the `Playground` story.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.
 - Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen.
 - Set `size` to the same width as the page's Container, so the bar lines up with the content.
+- For a section with several pages, use a `NavbarMenu` with a `label` and its links, grouped in `NavbarMenuGroup`s with a `title` when there are more than a handful. Give each `NavbarMenuLink` a short `description` when the name alone doesn't say what's there. Keep a panel to what fits on one screen: it's a way in, not a site map.
+- A NavbarMenu's button doesn't go anywhere itself. Give the section's own page a link in its panel, such as "All products".
 
 ## Accessibility
 
@@ -51,6 +61,7 @@ Drawn from the `Playground` story.
 - On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button.
 - With the menu open, Tab goes from the button into the links, in the order they appear, since the panel opens under the bar: the links come after the button in the DOM while it's open. Tab past the last link, any move of focus out of the bar, or a press outside it closes the menu.
 - The panel fades in as it opens and unrolls down from the bar, over 150ms, and fades back out when it closes, as Popover and Menu do. While it fades out it stays after the button and can't be used. With reduced motion it only fades.
+- **NavbarMenu** is a disclosure, not an ARIA menu (`role="menu"` is for app commands): a `<button>` with `aria-expanded` and `aria-controls`, and the panel after it, so Tab goes from the button into its links. Each group is a `role="group"` named by its title. A link with a `description` is named by its text and described by the line (`aria-describedby`), so a screen reader says the name first. Escape closes the panel and returns focus to its button, and in the small-screen menu it leaves that menu open. A press outside, focus leaving it, following a link or opening another NavbarMenu closes it: one is open at a time. On small screens the panel opens in place, under its button, inside the menu.
 - Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`Navbar.test.tsx`).
 
 ### Keyboard
@@ -58,8 +69,8 @@ Drawn from the `Playground` story.
 | Key | Does |
 | --- | --- |
 | Tab | Through the brand, links and actions; on small screens, the menu button, then the menu's links once it's open |
-| Enter / Space | On the menu button, opens or closes the menu |
-| Escape | Closes the menu and returns focus to the menu button |
+| Enter / Space | On the menu button, opens or closes the menu; on a NavbarMenu's button, opens or closes its panel |
+| Escape | Closes a NavbarMenu's panel and returns focus to its button; else closes the menu and returns focus to the menu button |
 
 ## Props
 
@@ -87,6 +98,35 @@ Drawn from the `Playground` story.
 
 Following a link closes the small-screen menu. `href`, `className`, `ref` and everything else go to the link (an `<a>`, or what `as` names).
 
+### NavbarMenu
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `label` | node | | The button's text: what its links are about |
+| `children` | NavbarMenuGroups or NavbarMenuLinks | none | The panel's links; links on their own are one list |
+| `active` | boolean | `false` | The current page is one of its links: the button is shaded as the current link is |
+
+`id`, `className`, `ref` and everything else go to its wrapping `<div>`, which has `data-state="open"` or `"closed"`.
+
+### NavbarMenuGroup
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `title` | node | | Shown above its links, and names the group |
+| `children` | NavbarMenuLinks | none | Its links |
+
+`id`, `className`, `ref` and everything else go to the group's `<div>`.
+
+### NavbarMenuLink
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `description` | node | none | A line under the name saying what's there, read as the link's description |
+| `active` | boolean | `false` | The current page: shaded, with `aria-current="page"` |
+| `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component, as on NavbarLink |
+
+Following one closes its panel and the small-screen menu. `id`, `href`, `className`, `ref` and everything else go to the link.
+
 ## Component tokens
 
 Each is an optional override: set it on the page, a container or one navbar. The list lives in `src/components/Navbar/navbar.tokens.json` (also in `design-tokens/components/`).
@@ -107,6 +147,11 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-link-bg-active` | `secondary` | The current page's link background. |
 | `--navbar-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--navbar-link-bg-pressed` | `pressed` | A link's fill while it's held down. |
+| `--navbar-menu-bg` | `surface-overlay` | A dropdown panel's background (NavbarMenu). |
+| `--navbar-menu-border` | `border` | A dropdown panel's border. |
+| `--navbar-menu-title-text` | `text-muted` | A group's title in a dropdown panel (4.5:1 on menu-bg). |
+| `--navbar-menu-link-text` | `text` | A dropdown link's text (4.5:1 on menu-bg). |
+| `--navbar-menu-desc-text` | `text-muted` | A dropdown link's description (4.5:1 on menu-bg). |
 
 **Type**
 
@@ -153,4 +198,5 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--navbar-shadow-scrolled` | `elevation-raised` | A sticky bar's shadow once the page has scrolled under it. |
+| `--navbar-menu-shadow` | `elevation-overlay` | A dropdown panel's shadow on wide screens. |
 <!-- token-table:end -->
