@@ -34,6 +34,8 @@ workflow:
 stages: [build, test]
 
 variables:
+  # The cross-browser job's groups (below): checks, components, storybook.
+  SERUPA_CROSS_GROUPS: checks components storybook
   # The Chromium the baselines are drawn with: Chrome for Testing at the version browsers.json names, which
   # tools/setup.mjs installs. The image's own /ms-playwright holds a later patch of that revision (156.0.8078.80
   # for .4), which tools/test/visual.mjs refuses. Kept in the cache, so it downloads once.
@@ -215,8 +217,8 @@ frameworks:
 
 # Cross-browser (GitHub's nightly Cross-browser workflow): the component tests, the checks and the Storybook checks in
 # Firefox and WebKit (Safari's engine), whose builds the Playwright image already has. A red job is a browser
-# difference to look at, not a broken main, so nothing waits on it. It costs CI minutes (six jobs; the free plan has
-# 400 a month for every lane), so it never runs on its own: a pipeline started through the API (POST
+# difference to look at, not a broken main, so nothing waits on it. Six jobs of up to an hour hold the runner's two
+# slots from every lane's merge requests, so it never runs on its own: a pipeline started through the API (POST
 # /projects/:id/pipeline, which a token with "Pipeline create" can do) or by a schedule runs build and this, nothing
 # else; one started by hand from Build > Pipelines > Run pipeline runs it with SERUPA_CROSS=1. SERUPA_CROSS_GROUPS
 # picks the groups (default: all three).
@@ -224,17 +226,21 @@ cross-browser:
   stage: test
   needs: [build]
   timeout: 75m
+  # A red job is a finding, not a broken pipeline: it doesn't cancel the other browser's jobs.
+  allow_failure: true
+  variables:
+    # Firefox and WebKit come from the image's own browsers (the cached Chrome for Testing is Chromium only).
+    PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+  # Only the groups SERUPA_CROSS_GROUPS names (a job left out costs nothing, not even its setup).
   rules:
-    - if: $CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1"
+    - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "checks" && $SERUPA_CROSS_GROUPS =~ /checks/
+    - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "components" && $SERUPA_CROSS_GROUPS =~ /components/
+    - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "storybook" && $SERUPA_CROSS_GROUPS =~ /storybook/
   parallel:
     matrix:
       - BROWSER: [firefox, webkit]
         GROUP: [checks, components, storybook]
-  variables:
-    SERUPA_CROSS_GROUPS: checks components storybook
   script:
-    - |
-      case " $SERUPA_CROSS_GROUPS " in *" $GROUP "*) ;; *) echo "$GROUP isn't in SERUPA_CROSS_GROUPS ($SERUPA_CROSS_GROUPS): skipped"; exit 0;; esac
     # Metric-compatible fonts for the Arial and Times a test may ask for, as the GitHub workflow installed.
     - apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
     - set -o pipefail
