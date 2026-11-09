@@ -81,7 +81,9 @@ const steps = [
   // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in a browser. Coverage
   // only on a full run: the floors in vitest.config.ts are for all of src/, which a few components can't reach.
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
-  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
+  // SERUPA_SHARD=2/3 with --group components: every third test file (CI runs the shards side by side). Coverage needs
+  // every file in one run, so a shard never takes it: CI's coverage job runs them whole, on main and at night.
+  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only && !(process.env.SERUPA_SHARD && arg('--group') === 'components') ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
   ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
