@@ -9,6 +9,7 @@ import { topModal } from '../../internal/layers';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import { Dialog, type DialogProps } from '../Dialog/Dialog';
 import { Kbd, isApple } from '../Kbd/Kbd';
+import { DescriptionItem, DescriptionList } from '../DescriptionList/DescriptionList';
 import { en as words } from './labels';
 
 /** One shortcut in the help dialog. */
@@ -175,14 +176,11 @@ export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, Ke
       {[...groups].map(([name, items]) => (
         <section key={name} className="dk-keyboard-shortcuts__group">
           {groups.size > 1 ? <h3 className="dk-keyboard-shortcuts__heading">{name}</h3> : null}
-          <dl className="dk-keyboard-shortcuts__list">
+          <DescriptionList layout="split" className="dk-keyboard-shortcuts__list">
             {items.map((s, i) => (
-              <div key={i} className="dk-keyboard-shortcuts__row">
-                <dt className="dk-keyboard-shortcuts__description">{s.description}</dt>
-                <dd className="dk-keyboard-shortcuts__keys"><Kbd keys={s.keys} size="sm" /></dd>
-              </div>
+              <DescriptionItem key={i} className="dk-keyboard-shortcuts__row" term={s.description}><Kbd keys={s.keys} size="sm" /></DescriptionItem>
             ))}
-          </dl>
+          </DescriptionList>
         </section>
       ))}
     </Dialog>

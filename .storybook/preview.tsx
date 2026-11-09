@@ -124,6 +124,9 @@ const preview: Preview = {
     },
   },
   initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', motion: '1', content: 'demo' },
+  // Every story is shot by tools/test/visual.mjs unless its file says tags: ['!visual'], which takes this tag away.
+  // A "!" tag only removes a tag, so this one has to be here for it to remove (GR285).
+  tags: ['visual'],
   decorators: [WithTheme],
   parameters: {
     layout: 'padded',
@@ -137,7 +140,7 @@ const preview: Preview = {
       storySort: (a, b) => {
         const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Upgrading', 'Changelog'];
         const foundations = ['Colors', 'Themes', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
-          'Content and voice', 'Accessibility', 'Utility classes', 'Icons'];
+          'Content and voice', 'Ethical design', 'Accessibility', 'Utility classes', 'Icons'];
         const at = (list, name) => { const i = list.indexOf(name); return i < 0 ? list.length : i; };
         const x = a.title.split('/'), y = b.title.split('/');
         if (x[0] !== y[0]) return at(order, x[0]) - at(order, y[0]);

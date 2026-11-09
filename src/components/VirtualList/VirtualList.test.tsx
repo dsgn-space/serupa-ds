@@ -208,16 +208,18 @@ describe('VirtualList', () => {
     await huge();
     el('v').focus();
     await userEvent.keyboard('{End}');
-    await expect.poll(() => rows('v').at(-1)?.getAttribute('aria-posinset'), { timeout: 5000 }).toBe('10000000');   // the browser's smooth scroll
+    await expect.poll(() => rows('v').at(-1)?.getAttribute('aria-posinset'), { timeout: 5000 }).toBe('10000000');
     const was = await steady();
     await userEvent.keyboard('{ArrowDown}');
     await new Promise((r) => setTimeout(r, 100));
     expect(first()).toBe(was);
     await userEvent.keyboard('{Home}');
+    // The list sets the top itself: the browser's smooth scroll sometimes stopped a pixel short of it, where the list
+    // rightly keeps the wheel (GR291).
+    expect(el('v').scrollTop).toBe(0);
     await expect.poll(() => titles('v')[0], { timeout: 5000 }).toBe('Row 1');
-    // Row 1 shows while the browser's smooth scroll is still a pixel from the top, and there the list rightly keeps the
-    // wheel: wait for the top itself, as the End half waits for its end.
-    await expect.poll(() => el('v').scrollTop, { timeout: 5000 }).toBe(0);
+    await new Promise((r) => setTimeout(r, 300));
+    expect(el('v').scrollTop).toBe(0);
     const up = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true });
     el('v').dispatchEvent(up);
     expect(up.defaultPrevented).toBe(false);

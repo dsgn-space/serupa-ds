@@ -21,12 +21,12 @@ let clicks = 0;
 function Fabs({ fabRef }: { fabRef?: React.Ref<HTMLButtonElement> }) {
   return <div style={{ padding: '120px 120px 16px', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
     <Fab id="fab" icon="add" label="New project" onClick={() => { clicks++; }} ref={fabRef} />
-    <Fab id="fbs" icon="add" label="Add" size="sm" position="top-start" />
-    <Fab id="fext" icon="edit" label="Compose" extended position="bottom-start" />
-    <Fab id="fst" icon="add" label="Static" position="static" />
+    <Fab id="fbs" icon="add" label="Add" size="sm" placement="top-start" />
+    <Fab id="fext" icon="edit" label="Compose" extended placement="bottom-start" />
+    <Fab id="fst" icon="add" label="Static" placement="static" />
     {/* @ts-expect-error: an unknown position */}
     <Fab id="fbad" icon="add" label="Bad" position="middle" style={{ '--fab-size': '50px', '--fab-offset': '10px' } as React.CSSProperties} />
-    <div dir="rtl"><Fab id="frtl" icon="add" label="RTL" position="top-end" /></div>
+    <div dir="rtl"><Fab id="frtl" icon="add" label="RTL" placement="top-end" /></div>
   </div>;
 }
 
@@ -118,7 +118,7 @@ describe('Fab: focus stays clear of it', () => {
         if (r.bottom > fab.top && r.top < fab.bottom && r.right > fab.left && r.left < fab.right) under.push(i);
       }
       expect(under).toEqual([]);
-      await screen.rerender(<div style={{ paddingBottom: '104px' }}><Fab id="ffab" icon="add" label="New" position="top-end" />{links}</div>);
+      await screen.rerender(<div style={{ paddingBottom: '104px' }}><Fab id="ffab" icon="add" label="New" placement="top-end" />{links}</div>);
       expect([css(document.documentElement).scrollPaddingTop, css(document.documentElement).scrollPaddingBottom]).toEqual(['104px', 'auto']);
     } finally {
       await page.viewport(800, 600);
@@ -165,5 +165,16 @@ describe('Fab above what shares its edge (GR157)', () => {
     await expect.poll(() => Math.round(el('up2').getBoundingClientRect().bottom) <= Math.round(rect('[data-toast]').top)).toBe(true);
     React.act(() => { toast.dismiss(); });
     await expect.poll(() => Math.round(window.innerHeight - el('up2').getBoundingClientRect().bottom), { timeout: 5000 }).toBe(24);
+  });
+});
+
+describe('Fab: position, the old name of placement', () => {
+  test('still places it as placement does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Fab id="old-pos" icon="add" label="Old" position="top-start" />);
+      expect(el('old-pos').getAttribute('data-position')).toBe('top-start');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('fab-position'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

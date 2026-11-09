@@ -14,6 +14,9 @@
    rather than growing the box past the control height. */
 .dk-date-range-picker.dk-input--size-sm .dk-date-range-picker__button { margin-block: calc(var(--spacing-0) - var(--input-border-width, var(--border-width-1))); }
 .dk-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--text-muted)); }
+/* With presets, the shortcuts sit after the months, and under them on a narrow screen (RU11). */
+.dk-date-range-picker__body { display: flex; align-items: flex-start; gap: var(--spacing-4); }
+@media (max-width: 639.98px) { .dk-date-range-picker__body { flex-direction: column; } }
 .dk-date-range-picker__months { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--date-range-picker-months-gap, var(--spacing-6)); }
 .dk-date-range-picker__months > :first-child .dk-calendar__nav--next, .dk-date-range-picker__months > :last-child:not(:first-child) .dk-calendar__nav--prev { visibility: hidden; }
 /* Stacked, the popup is as wide as one month (or the status line, wrapped to it), not as wide as two across, so it

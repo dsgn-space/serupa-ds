@@ -1,0 +1,91 @@
+{
+  "descriptionList": {
+    "$description": "DescriptionList's component tokens. Each one is an optional override: set the CSS variable (--description-list-<name>) on the page, a container or one DescriptionList, and every DescriptionList inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The list's text.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-text"
+          }
+        }
+      },
+      "term": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The terms (4.5:1 on surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-term"
+          }
+        }
+      },
+      "details": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The details (4.5:1 on surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-details"
+          }
+        }
+      },
+      "divider": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The hairline between items with dividers.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-divider"
+          }
+        }
+      }
+    },
+    "typography": {
+      "term-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The terms' weight in inline and stacked (500).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-term-weight"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between items, and above and below each with dividers (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-gap"
+          }
+        }
+      },
+      "term-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between a term and its details when stacked (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-term-gap"
+          }
+        }
+      },
+      "column-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space between the term and details columns in inline and split (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--description-list-column-gap"
+          }
+        }
+      }
+    }
+  }
+}

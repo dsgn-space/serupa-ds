@@ -38,9 +38,17 @@ A date component (Calendar, DatePicker, DateRangePicker) got a string it can't r
 
 A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as an API often sends a date). It's read as the day it writes, 24 October, and the time is ignored, so the day doesn't move with the reader's time zone. Pass the `"yyyy-mm-dd"` day itself (`value.slice(0, 10)`) to say that's what you mean.
 
+## fab-position
+
+Fab's `position` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`, the name the API naming table gives to where a floating part sits (CONTRIBUTING.md).
+
 ## field-control
 
 A Field's label points at its control by id, and nothing on the page has that id, so the label names nothing. Put the control inside the Field, or pass the control's `id`.
+
+## field-layout
+
+Field's `layout` is deprecated, and removed in 15.0.0. It still works as `orientation` does. Rename it to `orientation`, the name the API naming table gives to which way parts run.
 
 ## filter-value
 
@@ -110,9 +118,17 @@ useShortcut was given keys that aren't one key with its modifiers, such as `["G"
 
 A SkipLink was followed, but there's no element on the page with its target's id ("main" unless you pass `target`), so it can't move focus to the main content. Give the main content that id (`<main id="main">`), or pass its id as `target`.
 
+## splitter-direction
+
+Splitter's `direction` is deprecated, and removed in 15.0.0. It still works as `orientation` does. Rename it to `orientation`.
+
 ## splitter-two
 
 Splitter needs exactly two children, its two panes.
+
+## switch-pending
+
+Switch's `pending` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## table-row-click
 
@@ -130,9 +146,17 @@ Tabs' `value` or `defaultValue` matches no Tab. With `value`, no tab is selected
 
 `toast.undo` was called with no Toaster on the page, so nobody could see its Undo. The action is committed at once (its `commit` runs) instead of waiting for an Undo that can't come. Render one Toaster, once, near the root.
 
+## toaster-position
+
+Toaster's `position` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`.
+
 ## toaster-twice
 
 A second Toaster mounted, so only the newer one shows toasts. Render one Toaster, once, near the root of the app.
+
+## tooltip-delay
+
+Tooltip's `delay` is deprecated, and removed in 15.0.0. It still works as `openDelay` does. Rename it to `openDelay`, as HoverCard names it.
 
 ## tooltip-interactive
 

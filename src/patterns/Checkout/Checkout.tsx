@@ -10,6 +10,7 @@ import { Select } from '../../components/Select/Select';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
+import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { announce } from '../../internal/announce';
 import { minorDigits } from '../../internal/currency';
@@ -269,7 +270,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                 </Card>
               </div>
             ) : (
-              <p className="m-0 wrap-anywhere">We've sent the receipt to {d.email}. We'll email again when it's on its way.</p>
+              <p className="m-0 wrap-anywhere">We’ve sent the receipt to {d.email}. We’ll email again when it’s on its way.</p>
             )}
           </section>
 
@@ -283,12 +284,12 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                   </li>
                 ))}
               </ul>
-              <dl className="m-0 flex flex-col gap-1 border-t border-border pt-3 text-sm">
-                <div className="flex justify-between gap-3"><dt>Subtotal</dt><dd className="m-0">{money(subtotal)}</dd></div>
-                <div className="flex justify-between gap-3"><dt>Delivery</dt><dd className="m-0">{deliveryCost ? money(deliveryCost) : 'Free'}</dd></div>
-                {d.tip ? <div className="flex justify-between gap-3"><dt>Tip</dt><dd className="m-0">{money(d.tip)}</dd></div> : null}
-                <div className="flex justify-between gap-3 text-base font-semibold"><dt>Total</dt><dd className="m-0">{money(total)}</dd></div>
-              </dl>
+              <DescriptionList layout="split" className="gap-1 border-t border-border pt-3 text-sm">
+                <DescriptionItem term="Subtotal">{money(subtotal)}</DescriptionItem>
+                <DescriptionItem term="Delivery">{deliveryCost ? money(deliveryCost) : 'Free'}</DescriptionItem>
+                {d.tip ? <DescriptionItem term="Tip">{money(d.tip)}</DescriptionItem> : null}
+                <DescriptionItem term="Total" emphasis>{money(total)}</DescriptionItem>
+              </DescriptionList>
             </Card>
           </aside>
           {/* After the summary, so on a phone every line of the total is read before the button that pays; from lg

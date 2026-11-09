@@ -6,6 +6,7 @@ interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     labelPosition?: "end" | "start" | undefined;
     invalid?: boolean | undefined;
     readOnly?: boolean | undefined;
+    loading?: boolean | undefined;
     pending?: boolean | undefined;
     onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }

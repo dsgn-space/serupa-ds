@@ -110,7 +110,7 @@ describe('Patterns/Detail page', () => {
       const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
       await dialog.getByRole('textbox').fill('Website redesign');
       await dialog.getByRole('button', { name: 'Delete this project' }).click();
-      await expect.element(dialog.getByRole('alert')).toHaveTextContent("Couldn't delete Website redesign. Try again.");
+      await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete Website redesign. Try again.');
       await expect.element(dialog).toBeVisible();
       expect(h1()).toBe('Website redesign');
       expect(active().textContent).toBe('Delete this project');
@@ -134,7 +134,7 @@ describe('Patterns/Detail page', () => {
       const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
       await dialog.getByRole('textbox').fill('Website redesign');
       await dialog.getByRole('button', { name: 'Delete this project' }).click();
-      await expect.element(dialog.getByRole('alert')).toHaveTextContent("Couldn't delete Website redesign. Try again.");
+      await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete Website redesign. Try again.');
       expect(h1()).toBe('Website redesign');
       await new Promise((r) => setTimeout(r, 50));
       expect(errors).toEqual([]);

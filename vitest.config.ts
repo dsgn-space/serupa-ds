@@ -56,7 +56,8 @@ export default defineConfig({
         globalSetup: ['./tools/test/vitest/serverStories.ts'],
         // SERUPA_ONLY (run.mjs --since): the story-wide tests go through only these components' stories (storiesToRun).
         // SERUPA_BENCH (the nightly Benchmarks run): mountTime.test.tsx mounts each story more times.
-        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH },
+        // SERUPA_COVERAGE (CI's full runs): the code is instrumented, so the time budgets allow for it.
+        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH, coverage: !!process.env.SERUPA_COVERAGE },
         // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
         // one file landed in the middle of a drag in another. One file at a time there.
         fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
@@ -120,7 +121,9 @@ export default defineConfig({
       reportsDirectory: 'coverage',
       // Floors a little under the full run's figures on 25 Oct 2026 (96.2 / 88.6 / 98.9 / 99.6 %), so a change
       // that drops coverage fails. Raise them by hand when the figures climb; they never go down.
-      thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 },
+      // A CI shard (SERUPA_SHARD) runs a third of the files, so its own figures mean nothing: the floors are checked on
+      // the shards' merged report (the coverage job, vitest --merge-reports).
+      ...(process.env.SERUPA_SHARD ? {} : { thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 } }),
     },
   },
 });
