@@ -43,7 +43,12 @@
 .dk-rating--disabled { opacity: var(--opacity-disabled); }
 .dk-rating--disabled .dk-rating__choice { cursor: not-allowed; }
 @media (forced-colors: active) {
-  .dk-rating__empty { color: GrayText; }
+  /* An empty star is an outline in the text color, not GrayText, which forced colors keep for what's disabled: the
+     full stars are solid CanvasText, so the score reads by shape, not by a second gray. */
+  .dk-rating__empty { color: CanvasText; }
+  .dk-rating__empty svg { fill: Canvas; stroke: CanvasText; stroke-width: 56px; }   /* stylelint-disable-line serupa/no-raw-value -- in the star's 960-unit viewBox: about 1.4px at 24px */
+  .dk-rating--disabled .dk-rating__empty, .dk-rating--disabled .dk-rating__fill { color: GrayText; }
+  .dk-rating--disabled .dk-rating__empty svg { stroke: GrayText; }
   .dk-rating__fill { color: CanvasText; }
   .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline-color: Highlight; }
 }
