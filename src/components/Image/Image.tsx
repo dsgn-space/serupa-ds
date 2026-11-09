@@ -99,6 +99,8 @@ const connection = () => (navigator as Navigator & { connection?: Connection }).
 // No matchMedia (jsdom, where apps run their unit tests) means no preference, not a crash on every Image (L8E45).
 // The query is made once, and every Image shares one pair of listeners (GR278: a new query each render, and two
 // listeners for each Image).
+// module state: browser only. The server snapshot is "no", so a server render never makes the query or subscribes;
+// what's kept is the visitor's own browser setting.
 let dataQuery: MediaQueryList | undefined;
 const reducedData = () => dataQuery || (typeof matchMedia === 'function' ? (dataQuery = matchMedia(REDUCED)) : null);
 const savingData = () => { const m = reducedData(); return !!(connection() || {}).saveData || !!(m && m.matches); };

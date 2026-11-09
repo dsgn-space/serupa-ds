@@ -51,6 +51,7 @@ const OWN = { trigger: 1, children: 1, title: 1, 'aria-label': 1, 'aria-labelled
 const NARROW = '(max-width: 639.98px)';
 const noSubscribe = () => () => {};
 // The query is made once, not on every render of every Popover (GR278).
+// module state: browser only. The server snapshot is "not narrow", so a server render never makes the query.
 let narrowQuery: MediaQueryList | undefined;
 const narrowMedia = () => (narrowQuery || (narrowQuery = window.matchMedia(NARROW)));
 const subscribeNarrow = (on: () => void) => { const m = narrowMedia(); m.addEventListener('change', on); return () => m.removeEventListener('change', on); };
