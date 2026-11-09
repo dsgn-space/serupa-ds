@@ -33,7 +33,7 @@ export const Tones: Story = {
 };
 
 export const Sizes: Story = {
-  render: (args) => <div className="flex items-end gap-3">
+  render: (args) => <div className="flex flex-wrap items-end gap-3">
     {(['sm', 'md', 'lg', 'xl'] as const).map((s) => <IconTile key={s} {...args} size={s} />)}
     {(['sm', 'md', 'lg', 'xl'] as const).map((s) => <IconTile key={'c' + s} {...args} size={s} shape="circle" />)}
   </div>,
