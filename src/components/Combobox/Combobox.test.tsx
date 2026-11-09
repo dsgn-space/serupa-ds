@@ -894,13 +894,20 @@ describe('Combobox loadOptions (DG1)', () => {
       await userEvent.click(toggleOf('cb'));
       const pop = popOf('cb');
       await settled(pop);
+      // What the list is like as its fade starts, taken then: on a busy runner the 100ms fade can end before the
+      // click returns.
+      let fading: unknown[] | undefined;
+      const look = (e: TransitionEvent) => { if (e.target === pop && !fading) fading = [css(pop).display, pop.inert, pop.querySelectorAll('[role=option]').length, runs(pop)]; };
+      pop.addEventListener('transitionrun', look);
       await userEvent.click(toggleOf('cb'));
       expect([pop.hidden, toggleOf('cb').getAttribute('aria-expanded')]).toEqual([true, 'false']);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (CSS.supports('overlay', 'auto')) {
-        expect([css(pop).display, pop.inert, pop.querySelectorAll('[role=option]').length, runs(pop)]).toEqual(['flex', true, 7, [['opacity', 100], ['scale', 100]]]);
+        await expect.poll(() => fading).toBeDefined();
+        expect(fading).toEqual(['flex', true, 7, [['opacity', 100], ['scale', 100]]]);
         await settled(pop);
       }
+      pop.removeEventListener('transitionrun', look);
       await expect.poll(() => pop.querySelectorAll('[role=option]').length).toBe(0);
       expect(css(pop).display).toBe('none');
       await userEvent.click(toggleOf('cb'));

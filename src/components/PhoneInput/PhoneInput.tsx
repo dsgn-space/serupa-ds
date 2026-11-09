@@ -27,7 +27,7 @@ export interface PhoneValueDetails {
   complete: boolean;
 }
 
-export interface PhoneInputProps extends Omit<InputProps, 'type' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'onChange' | 'leftIcon' | 'rightIcon'> {
+export interface PhoneInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'onChange' | 'leftIcon' | 'rightIcon'> {
   /** The number in E.164, such as "+6281234567890", or "" (controlled). Use with onValueChange. */
   value?: string | undefined;
   /** The number at first (uncontrolled), in E.164. */

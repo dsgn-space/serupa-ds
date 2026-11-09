@@ -33,6 +33,22 @@ import { LOCALES } from './test/lib.mjs';
 
 const PROJECT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
+// --help prints the usage above; an option it doesn't know (a typo like --sinse) stops before anything runs, since a
+// whole run takes an hour and would quietly ignore it (GR275).
+const VALUED = ['--since', '--skip', '--from', '--only', '--report'];
+const FLAGS = ['--all-locales', '--keep-going', '--list', '--resume', '--clean'];
+if (process.argv.includes('--help') || process.argv.includes('-h')) {
+  const usage = fs.readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//   ') || l.startsWith('//  ')).map((l) => l.slice(3));
+  console.log(usage.join('\n'));
+  process.exit(0);
+}
+for (let i = 2; i < process.argv.length; i++) {
+  const a = process.argv[i];
+  if (VALUED.includes(a)) {
+    if (process.argv[i + 1] === undefined || process.argv[i + 1].startsWith('--')) { console.error(`${a} needs a value (node tools/ci.mjs --help)`); process.exit(2); }
+    i++;
+  } else if (!FLAGS.includes(a)) { console.error(`Unknown option: ${a} (node tools/ci.mjs --help)`); process.exit(2); }
+}
 const since = arg('--since');
 const skip = new Set((arg('--skip') || '').split(',').filter(Boolean));
 const keepGoing = process.argv.includes('--keep-going');

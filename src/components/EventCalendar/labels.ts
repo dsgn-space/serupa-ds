@@ -1,0 +1,46 @@
+// EventCalendar's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,
+// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.
+export interface EventCalendarLabels {
+  /** EventCalendar: the button that shows the month with today in it. */
+  goToToday: string;
+  /** EventCalendar: the view switch's name and its two options. */
+  calendarView: string;
+  monthView: string;
+  agendaView: string;
+  /** EventCalendar: how many events a day holds, read with the day ("Tuesday, March 4, 2025, 3 events"). */
+  eventCount: (count: number) => string;
+  /** EventCalendar: the button for the events a day has no room for ("+2 more"). */
+  moreEvents: (count: number) => string;
+  /** EventCalendar: an event that takes the whole day, in place of its time. */
+  allDay: string;
+  /** EventCalendar: an event's time, from start to end ("10:00 AM to 10:30 AM"). */
+  eventTime: (from: string, to: string) => string;
+  /** EventCalendar: said after a repeating event's time. */
+  repeats: string;
+  /** EventCalendar's agenda view when the month has no events. */
+  noEvents: string;
+}
+export const en: EventCalendarLabels = {
+  goToToday: 'Today',
+  calendarView: 'View',
+  monthView: 'Month',
+  agendaView: 'Agenda',
+  eventCount: (count) => (count === 0 ? 'No events' : count === 1 ? '1 event' : count + ' events'),
+  moreEvents: (count) => '+' + count + ' more',
+  allDay: 'All day',
+  eventTime: (from, to) => from + ' to ' + to,
+  repeats: 'Repeats',
+  noEvents: 'No events this month.',
+};
+export const id: EventCalendarLabels = {
+  goToToday: 'Hari ini',
+  calendarView: 'Tampilan',
+  monthView: 'Bulan',
+  agendaView: 'Agenda',
+  eventCount: (count) => (count === 0 ? 'Tidak ada acara' : count + ' acara'),
+  moreEvents: (count) => '+' + count + ' lagi',
+  allDay: 'Sepanjang hari',
+  eventTime: (from, to) => from + ' sampai ' + to,
+  repeats: 'Berulang',
+  noEvents: 'Tidak ada acara bulan ini.',
+};
