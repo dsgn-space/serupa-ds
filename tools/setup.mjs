@@ -9,6 +9,8 @@
 // - Chromium: the revision node_modules/playwright-core/browsers.json pins, when it isn't in PLAYWRIGHT_BROWSERS_PATH
 //   (or ~/.cache/ms-playwright), from Chrome for Testing on storage.googleapis.com, so it works where Playwright's own
 //   download host is blocked. Laid out as `npx playwright install chromium` would, so Playwright finds it.
+//   Chrome for Testing has no Linux arm64 build, so there (the arm CI runner) Playwright installs its own build of the
+//   same revision. Its patch version differs, so tools/test/visual.mjs refuses it: screenshots stay on x64.
 // - Text rendering (Linux): the visual baselines are drawn with fontconfig's stock settings (sub-pixel colour,
 //   slight hinting), as on GitHub's runners and in Playwright's image. A rule in /etc/fonts/conf.d that assigns
 //   grayscale or no hinting (some cloud images ship 12-unhinted-grayscale.conf) makes every picture with text
@@ -71,7 +73,9 @@ const browsers = skipBrowsers ? [] : JSON.parse(fs.readFileSync(path.join(P, 'no
 if (skipBrowsers) console.log('Chromium: skipped (--no-browsers)');
 const root = process.env.PLAYWRIGHT_BROWSERS_PATH || (plat === 'darwin' ? path.join(os.homedir(), 'Library/Caches/ms-playwright') : path.join(os.homedir(), '.cache/ms-playwright'));
 const cft = { linux: 'linux64', darwin: arch === 'arm64' ? 'mac-arm64' : 'mac-x64' }[plat];
-for (const [name, dirName, zip] of [['chromium', 'chromium', 'chrome'], ['chromium-headless-shell', 'chromium_headless_shell', 'chrome-headless-shell']]) {
+const ownBuild = plat === 'linux' && arch === 'arm64';
+if (ownBuild && browsers.length) sh(path.join(nodeBin, 'npx'), ['playwright', 'install', 'chromium', 'chromium-headless-shell'], { cwd: P, env: { ...env, PLAYWRIGHT_BROWSERS_PATH: root } });
+for (const [name, dirName, zip] of ownBuild ? [] : [['chromium', 'chromium', 'chrome'], ['chromium-headless-shell', 'chromium_headless_shell', 'chrome-headless-shell']]) {
   const b = browsers.find((/** @type {{ name: string }} */ x) => x.name === name);
   if (!b) continue;
   const dir = path.join(root, `${dirName}-${b.revision}`);

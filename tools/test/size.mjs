@@ -3,6 +3,7 @@
 //   node tools/test/size.mjs --update Name    set Name's budgets from what it weighs now (5% and 0.1 KiB over); with no
 //                                             name, only the component folders that have no budgets yet
 //   node tools/test/size.mjs --update Name --only alone    set that one budget and keep the others
+//   node tools/test/size.mjs --json size.json --previous last.json   and compare with last night's (nightly, below)
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand). Over budget fails; when a change is worth the bytes, raise the budget in the same pull request,
 // so the growth is a decision someone reviews.
@@ -193,5 +194,21 @@ const own = folders.flatMap((n) => (budgets[n]
   ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'share' ? SHARE_NOISE : 0),
     detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json` }))
   : [{ name: `${n} has size budgets`, ok: false, detail: `run node tools/test/size.mjs --update ${n} and commit tools/test/baseline-size/${n}.json` }]));
+// Size over time (nightly, as the benchmarks are): a budget allows 5% over what a folder weighed when it was set, so a
+// package that grows a little with every merge passes for months. --json writes tonight's sizes; --previous compares
+// them with the last night's and fails when a total, the starter page or a folder imported alone grew 3% (and 0.2 KiB)
+// in one night without its budget moving.
+const flag = (f) => (process.argv.includes(f) ? process.argv[process.argv.indexOf(f) + 1] : null);
+const tonight = { totals: Object.fromEntries(rows.map((r) => [r.name, r.now])), starter, alone: Object.fromEntries(folders.filter((n) => measured[n]).map((n) => [n, measured[n].alone])) };
+if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify(tonight, null, 1));
+const trend = [];
+if (flag('--previous') && fs.existsSync(flag('--previous'))) {
+  const last = JSON.parse(fs.readFileSync(flag('--previous'), 'utf8'));
+  const grew = (name, was, now) => trend.push({ name: `${name}: ${kib(was)} → ${kib(now)} KiB since last night`, ok: !(was && now > was * 1.03 && now - was > 0.2 * 1024),
+    detail: `${(100 * (now / was - 1)).toFixed(1)}% in one night: find the merge that grew it and decide whether it's worth the bytes` });
+  for (const [n, now] of Object.entries(tonight.totals)) grew(n, last.totals?.[n], now);
+  grew('Starter page', last.starter, starter);
+  for (const [n, now] of Object.entries(tonight.alone)) if (last.alone?.[n]) grew(`${n} imported alone`, last.alone[n], now);
+}
 const orphans = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => !folders.includes(f.replace(/\.json$/, ''))) : [];
-done(report('Size', [...totals, ...own, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));
+done(report('Size', [...totals, ...own, ...trend, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));
