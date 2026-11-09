@@ -21,7 +21,8 @@ import { announce } from '../../internal/announce';
      every second. The countdown on screen updates every second, outside any live region.
    - 2.2.6, 3.3.7: what's typed is kept as it's typed (here in sessionStorage under `saveKey`), so if the session
      ends, signing in again in the same tab brings it all back, and the page says so before and after. Signing out on
-     purpose, sending the message, or closing the tab clears it, so the next person on the computer doesn't find it.
+     purpose or sending the message clears it, so the next person on the computer doesn't find it. Closing the tab
+     doesn't: a browser that reopens a closed tab brings its sessionStorage back, so sign out on a shared computer.
      Only the subject and the message are kept: never a password, card number or ID number.
    - 2.4.3: when the warning closes, focus goes back to where it was; when the session ends, to the "Signed out"
      heading.
@@ -40,7 +41,7 @@ export interface SessionTimeoutProps {
   /** Typing or clicking keeps the session, at most once every this many seconds. Default: 60. */
   activityEvery?: number | undefined;
   /** Keeps what's typed in sessionStorage under this key, so it survives a time-out or a reload in the same tab.
-      Signing out, sending the message or closing the tab clears it. */
+      Signing out or sending the message clears it; a closed tab that the browser reopens brings it back. */
   saveKey?: string | undefined;
   /** Send the message. Once it resolves, the kept draft is cleared; a rejected promise keeps it. */
   onSend?: ((draft: { subject: string; message: string }) => void | Promise<unknown>) | undefined;
@@ -137,9 +138,16 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
   const extend = async () => {
     try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch { /* the session runs out as warned */ }
   };
+  // While a send is under way the button shows it and takes no more presses, so a second click doesn't send the
+  // message twice (the ref covers a second press before the re-render).
+  const [sending, setSending] = React.useState(false);
+  const sendingNow = React.useRef(false);
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
-    try { await onSend?.(draft); } catch { announce('The message wasn’t sent. What you typed is kept: try again.'); return; }
+    if (sendingNow.current) return;
+    sendingNow.current = true;
+    setSending(true);
+    try { await onSend?.(draft); } catch { announce('The message wasn’t sent. What you typed is kept: try again.'); return; } finally { sendingNow.current = false; setSending(false); }
     forget(saveKey);
     setDraft({ subject: '', message: '' });
     announce('Message sent.');
@@ -180,7 +188,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
                 <Field label="Message" hint="What happened, and what you expected.">
                   <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
                 </Field>
-                <div><Button type="submit">Send message</Button></div>
+                <div><Button type="submit" loading={sending}>Send message</Button></div>
               </form>
             </Card>
           </>

@@ -47,4 +47,4 @@ this table doesn't list, or when a row no longer matches the code. Nothing here 
 | `src/components/Splitter/Splitter.tsx` | localStorage | your `storageKey` | An uncontrolled Splitter's size, as a number. |
 | `src/patterns/ConsentBanner/ConsentBanner.tsx` | localStorage | your `saveKey` | The cookie choice, `accepted` or `rejected`, so the banner doesn't ask again. |
 | `src/patterns/Onboarding/Onboarding.tsx` | localStorage | your `saveKey` | Which steps are done and whether the checklist was hidden, as JSON. |
-| `src/patterns/SessionTimeout/SessionTimeout.tsx` | sessionStorage | your `saveKey` | The draft's subject and message, for the tab only. Cleared by signing out, by sending the message or by closing the tab. Never a password, card number or ID number. |
+| `src/patterns/SessionTimeout/SessionTimeout.tsx` | sessionStorage | your `saveKey` | The draft's subject and message, for the tab only. Cleared by signing out or by sending the message. Closing the tab doesn't clear it for good: a browser that reopens a closed tab restores its sessionStorage. Never a password, card number or ID number. |

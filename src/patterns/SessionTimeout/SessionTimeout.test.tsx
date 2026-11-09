@@ -129,7 +129,7 @@ describe('Patterns/Session time-out', () => {
     await first.getByRole('button', { name: 'Send message' }).click();
     await vi.waitFor(() => expect(said()).toContain('wasn’t sent'));
     expect(refused).toHaveBeenCalledWith({ subject: 'Refund', message: '' });
-    expect(JSON.parse(window.sessionStorage.getItem(KEY)!).subject).toBe('Refund');
+    expect((JSON.parse(window.sessionStorage.getItem(KEY)!) as { subject: string }).subject).toBe('Refund');
     await first.unmount();
     const onSend = vi.fn();
     const second = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
@@ -139,6 +139,24 @@ describe('Patterns/Session time-out', () => {
     expect(onSend).toHaveBeenCalledWith({ subject: 'Refund', message: '' });
     expect(window.sessionStorage.getItem(KEY)).toBeNull();
     await expect.element(second.getByLabelText('Subject')).toHaveValue('');
+  });
+
+  test('while the message is sending, a second press doesn\'t send it again', async () => {
+    let done!: () => void;
+    const onSend = vi.fn(() => new Promise<void>((r) => { done = r; }));
+    const screen = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
+    await userEvent.fill(screen.getByLabelText('Subject'), 'Refund');
+    const button = screen.getByRole('button', { name: 'Send message' });
+    await button.click();
+    await expect.element(button).toHaveAttribute('aria-busy', 'true');
+    // A second press while busy: a click (straight on the element, since the browser's own click waits for a busy
+    // button to be ready) and Enter on the focused button.
+    (button.element() as HTMLButtonElement).click();
+    await userEvent.keyboard('{Enter}');
+    expect(onSend).toHaveBeenCalledTimes(1);
+    done();
+    await vi.waitFor(() => expect(said()).toContain('Message sent.'));
+    await expect.element(button).not.toHaveAttribute('aria-busy', 'true');
   });
 
   test('a storage that throws is ignored', async () => {
