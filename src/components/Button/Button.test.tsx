@@ -277,18 +277,30 @@ describe('Button', () => {
   });
 
   test('onClick with a quick promise (under 300ms): no loading flash and no "Loading" announced, but still no second click until it settles', async () => {
-    let ok: () => void = () => {};
-    const onClick = vi.fn(() => new Promise<void>((r) => { ok = r; }));
-    await render(<Button id="qk" onClick={onClick}>Copy</Button>);
-    const a = announcer(); a.textContent = '';
-    await userEvent.click(el('qk'));
-    await userEvent.click(el('qk'));
-    expect([onClick.mock.calls.length, el('qk').hasAttribute('aria-busy')]).toEqual([1, false]);
-    ok();
-    await new Promise((r) => setTimeout(r, 400));
-    expect([el('qk').hasAttribute('aria-busy'), a.textContent]).toEqual([false, '']);
-    await userEvent.click(el('qk'));
-    expect(onClick).toHaveBeenCalledTimes(2);
+    // On fake timers, so a busy machine can't stretch the time between the click and the promise past 300ms (it showed
+    // the spinner on CI, and the spinner then stays its 500ms).
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    try {
+      let ok: () => void = () => {};
+      const onClick = vi.fn(() => new Promise<void>((r) => { ok = r; }));
+      await render(<Button id="qk" onClick={onClick}>Copy</Button>);
+      const a = announcer(); a.textContent = '';
+      const step = (ms: number) => React.act(async () => { vi.advanceTimersByTime(ms); });
+      await React.act(async () => el('qk').click());
+      await step(100);
+      await React.act(async () => el('qk').click());
+      expect([onClick.mock.calls.length, el('qk').hasAttribute('aria-busy')]).toEqual([1, false]);
+      await step(150);
+      await React.act(async () => ok());   // settled at 250ms
+      await step(400);
+      expect([el('qk').hasAttribute('aria-busy'), a.textContent]).toEqual([false, '']);
+      await React.act(async () => el('qk').click());
+      expect(onClick).toHaveBeenCalledTimes(2);
+      await React.act(async () => ok());   // settled at once, so nothing is left to say
+    } finally {
+      await React.act(async () => { vi.advanceTimersByTime(5000); });
+      vi.useRealTimers();
+    }
   });
 
   // EB1: a promise ending at 320ms showed the spinner for 20ms, cut off mid fade-in, then snapped back to the label.
