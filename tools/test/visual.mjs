@@ -24,18 +24,23 @@
 // touches only components (SERUPA_ONLY), since a component can't change them.
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
+import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
-const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+// Firefox and WebKit (SERUPA_BROWSER, baseline-visual-<engine>/): what differs between engines is layout, text and
+// the CSS each supports, not the theme's colours, so a lighter set: each story at rest in blue-light and on the other
+// axes, two pictures where Chromium has up to twenty. Nightly (cross-browser visual in .gitlab-ci.yml).
+const LIGHT = ENGINE !== 'chromium';
+const THEMES = LIGHT ? ['blue-light'] : ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+const STATES = LIGHT ? [] : ['hover', 'focus'];
 const SKIP = ['VisuallyHidden'];  // nothing to see
 // Components whose states (checked, selected, current, progress, drag-over) are easy to lose in forced colors: each
 // story is also shot with forced-colors: active, as <Story>-forced-colors.png.
 // The other axes, all at once in blue-light at rest: one picture per story catches a change on any of them.
 const AXES = 'dir:rtl;contrast:more;density:compact';
-const FORCED = ['Checkbox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
+const FORCED = LIGHT ? [] : ['Checkbox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
 
 const SB = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(SB, 'index.json'))) {
@@ -52,7 +57,7 @@ const only = onlyComponents();
 const stories = all.filter((e) => !only || only.has(component(e))).filter((_, i) => i % shards === shard - 1);
 // Every baseline a story can have, to find the ones whose story is gone.
 const expected = new Set(all.flatMap((e) => [
-  ...THEMES.flatMap((th) => ['rest', 'hover', 'focus'].map((s) => `${component(e)}/${e.exportName}-${th}-${s}.png`)),
+  ...THEMES.map((th) => `${component(e)}/${e.exportName}-${th}-rest.png`), ...STATES.map((s) => `${component(e)}/${e.exportName}-${THEMES[0]}-${s}.png`),
   ...(FORCED.includes(component(e)) ? [`${component(e)}/${e.exportName}-forced-colors.png`] : []),
   `${component(e)}/${e.exportName}-axes.png`,
 ]));
@@ -71,7 +76,7 @@ if (want && b.version() !== want) {
 }
 // The baselines' text is drawn with sub-pixel colour (fontconfig's stock settings on Linux). A machine whose
 // fontconfig forces grayscale draws every picture with text differently: say so once instead of failing them all.
-if (process.platform === 'linux') {
+if (process.platform === 'linux' && !LIGHT) {
   const probe = await b.newPage({ viewport: { width: 200, height: 40 } });
   await probe.setContent('<p style="font:16px sans-serif;margin:8px">Sub-pixel text</p>');
   const png = (await probe.screenshot()).toString('base64');
@@ -213,7 +218,7 @@ async function checkStory(e, page) {
   // Every theme at rest first, on one page load (each next theme switched in place), then hover and focus, which
   // each start from a fresh load.
   let atRest = false;
-  for (const [th, state] of [...THEMES.map((th) => [th, 'rest']), [THEMES[0], 'hover'], [THEMES[0], 'focus']]) {
+  for (const [th, state] of [...THEMES.map((th) => [th, 'rest']), ...STATES.map((st) => [THEMES[0], st])]) {
     {
       const name = `${c}/${e.exportName}-${th}-${state}`;
       const switched = atRest && state === 'rest' && !(await switchTo(page, th));
