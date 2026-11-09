@@ -112,6 +112,8 @@ export const labels: SerupaLabels = {
   filterClear: 'Tümünü temizle',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' “' + text + '” içerir',
+  filterFrom: (field, date) => field + ': ' + date + ' tarihinden itibaren',
+  filterUntil: (field, date) => field + ': ' + date + ' tarihine kadar',
   filterAny: (field) => field + ': tümü',
   filterRemove: (field) => 'Filtreyi kaldır: ' + field,
   filterDone: 'Bitti',

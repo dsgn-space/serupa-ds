@@ -41,7 +41,7 @@ export interface SidebarItemOwnProps {
   label: React.ReactNode;
   /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
   icon?: IconSource | undefined;
-  /** The current page: shaded, with aria-current="page". Default: false. */
+  /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
   active?: boolean | undefined;
   /** Something at the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read it. */
   badge?: React.ReactNode | undefined;

@@ -112,6 +112,8 @@ export const labels: SerupaLabels = {
   filterClear: 'Kosongkan semua',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' mengandungi “' + text + '”',
+  filterFrom: (field, date) => field + ': dari ' + date,
+  filterUntil: (field, date) => field + ': hingga ' + date,
   filterAny: (field) => field + ': semua',
   filterRemove: (field) => 'Alih keluar penapis: ' + field,
   filterDone: 'Selesai',

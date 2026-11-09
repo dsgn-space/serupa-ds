@@ -111,6 +111,8 @@ export const labels: SerupaLabels = {
   filterClear: 'すべてクリア',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + 'に「' + text + '」を含む',
+  filterFrom: (field, date) => field + ': ' + date + ' 以降',
+  filterUntil: (field, date) => field + ': ' + date + ' まで',
   filterAny: (field) => field + ': すべて',
   filterRemove: (field) => 'フィルターを削除: ' + field,
   filterDone: '完了',

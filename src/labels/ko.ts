@@ -114,6 +114,8 @@ export const labels: SerupaLabels = {
   filterClear: '모두 지우기',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + '에 ‘' + text + '’ 포함',
+  filterFrom: (field, date) => field + ': ' + date + ' 이후',
+  filterUntil: (field, date) => field + ': ' + date + ' 까지',
   filterAny: (field) => field + ': 전체',
   filterRemove: (field) => '필터 삭제: ' + field,
   filterDone: '완료',

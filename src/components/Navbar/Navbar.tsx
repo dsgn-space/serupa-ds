@@ -32,7 +32,7 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 
 /** NavbarLink's own props, beside those of the element it renders. */
 export interface NavbarLinkOwnProps {
-  /** The current page: shaded, with aria-current="page". Default: false. */
+  /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
   active?: boolean | undefined;
 }
 
@@ -49,7 +49,7 @@ export interface NavbarMenuProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   label: React.ReactNode;
   /** NavbarMenuGroups, each a titled list of links, or NavbarMenuLinks on their own. */
   children?: React.ReactNode | undefined;
-  /** The current page is one of its links: the button is shaded as the current page's link is, with aria-current="true". Default: false. */
+  /** The current page is one of its links: the button is shaded and barred as the current page's link is, with aria-current="true". Default: false. */
   active?: boolean | undefined;
 }
 /** NavbarMenuGroup's own props, beside a <div>'s. */
@@ -61,7 +61,7 @@ export interface NavbarMenuGroupProps extends Omit<React.HTMLAttributes<HTMLDivE
 }
 /** NavbarMenuLink's own props, beside those of the element it renders. */
 export interface NavbarMenuLinkOwnProps {
-  /** The current page: marked with aria-current="page". Default: false. */
+  /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
   active?: boolean | undefined;
   /** A line under the link's text saying what's there; read after its name, as its description. */
   description?: React.ReactNode | undefined;

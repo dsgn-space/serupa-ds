@@ -112,6 +112,8 @@ export const labels: SerupaLabels = {
   filterClear: 'Rensa alla',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' innehåller ”' + text + '”',
+  filterFrom: (field, date) => field + ': från ' + date,
+  filterUntil: (field, date) => field + ': till och med ' + date,
   filterAny: (field) => field + ': alla',
   filterRemove: (field) => 'Ta bort filter: ' + field,
   filterDone: 'Klar',

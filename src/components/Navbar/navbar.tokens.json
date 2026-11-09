@@ -92,6 +92,26 @@
           }
         }
       },
+      "link-bg-active-hover": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The current page's link background under the pointer: one step past its rest.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-link-bg-active-hover"
+          }
+        }
+      },
+      "link-indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The 2px bar under the current page's link (at the start of a menu link), which hover never draws.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-link-indicator"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",

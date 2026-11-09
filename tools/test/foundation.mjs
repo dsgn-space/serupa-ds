@@ -232,7 +232,8 @@ const ORDER = '@layer dk.tokens, dk.base, dk.components, dk.utilities;';
 const layered = { 'tokens.css': 'dk.tokens', 'dist/base.css': 'dk.base', 'dist/components.css': 'dk.components', 'dist/utilities.css': 'dk.utilities', 'dist/utilities-extra.css': 'dk.utilities' };
 const unlayered = [];
 for (const [f, layer] of Object.entries(layered)) {
-  const body = stripComments(read(f)).trim();
+  // Read with the whitespace a minifier may drop put back: "@layer a,b{" is "@layer a, b {".
+  const body = stripComments(read(f)).trim().replace(/@layer\s+([^;{]+?)\s*([;{])/g, (_, names, end) => `@layer ${names.split(/\s*,\s*/).join(', ')}${end === '{' ? ' {' : ';'}`);
   if (!body.startsWith(ORDER)) { unlayered.push(`${f}: doesn't start with "${ORDER}"`); continue; }
   // Outside the layer blocks there may only be the order statement, @font-face and @property (page-wide either way).
   let rest = body.slice(ORDER.length), depth = 0, outside = '';
