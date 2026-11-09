@@ -98,6 +98,13 @@ const br = (buf) => zlib.brotliCompressSync(buf, { params: { [zlib.constants.BRO
 const lazy = { name: 'lazy', setup(b) { b.onResolve({ filter: /.*/ }, (a) => a.kind === 'dynamic-import' ? { path: a.path, external: true } : undefined); } };
 const build = async (code, plugins) => (await esbuild.build({ stdin: { contents: code, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom'], plugins, logLevel: 'silent' })).outputFiles[0].contents;
 const bundled = async (code) => gz(await build(code, [lazy]));
+// What a folder imported alone is made of, largest first, for a failure's detail: the files and their minified
+// bytes, so a size that differs between machines (or grew) says which file brought the difference.
+const inputsOf = async (code) => {
+  const r = await esbuild.build({ stdin: { contents: code, resolveDir: PROJECT }, bundle: true, minify: true, write: false, metafile: true, format: 'esm', external: ['react', 'react-dom'], plugins: [lazy], logLevel: 'silent' });
+  const ins = Object.entries(Object.values(r.metafile.outputs)[0].inputs).sort((a, b) => b[1].bytesInOutput - a[1].bytesInOutput);
+  return `${ins.length} files, largest: ${ins.slice(0, 8).map(([f, i]) => `${f.replace(/^dist\/js\//, '')} ${i.bytesInOutput} B`).join(', ')}`;
+};
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));
 
 // What each folder exports (its index.ts, as the package's index.js re-exports it), and its CSS in the build's order.
@@ -191,9 +198,11 @@ const phoneData = gz((await esbuild.build({ stdin: { contents: "export { PHONE_C
 totals.push({ name: `PhoneInput's country table (PHONE_COUNTRIES): ${kib(phoneData)} KiB gzipped, within ${PHONE_DATA} KiB`, ok: phoneData <= PHONE_DATA * 1024 && phoneData >= 1024,
   detail: phoneData < 1024 ? 'not measured: the table should bundle from src/components/PhoneInput/phone.ts' : `${over(phoneData - PHONE_DATA * 1024)} over; if the countries are worth it, raise PHONE_DATA in tools/test/size.mjs` });
 const LABEL = { alone: 'imported alone', share: 'adds to the whole package', css: 'adds to components.css' };
+const overAlone = new Set(folders.filter((n) => budgets[n] && measured[n].alone > budgets[n].alone * 1024));
+const made = Object.fromEntries(await Promise.all([...overAlone].map(async (n) => [n, await inputsOf(pick(names[n]))])));
 const own = folders.flatMap((n) => (budgets[n]
   ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'share' ? SHARE_NOISE : 0),
-    detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json` }))
+    detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json${k === 'alone' && made[n] ? ` (${made[n]})` : ''}` }))
   : [{ name: `${n} has size budgets`, ok: false, detail: `run node tools/test/size.mjs --update ${n} and commit tools/test/baseline-size/${n}.json` }]));
 // Size over time (nightly, as the benchmarks are): a budget allows 5% over what a folder weighed when it was set, so a
 // package that grows a little with every merge passes for months. --json writes tonight's sizes; --previous compares
