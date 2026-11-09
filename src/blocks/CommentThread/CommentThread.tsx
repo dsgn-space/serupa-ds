@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { isComposing } from '../../internal/ime';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Button } from '../../components/Button/Button';
 import { Field } from '../../components/Field/Field';
@@ -165,7 +166,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
                     <form onSubmit={save(c)} className="flex flex-col gap-2">
                       <Field label={l.editBox} id={`${id}${c.id}-edit`} error={editError ? l.editEmpty : undefined}>
                         <Textarea value={draft} onChange={(e) => { setDraft(e.target.value); if (editError && e.target.value.trim()) setEditError(false); }} maxLength={maxLength} showCount autoResize
-                          onKeyDown={(e) => { if (e.key === 'Escape') { e.preventDefault(); stopEdit(c.id); } }} />
+                          onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); stopEdit(c.id); } }} />
                       </Field>
                       <div className="flex gap-2">
                         <Button type="submit" size="sm">{l.save}</Button>
