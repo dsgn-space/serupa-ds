@@ -1,6 +1,8 @@
 /* ---------------------------------------------------------------
    Progress: a bar (full width, 4, 8 or 12px thick, rounded ends) or a ring (24, 40 or 64px), with the done part
-   in the tone's color on a secondary track. The bar can have a label row above it (the label, and the value at
+   in the tone's color. The bar's track is the page's surface inside a field-border edge (WCAG 1.4.11): the edge marks the
+   whole scale at 3:1 and every tone's fill is 3:1 against the page; a secondary track was 1.1:1 on the page, and the
+   warning fill 2.9:1 on it. The ring's track stays secondary, since its arc runs along the page. The bar can have a label row above it (the label, and the value at
    the end); the ring can show the value inside. The fill moves to a new value over 300ms. Indeterminate: a
    segment slides across the bar, or a quarter arc turns; both stand still with reduced motion. A label word longer
    than the bar (a file name, a URL) breaks inside while the value keeps its width, so a 320px page doesn't scroll
@@ -25,7 +27,8 @@
 .dk-progress__header .dk-progress__value { flex-shrink: 0; margin-inline-start: auto; }
 .dk-progress--bar .dk-progress__track {
   position: relative; overflow: hidden; height: var(--dk-progress-h);
-  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--secondary));
+  border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--field-border));
 }
 .dk-progress__fill {
   height: var(--sizing-full); border-radius: inherit; background: var(--dk-progress-fill);
@@ -44,7 +47,7 @@
 .dk-progress--circle { --dk-progress-start: -90deg; position: relative; display: inline-flex; align-items: center; justify-content: center; width: var(--dk-progress-ring); height: var(--dk-progress-ring); flex-shrink: 0; vertical-align: middle; }
 .dk-progress__ring { display: block; width: var(--sizing-full); height: var(--sizing-full); rotate: var(--dk-progress-start); }
 .dk-progress__ring .dk-progress__track, .dk-progress__arc { fill: none; stroke-width: var(--progress-stroke-width, var(--stroke-width-3)); }
-.dk-progress__ring .dk-progress__track { stroke: var(--progress-track, var(--secondary)); }
+.dk-progress__ring .dk-progress__track { stroke: var(--progress-ring-track, var(--secondary)); }
 .dk-progress__arc { stroke: var(--dk-progress-fill); stroke-linecap: round; transition: stroke-dasharray var(--progress-duration, var(--motion-change-lg)) var(--ease-settle); }
 .dk-progress--circle .dk-progress__value { position: absolute; font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--progress-label-color, var(--text)); font-weight: var(--progress-label-weight, var(--font-medium)); }
 .dk-progress--circle.dk-progress--size-lg .dk-progress__value { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }

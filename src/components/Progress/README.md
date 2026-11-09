@@ -51,7 +51,7 @@ Drawn from the `AnnounceComplete` story.
 ## Accessibility
 
 - `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.
-- Every tone's fill keeps 3:1 on the page, and the label and value 4.5:1, in all six themes (`Progress.test.tsx`). In forced-colors mode the bar's track gets a border and the fill uses Highlight; the ring's track is GrayText under a Highlight arc, so the arc stands apart from it in every high-contrast theme (a CanvasText track can sit too close to Highlight, as black and dark navy do).
+- Every tone's fill keeps 3:1 on the page and on the bar's track, the track's field-border edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in all six themes (`Progress.test.tsx`). The bar's track is the page's surface inside that edge; the ring's track stays secondary, since its arc runs along the page. In forced-colors mode the bar's track gets a border and the fill uses Highlight; the ring's track is GrayText under a Highlight arc, so the arc stands apart from it in every high-contrast theme (a CanvasText track can sit too close to Highlight, as black and dark navy do).
 - Value changes aren't read out on their own, since reading every step is noisy. `announceComplete` says when it's done, politely ("Upload: complete", from `labels.progressComplete`, or your own words); for milestones in between, use `announce()` or your own live region.
 - **Keyboard:** none: it isn't focusable.
 
@@ -80,7 +80,9 @@ Each is an optional override: set it on the page, a container or one progress in
 <!-- token-table:start (made from progress.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--progress-track` | `secondary` | The empty part of the bar or ring. |
+| `--progress-track` | `surface` | The bar's empty part: the page's surface inside a `track-border` edge, so every tone's fill keeps 3:1 against it (WCAG 1.4.11). |
+| `--progress-track-border` | `field-border` | The bar's edge, 3:1 against the page, which marks the whole scale (WCAG 1.4.11). |
+| `--progress-ring-track` | `secondary` | The ring's empty part. The arc runs along the page on both sides, so it keeps 3:1 there. |
 | `--progress-fill` | `primary` | The done part, tone="primary" (the default; 3:1 on the track and the surface). |
 | `--progress-fill-success` | `success` | The done part, tone="success". |
 | `--progress-fill-warning` | `warning` | The done part, tone="warning". |
