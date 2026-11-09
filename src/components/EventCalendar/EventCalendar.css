@@ -2,7 +2,7 @@
    EventCalendar: a toolbar (Today, Previous and Next, the month's title, the Month and Agenda switch) over a month of
    weeks, each day a cell with its date and up to maxPerDay events, or the same month as a list of the days with
    events. Events are small buttons on a subtle tone fill with a bar of the tone at their start, the time first and
-   the title cut short with an ellipsis. Today's date is primary and semibold; days of other months are muted.
+   the title cut short with an ellipsis. Today's date is primary and semibold (underlined in the agenda); days of other months are muted.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-event-calendar {
@@ -64,7 +64,7 @@
 
 .dk-event-calendar__agenda { display: flex; flex-direction: column; gap: var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-event-calendar__agenda-date { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); }
-.dk-event-calendar__agenda-day--today .dk-event-calendar__agenda-date { color: var(--event-calendar-today, var(--primary)); }
+.dk-event-calendar__agenda-day--today .dk-event-calendar__agenda-date { color: var(--event-calendar-today, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }
 .dk-event-calendar__agenda .dk-event-calendar__event { padding-block: var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); flex-wrap: wrap; }
 .dk-event-calendar__empty { margin: var(--spacing-0); color: var(--event-calendar-muted, var(--text-muted)); }
 @media (forced-colors: active) { .dk-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .dk-event-calendar__day--today .dk-event-calendar__date { text-decoration: underline; } }

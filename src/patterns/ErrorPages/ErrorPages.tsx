@@ -75,7 +75,7 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
     server: {
       icon: 'error',
       what: 'Try again in a moment',
-      why: <>It isn't something you did. If it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
+      why: <>It isn’t something you did. If it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
       actions: <><Button onClick={retry}>Try again</Button>{toHome}</>,
     },
     'no-access': {

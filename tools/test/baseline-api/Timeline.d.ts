@@ -1,8 +1,14 @@
-// exports: Timeline, type TimelineAlign, TimelineItem, type TimelineItemProps, type TimelineProps, type TimelineStatus
+// exports: Timeline, type TimelineAlign, TimelineItem, type TimelineItemProps, type TimelineOrientation, type TimelineProps, type TimelineStatus
+interface TimelineLabels {
+    timeline: string;
+}
 type TimelineAlign = "alternate" | "start";
+type TimelineOrientation = "horizontal" | "vertical";
 type TimelineStatus = "danger" | "info" | "neutral" | "primary" | "success" | "warning";
 interface TimelineProps extends React.OlHTMLAttributes<HTMLOListElement> {
     align?: TimelineAlign | undefined;
+    orientation?: TimelineOrientation | undefined;
+    stackWhenNarrow?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
 interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "title"> {

@@ -80,6 +80,15 @@ describe('Blocks/Comment thread', () => {
     expect(mine().element().textContent).toContain('Yes, I will try 20px.');
   });
 
+  test('the Escape that cancels an input method\'s composition keeps the edit open (GR299)', async () => {
+    await render(<Harness />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    const box = document.activeElement as HTMLElement;
+    box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true, cancelable: true }));
+    await new Promise((r) => setTimeout(r, 100));
+    expect([box.isConnected, document.activeElement === box]).toEqual([true, true]);
+  });
+
   test('Delete moves focus to the next comment, and Undo brings it back focused without deleting', async () => {
     const onDelete = vi.fn();
     await render(<Harness onDelete={onDelete} />);

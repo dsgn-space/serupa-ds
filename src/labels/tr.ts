@@ -236,6 +236,7 @@ export const labels: SerupaLabels = {
   tourDone: 'Bitti',
   sparklineSummary: (label, first, last, min, max) => label + ': ' + first + ' değerinden ' + last + ' değerine, en düşük ' + min + ', en yüksek ' + max,
   table: 'Tablo',
+  timeline: 'Zaman çizelgesi',
   tableSorted: (column, direction) => column + ' sütununa göre ' + (direction === 'ascending' ? 'artan' : 'azalan') + ' sıralandı.',
   tableSelected: (count) => n(count) + ' seçili',
   clearSelection: 'Seçimi temizle',

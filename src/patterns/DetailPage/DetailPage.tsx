@@ -7,6 +7,7 @@ import { Card } from '../../components/Card/Card';
 import { Link } from '../../components/Link/Link';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { InlineEdit } from '../../components/InlineEdit/InlineEdit';
+import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { Tabs, TabList, Tab, TabPanel } from '../../components/Tabs/Tabs';
 import { TypeToConfirm } from '../../components/TypeToConfirm/TypeToConfirm';
 import { Toaster, toast } from '../../components/Toast/Toast';
@@ -139,17 +140,15 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
 
               <TabPanel value="overview" className="pt-4">
                 <Card>
-                  <dl className="m-0 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-3">
-                    <dt className="font-medium">Name</dt>
-                    <dd className="m-0 min-w-0 sm:col-span-2">
+                  <DescriptionList>
+                    <DescriptionItem term="Name">
                       <InlineEdit label="Project name" value={name} onValueChange={save('name', setName)}
                         validate={(v) => (v.trim() ? null : 'Enter a name for the project.')} />
-                    </dd>
-                    <dt className="font-medium">Description</dt>
-                    <dd className="m-0 min-w-0 sm:col-span-2"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></dd>
-                    <dt className="font-medium">Owner</dt><dd className="m-0 sm:col-span-2">{project.owner}</dd>
-                    <dt className="font-medium">Created</dt><dd className="m-0 sm:col-span-2"><time dateTime={project.created}>{day(project.created, locale)}</time></dd>
-                  </dl>
+                    </DescriptionItem>
+                    <DescriptionItem term="Description"><InlineEdit label="Description" value={description} onValueChange={save('description', setDescription)} /></DescriptionItem>
+                    <DescriptionItem term="Owner">{project.owner}</DescriptionItem>
+                    <DescriptionItem term="Created"><time dateTime={project.created}>{day(project.created, locale)}</time></DescriptionItem>
+                  </DescriptionList>
                 </Card>
               </TabPanel>
 
@@ -181,7 +180,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
             <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
               description={`This deletes the project and ${lost} for everyone. It can’t be undone.`}>
               <div className="flex flex-col gap-4">
-                {failed ? <Alert tone="danger">Couldn't delete {name}. Try again.</Alert> : null}
+                {failed ? <Alert tone="danger">Couldn’t delete {name}. Try again.</Alert> : null}
                 <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />
               </div>
             </Dialog>

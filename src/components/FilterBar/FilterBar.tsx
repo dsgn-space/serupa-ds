@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { isComposing } from '../../internal/ime';
 import { cn, domId, omit, setRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -192,7 +193,7 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
     }
     if (f.type === 'boolean') return <Switch checked={v === true} onCheckedChange={(on) => put(on)}>{f.label}</Switch>;
     return <Input aria-label={f.label} placeholder={f.placeholder} value={typeof v === 'string' ? v : ''} onChange={(e) => put(e.target.value)}
-      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); focusNext.current = f.id; closeEditor(f); } }} />;
+      onKeyDown={(e) => { if (e.key === 'Enter' && !isComposing(e)) { e.preventDefault(); focusNext.current = f.id; closeEditor(f); } }} />;
   };
 
   return (

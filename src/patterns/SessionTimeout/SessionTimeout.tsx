@@ -19,9 +19,11 @@ import { announce } from '../../internal/announce';
      since pressing anything means someone is there.
    - 4.1.3: the time left is said when the warning opens, then only at each whole minute and at 30 seconds, never
      every second. The countdown on screen updates every second, outside any live region.
-   - 2.2.6, 3.3.7: what's typed is kept as it's typed (here in localStorage under `saveKey`), so if the session ends,
-     signing in again brings it all back, and the page says so before and after. Signing out on purpose clears it, so
-     the next person on the computer doesn't find it.
+   - 2.2.6, 3.3.7: what's typed is kept as it's typed (here in sessionStorage under `saveKey`), so if the session
+     ends, signing in again in the same tab brings it all back, and the page says so before and after. Signing out on
+     purpose or sending the message clears it, so the next person on the computer doesn't find it. Closing the tab
+     doesn't: a browser that reopens a closed tab brings its sessionStorage back, so sign out on a shared computer.
+     Only the subject and the message are kept: never a password, card number or ID number.
    - 2.4.3: when the warning closes, focus goes back to where it was; when the session ends, to the "Signed out"
      heading.
    Keeping the session on the server (a request from `onExtend`), and signing in again, is the app's job. */
@@ -38,8 +40,11 @@ export interface SessionTimeoutProps {
   onExpire?: (() => void) | undefined;
   /** Typing or clicking keeps the session, at most once every this many seconds. Default: 60. */
   activityEvery?: number | undefined;
-  /** Keeps what's typed in localStorage under this key, so it survives a sign-out or a reload. */
+  /** Keeps what's typed in sessionStorage under this key, so it survives a time-out or a reload in the same tab.
+      Signing out or sending the message clears it; a closed tab that the browser reopens brings it back. */
   saveKey?: string | undefined;
+  /** Send the message. Once it resolves, the kept draft is cleared; a rejected promise keeps it. */
+  onSend?: ((draft: { subject: string; message: string }) => void | Promise<unknown>) | undefined;
 }
 
 interface Draft { subject: string; message: string }
@@ -55,24 +60,28 @@ export function timeLeft(seconds: number): string {
 /** Whether the time left is worth saying: each whole minute, and 30 seconds. */
 const worthSaying = (seconds: number) => seconds > 0 && (seconds % 60 === 0 || seconds === 30);
 
+// Drafts go in sessionStorage, not localStorage: they last for the tab, not for every later visit from the computer.
+// Only the two fields below are written, so a field added to the form isn't kept until it's named here; never name a
+// password, card number or ID number.
+const keep = (d: Partial<Draft>): Draft => ({ subject: String(d.subject ?? ''), message: String(d.message ?? '') });
 function load(key: string | undefined): Draft | null {
   if (!key) return null;
   try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as Draft) : null;
+    const raw = window.sessionStorage.getItem(key);
+    return raw ? keep(JSON.parse(raw) as Partial<Draft>) : null;
   } catch { return null; }
 }
 function forget(key: string | undefined) {
   if (!key) return;
-  try { window.localStorage.removeItem(key); } catch { /* blocked: nothing was kept */ }
+  try { window.sessionStorage.removeItem(key); } catch { /* blocked: nothing was kept */ }
 }
 function save(key: string | undefined, draft: Draft) {
   if (!key) return;
-  try { window.localStorage.setItem(key, JSON.stringify(draft)); } catch { /* full or blocked: the draft stays in the page */ }
+  try { window.sessionStorage.setItem(key, JSON.stringify(keep(draft))); } catch { /* full or blocked: the draft stays in the page */ }
 }
 
 /** A page with a form, a warning Dialog before the session ends, and a signed-out page that keeps what was typed. */
-export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEvery = 60, onExtend, onExpire, saveKey }: SessionTimeoutProps) {
+export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEvery = 60, onExtend, onExpire, onSend, saveKey }: SessionTimeoutProps) {
   const [deadline, setDeadline] = React.useState(() => Date.now() + duration * 1000);
   const [left, setLeft] = React.useState(duration);
   const [draft, setDraft] = React.useState<Draft>(() => load(saveKey) ?? { subject: '', message: '' });
@@ -129,6 +138,20 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
   const extend = async () => {
     try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch { /* the session runs out as warned */ }
   };
+  // While a send is under way the button shows it and takes no more presses, so a second click doesn't send the
+  // message twice (the ref covers a second press before the re-render).
+  const [sending, setSending] = React.useState(false);
+  const sendingNow = React.useRef(false);
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (sendingNow.current) return;
+    sendingNow.current = true;
+    setSending(true);
+    try { await onSend?.(draft); } catch { announce('The message wasn’t sent. What you typed is kept: try again.'); return; } finally { sendingNow.current = false; setSending(false); }
+    forget(saveKey);
+    setDraft({ subject: '', message: '' });
+    announce('Message sent.');
+  };
   const type = (k: keyof Draft) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const next = { ...draft, [k]: e.target.value };
     setDraft(next);
@@ -154,17 +177,19 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
           <>
             <div className="flex flex-col gap-2">
               <Heading level={1}>Contact support</Heading>
-              <p className="m-0 text-text-muted">For your security, you're signed out after {timeLeft(duration)} with nothing happening: typing counts. We'll warn you first, and keep what you've typed.</p>
+              <p className="m-0 text-text-muted">For your security, you’re signed out after {timeLeft(duration)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</p>
             </div>
-            <Card as="section" aria-labelledby="message-title" className="flex flex-col gap-4">
-              <Heading level={2} id="message-title">Your message</Heading>
-              <Field label="Subject">
-                <Input name="subject" value={draft.subject} onChange={type('subject')} />
-              </Field>
-              <Field label="Message" hint="What happened, and what you expected.">
-                <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
-              </Field>
-              <div><Button>Send message</Button></div>
+            <Card as="section" aria-labelledby="message-title">
+              <form className="flex flex-col gap-4" onSubmit={(e) => void send(e)}>
+                <Heading level={2} id="message-title">Your message</Heading>
+                <Field label="Subject">
+                  <Input name="subject" value={draft.subject} onChange={type('subject')} />
+                </Field>
+                <Field label="Message" hint="What happened, and what you expected.">
+                  <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
+                </Field>
+                <div><Button type="submit" loading={sending}>Send message</Button></div>
+              </form>
             </Card>
           </>
         )}

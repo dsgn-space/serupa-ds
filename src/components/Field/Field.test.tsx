@@ -229,9 +229,9 @@ describe('Field', () => {
     expect(document.getElementById('em')!.hasAttribute('aria-errormessage')).toBe(false);
   });
 
-  test('layout="horizontal" (D17): the label in a 192px column on the control\'s first line (baselines aligned), 16px from it; hint and error under the control; still named and described', async () => {
+  test('orientation="horizontal" (D17): the label in a 192px column on the control\'s first line (baselines aligned), 16px from it; hint and error under the control; still named and described', async () => {
     await render(<div style={{ width: '560px' }}>
-      <Field id="h-in" layout="horizontal" label="Display name" hint="Shown on your profile." error="Too short.">
+      <Field id="h-in" orientation="horizontal" label="Display name" hint="Shown on your profile." error="Too short.">
         <Input defaultValue="An" />
       </Field>
     </div>);
@@ -248,10 +248,10 @@ describe('Field', () => {
     expect([el('h-in').labels![0].textContent, described('h-in').length, el('h-in').getAttribute('aria-invalid')]).toEqual(['Display name', 2, 'true']);
   });
 
-  test('layout="horizontal" stacks again when the field is narrower than both columns, and is ignored with group', async () => {
+  test('orientation="horizontal" stacks again when the field is narrower than both columns, and is ignored with group', async () => {
     await render(<>
-      <div style={{ width: '300px' }}><Field id="h-narrow" layout="horizontal" label="Display name"><Input /></Field></div>
-      <div style={{ width: '560px' }}><Field group layout="horizontal" label="Plan" data-testid="h-group"><RadioGroup name="p"><Radio value="a">A</Radio></RadioGroup></Field></div>
+      <div style={{ width: '300px' }}><Field id="h-narrow" orientation="horizontal" label="Display name"><Input /></Field></div>
+      <div style={{ width: '560px' }}><Field group orientation="horizontal" label="Plan" data-testid="h-group"><RadioGroup name="p"><Radio value="a">A</Radio></RadioGroup></Field></div>
     </>);
     const label = el('h-narrow').labels![0].getBoundingClientRect(), box = el('h-narrow').parentElement!.getBoundingClientRect();
     expect([box.top >= label.bottom, Math.round(box.left), Math.round(box.width)]).toEqual([true, Math.round(label.left), 300]);
@@ -274,5 +274,16 @@ describe('Field inside a shadow root (GR60)', () => {
       await userEvent.click(root.querySelector<HTMLElement>('label')!);
       expect([root.activeElement?.getAttribute('role'), warn.mock.calls.map((c) => String(c[0])).filter((m) => /names nothing|no accessible name/.test(m))]).toEqual(['slider', []]);
     } finally { host.remove(); warn.mockRestore(); }
+  });
+});
+
+describe('Field: layout, the old name of orientation', () => {
+  test('still lays it out as orientation does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<div style={{ width: '560px' }}><Field id="old-layout" layout="horizontal" label="Name"><Input /></Field></div>);
+      expect(document.querySelector('[data-component="field"][data-layout="horizontal"]')).not.toBeNull();
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('field-layout'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

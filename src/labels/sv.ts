@@ -236,6 +236,7 @@ export const labels: SerupaLabels = {
   tourDone: 'Klar',
   sparklineSummary: (label, first, last, min, max) => label + ': från ' + first + ' till ' + last + ', lägst ' + min + ', högst ' + max,
   table: 'Tabell',
+  timeline: 'Tidslinje',
   tableSorted: (column, direction) => 'Sorterat efter ' + column + ', ' + (direction === 'ascending' ? 'stigande' : 'fallande') + '.',
   tableSelected: (count) => n(count) + ' valda',
   clearSelection: 'Rensa markering',

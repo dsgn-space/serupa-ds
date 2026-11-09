@@ -229,4 +229,12 @@ describe('PinInput', () => {
     t.focus();
     expect([modified(t, 'ArrowLeft'), modified(t, 'Home')]).toEqual([[false, false, false], [false, false, false]]);
   });
+
+  test('while an input method is composing (Safari sends the keydown), the arrows, Home and End are left to it', async () => {
+    await render(<PinInput id="ck" aria-label="Code" length={4} type="alphanumeric" defaultValue="ab" />);
+    const t = document.querySelector('#ck input, input#ck') as HTMLElement;
+    t.focus();
+    const composing = (key: string) => { const ev = new KeyboardEvent('keydown', { key, isComposing: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; };
+    expect([composing('ArrowLeft'), composing('ArrowDown'), composing('Home')]).toEqual([false, false, false]);
+  });
 });

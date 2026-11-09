@@ -168,6 +168,16 @@ describe('EventCalendar', () => {
     await expect.element(page.getByRole('grid', { name: 'March 2025' })).toBeInTheDocument();
   });
 
+  test('agenda: today is marked by more than colour, an underline, which forced colours keep (GR289)', async () => {
+    const now = new Date(), next = new Date(now.getFullYear(), now.getMonth(), now.getDate() === 1 ? 2 : 1);
+    const at = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    await render(<EventCalendar events={[{ id: 't', title: 'Now', start: at(now), allDay: true }, { id: 'o', title: 'Other', start: at(next), allDay: true }]} view="agenda" />);
+    const today = document.querySelector<HTMLElement>('li[aria-current="date"] h3')!, other = [...document.querySelectorAll<HTMLElement>('ol > li:not([aria-current]) h3')];
+    expect(other).toHaveLength(1);
+    expect(css(today).textDecorationLine).toBe('underline');
+    expect(css(other[0]).textDecorationLine).toBe('none');
+  });
+
   test('its text reads 4.5:1 on its background, and an event\'s on each tone, in all six themes', async () => {
     await render(<EventCalendar id="c" events={EVENTS} defaultMonth={MARCH} />);
     const bg = () => css(el('c')).backgroundColor;

@@ -31,6 +31,14 @@ export const Dots: Story = {
     </>,
   },
 };
+/** Events along a line, for milestones and order tracking. Past the width it has, it scrolls sideways in its own box. */
+export const Horizontal: Story = { args: { orientation: 'horizontal', 'aria-label': 'Order tracking' } };
+/** stackWhenNarrow: in a box under 480px wide, the events go down a line instead of scrolling. */
+export const HorizontalStacked: Story = {
+  name: 'Horizontal, stacked when narrow',
+  args: { orientation: 'horizontal', stackWhenNarrow: true, 'aria-label': 'Order tracking' },
+  render: (args) => <div style={{ maxWidth: 360 }}><Timeline {...args} /></div>,
+};
 /** From 768px up, events take turns on either side of a centered line. */
 export const Alternate: Story = { args: { align: 'alternate' } };
 
