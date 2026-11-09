@@ -271,7 +271,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   };
 
   // every render: Home and End use this render's rows and offsets.
-  // Past CAP, scrollToIndex puts the scaled range at its very top or bottom.
+  // every render: Home and End use this render's rows and offsets (past CAP, scrollToIndex goes to the very top or bottom).
   useIsoLayoutEffect(() => { toEdge.current = (last) => { if (count) scrollToIndex(last ? count - 1 : 0); }; });
 
   const drawn = offsets[end] - offsets[start];
