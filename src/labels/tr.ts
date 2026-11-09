@@ -68,6 +68,8 @@ export const labels: SerupaLabels = {
   valueAdded: (label) => label + ' eklendi',
   valueRemoved: (label) => label + ' kaldırıldı',
   copied: 'Kopyalandı',
+  contextualHelp: 'Yardım',
+  contextualInfo: 'Bilgi',
   copyFailed: 'Kopyalanamadı. Metni seçip kendiniz kopyalayın.',
   chatNewMessages: (count) => n(count) + ' yeni mesaj',
   chatLoadOlder: 'Önceki mesajları yükle',

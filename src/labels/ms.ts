@@ -68,6 +68,8 @@ export const labels: SerupaLabels = {
   valueAdded: (label) => label + ' ditambah',
   valueRemoved: (label) => label + ' dialih keluar',
   copied: 'Disalin',
+  contextualHelp: 'Bantuan',
+  contextualInfo: 'Maklumat',
   copyFailed: 'Tidak dapat menyalin. Pilih teks dan salin sendiri.',
   chatNewMessages: (count) => n(count) + ' mesej baharu',
   chatLoadOlder: 'Muatkan mesej terdahulu',
