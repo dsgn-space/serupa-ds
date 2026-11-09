@@ -19,11 +19,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Visa alla',
-  chartKind: (type) => (type === 'bar' ? 'Stapeldiagram' : 'Linjediagram'),
+  chartKind: (type) => ({ line: 'Linjediagram', bar: 'Stapeldiagram', area: 'Ytdiagram', donut: 'Ringdiagram' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + (series === 1 ? ' serie' : ' serier') + ', ' + n(points) + (points === 1 ? ' punkt' : ' punkter') + (points > 1 ? ' från ' + first + ' till ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': lägst ' + low + ' (' + lowAt + '), högst ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: 'Inget värde',
+  chartOther: 'Övrigt',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => 'Totalt: ' + total,
   chartCategory: 'Kategori',
   chartShowTable: 'Visa som tabell',
   chartShowChart: 'Visa som diagram',

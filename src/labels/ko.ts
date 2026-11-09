@@ -21,11 +21,14 @@ const ga = (w: string) => { const c = w.charCodeAt(w.length - 1); return c >= 0x
 
 export const labels: SerupaLabels = {
   expandAll: '모두 펼치기',
-  chartKind: (type) => (type === 'bar' ? '막대 차트' : '선 차트'),
+  chartKind: (type) => ({ line: '선 차트', bar: '막대 차트', area: '영역 차트', donut: '도넛 차트' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', 계열 ' + n(series) + '개, 데이터 ' + n(points) + '개' + (points > 1 ? ' (' + first + '~' + last + ')' : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': 최저 ' + low + ' (' + lowAt + '), 최고 ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: '값 없음',
+  chartOther: '기타',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => '합계: ' + total,
   chartCategory: '범주',
   chartShowTable: '표로 보기',
   chartShowChart: '차트로 보기',
