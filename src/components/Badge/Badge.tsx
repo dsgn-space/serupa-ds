@@ -12,7 +12,7 @@ import { warnOnce } from '../../internal/warn';
 import { removeAndRefocus } from '../../internal/removeFocus';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { Loader } from '../Loader/Loader';
+import { LoaderRing } from '../../internal/loaderRing';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { component } from '../../internal/component';
 import * as icons from '../../material/builtin';
@@ -154,7 +154,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
         aria-label={(props.removeLabel || sds.labels.remove) + named}><Icon icon={icons.Close} /></button>
     : null;
   // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingText)
-  const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><Loader label="" delay={0} /></span> : null;
+  const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
   const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
   const content: React.ReactNode[] = [dot, icon, <span className="dk-badge__label" key="label">{label}</span>, remove, spin];
   if (interactive) {

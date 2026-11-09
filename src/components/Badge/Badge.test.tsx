@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, css, keepMotion, press, tabTo, settled } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
+import { Loader } from '../Loader/Loader';
 import { Tooltip } from '../Tooltip/Tooltip';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
@@ -646,5 +647,20 @@ describe('focus after removing a tag (179)', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => el('grow').getAttribute('title')).toBe(LONG);
     expect([el('fits').hasAttribute('title'), el('named').hasAttribute('title'), el('own').title, el('grow').textContent]).toEqual([false, false, 'Mine', LONG]);
+  });
+});
+
+// GR311: Badge drew its loading ring with the whole Loader; it now draws Loader's ring itself, the same markup.
+describe('loading ring', () => {
+  const SOURCE = import.meta.glob<string>('./Badge.tsx', { query: '?raw', import: 'default', eager: true })['./Badge.tsx'];
+  test('Badge does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <Badge id="ring-badge" loading>Sync</Badge>
+      <div id="ring-loader"><Loader label="" delay={0} /></div>
+    </>);
+    const ring = () => document.querySelector('#ring-badge [data-component="loader"]');
+    await expect.poll(ring).toBeTruthy();
+    expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });
