@@ -125,24 +125,28 @@ describe('Toast', () => {
   });
 
   test('toast.promise: a neutral "Saving…" that stays while pending, then the result in its place, success or danger (said at once), from a string or a function of the value; it returns the promise; two with the same words are two toasts', async () => {
-    await render(<App />);
+    // On a fake clock: well past the 5s a toast stays by default, without waiting 5s.
     let ok: (v: number) => void = () => {}, fail: (e: Error) => void = () => {};
     const a = new Promise<number>((r) => { ok = r; }), b = new Promise<number>((_, r) => { fail = r; });
     let back: Promise<number> | null = null;
-    React.act(() => {
-      back = toast.promise(a, { loading: 'Saving…', success: (n) => n + ' files saved', error: 'Couldn\'t save' });
-      void toast.promise(() => b, { loading: 'Saving…', success: 'Saved', error: (e) => ({ title: 'Couldn\'t save', description: (e as Error).message }) });
-    });
-    expect([back === a, toasts().map((x) => x.dataset.tone + ':' + x.textContent.includes('Saving…'))]).toEqual([true, ['neutral:true', 'neutral:true']]);
-    await new Promise((r) => setTimeout(r, 5200));
-    expect(toasts().length).toBe(2);
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] });
+    try {
+      await render(<App />);
+      React.act(() => {
+        back = toast.promise(a, { loading: 'Saving…', success: (n) => n + ' files saved', error: 'Couldn\'t save' });
+        void toast.promise(() => b, { loading: 'Saving…', success: 'Saved', error: (e) => ({ title: 'Couldn\'t save', description: (e as Error).message }) });
+      });
+      expect([back === a, toasts().map((x) => x.dataset.tone + ':' + x.textContent.includes('Saving…'))]).toEqual([true, ['neutral:true', 'neutral:true']]);
+      await React.act(async () => { vi.advanceTimersByTime(60_000); });
+      expect(toasts().length).toBe(2);
+    } finally { vi.useRealTimers(); }
     await React.act(async () => { ok(3); await a; });
     await expect.poll(() => titles()).toEqual(['3 files saved', 'Saving…']);
     await React.act(async () => { fail(new Error('The server is offline.')); await b.catch(() => {}); });
     await expect.poll(() => titles()).toEqual(['3 files saved', 'Couldn\'t save']);
     expect(toasts().map((x) => x.dataset.tone)).toEqual(['success', 'danger']);
     await expect.poll(() => q('[data-dk-announcer-assertive]').textContent).toBe('Couldn\'t save. The server is offline.');
-  }, 15000);
+  });
 
   test('the action runs and closes the toast', async () => {
     await render(<App />);
@@ -608,6 +612,32 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
     React.act(() => toast.dismiss());
     expect([...log].sort()).toEqual(['commit a', 'commit c', 'commit d', 'undo b']);
     expect(new Set(ids).size).toBe(4);   // each its own toast, not a count on one
+  });
+
+  test('toast.undo with the id of one still open: the first one\'s action is done for good then, not lost', async () => {
+    await render(<Toaster />);
+    const log: string[] = [];
+    React.act(() => { toast.undo({ id: 'trash', title: 'Report moved to trash', commit: () => log.push('commit report'), onUndo: () => log.push('undo report') }); });
+    React.act(() => { toast.undo({ id: 'trash', title: 'Invoice moved to trash', commit: () => log.push('commit invoice'), onUndo: () => log.push('undo invoice') }); });
+    expect([log, toasts().length]).toEqual([['commit report'], 1]);
+    undoButton(toasts()[0]).click();
+    expect(log).toEqual(['commit report', 'undo invoice']);
+  });
+
+  test('toast.undo with no Toaster to show it, or once its Toaster unmounts, does the action for good and warns once', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const log: string[] = [];
+      toast.undo({ title: 'Report moved to trash', commit: () => log.push('commit alone'), onUndo: () => log.push('undo alone') });
+      await expect.poll(() => log).toEqual(['commit alone']);
+      const { unmount } = await render(<Toaster />);
+      React.act(() => { toast.undo({ title: 'Invoice moved to trash', commit: () => log.push('commit left'), onUndo: () => log.push('undo left') }); });
+      await new Promise((r) => setTimeout(r, 20));
+      expect(log).toEqual(['commit alone']);   // shown: still undoable
+      await unmount();
+      await expect.poll(() => log).toEqual(['commit alone', 'commit left']);
+      expect(warn.mock.calls.filter((c) => String(c[0]).includes('no Toaster is mounted')).length).toBe(1);
+    } finally { warn.mockRestore(); }
   });
 
   test('FEC5: toast.undo commits when the page is left, and a page brought back from the back/forward cache drops the toast, whose Undo can no longer undo', async () => {

@@ -32,9 +32,11 @@ describe('SaveStatus', () => {
   });
 
   test('Try again pressed from the keyboard: focus stays in the status as the error goes, not on the page (L8E55)', async () => {
+    // The save ends when the test says, so a busy runner can't skip past "saving" before it's checked.
+    let finish = () => {};
     function Own() {
       const [st, setSt] = React.useState<'error' | 'saving' | 'saved'>('error');
-      return <><button id="before">Before</button><SaveStatus id="sr" status={st} onRetry={() => { setSt('saving'); setTimeout(() => setSt('saved'), 50); }} /></>;
+      return <><button id="before">Before</button><SaveStatus id="sr" status={st} onRetry={() => { setSt('saving'); finish = () => { React.act(() => setSt('saved')); }; }} /></>;
     }
     await render(<Own />);
     el('before').focus();
@@ -43,6 +45,7 @@ describe('SaveStatus', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => el('sr').dataset.state).toBe('saving');
     await expect.poll(() => document.activeElement).toBe(el('sr'));
+    finish();
     await expect.poll(() => el('sr').dataset.state).toBe('saved');
     expect(document.activeElement).toBe(el('sr'));
     // Tab goes on from where it was, and the status isn't a tab stop.
@@ -52,9 +55,10 @@ describe('SaveStatus', () => {
   });
 
   test('inside a shadow root, Try again from the keyboard keeps focus in the status too', async () => {
+    let finish = () => {};
     function Own() {
       const [st, setSt] = React.useState<'error' | 'saving' | 'saved'>('error');
-      return <><button id="sbefore">Before</button><SaveStatus id="ssr" status={st} onRetry={() => { setSt('saving'); setTimeout(() => setSt('saved'), 50); }} /></>;
+      return <><button id="sbefore">Before</button><SaveStatus id="ssr" status={st} onRetry={() => { setSt('saving'); finish = () => { React.act(() => setSt('saved')); }; }} /></>;
     }
     const host = document.createElement('div');
     document.body.append(host);
@@ -69,6 +73,7 @@ describe('SaveStatus', () => {
       await userEvent.keyboard('{Enter}');
       await expect.poll(() => sr.dataset.state).toBe('saving');
       await expect.poll(() => root.activeElement).toBe(sr);
+      finish();
       await expect.poll(() => sr.dataset.state).toBe('saved');
       expect(root.activeElement).toBe(sr);
     } finally { host.remove(); }

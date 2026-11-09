@@ -9,6 +9,8 @@ import { DEFAULT_LABELS, idLabels } from './labels';
 // pull requests that each add a label don't edit the same line.
 const ARGS: Record<string, unknown[]> = {
   avatarStatus: ['online'],
+  cascadeHasMore: [false],
+  cascadePath: [['Jawa Barat', 'Kota Bandung']],
   clearValue: ['Email'],
   colorName: ['blue', 'dark'],
   contrast: ['4.5'],
@@ -48,8 +50,8 @@ function said(set: Record<string, unknown>): Record<string, string> {
   }));
 }
 // Words that are the same in both languages. "Slide" and "Format" are the usual loanwords in Indonesian, and
-// Indonesian writes PDF, Audio and Video too (Attachment's kinds).
-const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo']);
+// Indonesian writes PDF, Audio and Video too (Attachment's kinds). cascadePath only joins the names it's given.
+const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'cascadePath', 'agendaView']);
 // English labels left empty on purpose: invalidValue's "" keeps the browser's own message, already in its user's language.
 const EMPTY_IN_EN = new Set(['invalidValue']);
 
@@ -63,7 +65,33 @@ describe('labels', () => {
     const enSaid = Object.fromEntries(Object.entries(en).filter(([k]) => !EMPTY_IN_EN.has(k)));
     expect([bad(enSaid), bad(id)]).toEqual([[], []]);
   });
+  // GR165: one apostrophe and one pair of quotes in every label, the typographic ones (’ “ ”), so "Couldn’t save" and
+  // "Couldn't copy" don't look different on the same page.
+  test('apostrophes and quotes are curly in both sets', () => {
+    const straight = (set: Record<string, string>) => Object.entries(set).filter(([, t]) => /['"]/.test(t)).map(([k, t]) => k + ': ' + t);
+    expect([straight(en), straight(id)]).toEqual([[], []]);
+  });
   test('no Indonesian label is still in English', () => {
     expect(Object.keys(en).filter((k) => !SAME.has(k) && en[k] === id[k] && /[a-z]{3}/i.test(en[k])).map((k) => k + ': ' + en[k])).toEqual([]);
   });
+});
+
+// GR205: blocks and patterns keep their own words in their source, not in the label sets, so the test above doesn't
+// see them. Every string they show ("…", '…' or `…` in code, or text between JSX tags) uses the curly apostrophe too.
+// Comments and developer warnings (warnOnce) are left out.
+const PARTS = import.meta.glob<string>(['../blocks/*/*.tsx', '../patterns/*/*.tsx', '!../**/*.test.tsx', '!../**/*.stories.tsx'], { eager: true, query: '?raw', import: 'default' });
+test('blocks and patterns show curly apostrophes', () => {
+  const found: string[] = [];
+  for (const [file, src] of Object.entries(PARTS)) {
+    let inComment = false;
+    src.split('\n').forEach((line, i) => {
+      const t = line.trim();
+      if (inComment) { inComment = !t.includes('*/'); return; }
+      if (t.startsWith('/*')) { inComment = !t.includes('*/'); return; }
+      if (t.startsWith('//') || t.startsWith('*') || line.includes('warnOnce')) return;
+      const code = line.replace(/\s\/\/ .*$/, '');
+      if (/"[^"]*[A-Za-z]'[A-Za-z][^"]*"|`[^`]*[A-Za-z]'[A-Za-z][^`]*`|>[^<>{}]*[A-Za-z]'[A-Za-z][^<>{}]*</.test(code)) found.push(file.replace('../', '') + ':' + (i + 1) + ': ' + t);
+    });
+  }
+  expect(found).toEqual([]);
 });

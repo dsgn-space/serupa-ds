@@ -203,6 +203,9 @@ const NEUTRAL = new RegExp('^(' + [
   // no story shows (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|local-checks-gate|setup|tag-release)\.mjs`, String.raw`\.gitlab-ci\.yml`,
   String.raw`(AGENTS|CLAUDE|ROADMAP|SECURITY)\.md`, 'skills/.*',
+  // The docs' Markdown that no page shows (the dev warnings' sections, the ADRs, the RFCs: Storybook builds only
+  // .mdx, and docs/blocks.tsx imports foundations.md alone); the checks that read them run whole on every MR.
+  String.raw`docs/(?!foundations\.md$)[\w/-]+\.md`,
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,
@@ -212,6 +215,19 @@ const NEUTRAL = new RegExp('^(' + [
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
 // own, named by file as storybook.mjs names a page ("Introduction.mdx").
 export const FOLDERS = ['components', 'blocks', 'patterns'];
+// A component's name in kebab case, as its classes (dk-<kebab>), data-component and tokens file use it: DatePicker is
+// date-picker, and a run of capitals stays one word, so OTPInput is otp-input and QRCode qr-code (R7: the generator,
+// the contract and the --since scope each had their own, and they disagreed on names like these).
+export const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').toLowerCase();
+// The component, block or pattern folder a kebab-case name belongs to (otp-input → OTPInput), or null.
+export function folderForKebab(k) {
+  for (const d of FOLDERS) {
+    const DIR = path.join(PROJECT, 'src', d);
+    const hit = fs.existsSync(DIR) && fs.readdirSync(DIR).find((n) => kebab(n) === k);
+    if (hit) return hit;
+  }
+  return null;
+}
 // Shared files a new component adds its lines to: its labels in every language, the icons it draws, the package's
 // exports. A change that only adds lines to these can't change how another component looks or behaves (a duplicate
 // key fails the typecheck), so --since leaves them out of the scope (run.mjs), and the new component's own folder
@@ -235,7 +251,8 @@ export function affectedComponents(files) {
     // A component's own tokens (design-tokens/components/avatar-group.tokens.json is AvatarGroup's).
     const tokens = /^design-tokens\/components\/([a-z][\w-]*)\.tokens\.json$/.exec(f);
     if (m) names.add(m[1]);
-    else if (tokens) names.add(tokens[1].replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase()));
+    // A tokens file of no folder (its component removed or renamed) can change nothing: test everything to be sure.
+    else if (tokens) { const n = folderForKebab(tokens[1]); if (!n) return null; names.add(n); }
     else if (!NEUTRAL.test(f)) return null;
   }
   return names;
@@ -257,9 +274,9 @@ export function withDependents(names) {
   const folders = [...dirs.keys()];
   // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .dk-input box, Fab
   // reads .dk-navbar--sticky. "dk-date-picker__x" is DatePicker's; a class no component is named after counts for none.
-  const kebab = new Map(folders.map((n) => [n.replace(/[A-Z]/g, (c, i) => (i ? '-' : '') + c.toLowerCase()), n]));
+  const byKebab = new Map(folders.map((n) => [kebab(n), n]));
   const classes = (n) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.(tsx?|css)$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
-    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => kebab.get(m[1])))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
     .filter((c) => c && c !== n));
   const code = new Map(folders.map((n) => [n, new Set([...imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f)), ...classes(n)])]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));

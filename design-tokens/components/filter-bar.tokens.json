@@ -1,0 +1,101 @@
+{
+  "filter-bar": {
+    "$description": "FilterBar's component tokens. Each one is an optional override: set the CSS variable (--filter-bar-<name>) on the page, a container or one FilterBar, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Chip text (4.5:1 on chip-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The results count (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-muted"
+          }
+        }
+      },
+      "chip-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A chip's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-chip-bg"
+          }
+        }
+      },
+      "chip-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "A chip's outline (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-chip-border"
+          }
+        }
+      },
+      "chip-open": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A chip's text while its editor is open (4.5:1 on chip-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-chip-open"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a focused chip.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "chip-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "A chip's corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-chip-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between chips, buttons and the count (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-gap"
+          }
+        }
+      },
+      "editor-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-56}",
+        "$description": "The narrowest an editor is (224px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--filter-bar-editor-width"
+          }
+        }
+      }
+    }
+  }
+}

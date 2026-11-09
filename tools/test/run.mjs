@@ -32,7 +32,9 @@ if (arg('--since')) {
   const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
   // A story-wide test (STORY_WIDE) goes through the covered components' stories, so a change to one tests everything.
   const storyWide = diff.stdout.split('\n').some((l) => STORY_WIDE.includes(l.split('\t')[2]));
-  const changed = diff.status === 0 && !storyWide ? affectedComponents(scopeFiles(diff.stdout)) : null;
+  // It changes no picture and no Storybook page, though: Visual and Storybook stay narrowed to the changed components.
+  const wide = storyWide && !['visual', 'storybook'].includes(arg('--group'));
+  const changed = diff.status === 0 && !wide ? affectedComponents(scopeFiles(diff.stdout)) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
   direct = changed;

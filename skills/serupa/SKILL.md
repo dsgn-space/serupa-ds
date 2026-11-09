@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.2.0
+npm install gitlab:diki-stwn/serupa-ds#v14.2.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -56,7 +56,7 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 
 The components meet their part of WCAG 2.2 AA. The page meets the rest only if you also do these, in every answer, however short:
 
-- **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<Container as="main">`) and add a "Skip to content" link (`<VisuallyHidden focusable>`).
+- **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<Container as="main">`) and start it with `<SkipLink />`, the "Skip to content" link, which moves focus to the main content (`id="main"`).
 - **Headings:** one `h1` per page and no skipped levels. Heading's `level` sets the element, and its look can differ.
 - **Names:**
   - Wrap every form control in `<Field label="…">`. A placeholder is not a label.

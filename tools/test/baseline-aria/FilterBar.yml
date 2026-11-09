@@ -1,0 +1,94 @@
+# Controlled
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Open"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Add filter"
+  - button "Clear all"
+  - status: 95 results
+- code: "{\"status\":[\"open\"]}"
+
+# Empty
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Add filter"
+  - status: 132 results
+
+# Every
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Closed"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Owner is Citra"
+      - 'button "Remove filter: Owner"'
+    - listitem:
+      - button "Due is Nov 2, 2026 –"
+      - 'button "Remove filter: Due"'
+    - listitem:
+      - button "Archived"
+      - 'button "Remove filter: Archived"'
+    - listitem:
+      - button "Title contains “login”"
+      - 'button "Remove filter: Title"'
+    - listitem:
+      - button "Add filter" [disabled]
+  - button "Clear all"
+  - status: 1 result
+
+# LongText
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Open, Pending, or Closed"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Owner is Dewi"
+      - 'button "Remove filter: Owner"'
+    - listitem:
+      - button "Archived"
+      - 'button "Remove filter: Archived"'
+    - listitem:
+      - button "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung is A label long enough to wrap twice in a narrow column or Another one"
+      - 'button "Remove filter: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"'
+    - listitem:
+      - button "Add filter"
+  - button "Clear all"
+  - status: 12345 results
+
+# Playground
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Open or Pending"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Due is Nov 2 – 8, 2026"
+      - 'button "Remove filter: Due"'
+    - listitem:
+      - button "Add filter"
+  - button "Clear all"
+  - status: 24 results
+
+# WithActions
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Open or Pending"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Due is Nov 2 – 8, 2026"
+      - 'button "Remove filter: Due"'
+    - listitem:
+      - button "Add filter"
+  - button "Clear all"
+  - combobox "Sort":
+    - option "Newest" [selected]
+    - option "Oldest"
+    - option "Due date"
+  - status: 24 results
+

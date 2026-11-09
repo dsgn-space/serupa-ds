@@ -104,6 +104,19 @@ describe('CommandPalette', () => {
     } finally { history.replaceState(null, '', before || location.pathname + location.search); }
   });
 
+  test('an href that isn\'t a web page, mailto: or tel: (javascript:, data:) runs nothing and warns once', async () => {
+    const w = window as unknown as { __cmdkRan?: number };
+    w.__cmdkRan = 0;
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<CommandPalette id="x" defaultOpen commands={[{ id: 'js', label: 'Run', href: 'javascript:window.__cmdkRan=1' }, { id: 'jsu', label: 'Run upper', href: ' JavaScript:window.__cmdkRan=2' }]} />);
+      options()[0].click();
+      await expect.poll(() => isOpen('x')).toBe(false);
+      await new Promise((r) => setTimeout(r, 50));
+      expect([w.__cmdkRan, warn.mock.calls.filter((c) => String(c[0]).includes('command-palette-href') || String(c[0]).includes("isn't a web page")).length]).toEqual([0, 1]);
+    } finally { warn.mockRestore(); delete w.__cmdkRan; }
+  });
+
   test('a command runs after the palette has closed and given focus back: its onSelect can focus a field on the page (GR97)', async () => {
     const order: string[] = [];
     function App() {

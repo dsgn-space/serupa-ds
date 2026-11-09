@@ -14,6 +14,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import type * as lib from '../index';
+import { CascadeSelect } from '../components/CascadeSelect/CascadeSelect';
 import { Checkbox, CheckboxGroup } from '../components/Checkbox/Checkbox';
 import { ColorPicker } from '../components/ColorPicker/ColorPicker';
 import { Combobox } from '../components/Combobox/Combobox';
@@ -104,6 +105,9 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); }, changed: { view: 'grid' } },
   Combobox: { el: (form) => <Combobox aria-label="Fruit" name="fruit" form={form} options={['Apple', 'Banana', 'Cherry']} defaultValue="Apple" />, initial: { fruit: 'Apple' },
     change: async (r) => { await userEvent.click($(r, 'input')); await userEvent.click($(document.body, '[role="option"]:last-child')); }, changed: { fruit: 'Cherry' } },
+  // Submits the last value of the chosen path.
+  CascadeSelect: { el: (form) => <CascadeSelect aria-label="Area" name="area" form={form} options={[{ value: 'a', label: 'A', children: [{ value: 'a1', label: 'A1' }, { value: 'a2', label: 'A2' }] }]} defaultValue={['a', 'a1']} />, initial: { area: 'a1' },
+    change: async (r) => { await userEvent.click($(r, 'button')); await userEvent.click($(document.body, '[role="option"][id$="-1-a2"]')); }, changed: { area: 'a2' } },
   DatePicker: { el: (form) => <DatePicker aria-label="Day" name="day" form={form} locale="en-US" defaultValue={new Date(2026, 0, 5)} />, initial: { day: '2026-01-05' },
     change: (r) => fill($(r, 'input:not([type="hidden"])'), '02/10/2026'), changed: { day: '2026-02-10' } },
   DateRangePicker: { el: (form) => <DateRangePicker startName="from" endName="to" form={form} locale="en-US" defaultValue={{ start: new Date(2026, 0, 5), end: new Date(2026, 0, 9) }} />, initial: { from: '2026-01-05', to: '2026-01-09' },
@@ -116,7 +120,7 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); }, changed: { color: '#b91c1c' } },
   FileUpload: { el: (form) => <FileUpload name="attachment" form={form} files={[file]} onFilesChange={() => {}} />, initial: { attachment: 'notes.txt' } },
   // A button's name and value go only with the button that submits the form, as with <button name>.
-  CopyButton: 'a button', Fab: 'a button', Tab: 'a button', ToggleButton: 'a button',
+  CopyButton: 'a button', InputAction: 'a button', Fab: 'a button', Tab: 'a button', ToggleButton: 'a button',
   Attachment: "the file's name, shown and read", ChatComposer: "the <form> element's own name attribute, not a value", Avatar: "the person's name, shown as initials", Icon: "the icon's name", Illustration: "the picture's name",
 };
 const TABLE = Object.entries(CONTROLS).filter((e): e is [string, Control] => typeof e[1] !== 'string').map(([name, c]) => ({ name, ...c }));
