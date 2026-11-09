@@ -1,0 +1,96 @@
+# Default
+- main:
+  - heading "Inbox" [level=1]
+  - paragraph: "Message 1: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 2: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 3: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 4: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Inbox":
+        - /url: "#inbox"
+    - listitem:
+      - link "Search":
+        - /url: "#search"
+    - listitem:
+      - link "Account":
+        - /url: "#account"
+
+# LongText
+- main:
+  - heading "Inbox" [level=1]
+  - paragraph: "Message 1: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 2: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 3: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 4: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaft":
+        - /url: "#a"
+    - listitem:
+      - link "Notifications and messages":
+        - /url: "#b"
+    - listitem:
+      - link "Search":
+        - /url: "#c"
+    - listitem:
+      - link "Calendar":
+        - /url: "#d"
+    - listitem:
+      - link "Account settings":
+        - /url: "#e"
+
+# Playground
+- main:
+  - heading "Inbox" [level=1]
+  - paragraph: "Message 1: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 2: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 3: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 4: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Inbox":
+        - /url: "#inbox"
+    - listitem:
+      - link "Search":
+        - /url: "#search"
+    - listitem:
+      - link "Account":
+        - /url: "#account"
+
+# WithToast
+- main:
+  - heading "Inbox" [level=1]
+  - paragraph: "Message 1: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 2: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 3: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 4: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Inbox":
+        - /url: "#inbox"
+    - listitem:
+      - link "Search":
+        - /url: "#search"
+    - listitem:
+      - link "Account":
+        - /url: "#account"
+- region "Notifications":
+  - list:
+    - listitem "Message archived":
+      - paragraph: Message archived
+      - button "Dismiss"
+
