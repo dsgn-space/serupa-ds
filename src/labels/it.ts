@@ -22,11 +22,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Espandi tutto',
-  chartKind: (type) => (type === 'bar' ? 'Grafico a barre' : 'Grafico a linee'),
+  chartKind: (type) => ({ line: 'Grafico a linee', bar: 'Grafico a barre', area: 'Grafico ad area', donut: 'Grafico ad anello' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + ' serie' + ', ' + n(points) + (points === 1 ? ' punto' : ' punti') + (points > 1 ? ' da ' + first + ' a ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': minimo ' + low + ' (' + lowAt + '), massimo ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: 'Nessun valore',
+  chartOther: 'Altro',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => 'Totale: ' + total,
   chartCategory: 'Categoria',
   chartShowTable: 'Mostra come tabella',
   chartShowChart: 'Mostra come grafico',
@@ -116,6 +119,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Rimuovi filtro: ' + field,
   filterDone: 'Fine',
   filterResults: (count) => (count === 1 ? '1 risultato' : n(count) + ' risultati'),
+  tocTitle: 'In questa pagina',
   discardTitle: 'Annullare le modifiche?',
   discardDescription: 'Le modifiche fatte qui non sono state salvate.',
   discard: 'Annulla modifiche',

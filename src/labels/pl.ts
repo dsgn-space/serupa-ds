@@ -22,11 +22,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Rozwiń wszystko',
-  chartKind: (type) => (type === 'bar' ? 'Wykres słupkowy' : 'Wykres liniowy'),
+  chartKind: (type) => ({ line: 'Wykres liniowy', bar: 'Wykres słupkowy', area: 'Wykres warstwowy', donut: 'Wykres pierścieniowy' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + p3(series, 'seria', 'serie', 'serii') + ', ' + p3(points, 'punkt', 'punkty', 'punktów') + (points > 1 ? ' od ' + first + ' do ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': najniższa ' + low + ' (' + lowAt + '), najwyższa ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: 'Brak wartości',
+  chartOther: 'Inne',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => 'Razem: ' + total,
   chartCategory: 'Kategoria',
   chartShowTable: 'Pokaż jako tabelę',
   chartShowChart: 'Pokaż jako wykres',
@@ -116,6 +119,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Usuń filtr: ' + field,
   filterDone: 'Gotowe',
   filterResults: (count) => (count === 1 ? '1 wynik' : 'Wyniki: ' + n(count)),
+  tocTitle: 'Na tej stronie',
   discardTitle: 'Odrzucić zmiany?',
   discardDescription: 'Zmiany wprowadzone tutaj nie zostały zapisane.',
   discard: 'Odrzuć',

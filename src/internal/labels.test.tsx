@@ -11,6 +11,8 @@ const ARGS: Record<string, unknown[]> = {
   avatarStatus: ['online'],
   cascadeHasMore: [false],
   cascadePath: [['Jawa Barat', 'Kota Bandung']],
+  chartKind: ['donut'],
+  chartShare: ['120', '25%'],
   clearValue: ['Email'],
   colorName: ['blue', 'dark'],
   contrast: ['4.5'],

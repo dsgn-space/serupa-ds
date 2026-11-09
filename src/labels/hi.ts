@@ -18,11 +18,14 @@ const KEYS: Record<string, string> = {
 
 export const labels: SerupaLabels = {
   expandAll: 'सभी खोलें',
-  chartKind: (type) => (type === 'bar' ? 'बार चार्ट' : 'लाइन चार्ट'),
+  chartKind: (type) => ({ line: 'लाइन चार्ट', bar: 'बार चार्ट', area: 'क्षेत्र चार्ट', donut: 'डोनट चार्ट' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + ' सीरीज़' + ', ' + n(points) + ' बिंदु' + (points > 1 ? ', ' + first + ' से ' + last + ' तक' : '') + '।',
   chartRange: (series, low, lowAt, high, highAt) => series + ': न्यूनतम ' + low + ' (' + lowAt + '), अधिकतम ' + high + ' (' + highAt + ')।',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: 'कोई मान नहीं',
+  chartOther: 'अन्य',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => 'कुल: ' + total,
   chartCategory: 'श्रेणी',
   chartShowTable: 'तालिका के रूप में दिखाएँ',
   chartShowChart: 'चार्ट के रूप में दिखाएँ',
@@ -112,6 +115,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'फ़िल्टर हटाएँ: ' + field,
   filterDone: 'हो गया',
   filterResults: (count) => (count === 1 ? '1 परिणाम' : n(count) + ' परिणाम'),
+  tocTitle: 'इस पेज पर',
   discardTitle: 'बदलाव छोड़ दें?',
   discardDescription: 'यहाँ किए गए बदलाव सेव नहीं हुए हैं।',
   discard: 'छोड़ दें',

@@ -22,11 +22,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Alle aufklappen',
-  chartKind: (type) => (type === 'bar' ? 'Balkendiagramm' : 'Liniendiagramm'),
+  chartKind: (type) => ({ line: 'Liniendiagramm', bar: 'Balkendiagramm', area: 'Flächendiagramm', donut: 'Ringdiagramm' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + (series === 1 ? ' Reihe' : ' Reihen') + ', ' + n(points) + (points === 1 ? ' Punkt' : ' Punkte') + (points > 1 ? ' von ' + first + ' bis ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': niedrigster Wert ' + low + ' (' + lowAt + '), höchster Wert ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: 'Kein Wert',
+  chartOther: 'Sonstige',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => 'Gesamt: ' + total,
   chartCategory: 'Kategorie',
   chartShowTable: 'Als Tabelle anzeigen',
   chartShowChart: 'Als Diagramm anzeigen',
@@ -116,6 +119,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Filter entfernen: ' + field,
   filterDone: 'Fertig',
   filterResults: (count) => (count === 1 ? '1 Ergebnis' : n(count) + ' Ergebnisse'),
+  tocTitle: 'Auf dieser Seite',
   discardTitle: 'Änderungen verwerfen?',
   discardDescription: 'Ihre Änderungen hier wurden noch nicht gespeichert.',
   discard: 'Verwerfen',

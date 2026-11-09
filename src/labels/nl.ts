@@ -19,11 +19,14 @@ const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 export const labels: SerupaLabels = {
   expandAll: 'Alles uitvouwen',
-  chartKind: (type) => (type === 'bar' ? 'Staafdiagram' : 'Lijndiagram'),
+  chartKind: (type) => ({ line: 'Lijndiagram', bar: 'Staafdiagram', area: 'Vlakdiagram', donut: 'Ringdiagram' })[type],
   chartSummary: (kind, series, points, first, last) => kind + ', ' + n(series) + (series === 1 ? ' reeks' : ' reeksen') + ', ' + n(points) + (points === 1 ? ' punt' : ' punten') + (points > 1 ? ' van ' + first + ' tot ' + last : '') + '.',
   chartRange: (series, low, lowAt, high, highAt) => series + ': laagste ' + low + ' (' + lowAt + '), hoogste ' + high + ' (' + highAt + ').',
   chartPoint: (series, category, value) => (series ? series + ', ' + category + ': ' + value : category + ': ' + value),
   chartNoValue: 'Geen waarde',
+  chartOther: 'Overig',
+  chartShare: (value, percent) => value + ' (' + percent + ')',
+  chartTotal: (total) => 'Totaal: ' + total,
   chartCategory: 'Categorie',
   chartShowTable: 'Als tabel tonen',
   chartShowChart: 'Als diagram tonen',
@@ -113,6 +116,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Filter verwijderen: ' + field,
   filterDone: 'Klaar',
   filterResults: (count) => (count === 1 ? '1 resultaat' : n(count) + ' resultaten'),
+  tocTitle: 'Op deze pagina',
   discardTitle: 'Wijzigingen weggooien?',
   discardDescription: 'Wat je hier hebt gewijzigd, is nog niet opgeslagen.',
   discard: 'Weggooien',
