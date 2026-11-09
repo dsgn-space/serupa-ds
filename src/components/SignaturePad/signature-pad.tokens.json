@@ -1,0 +1,113 @@
+{
+  "signature-pad": {
+    "$description": "SignaturePad's component tokens. Each one is an optional override: set the CSS variable (--signature-pad-<name>) on the page, a container or one SignaturePad, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The drawing box's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The drawing box's outline (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-border"
+          }
+        }
+      },
+      "border-invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The drawing box's outline while the signature is invalid (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-border-invalid"
+          }
+        }
+      },
+      "ink": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The drawn strokes and the typed name (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-ink"
+          }
+        }
+      },
+      "line": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The line to sign on (3:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-line"
+          }
+        }
+      },
+      "hint": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The how-to text under the switch (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-hint"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "The drawing box's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The space between the switch, the how-to text, the box and the buttons.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-gap"
+          }
+        }
+      },
+      "height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-40}",
+        "$description": "The drawing box's height (160px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-height"
+          }
+        }
+      }
+    },
+    "borders": {
+      "stroke": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-2}",
+        "$description": "The drawn strokes' width on screen (the SVG value draws them 2.5px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-stroke"
+          }
+        }
+      }
+    }
+  }
+}

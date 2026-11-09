@@ -20,6 +20,7 @@ const DRAGS = {
   SortableList: { drag: 'drag a row by its handle', press: ['SortableList.test.tsx', 'a press without moving picks the row up'] },
   Kanban: { drag: 'drag a card by its handle to another place or column', press: ['Kanban.test.tsx', '"Move to…" moves the card to the end of the chosen column'] },
   Table: { drag: 'drag a column\'s resize handle to change its width', press: ['Table.test.tsx', 'a click or Enter on the handle opens Narrower, Wider and Fit'] },
+  SignaturePad: { drag: 'draw a signature in the box', press: ['SignaturePad.test.tsx', 'signing without dragging: a tap on Type'] },
   Splitter: { drag: 'drag the handle to resize the panes', press: ['Splitter.test.tsx', 'a press on the handle without dragging, then a press elsewhere'] },
 };
 // Moves that aren't a drag: nothing is held down while the pointer moves.
