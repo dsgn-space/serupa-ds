@@ -10,6 +10,7 @@ import { Progress } from '../Progress/Progress';
 import { formatFileSize } from '../FileUpload/formatFileSize';
 import * as icons from '../../material/builtin';
 import { attachmentKind, type AttachmentKind } from './attachmentKind';
+import { KIND_ICONS } from './kindIcon';
 import { en as ownWords } from './labels';
 import { en as fileWords } from '../FileUpload/labels';
 import { en as boundary } from '../ErrorBoundary/labels';
@@ -50,10 +51,7 @@ export interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 const OWN = { name: 1, bytes: 1, type: 1, kind: 1, href: 1, download: 1, progress: 1, error: 1, onRetry: 1, onRemove: 1, removeLabel: 1, disabled: 1, className: 1 } as const;
 
-const ICONS = {
-  pdf: icons.PictureAsPdf, image: icons.Image, sheet: icons.TableChart, doc: icons.Description, slides: icons.Slideshow,
-  archive: icons.FolderZip, code: icons.Code, audio: icons.AudioFile, video: icons.Movie, other: icons.Draft,
-} as const;
+const ICONS = KIND_ICONS;
 const WORD = {
   pdf: 'attachmentPdf', image: 'attachmentImage', sheet: 'attachmentSheet', doc: 'attachmentDoc', slides: 'attachmentSlides',
   archive: 'attachmentArchive', code: 'attachmentCode', audio: 'attachmentAudio', video: 'attachmentVideo', other: 'attachmentOther',

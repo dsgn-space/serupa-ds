@@ -395,6 +395,11 @@ cross-browser:
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "checks" && $SERUPA_CROSS_GROUPS =~ /checks/
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "components" && $SERUPA_CROSS_GROUPS =~ /components/
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "storybook" && $SERUPA_CROSS_GROUPS =~ /storybook/
+    # Visual in Firefox and WebKit: each story at rest in blue-light and on the other axes, against
+    # tools/test/baseline-visual-<browser>/ (visual.mjs). Not in the default groups until those baselines are committed.
+    # SERUPA_VISUAL_UPDATE=1 (with SERUPA_CROSS=1 and SERUPA_CROSS_GROUPS=visual, from Run pipeline) draws them instead,
+    # into the job's artifacts, to review and commit.
+    - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "visual" && $SERUPA_CROSS_GROUPS =~ /visual/
     # Every merge request: the component tests of the components it changes, in Firefox and WebKit; one that reaches
     # beyond the component folders passes without running (--narrowed-only) and is left to the nightly. Narrowed (the
     # browsers' own engines are slower, and Firefox runs one file at a time); the nightly runs them all.
@@ -402,19 +407,19 @@ cross-browser:
   parallel:
     matrix:
       - BROWSER: [firefox, webkit]
-        GROUP: [checks, components, storybook]
+        GROUP: [checks, components, storybook, visual]
   script:
     # Metric-compatible fonts for the Arial and Times a test may ask for, as the GitHub workflow installed.
     - apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
     - set -o pipefail
     # On a merge request, only a narrowed run (--narrowed-only, run.mjs): a change beyond the component folders is left to the nightly.
-    - node tools/test/run.mjs --browser "$BROWSER" --group "$GROUP" ${CI_MERGE_REQUEST_DIFF_BASE_SHA:+--since "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --narrowed-only} 2>&1 | tee test-output.txt
+    - node tools/test/run.mjs --browser "$BROWSER" --group "$GROUP" ${CI_MERGE_REQUEST_DIFF_BASE_SHA:+--since "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --narrowed-only} ${SERUPA_VISUAL_UPDATE:+--update} 2>&1 | tee test-output.txt
   after_script:
     - grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150 || true
   artifacts:
     when: always
     expire_in: 14 days
-    paths: [test-output.txt]
+    paths: [test-output.txt, tools/test/baseline-visual-firefox/, tools/test/baseline-visual-webkit/]
 
 # Nightly (the schedule on main, 02:00 Jakarta; Build > Pipeline schedules). Besides the whole suite above:
 # Mutation testing (tools/test/mutation.mjs --rotate): five components picked by the day, then every src/internal file
