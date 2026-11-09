@@ -1,7 +1,7 @@
 # GitLab CI: the jobs of .github/workflows/ci.yml (and the Changeset workflow's check), for the GitLab interim.
 # SERUPA_CI_MODE picks where a merge request's checks run:
-# - runner (default): on the project's own runners (an x86 server, and an ARM one for the jobs tagged arm, which take
-#   no screenshot; see tools/README.md), with no minute limit.
+# - runner (default): on the project's own runners (an x86 server and an Arm one; jobs tagged x86, the screenshots and
+#   timing budgets, run only on x86, and every other job on whichever is free; see tools/README.md), with no minute limit.
 #   A merge request runs the whole pipeline below: build, types and lint, the changeset check, the suite (what the
 #   MR changes, tools/test/run.mjs --since its base), consumer and frameworks. The runner keeps the cache and the
 #   pulled images between jobs, so setup costs seconds.
@@ -122,7 +122,6 @@ default:
     - if [ "$CI_JOB_STATUS" = success ] && [ -n "$RESULT" ]; then mkdir -p .result-cache && echo "$CI_JOB_URL" > ".result-cache/$RESULT"; fi
 
 build:
-  tags: [arm]
   extends: .full-suite-or-cross
   stage: build
   timeout: 20m
@@ -138,7 +137,6 @@ build:
     expire_in: 3 days
 
 types and lint:
-  tags: [arm]
   extends: .full-suite
   stage: build
   timeout: 20m
@@ -153,7 +151,6 @@ types and lint:
     - npm run lint
 
 changeset:
-  tags: [arm]
   stage: build
   timeout: 10m
   rules:
@@ -169,7 +166,6 @@ changeset:
 # test that fails on the base commit's src/. Anything else passes in seconds, before the browser is used. A fix only
 # the screenshots can show takes the "no-repro-test" label.
 fix proof:
-  tags: [arm]
   stage: build
   timeout: 20m
   rules:
@@ -268,8 +264,9 @@ suite:
         - tools/test/visual.mjs
         - tools/test/storybook.mjs
         - tools/test/baseline-visual/**/*
-  # Here, on serupa-runner (x64): the component tests, whose timing budgets were measured on it, and Visual, whose
-  # baselines are drawn with Chrome for Testing on x64. The other groups are in "suite arm", below.
+  # Tagged x86: the component tests, whose timing budgets were measured on x64, and Visual, whose baselines are drawn
+  # with Chrome for Testing on x64. The other groups are in "suite portable", below.
+  tags: [x86]
   parallel:
     matrix:
       - GROUP: components
@@ -294,11 +291,11 @@ suite:
 
 # build (dist/ and storybook-static/ are the same files on either machine), fix proof (one test against the base), and
 # the checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow): none takes a screenshot
-# or has a timing budget, so they run on serupa-arm (Oracle's Always Free Ampere, tag arm) next to serupa-runner: the
-# same image, the same rules, the same Chromium revision (Playwright's own arm64 build, tools/setup.mjs).
-suite arm:
+# or has a timing budget, so they are untagged and go to whichever runner is free, x86 or Arm: the same image, the same
+# rules, the same Chromium revision (on Arm, Playwright's own arm64 build, tools/setup.mjs).
+suite portable:
   extends: suite
-  tags: [arm]
+  tags: []
   parallel:
     matrix:
       - GROUP: checks
@@ -309,7 +306,6 @@ suite arm:
 # The package installed into an empty project on the oldest Node package.json allows, and the one between
 # (tools/test/consumer.mjs). No npm ci: the repo's dependencies ask for Node 26, and the check needs only Node and dist/.
 consumer:
-  tags: [arm]
   extends: .full-suite
   stage: test
   needs: [build]
@@ -325,7 +321,6 @@ consumer:
 
 # The packed build in a Next.js, a React Router and an Astro app, rendered on the server and hydrated in Chromium.
 frameworks:
-  tags: [arm]
   extends: .full-suite
   stage: test
   needs: [build]
@@ -342,6 +337,7 @@ frameworks:
 # picks the groups (default: all three).
 cross-browser:
   stage: test
+  tags: [x86]
   needs: [build]
   timeout: 75m
   # A red job is a finding, not a broken pipeline: it doesn't cancel the other browser's jobs.
@@ -375,6 +371,7 @@ cross-browser:
 # with a test; a score below tools/test/baseline-mutation.json fails, and the survivors it prints are tests to write.
 mutation:
   stage: test
+  tags: [x86]
   needs: []
   timeout: 2h
   rules:
@@ -391,6 +388,7 @@ mutation:
 # the last night's that passed (kept in the cache), so a story that slowly gets slower shows up on one night.
 benchmarks:
   stage: test
+  tags: [x86]
   needs: []
   timeout: 45m
   rules:
@@ -424,7 +422,6 @@ benchmarks:
 
 canary types:
   extends: .nightly
-  tags: [arm]
   timeout: 20m
   variables:
     SETUP_FLAGS: --no-browsers
@@ -435,6 +432,7 @@ canary types:
 
 canary components:
   extends: .nightly
+  tags: [x86]
   timeout: 45m
   script:
     - npm install --no-save --ignore-scripts --legacy-peer-deps react@canary react-dom@canary
@@ -444,7 +442,6 @@ canary components:
 
 canary consumer:
   extends: .nightly
-  tags: [arm]
   timeout: 20m
   variables:
     SETUP_FLAGS: --no-browsers
@@ -456,6 +453,7 @@ canary consumer:
 # that fails once in three runs on an unchanged tree is a flake to fix before it stops someone's merge request.
 flake hunt:
   extends: .nightly
+  tags: [x86]
   timeout: 90m
   parallel:
     matrix:
@@ -473,7 +471,6 @@ flake hunt:
 # licenses, for anyone who audits it. tools/test/licenses.mjs already fails a dependency whose license isn't allowed.
 sbom:
   extends: .nightly
-  tags: [arm]
   timeout: 10m
   variables:
     SETUP_FLAGS: --no-browsers
@@ -491,6 +488,7 @@ include:
   - template: Jobs/SAST.gitlab-ci.yml
 
 secret_detection:
+  tags: [x86]
   before_script: []
   after_script: []
   cache: []
@@ -499,6 +497,7 @@ secret_detection:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
 
 semgrep-sast:
+  tags: [x86]
   before_script: []
   after_script: []
   cache: []
@@ -508,6 +507,7 @@ semgrep-sast:
 
 # Every SAST analyzer the template may add (only Semgrep's applies to this repo).
 .sast-analyzer:
+  tags: [x86]
   before_script: []
   after_script: []
   cache: []
@@ -517,7 +517,6 @@ semgrep-sast:
 # the benchmarks' are, so a package that grows a little with every merge shows it on the night it grows.
 size trend:
   extends: .nightly
-  tags: [arm]
   timeout: 20m
   variables:
     SETUP_FLAGS: --no-browsers
@@ -543,7 +542,6 @@ size trend:
 # design-qa.md (Browse the job's artifacts, or "Design QA" on the merge request). It only shows; it never fails.
 design qa:
   stage: build
-  tags: [arm]
   needs: []
   timeout: 5m
   image: node:26-alpine
