@@ -173,14 +173,27 @@ for (const scheme of ['light', 'dark']) {
   // A choice saved by 4.x (as "diki-theme") is kept, and reset() forgets it for good.
   const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
+  // A reload straight after a storage write could start before the browser held the write, and read the old value
+  // (it failed that way on a busy runner). Another page hears a write as a storage event only once the browser has
+  // it, so each reload waits for that.
+  const watch = await ctx.newPage();
+  await watch.goto(writePage('theme-watch.html', '<p>x</p>'));
+  await watch.evaluate(() => { window.heard = []; addEventListener('storage', (e) => { window.heard.push(e.key); }); });
+  const held = (key) => watch.waitForFunction((k) => window.heard.includes(k), key);
   const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
   await p.goto(url);
   await p.evaluate(() => { localStorage.clear(); localStorage.setItem('diki-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
+  await held('diki-theme');
   await p.reload();
-  t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', (await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join())) === 'violet-dark,,true');
+  const moved = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join());
+  t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', moved === 'violet-dark,,true', moved);
+  await held('serupa-theme');
+  await watch.evaluate(() => { window.heard = []; });
   await p.evaluate(() => Serupa.theme.reset());
+  await held('serupa-theme');
   await p.reload();
-  t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'blue-light');
+  const after = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', after === 'blue-light', after);
   await ctx.close();
 }
 
@@ -336,7 +349,9 @@ for (const scheme of ['light', 'dark']) {
     const out = path.join(dir, `purge-${c}.css`);
     return { c, src, out, full: writePage(`pc-full-${c}.html`, body, { react: true, extraHead: head }), min: writePage(`pc-min-${c}.html`, body, { react: true, extraHead: head, bundle: `purge-${c}.css` }) };
   });
-  const four = [0, 1, 2, 3];
+  // Tabs at once in Chromium only: Firefox and WebKit give focus to one tab of a browser, so a preview that opens a
+  // panel or shows a focus ring in another tab differs (the cross-browser run, 8 Nov 2026).
+  const four = ENGINE === 'chromium' ? [0, 1, 2, 3] : [0];
   await inParallel(jobs, four, ({ src, out }) => new Promise((resolve, reject) => execFile(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), src, '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css'), '--components'], (err) => (err ? reject(err) : resolve()))));
   const diffs = await inParallel(jobs, four, async ({ full: fullUrl, min }) => {
     const a = await styles(fullUrl), z = await styles(min);

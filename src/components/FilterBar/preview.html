@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>FilterBar — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.FilterBar, { resultsCount: 24,
+    fields: [{ id: 'status', label: 'Status', type: 'select', multiple: true, options: ['Open', 'Pending', 'Closed'] }, { id: 'owner', label: 'Owner', type: 'select', options: ['Ana', 'Budi'] }, { id: 'archived', label: 'Archived', type: 'boolean' }],
+    defaultValue: { status: ['Open', 'Pending'] } }));
+</script>
+</body>
+</html>

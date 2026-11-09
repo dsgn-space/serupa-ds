@@ -8,6 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import postcss from 'postcss';
+import { transform } from 'lightningcss';
 import { PROJECT, report, done, fail } from './lib.mjs';
 import { purge, usedClasses } from '../../bin/serupa-purge.mjs';
 
@@ -61,6 +62,13 @@ try {
   t('PostCSS: rules @imported from bundle.css are trimmed, the importing file\'s are kept', mixed.startsWith(app) && has(mixed, 'flex') && !has(mixed, 'grid-cols-5') && mixed.length < 400_000, mixed.slice(0, 200));
   const lean = await run(bundle, BUNDLE, { components: true });
   t('PostCSS: components: true drops the components the sources never name', has(lean, 'dk-btn') && !has(lean, 'dk-dialog') && lean.length < own.length, `${lean.length} vs ${own.length}`);
+  // The trimmed CSS must still parse: Vite's default minifier (lightningcss) stops the build on a broken rule, which
+  // browsers would silently drop (C1: a comma inside :is(… :not(…)) split one ButtonGroup rule into two halves).
+  const parses = (css) => { try { transform({ filename: 'bundle.css', code: Buffer.from(css), minify: true, errorRecovery: false }); return ''; } catch (e) { return String(e.message); } };
+  for (const [mode, css] of [['default', own], ['components: true', lean]]) {
+    const err = parses(css);
+    t(`PostCSS (${mode}): the trimmed bundle.css parses with lightningcss, as Vite's minifier reads it`, !err, err);
+  }
   let error = '';
   try { await run(bundle, BUNDLE, { content: ['nowhere'] }); } catch (e) { error = String(e.message); }
   t('a content path that isn\'t there stops the build, saying which', error.includes('no such file or folder') && error.includes('nowhere'), error);

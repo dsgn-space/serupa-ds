@@ -14,6 +14,8 @@ t('its API baseline, size budgets and server-render case count as the component\
 for (const f of ['src/internal/labels.ts', 'tokens.json', 'src/styles/cascade.txt', 'tools/test/visual.mjs', '.storybook/preview.tsx', 'package.json', 'docs/Localization.mdx']) {
   t(`a change to ${f} tests everything`, affectedComponents(['src/components/Meter/Meter.tsx', f]) === null, list(affectedComponents([f])));
 }
+t('the docs\' Markdown no page shows (warnings, ADRs, RFCs) covers no component', affectedComponents(['docs/warnings.md', 'docs/adr/0015-upgrades.md', 'docs/rfcs/15.md'])?.size === 0);
+t('docs/foundations.md, which the docs blocks show, tests everything', affectedComponents(['docs/foundations.md']) === null);
 t('a changeset alone covers no component', affectedComponents(['.changeset/x.md'])?.size === 0);
 const none = ['CONTRIBUTING.md', '.github/pull_request_template.md', 'tools/test/size.mjs', 'tools/publish.mjs', '.github/dependabot.yml', '.github/workflows/release.yml', 'tools/test/baseline-utilities.json', 'licenses/inter.txt',
   'tools/skill-eval/results/2026-11-06-agentic/with/sign-in.1/src/App.tsx', 'tools/ci.mjs', 'tools/local-checks-gate.mjs', '.gitlab-ci.yml', 'AGENTS.md', 'skills/serupa/references/forms.md'];

@@ -26,6 +26,10 @@ A Button with only an icon has no text for a screen reader to say. Give it an `a
 
 Two or more of a Combobox's options have the same value. Picking the second one shows the first one's label in the field, and both are marked as selected. Give every option its own value; an id is a good one when labels repeat.
 
+## command-palette-href
+
+A CommandPalette command's `href` isn't a web page (http or https), a `mailto:` or a `tel:` link, for example `javascript:…`. Choosing it does nothing, so a link built from user data can't run script. Use `onSelect` to run code.
+
 ## date-string
 
 A date component (Calendar, DatePicker, DateRangePicker) got a string it can't read as a day, such as "tomorrow", "2026-13-01" or "2026-02-31", so it shows no date and the app holds a value nobody sees. Pass the day as "yyyy-mm-dd" or as a Date. An empty string is read as no date and doesn't warn. What people type is reported through `onInvalidInput` instead.
@@ -37,6 +41,10 @@ A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as a
 ## field-control
 
 A Field's label points at its control by id, and nothing on the page has that id, so the label names nothing. Put the control inside the Field, or pass the control's `id`.
+
+## filter-value
+
+FilterBar was given a value its field can't take, or one for a field it doesn't have, as can happen when the value is read from a URL someone edited or that arrived cut short. That filter is left out, and the bar shows the rest. A select field takes a string, or an array of strings with `multiple`; a date range `{ start, end }`, each a `"yyyy-mm-dd"` day or null; a boolean field `true`; a text field a string. Check the value where you read it if you need to tell people a filter was dropped.
 
 ## icon-load
 
@@ -117,6 +125,10 @@ The selected Tab was removed, so no tab is selected. When you remove the selecte
 ## tabs-value
 
 Tabs' `value` or `defaultValue` matches no Tab. With `value`, no tab is selected; with `defaultValue`, the first tab is. Set it to one of the Tabs' values.
+
+## toast-undo-no-toaster
+
+`toast.undo` was called with no Toaster on the page, so nobody could see its Undo. The action is committed at once (its `commit` runs) instead of waiting for an Undo that can't come. Render one Toaster, once, near the root.
 
 ## toaster-twice
 

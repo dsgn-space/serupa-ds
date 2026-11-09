@@ -28,6 +28,7 @@ const LATIN: Record<string, string> = {
   'Chart/Formatted': "the story's formatValue writes the text (Intl in 'en')", 'Chart/LongText': "the story's generated categories and values ('Day ' + n)",
   CodeBlock: 'the code is the story\'s, in ASCII as a program is written (its line numbers are CSS counters, not text)',
   Calendar: 'the grid is Gregorian with Latin digits, so its title and days are too (Calendar.tsx, formats())',
+  EventCalendar: 'Gregorian with Latin digits, as Calendar: its dates and times match the day numbers (EventCalendar.tsx, fmt)',
   'CommandPalette/LongText': "the story's own generated labels ('Project number ' + n)",
   'CascadeSelect/LongText': "the story's own generated labels ('Provinsi ' + n)",
   'FormattedNumber/Locales': 'each number passes its own locale',
@@ -41,6 +42,7 @@ const LATIN: Record<string, string> = {
   // A label pack's text (the provider's labels, English and Indonesian) is the app's words: an app with an Arabic
   // pack writes its own digits there.
   ErrorSummary: 'the title is the label pack\'s errorSummaryTitle(n)', Stepper: "the compact summary is the label pack's stepOf(n, total)", Tour: "the step count is the label pack's stepOf(n, total), as Stepper's",
+  FilterBar: "the results count is the label pack's filterResults(n), as Stepper's",
 };
 // What still writes ASCII digits, until its fix lands. None now.
 const KNOWN = new Set<string>([]);

@@ -3,6 +3,7 @@
 //   node tools/test/size.mjs --update Name    set Name's budgets from what it weighs now (5% and 0.1 KiB over); with no
 //                                             name, only the component folders that have no budgets yet
 //   node tools/test/size.mjs --update Name --only alone    set that one budget and keep the others
+//   node tools/test/size.mjs --json size.json --previous last.json   and compare with last night's (nightly, below)
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand). Over budget fails; when a change is worth the bytes, raise the budget in the same pull request,
 // so the growth is a decision someone reviews.
@@ -42,7 +43,7 @@ const TOTALS = {
   'serupa.iife.js': [123.5, 99.0, 'share'],   // 119.4 on 31 Oct 2026, once the full icon table moved to serupa-icons.iife.js (PF1); 610.1 with it
 };
 // KiB, gzipped: [budget, the size it was set at]. The totals that count shared code move with the budget.
-const LABELS = [3.7, 1.9];   // +0.3 KiB on 7 Nov 2026 for CascadeSelect's words (about 0.1 KiB over 3.4), with room for the three ReUI components queued behind it (FilterBar, StatusTracker, TableOfContents), so each doesn't raise it again. +0.1 KiB on 7 Nov 2026 for Kanban's words (86 B over 3.2 by themselves, on top of Chat's). +0.1 KiB on 7 Nov 2026 for Chat's words (31 B over). +0.1 KiB on 6 Nov 2026: slack so neighbouring changes don't each raise it (four component lanes at once on GitLab). +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over; 3.1 the same day for the words of CodeBlock (50), OfflineBanner (58) and Chart (CH2), about 3.05 with all three
+const LABELS = [4.0, 1.9];   // +0.1 KiB on 8 Nov 2026 for the date presets' nine labels (RU11). +0.2 KiB on 8 Nov 2026 for EventCalendar's words (RU8). +0.3 KiB on 7 Nov 2026 for CascadeSelect's words (about 0.1 KiB over 3.4), with room for the three ReUI components queued behind it (FilterBar, StatusTracker, TableOfContents), so each doesn't raise it again. +0.1 KiB on 7 Nov 2026 for Kanban's words (86 B over 3.2 by themselves, on top of Chat's). +0.1 KiB on 7 Nov 2026 for Chat's words (31 B over). +0.1 KiB on 6 Nov 2026: slack so neighbouring changes don't each raise it (four component lanes at once on GitLab). +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over; 3.1 the same day for the words of CodeBlock (50), OfflineBanner (58) and Chart (CH2), about 3.05 with all three
 // KiB, gzipped: PhoneInput's country table (PHONE_COUNTRIES in phone.ts, the calling codes, groupings and lengths;
 // 2.4 on 26 Oct 2026). It's data, not code, and grows a row at a time, so it has its own line: a country added is
 // a choice made here, not a few bytes lost in PhoneInput's own budget.
@@ -193,5 +194,21 @@ const own = folders.flatMap((n) => (budgets[n]
   ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'share' ? SHARE_NOISE : 0),
     detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json` }))
   : [{ name: `${n} has size budgets`, ok: false, detail: `run node tools/test/size.mjs --update ${n} and commit tools/test/baseline-size/${n}.json` }]));
+// Size over time (nightly, as the benchmarks are): a budget allows 5% over what a folder weighed when it was set, so a
+// package that grows a little with every merge passes for months. --json writes tonight's sizes; --previous compares
+// them with the last night's and fails when a total, the starter page or a folder imported alone grew 3% (and 0.2 KiB)
+// in one night without its budget moving.
+const flag = (f) => (process.argv.includes(f) ? process.argv[process.argv.indexOf(f) + 1] : null);
+const tonight = { totals: Object.fromEntries(rows.map((r) => [r.name, r.now])), starter, alone: Object.fromEntries(folders.filter((n) => measured[n]).map((n) => [n, measured[n].alone])) };
+if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify(tonight, null, 1));
+const trend = [];
+if (flag('--previous') && fs.existsSync(flag('--previous'))) {
+  const last = JSON.parse(fs.readFileSync(flag('--previous'), 'utf8'));
+  const grew = (name, was, now) => trend.push({ name: `${name}: ${kib(was)} → ${kib(now)} KiB since last night`, ok: !(was && now > was * 1.03 && now - was > 0.2 * 1024),
+    detail: `${(100 * (now / was - 1)).toFixed(1)}% in one night: find the merge that grew it and decide whether it's worth the bytes` });
+  for (const [n, now] of Object.entries(tonight.totals)) grew(n, last.totals?.[n], now);
+  grew('Starter page', last.starter, starter);
+  for (const [n, now] of Object.entries(tonight.alone)) if (last.alone?.[n]) grew(`${n} imported alone`, last.alone[n], now);
+}
 const orphans = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => !folders.includes(f.replace(/\.json$/, ''))) : [];
-done(report('Size', [...totals, ...own, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));
+done(report('Size', [...totals, ...own, ...trend, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));

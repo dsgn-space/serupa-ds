@@ -13,7 +13,7 @@ import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 
-export interface PasswordInputProps extends Omit<InputProps, 'type' | 'showCount' | 'prefix' | 'suffix' | 'rightIcon'> {
+export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'rightIcon'> {
   /** Shows the password as text (controlled). Use with onVisibleChange. */
   visible?: boolean | undefined;
   /** Shows it as text at first (uncontrolled). Default: false. */
