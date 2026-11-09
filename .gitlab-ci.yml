@@ -118,6 +118,8 @@ default:
       mkdir -p .ci-home && echo "$RESULT" > .ci-home/result-key
     - find .result-cache -type f -mtime +14 -delete 2>/dev/null || true
     - |
+      # The component test shards (base) always run: each writes its part of the coverage report the coverage job merges.
+      if [ "$GROUP" = components ] && [ "$SERUPA_PART" = base ]; then export SERUPA_COVERAGE=1 RESULT_CACHE=off; fi
       if [ "$CI_PIPELINE_SOURCE" != web ] && [ "${RESULT_CACHE:-on}" = on ] && [ -f ".result-cache/$RESULT" ]; then
         echo "Passed on this same tree and base in job $(cat ".result-cache/$RESULT"); not running it again."
         exit 0
@@ -276,7 +278,7 @@ suite:
   parallel:
     matrix:
       # The component tests in three shards, and their second run in another language beside them (SERUPA_PART and
-      # SERUPA_SHARD, run.mjs): about 3 minutes each rather than 13 in one job. Coverage is the coverage job's, below.
+      # SERUPA_SHARD, run.mjs): about 3 minutes each rather than 13 in one job. The coverage job, below, merges theirs.
       - GROUP: components
         SERUPA_PART: base
         SERUPA_SHARD: [1/3, 2/3, 3/3]
@@ -291,41 +293,45 @@ suite:
     - node tools/test/run.mjs --group "$GROUP" ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
   after_script:
     - !reference [.result-cache, record]
-  artifacts:
-    when: on_failure
-    expire_in: 7 days
-    paths:
-      - test-output.txt
-      - .test-tmp/
-      - tools/test/baseline-visual/**/*.actual.png
-
-# Coverage of the component tests (V8, thresholds in vitest.config.ts): every test file in one run, which the sharded
-# suite can't give. On main after each merge, at night and by hand, beside the suite; a merge request's run is narrowed to
-# what it changes, so it never measured coverage.
-coverage:
-  stage: test
-  needs: [build]
-  timeout: 30m
-  tags: [x86]
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  variables:
-    GROUP: components
-    SERUPA_PART: base
-    SERUPA_COVERAGE: "1"
-  script:
-    - set -o pipefail
-    - node tools/test/run.mjs --group components 2>&1 | tee test-output.txt
-  after_script:
-    - node tools/test/vitest/coverage-summary.mjs || true
-    - !reference [.result-cache, record]
+    # A passing job's artifacts are only the coverage blob; the rest is for looking into a failure.
+    - if [ "$CI_JOB_STATUS" = success ]; then rm -rf .test-tmp test-output.txt; fi
   artifacts:
     when: always
     expire_in: 7 days
     paths:
       - test-output.txt
+      - .test-tmp/
+      - tools/test/baseline-visual/**/*.actual.png
+      - .vitest-reports/
+
+# Coverage of the component tests (V8, floors in vitest.config.ts): the three shards' blob reports merged into one
+# (vitest --merge-reports), on every pipeline that runs them whole, so a drop fails the merge request, not main after it.
+coverage:
+  stage: test
+  needs:
+    - job: suite
+      parallel:
+        matrix:
+          - GROUP: components
+            SERUPA_PART: base
+            SERUPA_SHARD: [1/3, 2/3, 3/3]
+  timeout: 15m
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $SERUPA_WIDE == "1"
+  variables:
+    RESULT_CACHE: "off"
+  script:
+    - ls .vitest-reports/
+    - node node_modules/vitest/vitest.mjs --merge-reports .vitest-reports --coverage
+  after_script:
+    - node tools/test/vitest/coverage-summary.mjs || true
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
       - coverage/coverage-summary.json
 
 # build (dist/ and storybook-static/ are the same files on either machine), fix proof (one test against the base), and

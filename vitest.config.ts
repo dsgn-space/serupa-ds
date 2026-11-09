@@ -121,7 +121,9 @@ export default defineConfig({
       reportsDirectory: 'coverage',
       // Floors a little under the full run's figures on 25 Oct 2026 (96.2 / 88.6 / 98.9 / 99.6 %), so a change
       // that drops coverage fails. Raise them by hand when the figures climb; they never go down.
-      thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 },
+      // A CI shard (SERUPA_SHARD) runs a third of the files, so its own figures mean nothing: the floors are checked on
+      // the shards' merged report (the coverage job, vitest --merge-reports).
+      ...(process.env.SERUPA_SHARD ? {} : { thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 } }),
     },
   },
 });
