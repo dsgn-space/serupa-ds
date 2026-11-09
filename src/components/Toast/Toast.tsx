@@ -156,6 +156,10 @@ export interface ToastUndoOptions extends Omit<ToastOptions, 'action' | 'autoDis
    Either runs once. */
 function undo(options: ToastUndoOptions): string {
   const { commit, onUndo, undoLabel, ...rest } = options;
+  // A new undo toast with the id of one still open replaces it: the first one's action is done for good now, as its
+  // Undo is gone, rather than lost.
+  const prev = rest.id != null ? page.onClose.get(rest.id) : undefined;
+  if (prev) { page.onClose.delete(rest.id!); prev(); }
   let settled = false;
   // Leaving commits, since the page may never come back. If it does come back from the back/forward cache, the
   // toast is still there but its Undo can no longer undo anything, so it goes (FEC5).
@@ -171,7 +175,21 @@ function undo(options: ToastUndoOptions): string {
   const id = show(Object.assign({}, rest, { action: { label: undoLabel || page.undoWord || ownWords.undo, onClick: back }, autoDismiss: true }));
   page.onClose.set(id, keep);
   window.addEventListener('pagehide', left);
+  unseen();
   return id;
+}
+/* An undo toast that no Toaster shows (none is mounted, or the last one unmounted, as a page's own does when it's
+   left) can never be undone: its action is done for good, a moment later, so a Toaster mounting in the same commit
+   (or React's development remount) still takes it. Warns in development. */
+// module state: the browser's one pending check of the toast queue above; toast() runs in event handlers, not on a server.
+let unseenTimer: ReturnType<typeof setTimeout> | undefined;
+function unseen() {
+  clearTimeout(unseenTimer);
+  unseenTimer = setTimeout(() => {
+    if (page.listeners.size || !page.onClose.size) return;
+    if (process.env.NODE_ENV !== 'production') warnOnce('toast-undo-no-toaster', "toast.undo: no Toaster is mounted, so its Undo can't be seen and the action was done for good. Render one Toaster, once, near the root.");
+    for (const id of [...page.onClose.keys()]) dismiss(id);
+  }, 0);
 }
 /** Shows a toast in the page's <Toaster> and returns its id; toast.dismiss(id) closes it, toast.promise(p, { loading, success, error }) follows a promise, and toast.undo({ title, commit, onUndo }) does an action for good only if Undo isn't chosen. */
 export const toast = /* @__PURE__ */ Object.assign(show, { dismiss, promise, undo });
@@ -221,7 +239,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     arriving.current = true;
     page.listeners.add(take); emit();
     void Promise.resolve().then(() => { arriving.current = false; });
-    return () => { page.listeners.delete(take); emit(); };
+    return () => { page.listeners.delete(take); emit(); unseen(); };
   }, []);
   const pos = oneOf(POSITIONS, position, 'bottom-end');
   // The F8 hint is set once the Toaster is in the page, not while rendering, and goes with it: with no Toaster, F8

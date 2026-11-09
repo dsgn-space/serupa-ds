@@ -614,6 +614,32 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
     expect(new Set(ids).size).toBe(4);   // each its own toast, not a count on one
   });
 
+  test('toast.undo with the id of one still open: the first one\'s action is done for good then, not lost', async () => {
+    await render(<Toaster />);
+    const log: string[] = [];
+    React.act(() => { toast.undo({ id: 'trash', title: 'Report moved to trash', commit: () => log.push('commit report'), onUndo: () => log.push('undo report') }); });
+    React.act(() => { toast.undo({ id: 'trash', title: 'Invoice moved to trash', commit: () => log.push('commit invoice'), onUndo: () => log.push('undo invoice') }); });
+    expect([log, toasts().length]).toEqual([['commit report'], 1]);
+    undoButton(toasts()[0]).click();
+    expect(log).toEqual(['commit report', 'undo invoice']);
+  });
+
+  test('toast.undo with no Toaster to show it, or once its Toaster unmounts, does the action for good and warns once', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const log: string[] = [];
+      toast.undo({ title: 'Report moved to trash', commit: () => log.push('commit alone'), onUndo: () => log.push('undo alone') });
+      await expect.poll(() => log).toEqual(['commit alone']);
+      const { unmount } = await render(<Toaster />);
+      React.act(() => { toast.undo({ title: 'Invoice moved to trash', commit: () => log.push('commit left'), onUndo: () => log.push('undo left') }); });
+      await new Promise((r) => setTimeout(r, 20));
+      expect(log).toEqual(['commit alone']);   // shown: still undoable
+      await unmount();
+      await expect.poll(() => log).toEqual(['commit alone', 'commit left']);
+      expect(warn.mock.calls.filter((c) => String(c[0]).includes('no Toaster is mounted')).length).toBe(1);
+    } finally { warn.mockRestore(); }
+  });
+
   test('FEC5: toast.undo commits when the page is left, and a page brought back from the back/forward cache drops the toast, whose Undo can no longer undo', async () => {
     await render(<Toaster />);
     const log: string[] = [];
