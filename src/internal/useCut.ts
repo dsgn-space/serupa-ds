@@ -7,6 +7,8 @@ import { useIsoLayoutEffect } from './cn';
    size, which a ResizeObserver doesn't see.
    Every label shares one ResizeObserver and one font listener (GR242: one of each per Button, Badge and SidebarItem
    was thousands on a busy page), made on first use. */
+// module state: browser only. Labels are watched from a layout effect, which a server render never runs, so a
+// request never adds to or reads these.
 const checks = new Map<Element, () => void>();
 let ro: ResizeObserver | null | undefined;
 let fontsHeard = false;
