@@ -472,6 +472,21 @@ describe('Sidebar', () => {
     expect([low, n]).toEqual([[], 12]);
   });
 
+  test('focus ring on the current page keeps 3:1 against both sides in all six themes: a surface gap inside it, not the highlight fill', async () => {
+    await render(<App />);
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
+    await tabTo(el('ihome'));
+    const low: string[] = []; let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const s = css(el('ihome')), gap = /rgba?\([^)]*\)/.exec(s.boxShadow)?.[0] ?? s.backgroundColor;
+      for (const [name, on] of [['outside', css(el('sb')).backgroundColor], ['inside', gap]]) { const r = contrast(s.outlineColor, on); n++; if (r < 3) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    still.remove();
+    expect([low, n]).toEqual([[], 12]);
+  });
+
   test('pressed: an item held down fills with pressed, one step past hover', async () => {
     await render(<App />);
     const i = el('iinbox');
