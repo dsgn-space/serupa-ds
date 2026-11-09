@@ -90,6 +90,25 @@ describe('TableOfContents', () => {
     await expect.poll(() => links().length).toBe(3);
   });
 
+  test('headings in a pane that scrolls on its own: the current section follows the pane, and its foot marks the last (GR303)', async () => {
+    await render(
+      <div>
+        <div id="pane" style={{ height: '300px', overflow: 'auto' }}>
+          <h2 id="p1">One</h2><p style={{ height: '600px' }}>…</p>
+          <h2 id="p2">Two</h2><p style={{ height: '600px' }}>…</p>
+          <h2 id="p3">Three</h2><p style={{ height: '100px' }}>…</p>
+        </div>
+        <TableOfContents id="toc" container="#pane" offset={20} />
+      </div>,
+    );
+    const pane = document.getElementById('pane')!;
+    await expect.poll(current).toBe('One');
+    pane.scrollTop = document.getElementById('p2')!.offsetTop - pane.offsetTop;
+    await expect.poll(current).toBe('Two');
+    pane.scrollTop = pane.scrollHeight;
+    await expect.poll(current).toBe('Three');
+  });
+
   test('items instead of headings; title null leaves out the title', async () => {
     await render(<TableOfContents id="toc" title={null} aria-label="Sections" items={[{ id: 'x', label: 'One' }, { id: 'y', label: 'Two', level: 3 }]} />);
     await expect.element(page.getByRole('navigation', { name: 'Sections' })).toBeVisible();

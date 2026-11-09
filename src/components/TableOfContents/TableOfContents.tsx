@@ -96,28 +96,39 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     if (!ids) return;
     const list = ids.split('\n');
     let frame = 0;
+    // The box the headings scroll in: the page, or a pane of its own (overflow auto or scroll) around them.
+    const scroller = (): HTMLElement | null => {
+      for (let e = document.getElementById(list[0])?.parentElement; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
+        const o = getComputedStyle(e).overflowY;
+        if ((o === 'auto' || o === 'scroll' || o === 'overlay') && e.scrollHeight > e.clientHeight) return e;
+      }
+      return null;
+    };
     const update = () => {
       frame = 0;
       if (Date.now() < pinned.current) return;
+      const pane = scroller(), top = pane ? pane.getBoundingClientRect().top : 0;
       let at: string | null = null;
       for (const id of list) {
         const h = document.getElementById(id);
         if (!h) continue;
-        if (h.getBoundingClientRect().top - offset <= 1 || at == null) at = id;
+        if (h.getBoundingClientRect().top - top - offset <= 1 || at == null) at = id;
         else break;
       }
       // At the very bottom, the last section is current even when its heading can't reach the line.
-      const doc = document.documentElement;
-      if (window.innerHeight + window.scrollY >= doc.scrollHeight - 2) { const last = list[list.length - 1]; if (last && document.getElementById(last)) at = last; }
+      const bottom = pane ? pane.scrollTop + pane.clientHeight >= pane.scrollHeight - 2 : window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (bottom) { const last = list[list.length - 1]; if (last && document.getElementById(last)) at = last; }
       setCurrent(at);
     };
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     const onEnd = () => { pinned.current = 0; };
     update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('scrollend', onEnd);
+    // Scroll doesn't bubble, but it reaches the document while capturing: the page's scroll and a pane's alike.
+    const opts = { capture: true, passive: true } as const;
+    document.addEventListener('scroll', onScroll, opts);
+    document.addEventListener('scrollend', onEnd, { capture: true });
     window.addEventListener('resize', onScroll);
-    return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('scrollend', onEnd); window.removeEventListener('resize', onScroll); if (frame) cancelAnimationFrame(frame); };
+    return () => { document.removeEventListener('scroll', onScroll, opts); document.removeEventListener('scrollend', onEnd, { capture: true }); window.removeEventListener('resize', onScroll); if (frame) cancelAnimationFrame(frame); };
   }, [ids, offset]);
 
   const go = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {

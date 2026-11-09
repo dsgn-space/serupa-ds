@@ -53,10 +53,10 @@ Drawn from the `Playground` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `items` | `TocItem[]` | | `{ id, label, level? }`: your own entries instead of the headings |
-| `container` | `Element \| string` | `<main>`, else `<body>` | Where to read the headings from |
+| `container` | `Element \| string` | `<main>`, else `<body>` | Where to read the headings from. They may scroll with the page or in a pane of their own (`overflow: auto`). |
 | `headings` | `string` | `"h2, h3"` | Which headings it lists |
 | `title` | `ReactNode \| null` | "On this page" | The title and the landmark's name; `null` for none |
-| `offset` | `number` | `96` | How far from the top of the window, in pixels, a heading counts as reached |
+| `offset` | `number` | `96` | How far from the top of the window (or of the pane the headings scroll in), in pixels, a heading counts as reached |
 | `id` | `string` | | Goes to the `<nav>`. |
 
 `className`, `ref` and other props go to the `<nav>`.
