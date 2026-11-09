@@ -122,7 +122,8 @@ export const Field = /* @__PURE__ */ named('Field', function Field(props: FieldP
     return React.cloneElement(el, add);
   };
   if (process.env.NODE_ENV !== 'production' && props.layout != null) warnOnce('field-layout', 'Field: layout is deprecated and removed in 15.0.0. Use orientation, which does the same.');
-  const horizontal = !group && (props.orientation ?? props.layout) === 'horizontal';
+  // Each prop compared on its own, so tools/test/prop-values.mjs reads 'vertical' as the default of both.
+  const horizontal = !group && (props.orientation === 'horizontal' || (props.orientation == null && props.layout === 'horizontal'));
   const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', props.disabled && 'dk-field--disabled', props.className);
   if (group) {
     return (
