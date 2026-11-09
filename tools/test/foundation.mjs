@@ -161,7 +161,7 @@ for (const [, prop, val] of comp.matchAll(/([a-z-]+)\s*:\s*([^;{}]+);/g)) {
 check('components: Button and Icon use only tokens', !bad.size, [...bad].sort().slice(0, 10).join('; '));
 
 // 6. self-contained (a link the console warnings print isn't something the page loads: internal/warn.ts)
-const LINKS = ['https://github.com/diki-stwn/serupa-ds/blob/main/docs/warnings.md#'];
+const LINKS = ['https://gitlab.com/diki-stwn/serupa-ds/-/blob/main/docs/warnings.md#'];
 let extra = '';
 for (const f of ['src/styles/base.css', 'src/theme.js']) if (fs.existsSync(path.join(P, f))) extra += read(f);
 const ext = [...(cssRaw + js + extra).matchAll(/(?:https?:)?\/\/[a-z0-9.-]+\.[a-z]{2,}\/[^\s"')]*/g)].map((m) => m[0]).filter((u) => !u.startsWith('//') && !LINKS.some((l) => u.startsWith(l)));
