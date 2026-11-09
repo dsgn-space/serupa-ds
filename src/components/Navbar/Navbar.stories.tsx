@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Navbar, NavbarLink } from './Navbar';
+import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
 import { Button } from '../Button/Button';
 import { Avatar } from '../Avatar/Avatar';
 
@@ -14,7 +14,7 @@ const links = [
 const meta = {
   title: 'Components/Navigation/Navbar',
   component: Navbar,
-  subcomponents: { NavbarLink },
+  subcomponents: { NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink },
   parameters: { layout: 'fullscreen' },
   args: {
     brand: <a href="#" className="text-base font-semibold text-text no-underline">Acme</a>,
@@ -45,3 +45,25 @@ export const Sizes: Story = {
     {(['prose', 'md', 'lg', 'xl', '2xl', 'full'] as const).map((size) => <Navbar key={size} {...args} size={size} aria-label={`Main, ${size}`} brand={<a href="#" className="text-base font-semibold text-text no-underline">size="{size}"</a>} />)}
   </div>,
 };
+
+// Dropdown panels (a mega menu): a nav item opens grouped links, each with a line saying what's there.
+const menus = [
+  <NavbarLink key="d" href="#m1" active>Dashboard</NavbarLink>,
+  <NavbarMenu key="p" label="Products">
+    <NavbarMenuGroup title="Analytics">
+      <NavbarMenuLink href="#m2" description="Charts and reports for your team">Dashboards</NavbarMenuLink>
+      <NavbarMenuLink href="#m3" description="Get told when a number moves">Alerts</NavbarMenuLink>
+    </NavbarMenuGroup>
+    <NavbarMenuGroup title="Payments">
+      <NavbarMenuLink href="#m4" description="Invoices, plans and receipts">Billing</NavbarMenuLink>
+      <NavbarMenuLink href="#m5" description="Card, bank transfer and QRIS">Checkout</NavbarMenuLink>
+    </NavbarMenuGroup>
+  </NavbarMenu>,
+  <NavbarMenu key="r" label="Resources">
+    <NavbarMenuLink href="#m6">Docs</NavbarMenuLink>
+    <NavbarMenuLink href="#m7">Blog</NavbarMenuLink>
+  </NavbarMenu>,
+  <NavbarLink key="t" href="#m8">Team</NavbarLink>,
+];
+export const Menus: Story = { args: { children: menus }, render: (args) => <div style={{ minHeight: 320 }}><Navbar {...args} /></div> };
+export const MenusSmallScreen: Story = { name: 'Menus, small screen', args: { children: menus }, render: (args) => <div style={{ maxWidth: 375, minHeight: 280 }}><Navbar {...args} /></div> };
