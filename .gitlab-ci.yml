@@ -14,7 +14,8 @@
 #   ubuntu-24.04 runners had them), and tools/setup.mjs adds the Node major devEngines asks for and the Chromium
 #   revision this Playwright pins. The image's own Node and browsers are only a starting point.
 # - build makes dist/ and storybook-static/ once; the test jobs take them as artifacts.
-# - The suite's groups run in parallel: checks in three shards, visual and storybook in four each (SERUPA_SHARD).
+# - The suite's groups run in parallel: checks, visual and storybook in three shards each (SERUPA_SHARD). Three, not more: GitLab counts
+#   every job against the project's 500 in flight, and three keeps each shard within the component tests' 7 minutes.
 # - Results are kept (.result-cache): a job that passed on the same tree, against the same base, passes again at
 #   once without running. The same commit's next pipeline (a label, a description, auto-merge) costs seconds.
 # - Nightly: the pipeline schedule on main (Build > Pipeline schedules, 02:00 Jakarta) runs the whole suite
@@ -274,7 +275,7 @@ suite:
       - GROUP: components
         SERUPA_PART: [base, locale]
       - GROUP: visual
-        SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
+        SERUPA_SHARD: [1/3, 2/3, 3/3]
   variables:
     SERUPA_COVERAGE: ""
   script:
@@ -304,7 +305,7 @@ suite portable:
       - GROUP: checks
         SERUPA_SHARD: [1/3, 2/3, 3/3]
       - GROUP: storybook
-        SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
+        SERUPA_SHARD: [1/3, 2/3, 3/3]
 
 # The package installed into an empty project on the oldest Node package.json allows, and the one between
 # (tools/test/consumer.mjs). No npm ci: the repo's dependencies ask for Node 26, and the check needs only Node and dist/.
