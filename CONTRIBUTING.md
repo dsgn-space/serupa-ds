@@ -132,6 +132,37 @@ Every component names the same things the same way, so learning one teaches the 
 
 `node tools/test/props.mjs` checks the callbacks: a component's own `on…Change` names a prop it has, and only a native wrapper has a plain `onChange`. The known exceptions are listed in it with their reasons.
 
+### API naming table
+
+One idea has one name in every component. A new prop takes the name in the first column, and an older prop that says it another way gets that name as an alias in a minor (the old name `@deprecated`, with a development warning) and loses the old one in the next scheduled major.
+
+| Idea | Name | Not |
+| --- | --- | --- |
+| A composite's value | `value`, `defaultValue`, `onValueChange(value, details?)` | `onChange` (only a native wrapper keeps it), `onSelect` for a value |
+| An overlay's open state | `open`, `defaultOpen`, `onOpenChange(open, details?)` | `visible`, `show`, `isOpen` |
+| Which way parts run | `orientation`: `'horizontal' \| 'vertical'` | `direction`, `layout` |
+| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'` | `position`, `side` alone |
+| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color |
+| The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
+| Busy while something runs | `loading` | `pending`, `busy` |
+| The wait before an overlay opens or closes | `openDelay`, `closeDelay` (ms) | `delay`, `showDelay` |
+| Turning a part off | `hideX` (a part on by default may also take `x={false}`) | `noX`, `xHidden`, `disableX` |
+| Can't be used | `disabled` (and `disabledReason`) | `enabled`, `inactive` |
+| Size of a control | `size`: `'sm' \| 'md' \| 'lg'` | `small`, `compact` |
+
+A value named `default` in a prop's union means the prop's default: `tone="default"` must be what you get with no `tone`. A name that reads like one in the "Not" column but means something else stays, with why, in `NAME_KEPT` in `tools/test/props.mjs`: Stack's `direction` is the CSS `flex-direction` it sets, and Loader's `delay` is how long a load runs before the spinner shows.
+
+`node tools/test/props.mjs` holds every prop to the orientation, placement, loading and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+
+## Release cadence and support
+
+Breaking changes come together, on a schedule, so a project upgrades once rather than every few days (GR247).
+
+- **One scheduled major.** Every breaking changeset (`"serupa-ds": major`) waits for the next scheduled major, 15.0.0, and adds its section to [docs/rfcs/15.0.0.md](docs/rfcs/15.0.0.md) in the same merge request. Fixes and new features keep shipping as minors and patches in the meantime.
+- **A deprecation lives at least four weeks.** A name is deprecated in a minor (it keeps working, with a development warning and `removed in N.0.0`), and a major may remove it only 28 days or more after the release that deprecated it. `node tools/test/deprecations.mjs` fails a pending major changeset that removes a name sooner, and says from which date it may.
+- **The previous major gets fixes for four weeks.** For 28 days after a major ships, bug fixes and security fixes also go out as patches of the major before it (14.x after 15.0.0), from a `14.x` branch. New features go only into the new major.
+- **Deprecate before you rename.** A renamed prop, class or token keeps its old name as a deprecated alias for at least those four weeks (see the [API naming table](#api-naming-table)). The major then only removes.
+
 ## Pull requests
 
 Keep one change per pull request; several small fixes to the same component can share one. CI on a pull request tests only what the change can affect, and the first failing job stops the run. If two pull requests change the same file, the second merges `main` before it can merge, so pick work that doesn't overlap.

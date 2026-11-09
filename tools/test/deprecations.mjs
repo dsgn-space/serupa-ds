@@ -3,7 +3,8 @@
 // @deprecated JSDoc in src/, each deprecation warning (a warnOnce whose message says "deprecated") and each
 // $deprecated token says "removed in N.0.0", and this fails when one has no N, or when the major the next release
 // ships as has reached N, so a major can't ship with an expired deprecation. A deprecated prop or warning also needs
-// its warnings.md section and a line in CHANGELOG.md or a pending changeset that names it.
+// its warnings.md section and a line in CHANGELOG.md or a pending changeset that names it. And a major can't remove
+// a name sooner than four weeks after the release that deprecated it (GR247).
 //   node tools/test/deprecations.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -77,6 +78,45 @@ for (const f of tokenFiles) {
     for (const [k, v] of Object.entries(node)) if (!k.startsWith('$')) visit(v, [...trail, v && v.name ? v.name : k]);
   };
   visit(JSON.parse(read(f)), []);
+}
+
+// GR247: a deprecation lives at least four weeks before a major removes it (CONTRIBUTING.md, Release cadence). For
+// each name a pending major changeset removes (a line that says "Removed" and names it in backticks) that was ever
+// deprecated, the latest release that deprecated it, found in CHANGELOG.md on a line that says "deprecated" and names it, came
+// out at least 28 days ago. A name deprecated only in a pending changeset hasn't been released at all. A name never
+// deprecated is a breaking change of its own, which the RFC covers (upgrades.mjs).
+export const WINDOW_DAYS = 28;
+const releasesOf = (changelog) => [...changelog.matchAll(/^## \[(\d+\.\d+\.\d+)\] - (\d{4}-\d{2}-\d{2})\s*$([\s\S]*?)(?=^## \[|(?![\s\S]))/gm)].map((m) => ({ version: m[1], date: m[2], text: m[3] }));
+const mentions = (text, name) => text.split('\n').some((line) => /deprecat/i.test(line) && line.includes('`' + name + '`'));
+/** The latest release that deprecated `name`: { version, date }, or null. The latest, since two components can
+    deprecate the same name (RadioGroup's onChange in 9.2.0, OfflineBanner's in 14.2.0), and the newer one decides. */
+export const deprecatedIn = (name, changelog) => releasesOf(changelog).filter((r) => mentions(r.text, name)).sort((a, b) => b.date.localeCompare(a.date))[0] || null;
+/** Whether a major released on `today` may remove `name`: '' if so, else why not. `pending` is the unreleased changesets' text. */
+export const tooSoon = (name, changelog, pending, today) => {
+  const r = deprecatedIn(name, changelog);
+  if (!r) return mentions(pending, name) ? `\`${name}\` is deprecated only in a pending changeset: release the deprecation first, and remove it ${WINDOW_DAYS} days later` : '';
+  const days = Math.floor((Date.parse(today) - Date.parse(r.date)) / 864e5);
+  return days >= WINDOW_DAYS ? '' : `\`${name}\` was deprecated in ${r.version} on ${r.date}, ${days} days ago: it can go in a major from ${new Date(Date.parse(r.date) + WINDOW_DAYS * 864e5).toISOString().slice(0, 10)}`;
+};
+{
+  const log = '## [Unreleased]\n\n## [14.2.0] - 2026-11-07\n\n- Deprecated: `onChange`. Use `onOnlineChange`.\n\n## [13.0.0] - 2026-10-01\n\n- Deprecated: `noTitle`.\n- Deprecated (RadioGroup): `onChange`.\n';
+  t('the deprecation window: finds the release that deprecated a name, and holds a removal to 28 days after it',
+    deprecatedIn('onChange', log)?.version === '14.2.0' && deprecatedIn('noTitle', log)?.date === '2026-10-01' && deprecatedIn('hideTitle', log) === null
+    && tooSoon('noTitle', log, '', '2026-11-08') === '' && /from 2026-12-05/.test(tooSoon('onChange', log, '', '2026-11-08'))
+    && tooSoon('onChange', log, '', '2026-12-05') === '' && /only in a pending/.test(tooSoon('size', log, '- Deprecated: `size`.', '2026-11-08'))
+    && tooSoon('hideTitle', log, '', '2026-11-08') === '', 'deprecatedIn and tooSoon');
+}
+const today = process.env.SERUPA_TODAY || new Date().toISOString().slice(0, 10);
+const changelog = read('CHANGELOG.md');
+const pendingText = changesets.map((n) => read(path.join('.changeset', n))).join('\n');
+for (const [n, bump] of bumps) {
+  if (bump !== 'major') continue;
+  for (const line of read(path.join('.changeset', n)).split('\n').filter((l) => /\bRemoved\b/.test(l))) {
+    for (const [, name] of line.matchAll(/`([\w.-]+)`/g)) {
+      const why = tooSoon(name, changelog, pendingText, today);
+      if (deprecatedIn(name, changelog) || why) t(`.changeset/${n}: \`${name}\` was deprecated at least ${WINDOW_DAYS} days before this major removes it`, !why, why);
+    }
+  }
 }
 
 done(report('Deprecations', R));
