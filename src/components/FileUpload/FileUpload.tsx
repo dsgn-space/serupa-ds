@@ -8,6 +8,8 @@ import { Progress } from '../Progress/Progress';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { formatFileSize } from './formatFileSize';
+import { attachmentKind } from '../Attachment/attachmentKind';
+import { KIND_ICONS } from '../Attachment/kindIcon';
 import { MiddleCutName } from '../../internal/middleCutName';
 import * as icons from '../../material/builtin';
 import { useFieldLabel } from '../../internal/fieldLabel';
@@ -106,7 +108,8 @@ function acceptedTypes(accept: string): string[] | null {
   }
   return names.length ? names : null;
 }
-const iconFor = (f: File) => /^image\//.test(f.type) ? icons.Image : f.type === 'application/pdf' ? icons.PictureAsPdf : /^video\//.test(f.type) ? icons.Movie : /^audio\//.test(f.type) ? icons.AudioFile : /zip|compressed|tar/.test(f.type) ? icons.FolderZip : icons.Draft;
+// The same icon Attachment shows for the file's kind (its MIME type, then its extension).
+const iconFor = (f: File) => KIND_ICONS[attachmentKind(f.name, f.type)];
 const same = (a: File, b: File) => a.name === b.name && a.size === b.size && a.type === b.type;   // the same file picked again
 
 // A file's name, cut in the middle when it doesn't fit (internal/middleCutName.tsx).
