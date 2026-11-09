@@ -650,3 +650,18 @@ describe('Button in a flex row at 288px (GR5)', () => {
     }
   });
 });
+
+// GR311: Button drew its spinner with the whole Loader (its other variants, the delay, the announcement): about 1 KiB
+// gzipped more for every project that imports Button. It now draws Loader's ring itself, the same markup.
+describe('loading ring', () => {
+  const SOURCE = import.meta.glob<string>('./Button.tsx', { query: '?raw', import: 'default', eager: true })['./Button.tsx'];
+  test('Button does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <Button id="ring-btn" loading>Save</Button>
+      <div id="ring-loader"><Loader className="dk-btn__spinner" label="" delay={0} /></div>
+    </>);
+    await expect.poll(() => q('#ring-btn .dk-btn__spinner')).toBeTruthy();
+    expect(q('#ring-btn .dk-btn__spinner').outerHTML).toBe(q('#ring-loader .dk-btn__spinner').outerHTML);
+  });
+});
