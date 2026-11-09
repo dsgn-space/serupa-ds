@@ -109,7 +109,7 @@ default:
           *) git rev-parse HEAD^{tree} ;;
         esac
       }
-      export RESULT="$GROUP${SERUPA_SHARD:+-${SERUPA_SHARD%/*}}-$(tree)-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
+      export RESULT="$GROUP${SERUPA_PART:+-$SERUPA_PART}${SERUPA_SHARD:+-${SERUPA_SHARD%/*}}-$(tree)-${CI_MERGE_REQUEST_DIFF_BASE_SHA:-full}"
       mkdir -p .ci-home && echo "$RESULT" > .ci-home/result-key
     - find .result-cache -type f -mtime +14 -delete 2>/dev/null || true
     - |
