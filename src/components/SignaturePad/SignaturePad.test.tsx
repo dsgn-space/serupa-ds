@@ -149,7 +149,7 @@ describe('SignaturePad', () => {
 
   test('on the surface, the how-to text and the ink read 4.5:1, and the box outline and the line 3:1, in all six themes', async () => {
     await render(<SignaturePad id="c" aria-label="Signature" />);
-    const root = el('c'), box = root.querySelector('.dk-signature-pad__box')!, line = root.querySelector('.dk-signature-pad__line')!, ink = root.querySelector('.dk-signature-pad__strokes')!;
+    const root = el('c'), box = area(root).parentElement!, line = box.querySelector('span[aria-hidden]')!, ink = area(root).querySelector('g')!;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(box).backgroundColor;

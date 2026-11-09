@@ -132,7 +132,8 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   useAutoFocus(props.autoFocus, methodStop);
 
   const measure = () => { const b = area.current && area.current.getBoundingClientRect(); return b ? [Math.round(b.width), Math.round(b.height)] as [number, number] : size; };
-  React.useLayoutEffect(() => { setSize(measure()); }, [method]); // eslint-disable-line react-hooks/exhaustive-deps
+  // The box's size, again whenever the method shows the other box.
+  React.useLayoutEffect(() => { const b = area.current && area.current.getBoundingClientRect(); if (b) setSize([Math.round(b.width), Math.round(b.height)]); }, [method]);
 
   const valueOf = (m: SignatureMethod, s: Stroke[], t: string, wh: [number, number]): SignatureValue | null => {
     const w = wh[0] || 600, h = wh[1] || 160, name = t.trim();
@@ -148,6 +149,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const want = controlled ? props.value ?? null : undefined;
   const wantKey = want === undefined ? '' : want ? (want.method === 'type' ? 't:' + want.name.trim() : 'd:' + JSON.stringify(strokesOf(want.svg))) : '-';
   const haveKey = !value ? '-' : value.method === 'type' ? 't:' + value.name : 'd:' + JSON.stringify(strokes);
+  // every render: a value the app didn't take back has to undo, before paint, what the render that showed it drew or typed.
   React.useLayoutEffect(() => {
     if (want !== undefined && !live.current && wantKey !== haveKey) show(want, method);
   });
@@ -235,7 +237,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
             <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} invalid={invalid || undefined}
               value={typed} onChange={(e) => { setTyped(e.target.value); tell('type', strokes, e.target.value, 'type'); }} />
             <div className="dk-signature-pad__box" aria-hidden>
-              <svg ref={area} className="dk-signature-pad__area dk-signature-pad__area--typed">
+              <svg ref={area} className="dk-signature-pad__area dk-signature-pad__area--typed" role="presentation">
                 {typed.trim() ? <text className="dk-signature-pad__typed" x="16" y="68%">{typed.trim()}</text> : null}
               </svg>
               <span className="dk-signature-pad__line" />
