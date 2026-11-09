@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press, settle, withMotion } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { SerupaProvider } from '../../internal/provider';
-import { Table, TableActionBar, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableVirtualBody, type SortDirection } from './Table';
+import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
 const ROWS: Array<[string, string, number]> = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -627,5 +627,223 @@ describe('TableVirtualBody (51)', () => {
     f.scrollTop = 200000;
     await frames(); await frames();
     expect([document.activeElement === link, link.isConnected, drawn().length < 45]).toEqual([true, true, true]);
+  });
+});
+
+describe('Table layout="fixed" (PT4)', () => {
+  const PAGES = [[['Ada', 'Admin'], ['Grace', 'Editor']], [['Maximiliana Wolfeschlegelsteinhausen', 'Viewer'], ['Li', 'Owner of the whole billing and invoicing workspace']]];
+  function Paged(p: { page: number; layout?: 'auto' | 'fixed'; widths?: boolean }) {
+    return <div style={{ width: 480 }}><Table caption="Users" layout={p.layout}>
+      <TableHead><TableRow><TableHeaderCell id="h1" width={p.widths ? '30%' : undefined}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody>{PAGES[p.page].map(([a, b]) => <TableRow key={a}><TableCell>{a}</TableCell><TableCell>{b}</TableCell></TableRow>)}</TableBody>
+    </Table></div>;
+  }
+  const widths = () => [el('h1').getBoundingClientRect().width, el('h2').getBoundingClientRect().width];
+
+  test('with auto layout the columns follow each page\'s content; fixed keeps them the same on both pages, and long text wraps', async () => {
+    const s = await render(<Paged page={0} />);
+    const auto0 = widths();
+    await s.rerender(<Paged page={1} />);
+    expect(widths()).not.toEqual(auto0);
+    await s.rerender(<Paged page={0} layout="fixed" />);
+    const fixed0 = widths();
+    expect(Math.abs(fixed0[0] - fixed0[1])).toBeLessThanOrEqual(1);   // no widths: they share the table
+    await s.rerender(<Paged page={1} layout="fixed" />);
+    expect(widths()).toEqual(fixed0);
+    expect(s.getByText('Owner of the whole billing and invoicing workspace').element().getBoundingClientRect().height).toBeGreaterThan(30);
+  });
+
+  test('a header cell\'s width sets its column, as a CSS length or pixels; the select column stays the checkbox\'s width', async () => {
+    const s = await render(<Paged page={0} layout="fixed" widths />);
+    expect(widths()[0]).toBeCloseTo(480 * 0.3, -1);
+    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell header label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
+    expect(el('h1').style.width).toBe('200px');
+    expect(el('h1').style.color).toBe('red');
+    const box = s.getByRole('checkbox').element().closest('th')!.getBoundingClientRect().width;
+    expect(box).toBeLessThan(48);
+  });
+});
+
+describe('Table column tools (RU10)', () => {
+  function Resizing(p: { onWidthChange?: (w: number) => void; dir?: 'rtl' }) {
+    const [width, setWidth] = React.useState(160);
+    const change = p.onWidthChange ? (n: number) => { setWidth(n); p.onWidthChange!(n); } : undefined;
+    return <div style={{ width: 600 }} dir={p.dir}><Table caption="Users" layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id="h1" resizable width={change ? width : 160} minWidth={80} maxWidth={400} onWidthChange={change}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Maximiliana Wolfeschlegelsteinhausen</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table></div>;
+  }
+  const w = () => el('h1').getBoundingClientRect().width;
+
+  test('a resizable header has a focusable separator named for its column; arrows step 16px, Home and End go to the limits', async () => {
+    const seen: number[] = [];
+    const s = await render(<Resizing onWidthChange={(n) => seen.push(n)} />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    await expect.element(handle).toHaveAttribute('aria-orientation', 'vertical');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '160');
+    await expect.element(handle).toHaveAttribute('aria-valuemin', '80');
+    await expect.element(handle).toHaveAttribute('aria-valuemax', '400');
+    (handle.element() as HTMLElement).focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+    expect(w()).toBeCloseTo(176, 0);
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '144');
+    await userEvent.keyboard('{Home}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '80');
+    await userEvent.keyboard('{End}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '400');
+    expect(seen).toEqual([176, 160, 144, 80, 400]);
+  });
+
+  test('in a right-to-left table ArrowLeft widens the column', async () => {
+    const s = await render(<Resizing dir="rtl" />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    (handle.element() as HTMLElement).focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+  });
+
+  test('dragging the handle changes the width, within the limits; a double-click fits the widest cell on one line', async () => {
+    const s = await render(<Resizing />);
+    const h = s.getByRole('separator').element() as HTMLElement;
+    const r = h.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const fire = (type: string, dx: number) => h.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, button: 0, clientX: x + dx, clientY: y }));
+    fire('pointerdown', 0); fire('pointermove', 50); fire('pointerup', 50);
+    await expect.poll(w).toBeCloseTo(210, 0);
+    fire('pointerdown', 0); fire('pointermove', -500); fire('pointerup', -500);
+    await expect.poll(w).toBeCloseTo(80, 0);
+    await userEvent.dblClick(h);
+    const text = s.getByText('Maximiliana Wolfeschlegelsteinhausen').element() as HTMLElement;
+    await expect.poll(() => text.getBoundingClientRect().height).toBeLessThan(48);   // one line, in the cell's padding
+    expect(w()).toBeGreaterThan(210);
+    expect(w()).toBeLessThan(400);
+  });
+
+  test('a click or Enter on the handle opens Narrower, Wider and Fit, so no width needs a drag (2.5.7, GR296)', async () => {
+    const s = await render(<Resizing />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    const h = handle.element() as HTMLElement;
+    expect(document.getElementById(h.getAttribute('aria-describedby')!)!.textContent).toBe('Press Enter for width buttons');
+    await userEvent.click(h);
+    const dialog = page.getByRole('dialog', { name: 'Resize Name column' });
+    await expect.element(dialog).toBeVisible();
+    await userEvent.click(page.getByRole('button', { name: 'Wider' }));
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+    expect(w()).toBeCloseTo(176, 0);
+    await userEvent.click(page.getByRole('button', { name: 'Narrower' }));
+    await userEvent.click(page.getByRole('button', { name: 'Narrower' }));
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '144');
+    await userEvent.click(page.getByRole('button', { name: 'Fit to content' }));
+    const text = s.getByText('Maximiliana Wolfeschlegelsteinhausen').element() as HTMLElement;
+    await expect.poll(() => text.getBoundingClientRect().height).toBeLessThan(48);
+    expect(w()).toBeLessThan(400);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => document.querySelector('[role=dialog]')!.matches(':popover-open')).toBe(false);
+    expect(document.activeElement).toBe(h);
+    await userEvent.keyboard('{Home}{Enter}');
+    await expect.element(dialog).toBeVisible();
+    await expect.element(page.getByRole('button', { name: 'Narrower' })).toBeDisabled();   // at its 80px least
+  });
+
+  test('the click that ends a drag doesn\'t open the popover; with no width set, the value is the drawn width (GR296)', async () => {
+    const s = await render(<div style={{ width: 600 }}><Table caption="Users" layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id="h1" resizable>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Ada</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table></div>);
+    const h = s.getByRole('separator').element() as HTMLElement;
+    await expect.poll(() => Number(h.getAttribute('aria-valuenow'))).toBeCloseTo(w(), 0);
+    const r = h.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const fire = (type: string, dx: number) => h.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, button: 0, clientX: x + dx, clientY: y }));
+    fire('pointerdown', 0); fire('pointermove', 40); fire('pointerup', 40);
+    h.click();
+    await settle();
+    expect(document.querySelector('[role=dialog]')!.matches(':popover-open')).toBe(false);
+  });
+
+  function Wide(p: { pin?: boolean }) {
+    return <div style={{ width: 300 }}><Table id="tw" caption="Wide" layout="fixed" pinStart={p.pin} pinEnd={p.pin}>
+      <TableHead><TableRow><TableHeaderCell width={100}>Name</TableHeaderCell><TableHeaderCell width={200}>A</TableHeaderCell><TableHeaderCell width={200}>B</TableHeaderCell><TableHeaderCell width={80}>Act</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="first">Ada</TableCell><TableCell>a</TableCell><TableCell>b</TableCell><TableCell id="last">Edit</TableCell></TableRow></TableBody>
+    </Table></div>;
+  }
+  test('pinStart and pinEnd keep the first and last columns in view while the rest scroll sideways', async () => {
+    const s = await render(<Wide />);
+    const frame = el('tw').parentElement as HTMLElement;   // the scrolling frame around the <table>
+    const at = () => [el('first').getBoundingClientRect().left, el('last').getBoundingClientRect().right];
+    const before = at();
+    frame.scrollLeft = 120;
+    await settle();
+    expect(at()[0]).toBeLessThan(before[0] - 100);   // unpinned: it scrolls away
+    await s.rerender(<Wide pin />);
+    frame.scrollLeft = 0;
+    await settle();
+    const start = at(), box = frame.getBoundingClientRect();
+    expect(start[1]).toBeLessThanOrEqual(box.right);   // the last column sits at the frame's end
+    frame.scrollLeft = 120;
+    await settle();
+    expect(at()[0]).toBeCloseTo(start[0], 0);
+    expect(at()[1]).toBeCloseTo(start[1], 0);
+  });
+
+  test('TableColumnsMenu: a checkbox per column; a required column and the last one shown can\'t be cleared', async () => {
+    const seen: { id: string; visible: boolean }[] = [];
+    function Menu() {
+      const [cols, set] = React.useState<TableColumnOption[]>([{ id: 'name', label: 'Name', visible: true, required: true }, { id: 'role', label: 'Role', visible: true }, { id: 'calls', label: 'Calls', visible: false }]);
+      return <TableColumnsMenu columns={cols} onColumnsChange={(next, d) => { seen.push(d); set(next); }} />;
+    }
+    const s = await render(<Menu />);
+    await s.getByRole('button', { name: 'Columns' }).click();
+    const dialog = s.getByRole('dialog', { name: 'Columns' });
+    await expect.element(dialog).toBeVisible();
+    await expect.element(s.getByRole('checkbox', { name: 'Name' })).toBeChecked();
+    await expect.element(s.getByRole('checkbox', { name: 'Name' })).toBeDisabled();
+    await expect.element(s.getByRole('checkbox', { name: 'Calls' })).not.toBeChecked();
+    await s.getByRole('checkbox', { name: 'Calls' }).click();
+    await expect.element(s.getByRole('checkbox', { name: 'Calls' })).toBeChecked();
+    expect(seen).toEqual([{ id: 'calls', visible: true }]);   // and the list came back with Calls shown
+    // Without a required column, the last one shown can't be cleared.
+    await s.rerender(<TableColumnsMenu columns={[{ id: 'a', label: 'A', visible: true }, { id: 'b', label: 'B', visible: false }]} onColumnsChange={() => {}} />);
+    await s.getByRole('button', { name: 'Columns' }).click();
+    await expect.element(s.getByRole('checkbox', { name: 'A' })).toBeDisabled();
+    await expect.element(s.getByRole('checkbox', { name: 'B' })).toBeEnabled();
+  });
+
+  function Expanding(p: { striped?: boolean }) {
+    const [open, setOpen] = React.useState<Record<string, boolean>>({});
+    return <Table caption="Orders" striped={p.striped}>
+      <TableHead><TableRow><TableExpandCell header /><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
+      <TableBody>{['1', '2', '3'].map((n) => <React.Fragment key={n}>
+        <TableRow data-row={n}><TableExpandCell label={'Order ' + n} expanded={!!open[n]} controls={'d' + n} onExpandedChange={(v) => setOpen({ ...open, [n]: v })} /><TableCell>Order {n}</TableCell></TableRow>
+        <TableDetailRow id={'d' + n} open={!!open[n]} colSpan={2}>Notes for {n}</TableDetailRow>
+      </React.Fragment>)}</TableBody>
+    </Table>;
+  }
+  test('TableExpandCell: a button per row named for it, with aria-expanded and aria-controls; it shows the row\'s details', async () => {
+    const s = await render(<Expanding />);
+    await expect.element(s.getByRole('columnheader', { name: 'Details' })).toBeInTheDocument();
+    const b = s.getByRole('button', { name: 'Details, Order 2' });
+    await expect.element(b).toHaveAttribute('aria-expanded', 'false');
+    await expect.element(b).toHaveAttribute('aria-controls', 'd2');
+    await expect.element(s.getByText('Notes for 2')).not.toBeVisible();
+    await b.click();
+    await expect.element(b).toHaveAttribute('aria-expanded', 'true');
+    await expect.element(s.getByText('Notes for 2')).toBeVisible();
+    expect(el('d2').querySelector('td')!.colSpan).toBe(2);
+  });
+
+  test('striped shades every other data row, whether or not detail rows sit between them', async () => {
+    const s = await render(<Expanding striped />);
+    const shade = () => ['1', '2', '3'].map((n) => getComputedStyle(q('[data-row="' + n + '"]')).backgroundColor !== NONE);
+    expect(shade()).toEqual([false, true, false]);
+    await s.getByRole('button', { name: 'Details, Order 1' }).click();
+    expect(shade()).toEqual([false, true, false]);
+  });
+
+  test('Indonesian labels', async () => {
+    const s = await render(<SerupaProvider labels={idLabels}><Resizing /><Expanding /></SerupaProvider>);
+    await expect.element(s.getByRole('separator', { name: 'Ubah lebar kolom Name' })).toBeInTheDocument();
+    await expect.element(s.getByRole('button', { name: 'Rincian Order 1' })).toBeInTheDocument();
+    await expect.element(s.getByRole('columnheader', { name: 'Rincian' })).toBeInTheDocument();
   });
 });
