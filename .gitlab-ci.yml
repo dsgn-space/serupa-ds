@@ -48,8 +48,8 @@ variables:
   # is built from), not only what it changes: what a narrowed run leaves out is found before the merge, not after.
   # Set to "" to narrow again when there are fewer runners (the IBM burst runner gives 14 slots until its credit ends).
   SERUPA_WIDE: "1"
-  # The cross-browser job's groups (below): checks, components, storybook.
-  SERUPA_CROSS_GROUPS: checks components storybook
+  # The cross-browser job's groups (below): checks, components, storybook, visual.
+  SERUPA_CROSS_GROUPS: checks components storybook visual
   # The Chromium the baselines are drawn with: Chrome for Testing at the version browsers.json names, which
   # tools/setup.mjs installs. The image's own /ms-playwright holds a later patch of that revision (156.0.8078.80
   # for .4), which tools/test/visual.mjs refuses. Kept in the cache, so it downloads once.
@@ -379,7 +379,7 @@ frameworks:
 # slots from every lane's merge requests, so it never runs on its own: a pipeline started through the API (POST
 # /projects/:id/pipeline, which a token with "Pipeline create" can do) or by a schedule runs build and this, nothing
 # else; one started by hand from Build > Pipelines > Run pipeline runs it with SERUPA_CROSS=1. SERUPA_CROSS_GROUPS
-# picks the groups (default: all three).
+# picks the groups (default: all four).
 cross-browser:
   stage: test
   tags: [x86]
@@ -396,7 +396,7 @@ cross-browser:
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "components" && $SERUPA_CROSS_GROUPS =~ /components/
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "storybook" && $SERUPA_CROSS_GROUPS =~ /storybook/
     # Visual in Firefox and WebKit: each story at rest in blue-light and on the other axes, against
-    # tools/test/baseline-visual-<browser>/ (visual.mjs). Not in the default groups until those baselines are committed.
+    # tools/test/baseline-visual-<browser>/ (visual.mjs), in the default groups since those baselines are committed.
     # SERUPA_VISUAL_UPDATE=1 (with SERUPA_CROSS=1 and SERUPA_CROSS_GROUPS=visual, from Run pipeline) draws them instead,
     # into the job's artifacts, to review and commit.
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "visual" && $SERUPA_CROSS_GROUPS =~ /visual/
