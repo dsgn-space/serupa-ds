@@ -106,6 +106,13 @@ if (arg('--group')) {
   if (!steps.some((step) => step[3] === g)) { console.error(`Unknown --group "${g}" (checks, components, visual or storybook)`); process.exit(2); }
   steps.splice(0, steps.length, ...steps.filter((step) => step[3] === g));
 }
+// SERUPA_PART splits the components group into two CI jobs that run side by side: "locale" keeps only the runs in
+// another language (the steps with a SERUPA_LOCALE), "base" everything else. Run alone, either does half the work.
+if (process.env.SERUPA_PART) {
+  const part = process.env.SERUPA_PART;
+  if (!['base', 'locale'].includes(part)) { console.error(`Unknown SERUPA_PART "${part}" (base or locale)`); process.exit(2); }
+  steps.splice(0, steps.length, ...steps.filter((step) => Boolean(step[4]?.SERUPA_LOCALE) === (part === 'locale')));
+}
 // No component changed (a changeset alone): nothing for the component, visual or Storybook steps to cover.
 // A changed shared test still runs, in the component steps, with nothing else there.
 if (only && !only.size) steps.splice(0, steps.length, ...steps.filter((step) => step[3] === 'checks' || (sharedTests.length && step[3] === 'components')));

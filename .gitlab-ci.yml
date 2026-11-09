@@ -269,17 +269,20 @@ suite:
   tags: [x86]
   parallel:
     matrix:
+      # The component tests and their second run in another language, side by side (SERUPA_PART, run.mjs): about
+      # 7 minutes each rather than 13 in one job.
       - GROUP: components
+        SERUPA_PART: [base, locale]
       - GROUP: visual
         SERUPA_SHARD: [1/4, 2/4, 3/4, 4/4]
   variables:
     SERUPA_COVERAGE: ""
   script:
-    - if [ "$GROUP" = components ]; then export SERUPA_COVERAGE=1; fi
+    - if [ "$GROUP" = components ] && [ "$SERUPA_PART" != locale ]; then export SERUPA_COVERAGE=1; fi
     - set -o pipefail
     - node tools/test/run.mjs --group "$GROUP" ${SINCE:+--since "$SINCE"} 2>&1 | tee test-output.txt
   after_script:
-    - if [ "$GROUP" = components ]; then node tools/test/vitest/coverage-summary.mjs || true; fi
+    - if [ "$GROUP" = components ] && [ "$SERUPA_PART" != locale ]; then node tools/test/vitest/coverage-summary.mjs || true; fi
     - !reference [.result-cache, record]
   artifacts:
     when: on_failure
