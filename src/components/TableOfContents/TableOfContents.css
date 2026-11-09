@@ -10,7 +10,6 @@
 .dk-toc__link {
   display: flex; align-items: center; min-block-size: var(--spacing-7); padding-block: var(--spacing-1); padding-inline: calc(var(--spacing-3) + var(--spacing-3) * var(--dk-toc-depth, 0)) var(--spacing-2);
   border-inline-start: var(--border-width-2) solid var(--table-of-contents-line, var(--border)); color: inherit; text-decoration: none; overflow-wrap: anywhere;
-  transition: color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
 }
 @media (hover: hover) { .dk-toc__link:hover { color: var(--table-of-contents-title, var(--text)); } }
 .dk-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
