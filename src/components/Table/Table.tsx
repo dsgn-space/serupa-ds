@@ -14,6 +14,7 @@ import { warnOnce } from '../../internal/warn';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useVirtual } from '../../internal/virtual';
+import { useServerStyles } from '../../internal/serverStyles';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
@@ -113,6 +114,9 @@ const ALIGN = ['start', 'center', 'end'] as const;
    className and every other prop go to the <table>; containerProps go to the frame. */
 /** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
 export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Table', function Table(props, ref) {
+  // Server HTML's style attributes (a header's width, the frame's own) under a strict CSP: applied again after
+  // hydration, for the frame and everything in it.
+  const restyle = useServerStyles<HTMLDivElement>();
   const sds = useSettings(words);
   const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
@@ -159,7 +163,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   const region = !scrolls ? {} : hasCaption ? { tabIndex: 0, role: 'region', 'aria-labelledby': cid }
     : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
-    <div {...cp} {...region} ref={frame} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', props.pinStart && 'dk-table--pin-start', props.pinEnd && 'dk-table--pin-end', cp.className)}>
+    <div {...cp} {...region} ref={(n) => { frame.current = n; restyle(n); }} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', props.pinStart && 'dk-table--pin-start', props.pinEnd && 'dk-table--pin-end', cp.className)}>
       <table {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
         {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
