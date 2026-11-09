@@ -20,18 +20,23 @@ export function hasName(el: Element, group = false): boolean {
 /* A console warning, once per component, when the element the returned ref lands on has no accessible name after it
    mounts: a screen reader would announce only its role ("slider", "dialog"). how says how to name it. Checked after
    the commit, so a Field's label or a <label htmlFor> rendered after the element counts. The ref also fills ref. */
-export function useNameCheck<T extends Element>(component: string, how: string, ref?: React.ForwardedRef<T>): (node: T | null) => void {
+export function useNameCheck<T extends Element>(component: string, how: NameHow, ref?: React.ForwardedRef<T>): (node: T | null) => void {
   const node = React.useRef<Element | null>(null);
   React.useEffect(function () {
-    if (process.env.NODE_ENV !== 'production' && node.current && !hasName(node.current, how === NAME_HOW.group)) warnOnce('no-name', `${component} has no accessible name, so a screen reader announces only its role. ${how}`, 'name:' + component);
+    if (process.env.NODE_ENV !== 'production' && node.current && !hasName(node.current, how === NAME_HOW.group)) warnOnce('no-name', `${component} has no accessible name, so a screen reader announces only its role. ${HOW[how]}`, 'name:' + component);
   }, [component, how]);
   return React.useCallback(function (n: T | null) { node.current = n; if (ref) setRef(ref, n); }, [ref]);
 }
 
 /** How to name each kind of element, for useNameCheck's how. */
-export const NAME_HOW = {
+// The kinds by name only: the advice itself (HOW) is read inside the development warning, so a production build
+// leaves its text out.
+export const NAME_HOW = { field: 'field', group: 'group', label: 'label', title: 'title' } as const;
+type NameHow = keyof typeof NAME_HOW;
+
+const HOW: Record<NameHow, string> = {
   field: 'Put it in a Field with a label, or give it a <label htmlFor>, aria-label or aria-labelledby.',
   group: 'Put it in a Field group with a label, or give it aria-label or aria-labelledby.',
   label: 'Give it a label, or an aria-label.',
   title: 'Give it a title, or aria-label or aria-labelledby.',
-} as const;
+};

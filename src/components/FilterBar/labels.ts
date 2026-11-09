@@ -10,6 +10,9 @@ export interface FilterBarLabels {
   filterIs: (field: string, values: string) => string;
   /** FilterBar: a text filter's chip ("Name contains "ana""). */
   filterContains: (field: string, text: string) => string;
+  /** FilterBar: a date range with only a start ("Due: from Nov 2, 2026") or only an end ("Due: until Nov 8, 2026"). */
+  filterFrom: (field: string, date: string) => string;
+  filterUntil: (field: string, date: string) => string;
   /** FilterBar: a chip whose filter has nothing chosen yet. */
   filterAny: (field: string) => string;
   /** FilterBar: the button that removes one filter ("Remove filter: Status"). */
@@ -25,6 +28,8 @@ export const en: FilterBarLabels = {
   filterClear: 'Clear all',
   filterIs: (field, values) => field + ' is ' + values,
   filterContains: (field, text) => field + ' contains “' + text + '”',
+  filterFrom: (field, date) => field + ' from ' + date,
+  filterUntil: (field, date) => field + ' until ' + date,
   filterAny: (field) => field + ': any',
   filterRemove: (field) => 'Remove filter: ' + field,
   filterDone: 'Done',
@@ -36,6 +41,8 @@ export const id: FilterBarLabels = {
   filterClear: 'Hapus semua',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' berisi “' + text + '”',
+  filterFrom: (field, date) => field + ' sejak ' + date,
+  filterUntil: (field, date) => field + ' sampai ' + date,
   filterAny: (field) => field + ': semua',
   filterRemove: (field) => 'Hapus filter: ' + field,
   filterDone: 'Selesai',

@@ -15,7 +15,7 @@ export function repoUrl(root) {
 }
 
 /** The file with its link definitions written from its headings, replacing the ones at its end.
- * @param {string} log CHANGELOG.md's text @param {string} repo https://github.com/owner/name */
+ * @param {string} log CHANGELOG.md's text @param {string} repo https://gitlab.com/owner/name (or https://github.com/owner/name) */
 export function withLinks(log, repo) {
   const lines = log.replace(/\s+$/, '').split('\n');
   while (lines.length && (DEF.test(lines[lines.length - 1]) || !lines[lines.length - 1].trim())) lines.pop();
@@ -23,8 +23,10 @@ export function withLinks(log, repo) {
   const versions = names.filter((n) => n !== 'Unreleased');
   const defs = names.map((n) => {
     const at = versions.indexOf(n);
-    if (n === 'Unreleased') return `[${n}]: ${repo}/compare/v${versions[0]}...HEAD`;
-    return `[${n}]: ${repo}/${at + 1 < versions.length ? `compare/v${versions[at + 1]}...v${n}` : `releases/tag/v${n}`}`;
+    // GitLab keeps its pages under /-/ and has a page per tag where GitHub has one per release.
+    const gl = /^https:\/\/gitlab\.com\//.test(repo), compare = gl ? '-/compare' : 'compare', tag = gl ? '-/tags' : 'releases/tag';
+    if (n === 'Unreleased') return `[${n}]: ${repo}/${compare}/v${versions[0]}...HEAD`;
+    return `[${n}]: ${repo}/${at + 1 < versions.length ? `${compare}/v${versions[at + 1]}...v${n}` : `${tag}/v${n}`}`;
   });
   return `${lines.join('\n')}\n\n${defs.join('\n')}\n`;
 }

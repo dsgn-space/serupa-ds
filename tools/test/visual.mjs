@@ -166,8 +166,9 @@ async function open(page, e, theme, more = '') {
   if (!drawn) return 'did not render in 15 s';
   if (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay'))) return 'Storybook shows an error';
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}' });
-  // Every font face loaded, so no glyph draws late.
-  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+  // Every font face loaded, so no glyph draws late. A face the engine can't load (WebKit rejected one with a
+  // NetworkError) draws in its fallback, which the picture shows; it doesn't stop the run.
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))); await document.fonts.ready; });
   await page.waitForTimeout(150);   // stories that open a popover do it on a short timer
   return '';
 }
@@ -184,7 +185,7 @@ async function switchTo(page, theme) {
     ch.emit('updateGlobals', { globals: { brand, mode } });
   }), { brand, mode }).catch(() => false);
   if (!ok || (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) !== theme) return 'did not switch';
-  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))); await document.fonts.ready; });
   await page.waitForTimeout(150);
   return '';
 }
@@ -301,7 +302,7 @@ async function checkSheets(e, page) {
   const drawn = await page.waitForFunction(() => document.querySelector('#storybook-docs .sbdocs-content')?.children.length > 0, null, { timeout: 15000 }).then(() => true, () => false);
   if (!drawn) { sheetsFailed = true; return [{ name: pageName, ok: false, detail: 'did not render in 15 s' }]; }
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
-  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))); await document.fonts.ready; });
   await page.waitForTimeout(150);
   // A page without token blocks (Accessibility, Icons) has nothing to shoot.
   for (const sheet of await page.locator('[data-token-sheet]').evaluateAll((ns) => ns.map((n) => n.dataset.tokenSheet))) {
