@@ -103,15 +103,24 @@ describe('Sidebar', () => {
     expect([s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft]).toEqual(['14px', '500', '8px', '12px']);
   });
 
-  test('muted items, shaded and text-colored on hover; the current page the same', async () => {
+  test('muted items, shaded and text-colored on hover; the current page also has a 2px primary bar at its start that hover never draws, and darkens under the pointer', async () => {
     await render(<App />);
-    const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor'];
+    const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor', 'boxShadow'];
     await expect.poll(() => pick(el('iinbox'), keys)[1]).toBe('rgba(0, 0, 0, 0)');
     const rest = pick(el('iinbox'), keys), current = pick(el('ihome'), keys);
     expect(current[0]).not.toBe(rest[0]);
+    expect(rest[2]).toBe('none');
+    expect(current[2]).toMatch(/\) 2px 0px 0px 0px inset$/);
     await userEvent.hover(el('iinbox'));
-    await expect.poll(() => pick(el('iinbox'), keys)).toEqual(current);
+    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], current[1], 'none']);
+    await userEvent.hover(el('ihome'));
+    await expect.poll(() => css(el('ihome')).backgroundColor).not.toBe(current[1]);
     await away();
+  });
+
+  test('right to left: the current page’s bar is at the right edge', async () => {
+    await render(<div dir="rtl"><App /></div>);
+    expect(css(el('ihome')).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/);
   });
 
   test('a badge sits at the end, 12px in', async () => {
