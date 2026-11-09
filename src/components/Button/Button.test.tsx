@@ -230,7 +230,7 @@ describe('Button', () => {
   });
 
   test('disabledReason in a Tooltip with the same words: focus shows the tooltip (a disabled button never could), and the reason is read once, from the tooltip', async () => {
-    await render(<Tooltip content="Fill in your name first" delay={0}><Button id="drt" disabled disabledReason="Fill in your name first">Save</Button></Tooltip>);
+    await render(<Tooltip content="Fill in your name first" openDelay={0}><Button id="drt" disabled disabledReason="Fill in your name first">Save</Button></Tooltip>);
     await userEvent.tab();
     expect(document.activeElement).toBe(el('drt'));
     const tip = document.querySelector('[role=tooltip]') as HTMLElement;

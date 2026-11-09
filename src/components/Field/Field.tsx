@@ -34,6 +34,8 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   /** 'vertical' (default): label, hint, control and error stacked. 'horizontal': the label in a column at the start
    *  (--field-label-width) on the control's first line, with the control, hint and error beside it, for dense
    *  settings forms; it stacks again when the field is too narrow for both. Not with group. */
+  orientation?: 'vertical' | 'horizontal' | undefined;
+  /** @deprecated Use orientation (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as orientation is, when orientation isn't given. */
   layout?: 'vertical' | 'horizontal' | undefined;
   /** The control's id; by default the control's own id, or a generated one. */
   id?: string | undefined;
@@ -48,7 +50,7 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
 /** The props Field reads from and hands to its control (a component like Input, or a DOM element). */
 type ControlProps = { id?: string; invalid?: boolean; disabled?: boolean; 'aria-describedby'?: string; 'aria-errormessage'?: string; 'aria-required'?: boolean | 'true' | 'false'; 'aria-invalid'?: boolean };
 
-const OWN = { label: 1, hint: 1, error: 1, required: 1, optional: 1, disabled: 1, group: 1, layout: 1, id: 1, children: 1, className: 1 } as const;
+const OWN = { label: 1, hint: 1, error: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, layout: 1, id: 1, children: 1, className: 1 } as const;
 
 /** A label, an optional hint and an error message around one form control, wired up for screen readers. className and other attributes go to the outer element. */
 export const Field = /* @__PURE__ */ named('Field', function Field(props: FieldProps): React.ReactElement {
@@ -119,7 +121,9 @@ export const Field = /* @__PURE__ */ named('Field', function Field(props: FieldP
     if (props.disabled && !group) add.disabled = true;
     return React.cloneElement(el, add);
   };
-  const horizontal = !group && props.layout === 'horizontal';
+  if (process.env.NODE_ENV !== 'production' && props.layout != null) warnOnce('field-layout', 'Field: layout is deprecated and removed in 15.0.0. Use orientation, which does the same.');
+  // Each prop compared on its own, so tools/test/prop-values.mjs reads 'vertical' as the default of both.
+  const horizontal = !group && (props.orientation === 'horizontal' || (props.orientation == null && props.layout === 'horizontal'));
   const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', props.disabled && 'dk-field--disabled', props.className);
   if (group) {
     return (

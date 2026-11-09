@@ -15,6 +15,8 @@ export interface SplitterProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   /** The two panes, first and second. The handle between them resizes the first; the second takes the rest. */
   children: [React.ReactNode, React.ReactNode];
   /** "horizontal" (default): the panes side by side, the first at the start (left, or right in rtl). "vertical": stacked, the first on top. */
+  orientation?: 'horizontal' | 'vertical' | undefined;
+  /** @deprecated Use orientation (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as orientation is, when orientation isn't given. */
   direction?: 'horizontal' | 'vertical' | undefined;
   /** The first pane's size in percent of the Splitter (controlled). Use with onSizeChange. */
   size?: number | undefined;
@@ -54,10 +56,11 @@ const save = (key: string | undefined, n: number) => {
    the Splitter resizes. A collapsed pane is hidden, so nothing in it can be reached by Tab. */
 /** Two panes with a draggable, keyboard-operable handle between them: list and detail, sidebar and editor. */
 export const Splitter = /* @__PURE__ */ component<HTMLDivElement, SplitterProps>('Splitter', function Splitter(props, ref) {
-  const { children, direction: dirIn, size: sizeIn, defaultSize, onSizeChange, min: minIn, max: maxIn, step: stepIn, collapsible, storageKey, separatorLabel, className, ...rest } = props;
+  const { children, orientation: oriIn, direction: dirIn, size: sizeIn, defaultSize, onSizeChange, min: minIn, max: maxIn, step: stepIn, collapsible, storageKey, separatorLabel, className, ...rest } = props;
   const sds = useSettings(words);
   const styled = useServerStyles<HTMLDivElement>();   // the first pane's size, from server HTML under a strict CSP (GR12)
-  const direction = dirIn === 'vertical' ? 'vertical' : 'horizontal';
+  if (process.env.NODE_ENV !== 'production' && dirIn != null) warnOnce('splitter-direction', 'Splitter: direction is deprecated and removed in 15.0.0. Use orientation, which does the same.');
+  const direction = (oriIn ?? dirIn) === 'vertical' ? 'vertical' : 'horizontal';
   const min = clamp(typeof minIn === 'number' && isFinite(minIn) ? minIn : 10, 0, 100);
   const max = clamp(typeof maxIn === 'number' && isFinite(maxIn) ? maxIn : 90, min, 100);
   const step = typeof stepIn === 'number' && stepIn > 0 ? stepIn : 5;
