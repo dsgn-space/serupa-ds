@@ -1205,6 +1205,10 @@
             "violet-dark": "{green-950}",
             "emerald-light": "{green-950}",
             "emerald-dark": "{green-950}"
+          },
+          "contrastMore": {
+            "light": "{white}",
+            "dark": "{green-950}"
           }
         }
       }
@@ -1325,6 +1329,10 @@
             "violet-dark": "{amber-950}",
             "emerald-light": "{amber-950}",
             "emerald-dark": "{amber-950}"
+          },
+          "contrastMore": {
+            "light": "{white}",
+            "dark": "{amber-950}"
           }
         }
       }
