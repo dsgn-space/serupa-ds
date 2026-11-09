@@ -22,6 +22,17 @@ import { BottomNav, BottomNavLink } from "serupa-ds";
 - Actions, such as "New message": use a [Fab](../Fab/README.md) or a Button. Every item here goes somewhere.
 - Steps in a flow, or filters on one page: use [Tabs](../Tabs/README.md) or [SegmentedControl](../SegmentedControl/README.md).
 
+## Anatomy
+
+Drawn from the `Playground` story.
+
+1. **Bar** (`.dk-bottom-nav`): the navigation landmark, fixed along the bottom of a narrow screen, clear of a phone's home bar.
+2. **List** (`.dk-bottom-nav__list`): the destinations, side by side in equal widths.
+3. **Link** (`.dk-bottom-nav__link`): one destination; the current page is shaded and has `aria-current="page"`.
+4. **Icon** (`.dk-bottom-nav__icon`): the destination's icon, in a pill that is shaded on the current page.
+5. **Label** (`.dk-bottom-nav__label`): the destination's name, always shown under its icon.
+6. **Spacer** (`.dk-bottom-nav__spacer`): holds the bar's height at the end of the page, so the bar never covers the last content.
+
 ## Usage
 
 - **Links:** BottomNavLink takes an `icon` and a label of one or two short words; `active` marks the current page. `as` renders your router's link, typed with its props, or set it once with `configure({ link })`.
@@ -49,6 +60,7 @@ import { BottomNav, BottomNavLink } from "serupa-ds";
 | `label` | `string` | | The landmark's name ("Main") |
 | `hideFrom` | `'sm'` \| `'md'` \| `'lg'` \| `false` | `'md'` | The width from which it hides |
 | `children` | `ReactNode` | | Three to five BottomNavLink |
+| `id` | string | none | Goes to the `<nav>`. |
 
 `className`, `ref` and other props go to the `<nav>`.
 

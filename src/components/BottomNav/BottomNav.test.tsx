@@ -6,8 +6,8 @@ import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { BottomNav, BottomNavLink } from './BottomNav';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 
-const nav = () => document.querySelector('.dk-bottom-nav') as HTMLElement;
-const links = () => [...document.querySelectorAll('.dk-bottom-nav__link')] as HTMLElement[];
+const nav = () => document.querySelector('[data-component="bottom-nav"]') as HTMLElement;
+const links = () => [...nav().querySelectorAll('a')] as HTMLElement[];
 const Bar = (p: Partial<React.ComponentProps<typeof BottomNav>>) => (
   <BottomNav label="Main" {...p}>
     <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
@@ -26,7 +26,7 @@ describe('BottomNav', () => {
     const n = nav();
     expect([n.tagName, n.getAttribute('aria-label'), ref.current === n, n.dataset.x, n.classList.contains('extra')]).toEqual(['NAV', 'Main', true, 'y', true]);
     expect([...n.querySelectorAll('li > a')].map((a) => [a.textContent, a.getAttribute('aria-current')])).toEqual([['Home', null], ['Inbox', 'page'], ['Account', null]]);
-    expect(n.querySelector('.dk-bottom-nav__icon')!.getAttribute('aria-hidden')).toBe('true');
+    expect(n.querySelector('a > span')!.getAttribute('aria-hidden')).toBe('true');
   });
 
   test('fixed to the bottom edge, full width, links in equal columns at least 48px tall', async () => {
@@ -41,14 +41,14 @@ describe('BottomNav', () => {
   test('while it shows, the page gets room at its end and scroll padding; from 768px it hides and gives both back', async () => {
     await page.viewport(414, 800);
     await render(<Bar />);
-    const spacer = document.querySelector('.dk-bottom-nav__spacer') as HTMLElement;
+    const spacer = nav().previousElementSibling as HTMLElement;   // the spacer, just before the bar
     expect(spacer.getBoundingClientRect().height).toBe(64);
     expect(css(document.documentElement).scrollPaddingBottom).toBe('64px');
     await page.viewport(1024, 800);
     expect([css(nav()).display, spacer.getBoundingClientRect().height, css(document.documentElement).scrollPaddingBottom]).toEqual(['none', 0, 'auto']);
   });
 
-  test('hideFrom={false} keeps it at every width; hideFrom="lg" up to 1024px', async () => {
+  test('hideFrom={false} keeps it at every width; hideFrom="lg" up to 1024px, "sm" up to 640px', async () => {
     await page.viewport(1100, 800);
     const { rerender } = await render(<Bar hideFrom={false} />);
     expect(css(nav()).display).not.toBe('none');
@@ -56,13 +56,17 @@ describe('BottomNav', () => {
     expect(css(nav()).display).toBe('none');
     await page.viewport(900, 800);
     expect(css(nav()).display).not.toBe('none');
+    await rerender(<Bar hideFrom="sm" />);
+    expect(css(nav()).display).toBe('none');
+    await page.viewport(600, 800);
+    expect(css(nav()).display).not.toBe('none');
   });
 
   test('a bottom OfflineBanner sits above the bar', async () => {
     await page.viewport(414, 800);
     await render(<><Bar /><OfflineBanner online={false} /></>);
     await new Promise((r) => setTimeout(r, 50));
-    const b = document.querySelector('.dk-offline-banner') as HTMLElement;
+    const b = document.querySelector('[data-component="offline-banner"]') as HTMLElement;
     expect(b.getBoundingClientRect().bottom).toBeLessThanOrEqual(nav().getBoundingClientRect().top);
   });
 
