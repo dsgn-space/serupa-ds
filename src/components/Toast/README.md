@@ -98,7 +98,7 @@ The undo pattern, in place of a confirmation: do the action in the page at once 
 
 | Option | Type | Notes |
 | --- | --- | --- |
-| `commit` | `() => void` | Required. Does the action for good. It runs once, when the toast closes without Undo: its time runs out, it's closed with ×, `toast.dismiss` closes it, or the page is left (`pagehide`). |
+| `commit` | `() => void` | Required. Does the action for good. It runs once, when the toast closes without Undo: its time runs out, it's closed with ×, `toast.dismiss` closes it, or the page is left (`pagehide`). It also runs when a new `toast.undo` with the same `id` replaces it, and when no Toaster shows it (none is mounted, or the last one unmounts), since its Undo can't be reached then; that case warns in development (`toast-undo-no-toaster`). |
 | `onUndo` | `() => void` | Runs instead of `commit` when Undo is chosen: put things back. |
 | `undoLabel` | string | The button's text. Default: "Undo" (`labels.undo`). |
 

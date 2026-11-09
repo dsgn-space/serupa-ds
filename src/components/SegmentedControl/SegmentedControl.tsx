@@ -118,8 +118,11 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
     if (!r || !b) { setBox(null); return; }
     // From the boxes, not offsetLeft and offsetWidth: those round to whole pixels, and segments are as wide as their
     // text, so the indicator sat up to half a pixel off its segment. The boxes include any scale on an ancestor (a
-    // zoomed preview), and left and width are in the control's own pixels, so they're scaled back (k).
-    const rb = r.getBoundingClientRect(), bb = b.getBoundingClientRect(), k = rb.width ? r.offsetWidth / rb.width : 1;
+    // zoomed preview), and left and width are in the control's own pixels, so they're scaled back (k). offsetWidth is
+    // rounded, so a control as wide as its text differs from its box by up to half a pixel with no scale at all: under a
+    // pixel apart is no scale (k is exactly 1), and a real one is read from the unrounded computed width.
+    const rb = r.getBoundingClientRect(), bb = b.getBoundingClientRect();
+    const k = !rb.width || Math.abs(r.offsetWidth - rb.width) < 1 ? 1 : (parseFloat(getComputedStyle(r).width) || r.offsetWidth) / rb.width;
     const x = (bb.left - rb.left) * k - r.clientLeft, w = bb.width * k;
     setBox((p) => (p && p.x === x && p.w === w ? p : { x, w }));   // the same box when nothing moved, so a slide under way runs on
   }, [value, props.fullWidth]);

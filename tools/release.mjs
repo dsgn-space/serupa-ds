@@ -22,8 +22,8 @@ const V = '(\\d+\\.\\d+\\.\\d+)';
 // __VERSION__ in src/) take it from package.json at build time.
 const STAMPS = {
   'package.json': [`"version": "${V}"`],
-  // the install instructions pin the latest tag (and its release file)
-  'README.md': [`serupa-ds#v${V}`, `\\(\`#v${V}\`\\)`, `releases/download/v${V}/`, `/serupa-ds-${V}\\.tgz`],
+  // the install instructions pin the latest tag
+  'README.md': [`serupa-ds#v${V}`, `\\(\`#v${V}\`\\)`],
   'docs/GettingStarted.mdx': [`serupa-ds#v${V}`],
   'skills/serupa/SKILL.md': [`serupa-ds#v${V}`],
 };
