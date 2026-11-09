@@ -1,0 +1,61 @@
+# Disabled
+- group "Signature":
+  - radiogroup "Signature method" [disabled]:
+    - radio "Draw" [checked] [disabled]
+    - radio "Type" [disabled]
+  - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
+  - img "Signature area, empty"
+  - button "Undo" [disabled]
+  - button "Clear" [disabled]
+
+# InField
+- text: Sign to accept the terms Draw or type your name.
+- group "Sign to accept the terms":
+  - radiogroup "Signature method":
+    - radio "Draw" [checked]
+    - radio "Type"
+  - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
+  - img "Signature area, empty"
+  - button "Undo" [disabled]
+  - button "Clear" [disabled]
+- text: Please sign before you continue.
+
+# LongText
+- group "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung signature":
+  - radiogroup "Signature method":
+    - radio "Draw"
+    - radio "Type" [checked]
+  - paragraph: Your typed full name is your signature.
+  - text: Full name
+  - textbox "Full name"
+
+# Playground
+- group "Signature":
+  - radiogroup "Signature method":
+    - radio "Draw" [checked]
+    - radio "Type"
+  - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
+  - img "Signature area, empty"
+  - button "Undo" [disabled]
+  - button "Clear" [disabled]
+
+# Typed
+- group "Signature":
+  - radiogroup "Signature method":
+    - radio "Draw"
+    - radio "Type" [checked]
+  - paragraph: Your typed full name is your signature.
+  - text: Full name
+  - textbox "Full name"
+
+# WithValue
+- group "Courier signature":
+  - radiogroup "Signature method":
+    - radio "Draw" [checked]
+    - radio "Type"
+  - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
+  - img "Signature area, empty"
+  - button "Undo" [disabled]
+  - button "Clear" [disabled]
+- paragraph: Not signed yet
+
