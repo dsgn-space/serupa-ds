@@ -29,10 +29,11 @@ export const Playground: Story = { decorators: narrow };
 export const FromHeadings: Story = {
   name: 'From the page\'s headings',
   args: { items: undefined, container: '#toc-article' },
-  // In the page's own column, wider than the default box.
+  // In the page's own column beside the text, wider than the default box; on a narrow page, above the text
+  // (wrap-reverse flips the cross axis, so flex-end is the top).
   decorators: [(Story) => (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px', gap: 32 }}>
-      <div id="toc-article">
+    <div style={{ display: 'flex', flexWrap: 'wrap-reverse', alignItems: 'flex-end', gap: 32 }}>
+      <div id="toc-article" style={{ flex: '1 1 240px', minWidth: 0 }}>
         {sections.map((s) => (
           <section key={s.id}>
             {React.createElement(s.level === 2 ? 'h2' : 'h3', { id: s.id }, s.title)}
@@ -40,7 +41,7 @@ export const FromHeadings: Story = {
           </section>
         ))}
       </div>
-      <div style={{ position: 'sticky', top: 16, alignSelf: 'start' }}><Story /></div>
+      <div style={{ position: 'sticky', top: 16, flex: '0 1 200px' }}><Story /></div>
     </div>
   )],
 };
