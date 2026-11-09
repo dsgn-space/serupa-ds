@@ -97,13 +97,22 @@ type Connection = EventTarget & { saveData?: boolean };
 const REDUCED = '(prefers-reduced-data: reduce)';
 const connection = () => (navigator as Navigator & { connection?: Connection }).connection;
 // No matchMedia (jsdom, where apps run their unit tests) means no preference, not a crash on every Image (L8E45).
-const reducedData = () => (typeof matchMedia === 'function' ? matchMedia(REDUCED) : null);
+// The query is made once, and every Image shares one pair of listeners (GR278: a new query each render, and two
+// listeners for each Image).
+let dataQuery: MediaQueryList | undefined;
+const reducedData = () => dataQuery || (typeof matchMedia === 'function' ? (dataQuery = matchMedia(REDUCED)) : null);
 const savingData = () => { const m = reducedData(); return !!(connection() || {}).saveData || !!(m && m.matches); };
+const dataTold = new Set<() => void>();
+let dataHeard = false;
 function onSaveData(f: () => void) {
-  const c = connection(), m = reducedData();
-  if (c) c.addEventListener('change', f);
-  if (m) m.addEventListener('change', f);
-  return () => { if (c) c.removeEventListener('change', f); if (m) m.removeEventListener('change', f); };
+  if (!dataHeard) {
+    dataHeard = true;
+    const c = connection(), m = reducedData(), tell = () => dataTold.forEach((g) => g());
+    if (c) c.addEventListener('change', tell);
+    if (m) m.addEventListener('change', tell);
+  }
+  dataTold.add(f);
+  return () => { dataTold.delete(f); };
 }
 
 /* The viewer's picture: the frame's placeholder (and its sweep) while it loads, the frame's fallback if it fails. The
