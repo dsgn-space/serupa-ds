@@ -37,7 +37,7 @@ export const Horizontal: Story = { args: { orientation: 'horizontal', 'aria-labe
 export const HorizontalStacked: Story = {
   name: 'Horizontal, stacked when narrow',
   args: { orientation: 'horizontal', stackWhenNarrow: true, 'aria-label': 'Order tracking' },
-  render: (args) => <div style={{ width: 360 }}><Timeline {...args} /></div>,
+  render: (args) => <div style={{ maxWidth: 360 }}><Timeline {...args} /></div>,
 };
 /** From 768px up, events take turns on either side of a centered line. */
 export const Alternate: Story = { args: { align: 'alternate' } };
