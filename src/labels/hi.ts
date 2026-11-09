@@ -279,4 +279,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' से ' + to + ' तक',
   repeats: 'दोहराया जाता है',
   noEvents: 'इस महीने कोई इवेंट नहीं।',
+  dateFieldDay: 'दिन',
+  dateFieldMonth: 'महीना',
+  dateFieldYear: 'वर्ष',
 };

@@ -20,7 +20,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 ## When not to use
 
 - A start and an end date: use [DateRangePicker](../DateRangePicker/README.md) instead.
-- A date people know by heart and that's far from today, such as a date of birth: a plain [Input](../Input/README.md) with a format hint (or separate day, month and year fields) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
+- A date people know by heart and that's far from today, such as a date of birth: a [DateField](../DateField/README.md) (day, month and year boxes) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
 - Only a month or a year: use a [Select](../Select/README.md).
 - A calendar that's always on the page, such as a scheduling view: use [Calendar](../Calendar/README.md) on its own.
 

@@ -31,6 +31,7 @@ import { Radio, RadioGroup } from '../components/Radio/Radio';
 import { Rating } from '../components/Rating/Rating';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl';
+import { DateField } from '../components/DateField/DateField';
 import { Select } from '../components/Select/Select';
 import { Slider } from '../components/Slider/Slider';
 import { Switch } from '../components/Switch/Switch';
@@ -118,6 +119,9 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: (r) => fill($(r, 'input:not([type="hidden"])'), '14:30'), changed: { at: '14:30' } },
   ColorPicker: { el: (form) => <ColorPicker aria-label="Color" name="color" form={form} custom={false} swatches={['#1d4ed8', '#b91c1c']} defaultValue="#1d4ed8" />, initial: { color: '#1d4ed8' },
     change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); }, changed: { color: '#b91c1c' } },
+  DateField: { el: (form) => <DateField aria-label="Date of birth" name="dob" form={form} defaultValue="1990-05-01" />, initial: { dob: '1990-05-01' },
+    change: async (r) => { const year = [...r.querySelectorAll('input[inputmode]')].at(-1)!; await userEvent.clear(year); await userEvent.type(year, '1991'); },
+    changed: { dob: '1991-05-01' } },
   FileUpload: { el: (form) => <FileUpload name="attachment" form={form} files={[file]} onFilesChange={() => {}} />, initial: { attachment: 'notes.txt' } },
   // A button's name and value go only with the button that submits the form, as with <button name>.
   CopyButton: 'a button', InputAction: 'a button', Fab: 'a button', Tab: 'a button', ToggleButton: 'a button',
