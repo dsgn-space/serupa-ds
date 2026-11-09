@@ -328,7 +328,8 @@ export const TableSelectCell = /* @__PURE__ */ component<HTMLInputElement, Table
 
 const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
 
-const STEP = 16;   // px per arrow key on a resize handle
+const STEP = 16;   // px per arrow key on a resize handle, and per Narrower or Wider
+
 
 /** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. With resizable, a handle at its end changes the column's width. */
 export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>('TableHeaderCell', function TableHeaderCell(props, ref) {
@@ -359,6 +360,11 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
   // The handle's keys, drag and double-click, as native listeners: the newest width and callback through a ref.
   const live = React.useRef({ min, max, current, controlled, onWidthChange: props.onWidthChange });
   live.current = { min, max, current, controlled, onWidthChange: props.onWidthChange };
+  // A click on the handle (not a drag) or Enter opens Narrower, Wider and Fit: the width without dragging (2.5.7).
+  // A native popover (popover="auto": Escape and a press outside close it), so a Table without resizing, or a
+  // Chart's data table, doesn't carry Popover's code.
+  const panel = React.useRef<HTMLDivElement | null>(null);
+  const act = React.useRef<{ set: (n: number) => void; now: () => number; fit: () => void } | null>(null);
   React.useEffect(() => {
     const h = handle.current, cell = th.current;
     if (!resizable || !h || !cell) return;
@@ -375,18 +381,44 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
       else if (e.key === shrink) set(now() - STEP);
       else if (e.key === 'Home') set(live.current.min);
       else if (e.key === 'End') set(live.current.max);
+      else if (e.key === 'Enter' || e.key === ' ') show();
       else return;
       e.preventDefault();
     };
+    const p = panel.current;
+    const isOpen = () => !!p && p.matches(':popover-open');
+    const show = () => {
+      if (!p || isOpen()) return;
+      p.showPopover();
+      const r = h.getBoundingClientRect(), b = p.getBoundingClientRect(), gap = 8;
+      p.style.left = Math.round(Math.max(gap, Math.min(r.left + r.width / 2 - b.width / 2, innerWidth - b.width - gap))) + 'px';
+      p.style.top = Math.round(r.bottom + b.height + gap <= innerHeight ? r.bottom + gap : Math.max(gap, r.top - b.height - gap)) + 'px';
+      const first = p.querySelector<HTMLElement>('button:not(:disabled)');
+      if (first) first.focus();
+    };
+    // Closed by Escape or a press outside: focus goes back to the handle, unless it went somewhere on purpose.
+    const onToggle = (e: Event) => {
+      if ((e as ToggleEvent).newState !== 'closed' || !p) return;
+      const at = activeIn(h);
+      if (!at || at === p.ownerDocument.body || p.contains(at)) h.focus({ preventScroll: true });
+    };
+    let moved = false, wasOpen = false;
+    // A click opens it; the click that ends a drag, or that closed it a moment ago, doesn't.
+    const onClick = () => { if (!moved && !wasOpen) show(); moved = false; wasOpen = false; };
     let from = 0, start = 0, id: number | null = null;
     const onDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
       e.preventDefault();
-      from = e.clientX; start = now(); id = e.pointerId;
+      from = e.clientX; start = now(); id = e.pointerId; moved = false; wasOpen = isOpen();
       try { h.setPointerCapture(id); } catch { /* a pointer that's already gone: the drag still follows moves over the handle */ }
       h.focus({ preventScroll: true });
     };
-    const onMove = (e: PointerEvent) => { if (id === e.pointerId) set(start + (rtl() ? from - e.clientX : e.clientX - from)); };
+    const onMove = (e: PointerEvent) => {
+      if (id !== e.pointerId) return;
+      const d = rtl() ? from - e.clientX : e.clientX - from;
+      if (Math.abs(d) > 2) moved = true;
+      set(start + d);
+    };
     const onUp = (e: PointerEvent) => { if (id !== e.pointerId) return; id = null; if (h.hasPointerCapture(e.pointerId)) h.releasePointerCapture(e.pointerId); };
     // Fit: the widest cell of the column on one line, measured with its text unwrapped for a moment.
     const onFit = () => {
@@ -399,12 +431,16 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
         const was = c.style.whiteSpace, cs = getComputedStyle(c), range = document.createRange();
         c.style.whiteSpace = 'nowrap';
         range.selectNodeContents(c);
+        if (p && p.parentNode === c) range.setEndBefore(p);   // the width popover is in the top layer, not the cell
         const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
         widest = Math.max(widest, Math.ceil(range.getBoundingClientRect().width + pad));
         c.style.whiteSpace = was;
       }
       if (widest) set(widest + 1);
     };
+    act.current = { set, now, fit: onFit };
+    if (p) p.addEventListener('toggle', onToggle);
+    h.addEventListener('click', onClick);
     h.addEventListener('keydown', onKey);
     h.addEventListener('pointerdown', onDown);
     h.addEventListener('pointermove', onMove);
@@ -418,21 +454,27 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
       h.removeEventListener('pointerup', onUp);
       h.removeEventListener('pointercancel', onUp);
       h.removeEventListener('dblclick', onFit);
+      h.removeEventListener('click', onClick);
+      if (p) p.removeEventListener('toggle', onToggle);
     };
   }, [resizable]);
-  // The handle's name: the column's text, read once it's drawn.
+  // The handle's name: the column's text, read once it's drawn. With no width set yet, its value is the drawn width.
   const [name, setName] = React.useState('');
+  const [drawn, setDrawn] = React.useState<number | null>(null);
   useIsoLayoutEffect(() => {
     const cell = th.current;
     if (!resizable || !cell) return;
-    const own = cell.querySelector('.dk-table__resize');
-    const text = Array.from(cell.childNodes).filter((n) => n !== own).map((n) => n.textContent || '').join('').trim();
+    const text = Array.from(cell.childNodes).filter((n) => !(n instanceof Element && (n.classList.contains('dk-table__resize') || n.classList.contains('dk-popover')))).map((n) => n.textContent || '').join('').trim();
     if (text !== name) setName(text);
+    const w = current == null ? Math.round(cell.getBoundingClientRect().width) : null;
+    if (w !== drawn) setDrawn(w);
   });
+  const value = current != null ? current : drawn;
   const separator = resizable ? {
     role: 'separator', 'aria-orientation': 'vertical' as const, 'aria-label': labels.tableResizeColumn(name),
-    'aria-valuemin': min, 'aria-valuemax': max, 'aria-valuenow': current != null ? current : undefined, tabIndex: 0,
+    'aria-valuemin': min, 'aria-valuemax': max, 'aria-valuenow': value != null ? value : undefined, tabIndex: 0,
   } : null;
+  const step = (by: number) => { const a = act.current; if (a) a.set(a.now() + by); };
   return (
     <th scope="col" {...rest} ref={setTh} style={style} aria-sort={sort && sort !== 'none' ? sort : undefined}
       className={cn('dk-table__cell dk-table__header', align !== 'start' && 'dk-table__cell--' + align, sort && 'dk-table__header--sortable', resizable && 'dk-table__header--resizable', props.className)}>
@@ -443,6 +485,13 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
         </button>
       ) : props.children}
       {separator ? <span {...separator} ref={handle} className="dk-table__resize" /> : null}
+      {separator ? (
+        <div ref={panel} {...{ popover: 'auto' }} role="dialog" aria-label={labels.tableResizeColumn(name)} tabIndex={-1} className="dk-popover dk-table-width">
+          <Button variant="outline" size="sm" disabled={value != null && value <= min} onClick={() => step(-STEP)}>{labels.tableNarrower}</Button>
+          <Button variant="outline" size="sm" disabled={value != null && value >= max} onClick={() => step(STEP)}>{labels.tableWider}</Button>
+          <Button variant="outline" size="sm" onClick={() => { if (act.current) act.current.fit(); }}>{labels.tableFitColumn}</Button>
+        </div>
+      ) : null}
     </th>
   );
 });

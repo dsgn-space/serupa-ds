@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press, settle, withMotion } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
@@ -720,6 +720,46 @@ describe('Table column tools (RU10)', () => {
     expect(w()).toBeLessThan(400);
   });
 
+  test('a click or Enter on the handle opens Narrower, Wider and Fit, so no width needs a drag (2.5.7, GR296)', async () => {
+    const s = await render(<Resizing />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    const h = handle.element() as HTMLElement;
+    await userEvent.click(h);
+    const dialog = page.getByRole('dialog', { name: 'Resize Name column' });
+    await expect.element(dialog).toBeVisible();
+    await userEvent.click(page.getByRole('button', { name: 'Wider' }));
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+    expect(w()).toBeCloseTo(176, 0);
+    await userEvent.click(page.getByRole('button', { name: 'Narrower' }));
+    await userEvent.click(page.getByRole('button', { name: 'Narrower' }));
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '144');
+    await userEvent.click(page.getByRole('button', { name: 'Fit to content' }));
+    const text = s.getByText('Maximiliana Wolfeschlegelsteinhausen').element() as HTMLElement;
+    await expect.poll(() => text.getBoundingClientRect().height).toBeLessThan(48);
+    expect(w()).toBeLessThan(400);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => document.querySelector('[role=dialog]')!.matches(':popover-open')).toBe(false);
+    expect(document.activeElement).toBe(h);
+    await userEvent.keyboard('{Home}{Enter}');
+    await expect.element(dialog).toBeVisible();
+    await expect.element(page.getByRole('button', { name: 'Narrower' })).toBeDisabled();   // at its 80px least
+  });
+
+  test('the click that ends a drag doesn\'t open the popover; with no width set, the value is the drawn width (GR296)', async () => {
+    const s = await render(<div style={{ width: 600 }}><Table caption="Users" layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id="h1" resizable>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Ada</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table></div>);
+    const h = s.getByRole('separator').element() as HTMLElement;
+    await expect.poll(() => Number(h.getAttribute('aria-valuenow'))).toBeCloseTo(w(), 0);
+    const r = h.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const fire = (type: string, dx: number) => h.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, button: 0, clientX: x + dx, clientY: y }));
+    fire('pointerdown', 0); fire('pointermove', 40); fire('pointerup', 40);
+    h.click();
+    await settle();
+    expect(document.querySelector('[role=dialog]')!.matches(':popover-open')).toBe(false);
+  });
+
   function Wide(p: { pin?: boolean }) {
     return <div style={{ width: 300 }}><Table id="tw" caption="Wide" layout="fixed" pinStart={p.pin} pinEnd={p.pin}>
       <TableHead><TableRow><TableHeaderCell width={100}>Name</TableHeaderCell><TableHeaderCell width={200}>A</TableHeaderCell><TableHeaderCell width={200}>B</TableHeaderCell><TableHeaderCell width={80}>Act</TableHeaderCell></TableRow></TableHead>
@@ -728,7 +768,7 @@ describe('Table column tools (RU10)', () => {
   }
   test('pinStart and pinEnd keep the first and last columns in view while the rest scroll sideways', async () => {
     const s = await render(<Wide />);
-    const frame = el('tw').closest('.dk-table') as HTMLElement;
+    const frame = el('tw').parentElement as HTMLElement;   // the scrolling frame around the <table>
     const at = () => [el('first').getBoundingClientRect().left, el('last').getBoundingClientRect().right];
     const before = at();
     frame.scrollLeft = 120;

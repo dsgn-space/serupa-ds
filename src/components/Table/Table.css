@@ -123,6 +123,8 @@
 .dk-table__detail-cell { padding-block: var(--table-padding-x, var(--spacing-3)); }
 /* TableColumnsMenu: one checkbox per column, in a column. */
 .dk-table-columns { display: flex; flex-direction: column; gap: var(--spacing-2); }
+.dk-table-width { display: flex; flex-wrap: wrap; gap: var(--spacing-2); width: auto; }
+.dk-table-width:not(:popover-open) { display: none; }
 /* Print: the whole table, not its scrolled window; the header row repeats on every page, and a row isn't split
    across two pages. */
 @media print {

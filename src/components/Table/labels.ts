@@ -11,6 +11,11 @@ export interface TableLabels {
   clearSelection: string;
   /** TableHeaderCell resizable: the handle's name, given the column's name ("Resize Name column"). */
   tableResizeColumn: (column: string) => string;
+  /** Table: the buttons in a resizable column's width popover, opened by a click or Enter on its handle. */
+  tableNarrower: string;
+  tableWider: string;
+  /** Table: fits the column to its widest content. */
+  tableFitColumn: string;
   /** TableColumnsMenu: the button that opens the choice of columns, and its panel's title. */
   tableColumns: string;
   /** TableExpandCell header: the expand column's heading, read only (it shows nothing). */
@@ -24,6 +29,9 @@ export const en: TableLabels = {
   tableSelected: (n) => n + ' selected',
   clearSelection: 'Clear selection',
   tableResizeColumn: (column) => 'Resize ' + column + ' column',
+  tableNarrower: 'Narrower',
+  tableWider: 'Wider',
+  tableFitColumn: 'Fit to content',
   tableColumns: 'Columns',
   tableDetails: 'Details',
   tableRowDetails: (row) => 'Details, ' + row,
@@ -34,6 +42,9 @@ export const id: TableLabels = {
   tableSelected: (n) => n + ' dipilih',
   clearSelection: 'Hapus pilihan',
   tableResizeColumn: (column) => 'Ubah lebar kolom ' + column,
+  tableNarrower: 'Lebih sempit',
+  tableWider: 'Lebih lebar',
+  tableFitColumn: 'Sesuaikan dengan isi',
   tableColumns: 'Kolom',
   tableDetails: 'Rincian',
   tableRowDetails: (row) => 'Rincian ' + row,
