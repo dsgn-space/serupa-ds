@@ -64,6 +64,32 @@ describe('TableOfContents', () => {
     await expect.poll(() => Math.abs(g.getBoundingClientRect().top) < 40).toBe(true);
   });
 
+  test('a shared link to a heading whose id it makes (#beta-part) scrolls there once the id exists, as the browser would have (GR303)', async () => {
+    const before = window.location.href;
+    window.history.replaceState(null, '', '#beta-part');
+    try {
+      await render(<Page />);
+      await expect.poll(() => Math.round(document.getElementById('beta-part')?.getBoundingClientRect().top ?? -1)).toBe(0);
+    } finally {
+      window.history.replaceState(null, '', before);
+      window.scrollTo(0, 0);
+    }
+  });
+
+  test('headings added, renamed or removed later update the list (GR303)', async () => {
+    await render(<Page />);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Alpha', 'Beta part', 'Gamma']);
+    const art = document.getElementById('art')!, late = document.createElement('h2');
+    late.textContent = 'Delta, loaded later';
+    art.appendChild(late);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Alpha', 'Beta part', 'Gamma', 'Delta, loaded later']);
+    expect(late.id).toBe('delta-loaded-later');
+    document.getElementById('a')!.textContent = 'Alpha, renamed';
+    await expect.poll(() => links()[0].textContent).toBe('Alpha, renamed');
+    late.remove();
+    await expect.poll(() => links().length).toBe(3);
+  });
+
   test('items instead of headings; title null leaves out the title', async () => {
     await render(<TableOfContents id="toc" title={null} aria-label="Sections" items={[{ id: 'x', label: 'One' }, { id: 'y', label: 'Two', level: 3 }]} />);
     await expect.element(page.getByRole('navigation', { name: 'Sections' })).toBeVisible();

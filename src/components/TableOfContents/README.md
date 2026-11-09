@@ -37,7 +37,7 @@ Drawn from the `Playground` story.
 
 - Keep it to two levels (the default `h2, h3`): deeper lists are hard to scan.
 - Give the headings `scroll-margin-top` the height of any sticky header, and set `offset` to about the same plus a little, so a section counts as reached when its heading clears the header.
-- Headings without an `id` get one from their text ("Beta part" becomes `beta-part`), kept unique on the page, so links to them can be shared.
+- Headings without an `id` get one from their text ("Beta part" becomes `beta-part`), kept unique on the page, so links to them can be shared: a page opened with one (`#beta-part`) scrolls to that heading once its id is made. Headings added, removed or renamed later, such as content loaded after the page, update the list.
 - On a phone, put it at the top of the page or in an [Accordion](../Accordion/README.md), not beside the text.
 
 ## Accessibility

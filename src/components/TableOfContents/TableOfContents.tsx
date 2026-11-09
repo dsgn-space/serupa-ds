@@ -52,19 +52,42 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
   // Each entry's indent is an inline style: after hydration under a strict CSP it's applied again (serverStyles).
   const styled = useServerStyles(ref);
 
-  // Read the headings once mounted (and when what to read changes).
+  // Read the headings once mounted, again when headings are added, removed or renamed later (content loaded after
+  // the page, a tab that renders its panel), and when what to read changes.
   React.useEffect(() => {
     if (props.items) return;
     const box = typeof props.container === 'string' ? document.querySelector(props.container) : props.container || document.querySelector('main') || document.body;
     if (!box) return;
-    const used = new Set<string>();
-    const next = [...box.querySelectorAll<HTMLElement>(selector)].filter((h) => !h.closest("[data-component='table-of-contents']")).map((h) => {
-      // An id from the heading's text for a heading without one, kept unique on the page.
-      if (!h.id) { const b = slug(h.textContent); let id = b, n = 2; while (document.getElementById(id) || used.has(id)) id = b + '-' + n++; h.id = id; }
-      used.add(h.id);
-      return { id: h.id, label: h.textContent, level: Number(h.tagName.slice(1)) || 2 };
+    let last = '', frameId = 0, hashDone = false;
+    const read = () => {
+      frameId = 0;
+      const used = new Set<string>();
+      const next = [...box.querySelectorAll<HTMLElement>(selector)].filter((h) => !h.closest("[data-component='table-of-contents']")).map((h) => {
+        // An id from the heading's text for a heading without one, kept unique on the page.
+        if (!h.id) { const b = slug(h.textContent); let id = b, n = 2; while (document.getElementById(id) || used.has(id)) id = b + '-' + n++; h.id = id; }
+        used.add(h.id);
+        return { id: h.id, label: h.textContent, level: Number(h.tagName.slice(1)) || 2 };
+      });
+      const key = JSON.stringify(next);
+      if (key !== last) { last = key; setFound(next); }
+      // A shared link to a heading whose id is made here (#beta-part): the browser looked for it before it existed,
+      // so the page opened at the top. Go there once, as the browser would have, the first time the id exists.
+      if (!hashDone) {
+        const hash = decodeURIComponent(window.location.hash.slice(1));
+        const h = hash ? document.getElementById(hash) : null;
+        if (!hash) hashDone = true;
+        else if (h && used.has(hash)) { hashDone = true; h.scrollIntoView({ block: 'start' }); }
+      }
+    };
+    read();
+    // Only the headings' own changes matter: mutations inside this list (its links re-render) are left out.
+    const watch = new MutationObserver((list) => {
+      const mine = (n: Node) => { const e = n instanceof Element ? n : n.parentElement; return !!e && !!e.closest("[data-component='table-of-contents']"); };
+      if (frameId || list.every((m) => mine(m.target))) return;
+      frameId = requestAnimationFrame(read);
     });
-    setFound(next);
+    watch.observe(box, { childList: true, subtree: true, characterData: true });
+    return () => { watch.disconnect(); if (frameId) cancelAnimationFrame(frameId); };
   }, [props.items, props.container, selector]);
 
   // The current section: the last heading whose top has passed the offset line (the first one before any has).
