@@ -11,7 +11,6 @@ import { SignaturePad, signatureToPng, type SignatureChangeDetails, type Signatu
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const area = (root: Element) => root.querySelector('svg[role=img]') as SVGSVGElement;
 const paths = (root: Element) => root.querySelectorAll('svg[role=img] path').length;
-const hidden = (root: Element) => root.querySelector('input[type=hidden]') as HTMLInputElement | null;
 type Call = [SignatureValue | null, SignatureChangeDetails];
 
 describe('SignaturePad', () => {
