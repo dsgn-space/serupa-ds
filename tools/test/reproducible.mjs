@@ -28,7 +28,7 @@ const R = [];
 const here = hashes(path.join(PROJECT, 'dist'));
 if (!here.size) R.push({ name: 'dist/ is built', ok: false, detail: 'npm run build first' });
 else {
-  const files = spawnSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], { cwd: PROJECT, encoding: 'utf8' }).stdout.split('\0').filter(Boolean);
+  const files = spawnSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], { cwd: PROJECT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }).stdout.split('\0').filter(Boolean);
   // A path of another length and name, so nothing that embeds the checkout's location can match by chance.
   const copy = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-reproducible-elsewhere-'));
   try {
