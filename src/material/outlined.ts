@@ -37,4 +37,4 @@ export * from './outlined/28';
 export * from './outlined/29';
 export * from './outlined/30';
 export * from './outlined/31';
-export type { IconData } from './types';
+export type { IconData } from "./types";

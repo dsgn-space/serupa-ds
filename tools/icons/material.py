@@ -50,13 +50,34 @@ def fmt(v):
 
 
 def compact(d):
-    """Absolute path commands (as SVGPathPen writes them) to relative ones with the shortest numbers."""
-    out, prev, cx, cy, sx, sy, last = '', '', 0.0, 0.0, 0.0, 0.0, ''
+    """Absolute path commands (as SVGPathPen writes them) to relative ones with the shortest numbers.
+
+    A quadratic whose control point is the previous one's mirrored through the current point is written as a smooth
+    quadratic (t, its end point only): the same curve, two numbers shorter. The font's TrueType outlines are full of
+    them, since a run of off-curve points has its on-curve points implied halfway between, which is what t draws."""
+    out, prev, cx, cy, sx, sy, last, qc = '', '', 0.0, 0.0, 0.0, 0.0, '', None
     for cmd, args in re.findall(r'([MLHVQCZ])([^MLHVQCZ]*)', d):
         n = [float(x) for x in re.findall(r'-?\d*\.?\d+', args)]
         if cmd == 'Z':
-            out += 'z'; prev, last, cx, cy = 'z', 'z', sx, sy
+            out += 'z'; prev, last, cx, cy, qc = 'z', 'z', sx, sy, None
             continue
+        if cmd == 'Q':
+            # One segment at a time, so each can be smooth or not.
+            for i in range(0, len(n), 4):
+                x1, y1, x, y = n[i:i + 4]
+                smooth = qc is not None and 2 * cx - qc[0] == x1 and 2 * cy - qc[1] == y1
+                rel = [x - cx, y - cy] if smooth else [x1 - cx, y1 - cy, x - cx, y - cy]
+                c = 't' if smooth else 'q'
+                if c != last:
+                    out += c; prev = c
+                for v in rel:
+                    t = fmt(v)
+                    if not (prev.isalpha() or t.startswith('-') or (t.startswith('.') and '.' in prev)):
+                        out += ' '
+                    out += t; prev = t
+                last, qc, cx, cy = c, (x1, y1), x, y
+            continue
+        qc = None
         if cmd == 'H':
             rel = [n[-1] - cx]; cx = n[-1]
         elif cmd == 'V':
@@ -161,7 +182,7 @@ def main():
         '//   import { Home } from "serupa-ds/icons/outlined";\n'
         '//   import { Home as HomeFilled } from "serupa-ds/icons";\n'
         '//   <Icon icon={current ? HomeFilled : Home} />\n'
-        + ''.join(f'export * from "./outlined/{i:02}";\n' for i in range(PARTS))
+        + ''.join(f"export * from './outlined/{i:02}';\n" for i in range(PARTS))
         + 'export type { IconData } from "./types";\n')
     out['src/material/icons.ts'] = head + ''.join(f'export * from "./part/{i:02}";\n' for i in range(PARTS)) + (
         '\n/** Every Material Symbol name, for autocomplete. */\nexport type MaterialIconName =\n' + ''.join(f'  | "{n}"\n' for n in names)[:-1] + ';\n')
