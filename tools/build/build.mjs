@@ -85,7 +85,11 @@ fs.writeFileSync(path.join(D, 'base.css'), stamp(bare(read('src/styles/base.css'
 // drop the styles of components a project never uses.
 const cssOf = Object.fromEntries(IMPORTS.map((n) => [n, read(`src/components/${n}/${n}.css`)]));
 const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(dk-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
-const tsxOf = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
+// A component's code, with the shared drawings it renders from src/internal/*.tsx (Loader's ring in Button, GR311):
+// the classes those write out are the component's too.
+const ownTsx = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
+const drawn = (code) => [...new Set([...code.matchAll(/from ["']\.\.\/\.\.\/internal\/(\w+)["']/g)].map((m) => m[1]))].filter((m) => fs.existsSync(path.join(P, 'src', 'internal', m + '.tsx'))).map((m) => read(`src/internal/${m}.tsx`));
+const tsxOf = (n) => { const own = ownTsx(n); return [own, ...drawn(own)].join('\n'); };
 const manifest = {};
 for (const n of IMPORTS) {
   const code = tsxOf(n);
