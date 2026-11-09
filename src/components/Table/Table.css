@@ -88,7 +88,7 @@
 @media (forced-colors: active) { .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { border-inline-start: var(--table-indicator-width, var(--border-width-2)) solid Highlight; } }
 /* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */
 .dk-table__header--resizable { position: relative; }
-.dk-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; user-select: none; }
+.dk-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
 .dk-table__resize::after { content: ""; position: absolute; inset-block: var(--spacing-2); inset-inline-end: var(--spacing-0); width: var(--border-width-2); background: var(--table-border, var(--border)); }
 @media (hover: hover) { .dk-table__resize:hover::after { background: var(--table-resize-active, var(--primary)); } }
 .dk-table__resize:active::after, .dk-table__resize:focus-visible::after { background: var(--table-resize-active, var(--primary)); }
