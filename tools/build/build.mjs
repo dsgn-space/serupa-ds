@@ -25,6 +25,7 @@ import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import { buildUtilities } from '../utilities/build.mjs';
+import { compactCss } from './compact-css.mjs';
 import { split } from '../utilities/extra.mjs';
 import { buildRegistry, cascade } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
@@ -65,9 +66,10 @@ const utilities = buildUtilities(P);
 // so page styles outside the layers win over them whatever loads first.
 const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
 // Shipped without the source comments (the explained copy is src/), which are about 40% of components.css
-// gzipped, and without indentation (7 KB of bundle.css); the /*! banner lines stay. Each rule keeps its own line, so
-// devtools still reads well.
-const bare = (css) => css.replace(/\/\*(?!!)[\s\S]*?\*\//g, '').replace(/^[ \t]+|[ \t]+$/gm, '').replace(/\n{2,}/g, '\n');
+// gzipped, and compacted: no spaces or line breaks around { } ; : , > (compact-css.mjs, about 5 KiB gzipped across
+// components.css and utilities.css, 9 Nov 2026). Only whitespace goes, and each rule still ends its line, so devtools
+// still reads well. The /*! banner lines stay.
+const bare = (css) => compactCss(css.replace(/\/\*(?!!)[\s\S]*?\*\//g, ''));
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
 // The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
 // the few pages that use them.
