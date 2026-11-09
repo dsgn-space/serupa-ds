@@ -32,6 +32,11 @@ export interface SignatureChangeDetails {
 }
 
 export interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
+  /** The signature (controlled), or null for none: one onValueChange gave, or one saved before. A drawn one is read
+   *  back from its SVG's paths, so give the SVG SignaturePad made. Use with onValueChange. */
+  value?: SignatureValue | null | undefined;
+  /** The signature at first (uncontrolled), such as one saved before; form.reset() goes back to it. */
+  defaultValue?: SignatureValue | null | undefined;
   /** Called with the signature after each stroke, undo, clear, typed change or switch of method; null when it's empty. */
   onValueChange?: ((value: SignatureValue | null, details: SignatureChangeDetails) => void) | undefined;
   /** How it starts: drawing ("draw", the default) or typing a name ("type"). People can switch either way. */
@@ -49,9 +54,13 @@ export interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElem
 type Point = readonly [number, number];
 type Stroke = Point[];
 
-const OWN = { onValueChange: 1, defaultMethod: 1, name: 1, form: 1, disabled: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, disabled: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const pathOf = (s: Stroke) => s.length === 1 ? `M${s[0][0]} ${s[0][1]}h0` : 'M' + s.map((p) => p[0] + ' ' + p[1]).join('L');
+// The strokes back from an SVG this pad made: each <path d="M x yLx y…"> is one stroke ("h0" ends a dot).
+const strokesOf = (svg: string): Stroke[] => [...svg.matchAll(/<path d="M([^"]+)"/g)].map((m) =>
+  m[1].replace(/h0$/, '').split('L').map((p) => { const [x, y] = p.trim().split(/[\s,]+/).map(Number); return [x, y] as const; }).filter((p) => isFinite(p[0]) && isFinite(p[1])),
+).filter((s) => s.length);
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const SVG = (w: number, h: number, body: string) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
 // The typed name as a signature, as the pad shows it: slanted serif, 30px, on the line.
@@ -101,9 +110,19 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const disabled = !!props.disabled || inDisabledFieldset;
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const first: SignatureMethod = props.defaultMethod === 'type' ? 'type' : 'draw';
-  const [method, setMethod] = React.useState<SignatureMethod>(first);
-  const [strokes, setStrokes] = React.useState<Stroke[]>([]);
-  const [typed, setTyped] = React.useState('');
+  const controlled = props.value !== undefined;
+  const start = controlled ? props.value : props.defaultValue;
+  const [method, setMethod] = React.useState<SignatureMethod>(start ? (start.method === 'type' ? 'type' : 'draw') : first);
+  const [strokes, setStrokes] = React.useState<Stroke[]>(() => (start && start.method !== 'type' ? strokesOf(start.svg) : []));
+  const [typed, setTyped] = React.useState(start && start.method === 'type' ? start.name : '');
+  // Shows a given value: its method, and its strokes or name; null empties what's shown and keeps the method.
+  const show = (v: SignatureValue | null | undefined, empty: SignatureMethod) => {
+    live.current = null;
+    if (!v) { setStrokes([]); setTyped(''); setMethod(empty); return; }
+    const m: SignatureMethod = v.method === 'type' ? 'type' : 'draw';
+    setMethod(m);
+    if (m === 'type') setTyped(v.name); else setStrokes(strokesOf(v.svg));
+  };
   const [size, setSize] = React.useState<[number, number]>([0, 0]);
   const live = React.useRef<Stroke | null>(null);
   const [, redraw] = React.useReducer((n: number) => n + 1, 0);
@@ -125,9 +144,18 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
     if (props.onValueChange) props.onValueChange(valueOf(m, s, t, measure()), { reason });
   };
 
+  // Controlled: what's shown follows value, so a change the app doesn't take back goes away again.
+  const want = controlled ? props.value ?? null : undefined;
+  const wantKey = want === undefined ? '' : want ? (want.method === 'type' ? 't:' + want.name.trim() : 'd:' + JSON.stringify(strokesOf(want.svg))) : '-';
+  const haveKey = !value ? '-' : value.method === 'type' ? 't:' + value.name : 'd:' + JSON.stringify(strokes);
+  React.useLayoutEffect(() => {
+    if (want !== undefined && !live.current && wantKey !== haveKey) show(want, method);
+  });
+
   useFormReset(root, () => {
-    setStrokes([]); setTyped(''); setMethod(first); live.current = null;
-    if (props.onValueChange) props.onValueChange(null, { reason: 'reset' });
+    if (controlled) return;   // the app's value stays; a controlled field's reset is the app's, as with a native one
+    setStrokes([]); setTyped(''); show(props.defaultValue, first);
+    if (props.onValueChange) props.onValueChange(props.defaultValue ? valueOf(props.defaultValue.method === 'type' ? 'type' : 'draw', props.defaultValue.method === 'type' ? [] : strokesOf(props.defaultValue.svg), props.defaultValue.name, measure()) : null, { reason: 'reset' });
   }, props.form);
 
   const at = (e: React.PointerEvent): Point => {

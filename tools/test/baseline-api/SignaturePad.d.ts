@@ -21,6 +21,8 @@ interface SignatureChangeDetails {
     reason: "clear" | "draw" | "method" | "reset" | "type" | "undo";
 }
 interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
+    value?: null | SignatureValue | undefined;
+    defaultValue?: null | SignatureValue | undefined;
     onValueChange?: ((value: null | SignatureValue, details: SignatureChangeDetails) => void) | undefined;
     defaultMethod?: SignatureMethod | undefined;
     name?: string | undefined;

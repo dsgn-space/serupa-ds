@@ -39,6 +39,7 @@ Drawn from the `Playground` story.
 - Keep Type: it's how people who can't draw with a pointer sign (WCAG 2.5.7 Dragging movements, 2.1.1 Keyboard), and some simply prefer it. Treat a typed name as a signature as much as a drawing.
 - `onValueChange(value, details)` gives `{ method, svg, name }` (null while empty) after each stroke, undo, clear, typed change or switch, with `details.reason`. The SVG is a standalone document sized to the box, in black, so it prints on paper whatever the theme.
 - With `name`, a hidden input sends the SVG with the form ("" while empty), and `form.reset()` empties it. Check that it isn't empty yourself, and show the error in the Field.
+- To show a saved signature, pass it back as `defaultValue` (or `value`, controlled): a typed one by its `name`, a drawn one by the SVG SignaturePad made.
 - `defaultMethod="type"` starts on the name field, as on a page most people fill in with a keyboard.
 - A drawing and a typed name are kept apart while people switch; the value follows the method shown.
 
@@ -54,6 +55,8 @@ Drawn from the `Playground` story.
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
+| `value` | `SignatureValue \| null` | | The signature (controlled), as `onValueChange` gave it or as saved before. A drawn one is read back from its SVG's paths. |
+| `defaultValue` | `SignatureValue \| null` | | The signature at first (uncontrolled), such as one saved before; `form.reset()` goes back to it. |
 | `onValueChange` | `(value: SignatureValue \| null, details: { reason }) => void` | | After each stroke, undo, clear, typed change or switch of method. `reason`: `"draw"`, `"undo"`, `"clear"`, `"type"`, `"method"` or `"reset"`. |
 | `defaultMethod` | `"draw" \| "type"` | `"draw"` | How it starts. |
 | `name` | `string` | | Sends the SVG with a form in a hidden input. |

@@ -100,6 +100,40 @@ describe('SignaturePad', () => {
     expect(el('on').contains(document.activeElement) && document.activeElement!.getAttribute('role')).toBe('radio');
   });
 
+  test('signing without dragging: a tap on Type, then the name field, signs with one pointer and the keyboard alone (WCAG 2.5.7)', async () => {
+    const calls: Call[] = [];
+    await render(<SignaturePad id="np" aria-label="Signature" onValueChange={(v, d) => calls.push([v, d])} />);
+    await page.getByRole('radio', { name: 'Type' }).click();
+    await page.getByRole('textbox', { name: 'Full name' }).click();
+    await userEvent.keyboard('Dewi');
+    expect([calls[calls.length - 1][0]!.method, calls[calls.length - 1][0]!.name]).toEqual(['type', 'Dewi']);
+  });
+
+  test('defaultValue shows a saved signature, drawn or typed, and form.reset() goes back to it', async () => {
+    const drawn: SignatureValue = { method: 'draw', name: '', svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="160" viewBox="0 0 300 160"><g><path d="M20 100L140 60"/><path d="M160 100h0"/></g></svg>' };
+    await render(<form id="dvf"><SignaturePad id="dv" aria-label="Drawn" name="sig" defaultValue={drawn} /><SignaturePad id="dt" aria-label="Typed" defaultValue={{ method: 'type', name: 'Dewi', svg: '' }} /></form>);
+    expect([...el('dv').querySelectorAll('svg[role=img] path')].map((p) => p.getAttribute('d'))).toEqual(['M20 100L140 60', 'M160 100h0']);
+    await expect.element(page.getByRole('radio', { name: 'Type' }).nth(1)).toBeChecked();
+    await expect.element(page.getByRole('textbox', { name: 'Full name' })).toHaveValue('Dewi');
+    await page.getByRole('button', { name: 'Clear' }).click();
+    expect(paths(el('dv'))).toBe(0);
+    (el('dvf') as HTMLFormElement).reset();
+    await expect.poll(() => paths(el('dv'))).toBe(2);
+  });
+
+  test('value controls it: a stroke the app does not take goes away, and a value set by the app is shown', async () => {
+    function Controlled() {
+      const [v, setV] = React.useState<SignatureValue | null>(null);
+      return <><SignaturePad id="cv" aria-label="Signature" value={v} onValueChange={() => {}} />
+        <button type="button" onClick={() => setV({ method: 'type', name: 'Sari', svg: '' })}>Fill</button></>;
+    }
+    await render(<Controlled />);
+    await drag(area(el('cv')), { x: 20, y: 100 }, { x: 140, y: 60 });
+    await expect.poll(() => paths(el('cv'))).toBe(0);
+    await page.getByRole('button', { name: 'Fill' }).click();
+    await expect.element(page.getByRole('textbox', { name: 'Full name' })).toHaveValue('Sari');
+  });
+
   test('in Indonesian under id-ID labels', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><SignaturePad id="i" aria-label="Tanda tangan" /></SerupaProvider>);
     await expect.element(page.getByRole('radiogroup', { name: 'Cara tanda tangan' })).toBeInTheDocument();
