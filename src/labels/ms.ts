@@ -113,6 +113,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Alih keluar penapis: ' + field,
   filterDone: 'Selesai',
   filterResults: (count) => (count === 1 ? '1 hasil' : n(count) + ' hasil'),
+  tocTitle: 'Di halaman ini',
   discardTitle: 'Buang perubahan?',
   discardDescription: 'Perubahan yang anda buat di sini belum disimpan.',
   discard: 'Buang',

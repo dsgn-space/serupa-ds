@@ -116,6 +116,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Remover filtro: ' + field,
   filterDone: 'Concluído',
   filterResults: (count) => (count === 1 ? '1 resultado' : n(count) + ' resultados'),
+  tocTitle: 'Nesta página',
   discardTitle: 'Descartar as alterações?',
   discardDescription: 'O que você alterou aqui não foi salvo.',
   discard: 'Descartar',

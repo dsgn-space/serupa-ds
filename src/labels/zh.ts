@@ -112,6 +112,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => '移除筛选：' + field,
   filterDone: '完成',
   filterResults: (count) => (count === 1 ? '1 个结果' : n(count) + ' 个结果'),
+  tocTitle: '本页内容',
   discardTitle: '放弃更改？',
   discardDescription: '你在这里所做的更改尚未保存。',
   discard: '放弃',

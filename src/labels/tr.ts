@@ -113,6 +113,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Filtreyi kaldır: ' + field,
   filterDone: 'Bitti',
   filterResults: (count) => (count === 1 ? '1 sonuç' : n(count) + ' sonuç'),
+  tocTitle: 'Bu sayfada',
   discardTitle: 'Değişiklikler atılsın mı?',
   discardDescription: 'Burada yaptığınız değişiklikler kaydedilmedi.',
   discard: 'At',

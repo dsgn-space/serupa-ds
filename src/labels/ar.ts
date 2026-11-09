@@ -117,6 +117,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'إزالة عامل التصفية: ' + field,
   filterDone: 'تم',
   filterResults: (count) => (count === 1 ? 'نتيجة واحدة' : 'عدد النتائج: ' + n(count)),
+  tocTitle: 'في هذه الصفحة',
   discardTitle: 'تجاهل التغييرات؟',
   discardDescription: 'لم تُحفظ التغييرات التي أجريتها هنا.',
   discard: 'تجاهل',

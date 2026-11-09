@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TableOfContents — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: 240 } }, h(T.TableOfContents, { items: [
+    { id: 'intro', label: 'Introduction' }, { id: 'install', label: 'Installation' }, { id: 'npm', label: 'With npm', level: 3 }, { id: 'usage', label: 'Usage' }] })));
+</script>
+</body>
+</html>

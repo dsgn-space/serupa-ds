@@ -113,6 +113,7 @@ export const labels: SerupaLabels = {
   filterRemove: (field) => 'Xóa bộ lọc: ' + field,
   filterDone: 'Xong',
   filterResults: (count) => (count === 1 ? '1 kết quả' : n(count) + ' kết quả'),
+  tocTitle: 'Trên trang này',
   discardTitle: 'Bỏ các thay đổi?',
   discardDescription: 'Những gì bạn thay đổi ở đây chưa được lưu.',
   discard: 'Bỏ',

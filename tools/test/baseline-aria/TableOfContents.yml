@@ -1,0 +1,120 @@
+# FromHeadings
+- heading "Introduction" [level=2]
+- paragraph: Text of the introduction section.
+- heading "Installation" [level=2]
+- paragraph: Text of the installation section.
+- heading "With npm" [level=3]
+- paragraph: Text of the with npm section.
+- heading "From a CDN" [level=3]
+- paragraph: Text of the from a cdn section.
+- heading "Usage" [level=2]
+- paragraph: Text of the usage section.
+- heading "Theming" [level=2]
+- paragraph: Text of the theming section.
+- heading "Questions people ask" [level=2]
+- paragraph: Text of the questions people ask section.
+- navigation "On this page":
+  - paragraph: On this page
+  - list:
+    - listitem:
+      - link "Introduction":
+        - /url: "#toc-intro"
+    - listitem:
+      - link "Installation":
+        - /url: "#toc-install"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-npm"
+    - listitem:
+      - link "From a CDN":
+        - /url: "#toc-cdn"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-usage"
+    - listitem:
+      - link "Theming":
+        - /url: "#toc-theming"
+    - listitem:
+      - link "Questions people ask":
+        - /url: "#toc-faq"
+
+# LongText
+- navigation "On this page":
+  - paragraph: On this page
+  - list:
+    - listitem:
+      - link "Introduction":
+        - /url: "#toc-intro"
+    - listitem:
+      - link "Installation":
+        - /url: "#toc-install"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-npm"
+    - listitem:
+      - link "From a CDN":
+        - /url: "#toc-cdn"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-usage"
+    - listitem:
+      - link "Theming":
+        - /url: "#toc-theming"
+    - listitem:
+      - link "Questions people ask":
+        - /url: "#toc-faq"
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column":
+        - /url: "#toc-long"
+
+# NoTitle
+- navigation "Sections":
+  - list:
+    - listitem:
+      - link "Introduction":
+        - /url: "#toc-intro"
+    - listitem:
+      - link "Installation":
+        - /url: "#toc-install"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-npm"
+    - listitem:
+      - link "From a CDN":
+        - /url: "#toc-cdn"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-usage"
+    - listitem:
+      - link "Theming":
+        - /url: "#toc-theming"
+    - listitem:
+      - link "Questions people ask":
+        - /url: "#toc-faq"
+
+# Playground
+- navigation "On this page":
+  - paragraph: On this page
+  - list:
+    - listitem:
+      - link "Introduction":
+        - /url: "#toc-intro"
+    - listitem:
+      - link "Installation":
+        - /url: "#toc-install"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-npm"
+    - listitem:
+      - link "From a CDN":
+        - /url: "#toc-cdn"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-usage"
+    - listitem:
+      - link "Theming":
+        - /url: "#toc-theming"
+    - listitem:
+      - link "Questions people ask":
+        - /url: "#toc-faq"
+
