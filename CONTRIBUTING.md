@@ -14,6 +14,31 @@ Work on the repository with **Node 26**: `nvm use` (or `fnm use`) reads `.nvmrc`
 
 ## A new component
 
+**Before any code, a proposal.** Open an issue titled "Proposal: <Name>" and answer the four questions below. A component joins the system only when it clears the bar: it solves one problem that at least three real screens have, in different products or flows, and nothing already in the system covers it. A maintainer answers with accepted, parked or declined, and the reason.
+
+```md
+## The problem
+What someone is trying to do, and what goes wrong today without this component. One paragraph, no solution yet.
+
+## Three real uses
+Three or more screens where this is needed now, each in a different product or flow: what the screen is, what the
+component does there, and a link or a screenshot. Hypothetical uses don't count towards the three.
+
+## Prior art
+How two or three other design systems or well-known products do this, and what to take from each or leave out.
+
+## Why a composition won't do
+The closest you can get with what's already here (Stack, Card, List, Popover, Field and the rest), and what it gets
+wrong: the accessibility, the behaviour or the amount of code each screen would repeat. If a recipe in the docs would
+do, say so and stop here.
+```
+
+**Parked ideas.** A proposal that doesn't clear the bar yet is listed here with its reason, so the next person to want it starts from what was found. A parked idea comes back when the reason no longer holds, such as a third real use turning up.
+
+| Idea | Why it's parked | Comes back when |
+| --- | --- | --- |
+| *None yet* | | |
+
 **First, pick a direction by looking.** `npm run new-component -- <Name> --directions` writes one story, Directions/<Name> in `src/directions/`, with two or three takes behind one Storybook switch. The takes should differ in kind, such as layout, density or motion, not in polish. Draw each one just far enough to judge, flip between them, and pick one. Write the pick and the reason in the pull request, then delete the file. The contract check fails while it's there, so it never merges.
 
 1. `npm run new-component -- <Name> --group <Storybook group>` writes `src/components/<Name>/` with every file the contract asks for, already wired to the system: the component through `component()`, its CSS in `@layer dk.components` reading its own tokens, its tokens file, stories, a starting test, the Storybook page, the usage guide with its required headings, the preview page and the server-render case.
