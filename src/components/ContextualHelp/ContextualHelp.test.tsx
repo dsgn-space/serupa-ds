@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { ContextualHelp } from './ContextualHelp';
 
-const btn = () => document.querySelector('.dk-contextual-help__button') as HTMLButtonElement;
-const panel = () => document.querySelector('.dk-contextual-help') as HTMLElement;
+const btn = () => document.querySelector('button') as HTMLButtonElement;   // the first button on the page is its trigger
+const panel = () => document.getElementById(btn().getAttribute('aria-controls') || '') || (document.querySelector('[role="dialog"]') as HTMLElement);
 const tick = () => new Promise((r) => setTimeout(r, 30));
 
 describe('ContextualHelp', () => {
@@ -60,11 +60,24 @@ describe('ContextualHelp', () => {
 
   test('the "?" and "i" read 3:1 on the page in all six themes', async () => {
     await render(<><ContextualHelp>a</ContextualHelp><ContextualHelp variant="info">b</ContextualHelp></>);
-    const [h, i] = [...document.querySelectorAll('.dk-contextual-help__button')] as HTMLElement[];
+    const [h, i] = [...document.querySelectorAll('button')] as HTMLElement[];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(document.body).backgroundColor;
       for (const e of [h, i]) expect(contrast(css(e).color, bg), th).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  test('placement: the panel opens on the side asked for, each of the twelve', async () => {
+    const sides = ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left', 'left-start', 'left-end', 'right', 'right-start', 'right-end'] as const;
+    await page.viewport(1200, 900);   // room on every side, so none flips
+    const { rerender } = await render(<div />);
+    for (const at of sides) {
+      await rerender(<div style={{ display: 'flex', justifyContent: 'center', padding: 320 }}><ContextualHelp key={at} placement={at} defaultOpen>Text</ContextualHelp></div>);
+      await tick();
+      const b = btn().getBoundingClientRect(), p = panel().getBoundingClientRect(), side = at.split('-')[0];
+      const ok = side === 'top' ? p.bottom <= b.top : side === 'bottom' ? p.top >= b.bottom : side === 'left' ? p.right <= b.left : p.left >= b.right;
+      expect(ok, at).toBe(true);
     }
   });
 });

@@ -22,6 +22,13 @@ import { ContextualHelp } from "serupa-ds";
 - Controls, a form or several links: use [Popover](../Popover/README.md) with a labelled button.
 - Anything people need to finish the task, such as a field's format or a requirement: put it on the page, as the Field's `description`.
 
+## Anatomy
+
+Drawn from the `Default` story.
+
+1. **Button** (`.dk-contextual-help__button`): a small round "?" (or "i" with variant info) beside the term it explains.
+2. **Panel** (`.dk-contextual-help`): the non-modal dialog the button opens, with an optional title, text and links.
+
 ## Usage
 
 - **Variants:** `help` (default) shows a "?" for how something works; `info` shows an "i" in the info color for facts about a value.
@@ -43,6 +50,7 @@ import { ContextualHelp } from "serupa-ds";
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | | What the help says |
+| `id` | string | none | Goes to the panel. |
 | `title` | `ReactNode` | | A heading at the top of the panel |
 | `headingLevel` | `2` \| `3` \| `4` \| `5` \| `6` | `3` | The title's heading level |
 | `variant` | `'help'` \| `'info'` | `'help'` | "?" or "i" |
