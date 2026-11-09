@@ -14,9 +14,9 @@ const meta = {
     variant: 'help',
   },
   render: (args) => (
-    <p style={{ display: 'flex', alignItems: 'center', gap: 4, margin: 0 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 4, margin: 0 }}>
       Workspace <ContextualHelp {...args} />
-    </p>
+    </div>
   ),
 } satisfies Meta<typeof ContextualHelp>;
 export default meta;

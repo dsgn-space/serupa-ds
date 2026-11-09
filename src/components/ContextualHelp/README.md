@@ -34,7 +34,7 @@ Drawn from the `Default` story.
 - **Variants:** `help` (default) shows a "?" for how something works; `info` shows an "i" in the info color for facts about a value.
 - **Name:** the button is "Help" or "Information" by default (`labels.contextualHelp`, `labels.contextualInfo`). When a page has more than one, give each a `label` that names its topic ("Help: tax ID").
 - **Title:** an optional heading names the panel (an `h3` by default, `headingLevel` to fit the outline). Without one the panel takes the button's name.
-- **Content:** a sentence or two, and at most one link to more. The panel is 256px wide and wraps long words.
+- **Content:** a sentence or two, and at most one link to more. The panel is 256px wide and wraps long words. It is a `<div>`, so put the help beside a label or heading, not inside a `<p>`.
 - Put it right after the text it explains, inside the label when it's about a field, so it reads in order.
 
 ## Accessibility

@@ -7,5 +7,5 @@
 @layer dk.components {
 .dk-contextual-help__button { vertical-align: middle; color: var(--contextual-help-icon, var(--text-muted)); }
 .dk-contextual-help__button--info { color: var(--contextual-help-info-icon, var(--info)); }
-.dk-contextual-help { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-contextual-help { font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
 }
