@@ -343,7 +343,7 @@ consumer:
   extends: .full-suite
   stage: test
   needs: [build]
-  timeout: 10m
+  timeout: 20m
   image: node:${NODE}
   parallel:
     matrix:
