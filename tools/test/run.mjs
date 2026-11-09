@@ -2,6 +2,7 @@
 //   node tools/test/run.mjs                      everything
 //   node tools/test/run.mjs --group <name>       one group: checks, components, visual or storybook
 //   node tools/test/run.mjs --since <ref>        only the components changed since then and the ones that use them
+//   node tools/test/run.mjs --since <ref> --narrowed-only   pass without running when the change reaches beyond the component folders
 //   node tools/test/run.mjs --update             accept new baselines
 //   node tools/test/run.mjs --list               the steps it would run
 //   node tools/test/run.mjs --browser <engine>   firefox or webkit instead of Chromium
@@ -19,7 +20,7 @@ const update = process.argv.includes('--update') ? ['--update'] : [];
 // cross-browser comparison through WebDriver (see compat.mjs).
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 {
-  const VALUED = ['--group', '--since', '--browser', '--locale', '--compat', '--driver'], FLAGS = ['--update', '--list'];
+  const VALUED = ['--group', '--since', '--browser', '--locale', '--compat', '--driver'], FLAGS = ['--update', '--list', '--narrowed-only'];
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//   ') || l.startsWith('// --help')).map((l) => l.slice(3)).join('\n'));
     process.exit(0);
@@ -66,6 +67,13 @@ if (arg('--since')) {
   direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
+  // --narrowed-only (a merge request's cross-browser jobs): a change that reaches beyond the component folders (shared
+  // code, tooling) would run the whole suite in Firefox and WebKit, 20 to 40 minutes that hold the merge; the nightly
+  // run covers those, so the job passes with a note instead.
+  if (!names && process.argv.includes('--narrowed-only')) {
+    console.log('--narrowed-only: not narrowed, so this run is left to the nightly cross-browser run');
+    process.exit(0);
+  }
 }
 const only = onlyComponents();
 // They go through the covered components' stories, so with none to go through (ErrorBoundary alone: its stories are
@@ -81,7 +89,10 @@ const steps = [
   // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in a browser. Coverage
   // only on a full run: the floors in vitest.config.ts are for all of src/, which a few components can't reach.
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
-  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
+  // SERUPA_SHARD=2/3 with --group components: every third test file (CI runs the shards side by side). A shard with
+  // coverage also writes Vitest's blob report (.vitest/blob/ in Vitest 5), which CI's coverage job merges into one coverage
+  // report and checks against the floors.
+  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, ...(process.env.SERUPA_COVERAGE && !only ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
   ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
@@ -105,6 +116,13 @@ if (arg('--group')) {
   const g = arg('--group');
   if (!steps.some((step) => step[3] === g)) { console.error(`Unknown --group "${g}" (checks, components, visual or storybook)`); process.exit(2); }
   steps.splice(0, steps.length, ...steps.filter((step) => step[3] === g));
+}
+// SERUPA_PART splits the components group into two CI jobs that run side by side: "locale" keeps only the runs in
+// another language (the steps with a SERUPA_LOCALE), "base" everything else. Run alone, either does half the work.
+if (process.env.SERUPA_PART) {
+  const part = process.env.SERUPA_PART;
+  if (!['base', 'locale'].includes(part)) { console.error(`Unknown SERUPA_PART "${part}" (base or locale)`); process.exit(2); }
+  steps.splice(0, steps.length, ...steps.filter((step) => Boolean(step[4]?.SERUPA_LOCALE) === (part === 'locale')));
 }
 // No component changed (a changeset alone): nothing for the component, visual or Storybook steps to cover.
 // A changed shared test still runs, in the component steps, with nothing else there.
