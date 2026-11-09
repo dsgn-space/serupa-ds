@@ -10,11 +10,11 @@ export interface DescriptionListProps extends React.HTMLAttributes<HTMLDListElem
   /** `inline` (default): the term in a column beside its details, stacked when the list is narrower than 480px.
    *  `stacked`: the term above its details. `split`: the term at the start and the details at the end of one row,
    *  wrapping under it when both don't fit (totals, settings, shortcuts). */
-  layout?: DescriptionListLayout;
+  layout?: DescriptionListLayout | undefined;
   /** A hairline between items. */
-  dividers?: boolean;
+  dividers?: boolean | undefined;
   /** DescriptionItem children. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 }
 
 /** A list of terms and their details: a record's fields, an order's totals, a set of shortcuts. A `<dl>` whose items
@@ -32,9 +32,9 @@ export interface DescriptionItemProps extends Omit<React.HTMLAttributes<HTMLDivE
   /** The term: what the details describe ("Owner", "Subtotal"). */
   term: React.ReactNode;
   /** The details. Several values can go in one item; long ones wrap anywhere rather than widen the list. */
-  children?: React.ReactNode;
+  children?: React.ReactNode | undefined;
   /** A stronger row, such as an order's total. */
-  emphasis?: boolean;
+  emphasis?: boolean | undefined;
 }
 
 /** One term and its details in a DescriptionList: a `<div>` holding a `<dt>` and a `<dd>`. */

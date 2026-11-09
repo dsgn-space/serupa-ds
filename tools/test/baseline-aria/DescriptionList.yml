@@ -51,12 +51,12 @@
   - time: 14 March 2026
 
 # RightToLeft
-- term: الاسم
-- definition: إعادة تصميم نورثويند
-- term: المالك
-- definition: أيو ليستاري
-- term: المجموع
-- definition: ١٢٠ ر.س
+- term: Name
+- definition: Northwind redesign
+- term: Owner
+- definition: Ayu Lestari
+- term: Total
+- definition: SAR 120
 
 # Split
 - term: Subtotal

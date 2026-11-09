@@ -27,6 +27,15 @@ import { DescriptionList, DescriptionItem } from "serupa-ds";
 - Many records with the same fields, to compare: use [Table](../Table/README.md).
 - Fields a person fills in: use [Field](../Field/README.md) with its inputs.
 
+## Anatomy
+
+Drawn from the `Default` story.
+
+1. **List** (`.dk-description-list`): the `<dl>`, a term beside its details from 480px wide, under it when narrower.
+2. **Item** (`.dk-description-list__item`): one term and its details, in a `<div>`.
+3. **Term** (`.dk-description-list__term`): the `<dt>`, what the value is, muted and medium weight.
+4. **Details** (`.dk-description-list__details`): the `<dd>`, the value itself.
+
 ## Usage
 
 - **Layouts:** `inline` (default) puts the term in a column a third of the list wide, beside its details, and stacks them when the list is under 480px wide (a container query, so a list in a narrow card stacks on a wide screen too). `stacked` always puts the term above. `split` puts the details at the end of the term's row, in tabular figures, and moves them under it when both don't fit: totals, settings, shortcuts.
@@ -53,6 +62,7 @@ import { DescriptionList, DescriptionItem } from "serupa-ds";
 | `layout` | `'inline'` \| `'stacked'` \| `'split'` | `'inline'` | How a term sits beside its details |
 | `dividers` | `boolean` | `false` | A hairline between items |
 | `children` | `ReactNode` | | DescriptionItem elements |
+| `id` | string | none | Goes to the `<dl>`. |
 
 `className`, `ref` and other props go to the `<dl>`.
 

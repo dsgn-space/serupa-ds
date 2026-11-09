@@ -52,15 +52,17 @@ export const LongText: Story = {
     </DescriptionList>
   ),
 };
+// Right to left with Latin text: the layout mirrors the same way, and the picture doesn't depend on which Arabic
+// font a machine has (CI's draws Arabic differently from a laptop's).
 export const RightToLeft: Story = {
   render: (args) => (
-    <div dir="rtl" lang="ar" style={{ maxWidth: 560 }}>
+    <div dir="rtl" style={{ maxWidth: 560 }}>
       <DescriptionList {...args}>
-        <DescriptionItem term="الاسم">إعادة تصميم نورثويند</DescriptionItem>
-        <DescriptionItem term="المالك">أيو ليستاري</DescriptionItem>
+        <DescriptionItem term="Name">Northwind redesign</DescriptionItem>
+        <DescriptionItem term="Owner">Ayu Lestari</DescriptionItem>
       </DescriptionList>
       <DescriptionList layout="split" style={{ marginTop: 16 }}>
-        <DescriptionItem term="المجموع">١٢٠ ر.س</DescriptionItem>
+        <DescriptionItem term="Total">SAR 120</DescriptionItem>
       </DescriptionList>
     </div>
   ),
