@@ -41,7 +41,7 @@
 .dk-tour__close { flex-shrink: 0; margin-block-start: calc(var(--spacing-0) - var(--spacing-1)); margin-inline-end: calc(var(--spacing-0) - var(--spacing-2)); }
 .dk-tour__text { overflow-wrap: anywhere; }
 .dk-tour__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
-.dk-tour__count { color: var(--tour-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-tour__count { color: var(--tour-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }
 .dk-tour__actions { display: flex; gap: var(--spacing-2); margin-inline-start: auto; }
 /* The element the step points at. */
 [data-tour-target] { outline: var(--tour-ring-width, var(--border-width-2)) solid var(--tour-ring, var(--primary)); outline-offset: var(--tour-ring-offset, var(--outline-offset-2)); }

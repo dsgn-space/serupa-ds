@@ -23,12 +23,14 @@ function Paged({ id = 'lm', step = 10, all = 30, ms = 50, infinite = false, onLo
 }
 
 describe('LoadMore', () => {
-  test('a <div> with "Showing 20 of 134" over an outline Load more button; ref, className and other props reach it', async () => {
+  test('a <div> with "Showing 20 of 134" (tabular digits) over an outline Load more button; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><LoadMore id="x" ref={ref} className="extra" data-x="y" onLoadMore={() => {}} count={20} total={1340} /></SerupaProvider>);   // pinned: 1,340 follows the browser's locale
     const e = el('x');
     expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-load-more extra', 'y', 'load-more']);
     expect([para('x', 'Showing 20 of 1,340')?.textContent, button('x').textContent, button('x').className.includes('dk-btn--outline')]).toEqual(['Showing 20 of 1,340', 'Load more', true]);
+    // Its digits are tabular, so the count doesn't shift sideways as it grows.
+    expect(getComputedStyle(para('x', 'Showing 20 of 1,340')!).fontVariantNumeric).toBe('tabular-nums');
   });
 
   test('pressing it loads (one press until the promise settles), says what was added, keeps focus on the button, and focuses the end text when the last page leaves no button', async () => {

@@ -61,6 +61,7 @@ describe('Tour', () => {
     await render(<Page defaultOpen onStepChange={onStepChange} onFinish={onFinish} onOpenChange={onOpenChange} />);
     expect(button('Back')).toBe(undefined);
     await expect.element(page.getByText('Step 1 of 3')).toBeVisible();
+    expect(getComputedStyle(page.getByText('Step 1 of 3').element()).fontVariantNumeric).toBe('tabular-nums');   // the count doesn't shift as the step changes
     await userEvent.click(button('Next'));
     expect([el('t').querySelector('h2')!.textContent, el('a').hasAttribute('data-tour-target'), el('b').hasAttribute('data-tour-target')]).toEqual(['Second', false, true]);
     await userEvent.click(button('Back'));

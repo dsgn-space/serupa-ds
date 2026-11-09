@@ -389,6 +389,7 @@ describe('TableActionBar (62)', () => {
     await expect.poll(() => el('bar').hidden).toBe(false);
     expect(el('bar').getAttribute('role')).toBe('group');
     expect(document.getElementById(el('bar').getAttribute('aria-labelledby')!)?.textContent).toBe('2 selected');
+    expect(getComputedStyle(document.getElementById(el('bar').getAttribute('aria-labelledby')!)!).fontVariantNumeric).toBe('tabular-nums');   // the count doesn't shift as it changes
     expect([...el('bar').querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Delete', 'Clear selection']);
     await userEvent.click(barButton('Delete'));
     expect(log).toEqual(['delete Ada,Linus']);
