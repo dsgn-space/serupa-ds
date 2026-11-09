@@ -164,8 +164,11 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
       const fmt = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
       // Thin and narrow spaces as plain ones: Node's ICU and the browser's put different spaces around the range's dash,
       // so a server render wouldn't match the browser's.
-      const text = (r.start && r.end ? fmt.formatRange(toDate(r.start), toDate(r.end)) : r.start ? fmt.format(toDate(r.start)) + ' –' : '– ' + fmt.format(toDate(r.end!))).replace(/[\u2009\u202f]/g, ' ');
-      return L.filterIs(f.label, text);
+      const plain = (t: string) => t.replace(/[\u2009\u202f]/g, ' ');
+      // One end only: "from" or "until" in words, since a bare dash is read as nothing or as "dash" (GR295).
+      if (!r.end) return L.filterFrom(f.label, plain(fmt.format(toDate(r.start!))));
+      if (!r.start) return L.filterUntil(f.label, plain(fmt.format(toDate(r.end))));
+      return L.filterIs(f.label, plain(fmt.formatRange(toDate(r.start), toDate(r.end))));
     }
     const chosen = Array.isArray(v) ? v : typeof v === 'string' ? [v] : [];
     return L.filterIs(f.label, list(chosen.map((c) => { const o = f.options.find((x) => valueOf(x) === c); return o ? labelOf(o) : c; })));

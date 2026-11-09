@@ -5,6 +5,7 @@ import { announce, ensureAnnouncer } from '../../internal/announce';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useShowAfter } from '../../internal/showAfter';
+import { RingArt } from '../../internal/loaderRing';
 import { spinnerDelay } from '../../internal/timing';
 
 export type LoaderVariant = 'ring' | 'spokes' | 'dots' | 'pixel' | 'text' | 'skeleton';
@@ -121,11 +122,7 @@ export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>('L
         <circle className="dk-loader__dot" cx={12} cy={12} r={2.5} />
         <circle className="dk-loader__dot" cx={20} cy={12} r={2.5} />
       </svg>
-    : <svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
-        {/* a quarter arc turning (700ms a turn): Loader.css; still and breathing under reduced motion */}
-        <circle className="dk-loader__track" cx={12} cy={12} r={10} />
-        <circle className="dk-loader__arc" cx={12} cy={12} r={10} pathLength={100} strokeDasharray="25 150" />
-      </svg>;
+    : <RingArt />;
   // The visible label repeats the accessible name, so it's hidden from assistive tech (no double reading).
   // The glint holds a full-color copy of the words in its ::after (from data-words, so the text isn't read twice).
   const text = isText ? <span className="dk-loader__label" aria-hidden key="label">{words}<span className="dk-loader__glint" data-words={words} /></span> : null;

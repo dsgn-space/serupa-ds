@@ -337,3 +337,33 @@ describe('ChatComposer', () => {
     expect(act.compareDocumentPosition(send) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
+
+describe('Chat: watching messages grow (GR240)', () => {
+  function Stream({ api }: { api: { set?: (n: number, last: string) => void } }) {
+    const [state, setState] = React.useState({ n: 30, last: 'Thinking' });
+    api.set = (n, last) => setState({ n, last });
+    return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat aria-label="Support" style={{ flex: 'auto' }}>
+      {msgs(0, state.n)}<ChatMessage key={'reply' + state.n} author="Assistant" streaming>{state.last}</ChatMessage>
+    </Chat></div>;
+  }
+
+  test('one ResizeObserver for the log: a streamed token observes nothing again, and a message added later is watched', async () => {
+    const proto = ResizeObserver.prototype, realObserve = proto.observe;
+    let observed = 0;
+    proto.observe = function (this: ResizeObserver, ...a: Parameters<ResizeObserver['observe']>) { observed++; return realObserve.apply(this, a); };
+    try {
+      const api: { set?: (n: number, last: string) => void } = {};
+      await render(<Stream api={api} />);
+      await expect.poll(() => atBottom(log())).toBe(true);
+      const atMount = observed;
+      for (let i = 1; i <= 20; i++) { api.set!(30, 'Token '.repeat(i)); await new Promise((r) => requestAnimationFrame(r)); }
+      expect(observed - atMount).toBe(0);
+      // A message that arrives later is watched too: when it grows, the reader stays at the bottom.
+      api.set!(31, 'Thinking');
+      await expect.poll(() => observed - atMount).toBeGreaterThan(0);
+      await expect.poll(() => atBottom(log())).toBe(true);
+      api.set!(31, 'A long answer that wraps over several lines in this narrow log. '.repeat(8));
+      await expect.poll(() => atBottom(log())).toBe(true);
+    } finally { proto.observe = realObserve; }
+  });
+});

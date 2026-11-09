@@ -49,6 +49,17 @@ Drawn from the `FullScreen` story.
 - Use `alert` only for decisions people must make. It hides the × and stops a backdrop click from closing it.
 - Keep the body short. Pick `size="sm"` for a confirmation and `lg` only when the content needs the width.
 - For a long form on a phone, use `fullScreen="mobile"`. Under 640px the panel fills the screen with square corners, and the footer sits at the bottom, clear of the home bar.
+- For a form in the dialog, give the form an `id` and make the main button in `footer` its submit button with `form`, so Enter in a field submits it as it would on a page. The footer sits outside the form, and without it, Enter in a dialog with more than one field does nothing. On a failed submit, move focus to the first field with an error (or an ErrorSummary for a long form), as a page does:
+
+```tsx
+<Dialog open={open} onOpenChange={setOpen} title="New project"
+  footer={<><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button type="submit" form="new-project">Create project</Button></>}>
+  <form id="new-project" onSubmit={(e) => { e.preventDefault(); if (!name.trim()) { setError("Enter a project name"); nameRef.current?.focus(); return; } create(name); }}>
+    <Field label="Project name" required error={error}><Input ref={nameRef} value={name} onChange={(e) => setName(e.target.value)} /></Field>
+  </form>
+</Dialog>
+```
+
 - Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 
 ## Behavior

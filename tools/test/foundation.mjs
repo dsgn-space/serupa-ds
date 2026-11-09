@@ -161,7 +161,7 @@ for (const [, prop, val] of comp.matchAll(/([a-z-]+)\s*:\s*([^;{}]+);/g)) {
 check('components: Button and Icon use only tokens', !bad.size, [...bad].sort().slice(0, 10).join('; '));
 
 // 6. self-contained (a link the console warnings print isn't something the page loads: internal/warn.ts)
-const LINKS = ['https://github.com/diki-stwn/serupa-ds/blob/main/docs/warnings.md#'];
+const LINKS = ['https://gitlab.com/diki-stwn/serupa-ds/-/blob/main/docs/warnings.md#'];
 let extra = '';
 for (const f of ['src/styles/base.css', 'src/theme.js']) if (fs.existsSync(path.join(P, f))) extra += read(f);
 const ext = [...(cssRaw + js + extra).matchAll(/(?:https?:)?\/\/[a-z0-9.-]+\.[a-z]{2,}\/[^\s"')]*/g)].map((m) => m[0]).filter((u) => !u.startsWith('//') && !LINKS.some((l) => u.startsWith(l)));
@@ -231,7 +231,8 @@ const ORDER = '@layer dk.tokens, dk.base, dk.components, dk.utilities;';
 const layered = { 'tokens.css': 'dk.tokens', 'dist/base.css': 'dk.base', 'dist/components.css': 'dk.components', 'dist/utilities.css': 'dk.utilities', 'dist/utilities-extra.css': 'dk.utilities' };
 const unlayered = [];
 for (const [f, layer] of Object.entries(layered)) {
-  const body = stripComments(read(f)).trim();
+  // Read with the whitespace a minifier may drop put back: "@layer a,b{" is "@layer a, b {".
+  const body = stripComments(read(f)).trim().replace(/@layer\s+([^;{]+?)\s*([;{])/g, (_, names, end) => `@layer ${names.split(/\s*,\s*/).join(', ')}${end === '{' ? ' {' : ';'}`);
   if (!body.startsWith(ORDER)) { unlayered.push(`${f}: doesn't start with "${ORDER}"`); continue; }
   // Outside the layer blocks there may only be the order statement, @font-face and @property (page-wide either way).
   let rest = body.slice(ORDER.length), depth = 0, outside = '';

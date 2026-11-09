@@ -15,15 +15,16 @@ export const dayPresets = (w: { today: string; tomorrow: string; inAWeek: string
 };
 
 /** The ranges DateRangePicker offers with presets={true}: today, yesterday, the last 7 and 30 days up to today, and
-    this and last calendar month, first day to last. */
-export const rangePresets = (w: { today: string; yesterday: string; last7Days: string; last30Days: string; thisMonth: string; lastMonth: string }): PresetItem[] => {
-  const t = day(new Date()), y = t.getFullYear(), m = t.getMonth();
+    this and last calendar month, first day to last. With a max inside this month (a report up to today), "This month"
+    ends at max, the month so far, so it can still be picked (GR287). */
+export const rangePresets = (w: { today: string; yesterday: string; last7Days: string; last30Days: string; thisMonth: string; lastMonth: string }, max?: Date): PresetItem[] => {
+  const t = day(new Date()), y = t.getFullYear(), m = t.getMonth(), first = new Date(y, m, 1), last = new Date(y, m + 1, 0);
   return [
     { label: w.today, start: t, end: t },
     { label: w.yesterday, start: addDays(t, -1), end: addDays(t, -1) },
     { label: w.last7Days, start: addDays(t, -6), end: t },
     { label: w.last30Days, start: addDays(t, -29), end: t },
-    { label: w.thisMonth, start: new Date(y, m, 1), end: new Date(y, m + 1, 0) },
+    { label: w.thisMonth, start: first, end: max && max >= first && max < last ? day(max) : last },
     { label: w.lastMonth, start: new Date(y, m - 1, 1), end: new Date(y, m, 0) },
   ];
 };

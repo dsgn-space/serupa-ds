@@ -29,8 +29,13 @@ workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "web"
-    # The cross-browser run (below): a pipeline started through the API or by a schedule.
+    # The cross-browser run (below): a pipeline started through the API or by a schedule. These run to the end: a
+    # merge to main doesn't cancel them (the first nightly, 9 Nov 2026, was cancelled five minutes in by one), and a
+    # failed job doesn't stop the others, since every finding of a nightly run is worth having.
     - if: $CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule"
+      auto_cancel:
+        on_new_commit: none
+        on_job_failure: none
     # Main after every merge, unnarrowed, as GitHub's CI did on push: a merge request is tested on its own branch, not
     # merged onto main (GitLab's merged-results pipelines aren't on the free tier), so two that pass alone and break
     # together show up here. A newer merge cancels the run before it, so the latest main is always the one tested.

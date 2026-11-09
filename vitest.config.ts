@@ -97,12 +97,13 @@ export default defineConfig({
         // Shared code, the cross-browser comparison (npm run test:safari), the visual and Storybook steps, which
         // run.mjs shards across CI jobs, the install on older Node (consumer.mjs, its own CI job) and the framework
         // apps (frameworks.mjs, its own CI job; pack.mjs is shared by the two) and the mutation run (mutation.mjs,
-        // nightly: it starts a components Vitest of its own).
+        // nightly: it starts a components Vitest of its own), and the proof brand's leak report (proof-brand.mjs, a
+        // report on demand, not a check).
         // In Firefox and WebKit (the nightly Cross-browser run), also the checks that are Chromium's by design (GR135):
         // scroll-lock.mjs needs Chromium's switch that shows classic scrollbars, and utilities.mjs compares each
         // class's computed styles with Chromium's baseline, which other engines write differently (538px for 539px);
         // tools/test/compat.mjs is the comparison between engines.
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,

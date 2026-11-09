@@ -9,6 +9,7 @@ import tokens from '../tokens.json';
 import * as ALL_ICONS from '../src/material/icons';
 import { registerIcons } from '../src/icons';
 import { CONTENT, ContentContext, type Content } from './content';
+import { proofCss } from './proof-brand';
 
 // Every icon name draws at once in Storybook (apps load the full set the first time they need it).
 registerIcons(ALL_ICONS);
@@ -17,6 +18,13 @@ registerIcons(ALL_ICONS);
 // so a brand added there shows up here with no edit (ADR-0003).
 const BRANDS = [...new Set(tokens.color.themes.map((t: { id: string }) => t.id.replace(/-(light|dark)$/, '')))];
 const DEFAULT_BRAND = BRANDS[0];
+// The proof brand (.storybook/proof-brand.ts): Storybook only, not in tokens.json, so not shipped and not in the screenshots.
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.dataset.proofBrand = '';
+  style.textContent = proofCss(tokens as never);
+  document.head.appendChild(style);
+}
 
 // The toolbar picks a brand and a mode; together they are the page's data-theme, as theme.js sets it. Contrast
 // and density set data-contrast and data-density, the page's other theme axes; their defaults leave the attribute off,
@@ -88,7 +96,7 @@ const preview: Preview = {
     brand: {
       description: 'Brand',
       toolbar: { title: 'Brand', icon: 'paintbrush', dynamicTitle: true, items:
-        BRANDS.map((b) => ({ value: b, title: b[0].toUpperCase() + b.slice(1) })) },
+        [...BRANDS.map((b) => ({ value: b, title: b[0].toUpperCase() + b.slice(1) })), { value: 'proof', title: 'Proof (Storybook only)' }] },
     },
     mode: {
       description: 'Light or dark',

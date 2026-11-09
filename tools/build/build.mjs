@@ -25,6 +25,7 @@ import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import { buildUtilities } from '../utilities/build.mjs';
+import { compactCss } from './compact-css.mjs';
 import { split } from '../utilities/extra.mjs';
 import { buildRegistry, cascade } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
@@ -65,9 +66,10 @@ const utilities = buildUtilities(P);
 // so page styles outside the layers win over them whatever loads first.
 const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG.md */\n@layer dk.tokens, dk.base, dk.components, dk.utilities;\n`;
 // Shipped without the source comments (the explained copy is src/), which are about 40% of components.css
-// gzipped, and without indentation (7 KB of bundle.css); the /*! banner lines stay. Each rule keeps its own line, so
-// devtools still reads well.
-const bare = (css) => css.replace(/\/\*(?!!)[\s\S]*?\*\//g, '').replace(/^[ \t]+|[ \t]+$/gm, '').replace(/\n{2,}/g, '\n');
+// gzipped, and compacted: no spaces or line breaks around { } ; : , > (compact-css.mjs, about 5 KiB gzipped across
+// components.css and utilities.css, 9 Nov 2026). Only whitespace goes, and each rule still ends its line, so devtools
+// still reads well. The /*! banner lines stay.
+const bare = (css) => compactCss(css.replace(/\/\*(?!!)[\s\S]*?\*\//g, ''));
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
 // The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
 // the few pages that use them.
@@ -85,7 +87,11 @@ fs.writeFileSync(path.join(D, 'base.css'), stamp(bare(read('src/styles/base.css'
 // drop the styles of components a project never uses.
 const cssOf = Object.fromEntries(IMPORTS.map((n) => [n, read(`src/components/${n}/${n}.css`)]));
 const classesOf = Object.fromEntries(IMPORTS.map((n) => [n, [...new Set([...cssOf[n].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/\.(dk-[A-Za-z0-9_-]+)/g)].map((m) => m[1]))].sort()]));
-const tsxOf = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
+// A component's code, with the shared drawings it renders from src/internal/*.tsx (Loader's ring in Button, GR311):
+// the classes those write out are the component's too.
+const ownTsx = (n) => fs.readdirSync(path.join(P, 'src', 'components', n)).filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f)).map((f) => read(`src/components/${n}/${f}`)).join('\n');
+const drawn = (code) => [...new Set([...code.matchAll(/from ["']\.\.\/\.\.\/internal\/(\w+)["']/g)].map((m) => m[1]))].filter((m) => fs.existsSync(path.join(P, 'src', 'internal', m + '.tsx'))).map((m) => read(`src/internal/${m}.tsx`));
+const tsxOf = (n) => { const own = ownTsx(n); return [own, ...drawn(own)].join('\n'); };
 const manifest = {};
 for (const n of IMPORTS) {
   const code = tsxOf(n);

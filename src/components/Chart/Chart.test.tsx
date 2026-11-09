@@ -177,6 +177,88 @@ describe('Chart', () => {
     expect([bars[0].getAttribute('fill'), bars[2].getAttribute('fill')?.startsWith('url(#')]).toEqual([null, true]);
   });
 
+  test('area: a line with the space under it filled down to zero, a filled shape per series, named "Area chart"', async () => {
+    await render(<Chart type="area" title="Visits" categories={CATS} series={TWO} />);
+    await expect.element(page.getByRole('group', { name: 'Area chart' })).toBeInTheDocument();
+    expect(document.querySelector('figure')!.dataset.type).toBe('area');
+    const marks = [...document.querySelectorAll('[role="img"]')].map((m) => m.getAttribute('aria-label'));
+    expect(marks).toContain('Visitors, Feb: 20');
+    // The filled shapes come before the series, so the lines and markers are drawn over them.
+    const groups = [...document.querySelectorAll('svg[aria-describedby] > g[aria-hidden]')];
+    const fills = [...groups[groups.length - 1].querySelectorAll('path')];
+    expect(fills).toHaveLength(2);
+    // A missing value breaks the first series' shape in two.
+    expect(fills[0].getAttribute('d')!.match(/M/g)).toHaveLength(2);
+    const base = groups[1].querySelector('line')!.getBoundingClientRect().y;
+    expect(Math.abs(fills[1].getBoundingClientRect().bottom - base)).toBeLessThan(1.5);
+  });
+
+  test('area, stacked: each series stands on the one before it, and its points still say their own value', async () => {
+    const two = [{ name: 'Shop', values: [10, 10] }, { name: 'App', values: [5, 5] }];
+    const y = (name: string) => { const r = page.getByRole('img', { name }).element().getBoundingClientRect(); return r.top + r.height / 2; };
+    const { rerender } = await render(<Chart type="area" title="Orders" categories={['Jan', 'Feb']} series={two} />);
+    expect(y('App, Jan: 5')).toBeGreaterThan(y('Shop, Jan: 10'));   // unstacked, 5 is lower than 10
+    await rerender(<EnUS><Chart type="area" stacked title="Orders" categories={['Jan', 'Feb']} series={two} /></EnUS>);
+    expect(y('App, Jan: 5')).toBeLessThan(y('Shop, Jan: 10'));   // stacked, App's line is at 15, above Shop's
+    const groups = [...document.querySelectorAll('svg[aria-describedby] > g[aria-hidden]')];
+    expect([...groups[0].querySelectorAll('text')].map((t) => t.textContent)).toContain('15');
+  });
+
+  const SOURCES = ['Search', 'Direct', 'Social', 'Email', 'Referral'];
+  const VISITS = [{ name: 'Visits', values: [4200, 2600, 1800, 900, 500] }];
+  test('donut: a slice per category, named with its value and share; the summary gives the total', async () => {
+    await render(<Chart type="donut" title="Traffic" categories={SOURCES} series={VISITS} />);
+    const plot = page.getByRole('group', { name: 'Donut chart' });
+    await expect.element(plot).toBeInTheDocument();
+    expect([...document.querySelectorAll('[role="img"]')].map((m) => m.getAttribute('aria-label')))
+      .toEqual(['Search: 4,200 (42%)', 'Direct: 2,600 (26%)', 'Social: 1,800 (18%)', 'Email: 900 (9%)', 'Referral: 500 (5%)']);
+    expect(plot.element().querySelector('desc')!.textContent).toBe('Donut chart, 1 series, 5 points from Search to Referral. Total: 10,000 Visits: lowest 500 (5%) in Referral, highest 4,200 (42%) in Search.');
+    // The legend names each slice with its share, so they're told apart in words; a pattern on every slice after the first.
+    expect([...document.querySelectorAll('figure ul li')].map((li) => li.textContent)).toEqual(['Search4,200 (42%)', 'Direct2,600 (26%)', 'Social1,800 (18%)', 'Email900 (9%)', 'Referral500 (5%)']);
+    expect([...document.querySelectorAll('[role="img"]')].map((m) => !!m.getAttribute('fill'))).toEqual([false, true, true, true, true]);
+    await expect.element(page.getByText('Total: 10,000')).toBeInTheDocument();
+  });
+
+  test('donut: one tab stop; arrows go round the slices, Home and End; the focused slice shows its share', async () => {
+    await render(<Chart type="donut" title="Traffic" categories={SOURCES} series={VISITS} />);
+    expect([...document.querySelectorAll('[role="img"]')].map((m) => m.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1', '-1']);
+    await tabIn();
+    expect(focused()).toBe('Search: 4,200 (42%)');
+    await userEvent.keyboard('{ArrowRight}{ArrowDown}');
+    expect(focused()).toBe('Social: 1,800 (18%)');
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(focused()).toBe('Direct: 2,600 (26%)');
+    await userEvent.keyboard('{End}');
+    expect(focused()).toBe('Referral: 500 (5%)');
+    await userEvent.keyboard('{ArrowRight}');
+    expect(focused()).toBe('Referral: 500 (5%)');
+    await userEvent.keyboard('{Home}');
+    expect(focused()).toBe('Search: 4,200 (42%)');
+    await expect.element(page.getByText('4,200 (42%)', { exact: true }).first()).toBeInTheDocument();
+  });
+
+  test('donut: past seven categories the rest are one "Other" slice; zero, negative and missing values have none', async () => {
+    const cats = Array.from({ length: 10 }, (_, i) => 'C' + (i + 1));
+    await render(<Chart type="donut" title="Many" categories={[...cats, 'Zero', 'Less', 'None']} series={[{ name: 'N', values: [...cats.map(() => 10), 0, -5, null] }]} />);
+    const names = [...document.querySelectorAll('[role="img"]')].map((m) => m.getAttribute('aria-label'));
+    expect(names).toHaveLength(8);
+    expect(names[6]).toBe('C7: 10 (10%)');
+    expect(names[7]).toBe('Other: 30 (30%)');
+    // The table still lists every category.
+    await userEvent.click(page.getByRole('button', { name: 'Show as table' }));
+    expect(page.getByRole('row').elements()).toHaveLength(14);
+  });
+
+  test('donut, right to left: the slices go round the other way, and ArrowLeft moves on', async () => {
+    await render(<div dir="rtl"><Chart type="donut" title="Traffic" categories={SOURCES} series={VISITS} /></div>);
+    const first = page.getByRole('img', { name: 'Search: 4,200 (42%)' }).element().getBoundingClientRect();
+    const plot = document.querySelector('svg[aria-describedby]')!.getBoundingClientRect();
+    expect(first.left + first.width / 2).toBeLessThan(plot.left + plot.width / 2);   // the first slice is on the left
+    await tabIn();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(focused()).toBe('Direct: 2,600 (26%)');
+  });
+
   test('"Show as table" shows the same numbers as a sortable table, and back', async () => {
     const onViewChange = vi.fn();
     await render(<Chart title="Visitors" categories={CATS} series={TWO} onViewChange={onViewChange} />);
