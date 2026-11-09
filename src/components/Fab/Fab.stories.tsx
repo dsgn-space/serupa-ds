@@ -6,12 +6,12 @@ import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 const meta = {
   title: 'Components/Actions/Fab',
   component: Fab,
-  args: { icon: 'add', label: 'New project', position: 'static' },
+  args: { icon: 'add', label: 'New project', placement: 'static' },
   argTypes: {
     size: { control: 'inline-radio', options: ['md', 'sm'] },
     position: { control: 'inline-radio', options: ['static', 'bottom-end', 'bottom-start', 'top-end', 'top-start'] },
   },
-  parameters: { docs: { description: { component: 'The examples use position="static" so they stay in the page; a real FAB is fixed to a corner (bottom-end by default).' } } },
+  parameters: { docs: { description: { component: 'The examples use placement="static" so they stay in the page; a real FAB is fixed to a corner (bottom-end by default).' } } },
 } satisfies Meta<typeof Fab>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -20,9 +20,9 @@ export const Playground: Story = {};
 
 export const Kinds: Story = {
   render: () => <div className="flex gap-4 items-center">
-    <Fab icon="add" label="New project" position="static" />
-    <Fab icon="add" label="Add" size="sm" position="static" />
-    <Fab icon="edit" label="Compose" extended position="static" />
+    <Fab icon="add" label="New project" placement="static" />
+    <Fab icon="add" label="Add" size="sm" placement="static" />
+    <Fab icon="edit" label="Compose" extended placement="static" />
   </div>,
 };
 
@@ -55,10 +55,10 @@ export const Positions: Story = {
   name: 'Positions (in a frame)',
   render: () => (
     <div aria-label="Screen" role="group" style={{ position: 'relative', transform: 'translateZ(0)', height: 280, maxWidth: 480, border: '1px solid var(--border)', borderRadius: 'var(--rounded-lg)' }}>
-      <Fab icon="add" label="Add (bottom-end)" position="bottom-end" />
-      <Fab icon="chat" label="Chat (bottom-start)" position="bottom-start" />
-      <Fab icon="search" label="Search (top-end)" size="sm" position="top-end" />
-      <Fab icon="edit" label="Compose" extended position="top-start" />
+      <Fab icon="add" label="Add (bottom-end)" placement="bottom-end" />
+      <Fab icon="chat" label="Chat (bottom-start)" placement="bottom-start" />
+      <Fab icon="search" label="Search (top-end)" size="sm" placement="top-end" />
+      <Fab icon="edit" label="Compose" extended placement="top-start" />
     </div>
   ),
 };

@@ -6,7 +6,7 @@ const Pane = (p: { children: React.ReactNode }) => <div style={{ padding: 'var(-
 const meta = {
   title: 'Components/Layout/Splitter',
   component: Splitter,
-  args: { direction: 'horizontal', defaultSize: 30, min: 15, max: 70, collapsible: true, separatorLabel: 'Folders', children: [<Pane key="a">Folders</Pane>, <Pane key="b">Messages</Pane>] },
+  args: { orientation: 'horizontal', defaultSize: 30, min: 15, max: 70, collapsible: true, separatorLabel: 'Folders', children: [<Pane key="a">Folders</Pane>, <Pane key="b">Messages</Pane>] },
   argTypes: { direction: { control: 'inline-radio', options: ['horizontal', 'vertical'] } },
   decorators: [(Story) => <div style={{ height: 'var(--spacing-64)', border: 'var(--border-width-1) solid var(--border)', borderRadius: 'var(--rounded-md)', overflow: 'hidden' }}><Story /></div>],
   parameters: { layout: 'padded' },
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = { render: (args) => <Splitter {...args} style={{ height: 'var(--sizing-full)' }} /> };
 export const Vertical: Story = {
-  render: () => <Splitter direction="vertical" defaultSize={60} separatorLabel="Editor" style={{ height: 'var(--sizing-full)' }}>
+  render: () => <Splitter orientation="vertical" defaultSize={60} separatorLabel="Editor" style={{ height: 'var(--sizing-full)' }}>
     <Pane>Editor</Pane><Pane>Terminal</Pane>
   </Splitter>,
 };

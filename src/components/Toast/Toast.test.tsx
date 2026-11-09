@@ -753,13 +753,24 @@ describe('Toaster inside a shadow root (GR60)', () => {
     } finally { React.act(() => { toast.dismiss(); }); host.remove(); }
   });
   test('GR123: a Toaster on the same edge as a shown OfflineBanner stacks above the bar, not on it; back in its place when the bar goes', async () => {
-    const screen = await render(<><Toaster position="bottom-center" /><OfflineBanner online={false} /></>);
+    const screen = await render(<><Toaster placement="bottom-center" /><OfflineBanner online={false} /></>);
     toast('Saved');
     await expect.poll(() => toasts().length).toBe(1);
     const bar = document.querySelector<HTMLElement>('[data-component=offline-banner]')!;
     await expect.poll(() => toasts()[0].getBoundingClientRect().bottom <= bar.getBoundingClientRect().top).toBe(true);
-    await screen.rerender(<><Toaster position="bottom-center" /><OfflineBanner online /></>);
+    await screen.rerender(<><Toaster placement="bottom-center" /><OfflineBanner online /></>);
     await expect.poll(() => document.querySelector('[data-component=offline-banner]'), { timeout: 5000 }).toBe(null);
     await expect.poll(() => Math.round(window.innerHeight - toasts()[0].getBoundingClientRect().bottom)).toBe(16);
+  });
+});
+
+describe('Toaster: position, the old name of placement', () => {
+  test('still places the stack as placement does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Toaster position="top-center" />);
+      expect(document.querySelector('[data-component="toaster"]')!.getAttribute('data-position')).toBe('top-center');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('toaster-position'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

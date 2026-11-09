@@ -7,7 +7,7 @@ const { Fab } = window.Serupa;
 
 <Fab icon="add" label="New project" onClick={create} />
 <Fab icon="edit" label="Compose" extended />
-<Fab icon="chat" label="Help" size="sm" position="bottom-start" />
+<Fab icon="chat" label="Help" size="sm" placement="bottom-start" />
 ```
 
 ## When to use
@@ -53,7 +53,8 @@ const { Fab } = window.Serupa;
 | `label` | string | required | Shown next to the icon when extended; otherwise its `aria-label` and `title` |
 | `extended` | boolean | `false` | Shows the label: a 56px pill instead of a circle. In a corner it is never wider than the screen less its offset on both sides, so a long label ends in an ellipsis |
 | `size` | `'md'` \| `'sm'` | `'md'` | 56px or 40px |
-| `position` | `'bottom-end'` \| `'bottom-start'` \| `'top-end'` \| `'top-start'` \| `'static'` | `'bottom-end'` | The corner of the screen it's fixed to, 24px in; start and end follow the text direction. `static` leaves it in the page for you to place |
+| `placement` | `'bottom-end'` \| `'bottom-start'` \| `'top-end'` \| `'top-start'` \| `'static'` | `'bottom-end'` | The corner of the screen it's fixed to, 24px in; start and end follow the text direction. `static` leaves it in the page for you to place |
+| `position` | | | Deprecated, removed in 15.0.0: use `placement` |
 
 Every other Button prop works the same: `onClick`, `loading`, `disabled`, `destructive`, `ref`. It sits at `z-30`: above the page, under dialogs and toasts.
 

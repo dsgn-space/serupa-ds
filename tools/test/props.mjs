@@ -98,16 +98,9 @@ const isBoolean = (p) => {
 // One name for one idea (CONTRIBUTING.md, API naming table, GR268): these props say it another way. Each maps to
 // the name to use instead.
 const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', pending: 'loading', delay: 'openDelay (and closeDelay)' };
-// Props that still use one of those names, each with why. They get the table's name as an alias in a 14.x minor and
-// lose the old one in 15.0.0 (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
-const NAME_GAPS = {
-  'FabProps.position': 'which corner it sits in: placement, in a 14.x alias',
-  'FieldProps.layout': "'vertical' or 'horizontal': orientation, in a 14.x alias",
-  'SplitterProps.direction': "'horizontal' or 'vertical': orientation, in a 14.x alias",
-  'SwitchProps.pending': 'busy while a change saves: loading, as Button has, in a 14.x alias',
-  'ToasterProps.position': 'which corner the stack sits in: placement, in a 14.x alias',
-  'TooltipProps.delay': "the wait before it opens: openDelay, as HoverCard's, in a 14.x alias",
-};
+// Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
+// the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
+const NAME_GAPS = {};
 // Names that look like the ones above but mean something else, each with why. They stay.
 const NAME_KEPT = {
   'StackProps.direction': "'row' or 'column', the flex-direction it sets, by the CSS name",
