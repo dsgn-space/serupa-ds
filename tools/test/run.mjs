@@ -2,6 +2,7 @@
 //   node tools/test/run.mjs                      everything
 //   node tools/test/run.mjs --group <name>       one group: checks, components, visual or storybook
 //   node tools/test/run.mjs --since <ref>        only the components changed since then and the ones that use them
+//   node tools/test/run.mjs --since <ref> --narrowed-only   pass without running when the change reaches beyond the component folders
 //   node tools/test/run.mjs --update             accept new baselines
 //   node tools/test/run.mjs --list               the steps it would run
 //   node tools/test/run.mjs --browser <engine>   firefox or webkit instead of Chromium
@@ -19,7 +20,7 @@ const update = process.argv.includes('--update') ? ['--update'] : [];
 // cross-browser comparison through WebDriver (see compat.mjs).
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 {
-  const VALUED = ['--group', '--since', '--browser', '--locale', '--compat', '--driver'], FLAGS = ['--update', '--list'];
+  const VALUED = ['--group', '--since', '--browser', '--locale', '--compat', '--driver'], FLAGS = ['--update', '--list', '--narrowed-only'];
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//   ') || l.startsWith('// --help')).map((l) => l.slice(3)).join('\n'));
     process.exit(0);
@@ -66,6 +67,13 @@ if (arg('--since')) {
   direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
+  // --narrowed-only (a merge request's cross-browser jobs): a change that reaches beyond the component folders (shared
+  // code, tooling) would run the whole suite in Firefox and WebKit, 20 to 40 minutes that hold the merge; the nightly
+  // run covers those, so the job passes with a note instead.
+  if (!names && process.argv.includes('--narrowed-only')) {
+    console.log('--narrowed-only: not narrowed, so this run is left to the nightly cross-browser run');
+    process.exit(0);
+  }
 }
 const only = onlyComponents();
 // They go through the covered components' stories, so with none to go through (ErrorBoundary alone: its stories are
