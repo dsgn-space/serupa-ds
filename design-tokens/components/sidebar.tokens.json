@@ -131,6 +131,16 @@
             "cssVar": "--sidebar-focus-ring"
           }
         }
+      },
+      "focus-gap-color": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The gap between the focus ring and a filled item (the current page, or a hovered or pressed one), so the ring keeps 3:1 against what it touches.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-focus-gap-color"
+          }
+        }
       }
     },
     "typography": {
