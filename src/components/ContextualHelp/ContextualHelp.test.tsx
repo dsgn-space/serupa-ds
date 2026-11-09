@@ -7,7 +7,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { ContextualHelp } from './ContextualHelp';
 
 const btn = () => document.querySelector('button') as HTMLButtonElement;   // the first button on the page is its trigger
-const panel = () => document.getElementById(btn().getAttribute('aria-controls') || '') || (document.querySelector('[role="dialog"]') as HTMLElement);
+const panel = () => document.getElementById(btn().getAttribute('aria-controls') || '') || document.querySelector<HTMLElement>('[role="dialog"]')!;
 const tick = () => new Promise((r) => setTimeout(r, 30));
 
 describe('ContextualHelp', () => {
