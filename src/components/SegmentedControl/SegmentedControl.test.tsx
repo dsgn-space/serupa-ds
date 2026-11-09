@@ -365,7 +365,9 @@ describe('SegmentedControl', () => {
   test('the indicator sits exactly on its segment, to the fraction of a pixel, at any text width', async () => {
     const labels = ['Board view', 'Timeline', 'Calendar views', 'Mi', 'Ünïcödé widths', 'Week', 'Agenda list', 'Quarterly'];
     await document.fonts.ready;
-    await render(<div>{labels.map((l, i) => <SegmentedControl key={l} id={'fr' + i} aria-label="View" options={[{ value: 'a', label: 'List ' + i }, { value: 'b', label: l }]} defaultValue="b" />)}</div>);
+    // A little letter spacing, so every control is a fraction of a pixel wide on any machine: with hinted fonts the
+    // labels can come out whole pixels, and a rounding bug (offsetWidth) wouldn't show.
+    await render(<div style={{ letterSpacing: '0.0137em' }}>{labels.map((l, i) => <SegmentedControl key={l} id={'fr' + i} aria-label="View" options={[{ value: 'a', label: 'List ' + i }, { value: 'b', label: l }]} defaultValue="b" />)}</div>);
     const gaps = labels.flatMap((_, i) => {
       const ind = el('fr' + i).querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('fr' + i).querySelector('[aria-checked=true]')!.getBoundingClientRect();
       return [Math.abs(ind.left - c.left), Math.abs(ind.width - c.width)];
@@ -380,6 +382,11 @@ describe('SegmentedControl', () => {
   test('from the keyboard (KW1): an arrow moves the indicator at once, with no slide', async () => {
     await withMotion(async () => {
       await render(<SegmentedControl id="sk" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }]} defaultValue="a" />);
+      // As in the slide test: a web font that arrives after the arrow widens the labels, and the indicator is measured
+      // again a frame later, so it read a few pixels off (ar-EG on CI, [-2, -5]). The fonts are in, and the control
+      // has measured them, before the key.
+      await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+      await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
       const ind = el('sk').firstElementChild as HTMLElement;
       items('sk')[0].focus();
       await userEvent.keyboard('{ArrowRight}');
