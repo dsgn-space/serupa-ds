@@ -82,14 +82,22 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat',
     if (!active || active === el.ownerDocument.body || (older.current && older.current.contains(active))) el.focus({ preventScroll: true });
   }, [first, props.hasOlder, props.loadingOlder]);
   // A message that grows (a streamed reply) or a picture that loads keeps the reader at the bottom if they were there.
-  // every render: the messages it watches are the children of this render.
+  // One ResizeObserver for the log's life, told of each message as it comes and goes by a MutationObserver: rebuilt
+  // every render, it was 2,001 observe() calls per streamed token at 2,000 messages (GR240).
   React.useEffect(() => {
     const el = scroller.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => { if (was.current && was.current.bottom) toBottom(); });
     for (const c of Array.from(el.children)) ro.observe(c);
-    return () => ro.disconnect();
-  });
+    const mo = typeof MutationObserver === 'undefined' ? null : new MutationObserver((records) => {
+      for (const r of records) {
+        r.addedNodes.forEach((n) => { if (n.nodeType === 1) ro.observe(n as Element); });
+        r.removedNodes.forEach((n) => { if (n.nodeType === 1) ro.unobserve(n as Element); });
+      }
+    });
+    if (mo) mo.observe(el, { childList: true });
+    return () => { ro.disconnect(); if (mo) mo.disconnect(); };
+  }, []);
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget, bottom = atBottom(el);
     if (was.current) was.current = { ...was.current, bottom, top: el.scrollTop, height: el.scrollHeight };

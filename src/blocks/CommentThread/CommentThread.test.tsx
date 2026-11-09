@@ -125,14 +125,14 @@ describe('Blocks/Comment thread', () => {
   test('a reply that fails keeps its words in the box and ends the loading state', async () => {
     let fail = () => {};
     const onReply = vi.fn(() => new Promise<void>((_, no) => { fail = () => no(new Error('offline')); }));
-    await render(<CommentThread comments={start} onReply={onReply} />);
+    const view = await render(<CommentThread comments={start} onReply={onReply} />);
     await userEvent.fill(page.getByRole('textbox', { name: 'Reply' }), 'Still here');
     await userEvent.click(page.getByRole('button', { name: 'Post reply' }));
     await expect.element(page.getByRole('button', { name: 'Post reply' })).toHaveAttribute('aria-busy', 'true');
     fail();
     await expect.poll(() => (page.getByRole('button', { name: 'Post reply' }).element() as HTMLButtonElement).getAttribute('aria-busy')).not.toBe('true');
     await expect.element(page.getByRole('textbox', { name: 'Reply' })).toHaveValue('Still here');
-    await expect.element(page.getByText('Couldn’t post the reply. Try again.')).toBeVisible();
+    await expect.element(view.locator.getByText('Couldn’t post the reply. Try again.')).toBeVisible();
     await expect.poll(said).toContain('Couldn’t post the reply');
     expect(said()).not.toContain('Reply posted');
   });
@@ -153,11 +153,11 @@ describe('Blocks/Comment thread', () => {
   });
 
   test('a save that fails keeps the box open with its words, and says so once (GR144)', async () => {
-    await render(<CommentThread comments={start} onReply={() => {}} onEdit={() => Promise.reject(new Error('offline'))} />);
+    const view = await render(<CommentThread comments={start} onReply={() => {}} onEdit={() => Promise.reject(new Error('offline'))} />);
     await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
     await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
     await userEvent.click(page.getByRole('button', { name: 'Save' }));
-    await expect.element(page.getByText('Couldn’t save the comment. Try again.')).toBeVisible();
+    await expect.element(view.locator.getByText('Couldn’t save the comment. Try again.')).toBeVisible();
     await expect.poll(said).toContain('Couldn’t save the comment');
     await expect.element(page.getByRole('textbox', { name: 'Edit comment' })).toHaveValue('Yes, 24px.');
     expect(said()).not.toContain('Comment saved');

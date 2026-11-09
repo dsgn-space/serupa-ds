@@ -31,6 +31,7 @@ import { Radio, RadioGroup } from '../components/Radio/Radio';
 import { Rating } from '../components/Rating/Rating';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl';
+import { SignaturePad } from '../components/SignaturePad/SignaturePad';
 import { Select } from '../components/Select/Select';
 import { Slider } from '../components/Slider/Slider';
 import { Switch } from '../components/Switch/Switch';
@@ -118,6 +119,10 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: (r) => fill($(r, 'input:not([type="hidden"])'), '14:30'), changed: { at: '14:30' } },
   ColorPicker: { el: (form) => <ColorPicker aria-label="Color" name="color" form={form} custom={false} swatches={['#1d4ed8', '#b91c1c']} defaultValue="#1d4ed8" />, initial: { color: '#1d4ed8' },
     change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); }, changed: { color: '#b91c1c' } },
+  // The signature's SVG: typed here, as a drag can't be told apart point by point; the typed name ends it as text.
+  SignaturePad: { el: (form) => <SignaturePad aria-label="Signature" name="signature" form={form} />, initial: { signature: '' },
+    change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); await userEvent.type($(r, 'input[type=text], input:not([type])'), 'Dewi'); },
+    changed: { signature: expect.stringMatching(/>Dewi<\/text><\/svg>$/) as unknown as string } },
   FileUpload: { el: (form) => <FileUpload name="attachment" form={form} files={[file]} onFilesChange={() => {}} />, initial: { attachment: 'notes.txt' } },
   // A button's name and value go only with the button that submits the form, as with <button name>.
   CopyButton: 'a button', InputAction: 'a button', Fab: 'a button', Tab: 'a button', ToggleButton: 'a button',

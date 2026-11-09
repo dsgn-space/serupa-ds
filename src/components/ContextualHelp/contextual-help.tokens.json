@@ -1,0 +1,27 @@
+{
+  "contextualHelp": {
+    "$description": "ContextualHelp's component tokens. Each one is an optional override: set the CSS variable (--contextual-help-<name>) on the page, a container or one ContextualHelp, and every ContextualHelp inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The \"?\" of variant help (3:1+ on surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--contextual-help-icon"
+          }
+        }
+      },
+      "info-icon": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "The \"i\" of variant info (3:1+ on surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--contextual-help-info-icon"
+          }
+        }
+      }
+    }
+  }
+}
