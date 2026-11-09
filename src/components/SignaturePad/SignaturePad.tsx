@@ -181,10 +181,10 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const describedBy = cn(base + '-how', props['aria-describedby']);
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, methodStop); setRef(ref, n); nameRef(n); }} role="group"
-      aria-labelledby={labelledBy} aria-describedby={describedBy} aria-invalid={invalid || undefined}
+      aria-labelledby={labelledBy} aria-describedby={describedBy}
       className={cn('dk-signature-pad', disabled && 'dk-signature-pad--disabled', invalid && 'dk-signature-pad--invalid', props.className)} data-component="signature-pad">
       <FieldContext.Provider value={null}>
-        <SegmentedControl className="dk-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} value={method} onValueChange={pick}
+        <SegmentedControl className="dk-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} invalid={invalid || undefined} value={method} onValueChange={pick}
           options={[{ value: 'draw', label: L.signatureDraw }, { value: 'type', label: L.signatureType }]} />
         <p className="dk-signature-pad__how" id={base + '-how'}>{method === 'draw' ? L.signatureDrawHint : L.signatureTypeHint}</p>
         {method === 'draw' ? (
@@ -204,7 +204,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
         ) : (
           <>
             <label className="dk-signature-pad__label" htmlFor={base + '-name'}>{L.signatureName}</label>
-            <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled}
+            <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} invalid={invalid || undefined}
               value={typed} onChange={(e) => { setTyped(e.target.value); tell('type', strokes, e.target.value, 'type'); }} />
             <div className="dk-signature-pad__box" aria-hidden>
               <svg ref={area} className="dk-signature-pad__area dk-signature-pad__area--typed">

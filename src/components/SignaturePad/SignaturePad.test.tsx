@@ -76,7 +76,7 @@ describe('SignaturePad', () => {
     const form = el('f') as HTMLFormElement;
     expect(new FormData(form).get('signature')).toBe('');
     await drag(area(el('s')), { x: 20, y: 100 }, { x: 140, y: 60 });
-    expect(String(new FormData(form).get('signature'))).toMatch(/^<svg [^>]*><g [^>]*><path d="M[^"]+"\/><\/g><\/svg>$/);
+    expect(new FormData(form).get('signature') as string).toMatch(/^<svg [^>]*><g [^>]*><path d="M[^"]+"\/><\/g><\/svg>$/);
     form.reset();
     await expect.poll(() => [paths(el('s')), new FormData(form).get('signature')]).toEqual([0, '']);
   });
@@ -86,7 +86,7 @@ describe('SignaturePad', () => {
     const g = el('fs');
     await expect.element(page.getByRole('group', { name: 'Sign here' })).toBeInTheDocument();
     const said = g.getAttribute('aria-describedby')!.split(' ').map((id) => document.getElementById(id)!.textContent).join(' | ');
-    expect([said.includes('Draw or type.'), said.includes('Please sign.'), g.getAttribute('aria-invalid')]).toEqual([true, true, 'true']);
+    expect([said.includes('Draw or type.'), said.includes('Please sign.'), g.querySelector('[role=radiogroup]')!.getAttribute('aria-invalid')]).toEqual([true, true, 'true']);
     // the switch inside keeps its own name, not the Field's
     await expect.element(page.getByRole('radiogroup', { name: 'Signature method' })).toBeInTheDocument();
   });
@@ -119,7 +119,7 @@ describe('SignaturePad', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(box).backgroundColor;
-      expect(contrast(css(root.querySelector('p')!).color, bg), th + ' hint').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(root.querySelector('p')).color, bg), th + ' hint').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(box).borderTopColor, bg), th + ' outline').toBeGreaterThanOrEqual(3);
       expect(contrast(css(line).borderBottomColor, bg), th + ' line').toBeGreaterThanOrEqual(3);
       expect(contrast(css(ink).stroke, bg), th + ' ink').toBeGreaterThanOrEqual(4.5);

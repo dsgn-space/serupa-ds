@@ -11,7 +11,7 @@
 # InField
 - text: Sign to accept the terms Draw or type your name.
 - group "Sign to accept the terms":
-  - radiogroup "Signature method":
+  - radiogroup "Signature method" [invalid]:
     - radio "Draw" [checked]
     - radio "Type"
   - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
