@@ -183,7 +183,7 @@ def main():
         '//   import { Home as HomeFilled } from "serupa-ds/icons";\n'
         '//   <Icon icon={current ? HomeFilled : Home} />\n'
         + ''.join(f"export * from './outlined/{i:02}';\n" for i in range(PARTS))
-        + 'export type { IconData } from "./types";\n')
+        + "export type { IconData } from './types';\n")
     out['src/material/icons.ts'] = head + ''.join(f'export * from "./part/{i:02}";\n' for i in range(PARTS)) + (
         '\n/** Every Material Symbol name, for autocomplete. */\nexport type MaterialIconName =\n' + ''.join(f'  | "{n}"\n' for n in names)[:-1] + ';\n')
     out['src/material/parts.ts'] = head + (
