@@ -111,6 +111,8 @@ export const labels: SerupaLabels = {
   filterClear: '全部清除',
   filterIs: (field, values) => field + '：' + values,
   filterContains: (field, text) => field + '包含“' + text + '”',
+  filterFrom: (field, date) => field + '：自 ' + date,
+  filterUntil: (field, date) => field + '：至 ' + date,
   filterAny: (field) => field + '：全部',
   filterRemove: (field) => '移除筛选：' + field,
   filterDone: '完成',

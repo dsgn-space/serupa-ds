@@ -117,6 +117,8 @@ export const labels: SerupaLabels = {
   filterClear: 'Очистити все',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' містить «' + text + '»',
+  filterFrom: (field, date) => field + ': з ' + date,
+  filterUntil: (field, date) => field + ': по ' + date,
   filterAny: (field) => field + ': усі',
   filterRemove: (field) => 'Прибрати фільтр: ' + field,
   filterDone: 'Готово',

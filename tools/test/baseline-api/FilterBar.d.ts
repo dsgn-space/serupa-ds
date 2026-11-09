@@ -5,6 +5,8 @@ interface FilterBarLabels {
     filterClear: string;
     filterIs: (field: string, values: string) => string;
     filterContains: (field: string, text: string) => string;
+    filterFrom: (field: string, date: string) => string;
+    filterUntil: (field: string, date: string) => string;
     filterAny: (field: string) => string;
     filterRemove: (field: string) => string;
     filterDone: string;

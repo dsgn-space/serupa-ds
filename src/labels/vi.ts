@@ -112,6 +112,8 @@ export const labels: SerupaLabels = {
   filterClear: 'Xóa tất cả',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' chứa “' + text + '”',
+  filterFrom: (field, date) => field + ': từ ' + date,
+  filterUntil: (field, date) => field + ': đến ' + date,
   filterAny: (field) => field + ': tất cả',
   filterRemove: (field) => 'Xóa bộ lọc: ' + field,
   filterDone: 'Xong',

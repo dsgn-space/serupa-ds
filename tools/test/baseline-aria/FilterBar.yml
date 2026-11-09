@@ -27,7 +27,7 @@
       - button "Owner is Citra"
       - 'button "Remove filter: Owner"'
     - listitem:
-      - button "Due is Nov 2, 2026 –"
+      - button "Due from Nov 2, 2026"
       - 'button "Remove filter: Due"'
     - listitem:
       - button "Archived"
