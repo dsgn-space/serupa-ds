@@ -11,23 +11,13 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 
 ## Getting started
 
-### 1. Install a released version from GitHub
+### 1. Install a released version from GitLab
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.2.0
+npm install gitlab:diki-stwn/serupa-ds#v14.2.0
 ```
 
-Or install the same release from its file on the Releases page, which needs no git on the machine and puts the file's checksum in your lockfile:
-
-```sh
-npm install https://github.com/diki-stwn/serupa-ds/releases/download/v14.2.0/serupa-ds-14.2.0.tgz
-```
-
-To check a downloaded file before you install it: the release notes give its SHA-256, and releases after 10.1.0 also carry a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit. With the [GitHub CLI](https://cli.github.com):
-
-```sh
-gh attestation verify ./serupa-ds-14.2.0.tgz --repo diki-stwn/serupa-ds
-```
+The repository lives on [GitLab](https://gitlab.com/diki-stwn/serupa-ds) for now, and each release is a tag there. The release files, their SHA-256 and the build attestations that GitHub's Releases page carried return when the repository moves back to GitHub; until then, the tag is the release.
 
 Always pin a tag (`#v14.2.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
@@ -36,7 +26,7 @@ To update later, change the tag in `package.json` (or run the install again with
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:diki-stwn/serupa-ds#v14.2.0 serupa-create my-app
+npx --package=gitlab:diki-stwn/serupa-ds#v14.2.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev

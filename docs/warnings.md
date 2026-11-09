@@ -122,6 +122,10 @@ The selected Tab was removed, so no tab is selected. When you remove the selecte
 
 Tabs' `value` or `defaultValue` matches no Tab. With `value`, no tab is selected; with `defaultValue`, the first tab is. Set it to one of the Tabs' values.
 
+## toast-undo-no-toaster
+
+`toast.undo` was called with no Toaster on the page, so nobody could see its Undo. The action is committed at once (its `commit` runs) instead of waiting for an Undo that can't come. Render one Toaster, once, near the root.
+
 ## toaster-twice
 
 A second Toaster mounted, so only the newer one shows toasts. Render one Toaster, once, near the root of the app.

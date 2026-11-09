@@ -1,0 +1,211 @@
+{
+  "eventCalendar": {
+    "$description": "EventCalendar's component tokens. Each one is an optional override: set the CSS variable (--event-calendar-<name>) on the page, a container or one EventCalendar, and every EventCalendar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The month's title and the dates (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Weekday names, the dates of other months, \"+N more\" and the empty agenda (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-muted"
+          }
+        }
+      },
+      "today": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "Today's date, in the month and the agenda.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-today"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The lines between days.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-border"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring on a day and an event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-focus-ring"
+          }
+        }
+      },
+      "event-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A primary event's fill (other tones use their own subtle color).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-bg"
+          }
+        }
+      },
+      "event-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An event's time and title (4.5:1 on each tone's fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-text"
+          }
+        }
+      },
+      "event-tone": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The bar at the start of an event with no tone.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-tone"
+          }
+        }
+      },
+      "info-tone": {
+        "$type": "color",
+        "$value": "{color.info}",
+        "$description": "The bar at the start of a tone=\"info\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-info-tone"
+          }
+        }
+      },
+      "info-bg": {
+        "$type": "color",
+        "$value": "{color.info-subtle}",
+        "$description": "The fill of a tone=\"info\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-info-bg"
+          }
+        }
+      },
+      "success-tone": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "The bar at the start of a tone=\"success\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-success-tone"
+          }
+        }
+      },
+      "success-bg": {
+        "$type": "color",
+        "$value": "{color.success-subtle}",
+        "$description": "The fill of a tone=\"success\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-success-bg"
+          }
+        }
+      },
+      "warning-tone": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "The bar at the start of a tone=\"warning\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-warning-tone"
+          }
+        }
+      },
+      "warning-bg": {
+        "$type": "color",
+        "$value": "{color.warning-subtle}",
+        "$description": "The fill of a tone=\"warning\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-warning-bg"
+          }
+        }
+      },
+      "danger-tone": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The bar at the start of a tone=\"danger\" event.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-danger-tone"
+          }
+        }
+      },
+      "danger-bg": {
+        "$type": "color",
+        "$value": "{color.danger-subtle}",
+        "$description": "The fill of a tone=\"danger\" event (its text stays event-text, 4.5:1 on it).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-danger-bg"
+          }
+        }
+      },
+      "more-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "\"+N more\" under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-more-bg-hover"
+          }
+        }
+      }
+    },
+    "radius": {
+      "event-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "An event's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-event-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "day-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "A day's height in the month (96px): room for the date and three events.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-day-height"
+          }
+        }
+      }
+    }
+  }
+}

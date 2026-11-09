@@ -159,8 +159,10 @@ describe('CascadeSelect', () => {
   });
 
   test('loadOptions: children of an option without any load when it is opened, "Loading…" (aria-busy) meanwhile; a failed load says so and tries again next time', async () => {
-    let fail = true;
-    const load = vi.fn((path: CascadeOption[]) => new Promise<CascadeOption[]>((ok, no) => setTimeout(() => (fail ? no(new Error('x')) : ok([{ value: path[0].value + '1', label: path[0].label + ' 1' }])), 50)));
+    // Each load ends when the test says so (settle), not on a timer: a click is a round trip through the driver, and on
+    // a slow CI machine a 50ms load had already failed before "Loading…" was read.
+    let fail = true, settle = () => {};
+    const load = vi.fn((path: CascadeOption[]) => new Promise<CascadeOption[]>((ok, no) => { settle = () => (fail ? no(new Error('x')) : ok([{ value: path[0].value + '1', label: path[0].label + ' 1' }])); }));
     await render(<CascadeSelect aria-label="Area" options={[{ value: 'a', label: 'A' }, { value: 'b', label: 'B', isLeaf: true }]} loadOptions={load} />);
     await userEvent.click(button());
     const option = (label: string) => [...panel().querySelectorAll<HTMLElement>('[role=option]')].find((o) => o.textContent === label)!;
@@ -169,10 +171,12 @@ describe('CascadeSelect', () => {
     await userEvent.click(option('A'));
     const note = () => panel().querySelector<HTMLElement>('[role=status]');
     expect([note()?.textContent, note()?.getAttribute('aria-busy')]).toEqual(['Loading…', 'true']);
+    settle();
     await until(() => note()?.textContent === 'Couldn’t load the options');
     fail = false;
     await userEvent.click(option('A'));
     await userEvent.click(option('A'));
+    settle();
     await until(() => !!option('A 1'));
     expect(load).toHaveBeenCalledTimes(2);
     expect(load.mock.calls[0][0].map((o) => o.value)).toEqual(['a']);
