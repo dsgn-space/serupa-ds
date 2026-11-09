@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Start a new app with Serupa set up (135): Vite, React and TypeScript, the stylesheets in order, theme.js first in
 // <head> so the page never flashes the wrong theme, a skip link and main landmark, a theme switch, a small form,
-// and serupaPurge() so `npm run build` ships only the classes the app uses. `npm run check` is the app's "done":
+// and serupaPurge() so `npm run build` ships only the classes and components the app uses. `npm run check` is the app's "done":
 // the types, ESLint with jsx-a11y and serupa-ds/eslint (an <Image> with no alt), and Stylelint with
 // serupa-ds/stylelint (a raw color, spacing or radius where a token belongs), so the app's coding agent can check
 // its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
@@ -123,9 +123,10 @@ function serupaTheme(): Plugin {
   };
 }
 
-// serupaPurge() trims Serupa's stylesheets in \`vite build\` to the classes your code uses; the dev server keeps them all.
+// serupaPurge() trims Serupa's stylesheets in \`vite build\` to the classes and components your code uses (a component
+// counts once its name is in src/, as \`<Button\` or \`import { Button }\`); the dev server keeps them all.
 export default defineConfig({
-  plugins: [serupaTheme(), serupaPurge()],
+  plugins: [serupaTheme(), serupaPurge({ components: true })],
   build: {
     rollupOptions: {
       // The components' "use client" lines are for React Server Components; a browser bundle doesn't need them kept.
