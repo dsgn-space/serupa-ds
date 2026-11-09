@@ -49,7 +49,7 @@ export interface NavbarMenuProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   label: React.ReactNode;
   /** NavbarMenuGroups, each a titled list of links, or NavbarMenuLinks on their own. */
   children?: React.ReactNode | undefined;
-  /** The current page is one of its links: the button is shaded as the current page's link is. Default: false. */
+  /** The current page is one of its links: the button is shaded as the current page's link is, with aria-current="true". Default: false. */
   active?: boolean | undefined;
 }
 /** NavbarMenuGroup's own props, beside a <div>'s. */
@@ -250,7 +250,8 @@ export const NavbarMenu = /* @__PURE__ */ component<HTMLDivElement, NavbarMenuPr
   return (
     <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} data-state={open ? 'open' : 'closed'} className={cn('dk-navbar__menu', props.className)}>
       <button ref={button} type="button" className={cn('dk-navbar__link dk-navbar__menu-button', props.active && 'dk-navbar__link--active')}
-        aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>
+        // active: the current page is in this section, so it's the current item of the bar (1.3.1, GR297).
+        aria-current={props.active ? 'true' : undefined} aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>
         {props.label}<Icon icon={icons.ExpandMore} className="dk-navbar__chevron" />
       </button>
       <div id={id} className="dk-navbar__menu-panel" hidden={!open}>

@@ -104,7 +104,7 @@ Following a link closes the small-screen menu. `href`, `className`, `ref` and ev
 | --- | --- | --- | --- |
 | `label` | node | | The button's text: what its links are about |
 | `children` | NavbarMenuGroups or NavbarMenuLinks | none | The panel's links; links on their own are one list |
-| `active` | boolean | `false` | The current page is one of its links: the button is shaded as the current link is |
+| `active` | boolean | `false` | The current page is one of its links: the button is shaded as the current link is, with `aria-current="true"` |
 
 `id`, `className`, `ref` and everything else go to its wrapping `<div>`, which has `data-state="open"` or `"closed"`.
 

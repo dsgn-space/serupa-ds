@@ -435,6 +435,14 @@ describe('NavbarMenu (RU14)', () => {
   const button = (name: string) => page.getByRole('button', { name, exact: true });
   const expanded = (name: string) => button(name).element().getAttribute('aria-expanded');
 
+  test('active: the menu button says it holds the current page, with aria-current="true" (GR297)', async () => {
+    await render(<><Navbar brand={<a href="#home">Serupa</a>}>
+      <NavbarMenu label="Products" active><NavbarMenuLink href="#alerts" active>Alerts</NavbarMenuLink></NavbarMenu>
+      <NavbarMenu label="Resources"><NavbarMenuLink href="#docs">Docs</NavbarMenuLink></NavbarMenu>
+    </Navbar></>);
+    expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);
+  });
+
   test('a disclosure: a button with aria-expanded that shows a panel of titled groups; each link is named by its text and described by its line', async () => {
     await render(<Mega />);
     const b = button('Products').element();
