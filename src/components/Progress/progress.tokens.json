@@ -4,11 +4,31 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.secondary}",
-        "$description": "The empty part of the bar or ring.",
+        "$value": "{color.surface}",
+        "$description": "The bar's empty part: the page's surface inside a `track-border` edge, so every tone's fill keeps 3:1 against it (WCAG 1.4.11).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--progress-track"
+          }
+        }
+      },
+      "track-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The bar's edge, 3:1 against the page, which marks the whole scale (WCAG 1.4.11).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--progress-track-border"
+          }
+        }
+      },
+      "ring-track": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The ring's empty part. The arc runs along the page on both sides, so it keeps 3:1 there.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--progress-ring-track"
           }
         }
       },
