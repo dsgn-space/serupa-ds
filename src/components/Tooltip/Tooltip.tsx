@@ -18,6 +18,8 @@ export interface TooltipProps {
   /** 'top' (default), 'bottom', 'left', 'right', or with '-start' / '-end' ('bottom-start'). It flips when there's no room. */
   placement?: Placement | undefined;
   /** Milliseconds the pointer rests before it shows. Default: 400. Keyboard focus shows it at once, and so does the pointer while another tooltip is open or closed less than 300ms ago. */
+  openDelay?: number | undefined;
+  /** @deprecated Use openDelay, as HoverCard names it (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as openDelay is, when openDelay isn't given. */
   delay?: number | undefined;
   /** 'description' (default): adds to the element's name (aria-describedby). 'label': is its name (aria-labelledby), for an icon-only button with no other label. */
   role?: 'description' | 'label' | undefined;
@@ -46,7 +48,7 @@ const warm: { until: number; owner: object | null; close: (() => void) | null } 
 /** For tests: start cold, as if no tooltip had shown. Not exported from the package. @testseam */
 export function coolTooltips(): void { warm.until = 0; }
 
-const OWN = { content: 1, children: 1, placement: 1, delay: 1, role: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, ref: 1 } as const;
+const OWN = { content: 1, children: 1, placement: 1, openDelay: 1, delay: 1, role: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, ref: 1 } as const;
 
 /* Tooltip: a short hint about an element, shown while it's hovered (after a delay) or focused, and placed next to
    it in the top layer. Escape hides it; the pointer can move onto the tooltip without it closing (WCAG 1.4.13).
@@ -167,7 +169,8 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   }
   const cp: TriggerProps = { ...child.props, ...fwd };
   const passedRef = (props as { ref?: React.Ref<HTMLElement> }).ref;
-  const delay = props.delay == null ? hoverIntent : props.delay;
+  if (process.env.NODE_ENV !== 'production' && props.delay != null) warnOnce('tooltip-delay', 'Tooltip: delay is deprecated and removed in 15.0.0. Use openDelay, which does the same.');
+  const delay = props.openDelay ?? props.delay ?? hoverIntent;
   const touch = (e: React.SyntheticEvent) => 'pointerType' in e && e.pointerType === 'touch';
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own: unknown = cp[name]; if (typeof own === 'function') (own as Handler)(e); fn(e); };
   const childRef = elementRef<HTMLElement>(child);

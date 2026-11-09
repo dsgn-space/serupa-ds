@@ -42,6 +42,7 @@ declare const toast: typeof show & {
     undo: typeof undo;
 };
 interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
+    placement?: ToasterPosition | undefined;
     position?: ToasterPosition | undefined;
     label?: string | undefined;
     dismissLabel?: string | undefined;
