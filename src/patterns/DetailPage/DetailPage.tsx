@@ -181,7 +181,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }:
             <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
               description={`This deletes the project and ${lost} for everyone. It can’t be undone.`}>
               <div className="flex flex-col gap-4">
-                {failed ? <Alert tone="danger">Couldn't delete {name}. Try again.</Alert> : null}
+                {failed ? <Alert tone="danger">Couldn’t delete {name}. Try again.</Alert> : null}
                 <TypeToConfirm phrase={name} confirmLabel="Delete this project" onConfirm={confirm} />
               </div>
             </Dialog>

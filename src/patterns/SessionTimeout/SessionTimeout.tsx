@@ -154,7 +154,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
           <>
             <div className="flex flex-col gap-2">
               <Heading level={1}>Contact support</Heading>
-              <p className="m-0 text-text-muted">For your security, you're signed out after {timeLeft(duration)} with nothing happening: typing counts. We'll warn you first, and keep what you've typed.</p>
+              <p className="m-0 text-text-muted">For your security, you’re signed out after {timeLeft(duration)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</p>
             </div>
             <Card as="section" aria-labelledby="message-title" className="flex flex-col gap-4">
               <Heading level={2} id="message-title">Your message</Heading>
