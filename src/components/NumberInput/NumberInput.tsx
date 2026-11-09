@@ -24,7 +24,7 @@ import { holdDelay, holdRepeat } from '../../internal/timing';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, NumberInputWords, DatePickerWords);
 
-export interface NumberInputProps extends Omit<InputProps, 'type' | 'showCount' | 'value' | 'defaultValue' | 'rightIcon' | 'min' | 'max' | 'step'> {
+export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'value' | 'defaultValue' | 'rightIcon' | 'min' | 'max' | 'step'> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
   value?: number | null | undefined;
   /** The number at first (uncontrolled). */

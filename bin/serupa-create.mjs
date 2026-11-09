@@ -7,7 +7,7 @@
 // its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
 // node_modules/serupa-ds, which matches the installed release.
 //
-// usage:  npx --package=github:diki-stwn/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
+// usage:  npx --package=gitlab:diki-stwn/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
 //
 // The folder must be new or empty. The app installs this same release of serupa-ds (its tag, as the README's install
 // line does), and the React, Vite and TypeScript versions this release was tested with. --serupa <spec> installs
@@ -236,7 +236,8 @@ function main(argv) {
   if (!serupa) {
     const pkg = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'));
     const repo = pkg.repository.url.replace(/^git\+https:\/\/github\.com\//, '').replace(/\.git$/, '');
-    serupa = `github:${repo}#v${pkg.version}`;
+    // The GitLab interim: release tags are on GitLab (tools/tag-release.mjs), not GitHub. Back to github: on the move back.
+    serupa = `gitlab:${repo}#v${pkg.version}`;
   }
   for (const [file, text] of Object.entries(files({ name, serupa, brand }))) {
     fs.mkdirSync(path.dirname(path.join(target, file)), { recursive: true });

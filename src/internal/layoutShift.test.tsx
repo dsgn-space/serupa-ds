@@ -66,8 +66,12 @@ async function shiftOf(ui: React.ReactElement, serverHtml: string) {
 
 describe.skipIf(!supported)('layout shift', () => {
   // The fonts load once, first, as a returning visitor has them cached: the check is about what hydration moves, and a
-  // first font load would shift every story the same way.
+  // first font load would shift every story the same way. Every face, not only the ones "Aa" needs: Inter comes in
+  // subsets by unicode-range, and one loads only when a page first shows a character from it. Menu's ⌘ and ⇧ (the
+  // symbols subset) did, in the middle of its Shortcuts story, and on a busy runner it arrived inside the window
+  // watched for shifts (moved 0.00001).
   beforeAll(async () => {
+    await Promise.all([...document.fonts].map((f) => f.load().catch(() => f)));
     document.body.insertAdjacentHTML('beforeend', '<p id="font-warm" style="position:absolute;opacity:0">Aa <b>Aa</b> <code>Aa</code></p>');
     await document.fonts.ready;
     await frame();
