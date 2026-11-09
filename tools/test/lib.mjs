@@ -203,6 +203,9 @@ const NEUTRAL = new RegExp('^(' + [
   // no story shows (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|local-checks-gate|setup|tag-release)\.mjs`, String.raw`\.gitlab-ci\.yml`,
   String.raw`(AGENTS|CLAUDE|ROADMAP|SECURITY)\.md`, 'skills/.*',
+  // The docs' Markdown that no page shows (the dev warnings' sections, the ADRs, the RFCs: Storybook builds only
+  // .mdx, and docs/blocks.tsx imports foundations.md alone); the checks that read them run whole on every MR.
+  String.raw`docs/(?!foundations\.md$)[\w/-]+\.md`,
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,

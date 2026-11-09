@@ -114,7 +114,7 @@ describe('Meter', () => {
     expect([thick('sm'), thick('lg'), thick('bad')]).toEqual([4, 12, 8]);
   });
 
-  test('contrast: every zone\'s fill keeps 3:1 on the page, and the label and value 4.5:1, in all six themes', async () => {
+  test('contrast: every zone\'s fill keeps 3:1 on the page and on its track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in all six themes', async () => {
     await render(<Wrap>
       <Meter id="p" value={60} label="Storage" showValue />
       <Meter id="o" value={10} low={30} high={70} optimum={0} aria-label="o" />
@@ -125,11 +125,15 @@ describe('Meter', () => {
     let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      for (const id of ['p', 'o', 's', 'x']) { const r = contrast(fill(id), 'var(--surface)'); n++; if (r < 3) low.push(`${th} ${id} fill ${r.toFixed(2)}`); }
+      for (const id of ['p', 'o', 's', 'x']) {
+        const track = el(id).querySelector<HTMLElement>('[role=meter]')!, bg = css(track).backgroundColor;
+        const edge = /rgba?\([^)]*\)/.exec(css(track).boxShadow)?.[0] || 'transparent';
+        for (const [what, r] of [['fill', contrast(fill(id), 'var(--surface)')], ['fill on its track', contrast(fill(id), bg)], ['track edge', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${id} ${what} ${r.toFixed(2)}`); }
+      }
       for (const sel of ['#p .dk-meter__label', '#p .dk-meter__value']) { const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++; if (r < 4.5) low.push(`${th} ${sel} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
-    expect([low, n]).toEqual([[], 36]);
+    expect([low, n]).toEqual([[], 84]);
   });
 
   test('--meter-fill-poor overrides one meter', async () => {

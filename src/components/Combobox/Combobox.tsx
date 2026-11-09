@@ -31,7 +31,7 @@ import { useVirtual } from '../../internal/virtual';
 export type ComboboxOption<V extends string = string> = V | { value: V; label: string; description?: React.ReactNode; disabled?: boolean };
 /** Options under a heading, as Select's optgroup: { label, options }. disabled turns off every option in it. */
 export interface ComboboxOptionGroup<V extends string = string> { label: string; options: readonly ComboboxOption<V>[]; disabled?: boolean }
-interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 'type' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'rightIcon' | 'onChange'> {
+interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'rightIcon' | 'onChange'> {
   /** The choices: strings, or { value, label, description, disabled }. The label is what's typed to find it and shown once picked.
       Groups { label, options } put options under a heading; a group with no match left hides its heading.
       With loadOptions, the ones shown before anything has loaded (or leave it out). */

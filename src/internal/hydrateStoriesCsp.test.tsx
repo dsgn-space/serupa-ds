@@ -94,6 +94,19 @@ function appStyled(el: Element, source: string) {
   return fromStory(f) || fromRenderProp(f, source);
 }
 
+/** Whether a message is React's attribute-mismatch warning with no attribute changed but style (a + or - line is a
+    style entry, the style prop itself, or text shown for context). */
+function styleOnly(message: string): boolean {
+  if (!/didn't match the client properties/.test(message)) return false;
+  // The tree diff comes after React's link; the - lines above it are its list of usual causes.
+  const at = message.indexOf('react.dev/link/hydration-mismatch');
+  if (at < 0) return false;
+  const changed = message.slice(at).split('\n').filter((l) => /^\s*[+-]\s/.test(l)).map((l) => l.replace(/^\s*[+-]\s+/, ''));
+  // A changed attribute is a line like name="…" or name={…}; the rest are style entries (padding: …) and the text the
+  // tree shows for context.
+  return changed.length > 0 && changed.every((l) => /^style=\{\{.*\}\}$/.test(l) || !/^[\w:-]+=/.test(l));
+}
+
 // Hydrates the server HTML, with the style attributes at the indexes given (all of them, for the page without the
 // policy) set through the CSSOM first. Returns the boxes and which elements' styles are the app's.
 async function hydrate(ui: React.ReactElement, serverHtml: string, source: string, apply: (i: number) => boolean) {
@@ -110,7 +123,16 @@ async function hydrate(ui: React.ReactElement, serverHtml: string, source: strin
   els.forEach((el, i) => { if (texts[i] && apply(i)) setStyle(el, texts[i]); });
   let root: Root | undefined;
   const errors: string[] = [];
-  flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+  // The style attributes set through the CSSOM above read back in another form ("padding-top: 56px; …" for
+  // "padding: 56px 120px"), and the ones the policy blocks don't count at all, so React's development build warns of a
+  // mismatch in style alone on nearly every story. That is this page's doing, not the component's, and 1,500 of them
+  // filled a CI log past GitLab's 4 MB cap, hiding the test that failed. So a mismatch whose every changed line is a
+  // style is left out; any other mismatch is still printed.
+  const error = console.error;
+  const spy = vi.spyOn(console, 'error').mockImplementation((...args: unknown[]) => { if (!styleOnly(args.map(String).join(' '))) error(...args); });
+  try {
+    flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+  } finally { spy.mockRestore(); }
   const app = new Set(els.flatMap((el, i) => (texts[i] && appStyled(el, source) ? [i] : [])));
   const out = await boxes(host);
   root?.unmount();
@@ -127,6 +149,18 @@ const KNOWN = new Set<string>([]);
 // between them.
 beforeEach(() => { vi.useFakeTimers({ toFake: ['Date'], now: Date.now() }); });
 afterEach(() => { vi.useRealTimers(); });
+
+test('a mismatch in style alone is left out of the log, any other is kept', () => {
+  const warn = (diff: string) => `A tree hydrated but some attributes of the server rendered HTML didn't match the client properties.\n\n- Invalid HTML tag nesting.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <Inner>\n    <div\n${diff}\n    >`;
+  expect([
+    styleOnly(warn('      style={{\n+       padding: "56px 120px"\n-       padding-top: "56px"\n      }}')),
+    styleOnly(warn('-     style={{max-width:"20rem"}}')),
+    styleOnly(warn('      style={{\n+         gap: 16\n-         row-gap: "16px"\n      }}')),
+    styleOnly(warn('+     aria-expanded="true"\n-     aria-expanded="false"')),
+    styleOnly(warn('      style={{\n+       maxWidth: "20rem"\n      }}\n+     id="a"\n-     id="b"')),
+    styleOnly('Some other error'),
+  ]).toEqual([true, true, true, false, false, false]);
+});
 
 for (const [name, list] of storiesToRun()) {
   describe(`${name} stories hydrate under a strict CSP`, () => {
