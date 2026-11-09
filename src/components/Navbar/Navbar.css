@@ -92,7 +92,7 @@
      keeps its own width, so a label is never squeezed past reading. The padding keeps a focused action's ring inside
      the scrolling box. */
   .dk-navbar__actions > * { flex-shrink: 0; }
-  .dk-navbar__actions { overflow-x: auto; scrollbar-width: thin; padding: var(--spacing-1); }
+  .dk-navbar__actions { overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; padding: var(--spacing-1); }
   /* In the small-screen menu a NavbarMenu opens in place, under its button, its groups one after another. */
   .dk-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
   .dk-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }
