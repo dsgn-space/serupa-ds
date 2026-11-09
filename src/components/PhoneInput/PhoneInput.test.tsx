@@ -113,6 +113,14 @@ describe('PhoneInput', () => {
     expect([held('Backspace', 10), held('Delete', 9), i.value]).toEqual([[false, false, false], [false, false, false], '(201) 555-0123']);
   });
 
+  test('while an input method is composing (Safari sends the keydown), Backspace and Delete after a separator are left to it', async () => {
+    await render(<Wrap><PhoneInput id="pc" aria-label="Phone" defaultCountry="US" defaultValue="+12015550123" /></Wrap>);
+    const i = field('pc');
+    i.focus();
+    const composing = (key: string, at: number) => { i.setSelectionRange(at, at); const ev = new KeyboardEvent('keydown', { key, isComposing: true, bubbles: true, cancelable: true }); i.dispatchEvent(ev); return ev.defaultPrevented; };
+    expect([composing('Backspace', 10), composing('Delete', 9), i.value]).toEqual([false, false, '(201) 555-0123']);
+  });
+
   test('readOnly: Backspace or Delete next to a separator changes nothing and reports nothing (L8E69)', async () => {
     const seen: string[] = [];
     await render(<Wrap><PhoneInput id="pro" aria-label="Phone" readOnly defaultCountry="US" defaultValue="+12015550123" onValueChange={(v) => seen.push(v)} /></Wrap>);

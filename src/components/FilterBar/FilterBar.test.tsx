@@ -105,6 +105,19 @@ describe('FilterBar', () => {
     await expect.poll(focused).toBe('Title contains “bug”');
   });
 
+  test('the Enter that confirms an input method\'s composition doesn\'t close a text filter (GR299)', async () => {
+    const log: FilterValues[] = [];
+    await render(<Bar log={log} />);
+    await userEvent.click(page.getByRole('button', { name: 'Add filter' }));
+    await userEvent.click(page.getByRole('menuitem', { name: 'Title' }));
+    await userEvent.keyboard('bu');
+    const box = document.activeElement as HTMLElement;
+    box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true, cancelable: true }));
+    expect(box.isConnected && document.activeElement === box).toBe(true);
+    await userEvent.keyboard('g{Enter}');
+    expect(log.at(-1)).toEqual({ q: 'bug' });
+  });
+
   test('the × removes one filter and focus moves to the next chip (or the one before, or "Add filter"); "Clear all" removes every one', async () => {
     const log: FilterValues[] = [];
     await render(<Bar start={{ owner: 'Ana', archived: true }} log={log} />);
