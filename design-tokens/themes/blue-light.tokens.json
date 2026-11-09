@@ -309,6 +309,46 @@
         }
       }
     },
+    "success-hover": {
+      "$type": "color",
+      "$value": "{color.green-500}",
+      "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-hover"
+        }
+      }
+    },
+    "on-success": {
+      "$type": "color",
+      "$value": "{color.green-950}",
+      "$description": "Alias. Text and icons on `success` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--on-success"
+        }
+      }
+    },
+    "success-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.green-100}",
+      "$description": "Alias. Hover fill of an interactive `success-subtle` surface; `success-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-subtle-hover"
+        }
+      }
+    },
+    "success-border": {
+      "$type": "color",
+      "$value": "{color.green-300}",
+      "$description": "Alias. Border of a success outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-border"
+        }
+      }
+    },
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
@@ -336,6 +376,46 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning-text"
+        }
+      }
+    },
+    "warning-hover": {
+      "$type": "color",
+      "$value": "{color.amber-500}",
+      "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-hover"
+        }
+      }
+    },
+    "on-warning": {
+      "$type": "color",
+      "$value": "{color.amber-950}",
+      "$description": "Alias. Text and icons on `warning` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--on-warning"
+        }
+      }
+    },
+    "warning-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.amber-100}",
+      "$description": "Alias. Hover fill of an interactive `warning-subtle` surface; `warning-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-subtle-hover"
+        }
+      }
+    },
+    "warning-border": {
+      "$type": "color",
+      "$value": "{color.amber-300}",
+      "$description": "Alias. Border of a warning outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-border"
         }
       }
     },
@@ -436,6 +516,46 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--info-text"
+        }
+      }
+    },
+    "info-hover": {
+      "$type": "color",
+      "$value": "{color.sky-800}",
+      "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-hover"
+        }
+      }
+    },
+    "on-info": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--on-info"
+        }
+      }
+    },
+    "info-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.sky-100}",
+      "$description": "Alias. Hover fill of an interactive `info-subtle` surface; `info-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-subtle-hover"
+        }
+      }
+    },
+    "info-border": {
+      "$type": "color",
+      "$value": "{color.sky-300}",
+      "$description": "Alias. Border of a info outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-border"
         }
       }
     },

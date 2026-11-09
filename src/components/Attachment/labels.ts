@@ -35,5 +35,5 @@ export const id: AttachmentLabels = {
   attachmentCode: 'Kode',
   attachmentAudio: 'Audio',
   attachmentVideo: 'Video',
-  attachmentOther: 'Berkas',
+  attachmentOther: 'File',
 };

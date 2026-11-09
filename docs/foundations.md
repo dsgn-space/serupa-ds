@@ -118,9 +118,17 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
 | `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
+| `success-hover` | `green-500` | `green-400` | Hover / pressed state of `success` fills. |
+| `on-success` | `green-950` | `green-950` | Text and icons on `success` fills (4.5:1+). |
+| `success-subtle-hover` | `green-100` | `green-900` | Hover fill of an interactive `success-subtle` surface. |
+| `success-border` | `green-300` | `green-800` | Border of a success outline control or callout. |
 | `warning` | `amber-600` | `amber-500` | Warning icons and fills; put dark text on it. Not for text: use `warning-text`. |
 | `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
 | `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
+| `warning-hover` | `amber-500` | `amber-400` | Hover / pressed state of `warning` fills. |
+| `on-warning` | `amber-950` | `amber-950` | Text and icons on `warning` fills (4.5:1+). |
+| `warning-subtle-hover` | `amber-100` | `amber-900` | Hover fill of an interactive `warning-subtle` surface. |
+| `warning-border` | `amber-300` | `amber-800` | Border of a warning outline control or callout. |
 | `danger` | `red-600` | `red-600` | Errors, destructive buttons; white text on it. |
 | `danger-hover` | `red-700` | `red-700` | Hover / pressed state of `danger`. |
 | `on-danger` | `white` | `white` | Text and icons on `danger` fills. |
@@ -131,6 +139,10 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `info` | `sky-700` | `sky-400` | Informational icons and text. |
 | `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
 | `info-text` | `sky-700` | `sky-300` | Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+). Class `text-info-text`. |
+| `info-hover` | `sky-800` | `sky-300` | Hover / pressed state of `info` fills. |
+| `on-info` | `white` | `sky-950` | Text and icons on `info` fills (4.5:1+). |
+| `info-subtle-hover` | `sky-100` | `sky-900` | Hover fill of an interactive `info-subtle` surface. |
+| `info-border` | `sky-300` | `sky-800` | Border of an info outline control or callout. |
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. |
 | `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
 | `field-border` | `zinc-500` | `zinc-400` | Border of form fields: 3:1+ on `field` and `surface` (WCAG 1.4.11, a control's boundary). |
@@ -1093,6 +1105,19 @@ Close buttons, loading text, pagination and the other built-in words come from o
 - Overlays close with "Close" (Dialog, Drawer); notices go away with "Dismiss" (Alert, Toast).
 - Loading is "Loading…" everywhere; give a specific one when you can: `loadingText="Saving…"`.
 - When you change one, keep the patterns above: a verb for a button, sentence case, no full stop.
+
+**In Indonesian**
+
+`idLabels` and any Indonesian copy follow the rules above, and these as well.
+
+- **Anda, not kamu.** Address the person as "Anda", with a capital A wherever it falls in the sentence ("Zona waktu Anda"). A button or a hint needs neither: the plain verb says it ("Simpan", "Pilih file"). Don't switch to "kamu" for a casual product. A product with that voice changes the labels through `<SerupaProvider labels>`, every one of them, so the two never mix on one screen.
+- **Buttons are the base verb:** "Simpan", "Kirim", "Hapus", "Coba lagi". The me- form is for something under way, with the ellipsis: "Menyimpan…", "Memuat…". A done thing takes di-: "3 dihapus", "Disalin".
+- **No "silakan", "mohon" or "maaf"** in the words the components say, as no "please" or "sorry" in English.
+- **Loanwords.** Use the Indonesian word people already use on their phones and computers: "unduh", "unggah", "kata sandi", "salin", "pengaturan", "pencarian". Keep the loanword where it is the everyday word and the Indonesian one would make people stop: "file", "email", "online", "offline", "slide", "filter". Pick one word for each thing and use it everywhere: "file", not "file" in one place and "berkas" in another; "pilihan", not "pilihan" and "opsi". Loanwords aren't set in italics in an interface, and Indonesian affixes don't go on English words ("mengunggah", not "meng-upload").
+- **Plurals.** A number already says there's more than one, so the noun stays as it is: "3 file", "12 pesan baru", never "3 file-file". `plural()` takes the same form for one and many.
+- **Dates and times.** Day, month, year, with no comma: "24 Okt 2026" or "24 Oktober 2026". Times use a full stop, "14.30", as `Intl.DateTimeFormat` writes for `id-ID`. Let the locale write both.
+- **Numbers and money.** A full stop groups thousands and a comma marks decimals: "12.400", "2,5 MB". Rupiah goes before the amount, and whole rupiah need no ",00": "Rp 12.400" (`maximumFractionDigits: 0`). Let `Intl.NumberFormat` with `id-ID` write them; never build one by hand from the English form.
+- **Ranges.** In a sentence write "sampai" ("3 sampai 12"); in a short label use an en dash with no spaces ("1–5"), as in English.
 
 ## Ethical design
 
