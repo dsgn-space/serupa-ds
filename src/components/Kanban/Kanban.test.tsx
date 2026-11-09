@@ -150,6 +150,30 @@ describe('Kanban', () => {
     expect(moves[0].to).toEqual({ column: 'done', index: 0 });
   });
 
+  test('pointer: moves within one place re-render no card, and the card still follows the pointer (GR239)', async () => {
+    let renders = 0;
+    function Counted() {
+      const [cols, setCols] = React.useState(START());
+      return <div style={{ width: '1000px' }}><Kanban aria-label="Sprint" columns={cols} getKey={(x) => x.id} getLabel={(x) => x.t}
+        renderCard={(x) => { renders++; return x.t; }} onMove={(next) => setCols(next)} /></div>;
+    }
+    await render(<Counted />);
+    const h = handle('Alpha').element(), li = h.closest('li')!;
+    const a = h.getBoundingClientRect();
+    h.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 3, clientX: a.x + 4, clientY: a.y + 4 }));
+    window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 3, clientX: a.x + 24, clientY: a.y + 4 }));
+    await expect.poll(() => document.querySelector('[data-component="kanban"]')!.className).toMatch(/moving/);
+    for (let f = 0; f < 3; f++) await new Promise((r) => requestAnimationFrame(r));
+    const before = renders;
+    // 20 small moves sideways inside the first column: the same place each time.
+    for (let i = 1; i <= 20; i++) window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 3, clientX: a.x + 24 + i, clientY: a.y + 4 }));
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(renders - before).toBe(0);
+    expect(li.style.transform).toBe('translate(40px, 0px)');
+    window.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 3, clientX: a.x, clientY: a.y }));
+    await expect.poll(() => li.style.transform).toBe('');
+  });
+
   test('a pointer drag that is cancelled changes nothing', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
