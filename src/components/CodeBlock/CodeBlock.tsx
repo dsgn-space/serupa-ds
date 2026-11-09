@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { useScrolls } from '../../internal/useScrolls';
+import { cn, domId, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useServerStyles } from '../../internal/serverStyles';
 import { useSettings } from '../../internal/provider';
@@ -50,18 +51,7 @@ export const CodeBlock = /* @__PURE__ */ component<HTMLDivElement, CodeBlockProp
   const lang = props.language ? String(props.language) : '';
   const pre = React.useRef<HTMLPreElement>(null);
   // Only a box that scrolls is a tab stop, so the keyboard can scroll it (WCAG 2.1.1); then it's a region with a name.
-  const [scrolls, setScrolls] = React.useState(false);
-  useIsoLayoutEffect(() => {
-    const el = pre.current;
-    if (!el) return;
-    const check = () => setScrolls(el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1);
-    check();
-    if (typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(check);
-    ro.observe(el);
-    if (el.firstElementChild) ro.observe(el.firstElementChild);
-    return () => ro.disconnect();
-  }, []);
+  const scrolls = useScrolls(pre);
   const header = hasTitle || lang || copyable;
   const name = hasTitle ? { 'aria-labelledby': base + '-title' } : { 'aria-label': lang || labels.codeName };
 
