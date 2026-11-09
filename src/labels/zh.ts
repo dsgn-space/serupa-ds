@@ -235,6 +235,7 @@ export const labels: SerupaLabels = {
   tourDone: '完成',
   sparklineSummary: (label, first, last, min, max) => label + '：从' + first + '到' + last + '，最低' + min + '，最高' + max,
   table: '表格',
+  timeline: '时间线',
   tableSorted: (column, direction) => '已按' + column + (direction === 'ascending' ? '升序' : '降序') + '排列。',
   tableSelected: (count) => '已选择 ' + n(count) + ' 项',
   clearSelection: '清除选择',

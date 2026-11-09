@@ -240,6 +240,7 @@ export const labels: SerupaLabels = {
   tourDone: 'تم',
   sparklineSummary: (label, first, last, min, max) => label + ': من ' + first + ' إلى ' + last + '، الأدنى ' + min + '، الأعلى ' + max,
   table: 'جدول',
+  timeline: 'المخطط الزمني',
   tableSorted: (column, direction) => 'مرتب حسب ' + column + '، ' + (direction === 'ascending' ? 'تصاعديًا' : 'تنازليًا') + '.',
   tableSelected: (count) => 'المحدد: ' + n(count),
   clearSelection: 'مسح التحديد',
