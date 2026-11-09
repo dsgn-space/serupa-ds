@@ -376,6 +376,10 @@ describe('SegmentedControl', () => {
   });
   test('inside a scaled container, the indicator still sits on its segment', async () => {
     await render(<div style={{ transform: 'scale(0.5)', transformOrigin: '0 0' }}><SegmentedControl id="sc" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }, { value: 'c', label: 'Timeline' }]} defaultValue="c" /></div>);
+    // A web font that arrives after the first measure widens the labels, and the control measures again when its
+    // segments resize (ar-EG on CI read 72.5/39 against 74.5/42.5). Measured once the fonts are in and that's done.
+    await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
     const ind = el('sc').querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('sc').querySelector('[aria-checked=true]')!.getBoundingClientRect();
     expect([Math.abs(ind.left - c.left) < 0.5, Math.abs(ind.width - c.width) < 0.5], `${ind.left}/${ind.width} against ${c.left}/${c.width}`).toEqual([true, true]);
   });
