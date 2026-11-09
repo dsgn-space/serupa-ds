@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useValidityMessages } from '../../internal/validity';
-import { cn, domId, isInvalid, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
@@ -121,11 +121,10 @@ export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('In
   const countId = domId('dk-in', React.useId());
   const locale = useLocale();
   const num = (n: number) => displayNumber(n, locale, PLAIN);   // the locale's digits, as Textarea's
-  const setRefs = React.useCallback(function (node: HTMLInputElement | null) {
+  const setRefs = useMergedRef(ref, function (node: HTMLInputElement | null) {
     own.current = node;
     nameRef(node);
-    setRef(ref, node);
-  }, [ref, nameRef]);
+  });
   const affix = useAffixes(props.prefix, props.suffix, countId, own);
   if (affix.ids || props.showCount) rest['aria-describedby'] = cn(rest['aria-describedby'], affix.ids, props.showCount && countId);
   const icon = function (source: IconSource, side: string) {

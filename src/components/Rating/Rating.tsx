@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, domId, oneOf, SIZES } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
@@ -95,7 +95,8 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
   const styled = useServerStyles<HTMLDivElement>();   // each star's share, from server HTML under a strict CSP (GR10)
   // A Field's label click and ref.current.focus() (a form library focusing the first invalid field) land on the
   // star in the Tab order, the picked one or else the first; the <div> took no focus (L8E89).
-  const ref2 = (n: HTMLDivElement | null) => { root.current = n; if (!readOnly) delegateFocus(n, () => n && (n.querySelector<HTMLElement>('input:checked:enabled') || n.querySelector<HTMLElement>('input:enabled'))); nameRef(n); styled(n); if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; };
+  // A read-only Rating has no inputs, so the delegated focus finds nothing there and does nothing, as the <div>'s own.
+  const ref2 = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; delegateFocus(n, () => n && (n.querySelector<HTMLElement>('input:checked:enabled') || n.querySelector<HTMLElement>('input:enabled'))); nameRef(n); styled(n); });
   useAutoFocus(autoFocus, () => root.current);   // through the delegation above; the <div> ignored it (L8E92)
   const classes = cn('dk-rating', 'dk-rating--size-' + size, readOnly && 'dk-rating--readonly', off && 'dk-rating--disabled', className);
 

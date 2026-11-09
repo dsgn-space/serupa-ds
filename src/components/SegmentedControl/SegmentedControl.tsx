@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, isInvalid, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
@@ -195,8 +195,9 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const onFocus = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onFocus && crossing(e)) rest.onFocus(e); };
   const onBlur = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onBlur && crossing(e)) rest.onBlur(e); };
   const checkedUsable = usable.some((o) => o.value === value);
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; nameRef(n); delegateFocus(n, tabStop); });
   return (
-    <div {...rest} ref={(n) => { root.current = n; nameRef(n); delegateFocus(n, tabStop); setRef(ref, n); }}
+    <div {...rest} ref={mergedRef}
       role="radiogroup" aria-disabled={disabled || undefined}
       aria-invalid={invalid || undefined} aria-required={required || undefined} aria-readonly={readOnly || undefined}
       aria-labelledby={props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel)}

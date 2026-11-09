@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { Icon } from '../Icon/Icon';
 import { Loader } from '../Loader/Loader';
@@ -66,13 +66,14 @@ export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInp
     if (e.key === 'Escape' && e.currentTarget.value !== '' && !locked) { e.preventDefault(); e.stopPropagation(); clear(); }
     else if (e.key === 'Enter' && props.onSearch) props.onSearch(e.currentTarget.value);
   };
+  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
     <span className={cn('dk-input dk-search-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
       style={props.style} data-component="search-input" data-size={size} onMouseDown={pressFocuses(el)}>
       <span className="dk-input__icon dk-input__icon--left dk-search-input__icon" aria-hidden={props.loading ? undefined : true}>
         {props.loading ? <Loader size="sm" delay={0} label={props.loadingLabel ?? sds.labels.searching} /> : <Icon icon={icons.Search} />}
       </span>
-      <input {...rest} ref={(n) => { el.current = n; nameRef(n); if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; }}
+      <input {...rest} ref={mergedRef}
         type="search" enterKeyHint={rest.enterKeyHint || 'search'} className="dk-input__field" onChange={onChange} onKeyDown={onKeyDown} />
       {text !== '' && !locked ? (
         <button type="button" className="dk-search-input__clear" aria-label={props.clearLabel || sds.labels.clearSearch} aria-controls={rest.id}

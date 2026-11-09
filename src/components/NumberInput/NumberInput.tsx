@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { pressFocuses, useAffixes } from '../../internal/affix';
 import { Icon } from '../Icon/Icon';
@@ -262,12 +262,13 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     onContextMenu: (e: React.MouseEvent) => { if (hold.current && hold.current.timer) e.preventDefault(); },   // a long touch
     onClick: () => { if (hold.current) hold.current = null; else press(by); },
   });
+  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
     <span className={cn('dk-input dk-number-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.steppers !== false && 'dk-number-input--steppers', props.className)}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={pressFocuses(el)}>
       {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
       {affix.prefix}
-      <input {...rest} ref={(n) => { el.current = n; nameRef(n); if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; }}
+      <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}
         role="spinbutton" aria-valuenow={now ?? undefined} aria-valuetext={formatOptions && now != null ? show(now) : undefined} aria-valuemin={min} aria-valuemax={max}
         autoComplete={rest.autoComplete || 'off'} className="dk-input__field" value={text}

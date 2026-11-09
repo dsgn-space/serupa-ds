@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { useCut } from '../../internal/useCut';
 import { config } from '../../internal/config';
 import { displayNumber } from '../../internal/numbers';
@@ -99,7 +99,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
   const tipOk = !!text && rest.title == null && !rest['aria-label'] && !rest['aria-labelledby'] && !rest['aria-describedby'];
   const node = React.useRef<HTMLElement | null>(null);
   const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-badge__label'));
-  const setNode = React.useCallback(function (n: HTMLElement | null) { node.current = n; setRef(ref, n); }, [ref]);
+  const setNode = useMergedRef(ref, (n: HTMLElement | null) => { node.current = n; });
   let label: React.ReactNode = props.children;
   if (isCount) {
     const n = Math.max(0, Math.floor(Number(props.count)) || 0);

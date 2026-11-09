@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { activeIn } from '../../internal/root';
@@ -157,9 +157,10 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
       claim.drop();
     };
   }, [open, placement]);
+  const mergedRef = useMergedRef(ref, (n) => { bar.current = n; });
   if (!open && !leaving) return null;
   return (
-    <div {...rest} ref={(n) => { bar.current = n; setRef(ref, n); }} className={cn('dk-offline-banner', `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? '' : undefined}
+    <div {...rest} ref={mergedRef} className={cn('dk-offline-banner', `dk-offline-banner--${placement}`, props.className)} data-component="offline-banner" data-instant={instant ? '' : undefined}
       data-state={shown} data-leaving={open ? undefined : ''} inert={open ? undefined : true}>
       <Icon className="dk-offline-banner__icon" icon={shown === 'back' ? icons.CloudDone : icons.CloudOff} />
       <span className="dk-offline-banner__text">

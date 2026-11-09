@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { cn, type DataAttributes, domId, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { cn, type DataAttributes, domId, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { useCut } from '../../internal/useCut';
 import { config } from '../../internal/config';
 import { useShowAfter } from '../../internal/showAfter';
@@ -195,7 +195,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   const node = React.useRef<HTMLElement | null>(null);
   const cut = useCut(tipOk, text, () => node.current && node.current.querySelector<HTMLElement>('.dk-btn__label'));
   if (cut && tipOk) rest.title = text;
-  const setNode = React.useCallback(function (n: HTMLElement | null) { node.current = n; setRef(ref, n); }, [ref]);
+  const setNode = useMergedRef(ref, (n: HTMLElement | null) => { node.current = n; });
 
   // Micro-interactions: Enter shows the press like Space (your handlers run first)
   rest.onKeyDown = chain(rest.onKeyDown, pressKey);

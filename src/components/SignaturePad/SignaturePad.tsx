@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, omit, setRef } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
@@ -209,8 +209,9 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const empty = method === 'draw' ? !shown.length : !typed.trim();
   const labelledBy = props['aria-labelledby'] || (props['aria-label'] ? undefined : fieldLabel);
   const describedBy = cn(base + '-how', props['aria-describedby']);
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, methodStop); nameRef(n); });
   return (
-    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, methodStop); setRef(ref, n); nameRef(n); }} role="group"
+    <div {...rest} ref={mergedRef} role="group"
       aria-labelledby={labelledBy} aria-describedby={describedBy}
       className={cn('dk-signature-pad', disabled && 'dk-signature-pad--disabled', invalid && 'dk-signature-pad--invalid', props.className)} data-component="signature-pad">
       <FieldContext.Provider value={null}>

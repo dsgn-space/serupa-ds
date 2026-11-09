@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, setRef } from '../../internal/cn';
+import { cn, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { isComposing } from '../../internal/ime';
@@ -110,7 +110,7 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat',
     if (el) el.focus({ preventScroll: true });
   };
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat', props.className)} data-component="chat">
+    <div {...rest} ref={ref} className={cn('dk-chat', props.className)} data-component="chat">
       {/* A region that scrolls is focusable, so keyboard people can scroll it; role="log" reads new messages politely. */}
       <div ref={scroller} className="dk-chat__log" role="log" {...SCROLL_STOP} aria-label={props['aria-label']} aria-labelledby={props['aria-labelledby']} onScroll={onScroll}>
         {props.hasOlder ? (
@@ -162,7 +162,7 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
   const own = !!props.own, failed = props.status === 'failed';
   const showAuthor = !props.hideAuthor && (props.author != null || own);
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat-message', own && 'dk-chat-message--own', failed && 'dk-chat-message--failed', props.hideAuthor && 'dk-chat-message--follow', props.className)}
+    <div {...rest} ref={ref} className={cn('dk-chat-message', own && 'dk-chat-message--own', failed && 'dk-chat-message--failed', props.hideAuthor && 'dk-chat-message--follow', props.className)}
       data-component="chat-message" aria-busy={props.streaming || undefined}>
       <span className="dk-chat-message__avatar" aria-hidden>{props.hideAuthor ? null : props.avatar}</span>
       <div className="dk-chat-message__main">
@@ -225,7 +225,7 @@ export const ChatDivider = /* @__PURE__ */ component<HTMLDivElement, ChatDivider
     } else text = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
   }
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat-divider', props.className)} data-component="chat-divider">
+    <div {...rest} ref={ref} className={cn('dk-chat-divider', props.className)} data-component="chat-divider">
       <span className="dk-chat-divider__text">{text}</span>
     </div>
   );
@@ -275,7 +275,7 @@ export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatCompo
     if (field.current) field.current.focus();
   };
   return (
-    <form {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-chat-composer', props.className)} data-component="chat-composer"
+    <form {...rest} ref={ref} className={cn('dk-chat-composer', props.className)} data-component="chat-composer"
       onSubmit={(e) => { e.preventDefault(); send(); }}>
       {props.attachments ? <div className="dk-chat-composer__attachments">{props.attachments}</div> : null}
       <div className="dk-chat-composer__row">

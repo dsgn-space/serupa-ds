@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
@@ -281,9 +281,10 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   // every render: a render moves the cards; outside a drag it only clears a transform left behind.
   useIsoLayoutEffect(() => { follow(); });
 
+  const mergedRef = useMergedRef(ref, (n) => { board.current = n; });
   return (<>
     {/* Disabled, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
-    <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={(n) => { board.current = n; setRef(ref, n); }} role={rest.role ?? 'group'}
+    <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
       className={cn('dk-kanban', drag && 'dk-kanban--moving', props.disabled && 'dk-kanban--disabled', props.className)} data-component="kanban">
       {shown.map((col, c) => {
         const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;

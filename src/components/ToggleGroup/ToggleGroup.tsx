@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { useRowWrap } from '../../internal/useRowWrap';
 import { component } from '../../internal/component';
 import type { ButtonGroupProps } from '../ButtonGroup/ButtonGroup';
@@ -60,9 +60,10 @@ export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroup
   // As ButtonGroup: an attached row wider than its container wraps as separate buttons (GP1).
   const root = React.useRef<HTMLDivElement | null>(null);
   const wrapped = useRowWrap(root, props.attached !== false && !vertical, props.children);
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
     // ButtonGroup's markup and classes, so it looks and lays out the same.
-    <div role="group" {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} data-component="toggle-group" data-orientation={vertical ? 'vertical' : 'horizontal'} data-type={single ? 'single' : 'multiple'}
+    <div role="group" {...rest} ref={mergedRef} data-component="toggle-group" data-orientation={vertical ? 'vertical' : 'horizontal'} data-type={single ? 'single' : 'multiple'}
       data-wrapped={wrapped || undefined}
       className={cn('dk-button-group dk-toggle-group', vertical && 'dk-button-group--vertical', props.attached !== false && !wrapped && 'dk-button-group--attached', props.className)}>
       {children}

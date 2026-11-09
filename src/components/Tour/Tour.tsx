@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { showLayer, type Placement } from '../../internal/position';
@@ -162,10 +162,11 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour',
     return () => p.removeEventListener('keydown', esc);
   }, [open, close]);
 
+  const mergedRef = useMergedRef(ref, (n) => { panel.current = n; });
   if (!step) return null;
   const H = ('h' + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 2)) as 'h2';
   return (
-    <div {...omit(props, OWN)} ref={(n) => { panel.current = n; setRef(ref, n); }} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }}
+    <div {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }}
       hidden={!open || undefined} inert={!open || undefined} aria-labelledby={id + '-title'} aria-describedby={step.content != null ? id + '-text' : undefined}
       className={cn('dk-tour', !target && 'dk-tour--center', props.className)} data-component="tour" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}>
       {open || exit.leaving ? <>

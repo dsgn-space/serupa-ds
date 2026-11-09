@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { component } from '../../internal/component';
@@ -118,8 +118,9 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Ste
     if (head) head.focus();
   }, [current]);
   const shown = Math.min(current, steps.length - 1);
+  const mergedRef = useMergedRef(ref, (node) => { nav.current = node; });
   return (
-    <nav {...rest} ref={(node) => { nav.current = node; setRef(ref, node); }} aria-label={rest['aria-label'] || (rest['aria-labelledby'] ? undefined : sds.labels.progress)}
+    <nav {...rest} ref={mergedRef} aria-label={rest['aria-label'] || (rest['aria-labelledby'] ? undefined : sds.labels.progress)}
       className={cn('dk-stepper', vertical ? 'dk-stepper--vertical' : 'dk-stepper--horizontal', compact && 'dk-stepper--compact', compact && tight && 'dk-stepper--tight', 'dk-stepper--size-' + size, props.className)}
       data-component="stepper" data-orientation={vertical ? 'vertical' : 'horizontal'} data-size={size}>
       <ol className="dk-stepper__list">

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, setRef } from '../../internal/cn';
+import { cn, oneOf, useMergedRef } from '../../internal/cn';
 import { removeAndRefocus } from '../../internal/removeFocus';
 import { useServerStyles } from '../../internal/serverStyles';
 import { Dialog } from '../Dialog/Dialog';
@@ -160,6 +160,7 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>('Im
   const [state, setState] = React.useState<'loading' | 'loaded' | 'error'>('loading');
   const [open, setOpen] = React.useState(false);
   const img = React.useRef<HTMLImageElement | null>(null);
+  const mergedRef = useMergedRef(ref, (n) => { img.current = n; });
   // The picture is hidden while it loads only once the page's script runs (live), so server-rendered HTML paints
   // it as soon as it arrives, with or without JavaScript. A lazy one still loading a frame after mount is hidden
   // and fades in when it arrives; one that arrives within quickArrival ms of mount just appears (no fade as a page
@@ -209,7 +210,7 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>('Im
   const failed = state === 'error'
     ? <span className="dk-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
     : null;
-  const picture = <img {...rest} ref={(n) => { img.current = n; setRef(ref, n); }} src={src} alt={alt} loading={load} srcSet={least(rest.srcSet)}
+  const picture = <img {...rest} ref={mergedRef} src={src} alt={alt} loading={load} srcSet={least(rest.srcSet)}
         sizes={sizing(rest.srcSet, sizes)} decoding={decoding || 'async'} fetchPriority={fetchPriority || (priority ? 'high' : undefined)}
         className={cn('dk-image__img', className)} onLoad={(e) => { arrived(); setState('loaded'); if (onLoad) onLoad(e); }} onError={(e) => { setLive(false); setState('error'); if (onError) onError(e); }} />;
   // With sources, a <picture> (display: contents, so the <img> lays out as before) offers them ahead of src.

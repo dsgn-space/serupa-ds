@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn } from '../../internal/cn';
+import { useMergedRef, cn } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -112,10 +112,7 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
     run();
   }, [near, infinite, hasMore, busy, count, run]);
 
-  const setRef = React.useCallback((node: HTMLDivElement | null) => {
-    box.current = node;
-    if (typeof ref === 'function') ref(node); else if (ref) ref.current = node;
-  }, [ref]);
+  const setRef = useMergedRef(ref, (node: HTMLDivElement | null) => { box.current = node; });
 
   return (
     <div {...rest} ref={setRef} className={cn('dk-load-more', className)} data-component="load-more"

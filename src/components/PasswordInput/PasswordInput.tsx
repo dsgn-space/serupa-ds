@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { announce } from '../../internal/announce';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
-import { cn, domId, isInvalid, omit, oneOf, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, oneOf, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import type { InputProps } from '../Input/Input';
@@ -67,7 +67,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   // Switching the type puts the caret at the start: keep where it was, so typing goes on where it stopped.
   const field = React.useRef<HTMLInputElement | null>(null);
   const caret = React.useRef<[number, number, 'forward' | 'backward' | 'none', number, number] | null>(null);
-  const fieldRef = React.useCallback((n: HTMLInputElement | null) => { field.current = n; nameRef(n); setRef(ref, n); }, [ref, nameRef]);
+  const fieldRef = useMergedRef(ref, (n: HTMLInputElement | null) => { field.current = n; nameRef(n); });
   useIsoLayoutEffect(() => {
     const f = field.current, c = caret.current;
     caret.current = null;

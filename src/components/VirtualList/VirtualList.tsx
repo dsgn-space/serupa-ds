@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useVirtual } from '../../internal/virtual';
 
@@ -56,7 +56,7 @@ export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualLi
     return li && li.parentElement === list ? Number(li.dataset.index) : null;
   };
   const attach = r.ref;
-  const setNode = React.useCallback((n: HTMLUListElement | null) => { attach(n); setRef(ref, n); }, [attach, ref]);
+  const setNode = useMergedRef(ref, (n: HTMLUListElement | null) => { attach(n); });
   return React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
     ref: setNode,
     'data-component': 'virtual-list', role: rest.role ?? 'list', tabIndex: rest.tabIndex ?? 0,

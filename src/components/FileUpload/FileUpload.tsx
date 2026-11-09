@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, omit, setRef } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, useMergedRef } from '../../internal/cn';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
@@ -315,8 +315,9 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const errorId = invalid ? props['aria-errormessage'] : undefined;
   const given = props['aria-describedby'];
   const described = cn(required && base + '-req', given, errorId && !(given || '').split(/\s+/).includes(errorId) && errorId, hasHint && base + '-hint', missing && base + '-missing') || undefined;
+  const mergedRef = useMergedRef(ref, (n) => { delegateFocus(n, choose); });
   return (
-    <div {...rest} onPaste={onPaste} ref={(n) => { delegateFocus(n, choose); setRef(ref, n); }} aria-disabled={disabled || undefined} className={cn('dk-file-upload', disabled && 'dk-file-upload--disabled', readOnly && 'dk-file-upload--readonly', (invalid || missing) && 'dk-file-upload--invalid', props.className)} data-component="file-upload">
+    <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('dk-file-upload', disabled && 'dk-file-upload--disabled', readOnly && 'dk-file-upload--readonly', (invalid || missing) && 'dk-file-upload--invalid', props.className)} data-component="file-upload">
       {/* A click on the area's padding opens the picker too, for the pointer only: the choose button is how the
           keyboard and screen readers reach it, so the area is presentational and carries no state (TF1b); a disabled upload says so on the whole of it. */}
       <div className={cn('dk-file-upload__zone', over && 'dk-file-upload__zone--over')} data-dragging={over ? '' : undefined} role="presentation" {...drag}

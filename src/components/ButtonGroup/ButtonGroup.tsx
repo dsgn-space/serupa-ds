@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { useRowWrap } from '../../internal/useRowWrap';
 import { component } from '../../internal/component';
 
@@ -25,7 +25,8 @@ export const ButtonGroup = /* @__PURE__ */ component<HTMLDivElement, ButtonGroup
   // An attached row wider than its container wraps as separate buttons (useRowWrap).
   const root = React.useRef<HTMLDivElement | null>(null);
   const wrapped = useRowWrap(root, attached && !vertical, props.children);
-  return <div role="group" {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} data-component="button-group" data-orientation={vertical ? 'vertical' : 'horizontal'}
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
+  return <div role="group" {...rest} ref={mergedRef} data-component="button-group" data-orientation={vertical ? 'vertical' : 'horizontal'}
     data-wrapped={wrapped || undefined}
     className={cn('dk-button-group', vertical && 'dk-button-group--vertical', attached && !wrapped && 'dk-button-group--attached', props.className)} />;
 });

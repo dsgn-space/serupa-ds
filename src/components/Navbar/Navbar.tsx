@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { config } from '../../internal/config';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
@@ -172,9 +172,10 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
       <ul className="dk-navbar__links">{links.map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
     </nav>
   ) : null;
+  const mergedRef = useMergedRef(ref, (n) => { bar.current = n; });
   return (
     <NavbarContext.Provider value={ctx}>
-      <header {...rest} ref={(n) => { bar.current = n; setRef(ref, n); }} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.className)}>
+      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.className)}>
         <div className={cn('dk-navbar__inner dk-container dk-container--padded', 'dk-container--' + size)}>
           {props.brand != null ? <div className="dk-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <span>{props.brand}</span> : props.brand}</div> : null}
           {open || leaving ? null : nav}
@@ -247,8 +248,9 @@ export const NavbarMenu = /* @__PURE__ */ component<HTMLDivElement, NavbarMenuPr
     if (React.isValidElement(c) && c.type === NavbarMenuGroup) { flush(); parts.push(c); } else loose.push(c);
   }
   flush();
+  const mergedRef2 = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} data-state={open ? 'open' : 'closed'} className={cn('dk-navbar__menu', props.className)}>
+    <div {...rest} ref={mergedRef2} data-state={open ? 'open' : 'closed'} className={cn('dk-navbar__menu', props.className)}>
       <button ref={button} type="button" className={cn('dk-navbar__link dk-navbar__menu-button', props.active && 'dk-navbar__link--active')}
         // active: the current page is in this section, so it's the current item of the bar (1.3.1, GR297).
         aria-current={props.active ? 'true' : undefined} aria-expanded={open} aria-controls={id} onClick={() => set(!open)}>

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { isComposing } from '../../internal/ime';
-import { cn, domId, omit, setRef } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
@@ -199,8 +199,9 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
       onKeyDown={(e) => { if (e.key === 'Enter' && !isComposing(e)) { e.preventDefault(); focusNext.current = f.id; closeEditor(f); } }} />;
   };
 
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} role="group" aria-label={props['aria-label'] || (props['aria-labelledby'] ? undefined : L.filterBar)}
+    <div {...rest} ref={mergedRef} role="group" aria-label={props['aria-label'] || (props['aria-labelledby'] ? undefined : L.filterBar)}
       className={cn('dk-filter-bar', props.className)} data-component="filter-bar">
       <ul className="dk-filter-bar__chips" role="list">
         {active.map((f) => (
