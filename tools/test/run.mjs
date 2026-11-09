@@ -37,6 +37,9 @@ if (arg('--since')) {
   const changed = diff.status === 0 && !wide ? affectedComponents(scopeFiles(diff.stdout)) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
+  // The docs' Upgrading page renders the pending changesets (docs/upgrades.ts, the next major's breaking entries), so
+  // a changed changeset re-checks that page in Storybook (GR284). It is a page, not a component: no tests or pictures.
+  if (names && diff.stdout.split('\n').some((l) => /^\.changeset\/[\w-]+\.md$/.test(l.split('\t')[2] || ''))) names.add('docs/Upgrading.mdx');
   direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
@@ -58,7 +61,7 @@ const steps = [
   vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
-  ...(process.env.CI && (!arg('--since') || only?.size) && !arg('--locale') ? (() => {
+  ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
     const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
     const locale = LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
     const own = direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : [];
