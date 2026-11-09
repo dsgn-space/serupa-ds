@@ -173,7 +173,6 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       if ((e.key === 'End' || e.key === 'Home') && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
         toEdge.current(e.key === 'End');
-        read();
         return;
       }
       // PageUp and PageDown: a screen at once, not the browser's smooth scroll. The rows it measures on the way move
@@ -272,15 +271,8 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   };
 
   // every render: Home and End use this render's rows and offsets.
-  // Past CAP, straight to the very top or bottom of the scaled range.
-  useIsoLayoutEffect(() => {
-    toEdge.current = (last) => {
-      const el = node.current;
-      if (!count || !el) return;
-      if (scaled) { live.current.pin = null; go(live.current, el, last ? total : 0); }
-      else scrollToIndex(last ? count - 1 : 0);
-    };
-  });
+  // Past CAP, scrollToIndex puts the scaled range at its very top or bottom.
+  useIsoLayoutEffect(() => { toEdge.current = (last) => { if (count) scrollToIndex(last ? count - 1 : 0); }; });
 
   const drawn = offsets[end] - offsets[start];
   const before = scaled ? Math.max(0, offsets[start] + shift) : offsets[start];
