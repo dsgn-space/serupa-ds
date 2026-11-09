@@ -140,7 +140,7 @@ const preview: Preview = {
       storySort: (a, b) => {
         const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Upgrading', 'Changelog'];
         const foundations = ['Colors', 'Themes', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
-          'Content and voice', 'Accessibility', 'Utility classes', 'Icons'];
+          'Content and voice', 'Ethical design', 'Accessibility', 'Utility classes', 'Icons'];
         const at = (list, name) => { const i = list.indexOf(name); return i < 0 ? list.length : i; };
         const x = a.title.split('/'), y = b.title.split('/');
         if (x[0] !== y[0]) return at(order, x[0]) - at(order, y[0]);

@@ -1094,6 +1094,47 @@ Close buttons, loading text, pagination and the other built-in words come from o
 - Loading is "Loading…" everywhere; give a specific one when you can: `loadingText="Saving…"`.
 - When you change one, keep the patterns above: a verb for a button, sentence case, no full stop.
 
+## Ethical design
+
+A product built with the system asks for people's time, money and data honestly. Each choice is one the person makes for themselves, with what it costs in plain sight, and a "no" counts as much as a "yes". These rules sit beside Content and voice and Accessibility: a page can pass WCAG and still push someone into a choice they didn't mean to make.
+
+**Choices of equal weight**
+
+- Two answers to one question look alike: the same kind of button, side by side, in the same words ("Accept analytics cookies", "Reject analytics cookies"). Neither is a link, a paler color or one more step away. ConsentBanner works this way.
+- A recommended option says so in words ("Recommended"), and the others stay as clear to see and to choose.
+- A safe default (staying signed in, keeping a draft) can be the main button. A choice that earns the product money or data can't be the only one that looks like a button.
+
+**No confirmshaming**
+
+- The way out starts with a verb that says what it does, as any button does: "Skip", "Keep my current plan", "Close offer". Never "No, I don't want to save money" or "I prefer to pay full price".
+- No guilt, no sad faces, no "Are you sure you want to miss out?".
+
+**Nothing extra ticked for them**
+
+- Extras are off until the person turns them on: newsletters, add-ons, insurance, a tip, sharing with partners. A Checkbox or Switch for one of them starts unchecked.
+- Agreeing to the terms and agreeing to marketing are separate questions. Never fold one into the other.
+- The cheapest way to get what they came for is the default (standard delivery, monthly billing, the plan they're on), unless they choose otherwise.
+
+**Leaving takes no more than joining**
+
+- Cancelling, unsubscribing, deleting an account or turning notifications off takes no more steps than signing up or turning them on, and happens in the product, not by phone or email.
+- Say when a plan renews and what it will cost before someone chooses it, and how to cancel.
+- One confirmation is enough. No offer screens between the person and the button they asked for, and no "Contact us to cancel".
+
+**Honest time and numbers**
+
+- A timer counts down to something real, such as a session ending or a code expiring, and says what happens at zero. No timers that start again on reload, and no "offer ends in 10:00" that never ends.
+- Scarcity and popularity are true, current and checkable: "3 left" only when there are 3, "Popular with teams" only when it is.
+- The price shown is the price paid. Delivery, fees and taxes show before the last step, and the total on the button or next to it is the total charged.
+- Counts are true counts: an unread badge counts things the person hasn't seen, never a made-up nudge to come back.
+
+**Their data, their call**
+
+- Ask for data when it's needed and say why ("For the receipt and the delivery updates"). Mark what's optional.
+- Keep only what the feature needs, for as long as it needs it, and say what's kept in the browser (SECURITY.md lists what the components store).
+
+When a pattern breaks one of these, the fix is in the pattern, not in the words around it.
+
 ## Accessibility standard
 
 The target is **WCAG 2.2 level AA**, in all six themes, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
