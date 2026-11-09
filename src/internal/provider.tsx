@@ -115,18 +115,22 @@ const SERVER_LOCALE = 'en-US';
 // the visitor's own browser setting, never a request's: the server doesn't read it (its snapshot is SERVER_LOCALE).
 // Building a DateTimeFormat to ask costs about 0.6ms on a slow phone, and useSyncExternalStore asks at least twice a
 // render, so 21 components each paid that on every render: 2.4s to tick one row of a 1,000-row Table (GR58).
-// The one listener that forgets it is added on the first read, before any component subscribes, so it runs first and
-// a component told of the change reads the new locale.
+// One window listener for every component (GR241: one each was about 5,000 in a 1,000-row table with five dates a
+// row). It is added on the first read or subscribe, forgets the locale first and then tells each subscriber, so a
+// component told of the change reads the new one.
 let seenLocale: string | undefined;
-let forgetting = false;
+const told = new Set<() => void>();
+let listening = false;
+const listen = () => {
+  if (listening) return;
+  listening = true;
+  window.addEventListener('languagechange', () => { seenLocale = undefined; told.forEach((cb) => cb()); });
+};
 const browserLocale = () => {
-  if (seenLocale === undefined) {
-    seenLocale = new Intl.DateTimeFormat().resolvedOptions().locale;
-    if (!forgetting) { forgetting = true; window.addEventListener('languagechange', () => { seenLocale = undefined; }); }
-  }
+  if (seenLocale === undefined) { seenLocale = new Intl.DateTimeFormat().resolvedOptions().locale; listen(); }
   return seenLocale;
 };
-const onLanguageChange = (cb: () => void) => { window.addEventListener('languagechange', cb); return () => window.removeEventListener('languagechange', cb); };
+const onLanguageChange = (cb: () => void) => { listen(); told.add(cb); return () => { told.delete(cb); }; };
 /** A locale given to a component or provider, made safe for Intl: canonical, else undefined with a warning in development. */
 function usable(locale: string | undefined): string | undefined {
   if (!locale) return undefined;
