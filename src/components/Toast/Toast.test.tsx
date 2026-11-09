@@ -10,6 +10,7 @@ import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 import { toast, Toaster, type ToasterPosition } from './Toast';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
+import { resetWarnings } from '../../internal/warn';
 
 const toasts = () => [...document.querySelectorAll<HTMLElement>('[data-toast]')];
 // Each toast is named by its title (aria-labelledby).
@@ -626,6 +627,9 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
 
   test('toast.undo with no Toaster to show it, or once its Toaster unmounts, does the action for good and warns once', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // A toast.undo left by the test before (random order) can commit after the setup's reset and before the spy,
+    // using up the one warning where the spy can't see it; forget it here, with the spy on.
+    resetWarnings();
     try {
       const log: string[] = [];
       toast.undo({ title: 'Report moved to trash', commit: () => log.push('commit alone'), onUndo: () => log.push('undo alone') });

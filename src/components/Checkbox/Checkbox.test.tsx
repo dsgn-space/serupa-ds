@@ -287,7 +287,7 @@ describe('CheckboxGroup', () => {
     </CheckboxGroup></form><SerupaProvider locale="id-ID" labels={idLabels}><CheckboxGroup aria-label="Kontak" required><Checkbox value="wa">WhatsApp</Checkbox></CheckboxGroup></SerupaProvider>
     <CheckboxGroup aria-label="Own"><Checkbox value="own">Own</Checkbox></CheckboxGroup></>);
     bx('own').setCustomValidity('Mine');
-    expect([bx('mail').validationMessage, bx('sms').validationMessage, bx('wa').validationMessage]).toEqual(['Select at least one option.', 'Select at least one option.', 'Pilih setidaknya satu opsi.']);
+    expect([bx('mail').validationMessage, bx('sms').validationMessage, bx('wa').validationMessage]).toEqual(['Select at least one option.', 'Select at least one option.', 'Centang setidaknya satu pilihan.']);
     await userEvent.click(bx('mail'));
     expect([bx('mail').validationMessage, bx('sms').validationMessage, (document.getElementById('rqm') as HTMLFormElement).checkValidity(), bx('own').validationMessage]).toEqual(['', '', true, 'Mine']);
     await userEvent.click(bx('mail'));   // none again

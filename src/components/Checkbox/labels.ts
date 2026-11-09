@@ -8,5 +8,5 @@ export const en: CheckboxLabels = {
   selectAtLeastOne: 'Select at least one option.',
 };
 export const id: CheckboxLabels = {
-  selectAtLeastOne: 'Pilih setidaknya satu opsi.',
+  selectAtLeastOne: 'Centang setidaknya satu pilihan.',
 };
