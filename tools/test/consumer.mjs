@@ -30,7 +30,8 @@ const run = (args, cwd) => {
 // it, so a release that went out broken (a file left out, a bad package.json) fails here and not in someone's app.
 // The checkout is the tag's, so the cases in tools/test/ssr/ are the ones that version shipped with.
 const release = process.argv.includes('--release');
-const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '');
+// --release runs in the GitHub release workflow, which downloads the tarball from that repository's release.
+const repo = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-consumer-'));
 let tarball;
 if (release) tarball = `${repo}/releases/download/v${pkg.version}/${pkg.name}-${pkg.version}.tgz`;

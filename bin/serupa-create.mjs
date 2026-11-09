@@ -235,7 +235,7 @@ function main(argv) {
   const name = path.basename(target).toLowerCase().replace(/[^a-z0-9-._~]+/g, '-').replace(/^[-._]+/, '') || 'app';
   if (!serupa) {
     const pkg = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'));
-    const repo = pkg.repository.url.replace(/^git\+https:\/\/github\.com\//, '').replace(/\.git$/, '');
+    const repo = pkg.repository.url.replace(/^git\+https:\/\/(?:github|gitlab)\.com\//, '').replace(/\.git$/, '');
     // The GitLab interim: release tags are on GitLab (tools/tag-release.mjs), not GitHub. Back to github: on the move back.
     serupa = `gitlab:${repo}#v${pkg.version}`;
   }
