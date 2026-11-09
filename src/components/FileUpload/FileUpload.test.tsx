@@ -107,6 +107,13 @@ describe('FileUpload', () => {
     expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn’t added: up to 3 files.']);
   });
 
+  test('a row shows the icon Attachment shows for the file\'s kind, by MIME type and then by extension (RU6)', async () => {
+    await render(<FileUpload data-testid="kinds" multiple />);
+    const el = q('[data-testid=kinds]');
+    await userEvent.upload(input(el), [file('Q3.xlsx', '', 10), file('notes.txt', 'text/plain', 10), file('app.tsx', '', 10), file('deck.pptx', '', 10), file('data.bin', '', 10)]);
+    expect(items(el).map((li) => li.querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon)).toEqual(['table_chart', 'description', 'code', 'slideshow', 'draft']);
+  });
+
   test('N9: pasting files with focus on the choose button adds them, checked like dropped ones; a paste with no files, or read-only, adds nothing', async () => {
     await render(<><Many /><FileUpload id="ro" readOnly /></>);
     const el = q(many);
