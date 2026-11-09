@@ -73,7 +73,7 @@
           - separator "Resize Status column"
         - columnheader "Actions"
     - rowgroup:
-      - row "Details, Order 1001 Ada Lovelace London 3 IDR 1,240,000 Paid Edit":
+      - row "Details, Order 1001 Ada Lovelace London 3 IDR 1,240,000 Paid Edit order 1001":
         - cell "Details, Order 1001":
           - button "Details, Order 1001"
         - cell "Ada Lovelace"
@@ -81,9 +81,9 @@
         - cell "3"
         - cell "IDR 1,240,000"
         - cell "Paid"
-        - cell "Edit":
-          - button "Edit"
-      - row "Details, Order 1002 Grace Hopper Arlington 1 IDR 85,000 Pending Edit":
+        - cell "Edit order 1001":
+          - button "Edit order 1001": Edit
+      - row "Details, Order 1002 Grace Hopper Arlington 1 IDR 85,000 Pending Edit order 1002":
         - cell "Details, Order 1002":
           - button "Details, Order 1002"
         - cell "Grace Hopper"
@@ -91,9 +91,9 @@
         - cell "1"
         - cell "IDR 85,000"
         - cell "Pending"
-        - cell "Edit":
-          - button "Edit"
-      - row "Details, Order 1003 Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Paid Edit":
+        - cell "Edit order 1002":
+          - button "Edit order 1002": Edit
+      - row "Details, Order 1003 Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Paid Edit order 1003":
         - cell "Details, Order 1003":
           - button "Details, Order 1003" [expanded]
         - cell "Raden Ajeng Kartini"
@@ -101,8 +101,8 @@
         - cell "12"
         - cell "IDR 4,520,000"
         - cell "Paid"
-        - cell "Edit":
-          - button "Edit"
+        - cell "Edit order 1003":
+          - button "Edit order 1003": Edit
       - row "Split into two boxes.":
         - cell "Split into two boxes."
 
@@ -163,27 +163,27 @@
         - columnheader "Total"
         - columnheader "Actions"
     - rowgroup:
-      - row "Ada Lovelace London 3 IDR 1,240,000 Edit":
+      - row "Ada Lovelace London 3 IDR 1,240,000 Edit order 1001":
         - cell "Ada Lovelace"
         - cell "London"
         - cell "3"
         - cell "IDR 1,240,000"
-        - cell "Edit":
-          - button "Edit"
-      - row "Grace Hopper Arlington 1 IDR 85,000 Edit":
+        - cell "Edit order 1001":
+          - button "Edit order 1001": Edit
+      - row "Grace Hopper Arlington 1 IDR 85,000 Edit order 1002":
         - cell "Grace Hopper"
         - cell "Arlington"
         - cell "1"
         - cell "IDR 85,000"
-        - cell "Edit":
-          - button "Edit"
-      - row "Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Edit":
+        - cell "Edit order 1002":
+          - button "Edit order 1002": Edit
+      - row "Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Edit order 1003":
         - cell "Raden Ajeng Kartini"
         - cell "Jepara"
         - cell "12"
         - cell "IDR 4,520,000"
-        - cell "Edit":
-          - button "Edit"
+        - cell "Edit order 1003":
+          - button "Edit order 1003": Edit
 
 # Playground
 - table "Team members":
@@ -458,7 +458,7 @@
           - separator "Resize Status column"
         - columnheader "Actions"
     - rowgroup:
-      - row "Details, Order 1001 Ada Lovelace London 3 IDR 1,240,000 Paid Edit":
+      - row "Details, Order 1001 Ada Lovelace London 3 IDR 1,240,000 Paid Edit order 1001":
         - cell "Details, Order 1001":
           - button "Details, Order 1001"
         - cell "Ada Lovelace"
@@ -466,9 +466,9 @@
         - cell "3"
         - cell "IDR 1,240,000"
         - cell "Paid"
-        - cell "Edit":
-          - button "Edit"
-      - row "Details, Order 1002 Grace Hopper Arlington 1 IDR 85,000 Pending Edit":
+        - cell "Edit order 1001":
+          - button "Edit order 1001": Edit
+      - row "Details, Order 1002 Grace Hopper Arlington 1 IDR 85,000 Pending Edit order 1002":
         - cell "Details, Order 1002":
           - button "Details, Order 1002"
         - cell "Grace Hopper"
@@ -476,9 +476,9 @@
         - cell "1"
         - cell "IDR 85,000"
         - cell "Pending"
-        - cell "Edit":
-          - button "Edit"
-      - row "Details, Order 1003 Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Paid Edit":
+        - cell "Edit order 1002":
+          - button "Edit order 1002": Edit
+      - row "Details, Order 1003 Raden Ajeng Kartini Jepara 12 IDR 4,520,000 Paid Edit order 1003":
         - cell "Details, Order 1003":
           - button "Details, Order 1003" [expanded]
         - cell "Raden Ajeng Kartini"
@@ -486,8 +486,8 @@
         - cell "12"
         - cell "IDR 4,520,000"
         - cell "Paid"
-        - cell "Edit":
-          - button "Edit"
+        - cell "Edit order 1003":
+          - button "Edit order 1003": Edit
       - row "Split into two boxes.":
         - cell "Split into two boxes."
 

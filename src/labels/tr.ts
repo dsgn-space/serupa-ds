@@ -244,6 +244,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'Daralt',
   tableWider: 'Genişlet',
   tableFitColumn: 'İçeriğe sığdır',
+  tableResizeHint: 'Genişlik düğmeleri için Enter tuşuna basın',
   tableColumns: 'Sütunlar',
   tableDetails: 'Ayrıntılar',
   tableRowDetails: (row) => row + ' ayrıntıları',

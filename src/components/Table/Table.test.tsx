@@ -7,7 +7,7 @@ import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { SerupaProvider } from '../../internal/provider';
-import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableVirtualBody, type SortDirection } from './Table';
+import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
 const ROWS: Array<[string, string, number]> = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -724,6 +724,7 @@ describe('Table column tools (RU10)', () => {
     const s = await render(<Resizing />);
     const handle = s.getByRole('separator', { name: 'Resize Name column' });
     const h = handle.element() as HTMLElement;
+    expect(document.getElementById(h.getAttribute('aria-describedby')!)!.textContent).toBe('Press Enter for width buttons');
     await userEvent.click(h);
     const dialog = page.getByRole('dialog', { name: 'Resize Name column' });
     await expect.element(dialog).toBeVisible();
@@ -786,9 +787,10 @@ describe('Table column tools (RU10)', () => {
   });
 
   test('TableColumnsMenu: a checkbox per column; a required column and the last one shown can\'t be cleared', async () => {
+    const seen: { id: string; visible: boolean }[] = [];
     function Menu() {
-      const [cols, set] = React.useState([{ id: 'name', label: 'Name', visible: true, required: true }, { id: 'role', label: 'Role', visible: true }, { id: 'calls', label: 'Calls', visible: false }]);
-      return <TableColumnsMenu columns={cols} onVisibleChange={(id, v) => set(cols.map((c) => c.id === id ? { ...c, visible: v } : c))} />;
+      const [cols, set] = React.useState<TableColumnOption[]>([{ id: 'name', label: 'Name', visible: true, required: true }, { id: 'role', label: 'Role', visible: true }, { id: 'calls', label: 'Calls', visible: false }]);
+      return <TableColumnsMenu columns={cols} onColumnsChange={(next, d) => { seen.push(d); set(next); }} />;
     }
     const s = await render(<Menu />);
     await s.getByRole('button', { name: 'Columns' }).click();
@@ -799,8 +801,9 @@ describe('Table column tools (RU10)', () => {
     await expect.element(s.getByRole('checkbox', { name: 'Calls' })).not.toBeChecked();
     await s.getByRole('checkbox', { name: 'Calls' }).click();
     await expect.element(s.getByRole('checkbox', { name: 'Calls' })).toBeChecked();
+    expect(seen).toEqual([{ id: 'calls', visible: true }]);   // and the list came back with Calls shown
     // Without a required column, the last one shown can't be cleared.
-    await s.rerender(<TableColumnsMenu columns={[{ id: 'a', label: 'A', visible: true }, { id: 'b', label: 'B', visible: false }]} onVisibleChange={() => {}} />);
+    await s.rerender(<TableColumnsMenu columns={[{ id: 'a', label: 'A', visible: true }, { id: 'b', label: 'B', visible: false }]} onColumnsChange={() => {}} />);
     await s.getByRole('button', { name: 'Columns' }).click();
     await expect.element(s.getByRole('checkbox', { name: 'A' })).toBeDisabled();
     await expect.element(s.getByRole('checkbox', { name: 'B' })).toBeEnabled();

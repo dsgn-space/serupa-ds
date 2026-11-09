@@ -243,6 +243,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'संकरा',
   tableWider: 'चौड़ा',
   tableFitColumn: 'सामग्री के अनुसार',
+  tableResizeHint: 'चौड़ाई बटनों के लिए Enter दबाएँ',
   tableColumns: 'कॉलम',
   tableDetails: 'विवरण',
   tableRowDetails: (row) => row + ' का विवरण',

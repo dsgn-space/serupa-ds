@@ -250,6 +250,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'Уже',
   tableWider: 'Шире',
   tableFitColumn: 'По содержимому',
+  tableResizeHint: 'Нажмите Enter для кнопок ширины',
   tableColumns: 'Столбцы',
   tableDetails: 'Подробности',
   tableRowDetails: (row) => 'Подробности: ' + row,

@@ -16,6 +16,8 @@ export interface TableLabels {
   tableWider: string;
   /** Table: fits the column to its widest content. */
   tableFitColumn: string;
+  /** Table: a resize handle's description, saying how to reach the width buttons. */
+  tableResizeHint: string;
   /** TableColumnsMenu: the button that opens the choice of columns, and its panel's title. */
   tableColumns: string;
   /** TableExpandCell header: the expand column's heading, read only (it shows nothing). */
@@ -32,6 +34,7 @@ export const en: TableLabels = {
   tableNarrower: 'Narrower',
   tableWider: 'Wider',
   tableFitColumn: 'Fit to content',
+  tableResizeHint: 'Press Enter for width buttons',
   tableColumns: 'Columns',
   tableDetails: 'Details',
   tableRowDetails: (row) => 'Details, ' + row,
@@ -45,6 +48,7 @@ export const id: TableLabels = {
   tableNarrower: 'Lebih sempit',
   tableWider: 'Lebih lebar',
   tableFitColumn: 'Sesuaikan dengan isi',
+  tableResizeHint: 'Tekan Enter untuk tombol lebar',
   tableColumns: 'Kolom',
   tableDetails: 'Rincian',
   tableRowDetails: (row) => 'Rincian ' + row,

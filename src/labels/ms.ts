@@ -244,6 +244,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'Lebih sempit',
   tableWider: 'Lebih lebar',
   tableFitColumn: 'Muatkan dengan kandungan',
+  tableResizeHint: 'Tekan Enter untuk butang lebar',
   tableColumns: 'Lajur',
   tableDetails: 'Butiran',
   tableRowDetails: (row) => 'Butiran ' + row,

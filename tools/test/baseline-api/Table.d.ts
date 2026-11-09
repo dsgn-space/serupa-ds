@@ -5,6 +5,10 @@ interface TableLabels {
     tableSelected: (count: number) => string;
     clearSelection: string;
     tableResizeColumn: (column: string) => string;
+    tableNarrower: string;
+    tableWider: string;
+    tableFitColumn: string;
+    tableResizeHint: string;
     tableColumns: string;
     tableDetails: string;
     tableRowDetails: (row: string) => string;
@@ -81,9 +85,12 @@ interface TableColumnOption {
 }
 interface TableColumnsMenuProps {
     columns: TableColumnOption[];
-    onVisibleChange: (id: string, visible: boolean) => void;
+    onColumnsChange: (columns: TableColumnOption[], details: TableColumnsChangeDetails) => void;
     label?: string | undefined;
-    placement?: React.ComponentProps<typeof Popover>["placement"];
+}
+interface TableColumnsChangeDetails {
+    id: string;
+    visible: boolean;
 }
 declare function TableColumnsMenu(props: TableColumnsMenuProps): React.JSX.Element;
 interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {

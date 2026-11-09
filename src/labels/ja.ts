@@ -243,6 +243,7 @@ export const labels: SerupaLabels = {
   tableNarrower: '狭く',
   tableWider: '広く',
   tableFitColumn: '内容に合わせる',
+  tableResizeHint: 'Enter キーで幅のボタンを表示',
   tableColumns: '列',
   tableDetails: '詳細',
   tableRowDetails: (row) => row + ' の詳細',

@@ -213,7 +213,7 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
   return (
     <div className="flex flex-col items-end gap-2" style={{ maxWidth: 560 }}>
       <TableColumnsMenu columns={[{ id: 'customer', label: 'Customer', visible: true, required: true }, ...COLS.map((c) => ({ ...c, visible: shown[c.id] }))]}
-        onVisibleChange={(id, v) => setShown({ ...shown, [id]: v })} />
+        onColumnsChange={(_cols, d) => setShown({ ...shown, [d.id]: d.visible })} />
       <Table {...args} caption="Orders" hideCaption layout="fixed" pinEnd containerProps={{ style: { width: '100%' } }}>
         <TableHead>
           <TableRow>
@@ -233,7 +233,7 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
                   : c.id === 'items' ? <TableCell key={c.id} align="end">{o.items}</TableCell>
                   : c.id === 'total' ? <TableCell key={c.id} align="end"><FormattedNumber value={o.total} format="currency" currency="IDR" options={{ maximumFractionDigits: 0 }} /></TableCell>
                   : <TableCell key={c.id}><Badge tone={o.status === 'Paid' ? 'success' : 'neutral'}>{o.status}</Badge></TableCell>)}
-                <TableCell><Button variant="ghost" size="sm">Edit</Button></TableCell>
+                <TableCell><Button variant="ghost" size="sm" aria-label={'Edit order ' + o.id}>Edit</Button></TableCell>
               </TableRow>
               <TableDetailRow id={'order-' + o.id} open={!!open[o.id]} colSpan={cols.length + 3}><Text as="span" tone="muted">{o.note}</Text></TableDetailRow>
             </React.Fragment>
@@ -258,7 +258,7 @@ function Pinned(args: React.ComponentProps<typeof Table>) {
             <TableRow key={o.id} selected={i === 1}>
               <TableCell>{o.customer}</TableCell><TableCell>{o.city}</TableCell><TableCell align="end">{o.items}</TableCell>
               <TableCell align="end"><FormattedNumber value={o.total} format="currency" currency="IDR" options={{ maximumFractionDigits: 0 }} /></TableCell>
-              <TableCell><Button variant="ghost" size="sm">Edit</Button></TableCell>
+              <TableCell><Button variant="ghost" size="sm" aria-label={'Edit order ' + o.id}>Edit</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>

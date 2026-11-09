@@ -246,6 +246,7 @@ export const labels: SerupaLabels = {
   tableNarrower: '좁게',
   tableWider: '넓게',
   tableFitColumn: '내용에 맞추기',
+  tableResizeHint: 'Enter 키를 눌러 너비 버튼 열기',
   tableColumns: '열',
   tableDetails: '세부 정보',
   tableRowDetails: (row) => row + ' 세부 정보',

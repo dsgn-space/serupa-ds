@@ -247,6 +247,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'Schmaler',
   tableWider: 'Breiter',
   tableFitColumn: 'An Inhalt anpassen',
+  tableResizeHint: 'Enter drücken für Breiten-Schaltflächen',
   tableColumns: 'Spalten',
   tableDetails: 'Details',
   tableRowDetails: (row) => 'Details zu ' + row,

@@ -248,6 +248,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'أضيق',
   tableWider: 'أعرض',
   tableFitColumn: 'ملاءمة المحتوى',
+  tableResizeHint: 'اضغط Enter لأزرار العرض',
   tableColumns: 'الأعمدة',
   tableDetails: 'التفاصيل',
   tableRowDetails: (row) => 'تفاصيل ' + row,

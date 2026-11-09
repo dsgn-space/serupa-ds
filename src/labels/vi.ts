@@ -244,6 +244,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'Hẹp hơn',
   tableWider: 'Rộng hơn',
   tableFitColumn: 'Vừa với nội dung',
+  tableResizeHint: 'Nhấn Enter để mở nút độ rộng',
   tableColumns: 'Cột',
   tableDetails: 'Chi tiết',
   tableRowDetails: (row) => 'Chi tiết ' + row,

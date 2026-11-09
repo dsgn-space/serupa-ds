@@ -249,6 +249,7 @@ export const labels: SerupaLabels = {
   tableNarrower: 'Вужче',
   tableWider: 'Ширше',
   tableFitColumn: 'За вмістом',
+  tableResizeHint: 'Натисніть Enter для кнопок ширини',
   tableColumns: 'Стовпці',
   tableDetails: 'Подробиці',
   tableRowDetails: (row) => 'Подробиці: ' + row,

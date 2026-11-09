@@ -461,10 +461,14 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
   // The handle's name: the column's text, read once it's drawn. With no width set yet, its value is the drawn width.
   const [name, setName] = React.useState('');
   const [drawn, setDrawn] = React.useState<number | null>(null);
+  const hint = domId('dk-th-hint', React.useId());
+  // The header's text and drawn width can change with any child or the table's layout, and both are read from the
+  // DOM; each sets state only when it differs, so it settles after one pass.
+  // every render: what it reads isn't in props or state.
   useIsoLayoutEffect(() => {
     const cell = th.current;
     if (!resizable || !cell) return;
-    const text = Array.from(cell.childNodes).filter((n) => !(n instanceof Element && (n.classList.contains('dk-table__resize') || n.classList.contains('dk-popover')))).map((n) => n.textContent || '').join('').trim();
+    const text = Array.from(cell.childNodes).filter((n) => !(n instanceof HTMLElement && (n.hidden || n.classList.contains('dk-table__resize') || n.classList.contains('dk-popover')))).map((n) => n.textContent || '').join('').trim();
     if (text !== name) setName(text);
     const w = current == null ? Math.round(cell.getBoundingClientRect().width) : null;
     if (w !== drawn) setDrawn(w);
@@ -473,6 +477,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
   const separator = resizable ? {
     role: 'separator', 'aria-orientation': 'vertical' as const, 'aria-label': labels.tableResizeColumn(name),
     'aria-valuemin': min, 'aria-valuemax': max, 'aria-valuenow': value != null ? value : undefined, tabIndex: 0,
+    'aria-describedby': hint,   // that Enter opens the width buttons: a separator can't carry aria-haspopup
   } : null;
   const step = (by: number) => { const a = act.current; if (a) a.set(a.now() + by); };
   return (
@@ -485,6 +490,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
         </button>
       ) : props.children}
       {separator ? <span {...separator} ref={handle} className="dk-table__resize" /> : null}
+      {separator ? <span id={hint} hidden>{labels.tableResizeHint}</span> : null}
       {separator ? (
         <div ref={panel} {...{ popover: 'auto' }} role="dialog" aria-label={labels.tableResizeColumn(name)} tabIndex={-1} className="dk-popover dk-table-width">
           <Button variant="outline" size="sm" disabled={value != null && value <= min} onClick={() => step(-STEP)}>{labels.tableNarrower}</Button>
@@ -549,7 +555,7 @@ export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableAct
 });
 
 export interface TableColumnOption {
-  /** Your id for the column, passed back to onVisibleChange. */
+  /** Your id for the column, passed back in onColumnsChange's details. */
   id: string;
   /** The column's name, as its header says it. */
   label: React.ReactNode;
@@ -562,13 +568,15 @@ export interface TableColumnOption {
 export interface TableColumnsMenuProps {
   /** Every column that can be shown, in the table's order. */
   columns: TableColumnOption[];
-  /** Called when a column is checked or cleared: show or hide it in the table. */
-  onVisibleChange: (id: string, visible: boolean) => void;
+  /** Called when a column is checked or cleared, with the list as it now is (draw the table from it) and which
+      column changed: { id, visible }. */
+  onColumnsChange: (columns: TableColumnOption[], details: TableColumnsChangeDetails) => void;
   /** The button's text, and the panel's title. Default: "Columns" (labels.tableColumns). */
   label?: string | undefined;
-  /** Where the panel opens. Default: "bottom-end". */
-  placement?: React.ComponentProps<typeof Popover>['placement'];
 }
+
+/** onColumnsChange's details: the column that was checked or cleared, and whether it's shown now. */
+export interface TableColumnsChangeDetails { id: string; visible: boolean }
 
 /* TableColumnsMenu: a "Columns" button that opens a Popover of checkboxes, one per column, to show or hide them. The
    table is yours to draw from the same list. The last column shown can't be cleared, so the table is never empty. */
@@ -578,12 +586,12 @@ export function TableColumnsMenu(props: TableColumnsMenuProps) {
   const label = props.label || labels.tableColumns;
   const shown = props.columns.filter((c) => c.visible).length;
   return (
-    <Popover title={label} placement={props.placement || 'bottom-end'}
+    <Popover title={label} placement="bottom-end"
       trigger={<Button variant="outline" size="sm">{label}</Button>}>
       <div className="dk-table-columns">
         {props.columns.map((c) => (
           <Checkbox key={c.id} checked={c.visible || !!c.required} disabled={!!c.required || (c.visible && shown <= 1)}
-            onChange={(e) => props.onVisibleChange(c.id, e.currentTarget.checked)}>{c.label}</Checkbox>
+            onChange={(e) => { const v = e.currentTarget.checked; props.onColumnsChange(props.columns.map((x) => (x.id === c.id ? { ...x, visible: v } : x)), { id: c.id, visible: v }); }}>{c.label}</Checkbox>
         ))}
       </div>
     </Popover>

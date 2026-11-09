@@ -243,6 +243,7 @@ export const labels: SerupaLabels = {
   tableNarrower: '变窄',
   tableWider: '变宽',
   tableFitColumn: '适应内容',
+  tableResizeHint: '按 Enter 打开宽度按钮',
   tableColumns: '列',
   tableDetails: '详细信息',
   tableRowDetails: (row) => row + ' 的详细信息',
