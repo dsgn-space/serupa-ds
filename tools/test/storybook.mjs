@@ -87,7 +87,8 @@ async function switchTo(w, run) {
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories and docs pages of the components it touches.
 const only = onlyComponents();
-const mine = (e) => !only || only.has(e.importPath.split('/')[3]);   // ./src/components/<Name>/…
+// ./src/components/<Name>/…, or a page of docs/ by its file (./docs/Upgrading.mdx is "docs/Upgrading.mdx").
+const mine = (e) => { const p = e.importPath.split('/'); return !only || only.has(p[1] === 'docs' ? `docs/${p[2]}` : p[3]); };
 const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
 const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
 async function checkDocs(e, w) {

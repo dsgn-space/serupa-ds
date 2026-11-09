@@ -19,4 +19,5 @@ t('each story gets a row per theme, the changed ones marked, with the picture at
 t('a new story has no "before"; the other shots that changed are named', /\| blue-light \(changed\) \| new \|/.test(md) && md.includes('Also changed: blue-light-hover, axes.'));
 t('not required: says so; required: asks for the label', md.includes('isn\'t required') && sheet({ status, base: 'a', head: 'b', repo: 'o/r', required: true }).includes('add the **design-qa** label'));
 t('no picture changed: says there is nothing to review', sheet({ status: `M\tsrc/x.ts`, base: 'a', head: 'b', repo: 'o/r' }).includes('nothing to review'));
+t('on GitLab the pictures are its raw files', sheet({ status, base: 'a', head: 'b', repo: 'g/r', gitlab: 'https://gitlab.com' }).includes('https://gitlab.com/g/r/-/raw/b/'));
 done(report('Design QA', R));

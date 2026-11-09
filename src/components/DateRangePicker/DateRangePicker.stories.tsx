@@ -34,3 +34,4 @@ export const OverflowNarrow: Story = {
   args: { defaultValue: { start: new Date(2025, 11, 24), end: new Date(2026, 0, 6) } },
   render: (args) => <div style={{ width: 200 }}><DateRangePicker {...args} /></div>,
 };
+export const WithPresets: Story = { args: { presets: true, defaultValue: { start: new Date(2025, 2, 10), end: new Date(2025, 2, 14) } } };

@@ -1,10 +1,15 @@
-// exports: type DateRange, type DateRangeInput, DateRangePicker, type DateRangePickerProps
+// exports: type DateRange, type DateRangeInput, DateRangePicker, type DateRangePickerProps, type DateRangePreset
 interface DateRangePickerLabels {
     chooseDates: string;
     startDate: string;
     endDate: string;
     chooseStartDate: string;
     chooseEndDate: string;
+    yesterday: string;
+    last7Days: string;
+    last30Days: string;
+    thisMonth: string;
+    lastMonth: string;
 }
 interface DateRange {
     start: Date | null;
@@ -13,6 +18,10 @@ interface DateRange {
 interface DateRangeInput {
     start: Date | null | string;
     end: Date | null | string;
+}
+interface DateRangePreset {
+    label: string;
+    value: (() => DateRangeInput) | DateRangeInput;
 }
 interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "defaultValue" | "onChange"> {
     value?: DateRangeInput | undefined;
@@ -40,5 +49,6 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     form?: string | undefined;
     buttonLabel?: string | undefined;
     months?: 1 | 2 | undefined;
+    presets?: boolean | DateRangePreset[] | undefined;
 }
 declare const DateRangePicker: React.ForwardRefExoticComponent<DateRangePickerProps & React.RefAttributes<HTMLSpanElement>>;

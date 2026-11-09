@@ -32,6 +32,16 @@
           }
         }
       },
+      "presets-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line between the days and the `presets` shortcuts.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-presets-border"
+          }
+        }
+      },
       "weekday-color": {
         "$type": "color",
         "$value": "{color.text-muted}",

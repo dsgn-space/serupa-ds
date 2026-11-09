@@ -7,7 +7,12 @@ import { component } from '../../internal/component';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { useFocusHandover } from '../../internal/focus';
+import { dayPresets, PresetList, type PresetItem } from '../../internal/datePresets';
 import { en as words } from './labels';
+
+/** A shortcut beside the days (Calendar and DatePicker presets): its name and the day it picks, as a Date, a
+    "yyyy-mm-dd" string, or a function that gives one when the list draws (so "Next Monday" follows today). */
+export interface DatePreset { label: string; value: Date | string | (() => Date | string) }
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   /** The selected day (controlled), or null. Use with onValueChange. A Date, or a plain "yyyy-mm-dd" string for that local day. */
@@ -42,6 +47,9 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
       out) without a click per month. The years run from min's (else 100 years back) to max's (else 10 ahead).
       Default: false. */
   monthYearPicker?: boolean | undefined;
+  /** Shortcuts in a list beside the days, after them in reading order: true for "Today", "Tomorrow" and "In a week",
+      or your own. Picking one picks its day and shows its month. One whose day can't be picked is disabled. */
+  presets?: boolean | DatePreset[] | undefined;
   /** @internal Extra classes per day, for DateRangePicker. */
   dayClassName?: (date: Date) => string | undefined;
   /** @internal aria-selected per day, for DateRangePicker. */
@@ -90,7 +98,7 @@ function formats(locale: string): Formats {
   return f;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, className: 1 } as const;
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -202,9 +210,11 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   // A month arrow that reaches min or max turns disabled under focus (FJ1): focus goes to the other arrow.
   const handover = useFocusHandover();
+  const presets: PresetItem[] | null = props.presets === true ? dayPresets(sds.labels)
+    : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === 'function' ? p.value() : p.value, 'Calendar'), end: null })) : null;
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
-    <div {...rest} ref={ref} className={cn('dk-calendar', props.className)} data-component="calendar">
+    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.className)} data-component="calendar">
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
@@ -239,6 +249,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
           ))}
         </tbody>
       </table>
+      {presets ? <PresetList label={sds.labels.presets} items={presets} allowed={(d) => !disabled(d)} current={{ start: value, end: null }} onPick={(it) => { if (it.start) pick(it.start); }} /> : null}
     </div>
   );
 });

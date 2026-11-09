@@ -21,4 +21,7 @@ coverage/
 src/generated/
 docs/generated/
 .ci-home/
+.result-cache/
+.bench/
+.bench-history/
 .npm/
