@@ -1094,6 +1094,19 @@ Close buttons, loading text, pagination and the other built-in words come from o
 - Loading is "Loading…" everywhere; give a specific one when you can: `loadingText="Saving…"`.
 - When you change one, keep the patterns above: a verb for a button, sentence case, no full stop.
 
+**In Indonesian**
+
+`idLabels` and any Indonesian copy follow the rules above, and these as well.
+
+- **Anda, not kamu.** Address the person as "Anda", with a capital A wherever it falls in the sentence ("Zona waktu Anda"). A button or a hint needs neither: the plain verb says it ("Simpan", "Pilih file"). Don't switch to "kamu" for a casual product. A product with that voice changes the labels through `<SerupaProvider labels>`, every one of them, so the two never mix on one screen.
+- **Buttons are the base verb:** "Simpan", "Kirim", "Hapus", "Coba lagi". The me- form is for something under way, with the ellipsis: "Menyimpan…", "Memuat…". A done thing takes di-: "3 dihapus", "Disalin".
+- **No "silakan", "mohon" or "maaf"** in the words the components say, as no "please" or "sorry" in English.
+- **Loanwords.** Use the Indonesian word people already use on their phones and computers: "unduh", "unggah", "kata sandi", "salin", "pengaturan", "pencarian". Keep the loanword where it is the everyday word and the Indonesian one would make people stop: "file", "email", "online", "offline", "slide", "filter". Pick one word for each thing and use it everywhere: "file", not "file" in one place and "berkas" in another; "pilihan", not "pilihan" and "opsi". Loanwords aren't set in italics in an interface, and Indonesian affixes don't go on English words ("mengunggah", not "meng-upload").
+- **Plurals.** A number already says there's more than one, so the noun stays as it is: "3 file", "12 pesan baru", never "3 file-file". `plural()` takes the same form for one and many.
+- **Dates and times.** Day, month, year, with no comma: "24 Okt 2026" or "24 Oktober 2026". Times use a full stop, "14.30", as `Intl.DateTimeFormat` writes for `id-ID`. Let the locale write both.
+- **Numbers and money.** A full stop groups thousands and a comma marks decimals: "12.400", "2,5 MB". Rupiah goes before the amount, and whole rupiah need no ",00": "Rp 12.400" (`maximumFractionDigits: 0`). Let `Intl.NumberFormat` with `id-ID` write them; never build one by hand from the English form.
+- **Ranges.** In a sentence write "sampai" ("3 sampai 12"); in a short label use an en dash with no spaces ("1–5"), as in English.
+
 ## Ethical design
 
 A product built with the system asks for people's time, money and data honestly. Each choice is one the person makes for themselves, with what it costs in plain sight, and a "no" counts as much as a "yes". These rules sit beside Content and voice and Accessibility: a page can pass WCAG and still push someone into a choice they didn't mean to make.
