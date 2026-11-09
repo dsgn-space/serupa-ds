@@ -150,7 +150,9 @@ if (made.status === 0) {
   const css = fs.existsSync(path.join(out, 'assets')) ? fs.readdirSync(path.join(out, 'assets')).filter((f) => f.endsWith('.css')) : [];
   const size = css.reduce((n, f) => n + fs.statSync(path.join(out, 'assets', f)).size, 0);
   const whole = fs.statSync(path.join(shipped, 'bundle.css')).size;
-  results.push({ name: 'Starter: its CSS is trimmed (serupaPurge), under half of bundle.css', ok: size > 0 && size < whole / 2, detail: `${size} of ${whole} bytes` });
+  // With components: true the starter's ten components are kept and the rest dropped: about a tenth of bundle.css,
+  // where keeping every component's styles came to over a quarter.
+  results.push({ name: 'Starter: its CSS is trimmed to the classes and components it uses (serupaPurge), under a sixth of bundle.css', ok: size > 0 && size < whole / 6, detail: `${size} of ${whole} bytes` });
 }
 fs.rmSync(tmp, { recursive: true, force: true });
 for (const x of results) console.log(`${x.ok ? 'PASS' : 'FAIL'}  ${x.name}${x.ok || !x.detail ? '' : '\n      ' + x.detail}`);

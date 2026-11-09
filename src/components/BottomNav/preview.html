@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>BottomNav — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  var link = function (href, icon, text, active) { return h(T.BottomNavLink, { key: href, href: href, icon: icon, active: active }, text); };
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('p', null, 'The bar along the bottom (shown at every width here).'),
+    h(T.BottomNav, { label: 'Main', hideFrom: false }, link('#home', 'home', 'Home'), link('#inbox', 'inbox', 'Inbox', true), link('#me', 'person', 'Account'))));
+</script>
+</body>
+</html>

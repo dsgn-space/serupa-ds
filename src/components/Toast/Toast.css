@@ -22,10 +22,10 @@
 }
 /* Clear of a phone's notch and home indicator too (the safe area, with viewport-fit=cover). */
 .dk-toaster--top-start, .dk-toaster--top-center, .dk-toaster--top-end { inset-block-start: max(var(--dk-toast-offset), env(safe-area-inset-top)); }
-.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end { inset-block-end: max(var(--dk-toast-offset), env(safe-area-inset-bottom)); }
+.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end { inset-block-end: max(var(--dk-toast-offset), env(safe-area-inset-bottom), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--dk-toast-offset))); }
 /* Stacked above an OfflineBanner on the same edge rather than on it (GR123): while one shows, it measures the room
    it takes into --dk-offline-banner-space (its height, its gap from the edge and a little more). */
-:root:has(.dk-offline-banner--bottom:not([data-leaving])) :is(.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end) { inset-block-end: var(--dk-offline-banner-space, max(var(--dk-toast-offset), env(safe-area-inset-bottom))); }
+:root:has(.dk-offline-banner--bottom:not([data-leaving])) :is(.dk-toaster--bottom-start, .dk-toaster--bottom-center, .dk-toaster--bottom-end) { inset-block-end: var(--dk-offline-banner-space, max(var(--dk-toast-offset), env(safe-area-inset-bottom), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--dk-toast-offset)))); }
 :root:has(.dk-offline-banner--top:not([data-leaving])) :is(.dk-toaster--top-start, .dk-toaster--top-center, .dk-toaster--top-end) { inset-block-start: var(--dk-offline-banner-space, max(var(--dk-toast-offset), env(safe-area-inset-top))); }
 .dk-toaster--top-start, .dk-toaster--bottom-start { inset-inline-start: max(var(--dk-toast-offset), env(safe-area-inset-left)); }
 .dk-toaster--top-end, .dk-toaster--bottom-end { inset-inline-end: max(var(--dk-toast-offset), env(safe-area-inset-right)); }

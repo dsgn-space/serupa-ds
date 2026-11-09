@@ -105,7 +105,7 @@ import { serupaPurge } from 'serupa-ds/purge';
 export default { plugins: [react(), serupaPurge()] };
 ```
 
-`vite build` then ships the component styles (about 220 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
+`vite build` then ships the component styles (about 380 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
 
 ```js
 // postcss.config.mjs
@@ -122,7 +122,7 @@ npx serupa-purge src -o public/bundle.min.css
 
 Class names must appear whole in your code: name the ones it builds at runtime (`"grid-cols-" + n`) with `keep: ['grid-cols-2', '@safelist.txt']` in either plugin, or `--keep` on the command line.
 
-To also drop the styles of components your code never names, pass `components: true` (or `--components`): an app that only uses Button gets about 48 KB instead of 189 KB. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
+To also drop the styles of components your code never names, pass `components: true` (or `--components`): an app that only uses Button gets about 51 KB instead of 375 KB. An app made with `serupa-create` has it on. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
 
 ```sh
 npx serupa-purge src -o public/bundle.min.css --components

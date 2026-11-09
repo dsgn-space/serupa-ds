@@ -106,6 +106,7 @@ const NAME_KEPT = {
   'StackProps.direction': "'row' or 'column', the flex-direction it sets, by the CSS name",
   'LoaderProps.delay': 'how long a load runs before the spinner shows: not an overlay, so not openDelay',
   'DescriptionListProps.layout': "'stacked', 'inline' or 'split': how each term sits beside its description, not an orientation",
+  'TableProps.layout': "'auto' or 'fixed', the table-layout it sets, by the CSS name",
 };
 const nameGaps = new Set();
 const booleanGaps = new Set();

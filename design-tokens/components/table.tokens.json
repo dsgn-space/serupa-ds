@@ -121,6 +121,16 @@
             "cssVar": "--table-action-bar-text"
           }
         }
+      },
+      "resize-active": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A column's resize handle on hover, while dragged and on focus.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-resize-active"
+          }
+        }
       }
     },
     "shadow": {
@@ -131,6 +141,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-head-shadow-scrolled"
+          }
+        }
+      },
+      "pin-scrolled": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-part}",
+        "$description": "A pinned column's shadow on its inner edge while there's more to scroll to under it (where scroll-state container queries are supported).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-pin-shadow-scrolled"
           }
         }
       }
