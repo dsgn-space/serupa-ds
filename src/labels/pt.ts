@@ -115,6 +115,8 @@ export const labels: SerupaLabels = {
   filterClear: 'Limpar tudo',
   filterIs: (field, values) => field + ': ' + values,
   filterContains: (field, text) => field + ' contém “' + text + '”',
+  filterFrom: (field, date) => field + ': a partir de ' + date,
+  filterUntil: (field, date) => field + ': até ' + date,
   filterAny: (field) => field + ': todos',
   filterRemove: (field) => 'Remover filtro: ' + field,
   filterDone: 'Concluído',

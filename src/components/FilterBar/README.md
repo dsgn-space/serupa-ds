@@ -44,7 +44,7 @@ Drawn from the `Playground` story.
 - Order `fields` as people think of them, most used first: the menu lists them in that order.
 - Keep labels short ("Status", "Due"): they start each chip.
 - Give `resultsCount` whenever you know it: it tells people what their filters did, and screen readers hear it change.
-- The value has a key for each filter in use: `select` gives a string (or an array with `multiple`), `date-range` `{ start, end }` as "yyyy-mm-dd" (either may be null), `boolean` `true`, `text` a string. A filter whose editor closes with nothing chosen is taken out.
+- The value has a key for each filter in use: `select` gives a string (or an array with `multiple`), `date-range` `{ start, end }` as "yyyy-mm-dd" (either may be null, and its chip then says "Due from Nov 2, 2026" or "Due until Nov 8, 2026" with the `filterFrom` and `filterUntil` labels), `boolean` `true`, `text` a string. A filter whose editor closes with nothing chosen is taken out.
 - A `boolean` filter is on as soon as it's added, with no editor to open first; its chip opens a switch to turn it off.
 - Put a sort or a view switch in `actions`, so it sits with the filters and before the count.
 
