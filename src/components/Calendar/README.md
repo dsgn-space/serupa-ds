@@ -45,6 +45,7 @@ Drawn from the `MonthYearPicker` story.
 
 - Always six weeks tall, so the layout doesn't jump between months. Days of the months before and after are muted and can be picked.
 - Today is in primary and semibold. The selected day is filled in primary.
+- With `presets`, a group of shortcut buttons named "Shortcuts" follows the days: beside them, or under them below 640px. The one the value matches is pressed (`aria-pressed`), and one whose day can't be picked is disabled.
 - With `monthYearPicker`, the header shows a Month and a Year menu in place of the title, so people can jump years at once (a date of birth, an expiry). Years run from `min` to `max`, or from 100 years back to 10 ahead when unset; months outside `min` and `max` are disabled. Off by default.
 - Today follows the clock: a calendar left open past midnight moves today to the new day without needing a re-render.
 - Today is the visitor's day, not the server's. A server-rendered page marks it once it hydrates, since the server's date can differ (a UTC server and a visitor in Jakarta before 7am). Until then, the Tab stop is on the value or on the month's first day. With no value, the month shown at first is today's on each side. Around a month's turn, that can differ between the server and the visitor, so a server-rendered Calendar with no value should get a `defaultMonth`.
@@ -81,6 +82,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | `month` / `defaultMonth` | `Date` | the selected day's month, or today's | The month shown: any day in it. |
 | `onMonthChange` | `(month: Date) => void` | | Called with the first of the newly shown month. |
 | `min`, `max` | `Date \| string` | | Days outside can't be picked, and the month buttons stop there. A Date or `"yyyy-mm-dd"`. |
+| `presets` | `boolean \| DatePreset[]` | | Shortcuts in a list after the days: `true` for Today, Tomorrow and In a week, or your own `{ label, value }`. Picking one picks its day and shows its month. |
 | `monthYearPicker` | `boolean` | `false` | Shows native Month and Year menus in the header instead of the title. The title stays for screen readers and still names the grid. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days to refuse, such as weekends or holidays. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. When it differs from the provider's, the month title and the grid carry `lang`, so screen readers read the names in that language; the nav buttons keep the page's. |
@@ -100,6 +102,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-title-color` | `text` | The month and year. |
 | `--calendar-menu-border` | `field-border` | The Month and Year menus' border (`monthYearPicker`). |
 | `--calendar-menu-bg` | `field` | The Month and Year menus' fill (`monthYearPicker`). |
+| `--calendar-presets-border` | `border` | The line between the days and the `presets` shortcuts. |
 | `--calendar-weekday-color` | `text-muted` | The weekday names (4.5:1 on surface). |
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |

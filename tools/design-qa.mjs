@@ -2,6 +2,7 @@
 // story in all six themes. This writes that review sheet, for the Design QA workflow's summary: for every story with
 // a changed picture, its six themes at rest, before (the base) and after (this branch), and whether each changed.
 //   node tools/design-qa.mjs <base-sha> [head]       Markdown on stdout; GITHUB_REPOSITORY names the repository
+//   (on GitLab CI_PROJECT_PATH and CI_SERVER_URL, and the pictures link to GitLab's raw files)
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
@@ -24,10 +25,11 @@ export function changedStories(status) {
 }
 
 /** The review sheet in Markdown. */
-export function sheet({ status, base, head, repo, required, max = 20 }) {
+export function sheet({ status, base, head, repo, required, max = 20, gitlab = '' }) {
   const stories = changedStories(status);
   if (!stories.size) return '## Design QA\n\nNo picture changed: nothing to review.\n';
-  const url = (ref, f) => `https://github.com/${repo}/blob/${ref}/${f}?raw=true`;
+  // gitlab: the server's URL (CI_SERVER_URL) when the repository is on GitLab, where a raw file is under /-/raw/.
+  const url = (ref, f) => gitlab ? `${gitlab}/${repo}/-/raw/${ref}/${f}` : `https://github.com/${repo}/blob/${ref}/${f}?raw=true`;
   const img = (ref, f, alt) => `<img src="${url(ref, f)}" width="240" alt="${alt}">`;
   const out = ['## Design QA', '',
     `${stories.size} ${stories.size === 1 ? 'story looks' : 'stories look'} different. Look at each in all six themes: it reads in every one, nothing is cut off, overlaps or lost its contrast, and the change is the one meant.`,
@@ -54,6 +56,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   if (!base) { console.error('node tools/design-qa.mjs <base-sha> [head]'); process.exit(2); }
   const git = (...a) => execFileSync('git', a, { cwd: P, encoding: 'utf8' }).trim();
   const from = git('merge-base', base, head), to = git('rev-parse', head);
-  const repo = process.env.GITHUB_REPOSITORY || /github\.com[:/](.+?)(?:\.git)?$/.exec(git('remote', 'get-url', 'origin'))?.[1] || 'owner/repo';
-  process.stdout.write(sheet({ status: git('diff', '--name-status', '--no-renames', from, to, '--', DIR), base: from, head: to, repo, required: process.env.DESIGN_QA === 'required' }));
+  const gitlab = process.env.CI_PROJECT_PATH ? process.env.CI_SERVER_URL || 'https://gitlab.com' : '';
+  const repo = process.env.CI_PROJECT_PATH || process.env.GITHUB_REPOSITORY || /github\.com[:/](.+?)(?:\.git)?$/.exec(git('remote', 'get-url', 'origin'))?.[1] || 'owner/repo';
+  process.stdout.write(sheet({ status: git('diff', '--name-status', '--no-renames', from, to, '--', DIR), base: from, head: to, repo, required: process.env.DESIGN_QA === 'required', gitlab }));
 }

@@ -1,9 +1,17 @@
-// exports: Calendar, type CalendarProps
+// exports: Calendar, type CalendarProps, type DatePreset
 interface CalendarLabels {
     previousMonth: string;
     nextMonth: string;
     month: string;
     year: string;
+    presets: string;
+    today: string;
+    tomorrow: string;
+    inAWeek: string;
+}
+interface DatePreset {
+    label: string;
+    value: (() => Date | string) | Date | string;
 }
 interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: Date | null | string | undefined;
@@ -21,5 +29,6 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defa
     previousLabel?: string | undefined;
     nextLabel?: string | undefined;
     monthYearPicker?: boolean | undefined;
+    presets?: boolean | DatePreset[] | undefined;
 }
 declare const Calendar: React.ForwardRefExoticComponent<CalendarProps & React.RefAttributes<HTMLDivElement>>;

@@ -41,6 +41,7 @@ Drawn from the `Disabled` story.
 
 ## Behavior
 
+- With `presets`, a list of shortcuts sits beside the months in the popup (under them on a narrow screen). Picking one sets both ends and shows the range in the months, and the popup stays open so people can see what they got or change an end. The one the range matches is pressed. "Last 7 days" and "Last 30 days" end today; "This month" and "Last month" run from the first day to the last. Your own take a range or a function that returns one: `{ label: "This quarter", value: () => quarterOf(new Date()) }`. A shortcut with an end that can't be chosen is disabled.
 - In the popup, the first pick is the start and the second the end; a day before the start moves the start instead. Pointing at days previews the range. The popup closes once both ends are set, on Escape, on a click outside and when Tab moves focus past it. A finger that starts a scroll outside leaves it open.
 - Opening it with only a start asks for the end.
 - Each field reads typed text on blur and Enter, like DatePicker. Text that can't be used puts back the last good day, and a typed start after the end clears the end. Switching to another window or browser tab isn't leaving the field: the text waits until people come back.
@@ -81,6 +82,7 @@ Drawn from the `Disabled` story.
 | `startName`, `endName` | `string` | | Hidden inputs that send each end as `yyyy-mm-dd`. |
 | `form` | `string` | | The id of a form it sits outside of: both fields and both hidden inputs belong to that form, and reset with it. |
 | `buttonLabel` | `string` | `"Choose dates"` | The calendar button's name, and the popup's. |
+| `presets` | `boolean \| DateRangePreset[]` | | Shortcuts beside the months: `true` for Today, Yesterday, Last 7 days, Last 30 days, This month and Last month, or your own `{ label, value: { start, end } }`. |
 
 `className`, `ref`, `aria-label` and other props go to the box (`role="group"`); `aria-describedby` and `aria-required` (which Field passes) go to both fields. Its `focus()` and `autoFocus` move focus to the start field, so a form library that focuses the first invalid field after a failed submit lands on it.
 

@@ -16,13 +16,19 @@ import { isComposing } from '../../internal/ime';
 import { delegateFocus, useAutoFocus, windowBlur } from '../../internal/focus';
 import { en as DateRangePickerWords } from './labels';
 import { en as DatePickerWords } from '../DatePicker/labels';
-// This component's words and the ones it shares with DatePicker.
-const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords);
+import { en as CalendarWords } from '../Calendar/labels';
+import { PresetList, rangePresets, type PresetItem } from '../../internal/datePresets';
+// This component's words and the ones it shares with DatePicker and Calendar (the presets' "Today" and their name).
+const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, CalendarWords);
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
 /** A range as given to DateRangePicker: each end a Date, a plain "yyyy-mm-dd" string for that local day, or null. */
 export interface DateRangeInput { start: Date | string | null; end: Date | string | null }
+
+/** A shortcut beside the months (DateRangePicker presets): its name and the range it picks, each end a Date or
+    "yyyy-mm-dd", or a function that gives one when the list draws (so "This quarter" follows today). */
+export interface DateRangePreset { label: string; value: DateRangeInput | (() => DateRangeInput) }
 
 export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'defaultValue' | 'onChange'> {
   /** The chosen range (controlled). Use with onValueChange. Each end a Date or a plain "yyyy-mm-dd" string. */
@@ -70,6 +76,10 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   buttonLabel?: string | undefined;
   /** Months shown side by side in the popup: 1 or 2 (default). */
   months?: 1 | 2 | undefined;
+  /** Shortcuts beside the months in the popup: true for "Today", "Yesterday", "Last 7 days", "Last 30 days", "This
+      month" and "Last month", or your own. Picking one sets the range and shows it in the months; the popup stays open
+      so it can be checked, and closes as usual. One whose start or end can't be chosen is disabled. */
+  presets?: boolean | DateRangePreset[] | undefined;
 }
 
 const norm = (r: DateRangeInput | undefined): DateRange => ({ start: r ? toDay(r.start, 'DateRangePicker') : null, end: r ? toDay(r.end, 'DateRangePicker') : null });
@@ -85,7 +95,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>('DateRangePicker', function DateRangePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, autoFocus, className, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
   const size = oneOf(SIZES, props.size, 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
@@ -173,6 +183,10 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   };
   const isSel = (d: Date) => sameDay(d, value.start) || sameDay(d, value.end);
   const off = !!disabled || !!readOnly;
+  const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels)
+    : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === 'function' ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
+  // A preset sets both ends and brings its start's month into view; the popup stays open to show it (RU11).
+  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(startOfMonth(it.start)); setPicking('start'); setHover(null); };
   const field = (which: 'start' | 'end') => (
     <input type="text" inputMode="numeric" autoComplete="off" className="dk-input__field dk-date-range-picker__field"
       ref={which === 'start' ? startField : undefined} id={which === 'start' ? id : undefined}
@@ -208,7 +222,10 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
         onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}
         onMouseLeave={() => setHover(null)}>
         {open || exit.leaving ? <>
-          <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>
+          {presets ? <div className="dk-date-range-picker__body">
+            <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>
+            <PresetList label={sds.labels.presets} items={presets} allowed={allowed} current={value} onPick={choose} />
+          </div> : <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>}
           <p className="dk-date-range-picker__status" aria-live="polite">{picking === 'start' ? sds.labels.chooseStartDate : sds.labels.chooseEndDate}</p>
         </> : null}
       </div>
