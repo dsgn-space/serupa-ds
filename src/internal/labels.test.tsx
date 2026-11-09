@@ -51,7 +51,7 @@ function said(set: Record<string, unknown>): Record<string, string> {
 }
 // Words that are the same in both languages. "Slide" and "Format" are the usual loanwords in Indonesian, and
 // Indonesian writes PDF, Audio and Video too (Attachment's kinds). cascadePath only joins the names it's given.
-const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'cascadePath', 'agendaView']);
+const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'attachmentOther', 'cascadePath', 'agendaView']);
 // English labels left empty on purpose: invalidValue's "" keeps the browser's own message, already in its user's language.
 const EMPTY_IN_EN = new Set(['invalidValue']);
 
