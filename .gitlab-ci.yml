@@ -44,6 +44,10 @@ workflow:
 stages: [build, test]
 
 variables:
+  # Every merge request runs the whole suite (components, checks, Storybook, and Visual when it touches what a picture
+  # is built from), not only what it changes: what a narrowed run leaves out is found before the merge, not after.
+  # Set to "" to narrow again when there are fewer runners (the IBM burst runner gives 14 slots until its credit ends).
+  SERUPA_WIDE: "1"
   # The cross-browser job's groups (below): checks, components, storybook.
   SERUPA_CROSS_GROUPS: checks components storybook
   # The Chromium the baselines are drawn with: Chrome for Testing at the version browsers.json names, which
@@ -89,7 +93,8 @@ default:
     - |
       if [ "$CI_PIPELINE_SOURCE" = merge_request_event ]; then
         git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-        export SINCE="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+        # SERUPA_WIDE=1: a merge request's suite runs whole, as main's does, rather than narrowed to what it changes.
+        if [ "$SERUPA_WIDE" != 1 ]; then export SINCE="$CI_MERGE_REQUEST_DIFF_BASE_SHA"; fi
       fi
   after_script:
     - !reference [.result-cache, record]
@@ -384,6 +389,9 @@ cross-browser:
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "checks" && $SERUPA_CROSS_GROUPS =~ /checks/
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "components" && $SERUPA_CROSS_GROUPS =~ /components/
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "storybook" && $SERUPA_CROSS_GROUPS =~ /storybook/
+    # Every merge request: the component tests of the components it changes, in Firefox and WebKit. Narrowed (the
+    # browsers' own engines are slower, and Firefox runs one file at a time); the nightly runs them all.
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $GROUP == "components"
   parallel:
     matrix:
       - BROWSER: [firefox, webkit]
@@ -392,7 +400,7 @@ cross-browser:
     # Metric-compatible fonts for the Arial and Times a test may ask for, as the GitHub workflow installed.
     - apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
     - set -o pipefail
-    - node tools/test/run.mjs --browser "$BROWSER" --group "$GROUP" 2>&1 | tee test-output.txt
+    - node tools/test/run.mjs --browser "$BROWSER" --group "$GROUP" ${CI_MERGE_REQUEST_DIFF_BASE_SHA:+--since "$CI_MERGE_REQUEST_DIFF_BASE_SHA"} 2>&1 | tee test-output.txt
   after_script:
     - grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150 || true
   artifacts:
@@ -410,6 +418,11 @@ mutation:
   timeout: 2h
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
+  # Six shards side by side (SERUPA_SHARD, mutation.mjs): thirty components a night rather than five, and every
+  # src/internal file, each shard within its 100 minutes.
+  parallel: 6
+  variables:
+    SERUPA_SHARD: $CI_NODE_INDEX/$CI_NODE_TOTAL
   after_script: []
   script:
     - node tools/test/mutation.mjs --rotate --minutes 100 --json mutation.json
