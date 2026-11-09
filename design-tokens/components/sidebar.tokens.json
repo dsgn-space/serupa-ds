@@ -92,6 +92,26 @@
           }
         }
       },
+      "item-bg-active-hover": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The current page's item background under the pointer: one step past its rest.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-item-bg-active-hover"
+          }
+        }
+      },
+      "item-indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The 2px bar at the start of the current page's item, which hover never draws.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sidebar-item-indicator"
+          }
+        }
+      },
       "section-title": {
         "$type": "color",
         "$value": "{color.text-muted}",
