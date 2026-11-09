@@ -302,7 +302,7 @@ suite:
       - test-output.txt
       - .test-tmp/
       - tools/test/baseline-visual/**/*.actual.png
-      - .vitest-reports/
+      - .vitest/blob/
 
 # Coverage of the component tests (V8, floors in vitest.config.ts): the three shards' blob reports merged into one
 # (vitest --merge-reports), on every pipeline that runs them whole, so a drop fails the merge request, not main after it.
@@ -324,8 +324,8 @@ coverage:
   variables:
     RESULT_CACHE: "off"
   script:
-    - ls .vitest-reports/
-    - node node_modules/vitest/vitest.mjs --merge-reports .vitest-reports --coverage
+    - ls .vitest/blob/
+    - node node_modules/vitest/vitest.mjs --merge-reports .vitest/blob --coverage
   after_script:
     - node tools/test/vitest/coverage-summary.mjs || true
   artifacts:
