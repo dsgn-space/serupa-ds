@@ -5,7 +5,7 @@
    tokens (signature-pad.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-signature-pad { display: flex; flex-direction: column; align-items: stretch; gap: var(--signature-pad-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--text); }
+.dk-signature-pad { display: flex; flex-direction: column; align-items: stretch; gap: var(--signature-pad-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-signature-pad__method { align-self: flex-start; }
 .dk-signature-pad__how { margin: var(--spacing-0); color: var(--signature-pad-hint, var(--text-muted)); }
 .dk-signature-pad__label { font-weight: var(--font-medium); }
