@@ -57,3 +57,17 @@ export const InACard: Story = {
     ))}
   </div>,
 };
+// Stress: a long unbroken title and text in a narrow card. The tile keeps its size and doesn't shrink as the text wraps.
+export const LongText: Story = {
+  render: (args) => (
+    <Card style={{ maxWidth: 280 }}>
+      <div className="flex items-start gap-3">
+        <IconTile {...args} icon={icons.Schedule} tone="warning" size="lg" />
+        <div style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+          <Text as="p" weight="semibold">Donaudampfschifffahrtsgesellschaftskapitänskajüte renewal</Text>
+          <Text as="p" tone="muted" size="sm">Your subscription for Kartini’s workspace, with 48 members and 312 projects, ends in 3 days unless you add a payment method.</Text>
+        </div>
+      </div>
+    </Card>
+  ),
+};

@@ -25,7 +25,7 @@ import { IconTile } from "serupa-ds";
 
 ## Anatomy
 
-Drawn from the `In a card` story.
+Drawn from the `InACard` story.
 
 1. **Tile** (`.dk-icon-tile`): the tinted square, in the tone's fill.
 2. **Icon** (`.dk-icon-tile__icon`): centered, in the tone's color.
