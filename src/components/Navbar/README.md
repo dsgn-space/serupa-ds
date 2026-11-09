@@ -37,15 +37,9 @@ Drawn from the `Playground` story.
 3. **Current link** (`.dk-navbar__link--active`): the section you're in.
 4. **Actions** (`.dk-navbar__actions`): search, account or other actions at the end.
 
-From the `Menus` story, a NavbarMenu (`.dk-navbar__menu`) adds:
-
-5. **Menu button** (`.dk-navbar__menu-button`): the section's name and a chevron (`.dk-navbar__chevron`) that turns when it's open.
-6. **Panel** (`.dk-navbar__menu-panel`): across the bar, under it, with its groups side by side.
-7. **Group** (`.dk-navbar__menu-group`): a title (`.dk-navbar__menu-title`) over a list of links.
-8. **Menu link** (`.dk-navbar__menu-link`): its name (`.dk-navbar__menu-name`) and a muted line about it (`.dk-navbar__menu-desc`).
-
 ## Usage
 
+- A NavbarMenu's parts (the `Menus` story): its button (`.dk-navbar__menu-button`), with the section's name and a chevron that turns while it's open; the panel (`.dk-navbar__menu-panel`) across the bar under it; its groups (`.dk-navbar__menu-group`), each a title over a list of links; and each link (`.dk-navbar__menu-link`), its name and a muted line about it.
 - Keep the links to the main pages, a few short words each; below 768px they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
 - Mark the current page with `active` on its NavbarLink.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.
