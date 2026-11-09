@@ -1,5 +1,14 @@
-// Runs the whole suite: node tools/test/run.mjs   (add --update to accept new baselines, --list to see the steps,
-// --since <ref> to test only the components changed since then)
+// Runs the whole suite. Its options:
+//   node tools/test/run.mjs                      everything
+//   node tools/test/run.mjs --group <name>       one group: checks, components, visual or storybook
+//   node tools/test/run.mjs --since <ref>        only the components changed since then and the ones that use them
+//   node tools/test/run.mjs --update             accept new baselines
+//   node tools/test/run.mjs --list               the steps it would run
+//   node tools/test/run.mjs --browser <engine>   firefox or webkit instead of Chromium
+//   node tools/test/run.mjs --locale <code>      the component tests with the browser in that language
+//   node tools/test/run.mjs --compat <engine>    add the cross-browser comparison (safari, firefox, webkitgtk), with
+//                                                --driver <path> for its WebDriver
+// --help prints this; an unknown option or one missing its value stops it before any test runs (GR275).
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,6 +18,20 @@ const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
 // cross-browser comparison through WebDriver (see compat.mjs).
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
+{
+  const VALUED = ['--group', '--since', '--browser', '--locale', '--compat', '--driver'], FLAGS = ['--update', '--list'];
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//   ') || l.startsWith('// --help')).map((l) => l.slice(3)).join('\n'));
+    process.exit(0);
+  }
+  for (let i = 2; i < process.argv.length; i++) {
+    const a = process.argv[i];
+    if (VALUED.includes(a)) {
+      if (process.argv[i + 1] === undefined || process.argv[i + 1].startsWith('--')) { console.error(`${a} needs a value (node tools/test/run.mjs --help)`); process.exit(2); }
+      i++;
+    } else if (!FLAGS.includes(a)) { console.error(`Unknown option: ${a} (node tools/test/run.mjs --help)`); process.exit(2); }
+  }
+}
 if (arg('--browser')) process.env.SERUPA_BROWSER = arg('--browser');
 // --locale ar runs the component tests with the browser in that language (SERUPA_LOCALE, vitest.config.ts).
 if (arg('--locale')) process.env.SERUPA_LOCALE = arg('--locale');
