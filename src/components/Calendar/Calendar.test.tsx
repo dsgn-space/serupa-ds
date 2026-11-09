@@ -345,4 +345,37 @@ describe('server-rendered on another day than the visitor\'s', () => {
       } finally { r.done(); }
     });
   }
+
+  test('presets: no mismatch, and the pressed preset follows the visitor\'s today, not the server\'s (GR286)', async () => {
+    const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), <Calendar aria-label="Day" locale="en-US" presets defaultValue={new Date(2026, 10, 8)} />);
+    try {
+      expect(r.errors).toEqual([]);
+      expect([...r.host.querySelectorAll('button[aria-pressed="true"]')].map((b) => b.textContent)).toEqual(['Today']);
+    } finally { r.done(); }
+  });
+});
+
+describe('Calendar presets (RU11)', () => {
+  const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  test('presets={true}: Today, Tomorrow and In a week after the days; one picks its day and shows its month; one past max is disabled', async () => {
+    const got: string[] = [];
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const max = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 3);
+    await render(<Calendar id="cp" locale="en-US" presets max={max} onValueChange={(_d, s) => got.push(s)} />);
+    const group = page.getByRole('group', { name: 'Shortcuts' });
+    await expect.element(group).toBeInTheDocument();
+    const btns = [...group.element().querySelectorAll('button')];
+    expect(btns.map((b) => [b.textContent, b.getAttribute('aria-disabled')])).toEqual([['Today', null], ['Tomorrow', null], ['In a week', 'true']]);
+    await userEvent.click(btns[1]);
+    const tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
+    expect(got).toEqual([iso(tomorrow)]);
+    expect(btns[1].getAttribute('aria-pressed')).toBe('true');
+    expect(document.querySelector(`#cp [data-date="${iso(tomorrow)}"]`)!.closest('td')!.getAttribute('aria-selected')).toBe('true');
+  });
+  test('your own presets jump to their month; without presets there is no list', async () => {
+    await render(<><Calendar id="co" locale="en-US" defaultMonth={new Date(2025, 0, 1)} presets={[{ label: 'Launch', value: '2025-06-15' }]} /><Calendar id="cn" locale="en-US" /></>);
+    await userEvent.click(page.getByRole('button', { name: 'Launch' }));
+    expect(document.querySelector('#co [data-date="2025-06-15"]')!.closest('td')!.getAttribute('aria-selected')).toBe('true');
+    expect(document.querySelector('#cn [role=group]')).toBe(null);
+  });
 });

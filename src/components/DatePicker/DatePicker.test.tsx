@@ -334,3 +334,16 @@ describe('DatePicker: motion (DZ1)', () => {
     } finally { warn.mockRestore(); }
   });
 });
+
+describe('DatePicker presets (RU11)', () => {
+  test('presets in the popup: picking one fills the field and closes the popup, back on the field', async () => {
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
+    await render(<DatePicker id="dpp" aria-label="Due" locale="en-US" presets />);
+    await userEvent.click(button('dpp'));
+    await userEvent.click(page.getByRole('button', { name: 'Tomorrow' }));
+    expect(el('dpp').value).toBe(new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).format(tomorrow));
+    await expect.poll(() => popup('dpp').hidden).toBe(true);
+    expect(document.activeElement).toBe(el('dpp'));
+  });
+});

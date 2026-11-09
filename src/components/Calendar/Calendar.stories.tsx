@@ -32,3 +32,7 @@ export const LongText: Story = {
   args: { locale: 'pt-BR', defaultValue: new Date(2025, 8, 10), defaultMonth: new Date(2025, 8, 10) },
   render: (args) => <div style={{ width: 240 }}><Calendar {...args} /></div>,
 };
+
+export const WithPresets: Story = {
+  args: { defaultMonth: new Date(2025, 8, 1), defaultValue: new Date(2025, 8, 1), presets: [{ label: 'Start of term', value: '2025-09-01' }, { label: 'Mid-term break', value: '2025-10-20' }, { label: 'End of term', value: '2025-12-12' }] },
+};
