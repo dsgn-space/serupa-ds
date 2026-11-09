@@ -569,6 +569,22 @@ describe('TableVirtualBody (51)', () => {
     </Table>;
   }
   const drawn = () => [...el('vt').querySelectorAll<HTMLElement>('tbody > tr[data-index]')];
+  test('aria-rowcount goes with the virtual body: a table that switches to drawing every row has none left (GR270)', async () => {
+    function Switch({ all }: { all: boolean }) {
+      return <Table id="vs" caption="Orders">
+        <TableHead><TableRow><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
+        {all
+          ? <TableBody><TableRow><TableCell>Order 1</TableCell></TableRow><TableRow><TableCell>Order 2</TableCell></TableRow></TableBody>
+          : <TableVirtualBody count={500} renderRow={(i) => <TableRow><TableCell>{'Order ' + i}</TableCell></TableRow>} />}
+      </Table>;
+    }
+    const { rerender } = await render(<Switch all={false} />);
+    await frames();
+    expect(el('vs').getAttribute('aria-rowcount')).toBe('501');
+    await rerender(<Switch all />);
+    expect(el('vs').hasAttribute('aria-rowcount')).toBe(false);
+  });
+
   test('draws only the rows in view, with aria-rowindex under the header and aria-rowcount on the table; the frame scrolls through all 10,000', async () => {
     await render(<Big />);
     await frames();
