@@ -60,9 +60,9 @@ describe('Blocks/Empty states', () => {
   });
 
   test('no access: the failure text is 4.5:1 on the page in all six themes (GR140)', async () => {
-    await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={() => Promise.reject(new Error('offline'))} />);
+    const view = await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={() => Promise.reject(new Error('offline'))} />);
     await userEvent.click(page.getByRole('button', { name: 'Request access' }));
-    const text = page.getByText('Couldn’t send the request. Try again.');
+    const text = view.locator.getByText('Couldn’t send the request. Try again.');
     await expect.element(text).toBeVisible();
     const low: string[] = [];
     for (const th of THEMES) {
