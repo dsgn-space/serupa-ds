@@ -350,7 +350,7 @@ describe('server-rendered on another day than the visitor\'s', () => {
     const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), <Calendar aria-label="Day" locale="en-US" presets defaultValue={new Date(2026, 10, 8)} />);
     try {
       expect(r.errors).toEqual([]);
-      expect([...r.host.querySelectorAll('.dk-calendar__preset[aria-pressed="true"]')].map((b) => b.textContent)).toEqual(['Today']);
+      expect([...r.host.querySelectorAll('button[aria-pressed="true"]')].map((b) => b.textContent)).toEqual(['Today']);
     } finally { r.done(); }
   });
 });
