@@ -90,6 +90,11 @@
      that doesn't fit ends in an ellipsis. Its link keeps its own box, so its focus ring isn't clipped. */
   .dk-navbar__brand { flex-shrink: initial; min-width: var(--spacing-0); }
   .dk-navbar__brand > * { min-width: var(--spacing-0); max-width: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Then the actions: wider than what's left, they scroll sideways within the bar, and Tab scrolls each into view. Each
+     keeps its own width, so a label is never squeezed past reading. The padding keeps a focused action's ring inside
+     the scrolling box. */
+  .dk-navbar__actions > * { flex-shrink: 0; }
+  .dk-navbar__actions { flex-shrink: initial; min-width: var(--spacing-0); overflow-x: auto; scrollbar-width: thin; padding: var(--spacing-1); }
   /* In the small-screen menu a NavbarMenu opens in place, under its button, its groups one after another. */
   .dk-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
   .dk-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }

@@ -241,6 +241,27 @@ describe('Navbar', () => {
     expect(el('brand').scrollWidth > el('brand').clientWidth).toBe(false);
   });
 
+  test('small screens with actions wider than the screen: they scroll within the bar, so the menu button stays on screen and the page never scrolls sideways', async () => {
+    // Two button groups (a language and a theme switch) are wider than 320px on their own, so the brand giving way
+    // isn't enough: the menu button was pushed past the edge and the page scrolled.
+    await render(<Navbar id="nav" brand={<a href="#home">Serupa</a>} actions={<>
+      <Button size="sm" variant="outline">English</Button><Button size="sm" variant="outline">Bahasa Indonesia</Button>
+      <Button size="sm" variant="outline">Auto</Button><Button size="sm" variant="outline">Light</Button><Button size="sm" variant="outline" id="last">Dark</Button>
+    </>}>
+      <NavbarLink href="#dash">Dashboard</NavbarLink>
+    </Navbar>);
+    for (const w of [390, 320]) {
+      await resize(w);
+      const acts = q('#nav .dk-navbar__actions');
+      expect([w, Math.round(toggle().getBoundingClientRect().right) <= w, document.documentElement.scrollWidth <= w, w > 320 || acts.scrollWidth > acts.clientWidth]).toEqual([w, true, true, true]);
+    }
+    // The last action is reached by Tab: focus scrolls it into view inside the bar, with its focus ring unclipped.
+    el('last').focus();
+    await expect.poll(() => Math.round(el('last').getBoundingClientRect().right) <= Math.round(q('#nav .dk-navbar__actions').getBoundingClientRect().right)).toBe(true);
+    await resize(1100);
+    expect(q('#nav .dk-navbar__actions').scrollWidth > q('#nav .dk-navbar__actions').clientWidth).toBe(false);
+  });
+
   test('320px: a brand given as plain text ends in an ellipsis too, and never runs under the actions (GR79, GR81)', async () => {
     await render(<Navbar id="nav" brand="Kommunikationsplattform" actions={<><Button size="sm" variant="ghost" id="act">Sign in</Button><Button size="sm">Start free trial</Button></>}>
       <NavbarLink href="#dash">Dashboard</NavbarLink>

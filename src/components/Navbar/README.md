@@ -43,7 +43,7 @@ Drawn from the `Playground` story.
 - Keep the links to the main pages, a few short words each; below 768px they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
 - Mark the current page with `active` on its NavbarLink.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.
-- Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen.
+- Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen; if they still don't, they scroll sideways within the bar (Tab scrolls each into view), and the page never does.
 - Set `size` to the same width as the page's Container, so the bar lines up with the content.
 - For a section with several pages, use a `NavbarMenu` with a `label` and its links, grouped in `NavbarMenuGroup`s with a `title` when there are more than a handful. Give each `NavbarMenuLink` a short `description` when the name alone doesn't say what's there. Keep a panel to what fits on one screen: it's a way in, not a site map.
 - A NavbarMenu's button doesn't go anywhere itself. Give the section's own page a link in its panel, such as "All products".
