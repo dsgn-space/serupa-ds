@@ -164,6 +164,9 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
     expect(document.activeElement).toBe(box);
     await userEvent.keyboard('{ArrowRight}');
     await expect.poll(() => box.scrollLeft).toBeGreaterThan(0);
+    const moved = box.scrollLeft;
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect.poll(() => box.scrollLeft).toBeLessThan(moved);
   });
 
   test('right to left, the first event is at the right', async () => {
