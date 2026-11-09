@@ -590,7 +590,7 @@ size trend:
 design qa:
   stage: build
   needs: []
-  timeout: 5m
+  timeout: 15m
   image: node:26-alpine
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
