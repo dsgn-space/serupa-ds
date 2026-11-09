@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Tones: Story = {
-  render: (args) => <div className="flex gap-3">
+  render: (args) => <div className="flex flex-wrap gap-3">
     <IconTile {...args} tone="neutral" icon={icons.Description} />
     <IconTile {...args} tone="primary" icon={icons.CloudDone} />
     <IconTile {...args} tone="success" icon={icons.CheckCircle} />
