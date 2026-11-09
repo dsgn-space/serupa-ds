@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, inject, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { commands, userEvent } from 'vitest/browser';
 import { stories } from '../../tools/test/vitest/stories';
@@ -11,7 +11,9 @@ import { Combobox } from '../components/Combobox/Combobox';
 // counts. A real phone's budget for a good INP is 200 ms; this is a desktop browser on React's development build,
 // where an answer takes one or two frames (16-24 ms on 25 Oct 2026), so BUDGET fails a change that makes one take
 // several times that, such as rebuilding every option on each keystroke.
-const BUDGET = 100;
+// Twice that with coverage on (CI's full runs), where every line counts itself as it runs; the runs without coverage
+// keep 100.
+const BUDGET = inject('coverage') ? 200 : 100;
 // Event Timing reports only an answer that took 16 ms or more: on a fast machine, none at all is a pass. WebKit has
 // no Event Timing, so there is nothing to measure there.
 const supported = PerformanceObserver.supportedEntryTypes.includes('event');

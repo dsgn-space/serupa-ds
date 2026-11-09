@@ -56,7 +56,8 @@ export default defineConfig({
         globalSetup: ['./tools/test/vitest/serverStories.ts'],
         // SERUPA_ONLY (run.mjs --since): the story-wide tests go through only these components' stories (storiesToRun).
         // SERUPA_BENCH (the nightly Benchmarks run): mountTime.test.tsx mounts each story more times.
-        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH },
+        // SERUPA_COVERAGE (CI's full runs): the code is instrumented, so the time budgets allow for it.
+        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH, coverage: !!process.env.SERUPA_COVERAGE },
         // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
         // one file landed in the middle of a drag in another. One file at a time there.
         fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',

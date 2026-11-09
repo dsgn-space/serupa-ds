@@ -124,6 +124,9 @@ const preview: Preview = {
     },
   },
   initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', motion: '1', content: 'demo' },
+  // Every story is shot by tools/test/visual.mjs unless its file says tags: ['!visual'], which takes this tag away.
+  // A "!" tag only removes a tag, so this one has to be here for it to remove (GR285).
+  tags: ['visual'],
   decorators: [WithTheme],
   parameters: {
     layout: 'padded',

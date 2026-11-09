@@ -97,13 +97,30 @@ export function purge(css, used, drop = new Set()) {
         } else out.push(`${pre} {${body}}`);   // @keyframes, @property, @font-face…
         continue;
       }
-      const kept = pre.split(/,(?![^()]*\))/).map((x) => x.trim()).filter(keepSelector);
+      const kept = splitSelectors(pre).map((x) => x.trim()).filter(keepSelector);
       if (kept.length) out.push(`${kept.join(', ')} {${body}}`);
     }
     return out.join('\n');
   };
   // comments go first (an apostrophe in one would look like a string)
   return walk(stripComments(css));
+}
+
+// A selector list split at its top-level commas: not inside (), [] or a string, however deeply nested. A regex
+// lookahead can't count depth: :is(.a, .b + :not(.c)) split inside the :is() and left invalid CSS (GR217).
+export function splitSelectors(list) {
+  const parts = [];
+  let depth = 0, quote = '', start = 0;
+  for (let i = 0; i < list.length; i++) {
+    const ch = list[i];
+    if (quote) { if (ch === '\\') i++; else if (ch === quote) quote = ''; continue; }
+    if (ch === '"' || ch === "'") quote = ch;
+    else if (ch === '(' || ch === '[') depth++;
+    else if ((ch === ')' || ch === ']') && depth) depth--;
+    else if (ch === ',' && !depth) { parts.push(list.slice(start, i)); start = i + 1; }
+  }
+  parts.push(list.slice(start));
+  return parts;
 }
 
 // A scan, not /\/\*[\s\S]*?\*\//g: on a stylesheet full of unclosed "/*" that regex tries every one to the end

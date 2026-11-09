@@ -23,6 +23,10 @@ const OWN_BUDGET: Record<string, number> = {
 };
 // The nightly Benchmarks run takes the fastest of more, so a night's time moves less with the machine.
 const RUNS = inject('bench') ? 15 : 5;
+// With coverage on (CI's full runs), every line counts itself as it runs, which made VirtualList's Playground take
+// 20.8 ms against 20 on a busy runner (8 Nov 2026). Twice the budget there; the narrowed merge request runs and the
+// nightly Benchmarks run have no coverage and keep the budget as it is, so a slow story still fails there.
+const SLOWER = inject('coverage') ? 2 : 1;
 const frame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
 
 async function mountTime(ui: React.ReactElement): Promise<number> {
@@ -51,7 +55,7 @@ describe('mount time', () => {
         // all five runs at once, and two short pauses weren't always enough (Kanban/LongText measured 20.6 ms against 20
         // on 8 Nov 2026, and 20.4 ms after both pauses that night); a story that is really too slow is still too slow
         // after 7.5 s of pauses.
-        const budget = OWN_BUDGET[`${name}/${exportName}`] ?? BUDGET;
+        const budget = (OWN_BUDGET[`${name}/${exportName}`] ?? BUDGET) * SLOWER;
         let ms = await mountTime(ui);
         for (let again = 0; again < 4 && ms > budget; again++) {
           await new Promise((r) => setTimeout(r, 500 * 2 ** again));

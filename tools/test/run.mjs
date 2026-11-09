@@ -1,5 +1,14 @@
-// Runs the whole suite: node tools/test/run.mjs   (add --update to accept new baselines, --list to see the steps,
-// --since <ref> to test only the components changed since then)
+// Runs the whole suite. Its options:
+//   node tools/test/run.mjs                      everything
+//   node tools/test/run.mjs --group <name>       one group: checks, components, visual or storybook
+//   node tools/test/run.mjs --since <ref>        only the components changed since then and the ones that use them
+//   node tools/test/run.mjs --update             accept new baselines
+//   node tools/test/run.mjs --list               the steps it would run
+//   node tools/test/run.mjs --browser <engine>   firefox or webkit instead of Chromium
+//   node tools/test/run.mjs --locale <code>      the component tests with the browser in that language
+//   node tools/test/run.mjs --compat <engine>    add the cross-browser comparison (safari, firefox, webkitgtk), with
+//                                                --driver <path> for its WebDriver
+// --help prints this; an unknown option or one missing its value stops it before any test runs (GR275).
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,6 +18,20 @@ const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
 // cross-browser comparison through WebDriver (see compat.mjs).
 const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
+{
+  const VALUED = ['--group', '--since', '--browser', '--locale', '--compat', '--driver'], FLAGS = ['--update', '--list'];
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').filter((l) => l.startsWith('//   ') || l.startsWith('// --help')).map((l) => l.slice(3)).join('\n'));
+    process.exit(0);
+  }
+  for (let i = 2; i < process.argv.length; i++) {
+    const a = process.argv[i];
+    if (VALUED.includes(a)) {
+      if (process.argv[i + 1] === undefined || process.argv[i + 1].startsWith('--')) { console.error(`${a} needs a value (node tools/test/run.mjs --help)`); process.exit(2); }
+      i++;
+    } else if (!FLAGS.includes(a)) { console.error(`Unknown option: ${a} (node tools/test/run.mjs --help)`); process.exit(2); }
+  }
+}
 if (arg('--browser')) process.env.SERUPA_BROWSER = arg('--browser');
 // --locale ar runs the component tests with the browser in that language (SERUPA_LOCALE, vitest.config.ts).
 if (arg('--locale')) process.env.SERUPA_LOCALE = arg('--locale');
@@ -37,6 +60,9 @@ if (arg('--since')) {
   const changed = diff.status === 0 && !wide ? affectedComponents(scopeFiles(diff.stdout)) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
+  // The docs' Upgrading page renders the pending changesets (docs/upgrades.ts, the next major's breaking entries), so
+  // a changed changeset re-checks that page in Storybook (GR284). It is a page, not a component: no tests or pictures.
+  if (names && diff.stdout.split('\n').some((l) => /^\.changeset\/[\w-]+\.md$/.test(l.split('\t')[2] || ''))) names.add('docs/Upgrading.mdx');
   direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
@@ -58,7 +84,7 @@ const steps = [
   vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
-  ...(process.env.CI && (!arg('--since') || only?.size) && !arg('--locale') ? (() => {
+  ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
     const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
     const locale = LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
     const own = direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : [];

@@ -236,7 +236,10 @@ describe('Splitter collapse motion (GN3b)', () => {
       await userEvent.keyboard('{Enter}');
       // Opening again: laid out open at once, but the handle is still where it was, and the clip hides the same part.
       expect([h.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - closingAt) <= 2]).toEqual(['40', 'open', true]);
-      expect(getComputedStyle(a).clipPath).toBe('inset(0px ' + (200 - closingAt) + 'px 0px 0px)');
+      // closingAt is rounded to the pixel and the clip isn't (inset(0px 99.39px …) against 100): the same place, to the
+      // two pixels the handle is checked to above.
+      const cut = /^inset\(0px ([\d.]+)px 0px 0px\)$/.exec(getComputedStyle(a).clipPath);
+      expect(cut && Math.abs(parseFloat(cut[1]) - (200 - closingAt)) <= 2, getComputedStyle(a).clipPath).toBe(true);
       const openingAt = await halfway();
       expect(openingAt > closingAt && openingAt < 200, String(openingAt)).toBe(true);
       // …and back again: from there toward the start.
