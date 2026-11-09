@@ -7,6 +7,7 @@ import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
+import { hoverLeave } from '../../internal/timing';
 import { Tooltip, coolTooltips } from './Tooltip';
 
 // Every test starts cold: the warm-up (EC1) would otherwise carry over from the test before.
@@ -93,10 +94,12 @@ describe('Tooltip', () => {
     expect([t.dataset.side, t.matches(':popover-open')]).toEqual(['top', true]);
     expect(near(rect(a).top - rect(t).bottom, 6)).toBe(true);
     expect(near(rect(t).left + rect(t).width / 2, rect(a).left + rect(a).width / 2)).toBe(true);
+    // The grace is timed the same way, from before the pointer leaves: a busy runner can take longer than the grace
+    // to move the pointer, so a check straight after the move could find it already closed.
+    const t1 = performance.now();
     await away();
-    await settle(50);
-    expect(isOpen('a')).toBe(true);
     await expect.poll(() => isOpen('a')).toBe(false);
+    expect(performance.now() - t1).toBeGreaterThanOrEqual(hoverLeave);
   });
 
   test('the pointer can move onto the tooltip without it closing (hoverable); Escape hides it even while hovered (dismissible)', async () => {
