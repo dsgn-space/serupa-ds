@@ -46,7 +46,10 @@ try {
   t('Vite: utilities-extra.css is trimmed too (from-primary stays, from-danger goes)', has(css, 'from-primary') && has(css, 'bg-linear-to-r') && !has(css, 'from-danger'), css.length);
   t('Vite: the component styles stay', has(css, 'dk-btn') && has(css, 'dk-dialog'), css.length);
   t('Vite: the app\'s own CSS is left alone, a rule named like a utility too', has(css, 'my-card') && has(css, 'grid-cols-7'), css.length);
-  t('Vite: the stylesheet is about the size the command makes, not 2 MB', css.length < 400_000, `${Math.round(css.length / 1024)} KB`);
+  // Trimmed means well under half of bundle.css (a quarter on 9 Nov 2026: 391 of 1,648 KB); a fixed byte count broke as
+  // components were added, while an untrimmed file is the whole of it.
+  const trimmed = (n) => n < bundle.length / 2;
+  t('Vite: the stylesheet is about the size the command makes, not the whole bundle.css', trimmed(css.length), `${Math.round(css.length / 1024)} of ${Math.round(bundle.length / 1024)} KB`);
   t('Vite: the dev server is left alone (apply: "build")', serupaPurge().apply === 'build');
 
   // PostCSS: bundle.css itself, an app file, and an app file with bundle.css's rules @imported into it.
@@ -59,7 +62,7 @@ try {
   const merged = postcss.parse(app, { from: path.join(dir, 'src', 'app.css') });
   merged.append(postcss.parse(bundle, { from: BUNDLE }).nodes);
   const mixed = (await postcss([serupaPurgePostcss({ root: dir })]).process(merged, { from: path.join(dir, 'src', 'app.css') })).css;
-  t('PostCSS: rules @imported from bundle.css are trimmed, the importing file\'s are kept', mixed.startsWith(app) && has(mixed, 'flex') && !has(mixed, 'grid-cols-5') && mixed.length < 400_000, mixed.slice(0, 200));
+  t('PostCSS: rules @imported from bundle.css are trimmed, the importing file\'s are kept', mixed.startsWith(app) && has(mixed, 'flex') && !has(mixed, 'grid-cols-5') && trimmed(mixed.length), `${Math.round(mixed.length / 1024)} of ${Math.round(bundle.length / 1024)} KB: ${mixed.slice(0, 200)}`);
   const lean = await run(bundle, BUNDLE, { components: true });
   t('PostCSS: components: true drops the components the sources never name', has(lean, 'dk-btn') && !has(lean, 'dk-dialog') && lean.length < own.length, `${lean.length} vs ${own.length}`);
   // The trimmed CSS must still parse: Vite's default minifier (lightningcss) stops the build on a broken rule, which
