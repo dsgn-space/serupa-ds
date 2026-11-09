@@ -17,7 +17,7 @@ import { useIsoLayoutEffect } from './cn';
    CAP the scroll range is scaled down: the scroll position is a fraction of the whole, the rows for that fraction
    are drawn, and the space before them puts them under the view. Dragging the scrollbar then moves through the rows
    at total / CAP times the pointer, as in react-window's and TanStack Virtual's large lists, and every row is reached
-   (GR92); the arrow and Page keys and the wheel step through the rows themselves, row by row, as in a short list
+   (GR92); Home and End go straight to either end, and the arrow and Page keys and the wheel step through the rows themselves, row by row, as in a short list
    (GR94). */
 export interface VirtualOptions {
   /** How many rows there are. */
@@ -168,10 +168,12 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       // End: the last row, kept at the bottom while the rows on the way are measured. The browser's own End scrolls to
       // the end of the range as it stands, and in WebKit the rows then measured taller than the guess left the view at
       // row 408 of 1,000 (FW1). Home the same way: back from the end, rows measured on the way up moved the top it
-      // aimed for, and it stopped at row 13 (GR139).
-      if ((e.key === 'End' || e.key === 'Home') && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      // aimed for, and it stopped at row 13 (GR139). Past CAP too: the browser's smooth scroll back up sometimes
+      // stopped a pixel short of the top, where the list keeps the wheel (GR291); here the top is set at once.
+      if ((e.key === 'End' || e.key === 'Home') && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
         toEdge.current(e.key === 'End');
+        read();
         return;
       }
       // PageUp and PageDown: a screen at once, not the browser's smooth scroll. The rows it measures on the way move
@@ -270,7 +272,15 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   };
 
   // every render: Home and End use this render's rows and offsets.
-  useIsoLayoutEffect(() => { toEdge.current = (last) => { if (count) scrollToIndex(last ? count - 1 : 0); }; });
+  // Past CAP, straight to the very top or bottom of the scaled range.
+  useIsoLayoutEffect(() => {
+    toEdge.current = (last) => {
+      const el = node.current;
+      if (!count || !el) return;
+      if (scaled) { live.current.pin = null; go(live.current, el, last ? total : 0); }
+      else scrollToIndex(last ? count - 1 : 0);
+    };
+  });
 
   const drawn = offsets[end] - offsets[start];
   const before = scaled ? Math.max(0, offsets[start] + shift) : offsets[start];
