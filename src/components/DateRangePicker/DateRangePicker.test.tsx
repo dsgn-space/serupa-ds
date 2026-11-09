@@ -334,6 +334,18 @@ describe('DateRangePicker presets (RU11)', () => {
     expect(got).toHaveLength(1);
   });
 
+  test('with max today, "This month" is the month so far and can be picked (GR287)', async () => {
+    const got: string[] = [];
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await userEvent.click(btn('mx'));
+    const month = presetBtns('mx')[4];
+    expect([month.textContent, month.getAttribute('aria-disabled')]).toEqual(['This month', null]);
+    await userEvent.click(month);
+    expect(got).toEqual([iso(new Date(t.getFullYear(), t.getMonth(), 1)) + '..' + iso(t)]);
+    expect(month.getAttribute('aria-pressed')).toBe('true');
+  });
+
   test('your own presets, as values or functions; without presets there is no list', async () => {
     await render(<>
       <DateRangePicker data-testid="own" aria-label="Stay" locale="en-US" presets={[{ label: 'Spring break', value: { start: '2025-03-10', end: '2025-03-14' } }, { label: 'Late March', value: () => ({ start: '2025-03-24', end: '2025-03-28' }) }]} />
