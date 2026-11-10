@@ -123,6 +123,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const home = () => { const t = new Date(); return min && compare(t, min) < 0 ? min : max && compare(t, max) > 0 ? max : t; };
   const [base, setBase] = React.useState(() => startOfMonth(value.start || home()));
   const popId = domId('dk-drp', React.useId());
+  const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the fields
   const box = React.useRef<HTMLSpanElement | null>(null);
   const startField = React.useRef<HTMLInputElement | null>(null);
   // ref.current.focus() and autoFocus land on the start field, as they would on a date input.
@@ -148,13 +149,13 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const read = (which: 'start' | 'end') => {
     const raw = text[which].trim();
     let d: Date | null = raw === '' ? null : parseDate(raw, locale);
-    if (raw !== '' && !(d && allowed(d))) { reject(raw, d ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted); d = value[which]; }
+    if (raw !== '' && !(d && allowed(d))) { reject(raw, d ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted, setRejected); d = value[which]; }
     const r = { ...value, [which]: d };
     // A start past the end clears the end; an end before the start is turned down out loud, as a date outside min and
     // max is, so the text doesn't just vanish.
     if (r.start && r.end && compare(r.start, r.end) > 0) {
       if (which === 'start') r.end = null;
-      else { reject(raw, 'unavailable', onInvalidInput, sds.labels.inputNotAccepted); r.end = value.end; }
+      else { reject(raw, 'unavailable', onInvalidInput, sds.labels.inputNotAccepted, setRejected); r.end = value.end; }
     }
     commit(r);
   };
@@ -190,9 +191,9 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const field = (which: 'start' | 'end') => (
     <input type="text" inputMode="numeric" autoComplete="off" className="dk-input__field dk-date-range-picker__field"
       ref={which === 'start' ? startField : undefined} id={which === 'start' ? id : undefined}
-      aria-label={which === 'start' ? startLabel || sds.labels.startDate : endLabel || sds.labels.endDate} aria-describedby={cn(describedBy, popId + '-format')} aria-errormessage={invalid ? errorMessage : undefined} aria-required={required} aria-invalid={invalid || undefined}
+      aria-label={which === 'start' ? startLabel || sds.labels.startDate : endLabel || sds.labels.endDate} aria-describedby={cn(describedBy, popId + '-format', rejected && popId + '-rejected')} aria-errormessage={invalid ? errorMessage : undefined} aria-required={required} aria-invalid={invalid || undefined}
       value={text[which]} placeholder={datePattern(locale)} disabled={disabled} readOnly={readOnly} required={requiredProp} form={form}
-      onChange={(e) => setText({ ...text, [which]: e.target.value })} onBlur={(e) => { if (!windowBlur(e)) read(which); }}
+      onChange={(e) => { setText({ ...text, [which]: e.target.value }); setRejected(''); }} onBlur={(e) => { if (!windowBlur(e)) read(which); }}
       onKeyDown={(e) => {
         if (isComposing(e)) return;
         if (e.key === 'Enter') read(which);
@@ -206,6 +207,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
   return (
+    <>
     <span {...rest} ref={mergedRef} role="group"
       className={cn('dk-input', 'dk-input--size-' + size, 'dk-date-range-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)}
       data-component="date-range-picker" data-state={open ? 'open' : 'closed'} data-size={size}>
@@ -231,5 +233,8 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
         </> : null}
       </div>
     </span>
+      {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
+      {rejected && <span id={popId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+    </>
   );
 });

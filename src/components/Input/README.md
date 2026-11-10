@@ -147,6 +147,7 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-action-text` | `primary` | A text action's words, such as Apply (4.5:1 on the field). |
 | `--input-action-text-bg-hover` | `primary-subtle` | A text action's background on hover. |
 | `--input-action-focus-ring` | `focus-ring` | The ring around a focused action. |
+| `--input-rejected-color` | `text-muted` | The line under a DatePicker, DateRangePicker, TimePicker or NumberInput saying why typed text was put back. |
 
 **Sizing**
 
