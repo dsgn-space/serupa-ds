@@ -6,6 +6,8 @@ import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { isComposing } from '../../internal/ime';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { useServerStyles } from '../../internal/serverStyles';
 import { Button } from '../Button/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from '../Table/Table';
 import { en as words } from './labels';
@@ -48,15 +50,28 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   defaultView?: ChartView | undefined;
   /** Called when the "Show as table" or "Show as chart" button is pressed, with the view it asks for. */
   onViewChange?: ((view: ChartView) => void) | undefined;
+  /** The numbers are on their way: sets aria-busy. Before the first ones arrive (no categories yet), the plot is a
+      placeholder at its height, and `loadingLabel` is said once, after the loader's delay. With numbers already
+      shown, they stay until the new ones arrive. Default: false. */
+  busy?: boolean | undefined;
+  /** Said once as the placeholder appears ("Loading visitors"). Default: "Loading…" (labels.loading). */
+  loadingLabel?: string | undefined;
 }
 
-const OWN = { type: 1, stacked: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, className: 1 } as const;
+const OWN = { type: 1, stacked: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, busy: 1, loadingLabel: 1, className: 1 } as const;
 const TYPES = ['line', 'bar', 'area', 'donut'] as const;
 const VIEWS = ['chart', 'table'] as const;
 const COLORS = 8;
 // The plot's frame in pixels, and a label's character width (text-xs) for laying out axis labels without measuring.
 const CHAR = 7.2, PAD_TOP = 8, PAD_END = 8, AXIS = 24, INSET = 10, MARKER = 4;
 const WIDTH = 640;   // before the box is measured: the server render and the first frame
+
+// Stands in for the plot until the first numbers arrive: a block as tall as the plot, so nothing jumps.
+function ChartPlaceholder({ height, label }: { height: number; label: string }) {
+  const shown = useSkeletonShown(label);
+  const ref = useServerStyles<HTMLDivElement>();   // the height holds under a strict CSP too
+  return <div ref={ref} className="dk-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
+}
 
 /** Round ticks from lo to hi, about count of them, in steps of 1, 2, 2.5 or 5 times a power of ten. */
 export function niceTicks(lo: number, hi: number, count: number): number[] {
@@ -99,11 +114,13 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   const rest = omit(props, OWN);
   const locale = useLocale();
   const labels = useSettings(words).labels;
+  const busy = !!props.busy;
   const base = domId('dk-chart', React.useId());
   const type = oneOf(TYPES, props.type, 'line');
   const categories = props.categories || [];
   const series = (props.series || []).slice(0, COLORS);
   const n = categories.length;
+  const waiting = busy && !n;   // nothing to draw yet: the placeholder
   const height = Math.max(80, Math.round(Number(props.height) || 240));
   const fmt = (v: number) => (props.formatValue ? props.formatValue(v) : displayNumber(v, locale));
   const [ownView, setOwnView] = React.useState<ChartView>(() => oneOf(VIEWS, props.defaultView, 'chart'));
@@ -317,12 +334,15 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
 
   return (
     <figure {...rest} ref={nameRef} className={cn('dk-chart', 'dk-chart--' + type, props.className)} data-component="chart" data-type={type} data-view={view}
+      aria-busy={rest['aria-busy'] ?? (busy || undefined)}
       aria-labelledby={rest['aria-labelledby'] || (hasTitle && !rest['aria-label'] ? base + '-title' : undefined)}>
       {hasTitle ? <figcaption className="dk-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
-      <Button className="dk-chart__toggle" variant="ghost" size="sm" onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
+      {waiting ? null : <Button className="dk-chart__toggle" variant="ghost" size="sm" onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
         {view === 'chart' ? labels.chartShowTable : labels.chartShowChart}
-      </Button>
-      {view === 'table' ? (
+      </Button>}
+      {waiting ? (
+        <div className="dk-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
+      ) : view === 'table' ? (
         <Table className="dk-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
           <TableHead>
             <TableRow>

@@ -328,4 +328,24 @@ describe('Chart', () => {
     }
     document.documentElement.removeAttribute('data-theme');
   });
+
+  test('busy: before the first numbers, a placeholder as tall as the plot that is said once; with numbers, they stay', async () => {
+    const { rerender } = await render(<Chart id="c" title="Visitors" categories={[]} series={[]} busy loadingLabel="Loading visitors" height={200} />);
+    const e = el('c');
+    expect(e.getAttribute('aria-busy')).toBe('true');
+    // Only the title and the placeholder: no table button, no plot, no legend, and nothing a screen reader reads.
+    expect([page.getByRole('button').all().length, e.querySelector('svg'), page.getByRole('progressbar').all().length]).toEqual([0, null, 0]);
+    const art = e.querySelector('[data-component="loader"]') as HTMLElement;
+    expect(art.getAttribute('aria-hidden')).toBe('true');
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading visitors');
+    const block = art.getBoundingClientRect().height;
+    await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} height={200} />);
+    expect([block, (e.querySelector('svg') as SVGElement).getBoundingClientRect().height, e.hasAttribute('aria-busy')]).toEqual([200, 200, false]);
+    // Refreshing numbers already shown: the chart stays, busy.
+    await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} busy />);
+    expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="loader"]')]).toEqual(['true', true, null]);
+    // Without a loadingLabel it says the shared "Loading…".
+    await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} busy />);
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');
+  });
 });
