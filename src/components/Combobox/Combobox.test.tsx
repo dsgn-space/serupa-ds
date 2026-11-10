@@ -574,7 +574,25 @@ describe('Combobox', () => {
     await userEvent.keyboard('an');
     await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('2 results');
     seen.disconnect();
-    expect([idLabels.resultsCount(2), DEFAULT_LABELS.resultsCount(1)]).toEqual(['2 hasil', '1 result']);
+    expect([idLabels.resultsCount(2, '2'), DEFAULT_LABELS.resultsCount(1, '1')]).toEqual(['2 hasil', '1 result']);
+  });
+
+  test('the count said is in the locale\'s digits and grouping: "٢ results" in ar-EG, "1,200 results" in en-US', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    const many = Array.from({ length: 1200 }, (_, i) => 'Item ' + (i + 1));
+    await render(<>
+      <SerupaProvider locale="ar-EG"><Combobox id="cb-ar" aria-label="Country" options={COUNTRIES} /></SerupaProvider>
+      <SerupaProvider locale="en-US"><Combobox id="cb-many" aria-label="Item" options={many} /></SerupaProvider>
+    </>);
+    el('cb-ar').focus();
+    await userEvent.keyboard('an');
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('٢ results');
+    el('cb-many').focus();
+    await userEvent.keyboard('item');
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('1,200 results');
+    seen.disconnect();
   });
 
   // GR53: "No results" sat in a role=status row inserted with its text already in it, which VoiceOver and JAWS don't

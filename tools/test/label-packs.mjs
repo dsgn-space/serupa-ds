@@ -28,7 +28,7 @@ const SAMPLES = {
   avatarStatus: ['online', 'busy', 'away', 'offline'].map((s) => [s]),
   avatarMore: [[1, '1'], [5, '5']], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]], sparklineSummary: [['Revenue', '12', '18', '9', '21']],
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
-  contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0], [1], [5]], dataGridEdit: [['Qty']], dataGridCopied: [[1], [4]], dataGridPasted: [[1], [6]], moreResults: [[1], [40]],
+  contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0, '0'], [1, '1'], [5, '5']], dataGridEdit: [['Qty']], dataGridCopied: [[1], [4]], dataGridPasted: [[1], [6]], moreResults: [[1], [40]],
   clearValue: [['Size'], ['']], createOption: [['Research']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],
   errorSummaryTitle: [[1, '1'], [3, '3']],
   fileWrongType: [['a.exe', ['image']], ['a.exe', ['image', 'video', 'PDF']], ['a.exe', undefined]], fileTooLarge: [['a.png', '5 MB']],

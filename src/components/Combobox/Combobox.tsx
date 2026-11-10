@@ -11,7 +11,8 @@ import { LoaderRing } from '../../internal/loaderRing';
 import type { InputProps } from '../Input/Input';
 import { component } from '../../internal/component';
 import { FieldContext, useFieldControl } from '../../internal/field';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
 import { useFormReset } from '../../internal/useFormReset';
 import { isComposing } from '../../internal/ime';
 import { fieldName } from '../../internal/fieldName';
@@ -157,6 +158,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
+  const locale = useLocale();
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1 } as const);
   const multi = props.multiple === true;
   const size = oneOf(SIZES, props.size, 'md');
@@ -447,7 +449,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   // are plain text and the shared announcer says them, as it says the counts.
   const count = usable.length - (adding ? 1 : 0);
   const empty = typeof props.emptyText === 'string' ? props.emptyText : sds.labels.noResults;
-  const said = failed ? sds.labels.loadFailed : shown.length === 0 ? empty : count ? sds.labels.resultsCount(count) : adding ? sds.labels.createOption(adding.add!) : '';
+  const said = failed ? sds.labels.loadFailed : shown.length === 0 ? empty : count ? sds.labels.resultsCount(count, displayNumber(count, locale)) : adding ? sds.labels.createOption(adding.add!) : '';
   React.useEffect(() => {
     if (!open || !typed || loading || !said) return;
     const t = setTimeout(() => announce(said), announcePause);
