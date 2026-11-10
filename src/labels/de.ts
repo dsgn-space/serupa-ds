@@ -304,4 +304,8 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Tag',
   dateFieldMonth: 'Monat',
   dateFieldYear: 'Jahr',
+  dataGridEdit: (column) => 'Bearbeiten: ' + column,
+  dataGridCopied: (count) => count + ' Zellen kopiert',
+  dataGridPasted: (count) => count + ' Zellen eingefügt',
+  dataGridHint: 'Pfeiltasten wechseln die Zelle. Enter oder F2 bearbeitet eine Zelle, Escape bricht ab.',
 };

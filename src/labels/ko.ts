@@ -303,4 +303,8 @@ export const labels: SerupaLabels = {
   dateFieldDay: '일',
   dateFieldMonth: '월',
   dateFieldYear: '연도',
+  dataGridEdit: (column) => '편집: ' + column,
+  dataGridCopied: (count) => '셀 ' + count + '개를 복사했습니다',
+  dataGridPasted: (count) => '셀 ' + count + '개를 붙여 넣었습니다',
+  dataGridHint: '화살표 키로 셀을 이동합니다. Enter 또는 F2로 편집하고 Escape로 취소합니다.',
 };

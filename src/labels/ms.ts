@@ -301,4 +301,8 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Hari',
   dateFieldMonth: 'Bulan',
   dateFieldYear: 'Tahun',
+  dataGridEdit: (column) => 'Sunting ' + column,
+  dataGridCopied: (count) => count + ' sel disalin',
+  dataGridPasted: (count) => count + ' sel ditampal',
+  dataGridHint: 'Kekunci anak panah beralih antara sel. Enter atau F2 mengedit sel, Escape membatalkan.',
 };

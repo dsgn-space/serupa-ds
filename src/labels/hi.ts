@@ -300,4 +300,8 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'दिन',
   dateFieldMonth: 'महीना',
   dateFieldYear: 'वर्ष',
+  dataGridEdit: (column) => 'संपादित करें: ' + column,
+  dataGridCopied: (count) => count + ' सेल कॉपी किए गए',
+  dataGridPasted: (count) => count + ' सेल चिपकाए गए',
+  dataGridHint: 'तीर कुंजियाँ सेल बदलती हैं। Enter या F2 सेल संपादित करता है, Escape रद्द करता है।',
 };
