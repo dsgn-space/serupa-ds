@@ -119,6 +119,30 @@ describe('DataGrid', () => {
     await expect.element(page.getByRole('textbox', { name: 'Edit Name' })).toHaveValue('Gula');
   });
 
+  test('a click on a header takes the focus there; Page Down and Page Up move ten rows; Ctrl+A selects every cell; leaving an edit saves it', async () => {
+    const changes: DataGridCellChange[][] = [];
+    await render(<><Live onChange={(c) => changes.push(c)} /><button type="button">After</button></>);
+    await userEvent.click(page.getByRole('columnheader', { name: 'Qty' }));
+    expect(focused()).toBe('Qty');
+    await userEvent.keyboard('{PageDown}');
+    expect(focused()).toBe('1');
+    await userEvent.keyboard('{PageUp}');
+    expect(focused()).toBe('4');
+    await userEvent.keyboard('{Control>}a{/Control}');
+    expect(page.getByRole('gridcell', { selected: true }).elements()).toHaveLength(9);
+    await userEvent.keyboard('{Control>}{Home}{/Control}{ArrowRight}{F2}5');
+    await userEvent.click(page.getByRole('button', { name: 'After' }));
+    expect(changes).toEqual([[{ rowId: 'a', column: 'qty', value: '45' }]]);
+  });
+
+  test('a column\'s format writes the text shown, copied and edited', async () => {
+    const cols: DataGridColumn[] = [{ key: 'price', header: 'Price', editable: true, format: (r) => 'Rp ' + String(r.price) }];
+    await render(<DataGrid aria-label="Prices" columns={cols} rows={[{ id: 'a', price: 5000 }]} onRowsChange={() => {}} />);
+    await userEvent.click(cell('Rp 5000'));
+    await userEvent.keyboard('{Enter}');
+    await expect.element(page.getByRole('textbox', { name: 'Edit Price' })).toHaveValue('Rp 5000');
+  });
+
   test('in right-to-left text, ArrowLeft moves to the next column', async () => {
     await render(<div dir="rtl"><DataGrid aria-label="Stock" columns={COLS} rows={ROWS} /></div>);
     await userEvent.click(cell('Kopi'));
