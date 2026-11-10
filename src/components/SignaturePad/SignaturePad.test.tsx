@@ -124,6 +124,14 @@ describe('SignaturePad', () => {
     expect([calls[calls.length - 1][0]!.method, calls[calls.length - 1][0]!.name]).toEqual(['type', 'Dewi']);
   });
 
+  test('a typed name shows inside the box on a right-to-left page too, starting where the saved signature starts', async () => {
+    await render(<div dir="rtl" style={{ width: 480 }}><SignaturePad id="rtl" aria-label="Signature" defaultValue={{ method: 'type', name: 'Dewi Lestari', svg: '' }} /></div>);
+    const box = document.querySelector('#rtl svg')!.getBoundingClientRect();
+    const text = document.querySelector('#rtl svg text')!.getBoundingClientRect();
+    // Before, the name ended at the box's left edge, so all but its last letters fell outside it.
+    // It starts about 16px in, as the saved SVG's x says (the italic first letter's ink varies a few pixels by engine).
+    expect([text.left >= box.left, text.right <= box.right, Math.abs(text.left - box.left - 16) < 6]).toEqual([true, true, true]);
+  });
   test('defaultValue shows a saved signature, drawn or typed, and form.reset() goes back to it', async () => {
     const drawn: SignatureValue = { method: 'draw', name: '', svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="160" viewBox="0 0 300 160"><g><path d="M20 100L140 60"/><path d="M160 100h0"/></g></svg>' };
     await render(<form id="dvf"><SignaturePad id="dv" aria-label="Drawn" name="sig" defaultValue={drawn} /><SignaturePad id="dt" aria-label="Typed" defaultValue={{ method: 'type', name: 'Dewi', svg: '' }} /></form>);

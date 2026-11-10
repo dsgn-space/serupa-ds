@@ -19,7 +19,9 @@
 .dk-signature-pad__area--typed, .dk-signature-pad--readonly .dk-signature-pad__area { cursor: default; }
 .dk-signature-pad--disabled .dk-signature-pad__area { cursor: not-allowed; }
 .dk-signature-pad__strokes { fill: none; stroke: var(--signature-pad-ink, var(--text)); stroke-width: var(--signature-pad-stroke, var(--border-width-2)); stroke-linecap: round; stroke-linejoin: round; }
-.dk-signature-pad__typed { fill: var(--signature-pad-ink, var(--text)); font-family: var(--font-serif); font-style: italic; font-size: var(--text-3xl); }
+/* Left to right on any page, as in the saved SVG (its x is from the left): on a right-to-left page the name ended at
+   its x, past the box's left edge. */
+.dk-signature-pad__typed { fill: var(--signature-pad-ink, var(--text)); font-family: var(--font-serif); font-style: italic; font-size: var(--text-3xl); direction: ltr; }
 .dk-signature-pad__line {
   position: absolute; inset-inline: var(--spacing-4); inset-block-end: var(--spacing-8); pointer-events: none;
   border-block-end: var(--border-width-1) solid var(--signature-pad-line, var(--text-muted));
