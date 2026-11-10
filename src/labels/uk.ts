@@ -306,5 +306,9 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'День',
   dateFieldMonth: 'Місяць',
   dateFieldYear: 'Рік',
+  dataGridEdit: (column) => 'Змінити: ' + column,
+  dataGridCopied: (count) => 'Скопійовано клітинок: ' + n(count),
+  dataGridPasted: (count) => 'Вставлено клітинок: ' + n(count),
+  dataGridHint: 'Стрілки переміщують між клітинками. Enter або F2 — змінити клітинку, Escape — скасувати.',
   scrollArea: 'Прокручуваний вміст',
 };

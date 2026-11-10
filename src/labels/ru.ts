@@ -307,5 +307,9 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'День',
   dateFieldMonth: 'Месяц',
   dateFieldYear: 'Год',
+  dataGridEdit: (column) => 'Изменить: ' + column,
+  dataGridCopied: (count) => 'Скопировано ячеек: ' + n(count),
+  dataGridPasted: (count) => 'Вставлено ячеек: ' + n(count),
+  dataGridHint: 'Стрелки перемещают между ячейками. Enter или F2 — изменить ячейку, Escape — отменить.',
   scrollArea: 'Прокручиваемое содержимое',
 };

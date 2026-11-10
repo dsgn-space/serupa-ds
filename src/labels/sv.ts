@@ -301,5 +301,9 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Dag',
   dateFieldMonth: 'Månad',
   dateFieldYear: 'År',
+  dataGridEdit: (column) => 'Redigera ' + column,
+  dataGridCopied: (count) => (count === 1 ? '1 cell kopierad' : n(count) + ' celler kopierade'),
+  dataGridPasted: (count) => (count === 1 ? '1 cell inklistrad' : n(count) + ' celler inklistrade'),
+  dataGridHint: 'Piltangenterna flyttar mellan celler. Enter eller F2 redigerar en cell, Escape avbryter.',
   scrollArea: 'Rullbart innehåll',
 };

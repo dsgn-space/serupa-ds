@@ -305,5 +305,9 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'اليوم',
   dateFieldMonth: 'الشهر',
   dateFieldYear: 'السنة',
+  dataGridEdit: (column) => 'تعديل ' + column,
+  dataGridCopied: (count) => 'الخلايا المنسوخة: ' + n(count),
+  dataGridPasted: (count) => 'الخلايا الملصقة: ' + n(count),
+  dataGridHint: 'تنقل مفاتيح الأسهم بين الخلايا. يعدّل Enter أو F2 الخلية، ويلغي Escape.',
   scrollArea: 'محتوى قابل للتمرير',
 };
