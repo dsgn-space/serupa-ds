@@ -47,7 +47,7 @@ Drawn from the `Expanded` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | `string` | | Goes to the outer `<div>`. |
-| `lines` | `number` | `3` | Lines shown while closed, the last cut with an ellipsis. |
+| `lines` | `number` | `3` | Lines shown while closed (1 to 6; more counts as 6), the last cut with an ellipsis. |
 | `expanded` | `boolean` | | Open (controlled). Use with `onExpandedChange`. |
 | `defaultExpanded` | `boolean` | `false` | Open at first (uncontrolled). |
 | `onExpandedChange` | `(expanded: boolean) => void` | | Called with the new state when the button is pressed. |

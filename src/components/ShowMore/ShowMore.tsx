@@ -7,7 +7,7 @@ import { Button } from '../Button/Button';
 import { en as words } from './labels';
 
 export interface ShowMoreProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** How many lines show while it's closed; the last is cut with an ellipsis. Default: 3. */
+  /** How many lines show while it's closed (1 to 6); the last is cut with an ellipsis. Default: 3. */
   lines?: number | undefined;
   /** Open (controlled): all of it shows. Use with onExpandedChange. */
   expanded?: boolean | undefined;
@@ -22,7 +22,8 @@ export interface ShowMoreProps extends React.HTMLAttributes<HTMLDivElement> {
 /* ShowMore: long text cut after a few lines, with a "Show more" button under it that shows the rest and becomes
    "Show less". The button appears only when the text is cut (measured, and again when its width changes), so short
    text shows as it is. The hidden lines stay in the page: screen readers read them and find-in-page finds them;
-   the button is for the eye. */
+   the button is for the eye. The line count goes in an attribute the CSS reads, not a style attribute, so the cut
+   holds under a strict Content Security Policy, before any script runs. */
 const OWN = { lines: 1, expanded: 1, defaultExpanded: 1, onExpandedChange: 1, className: 1, children: 1 } as const;
 
 /** Long text cut after a few lines, with a Show more button that shows the rest.
@@ -31,7 +32,7 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
   const base = domId('dk-sm', React.useId());
-  const lines = Math.max(1, Math.floor(Number(props.lines)) || 3);
+  const lines = Math.min(6, Math.max(1, Math.floor(Number(props.lines)) || 3));
   const controlled = props.expanded !== undefined;
   const [own, setOwn] = React.useState(!!props.defaultExpanded);
   const open = controlled ? !!props.expanded : own;
@@ -51,7 +52,7 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
   return (
     <div {...rest} ref={ref} className={cn('dk-show-more', props.className)} data-component="show-more" data-expanded={open ? '' : undefined}>
       <div id={base + '-text'} ref={content} className={cn('dk-show-more__text', !open && 'dk-show-more__text--cut')}
-        style={open ? undefined : ({ '--dk-show-more-lines': lines } as React.CSSProperties)}>{props.children}</div>
+        data-lines={open ? undefined : lines}>{props.children}</div>
       {open || cut ? (
         <Button variant="link" size="sm" className="dk-show-more__toggle" aria-expanded={open} aria-controls={base + '-text'} onClick={toggle}>
           {open ? L.showLess : L.showMore}

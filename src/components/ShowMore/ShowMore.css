@@ -10,4 +10,10 @@
 .dk-show-more__text > :last-child { margin-block-end: var(--spacing-0); }
 .dk-show-more > .dk-show-more__toggle { margin-inline-start: calc(var(--spacing-0) - var(--button-padding-x-sm, var(--spacing-2))); }
 .dk-show-more__text--cut { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-show-more-lines); line-clamp: var(--dk-show-more-lines); overflow: hidden; }
+.dk-show-more__text--cut[data-lines="1"] { --dk-show-more-lines: var(--line-clamp-1); }
+.dk-show-more__text--cut[data-lines="2"] { --dk-show-more-lines: var(--line-clamp-2); }
+.dk-show-more__text--cut[data-lines="3"] { --dk-show-more-lines: var(--line-clamp-3); }
+.dk-show-more__text--cut[data-lines="4"] { --dk-show-more-lines: var(--line-clamp-4); }
+.dk-show-more__text--cut[data-lines="5"] { --dk-show-more-lines: var(--line-clamp-5); }
+.dk-show-more__text--cut[data-lines="6"] { --dk-show-more-lines: var(--line-clamp-6); }
 }

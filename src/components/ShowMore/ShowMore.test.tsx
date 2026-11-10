@@ -47,6 +47,11 @@ describe('ShowMore', () => {
     await expect.element(page.getByRole('button', { name: 'Show more' })).toBeInTheDocument();
   });
 
+  test('lines runs from 1 to 6 (more counts as 6), set without a style attribute so a strict CSP keeps it', async () => {
+    await render(<Narrow><ShowMore id="l1" lines={1}>{LONG}</ShowMore><ShowMore id="l9" lines={9}>{LONG}</ShowMore></Narrow>);
+    expect([Math.round(text('l1').getBoundingClientRect().height), Math.round(text('l9').getBoundingClientRect().height), text('l9').hasAttribute('style')]).toEqual([20, 120, false]);
+  });
+
   test('controlled: expanded with onExpandedChange; the default is 3 lines', async () => {
     const onExpandedChange = vi.fn();
     function Ctl() { const [open, setOpen] = React.useState(false); return <Narrow><ShowMore id="c" expanded={open} onExpandedChange={(v) => { onExpandedChange(v); setOpen(v); }}>{LONG}</ShowMore></Narrow>; }
