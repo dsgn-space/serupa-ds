@@ -58,7 +58,7 @@
     - listitem:
       - button "Add filter"
   - button "Clear all"
-  - status: 12345 results
+  - status: 12,345 results
 
 # Playground
 - group "Filters":

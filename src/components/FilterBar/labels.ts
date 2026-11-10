@@ -19,8 +19,9 @@ export interface FilterBarLabels {
   filterRemove: (field: string) => string;
   /** FilterBar: the button that closes a filter's editor. */
   filterDone: string;
-  /** FilterBar: how many results the filters leave, shown and announced. */
-  filterResults: (count: number) => string;
+  /** FilterBar: how many results the filters leave, shown and announced. `formatted` is the count in the locale's
+   *  digits and grouping; `count` is there for plural rules. */
+  filterResults: (count: number, formatted: string) => string;
 }
 export const en: FilterBarLabels = {
   filterBar: 'Filters',
@@ -33,7 +34,7 @@ export const en: FilterBarLabels = {
   filterAny: (field) => field + ': any',
   filterRemove: (field) => 'Remove filter: ' + field,
   filterDone: 'Done',
-  filterResults: (count) => (count === 1 ? '1 result' : count + ' results'),
+  filterResults: (count, formatted = String(count)) => formatted + (count === 1 ? ' result' : ' results'),
 };
 export const id: FilterBarLabels = {
   filterBar: 'Filter',
@@ -46,5 +47,5 @@ export const id: FilterBarLabels = {
   filterAny: (field) => field + ': semua',
   filterRemove: (field) => 'Hapus filter: ' + field,
   filterDone: 'Selesai',
-  filterResults: (count) => count + ' hasil',
+  filterResults: (count, formatted = String(count)) => formatted + ' hasil',
 };

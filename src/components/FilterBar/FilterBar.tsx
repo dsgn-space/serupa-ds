@@ -227,7 +227,7 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
       </ul>
       {active.length ? <Button variant="link" size="sm" className="dk-filter-bar__clear" onClick={() => { focusNext.current = 'add'; setEditing(null); set({}); }}>{L.filterClear}</Button> : null}
       {props.actions != null ? <div className="dk-filter-bar__actions">{props.actions}</div> : null}
-      {props.resultsCount != null ? <span className="dk-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount)}</span> : null}
+      {props.resultsCount != null ? <span className="dk-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount, new Intl.NumberFormat(locale).format(props.resultsCount))}</span> : null}
     </div>
   );
 });
