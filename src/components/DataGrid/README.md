@@ -38,7 +38,7 @@ Drawn from the `Playground` story.
 ## Usage
 
 - Name it with `aria-label` or `aria-labelledby`.
-- `columns`: `key` (the row field), `header`, and optionally `editable`, `align` (`"end"` for numbers), `width`, and `format(row)` for the text shown, edited and copied (a price with separators).
+- `columns`: `key` (the row field), `header`, and optionally `editable`, `align` (`"end"` for numbers), `width`, and `format(row)` for the text shown, edited and copied (a price with separators). The grid writes a cell's text as it gets it: without `format`, a number shows in Latin digits whatever the locale, so a spreadsheet takes it back as a number.
 - `rows`: objects with an id under `rowKey` (`"id"` by default).
 - `onRowsChange(rows, { changes })` is called once per edit, paste or Delete over a range. `rows` is the new rows with each changed field set to the text typed or pasted; `changes` lists every cell that changed, `{ rowId, column, value }`. Set `rows` from it, or parse and check `changes` first (a number column gets text). A change you don't take leaves the old text. Without `onRowsChange`, nothing is editable.
 - A pasted block fills from the active cell (or the top-left of the range), as far as the grid goes, skipping read-only columns; one value pasted over a range fills all of it.
