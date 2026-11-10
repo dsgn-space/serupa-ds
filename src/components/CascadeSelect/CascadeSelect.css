@@ -23,9 +23,10 @@
   background: var(--cascade-select-bg, var(--field)); color: var(--cascade-select-text, var(--text)); font: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
   transition: border-color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-cascade-select__button:hover:not(:disabled, :focus-visible) { --dk-cs-bd: var(--cascade-select-border-hover, var(--field-border-hover)); border-color: var(--dk-cs-bd); } }
+@media (hover: hover) { .dk-cascade-select__button:hover:not(:disabled, [aria-readonly="true"], :focus-visible) { --dk-cs-bd: var(--cascade-select-border-hover, var(--field-border-hover)); border-color: var(--dk-cs-bd); } }
 .dk-cascade-select__button:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-cascade-select--invalid { --dk-cs-bd: var(--cascade-select-invalid, var(--danger)); }
+.dk-cascade-select--readonly .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); cursor: default; }
 .dk-cascade-select--disabled .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-cascade-select__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-cascade-select__value--empty { color: var(--cascade-select-placeholder, var(--placeholder)); }
