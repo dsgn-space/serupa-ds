@@ -301,4 +301,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'od ' + from + ' do ' + to,
   repeats: 'Powtarza się',
   noEvents: 'Brak wydarzeń w tym miesiącu.',
+  dateFieldDay: 'Dzień',
+  dateFieldMonth: 'Miesiąc',
+  dateFieldYear: 'Rok',
 };

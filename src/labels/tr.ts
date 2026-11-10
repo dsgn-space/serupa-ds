@@ -298,4 +298,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' – ' + to,
   repeats: 'Tekrarlanır',
   noEvents: 'Bu ay etkinlik yok.',
+  dateFieldDay: 'Gün',
+  dateFieldMonth: 'Ay',
+  dateFieldYear: 'Yıl',
 };

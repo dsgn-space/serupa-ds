@@ -1,0 +1,104 @@
+# Checked
+- text: Date of birth For example, 27 3 2007
+- group "Date of birth":
+  - text: Month
+  - textbox "Month"
+  - text: Day
+  - textbox "Day"
+  - text: Year
+  - textbox "Year"
+- button "Continue"
+- paragraph: "Value: (none yet)"
+
+# Disabled
+- group "Date of birth":
+  - text: Month
+  - textbox "Month" [disabled]: "5"
+  - text: Day
+  - textbox "Day" [disabled]: "1"
+  - text: Year
+  - textbox "Year" [disabled]: "1990"
+
+# InField
+- text: Date of birth For example, 27 3 2007
+- group "Date of birth":
+  - text: Month
+  - textbox "Month"
+  - text: Day
+  - textbox "Day"
+  - text: Year
+  - textbox "Year"
+
+# Indonesian
+- text: "Tanggal lahir Contoh: 17 8 1945"
+- group "Tanggal lahir":
+  - text: Tanggal
+  - textbox "Tanggal": "17"
+  - text: Bulan
+  - textbox "Bulan": "8"
+  - text: Tahun
+  - textbox "Tahun": "1945"
+
+# Invalid
+- text: Passport expiry date For example, 12 11 2031
+- group "Passport expiry date":
+  - text: Month
+  - textbox "Month" [invalid]
+  - text: Day
+  - textbox "Day" [invalid]
+  - text: Year
+  - textbox "Year" [invalid]
+- text: The expiry date must include a year
+
+# LongText
+- text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung start date The date on the letter from the insurance office, which is usually at the top right
+- group "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung start date":
+  - text: Month
+  - textbox "Month": "1"
+  - text: Day
+  - textbox "Day": "31"
+  - text: Year
+  - textbox "Year": "2024"
+
+# Playground
+- group "Date of birth":
+  - text: Month
+  - textbox "Month"
+  - text: Day
+  - textbox "Day"
+  - text: Year
+  - textbox "Year"
+
+# Sizes
+- group "Small":
+  - text: Month
+  - textbox "Month": "11"
+  - text: Day
+  - textbox "Day": "12"
+  - text: Year
+  - textbox "Year": "2031"
+- group "Medium":
+  - text: Month
+  - textbox "Month": "11"
+  - text: Day
+  - textbox "Day": "12"
+  - text: Year
+  - textbox "Year": "2031"
+- group "Large":
+  - text: Month
+  - textbox "Month": "11"
+  - text: Day
+  - textbox "Day": "12"
+  - text: Year
+  - textbox "Year": "2031"
+
+# UnitedStates
+- text: Date of birth For example, 3 27 2007
+- group "Date of birth":
+  - text: Month
+  - textbox "Month": "3"
+  - text: Day
+  - textbox "Day": "27"
+  - text: Year
+  - textbox "Year": "2007"
+

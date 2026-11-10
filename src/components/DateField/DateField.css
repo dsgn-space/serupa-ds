@@ -1,0 +1,15 @@
+/* ---------------------------------------------------------------
+   DateField: three Inputs side by side (Day, Month, Year, in the locale's order), each with its small label above,
+   16px apart. Day and month boxes fit two digits, the year's four. In a narrow column they wrap. Every value reads
+   one of its own tokens (date-field.tokens.json), which fall back to the shared ones; the boxes are Inputs, so their
+   colors, border, focus ring and invalid border are Input's.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-date-field { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--date-field-gap, var(--spacing-4)); min-width: var(--spacing-0); }
+.dk-date-field__part { display: flex; flex-direction: column; gap: var(--date-field-label-gap, var(--spacing-1)); min-width: var(--spacing-0); }
+.dk-date-field__label { font-size: var(--date-field-label-size, var(--text-sm)); line-height: var(--leading-tight); color: var(--date-field-label, var(--text)); }
+.dk-date-field__part--day, .dk-date-field__part--month { width: var(--date-field-short-width, var(--spacing-16)); }
+.dk-date-field__part--year { width: var(--date-field-year-width, var(--spacing-24)); }
+.dk-date-field__input { width: var(--sizing-full); font-variant-numeric: tabular-nums; }
+.dk-date-field--disabled .dk-date-field__label { opacity: var(--opacity-disabled); }
+}
