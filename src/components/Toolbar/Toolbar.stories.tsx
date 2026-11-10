@@ -25,7 +25,7 @@ const meta = {
   title: 'Components/Actions/Toolbar',
   component: Toolbar,
   args: { 'aria-label': 'Text formatting', orientation: 'horizontal', children: Formatting() },
-  argTypes: { orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] }, children: { control: false } },
+  argTypes: { orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, children: { control: false } },
 } satisfies Meta<typeof Toolbar>;
 export default meta;
 type Story = StoryObj<typeof meta>;

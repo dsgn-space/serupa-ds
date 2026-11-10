@@ -37,7 +37,7 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 
 ## Usage
 
-- Put any controls inside, at any depth: Buttons, IconButtons, ToggleButtons, ButtonGroups, a Menu's trigger, a Select or an Input. Give them all the same `size`.
+- Put any controls inside, at any depth: Buttons, IconButtons, ToggleButtons, ButtonGroups, a Menu's trigger, a Select or an Input. Set `size` on the toolbar and every button in it takes it, in its ButtonGroups too (a button's own `size` still wins); give a Select or an Input in it the same `size` yourself.
 - Use a vertical [Divider](../Divider/README.md) between groups in a row, or a horizontal one in a column. It takes the row's height.
 - Disabled controls are skipped by the arrow keys. To keep one reachable so people can find it, use `aria-disabled` instead of `disabled`.
 - Controls added or removed later join the arrow-key order on their own.
@@ -67,6 +67,7 @@ Your `onKeyDown` runs before the toolbar's own keys, so `e.preventDefault()` in 
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div role="toolbar">`. |
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | A wrapping row, moved through with Left and Right, or a column, moved through with Up and Down. |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | none | The size of every Button, IconButton and ToggleButton in it that doesn't set its own (24, 32 or 44px). |
 | `aria-label` | string | none | What the controls are for ("Text formatting"). |
 | `children` | `ReactNode` | | The controls, at any depth. |
 
