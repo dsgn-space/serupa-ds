@@ -5,16 +5,18 @@
  *  set's status to read "loaded" (for ten seconds at most). Returns the function that stops it. Browser only: call
  *  it from an effect. */
 export function onFontsLoaded(fn: () => void): () => void {
-  const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
-  if (!fonts || !fonts.addEventListener) return () => {};
+  const fonts = typeof document !== 'undefined' && document.fonts && 'addEventListener' in document.fonts ? document.fonts : null;
   let live = true, frame = 0;
   const done = () => { if (live) fn(); };
   const loading = () => {
     let n = 0;
-    const wait = () => { if (!live) return; if (fonts.status === 'loaded') fn(); else if (n++ < 600) frame = requestAnimationFrame(wait); };
+    const wait = () => { if (!live) return; if (fonts!.status === 'loaded') fn(); else if (n++ < 600) frame = requestAnimationFrame(wait); };
     cancelAnimationFrame(frame); frame = requestAnimationFrame(wait);
   };
-  fonts.addEventListener('loading', loading);
-  fonts.addEventListener('loadingdone', done);
-  return () => { live = false; cancelAnimationFrame(frame); fonts.removeEventListener('loading', loading); fonts.removeEventListener('loadingdone', done); };
+  if (fonts) { fonts.addEventListener('loading', loading); fonts.addEventListener('loadingdone', done); }
+  // One stop function whether or not there was a font set to listen to: no empty one for the server.
+  return () => {
+    live = false;
+    if (fonts) { cancelAnimationFrame(frame); fonts.removeEventListener('loading', loading); fonts.removeEventListener('loadingdone', done); }
+  };
 }
