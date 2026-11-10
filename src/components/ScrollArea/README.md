@@ -26,7 +26,7 @@ import { ScrollArea } from "serupa-ds";
 
 - Give it a size: a `maxHeight` (or `height`) for `orientation="vertical"`, the default; a width narrower than its content for `"horizontal"`; both for `"both"`.
 - Name it with `aria-label` or `aria-labelledby` for what it holds ("Recent activity"). The name is used only while it scrolls; with none it's "Scrolling content".
-- With `fade`, an edge with more past it fades out over 32px, a hint that there's more: use it where the scrollbar alone can go unnoticed (a phone, a row of chips). The faded edge isn't for reading, so keep padding at the edges.
+- With `fade`, an edge with more past it fades out over 32px, a hint that there's more: use it where the scrollbar alone can go unnoticed (a phone, a row of chips). The faded edge isn't for reading, so keep padding at the edges; it fades the box's own border there too, so put a border on a wrapper around it if it needs one.
 - The scrollbar is the browser's own, so dragging, clicking the track, touch and screen readers work as they do everywhere; only its width and colors change.
 
 ## Accessibility
