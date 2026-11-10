@@ -20,7 +20,7 @@
   border: none; border-radius: var(--menubar-item-radius, var(--radius-control));
   background: transparent; color: var(--menubar-item-text, var(--text));
   font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium);
-  cursor: pointer;
+  cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover);
 }
 @media (hover: hover) { .dk-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--highlight)); } }
