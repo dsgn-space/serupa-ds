@@ -111,6 +111,46 @@
             "cssVar": "--radio-invalid"
           }
         }
+      },
+      "card-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A card radio's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-bg"
+          }
+        }
+      },
+      "card-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A card's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-border"
+          }
+        }
+      },
+      "card-border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "A card's border under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-border-hover"
+          }
+        }
+      },
+      "card-border-checked": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A checked card's border, 2px.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-border-checked"
+          }
+        }
       }
     },
     "sizing": {
@@ -173,6 +213,16 @@
             "cssVar": "--radio-dot-size-lg"
           }
         }
+      },
+      "card-min-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-48}",
+        "$description": "The narrowest a card gets in a horizontal group before the row wraps (192px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-min-width"
+          }
+        }
       }
     },
     "spacing": {
@@ -205,6 +255,48 @@
             "cssVar": "--radio-group-gap-horizontal"
           }
         }
+      },
+      "card-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space inside a card (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-padding"
+          }
+        }
+      },
+      "card-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between a card's radio and its text (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-gap"
+          }
+        }
+      },
+      "card-group-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between cards in a group (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-group-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "card-label-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "A card's label weight (500).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-label-weight"
+          }
+        }
       }
     },
     "border": {
@@ -215,6 +307,18 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--radio-border-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "card-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "A card's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-card-radius"
           }
         }
       }
