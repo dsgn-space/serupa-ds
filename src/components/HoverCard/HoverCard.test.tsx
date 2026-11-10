@@ -187,3 +187,20 @@ describe('HoverCard', () => {
     }
   });
 });
+
+describe('HoverCard: a web font arriving after it opens', () => {
+  test('moves the trigger in its line, and the card follows it (an inline trigger never resizes for a ResizeObserver)', async () => {
+    // The font's rule is added only once the card is placed, so nothing loads it sooner.
+    const rule = document.createElement('style');
+    rule.textContent = "@font-face { font-family: HcLate; src: url(/fonts/InterVariable-latin.woff2) format('woff2'); }";
+    try {
+      await render(<p style={{ margin: '40px', fontFamily: 'HcLate, monospace', fontSize: '20px' }}>Reviewed by an earlier reviewer, then{' '}
+        <HoverCard id="hcf" open onOpenChange={() => {}} placement="bottom-start" trigger={<a id="tf" href="#dewi">@dewi</a>}>Dewi</HoverCard> on Monday.</p>);
+      const before = rect(el('tf')).left;
+      document.head.append(rule);
+      await expect.poll(() => near(rect(el('tf')).left, before)).toBe(false);   // the font arrived and moved it
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      expect(near(rect(el('hcf')).left, rect(el('tf')).left)).toBe(true);
+    } finally { rule.remove(); }
+  });
+});
