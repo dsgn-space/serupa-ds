@@ -154,9 +154,13 @@ function print(r, total) {
 }
 
 function main(argv) {
+  const USAGE = 'usage: serupa-usage <source files or folders...> [--json]';
+  if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); return 0; }
   const json = argv.includes('--json');
   const paths = argv.filter((a) => a !== '--json');
-  if (!paths.length) { console.error('usage: serupa-usage <source files or folders...> [--json]'); return 2; }
+  const unknown = paths.find((a) => a.startsWith('-'));
+  if (unknown) { console.error(`serupa-usage: unknown option ${unknown}\n${USAGE}`); return 2; }
+  if (!paths.length) { console.error(USAGE); return 2; }
   const missing = paths.filter((p) => !fs.existsSync(p));
   if (missing.length) { console.error(`Not found: ${missing.join(', ')}`); return 2; }
   const list = fs.readFileSync(fileURLToPath(new URL('../dist/components.json', import.meta.url)), 'utf8');
