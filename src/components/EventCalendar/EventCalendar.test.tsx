@@ -32,6 +32,21 @@ describe('EventCalendar', () => {
     expect(document.querySelectorAll('tbody tr')).toHaveLength(6);   // Feb 23 to Apr 5: March 2025 reaches six weeks
   });
 
+  test('a time is written with the hour unpadded in every engine, as the server writes it ("9.30", not Firefox\'s "09.30" for id-ID)', async () => {
+    // As Firefox does for some 24-hour locales: the hour two digits wide though 'numeric' was asked for.
+    const parts = Intl.DateTimeFormat.prototype.formatToParts;
+    const padded = function (this: Intl.DateTimeFormat, d?: Date | number) {
+      return parts.call(this, d).map((x) => (x.type === 'hour' && this.resolvedOptions().hour === 'numeric' ? { ...x, value: x.value.padStart(2, '0') } : x));
+    };
+    const toParts = vi.spyOn(Intl.DateTimeFormat.prototype, 'formatToParts').mockImplementation(padded);
+    // format is a getter that hands back a bound function.
+    const format = vi.spyOn(Intl.DateTimeFormat.prototype as unknown as { format: object }, 'format', 'get').mockImplementation(function (this: Intl.DateTimeFormat) { return (d?: Date | number) => padded.call(this, d).map((x) => x.value).join(''); });
+    try {
+      await draw(<EventCalendar events={EVENTS} defaultMonth={MARCH} locale="id-ID" />);
+      expect(names('2025-03-04')[0]).toMatch(/^9\.30 Team standup, .*, 9\.30 to 9\.45, /);
+    } finally { toParts.mockRestore(); format.mockRestore(); }
+  });
+
   test('each day is named by its date and its events; events are buttons named by title, time and Repeats, in order', async () => {
     await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} />);
     expect(cell('2025-03-04').textContent).toMatch(/^Tuesday, March 4, 2025, 2 events/);
