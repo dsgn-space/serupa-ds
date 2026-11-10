@@ -56,6 +56,7 @@ toast.undo({ title: "Moved to trash", commit: () => deleteFile(file), onUndo: ()
 
 ## Accessibility
 
+- Focus is never left behind a toast (WCAG 2.4.11): while toasts show at the top or bottom edge, the page's scroll padding there is the room they take, so tabbing to a control under them scrolls it clear. A page's own `scroll-padding` still wins.
 - Each new toast is read out through the shared polite live region, so it doesn't interrupt. A repeat that only adds to a toast's count isn't read each time: once the burst stops (a second with no repeat), the message is read once more with the count ("Network error. 12 times.", `labels.toastRepeated`). The count reads as "12 times" with the title, not "×12".
 - The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1), so a toast with an `action` can go by itself like any other: hovering it, or reaching it with F8, holds it. Give one `autoDismiss: false` when people have to act on it. For anything they must act on before going on, an Alert or a Dialog is still better.
 - F8 moves focus to the newest toast (a screen reader reads it, and Tab reaches its buttons), and F8 or Escape takes focus back to where it was. The first toast with an action adds "Press F8 to reach it." to what's announced (`labels.toastShortcut`), while a Toaster is in the page. When a toast closes with keyboard focus in it (its ×, its action, or `toast.dismiss()`), focus goes back where F8 came from, or else to the toast next to it. Closed with the mouse, focus isn't moved to the next toast, so that one's time keeps running.
@@ -94,7 +95,7 @@ Shows `messages.loading` while `work` (a promise, or a function that returns one
 
 ### toast.undo(options)
 
-The undo pattern, in place of a confirmation: do the action in the page at once (the item leaves the list), and let `toast.undo` hold the real work until it's sure. It shows a toast with an Undo button, and takes `toast()` options except `action` and `autoDismiss`, plus:
+The undo pattern, in place of a confirmation: do the action in the page at once (the item leaves the list), and let `toast.undo` hold the real work until it's sure. It shows a toast with an Undo button, and takes `toast()` options except `action`, plus the ones below. Its time follows `autoDismiss` and `duration` like any toast's, so a Toaster with `autoDismiss={false}`, which some apps need for WCAG 2.2.1 (Timing Adjustable), keeps an undo toast until it's closed too.
 
 | Option | Type | Notes |
 | --- | --- | --- |

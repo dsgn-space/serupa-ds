@@ -54,6 +54,7 @@ Drawn from the `Disabled` story.
 | Hover | `field-border-hover`; a checked radio turns `primary-hover` |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
+| Read-only | Looks as it is, with a default cursor and no hover or press change |
 | Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` circle; also inside a disabled fieldset (`Field group disabled`) |
 
 ## Accessibility
@@ -71,7 +72,7 @@ Drawn from the `Disabled` story.
 | Key | Does |
 | --- | --- |
 | Tab | Into the group, on the checked radio (or the first, when none is) |
-| ↑ ↓ ← → | The previous or next radio, checking it; wraps, and skips disabled ones |
+| ↑ ↓ ← → | The previous or next radio, checking it; wraps, and skips disabled ones. Nothing in a read-only group |
 | Space | Check the focused radio, when none is checked |
 
 ## Props
@@ -90,6 +91,7 @@ Drawn from the `Disabled` story.
 | `invalid` | boolean | `false` | `aria-invalid` on the group, and a danger border on each unchecked radio. Field sets it from its error |
 | `disabled` | boolean | `false` | Disables every radio (and sets `aria-disabled` on the group) |
 | `required` | boolean | `false` | `aria-required` on the group, `required` on each radio |
+| `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly` on the group), and the form still sends the choice, unlike `disabled`; arrows, Space and clicks don't change it, and `onValueChange` doesn't run |
 
 Other props (`id`, `aria-label`, `aria-labelledby`, `className`…) and `ref` go to the `<div role="radiogroup">`, which has `data-component="radio-group"` and `data-orientation`.
 

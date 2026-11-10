@@ -44,6 +44,8 @@ export interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   size?: 'sm' | 'md' | undefined;
   /** Turns every swatch and the hex field off, as a disabled native control. */
   disabled?: boolean | undefined;
+  /** Shows the color without letting it change: the swatches stay focusable and the group says it (aria-readonly), the hex field is read-only, the browser's color picker doesn't open, and a form still sends the color, unlike disabled. */
+  readOnly?: boolean | undefined;
   /** Submits the color with a form, in a hidden input. */
   name?: string | undefined;
   /** The id of the form the color submits with, when the picker sits outside it (like an input's form attribute). */
@@ -54,7 +56,7 @@ export interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   invalid?: boolean | undefined;
 }
 
-const OWN = { 'aria-label': 1, 'aria-labelledby': 1, swatches: 1, value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, custom: 1, contrastWith: 1, minContrast: 1, size: 1, disabled: 1, name: 1, className: 1, form: 1, required: 1, invalid: 1, 'aria-describedby': 1, 'aria-errormessage': 1, 'aria-required': 1, 'aria-invalid': 1, autoFocus: 1 } as const;
+const OWN = { 'aria-label': 1, 'aria-labelledby': 1, swatches: 1, value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, custom: 1, contrastWith: 1, minContrast: 1, size: 1, disabled: 1, readOnly: 1, name: 1, className: 1, form: 1, required: 1, invalid: 1, 'aria-describedby': 1, 'aria-errormessage': 1, 'aria-required': 1, 'aria-invalid': 1, autoFocus: 1 } as const;
 type Swatch = ColorSwatch & { named: boolean };
 // The check on a swatch: white or black, whichever stands out more on it.
 const ink = (hex: string) => ((contrastRatio(hex, '#ffffff') || 0) >= (contrastRatio(hex, '#000000') || 0) ? '#ffffff' : '#000000');
@@ -85,7 +87,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<string | null>(normalizeHex(props.defaultValue || '') );
   const value = controlled ? normalizeHex(props.value || '') : own;
-  const disabled = !!props.disabled, custom = props.custom !== false;
+  const disabled = !!props.disabled, readOnly = !!props.readOnly, custom = props.custom !== false;
   const truthy = (v: unknown) => v === true || v === 'true';
   const required = !!props.required || truthy(props['aria-required']);
   // A form submitted with nothing picked: the swatches are marked invalid and take focus, until a color is picked.
@@ -137,7 +139,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
     return () => { el.removeEventListener('change', on); el.removeEventListener('input', input); el.removeEventListener('blur', blur); };
   }, [custom]);
   const choose = (hex: string, focus?: boolean, final = true) => {
-    if (disabled) return;
+    if (disabled || readOnly) return;
     const v = normalizeHex(hex);
     if (!v) return;
     if (!controlled) setOwn(v);
@@ -156,7 +158,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   const tabStop = picked >= 0 ? picked : 0;
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
-    if (e.defaultPrevented || !swatches.length || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.defaultPrevented || readOnly || !swatches.length || e.altKey || e.ctrlKey || e.metaKey) return;
     const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
     const i = swatches.findIndex((s) => s.value === e.currentTarget.dataset.value);
     let n: number;
@@ -189,11 +191,11 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   const low = ratio != null && ratio < min;
   useAutoFocus(props.autoFocus, () => root.current && root.current.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop]);
   return (
-    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, () => n && n.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop]); restyle(n); }} className={cn('dk-color-picker', 'dk-color-picker--size-' + size, disabled && 'dk-color-picker--disabled', props.className)}
+    <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, () => n && n.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop]); restyle(n); }} className={cn('dk-color-picker', 'dk-color-picker--size-' + size, disabled && 'dk-color-picker--disabled', readOnly && 'dk-color-picker--readonly', props.className)}
       data-component="color-picker" data-size={size}>
       {/* The description and states a Field hands the picker go on the radiogroup, the control screen readers reach.
           The id stays on the outer div, so a label click focuses the picked swatch through it. */}
-      <div ref={nameRef} role="radiogroup" className="dk-color-picker__swatches" aria-label={props['aria-label']} aria-labelledby={labelledBy} aria-disabled={disabled || undefined}
+      <div ref={nameRef} role="radiogroup" className="dk-color-picker__swatches" aria-label={props['aria-label']} aria-labelledby={labelledBy} aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined}
         aria-describedby={props['aria-describedby']} aria-required={required || undefined} aria-invalid={invalid || undefined} aria-errormessage={invalid ? props['aria-errormessage'] : undefined}>
         {swatches.map((s, i) => {
           const on = s.value === value;
@@ -216,8 +218,10 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
         // The hex field is a second field of the picker, named "Hex code": not the control a Field labels.
         <FieldContext.Provider value={null}><div className="dk-color-picker__custom">
           <input ref={native} type="color" className="dk-color-picker__native" aria-label={sds.labels.customColor} value={value || '#000000'} disabled={disabled} data-empty={value ? undefined : ''}
+            // Read-only: a native color input has no readonly, so the click (or the key) that opens its picker is cancelled.
+            onClick={readOnly ? (e) => e.preventDefault() : undefined} onKeyDown={readOnly ? (e) => { if (e.key === 'Enter' || e.key === ' ') e.preventDefault(); } : undefined}
             onChange={(e) => choose(e.target.value, false, false)} />
-          <Input size="sm" className="dk-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
+          <Input size="sm" className="dk-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
             leftIcon={<span className="dk-color-picker__hash">#</span>} aria-invalid={bad || undefined}
             onFocus={() => { typing.current = true; }}
             onChange={(e) => { const t = e.target.value.replace(/^#/, ''); setText(t); setTried(false); const v = normalizeHex(t); if (v && t.length === 6) choose(v, false, false); }}

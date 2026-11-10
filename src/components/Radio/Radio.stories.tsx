@@ -21,6 +21,7 @@ export const Playground: Story = {};
 export const Horizontal: Story = { args: { orientation: 'horizontal' } };
 export const Invalid: Story = { args: { invalid: true, defaultValue: undefined } };
 export const Disabled: Story = { args: { disabled: true } };
+export const ReadOnly: Story = { args: { readOnly: true } };
 
 export const Controlled: Story = {
   render: function ControlledDemo() {

@@ -155,6 +155,53 @@ describe('Toast', () => {
     await expect.poll(() => q('[data-dk-announcer-assertive]').textContent).toBe('Couldn\'t save. The server is offline.');
   });
 
+  test('toast.promise whose message function throws: a throwing success shows the error message, a throwing error closes the toast; nothing is left loading or unhandled (GR234)', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const unhandled: unknown[] = [];
+    const onUnhandled = (e: PromiseRejectionEvent) => { unhandled.push(e.reason); e.preventDefault(); };
+    window.addEventListener('unhandledrejection', onUnhandled);
+    try {
+      await render(<App />);
+      const boom = () => { throw new Error('bad message'); };
+      React.act(() => {
+        void toast.promise(Promise.resolve(1), { loading: 'Saving one…', success: boom, error: (e) => 'Failed: ' + (e as Error).message });
+        void toast.promise(Promise.reject(new Error('offline')), { loading: 'Saving two…', success: 'Saved', error: boom }).catch(() => {});
+      });
+      await expect.poll(() => titles()).toEqual(['Failed: bad message']);
+      await new Promise((r) => setTimeout(r, 50));
+      expect([unhandled, toasts().map((x) => x.dataset.tone), warn.mock.calls.length > 0]).toEqual([[], ['danger'], true]);
+    } finally { window.removeEventListener('unhandledrejection', onUnhandled); warn.mockRestore(); }
+  });
+
+  test('toast.undo follows autoDismiss: a Toaster with autoDismiss={false} keeps it past its duration, and commit waits for the close (GR223)', async () => {
+    let commits = 0;
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] });
+    try {
+      await render(<Toaster autoDismiss={false} />);
+      React.act(() => { toast.undo({ title: 'Moved to trash', commit: () => { commits++; } }); });
+      await React.act(async () => { vi.advanceTimersByTime(60_000); });
+      expect([titles(), commits]).toEqual([['Moved to trash'], 0]);
+    } finally { vi.useRealTimers(); }
+    React.act(() => { toast.dismiss(); });
+    await expect.poll(() => commits).toBe(1);
+  });
+
+  test('focus not obscured: tabbing to a button under a persistent bottom-end toast scrolls it clear of the toast (WCAG 2.4.11, GR222)', async () => {
+    await render(<><div style={{ height: '150vh' }} /><button id="under" style={{ display: 'block', marginInlineStart: 'auto' }}>Save</button><div style={{ height: '150vh' }} /><Toaster position="bottom-end" autoDismiss={false} /></>);
+    React.act(() => { toast({ title: 'Upload failed', description: 'The file was too large to upload in one go.' }); });
+    await expect.poll(() => toasts().length).toBe(1);
+    const t = toasts()[0];
+    await expect.poll(() => getComputedStyle(document.documentElement).getPropertyValue('--dk-toaster-space-bottom-end')).not.toBe('');
+    // Put the button just above the bottom of the screen, where the toast is, then Tab to it from the one before.
+    window.scrollTo(0, document.getElementById('under')!.offsetTop - window.innerHeight + 40);
+    const before = document.createElement('button'); before.textContent = 'Before'; document.getElementById('under')!.before(before); before.focus({ preventScroll: true });
+    await userEvent.keyboard('{Tab}');
+    const b = document.getElementById('under')!.getBoundingClientRect(), r = t.getBoundingClientRect();
+    expect([document.activeElement?.id, b.bottom <= r.top]).toEqual(['under', true]);
+    before.remove();
+    React.act(() => { toast.dismiss(); });
+  });
+
   test('the action runs and closes the toast', async () => {
     await render(<App />);
     let undos = 0;
@@ -535,6 +582,57 @@ describe('Toast: motion (DZ1)', () => {
       expect([more.isConnected, more.textContent, runs(more)]).toEqual([true, '+1 more', [['opacity', 150]]]);
       await landed();
       await expect.poll(() => more.isConnected).toBe(false);
+    });
+  });
+});
+
+describe('Toast: interrupted exits and a hidden page', () => {
+  const byTitle = (t: string) => toasts().find((x) => document.getElementById(x.getAttribute('aria-labelledby')!)!.textContent === t)!;
+  test('its time stops while the page is hidden (another tab in front) and runs on once it\'s back', async () => {
+    await render(<App />);
+    const hidden = (on: boolean) => {
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => on });
+      document.dispatchEvent(new Event('visibilitychange'));
+    };
+    try {
+      React.act(() => { toast({ title: 'Away', duration: 600 }); });
+      React.act(() => { hidden(true); });
+      await settle(900);   // past its time: only the hidden page keeps it
+      expect(titles()).toEqual(['Away']);
+      React.act(() => { hidden(false); });
+      await expect.poll(() => titles().length, { timeout: 2500 }).toBe(0);
+    } finally {
+      delete (document as { hidden?: boolean }).hidden;
+    }
+  });
+
+  test('a closing toast, or the waiting line, whose fade is cancelled midway is still taken off the page', async () => {
+    await withMotion(async () => {
+      await render(<Toaster limit={1} />);
+      React.act(() => { toast({ title: 'One', duration: 0 }); });
+      React.act(() => { toast({ title: 'Two', duration: 0 }); });
+      await landed();
+      const more = q('.dk-toaster__more'), two = byTitle('Two');
+      React.act(() => { toast.dismiss(two.dataset.toast); });
+      await expect.poll(() => more.hasAttribute('data-leaving')).toBe(true);
+      // Cancelled, a fade's finished promise rejects rather than resolving: they still go.
+      [...two.getAnimations(), ...more.getAnimations()].forEach((x) => x.cancel());
+      await expect.poll(() => [two.isConnected, more.isConnected]).toEqual([false, false]);
+      expect(titles()).toEqual(['One']);
+    });
+  });
+
+  test('two toasts closed one after the other both leave, the second while the first is still fading', async () => {
+    await withMotion(async () => {
+      await render(<App />);
+      React.act(() => { toast({ title: 'A', duration: 0 }); toast({ title: 'B', duration: 0 }); toast({ title: 'C', duration: 0 }); });
+      await landed();
+      const a = byTitle('A'), b = byTitle('B');
+      React.act(() => { toast.dismiss(a.dataset.toast); });
+      React.act(() => { toast.dismiss(b.dataset.toast); });
+      expect([a.hasAttribute('data-leaving'), b.hasAttribute('data-leaving')]).toEqual([true, true]);
+      await expect.poll(() => [a.isConnected, b.isConnected]).toEqual([false, false]);
+      expect(titles()).toEqual(['C']);
     });
   });
 });

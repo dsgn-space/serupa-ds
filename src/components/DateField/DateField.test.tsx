@@ -107,9 +107,9 @@ describe('DateField', () => {
 
   test('autoComplete="bday" asks for bday-day, bday-month and bday-year; otherwise off', async () => {
     const { rerender } = await render(<SerupaProvider locale="en-GB"><DateField id="d" aria-label="Date" autoComplete="bday" /></SerupaProvider>);
-    expect(boxes(el('d')).map((i) => i.autocomplete)).toEqual(['bday-day', 'bday-month', 'bday-year']);
+    expect(boxes(el('d')).map((i) => i.getAttribute('autocomplete'))).toEqual(['bday-day', 'bday-month', 'bday-year']);
     await rerender(<SerupaProvider locale="en-GB"><DateField id="d" aria-label="Date" /></SerupaProvider>);
-    expect(boxes(el('d')).map((i) => i.autocomplete)).toEqual(['off', 'off', 'off']);
+    expect(boxes(el('d')).map((i) => i.getAttribute('autocomplete'))).toEqual(['off', 'off', 'off']);
   });
 
   test('in a Field: the label names the group, the hint and error describe it, and only the wrong box is marked', async () => {
@@ -164,6 +164,20 @@ describe('DateField', () => {
     await render(<form id="f"><DateField aria-label="Date" name="dob" defaultValue="1990-05-01" disabled /></form>);
     expect(boxes(document.getElementById('f')!).every((i) => i.disabled)).toBe(true);
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('dob')).toBe(null);
+  });
+
+  test('readOnly: the three boxes stay focusable and read-only; typing and a pasted date change nothing, and the date is still sent', async () => {
+    const onValueChange = vi.fn();
+    await render(<SerupaProvider locale="en-GB"><input id="src" aria-label="Source" defaultValue="17/08/1945" />
+      <form id="f"><DateField aria-label="Date" name="dob" defaultValue="1990-05-01" readOnly onValueChange={onValueChange} /></form></SerupaProvider>);
+    (el('src') as HTMLInputElement).select();
+    await userEvent.copy();
+    await userEvent.click(box('Month'));
+    await userEvent.paste();
+    await userEvent.keyboard('{Backspace}7');
+    const all = boxes(document.getElementById('f')!);
+    expect([all.map((i) => [i.readOnly, i.disabled]), all.map((i) => i.value), document.activeElement === box('Month'), onValueChange.mock.calls.length,
+      new FormData(document.getElementById('f') as HTMLFormElement).get('dob')]).toEqual([[[true, false], [true, false], [true, false]], ['1', '5', '1990'], true, 0, '1990-05-01']);
   });
 
   test('in Indonesian: Tanggal, Bulan, Tahun', async () => {

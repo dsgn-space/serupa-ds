@@ -36,6 +36,7 @@ const KNOWN = {
   'property content-visibility': { why: 'Accordion panels (Safari 18): closed content is also hidden="until-found", so it stays hidden' },
   'content-visibility: hidden': { why: 'as content-visibility' },
   'content-visibility: visible': { why: 'as content-visibility' },
+  'content-visibility: auto': { why: 'TreeView rows out of view wait to be laid out (Safari 26): a big tree lays out every row at once there, as before' },
   'property animation-range': { why: 'scroll-driven animations are progressive and behind @supports (animation-timeline: scroll()): a sticky Navbar keeps its line and lifts with no shadow' },
   'property view-transition-name': { why: 'view transitions are progressive: the change happens without the animation' },
   'view-transition-name: none': { why: 'as view-transition-name' },

@@ -21,6 +21,7 @@ interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "d
     minContrast?: number | undefined;
     size?: "md" | "sm" | undefined;
     disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
     name?: string | undefined;
     form?: string | undefined;
     required?: boolean | undefined;

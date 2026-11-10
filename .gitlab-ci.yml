@@ -94,7 +94,7 @@ default:
         apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null
       fi
     - node tools/setup.mjs $SETUP_FLAGS
-    - NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | tail -1 || true)"; if [ -n "$NODE_DIR" ]; then export PATH="$NODE_DIR:$PATH"; fi; node --version
+    - NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | sort -V | tail -1 || true)"; if [ -n "$NODE_DIR" ]; then export PATH="$NODE_DIR:$PATH"; fi; node --version
     - |
       if [ "$CI_PIPELINE_SOURCE" = merge_request_event ]; then
         git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"

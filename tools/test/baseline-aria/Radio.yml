@@ -55,3 +55,12 @@
   - radio "Team"
   - text: Team
 
+# ReadOnly
+- radiogroup "Plan":
+  - radio "Free"
+  - text: Free
+  - radio "Pro" [checked]
+  - text: Pro Everything in Free, plus unlimited projects
+  - radio "Team"
+  - text: Team
+

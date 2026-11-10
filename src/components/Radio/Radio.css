@@ -23,7 +23,7 @@
 /* Pressed: the circle shrinks a little while the row is held (pointer, or Space on it) and springs back, as
    Checkbox's box does. Only scale moves; not when disabled, and not under reduced motion. */
 .dk-radio__control { transition: scale var(--motion-release) var(--ease-spring); }
-.dk-radio:active:not(:has(.dk-radio__input:disabled)) .dk-radio__control { scale: var(--radio-press-scale, var(--scale-90)); transition: scale var(--motion-press) var(--ease-settle); }
+.dk-radio:active:not(.dk-radio--readonly, :has(.dk-radio__input:disabled)) .dk-radio__control { scale: var(--radio-press-scale, var(--scale-90)); transition: scale var(--motion-press) var(--ease-settle); }
 @media (prefers-reduced-motion: reduce) { .dk-radio__control { transition: none; } .dk-radio:active .dk-radio__control { scale: none; } }
 .dk-radio__input {
   --dk-radio-bd: var(--radio-border, var(--field-border));
@@ -37,7 +37,7 @@
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
-@media (hover: hover) { .dk-radio:hover .dk-radio__input:not(:disabled) { --dk-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --dk-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
+@media (hover: hover) { .dk-radio:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --dk-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
 .dk-radio__input:checked { background: var(--dk-radio-fill); border-color: var(--dk-radio-fill); }
 .dk-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-radio__input:checked + .dk-radio__dot { visibility: visible; }
@@ -47,12 +47,14 @@
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
 .dk-radio--invalid .dk-radio__input { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); }
-@media (hover: hover) { .dk-radio--invalid:hover .dk-radio__input:not(:disabled) { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); } }
+@media (hover: hover) { .dk-radio--invalid:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); } }
 /* A required group with nothing picked once people try to send the form: as Input (:user-invalid). */
 .dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); }
 @media (hover: hover) { .dk-radio:hover .dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); } }
 .dk-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-radio__description { color: var(--radio-description-color, var(--text-muted)); }
+/* Read-only: a default cursor and no hover or press change, since a click does nothing. */
+.dk-radio--readonly { cursor: default; }
 /* Disabled, by its own prop, the group's or a disabled fieldset (Field group). */
 .dk-radio:has(.dk-radio__input:disabled) { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-radio__input:disabled:not(:checked) { background: var(--radio-bg-disabled, var(--surface-muted)); }

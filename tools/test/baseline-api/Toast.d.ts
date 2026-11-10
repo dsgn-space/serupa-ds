@@ -30,7 +30,7 @@ interface ToastPromiseMessages<T> {
     error: Message<unknown>;
 }
 declare function promise<T>(work: (() => Promise<T>) | Promise<T>, messages: ToastPromiseMessages<T>): Promise<T>;
-interface ToastUndoOptions extends Omit<ToastOptions, "action" | "autoDismiss"> {
+interface ToastUndoOptions extends Omit<ToastOptions, "action"> {
     commit: () => void;
     onUndo?: (() => void) | undefined;
     undoLabel?: string | undefined;

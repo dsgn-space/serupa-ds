@@ -43,3 +43,4 @@ export const Invalid: Story = {
   render: (args) => <Field label="Label color" error="Pick a color for the label." required><ColorPicker {...args} /></Field>,
 };
 export const Disabled: Story = { args: { disabled: true } };
+export const ReadOnly: Story = { args: { readOnly: true } };

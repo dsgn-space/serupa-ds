@@ -50,7 +50,7 @@ interface Row { item: TreeViewItem; level: number; parent: string | null }
 
 /* What the rows read: open and picked ids as Sets, the Tab stop and the mode. Each row subscribes to its own part
    (open, picked, Tab stop), so a focus move or a pick redraws the rows it changes, not every row in view. */
-interface Store { open: Set<string>; value: Set<string>; tab: string | null; mode: string; listeners: Set<() => void> }
+interface Store { open: Set<string>; value: Set<string>; tab: string | null; mode: string; listeners: Map<string, () => void> }
 interface Api { focus: (id: string) => void; press: (item: TreeViewItem, e: React.MouseEvent) => void; toggle: (item: TreeViewItem) => void }
 const TreeContext = /* @__PURE__ */ React.createContext<{ store: Store; api: React.RefObject<Api> } | null>(null);
 
@@ -94,12 +94,13 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     walk(props.items, 1, null);
     return out;
   }, [props.items, open]);
-  const index = (id: string | null) => id == null ? -1 : rows.findIndex((r) => r.item.id === id);
+  // Where each item in view sits, so a key press or click looks a row up at once rather than through every row.
+  const at = React.useMemo(() => new Map(rows.map((r, n) => [r.item.id, n])), [rows]);
+  const index = (id: string | null) => { const n = id == null ? undefined : at.get(id); return n === undefined ? -1 : n; };
   const openSet = React.useMemo(() => new Set(open), [open]);
   const valueSet = React.useMemo(() => new Set(value), [value]);
   // The Tab stop: the item focused last while it's in view, else the first picked one in view, else the first.
-  const firstPicked = rows.find((r) => valueSet.has(r.item.id));
-  const tabStop = index(focusId) >= 0 ? focusId : firstPicked ? firstPicked.item.id : rows.length ? rows[0].item.id : null;
+  const tabStop = index(focusId) >= 0 ? focusId : ((value.length && rows.find((r) => valueSet.has(r.item.id))) || rows[0])?.item.id ?? null;
 
   useIsoLayoutEffect(function () {
     if (!moveFocus.current || !root.current) return;
@@ -171,7 +172,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     const i = index(t.dataset.id || null);
     if (i < 0) return;
     const r = rows[i], item = r.item;
-    const rtl = getComputedStyle(root.current).direction === 'rtl';
+    const rtl = (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && getComputedStyle(root.current).direction === 'rtl';
     const isOpen = openSet.has(item.id);
     let to = -1;
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -204,13 +205,25 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     if (to >= 0 && to !== i) go(rows[to].item.id);
   };
 
-  // The rows read this through context, so none of them redraws because the tree did; see TreeRow.
+  // The rows read this through context, so none of them redraws because the tree did; see TreeRow. A change
+  // tells only the rows it touches (opened or closed, picked or not, the Tab stop before and after), so a key
+  // press in a tree of thousands wakes two rows rather than all of them.
   const store = React.useRef<Store | null>(null);
-  if (!store.current) store.current = { open: openSet, value: valueSet, tab: tabStop, mode, listeners: new Set() };
+  if (!store.current) store.current = { open: openSet, value: valueSet, tab: tabStop, mode, listeners: new Map() };
   const st = store.current;
   st.open = openSet; st.value = valueSet; st.tab = tabStop; st.mode = mode;
-  useIsoLayoutEffect(function () { st.listeners.forEach((l) => l()); }, [openSet, valueSet, tabStop, mode]);
-  const api = React.useRef<Api>({ focus: () => {}, press: () => {}, toggle: () => {} });
+  const told = React.useRef({ open: openSet, value: valueSet, tab: tabStop, mode });   // what the rows last heard
+  useIsoLayoutEffect(function () {
+    const before = told.current;
+    told.current = { open: openSet, value: valueSet, tab: tabStop, mode };
+    const tell = (id: string | null) => { const l = id == null ? undefined : st.listeners.get(id); if (l) l(); };
+    if (before.mode !== mode) { st.listeners.forEach((l) => l()); return; }
+    const diff = (a: Set<string>, b: Set<string>) => { if (a !== b) { a.forEach((id) => { if (!b.has(id)) tell(id); }); b.forEach((id) => { if (!a.has(id)) tell(id); }); } };
+    diff(before.open, openSet);
+    diff(before.value, valueSet);
+    if (before.tab !== tabStop) { tell(before.tab); tell(tabStop); }
+  }, [openSet, valueSet, tabStop, mode]);
+  const api = React.useRef<Api>(null!);   // set just below, every render, before any row can call it
   api.current = {
     focus: (id) => { if (focusId !== id) setFocusId(id); },
     press: (item, e) => { setFocusId(item.id); if (mode === 'none') toggleOpen(item); else choose(item, multi && e.shiftKey); },
@@ -239,7 +252,10 @@ const Rows = /* @__PURE__ */ React.memo(function Rows(props: { list: TreeViewIte
 const TreeRow = /* @__PURE__ */ React.memo(function TreeRow(props: { item: TreeViewItem; level: number; pos: number; size: number }) {
   const { store, api } = React.useContext(TreeContext)!;
   const { item, level } = props, id = item.id;
-  const subscribe = React.useCallback((l: () => void) => { store.listeners.add(l); return () => { store.listeners.delete(l); }; }, [store]);
+  const subscribe = React.useCallback((l: () => void) => {
+    store.listeners.set(id, l);
+    return () => { if (store.listeners.get(id) === l) store.listeners.delete(id); };
+  }, [store, id]);
   // One string, so React compares a primitive: open, picked, Tab stop, mode.
   const snap = () => (store.open.has(id) ? 'o' : '-') + (store.value.has(id) ? 'p' : '-') + (store.tab === id ? 't' : '-') + store.mode;
   const key = React.useSyncExternalStore(subscribe, snap, snap);

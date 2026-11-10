@@ -15,7 +15,7 @@
       "bg-disabled": {
         "$type": "color",
         "$value": "{color.field-readonly}",
-        "$description": "Background when disabled",
+        "$description": "Background when read-only or disabled",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--select-bg-disabled"

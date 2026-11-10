@@ -70,6 +70,7 @@ Drawn from the `Playground` story.
 | `form` | `string` | | The id of a form elsewhere on the page. |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | The boxes' size, as Input's. |
 | `disabled` | `boolean` | `false` | Turns the boxes off; nothing is sent. |
+| `readOnly` | `boolean` | `false` | The boxes stay focusable and read out as read-only, and the date is still sent, unlike `disabled`; typing and a pasted date change nothing. |
 | `invalid` | `boolean` | `false` | Marks the boxes the problem is in. Field sets it from its error. |
 
 `className`, `ref` and other props go to the group's `<div>`; `ref.current.focus()` and `autoFocus` focus the first box.
