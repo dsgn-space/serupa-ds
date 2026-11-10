@@ -210,7 +210,7 @@ local checks:
   stage: build
   timeout: 5m
   # Only the script and the description: a small image, one commit of history, no cache, no install.
-  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
+  image: node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   variables:
     # The changeset check (below) reads the history back to the merge request's base.
     GIT_DEPTH: "0"
@@ -629,7 +629,7 @@ design qa:
   stage: build
   needs: []
   timeout: 15m
-  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
+  image: node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
       changes: [tools/test/baseline-visual/**/*]
