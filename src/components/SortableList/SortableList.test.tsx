@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag, withMotion } from '../../../tools/test/vitest/helpers';
+import { contrast, css, drag, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { SortableList } from './SortableList';
@@ -298,7 +298,7 @@ describe('SortableList', () => {
       // As it starts, each is still at its old place: Gemini above its new slot, Mercury below its new one.
       expect([ran.Gemini, ran.Mercury, Math.abs(geminiAtStart! - before.gemini) < Math.abs(geminiAtStart! - before.mercury), ran.Apollo])
         .toEqual([['translate'], ['translate'], true, []]);
-      await Promise.all(document.getAnimations().map((a) => a.finished));
+      await settled();
       expect([names(), Math.round(top('Gemini')), Math.round(top('Mercury')), css(row('Gemini')).translate])
         .toEqual([['Apollo', 'Mercury', 'Gemini', 'Artemis'], Math.round(before.mercury), Math.round(before.gemini), 'none']);
     });

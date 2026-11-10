@@ -883,7 +883,7 @@ describe('Combobox loadOptions (DG1)', () => {
       await expect.poll(() => started.length).toBeGreaterThanOrEqual(2);
       const moves = [...started].sort();
       expect([moves, keyframes.length > 0 || pop.getAnimations().some((a) => a instanceof CSSAnimation), pop.dataset.side, css(pop).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
-      await Promise.all(pop.getAnimations().map((a) => a.finished));
+      await settled(pop);
       expect([css(pop).opacity, css(pop).scale]).toEqual(['1', 'none']);
     });
   });

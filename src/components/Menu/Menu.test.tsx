@@ -180,7 +180,7 @@ describe('Menu', () => {
   test('click opens it under the button (start-aligned, 4px away, at least 192px, top layer) on the first item; items have tabindex -1; groups are named', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    await Promise.all(document.getAnimations().map((a) => a.finished));
+    await settled();
     const b = el('mb'), m = menuOf('mb'), g = m.querySelector('[role="group"]')!;
     expect([b.getAttribute('aria-expanded'), m.getAttribute('role'), m.matches(':popover-open')]).toEqual(['true', 'menu', true]);
     expect([near(rect(m).top - rect(b).bottom, 4), near(rect(m).left, rect(b).left), m.offsetWidth >= 192]).toEqual([true, true, true]);
@@ -440,7 +440,7 @@ describe('Menu', () => {
   test('look: 4px padding, 8px corners, shadow-lg; 32px items, text-sm, 6px corners, 16px icons', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    await Promise.all(document.getAnimations().map((a) => a.finished));
+    await settled();
     const m = menuOf('mb'), it = m.querySelector<HTMLElement>('[role="menuitem"]')!, s = getComputedStyle(m), i = getComputedStyle(it);
     expect([s.paddingTop, s.borderTopLeftRadius, it.offsetHeight, i.fontSize, i.borderTopLeftRadius]).toEqual(['4px', '8px', 32, '14px', '6px']);
     expect(s.boxShadow).toMatch(/10px 15px -3px/);
@@ -451,7 +451,7 @@ describe('Menu', () => {
     const long = 'Move this conversation to the archive and stop notifications about it from now on';
     await render(<Menu trigger={<Button id="mw" size="sm">More</Button>}><MenuItem>Short</MenuItem><MenuItem id="ml">{long}</MenuItem></Menu>);
     await userEvent.click(el('mw'));
-    await Promise.all(document.getAnimations().map((a) => a.finished));
+    await settled();
     const m = menuOf('mw'), short = m.querySelector<HTMLElement>('[role="menuitem"]')!, item = el('ml');
     expect([near(rect(m).width, 320), short.offsetHeight, item.offsetHeight > 32, item.scrollWidth <= item.clientWidth]).toEqual([true, 32, true, true]);
   });

@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { renderToString } from 'react-dom/server';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, keepMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, keepMotion, settled, THEMES } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { resetWarnings } from '../../internal/warn';
 import { SerupaProvider } from '../../internal/provider';
@@ -271,21 +271,21 @@ describe('Carousel', () => {
     try {
       await render(<App />);
       const c = el('loop'), t = part('loop', TRACK), x = () => new DOMMatrix(getComputedStyle(t).transform).m41;
-      for (let i = 0; i < 2; i++) { await userEvent.click(arrow('loop', 'next')); await Promise.all(t.getAnimations().map((a) => a.finished)); }
+      for (let i = 0; i < 2; i++) { await userEvent.click(arrow('loop', 'next')); await settled(t); }
       expect(state('loop').index).toBe(2);
       const from = x();
       await userEvent.click(arrow('loop', 'next'));
       await new Promise((f) => requestAnimationFrame(() => requestAnimationFrame(f)));
       // Moving on (further left), with the first slide standing in after the last.
       expect([x() < from, slidesOf(c)[0].dataset.wrap, state('loop').index]).toEqual([true, 'after', 0]);
-      await Promise.all(t.getAnimations().map((a) => a.finished));
+      await settled(t);
       await expect.poll(() => slidesOf(c)[0].dataset.wrap).toBe(undefined);
       await expect.poll(() => t.hasAttribute('data-snap')).toBe(false);
       expect([state('loop').shown, Math.round(x())]).toEqual([0, 0]);
       await userEvent.click(arrow('loop', 'prev'));
       await new Promise((f) => requestAnimationFrame(() => requestAnimationFrame(f)));
       expect([x() > 0, slidesOf(c)[2].dataset.wrap, state('loop').index]).toEqual([true, 'before', 2]);
-      await Promise.all(t.getAnimations().map((a) => a.finished));
+      await settled(t);
       await expect.poll(() => slidesOf(c)[2].dataset.wrap).toBe(undefined);
       await expect.poll(() => state('loop').shown).toBe(2);
     } finally { motion = emulate(REDUCE, NO_PREF); }

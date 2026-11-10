@@ -304,7 +304,7 @@ describe('Tooltip warm-up (EC1)', () => {
       const t = tipOf('sl');
       const moves = t.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort();
       expect([moves, t.getAnimations().some((a) => a instanceof CSSAnimation), t.dataset.side]).toEqual([['opacity', 'translate'], false, 'bottom']);
-      await Promise.all(t.getAnimations().map((a) => a.finished));
+      await settled(t);
       expect([css(t).opacity, css(t).translate]).toEqual(['1', 'none']);
     });
   });
