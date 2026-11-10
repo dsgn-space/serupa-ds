@@ -97,11 +97,12 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
     if (!controlled) setOwn(d);
     if (onValueChange) onValueChange(d, d ? isoDate(d) : null);
   };
+  const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const read = () => {
     if (text.trim() === '') return commit(null);
     const d = parseDate(text, locale);
     if (d && allowed(d)) return commit(d);
-    reject(text, d ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted);
+    reject(text, d ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted, setRejected);
     commit(value);
   };
   const close = (focusField: boolean) => { setOpen(false); if (focusField && field.current) field.current.focus(); };
@@ -115,11 +116,12 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const off = !!disabled || !!readOnly;
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
+    <>
     <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-date-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="date-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
       <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" inputMode="numeric" autoComplete={rest.autoComplete || 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
-        placeholder={placeholder != null ? placeholder : datePattern(locale)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format')}
-        onChange={(e) => setText(e.target.value)}
+        placeholder={placeholder != null ? placeholder : datePattern(locale)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}
+        onChange={(e) => { setText(e.target.value); setRejected(''); }}
         onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }}
         onKeyDown={(e) => {
           if (onKeyDown) onKeyDown(e);
@@ -140,5 +142,8 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
           onValueChange={(d) => { commit(d); close(true); }} /> : null}
       </div>
     </span>
+      {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
+      {rejected && <span id={id + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+    </>
   );
 });

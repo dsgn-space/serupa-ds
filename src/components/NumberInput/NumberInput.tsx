@@ -188,7 +188,9 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     const to = onGrid ? k + by : by > 0 ? Math.floor(k) + by : Math.ceil(k) + by;
     put(fit(origin + to * step));
   };
+  const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRejected('');
     setText(e.target.value); typing.current = true;
     const n = parse(e.target.value);   // a number out of range waits for blur, which clamps it
     if (n === null || (n !== undefined && (min === undefined || n >= min) && (max === undefined || n <= max))) commit(n);
@@ -204,7 +206,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     const v = n == null ? null : fit(n === undefined ? (value ?? 0) : n);
     const out = n === undefined ? value : v;
     put(out);
-    if (n === undefined) reject(text, 'unreadable', props.onInvalidInput, sds.labels.inputNotAccepted);
+    if (n === undefined) reject(text, 'unreadable', props.onInvalidInput, sds.labels.inputNotAccepted, setRejected);
     else if (n != null && outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range');
     if (rest.onBlur) rest.onBlur(e);
   };
@@ -231,7 +233,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const current = parse(text);
   const now = typeof current === 'number' ? current : value;
   const left = asIcon(props.leftIcon);
-  const affix = useAffixes(props.prefix, props.suffix, domId('dk-ni', React.useId()), el);
+  const niId = domId('dk-ni', React.useId());
+  const affix = useAffixes(props.prefix, props.suffix, niId, el);
   const press = (by: number) => { nudge(by); if (el.current && document.activeElement !== el.current) el.current.focus({ preventScroll: true }); };
   // Holding − or + repeats: one step on the press, then after 400ms one every 50ms, until the pointer goes up or
   // leaves the button, Escape, or the end of the range. The press already stepped, so its click doesn't; a click with
@@ -264,6 +267,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   });
   const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
+    <>
     <span className={cn('dk-input dk-number-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.steppers !== false && 'dk-number-input--steppers', props.className)}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={pressFocuses(el)}>
       {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
@@ -272,7 +276,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
         lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}
         role="spinbutton" aria-valuenow={now ?? undefined} aria-valuetext={formatOptions && now != null ? show(now) : undefined} aria-valuemin={min} aria-valuemax={max}
         autoComplete={rest.autoComplete || 'off'} className="dk-input__field" value={text}
-        aria-describedby={cn(rest['aria-describedby'], affix.ids) || undefined}
+        aria-describedby={cn(rest['aria-describedby'], affix.ids, rejected && niId + '-rejected') || undefined}
         onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} onFocus={rest.onFocus} />
       {affix.suffix}
       {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? '' : String(out(value))} /> : null}
@@ -289,5 +293,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
         </span>
       ) : null}
     </span>
+      {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
+      {rejected && <span id={niId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+    </>
   );
 });

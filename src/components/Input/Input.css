@@ -5,6 +5,9 @@
    .dk-input__field (the native <input>), .dk-input__count, .dk-input__icon--right. Every value goes through --input-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
+/* Under DatePicker, DateRangePicker, TimePicker or NumberInput when typed text was put back (GR232): why, in the
+   hint's color and size, until the text changes. A block of its own after the field's box. */
+.dk-input-rejected { display: block; margin-block-start: var(--spacing-1); color: var(--input-rejected-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
 .dk-input {
   --dk-input-h: var(--input-height-md, var(--control-height-md));
   --dk-input-px: var(--input-padding-x-md, var(--spacing-3));
