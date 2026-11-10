@@ -16,7 +16,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useVirtual } from '../../internal/virtual';
 import { useServerStyles } from '../../internal/serverStyles';
-import { Loader } from '../Loader/Loader';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
@@ -655,18 +655,20 @@ export interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSec
 }
 
 /* TableLoadingRows: a <tbody> of placeholder rows, each cell a one-line skeleton in the table's own text size and
-   padding, so the rows are as tall as the ones that replace them and nothing moves when they arrive. Only the first
-   placeholder has a name, so a screen reader hears "Loading" once rather than once a cell. */
+   padding, so the rows are as tall as the ones that replace them and nothing moves when they arrive. They're
+   decorative: the label is said once, after the loader's delay, and the Table's busy marks it as loading. */
 /** Placeholder rows (a <tbody> of skeletons) the height of real rows, while the table's rows load. Set the Table's busy too. */
 export const TableLoadingRows = /* @__PURE__ */ component<HTMLTableSectionElement, TableLoadingRowsProps>('TableLoadingRows', function TableLoadingRows(props, ref) {
   const rest = omit(props, { columns: 1, rows: 1, label: 1, className: 1, children: 1 });
   const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));
   const columns = Math.min(100, Math.max(1, Math.floor(Number(props.columns)) || 1));
+  const sds = useSettings(words);
+  const waiting = !useSkeletonShown(props.label == null ? sds.labels.loading : props.label);
   const out: React.ReactNode[] = [];
   for (let r = 0; r < rows; r++) {
     const cells: React.ReactNode[] = [];
     for (let c = 0; c < columns; c++)
-      cells.push(<td key={c} className="dk-table__cell"><Loader variant="skeleton" label={r === 0 && c === 0 ? props.label : ''} /></td>);
+      cells.push(<td key={c} className="dk-table__cell"><SkeletonArt waiting={waiting} /></td>);
     out.push(<tr key={r} className="dk-table__loading-row">{cells}</tr>);
   }
   return <tbody {...rest} ref={ref} className={cn('dk-table__body dk-table__loading', props.className)}>{out}</tbody>;
