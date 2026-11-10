@@ -62,6 +62,8 @@ export interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement
   form?: string | undefined;
   /** Turns the three boxes off. */
   disabled?: boolean | undefined;
+  /** Shows the date without letting it change: the boxes stay focusable and read out as read-only, and a form still sends the date, unlike disabled. A pasted date changes nothing either. */
+  readOnly?: boolean | undefined;
   /** Marks the date invalid: aria-invalid and the danger border on the boxes the problem is in, or on all three.
    *  Field sets it from its error. */
   invalid?: boolean | undefined;
@@ -69,7 +71,7 @@ export interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement
   size?: 'sm' | 'md' | 'lg' | undefined;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, order: 1, autoComplete: 1, name: 1, form: 1, disabled: 1, invalid: 1, size: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-errormessage': 1, autoFocus: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, order: 1, autoComplete: 1, name: 1, form: 1, disabled: 1, readOnly: 1, invalid: 1, size: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-errormessage': 1, autoFocus: 1, className: 1 } as const;
 type Parts = Record<DatePart, string>;
 const NONE: Parts = { day: '', month: '', year: '' };
 const ORDERS = { dmy: ['day', 'month', 'year'], mdy: ['month', 'day', 'year'], ymd: ['year', 'month', 'day'] } as const;
@@ -156,6 +158,7 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
     if (next && parts[k].trim()) box(next)?.focus();
   };
   const onPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (props.readOnly) return;   // the box's own readonly keeps the paste out
     const text = e.clipboardData.getData('text');
     if (!/\d\D+\d|^\s*\d{8}\s*$|\p{L}{3}/u.test(text)) return;   // a number alone goes in the box as usual
     const d = parseDate(text, locale);
@@ -178,7 +181,7 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
             <label className="dk-date-field__label" htmlFor={`${base}-${k}`}>{label[k]}</label>
             <Input id={`${base}-${k}`} className="dk-date-field__input" size={props.size} inputMode="numeric" spellCheck={false}
               autoComplete={props.autoComplete === 'bday' ? `bday-${k}` : 'off'} maxLength={k === 'year' ? 4 : 2}
-              value={parts[k]} disabled={disabled} invalid={marked.includes(k) || undefined}
+              value={parts[k]} disabled={disabled} readOnly={props.readOnly} invalid={marked.includes(k) || undefined}
               aria-required={props['aria-required']}
               onChange={(e) => change({ ...parts, [k]: e.target.value }, 'type')} onKeyDown={onKeyDown(k)} onPaste={onPaste} />
           </div>
