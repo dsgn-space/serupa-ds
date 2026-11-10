@@ -60,7 +60,7 @@ export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement>
   rel?: string | undefined;
 }
 
-export interface TableSelectCellProps extends Omit<CheckboxProps, 'children' | 'description' | 'size'> {
+export interface TableSelectCellProps extends Omit<CheckboxProps, 'children' | 'description' | 'size' | 'variant'> {
   /** The checkbox's name for screen readers, such as "Select Alpha", or "Select all rows" in the header. */
   label: string;
   /** In the header row: renders a <th>, for a select-all checkbox (with indeterminate while some rows are). Default: false. */

@@ -111,6 +111,46 @@
             "cssVar": "--checkbox-invalid"
           }
         }
+      },
+      "card-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A card checkbox's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-bg"
+          }
+        }
+      },
+      "card-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A card's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-border"
+          }
+        }
+      },
+      "card-border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "A card's border under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-border-hover"
+          }
+        }
+      },
+      "card-border-checked": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A checked card's border, 2px.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-border-checked"
+          }
+        }
       }
     },
     "sizing": {
@@ -173,6 +213,16 @@
             "cssVar": "--checkbox-icon-size-lg"
           }
         }
+      },
+      "card-min-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-48}",
+        "$description": "The narrowest a card gets in a horizontal group before the row wraps (192px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-min-width"
+          }
+        }
       }
     },
     "spacing": {
@@ -205,6 +255,48 @@
             "cssVar": "--checkbox-group-gap-horizontal"
           }
         }
+      },
+      "card-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space inside a card (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-padding"
+          }
+        }
+      },
+      "card-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between a card's box and its text (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-gap"
+          }
+        }
+      },
+      "card-group-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between cards in a group (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-group-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "card-label-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "A card's label weight (500).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-label-weight"
+          }
+        }
       }
     },
     "border": {
@@ -225,6 +317,18 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--checkbox-radius"
+          }
+        }
+      }
+    },
+    "radius": {
+      "card-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "A card's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-card-radius"
           }
         }
       }

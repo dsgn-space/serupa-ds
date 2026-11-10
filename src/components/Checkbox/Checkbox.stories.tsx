@@ -81,3 +81,22 @@ export const GroupHorizontal: Story = {
     </CheckboxGroup>
   </Field>,
 };
+
+/** Cards: each box a bordered card, for a few choices that each need a sentence or a price. */
+export const Cards: Story = {
+  render: () => <Field group label="Add-ons">
+    <CheckboxGroup name="addons" variant="card" orientation="horizontal" defaultValue={['wrap']}>
+      <Checkbox value="wrap" description="Rp 15.000">Gift wrap</Checkbox>
+      <Checkbox value="card" description="A printed note, free">Greeting card</Checkbox>
+      <Checkbox value="insure" description="Not for this shipping method" disabled>Insurance</Checkbox>
+    </CheckboxGroup>
+  </Field>,
+};
+export const CardsInvalid: Story = {
+  render: () => <Field group label="Interests" error="Pick at least one.">
+    <CheckboxGroup name="interests" variant="card">
+      <Checkbox value="design" description="Components, tokens and patterns">Design</Checkbox>
+      <Checkbox value="code">Engineering</Checkbox>
+    </CheckboxGroup>
+  </Field>,
+};
