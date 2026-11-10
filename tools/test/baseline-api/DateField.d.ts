@@ -25,6 +25,7 @@ interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "def
     name?: string | undefined;
     form?: string | undefined;
     disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
     invalid?: boolean | undefined;
     size?: "lg" | "md" | "sm" | undefined;
 }

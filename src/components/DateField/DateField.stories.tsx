@@ -89,6 +89,7 @@ export const Sizes: Story = {
 };
 
 export const Disabled: Story = { args: { disabled: true, defaultValue: '1990-05-01' } };
+export const ReadOnly: Story = { args: { readOnly: true, defaultValue: '1990-05-01' } };
 
 // The stress story (G14): a long label and hint, and a column too narrow for the three boxes in a row.
 export const LongText: Story = {
