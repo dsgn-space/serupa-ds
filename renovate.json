@@ -16,6 +16,8 @@
     { "matchPackageNames": ["eslint", "@eslint/**", "eslint-plugin-*", "typescript-eslint", "globals", "stylelint", "stylelint-*"], "groupName": "lint" },
     { "matchDepTypes": ["devDependencies"], "matchUpdateTypes": ["minor", "patch"], "groupName": "dev tools (minor and patch)", "addLabels": ["no-changeset"], "automerge": true, "platformAutomerge": true },
     { "matchDepTypes": ["devDependencies"], "matchUpdateTypes": ["major"], "addLabels": ["no-changeset"] },
-    { "matchManagers": ["gitlabci"], "pinDigests": true, "groupName": "CI images", "addLabels": ["no-changeset"] }
+    { "matchManagers": ["gitlabci"], "pinDigests": true, "groupName": "CI images", "addLabels": ["no-changeset"] },
+    { "description": "What the package asks of a project (peerDependencies, engines) stays a range: pinned, it would refuse every other React 19 or Node release.", "matchDepTypes": ["peerDependencies", "engines"], "rangeStrategy": "widen" },
+    { "description": ".nvmrc names the Node major (26) on purpose; tools/setup.mjs picks its latest release.", "matchManagers": ["nvm"], "matchUpdateTypes": ["pin"], "enabled": false }
   ]
 }
