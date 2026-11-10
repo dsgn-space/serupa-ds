@@ -10,7 +10,10 @@ import { activeIn } from './root';
 /** Makes el.focus() focus what target() returns instead; nothing when it returns null (a disabled control, as a
  *  disabled input ignores focus()). Call it from the wrapper's ref callback, before handing the element on. */
 export function delegateFocus(el: HTMLElement | null, target: () => HTMLElement | null | undefined): void {
-  if (el) el.focus = (options?: FocusOptions) => { const t = target(); if (t) t.focus(options); };
+  // Defined on el itself rather than assigned: a test tool that wraps HTMLElement.prototype.focus in a setter
+  // (Storybook's) would otherwise take the assignment as its own, and every element's focus() on the page would
+  // then go to this control.
+  if (el) Object.defineProperty(el, 'focus', { configurable: true, value: (options?: FocusOptions) => { const t = target(); if (t) t.focus(options); } });
 }
 
 /** A blur from the window or browser tab losing focus (people went to copy something from another app): the field is
