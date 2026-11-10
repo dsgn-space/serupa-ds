@@ -338,12 +338,14 @@ describe('SegmentedControl', () => {
       await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
       const [a, b] = items('sl');
       const ind = el('sl').firstElementChild as HTMLElement;
-      // A click from the page itself, so the transitions are read a frame after the choice. A driver click (userEvent)
-      // comes back after a round trip, which in WebKit can outlast the 200ms slide, leaving nothing to read. One press
-      // (detail 1), as a mouse's: a click with none is a key's, which puts it there at once (KW1).
+      // A click from the page itself, and the transitions read as soon as React has drawn the choice (a microtask
+      // later; reading them resolves the styles that start them). A driver click (userEvent) comes back after a round
+      // trip, and even a frame's wait outlasted the 200ms slide on a busy runner in WebKit, leaving nothing to read.
+      // One press (detail 1), as a mouse's: a click with none is a key's, which puts it there at once (KW1).
+      const slides = () => document.getAnimations().filter((x): x is CSSTransition => x instanceof CSSTransition && (x.effect as KeyframeEffect).target === ind);
       b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
-      await new Promise(requestAnimationFrame);
-      const moves = document.getAnimations().filter((x): x is CSSTransition => x instanceof CSSTransition && (x.effect as KeyframeEffect).target === ind);
+      for (let i = 0; i < 20 && !slides().length; i++) await Promise.resolve();
+      const moves = slides();
       expect(moves.map((x) => [(x.effect as KeyframeEffect).pseudoElement, x.transitionProperty]).sort()).toEqual([['::after', 'clip-path'], ['::before', 'clip-path']]);
       // The border layer starts cut to the first segment (nothing cut from its start, the second segment's extra width
       // from its end) and ends cut to the second.
