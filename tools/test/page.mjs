@@ -7,7 +7,7 @@ import path from 'node:path';
 import { execFile, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { ENGINE, PROJECT, writePage, browser, cleanup, report, done, inParallel } from './lib.mjs';
+import { ENGINE, PROJECT, writePage, browser, cleanup, report, done, inParallel, serve } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -175,13 +175,15 @@ for (const scheme of ['light', 'dark']) {
   const p = await ctx.newPage();
   // A reload straight after a storage write could start before the browser held the write, and read the old value
   // (it failed that way on a busy runner). Another page hears a write as a storage event only once the browser has
-  // it, so each reload waits for that.
+  // it, so each reload waits for that. Over http, so the two pages share an origin: WebKit gives each file:// page
+  // an origin of its own, and the watching page would hear nothing.
+  const srv = serve(PROJECT);
+  const web = (file) => `${srv.base}/${path.relative(PROJECT, fileURLToPath(file)).split(path.sep).join('/')}`;
   const watch = await ctx.newPage();
-  await watch.goto(writePage('theme-watch.html', '<p>x</p>'));
+  await watch.goto(web(writePage('theme-watch.html', '<p>x</p>')));
   await watch.evaluate(() => { window.heard = []; addEventListener('storage', (e) => { window.heard.push(e.key); }); });
   const held = (key) => watch.waitForFunction((k) => window.heard.includes(k), key);
-  const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
-  await p.goto(url);
+  await p.goto(web(writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' })));
   await p.evaluate(() => { localStorage.clear(); localStorage.setItem('diki-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
   await held('diki-theme');
   await p.reload();
@@ -195,6 +197,7 @@ for (const scheme of ['light', 'dark']) {
   const after = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
   t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', after === 'blue-light', after);
   await ctx.close();
+  srv.close();
 }
 
 {
