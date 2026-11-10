@@ -9,6 +9,7 @@ interface RadioGroupProps<V extends number | string = number | string> extends O
     invalid?: boolean | undefined;
     disabled?: boolean | undefined;
     required?: boolean | undefined;
+    readOnly?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
 interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
