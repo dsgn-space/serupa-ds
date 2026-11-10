@@ -16,6 +16,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useVirtual } from '../../internal/virtual';
 import { useServerStyles } from '../../internal/serverStyles';
+import { Loader } from '../Loader/Loader';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as words } from './labels';
@@ -41,6 +42,8 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   pinStart?: boolean | undefined;
   /** Keeps the last column in view while the table scrolls sideways, such as a column of row actions. Default: false. */
   pinEnd?: boolean | undefined;
+  /** Its rows are loading (or reloading): sets aria-busy on the table. Pair it with TableLoadingRows. Default: false. */
+  busy?: boolean | undefined;
 }
 
 export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -119,7 +122,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   // hydration, for the frame and everything in it.
   const restyle = useServerStyles<HTMLDivElement>();
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, className: 1, children: 1 });
+  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, busy: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const frame = React.useRef<HTMLDivElement>(null);
   const scrolls = useScrolls(frame);
@@ -155,7 +158,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
     : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
     <div {...cp} {...region} ref={(n) => { frame.current = n; restyle(n); }} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', props.pinStart && 'dk-table--pin-start', props.pinEnd && 'dk-table--pin-end', cp.className)}>
-      <table {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
+      <table aria-busy={props.busy || undefined} {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
         {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
       </table>
@@ -638,6 +641,48 @@ export const TableDetailRow = /* @__PURE__ */ component<HTMLTableRowElement, Tab
   return (
     <tr {...rest} ref={ref} hidden={!props.open} className={cn('dk-table__detail', props.className)}>
       <td colSpan={props.colSpan} className="dk-table__cell dk-table__detail-cell">{props.children}</td>
+    </tr>
+  );
+});
+
+export interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  /** How many columns: all of the table's, so each row has a placeholder in every cell. */
+  columns: number;
+  /** How many placeholder rows: about as many as will load, up to a screenful. Default: 3. */
+  rows?: number | undefined;
+  /** Said once as the rows appear ("Loading projects"), after the loader's delay. Default: "Loading" (labels.loading). */
+  label?: string | undefined;
+}
+
+/* TableLoadingRows: a <tbody> of placeholder rows, each cell a one-line skeleton in the table's own text size and
+   padding, so the rows are as tall as the ones that replace them and nothing moves when they arrive. Only the first
+   placeholder has a name, so a screen reader hears "Loading" once rather than once a cell. */
+/** Placeholder rows (a <tbody> of skeletons) the height of real rows, while the table's rows load. Set the Table's busy too. */
+export const TableLoadingRows = /* @__PURE__ */ component<HTMLTableSectionElement, TableLoadingRowsProps>('TableLoadingRows', function TableLoadingRows(props, ref) {
+  const rest = omit(props, { columns: 1, rows: 1, label: 1, className: 1, children: 1 });
+  const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));
+  const columns = Math.min(100, Math.max(1, Math.floor(Number(props.columns)) || 1));
+  const out: React.ReactNode[] = [];
+  for (let r = 0; r < rows; r++) {
+    const cells: React.ReactNode[] = [];
+    for (let c = 0; c < columns; c++)
+      cells.push(<td key={c} className="dk-table__cell"><Loader variant="skeleton" label={r === 0 && c === 0 ? props.label : ''} /></td>);
+    out.push(<tr key={r} className="dk-table__loading-row">{cells}</tr>);
+  }
+  return <tbody {...rest} ref={ref} className={cn('dk-table__body dk-table__loading', props.className)}>{out}</tbody>;
+});
+
+export interface TableMessageRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  /** How many columns it spans: all of the table's. */
+  colSpan: number;
+}
+
+/** One row across every column for a message in place of the rows: an EmptyState when there are none, or an Alert with Retry when they didn't load. */
+export const TableMessageRow = /* @__PURE__ */ component<HTMLTableRowElement, TableMessageRowProps>('TableMessageRow', function TableMessageRow(props, ref) {
+  const rest = omit(props, { colSpan: 1, className: 1, children: 1 });
+  return (
+    <tr {...rest} ref={ref} className={cn('dk-table__message', props.className)}>
+      <td colSpan={props.colSpan} className="dk-table__cell dk-table__message-cell">{props.children}</td>
     </tr>
   );
 });
