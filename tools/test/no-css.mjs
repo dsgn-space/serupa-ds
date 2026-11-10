@@ -36,8 +36,11 @@ const look = () => {
     return v;
   };
   return {
-    // innerText, not textContent: text inside a hidden element (a closed panel's content) isn't shown.
-    shown: all.map((e) => drawn(e) && !!(/** @type {HTMLElement} */ (e).innerText || '').trim()),
+    // innerText, not textContent: text inside a hidden element (a closed panel's content) isn't shown. A <select>
+    // shows its picked option, which innerText leaves out in WebKit once the select has appearance: none, so it's
+    // read from the select (drawn) itself: the same text in every engine, with the stylesheet or without.
+    shown: all.map((e) => drawn(e) && (!!(/** @type {HTMLElement} */ (e).innerText || '').trim()
+      || [...(e.matches('select') ? [e] : []), ...e.querySelectorAll('select')].some((s) => drawn(s) && !!(/** @type {HTMLSelectElement} */ (s).selectedOptions[0]?.text || '').trim()))),
     parent: all.map((e) => all.indexOf(/** @type {Element} */ (e.parentElement))),
     cls: all.map((e) => (e.getAttribute('class') || e.tagName.toLowerCase()).split(' ')[0]),
     // Icons only: an svg with a role is a graphic with a name (Chart's plot), drawn at its width on purpose.
