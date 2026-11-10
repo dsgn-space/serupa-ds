@@ -632,13 +632,21 @@ describe('Dialog: motion (DZ1)', () => {
       const ctl: Partial<Ctl> = {};
       await render(<App asks={[]} ctl={ctl} />);
       const d = dlg('dlg'), pn = panel('dlg');
+      // Held where they start: the click is a round trip to the browser, and on a busy runner it could come back after
+      // the 250ms the transitions run, with none left to read (a flake in CI). transitionrun comes from the page itself.
+      const held = new Set<Animation>();
+      const hold = () => { for (const a of [...pn.getAnimations(), ...backdropOf(d)]) if (!held.has(a)) { a.pause(); held.add(a); } };
+      d.addEventListener('transitionrun', hold);
       await userEvent.click(el('opener'));
+      await expect.poll(() => held.size).toBe(3);
+      d.removeEventListener('transitionrun', hold);
       const enter = pn.getAnimations();
       expect([enter.filter((a) => a instanceof CSSTransition).map((a) => (a).transitionProperty).sort(), enter.some((a) => a instanceof CSSAnimation), enter.map(ms)]).toEqual([['opacity', 'scale'], false, [200, 200]]);
       expect(backdropOf(d).map((a) => [(a as CSSTransition).transitionProperty, ms(a)])).toEqual([['opacity', 200]]);
       // A sequence: the backdrop starts at once, the panel motion-sequence (50ms) later.
       const delay = (a: Animation) => Number(a.effect!.getTiming().delay);
       expect([enter.map(delay), backdropOf(d).map(delay)]).toEqual([[50, 50], [0]]);
+      for (const a of held) a.play();
       await settled();
       expect([getComputedStyle(pn).opacity, getComputedStyle(pn).scale]).toEqual(['1', 'none']);
 
