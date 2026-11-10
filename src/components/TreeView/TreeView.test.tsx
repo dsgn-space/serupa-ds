@@ -297,6 +297,20 @@ describe('TreeView', () => {
     expect(item('f1').getAttribute('aria-expanded')).toBe('false');
     expect([...draws.keys()].sort()).toEqual(['0-0', 'f1']);
   });
+  test('a big tree: Up and Down don\'t make the page work out its styles, and a row out of view isn\'t laid out until it scrolls near', async () => {
+    const big: TreeViewItem[] = Array.from({ length: 2000 }, (_, i) => ({ id: 'n' + i, label: 'Node ' + i }));
+    await render(<TreeView aria-label="Nodes" items={big} />);
+    item('n0').focus();
+    const styles = vi.spyOn(window, 'getComputedStyle');
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowUp}');
+    const reads = styles.mock.calls.length;
+    styles.mockRestore();
+    expect([focused(), reads]).toEqual(['n1', 0]);
+    const row = item('n1999').firstElementChild as HTMLElement;
+    expect([css(row).contentVisibility, css(row).containIntrinsicBlockSize]).toEqual(['auto', 'auto 24px']);
+    // Its text is still in the page, for find in page and screen readers.
+    expect(row.textContent).toBe('Node 1999');
+  });
 
   test('pressed: a row held down fills with pressed at once; a disabled row doesn\'t (ED1)', async () => {
     await render(<Tree />);
