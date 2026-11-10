@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, pasteText } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Field } from '../Field/Field';
@@ -11,6 +11,7 @@ import { DateField, type DateFieldChangeDetails } from './DateField';
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const boxes = (root: Element) => [...root.querySelectorAll<HTMLInputElement>('input:not([type=hidden])')];
 const box = (name: string) => page.getByRole('textbox', { name }).element() as HTMLInputElement;
+
 
 describe('DateField', () => {
   test('renders a group <div>; ref, className and other props reach it', async () => {
@@ -78,14 +79,10 @@ describe('DateField', () => {
   test('a whole date pasted into any box fills all three, in the locale\'s order or as ISO', async () => {
     const onValueChange = vi.fn();
     const paste = async (into: string, text: string) => {
-      const src = el('src') as HTMLInputElement;
-      src.value = text;
-      src.select();
-      await userEvent.copy();
       await userEvent.click(box(into));
-      await userEvent.paste();
+      pasteText(box(into), text);
     };
-    await render(<SerupaProvider locale="en-GB"><input id="src" aria-label="Source" /><DateField aria-label="Date" onValueChange={onValueChange} /></SerupaProvider>);
+    await render(<SerupaProvider locale="en-GB"><DateField aria-label="Date" onValueChange={onValueChange} /></SerupaProvider>);
     await paste('Month', '17/08/1945');
     expect([box('Day').value, box('Month').value, box('Year').value]).toEqual(['17', '8', '1945']);
     expect(onValueChange).toHaveBeenLastCalledWith('1945-08-17', expect.objectContaining({ reason: 'paste' }));
@@ -168,12 +165,9 @@ describe('DateField', () => {
 
   test('readOnly: the three boxes stay focusable and read-only; typing and a pasted date change nothing, and the date is still sent', async () => {
     const onValueChange = vi.fn();
-    await render(<SerupaProvider locale="en-GB"><input id="src" aria-label="Source" defaultValue="17/08/1945" />
-      <form id="f"><DateField aria-label="Date" name="dob" defaultValue="1990-05-01" readOnly onValueChange={onValueChange} /></form></SerupaProvider>);
-    (el('src') as HTMLInputElement).select();
-    await userEvent.copy();
+    await render(<SerupaProvider locale="en-GB"><form id="f"><DateField aria-label="Date" name="dob" defaultValue="1990-05-01" readOnly onValueChange={onValueChange} /></form></SerupaProvider>);
     await userEvent.click(box('Month'));
-    await userEvent.paste();
+    pasteText(box('Month'), '17/08/1945');
     await userEvent.keyboard('{Backspace}7');
     const all = boxes(document.getElementById('f')!);
     expect([all.map((i) => [i.readOnly, i.disabled]), all.map((i) => i.value), document.activeElement === box('Month'), onValueChange.mock.calls.length,
