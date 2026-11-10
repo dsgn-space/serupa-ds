@@ -34,5 +34,6 @@
   background: var(--data-grid-input-bg, var(--field)); color: var(--data-grid-text, var(--text));
 }
 .dk-data-grid--sm .dk-data-grid__input { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
+.dk-data-grid__message { white-space: normal; text-align: center; padding: var(--data-grid-message-padding, var(--spacing-6)); }
 @media (forced-colors: active) { .dk-data-grid__cell--selected { forced-color-adjust: none; background: Highlight; color: HighlightText; } }
 }

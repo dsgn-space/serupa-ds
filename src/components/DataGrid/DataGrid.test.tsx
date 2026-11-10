@@ -169,5 +169,35 @@ describe('DataGrid', () => {
     }
     document.documentElement.removeAttribute('data-theme');
   });
+
+  test('busy with no rows: aria-busy and placeholder rows as tall as real ones, the first named once; then the rows', async () => {
+    const { rerender } = await render(<DataGrid aria-label="Stock" columns={COLS} rows={[]} busy loadingRows={4} loadingLabel="Loading stock" />);
+    const grid = page.getByRole('grid').element() as HTMLTableElement;
+    expect(grid.getAttribute('aria-busy')).toBe('true');
+    expect(grid.getAttribute('aria-rowcount')).toBe('-1');
+    const rows = grid.querySelectorAll('tbody tr');
+    expect(rows).toHaveLength(4);
+    expect(rows[0].querySelectorAll('[role="gridcell"]')).toHaveLength(3);
+    await expect.element(page.getByRole('progressbar', { name: 'Loading stock' })).toBeInTheDocument();
+    expect(page.getByRole('progressbar').all()).toHaveLength(1);
+    const tall = rows[0].getBoundingClientRect().height;
+    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} busy={false} />);
+    expect(grid.hasAttribute('aria-busy')).toBe(false);
+    expect(grid.getAttribute('aria-rowcount')).toBe('4');
+    expect(Math.abs(grid.querySelector('tbody tr')!.getBoundingClientRect().height - tall)).toBeLessThan(2);
+  });
+
+  test('no rows and not busy: the message in one cell across every column; busy with rows keeps them', async () => {
+    const { rerender } = await render(<DataGrid aria-label="Stock" columns={COLS} rows={[]} message={<p>No products yet</p>} />);
+    const msg = cell('No products yet') as HTMLTableCellElement;
+    expect(msg.colSpan).toBe(3);
+    expect(msg.getAttribute('aria-colspan')).toBe('3');
+    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} busy message={<p>No products yet</p>} />);
+    expect(page.getByText('No products yet').query()).toBeNull();
+    expect(cell('Kopi')).toBeTruthy();
+    expect(page.getByRole('grid').element().getAttribute('aria-busy')).toBe('true');
+    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={[]} busy={false} />);
+    expect(page.getByRole('grid').element().querySelectorAll('tbody tr')).toHaveLength(0);
+  });
 });
 const focus = () => document.activeElement as HTMLElement;

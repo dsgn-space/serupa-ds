@@ -145,6 +145,16 @@
             "cssVar": "--data-grid-padding-y-sm"
           }
         }
+      },
+      "message-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space around the message shown in place of rows (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-message-padding"
+          }
+        }
       }
     },
     "borders": {
