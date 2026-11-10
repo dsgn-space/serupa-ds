@@ -64,6 +64,25 @@
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-checkbox__input:disabled:not(:checked, :indeterminate, [data-indeterminate]) { background: var(--checkbox-bg-disabled, var(--surface-muted)); }
+/* Card: the box, label and description in a bordered card, pressed as a whole, a 2px primary border once checked
+   (drawn inside, so nothing moves; the tick says it too, so it isn't colour alone), the focus ring around the card.
+   In a group the cards fill the column, or share a wrapping row. */
+.dk-checkbox-group--card { align-items: stretch; gap: var(--checkbox-card-group-gap, var(--spacing-3)); }
+.dk-checkbox-group--card.dk-checkbox-group--horizontal > .dk-checkbox { flex: auto; flex-basis: var(--checkbox-card-min-width, var(--spacing-48)); }
+.dk-checkbox--card {
+  gap: var(--checkbox-card-gap, var(--spacing-3)); padding: var(--checkbox-card-padding, var(--spacing-4));
+  border: var(--checkbox-border-width, var(--border-width-1)) solid var(--checkbox-card-border, var(--border)); border-radius: var(--checkbox-card-radius, var(--radius-surface));
+  background: var(--checkbox-card-bg, var(--surface));
+  transition: border-color var(--motion-press) var(--ease-move);
+}
+.dk-checkbox--card .dk-checkbox__label { font-weight: var(--checkbox-card-label-weight, var(--font-medium)); }
+@media (hover: hover) { .dk-checkbox--card:hover:not(.dk-checkbox--readonly, :has(.dk-checkbox__input:disabled)) { border-color: var(--checkbox-card-border-hover, var(--field-border-hover)); } }
+.dk-checkbox--card:has(.dk-checkbox__input:checked) { --dk-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary)); border-color: var(--dk-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--dk-checkbox-card-on); }
+.dk-checkbox--card:has(.dk-checkbox__input:focus-visible) { outline: var(--focus-ring-width) solid var(--checkbox-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-checkbox--card .dk-checkbox__input:focus-visible { outline: none; }
+.dk-checkbox--card.dk-checkbox--invalid:not(:has(.dk-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--danger)); }
+.dk-checkbox--card.dk-checkbox--invalid:has(.dk-checkbox__input:focus-visible) { outline-color: var(--checkbox-invalid, var(--danger)); }
+@media (forced-colors: active) { .dk-checkbox--card:has(.dk-checkbox__input:checked) { --dk-checkbox-card-on: Highlight; } }
 @media (forced-colors: active) { .dk-checkbox__icon { color: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind
    it reaches past its edges. The stacking context keeps that box under the content, so the parts keep their hover. */

@@ -23,6 +23,9 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
   indeterminate?: boolean | undefined;
   /** A danger border (while unchecked) and focus ring, and aria-invalid. */
   invalid?: boolean | undefined;
+  /** 'default' or 'card': the box, label and description in a bordered card that's pressed as a whole, with a 2px
+   *  primary border once checked. In a CheckboxGroup, the group's variant by default. */
+  variant?: 'default' | 'card' | undefined;
   /** Focusable and read out (aria-readonly), but a click or Space doesn't change it; a checked box is still submitted. */
   readOnly?: boolean | undefined;
   /** In a CheckboxGroup: the box that checks or clears every other box. It's checked when all are, and indeterminate when some are. Leave out value. */
@@ -45,6 +48,9 @@ export interface CheckboxGroupProps<V extends string | number = string | number>
   orientation?: 'vertical' | 'horizontal' | undefined;
   /** The boxes' size, unless a Checkbox sets its own. */
   size?: 'sm' | 'md' | 'lg' | undefined;
+  /** 'default' (a box beside its label) or 'card' (each box a bordered card, for add-ons, features and other choices
+   *  with a description), unless a Checkbox sets its own. Default: 'default'. */
+  variant?: 'default' | 'card' | undefined;
   /** A danger border on every unchecked box, and aria-invalid on the group. Field sets it from its error. */
   invalid?: boolean | undefined;
   /** Disables every box. */
@@ -59,6 +65,7 @@ interface GroupContextValue {
   name: string;
   values: readonly string[];
   size: unknown;
+  variant: unknown;
   invalid: boolean;
   disabled: boolean;
   required: boolean;
@@ -68,6 +75,7 @@ interface GroupContextValue {
   toggle(value: string, on: boolean, event: React.ChangeEvent<HTMLInputElement>): void;
   toggleAll(on: boolean, event: React.ChangeEvent<HTMLInputElement>): void;
 }
+const VARIANTS = ['default', 'card'] as const;
 const GroupContext = /* @__PURE__ */ React.createContext<GroupContextValue | null>(null);
 
 /* CheckboxGroup: any number of choices from a set of Checkboxes. It names them (name, or a generated one), holds the
@@ -76,7 +84,7 @@ const GroupContext = /* @__PURE__ */ React.createContext<GroupContextValue | nul
    fieldset and legend), aria-label or aria-labelledby. role="group" supports neither aria-invalid nor
    aria-required, so invalid goes on each box and required is each box's native required while none is checked
    (Field group says "Required" in the legend too). */
-const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, invalid: 1, disabled: 1, required: 1, children: 1, className: 1, autoFocus: 1 } as const;
+const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, variant: 1, invalid: 1, disabled: 1, required: 1, children: 1, className: 1, autoFocus: 1 } as const;
 
 /** The value boxes among a group's children (inside plain elements too), with whether each is disabled. */
 function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<string, boolean>()): Map<string, boolean> {
@@ -117,7 +125,7 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
   // stand in, so select-all is enabled, and checked or mixed, from the first paint.
   const known = boxes.size ? boxes : childBoxes(props.children, !!props.disabled);
   const ctx: GroupContextValue = {
-    name: props.name || autoName, values: raw.map(String), size: props.size, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known,
+    name: props.name || autoName, values: raw.map(String), size: props.size, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known,
     register(v, dis) { const k = String(v); boxes.set(k, dis); typed.set(k, v); rerender((n) => n + 1); return () => { boxes.delete(k); rerender((n) => n + 1); }; },
     toggle(v, on, e) { const next = new Set(latest.current.map(String)); if (on) next.add(v); else next.delete(v); emit(next, e); },
     toggleAll(on, e) {
@@ -134,7 +142,7 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
   });
   return (
     <div {...rest} ref={groupRef} role="group" aria-disabled={props.disabled || undefined}
-      className={cn('dk-checkbox-group', 'dk-checkbox-group--' + orientation, invalid && 'dk-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
+      className={cn('dk-checkbox-group', 'dk-checkbox-group--' + orientation, props.variant === 'card' && 'dk-checkbox-group--card', invalid && 'dk-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
       <GroupContext.Provider value={ctx}>{props.children}</GroupContext.Provider>
     </div>
   );
@@ -145,7 +153,7 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
    select-all box, drawn as a dash and announced as mixed); invalid. Renders <label class="dk-checkbox"> around the
    box and the text, so a click anywhere on it toggles: className and style go to the label, every other prop
    (checked, defaultChecked, onChange, name, value, disabled, required, aria-*…) and ref to the <input>. */
-const OWN = { size: 1, invalid: 1, indeterminate: 1, selectAll: 1, onCheckedChange: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
+const OWN = { size: 1, variant: 1, invalid: 1, indeterminate: 1, selectAll: 1, onCheckedChange: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
 /** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
 export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>('Checkbox', function Checkbox(props, ref) {
@@ -157,6 +165,7 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   if (!group) props = fromField;
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, oneOf(SIZES, group && group.size, 'md'));
+  const card = oneOf(VARIANTS, props.variant, oneOf(VARIANTS, group && group.variant, 'default')) === 'card';
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   // A group's invalid goes on each box: role="group" can't carry aria-invalid (TF1a).
   if (invalid || (group && group.invalid)) rest['aria-invalid'] = true;
@@ -227,7 +236,7 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   // the description sits inside the <label> (so it's clickable too); naming by the label text alone keeps it out of the name
   if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;
   return (
-    <label className={cn('dk-checkbox', 'dk-checkbox--size-' + size, (invalid || (group && group.invalid)) && 'dk-checkbox--invalid', rest.disabled && 'dk-checkbox--disabled', readOnly && 'dk-checkbox--readonly', !hasLabel && !hasDesc && 'dk-checkbox--bare', props.className)} style={props.style} data-component="checkbox" data-size={size}>
+    <label className={cn('dk-checkbox', 'dk-checkbox--size-' + size, card && 'dk-checkbox--card', (invalid || (group && group.invalid)) && 'dk-checkbox--invalid', rest.disabled && 'dk-checkbox--disabled', readOnly && 'dk-checkbox--readonly', !hasLabel && !hasDesc && 'dk-checkbox--bare', props.className)} style={props.style} data-component="checkbox" data-size={size}>
       <span className="dk-checkbox__control" key="control">
         <input {...rest} ref={setRefs} type="checkbox" className="dk-checkbox__input" data-indeterminate={mixed ? '' : undefined} key="input" />
         <span className="dk-checkbox__icon" aria-hidden key="icon"><Icon icon={mixed ? icons.Remove : icons.Check} /></span>
