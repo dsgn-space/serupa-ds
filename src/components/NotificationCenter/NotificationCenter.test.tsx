@@ -190,7 +190,8 @@ describe('useToastHistory', () => {
     const packs = import.meta.glob<{ labels: typeof DEFAULT_LABELS }>('../../labels/*.ts', { eager: true });
     for (const [f, m] of Object.entries(packs)) {
       expect(m.labels.notificationsUnread(0), f).toBe(m.labels.notificationCenter);
-      expect(m.labels.notificationsUnread(7), f).toMatch(/7/);
+      // 7 in the digits the pack's locale writes: WebKit writes Arabic in its own digits (٧), Chromium in 0–9.
+      expect(m.labels.notificationsUnread(7), f).toMatch(/[7٧۷]/);
     }
   });
 });

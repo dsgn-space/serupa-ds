@@ -437,6 +437,26 @@ describe('NumberInput', () => {
     expect(field('qty').value).toBe('7');
   });
 
+  test('a decimal mark left at the end ("5." or "7,") is read without it on blur and Enter, not reported as unreadable (GR235)', async () => {
+    const seen: string[] = [], got: Array<number | null> = [];
+    await render(<Col><NumberInput id="tr" aria-label="Weight" defaultValue={1} onValueChange={(v) => got.push(v)} onInvalidInput={(t, why) => seen.push(t + ':' + why)} /></Col>);
+    await fill('tr', '5.');
+    await blur('tr');
+    const afterBlur = field('tr').value;
+    await fill('tr', '7,');
+    field('tr').focus();
+    await userEvent.keyboard('{Enter}');
+    expect([seen, afterBlur, field('tr').value, got.at(-1)]).toEqual([[], '5', '7', 7]);
+  });
+
+  test('tabbing through a controlled value outside min and max leaves it alone: no onValueChange, no range report (GR236)', async () => {
+    const seen: string[] = [], got: Array<number | null> = [];
+    await render(<Col><NumberInput id="ctl" aria-label="Quantity" value={150} max={100} onValueChange={(v) => got.push(v)} onInvalidInput={(t, why) => seen.push(t + ':' + why)} /></Col>);
+    field('ctl').focus();
+    await blur('ctl');
+    expect([got, seen, field('ctl').value]).toEqual([[], [], '150']);
+  });
+
   test('onInvalidInput: a number out of range is brought back and reported as "range" (blur and Enter); text that isn\'t a number as "unreadable", and said', async () => {
     const seen: string[] = [];
     await render(<Col><NumberInput id="inv" aria-label="Quantity" defaultValue={5} min={0} max={100} onInvalidInput={(t, why) => seen.push(t + ':' + why)} /></Col>);

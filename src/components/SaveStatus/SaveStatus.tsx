@@ -6,7 +6,7 @@ import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { activeIn } from '../../internal/root';
 import { Icon } from '../Icon/Icon';
-import { Loader } from '../Loader/Loader';
+import { LoaderRing } from '../../internal/loaderRing';
 import { Button } from '../Button/Button';
 import { RelativeTime } from '../RelativeTime/RelativeTime';
 import * as icons from '../../material/builtin';
@@ -90,7 +90,7 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
   const face = (st: SaveState, out: boolean) => st === 'idle' ? null : (
     <span key={st} ref={out ? leaving : undefined} className={'dk-save-status__face dk-save-status__face--' + st} data-leaving={out ? '' : undefined} data-entering={!out && changed ? '' : undefined} inert={out || undefined} aria-hidden={out || undefined}
       onTransitionEnd={out ? (e) => { if (e.target === e.currentTarget && e.propertyName === 'opacity') setGone(null); } : undefined}>
-      {st === 'saving' ? <><Loader className="dk-save-status__icon" size="sm" label="" delay={0} /><span className="dk-save-status__text">{sds.labels.saving}</span></> : null}
+      {st === 'saving' ? <><LoaderRing className="dk-save-status__icon" size="sm" /><span className="dk-save-status__text">{sds.labels.saving}</span></> : null}
       {st === 'saved' ? <><Icon className="dk-save-status__icon" icon={icons.Check} /><span className="dk-save-status__text">{sds.labels.saved}{savedAt != null ? <> <RelativeTime date={savedAt} /></> : null}</span></> : null}
       {st === 'error' ? <>
         <Icon className="dk-save-status__icon" icon={icons.Error} />

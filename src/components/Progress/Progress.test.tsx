@@ -93,7 +93,7 @@ describe('Progress', () => {
     expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), withMotion(() => css(el('cind').querySelector('svg')).animationName)]).toEqual([null, '25 100', 'dk-progress-turn']);
   });
 
-  test('contrast: every tone\'s fill keeps 3:1 on the page, and the label and values 4.5:1, in all six themes', async () => {
+  test('contrast: every tone\'s fill keeps 3:1 on the page and on the bar\'s track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and values 4.5:1, in all six themes', async () => {
     const tones = ['primary', 'success', 'warning', 'danger'] as const;
     await render(<Wrap>
       <Progress id="p1" value={45} label="Uploading" showValue />
@@ -105,8 +105,9 @@ describe('Progress', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const tone of tones) {
-        const r = contrast(css(el('tone-' + tone).querySelector('[role=progressbar] > div')).backgroundColor, 'var(--surface)'); n++;
-        if (r < 3) low.push(`${th} ${tone} fill on the page ${r.toFixed(2)}`);
+        const track = el('tone-' + tone).querySelector<HTMLElement>('[role=progressbar]')!, fill = css(track.querySelector('div')).backgroundColor;
+        const edge = /rgba?\([^)]*\)/.exec(css(track).boxShadow)?.[0] || 'transparent';
+        for (const [what, r] of [['fill on the page', contrast(fill, 'var(--surface)')], ['fill on its track', contrast(fill, css(track).backgroundColor)], ['track edge on the page', contrast(edge, 'var(--surface)')]] as const) { n++; if (r < 3) low.push(`${th} ${tone} ${what} ${r.toFixed(2)}`); }
       }
       for (const sel of ['#p1 .dk-progress__label', '#p1 .dk-progress__value', '#c1 .dk-progress__value']) {
         const r = contrast(css(document.querySelector(sel)).color, 'var(--surface)'); n++;
@@ -114,7 +115,7 @@ describe('Progress', () => {
       }
     }
     expect(low).toEqual([]);
-    expect(n).toBe(42);
+    expect(n).toBe(90);
   });
 
   test('--progress-fill overrides one bar', async () => {

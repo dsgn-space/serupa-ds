@@ -129,6 +129,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-indicator` | `primary` | The 2px bar at the start of the current page's item, which hover never draws. |
 | `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--sidebar-focus-gap-color` | `surface` | The gap between the focus ring and a filled item (the current page, or a hovered or pressed one), so the ring keeps 3:1 against what it touches. |
 
 **Type**
 

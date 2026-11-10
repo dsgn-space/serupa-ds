@@ -229,7 +229,10 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
     const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(':scope > tr').length : 0);
     const h = t ? rowsOf(t.querySelector(':scope > thead')) : 0;
     setHead(h);
-    if (t) t.setAttribute('aria-rowcount', String(h + count + rowsOf(t.querySelector(':scope > tfoot'))));
+    if (!t) return;
+    t.setAttribute('aria-rowcount', String(h + count + rowsOf(t.querySelector(':scope > tfoot'))));
+    // Gone with the virtual body: a table that now draws every row has no hidden rows to count (GR270).
+    return () => t.removeAttribute('aria-rowcount');
   }, [attach, count]);
   const [focused, setFocused] = React.useState<number | null>(null);
   // Print: every row (the first PRINT_ROWS), drawn from beforeprint to afterprint, so the printout is the whole table

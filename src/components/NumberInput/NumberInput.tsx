@@ -162,6 +162,12 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     const n = parseNumber(s, locale);
     return n != null && scale !== 1 ? n / scale : n;
   };
+  // A finished entry: a decimal mark left at the end ("5." or "7,") is read without it, since nothing more is coming.
+  // While typing it stays "not a number yet", so the value doesn't move under the caret (GR235).
+  const finished = (s: string): number | null | undefined => {
+    const n = parse(s), t = s.trim();
+    return n === undefined && /[.,\u066b]$/.test(t) ? parse(t.slice(0, -1)) : n;
+  };
   const commit = (v: number | null) => {
     if (!controlled) setOwnValue(v);
     if (v !== value && props.onValueChange) props.onValueChange(v == null ? v : out(v));
@@ -191,11 +197,14 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const outside = (n: number) => (min !== undefined && n < min) || (max !== undefined && n > max);
   const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (windowBlur(e)) { if (rest.onBlur) rest.onBlur(e); return; }   // switched windows: still typing
-    const n = parse(text), typed = typing.current;
+    // Tabbing through a field nobody typed in leaves the value alone, even one outside min and max that the app
+    // set: clamping it would change the app's value and report a range error for something no one entered (GR236).
+    if (!typing.current) { if (rest.onBlur) rest.onBlur(e); return; }
+    const n = finished(text);
     const v = n == null ? null : fit(n === undefined ? (value ?? 0) : n);
     const out = n === undefined ? value : v;
     put(out);
-    if (n === undefined && typed) reject(text, 'unreadable', props.onInvalidInput, sds.labels.inputNotAccepted);
+    if (n === undefined) reject(text, 'unreadable', props.onInvalidInput, sds.labels.inputNotAccepted);
     else if (n != null && outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range');
     if (rest.onBlur) rest.onBlur(e);
   };
@@ -212,7 +221,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     else if (k === 'Home' && min !== undefined && !locked) put(min);
     else if (k === 'End' && max !== undefined && !locked) put(max);
     else if (k === 'Enter') {
-      const n = parse(text);
+      const n = finished(text);
       if (n != null) { put(fit(n)); if (outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range'); }
       return;
     }
