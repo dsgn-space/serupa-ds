@@ -20,8 +20,10 @@ export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   total?: number | undefined;
   /** One size for every avatar in the group: 'xs', 'sm', 'md' (default), 'lg' or 'xl'. */
   size?: AvatarSize | undefined;
-  /** What a screen reader hears for the "+N" avatar. Default: the avatarMore label ("N more"). */
-  moreLabel?: ((count: number) => string) | undefined;
+  /** What a screen reader hears for the "+N" avatar, and the last line of the showMore list. Default: the avatarMore
+   *  label ("N more"). `formatted` is the count in the locale's digits and grouping ("1,234", "١٬٢٣٤"); `count` is
+   *  there for plural rules. */
+  moreLabel?: ((count: number, formatted: string) => string) | undefined;
   /** The group's accessible name, such as "Assigned to". */
   label?: string | undefined;
   /** Makes "+N" a button that opens a popover listing the people not shown, so keyboard and touch users can see them too. */
@@ -54,7 +56,9 @@ export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroup
   // In the locale's digits, as Badge writes its count: "+٣" in ar-EG (GR22).
   const digits = (n: number) => displayNumber(n, locale, PLAIN);
   // The name says the count in those digits too, "٣ more" for "+٣", so it holds the visible text (WCAG 2.5.3).
-  const moreName = (props.moreLabel || sds.labels.avatarMore)(more).replace(new RegExp('(?<!\\d)' + more + '(?!\\d)', 'g'), digits(more));
+  // A label that ignores `formatted` still gets the count in those digits.
+  const moreText = (n: number) => (props.moreLabel || sds.labels.avatarMore)(n, displayNumber(n, locale)).replace(new RegExp('(?<!\\d)' + n + '(?!\\d)', 'g'), digits(n));
+  const moreName = moreText(more);
   const face = <span className="dk-avatar__frame"><span className="dk-avatar__initials" aria-hidden="true">{more > cap ? digits(cap) + '+' : '+' + digits(more)}</span></span>;
   const cls = 'dk-avatar dk-avatar--' + size + ' dk-avatar-group__more';
   // Static, "+N" is one image; with showMore or onMore it's a button with the same name.
@@ -77,7 +81,7 @@ export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroup
                   // An Avatar is shown with its name written next to it (alt="", so it isn't read twice); a wrapped one as it is.
                   return <li key={el.key ?? i}>{name ? <><AvatarGroupSize.Provider value="xs">{React.cloneElement(el as React.ReactElement<{ alt?: string }>, { alt: '' })}</AvatarGroupSize.Provider>{name}</> : el}</li>;
                 })}
-                {total > all.length ? <li>{(props.moreLabel || sds.labels.avatarMore)(total - all.length)}</li> : null}
+                {total > all.length ? <li>{moreText(total - all.length)}</li> : null}
               </ul>
             </Popover>
           )}

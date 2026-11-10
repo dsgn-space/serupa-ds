@@ -74,7 +74,7 @@ Drawn from the `Overflow` story.
 | `label` | `string` | | The group's accessible name, such as "Assigned to". |
 | `showMore` | `boolean` | `false` | Makes "+N" a button that opens a popover listing the people not shown. |
 | `onMore` | `(event) => void` | | Makes "+N" a button that calls this, to show the rest your own way. Wins over `showMore`. |
-| `moreLabel` | `(count) => string` | `"N more"` | What a screen reader hears for "+N". By default the `avatarMore` label ("N lainnya" in `idLabels`). |
+| `moreLabel` | `(count, formatted) => string` | `"N more"` | What a screen reader hears for "+N", and the last line of the showMore list. `formatted` is the count in the locale's digits and grouping ("1,234", "١٬٢٣٤"); `count` is for plural rules. By default the `avatarMore` label ("N lainnya" in `idLabels`). |
 
 `ref`, `className` and other props go to the outer `<div>`.
 
