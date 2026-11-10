@@ -429,11 +429,18 @@ describe('Tabs indicator from the keyboard (KW1)', () => {
         const tabs = [...el(id).querySelectorAll<HTMLElement>('[role="tab"]')];
         const on = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true')!;
         const runs = (t: HTMLElement) => t.getAnimations({ subtree: true }).filter((a) => a instanceof CSSTransition && /^(translate|scale|clip-path)$/.test(a.transitionProperty)).length;
+        // The click comes from the page itself and the slide is read as soon as React has drawn it: a driver click
+        // (userEvent) comes back after a round trip, which on a busy runner outlasted the slide. One press (detail 1),
+        // as a mouse's: a click with none is a key's, which moves it at once.
+        const click = async (t: HTMLElement) => {
+          t.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
+          for (let i = 0; i < 20 && !runs(t); i++) await Promise.resolve();
+        };
         const was = on();
         was.focus();
         await userEvent.keyboard('{ArrowLeft}');
         expect([id, on() !== was, runs(on())]).toEqual([id, true, 0]);
-        await userEvent.click(was);
+        await click(was);
         expect([id, on() === was, runs(was) > 0]).toEqual([id, true, true]);
       }
     });

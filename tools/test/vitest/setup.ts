@@ -36,6 +36,16 @@ document.head.appendChild(still);
 // hovers whatever the next test renders there, which then reads its hover look: so it goes back after each.
 document.body.style.padding = '16px';
 afterEach(() => userEvent.hover(document.documentElement, { position: { x: 0, y: 0 }, force: true }));
+// A field that failed its check (a submit, reportValidity()) has the browser show its message, and Firefox keeps that
+// bubble open into the next test, where the first click only closes it: the click never reaches the page (Tabs' KW1
+// test after its form one). After a test that showed one, a click in the empty corner closes it.
+let invalid = false;
+document.addEventListener('invalid', () => { invalid = true; }, true);
+afterEach(async () => {
+  if (!invalid) return;
+  invalid = false;
+  await userEvent.click(document.documentElement, { position: { x: 0, y: 0 }, force: true });
+});
 // A test that narrows the page (page.viewport) and doesn't put it back leaves every later test in its file, in random
 // order, at that size: in Firefox the clicks of those tests then landed beside their targets (Accordion, after its
 // 320px test). After each test, the page goes back to the size it had when the test started (a file's own size, set in
