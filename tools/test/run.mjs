@@ -83,16 +83,20 @@ const storied = !!only && [...only].some((n) => n !== 'ErrorBoundary' && fs.exis
 // component tests (in English and in the second language) cover these.
 // A block or pattern brings its own folder (src/patterns/<Name>/); an Introduction page has none.
 const covered = only ? [...new Set([...[...only].map(folderOf).filter(Boolean), ...internalTestsFor(only), ...sharedTests])] : [];
+// .vitest/narrowed names what a narrowed run with coverage tested, for the coverage job; a whole run leaves none.
+const narrowedMark = path.join(PROJECT, '.vitest', 'narrowed');
+if (only && process.env.SERUPA_COVERAGE) { fs.mkdirSync(path.dirname(narrowedMark), { recursive: true }); fs.writeFileSync(narrowedMark, [...only].sort().join('\n') + '\n'); } else fs.rmSync(narrowedMark, { force: true });
 const node = (g) => ([name, f, ...args]) => [name, 'node', [path.join(HERE, f), ...args], g];
 const vitest = (name, project, g, ...args) => [name, process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run', '--project', project, ...args], g];
 const steps = [
-  // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in a browser. Coverage
-  // only on a full run: the floors in vitest.config.ts are for all of src/, which a few components can't reach.
+  // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in a browser. With
+  // SERUPA_COVERAGE (CI), on a narrowed run too: the coverage job then checks that every function the merge request
+  // adds runs (tools/coverage-new-functions.mjs), and leaves the floors for all of src/ to full runs (.vitest/narrowed).
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
   // SERUPA_SHARD=2/3 with --group components: every third test file (CI runs the shards side by side). A shard with
   // coverage also writes Vitest's blob report (.vitest/blob/ in Vitest 5), which CI's coverage job merges into one coverage
   // report and checks against the floors.
-  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE && !only ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, ...(process.env.SERUPA_COVERAGE && !only ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
+  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, ...(process.env.SERUPA_COVERAGE ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
   ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
