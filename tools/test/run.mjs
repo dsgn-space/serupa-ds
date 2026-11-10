@@ -103,9 +103,13 @@ const steps = [
     const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
     const locale = LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
     const own = direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : [];
+    // SERUPA_SHARD with SERUPA_PART=locale (CI): every third file of each, like the base shards (GR322: the whole run
+    // in one language took 12 minutes in one job). A narrowed run may have fewer files than shards: a shard left
+    // with none passes.
+    const shard = process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests'] : [];
     return [
-      [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...covered), { SERUPA_LOCALE: locale }],
-      ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(',') }]) : []),
+      [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...covered), { SERUPA_LOCALE: locale }],
+      ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(',') }]) : []),
     ];
   })() : []),
   // --update first accepts the current API and utility classes as the baselines the checks compare with.
