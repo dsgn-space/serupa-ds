@@ -19,7 +19,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   truncate?: boolean | undefined;
   /** Shows at most this many lines (1 to 6), cutting the last with an ellipsis (CSS line-clamp), for a preview of a
    *  long description or comment. The rest stays in the page for screen readers and find-in-page; give people a way to
-   *  see it all (a link to the full item, or a button that lifts the limit). Ignored with truncate. */
+   *  see it all (a link to the full item), or use ShowMore to open it in place. Ignored with truncate. */
   lines?: number | undefined;
   /** Caps the line at about 65 characters (`container-prose`), the comfortable length for running text: an
    *  article's paragraphs, a long description, help text on a wide page. Default: false. */

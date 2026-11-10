@@ -17,7 +17,7 @@ const { Text } = window.Serupa;
 - Paragraphs, captions and short lines of supporting text, such as "Last edited 2 hours ago".
 - Changing the size, tone or weight of part of a sentence, with `as="span"`.
 - A single line that may be too long for its space, such as a file name, cut short with `truncate`.
-- A preview of a long description, review or comment, cut after a few lines with `lines`.
+- A preview of a long description, review or comment, cut after a few lines with `lines`, when the full item is a link away. To open the rest in place, use [ShowMore](../ShowMore/README.md).
 - User content with long words or URLs: they break onto the next line, even in a flex row or grid column, rather than push the layout wider.
 
 ## When not to use
@@ -40,7 +40,7 @@ const { Text } = window.Serupa;
 - Every tone keeps 4.5:1 on `surface` in all six themes (`Text.test.tsx`). On other backgrounds, check it yourself.
 - Don't use color alone to say something is wrong: say it in the words too.
 - A truncated line hides the rest: put the full text in a `title` or somewhere else on the page.
-- With `lines`, the hidden lines are still read by screen readers and found by find-in-page; only the eye misses them. Give people who see the screen a way to the rest: a link to the full item, or a "Show more" button that sets `lines` to undefined and says `aria-expanded`.
+- With `lines`, the hidden lines are still read by screen readers and found by find-in-page; only the eye misses them. Give people who see the screen a way to the rest: a link to the full item, or, to open it in place, [ShowMore](../ShowMore/README.md) instead of Text.
 - **Keyboard:** none: inline text, not focusable.
 
 ## Props
