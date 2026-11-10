@@ -586,6 +586,57 @@ describe('Toast: motion (DZ1)', () => {
   });
 });
 
+describe('Toast: interrupted exits and a hidden page', () => {
+  const byTitle = (t: string) => toasts().find((x) => document.getElementById(x.getAttribute('aria-labelledby')!)!.textContent === t)!;
+  test('its time stops while the page is hidden (another tab in front) and runs on once it\'s back', async () => {
+    await render(<App />);
+    const hidden = (on: boolean) => {
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => on });
+      document.dispatchEvent(new Event('visibilitychange'));
+    };
+    try {
+      React.act(() => { toast({ title: 'Away', duration: 600 }); });
+      React.act(() => { hidden(true); });
+      await settle(900);   // past its time: only the hidden page keeps it
+      expect(titles()).toEqual(['Away']);
+      React.act(() => { hidden(false); });
+      await expect.poll(() => titles().length, { timeout: 2500 }).toBe(0);
+    } finally {
+      delete (document as { hidden?: boolean }).hidden;
+    }
+  });
+
+  test('a closing toast, or the waiting line, whose fade is cancelled midway is still taken off the page', async () => {
+    await withMotion(async () => {
+      await render(<Toaster limit={1} />);
+      React.act(() => { toast({ title: 'One', duration: 0 }); });
+      React.act(() => { toast({ title: 'Two', duration: 0 }); });
+      await landed();
+      const more = q('.dk-toaster__more'), two = byTitle('Two');
+      React.act(() => { toast.dismiss(two.dataset.toast); });
+      await expect.poll(() => more.hasAttribute('data-leaving')).toBe(true);
+      // Cancelled, a fade's finished promise rejects rather than resolving: they still go.
+      [...two.getAnimations(), ...more.getAnimations()].forEach((x) => x.cancel());
+      await expect.poll(() => [two.isConnected, more.isConnected]).toEqual([false, false]);
+      expect(titles()).toEqual(['One']);
+    });
+  });
+
+  test('two toasts closed one after the other both leave, the second while the first is still fading', async () => {
+    await withMotion(async () => {
+      await render(<App />);
+      React.act(() => { toast({ title: 'A', duration: 0 }); toast({ title: 'B', duration: 0 }); toast({ title: 'C', duration: 0 }); });
+      await landed();
+      const a = byTitle('A'), b = byTitle('B');
+      React.act(() => { toast.dismiss(a.dataset.toast); });
+      React.act(() => { toast.dismiss(b.dataset.toast); });
+      expect([a.hasAttribute('data-leaving'), b.hasAttribute('data-leaving')]).toEqual([true, true]);
+      await expect.poll(() => [a.isConnected, b.isConnected]).toEqual([false, false]);
+      expect(titles()).toEqual(['C']);
+    });
+  });
+});
+
 describe('Toast: time in the waiting line (FO1)', () => {
   test('a toast pushed into the waiting line keeps its time running there, so they go in the order they came', async () => {
     await render(<><App /><button id="out">Out</button></>);

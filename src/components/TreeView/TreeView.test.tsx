@@ -192,6 +192,15 @@ describe('TreeView', () => {
     expect([...(onValueChange.mock.calls.at(-1)![0] as string[])].sort().join()).toBe('a,a1,a2,c,d');
   });
 
+  test('changing selectionMode after mounting redraws every row in view: aria-selected follows the new mode', async () => {
+    const sel = () => items().map((i) => i.getAttribute('aria-selected')).join();
+    const { rerender } = await render(<Tree selectionMode="single" defaultValue={['b']} />);
+    expect(sel()).toBe(',true,,');   // single: only the picked item says so
+    await rerender(<Tree selectionMode="multiple" defaultValue={['b']} />);
+    expect(sel()).toBe('false,true,false,false');   // multiple: every item says picked or not
+    await rerender(<Tree selectionMode="none" defaultValue={['b']} />);
+    expect(sel()).toBe(',,,');
+  });
   test('none: no aria-selected, and Enter, Space or a click opens and closes', async () => {
     await render(<Tree selectionMode="none" />);
     expect(item('a').hasAttribute('aria-selected')).toBe(false);
