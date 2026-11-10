@@ -2,7 +2,7 @@
 interface TableLabels {
     table: string;
     tableSorted: (column: string, direction: "ascending" | "descending") => string;
-    tableSelected: (count: number) => string;
+    tableSelected: (count: number, formatted: string) => string;
     clearSelection: string;
     tableResizeColumn: (column: string) => string;
     tableNarrower: string;

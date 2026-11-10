@@ -382,7 +382,7 @@ const barButton = (name: string) => [...el('bar').querySelectorAll('button')].fi
 describe('TableActionBar (62)', () => {
   test('hidden with nothing selected; "2 selected", the actions and "Clear selection" while rows are; a group named by the count', async () => {
     const log: string[] = [];
-    await render(<Picker log={log} />);
+    await render(<SerupaProvider locale="en"><Picker log={log} /></SerupaProvider>);
     expect(el('bar').hidden).toBe(true);
     await userEvent.click(box('Select Ada'));
     await userEvent.click(box('Select Linus'));
@@ -394,6 +394,14 @@ describe('TableActionBar (62)', () => {
     await userEvent.click(barButton('Delete'));
     expect(log).toEqual(['delete Ada,Linus']);
     await expect.poll(() => el('bar').hidden).toBe(true);
+  });
+
+  test('the count is in the locale\'s digits and grouping: "٢ selected" in ar-EG, "1,200 selected" in en-US', async () => {
+    await render(<>
+      <SerupaProvider locale="ar-EG"><TableActionBar id="bar-ar" count={2} /></SerupaProvider>
+      <SerupaProvider locale="en-US"><TableActionBar id="bar-many" count={1200} /></SerupaProvider>
+    </>);
+    expect(['bar-ar', 'bar-many'].map((b) => document.getElementById(el(b).getAttribute('aria-labelledby')!)?.textContent)).toEqual(['٢ selected', '1,200 selected']);
   });
 
   test('hiding with focus in it (Clear, or an action that empties the selection) moves focus to the table\'s "Select all", not the page', async () => {
@@ -432,13 +440,13 @@ describe('TableActionBar (62)', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Picker log={[]} />);
+    await render(<SerupaProvider locale="en"><Picker log={[]} /></SerupaProvider>);
     await new Promise((r) => setTimeout(r, 300));
     expect(said.filter((t) => /selected/.test(t))).toEqual([]);
     await userEvent.click(box('Select all rows'));
     await expect.poll(() => said.at(-1)).toMatch(/3 selected$/);
     seen.disconnect();
-    expect([idLabels.tableSelected(3), idLabels.clearSelection]).toEqual(['3 dipilih', 'Hapus pilihan']);
+    expect([idLabels.tableSelected(3, '3'), idLabels.clearSelection]).toEqual(['3 dipilih', 'Hapus pilihan']);
   });
 
   test('GR55: a bar rendered only while rows are selected reads out its first count', async () => {
@@ -446,7 +454,7 @@ describe('TableActionBar (62)', () => {
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const screen = await render(<div />);
-    await screen.rerender(<TableActionBar id="bar" count={1} />);
+    await screen.rerender(<SerupaProvider locale="en"><TableActionBar id="bar" count={1} /></SerupaProvider>);
     await expect.poll(() => said.at(-1)).toMatch(/1 selected$/);
     seen.disconnect();
   });
@@ -456,7 +464,7 @@ describe('TableActionBar (62)', () => {
     expect([...el('bar').querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Export']);
     await screen.rerender(<TableActionBar id="bar" count={1} onClear={() => {}} clearLabel="Deselect" />);
     expect(barButton('Deselect')).toBeTruthy();
-    await screen.rerender(<SerupaProvider labels={idLabels}><TableActionBar id="bar" count={4} onClear={() => {}} /></SerupaProvider>);
+    await screen.rerender(<SerupaProvider locale="id-ID" labels={idLabels}><TableActionBar id="bar" count={4} onClear={() => {}} /></SerupaProvider>);
     expect(el('bar').textContent).toBe('4 dipilihHapus pilihan');
   });
 
