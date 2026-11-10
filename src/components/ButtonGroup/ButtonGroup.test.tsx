@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { ToggleButton } from '../ToggleButton/ToggleButton';
 import { Menu, MenuItem } from '../Menu/Menu';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { ButtonGroup } from './ButtonGroup';
@@ -38,6 +39,18 @@ describe('ButtonGroup', () => {
     expect(['b1', 'b2', 'b3'].map((id) => corners(el(id)))).toEqual(['6px 0px 0px 6px', '0px 0px 0px 0px', '0px 6px 6px 0px']);
     await userEvent.hover(el('b2'));
     expect(['b1', 'b2'].map((id) => getComputedStyle(el(id)).zIndex)).toEqual(['auto', '10']);
+  });
+
+  test('size: every Button, IconButton and ToggleButton in it without a size of its own takes the group\'s (sm 24, md 32, lg 44px); one with its own keeps it; none leaves them at md', async () => {
+    const Group = (p: { id: string; size?: 'sm' | 'md' | 'lg' }) => (
+      <ButtonGroup id={p.id} size={p.size} aria-label="Edit">
+        <Button variant="secondary">Cut</Button><IconButton icon="content_copy" aria-label="Copy" variant="secondary" /><ToggleButton>Bold</ToggleButton><Button variant="secondary" size="sm">Own</Button>
+      </ButtonGroup>
+    );
+    await render(<><Group id="gsm" size="sm" /><Group id="gmd" size="md" /><Group id="glg" size="lg" /><Group id="gnone" /></>);
+    const heights = (id: string) => [...document.getElementById(id)!.querySelectorAll('button')].map((b) => b.getBoundingClientRect().height);
+    expect(['gsm', 'gmd', 'glg', 'gnone'].map(heights)).toEqual([[24, 24, 24, 24], [32, 32, 32, 24], [44, 44, 44, 24], [32, 32, 32, 24]]);
+    expect(document.getElementById('glg')!.querySelector('button')!.dataset.size).toBe('lg');
   });
 
   test('attached={false}: 8px apart, own corners; --button-group-gap sets the gap', async () => {
