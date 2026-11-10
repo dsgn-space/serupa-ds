@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { config } from '../../internal/config';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { Select } from '../Select/Select';
 import { component } from '../../internal/component';
@@ -111,8 +112,8 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
     let live = true;
     const again = () => { if (!live) return; setCut(0); remeasure(); };
     if (fonts.status !== 'loaded') fonts.ready.then(again, () => {});
-    fonts.addEventListener('loadingdone', again);
-    return () => { live = false; fonts.removeEventListener('loadingdone', again); };
+    const off = onFontsLoaded(again);
+    return () => { live = false; off(); };
   }, []);
   // An arrow that takes you to the first or last page turns disabled under focus (FJ1): focus goes to the other one.
   const handover = useFocusHandover();

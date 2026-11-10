@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { component } from '../../internal/component';
@@ -95,13 +96,11 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Ste
     // (font-display: swap), and the nav's own width doesn't, so the ResizeObserver doesn't fire (GR65).
     const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
     let live = true;
-    if (fonts) {
-      if (fonts.status !== 'loaded') fonts.ready.then(() => { if (live) fit(); }, () => {});
-      fonts.addEventListener('loadingdone', fit);
-    }
+    if (fonts && fonts.status !== 'loaded') fonts.ready.then(() => { if (live) fit(); }, () => {});
+    const off = onFontsLoaded(fit);
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit);
     if (ro) ro.observe(el);
-    return () => { live = false; if (fonts) fonts.removeEventListener('loadingdone', fit); if (ro) ro.disconnect(); };
+    return () => { live = false; off(); if (ro) ro.disconnect(); };
   }, [vertical, shape, size]);
   // Going to a step makes its button the current step's plain head, so React replaces the element that has focus
   // and focus would drop to the page: put it on the new current head instead (GN1).
