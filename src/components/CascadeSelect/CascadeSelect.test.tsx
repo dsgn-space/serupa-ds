@@ -308,4 +308,17 @@ describe('CascadeSelect', () => {
       ['focus', 'var(--focus-ring)', 'var(--surface-overlay)', 3],
     ])).toEqual([]);
   });
+
+  test('focus looks like the other fields\': the border and a 1px ring hugging it take the focus color, with a transparent outline for forced colors; it stays while the panel is open', async () => {
+    await render(<CascadeSelect aria-label="Region" options={regions} levels={levels} />);
+    const ring = color('var(--focus-ring)');
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(button());
+    await expect.poll(() => css(button()).borderTopColor).toBe(ring);
+    const s = css(button());
+    expect([s.boxShadow.includes(ring), /0px 0px 0px 1px/.test(s.boxShadow), s.outlineWidth, s.outlineColor, s.outlineOffset]).toEqual([true, true, '2px', 'rgba(0, 0, 0, 0)', '0px']);
+    await userEvent.keyboard('{ArrowDown}');
+    await until(() => !!panel() && !panel().hidden && document.activeElement !== button());
+    expect(css(button()).borderTopColor).toBe(ring);
+  });
 });
