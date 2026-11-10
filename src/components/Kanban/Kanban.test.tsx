@@ -200,6 +200,17 @@ describe('Kanban', () => {
     await expect.poll(() => li.style.transform).toBe('');
   });
 
+  test('a picked-up card puts itself back when focus leaves it (a click elsewhere on the page); nothing is reported', async () => {
+    const moves: KanbanMove<T>[] = [];
+    await render(<><Board moves={moves} /><button id="elsewhere">Elsewhere</button></>);
+    await userEvent.click(handle('Alpha'));
+    await userEvent.keyboard('{ArrowDown}');
+    await said('Alpha, To do, position 2 of 3.');
+    await userEvent.click(document.getElementById('elsewhere')!);
+    await said('Cancelled. Alpha is back in To do, position 1 of 3.');
+    expect([names(), moves.length]).toEqual([['To do: abc', 'Doing: d', 'Done: '], 0]);
+  });
+
   test('a pointer drag that is cancelled changes nothing', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
