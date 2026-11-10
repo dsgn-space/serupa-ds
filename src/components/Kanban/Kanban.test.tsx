@@ -27,6 +27,30 @@ function Board({ moves, dir, start }: { moves?: KanbanMove<T>[]; dir?: 'rtl'; st
 }
 
 describe('Kanban', () => {
+  test('a big board: picking a card up, moving it and dropping it redraws only the cards whose place changes, not all 300', async () => {
+    const draws = new Map<string, number>();
+    const big = ['To do', 'Doing', 'Done'].map((title, c) => ({ id: title, title, items: Array.from({ length: 100 }, (_, i) => ({ id: c + '-' + i, t: title + ' ' + i })) }));
+    // renderCard is the same function every render, as it is when it's defined outside the component or in a useCallback.
+    const card = (x: T) => { draws.set(x.id, (draws.get(x.id) || 0) + 1); return x.t; };
+    function Big() {
+      const [cols, setCols] = React.useState<KanbanColumn<T>[]>(big);
+      return <Kanban aria-label="Big" columns={cols} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={card} onMove={setCols} />;
+    }
+    await render(<Big />);
+    expect(draws.size).toBe(300);
+    draws.clear();
+    await userEvent.click(handle('To do 0'));
+    await said('Picked up To do 0. To do, position 1 of 100.');
+    expect([...draws.keys()]).toEqual(['0-0']);
+    draws.clear();
+    await userEvent.keyboard('{ArrowDown}');
+    await said('To do 0, To do, position 2 of 100.');
+    expect([...draws.keys()].sort()).toEqual(['0-0', '0-1']);
+    draws.clear();
+    await userEvent.keyboard(' ');
+    await said('To do 0 moved to To do, position 2 of 100.');
+    expect([...draws.keys()]).toEqual(['0-0']);
+  });
   test('a named group of columns, each a section headed by its title with a list of its cards; ref, className and props reach the board', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Kanban ref={ref} id="k" className="extra" data-x="y" aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
@@ -174,6 +198,17 @@ describe('Kanban', () => {
     expect([m.e, m.f]).toEqual([40, 0]);
     window.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 3, clientX: a.x, clientY: a.y }));
     await expect.poll(() => li.style.transform).toBe('');
+  });
+
+  test('a picked-up card puts itself back when focus leaves it (a click elsewhere on the page); nothing is reported', async () => {
+    const moves: KanbanMove<T>[] = [];
+    await render(<><Board moves={moves} /><button id="elsewhere">Elsewhere</button></>);
+    await userEvent.click(handle('Alpha'));
+    await userEvent.keyboard('{ArrowDown}');
+    await said('Alpha, To do, position 2 of 3.');
+    await userEvent.click(document.getElementById('elsewhere')!);
+    await said('Cancelled. Alpha is back in To do, position 1 of 3.');
+    expect([names(), moves.length]).toEqual([['To do: abc', 'Doing: d', 'Done: '], 0]);
   });
 
   test('a pointer drag that is cancelled changes nothing', async () => {
