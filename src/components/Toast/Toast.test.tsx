@@ -2,7 +2,7 @@ import * as React from 'react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, settle, withMotion } from '../../../tools/test/vitest/helpers';
+import { contrast, css, settle, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Drawer } from '../Drawer/Drawer';
@@ -19,7 +19,7 @@ const q = (sel: string) => document.querySelector(sel) as HTMLElement;
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const away = () => userEvent.hover(document.body, { position: { x: 5, y: 5 } });
 // Toasts slide in for 200ms: measure once that has finished.
-const landed = () => Promise.all(document.getAnimations().map((a) => a.finished));
+const landed = () => settled();
 
 let setPos: (p: ToasterPosition) => void = () => {};
 function App() {
@@ -471,7 +471,7 @@ describe('Toast: motion (DZ1)', () => {
       // It leaves the flow at once, so the first glides into its place now, not once the fade has ended.
       const glide = first.getAnimations().find((a) => a.id === 'dk-toast-move');
       expect(glide && ms(glide)).toBe(200);
-      await Promise.all(second.getAnimations().map((a) => a.finished));
+      await settled(second);
       await expect.poll(() => second.isConnected).toBe(false);
       await landed();
       expect(css(first).translate).toBe('none');

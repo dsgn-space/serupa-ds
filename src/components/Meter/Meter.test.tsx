@@ -149,7 +149,7 @@ describe('Meter', () => {
       await rerender(bar(70));
       const moves = own().getAnimations().filter((a): a is CSSTransition => a instanceof CSSTransition);
       expect(moves.map((a) => a.transitionProperty)).toEqual(['translate']);
-      await Promise.all(moves.map((a) => a.finished));
+      await Promise.all(moves.map((a) => a.finished.catch(() => {})));
     });
     const tr = own().parentElement!.getBoundingClientRect(), f = own().getBoundingClientRect();
     expect([share('mv'), Math.round(Math.max(f.left, tr.left) - tr.left)]).toEqual([70, 120]); // the 30% not filled is on the left

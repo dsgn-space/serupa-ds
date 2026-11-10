@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, settle, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, press, settle, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
@@ -173,7 +173,7 @@ describe('Table', () => {
     expect(rows[0].hasAttribute('aria-selected')).toBe(false);
     await userEvent.hover(rows[0].querySelector('td')!);
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
-    await Promise.all(rows[0].getAnimations().map((a) => a.finished));
+    await settled(rows[0]);
     expect(css(rows[0]).backgroundColor).toBe(NONE);
     await away();
   });

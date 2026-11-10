@@ -291,7 +291,7 @@ describe('TimePicker: autocomplete', () => {
       const list = document.getElementById(el('tp').getAttribute('aria-controls')!) as HTMLElement;
       const moves = list.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort();
       expect([moves, list.getAnimations().some((a) => a instanceof CSSAnimation), list.dataset.side, css(list).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
-      await Promise.all(list.getAnimations().map((a) => a.finished));
+      await settled(list);
       expect([css(list).opacity, css(list).scale]).toEqual(['1', 'none']);
     });
   });
