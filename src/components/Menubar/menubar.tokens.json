@@ -1,0 +1,123 @@
+{
+  "menubar": {
+    "$description": "Menubar's component tokens. Each one is an optional override: set the CSS variable (--menubar-<name>) on the page, a container or one Menubar, and every Menubar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The bar's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The line under the bar.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-border"
+          }
+        }
+      },
+      "item-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A menu's name (4.5:1 on bg, on the hover and on the open background).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-text"
+          }
+        }
+      },
+      "item-bg-hover": {
+        "$type": "color",
+        "$value": "{color.highlight}",
+        "$description": "A menu name's background under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-bg-hover"
+          }
+        }
+      },
+      "item-bg-open": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The background of the name whose menu is open.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-bg-open"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring around a menu's name (3:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "item-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "A menu name's corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space inside the bar, on every side (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-padding"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the menus' names (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-gap"
+          }
+        }
+      },
+      "item-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space each side of a menu's name (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-padding-x"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "item-height": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-sm}",
+        "$description": "A menu name's height (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-height"
+          }
+        }
+      }
+    }
+  }
+}

@@ -63,6 +63,47 @@ function moveCard<T>(columns: readonly KanbanColumn<T>[], from: Place, to: Place
   return out;
 }
 
+/* What a card calls back into the board with. The board keeps these in a ref and swaps in fresh ones each render,
+   so a card's own props say only what it shows. */
+interface KanbanCardApi {
+  click: (key: string | number) => void;
+  keyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  blur: () => void;
+  pointerDown: (key: string | number, e: React.PointerEvent<HTMLButtonElement>) => void;
+  moveTo: (key: string | number, column: number) => void;
+  handle: (key: string | number, node: HTMLButtonElement | null) => void;
+}
+interface KanbanCardProps {
+  item: unknown; itemKey: string | number; name: string; column: string; c: number; index: number;
+  dragging: boolean; pressed: boolean; disabled: boolean;
+  targets: readonly { id: string; title: string }[];   // the "Move to…" columns, all of them (this one is left out)
+  renderCard: KanbanProps<unknown>['renderCard']; labels: typeof words; hint: string; api: React.RefObject<KanbanCardApi>;
+}
+
+/* One card: memoised on what it shows, so moving a card by keyboard or pointer redraws the cards whose place
+   changes, not every card on the board (3 columns of 1,000 took a fifth of a second per arrow press). */
+const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanCardProps) {
+  const { itemKey: key, name, api, labels: L } = props;
+  return (
+    <li data-key={String(key)} className={cn('dk-kanban__card', props.dragging && 'dk-kanban__card--dragging')} data-state={props.dragging ? 'dragging' : undefined}>
+      {props.disabled ? null : (
+        <button type="button" className="dk-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={props.hint} aria-pressed={props.pressed}
+          ref={(n) => api.current.handle(key, n)}
+          onClick={() => api.current.click(key)} onKeyDown={(e) => api.current.keyDown(e)} onBlur={() => api.current.blur()}
+          onPointerDown={(e) => api.current.pointerDown(key, e)}>
+          <Icon icon={icons.DragIndicator} />
+        </button>
+      )}
+      <div className="dk-kanban__content">{props.renderCard(props.item, { column: props.column, index: props.index, dragging: props.dragging })}</div>
+      {props.disabled || props.targets.length < 2 ? null : (
+        <Menu placement="bottom-end" trigger={<IconButton className="dk-kanban__menu" icon={icons.MoreVert} label={L.kanbanMoveTo(name)} size="sm" variant="ghost" />}>
+          {props.targets.map((target, t) => t === props.c ? null : <MenuItem key={target.id} onSelect={() => api.current.moveTo(key, t)}>{target.title}</MenuItem>)}
+        </Menu>
+      )}
+    </li>
+  );
+});
+
 /* Kanban: a board of columns of cards. A card moves by dragging its handle, by keyboard (Space or Enter on the handle
    picks it up, Up and Down move it within its column, Left and Right to the next column in reading order, Home and
    End to the top and bottom, Space or Enter drops it and Escape puts it back), or with its "Move to…" menu, the
@@ -119,7 +160,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
 
   // Keyboard, and a click that didn't drag (a screen reader's virtual click, a tap): pick up, then drop.
   const dragged = React.useRef(false);
-  const onClick = (key: string | number) => () => {
+  const onClick = (key: string | number) => {
     if (props.disabled) return;
     if (dragged.current) { dragged.current = false; return; }
     if (drag && !drag.pointer) { finish(drag, true); return; }
@@ -177,7 +218,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   latest.current = { columns, find, finish };
   const stop = React.useRef<(() => void) | null>(null);
   React.useEffect(() => () => { if (stop.current) stop.current(); }, []);
-  const onPointerDown = (key: string | number) => (e: React.PointerEvent<HTMLButtonElement>) => {
+  const onPointerDown = (key: string | number, e: React.PointerEvent<HTMLButtonElement>) => {
     dragged.current = false;
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
     const card = e.currentTarget.closest('li')!.getBoundingClientRect();
@@ -266,20 +307,34 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   };
   // The dragged card sits under the pointer, wherever the board has placed it: after each render that moves it, and
   // on each pointer move or scroll that doesn't (those leave the board's state alone).
+  // Only the dragged card is moved, so only it (and the one moved last, if another) is touched, not every card.
+  const moved = React.useRef<HTMLElement | null>(null);
   const follow = () => {
-    const p = pointer.current, d = current.current, cards = board.current ? [...board.current.querySelectorAll<HTMLElement>('li[data-key]')] : [];
-    for (const li of cards) {
-      if (p && p.moved && d && d.pointer && li.dataset.key === String(d.key)) {
-        li.style.transform = '';
-        const b = li.getBoundingClientRect();
-        li.style.transform = 'translate(' + Math.round(p.x - p.gx - b.left) + 'px, ' + Math.round(p.y - p.gy - b.top) + 'px)';
-      } else if (li.style.transform) li.style.transform = '';
+    const p = pointer.current, d = current.current;
+    const li = p && p.moved && d && d.pointer && board.current ? board.current.querySelector<HTMLElement>(`li[data-key="${CSS.escape(String(d.key))}"]`) : null;
+    if (moved.current && moved.current !== li) moved.current.style.transform = '';
+    moved.current = li;
+    if (li && p) {
+      li.style.transform = '';
+      const b = li.getBoundingClientRect();
+      li.style.transform = 'translate(' + Math.round(p.x - p.gx - b.left) + 'px, ' + Math.round(p.y - p.gy - b.top) + 'px)';
     }
   };
   const followRef = React.useRef(follow);
   followRef.current = follow;
   // every render: a render moves the cards; outside a drag it only clears a transform left behind.
   useIsoLayoutEffect(() => { follow(); });
+
+  const api = React.useRef<KanbanCardApi>(null!);
+  api.current = {
+    click: onClick, keyDown: onKeyDown, blur: onBlur, pointerDown: onPointerDown, moveTo,
+    handle: (key, n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); },
+  };
+  // The "Move to…" columns, kept the same while their ids and titles are, so a drop doesn't redraw every card's menu.
+  const kept = React.useRef<{ id: string; title: string }[]>([]);
+  if (kept.current.length !== columns.length || columns.some((c, i) => c.id !== kept.current[i].id || c.title !== kept.current[i].title))
+    kept.current = columns.map((c) => ({ id: c.id, title: c.title }));
+  const targets = kept.current;
 
   const mergedRef = useMergedRef(ref, (n) => { board.current = n; });
   return (<>
@@ -300,24 +355,10 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
             </div>
             <ul role="list" className="dk-kanban__cards" aria-labelledby={titleId}>
               {col.items.map((it, index) => {
-                const key = getKey(it), dragging = !!drag && drag.key === key, name = getLabel(it);
-                return (
-                  <li key={key} data-key={String(key)} className={cn('dk-kanban__card', dragging && 'dk-kanban__card--dragging')} data-state={dragging ? 'dragging' : undefined}>
-                    {props.disabled ? null : (
-                      <button type="button" className="dk-kanban__handle" aria-label={L.kanbanMove + ' ' + name} aria-describedby={base + '-hint'} aria-pressed={dragging && !drag.pointer}
-                        ref={(n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); }}
-                        onClick={onClick(key)} onKeyDown={onKeyDown} onBlur={onBlur} onPointerDown={onPointerDown(key)}>
-                        <Icon icon={icons.DragIndicator} />
-                      </button>
-                    )}
-                    <div className="dk-kanban__content">{props.renderCard(it, { column: col.id, index, dragging })}</div>
-                    {props.disabled || columns.length < 2 ? null : (
-                      <Menu placement="bottom-end" trigger={<IconButton className="dk-kanban__menu" icon={icons.MoreVert} label={L.kanbanMoveTo(name)} size="sm" variant="ghost" />}>
-                        {columns.map((target, t) => t === c ? null : <MenuItem key={target.id} onSelect={() => moveTo(key, t)}>{target.title}</MenuItem>)}
-                      </Menu>
-                    )}
-                  </li>
-                );
+                const key = getKey(it), dragging = !!drag && drag.key === key;
+                return <KanbanCard key={key} item={it} itemKey={key} name={getLabel(it)} column={col.id} c={c} index={index}
+                  dragging={dragging} pressed={dragging && !drag.pointer} disabled={!!props.disabled} targets={targets}
+                  renderCard={props.renderCard} labels={L} hint={base + '-hint'} api={api} />;
               })}
               {col.items.length ? null : <li className="dk-kanban__empty">{L.kanbanEmpty}</li>}
             </ul>

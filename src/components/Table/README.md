@@ -71,6 +71,26 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - With `stickyHeader`, give the frame a height through `containerProps`. The frame measures the header and keeps that much scroll padding at the top, so a focused link or button in a row scrolls into view below the header, not under it (WCAG 2.4.11).
 - For thousands of rows, use `TableVirtualBody` in place of `TableBody`: it draws only the rows in view of the frame, plus a few either side, so 10,000 rows scroll as quickly as 20. Give the frame a height (`containerProps={{ style: { maxHeight: 480 } }}`, usually with `stickyHeader`), since without one every row is in view. Columns size to the rows drawn, so set widths (`table-layout: fixed` or a width per header cell) where a column mustn't shift while scrolling. Each drawn row gets `aria-rowindex` and the table `aria-rowcount`, a row with focus stays drawn when it scrolls away, and `striped` shades the same rows as a `TableBody` would. In print it draws every row, up to the first 5,000 (about 100 pages); for more, offer an export (CSV) instead of print. Sorting and filtering stay yours: sort the data, then draw row `index` from it.
 
+### Loading, empty and failed
+
+The table keeps its header and caption in every state, so the page doesn't move and people know what's coming.
+
+- **Loading:** set `busy` on the Table and draw a `TableLoadingRows` in place of the `TableBody`, with `columns` set to every column and `rows` to about as many rows as will come (up to a screenful). Each placeholder row is as tall as a real one, at either `size`, so nothing jumps when the data arrives. Name the wait in `label` ("Loading projects"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `busy` sets `aria-busy` on the table while it lasts. To reload rows already shown, keep them and set `busy`, or swap them for placeholders if the old ones would mislead.
+- **Empty:** a `TableBody` with one `TableMessageRow` (`colSpan` of every column) holding an `EmptyState size="sm"`: what's missing, and the action that adds the first one.
+- **Failed:** the same row with a danger `Alert`, which says what didn't load and offers Retry in `actions`. A danger Alert is `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+<Table caption="Projects" busy={state === 'loading'}>
+  <TableHead>…</TableHead>
+  {state === 'loading' ? <TableLoadingRows columns={4} rows={5} label="Loading projects" />
+    : <TableBody>
+        {state === 'failed' ? <TableMessageRow colSpan={4}><Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Projects didn't load.</Alert></TableMessageRow>
+          : projects.length ? projects.map((p) => <TableRow key={p.id}>…</TableRow>)
+          : <TableMessageRow colSpan={4}><EmptyState size="sm" title="No projects yet" /></TableMessageRow>}
+      </TableBody>}
+</Table>
+```
+
 ## Accessibility
 
 - It's a real `<table>`, so screen readers announce rows, columns and headers. Give it a `caption` (or `aria-label`) so people know what it holds.
@@ -108,6 +128,7 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 | `hideCaption` | boolean | `false` | Hides the caption on screen; screen readers still announce it. |
 | `pinStart` | boolean | `false` | Keeps the first column in view while the table scrolls sideways |
 | `pinEnd` | boolean | `false` | Keeps the last column in view while the table scrolls sideways |
+| `busy` | boolean | `false` | Its rows are loading: sets `aria-busy` on the table. Pair it with `TableLoadingRows` |
 | `containerProps` | div props | none | Go to the scrolling frame, which has `data-component="table"`. An `aria-label` or `aria-labelledby` here names the frame only while it scrolls (when it's a region); a caption takes precedence |
 
 `className`, `ref` and everything else go to the `<table>`.
@@ -124,6 +145,8 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 | `TableCell` | `<td>` | `align`; `'end'` also gives tabular digits, for numbers; `link`: in a row with `href`, this cell holds the row's link (default: the first `TableCell`) |
 | `TableExpandCell` | `<td>` with a button, or `<th scope="col">` with `header` | `label`: the row's name, for the button's; `expanded`, `onExpandedChange(expanded)`; `controls`: its `TableDetailRow`'s id; the rest goes to the cell |
 | `TableDetailRow` | `<tr>` with one `<td>` across | `open` (required: hidden while false), `colSpan` (required: every column); `id`, `className`, `ref` and the rest go to the `<tr>` |
+| `TableLoadingRows` | `<tbody>` of placeholder rows | `columns` (required: every column), `rows` (default 3), `label`: said once as they appear (default "Loading"); the rest goes to the `<tbody>` |
+| `TableMessageRow` | `<tr>` with one `<td>` across | `colSpan` (required: every column); children are the message, such as an EmptyState or an Alert with Retry; the rest goes to the `<tr>` |
 | `TableColumnsMenu` | a Button and a Popover | `columns` (required: `{ id, label, visible, required? }` in the table's order), `onColumnsChange(columns, { id, visible })` (required), `label` (default "Columns") |
 | `TableVirtualBody` (beta) | `<tbody>` drawing only the rows in view | `count` (required); `renderRow(index)` (required) returns a `TableRow`; `itemKey(index)`: a stable key per row (default the index); `estimatedRowHeight`: a guess for rows not drawn yet (default 41, 36 at `size="sm"`); `overscan`: rows drawn beyond each edge (default 6); the rest goes to the `<tbody>` |
 
