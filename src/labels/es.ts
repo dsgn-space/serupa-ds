@@ -301,5 +301,8 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'de ' + from + ' a ' + to,
   repeats: 'Se repite',
   noEvents: 'No hay eventos este mes.',
+  dateFieldDay: 'Día',
+  dateFieldMonth: 'Mes',
+  dateFieldYear: 'Año',
   scrollArea: 'Contenido desplazable',
 };

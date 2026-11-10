@@ -300,5 +300,8 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + '~' + to,
   repeats: '반복',
   noEvents: '이번 달에는 일정이 없습니다.',
+  dateFieldDay: '일',
+  dateFieldMonth: '월',
+  dateFieldYear: '연도',
   scrollArea: '스크롤 콘텐츠',
 };

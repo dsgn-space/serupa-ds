@@ -304,5 +304,8 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'с ' + from + ' до ' + to,
   repeats: 'Повторяется',
   noEvents: 'В этом месяце нет событий.',
+  dateFieldDay: 'День',
+  dateFieldMonth: 'Месяц',
+  dateFieldYear: 'Год',
   scrollArea: 'Прокручиваемое содержимое',
 };

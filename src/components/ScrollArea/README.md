@@ -27,7 +27,7 @@ import { ScrollArea } from "serupa-ds";
 Drawn from the `Playground` story.
 
 1. **Box** (`.dk-scroll-area`): the scrolling container, with the browser's own scrollbar made thin, a field-border thumb on a clear track.
-2. **Fade** (`.dk-scroll-area--more-end`, or `--more-start`): with `fade`, the content fades out over 32px at an edge with more past it.
+2. **Fade** (`.dk-scroll-area--more-end`): with `fade`, the content fades out over 32px at an edge with more past it (`--more-start` at the start).
 
 ## Usage
 
