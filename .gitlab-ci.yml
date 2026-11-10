@@ -409,6 +409,13 @@ cross-browser:
     # beyond the component folders passes without running (--narrowed-only) and is left to the nightly. Narrowed (the
     # browsers' own engines are slower, and Firefox runs one file at a time); the nightly runs them all.
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $GROUP == "components"
+    # A merge request that changes pictures (a Chromium baseline, or a Firefox or WebKit one): Visual in Firefox and
+    # WebKit too, narrowed like the suite's, and required, so their baselines move in the same merge request rather
+    # than going stale until the nightly finds them. When it fails on purpose, tools/take-cross-baselines.mjs
+    # <pipeline id> takes the pictures it drew; look at them and commit them.
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $GROUP == "visual"
+      changes: [tools/test/baseline-visual/**/*, tools/test/baseline-visual-firefox/**/*, tools/test/baseline-visual-webkit/**/*]
+      allow_failure: false
   parallel:
     matrix:
       - BROWSER: [firefox, webkit]
@@ -417,10 +424,15 @@ cross-browser:
     # Metric-compatible fonts for the Arial and Times a test may ask for, as the GitHub workflow installed.
     - apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
     - set -o pipefail
-    # On a merge request, only a narrowed run (--narrowed-only, run.mjs): a change beyond the component folders is left to the nightly.
-    - node tools/test/run.mjs --browser "$BROWSER" --group "$GROUP" ${CI_MERGE_REQUEST_DIFF_BASE_SHA:+--since "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --narrowed-only} ${SERUPA_VISUAL_UPDATE:+--update} 2>&1 | tee test-output.txt
+    # On a merge request, the component tests run only narrowed (--narrowed-only, run.mjs): a change beyond the
+    # component folders is left to the nightly. Visual there is narrowed the same way, but a wider change runs it whole.
+    - NARROW=""
+    - if [ -n "$CI_MERGE_REQUEST_DIFF_BASE_SHA" ]; then NARROW="--since $CI_MERGE_REQUEST_DIFF_BASE_SHA"; fi
+    - if [ -n "$NARROW" ] && [ "$GROUP" = components ]; then NARROW="$NARROW --narrowed-only"; fi
+    - node tools/test/run.mjs --browser "$BROWSER" --group "$GROUP" $NARROW ${SERUPA_VISUAL_UPDATE:+--update} 2>&1 | tee test-output.txt
   after_script:
     - grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150 || true
+    - if [ "$GROUP" = visual ] && [ "$CI_JOB_STATUS" != success ]; then echo "If these pictures changed on purpose, take them with GITLAB_TOKEN=… node tools/take-cross-baselines.mjs $CI_PIPELINE_ID, look at them and commit them."; fi
   artifacts:
     when: always
     expire_in: 14 days
