@@ -93,7 +93,7 @@ export const Cards: Story = {
   </Field>,
 };
 export const CardsInvalid: Story = {
-  render: () => <Field group label="Interests" error="Pick at least one.">
+  render: () => <Field group label="Interests" error="Choose at least one.">
     <CheckboxGroup name="interests" variant="card">
       <Checkbox value="design" description="Components, tokens and patterns">Design</Checkbox>
       <Checkbox value="code">Engineering</Checkbox>

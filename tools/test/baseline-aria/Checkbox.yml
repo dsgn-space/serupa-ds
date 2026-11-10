@@ -17,7 +17,7 @@
     - text: Design Components, tokens and patterns
     - checkbox "Engineering" [invalid]
     - text: Engineering
-  - text: Pick at least one.
+  - text: Choose at least one.
 
 # Group
 - group "Teams to notify":
