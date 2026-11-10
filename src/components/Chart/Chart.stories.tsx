@@ -1,6 +1,9 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Chart } from './Chart';
+import { Chart, type ChartProps } from './Chart';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { EmptyState } from '../EmptyState/EmptyState';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const meta = {
@@ -89,3 +92,20 @@ export const LongText: Story = {
   },
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 };
+
+// Loading, empty and failed: the placeholder is as tall as the plot, and a failure offers Retry.
+function States(args: ChartProps) {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'empty' | 'failed'>('loading');
+  const loaded = state === 'loaded';
+  return (
+    <div style={{ display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Visitors didn't load. Check your connection and try again.</Alert>
+        : state === 'empty' ? <EmptyState size="sm" title="No visitors yet" description="Visits show here from the day the site goes live." />
+        : <Chart {...args} busy={!loaded} loadingLabel="Loading visitors" categories={loaded ? args.categories : []} series={loaded ? args.series : []} />}
+    </div>
+  );
+}
+export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };

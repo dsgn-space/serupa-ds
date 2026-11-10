@@ -52,6 +52,19 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
 - Bars and areas always start at zero. A line starts at zero too, unless its values sit so far from it that zero would flatten them.
 - Put it in a [Card](../Card/README.md) for a dashboard tile. It takes its box's width and the `height` you give it (240px by default).
 
+### Loading, empty and failed
+
+- **Loading:** set `busy` and pass no categories yet. The plot is a placeholder block at its `height`, so nothing jumps when the numbers arrive, and the table button waits. Name the wait in `loadingLabel` ("Loading visitors"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh numbers already shown, keep them in and set `busy`: the chart stays as it is until the new ones arrive.
+- **Empty:** in place of the Chart, an [EmptyState](../EmptyState/README.md) that says why there's nothing yet. A chart of zeros reads as a real result.
+- **Failed:** in place of the Chart, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+{state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Visitors didn't load.</Alert>
+  : state === 'loaded' && !months.length ? <EmptyState size="sm" title="No visitors yet" />
+  : <Chart title="Visitors" busy={state === 'loading'} loadingLabel="Loading visitors"
+      categories={months} series={[{ name: "Visitors", values: visits }]} />}
+```
+
 ## Accessibility
 
 - **Role and name:** a `<figure>` named by its title (`figcaption`). The plot is a group named by its kind ("Line chart") and described by a summary: how many series and points, from which category to which, and each series' lowest and highest value.
@@ -86,6 +99,8 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
 | `hideLegend` | `boolean` | `false` | With one series, or when the title names them. |
 | `categoryLabel` | `string` | `"Category"` | The first column's heading in the table. |
 | `view`, `defaultView`, `onViewChange` | `'chart' \| 'table'` | `'chart'` | Controlled or not. |
+| `busy` | `boolean` | `false` | Sets `aria-busy`. With no categories yet, the plot is a placeholder at its height. |
+| `loadingLabel` | `string` | `"Loading…"` | Said once as the placeholder appears. |
 | `id` | string | none | Goes to the root `<figure>`. |
 
 `className`, `ref` and other props go to the `<figure>`.
