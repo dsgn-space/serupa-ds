@@ -8,7 +8,8 @@
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import { read, writePage, browser, cleanup, report, done, PROJECT } from './lib.mjs';
+import { fileURLToPath } from 'node:url';
+import { ENGINE, read, writePage, browser, cleanup, report, done, serve, PROJECT } from './lib.mjs';
 
 // The table, from its parts (src/material/part/NN.ts), which src/material/icons.ts re-exports.
 const parts = fs.readdirSync(path.join(PROJECT, 'src/material/part')).sort().map((f) => read('src/material/part/' + f)).join('');
@@ -48,8 +49,11 @@ const added = await p.evaluate(() => [...document.scripts].filter((s) => /serupa
 t('serupa.iife.js alone adds serupa-icons.iife.js to the page once, for all the names outside the everyday set', added === 1, `${added} script tags`);
 t(`all ${names.length} Material Symbols draw by name, as an SVG`, !missing.length, missing.join(', '));
 
-// Pixel for pixel: each SVG against the font glyph it was drawn from, both 24px with the font at its opsz 24.
-const differ = await p.evaluate((icons) => {
+// Pixel for pixel: each SVG against the font glyph it was drawn from, both 24px with the font at its opsz 24. In
+// Chromium only, where the paths were checked against the font: Firefox and WebKit rasterize a font's glyph a little
+// differently from the same outline as a path (6 to 33 pixels' worth an icon), so there it would measure the engine's
+// font rasterizer, not the paths, which are the same files in every browser.
+const differ = ENGINE !== 'chromium' ? [] : await p.evaluate((icons) => {
   const bad = [];
   const alpha = (draw) => { const c = document.createElement('canvas'); c.width = c.height = 24; const x = c.getContext('2d'); draw(x); return x.getImageData(0, 0, 24, 24).data; };
   for (const [n, d] of icons) {
@@ -61,7 +65,7 @@ const differ = await p.evaluate((icons) => {
   }
   return bad;
 }, [...all]);
-t('each icon draws exactly as the 5.x icon font did', !differ.length, differ.join(', '));
+if (ENGINE === 'chromium') t('each icon draws exactly as the 5.x icon font did', !differ.length, differ.join(', '));
 
 const one = await p.evaluate(() => {
   const q = (s) => document.querySelector(s);
@@ -80,14 +84,17 @@ await q.waitForTimeout(300);
 t(`on a plain page any of the ${all.size} names works ("sports_cricket"), with serupa-icons.iife.js loaded or not`, await q.evaluate(() => !!document.querySelector('#r svg path')));
 t('a page that includes serupa-icons.iife.js itself gets no second copy', await q.evaluate(() => [...document.scripts].filter((s) => /serupa-icons\.iife\.js$/.test(s.src)).length) === 1);
 // Without the file beside it (a page that copied serupa.iife.js alone), the box stays empty and the warning says what to include.
+// Over http: Firefox doesn't let route() abort a file:// script, so the icon would draw.
+const srv = serve(PROJECT);
 const lone = await b.newPage();
 const said = [];
 lone.on('console', (m) => said.push(m.text()));
 await lone.route('**/serupa-icons.iife.js', (r) => r.abort());
-await lone.goto(writePage('icon-lone.html', `<div id="root"></div><script>
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Serupa.Icon, { id: 'r', name: 'sports_cricket' }));</script>`, { react: true }));
+await lone.goto(`${srv.base}/${path.relative(PROJECT, fileURLToPath(writePage('icon-lone.html', `<div id="root"></div><script>
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Serupa.Icon, { id: 'r', name: 'sports_cricket' }));</script>`, { react: true })))}`);
 await lone.waitForTimeout(300);
 t('when serupa-icons.iife.js is missing, the icon stays empty and the warning says to include it', !(await lone.evaluate(() => document.querySelector('#r svg'))) && said.some((w) => w.includes('include serupa-icons.iife.js')), said.join(' | '));
 await b.close();
+srv.close();
 cleanup();
 done(report('Icon names', R));

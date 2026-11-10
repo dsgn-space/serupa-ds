@@ -1,11 +1,10 @@
 // Inter split by script (F6, tools/fonts/subset.py): tokens.css gives each file its unicode-range, so an English page
 // downloads the latin files only, and text in every script Inter covers draws exactly as with the whole font (the
-// same pixels: no glyph, feature or weight lost). Chromium.
+// same pixels: no glyph, feature or weight lost; pixel for pixel in Chromium, which can turn hinting off).
 //   node tools/test/font-subsets.mjs
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { PROJECT, browser, read, report, done } from './lib.mjs';
+import { ENGINE, PROJECT, browser, read, report, done, servePages } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -14,9 +13,8 @@ t('every face in tokens.json is a file in fonts/ with a unicode-range', faces.le
 const fallbacks = JSON.parse(read('tokens.json')).type.fallbacks || [];
 t('tokens.css has an @font-face with its unicode-range for each (and for each Inter Fallback face)', (read('tokens.css').match(/unicode-range:/g) || []).length === faces.length + fallbacks.length, `${(read('tokens.css').match(/unicode-range:/g) || []).length} of ${faces.length + fallbacks.length}`);
 
-// Its own folder, not .test-tmp/: the other suites running beside it empty that one when they finish.
-const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-fonts-'));
-const at = (f) => 'file://' + path.join(PROJECT, f);
+const pages = servePages('fonts');
+const at = pages.at;
 // Hinting off. With it on (Linux CI), FreeType's autohinter works out its measurements from each file's own
 // glyphs, so a line that mixes subsets can land a pixel wider or narrower than with the whole font. That is how
 // hinting treats any split font, not a missing glyph or feature, which is what this test looks for.
@@ -24,8 +22,8 @@ const b = await browser(['--font-render-hinting=none']);
 const p = await b.newPage({ viewport: { width: 900, height: 520 } });
 const fetched = [];
 p.on('request', (r) => { if (r.url().endsWith('.woff2')) fetched.push(r.url().split('/').pop()); });
-fs.writeFileSync(path.join(dir, 'font-english.html'), `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="${at('tokens.css')}"><body style="font-family:var(--font-sans)"><p>Save — 12.50 € … “Ready”, <b>bold</b> <i>and italic</i>.</p>`);
-await p.goto('file://' + path.join(dir, 'font-english.html'));
+const english = pages.write('font-english.html', `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="${at('tokens.css')}"><body style="font-family:var(--font-sans)"><p>Save — 12.50 € … “Ready”, <b>bold</b> <i>and italic</i>.</p>`);
+await p.goto(english);
 await p.evaluate(() => document.fonts.ready);
 t('an English page downloads only the latin files, upright and italic', fetched.sort().join() === 'InterVariable-Italic-latin.woff2,InterVariable-latin.woff2', fetched.join(', '));
 
@@ -46,8 +44,7 @@ const whole = `@font-face{font-family:T;src:url("${at('fonts/InterVariable.woff2
 const split = faces.map((f) => `@font-face{font-family:T;src:url("${at(f.file)}");font-weight:${f.weight};font-style:${f.style};unicode-range:${f.unicodeRange}}`).join('');
 // A picture of each line, as base64.
 const shots = async (name, css) => {
-  fs.writeFileSync(path.join(dir, name), `<!doctype html><meta charset="utf-8"><style>${css} body{font-family:T;font-size:22px;margin:8px} p{width:max-content}</style>${text}`);
-  await p.goto('file://' + path.join(dir, name));
+  await p.goto(pages.write(name, `<!doctype html><meta charset="utf-8"><style>${css} body{font-family:T;font-size:22px;margin:8px} p{width:max-content}</style>${text}`));
   // Load every face first: one with a unicode-range only starts loading when layout meets one of its characters, and
   // on a busy runner fonts.ready can settle before that.
   await p.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(() => ok()))); });
@@ -71,11 +68,15 @@ const differ = (x, y) => p.evaluate(async ([x, y]) => {
   }
   return n ? `${n} of ${ia.width * ia.height} pixels differ, x ${left}-${right}` : '';
 }, [x, y]);
-for (let i = 0; i < LINES.length; i++) {
+// Pixel for pixel in Chromium, with its hinting off. Firefox and WebKit hint a web font (there's no switch for it), and
+// FreeType's autohinter measures each file from its own glyphs, so a split line lands a pixel off the whole font's
+// in them however right the files are. The files are the same in every engine; what is the engine's own, that an
+// English page fetches only the latin files, is checked in all three.
+for (let i = 0; i < (ENGINE === 'chromium' ? LINES.length : 0); i++) {
   const d = a[i] === c[i] ? '' : await differ(a[i], c[i]);
   t(`${LINES[i][0]} draws the same pixels as with the whole font`, !d, d);
 }
 
 await b.close();
-fs.rmSync(dir, { recursive: true, force: true });
+pages.close();
 done(report('Font subsets', R));
