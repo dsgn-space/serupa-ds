@@ -225,11 +225,15 @@ To update Serupa, change the tag of \`serupa-ds\` in \`package.json\`, run \`npm
 }
 
 function main(argv) {
+  const USAGE = 'usage: serupa-create <folder> [--brand blue|violet|emerald]';
+  if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); return 0; }
   const opt = (flag) => { const i = argv.indexOf(flag); if (i < 0) return undefined; const v = argv[i + 1]; argv.splice(i, 2); return v; };
   const brand = opt('--brand') ?? 'blue';
   let serupa = opt('--serupa');
-  const [dir] = argv;
-  if (!dir || dir.startsWith('-')) { console.error('usage: serupa-create <folder> [--brand blue|violet|emerald]'); return 2; }
+  const unknown = argv.find((a) => a.startsWith('-'));
+  if (unknown) { console.error(`serupa-create: unknown option ${unknown}\n${USAGE}`); return 2; }
+  const [dir, extra] = argv;
+  if (!dir || extra !== undefined) { console.error(USAGE); return 2; }
   if (!BRANDS.includes(brand)) { console.error(`--brand is one of ${BRANDS.join(', ')}, not "${brand}"`); return 2; }
   const target = path.resolve(dir);
   if (fs.existsSync(target) && fs.readdirSync(target).length) { console.error(`${dir} isn't empty: pick a new folder.`); return 1; }
