@@ -22,6 +22,7 @@ import acr from './acr.json';
 import { componentTests } from './generated/tested';
 import { changesFor } from './changes';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
+import { DoDont, doDontAt } from './doDont';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 
@@ -60,8 +61,9 @@ export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
   return <>
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
-    {anatomyAt(source.replace(/^# .*\n+/, '')).map((part, i) => (typeof part === 'string'
+    {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <Markdown key={i}>{relink(part)}</Markdown>
+      : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
     {name && <ComponentChanges name={name} />}

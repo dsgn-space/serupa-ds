@@ -25,6 +25,24 @@
 # DisabledWithReason
 - button "Save" [disabled]
 
+# DoOnePrimary
+- button "Cancel"
+- button "Preview"
+- button "Publish"
+
+# DoVerbLabels
+- button "Keep project"
+- button "Delete project"
+
+# DontManyPrimaries
+- button "Cancel"
+- button "Preview"
+- button "Publish"
+
+# DontVagueLabels
+- button "No"
+- button "Yes"
+
 # Loading
 - button "Save"
 
