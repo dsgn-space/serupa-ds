@@ -68,18 +68,20 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     window.addEventListener('scroll', scrolled, true); window.addEventListener('resize', resized);
     // A web font arriving moves text, and the anchor in it, without a resize a ResizeObserver sees: an inline
     // anchor (a Link in a sentence) has no box for one, and one further down only moves. Placed again once the
-    // fonts are ready ("loadingdone" would do, but WebKit doesn't send it).
+    // load is done and laid out: a frame after "loadingdone", or after the set is ready following "loading", since
+    // WebKit sends only that.
     const fonts = document.fonts;
     let live = true;
-    const font = () => { void fonts.ready.then(() => { if (live) resized(); }); };
-    if (fonts) fonts.addEventListener('loading', font);
+    const again = () => requestAnimationFrame(() => { if (live) resized(); });
+    const font = () => { void fonts.ready.then(again); };
+    if (fonts) { fonts.addEventListener('loading', font); fonts.addEventListener('loadingdone', again); }
     // A phone's keyboard opening, or pinch-zoom, moves the visual viewport without a window resize or scroll.
     const vv = window.visualViewport;
     if (vv) { vv.addEventListener('resize', resized); vv.addEventListener('scroll', update); }
     return () => {
       if (ro) ro.disconnect(); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
       live = false;
-      if (fonts) fonts.removeEventListener('loading', font);
+      if (fonts) { fonts.removeEventListener('loading', font); fonts.removeEventListener('loadingdone', again); }
       if (vv) { vv.removeEventListener('resize', resized); vv.removeEventListener('scroll', update); }
     };
   }, [open, layer, anchor, placement, fallback, offsetVar, matchWidth, watch, docked]);
