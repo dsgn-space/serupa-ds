@@ -470,12 +470,7 @@
         "fallbacks": [
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial",
-              "Helvetica",
-              "Liberation Sans",
-              "Arimo"
-            ],
+            "local": ["Arial", "ArialMT", "Helvetica", "Liberation Sans", "LiberationSans", "Arimo"],
             "weight": "400",
             "style": "normal",
             "sizeAdjust": "105.31%",
@@ -486,12 +481,7 @@
           },
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial Bold",
-              "Helvetica Bold",
-              "Liberation Sans Bold",
-              "Arimo Bold"
-            ],
+            "local": ["Arial Bold", "Arial-BoldMT", "Helvetica Bold", "Helvetica-Bold", "Liberation Sans Bold", "LiberationSans-Bold", "Arimo Bold", "Arimo-Bold", "Arial", "Helvetica", "Liberation Sans", "Arimo"],
             "weight": "700",
             "style": "normal",
             "sizeAdjust": "101.06%",
@@ -502,12 +492,7 @@
           },
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial Italic",
-              "Helvetica Oblique",
-              "Liberation Sans Italic",
-              "Arimo Italic"
-            ],
+            "local": ["Arial Italic", "Arial-ItalicMT", "Helvetica Oblique", "Helvetica-Oblique", "Liberation Sans Italic", "LiberationSans-Italic", "Arimo Italic", "Arimo-Italic", "Arial", "Helvetica", "Liberation Sans", "Arimo"],
             "weight": "400",
             "style": "italic",
             "sizeAdjust": "105.81%",
@@ -518,12 +503,7 @@
           },
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial Bold Italic",
-              "Helvetica Bold Oblique",
-              "Liberation Sans Bold Italic",
-              "Arimo Bold Italic"
-            ],
+            "local": ["Arial Bold Italic", "Arial-BoldItalicMT", "Helvetica Bold Oblique", "Helvetica-BoldOblique", "Liberation Sans Bold Italic", "LiberationSans-BoldItalic", "Arimo Bold Italic", "Arimo-BoldItalic", "Arial", "Helvetica", "Liberation Sans", "Arimo"],
             "weight": "700",
             "style": "italic",
             "sizeAdjust": "101.54%",
