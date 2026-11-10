@@ -76,7 +76,9 @@ describe('Patterns/Data import', () => {
     await render(<DataImport start="check" file={FILE} existing={['ani@example.com']} onImport={onImport} />);
     expect(page.getByRole('main').element().textContent).toMatch(/2 rows are ready: 1 new customer and 1 update to customers you have\. 1 row has problems, listed first\. Nothing is saved until you import\./);
     const rows = page.getByRole('row').elements().slice(1).map((r) => [...r.querySelectorAll('td')].map((c) => c.textContent));
-    expect(rows.map((r) => [r[0], r[1], r[2]])).toEqual([['3', 'Problem', '“citra@example” isn’t an email address'], ['2', 'Update', ''], ['4', 'New', '']]);
+    // Line numbers are written in the reader's digits (Arabic-Indic in ar-EG); read them back as Latin.
+    const latin = (t: string | null) => (t || '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+    expect(rows.map((r) => [latin(r[0]), r[1], r[2]])).toEqual([['3', 'Problem', '“citra@example” isn’t an email address'], ['2', 'Update', ''], ['4', 'New', '']]);
     await userEvent.click(page.getByRole('button', { name: 'Import 2 customers' }));
     await expect.poll(() => active().textContent).toMatch(/There is a problem/);
     expect(onImport).not.toHaveBeenCalled();
