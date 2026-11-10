@@ -27,7 +27,7 @@ try {
     ['no sources', [], 'no source files or folders given'],
   ]) {
     const r = cli(...args);
-    t(`stops on ${label}, saying so`, r.status === 2 && r.stderr.includes(word) && r.stderr.includes('usage:') && !/\n\s+at /.test(r.stderr), `exit ${r.status}: ${r.stderr.slice(0, 300)}`);
+    t(`stops on ${label}, saying so`, r.status === 2 && String(r.stderr).includes(String(word)) && String(r.stderr).includes('usage:') && !/\n\s+at /.test(String(r.stderr)), `exit ${r.status}: ${String(r.stderr).slice(0, 300)}`);
   }
   const ok = cli('page.html', '-o', 'out.css');
   t('a correct command still writes the file', ok.status === 0 && fs.existsSync(path.join(dir, 'out.css')), ok.stderr.slice(0, 300));

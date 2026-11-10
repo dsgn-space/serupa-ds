@@ -21,6 +21,7 @@ const gate = (text, labels = '', sha = SHA) => {
 const reportOf = ({ result = 'All passed', commit = SHA.slice(0, 9), command = 'node tools/ci.mjs --clean --since origin/main --report local-checks.md', extra = '' } = {}) =>
   `Some words about the change.\n\n## Local checks\n\n**${result}** on \`${commit}\`\n\nCommand: \`${command}\`\n${extra}`;
 
+/** @type {[string, string, string, number][]} */
 const table = [
   ['a passing report for this commit', reportOf(), '', 0],
   ['no report', 'Just a description.', '', 1],

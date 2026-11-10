@@ -118,13 +118,15 @@ export default defineConfig({
       // here, and tools/test/icon-names.mjs checks them as built, on a page. src/labels/ holds the language packs, which
       // no component imports: tools/test/label-packs.mjs builds each one and says every word of it.
       exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts', 'src/browser*.ts', 'src/labels/**'],
-      reporter: ['text-summary', 'html', 'json-summary'],
+      // json (coverage-final.json): each function's line, for the coverage job's added-functions check on a merge request.
+      reporter: ['text-summary', 'html', 'json-summary', 'json'],
       reportsDirectory: 'coverage',
       // Floors a little under the full run's figures on 25 Oct 2026 (96.2 / 88.6 / 98.9 / 99.6 %), so a change
       // that drops coverage fails. Raise them by hand when the figures climb; they never go down.
       // A CI shard (SERUPA_SHARD) runs a third of the files, so its own figures mean nothing: the floors are checked on
       // the shards' merged report (the coverage job, vitest --merge-reports).
-      ...(process.env.SERUPA_SHARD ? {} : { thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 } }),
+      // SERUPA_NO_FLOORS: a narrowed merge request's report (the coverage job), which leaves most of src/ unrun on purpose.
+      ...(process.env.SERUPA_SHARD || process.env.SERUPA_NO_FLOORS ? {} : { thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 } }),
     },
   },
 });

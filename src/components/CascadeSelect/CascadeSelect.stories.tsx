@@ -33,6 +33,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Chosen: Story = { name: 'With a path chosen', args: { defaultValue: ['jabar', 'bandung', 'coblong'] } };
+export const ReadOnly: Story = { args: { readOnly: true, defaultValue: ['jabar', 'bandung', 'coblong'] } };
 
 /** Open, three columns deep, the chosen district checked. */
 export const Open: Story = { args: { defaultValue: ['jabar', 'bandung', 'coblong'], defaultOpen: true } };

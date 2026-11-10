@@ -35,6 +35,7 @@ const KNOWN = {
   'from-current': 'Safari resolves currentcolor in a registered color variable to a color right away (Chrome keeps the keyword); the gradient looks the same',
   'via-current': 'same', 'to-current': 'same', 'scrollbar-thumb-current': 'same', 'scrollbar-track-current': 'same',
 };
+/** @type {[RegExp, string][]} */
 const KNOWN_PATTERNS = [
   [/^(justify|place)-self-(start|end|center|left|right|flex-start|flex-end|baseline|last-baseline|end-safe|center-safe)/, 'Safari ignores justify-self / place-self in block layout (new CSS; Chrome 130+). In grid they work (checked below)'],
 ];
@@ -83,7 +84,7 @@ const measure = ([list, internal]) => {
   const host = document.getElementById('host'); host.innerHTML = '';
   const base = document.createElement('div'); base.innerHTML = '<i>a</i><i>b</i>'; host.appendChild(base);
   const els = list.map((c) => { const w = document.createElement('section'); w.style.position = 'relative'; w.style.transform = 'translateZ(0)'; const d = document.createElement('div'); d.className = c; d.innerHTML = '<i>a</i><i>b</i>'; w.appendChild(d); host.appendChild(w); return d; });
-  const B = getComputedStyle(base), B1 = getComputedStyle(base.firstChild);
+  const B = getComputedStyle(base), B1 = getComputedStyle(/** @type {Element} */ (base.firstChild));
   const props = []; for (let j = 0; j < B.length; j++) props.push(B[j]); for (const v of internal) if (!props.includes(v)) props.push(v);
   const bv = {}, b1 = {}; props.forEach((p) => { bv[p] = B.getPropertyValue(p); b1[p] = B1.getPropertyValue(p); });
   return { props, base: bv, base1: b1, out: els.map((d) => { const s = getComputedStyle(d), s1 = getComputedStyle(d.firstChild); const o = {};
@@ -148,7 +149,7 @@ try {
   const chrome = await wd.evaluate(() => ({ w: outerWidth - innerWidth }));
   for (const [w] of [[700, 2], [900, 3], [1100, 4], [1400, 5]]) {
     await wd.size(w + chrome.w, 900);
-    await wd.evaluate((w) => new Promise((ok) => { const t0 = Date.now(); (function poll() { if (Math.abs(innerWidth - w) < 2 || Date.now() - t0 > 3000) ok(); else setTimeout(poll, 50); })(); }), w);
+    await wd.evaluate((w) => new Promise((ok) => { const t0 = Date.now(); (function poll() { if (Math.abs(innerWidth - w) < 2 || Date.now() - t0 > 3000) ok(undefined); else setTimeout(poll, 50); })(); }), w);
     const r = await wd.evaluate(() => ({ iw: innerWidth, cols: getComputedStyle(document.getElementById('r')).gridTemplateColumns.split(' ').length, h: getComputedStyle(document.getElementById('h')).display }));
     const want = r.iw >= 1280 ? 5 : r.iw >= 1024 ? 4 : r.iw >= 768 ? 3 : r.iw >= 640 ? 2 : 1;
     t(`responsive at ${r.iw}px: ${want} columns, md:block ${r.iw >= 768 ? 'shown' : 'hidden'}`, r.cols === want && r.h === (r.iw >= 768 ? 'block' : 'none'), JSON.stringify(r));
@@ -204,7 +205,7 @@ try {
   await wd.goto(writePage('compat-loader.html', '<div id="root"></div><script>var h=React.createElement;ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment,null,h(Serupa.Loader,{id:"r",size:"lg",delay:0}),h(Serupa.Loader,{id:"d",variant:"dots",delay:0}),h(Serupa.Loader,{id:"sp",variant:"spokes",delay:0}),h(Serupa.Loader,{id:"px",variant:"pixel",delay:0}),h(Serupa.Loader,{id:"l",variant:"text",label:"Loading projects",delay:0}),h("div",{style:{display:"flex",gap:"12px",width:"300px"}},h(Serupa.Loader,{id:"sc",variant:"skeleton",shape:"circle",size:"lg",label:"",delay:0}),h(Serupa.Loader,{id:"st",variant:"skeleton",lines:3,label:"",delay:0}))));</script>', { react: true }));
   const sp = await wd.evaluate(() => new Promise((res) => setTimeout(() => {
     const arc = document.querySelector('#r .dk-loader__arc'), svg = document.querySelector('#r svg');
-    const len = (ms) => { const a = arc.getAnimations().find((x) => x.animationName === 'dk-loader-arc'); if (!a) return NaN; a.pause(); a.currentTime = ms; return parseFloat(getComputedStyle(arc).strokeDasharray); };
+    const len = (ms) => { const a = arc.getAnimations().find((x) => /** @type {CSSAnimation} */ (x).animationName === 'dk-loader-arc'); if (!a) return NaN; a.pause(); a.currentTime = ms; return parseFloat(getComputedStyle(arc).strokeDasharray); };
     const v = { dot: len(0), long: len(750), turn: getComputedStyle(svg).animationName + ' ' + getComputedStyle(svg).animationDuration, dots: [...document.querySelectorAll('#d .dk-loader__dot')].map((c) => getComputedStyle(c).animationName), w: Math.round(document.getElementById('r').getBoundingClientRect().width), lab: (() => { const l = document.querySelector('#l .dk-loader__label'), g = l.querySelector('.dk-loader__glint'), st = getComputedStyle(g, '::after'); return [st.content, getComputedStyle(l).webkitTextFillColor, /gradient/.test(getComputedStyle(g).maskImage || getComputedStyle(g).webkitMaskImage), st.animationName, Math.round(l.getBoundingClientRect().width)]; })(),
       px: [...document.querySelectorAll('#px rect.dk-loader__px')].map((r) => getComputedStyle(r).animationName + '@' + getComputedStyle(r).animationDelay).join(','),
       spk: (() => { const s = document.querySelector('#sp svg'); return [document.querySelectorAll('#sp line').length, getComputedStyle(s).animationName, getComputedStyle(s).animationTimingFunction, getComputedStyle(document.querySelectorAll('#sp line')[7]).opacity]; })(),

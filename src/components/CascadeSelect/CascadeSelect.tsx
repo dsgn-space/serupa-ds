@@ -48,6 +48,8 @@ export interface CascadeSelectProps extends Omit<React.ButtonHTMLAttributes<HTML
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger outline, and aria-invalid. In a Field with an error, it's set for you. */
   invalid?: boolean | undefined;
+  /** Shows the chosen path without letting it change: focusable and read out (aria-readonly), and a form still sends the value, unlike disabled. It doesn't open. */
+  readOnly?: boolean | undefined;
   /** Submits the last value of the path with a form, under this name. */
   name?: string | undefined;
   /** Whether the panel is open (controlled). Use with onOpenChange. */
@@ -72,11 +74,11 @@ const keyOf = (values: string[]) => JSON.stringify(values);
 export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, CascadeSelectProps>('CascadeSelect', function CascadeSelect(props, ref) {
   props = useFieldControl(props);
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, loadOptions: 1, levels: 1, selectParents: 1, placeholder: 1, size: 1, invalid: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
+  const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, loadOptions: 1, levels: 1, selectParents: 1, placeholder: 1, size: 1, invalid: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1, readOnly: 1 } as const);
   const base = domId('dk-cs', React.useId());
   const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
-  const disabled = !!props.disabled;
+  const disabled = !!props.disabled, readOnly = !!props.readOnly;
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<string[]>(props.defaultValue || []);
   const value = controlled ? props.value! : own;
@@ -84,7 +86,7 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
   // Options chosen before, kept so a path whose children were loaded still reads in words.
   const [known, setKnown] = React.useState<CascadeOption[]>([]);
   const [ownOpen, setOwnOpen] = React.useState(!!props.defaultOpen);
-  const open = !disabled && (props.open !== undefined ? props.open : ownOpen);
+  const open = !disabled && !readOnly && (props.open !== undefined ? props.open : ownOpen);
   type Reason = 'trigger' | 'select' | 'escape' | 'outside' | 'reset';
   const setOpen = (next: boolean, reason: Reason) => {
     if (next === open) return;
@@ -157,7 +159,7 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
   const close = (focus: boolean, reason: Reason) => { setOpen(false, reason); if (focus && button.current) button.current.focus(); };
   // The dialog is named as the field is: its aria-label, else its <label>'s text (a Field's), read when it opens.
   const [dialogName, setDialogName] = React.useState('');
-  const show = () => { if (!disabled) setOpen(true, 'trigger'); };
+  const show = () => { if (!disabled && !readOnly) setOpen(true, 'trigger'); };
   // Each time it opens: the chosen path highlighted, its column focused, the columns on it loaded, the dialog named.
   const focusCol = React.useRef<number | null>(null);
   const first = React.useRef(true);
@@ -236,9 +238,9 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
   const empty = !value.length;
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('dk-cascade-select', 'dk-cascade-select--size-' + size, invalid && 'dk-cascade-select--invalid', disabled && 'dk-cascade-select--disabled', open && 'dk-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
+    <div className={cn('dk-cascade-select', 'dk-cascade-select--size-' + size, invalid && 'dk-cascade-select--invalid', disabled && 'dk-cascade-select--disabled', readOnly && 'dk-cascade-select--readonly', open && 'dk-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
       <button {...rest} ref={mergedRef} type="button" role="combobox" className="dk-cascade-select__button"
-        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} disabled={disabled}
+        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
         <span className={cn('dk-cascade-select__value', empty && 'dk-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</span>

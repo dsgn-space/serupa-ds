@@ -119,10 +119,10 @@ const types = Object.entries(bcd.css.types);
 css.walkDecls((d) => {
   if (d.prop.startsWith('--') || d.prop.startsWith('-') || d.parent.type === 'atrule' || asksFirst(d, d.prop)) return;
   const p = bcd.css.properties[d.prop];
-  if (!p) { unknown.add(`${d.prop} (${d.parent.selector})`); return; }
+  if (!p) { unknown.add(`${d.prop} (${/** @type {import('postcss').Rule} */ (d.parent).selector})`); return; }
   const prefixes = new Set();
   d.parent.each((n) => { const m = n.type === 'decl' && n.prop.match(/^(-webkit-|-moz-)(.*)$/); if (m && m[2] === d.prop) prefixes.add(m[1]); });
-  const where = d.parent.selector;
+  const where = /** @type {import('postcss').Rule} */ (d.parent).selector;
   note(`property ${d.prop}`, p.__compat, where, prefixes);
   for (const w of new Set(d.value.split(/[\s,()/]+/))) if (w !== '__compat' && p[w]?.__compat) note(`${d.prop}: ${w}`, p[w].__compat, where, prefixes);
   for (const [, f] of d.value.matchAll(/([a-z-]+)\(/g)) {

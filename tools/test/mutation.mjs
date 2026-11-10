@@ -89,6 +89,7 @@ function mutants(file, text) {
 
 // One Vitest for the whole run (its start, with every story drawn in Node, takes a few seconds), made again after a
 // mutant that hangs.
+/** @type {any} */
 let vitest = null;
 const start = async () => { vitest = await createVitest('test', { project: ['components'], watch: false, reporters: [{}], silent: true }); };
 const passes = async (specs, ms) => {

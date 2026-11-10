@@ -148,7 +148,7 @@ const groups = [[], ...exported.map((x) => [x])];
 const part = /^([\w-]+):(\d+)\/(\d+)$/.exec(process.env.SERUPA_TREE_SHAKE_PART || '');
 if (part) {
   const [, variant, k, n] = part;
-  const mine = groups.map((g, i) => [i, g]).filter(([i]) => i % Number(n) === Number(k));
+  const mine = groups.map((g, i) => [i, g]).filter(([i]) => Number(i) % Number(n) === Number(k));
   const kept = await rollupEach(mine.map(([, g]) => g), ROLLUP[variant]);
   // Exit once the output is written: process.exit() alone can cut a large write to a pipe short.
   await new Promise((resolve) => process.stdout.write(JSON.stringify(mine.map(([i], j) => [i, kept[j]])), resolve));

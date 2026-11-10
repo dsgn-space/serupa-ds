@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { css, lowContrast, settle } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, settle } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -248,6 +248,16 @@ describe('CascadeSelect', () => {
     expect(panel().hidden).toBe(true);
     const off = document.querySelectorAll<HTMLButtonElement>('[role=combobox]')[1];
     expect(off.disabled).toBe(true);
+  });
+
+  test('readOnly: focusable, aria-readonly, shows its path; a click, ArrowDown or Space doesn\'t open it; the form still sends the value; field-readonly background, default cursor', async () => {
+    const opened: boolean[] = [];
+    await render(<form id="f"><CascadeSelect aria-label="Wilayah" name="area" readOnly options={regions} defaultValue={['bali', 'denpasar', 'denpasar-selatan']} onOpenChange={(o) => opened.push(o)} /></form>);
+    await userEvent.click(button());
+    await userEvent.keyboard('{ArrowDown}{ArrowUp} ');
+    expect([document.activeElement === button(), button().disabled, button().getAttribute('aria-readonly'), button().getAttribute('aria-expanded'), panel().hidden, opened,
+      new FormData(document.getElementById('f') as HTMLFormElement).get('area'), button().textContent]).toEqual([true, false, 'true', 'false', true, [], 'denpasar-selatan', expect.stringContaining('Denpasar Selatan')]);
+    expect([css(button()).backgroundColor, css(button()).cursor]).toEqual([color('var(--field-readonly)'), 'default']);
   });
 
   test('a form gets the last value under name, and a reset brings back defaultValue', async () => {

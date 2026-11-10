@@ -148,7 +148,7 @@ if (ui > 0) {
 
 const budgets = Object.fromEntries(folders.map((n) => [n, fs.existsSync(budgetFile(n)) ? JSON.parse(fs.readFileSync(budgetFile(n), 'utf8')) : null]));
 const sum = (k) => folders.reduce((t, n) => t + (budgets[n]?.[k] || 0), 0);
-const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(at + sum(k) - was + (k === 'share' ? LABELS[0] - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
+const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(Number(at) + sum(String(k)) - Number(was) + (k === 'share' ? LABELS[0] - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
 BUDGET['bundle.css'] = +(BUDGET['components.css'] + BUDGET['utilities.css']).toFixed(1);
 const size = { 'All components (index.js)': whole }, brotli = {};
 for (const f of ['components.css', 'utilities.css', 'bundle.css', 'base.css', 'theme.js', 'serupa.iife.js', 'serupa-icons.iife.js']) { size[f] = file(f); brotli[f] = br(fs.readFileSync(path.join(PROJECT, 'dist', f))); }
