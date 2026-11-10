@@ -38,8 +38,13 @@ workflow:
         on_job_failure: none
     # Main after every merge, unnarrowed, as GitHub's CI did on push: a merge request is tested on its own branch, not
     # merged onto main (GitLab's merged-results pipelines aren't on the free tier), so two that pass alone and break
-    # together show up here. A newer merge cancels the run before it, so the latest main is always the one tested.
+    # together show up here. Each run goes to the end: a newer merge doesn't cancel it and a failed job doesn't stop
+    # the rest (GR329: with merges minutes apart, ten main runs in a row were cancelled and none finished, so a red
+    # main went unseen, and a failure is worth seeing whole).
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      auto_cancel:
+        on_new_commit: none
+        on_job_failure: none
   # A new push cancels the pipeline for the push before it, and the first failed job cancels the rest of its
   # pipeline: a red run stops spending CI minutes as soon as it's red.
   auto_cancel:
@@ -210,7 +215,7 @@ local checks:
   stage: build
   timeout: 5m
   # Only the script and the description: a small image, one commit of history, no cache, no install.
-  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
+  image: node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   variables:
     # The changeset check (below) reads the history back to the merge request's base.
     GIT_DEPTH: "0"
@@ -629,7 +634,7 @@ design qa:
   stage: build
   needs: []
   timeout: 15m
-  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
+  image: node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
       changes: [tools/test/baseline-visual/**/*]

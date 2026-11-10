@@ -12,6 +12,7 @@ import { warnOnce } from '../../internal/warn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
+import { ControlSize } from '../../internal/controlSize';
 import { BUTTON_VARIANTS, buttonClass } from './buttonClass';
 import { LoaderRing } from '../../internal/loaderRing';
 import { feedbackHold, spinnerDelay } from '../../internal/timing';
@@ -106,7 +107,8 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   const iconOnly = props.icon != null;
   const pos = props.leftIcon != null && props.rightIcon == null ? 'left' : props.rightIcon != null && props.leftIcon == null ? 'right' : undefined;
   const variant = oneOf(BUTTON_VARIANTS, props.variant, 'primary');
-  const size = oneOf(SIZES, props.size, 'md');
+  const groupSize = React.useContext(ControlSize);   // a ButtonGroup's size, for a button with none of its own
+  const size = oneOf(SIZES, props.size ?? groupSize, 'md');
   let classes = buttonClass({ variant: variant, size: size, destructive: props.destructive, iconOnly: iconOnly, iconPosition: pos, wrap: props.wrap, className: props.className });
   if (process.env.NODE_ENV !== 'production' && iconOnly && !rest['aria-label'] && !rest['aria-labelledby'] && !rest.title) {
     warnOnce('button-icon-label', 'Button: an icon-only button needs an aria-label.');

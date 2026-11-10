@@ -22,6 +22,8 @@ export const PAIRS = [
   ['on-primary', 'primary', 4.5, 'Primary button text'],
   ['on-primary', 'primary-hover', 4.5, 'Primary button text on hover'],
   ['primary', 'surface', 4.5, 'Brand text, links and icons, and the secondary button'],
+  ['primary', 'surface-muted', 4.5, 'A link or brand text on a muted surface (a Dashboard card\'s "All projects")'],
+  ['primary-hover', 'surface-muted', 4.5, 'A link on hover, on a muted surface'],
   ['link-visited', 'surface', 4.5, 'A visited link (Prose)'],
   ['link-visited', 'surface-muted', 4.5, 'A visited link on a muted surface (Prose)'],
   ['primary-hover', 'primary-subtle', 4.5, 'Brand text on hover, on its tint'],

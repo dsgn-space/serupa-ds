@@ -31,7 +31,7 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     target?: string | undefined;
     rel?: string | undefined;
 }
-interface TableSelectCellProps extends Omit<CheckboxProps, "children" | "description" | "size"> {
+interface TableSelectCellProps extends Omit<CheckboxProps, "children" | "description" | "size" | "variant"> {
     label: string;
     header?: boolean | undefined;
     cellProps?: React.TdHTMLAttributes<HTMLTableCellElement> | undefined;

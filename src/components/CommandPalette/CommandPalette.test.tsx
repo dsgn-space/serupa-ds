@@ -180,7 +180,7 @@ describe('CommandPalette', () => {
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     try {
-      await render(<CommandPalette defaultOpen commands={COMMANDS} />);
+      await render(<SerupaProvider locale="en"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);
       await userEvent.type(field(), 'pro');
       await expect.poll(() => said.at(-1)).toBe('1 command');   // the disabled one isn't counted
       await userEvent.type(field(), 'zzz');
@@ -209,6 +209,22 @@ describe('CommandPalette', () => {
       expect([el('cp').getAttribute('aria-label'), field().getAttribute('aria-label')]).toEqual(['Palet perintah', 'Cari perintah dan halaman']);
       await userEvent.type(field(), 'pro');
       await expect.poll(() => said.at(-1)).toBe('1 perintah');
+    } finally { seen.disconnect(); }
+  });
+
+  test('the count it says is in the locale\'s digits and grouping: "١ command" in ar-EG, "1,200 commands" in en-US', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    try {
+      const { unmount } = await render(<SerupaProvider locale="ar-EG"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);
+      await userEvent.type(field(), 'pro');
+      await expect.poll(() => said.at(-1)).toBe('١ command');
+      await unmount();
+      const many = Array.from({ length: 1200 }, (_, i) => ({ id: 'c' + i, label: 'Command ' + i }));
+      await render(<SerupaProvider locale="en-US"><CommandPalette defaultOpen commands={many} limit={2000} /></SerupaProvider>);
+      await userEvent.type(field(), 'com');
+      await expect.poll(() => said.at(-1)).toBe('1,200 commands');
     } finally { seen.disconnect(); }
   });
 

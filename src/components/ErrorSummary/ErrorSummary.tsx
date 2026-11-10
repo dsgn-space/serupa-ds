@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
 import { summaryTookFocus } from '../../internal/summaryFocus';
 import { en as words } from './labels';
 
@@ -35,6 +35,7 @@ export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElem
 /** After a failed submit: a heading and a list of the form's errors, each a link that moves focus to its field. */
 export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSummaryProps>('ErrorSummary', function ErrorSummary(props, ref) {
   const sds = useSettings(words);
+  const locale = useLocale();
   const { errors, title, headingLevel, description, autoFocus, className, ...rest } = props;
   const box = React.useRef<HTMLDivElement | null>(null);
   const heading = React.useId();
@@ -56,7 +57,7 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
   const level = [2, 3, 4, 5, 6].indexOf(headingLevel as number) < 0 ? 2 : (headingLevel as number);
   return (
     <div tabIndex={-1} aria-labelledby={heading} {...rest} ref={mergedRef} className={cn('dk-error-summary', className)} data-component="error-summary">
-      {React.createElement('h' + level, { id: heading, className: 'dk-error-summary__title' }, title != null ? title : sds.labels.errorSummaryTitle(list.length))}
+      {React.createElement('h' + level, { id: heading, className: 'dk-error-summary__title' }, title != null ? title : sds.labels.errorSummaryTitle(list.length, new Intl.NumberFormat(locale).format(list.length)))}
       {description != null ? <div className="dk-error-summary__description">{description}</div> : null}
       <ul className="dk-error-summary__list" role="list">
         {list.map((e, k) => (

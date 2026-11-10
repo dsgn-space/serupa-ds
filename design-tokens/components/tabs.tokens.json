@@ -133,6 +133,16 @@
             "cssVar": "--tabs-height-md"
           }
         }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "A tab's height with size=\"lg\" (44px), the touch-target size.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tabs-height-lg"
+          }
+        }
       }
     },
     "border": {

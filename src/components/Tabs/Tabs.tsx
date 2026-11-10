@@ -20,8 +20,8 @@ export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'o
   onValueChange?: ((value: string) => void) | undefined;
   /** 'line' (default): a line under the selected tab. 'pill': the selected tab filled in primary. */
   variant?: TabsVariant | undefined;
-  /** 'sm' (32px tabs) or 'md' (36px, default). */
-  size?: 'sm' | 'md' | undefined;
+  /** 'sm' (32px tabs), 'md' (36px, default) or 'lg' (44px with 16px text, the touch-target size, beside lg fields and buttons). */
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** 'auto' (default): arrow keys move and select at once. 'manual': arrow keys move, Enter or Space selects (for panels that are slow to show). */
   activation?: 'auto' | 'manual' | undefined;
   /** 'horizontal' (default): the tabs in a row over the panels. 'vertical': a column beside them, with ↑ ↓ between tabs. */
@@ -84,7 +84,7 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
     if (onChange.current) onChange.current(v);
   }, [controlled]);
   const variant = oneOf(['line', 'pill'] as const, props.variant, 'line');
-  const size = oneOf(['sm', 'md'] as const, props.size, 'md');
+  const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   // Which values have a TabPanel, so a tab only points (aria-controls) at a panel that exists: a tab row can
   // drive content of its own (a filter, say) with no TabPanel at all.
   const [panels, setPanels] = React.useState<Record<string, number>>({});
@@ -150,7 +150,7 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
       <div {...rest} ref={mergedRef}
         onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}
         onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) focusedIn.current = false; if (rest.onBlur) rest.onBlur(e); }}
-        className={cn('dk-tabs', 'dk-tabs--' + variant, size === 'sm' && 'dk-tabs--sm', vertical && 'dk-tabs--vertical', props.className)} data-component="tabs" data-variant={variant} data-orientation={vertical ? 'vertical' : 'horizontal'} />
+        className={cn('dk-tabs', 'dk-tabs--' + variant, size !== 'md' && 'dk-tabs--' + size, vertical && 'dk-tabs--vertical', props.className)} data-component="tabs" data-variant={variant} data-orientation={vertical ? 'vertical' : 'horizontal'} />
     </TabsContext.Provider>
   );
 });

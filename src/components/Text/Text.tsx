@@ -17,6 +17,10 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   weight?: TextWeight | undefined;
   /** Keeps it on one line, cut with an ellipsis. Give it a width (it's a block). */
   truncate?: boolean | undefined;
+  /** Shows at most this many lines (1 to 6), cutting the last with an ellipsis (CSS line-clamp), for a preview of a
+   *  long description or comment. The rest stays in the page for screen readers and find-in-page; give people a way to
+   *  see it all (a link to the full item), or use ShowMore to open it in place. Ignored with truncate. */
+  lines?: number | undefined;
   /** Caps the line at about 65 characters (`container-prose`), the comfortable length for running text: an
    *  article's paragraphs, a long description, help text on a wide page. Default: false. */
   measure?: boolean | undefined;
@@ -34,10 +38,13 @@ const pick = <T extends string>(list: readonly T[], v: unknown): T | null => (li
 
 /** Body text in the system's type: size, tone and weight, each inherited when unset. */
 export const Text = /* @__PURE__ */ component<HTMLElement, TextProps>('Text', function Text(props, ref) {
-  const { as, size, tone, weight, truncate, measure, className, ...rest } = props;
+  const { as, size, tone, weight, truncate, lines, measure, className, ...rest } = props;
+  const clamp = !truncate && lines != null && lines >= 1 ? Math.min(6, Math.floor(lines)) : 0;
   const s = pick(SIZES, size), t = pick(TONES, tone), w = pick(WEIGHTS, weight);
   return React.createElement(oneOf(TAGS, as, 'p'), Object.assign(rest, {
     ref: ref, 'data-component': 'text',
-    className: cn('dk-text', s && 'dk-text--' + s, t && 'dk-text--' + t, w && 'dk-text--' + w, truncate && 'dk-text--truncate', measure && 'dk-text--measure', className),
+    // The count goes in an attribute the CSS reads, not a style attribute, so it holds under a strict CSP too.
+    'data-lines': clamp || undefined,
+    className: cn('dk-text', s && 'dk-text--' + s, t && 'dk-text--' + t, w && 'dk-text--' + w, truncate && 'dk-text--truncate', clamp && 'dk-text--clamp', measure && 'dk-text--measure', className),
   }));
 });

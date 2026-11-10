@@ -6,7 +6,7 @@
 // tools/test/foundation.mjs checks the shipped themes with:
 //
 //   light  primary          the color itself when it passes, else the lightest of 500 to 800: white text at 4.5:1,
-//                           4.5:1 on the surface, and a hover one step darker that passes too (and 4.5:1 on
+//                           4.5:1 on the surface and on surface-muted, and a hover one step darker that passes too (and 4.5:1 on
 //                           primary-subtle, brand 50)
 //          focus-ring       the lightest of 400 to 800 at 3:1 on the surface, on a popover and on primary-subtle
 //          more contrast    primary the lightest of 600 to 900 at 7:1 on the surface and on brand 50, hover a step
@@ -21,7 +21,7 @@
 /** @type {[string, string, number][]} */
 const PAIRS_FOR_BRAND = [
   ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
-  ['primary', 'surface', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5],
+  ['primary', 'surface', 4.5], ['primary', 'surface-muted', 4.5], ['primary-hover', 'surface-muted', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5],
   ['link-visited', 'surface', 4.5], ['link-visited', 'surface-muted', 4.5],
   ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3],
   ['more:primary', 'surface', 7], ['more:primary', 'primary-subtle', 7], ['more:primary-hover', 'surface', 7],
@@ -131,14 +131,15 @@ export function brandTheme({ name, color, corners = 'default', tokens }) {
 
   for (const mode of ['light', 'dark']) {
     const b = base(mode);
-    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b);
+    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), muted = hexAt(b['surface-muted'], b);
     const light = mode === 'light';
     const on = light ? palette.get('white') : S('950');
     const subtle = light ? S('50') : S('950');
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
     const next = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
-    const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), overlay) >= 3;
+    // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
+    const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3;
     const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5;
     // The color itself when it passes, so the buttons are the brand's own; else the shade nearest the page's end.
     const cands = order(light ? '500' : '200', light ? '800' : '500');
