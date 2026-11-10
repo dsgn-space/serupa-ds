@@ -34,7 +34,7 @@ const { ButtonGroup, Button, IconButton, ToggleButton } = window.Serupa;
 
 ## Usage
 
-Size and variant stay on each button: give them all the same ones. Two attached primary buttons get an edge between them in their text color (`--button-group-divider`), as a split button has.
+Give the group a `size` and every button in it takes it (a button's own `size` still wins), so a large toolbar is one prop, not one per button. Variant stays on each button: give them all the same one. Two attached primary buttons get an edge between them in their text color (`--button-group-divider`), as a split button has.
 
 An attached row that's wider than its container wraps as separate, spaced buttons (with `data-wrapped` on the group), so a narrow screen never scrolls sideways and no label is cut; it joins again once there's room. This holds in a CSS grid column or a flex row too. A vertical group doesn't wrap. The group is never wider than its container: a single label too long for a whole line (a long German compound at 320px) is cut with an ellipsis, with the whole label as the button's title, as a lone Button's is.
 
@@ -54,6 +54,7 @@ A button can be a Menu's trigger or sit in a Tooltip, as in a split button (`<Me
 | `id` | string | none | Goes to the root `<div>`. |
 | `attached` | boolean | `true` | Joins them: shared borders, only the outer corners rounded |
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | A row or a column |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | none | The size of every Button, IconButton and ToggleButton in it that doesn't set its own (24, 32 or 44px) |
 | `aria-label` | string | none | What the group is for |
 
 `className`, `style`, `ref` and everything else go to the wrapper, which has `role="group"`, `data-component="button-group"` and `data-orientation`.
