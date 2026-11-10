@@ -32,8 +32,8 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   siblings?: number | undefined;
   /** Pages always shown at the start and the end. Default: 1. Fewer show, after the siblings, when the row wouldn't fit. */
   boundaries?: number | undefined;
-  /** 'md' (default, 32px) or 'sm' (24px). */
-  size?: 'sm' | 'md' | undefined;
+  /** 'md' (default, 32px), 'sm' (24px) or 'lg' (44px with 16px text, the touch-target size, beside lg fields and buttons). */
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** The nav's accessible name. Default: "Pagination". */
   'aria-label'?: string | undefined;
   /** Default: "Previous page". */
@@ -69,7 +69,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   const [own, setOwn] = React.useState(() => int(props.defaultPage, 1, 1));
   const controlled = props.page !== undefined;
   const page = Math.min(Math.max(int(controlled ? props.page : own, 1, 1), 1), Math.max(count, 1));
-  const size = oneOf(['sm', 'md'] as const, props.size, 'md');
+  const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const label = props.pageLabel || sds.labels.page;
   // The name says the number as the button shows it, "١٠" in ar-EG and "1,000" in en-US, so it holds the visible
   // text, as WCAG 2.5.3 asks: "Page ١٠", not "Page 10".
@@ -148,7 +148,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   };
   const bar = summary != null || sizes != null;
   return (
-    <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn('dk-pagination', size === 'sm' && 'dk-pagination--sm', bar && 'dk-pagination--summary', props.className)}>
+    <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn('dk-pagination', size !== 'md' && 'dk-pagination--' + size, bar && 'dk-pagination--summary', props.className)}>
       {summary != null ? <p className="dk-pagination__summary">{summary}</p> : null}
       {sizes ? <span className="dk-pagination__page-size"><label htmlFor={sizeId}>{sds.labels.perPage}</label>
         <Select id={sizeId} size={size} value={String(per)} onChange={resize} options={(sizes.indexOf(per) < 0 ? sizes.concat(per).sort((a, b) => a - b) : sizes).map((n) => ({ value: String(n), label: displayNumber(n, locale) }))} /></span> : null}

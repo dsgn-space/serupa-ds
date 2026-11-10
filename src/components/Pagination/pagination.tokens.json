@@ -125,6 +125,16 @@
             "cssVar": "--pagination-size-sm"
           }
         }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "At size lg (44px), the touch-target size.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-size-lg"
+          }
+        }
       }
     },
     "spacing": {

@@ -87,7 +87,7 @@ An arrow that takes you to the first or last page turns disabled, so focus moves
 | `linkAs` | a component | the `configure({ link })` link, else `'a'` | With `getHref`, your router's link component for the page links (it gets `href`, `className` and the rest). The disabled arrows stay plain `<a>` |
 | `siblings` | number | `1` | Pages on each side of the current one |
 | `boundaries` | number | `1` | Pages always shown at each end |
-| `size` | `'sm'` \| `'md'` | `'md'` | 24px or 32px squares |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24px, 32px or 44px squares; `lg` has 16px text and a large page-size select, to sit beside large fields and buttons and give a touch-sized target |
 | `aria-label` | string | `"Pagination"` | The nav's name |
 | `previousLabel`, `nextLabel` | string | `"Previous page"`, `"Next page"` | The arrows' names |
 | `pageLabel` | `(page) => string` | `"Page " + page` | A page's name |
@@ -117,6 +117,7 @@ Each is an optional override: set it on the page, a container or one pagination.
 | `--pagination-weight-current` | `font-semibold` | The current page's weight (600). |
 | `--pagination-size` | `control-height-md` | A page's width and height at size md (32px). |
 | `--pagination-size-sm` | `control-height-sm` | At size sm (24px). |
+| `--pagination-size-lg` | `control-height-lg` | At size lg (44px), the touch-target size. |
 | `--pagination-gap` | `spacing-1` | Space between pages (4px). |
 | `--pagination-padding-x` | `spacing-2` | Side padding inside a page, for wide numbers (8px). |
 | `--pagination-padding-x-sm` | `spacing-0.5` | At size sm (2px), so two semibold digits fit in the 24px square. |
