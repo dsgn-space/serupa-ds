@@ -305,4 +305,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'اليوم',
   dateFieldMonth: 'الشهر',
   dateFieldYear: 'السنة',
+  scrollArea: 'محتوى قابل للتمرير',
 };

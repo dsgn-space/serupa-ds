@@ -300,4 +300,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'दिन',
   dateFieldMonth: 'महीना',
   dateFieldYear: 'वर्ष',
+  scrollArea: 'स्क्रॉल होने वाली सामग्री',
 };

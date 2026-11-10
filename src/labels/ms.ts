@@ -301,4 +301,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Hari',
   dateFieldMonth: 'Bulan',
   dateFieldYear: 'Tahun',
+  scrollArea: 'Kandungan boleh tatal',
 };

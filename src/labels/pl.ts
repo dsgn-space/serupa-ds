@@ -304,4 +304,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Dzień',
   dateFieldMonth: 'Miesiąc',
   dateFieldYear: 'Rok',
+  scrollArea: 'Przewijana zawartość',
 };

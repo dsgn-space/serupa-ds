@@ -301,4 +301,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Ngày',
   dateFieldMonth: 'Tháng',
   dateFieldYear: 'Năm',
+  scrollArea: 'Nội dung cuộn',
 };

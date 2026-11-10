@@ -307,4 +307,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'День',
   dateFieldMonth: 'Месяц',
   dateFieldYear: 'Год',
+  scrollArea: 'Прокручиваемое содержимое',
 };

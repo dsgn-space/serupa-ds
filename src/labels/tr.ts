@@ -301,4 +301,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: 'Gün',
   dateFieldMonth: 'Ay',
   dateFieldYear: 'Yıl',
+  scrollArea: 'Kaydırılabilir içerik',
 };

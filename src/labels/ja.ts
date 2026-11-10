@@ -300,4 +300,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: '日',
   dateFieldMonth: '月',
   dateFieldYear: '年',
+  scrollArea: 'スクロールするコンテンツ',
 };

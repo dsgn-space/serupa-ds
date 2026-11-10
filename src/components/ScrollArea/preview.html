@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ScrollArea — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.ScrollArea, { 'aria-label': 'Recent activity', fade: true, style: { maxHeight: 120 } }, Array.from({ length: 12 }, function (_, i) { return h('p', { key: i }, 'Activity ' + (i + 1)); })));
+</script>
+</body>
+</html>

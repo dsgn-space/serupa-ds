@@ -303,4 +303,5 @@ export const labels: SerupaLabels = {
   dateFieldDay: '일',
   dateFieldMonth: '월',
   dateFieldYear: '연도',
+  scrollArea: '스크롤 콘텐츠',
 };
