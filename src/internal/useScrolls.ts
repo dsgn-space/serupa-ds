@@ -1,19 +1,24 @@
 import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
 
 /** Whether the element's content is taller or wider than it, so it scrolls. Kept up to date as the element or
- *  its content resizes, or content is added. A scrolling area needs Tab focus to be scrolled from the keyboard
- *  (outside Chromium, which scrolls the area under focus anyway), so callers make it focusable while this is true. */
-export function useScrolls(el: HTMLElement | null): boolean {
+ *  its content resizes, or content is added or replaced. A scrolling area needs Tab focus to be scrolled from the
+ *  keyboard (outside Chromium, which scrolls the area under focus anyway), so callers make it focusable, a region
+ *  and named while this is true (Table, CodeBlock, Timeline). Takes the element, or a ref to one that's rendered
+ *  from the first render on. Measured before paint, so a box that scrolls from the start is never drawn without it. */
+export function useScrolls(target: HTMLElement | null | React.RefObject<HTMLElement | null>): boolean {
   const [scrolls, setScrolls] = React.useState(false);
-  React.useEffect(() => {
-    if (!el || typeof ResizeObserver === 'undefined') return;
+  useIsoLayoutEffect(() => {
+    const el = target && 'current' in target ? target.current : target;
+    if (!el) return;
     const check = () => setScrolls(el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1);
+    if (typeof ResizeObserver === 'undefined') { check(); return () => setScrolls(false); }
     const ro = new ResizeObserver(check);
     const watch = () => { ro.disconnect(); ro.observe(el); for (const c of Array.from(el.children)) ro.observe(c); check(); };
     const mo = typeof MutationObserver === 'undefined' ? null : new MutationObserver(watch);
     if (mo) mo.observe(el, { childList: true });
     watch();
-    return () => { ro.disconnect(); if (mo) mo.disconnect(); };
-  }, [el]);
-  return scrolls && !!el && typeof ResizeObserver !== 'undefined';
+    return () => { ro.disconnect(); if (mo) mo.disconnect(); setScrolls(false); };
+  }, [target]);
+  return scrolls;
 }

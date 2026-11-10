@@ -36,7 +36,7 @@ describe('Patterns/Detail page', () => {
 
     await screen.getByRole('button', { name: /Project name/ }).click();
     await userEvent.keyboard('{Control>}a{/Control}{Backspace}{Enter}');
-    await expect.element(screen.getByText('Enter a name for the project.')).toBeVisible();
+    await expect.element(screen.locator.getByText('Enter a name for the project.')).toBeVisible();
     await userEvent.keyboard('{Escape}');
     expect(h1()).toBe('Site refresh');
     expect(onRename).toHaveBeenCalledTimes(1);

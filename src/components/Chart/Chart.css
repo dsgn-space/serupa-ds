@@ -38,6 +38,13 @@
 .dk-chart__marker, .dk-chart__bar { stroke: var(--chart-separator, var(--chart-gap)); stroke-width: var(--dk-chart-ring); paint-order: stroke; }
 .dk-chart__bar { stroke-width: var(--stroke-width-1); }
 .dk-chart__pattern-fill { fill: var(--dk-chart-color); }
+/* An area is its series' color, faint, under the line; stacked ones meet without overlapping. */
+.dk-chart__area { fill: var(--dk-chart-color); fill-opacity: var(--opacity-20); stroke: none; pointer-events: none; }
+/* A donut's slices, a gap of the gap color between neighbours, and the total in the middle. */
+.dk-chart__slice:not([fill]) { fill: var(--dk-chart-color); }
+.dk-chart__slice { stroke: var(--chart-separator, var(--chart-gap)); stroke-width: var(--stroke-width-2); stroke-linejoin: round; }
+.dk-chart__total { fill: var(--chart-text, var(--text)); font-size: var(--text-sm); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+.dk-chart__key-value { font-variant-numeric: tabular-nums; }
 .dk-chart__pattern-mark { fill: var(--chart-separator, var(--chart-gap)); }
 .dk-chart__point { cursor: default; }
 .dk-chart__marker[data-active] { stroke-width: var(--stroke-width-3); }
@@ -72,6 +79,7 @@
   .dk-chart__plot .dk-chart__marker { animation: dk-chart-fade var(--motion-enter-md) var(--ease-enter) both; animation-delay: var(--dk-chart-marker-delay); }
   .dk-chart__plot .dk-chart__bar { transform-box: fill-box; transform-origin: var(--sizing-1-2) var(--sizing-full); animation: dk-chart-grow var(--motion-enter-lg) var(--ease-settle) both; }
   .dk-chart__plot .dk-chart__bar--neg { transform-origin: var(--sizing-1-2) 0; }
+  .dk-chart__plot .dk-chart__area, .dk-chart__plot .dk-chart__slice { animation: dk-chart-fade var(--motion-enter-lg) var(--ease-enter) both; }
   .dk-chart__tip { animation: dk-chart-fade var(--motion-enter-sm) var(--ease-enter); }
   .dk-chart__marker { transition: stroke-width var(--motion-hover) var(--ease-move); }
 }

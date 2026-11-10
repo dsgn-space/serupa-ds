@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useScrolls } from '../../internal/useScrolls';
 import { flushSync } from 'react-dom';
 import { announce } from '../../internal/announce';
 import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
@@ -121,18 +122,8 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const frame = React.useRef<HTMLDivElement>(null);
-  const [scrolls, setScrolls] = React.useState(false);
+  const scrolls = useScrolls(frame);
   const cid = domId('dk-tc', React.useId());
-  React.useEffect(() => {
-    const el = frame.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
-    const check = () => setScrolls(el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1);
-    const ro = new ResizeObserver(check);
-    ro.observe(el);
-    if (el.firstElementChild) ro.observe(el.firstElementChild);
-    check();
-    return () => ro.disconnect();
-  }, []);
   // A sticky header covers the top of the frame: measure it, so focus scrolls in below it (the CSS reads --dk-table-head).
   const sticky = !!props.stickyHeader;
   React.useEffect(() => {
@@ -238,7 +229,10 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
     const rowsOf = (s: Element | null | undefined) => (s ? s.querySelectorAll(':scope > tr').length : 0);
     const h = t ? rowsOf(t.querySelector(':scope > thead')) : 0;
     setHead(h);
-    if (t) t.setAttribute('aria-rowcount', String(h + count + rowsOf(t.querySelector(':scope > tfoot'))));
+    if (!t) return;
+    t.setAttribute('aria-rowcount', String(h + count + rowsOf(t.querySelector(':scope > tfoot'))));
+    // Gone with the virtual body: a table that now draws every row has no hidden rows to count (GR270).
+    return () => t.removeAttribute('aria-rowcount');
   }, [attach, count]);
   const [focused, setFocused] = React.useState<number | null>(null);
   // Print: every row (the first PRINT_ROWS), drawn from beforeprint to afterprint, so the printout is the whole table

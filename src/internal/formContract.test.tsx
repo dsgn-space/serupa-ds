@@ -32,6 +32,7 @@ import { Rating } from '../components/Rating/Rating';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl';
 import { DateField } from '../components/DateField/DateField';
+import { SignaturePad } from '../components/SignaturePad/SignaturePad';
 import { Select } from '../components/Select/Select';
 import { Slider } from '../components/Slider/Slider';
 import { Switch } from '../components/Switch/Switch';
@@ -122,6 +123,10 @@ const CONTROLS: { [K in Named]: Control | string } = {
   DateField: { el: (form) => <DateField aria-label="Date of birth" name="dob" form={form} defaultValue="1990-05-01" />, initial: { dob: '1990-05-01' },
     change: async (r) => { const year = [...r.querySelectorAll('input[inputmode]')].at(-1)!; await userEvent.clear(year); await userEvent.type(year, '1991'); },
     changed: { dob: '1991-05-01' } },
+  // The signature's SVG: typed here, as a drag can't be told apart point by point; the typed name ends it as text.
+  SignaturePad: { el: (form) => <SignaturePad aria-label="Signature" name="signature" form={form} />, initial: { signature: '' },
+    change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); await userEvent.type($(r, 'input[type=text], input:not([type])'), 'Dewi'); },
+    changed: { signature: expect.stringMatching(/>Dewi<\/text><\/svg>$/) as unknown as string } },
   FileUpload: { el: (form) => <FileUpload name="attachment" form={form} files={[file]} onFilesChange={() => {}} />, initial: { attachment: 'notes.txt' } },
   // A button's name and value go only with the button that submits the form, as with <button name>.
   CopyButton: 'a button', InputAction: 'a button', Fab: 'a button', Tab: 'a button', ToggleButton: 'a button',

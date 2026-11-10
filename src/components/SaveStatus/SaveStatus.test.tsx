@@ -6,6 +6,7 @@ import { THEMES, contrast, css, keepMotion } from '../../../tools/test/vitest/he
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { Loader } from '../Loader/Loader';
 import { SaveStatus } from './SaveStatus';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -152,5 +153,20 @@ describe('SaveStatus motion (KW19)', () => {
     mo.disconnect();
     const now = [...e.children].find((c) => !(c as HTMLElement).inert) as HTMLElement;
     expect([now === saving, moved.includes(saving), now.textContent]).toEqual([true, false, 'Saving…']);
+  });
+});
+
+// GR311: SaveStatus drew its saving ring with the whole Loader; it now draws Loader's ring itself, the same markup.
+describe('saving ring', () => {
+  const SOURCE = import.meta.glob<string>('./SaveStatus.tsx', { query: '?raw', import: 'default', eager: true })['./SaveStatus.tsx'];
+  test('SaveStatus does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <SaveStatus id="ring-save" status="saving" />
+      <div id="ring-loader"><Loader className="dk-save-status__icon" size="sm" label="" delay={0} /></div>
+    </>);
+    const ring = () => document.querySelector('#ring-save [data-component="loader"]');
+    await expect.poll(ring).toBeTruthy();
+    expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });

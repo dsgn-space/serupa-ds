@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
 import { Field } from '../Field/Field';
+import { Loader } from '../Loader/Loader';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 const modded = (t: Element, key: string) => ['ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
@@ -987,5 +988,20 @@ describe('Combobox loadOptions (DG1)', () => {
       await expect.poll(said).toHaveLength(1);
       expect(said()[0]).toMatch(/more than one option has the value "x"/);
     } finally { warn.mockRestore(); }
+  });
+});
+
+// GR311: Combobox drew its loading ring with the whole Loader; it now draws Loader's ring itself, the same markup.
+describe('loading ring', () => {
+  const SOURCE = import.meta.glob<string>('./Combobox.tsx', { query: '?raw', import: 'default', eager: true })['./Combobox.tsx'];
+  test('Combobox does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <Combobox id="ring-combo" aria-label="Person" options={[]} filter={false} loading defaultOpen />
+      <div id="ring-loader"><Loader size="sm" delay={0} label="" /></div>
+    </>);
+    const ring = () => document.querySelector('[role="status"] > [data-component="loader"]');
+    await expect.poll(ring).toBeTruthy();
+    expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });

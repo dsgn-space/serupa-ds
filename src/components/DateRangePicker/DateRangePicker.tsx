@@ -183,7 +183,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   };
   const isSel = (d: Date) => sameDay(d, value.start) || sameDay(d, value.end);
   const off = !!disabled || !!readOnly;
-  const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels)
+  const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels, max)
     : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === 'function' ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
   // A preset sets both ends and brings its start's month into view; the popup stays open to show it (RU11).
   const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(startOfMonth(it.start)); setPicking('start'); setHover(null); };

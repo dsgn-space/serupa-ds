@@ -96,8 +96,10 @@ function main(base, head = 'HEAD') {
     .filter((c) => c.file.includes('/baseline-') || path.basename(c.file).startsWith('baseline-'));
   const show = (rev) => (file) => { try { return JSON.parse(git('show', `${rev}:${file}`)); } catch { return null; } };
   const pkg = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-  const repo = process.env.GITHUB_REPOSITORY || pkg.repository.url.replace(/^git\+https:\/\/github\.com\//, '').replace(/\.git$/, '');
-  const url = (file, side) => `https://github.com/${repo}/raw/${side === 'base' ? from : to}/${file}`;
+  // The pictures' raw files on the repository's host: GitLab keeps them under /-/raw.
+  const repo = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '');
+  const raw = /^https:\/\/gitlab\.com\//.test(repo) ? '-/raw' : 'raw';
+  const url = (file, side) => `${repo}/${raw}/${side === 'base' ? from : to}/${file}`;
   process.stdout.write(report(changes, show(from), show(to), url) + '\n');
 }
 

@@ -50,8 +50,12 @@ const OWN = { trigger: 1, children: 1, title: 1, 'aria-label': 1, 'aria-labelled
 // 'mobile': under the sm breakpoint, as Dialog's fullScreen="mobile" (Dialog.css).
 const NARROW = '(max-width: 639.98px)';
 const noSubscribe = () => () => {};
-const subscribeNarrow = (on: () => void) => { const m = window.matchMedia(NARROW); m.addEventListener('change', on); return () => m.removeEventListener('change', on); };
-const isNarrow = () => window.matchMedia(NARROW).matches;
+// The query is made once, not on every render of every Popover (GR278).
+// module state: browser only. The server snapshot is "not narrow", so a server render never makes the query.
+let narrowQuery: MediaQueryList | undefined;
+const narrowMedia = () => (narrowQuery || (narrowQuery = window.matchMedia(NARROW)));
+const subscribeNarrow = (on: () => void) => { const m = narrowMedia(); m.addEventListener('change', on); return () => m.removeEventListener('change', on); };
+const isNarrow = () => narrowMedia().matches;
 const notNarrow = () => false;
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
