@@ -305,7 +305,8 @@ export const labels: SerupaLabels = {
   dateFieldMonth: 'Mes',
   dateFieldYear: 'Año',
   dataGridEdit: (column) => 'Editar ' + column,
-  dataGridCopied: (count) => count + ' celdas copiadas',
-  dataGridPasted: (count) => count + ' celdas pegadas',
+  dataGridCopied: (count) => (count === 1 ? '1 celda copiada' : n(count) + ' celdas copiadas'),
+  dataGridPasted: (count) => (count === 1 ? '1 celda pegada' : n(count) + ' celdas pegadas'),
   dataGridHint: 'Las flechas mueven entre celdas. Enter o F2 edita una celda, Escape cancela.',
+  scrollArea: 'Contenido desplazable',
 };

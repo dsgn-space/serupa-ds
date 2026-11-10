@@ -1,0 +1,31 @@
+/* ---------------------------------------------------------------
+   ScrollArea: a box that scrolls its content, with the browser's own scrollbars made thin and in the theme's colors
+   (a strong-border thumb on a clear track). Focus while it scrolls draws the ring inside its edge. With fade, an
+   edge with more past it fades out over 32px (a mask, so it works on any background). Every value reads one of
+   its own tokens (scroll-area.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-scroll-area {
+  min-width: var(--spacing-0); min-height: var(--spacing-0);
+}
+/* Safari before 26.2 keeps its own overlay scrollbars. */
+@supports (scrollbar-color: auto) { .dk-scroll-area { scrollbar-width: thin; scrollbar-color: var(--scroll-area-thumb, var(--field-border)) transparent; } }
+/* Each way it scrolls stops scroll chaining in the same rule, so reaching its end doesn't scroll the page. */
+.dk-scroll-area--vertical { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.dk-scroll-area--horizontal { overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; }
+.dk-scroll-area--both { overflow: auto; overscroll-behavior: contain; }
+.dk-scroll-area:focus-visible { outline: var(--focus-ring-width) solid var(--scroll-area-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-scroll-area--more-start, .dk-scroll-area--more-end { --dk-sa-a: var(--spacing-0); --dk-sa-b: var(--spacing-0); }
+.dk-scroll-area--more-start { --dk-sa-a: var(--scroll-area-fade, var(--spacing-8)); }
+.dk-scroll-area--more-end { --dk-sa-b: var(--scroll-area-fade, var(--spacing-8)); }
+.dk-scroll-area--vertical:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end), .dk-scroll-area--both:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
+  mask-image: linear-gradient(to bottom, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
+}
+.dk-scroll-area--horizontal:is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
+  mask-image: linear-gradient(to right, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
+}
+.dk-scroll-area--horizontal:dir(rtl):is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
+  mask-image: linear-gradient(to left, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
+}
+@media (forced-colors: active) { @supports (scrollbar-color: auto) { .dk-scroll-area { scrollbar-color: auto; } } }
+}

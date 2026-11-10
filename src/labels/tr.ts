@@ -302,7 +302,8 @@ export const labels: SerupaLabels = {
   dateFieldMonth: 'Ay',
   dateFieldYear: 'Yıl',
   dataGridEdit: (column) => 'Düzenle: ' + column,
-  dataGridCopied: (count) => count + ' hücre kopyalandı',
-  dataGridPasted: (count) => count + ' hücre yapıştırıldı',
+  dataGridCopied: (count) => n(count) + ' hücre kopyalandı',
+  dataGridPasted: (count) => n(count) + ' hücre yapıştırıldı',
   dataGridHint: 'Ok tuşları hücreler arasında gezer. Enter veya F2 hücreyi düzenler, Escape iptal eder.',
+  scrollArea: 'Kaydırılabilir içerik',
 };

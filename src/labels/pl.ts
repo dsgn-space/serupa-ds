@@ -305,7 +305,8 @@ export const labels: SerupaLabels = {
   dateFieldMonth: 'Miesiąc',
   dateFieldYear: 'Rok',
   dataGridEdit: (column) => 'Edytuj: ' + column,
-  dataGridCopied: (count) => 'Skopiowano komórki: ' + count,
-  dataGridPasted: (count) => 'Wklejono komórki: ' + count,
+  dataGridCopied: (count) => 'Skopiowano komórki: ' + n(count),
+  dataGridPasted: (count) => 'Wklejono komórki: ' + n(count),
   dataGridHint: 'Strzałki przechodzą między komórkami. Enter lub F2 edytuje komórkę, Escape anuluje.',
+  scrollArea: 'Przewijana zawartość',
 };

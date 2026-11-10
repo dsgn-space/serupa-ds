@@ -301,7 +301,8 @@ export const labels: SerupaLabels = {
   dateFieldMonth: '月',
   dateFieldYear: '年',
   dataGridEdit: (column) => '編集: ' + column,
-  dataGridCopied: (count) => count + ' 個のセルをコピーしました',
-  dataGridPasted: (count) => count + ' 個のセルを貼り付けました',
+  dataGridCopied: (count) => n(count) + ' 個のセルをコピーしました',
+  dataGridPasted: (count) => n(count) + ' 個のセルを貼り付けました',
   dataGridHint: '矢印キーでセルを移動します。Enter または F2 で編集、Escape で取り消します。',
+  scrollArea: 'スクロールするコンテンツ',
 };

@@ -301,7 +301,8 @@ export const labels: SerupaLabels = {
   dateFieldMonth: '月',
   dateFieldYear: '年',
   dataGridEdit: (column) => '编辑' + column,
-  dataGridCopied: (count) => '已复制 ' + count + ' 个单元格',
-  dataGridPasted: (count) => '已粘贴 ' + count + ' 个单元格',
+  dataGridCopied: (count) => '已复制 ' + n(count) + ' 个单元格',
+  dataGridPasted: (count) => '已粘贴 ' + n(count) + ' 个单元格',
   dataGridHint: '方向键在单元格间移动。Enter 或 F2 编辑单元格，Escape 取消。',
+  scrollArea: '可滚动内容',
 };

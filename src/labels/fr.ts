@@ -307,7 +307,8 @@ export const labels: SerupaLabels = {
   dateFieldMonth: 'Mois',
   dateFieldYear: 'Année',
   dataGridEdit: (column) => 'Modifier ' + column,
-  dataGridCopied: (count) => count + ' cellules copiées',
-  dataGridPasted: (count) => count + ' cellules collées',
+  dataGridCopied: (count) => (count === 1 ? '1 cellule copiée' : n(count) + ' cellules copiées'),
+  dataGridPasted: (count) => (count === 1 ? '1 cellule collée' : n(count) + ' cellules collées'),
   dataGridHint: 'Les flèches passent d’une cellule à l’autre. Entrée ou F2 modifie une cellule, Échap annule.',
+  scrollArea: 'Contenu défilant',
 };

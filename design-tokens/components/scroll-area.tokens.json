@@ -1,0 +1,39 @@
+{
+  "scrollArea": {
+    "$description": "ScrollArea's component tokens. Each one is an optional override: set the CSS variable (--scroll-area-<name>) on the page, a container or one ScrollArea, and every ScrollArea inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "thumb": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The scrollbar's thumb (3:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--scroll-area-thumb"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring inside its edge while it has focus.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--scroll-area-focus-ring"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "fade": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "How far an edge with more past it fades, with fade (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--scroll-area-fade"
+          }
+        }
+      }
+    }
+  }
+}
