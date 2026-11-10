@@ -95,7 +95,7 @@ try {
     ['a source that isn\'t there', ['missing'], 'no such file or folder: missing'],
   ]) {
     const r = cli(...args);
-    t(`stops on ${label}, saying so`, r.status === 2 && r.stderr.includes(word) && r.stderr.includes('usage:') && !/\n\s+at /.test(r.stderr), `exit ${r.status}: ${r.stderr.slice(0, 200)}`);
+    t(`stops on ${label}, saying so`, r.status === 2 && String(r.stderr).includes(String(word)) && String(r.stderr).includes('usage:') && !/\n\s+at /.test(String(r.stderr)), `exit ${r.status}: ${String(r.stderr).slice(0, 200)}`);
   }
   fs.mkdirSync(path.join(tmp, 'src', 'node_modules'), { recursive: true });
   fs.writeFileSync(path.join(tmp, 'src', 'App.tsx'), '<IconButton noTitle />');

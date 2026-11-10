@@ -86,7 +86,7 @@ for (const mode of ['light', 'dark']) {
     const probe = document.createElement('i');
     document.body.appendChild(probe);
     const col = (n) => { probe.style.color = `var(--${n})`; return getComputedStyle(probe).color.match(/[\d.]+/g).map(Number); };
-    const lum = ([r, g, b]) => [r, g, b].map((v) => v / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+    const lum = (/** @type {number[]} */ [r, g, b]) => [r, g, b].map((v) => v / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
     const bad = [];
     for (const [fg, bg, need, what] of PAIRS) {
       const x = lum(col(fg)), y = lum(col(bg)), r = (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);

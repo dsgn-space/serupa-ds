@@ -18,7 +18,7 @@ const RESP = '<div id="r" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
 const respUrl = writePage('responsive.html', RESP);
 const expect = [[390, 1, 'none', 14], [640, 2, 'none', 14], [768, 3, 'block', 14], [1024, 4, 'block', 20], [1280, 5, 'block', 20], [1536, 6, 'block', 20]];
 for (const [w, cols, disp, fs_] of expect) {
-  const p = await b.newPage({ viewport: { width: w, height: 600 } });
+  const p = await b.newPage({ viewport: { width: Number(w), height: 600 } });
   await p.goto(respUrl);
   const r = await p.evaluate(() => ({ cols: getComputedStyle(document.getElementById('r')).gridTemplateColumns.split(' ').length, disp: getComputedStyle(document.getElementById('h')).display, fs: parseFloat(getComputedStyle(document.getElementById('s')).fontSize) }));
   t(`responsive at ${w}px: ${cols} columns, hidden→${disp}, text ${fs_}px`, r.cols === cols && r.disp === disp && r.fs === fs_, JSON.stringify(r));
@@ -51,7 +51,7 @@ for (const [w, cols, disp, fs_] of expect) {
 }
 
 // 3. theme.js (with reduced motion, so a switch is synchronous; the crossfade it makes otherwise is checked after)
-for (const scheme of ['light', 'dark']) {
+for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   const ctx = await b.newContext({ colorScheme: scheme, reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="emerald" data-mode="auto"' }));
@@ -233,7 +233,7 @@ for (const scheme of ['light', 'dark']) {
     Serupa.theme.set({ mode: 'dark' });
     document.querySelector('.thumb').style.translate = '16px';
     const bg = (s) => getComputedStyle(document.querySelector(s)).backgroundColor;
-    return [document.getAnimations().map((a) => a.transitionProperty).sort().join(' '), bg('.row') === bg('.still')];
+    return [document.getAnimations().map((a) => /** @type {CSSTransition} */ (a).transitionProperty).sort().join(' '), bg('.row') === bg('.still')];
   });
   t('theme.js: switching theme changes every color at once, while a menu fading and a switch sliding in the same tick run on', r.join() === 'opacity scale translate,true', r.join());
   await p.close();

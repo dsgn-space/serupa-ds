@@ -103,7 +103,7 @@ export async function gradeApp(dir) {
         // Only finite ones, and at most 2 s: a spinner's animation never finishes.
         const finite = document.getAnimations().filter((x) => Number.isFinite(x.effect?.getComputedTiming().endTime));
         await Promise.race([Promise.all(finite.map((x) => x.finished.catch(() => undefined))), new Promise((res) => setTimeout(res, 2000))]);
-        // @ts-expect-error axe is the script added above
+        // axe is the script added above
         const out = await window.axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] });
         return out.violations.map((x) => `${x.id} (${x.nodes.length})`);
       }, theme);
