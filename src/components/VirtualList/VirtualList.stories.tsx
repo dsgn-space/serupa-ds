@@ -1,7 +1,10 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { VirtualList } from './VirtualList';
-import { ListItem } from '../List/List';
+import { List, ListItem, ListLoadingItems } from '../List/List';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { EmptyState } from '../EmptyState/EmptyState';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 
@@ -54,3 +57,20 @@ export const LongText: Story = {
   },
 };
 export const Empty: Story = { args: { count: 0 } };
+
+// Loading, empty and failed: until the first rows arrive, a busy List in the rows' shape; a failure offers Retry.
+function States(args: React.ComponentProps<typeof VirtualList>) {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'empty' | 'failed'>('loading');
+  return (
+    <div style={{ maxWidth: 480, display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Members didn't load. Check your connection and try again.</Alert>
+        : state === 'empty' ? <EmptyState size="sm" title="No members yet" description="Invite people to work on this project with you." />
+        : state === 'loading' ? <List aria-label="Members" busy><ListLoadingItems rows={6} description leading="sm" label="Loading members" /></List>
+        : <VirtualList {...args} />}
+    </div>
+  );
+}
+export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };

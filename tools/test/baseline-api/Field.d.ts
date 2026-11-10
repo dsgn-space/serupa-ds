@@ -15,6 +15,4 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">
     id?: string | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const Field: ((props: FieldProps) => React.ReactElement) & {
-    displayName: string;
-};
+declare const Field: React.ForwardRefExoticComponent<FieldProps & React.RefAttributes<HTMLElement>>;

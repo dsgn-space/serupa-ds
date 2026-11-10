@@ -165,3 +165,15 @@ export function iconPoints(icon: Element): 'left' | 'right' {
   const right = /right|forward|next|last/.test(name);
   return right !== (getComputedStyle(icon.querySelector('svg')!).scale === '-1 1') ? 'right' : 'left';
 }
+
+// A paste of `text`, as the browser sends it, without the system clipboard: test files run side by side in one
+// browser and share its clipboard, so a copy in one could land in another's paste (it came through empty in CI). The
+// data is set on the event itself, since Firefox keeps a made-up ClipboardEvent's clipboardData unreadable.
+export const pasteText = (target: HTMLElement, text: string) => {
+  const data = new DataTransfer();
+  data.setData('text/plain', text);
+  const e = new Event('paste', { bubbles: true, cancelable: true });
+  Object.defineProperty(e, 'clipboardData', { value: data });
+  // What the browser does with a paste no handler stopped: the text goes in where the caret is.
+  if (target.dispatchEvent(e)) document.execCommand('insertText', false, text);
+};

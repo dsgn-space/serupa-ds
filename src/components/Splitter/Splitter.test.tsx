@@ -229,11 +229,15 @@ describe('Splitter collapse motion (GN3b)', () => {
         for (const an of root.getAnimations({ subtree: true })) { an.pause(); an.currentTime = Number(an.effect!.getTiming().duration) / 2; }
         return x();
       };
+      // Holds a slide that has already set off at its start: the driver's round trip after Enter can be long enough on
+      // CI for the turned-back slide to have moved a few pixels before the handle is read (GR46 failed on that).
+      const atStart = () => { for (const an of root.getAnimations({ subtree: true })) { an.pause(); an.currentTime = 0; } };
       h.focus();
       await userEvent.keyboard('{Enter}');
       const closingAt = await halfway();
       expect(closingAt > 20 && closingAt < 180, String(closingAt)).toBe(true);
       await userEvent.keyboard('{Enter}');
+      atStart();
       // Opening again: laid out open at once, but the handle is still where it was, and the clip hides the same part.
       expect([h.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - closingAt) <= 2]).toEqual(['40', 'open', true]);
       // closingAt is rounded to the pixel and the clip isn't (inset(0px 99.39px …) against 100): the same place, to the
@@ -244,6 +248,7 @@ describe('Splitter collapse motion (GN3b)', () => {
       expect(openingAt > closingAt && openingAt < 200, String(openingAt)).toBe(true);
       // …and back again: from there toward the start.
       await userEvent.keyboard('{Enter}');
+      atStart();
       expect([h.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - openingAt) <= 2, Math.round(h.offsetLeft)]).toEqual(['0', 'closed', true, 0]);
       for (const an of root.getAnimations({ subtree: true })) an.finish();
       vi.advanceTimersByTime(1000);

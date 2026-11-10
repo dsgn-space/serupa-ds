@@ -60,6 +60,19 @@
     - link "Radia Lovelace 10 radia.lovelace.10@example.com":
       - /url: "#"
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- list "Members":
+  - listitem
+  - listitem
+  - listitem
+  - listitem
+  - listitem
+  - listitem
+
 # LongText
 - list "Members":
   - listitem: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung 1 And a description long enough to wrap twice in a narrow column, so the rows are taller than the guess.

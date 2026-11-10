@@ -20,6 +20,8 @@
 .dk-chart__toggle { grid-column: var(--dk-chart-end); justify-self: end; }
 .dk-chart__frame, .dk-chart__table, .dk-chart__legend, .dk-chart > .dk-table-wrap { grid-column: var(--dk-chart-all); }
 .dk-chart__frame { position: relative; min-inline-size: 0; }
+/* Before the first numbers: one placeholder block as tall as the plot (Chart sets its height). */
+.dk-chart__placeholder > .dk-loader { block-size: var(--sizing-full); }
 /* The plot lays itself out in page order, so its own direction stays left to right (labels keep their own). */
 .dk-chart__plot { display: block; inline-size: var(--sizing-full); overflow: visible; direction: ltr; touch-action: pan-y; }
 .dk-chart__plot:focus { outline: none; }

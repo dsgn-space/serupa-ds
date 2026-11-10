@@ -1463,6 +1463,37 @@
 </figure>
 </div>
 
+<!-- LoadingAndErrors -->
+<div style="max-width:var(--container-md)">
+<div style="display:grid;gap:12px">
+<div style="display:flex;gap:8px">
+<button aria-pressed="true" data-component="button" data-variant="primary" data-size="sm" type="button" class="dk-btn dk-btn--primary dk-btn--size-sm">
+<span class="dk-btn__label">Loading</span>
+</button>
+<button aria-pressed="false" data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
+<span class="dk-btn__label">Loaded</span>
+</button>
+<button aria-pressed="false" data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
+<span class="dk-btn__label">Empty</span>
+</button>
+<button aria-pressed="false" data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
+<span class="dk-btn__label">Failed</span>
+</button>
+</div>
+<figure class="dk-chart dk-chart--line" data-component="chart" data-type="line" data-view="chart" aria-busy="true" aria-labelledby="dk-chart_R_2_-title">
+<figcaption class="dk-chart__title" id="dk-chart_R_2_-title">Visitors and sign-ups</figcaption>
+<div class="dk-chart__frame">
+<div class="dk-chart__placeholder" style="block-size:240px">
+<span data-component="loader" data-variant="skeleton" data-size="md" data-shape="rect" aria-hidden="true" class="dk-loader dk-loader--skeleton dk-loader--shape-rect dk-loader--size-md dk-loader--waiting">
+<span class="dk-loader__bone">
+</span>
+</span>
+</div>
+</div>
+</figure>
+</div>
+</div>
+
 <!-- LongText -->
 <div style="max-width:var(--container-md)">
 <div style="max-width:320px">

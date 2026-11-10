@@ -346,6 +346,13 @@
       - 'img "Sign-ups, Nov: 110"'
       - 'img "Sign-ups, Dec: 142"'
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- figure "Visitors and sign-ups"
+
 # LongText
 - figure "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice in a narrow column":
   - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice in a narrow column
