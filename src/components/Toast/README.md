@@ -56,6 +56,13 @@ toast.undo({ title: "Moved to trash", commit: () => deleteFile(file), onUndo: ()
 - A burst can't bury the page: at most `limit` toasts show (3), and the same message again (same words and tone, with no `id` or `action`) adds a count to the toast that's showing ("Network error ×12") and starts its time over, rather than stacking. The stack stays clear of a phone's notch and home indicator. On a short screen, such as a phone in landscape, only as many as fit show, and the rest wait under the "+2 more" line, so none runs off the top or bottom. On a phone, a toast's action goes under the text, lined up with it, so the text keeps its width.
 - On a touch screen, swipe a toast sideways to dismiss it. It follows the finger and fades as it goes. Let go past a third of its width, or flick it (even gently), and it carries on at your finger's speed and closes. Otherwise it slides back. Its time stops while it's under your finger.
 
+### Do and don't
+
+- **Do:** Say what happened in a few words: "Changes saved". (`DoShortTitle`)
+- **Don't:** Write a sentence: the toast may go before people finish reading it. (`DontWordyTitle`)
+- **Do:** Offer one quick action, such as Undo, for something people may want back. (`DoOneQuickAction`)
+- **Don't:** Put something people must act on in a toast: a declined card belongs in a [Dialog](../Dialog/README.md) or an [Alert](../Alert/README.md) that stays. (`DontMustAct`)
+
 ## Accessibility
 
 - Focus is never left behind a toast (WCAG 2.4.11): while toasts show at the top or bottom edge, the page's scroll padding there is the room they take, so tabbing to a control under them scrolls it clear. A page's own `scroll-padding` still wins.
