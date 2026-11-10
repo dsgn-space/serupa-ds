@@ -24,6 +24,7 @@ export const Groups: Story = {
 };
 
 export const WithIcon: Story = { name: 'With an icon', args: { leftIcon: 'public' } };
+export const ReadOnly: Story = { args: { readOnly: true, defaultValue: 'Indonesia' } };
 
 export const States: Story = {
   render: () => <div className="flex flex-col gap-3">
