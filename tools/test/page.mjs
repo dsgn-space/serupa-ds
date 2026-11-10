@@ -174,25 +174,26 @@ for (const scheme of ['light', 'dark']) {
   const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   // A reload straight after a storage write could start before the browser held the write, and read the old value
-  // (it failed that way on a busy runner). Another page hears a write as a storage event only once the browser has
-  // it, so each reload waits for that. Over http, so the two pages share an origin: WebKit gives each file:// page
-  // an origin of its own, and the watching page would hear nothing.
+  // (it failed that way on a busy runner). Another page of the same origin sees the write only once the browser has
+  // it, so each reload waits until that page reads the new value. It reads rather than waits for a storage event:
+  // headless WebKit never sent the event to the other page, over file:// or http. Over http, so the two pages share
+  // an origin (WebKit gives each file:// page one of its own).
   const srv = serve(PROJECT);
   const web = (file) => `${srv.base}/${path.relative(PROJECT, fileURLToPath(file)).split(path.sep).join('/')}`;
   const watch = await ctx.newPage();
   await watch.goto(web(writePage('theme-watch.html', '<p>x</p>')));
-  await watch.evaluate(() => { window.heard = []; addEventListener('storage', (e) => { window.heard.push(e.key); }); });
-  const held = (key) => watch.waitForFunction((k) => window.heard.includes(k), key);
+  const stored = (key) => watch.evaluate((k) => localStorage.getItem(k), key);
+  const held = (key, before) => watch.waitForFunction(([k, b]) => localStorage.getItem(k) !== b, [key, before]);
   await p.goto(web(writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' })));
   await p.evaluate(() => { localStorage.clear(); localStorage.setItem('diki-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
-  await held('diki-theme');
+  await held('diki-theme', null);
   await p.reload();
   const moved = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join());
   t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', moved === 'violet-dark,,true', moved);
-  await held('serupa-theme');
-  await watch.evaluate(() => { window.heard = []; });
+  await held('serupa-theme', null);
+  const before = await stored('serupa-theme');
   await p.evaluate(() => Serupa.theme.reset());
-  await held('serupa-theme');
+  await held('serupa-theme', before);
   await p.reload();
   const after = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
   t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', after === 'blue-light', after);
