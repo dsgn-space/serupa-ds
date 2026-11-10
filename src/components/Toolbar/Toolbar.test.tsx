@@ -47,7 +47,7 @@ describe('Toolbar', () => {
     const Bar = (p: { id: string; size?: 'sm' | 'md' | 'lg' }) => (
       <Toolbar id={p.id} size={p.size} aria-label="Edit">
         <Button variant="secondary">Cut</Button>
-        <ButtonGroup aria-label="Style"><ToggleButton>Bold</ToggleButton><IconButton icon="format_italic" aria-label="Italic" /></ButtonGroup>
+        <ButtonGroup aria-label="Style"><ToggleButton>Bold</ToggleButton><IconButton icon="format_italic" label="Italic" /></ButtonGroup>
         <ButtonGroup size="sm" aria-label="Own"><Button variant="secondary">Group</Button></ButtonGroup>
         <Button variant="secondary" size="md">Own</Button>
       </Toolbar>
