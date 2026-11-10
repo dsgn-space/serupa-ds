@@ -37,6 +37,18 @@ for (const name of fs.readdirSync(DIR).sort()) {
   const ok = said && (!keys || table);
   const why = !said ? 'no "### Keyboard" part or "**Keyboard:**" line under Accessibility' : 'it handles keys: add a | Key | Does | table';
   t(`${name}: the guide says what the keyboard does`, ok, why);
+  // Do and don't (docs/doDont.tsx): each Do followed by its Don't, and every story they name exported from the stories file.
+  const dd = (md.split(/^### Do and don't\s*$/m)[1] || '').split(/^##+ /m)[0];
+  if (dd) {
+    const items = [...dd.matchAll(/^- \*\*(Do|Don't):\*\* .+? \(`(\w+)`\)\s*$/gm)].map((m) => ({ kind: m[1], story: m[2] }));
+    const bullets = (dd.match(/^- /gm) || []).length;
+    const paired = items.length > 0 && items.length === bullets && items.length % 2 === 0 && items.every((it, i) => it.kind === (i % 2 ? "Don't" : 'Do'));
+    t(`${name}: each Do has its Don't, and each names its story`, paired, 'write "- **Do:** <rule> (`Story`)" then "- **Don\'t:** <rule> (`Story`)"');
+    const storiesFile = path.join(DIR, name, `${name}.stories.tsx`);
+    const src = fs.existsSync(storiesFile) ? fs.readFileSync(storiesFile, 'utf8') : '';
+    const missingStories = items.filter((it) => !new RegExp(`^export const ${it.story}\\b`, 'm').test(src)).map((it) => it.story);
+    t(`${name}: the Do and don't stories exist`, !missingStories.length, `not exported: ${missingStories.join(', ')}`);
+  }
 }
 // The classes the docs name: each word of a class="…" in an example, and each prefixed class in backticks
 // (`md:gap-12`). Utilities have only breakpoint prefixes, so `hover:scale-105` or `focus:not-sr-only` would silently

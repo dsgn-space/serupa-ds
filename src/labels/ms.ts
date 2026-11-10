@@ -306,4 +306,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => n(count) + ' sel ditampal',
   dataGridHint: 'Kekunci anak panah beralih antara sel. Enter atau F2 mengedit sel, Escape membatalkan.',
   scrollArea: 'Kandungan boleh tatal',
+  showMore: 'Tunjukkan lagi',
+  showLess: 'Tunjukkan kurang',
 };

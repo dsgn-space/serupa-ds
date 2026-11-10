@@ -311,4 +311,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => 'Вставлено клітинок: ' + n(count),
   dataGridHint: 'Стрілки переміщують між клітинками. Enter або F2 — змінити клітинку, Escape — скасувати.',
   scrollArea: 'Прокручуваний вміст',
+  showMore: 'Показати більше',
+  showLess: 'Показати менше',
 };

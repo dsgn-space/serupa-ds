@@ -306,4 +306,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 cel geplakt' : n(count) + ' cellen geplakt'),
   dataGridHint: 'Pijltjestoetsen gaan naar een andere cel. Enter of F2 bewerkt een cel, Escape annuleert.',
   scrollArea: 'Scrollbare inhoud',
+  showMore: 'Meer tonen',
+  showLess: 'Minder tonen',
 };

@@ -51,6 +51,15 @@ Drawn from the `<Story>` story.
 
 - <Guidance.>
 
+### Do and don't
+
+<!-- Recommended for the main usage rules. Each Do is followed by its Don't, and each names the story that shows it
+(export it from the component's stories file). The Storybook page draws each pair side by side, marked "✓ Do" and
+"✗ Don't" in words; tools/test/guides.mjs checks that they pair up and that the stories exist. -->
+
+- **Do:** <The rule, shown done right.> (`Do<Something>`)
+- **Don't:** <The mistake it prevents, and why it hurts.> (`Dont<Something>`)
+
 ### <Variant, size or feature name>
 
 <!-- Optional subsections for variants, sizes, tones or notable features, each with a short example. -->

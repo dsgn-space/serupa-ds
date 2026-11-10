@@ -40,7 +40,7 @@ const SAMPLES = {
   itemsOf: [[1, 1, 9], [1, 10, 90]], progressComplete: [['Upload'], ['']], ratingStars: [[1], [3.5], [5]], ratingValue: [[3, 5]],
   reorderGrabbed: [['Apples', 2, 5]], reorderMoved: [['Apples', 3, 5]], reorderDropped: [['Apples', 3, 5]], reorderCancelled: [['Apples', 2, 5]],
   stepOf: [[2, 4]], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1], [3]], tableResizeColumn: [['Name']], tableRowDetails: [['Order 1001']],
-  commandsCount: [[0], [1], [5]],
+  commandsCount: [[0, '0'], [1, '1'], [5, '5']],
   chartKind: [['line'], ['bar'], ['area'], ['donut']], chartShare: [['120', '25%']], chartTotal: [['480']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
   chatNewMessages: [[1], [3]], notificationsUnread: [[1], [2]], eventCount: [[0], [1], [3]], moreEvents: [[1], [2]], eventTime: [['9:30 AM', '10:00 AM']],
   kanbanMoveTo: [['Fix login']], kanbanCount: [['6', '5']], kanbanGrabbed: [['Fix login', 'To do', 1, 3]], kanbanMoved: [['Fix login', 'Done', 2, 5]], kanbanDropped: [['Fix login', 'Done', 2, 5]], kanbanCancelled: [['Fix login', 'To do', 1, 3]],
