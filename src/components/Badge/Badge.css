@@ -102,6 +102,9 @@
 @media (hover: hover) { .dk-badge__remove:hover { opacity: var(--opacity-100); } }
 .dk-badge__remove:focus-visible { opacity: var(--opacity-100); }
 .dk-badge__remove:focus-visible::after { outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }   /* the ring goes round the whole 24×24 target */
+/* On a solid fill the focus color can be the fill's own (a primary badge) or close to it, so the ring has an inner
+   band in the badge's text color, which keeps 4.5:1 on the fill; the outer band keeps 3:1 on the page around it. */
+.dk-badge--solid .dk-badge__remove:focus-visible::after { box-shadow: inset 0 0 0 calc(var(--focus-ring-width) + var(--focus-ring-width)) currentColor; }
 /* Interactive (onClick: a <button>; href: a link): a state layer (hover, then stronger while pressed) in the text
    color on subtle and outline, and black (light themes) or white (dark) on solid, a 2px focus ring outside a 2px surface gap, and a 50% fade when disabled. The layer sits above the
    fill and below the content, so every style and tone gets the same treatment. */
