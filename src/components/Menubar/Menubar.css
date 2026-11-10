@@ -1,0 +1,31 @@
+/* ---------------------------------------------------------------
+   Menubar: the menus' names in a row on the surface, 4px apart inside 4px of padding, with a line under the bar.
+   Each name is a 32px button-like label with rounded corners: a highlight under the pointer, a pressed background
+   while its menu is open, and the focus ring outside it. The menus are Menus. Every value reads one of its own
+   tokens (menubar.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-menubar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--menubar-gap, var(--spacing-1));
+  padding: var(--menubar-padding, var(--spacing-1));
+  background: var(--menubar-bg, var(--surface));
+  border-bottom: var(--border-width-1) solid var(--menubar-border, var(--border));
+}
+/* Focusable only from code (tabIndex -1, for the menubar role): a press between names draws no ring. */
+.dk-menubar:focus { outline: none; }
+.dk-menubar__item {
+  display: inline-flex; align-items: center;
+  min-height: var(--menubar-item-height, var(--control-height-sm));
+  padding-inline: var(--menubar-item-padding-x, var(--spacing-3));
+  border: none; border-radius: var(--menubar-item-radius, var(--radius-control));
+  background: transparent; color: var(--menubar-item-text, var(--text));
+  font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background-color var(--motion-hover);
+}
+@media (hover: hover) { .dk-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--highlight)); } }
+.dk-menubar__item[aria-expanded="true"] { background: var(--menubar-item-bg-open, var(--pressed)); }
+.dk-menubar__item:focus-visible { outline: var(--focus-ring-width) solid var(--menubar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-menubar__item[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
+@media (forced-colors: active) { .dk-menubar__item[aria-expanded="true"] { background: Highlight; color: HighlightText; } }
+}
