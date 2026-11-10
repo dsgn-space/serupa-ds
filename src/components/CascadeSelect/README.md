@@ -58,7 +58,7 @@ Drawn from the `Open` story.
 | Rest | `field` background, 1px `field-border`, the chevron in `text-muted` |
 | Placeholder | "Choose…" (or `placeholder`) in the `placeholder` color |
 | Hover | `field-border-hover` |
-| Focus | A `focus-ring` outline; inside the panel, on the focused option or column |
+| Focus | Like the other fields: the border and a 1px ring hugging it take the `focus-ring` color (danger when invalid), and stay while the panel is open; inside the panel, an outline on the focused option or column |
 | Open | The panel under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor; it doesn't open |
