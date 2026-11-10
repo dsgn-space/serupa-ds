@@ -103,6 +103,16 @@ describe('Patterns/Data import', () => {
     expect(onImport).toHaveBeenCalledTimes(2);
   });
 
+  test('on a right-to-left page, phone numbers and emails still read left to right', async () => {
+    await render(<div dir="rtl"><DataImport start="check" file={{ name: 'p.csv', text: 'Name,Email,Phone\nAni,ani@example.com,+62 811 0000 1234\n' }} /></div>);
+    const cellOf = (text: string) => page.getByRole('cell', { name: text }).element();
+    for (const text of ['+62 811 0000 1234', 'ani@example.com']) {
+      const node = [...cellOf(text).querySelectorAll('*')].find((n) => n.textContent === text)!.firstChild as Text;
+      const x = (i: number) => { const r = document.createRange(); r.setStart(node, i); r.setEnd(node, i + 1); return r.getBoundingClientRect().left; };
+      expect(x(0)).toBeLessThan(x(text.length - 1));
+    }
+  });
+
   test('Back from checking goes to the matches, kept', async () => {
     await render(<DataImport start="check" file={FILE} />);
     await userEvent.click(page.getByRole('button', { name: 'Back' }));

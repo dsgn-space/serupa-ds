@@ -122,6 +122,9 @@ export function checkRows(data: string[][], m: ImportMapping, existing: string[]
 
 // A phone number reads as one piece: it doesn't break at its spaces.
 const NOWRAP: Partial<Record<ImportField['key'], string>> = { phone: 'whitespace-nowrap' };
+// Phone numbers and email addresses read left to right in every language: isolated, so a right-to-left page doesn't
+// reverse their runs ("+62 811 0000 1234" would come out "1234 0000 811 62+").
+const LTR: Partial<Record<ImportField['key'], true>> = { phone: true, email: true };
 const DEMO_EXISTING = ['ani@example.com', 'budi@example.com'];
 const STEPS = [{ title: 'Choose a file' }, { title: 'Match columns' }, { title: 'Check rows' }, { title: 'Done' }];
 const ORDER: DataImportStep[] = ['upload', 'match', 'check', 'done'];
@@ -239,7 +242,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
                       <TableCell align="end">{r.line}</TableCell>
                       <TableCell>{r.problems.length ? <Badge tone="danger">Problem</Badge> : r.update ? <Badge tone="info">Update</Badge> : <Badge tone="success">New</Badge>}</TableCell>
                       <TableCell>{r.problems.join('. ')}</TableCell>
-                      {FIELDS.map((f) => <TableCell key={f.key} className={NOWRAP[f.key]}>{r.row[f.key]}</TableCell>)}
+                      {FIELDS.map((f) => <TableCell key={f.key} className={NOWRAP[f.key]}>{LTR[f.key] ? <bdi dir="ltr">{r.row[f.key]}</bdi> : r.row[f.key]}</TableCell>)}
                     </TableRow>
                   ))}
                 </TableBody>
