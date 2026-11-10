@@ -50,6 +50,21 @@ Drawn from the `Settings` story.
 - Use `variant="card"` for a list that stands on its own; inside a Card or a panel that already has a frame, keep it `plain`.
 - With a router, pass its link component as `as` and its props (such as `to`) in `linkProps`.
 
+### Loading, empty and failed
+
+- **Loading:** set `busy` on the List and put a `ListLoadingItems` inside it, with `rows` set to about as many as will come and with the shape the rows will have: `description` when they have a second line, and `leading` set to `'icon'` or to the Avatar's size (`'sm'`, `'md'` and so on). Each placeholder is as tall as the real row, so nothing jumps when the data arrives. Name the wait in `label` ("Loading members"): a screen reader hears it once, after the loader's delay, so a quick load says nothing.
+- **Empty:** in place of the List, an `EmptyState` that says what's missing and offers the action that adds the first one.
+- **Failed:** in place of the List, a danger `Alert` that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+{state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Members didn't load.</Alert>
+  : state === 'loaded' && !members.length ? <EmptyState size="sm" title="No members yet" />
+  : <List aria-label="Members" busy={state === 'loading'}>
+      {state === 'loading' ? <ListLoadingItems rows={4} description leading="sm" label="Loading members" />
+        : members.map((m) => <ListItem key={m.id} title={m.name} description={m.email} leading={<Avatar name={m.name} size="sm" />} />)}
+    </List>}
+```
+
 ## Accessibility
 
 - It's a real list, so screen readers say how many rows there are, Safari's VoiceOver included (`role="list"` keeps the role it would drop from a list without bullets). Name it with `aria-label` when there's no heading over it.
@@ -69,6 +84,7 @@ Drawn from the `Settings` story.
 | `variant` | `'plain'` \| `'card'` | `'plain'` | Bare rows, or rows in a bordered, rounded frame |
 | `divided` | boolean | `true` | Lines between rows |
 | `as` | `'ul'` \| `'ol'` | `'ul'` | `ol` when the order matters |
+| `busy` | boolean | `false` | Its rows are loading: sets `aria-busy` on the list. Pair it with `ListLoadingItems` |
 
 `className`, `style`, `ref`, `aria-label` and everything else go to the list, which has `data-component="list"`.
 
@@ -88,6 +104,17 @@ Drawn from the `Settings` story.
 | `disabled` | boolean | `false` | Dims a link or button row and stops it |
 
 `className`, `ref` and everything else go to the `<li>`.
+
+### ListLoadingItems
+
+Placeholder rows, inside a List, while its rows load.
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `rows` | number | `3` | How many placeholder rows (1 to 50) |
+| `description` | boolean | `false` | Each row gets a second, shorter line, for rows with a description |
+| `leading` | `'icon'` \| `'xs'` \| `'sm'` \| `'md'` \| `'lg'` \| `'xl'` | none | A circle before the text: a 20px icon's, or an Avatar's of that size |
+| `label` | string | `"Loading"` | Said once as the rows appear, after the loader's delay |
 
 ## Component tokens
 

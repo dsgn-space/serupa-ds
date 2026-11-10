@@ -5,6 +5,8 @@ import { config } from '../../internal/config';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { useSettings } from '../../internal/provider';
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -15,6 +17,8 @@ export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   divided?: boolean | undefined;
   /** 'ul' (default) or 'ol' when the order matters. */
   as?: 'ul' | 'ol' | undefined;
+  /** Its rows are loading (or reloading): sets aria-busy on the list. Pair it with ListLoadingItems. Default: false. */
+  busy?: boolean | undefined;
 }
 
 export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, 'title' | 'onClick'> {
@@ -45,11 +49,11 @@ export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement
    it so controls are never nested. className and every other prop go to the <ul>. */
 /** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
 export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List', function List(props, ref) {
-  const rest = omit(props, { variant: 1, divided: 1, as: 1, className: 1 });
+  const rest = omit(props, { variant: 1, divided: 1, as: 1, busy: 1, className: 1 });
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
   return React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
-    ref: ref, 'data-component': 'list', role: rest.role ?? 'list',
+    ref: ref, 'data-component': 'list', role: rest.role ?? 'list', 'aria-busy': rest['aria-busy'] ?? (props.busy || undefined),
     className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided !== false && 'dk-list--divided', props.className),
   }));
 });
@@ -91,3 +95,38 @@ export const ListItem = /* @__PURE__ */ component<HTMLLIElement, ListItemProps>(
     </li>
   );
 });
+
+export interface ListLoadingItemsProps {
+  /** How many placeholder rows: about as many as will load, up to a screenful. Default: 3. */
+  rows?: number | undefined;
+  /** The rows will have a description: each placeholder gets a second, shorter line. Default: false. */
+  description?: boolean | undefined;
+  /** What the rows will start with: an icon (20px), or an Avatar of that size ('md' is 40px). Default: nothing. */
+  leading?: 'icon' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
+  /** Said once as the rows appear ("Loading people"), after the loader's delay. Default: "Loading" (labels.loading). */
+  label?: string | undefined;
+}
+
+const LEADS = ['icon', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+/* ListLoadingItems: placeholder rows inside a List, built from the rows' own parts (padding, gap, text lines, a
+   circle the size of the leading icon or Avatar), so each is as tall as the row that replaces it and nothing moves.
+   They're decorative: the label is said once, after the loader's delay, and the List's busy marks it as loading. */
+/** Placeholder rows (skeletons) the height of real ListItems, while a List's rows load. Put it inside the List and set its busy. */
+export function ListLoadingItems(props: ListLoadingItemsProps): React.ReactElement {
+  const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));
+  const lead = props.leading == null ? null : oneOf(LEADS, props.leading, 'md');
+  const sds = useSettings();
+  const label = props.label == null ? sds.labels.loading : props.label;
+  const waiting = !useSkeletonShown(label);
+  const out: React.ReactNode[] = [];
+  for (let r = 0; r < rows; r++) out.push(
+    <li key={r} className="dk-list__item dk-list__loading">
+      <div className="dk-list__main dk-list__main--static">
+        {lead ? <span className={'dk-list__leading dk-list__leading--' + lead}><SkeletonArt shape="circle" waiting={waiting} /></span> : null}
+        <span className="dk-list__text"><SkeletonArt lines={props.description ? 2 : 1} waiting={waiting} /></span>
+      </div>
+    </li>,
+  );
+  return <>{out}</>;
+}
