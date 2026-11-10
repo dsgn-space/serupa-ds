@@ -66,10 +66,10 @@ const SITES: Record<string, Site> = {
     act: async () => { React.act(() => { toast({ title: 'Upload failed', tone: 'danger', duration: 0 }); }); }, says: /Upload failed/, assertive: true },
   'Combobox: how many options match once typing stops': {
     ui: () => <Combobox aria-label="Planet" options={['Mars', 'Mercury', 'Venus']} />,
-    act: async () => { await userEvent.click($('input[role="combobox"]')); await userEvent.keyboard('M'); }, says: /2 results/ },
+    act: async () => { await userEvent.click($('input[role="combobox"]')); await userEvent.keyboard('M'); }, says: /[2٢] results/ },
   'CommandPalette: how many commands match once typing stops (the palette is a dialog on top)': {
     ui: (s) => <CommandPalette open={!!s} hotkey={false} commands={[{ id: 'a', label: 'Mars' }, { id: 'b', label: 'Mercury' }, { id: 'c', label: 'Venus' }]} />,
-    act: async (next) => { await next(); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('M'); }, says: /2 commands/ },
+    act: async (next) => { await next(); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('M'); }, says: /[2٢] commands/ },
   'EmptyState: a result with announce as it appears': {
     ui: (s) => (s ? <EmptyState announce title="No results for “mars”" /> : <span />),
     act: (next) => next(), says: /No results for “mars”/ },

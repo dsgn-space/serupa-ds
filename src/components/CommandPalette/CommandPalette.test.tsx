@@ -180,7 +180,7 @@ describe('CommandPalette', () => {
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     try {
-      await render(<CommandPalette defaultOpen commands={COMMANDS} />);
+      await render(<SerupaProvider locale="en"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);
       await userEvent.type(field(), 'pro');
       await expect.poll(() => said.at(-1)).toBe('1 command');   // the disabled one isn't counted
       await userEvent.type(field(), 'zzz');

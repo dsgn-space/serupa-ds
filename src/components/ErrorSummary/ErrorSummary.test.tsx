@@ -49,7 +49,7 @@ function Form({ errors = ERRORS, ...p }: { errors?: ErrorSummaryItem[] } & Parti
 describe('ErrorSummary', () => {
   test('a box named by its heading, then a list of links to each field; ref, className and other props reach the box', async () => {
     const ref = React.createRef<HTMLDivElement>();
-    await render(<ErrorSummary id="x" ref={ref} className="extra" data-x="y" autoFocus={false} errors={ERRORS} />);
+    await render(<SerupaProvider locale="en"><ErrorSummary id="x" ref={ref} className="extra" data-x="y" autoFocus={false} errors={ERRORS} /></SerupaProvider>);
     const e = el('x'), h = e.querySelector('h2')!;
     expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.tabIndex]).toEqual(['DIV', true, 'dk-error-summary extra', 'y', 'error-summary', -1]);
     expect([e.getAttribute('aria-labelledby'), h.textContent]).toEqual([h.id, 'There are 2 problems']);
@@ -62,7 +62,7 @@ describe('ErrorSummary', () => {
     expect(el('s').querySelector('h2')!.textContent).toBe('There is a problem');
     await screen.rerender(<ErrorSummary id="s" autoFocus={false} errors={ERRORS} title="Check your booking" headingLevel={3} description="Fix these first." />);
     expect([el('s').querySelector('h3')!.textContent, el('s').querySelector('h3 + div')!.textContent]).toEqual(['Check your booking', 'Fix these first.']);
-    await screen.rerender(<SerupaProvider labels={idLabels}><ErrorSummary id="s" autoFocus={false} errors={ERRORS} /></SerupaProvider>);
+    await screen.rerender(<SerupaProvider locale="id-ID" labels={idLabels}><ErrorSummary id="s" autoFocus={false} errors={ERRORS} /></SerupaProvider>);
     expect(el('s').querySelector('h2')!.textContent).toBe('Ada 2 masalah');
     await screen.rerender(<ErrorSummary id="s" errors={[]} />);
     expect(el('s')).toBeNull();
