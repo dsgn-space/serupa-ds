@@ -134,14 +134,22 @@ function promise<T>(work: Promise<T> | (() => Promise<T>), messages: ToastPromis
   // Its own id, so a second promise with the same words gets its own toast rather than a count on this one.
   const id = 'dk-toast-' + ++page.next;
   show(Object.assign({ autoDismiss: false }, asOptions(messages.loading), { id: id }));
-  const settle = <A,>(m: Message<A>, arg: A, tone: ToastTone) => {
-    const o = asOptions(typeof m === 'function' ? m(arg) : m);
+  // A message function that throws (GR234) mustn't leave "Saving…" up for good or reject where no one catches it: a
+  // throwing success message shows the error message for what it threw; a throwing error message closes the toast.
+  // Either way development warns, so the bug in the message function is still seen.
+  const settle = <A,>(m: Message<A>, arg: A, tone: ToastTone): void => {
+    let o: ToastOptions;
+    try { o = asOptions(typeof m === 'function' ? m(arg) : m); } catch (thrown) {
+      if (process.env.NODE_ENV !== 'production') warnOnce('toast-promise-threw', 'toast.promise: the ' + (tone === 'success' ? 'success' : 'error') + ' message threw (' + String(thrown) + '), so ' + (tone === 'success' ? 'the error message shows instead.' : 'the toast closes.'));
+      if (tone === 'success') settle(messages.error, thrown, 'danger'); else dismiss(id);
+      return;
+    }
     show(Object.assign({ tone: tone }, o, { id: id }));
   };
   p.then((v) => settle(messages.success, v, 'success'), (e: unknown) => settle(messages.error, e, 'danger'));
   return p;
 }
-export interface ToastUndoOptions extends Omit<ToastOptions, 'action' | 'autoDismiss'> {
+export interface ToastUndoOptions extends Omit<ToastOptions, 'action'> {
   /** Does the action for good. It runs once, when the toast closes without Undo: its time runs out, it's closed, or
    *  the page is left. */
   commit: () => void;
@@ -153,7 +161,9 @@ export interface ToastUndoOptions extends Omit<ToastOptions, 'action' | 'autoDis
 /* toast.undo: the undo pattern. The action looks done at once (the item is gone from the list), and a toast says so
    with an Undo button; the action is done for good (commit) only when the toast closes without Undo, or when the
    page is left (pagehide), so nothing is lost and nothing needs a "Are you sure?" first. Undo runs onUndo instead.
-   Either runs once. */
+   Either runs once. Its time follows autoDismiss and duration like any toast's, the Toaster's unless it sets its own,
+   so an app that keeps toasts until they're closed (WCAG 2.2.1) keeps this one too, rather than committing after 5 s
+   (GR223). */
 function undo(options: ToastUndoOptions): string {
   const { commit, onUndo, undoLabel, ...rest } = options;
   // A new undo toast with the id of one still open replaces it: the first one's action is done for good now, as its
@@ -172,7 +182,7 @@ function undo(options: ToastUndoOptions): string {
     if (f) f();
   };
   const keep = once(commit), back = once(onUndo), left = once(commit, true);
-  const id = show(Object.assign({}, rest, { action: { label: undoLabel || page.undoWord || ownWords.undo, onClick: back }, autoDismiss: true }));
+  const id = show(Object.assign({}, rest, { action: { label: undoLabel || page.undoWord || ownWords.undo, onClick: back } }));
   page.onClose.set(id, keep);
   window.addEventListener('pagehide', left);
   unseen();
@@ -401,21 +411,23 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     const tall = live.reduce((h, e) => h + e.getBoundingClientRect().height, 0) + gap * (live.length - 1);
     if (tall > window.innerHeight - 2 * edge + 0.5) setRoom(toastsLive - 1);
   });
-  const spaceVar = '--dk-toaster-space-' + pos;
+  const spaceVar = '--dk-toaster-space-' + pos, edgeVar = '--dk-toaster-space-' + pos.split('-')[0];
   // The room the toasts take at their edge, so a Fab there rises above them rather than under them (GR157): the
   // Toaster's offset from the edge, the toasts' heights and gaps (laid out, so a toast still sliding in counts in
-  // full) and 8px, in --dk-toaster-space-<position> on the root while one shows. Fab.css reads it.
+  // full) and 8px, in --dk-toaster-space-<position> (and -top or -bottom) on the root while one shows. Fab.css reads
+  // the first, Toast.css's scroll padding the second.
   // every render: a toast's height changes with its text and count.
   useIsoLayoutEffect(() => {
     const region = self.current, root = document.documentElement;
     const live = region ? [...region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving]), .dk-toaster__more:not([data-leaving])')] : [];
-    if (!region || !live.some((e) => e.hasAttribute('data-toast'))) { root.style.removeProperty(spaceVar); return; }
+    if (!region || !live.some((e) => e.hasAttribute('data-toast'))) { root.style.removeProperty(spaceVar); root.style.removeProperty(edgeVar); return; }
     const cs = getComputedStyle(region), gap = parseFloat(getComputedStyle(region.firstElementChild as Element).rowGap) || 0;
     const edge = parseFloat(pos.startsWith('top') ? cs.top : cs.bottom) || 0;
     const tall = live.reduce((h, e) => h + e.offsetHeight, 0) + gap * (live.length - 1);
     root.style.setProperty(spaceVar, Math.ceil(edge + tall + 8) + 'px');
+    root.style.setProperty(edgeVar, Math.ceil(edge + tall + 8) + 'px');   // the edge's too: Toast.css pads scrolling by it
   });
-  React.useEffect(() => () => { document.documentElement.style.removeProperty(spaceVar); }, [spaceVar]);
+  React.useEffect(() => () => { document.documentElement.style.removeProperty(spaceVar); document.documentElement.style.removeProperty(edgeVar); }, [spaceVar, edgeVar]);
   // While a Dialog or Drawer is open the page behind it is inert and under it, so the toasts move into it: a
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
