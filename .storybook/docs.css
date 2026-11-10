@@ -68,6 +68,7 @@ html, body { background-color: var(--surface); }
 .sb-dodont__stage .docs-story, .sb-dodont__stage .sbdocs-preview { margin: 0; border: 0; box-shadow: none; background: transparent; }
 .sb-dodont__caption { padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface-muted); color: var(--text); font: 400 14px/20px var(--font-sans); }
 .sb-dodont__caption p { margin: 4px 0 0; }
+.sb-dodont__stage .docblock-source { inline-size: 100%; margin: 0; }
 .sb-dodont__verdict { color: var(--success-text); font-weight: 600; }
 .sb-dodont__item--dont .sb-dodont__verdict { color: var(--danger-text); }
 @media (forced-colors: active) { .sb-dodont__item { border-top-color: CanvasText; } }

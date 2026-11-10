@@ -43,15 +43,26 @@ const idPart = (exportName: string) => exportName.replace(/([a-z0-9])([A-Z])/g, 
 function Example({ item }: { item: DoDontItem }) {
   const stories = React.useContext(DocsContext).componentStories();
   const story = stories.find((s) => s.id.endsWith('--' + idPart(item.story)));
-  const ok = item.kind === 'do';
-  // The verdict is in words (✓ Do, ✗ Don't) and in the bar's color, so it doesn't rest on color alone.
-  return <figure className={'sb-dodont__item sb-dodont__item--' + item.kind}>
-    <div className="sb-dodont__stage">{story ? <Story of={story.moduleExport} /> : null}</div>
+  return <Figure kind={item.kind} text={item.text}>{story ? <Story of={story.moduleExport} /> : null}</Figure>;
+}
+
+// The verdict is in words (✓ Do, ✗ Don't) and in the bar's color, so it doesn't rest on color alone.
+function Figure({ kind, text, children }: { kind: 'do' | 'dont'; text: string; children: React.ReactNode }) {
+  return <figure className={'sb-dodont__item sb-dodont__item--' + kind}>
+    <div className="sb-dodont__stage">{children}</div>
     <figcaption className="sb-dodont__caption">
-      <strong className="sb-dodont__verdict">{ok ? '✓ Do' : '✗ Don’t'}</strong>
-      <Markdown>{item.text}</Markdown>
+      <strong className="sb-dodont__verdict">{kind === 'do' ? '✓ Do' : '✗ Don’t'}</strong>
+      <Markdown>{text}</Markdown>
     </figcaption>
   </figure>;
+}
+
+/** One pair drawn from examples given in place, for a page with no stories of its own (the design principles). */
+export function DoDontExample(props: { doText: string; doExample: React.ReactNode; dontText: string; dontExample: React.ReactNode }) {
+  return <div className="sb-dodont sb-unstyled"><div className="sb-dodont__pair">
+    <Figure kind="do" text={props.doText}>{props.doExample}</Figure>
+    <Figure kind="dont" text={props.dontText}>{props.dontExample}</Figure>
+  </div></div>;
 }
 
 /** Each pair side by side (stacked on a narrow page): the Do, then the Don't. */
