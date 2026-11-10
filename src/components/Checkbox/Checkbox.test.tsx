@@ -280,18 +280,18 @@ describe('CheckboxGroup', () => {
     expect([box('mail').required, box('sms').required, form.checkValidity()]).toEqual([false, false, true]);
   });
 
-  test('required: the browser says "Select at least one option." (the group\'s message, in the provider\'s words), not its one-box message, until a box is checked; a box\'s own message is left alone (EW1)', async () => {
+  test('required: the browser says "Choose at least one option." (the group\'s message, in the provider\'s words), not its one-box message, until a box is checked; a box\'s own message is left alone (EW1)', async () => {
     const bx = (v: string) => document.querySelector<HTMLInputElement>(`input[value="${v}"]`)!;
     await render(<><form id="rqm"><CheckboxGroup aria-label="Contact" name="via" required>
       <Checkbox value="mail">Email</Checkbox><Checkbox value="sms">SMS</Checkbox>
     </CheckboxGroup></form><SerupaProvider locale="id-ID" labels={idLabels}><CheckboxGroup aria-label="Kontak" required><Checkbox value="wa">WhatsApp</Checkbox></CheckboxGroup></SerupaProvider>
     <CheckboxGroup aria-label="Own"><Checkbox value="own">Own</Checkbox></CheckboxGroup></>);
     bx('own').setCustomValidity('Mine');
-    expect([bx('mail').validationMessage, bx('sms').validationMessage, bx('wa').validationMessage]).toEqual(['Select at least one option.', 'Select at least one option.', 'Centang setidaknya satu pilihan.']);
+    expect([bx('mail').validationMessage, bx('sms').validationMessage, bx('wa').validationMessage]).toEqual(['Choose at least one option.', 'Choose at least one option.', 'Centang setidaknya satu pilihan.']);
     await userEvent.click(bx('mail'));
     expect([bx('mail').validationMessage, bx('sms').validationMessage, (document.getElementById('rqm') as HTMLFormElement).checkValidity(), bx('own').validationMessage]).toEqual(['', '', true, 'Mine']);
     await userEvent.click(bx('mail'));   // none again
-    expect(bx('sms').validationMessage).toBe('Select at least one option.');
+    expect(bx('sms').validationMessage).toBe('Choose at least one option.');
   });
 
   test('a form gets every checked value under the name, and a reset brings back defaultValue', async () => {
