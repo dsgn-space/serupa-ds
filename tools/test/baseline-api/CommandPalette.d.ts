@@ -3,7 +3,7 @@ interface CommandPaletteLabels {
     commandPalette: string;
     searchCommands: string;
     noCommands: string;
-    commandsCount: (count: number) => string;
+    commandsCount: (count: number, formatted: string) => string;
     otherCommands: string;
 }
 interface Command {
