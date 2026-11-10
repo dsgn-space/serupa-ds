@@ -14,6 +14,12 @@ import { en as EventCalendarWords } from './labels';
 // Its own words and the month buttons' names it shares with Calendar.
 const words = /* @__PURE__ */ Object.assign({}, EventCalendarWords, CalendarWords);
 
+/* A time with the hour as 'numeric' asks: "9.30", not "09.30". Engines differ for some 24-hour locales (Firefox writes
+   id-ID as "09.30", Chromium and Node as "9.30"), and the server's HTML has to match what the browser renders. */
+function numericHour(f: Intl.DateTimeFormat): { format: (d: Date) => string } {
+  return { format: (d) => f.formatToParts(d).map((x) => (x.type === 'hour' ? x.value.replace(/^0(?=\d)/, '') : x.value)).join('') };
+}
+
 /** One event. The app expands repeating events into their occurrences and marks them with repeating. */
 export interface CalendarEvent {
   /** Unique among the events: the key, and what onEventClick hands back with the event. */
@@ -179,7 +185,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     short: new Intl.DateTimeFormat(locale, { weekday: 'short' }),
     long: new Intl.DateTimeFormat(locale, { weekday: 'long' }),
     day: new Intl.DateTimeFormat(locale, { calendar: 'gregory', numberingSystem: 'latn', weekday: 'long', month: 'long', day: 'numeric' }),
-    time: new Intl.DateTimeFormat(locale, { numberingSystem: 'latn', hour: 'numeric', minute: '2-digit' }),
+    time: numericHour(new Intl.DateTimeFormat(locale, { numberingSystem: 'latn', hour: 'numeric', minute: '2-digit' })),
   }), [locale]);
   const titleId = domId('dk-evc', React.useId()) + '-title';
   const level = props.headingLevel && props.headingLevel >= 2 && props.headingLevel <= 6 ? props.headingLevel : 2;
