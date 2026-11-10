@@ -223,7 +223,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     diff(before.value, valueSet);
     if (before.tab !== tabStop) { tell(before.tab); tell(tabStop); }
   }, [openSet, valueSet, tabStop, mode]);
-  const api = React.useRef<Api>({ focus: () => {}, press: () => {}, toggle: () => {} });
+  const api = React.useRef<Api>(null!);   // set just below, every render, before any row can call it
   api.current = {
     focus: (id) => { if (focusId !== id) setFocusId(id); },
     press: (item, e) => { setFocusId(item.id); if (mode === 'none') toggleOpen(item); else choose(item, multi && e.shiftKey); },
