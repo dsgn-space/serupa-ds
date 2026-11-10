@@ -30,7 +30,7 @@ const SAMPLES = {
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
   contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0], [1], [5]], dataGridEdit: [['Qty']], dataGridCopied: [[1], [4]], dataGridPasted: [[1], [6]], moreResults: [[1], [40]],
   clearValue: [['Size'], ['']], createOption: [['Research']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],
-  errorSummaryTitle: [[1], [3]],
+  errorSummaryTitle: [[1, '1'], [3, '3']],
   fileWrongType: [['a.exe', ['image']], ['a.exe', ['image', 'video', 'PDF']], ['a.exe', undefined]], fileTooLarge: [['a.png', '5 MB']],
   fileTooMany: [['a.png', 1], ['a.png', 3]], fileOnlyOne: [['a.png']], fileMissing: [[true], [false]], fileFolder: [['photos']], fileAlreadyAdded: [['a.png']],
   filesAdded: [[['a.png']], [['a.png', 'b.png']]], fileRemoved: [['a.png']],

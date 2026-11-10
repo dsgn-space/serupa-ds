@@ -18,7 +18,8 @@ const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'ut
 const tokensCss = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
 
 // Brand colors across the wheel, light and dark, loud and grey.
-const COLORS = ['#2563eb', '#0f766e', '#e11d48', '#f59e0b', '#7c3aed', '#111111', '#fde047', '#22c55e', '#64748b', '#ff00ff', '#00ffff', '#8b4513', '#ffffff', '#000000'];
+// The last four passed on white but not on a muted panel before GR327.
+const COLORS = ['#2563eb', '#0f766e', '#e11d48', '#f59e0b', '#7c3aed', '#111111', '#fde047', '#22c55e', '#64748b', '#ff00ff', '#00ffff', '#8b4513', '#ffffff', '#000000', '#16a34a', '#db2777', '#059669', '#14532d'];
 const made = {};
 for (const c of COLORS) {
   let r, err = '';
