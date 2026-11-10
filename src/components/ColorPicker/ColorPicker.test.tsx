@@ -25,6 +25,18 @@ function Controlled({ calls }: { calls: string[] }) {
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('ColorPicker', () => {
+  test('size md, the default: 32px swatches', async () => {
+    await render(<ColorPicker aria-label="C" swatches={SW} size="md" />);
+    expect(Math.round(swatch('Blue').getBoundingClientRect().height)).toBe(32);
+  });
+
+  test('size lg: 44px swatches and custom color, a 44px hex field, 16px text, like the other large controls', async () => {
+    await render(<ColorPicker aria-label="C" swatches={SW} size="lg" defaultValue="#1d4ed8" />);
+    const native = document.querySelector('input[type=color]') as HTMLInputElement;
+    const box = (e: Element) => Math.round(e.getBoundingClientRect().width) + 'x' + Math.round(e.getBoundingClientRect().height);
+    expect([box(swatch('Blue')), box(native), Math.round(hex().parentElement!.getBoundingClientRect().height), css(hex()).fontSize]).toEqual(['44x44', '44x44', 44, '16px']);
+  });
+
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<ColorPicker aria-label="C" swatches={SW} defaultValue="#1d4ed8" />);
     const t = document.querySelector('[role=radio]') as HTMLElement;

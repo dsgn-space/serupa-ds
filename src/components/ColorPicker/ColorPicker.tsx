@@ -40,8 +40,8 @@ export interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   contrastWith?: string | undefined;
   /** The ratio below which it warns. Default: 4.5 (text); 3 for large text and icons. */
   minContrast?: number | undefined;
-  /** 'sm' (24px swatches) or 'md' (32px, default). */
-  size?: 'sm' | 'md' | undefined;
+  /** 'sm' (24px swatches), 'md' (32px, default) or 'lg' (44px swatches, a large hex field and 16px text: the touch-target size, beside lg fields and buttons). */
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Turns every swatch and the hex field off, as a disabled native control. */
   disabled?: boolean | undefined;
   /** Shows the color without letting it change: the swatches stay focusable and the group says it (aria-readonly), the hex field is read-only, the browser's color picker doesn't open, and a form still sends the color, unlike disabled. */
@@ -94,7 +94,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   const [missing, setMissing] = React.useState(false);
   if (missing && value) setMissing(false);
   const invalid = !!props.invalid || truthy(props['aria-invalid']) || missing;
-  const size = props.size === 'sm' ? 'sm' : 'md';
+  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
   const [text, setText] = React.useState((value || '').replace('#', ''));
   const typing = React.useRef(false);
   // A code on its way to six digits ("1d4") isn't marked invalid until Enter: only one that can't become a color is.
@@ -221,7 +221,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
             // Read-only: a native color input has no readonly, so the click (or the key) that opens its picker is cancelled.
             onClick={readOnly ? (e) => e.preventDefault() : undefined} onKeyDown={readOnly ? (e) => { if (e.key === 'Enter' || e.key === ' ') e.preventDefault(); } : undefined}
             onChange={(e) => choose(e.target.value, false, false)} />
-          <Input size="sm" className="dk-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
+          <Input size={size === 'lg' ? 'lg' : 'sm'} className="dk-color-picker__hex" aria-label={sds.labels.hexCode} value={text} disabled={disabled} readOnly={readOnly} maxLength={7} spellCheck={false} autoCorrect="off" autoCapitalize="off" autoComplete="off"
             leftIcon={<span className="dk-color-picker__hash">#</span>} aria-invalid={bad || undefined}
             onFocus={() => { typing.current = true; }}
             onChange={(e) => { const t = e.target.value.replace(/^#/, ''); setText(t); setTried(false); const v = normalizeHex(t); if (v && t.length === 6) choose(v, false, false); }}

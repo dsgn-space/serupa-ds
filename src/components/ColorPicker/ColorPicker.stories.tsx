@@ -12,7 +12,7 @@ const meta = {
   title: 'Components/Forms/ColorPicker',
   component: ColorPicker,
   args: { 'aria-label': 'Label color', swatches: SWATCHES, defaultValue: '#1d4ed8' },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
 } satisfies Meta<typeof ColorPicker>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -32,6 +32,8 @@ export const ContrastCheck: Story = {
   },
 };
 export const SwatchesOnly: Story = { name: 'Swatches only', args: { custom: false, size: 'sm' } };
+/** 44px swatches and a large hex field, beside large fields and buttons or on a touch screen. */
+export const Large: Story = { args: { size: 'lg' } };
 
 export const LongLabels: Story = {
   args: { swatches: [{ value: '#1d4ed8', label: 'Deep ocean blue for headings' }, { value: '#047857', label: 'Forest green for success' }, { value: '#b91c1c', label: 'Signal red for errors' }] },
