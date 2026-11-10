@@ -1,6 +1,7 @@
 // exports: Toolbar, type ToolbarProps
 interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
     orientation?: "horizontal" | "vertical" | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
     "aria-label"?: string | undefined;
     children?: React.ReactNode | undefined;
 }

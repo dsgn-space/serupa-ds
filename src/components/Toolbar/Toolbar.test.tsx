@@ -6,6 +6,7 @@ import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { ButtonGroup } from '../ButtonGroup/ButtonGroup';
 import { Divider } from '../Divider/Divider';
+import { IconButton } from '../IconButton/IconButton';
 import { Input } from '../Input/Input';
 import { Menu, MenuItem } from '../Menu/Menu';
 import { ToggleButton } from '../ToggleButton/ToggleButton';
@@ -40,6 +41,20 @@ describe('Toolbar', () => {
     const e = el('x');
     expect([e.tagName, page.getByRole('toolbar', { name: 'Tools' }).element() === e, e.getAttribute('aria-orientation'), ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.orientation])
       .toEqual(['DIV', true, 'horizontal', true, 'dk-toolbar extra', 'y', 'toolbar', 'horizontal']);
+  });
+
+  test('size: every button in it without its own, in a ButtonGroup too, takes the toolbar\'s (sm 24, md 32, lg 44px); a group\'s or a button\'s own size wins', async () => {
+    const Bar = (p: { id: string; size?: 'sm' | 'md' | 'lg' }) => (
+      <Toolbar id={p.id} size={p.size} aria-label="Edit">
+        <Button variant="secondary">Cut</Button>
+        <ButtonGroup aria-label="Style"><ToggleButton>Bold</ToggleButton><IconButton icon="format_italic" label="Italic" /></ButtonGroup>
+        <ButtonGroup size="sm" aria-label="Own"><Button variant="secondary">Group</Button></ButtonGroup>
+        <Button variant="secondary" size="md">Own</Button>
+      </Toolbar>
+    );
+    await render(<><Bar id="tsm" size="sm" /><Bar id="tmd" size="md" /><Bar id="tlg" size="lg" /><Bar id="tnone" /></>);
+    const heights = (id: string) => [...document.getElementById(id)!.querySelectorAll('button')].map((b) => b.getBoundingClientRect().height);
+    expect(['tsm', 'tmd', 'tlg', 'tnone'].map(heights)).toEqual([[24, 24, 24, 24, 32], [32, 32, 32, 24, 32], [44, 44, 44, 24, 32], [32, 32, 32, 24, 32]]);
   });
 
   test('one Tab stop: the first control; Tab goes in and straight out again', async () => {
