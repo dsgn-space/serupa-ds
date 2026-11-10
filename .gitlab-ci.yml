@@ -67,8 +67,9 @@ variables:
 
 default:
   # The Playwright version in package-lock.json, for the system libraries and fonts its Chromium needs (and Node 26).
-  # Bump it with Playwright.
-  image: mcr.microsoft.com/playwright:v1.64.1-noble
+  # Bump it with Playwright. Every image here is pinned by digest as well as tag, so a tag moved upstream can't change
+  # what CI runs (GR277); Renovate keeps the digests current, and tools/test/ci-images.mjs checks both.
+  image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
   interruptible: true
   # Once more when the machine, not the code, failed: a runner restart, a lost connection, GitLab's API. A failing
   # test is never retried here (inParallelRetry in tools/test/lib.mjs names the rare story retried and passed).
@@ -209,7 +210,7 @@ local checks:
   stage: build
   timeout: 5m
   # Only the script and the description: a small image, one commit of history, no cache, no install.
-  image: node:26-alpine
+  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   variables:
     # The changeset check (below) reads the history back to the merge request's base.
     GIT_DEPTH: "0"
@@ -628,7 +629,7 @@ design qa:
   stage: build
   needs: []
   timeout: 15m
-  image: node:26-alpine
+  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
       changes: [tools/test/baseline-visual/**/*]
@@ -652,7 +653,7 @@ renovate:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $RENOVATE_TOKEN
   timeout: 30m
-  image: renovate/renovate:41
+  image: renovate/renovate:41@sha256:e998e1218fe572e23278d8808186a310784f7cb2ac8055307183ffc51d3a59e5
   variables:
     RENOVATE_PLATFORM: gitlab
     RENOVATE_ENDPOINT: $CI_API_V4_URL

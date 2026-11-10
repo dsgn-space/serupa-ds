@@ -15,6 +15,7 @@
     { "matchPackageNames": ["vitest", "@vitest/**", "vitest-browser-react", "vite"], "groupName": "vitest" },
     { "matchPackageNames": ["eslint", "@eslint/**", "eslint-plugin-*", "typescript-eslint", "globals", "stylelint", "stylelint-*"], "groupName": "lint" },
     { "matchDepTypes": ["devDependencies"], "matchUpdateTypes": ["minor", "patch"], "groupName": "dev tools (minor and patch)", "addLabels": ["no-changeset"], "automerge": true, "platformAutomerge": true },
-    { "matchDepTypes": ["devDependencies"], "matchUpdateTypes": ["major"], "addLabels": ["no-changeset"] }
+    { "matchDepTypes": ["devDependencies"], "matchUpdateTypes": ["major"], "addLabels": ["no-changeset"] },
+    { "matchManagers": ["gitlabci"], "pinDigests": true, "groupName": "CI images", "addLabels": ["no-changeset"] }
   ]
 }
