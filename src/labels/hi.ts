@@ -305,4 +305,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => n(count) + ' सेल चिपकाए गए',
   dataGridHint: 'तीर कुंजियाँ सेल बदलती हैं। Enter या F2 सेल संपादित करता है, Escape रद्द करता है।',
   scrollArea: 'स्क्रॉल होने वाली सामग्री',
+  showMore: 'और दिखाएँ',
+  showLess: 'कम दिखाएँ',
 };

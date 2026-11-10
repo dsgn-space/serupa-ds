@@ -305,4 +305,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => '已粘贴 ' + n(count) + ' 个单元格',
   dataGridHint: '方向键在单元格间移动。Enter 或 F2 编辑单元格，Escape 取消。',
   scrollArea: '可滚动内容',
+  showMore: '显示更多',
+  showLess: '收起',
 };

@@ -308,4 +308,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => '셀 ' + n(count) + '개를 붙여 넣었습니다',
   dataGridHint: '화살표 키로 셀을 이동합니다. Enter 또는 F2로 편집하고 Escape로 취소합니다.',
   scrollArea: '스크롤 콘텐츠',
+  showMore: '더 보기',
+  showLess: '간단히 보기',
 };

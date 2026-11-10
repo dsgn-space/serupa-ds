@@ -309,4 +309,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 célula colada' : n(count) + ' células coladas'),
   dataGridHint: 'As setas movem entre células. Enter ou F2 edita uma célula, Escape cancela.',
   scrollArea: 'Conteúdo rolável',
+  showMore: 'Mostrar mais',
+  showLess: 'Mostrar menos',
 };

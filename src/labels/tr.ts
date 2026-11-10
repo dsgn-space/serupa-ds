@@ -306,4 +306,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => n(count) + ' hücre yapıştırıldı',
   dataGridHint: 'Ok tuşları hücreler arasında gezer. Enter veya F2 hücreyi düzenler, Escape iptal eder.',
   scrollArea: 'Kaydırılabilir içerik',
+  showMore: 'Daha fazla göster',
+  showLess: 'Daha az göster',
 };

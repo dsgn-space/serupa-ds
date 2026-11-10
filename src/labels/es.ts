@@ -309,4 +309,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 celda pegada' : n(count) + ' celdas pegadas'),
   dataGridHint: 'Las flechas mueven entre celdas. Enter o F2 edita una celda, Escape cancela.',
   scrollArea: 'Contenido desplazable',
+  showMore: 'Mostrar más',
+  showLess: 'Mostrar menos',
 };
