@@ -22,18 +22,11 @@ import { ScrollArea } from "serupa-ds";
 - A long list of thousands of rows: use [VirtualList](../VirtualList/README.md), which draws only the rows in view.
 - The page itself: let the page scroll. A box that scrolls inside a page that scrolls is harder to use, above all on a phone.
 
-## Anatomy
-
-Drawn from the `Playground` story.
-
-1. **Box** (`.dk-scroll-area`): the scrolling container, with the browser's own scrollbar made thin, a field-border thumb on a clear track.
-2. **Fade** (`.dk-scroll-area--more-end`): with `fade`, the content fades out over 32px at an edge with more past it (`--more-start` at the start).
-
 ## Usage
 
 - Give it a size: a `maxHeight` (or `height`) for `orientation="vertical"`, the default; a width narrower than its content for `"horizontal"`; both for `"both"`.
 - Name it with `aria-label` or `aria-labelledby` for what it holds ("Recent activity"). The name is used only while it scrolls; with none it's "Scrolling content".
-- `fade` hints that there's more: use it where the scrollbar alone can go unnoticed (a phone, a row of chips). The faded edge isn't for reading, so keep padding at the edges.
+- With `fade`, an edge with more past it fades out over 32px, a hint that there's more: use it where the scrollbar alone can go unnoticed (a phone, a row of chips). The faded edge isn't for reading, so keep padding at the edges.
 - The scrollbar is the browser's own, so dragging, clicking the track, touch and screen readers work as they do everywhere; only its width and colors change.
 
 ## Accessibility
