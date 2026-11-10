@@ -7,7 +7,7 @@ import { spinnerDelay } from './timing';
 /** The markup of a decorative `<Loader variant="skeleton" />` (label=""): placeholder shapes in Loader's classes, so
     they look, move and stand still (reduced motion, forced colors) exactly as Loader's do, without carrying the whole
     Loader. While `waiting` (the loader's delay), they keep their space and show nothing. */
-export function SkeletonArt({ shape = 'text', lines = 1, waiting, className }: { shape?: 'text' | 'circle'; lines?: number; waiting?: boolean; className?: string }): React.ReactElement {
+export function SkeletonArt({ shape = 'text', lines = 1, waiting, className }: { shape?: 'text' | 'circle' | 'rect'; lines?: number; waiting?: boolean; className?: string }): React.ReactElement {
   const bones: React.ReactNode[] = [];
   if (shape === 'text') for (let i = 0; i < lines; i++) bones.push(<span className="dk-loader__line" key={i}><span className="dk-loader__bone" /></span>);
   else bones.push(<span className="dk-loader__bone" key="bone" />);

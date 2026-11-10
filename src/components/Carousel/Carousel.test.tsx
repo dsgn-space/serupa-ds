@@ -226,15 +226,21 @@ describe('Carousel', () => {
     expect(state('cssrtl').shown).toBe(1);
   });
 
-  /** A mouse drag across the viewport through `path`: [dx from the start, ms after the move before]. */
+  /** A mouse drag across the viewport through `path`: [dx from the start, ms after the move before]. Each event carries
+   *  the path's time as its timeStamp, which the drag speed is read from, so a busy runner's late timer can't slow it. */
   const trace = async (id: string, path: [number, number][], up = true) => {
     const v = part(id, VIEW);
     v.scrollIntoView({ block: 'center' });
     const r = v.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + 40;
-    const ev = (name: string, cx: number) => v.dispatchEvent(new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: 'mouse', button: 0, buttons: 1, clientX: cx, clientY: y }));
+    let t = performance.now();
+    const ev = (name: string, cx: number) => {
+      const e = new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: 'mouse', button: 0, buttons: 1, clientX: cx, clientY: y });
+      Object.defineProperty(e, 'timeStamp', { value: t });
+      v.dispatchEvent(e);
+    };
     ev('pointerdown', x);
     let at = 0;
-    for (const [dx, ms] of path) { await new Promise((f) => setTimeout(f, ms)); ev('pointermove', x + dx); at = dx; }
+    for (const [dx, ms] of path) { await new Promise((f) => setTimeout(f, ms)); t += ms; ev('pointermove', x + dx); at = dx; }
     if (up) ev('pointerup', x + at);
   };
 
