@@ -881,9 +881,10 @@ describe('Table loading and messages (GR316)', () => {
     }
     // One name for the whole table: the rest of the placeholders are hidden from screen readers.
     // The placeholders are hidden from screen readers; the wait is said once, after the loader's delay.
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
+    // Once shown, no cell is a progress bar a screen reader can land on; the table's aria-busy says it's loading.
     expect(page.getByRole('progressbar').all().length).toBe(0);
     expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
-    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
     const loadingHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
     await rerender(<div style={{ width: '600px' }}><Loading busy={false} /><Loading size="sm" busy={false} /></div>);
     const realHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
