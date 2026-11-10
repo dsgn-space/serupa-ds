@@ -47,6 +47,8 @@ export interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElem
   form?: string | undefined;
   /** Turns drawing, typing and every button off. */
   disabled?: boolean | undefined;
+  /** Shows the signature without letting it change, such as one already given: nothing draws, the method switch and a typed name are read-only (still focusable and read out), Undo, Clear and the how-to text are left out, and a form still sends it, unlike disabled. */
+  readOnly?: boolean | undefined;
   /** Marks the signature invalid (aria-invalid on the group). Field sets it from its error. */
   invalid?: boolean | undefined;
 }
@@ -54,7 +56,7 @@ export interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElem
 type Point = readonly [number, number];
 type Stroke = Point[];
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, disabled: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, disabled: 1, readOnly: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const pathOf = (s: Stroke) => s.length === 1 ? `M${s[0][0]} ${s[0][1]}h0` : 'M' + s.map((p) => p[0] + ' ' + p[1]).join('L');
 // The strokes back from an SVG this pad made: each <path d="M x yLx y…"> is one stroke ("h0" ends a dot).
@@ -107,7 +109,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const root = React.useRef<HTMLDivElement | null>(null);
   const area = React.useRef<SVGSVGElement | null>(null);
   const inDisabledFieldset = useFieldsetDisabled(root);
-  const disabled = !!props.disabled || inDisabledFieldset;
+  const disabled = !!props.disabled || inDisabledFieldset, readOnly = !!props.readOnly;
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const first: SignatureMethod = props.defaultMethod === 'type' ? 'type' : 'draw';
   const controlled = props.value !== undefined;
@@ -165,7 +167,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
     return [r1(Math.min(b.width, Math.max(0, e.clientX - b.left))), r1(Math.min(b.height, Math.max(0, e.clientY - b.top)))];
   };
   const onDown = (e: React.PointerEvent<SVGSVGElement>) => {
-    if (disabled || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    if (disabled || readOnly || (e.pointerType === 'mouse' && e.button !== 0)) return;
     e.preventDefault();
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a synthetic pointer has no capture */ }
     live.current = [at(e)];
@@ -208,16 +210,16 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const shown = live.current ? [...strokes, live.current] : strokes;
   const empty = method === 'draw' ? !shown.length : !typed.trim();
   const labelledBy = props['aria-labelledby'] || (props['aria-label'] ? undefined : fieldLabel);
-  const describedBy = cn(base + '-how', props['aria-describedby']);
+  const describedBy = cn(!readOnly && base + '-how', props['aria-describedby']) || undefined;
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, methodStop); nameRef(n); });
   return (
     <div {...rest} ref={mergedRef} role="group"
       aria-labelledby={labelledBy} aria-describedby={describedBy}
-      className={cn('dk-signature-pad', disabled && 'dk-signature-pad--disabled', invalid && 'dk-signature-pad--invalid', props.className)} data-component="signature-pad">
+      className={cn('dk-signature-pad', disabled && 'dk-signature-pad--disabled', readOnly && 'dk-signature-pad--readonly', invalid && 'dk-signature-pad--invalid', props.className)} data-component="signature-pad">
       <FieldContext.Provider value={null}>
-        <SegmentedControl className="dk-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} invalid={invalid || undefined} value={method} onValueChange={pick}
+        <SegmentedControl className="dk-signature-pad__method" size="sm" aria-label={L.signatureMethod} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined} value={method} onValueChange={pick}
           options={[{ value: 'draw', label: L.signatureDraw }, { value: 'type', label: L.signatureType }]} />
-        <p className="dk-signature-pad__how" id={base + '-how'}>{method === 'draw' ? L.signatureDrawHint : L.signatureTypeHint}</p>
+        {readOnly ? null : <p className="dk-signature-pad__how" id={base + '-how'}>{method === 'draw' ? L.signatureDrawHint : L.signatureTypeHint}</p>}
         {method === 'draw' ? (
           <>
             <div className="dk-signature-pad__box">
@@ -227,15 +229,15 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
               </svg>
               <span className="dk-signature-pad__line" aria-hidden />
             </div>
-            <div className="dk-signature-pad__actions">
+            {readOnly ? null : <div className="dk-signature-pad__actions">
               <Button variant="ghost" size="sm" disabled={disabled || !strokes.length} onClick={undo}>{L.signatureUndo}</Button>
               <Button variant="ghost" size="sm" disabled={disabled || !strokes.length} onClick={clear}>{L.signatureClear}</Button>
-            </div>
+            </div>}
           </>
         ) : (
           <>
             <label className="dk-signature-pad__label" htmlFor={base + '-name'}>{L.signatureName}</label>
-            <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} invalid={invalid || undefined}
+            <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
               value={typed} onChange={(e) => { setTyped(e.target.value); tell('type', strokes, e.target.value, 'type'); }} />
             <div className="dk-signature-pad__box" aria-hidden>
               <svg ref={area} className="dk-signature-pad__area dk-signature-pad__area--typed" role="presentation">
