@@ -63,7 +63,7 @@ export function Guide({ source }: { source: string }) {
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
     {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <Markdown key={i}>{relink(part)}</Markdown>
-      : Array.isArray(part) ? <DoDont key={i} pairs={part} />
+      : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
     {name && <ComponentChanges name={name} />}
