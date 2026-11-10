@@ -63,6 +63,7 @@ Drawn from the `Playground` story.
 | `name` | `string` | | Sends the SVG with a form in a hidden input. |
 | `form` | `string` | | The id of a form elsewhere on the page. |
 | `disabled` | `boolean` | `false` | Turns drawing, typing and the buttons off. |
+| `readOnly` | `boolean` | `false` | Shows a signature already given: nothing draws, the method switch and a typed name are read-only but still focusable, Undo, Clear and the how-to text are left out, and the form still sends it, unlike `disabled`. |
 | `invalid` | `boolean` | `false` | `aria-invalid` and a danger outline. Field sets it from its error. |
 
 `SignatureValue` is `{ method: "draw" | "type"; svg: string; name: string }`. `signatureToPng(svg, scale = 2)` resolves to a PNG `Blob` drawn in the browser (null on the server). `className`, `ref` and other props go to the group's `<div>`; `ref.current.focus()` and `autoFocus` focus the method switch.

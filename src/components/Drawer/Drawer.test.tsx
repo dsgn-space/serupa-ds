@@ -244,13 +244,20 @@ describe('Drawer', () => {
     expect(closedBy).toEqual(['opener', 'opener']);
   });
 
-  // A touch drag along x through `path`: [dx from the start, ms after the move before].
+  // A touch drag along x through `path`: [dx from the start, ms after the move before]. Each event carries the time
+  // the path gives it as its timeStamp, which the swipe speed is read from: a busy runner's late timer would otherwise
+  // stretch 100ms to 300 and turn a flick into a slow drag (a flake in CI).
   const trace = async (p: HTMLElement, path: [number, number][], up = true) => {
     const r = p.getBoundingClientRect(), x = r.left + 40, y = r.top + 40;
-    const ev = (name: string, cx: number) => p.dispatchEvent(new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 8, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y }));
+    let t = performance.now();
+    const ev = (name: string, cx: number) => {
+      const e = new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 8, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y });
+      Object.defineProperty(e, 'timeStamp', { value: t });
+      p.dispatchEvent(e);
+    };
     ev('pointerdown', x);
     let at = 0;
-    for (const [dx, ms] of path) { await new Promise((f) => setTimeout(f, ms)); ev('pointermove', x + dx); at = dx; }
+    for (const [dx, ms] of path) { await new Promise((f) => setTimeout(f, ms)); t += ms; ev('pointermove', x + dx); at = dx; }
     if (up) ev('pointerup', x + at);
   };
 

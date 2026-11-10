@@ -36,6 +36,7 @@ const KNOWN = {
   'property content-visibility': { why: 'Accordion panels (Safari 18): closed content is also hidden="until-found", so it stays hidden' },
   'content-visibility: hidden': { why: 'as content-visibility' },
   'content-visibility: visible': { why: 'as content-visibility' },
+  'content-visibility: auto': { why: 'TreeView rows out of view wait to be laid out (Safari 26): a big tree lays out every row at once there, as before' },
   'property animation-range': { why: 'scroll-driven animations are progressive and behind @supports (animation-timeline: scroll()): a sticky Navbar keeps its line and lifts with no shadow' },
   'property view-transition-name': { why: 'view transitions are progressive: the change happens without the animation' },
   'view-transition-name: none': { why: 'as view-transition-name' },
@@ -118,10 +119,10 @@ const types = Object.entries(bcd.css.types);
 css.walkDecls((d) => {
   if (d.prop.startsWith('--') || d.prop.startsWith('-') || d.parent.type === 'atrule' || asksFirst(d, d.prop)) return;
   const p = bcd.css.properties[d.prop];
-  if (!p) { unknown.add(`${d.prop} (${d.parent.selector})`); return; }
+  if (!p) { unknown.add(`${d.prop} (${/** @type {import('postcss').Rule} */ (d.parent).selector})`); return; }
   const prefixes = new Set();
   d.parent.each((n) => { const m = n.type === 'decl' && n.prop.match(/^(-webkit-|-moz-)(.*)$/); if (m && m[2] === d.prop) prefixes.add(m[1]); });
-  const where = d.parent.selector;
+  const where = /** @type {import('postcss').Rule} */ (d.parent).selector;
   note(`property ${d.prop}`, p.__compat, where, prefixes);
   for (const w of new Set(d.value.split(/[\s,()/]+/))) if (w !== '__compat' && p[w]?.__compat) note(`${d.prop}: ${w}`, p[w].__compat, where, prefixes);
   for (const [, f] of d.value.matchAll(/([a-z-]+)\(/g)) {

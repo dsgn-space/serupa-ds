@@ -302,4 +302,12 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'من ' + from + ' إلى ' + to,
   repeats: 'يتكرر',
   noEvents: 'لا أحداث هذا الشهر.',
+  dateFieldDay: 'اليوم',
+  dateFieldMonth: 'الشهر',
+  dateFieldYear: 'السنة',
+  dataGridEdit: (column) => 'تعديل ' + column,
+  dataGridCopied: (count) => 'الخلايا المنسوخة: ' + n(count),
+  dataGridPasted: (count) => 'الخلايا الملصقة: ' + n(count),
+  dataGridHint: 'تنقل مفاتيح الأسهم بين الخلايا. يعدّل Enter أو F2 الخلية، ويلغي Escape.',
+  scrollArea: 'محتوى قابل للتمرير',
 };

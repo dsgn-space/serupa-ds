@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { css, lowContrast, settle } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, settle } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -250,6 +250,16 @@ describe('CascadeSelect', () => {
     expect(off.disabled).toBe(true);
   });
 
+  test('readOnly: focusable, aria-readonly, shows its path; a click, ArrowDown or Space doesn\'t open it; the form still sends the value; field-readonly background, default cursor', async () => {
+    const opened: boolean[] = [];
+    await render(<form id="f"><CascadeSelect aria-label="Wilayah" name="area" readOnly options={regions} defaultValue={['bali', 'denpasar', 'denpasar-selatan']} onOpenChange={(o) => opened.push(o)} /></form>);
+    await userEvent.click(button());
+    await userEvent.keyboard('{ArrowDown}{ArrowUp} ');
+    expect([document.activeElement === button(), button().disabled, button().getAttribute('aria-readonly'), button().getAttribute('aria-expanded'), panel().hidden, opened,
+      new FormData(document.getElementById('f') as HTMLFormElement).get('area'), button().textContent]).toEqual([true, false, 'true', 'false', true, [], 'denpasar-selatan', expect.stringContaining('Denpasar Selatan')]);
+    expect([css(button()).backgroundColor, css(button()).cursor]).toEqual([color('var(--field-readonly)'), 'default']);
+  });
+
   test('a form gets the last value under name, and a reset brings back defaultValue', async () => {
     await render(<form id="f"><CascadeSelect aria-label="Wilayah" name="area" options={regions} defaultValue={['bali', 'denpasar', 'denpasar-selatan']} /></form>);
     const form = document.getElementById('f') as HTMLFormElement;
@@ -297,5 +307,18 @@ describe('CascadeSelect', () => {
       ['check', 'var(--primary)', 'var(--surface-overlay)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface-overlay)', 3],
     ])).toEqual([]);
+  });
+
+  test('focus looks like the other fields\': the border and a 1px ring hugging it take the focus color, with a transparent outline for forced colors; it stays while the panel is open', async () => {
+    await render(<CascadeSelect aria-label="Region" options={regions} levels={levels} />);
+    const ring = color('var(--focus-ring)');
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(button());
+    await expect.poll(() => css(button()).borderTopColor).toBe(ring);
+    const s = css(button());
+    expect([s.boxShadow.includes(ring), /0px 0px 0px 1px/.test(s.boxShadow), s.outlineWidth, s.outlineColor, s.outlineOffset]).toEqual([true, true, '2px', 'rgba(0, 0, 0, 0)', '0px']);
+    await userEvent.keyboard('{ArrowDown}');
+    await until(() => !!panel() && !panel().hidden && document.activeElement !== button());
+    expect(css(button()).borderTopColor).toBe(ring);
   });
 });

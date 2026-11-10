@@ -298,11 +298,19 @@ describe('DatePicker: motion (DZ1)', () => {
       const ms = (a: Animation) => Number(a.effect!.getComputedTiming().duration);
       const runs = (e: Element) => e.getAnimations().filter((a) => a instanceof CSSTransition && /^(opacity|scale)$/.test(a.transitionProperty)).map((a) => [(a as CSSTransition).transitionProperty, ms(a)]).sort();
       await render(<DatePicker id="mo" aria-label="Due" locale="en-US" defaultValue={new Date(2026, 2, 1)} />);
-      await userEvent.click(button('mo'));
       const p = popup('mo');
+      // Clicks from the page itself, read as soon as React has drawn them: a driver click (userEvent) comes back after
+      // a round trip, which on a busy runner outlasted the 150ms fade (Chromium read no transition). One press
+      // (detail 1), as a mouse's: a click with none is a key's, which opens and closes it at once (KW1).
+      const press = async (want: boolean) => {
+        button('mo').focus();   // as a mouse press does, before its click
+        button('mo').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
+        for (let i = 0; i < 20 && (p.hidden !== want || !runs(p).length); i++) await Promise.resolve();
+      };
+      await press(false);
       expect([runs(p), p.getAnimations().some((a) => a instanceof CSSAnimation)]).toEqual([[['opacity', 150], ['scale', 150]], false]);
       await settled(p);
-      await userEvent.click(button('mo'));
+      await press(true);
       expect([p.hidden, document.activeElement]).toEqual([true, button('mo')]);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (CSS.supports('overlay', 'auto')) {

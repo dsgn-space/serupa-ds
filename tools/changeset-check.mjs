@@ -18,13 +18,24 @@ const base = process.argv[2];
 if (!base) { console.error('Usage: node tools/changeset-check.mjs <base commit>'); process.exit(2); }
 
 // What ships: everything a release builds from or puts in the package.
-const SHIPS = [/^src\//, /^bin\//, /^fonts\//, /^design-tokens\//, /^tokens\.(json|css)$/, /^tsup\.config\.mjs$/, /^tools\/(build|utilities|icons)\//];
+// tools/tokens/ and tools/lint/a11y-components.mjs are in it because the build writes them into dist/ (tokens.css, the
+// contrast pairs in debug.js, the component map in eslint.js).
+const SHIPS = [/^src\//, /^bin\//, /^fonts\//, /^design-tokens\//, /^tokens\.(json|css)$/, /^tsup\.config\.mjs$/, /^tools\/(build|utilities|icons|tokens)\//, /^tools\/lint\/a11y-components\.mjs$/];
 // Inside those, what doesn't reach a project: tests, stories, docs pages and usage guides.
 const ASIDE = [/\.test\.tsx?$/, /\.stories\.tsx$/, /\.mdx$/, /\.md$/, /^src\/components\/[^/]+\/preview\.html$/];
 
 const changed = execFileSync('git', ['diff', '--name-status', '--no-renames', `${base}...HEAD`], { cwd: P, encoding: 'utf8' })
   .trim().split('\n').filter(Boolean).map((l) => l.split('\t'));
 const shipping = changed.map(([, f]) => f).filter((f) => SHIPS.some((r) => r.test(f)) && !ASIDE.some((r) => r.test(f)));
+// package.json ships too, but only some of it reaches a project: what it installs and what it can import. A change to
+// scripts or devDependencies (a tool update) needs no changeset.
+const PACKAGE_KEYS = ['name', 'type', 'main', 'module', 'types', 'exports', 'bin', 'files', 'sideEffects', 'engines', 'dependencies', 'peerDependencies', 'peerDependenciesMeta', 'optionalDependencies', 'browser', 'unpkg', 'jsdelivr'];
+if (changed.some(([, f]) => f === 'package.json')) {
+  const at = (ref) => { try { return JSON.parse(execFileSync('git', ['show', `${ref}:package.json`], { cwd: P, encoding: 'utf8' })); } catch { return {}; } };
+  const [was, now] = [at(base), at('HEAD')];
+  const keys = PACKAGE_KEYS.filter((k) => JSON.stringify(was[k]) !== JSON.stringify(now[k]));
+  if (keys.length) shipping.push(`package.json (${keys.join(', ')})`);
+}
 const changesets = changed.filter(([s, f]) => s !== 'D' && /^\.changeset\/[^/]+\.md$/.test(f) && f !== '.changeset/README.md').map(([, f]) => f);
 
 if (!shipping.length) { console.log('No change to what the package ships: no changeset needed.'); process.exit(0); }

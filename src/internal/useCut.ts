@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from './cn';
+import { onFontsLoaded } from './fontsLoaded';
 
 /* Whether a text label is cut with an ellipsis, for the title that then shows it in full on hover (Button, Badge,
    SidebarItem). Checked when it renders, when the label's box changes size, and when a font finishes loading: a
@@ -12,11 +13,9 @@ import { useIsoLayoutEffect } from './cn';
 const checks = new Map<Element, () => void>();
 let ro: ResizeObserver | null | undefined;
 let fontsHeard = false;
-const fontsLoaded = () => checks.forEach((check) => check());
 function watch(l: HTMLElement, check: () => void): () => void {
   if (ro === undefined) ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver((entries) => entries.forEach((e) => checks.get(e.target)?.())) : null;
-  const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
-  if (!fontsHeard && fonts && fonts.addEventListener) { fontsHeard = true; fonts.addEventListener('loadingdone', fontsLoaded); }
+  if (!fontsHeard) { fontsHeard = true; onFontsLoaded(() => checks.forEach((check) => check())); }
   checks.set(l, check);
   if (ro) ro.observe(l);
   return () => { if (checks.get(l) === check) { checks.delete(l); if (ro) ro.unobserve(l); } };

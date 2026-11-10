@@ -80,7 +80,7 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 | `layout` | | | Deprecated, removed in 15.0.0: use `orientation` |
 | `id` | string | | The control's id; by default the control's own `id`, or a generated one |
 
-Field takes one control as its child (any number with `group`). The control keeps its own props, `ref` and `aria-describedby` (Field's ids are added after yours). `className` and any other attribute go to the outer element, which has `data-component="field"`.
+Field takes one control as its child (any number with `group`). The control keeps its own props, `ref` and `aria-describedby` (Field's ids are added after yours). `className`, `ref` and any other attribute go to the outer element (a `<fieldset>` with `group`, otherwise a `<div>`), which has `data-component="field"`: a ref lets an app scroll to or measure a field with an error.
 
 ## Component tokens
 

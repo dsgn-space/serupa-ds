@@ -297,4 +297,12 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' से ' + to + ' तक',
   repeats: 'दोहराया जाता है',
   noEvents: 'इस महीने कोई इवेंट नहीं।',
+  dateFieldDay: 'दिन',
+  dateFieldMonth: 'महीना',
+  dateFieldYear: 'वर्ष',
+  dataGridEdit: (column) => 'संपादित करें: ' + column,
+  dataGridCopied: (count) => n(count) + ' सेल कॉपी किए गए',
+  dataGridPasted: (count) => n(count) + ' सेल चिपकाए गए',
+  dataGridHint: 'तीर कुंजियाँ सेल बदलती हैं। Enter या F2 सेल संपादित करता है, Escape रद्द करता है।',
+  scrollArea: 'स्क्रॉल होने वाली सामग्री',
 };

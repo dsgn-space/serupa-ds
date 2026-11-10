@@ -20,7 +20,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 ## When not to use
 
 - A start and an end date: use [DateRangePicker](../DateRangePicker/README.md) instead.
-- A date people know by heart and that's far from today, such as a date of birth: a plain [Input](../Input/README.md) with a format hint (or separate day, month and year fields) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
+- A date people know by heart and that's far from today, such as a date of birth: a [DateField](../DateField/README.md) (day, month and year boxes) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
 - Only a month or a year: use a [Select](../Select/README.md).
 - A calendar that's always on the page, such as a scheduling view: use [Calendar](../Calendar/README.md) on its own.
 
@@ -75,7 +75,7 @@ Drawn from the `Disabled` story.
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `value` / `defaultValue` | `Date \| string \| null` | | The chosen day, controlled or not: a Date, or a plain `"yyyy-mm-dd"` string. |
 | `onValueChange` | `(date: Date \| null, iso: string \| null) => void` | | Called with the new day (local midnight) and the same day as `"yyyy-mm-dd"`, or `null` twice when the field is cleared. |
-| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). |
+| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.dk-input-rejected`, read with it) until the text changes. |
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. `min` and `max` take a Date or `"yyyy-mm-dd"`. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. When it differs from the provider's, the field and the calendar carry `lang`, so screen readers read them in that language. |
 | `weekStartsOn` | `0`–`6` | the locale's | |

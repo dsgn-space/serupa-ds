@@ -40,7 +40,7 @@ const measure = ([list, internal]) => {
   host.innerHTML = '';
   const base = document.createElement('div'); base.innerHTML = '<i>a</i><i>b</i>'; host.appendChild(base);
   const els = list.map((c) => { const w = document.createElement('section'); w.style.position = 'relative'; w.style.transform = 'translateZ(0)';   /* contains fixed elements too, so their position doesn't depend on the class's place in the list */ const d = document.createElement('div'); d.className = c; d.innerHTML = '<i>a</i><i>b</i>'; w.appendChild(d); host.appendChild(w); return d; });
-  const B = getComputedStyle(base), B1 = getComputedStyle(base.firstChild);
+  const B = getComputedStyle(base), B1 = getComputedStyle(/** @type {Element} */ (base.firstChild));
   const props = []; for (let j = 0; j < B.length; j++) props.push(B[j]); for (const v of internal) if (!props.includes(v)) props.push(v);
   // Chromium lists custom properties in an order that changes from run to run (--dk-mask-b-to-p came before or after
   // --dk-mask-bottom on different CI runners), so they go last, by name, and an effect reads the same on every run.

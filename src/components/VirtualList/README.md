@@ -29,6 +29,19 @@ import { VirtualList, ListItem } from "serupa-ds";
 - Rows can be links or buttons. Tab moves through the rows that are drawn, and the row with focus stays drawn while scrolled away.
 - Rows not drawn aren't in the page: the browser's find doesn't see them. Offer a search or filter for long lists.
 
+### Loading, empty and failed
+
+- **Loading:** until the first rows arrive, show a [List](../List/README.md#loading-empty-and-failed) with `busy` and a `ListLoadingItems` in the rows' shape (`description`, and `leading` set to `'icon'` or the Avatar's size), with as many rows as fill the view: six for the default 384px of 56px rows. Each placeholder is as tall as the VirtualList row that replaces it, and the `label` ("Loading members") is said once, after the loader's delay.
+- **Empty:** in place of the VirtualList, an [EmptyState](../EmptyState/README.md) that says what's missing and offers the action that adds the first one. An empty VirtualList is an empty box people can still Tab to.
+- **Failed:** in place of the VirtualList, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+{state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Members didn't load.</Alert>
+  : state === 'loading' ? <List aria-label="Members" busy><ListLoadingItems rows={6} description leading="sm" label="Loading members" /></List>
+  : !people.length ? <EmptyState size="sm" title="No members yet" />
+  : <VirtualList aria-label="Members" count={people.length} itemKey={(i) => people[i].id} renderItem={row} />}
+```
+
 ## Behavior
 
 - Browsers stop an element's height at about 17.9 million px (33.5 million in Chromium and WebKit). Past 15 million px of rows (about 270,000 rows of 56px), the scroll range stays at 15 million and is scaled: the scrollbar's position is the same fraction of the rows, so every row, the last included, can be reached. Dragging the scrollbar then moves through the rows faster than one pixel per pixel, but the arrow and Page keys and the wheel still move by as much as in a short list, so no row is skipped. End and Home still go to the last and first rows. At either end the wheel scrolls the page.

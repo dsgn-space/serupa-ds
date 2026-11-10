@@ -298,4 +298,12 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' hingga ' + to,
   repeats: 'Berulang',
   noEvents: 'Tiada acara bulan ini.',
+  dateFieldDay: 'Hari',
+  dateFieldMonth: 'Bulan',
+  dateFieldYear: 'Tahun',
+  dataGridEdit: (column) => 'Sunting ' + column,
+  dataGridCopied: (count) => n(count) + ' sel disalin',
+  dataGridPasted: (count) => n(count) + ' sel ditampal',
+  dataGridHint: 'Kekunci anak panah beralih antara sel. Enter atau F2 mengedit sel, Escape membatalkan.',
+  scrollArea: 'Kandungan boleh tatal',
 };

@@ -298,4 +298,12 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'từ ' + from + ' đến ' + to,
   repeats: 'Lặp lại',
   noEvents: 'Không có sự kiện nào trong tháng này.',
+  dateFieldDay: 'Ngày',
+  dateFieldMonth: 'Tháng',
+  dateFieldYear: 'Năm',
+  dataGridEdit: (column) => 'Sửa ' + column,
+  dataGridCopied: (count) => 'Đã sao chép ' + n(count) + ' ô',
+  dataGridPasted: (count) => 'Đã dán ' + n(count) + ' ô',
+  dataGridHint: 'Phím mũi tên di chuyển giữa các ô. Enter hoặc F2 sửa ô, Escape hủy.',
+  scrollArea: 'Nội dung cuộn',
 };

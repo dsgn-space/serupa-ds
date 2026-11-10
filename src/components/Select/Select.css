@@ -37,7 +37,7 @@
 .dk-select__icon--left { inset-inline-start: var(--dk-select-px); }
 .dk-select__icon--chevron { inset-inline-end: var(--dk-select-px); }
 .dk-select__icon .dk-icon { font-size: var(--dk-select-icon); }
-@media (hover: hover) { .dk-select:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), :focus-within) { --dk-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
+@media (hover: hover) { .dk-select:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), .dk-select--readonly, :focus-within) { --dk-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws. */
 .dk-select:focus-within { transition-duration: var(--duration-0); --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
@@ -49,6 +49,9 @@
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native select follows that on its own). */
 .dk-select--disabled, .dk-select:where(:has(.dk-select__field:disabled)) { background: var(--select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); }
 .dk-select--disabled .dk-select__field, .dk-select__field:where(:disabled) { cursor: not-allowed; }
+/* Read-only: the read-only field background, as Input, and a default cursor, since it doesn't open. */
+.dk-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }
+.dk-select--readonly .dk-select__field { cursor: default; }
 @media (forced-colors: active) { .dk-select__icon { color: CanvasText; } }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */

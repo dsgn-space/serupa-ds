@@ -1,9 +1,11 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table, TableActionBar, TableBody, TableVirtualBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from './Table';
+import { Table, TableActionBar, TableBody, TableVirtualBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, type SortDirection } from './Table';
 import { Text } from '../Text/Text';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
+import { Alert } from '../Alert/Alert';
+import { EmptyState } from '../EmptyState/EmptyState';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { FormattedNumber } from '../FormattedNumber/FormattedNumber';
 import { usePeople } from '../../../.storybook/content';
@@ -267,3 +269,30 @@ function Pinned(args: React.ComponentProps<typeof Table>) {
   );
 }
 export const PinnedColumns: Story = { name: 'Pinned columns', render: (args) => <Pinned {...args} /> };
+
+// Loading, empty and failed: the header stays, the placeholder rows are as tall as real ones, and a failure offers Retry.
+function States(args: React.ComponentProps<typeof Table>) {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'empty' | 'failed'>('loading');
+  return (
+    <div style={{ display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      <Table {...args} caption="Team members" busy={state === 'loading'}>
+        {state === 'loaded' ? <Rows /> : <>
+          <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell><TableHeaderCell align="end">Calls</TableHeaderCell></TableRow></TableHead>
+          {state === 'loading' ? <TableLoadingRows columns={4} rows={4} label="Loading team members" /> : (
+            <TableBody>
+              <TableMessageRow colSpan={4}>
+                {state === 'failed'
+                  ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Team members didn't load. Check your connection and try again.</Alert>
+                  : <EmptyState size="sm" title="No team members yet" description="Invite people to work on this project with you." />}
+              </TableMessageRow>
+            </TableBody>
+          )}
+        </>}
+      </Table>
+    </div>
+  );
+}
+export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };

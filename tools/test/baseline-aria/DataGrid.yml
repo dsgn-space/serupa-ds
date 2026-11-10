@@ -1,0 +1,220 @@
+# Edit
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row "KP-001 Kopi Toraja 250 g 42 85.000":
+      - gridcell "KP-001" [selected]
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "42"
+      - gridcell "85.000"
+    - row "KP-002 Kopi Gayo 250 g 18 92.000":
+      - gridcell "KP-002"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "18"
+      - gridcell "92.000"
+    - row "TH-010 Teh Melati 100 g 120 24.000":
+      - gridcell "TH-010"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "120"
+      - gridcell "24.000"
+    - row "GL-005 Gula Aren 500 g 0 38.000":
+      - gridcell "GL-005"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "0"
+      - gridcell "38.000"
+    - row "MD-020 Madu Hutan 350 ml 9 110.000":
+      - gridcell "MD-020"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "9"
+      - gridcell "110.000"
+
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+
+# LongText
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp) Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung note":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+      - columnheader "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung note"
+  - rowgroup:
+    - row "KP-001 Kopi Toraja 250 g 42 85.000 A note long enough to need the frame to scroll sideways in a narrow column":
+      - gridcell "KP-001" [selected]
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "42"
+      - gridcell "85.000"
+      - gridcell "A note long enough to need the frame to scroll sideways in a narrow column"
+    - row "KP-002 Kopi Gayo 250 g 18 92.000 A note long enough to need the frame to scroll sideways in a narrow column":
+      - gridcell "KP-002"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "18"
+      - gridcell "92.000"
+      - gridcell "A note long enough to need the frame to scroll sideways in a narrow column"
+    - row "TH-010 Teh Melati 100 g 120 24.000 A note long enough to need the frame to scroll sideways in a narrow column":
+      - gridcell "TH-010"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "120"
+      - gridcell "24.000"
+      - gridcell "A note long enough to need the frame to scroll sideways in a narrow column"
+    - row "GL-005 Gula Aren 500 g 0 38.000 A note long enough to need the frame to scroll sideways in a narrow column":
+      - gridcell "GL-005"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "0"
+      - gridcell "38.000"
+      - gridcell "A note long enough to need the frame to scroll sideways in a narrow column"
+    - row "MD-020 Madu Hutan 350 ml 9 110.000 A note long enough to need the frame to scroll sideways in a narrow column":
+      - gridcell "MD-020"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "9"
+      - gridcell "110.000"
+      - gridcell "A note long enough to need the frame to scroll sideways in a narrow column"
+
+# Playground
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row "KP-001 Kopi Toraja 250 g 42 85.000":
+      - gridcell "KP-001" [selected]
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "42"
+      - gridcell "85.000"
+    - row "KP-002 Kopi Gayo 250 g 18 92.000":
+      - gridcell "KP-002"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "18"
+      - gridcell "92.000"
+    - row "TH-010 Teh Melati 100 g 120 24.000":
+      - gridcell "TH-010"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "120"
+      - gridcell "24.000"
+    - row "GL-005 Gula Aren 500 g 0 38.000":
+      - gridcell "GL-005"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "0"
+      - gridcell "38.000"
+    - row "MD-020 Madu Hutan 350 ml 9 110.000":
+      - gridcell "MD-020"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "9"
+      - gridcell "110.000"
+
+# ReadOnly
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row "KP-001 Kopi Toraja 250 g 42 85.000":
+      - gridcell "KP-001" [selected]
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "42"
+      - gridcell "85.000"
+    - row "KP-002 Kopi Gayo 250 g 18 92.000":
+      - gridcell "KP-002"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "18"
+      - gridcell "92.000"
+    - row "TH-010 Teh Melati 100 g 120 24.000":
+      - gridcell "TH-010"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "120"
+      - gridcell "24.000"
+    - row "GL-005 Gula Aren 500 g 0 38.000":
+      - gridcell "GL-005"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "0"
+      - gridcell "38.000"
+    - row "MD-020 Madu Hutan 350 ml 9 110.000":
+      - gridcell "MD-020"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "9"
+      - gridcell "110.000"
+
+# Small
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row "KP-001 Kopi Toraja 250 g 42 85.000":
+      - gridcell "KP-001" [selected]
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "42"
+      - gridcell "85.000"
+    - row "KP-002 Kopi Gayo 250 g 18 92.000":
+      - gridcell "KP-002"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "18"
+      - gridcell "92.000"
+    - row "TH-010 Teh Melati 100 g 120 24.000":
+      - gridcell "TH-010"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "120"
+      - gridcell "24.000"
+    - row "GL-005 Gula Aren 500 g 0 38.000":
+      - gridcell "GL-005"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "0"
+      - gridcell "38.000"
+    - row "MD-020 Madu Hutan 350 ml 9 110.000":
+      - gridcell "MD-020"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "9"
+      - gridcell "110.000"
+

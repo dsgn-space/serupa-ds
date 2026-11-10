@@ -110,9 +110,11 @@ try {
   const r3 = run(icons);
   check('a bad file stops the build and leaves src/icons.ts untouched', r3.status === 1 && r3.stderr.includes('bad:') && fs.readFileSync(ICONS_TS, 'utf8') === js, r3.stderr);
   fs.rmSync(path.join(icons, 'bad.svg'));
-  const r4 = run(path.join(tmp, 'nowhere'));
+  const r5 = run(path.join(tmp, 'nowhere'));
+  check('a folder named on the command line that isn\'t there stops the build and leaves src/icons.ts untouched', r5.status === 2 && r5.stderr.includes('nowhere') && fs.readFileSync(ICONS_TS, 'utf8') === js, r5.stdout + r5.stderr);
+  const r4 = run();
   const after = fs.readFileSync(ICONS_TS, 'utf8');
-  check('a missing folder removes every custom icon', r4.status === 0 && !Object.keys(B.readRegistry(after)).length && after.includes('CustomIconName = never;'), r4.stdout + r4.stderr);
+  check('with no assets/Icons folder, the build removes every custom icon', r4.status === 0 && !Object.keys(B.readRegistry(after)).length && after.includes('CustomIconName = never;'), r4.stdout + r4.stderr);
 } finally {
   fs.rmSync(tmp, { recursive: true, force: true });
 }

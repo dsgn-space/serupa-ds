@@ -28,6 +28,7 @@ interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     name?: string | undefined;
     form?: string | undefined;
     disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
     invalid?: boolean | undefined;
 }
 declare function signatureToPng(svg: string, scale?: number): Promise<Blob | null>;

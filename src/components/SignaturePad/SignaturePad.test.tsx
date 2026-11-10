@@ -100,6 +100,21 @@ describe('SignaturePad', () => {
     expect(el('on').contains(document.activeElement) && document.activeElement!.getAttribute('role')).toBe('radio');
   });
 
+  test('readOnly: shows a saved signature; a drag draws nothing, the switch is read-only, there is no Undo or Clear or how-to text, a typed name is read-only, and the form still sends it', async () => {
+    const drawn: SignatureValue = { method: 'draw', name: '', svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="160" viewBox="0 0 300 160"><g><path d="M20 100L140 60"/></g></svg>' };
+    const calls: Call[] = [];
+    await render(<form id="rof"><SignaturePad id="ro" aria-label="Drawn" name="sig" readOnly defaultValue={drawn} onValueChange={(v, d) => calls.push([v, d])} />
+      <SignaturePad id="rt" aria-label="Typed" readOnly defaultValue={{ method: 'type', name: 'Dewi', svg: '' }} onValueChange={(v, d) => calls.push([v, d])} /></form>);
+    await drag(area(el('ro')), { x: 20, y: 40 }, { x: 140, y: 120 });
+    const sw = el('ro').querySelector<HTMLElement>('[role=radiogroup]')!;
+    await userEvent.click(page.getByRole('radio', { name: 'Type' }).first());
+    const name = el('rt').querySelector<HTMLInputElement>('input[autocomplete=name]')!;
+    await userEvent.click(name);
+    await userEvent.keyboard('x');
+    expect([paths(el('ro')), sw.getAttribute('aria-readonly'), el('ro').querySelectorAll('button:not([role=radio])').length, el('ro').getAttribute('aria-describedby'), css(area(el('ro'))).cursor,
+      name.readOnly, name.value, calls, (new FormData(el('rof') as HTMLFormElement).get('sig') as string).includes('M20 100L140 60')]).toEqual([1, 'true', 0, null, 'default', true, 'Dewi', [], true]);
+  });
+
   test('signing without dragging: a tap on Type, then the name field, signs with one pointer and the keyboard alone (WCAG 2.5.7)', async () => {
     const calls: Call[] = [];
     await render(<SignaturePad id="np" aria-label="Signature" onValueChange={(v, d) => calls.push([v, d])} />);
@@ -109,6 +124,14 @@ describe('SignaturePad', () => {
     expect([calls[calls.length - 1][0]!.method, calls[calls.length - 1][0]!.name]).toEqual(['type', 'Dewi']);
   });
 
+  test('a typed name shows inside the box on a right-to-left page too, starting where the saved signature starts', async () => {
+    await render(<div dir="rtl" style={{ width: 480 }}><SignaturePad id="rtl" aria-label="Signature" defaultValue={{ method: 'type', name: 'Dewi Lestari', svg: '' }} /></div>);
+    const box = document.querySelector('#rtl svg')!.getBoundingClientRect();
+    const text = document.querySelector('#rtl svg text')!.getBoundingClientRect();
+    // Before, the name ended at the box's left edge, so all but its last letters fell outside it.
+    // It starts about 16px in, as the saved SVG's x says (the italic first letter's ink varies a few pixels by engine).
+    expect([text.left >= box.left, text.right <= box.right, Math.abs(text.left - box.left - 16) < 6]).toEqual([true, true, true]);
+  });
   test('defaultValue shows a saved signature, drawn or typed, and form.reset() goes back to it', async () => {
     const drawn: SignatureValue = { method: 'draw', name: '', svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="160" viewBox="0 0 300 160"><g><path d="M20 100L140 60"/><path d="M160 100h0"/></g></svg>' };
     await render(<form id="dvf"><SignaturePad id="dv" aria-label="Drawn" name="sig" defaultValue={drawn} /><SignaturePad id="dt" aria-label="Typed" defaultValue={{ method: 'type', name: 'Dewi', svg: '' }} /></form>);

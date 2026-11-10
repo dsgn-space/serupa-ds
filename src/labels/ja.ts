@@ -297,4 +297,12 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + '～' + to,
   repeats: '繰り返し',
   noEvents: '今月の予定はありません。',
+  dateFieldDay: '日',
+  dateFieldMonth: '月',
+  dateFieldYear: '年',
+  dataGridEdit: (column) => '編集: ' + column,
+  dataGridCopied: (count) => n(count) + ' 個のセルをコピーしました',
+  dataGridPasted: (count) => n(count) + ' 個のセルを貼り付けました',
+  dataGridHint: '矢印キーでセルを移動します。Enter または F2 で編集、Escape で取り消します。',
+  scrollArea: 'スクロールするコンテンツ',
 };

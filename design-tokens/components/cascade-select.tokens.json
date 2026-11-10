@@ -65,7 +65,7 @@
       "bg-disabled": {
         "$type": "color",
         "$value": "{color.field-readonly}",
-        "$description": "The button's background when disabled.",
+        "$description": "The button's background when read-only or disabled.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--cascade-select-bg-disabled"

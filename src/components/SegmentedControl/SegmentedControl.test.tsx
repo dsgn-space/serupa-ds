@@ -370,6 +370,10 @@ describe('SegmentedControl', () => {
     // A little letter spacing, so every control is a fraction of a pixel wide on any machine: with hinted fonts the
     // labels can come out whole pixels, and a rounding bug (offsetWidth) wouldn't show.
     await render(<div style={{ letterSpacing: '0.0137em' }}>{labels.map((l, i) => <SegmentedControl key={l} id={'fr' + i} aria-label="View" options={[{ value: 'a', label: 'List ' + i }, { value: 'b', label: l }]} defaultValue="b" />)}</div>);
+    // A font face these labels need first (Ünïcödé's) can arrive after the first measure and widen them; the control
+    // measures again when its segments resize. Measured once the fonts are in and that's done (CI read 1 to 8px off).
+    await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
     const gaps = labels.flatMap((_, i) => {
       const ind = el('fr' + i).querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('fr' + i).querySelector('[aria-checked=true]')!.getBoundingClientRect();
       return [Math.abs(ind.left - c.left), Math.abs(ind.width - c.width)];

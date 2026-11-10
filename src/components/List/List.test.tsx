@@ -6,7 +6,8 @@ import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 import { IconButton } from '../IconButton/IconButton';
-import { List, ListItem } from './List';
+import { page } from 'vitest/browser';
+import { List, ListItem, ListLoadingItems } from './List';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -215,4 +216,38 @@ describe('List', () => {
     await press(el('more'), () => expect.poll(() => css(row).backgroundColor).not.toBe(color('var(--pressed)')));
   });
 
+});
+
+describe('List loading (GR316)', () => {
+  test('busy sets aria-busy; ListLoadingItems rows are as tall as the rows that replace them, with or without a description, icon or Avatar, and the wait is said once', async () => {
+    type Lead = 'icon' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
+    const CASES: Array<{ id: string; description: boolean; leading: Lead }> = [
+      { id: 'plain', description: false, leading: undefined },
+      { id: 'desc-md', description: true, leading: 'md' },
+      { id: 'desc-icon', description: true, leading: 'icon' },
+      { id: 'sm', description: false, leading: 'sm' },
+      { id: 'xs', description: false, leading: 'xs' },
+      { id: 'lg', description: true, leading: 'lg' },
+      { id: 'xl', description: true, leading: 'xl' },
+    ];
+    function Lists(props: { busy: boolean }) {
+      return <div style={{ width: '400px' }}>{CASES.map((c) => (
+        <List key={c.id} id={c.id} busy={props.busy} aria-label={c.id}>
+          {props.busy ? <ListLoadingItems rows={2} description={c.description} leading={c.leading} label={'Loading ' + c.id} />
+            : <ListItem title="Ada Lovelace" description={c.description ? 'Admin' : undefined}
+              leading={c.leading === 'icon' ? 'person' : c.leading ? <Avatar name="Ada Lovelace" size={c.leading} /> : undefined} />}
+        </List>
+      ))}</div>;
+    }
+    const { rerender } = await render(<Lists busy />);
+    expect(CASES.map((c) => [el(c.id).getAttribute('aria-busy'), el(c.id).children.length])).toEqual(CASES.map(() => ['true', 2]));
+    // The placeholders are hidden from screen readers; each list's label is said once, after the loader's delay.
+    expect(page.getByRole('progressbar').all().length).toBe(0);
+    expect(CASES.every((c) => [...el(c.id).querySelectorAll('li > div > *')].every((x) => x.querySelector('[aria-hidden="true"]') || x.getAttribute('aria-hidden') === 'true'))).toBe(true);
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading desc-md');
+    const loading = CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height);
+    await rerender(<Lists busy={false} />);
+    expect(CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height)).toEqual(loading);
+    expect(el('plain').hasAttribute('aria-busy')).toBe(false);
+  });
 });

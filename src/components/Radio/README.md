@@ -44,6 +44,16 @@ Drawn from the `Disabled` story.
 
 - Pick a default when one is safe, so the group never starts empty; leave it empty when the choice has to be deliberate.
 - Stack options; use a row only for short labels that fit on one line.
+- `variant="card"` makes each radio a bordered card, pressed as a whole: for a few choices that each need a sentence, a price or a delivery time (plans, shipping methods, onboarding questions). The radios stay native, so the arrow keys and the form value work as in a plain group. Keep cards to about two to five options; past that, a plain group or a Select scans faster.
+
+```tsx
+<Field label="Delivery" group>
+  <RadioGroup variant="card" orientation="horizontal" defaultValue="standard">
+    <Radio value="standard" description="3 to 5 days, free">Standard</Radio>
+    <Radio value="express" description="Next day, Rp 25.000">Express</Radio>
+  </RadioGroup>
+</Field>
+```
 
 ## States
 
@@ -54,7 +64,9 @@ Drawn from the `Disabled` story.
 | Hover | `field-border-hover`; a checked radio turns `primary-hover` |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
+| Read-only | Looks as it is, with a default cursor and no hover or press change |
 | Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` circle; also inside a disabled fieldset (`Field group disabled`) |
+| Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the dot shows it too); the focus ring goes round the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
 
 ## Accessibility
 
@@ -71,7 +83,7 @@ Drawn from the `Disabled` story.
 | Key | Does |
 | --- | --- |
 | Tab | Into the group, on the checked radio (or the first, when none is) |
-| ↑ ↓ ← → | The previous or next radio, checking it; wraps, and skips disabled ones |
+| ↑ ↓ ← → | The previous or next radio, checking it; wraps, and skips disabled ones. Nothing in a read-only group |
 | Space | Check the focused radio, when none is checked |
 
 ## Props
@@ -87,9 +99,11 @@ Drawn from the `Disabled` story.
 | `name` | string | generated | The radios' name, for forms |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | A stack 8px apart, or a wrapping row 16px apart |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Every radio's size, unless one sets its own |
+| `variant` | `'default'` \| `'card'` | `'default'` | Every radio's look, unless one sets its own. Cards fill the column, or share a wrapping row (each at least 192px) with `orientation="horizontal"`, 12px apart |
 | `invalid` | boolean | `false` | `aria-invalid` on the group, and a danger border on each unchecked radio. Field sets it from its error |
 | `disabled` | boolean | `false` | Disables every radio (and sets `aria-disabled` on the group) |
 | `required` | boolean | `false` | `aria-required` on the group, `required` on each radio |
+| `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly` on the group), and the form still sends the choice, unlike `disabled`; arrows, Space and clicks don't change it, and `onValueChange` doesn't run |
 
 Other props (`id`, `aria-label`, `aria-labelledby`, `className`…) and `ref` go to the `<div role="radiogroup">`, which has `data-component="radio-group"` and `data-orientation`.
 
@@ -102,6 +116,7 @@ Other props (`id`, `aria-label`, `aria-labelledby`, `className`…) and `ref` go
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | the group's, or `'md'` | A 14px circle with `text-xs`, 16px with `text-sm`, 20px with `text-base` |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid`. In a group, set `invalid` on the RadioGroup instead |
+| `variant` | `'default'` \| `'card'` | the group's, or `'default'` | `'card'`: the radio, label and description in a bordered card pressed as a whole |
 
 Other props (`id`, `disabled`, `aria-*`, `onChange`…) and `ref` go to the `<input type="radio">`. `className` and `style` go to the `<label>`, which has `data-component="radio"` and `data-size`. In a group, the group sets `name` and `checked` (a radio's own are ignored). Outside one, a Radio is a plain radio: pass `name` and `checked` or `defaultChecked` yourself.
 
@@ -125,6 +140,10 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-description-color` | `text-muted` | The description |
 | `--radio-focus-ring` | `focus-ring` | The focus ring |
 | `--radio-invalid` | `danger` | Border and focus ring when invalid |
+| `--radio-card-bg` | `surface` | A card radio's background. |
+| `--radio-card-border` | `border` | A card's border. |
+| `--radio-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
+| `--radio-card-border-checked` | `primary` | A checked card's border, 2px. |
 
 **Sizing**
 
@@ -136,6 +155,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-dot-size-sm` | `spacing-1.5` | Dot size, sm (6px). |
 | `--radio-dot-size-md` | `spacing-1.5` | Dot size, md (6px). |
 | `--radio-dot-size-lg` | `spacing-2` | Dot size, lg (8px). |
+| `--radio-card-min-width` | `spacing-48` | The narrowest a card gets in a horizontal group before the row wraps (192px). |
 
 **Spacing**
 
@@ -144,12 +164,27 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-gap` | `spacing-2` | Circle to label (8px) |
 | `--radio-group-gap` | `spacing-2` | Between radios in a stack, and between rows (8px) |
 | `--radio-group-gap-horizontal` | `spacing-4` | Between radios in a row (16px) |
+| `--radio-card-padding` | `spacing-4` | Space inside a card (16px). |
+| `--radio-card-gap` | `spacing-3` | Space between a card's radio and its text (12px). |
+| `--radio-card-group-gap` | `spacing-3` | Space between cards in a group (12px). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--radio-card-label-weight` | `font-medium` | A card's label weight (500). |
 
 **Border**
 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--radio-border-width` | `border-width-1` | Border width (1px) |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--radio-card-radius` | `radius-surface` | A card's corners (8px). |
 
 **Motion**
 

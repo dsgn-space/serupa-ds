@@ -317,6 +317,27 @@ describe('Badge', () => {
     expect(el('tags').querySelectorAll(BADGE).length).toBe(0);
   });
 
+  test('removable solid badges: the remove button\'s focus ring, where it runs over the fill, keeps 3:1 against it in every tone and all six themes', async () => {
+    await render(<div>{TONES.map((t) => <Badge key={t} variant="solid" tone={t} data-rt={t} onRemove={() => {}}>{t}</Badge>)}</div>);
+    const low: string[] = [];
+    try {
+      for (const t of TONES) {
+        const b = q(`[data-rt="${t}"]`), x = b.querySelector('button')!;
+        await tabTo(x);
+        for (const th of THEMES) {
+          document.documentElement.setAttribute('data-theme', th);
+          const a = getComputedStyle(x, '::after'), fill = over(rgb(css(b).backgroundColor), surface());
+          // the band of the ring next to the fill: an inner ring drawn by box-shadow, else the outline itself
+          const inner = a.boxShadow !== 'none' ? a.boxShadow.slice(0, a.boxShadow.indexOf(')') + 1) : a.outlineColor;
+          const r = ratio(over(rgb(inner), fill), fill);
+          if (r < 3) low.push(`${th} ${t}: ${r.toFixed(2)}`);
+        }
+        document.documentElement.setAttribute('data-theme', 'blue-light');
+      }
+    } finally { document.documentElement.setAttribute('data-theme', 'blue-light'); }
+    expect(low).toEqual([]);
+  });
+
   test('subtle: a 1px outline in the text color at 20% (every tone), --badge-subtle-border: 0% removes it; solid stays borderless', async () => {
     await show();
     const alpha = (c: string) => rgb(c)[3];

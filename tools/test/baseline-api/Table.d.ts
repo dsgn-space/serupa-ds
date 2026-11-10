@@ -1,4 +1,4 @@
-// exports: type SortDirection, Table, TableActionBar, type TableActionBarProps, TableBody, type TableBodyProps, TableCell, type TableCellProps, type TableColumnOption, type TableColumnsChangeDetails, TableColumnsMenu, type TableColumnsMenuProps, TableDetailRow, type TableDetailRowProps, TableExpandCell, type TableExpandCellProps, TableFoot, type TableFootProps, TableHead, TableHeaderCell, type TableHeaderCellProps, type TableHeadProps, type TableProps, TableRow, type TableRowProps, TableSelectCell, type TableSelectCellProps, TableVirtualBody, type TableVirtualBodyProps
+// exports: type SortDirection, Table, TableActionBar, type TableActionBarProps, TableBody, type TableBodyProps, TableCell, type TableCellProps, type TableColumnOption, type TableColumnsChangeDetails, TableColumnsMenu, type TableColumnsMenuProps, TableDetailRow, type TableDetailRowProps, TableExpandCell, type TableExpandCellProps, TableFoot, type TableFootProps, TableHead, TableHeaderCell, type TableHeaderCellProps, type TableHeadProps, TableLoadingRows, type TableLoadingRowsProps, TableMessageRow, type TableMessageRowProps, type TableProps, TableRow, type TableRowProps, TableSelectCell, type TableSelectCellProps, TableVirtualBody, type TableVirtualBodyProps
 interface TableLabels {
     table: string;
     tableSorted: (column: string, direction: "ascending" | "descending") => string;
@@ -23,6 +23,7 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
     containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
     pinStart?: boolean | undefined;
     pinEnd?: boolean | undefined;
+    busy?: boolean | undefined;
 }
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     selected?: boolean | undefined;
@@ -106,3 +107,13 @@ interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowElement> 
     colSpan: number;
 }
 declare const TableDetailRow: React.ForwardRefExoticComponent<TableDetailRowProps & React.RefAttributes<HTMLTableRowElement>>;
+interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+    columns: number;
+    rows?: number | undefined;
+    label?: string | undefined;
+}
+declare const TableLoadingRows: React.ForwardRefExoticComponent<TableLoadingRowsProps & React.RefAttributes<HTMLTableSectionElement>>;
+interface TableMessageRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+    colSpan: number;
+}
+declare const TableMessageRow: React.ForwardRefExoticComponent<TableMessageRowProps & React.RefAttributes<HTMLTableRowElement>>;

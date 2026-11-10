@@ -1,0 +1,185 @@
+{
+  "dataGrid": {
+    "$description": "DataGrid's component tokens. Each one is an optional override: set the CSS variable (--data-grid-<name>) on the page, a container or one DataGrid, and every DataGrid inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The cells' background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The cells' text (4.5:1 on bg, header-bg and selected-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-text"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The frame's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-border"
+          }
+        }
+      },
+      "line": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The lines between cells.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-line"
+          }
+        }
+      },
+      "header-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The header row's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-header-bg"
+          }
+        }
+      },
+      "header-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The header row's text (4.5:1 on header-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-header-text"
+          }
+        }
+      },
+      "selected-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The selected range's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-selected-bg"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring inside the active cell (3:1 on bg and selected-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-focus-ring"
+          }
+        }
+      },
+      "input-bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "A cell's background while it's edited.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-input-bg"
+          }
+        }
+      }
+    },
+    "typography": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The cells' text (14px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-font-size"
+          }
+        }
+      },
+      "header-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-medium}",
+        "$description": "The header text's weight (500).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-header-weight"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space at a cell's sides (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-padding-x"
+          }
+        }
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space above and below a cell's text (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-padding-y"
+          }
+        }
+      },
+      "padding-y-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The same with size sm (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-padding-y-sm"
+          }
+        }
+      },
+      "message-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "Space around the message shown in place of rows (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-message-padding"
+          }
+        }
+      }
+    },
+    "borders": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-1}",
+        "$description": "The frame's and lines' width (1px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-border-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The frame's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-radius"
+          }
+        }
+      }
+    }
+  }
+}

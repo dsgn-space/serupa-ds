@@ -301,4 +301,12 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'de ' + from + ' a ' + to,
   repeats: 'Se repite',
   noEvents: 'No hay eventos este mes.',
+  dateFieldDay: 'Día',
+  dateFieldMonth: 'Mes',
+  dateFieldYear: 'Año',
+  dataGridEdit: (column) => 'Editar ' + column,
+  dataGridCopied: (count) => (count === 1 ? '1 celda copiada' : n(count) + ' celdas copiadas'),
+  dataGridPasted: (count) => (count === 1 ? '1 celda pegada' : n(count) + ' celdas pegadas'),
+  dataGridHint: 'Las flechas mueven entre celdas. Enter o F2 edita una celda, Escape cancela.',
+  scrollArea: 'Contenido desplazable',
 };

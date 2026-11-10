@@ -67,8 +67,9 @@ variables:
 
 default:
   # The Playwright version in package-lock.json, for the system libraries and fonts its Chromium needs (and Node 26).
-  # Bump it with Playwright.
-  image: mcr.microsoft.com/playwright:v1.64.1-noble
+  # Bump it with Playwright. Every image here is pinned by digest as well as tag, so a tag moved upstream can't change
+  # what CI runs (GR277); Renovate keeps the digests current, and tools/test/ci-images.mjs checks both.
+  image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
   interruptible: true
   # Once more when the machine, not the code, failed: a runner restart, a lost connection, GitLab's API. A failing
   # test is never retried here (inParallelRetry in tools/test/lib.mjs names the rare story retried and passed).
@@ -94,7 +95,7 @@ default:
         apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null
       fi
     - node tools/setup.mjs $SETUP_FLAGS
-    - NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | tail -1 || true)"; if [ -n "$NODE_DIR" ]; then export PATH="$NODE_DIR:$PATH"; fi; node --version
+    - NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | sort -V | tail -1 || true)"; if [ -n "$NODE_DIR" ]; then export PATH="$NODE_DIR:$PATH"; fi; node --version
     - |
       if [ "$CI_PIPELINE_SOURCE" = merge_request_event ]; then
         git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
@@ -209,7 +210,7 @@ local checks:
   stage: build
   timeout: 5m
   # Only the script and the description: a small image, one commit of history, no cache, no install.
-  image: node:26-alpine
+  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   variables:
     # The changeset check (below) reads the history back to the merge request's base.
     GIT_DEPTH: "0"
@@ -282,13 +283,15 @@ suite:
   tags: [x86]
   parallel:
     matrix:
-      # The component tests in three shards, and their second run in another language beside them (SERUPA_PART and
-      # SERUPA_SHARD, run.mjs): about 3 minutes each rather than 13 in one job. The coverage job, below, merges theirs.
+      # The component tests in three shards, and their second run in another language beside them in three more
+      # (SERUPA_PART and SERUPA_SHARD, run.mjs): about 4 minutes each rather than 13 in one job. The coverage job,
+      # below, merges the base shards'.
       - GROUP: components
         SERUPA_PART: base
         SERUPA_SHARD: [1/3, 2/3, 3/3]
       - GROUP: components
         SERUPA_PART: locale
+        SERUPA_SHARD: [1/3, 2/3, 3/3]
       - GROUP: visual
         SERUPA_SHARD: [1/3, 2/3, 3/3]
   variables:
@@ -308,6 +311,7 @@ suite:
       - .test-tmp/
       - tools/test/baseline-visual/**/*.actual.png
       - .vitest/blob/
+      - .vitest/narrowed
 
 # Coverage of the component tests (V8, floors in vitest.config.ts): the three shards' blob reports merged into one
 # (vitest --merge-reports), on every pipeline that runs them whole, so a drop fails the merge request, not main after it.
@@ -325,12 +329,16 @@ coverage:
     - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $SERUPA_WIDE == "1"
+    # Every merge request: a narrowed one's report covers the components it tests, and the check below asks only that
+    # every function it adds runs in a test, so a merge can't take main under the floors (the floors run on whole runs).
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
   variables:
     RESULT_CACHE: "off"
   script:
-    - ls .vitest/blob/
+    - if ! ls .vitest/blob/* >/dev/null 2>&1; then echo "No component tests ran, so there is no coverage to check."; exit 0; fi
+    - if [ -f .vitest/narrowed ]; then echo "Narrowed run ($(tr '\n' ' ' < .vitest/narrowed)); the floors are checked on main's full run."; export SERUPA_NO_FLOORS=1; fi
     - node node_modules/vitest/vitest.mjs --merge-reports .vitest/blob --coverage
+    - if [ -n "$SINCE" ]; then node tools/coverage-new-functions.mjs "$SINCE"; fi
   after_script:
     - node tools/test/vitest/coverage-summary.mjs || true
   artifacts:
@@ -621,7 +629,7 @@ design qa:
   stage: build
   needs: []
   timeout: 15m
-  image: node:26-alpine
+  image: node:26-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
       changes: [tools/test/baseline-visual/**/*]
@@ -645,7 +653,7 @@ renovate:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $RENOVATE_TOKEN
   timeout: 30m
-  image: renovate/renovate:41
+  image: renovate/renovate:41@sha256:e998e1218fe572e23278d8808186a310784f7cb2ac8055307183ffc51d3a59e5
   variables:
     RENOVATE_PLATFORM: gitlab
     RENOVATE_ENDPOINT: $CI_API_V4_URL

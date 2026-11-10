@@ -142,6 +142,10 @@ The selected Tab was removed, so no tab is selected. When you remove the selecte
 
 Tabs' `value` or `defaultValue` matches no Tab. With `value`, no tab is selected; with `defaultValue`, the first tab is. Set it to one of the Tabs' values.
 
+## toast-promise-threw
+
+A `toast.promise` `success` or `error` message function threw. Rather than leave the loading toast up for good, a throwing `success` message shows the `error` message for what it threw, and a throwing `error` message closes the toast. Fix the message function: it gets the promise's value (`success`) or its reason (`error`), which may not be the shape it expects.
+
 ## toast-undo-no-toaster
 
 `toast.undo` was called with no Toaster on the page, so nobody could see its Undo. The action is committed at once (its `commit` runs) instead of waiting for an Undo that can't come. Render one Toaster, once, near the root.

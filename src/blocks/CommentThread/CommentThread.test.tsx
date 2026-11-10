@@ -83,6 +83,8 @@ describe('Blocks/Comment thread', () => {
   test('the Escape that cancels an input method\'s composition keeps the edit open (GR299)', async () => {
     await render(<Harness />);
     await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    // The edit box takes focus once it has drawn, which in WebKit can be after the click returns.
+    await expect.poll(() => document.activeElement?.getAttribute('role') === 'textbox' || document.activeElement instanceof HTMLTextAreaElement).toBe(true);
     const box = document.activeElement as HTMLElement;
     box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true, cancelable: true }));
     await new Promise((r) => setTimeout(r, 100));

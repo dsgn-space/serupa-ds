@@ -58,7 +58,7 @@ async function served(app, dir) {
       if (!file.startsWith(dist) || !fs.existsSync(file) || !fs.statSync(file).isFile()) { res.writeHead(404).end(); return; }
       res.writeHead(200, { 'content-type': types[path.extname(file)] ?? 'application/octet-stream' }).end(fs.readFileSync(file));
     });
-    await new Promise((r) => server.listen(Number(port), '127.0.0.1', r));
+    await new Promise((r) => server.listen(Number(port), '127.0.0.1', () => r(undefined)));
     return { base, html: await get('/'), get, stop: () => server.close() };
   }
   const child = spawn(npm, ['run', 'start'], { cwd: dir, env: { ...process.env, PORT: port, NODE_ENV: 'production', NEXT_TELEMETRY_DISABLED: '1' }, stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32', detached: process.platform !== 'win32' });

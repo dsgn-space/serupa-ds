@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { Loader } from '../Loader/Loader';
 import { DescriptionItem, DescriptionList } from './DescriptionList';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -84,5 +85,27 @@ describe('DescriptionList', () => {
       const bg = css(document.body).backgroundColor;
       for (const e of [dt, dd]) expect(contrast(css(e).color, bg), th).toBeGreaterThanOrEqual(4.5);
     }
+  });
+
+  // The README's loading recipe: the terms stay, each detail is a decorative skeleton line of the text's size, and the
+  // list is busy. The rows keep their height when the details arrive, so nothing jumps.
+  test('the loading recipe: a skeleton line per detail, sized to the text, keeps each row as tall as the loaded one', async () => {
+    const SIZES = [['var(--text-xs)', 'sm'], ['var(--text-sm)', 'md'], ['var(--text-base)', 'lg']] as const;
+    function Lists(p: { busy: boolean }) {
+      return <>{SIZES.map(([font, size]) => (
+        <div key={size} style={{ width: 600, fontSize: font, lineHeight: `var(--text-${size === 'sm' ? 'xs' : size === 'md' ? 'sm' : 'base'}--line-height)` }}>
+          <DescriptionList id={'dl-' + size} aria-busy={p.busy || undefined} layout="inline">
+            {['Owner', 'Created'].map((t) => <DescriptionItem key={t} term={t}>{p.busy ? <Loader variant="skeleton" size={size} label="" /> : 'Ayu Lestari'}</DescriptionItem>)}
+          </DescriptionList>
+        </div>
+      ))}</>;
+    }
+    const heights = () => SIZES.map(([, size]) => [...el('dl-' + size).children].map((c) => box(c).height));
+    const { rerender } = await render(<Lists busy />);
+    expect(el('dl-md').getAttribute('aria-busy')).toBe('true');
+    expect([...document.querySelectorAll('dd [data-component="loader"]')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
+    const busy = heights();
+    await rerender(<Lists busy={false} />);
+    expect(heights()).toEqual(busy);
   });
 });

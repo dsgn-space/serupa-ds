@@ -6,9 +6,11 @@ interface RadioGroupProps<V extends number | string = number | string> extends O
     onValueChange?: ((value: V, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
     size?: "lg" | "md" | "sm" | undefined;
+    variant?: "card" | "default" | undefined;
     invalid?: boolean | undefined;
     disabled?: boolean | undefined;
     required?: boolean | undefined;
+    readOnly?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
 interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
@@ -16,6 +18,7 @@ interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "
     children?: React.ReactNode | undefined;
     description?: React.ReactNode | undefined;
     invalid?: boolean | undefined;
+    variant?: "card" | "default" | undefined;
 }
 declare const RadioGroup: (<V extends number | string = number | string>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;

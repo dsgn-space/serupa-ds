@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, page, server, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, pasteText, withMotion } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { PinInput } from './PinInput';
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
@@ -80,22 +80,18 @@ describe('PinInput', () => {
 
   test('L8E105: a whole code pasted after a part typed replaces it, instead of being added after it and cut off', async () => {
     const done = vi.fn();
-    await render(<div><input id="l8e105src" defaultValue="483 921" /><PinInput id="p" aria-label="Code" onComplete={done} /></div>);
-    el('l8e105src').select();
-    await userEvent.copy();
+    await render(<div><PinInput id="p" aria-label="Code" onComplete={done} /></div>);
     await userEvent.click(el('p'));
     await userEvent.keyboard('12');
-    await userEvent.paste();
+    pasteText(el('p'), '483 921');
     expect([shown('p'), done.mock.calls]).toEqual(['483921', [['483921']]]);
   });
 
   test('a part of a code pasted is added to what is typed', async () => {
-    await render(<div><input id="l8e105src" defaultValue="34" /><PinInput id="p" aria-label="Code" length={4} /></div>);
-    el('l8e105src').select();
-    await userEvent.copy();
+    await render(<div><PinInput id="p" aria-label="Code" length={4} /></div>);
     await userEvent.click(el('p'));
     await userEvent.keyboard('12');
-    await userEvent.paste();
+    pasteText(el('p'), '34');
     expect(shown('p')).toBe('1234');
   });
 

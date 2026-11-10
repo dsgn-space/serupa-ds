@@ -58,7 +58,7 @@ Drawn from the `Open` story.
 | Rest | `field` background, 1px `field-border`, the chevron in `text-muted` |
 | Placeholder | "Choose…" (or `placeholder`) in the `placeholder` color |
 | Hover | `field-border-hover` |
-| Focus | A `focus-ring` outline; inside the panel, on the focused option or column |
+| Focus | Like the other fields: the border and a 1px ring hugging it take the `focus-ring` color (danger when invalid), and stay while the panel is open; inside the panel, an outline on the focused option or column |
 | Open | The panel under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor; it doesn't open |
@@ -101,6 +101,7 @@ Drawn from the `Open` story.
 | `name` | string | | A form gets the path's last value under it, and a form reset brings back `defaultValue` |
 | `open`, `defaultOpen`, `onOpenChange` | | | The panel's open state, controlled or not; `onOpenChange(open, { reason })` says why: `'trigger'`, `'select'`, `'escape'`, `'outside'` or `'reset'` |
 | `disabled` | boolean | `false` | It can't open, and the form doesn't get its value |
+| `readOnly` | boolean | `false` | Shows the path but can't open: focusable and read out (`aria-readonly`), and the form still gets its value, unlike `disabled` |
 
 `ref`, `id`, `aria-*` and other props go to the `<button>`; `className` and `style` go to the wrapper (`data-component="cascade-select"`, `data-state`), full width by default.
 
@@ -119,7 +120,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-border` | `field-border` | The button's outline (3:1). |
 | `--cascade-select-border-hover` | `field-border-hover` | Its outline under the pointer. |
 | `--cascade-select-invalid` | `danger` | The outline when invalid. |
-| `--cascade-select-bg-disabled` | `field-readonly` | The button's background when disabled. |
+| `--cascade-select-bg-disabled` | `field-readonly` | The button's background when read-only or disabled. |
 | `--cascade-select-icon` | `text-muted` | The chevron (3:1). |
 | `--cascade-select-muted` | `text-muted` | Level names, notes and the children chevrons (4.5:1 on the panel). |
 | `--cascade-select-check` | `primary` | The chosen last step's check (3:1). |

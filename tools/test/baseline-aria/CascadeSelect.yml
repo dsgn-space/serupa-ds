@@ -76,6 +76,9 @@
 # Playground
 - combobox "Wilayah": Pilih wilayah
 
+# ReadOnly
+- combobox "Wilayah": Jawa Barat › Kota Bandung › Coblong
+
 # States
 - combobox "Size small": Bali › Kota Denpasar › Denpasar Selatan
 - combobox "Size large": Large

@@ -7,7 +7,7 @@ const meta = {
   component: RadioGroup,
   subcomponents: { Radio },
   args: { 'aria-label': 'Plan', defaultValue: 'pro', orientation: 'vertical', size: 'md' },
-  argTypes: { orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
+  argTypes: { variant: { control: 'inline-radio', options: ['default', 'card'] }, orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   render: (args) => <RadioGroup {...args}>
     <Radio value="free">Free</Radio>
     <Radio value="pro" description="Everything in Free, plus unlimited projects">Pro</Radio>
@@ -18,9 +18,21 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Cards: each radio a bordered card, for a few choices that each need a sentence or a price. */
+export const Cards: Story = {
+  args: { 'aria-label': 'Delivery', variant: 'card', orientation: 'horizontal', defaultValue: 'standard' },
+  render: (args) => <RadioGroup {...args}>
+    <Radio value="standard" description="3 to 5 days, free">Standard</Radio>
+    <Radio value="express" description="Next day, Rp 25.000">Express</Radio>
+    <Radio value="pickup" description="Collect from the Bandung store today" disabled>Pick up</Radio>
+  </RadioGroup>,
+};
+export const CardsInvalid: Story = { args: { variant: 'card', invalid: true, defaultValue: undefined } };
 export const Horizontal: Story = { args: { orientation: 'horizontal' } };
 export const Invalid: Story = { args: { invalid: true, defaultValue: undefined } };
 export const Disabled: Story = { args: { disabled: true } };
+export const ReadOnly: Story = { args: { readOnly: true } };
 
 export const Controlled: Story = {
   render: function ControlledDemo() {

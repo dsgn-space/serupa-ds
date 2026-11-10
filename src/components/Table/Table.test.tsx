@@ -7,7 +7,7 @@ import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { SerupaProvider } from '../../internal/provider';
-import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
+import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
 const ROWS: Array<[string, string, number]> = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -862,5 +862,41 @@ describe('Table column tools (RU10)', () => {
     await expect.element(s.getByRole('separator', { name: 'Ubah lebar kolom Name' })).toBeInTheDocument();
     await expect.element(s.getByRole('button', { name: 'Rincian Order 1' })).toBeInTheDocument();
     await expect.element(s.getByRole('columnheader', { name: 'Rincian' })).toBeInTheDocument();
+  });
+});
+
+describe('Table loading and messages (GR316)', () => {
+  test('busy sets aria-busy; TableLoadingRows draws a placeholder in every cell, its rows as tall as real ones in both sizes, and the wait is said once', async () => {
+    function Loading(props: { size?: 'sm' | 'md'; busy: boolean }) {
+      return <Table id={'tl-' + (props.size || 'md')} size={props.size} busy={props.busy} caption="Projects">
+        {head()}
+        {props.busy ? <TableLoadingRows columns={3} rows={4} label="Loading projects" /> : body()}
+      </Table>;
+    }
+    const { rerender } = await render(<div style={{ width: '600px' }}><Loading busy /><Loading size="sm" busy /></div>);
+    for (const id of ['tl-md', 'tl-sm']) {
+      const table = el(id), rows = [...table.querySelectorAll('tbody tr')] as HTMLElement[];
+      expect(table.getAttribute('aria-busy')).toBe('true');
+      expect(rows.map((r) => r.children.length)).toEqual([3, 3, 3, 3]);
+    }
+    // One name for the whole table: the rest of the placeholders are hidden from screen readers.
+    // The placeholders are hidden from screen readers; the wait is said once, after the loader's delay.
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
+    // Once shown, no cell is a progress bar a screen reader can land on; the table's aria-busy says it's loading.
+    expect(page.getByRole('progressbar').all().length).toBe(0);
+    expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
+    const loadingHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
+    await rerender(<div style={{ width: '600px' }}><Loading busy={false} /><Loading size="sm" busy={false} /></div>);
+    const realHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
+    expect(loadingHeights).toEqual(realHeights);
+    expect(el('tl-md').hasAttribute('aria-busy')).toBe(false);
+  });
+
+  test('TableMessageRow is one cell across every column, for an empty or failed load', async () => {
+    await render(<Table id="tmsg" caption="Projects">{head()}<TableBody><TableMessageRow colSpan={3} id="msg"><span role="alert">Couldn't load projects.</span><Button>Retry</Button></TableMessageRow></TableBody></Table>);
+    const row = el('msg');
+    expect([row.tagName, row.children.length, (row.firstElementChild as HTMLTableCellElement).colSpan]).toEqual(['TR', 1, 3]);
+    expect(row.getBoundingClientRect().width).toBe((el('tmsg').querySelector('thead tr') as HTMLElement).getBoundingClientRect().width);
+    await expect.element(page.getByRole('alert')).toHaveTextContent("Couldn't load projects.");
   });
 });
