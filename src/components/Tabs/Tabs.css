@@ -78,7 +78,7 @@
   transition: color var(--motion-hover) var(--ease-move), background-color var(--motion-hover) var(--ease-move);
 }
 .dk-tabs--sm .dk-tabs__tab { height: var(--tabs-height-sm, var(--control-height-md)); }
-.dk-tabs--lg .dk-tabs__tab { height: var(--tabs-height-lg, var(--control-height-lg)); padding-inline: var(--tabs-padding-x-lg, var(--spacing-4)); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-tabs--lg .dk-tabs__tab { height: var(--tabs-height-lg, var(--control-height-lg)); padding-inline: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-tabs--lg .dk-tabs__icon .dk-icon { font-size: var(--spacing-5); }
 .dk-tabs__icon { display: inline-flex; }
 .dk-tabs__icon .dk-icon { font-size: var(--spacing-4); }
