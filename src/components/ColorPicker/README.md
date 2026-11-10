@@ -82,7 +82,7 @@ Drawn from the `ContrastCheck` story.
 | `custom` | `boolean` | `true` | The browser's picker and a hex field. |
 | `contrastWith` | `string` | | A hex color to check against: the picked one in the contrast line, and every swatch in its description and strike-through. |
 | `minContrast` | `number` | `4.5` | Below this ratio it warns. |
-| `size` | `'sm' \| 'md'` | `'md'` | 24 or 32px swatches. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 24, 32 or 44px swatches. `lg` also has a large hex field and 16px text, to sit beside large fields and buttons and give touch-sized targets. |
 | `disabled` | `boolean` | `false` | A `<fieldset disabled>` around it does the same |
 | `readOnly` | `boolean` | `false` | Shows the color but can't change it: the swatches stay focusable and the group says it (`aria-readonly`), the hex field is read-only, the browser's picker doesn't open, and a form still sends the color, unlike `disabled` |
 | `name` | `string` | | Submits the color with a form. |
@@ -111,5 +111,6 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--color-picker-swatch-gap` | `spacing-2` | Space between swatches (8px). |
 | `--color-picker-swatch-size-sm` | `spacing-6` | A swatch at `size="sm"` (24px). |
 | `--color-picker-swatch-size-md` | `spacing-8` | A swatch at `size="md"` (32px). |
+| `--color-picker-swatch-size-lg` | `control-height-lg` | A swatch at `size="lg"` (44px), the touch-target size. |
 | `--color-picker-hex-width` | `spacing-28` | The hex field's width (112px). |
 <!-- token-table:end -->

@@ -13,6 +13,7 @@
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--color-picker-text, var(--text));
 }
 .dk-color-picker--size-sm { --dk-cp-size: var(--color-picker-swatch-size-sm, var(--spacing-6)); --dk-cp-check: var(--spacing-4); }
+.dk-color-picker--size-lg { --dk-cp-size: var(--color-picker-swatch-size-lg, var(--control-height-lg)); --dk-cp-check: var(--spacing-6); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-color-picker__swatches { display: flex; flex-wrap: wrap; gap: var(--color-picker-swatch-gap, var(--spacing-2)); }
 .dk-color-picker__swatch {
   position: relative; display: inline-flex; align-items: center; justify-content: center;

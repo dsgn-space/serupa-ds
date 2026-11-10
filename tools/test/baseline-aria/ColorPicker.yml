@@ -42,6 +42,19 @@
 - textbox "Hex code"
 - text: Pick a color for the label.
 
+# Large
+- radiogroup "Label color":
+  - radio "Blue" [checked]
+  - radio "Violet"
+  - radio "Emerald"
+  - radio "Red"
+  - radio "Amber"
+  - radio "Yellow"
+  - radio "Black"
+  - radio "White"
+- textbox "Custom color": "#1d4ed8"
+- textbox "Hex code": 1d4ed8
+
 # LongLabels
 - radiogroup "Label color":
   - radio "Deep ocean blue for headings" [checked]
