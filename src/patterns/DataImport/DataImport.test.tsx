@@ -9,6 +9,9 @@ const select = (id: string) => document.getElementById(id) as HTMLSelectElement;
 const CSV = 'Full name,E-mail,Mobile,Town\nAni,ani@example.com,0812,Bandung\nCitra,citra@example,,Surabaya\nDewi,dewi@example.com,,Yogyakarta\n';
 const FILE = { name: 'customers.csv', text: CSV };
 
+// Numbers are written in the reader's digits (Arabic-Indic in ar-EG): read them back as Latin.
+const latin = (t: string | null) => (t || '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+
 // Data import: a CSV file, its columns matched, every row checked and shown before anything is saved, then what
 // happened in words; each step's heading takes focus, and every problem is listed with what to do.
 describe('Patterns/Data import', () => {
@@ -64,7 +67,7 @@ describe('Patterns/Data import', () => {
     await userEvent.selectOptions(select('import-email'), 'Not in the file');
     await userEvent.selectOptions(select('import-city'), 'Full name');
     await userEvent.click(page.getByRole('button', { name: 'Check rows' }));
-    await expect.poll(() => active().textContent).toMatch(/There are 2 problems/);
+    await expect.poll(() => latin(active().textContent)).toMatch(/There are 2 problems/);
     await userEvent.click(page.getByRole('button', { name: 'Back' }));
     await userEvent.click(page.getByRole('button', { name: 'Continue' }));
     await expect.poll(() => active().textContent).toBe('Match columns');
@@ -76,8 +79,6 @@ describe('Patterns/Data import', () => {
     await render(<DataImport start="check" file={FILE} existing={['ani@example.com']} onImport={onImport} />);
     expect(page.getByRole('main').element().textContent).toMatch(/2 rows are ready: 1 new customer and 1 update to customers you have\. 1 row has problems, listed first\. Nothing is saved until you import\./);
     const rows = page.getByRole('row').elements().slice(1).map((r) => [...r.querySelectorAll('td')].map((c) => c.textContent));
-    // Line numbers are written in the reader's digits (Arabic-Indic in ar-EG); read them back as Latin.
-    const latin = (t: string | null) => (t || '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
     expect(rows.map((r) => [latin(r[0]), r[1], r[2]])).toEqual([['3', 'Problem', '“citra@example” isn’t an email address'], ['2', 'Update', ''], ['4', 'New', '']]);
     await userEvent.click(page.getByRole('button', { name: 'Import 2 customers' }));
     await expect.poll(() => active().textContent).toMatch(/There is a problem/);

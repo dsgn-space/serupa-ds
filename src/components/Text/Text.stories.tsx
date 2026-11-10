@@ -34,6 +34,11 @@ export const Truncate: Story = {
   render: () => <div style={{ width: 200 }}><Text truncate>quarterly-report-final-version-2.pdf</Text></div>,
 };
 
+/** Lines: a long review cut after three lines; the rest is still in the page. */
+export const Lines: Story = {
+  render: () => <div style={{ maxWidth: 320 }}><Text lines={3}>Arrived two days early and well packed. The coffee is fresher than what I buy at the market: bright, a little fruity, and not bitter even as a strong espresso. I've ordered it three times now and it has been the same every time, which matters more to me than anything else. The 250 g bag lasts about two weeks.</Text></div>,
+};
+
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 200 }}>

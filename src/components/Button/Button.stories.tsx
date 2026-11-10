@@ -109,3 +109,25 @@ export const LongLabel: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: one primary button, the main action; the others quieter. */
+export const DoOnePrimary: Story = {
+  name: 'Do: one primary',
+  render: () => <Row><Button variant="outline">Cancel</Button><Button variant="secondary">Preview</Button><Button>Publish</Button></Row>,
+};
+/** Don't: three primary buttons, so none reads as the main action. */
+export const DontManyPrimaries: Story = {
+  name: "Don't: many primaries",
+  render: () => <Row><Button>Cancel</Button><Button>Preview</Button><Button>Publish</Button></Row>,
+};
+/** Do: labels that say what happens. */
+export const DoVerbLabels: Story = {
+  name: 'Do: verb labels',
+  render: () => <Row><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></Row>,
+};
+/** Don't: Yes and No, which make people read the question again. */
+export const DontVagueLabels: Story = {
+  name: "Don't: vague labels",
+  render: () => <Row><Button variant="outline">No</Button><Button destructive>Yes</Button></Row>,
+};

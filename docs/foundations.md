@@ -1049,6 +1049,19 @@ How the words in a product built with the system should read: labels, hints, err
 - Leave out words that tell the reader something should be quick for them: "simply", "just", "obviously", "of course", "easy". When it isn't quick for them, the word makes them feel slow; when it is, the word adds nothing. "Add an email address", not "Just add an email address".
 - Use plain, neutral terms: "allow list" and "block list", not "whitelist" and "blacklist"; "main" and "replica" (or "primary" and "secondary"), not "master" and "slave".
 
+**Words to use**
+
+One word for one act, so a form reads in one voice and someone using voice control can say what they see. The components' own words follow this list.
+
+| Use | Not | For |
+| --- | --- | --- |
+| choose | pick, select | taking one or more options from a set: "Choose a date", "Choose at least one option." |
+| select | click, tap, press | acting on a control whatever the input: "Select Save". Also for selecting items or text to act on them: "Select all rows" |
+| enter | type, input, fill in | putting a value in a field: "Enter your email" |
+| sign in, sign out | log in, login, log out | starting and ending a session: "Sign in", "We signed you out" |
+| remove | delete | taking something out of a list or a field, when the thing itself stays: a Badge's remove button |
+| delete | remove | destroying the thing itself, usually after a confirmation: "Delete project" |
+
 **Capitalization and punctuation**
 
 - Sentence case everywhere: titles, buttons, labels, menu items, tabs and column headings. "Save changes", not "Save Changes". Proper nouns keep their capitals.

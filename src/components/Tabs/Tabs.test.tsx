@@ -208,6 +208,8 @@ describe('Tabs', () => {
 
   test('size lg: 44px tabs with 16px text and a 20px icon, the same height as a large Button and Input', async () => {
     await render(<Tabs id="lg" size="lg"><Set3 icon /></Tabs>);
+    // The first tab is picked after mount, as in setup(), and the named icon draws once its set has loaded.
+    await expect.poll(() => !!selected('lg')?.querySelector('svg')).toBe(true);
     const sel = selected('lg'), s = css(sel);
     expect([sel.getBoundingClientRect().height, s.fontSize, s.paddingLeft, sel.querySelector('svg')!.getBoundingClientRect().width])
       .toEqual([44, '16px', '16px', 20]);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { fold } from '../../internal/fold';
@@ -87,7 +87,7 @@ function score(c: Command, q: string): number {
 /** A ⌘K search over commands and pages in a dialog: type to filter, arrows to move, Enter to run.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>('CommandPalette', function CommandPalette(props, ref) {
-  const sds = useSettings(words), labels = sds.labels;
+  const sds = useSettings(words), labels = sds.labels, locale = useLocale();
   const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
   const [own, setOwn] = React.useState(!!props.defaultOpen);
   const controlled = props.open != null;
@@ -135,7 +135,7 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
 
   // How many match, said once typing stops (the rows change in silence otherwise).
   const empty = typeof props.emptyText === 'string' ? props.emptyText : labels.noCommands;
-  const said = !query.trim() ? '' : usable.length ? labels.commandsCount(usable.length) : empty;
+  const said = !query.trim() ? '' : usable.length ? labels.commandsCount(usable.length, new Intl.NumberFormat(locale).format(usable.length)) : empty;
   React.useEffect(() => {
     if (!open || !said) return;
     const t = setTimeout(() => announce(said), announcePause);

@@ -2,10 +2,14 @@
 import * as React from 'react';
 import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
+import { ControlSize } from '../../internal/controlSize';
 
 export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** 'horizontal' (a wrapping row, default; Left and Right move focus) or 'vertical' (a column; Up and Down). */
   orientation?: 'horizontal' | 'vertical' | undefined;
+  /** The size of every Button, IconButton and ToggleButton in it (in its ButtonGroups too) that doesn't set its own:
+      'sm', 'md' or 'lg'. Default: none, so each keeps its own. */
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** What the controls are for ("Text formatting"); needed when a page has more than one toolbar. */
   'aria-label'?: string | undefined;
   /** Buttons, IconButtons, ToggleButtons, ButtonGroups, Menus, Selects and Dividers, at any depth. */
@@ -34,7 +38,8 @@ const typing = (e: HTMLElement) => e.isContentEditable || e instanceof HTMLTextA
    lands on the control used last. Disabled controls are skipped. In a text field the keys stay the field's. */
 /** A set of controls with one Tab stop, where the arrow keys move between them. */
 export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('Toolbar', function Toolbar(props, ref) {
-  const rest = omit(props, { orientation: 1, className: 1, children: 1 });
+  const rest = omit(props, { orientation: 1, size: 1, className: 1, children: 1 });
+  const size = props.size === 'sm' || props.size === 'md' || props.size === 'lg' ? props.size : undefined;
   const vertical = props.orientation === 'vertical';
   const root = React.useRef<HTMLDivElement | null>(null);
   const active = React.useRef<HTMLElement | null>(null);
@@ -99,7 +104,7 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('
     <div {...rest} ref={mergedRef} role="toolbar" aria-orientation={vertical ? 'vertical' : 'horizontal'}
       className={cn('dk-toolbar', vertical && 'dk-toolbar--vertical', props.className)} data-component="toolbar" data-orientation={vertical ? 'vertical' : 'horizontal'}
       onFocus={onFocus} onKeyDown={onKeyDown}>
-      {props.children}
+      {size ? <ControlSize.Provider value={size}>{props.children}</ControlSize.Provider> : props.children}
     </div>
   );
 });

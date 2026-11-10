@@ -56,6 +56,13 @@ When an action succeeds (`success`), a check takes the loader's place for a mome
 - Navigation is a link: give the Button an `href`, not an `onClick` that changes the URL.
 - Icons come from Material Symbols Rounded (filled), drawn as SVG. The consumer provides the click handler.
 
+### Do and don't
+
+- **Do:** One `primary` button for the main action of a view or dialog, with the others `secondary`, `outline` or `ghost`. (`DoOnePrimary`)
+- **Don't:** Several `primary` buttons side by side: none of them reads as the main action, and people stop to compare. (`DontManyPrimaries`)
+- **Do:** Label with what happens: "Delete project", "Keep project". (`DoVerbLabels`)
+- **Don't:** "Yes" and "No", which make people go back and read the question to know what each does. (`DontVagueLabels`)
+
 ### Variants
 
 | `variant` | Looks | Use for |
