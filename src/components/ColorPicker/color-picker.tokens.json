@@ -126,6 +126,16 @@
           }
         }
       },
+      "swatch-size-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "A swatch at `size=\"lg\"` (44px), the touch-target size.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-swatch-size-lg"
+          }
+        }
+      },
       "hex-width": {
         "$type": "dimension",
         "$value": "{spacing.spacing-28}",
