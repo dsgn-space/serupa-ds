@@ -84,6 +84,7 @@ Drawn from the `ContrastCheck` story.
 | `minContrast` | `number` | `4.5` | Below this ratio it warns. |
 | `size` | `'sm' \| 'md'` | `'md'` | 24 or 32px swatches. |
 | `disabled` | `boolean` | `false` | A `<fieldset disabled>` around it does the same |
+| `readOnly` | `boolean` | `false` | Shows the color but can't change it: the swatches stay focusable and the group says it (`aria-readonly`), the hex field is read-only, the browser's picker doesn't open, and a form still sends the color, unlike `disabled` |
 | `name` | `string` | | Submits the color with a form. |
 | `form` | `string` | | The id of the form it submits with, when the picker sits outside it (like an input's `form`). |
 | `required` | `boolean` | `false` | A color must be picked: `aria-required` on the swatches, and the form won't submit without one (the swatches are marked invalid and take focus). Set for you in a required Field. |
