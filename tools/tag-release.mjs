@@ -35,6 +35,14 @@ const own = (v) => {
 };
 
 if (!todo.length) { console.log('Every version in CHANGELOG.md has its tag.'); process.exit(0); }
+// The tag's dist/ is built here, by this Node: one older than devEngines asks for could build it differently from CI.
+if (make) {
+  const want = /^>=\s*(\d+)/.exec(JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8')).devEngines?.runtime?.version || '')?.[1];
+  if (want && Number(process.versions.node.split('.')[0]) < Number(want)) {
+    console.error(`This is Node ${process.versions.node}; devEngines asks for ${want} or newer. Run node tools/setup.mjs and put the Node it names on PATH.`);
+    process.exit(1);
+  }
+}
 for (const v of todo) {
   const tag = `v${v}`;
   const c = own(v);
@@ -51,6 +59,9 @@ for (const v of todo) {
       const here = { cwd: wt, stdio: /** @type {const} */ ('inherit') };
       run('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund'], here);
       run('npm', ['run', 'build'], here);
+      // The package as a project installs it, on the dist/ just built: every export there, the components import and
+      // render on the server, the types build. A failure throws here, before anything is committed or tagged.
+      run(process.execPath, ['tools/test/package.mjs'], here);
       const pkg = JSON.parse(fs.readFileSync(path.join(wt, 'package.json'), 'utf8'));
       delete pkg.scripts;
       delete pkg.devDependencies;
