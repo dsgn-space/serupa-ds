@@ -1,6 +1,9 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Alert } from '../Alert';
 import { Badge } from '../Badge';
+import { Button } from '../Button';
+import { Loader } from '../Loader';
 import { Card } from '../Card';
 import { DescriptionItem, DescriptionList } from './DescriptionList';
 
@@ -67,3 +70,22 @@ export const RightToLeft: Story = {
     </div>
   ),
 };
+
+// Loading and failed: the terms stay, each detail is a skeleton line of the text's size, and a failure offers Retry.
+function States(args: React.ComponentProps<typeof DescriptionList>) {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'failed'>('loading');
+  const terms = ['Name', 'Owner', 'Status', 'Created'];
+  return (
+    <div style={{ maxWidth: 560, display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The project didn't load. Check your connection and try again.</Alert>
+        : state === 'loaded' ? <Record {...args} />
+        : <DescriptionList {...args} aria-busy>
+            {terms.map((t, i) => <DescriptionItem key={t} term={t}><Loader variant="skeleton" size="lg" label={i === 0 ? 'Loading project' : ''} /></DescriptionItem>)}
+          </DescriptionList>}
+    </div>
+  );
+}
+export const LoadingAndErrors: Story = { name: 'Loading and failed', render: (args) => <States {...args} /> };

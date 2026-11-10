@@ -20,6 +20,19 @@
 - definition:
   - time: 14 March 2026
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Failed"
+- term: Name
+- definition
+- term: Owner
+- definition
+- term: Status
+- definition
+- term: Created
+- definition
+
 # LongText
 - term: Donaudampfschifffahrtsgesellschaft
 - definition: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung
