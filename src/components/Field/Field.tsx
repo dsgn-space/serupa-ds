@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
-import { named } from '../../internal/component';
+import { component } from '../../internal/component';
 import { FieldContext, type FieldControl } from '../../internal/field';
 import * as icons from '../../material/builtin';
 import { FieldLabel } from '../../internal/fieldLabel';
@@ -52,8 +52,8 @@ type ControlProps = { id?: string; invalid?: boolean; disabled?: boolean; 'aria-
 
 const OWN = { label: 1, hint: 1, error: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, layout: 1, id: 1, children: 1, className: 1 } as const;
 
-/** A label, an optional hint and an error message around one form control, wired up for screen readers. className and other attributes go to the outer element. */
-export const Field = /* @__PURE__ */ named('Field', function Field(props: FieldProps): React.ReactElement {
+/** A label, an optional hint and an error message around one form control, wired up for screen readers. className, ref and other attributes go to the outer element (a <fieldset> with group). */
+export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field', function Field(props, ref) {
   const rest = omit(props, OWN);
   const base = domId('dk-f', React.useId());
   const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<ControlProps>) : null;
@@ -127,7 +127,7 @@ export const Field = /* @__PURE__ */ named('Field', function Field(props: FieldP
   const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', props.disabled && 'dk-field--disabled', props.className);
   if (group) {
     return (
-      <fieldset {...rest} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
+      <fieldset {...rest} ref={ref as React.Ref<HTMLFieldSetElement>} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
         {label}
         {hint}
         <FieldContext.Provider value={null}>
@@ -145,9 +145,9 @@ export const Field = /* @__PURE__ */ named('Field', function Field(props: FieldP
     </div>
   </FieldContext.Provider>;
   // Horizontal: the label beside a column holding the control, then the hint and the error under it.
-  if (horizontal) return <div {...rest} className={cls} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
+  if (horizontal) return <div {...rest} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
   return (
-    <div {...rest} className={cls} data-component="field">
+    <div {...rest} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field">
       {label}
       {hint}
       {body}

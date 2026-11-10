@@ -34,6 +34,18 @@ describe('Field', () => {
     expect(el('plain').getAttribute('aria-invalid')).toBeNull();
   });
 
+  test('its own ref reaches the outer element in every layout, so an app can scroll to a field with an error', async () => {
+    const v = React.createRef<HTMLElement>(), h = React.createRef<HTMLElement>(), g = React.createRef<HTMLElement>();
+    await render(<>
+      <Field ref={v} label="Name" error="Enter a name"><Input /></Field>
+      <Field ref={h} label="City" orientation="horizontal"><Input /></Field>
+      <Field ref={g} label="Size" group><Radio name="s" value="s">Small</Radio></Field>
+    </>);
+    expect([v.current?.tagName, h.current?.tagName, g.current?.tagName]).toEqual(['DIV', 'DIV', 'FIELDSET']);
+    for (const r of [v, h, g]) expect(r.current?.getAttribute('data-component')).toBe('field');
+    expect(v.current?.textContent).toContain('Enter a name');
+  });
+
   test('hint and error join the control\'s own aria-describedby; the error makes an Input invalid; required adds aria-required and a hidden *', async () => {
     function App() {
       const [err, setErr] = React.useState<string | null>('Enter an email address.');
