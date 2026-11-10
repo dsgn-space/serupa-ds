@@ -181,6 +181,16 @@
             "cssVar": "--input-action-focus-ring"
           }
         }
+      },
+      "rejected-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The line under a DatePicker, DateRangePicker, TimePicker or NumberInput saying why typed text was put back.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-rejected-color"
+          }
+        }
       }
     },
     "sizing": {

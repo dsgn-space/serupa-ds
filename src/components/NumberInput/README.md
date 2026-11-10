@@ -80,7 +80,7 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `prefix`, `suffix`, `plac
 | `defaultValue` | `number \| null` | | Uncontrolled. |
 | `onValueChange` | `(value: number \| null) => void` | | As people type (numbers within range), on blur (clamped), and from the keys and buttons. |
 | `min`, `max` | `number` | | Limits. The field snaps into them when it loses focus. |
-| `onInvalidInput` | `(text: string, reason: 'range' \| 'unreadable') => void` | | When typed text isn't kept as it is: a number brought back within `min`..`max`, or text that isn't a number. |
+| `onInvalidInput` | `(text: string, reason: 'range' \| 'unreadable') => void` | | When typed text isn't kept as it is: a number brought back within `min`..`max`, or text that isn't a number. The same words show under the field (`.dk-input-rejected`, read with it) until the text changes. |
 | `step` | `number` | `1` | How much the arrows and buttons change it. Its decimals set how many the value keeps. |
 | `largeStep` | `number` | `10` | Steps moved by PageUp, PageDown and Shift with an arrow. |
 | `steppers` | `boolean` | `true` | The − and + buttons. |

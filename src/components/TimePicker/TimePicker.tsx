@@ -80,6 +80,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(0);
   const id = domId('dk-tp', React.useId());
+  const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const box = React.useRef<HTMLSpanElement | null>(null);
   const field = React.useRef<HTMLInputElement | null>(null);
   useFormReset(field, () => {
@@ -108,7 +109,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     if (text.trim() === '') return commit(null);
     const n = parseTime(text, locale);
     if (n != null && n >= lo && n <= hi) return commit(n);
-    reject(text, n != null ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted);
+    reject(text, n != null ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted, setRejected);
     commit(value);
   };
   const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text, locale); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
@@ -159,13 +160,14 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const label = listLabel || sds.labels.chooseTime;
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
+    <>
     <span ref={box} className={cn('dk-input', 'dk-input--size-' + size, 'dk-time-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)} style={style} data-component="time-picker" data-state={open ? 'open' : 'closed'} data-size={size} onMouseDown={pressFocuses(field)}>
       <input {...rest} ref={mergedRef}
         lang={rest.lang ?? lang} type="text" role="combobox" autoComplete={rest.autoComplete || 'off'} spellCheck={rest.spellCheck ?? false} autoCorrect={rest.autoCorrect ?? 'off'} autoCapitalize={rest.autoCapitalize ?? 'off'} className="dk-input__field" value={text} disabled={disabled} readOnly={readOnly}
-        placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format')}
+        placeholder={placeholder != null ? placeholder : timePattern(locale, h12)} aria-invalid={invalid || undefined} aria-describedby={cn(rest['aria-describedby'], id + '-format', rejected && id + '-rejected')}
         aria-expanded={open} aria-controls={id} aria-autocomplete="none" aria-haspopup="listbox" aria-activedescendant={open ? `${id}-${active}` : undefined}
         onChange={(e) => {
-          setText(e.target.value);
+          setText(e.target.value); setRejected('');
           if (open) { typed.current = true; const n = parseTime(e.target.value, locale); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
         }} onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
@@ -186,5 +188,8 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
         )) : null}
       </ul>
     </span>
+      {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
+      {rejected && <span id={id + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+    </>
   );
 });
