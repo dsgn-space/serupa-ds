@@ -4,6 +4,10 @@
 # Extras
 - text: Online Live Scheduled 8 120 Design
 - button "Remove Design"
+- text: Primary
+- button "Remove Primary"
+- text: Neutral
+- button "Remove Neutral"
 - img "New messages"
 
 # Interactive
