@@ -6,18 +6,14 @@
 //     1.6 times its size in Arabic and 1.5 in Devanagari, Thai and CJK, and the same as before in English and Hebrew;
 //     a line height already taller (text-base in Thai, 24px) is kept.
 //   node tools/test/script-fonts.mjs
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import { read, browser, report, done, PROJECT } from './lib.mjs';
+import { read, browser, report, done, servePages } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const scripts = JSON.parse(read('tokens.json')).type.scripts || [];
 t('tokens.json gives Arabic, Devanagari, Thai, Japanese, Korean and both Chinese a line height', ['Arabic', 'Devanagari', 'Thai', 'Japanese', 'Korean', 'Simplified Chinese', 'Traditional Chinese'].every((n) => scripts.some((s) => s.script === n && s.lineHeight)), scripts.map((s) => s.script).join(', '));
 
-// A page of its own, outside .test-tmp (other suites empty that folder while this one runs).
-const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-scripts-'));
+const pages = servePages('scripts');
 const CASES = [
   // [lang, size token, expected line height in px, font that must come right after "Inter Fallback"]
   ['en', 'sm', 20, 'Noto Sans Arabic'],
@@ -36,17 +32,17 @@ const CASES = [
   ['zh-Hant-HK', 'sm', 21, 'Noto Sans TC'],
 ];
 const body = CASES.map(([lang, size], i) => `<div lang="en"><p id="c${i}" lang="${lang}" style="font-family:var(--font-sans);font-size:var(--text-${size});line-height:var(--text-${size}--line-height)">x</p></div>`).join('');
-fs.writeFileSync(path.join(dir, 'page.html'), `<!doctype html><html lang="en"><meta charset="utf-8"><link rel="stylesheet" href="file://${path.join(PROJECT, 'tokens.css')}"><body>${body}`);
+const page = pages.write('page.html', `<!doctype html><html lang="en"><meta charset="utf-8"><link rel="stylesheet" href="${pages.at('tokens.css')}"><body>${body}`);
 
 const b = await browser();
 const p = await b.newPage();
-await p.goto('file://' + path.join(dir, 'page.html'));
+await p.goto(page);
 const got = await p.evaluate((n) => Array.from({ length: n }, (_, i) => {
   const s = getComputedStyle(document.getElementById('c' + i));
   return { lh: parseFloat(s.lineHeight), family: s.fontFamily };
 }), CASES.length);
 await b.close();
-fs.rmSync(dir, { recursive: true, force: true });
+pages.close();
 
 CASES.forEach(([lang, size, lh, next], i) => {
   const g = got[i];
