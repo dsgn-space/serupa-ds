@@ -650,13 +650,20 @@ describe('Dialog: motion (DZ1)', () => {
       await settled();
       expect([getComputedStyle(pn).opacity, getComputedStyle(pn).scale]).toEqual(['1', 'none']);
 
+      // Held where they start too, as on the way in: the 150ms close could be over before the click comes back.
+      const closing = new Set<Animation>();
+      const holdClose = () => { for (const a of document.getAnimations()) { const target = (a.effect as KeyframeEffect | null)?.target; if ((target === d || target === pn) && !closing.has(a)) { a.pause(); closing.add(a); } } };
+      d.addEventListener('transitionrun', holdClose);
       await userEvent.click(page.getByRole('button', { name: 'Cancel' }));
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       const holds = CSS.supports('overlay', 'auto');
+      if (holds) await expect.poll(() => pn.getAnimations().length).toBe(2);
+      d.removeEventListener('transitionrun', holdClose);
       expect([isOpen('dlg'), document.activeElement, getComputedStyle(d).display]).toEqual([false, el('opener'), holds ? 'flex' : 'none']);
-      if (!holds) return;
+      if (!holds) { for (const a of closing) a.play(); return; }
       expect([getComputedStyle(d).pointerEvents, pn.getAnimations().map(ms), backdropOf(d).map(ms)]).toEqual(['none', [150, 150], [150]]);
       // 60ms into the 150ms fade, held there: a real 60ms wait on a busy runner could land at the end of the fade.
+      for (const a of closing) if ((a.effect as KeyframeEffect).target !== pn) a.play();
       for (const a of pn.getAnimations()) { a.pause(); a.currentTime = 60; }
       const mid = Number(getComputedStyle(pn).opacity);
       expect(mid).toBeGreaterThan(0.05);
