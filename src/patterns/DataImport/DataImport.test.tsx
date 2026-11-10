@@ -100,4 +100,11 @@ describe('Patterns/Data import', () => {
     await expect.poll(() => active().textContent).toBe('Import finished');
     expect(onImport).toHaveBeenCalledTimes(2);
   });
+
+  test('Back from checking goes to the matches, kept', async () => {
+    await render(<DataImport start="check" file={FILE} />);
+    await userEvent.click(page.getByRole('button', { name: 'Back' }));
+    await expect.poll(() => active().textContent).toBe('Match columns');
+    expect(select('import-email').value).toBe('1');
+  });
 });
