@@ -44,7 +44,7 @@ describe('ButtonGroup', () => {
   test('size: every Button, IconButton and ToggleButton in it without a size of its own takes the group\'s (sm 24, md 32, lg 44px); one with its own keeps it; none leaves them at md', async () => {
     const Group = (p: { id: string; size?: 'sm' | 'md' | 'lg' }) => (
       <ButtonGroup id={p.id} size={p.size} aria-label="Edit">
-        <Button variant="secondary">Cut</Button><IconButton icon="content_copy" aria-label="Copy" variant="secondary" /><ToggleButton>Bold</ToggleButton><Button variant="secondary" size="sm">Own</Button>
+        <Button variant="secondary">Cut</Button><IconButton icon="content_copy" label="Copy" variant="secondary" /><ToggleButton>Bold</ToggleButton><Button variant="secondary" size="sm">Own</Button>
       </ButtonGroup>
     );
     await render(<><Group id="gsm" size="sm" /><Group id="gmd" size="md" /><Group id="glg" size="lg" /><Group id="gnone" /></>);
