@@ -10,7 +10,7 @@ interface FilterBarLabels {
     filterAny: (field: string) => string;
     filterRemove: (field: string) => string;
     filterDone: string;
-    filterResults: (count: number) => string;
+    filterResults: (count: number, formatted: string) => string;
 }
 type FilterOption = {
     value: string;

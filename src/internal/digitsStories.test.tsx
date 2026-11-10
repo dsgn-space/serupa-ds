@@ -42,7 +42,6 @@ const LATIN: Record<string, string> = {
   // A label pack's text (the provider's labels, English and Indonesian) is the app's words: an app with an Arabic
   // pack writes its own digits there.
   Stepper: "the compact summary is the label pack's stepOf(n, total)", Tour: "the step count is the label pack's stepOf(n, total), as Stepper's",
-  FilterBar: "the results count is the label pack's filterResults(n), as Stepper's",
   DataGrid: "a cell's text is the app's (its column's format, or the field as text), the same text it edits, copies and pastes to a spreadsheet",
 };
 // What still writes ASCII digits, until its fix lands. None now.
