@@ -134,6 +134,13 @@ describe('Pagination', () => {
     expect([css(cur).color, css(cur).fontWeight]).toEqual([color('var(--on-primary)'), '600']);
   });
 
+  test('size lg: 44px squares with 16px text, and a large page-size select, like the other large controls', async () => {
+    await render(<Pagination id="plg" count={3} size="lg" total={60} pageSize={20} pageSizeOptions={[20, 50]} />, { wrapper: EnUS });
+    const r = named('plg', 'Page 1').getBoundingClientRect();
+    const select = el('plg').querySelector('select')!;
+    expect([r.width + 'x' + r.height, css(named('plg', 'Page 1')).fontSize, Math.round(select.parentElement!.getBoundingClientRect().height)]).toEqual(['44x44', '16px', 44]);
+  });
+
   test('arrows with nowhere to go fade to 50%; a bad count, page, size and siblings fall back: no pages, both arrows disabled', async () => {
     // @ts-expect-error: an unknown size, as plain JavaScript could pass
     await render(<Pagination id="pbad" count={-4} defaultPage={99} size="xl" siblings={-1} />);
