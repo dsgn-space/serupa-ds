@@ -62,7 +62,7 @@
    (drawn inside, so nothing moves; the dot says it too, so it isn't colour alone), the focus ring around the card. In a group the cards
    fill the column, or share a wrapping row. */
 .dk-radio-group--card { align-items: stretch; gap: var(--radio-card-group-gap, var(--spacing-3)); }
-.dk-radio-group--card.dk-radio-group--horizontal > .dk-radio { flex: 1 1 var(--radio-card-min-width, var(--spacing-48)); }
+.dk-radio-group--card.dk-radio-group--horizontal > .dk-radio { flex: auto; flex-basis: var(--radio-card-min-width, var(--spacing-48)); }
 .dk-radio--card {
   gap: var(--radio-card-gap, var(--spacing-3)); padding: var(--radio-card-padding, var(--spacing-4));
   border: var(--radio-border-width, var(--border-width-1)) solid var(--radio-card-border, var(--border)); border-radius: var(--radio-card-radius, var(--radius-surface));
