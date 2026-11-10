@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, setRef } from '../../internal/cn';
+import { cn, oneOf, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { schemeOf, useThemeChanges } from '../../internal/scheme';
 
@@ -45,6 +45,7 @@ function both(a: string | null, b: string | null): string | null {
 export const Logo = /* @__PURE__ */ component<HTMLImageElement, LogoProps>('Logo', function Logo(props, ref) {
   const { src, alt, darkSrc, markSrc, markDarkSrc, variant, collapseBelow, size, className, ...rest } = props;
   const img = React.useRef<HTMLImageElement | null>(null);
+  const mergedRef = useMergedRef(ref, (n) => { img.current = n; });
   const dark = !!(darkSrc || markDarkSrc);
   const themes = useThemeChanges(dark);
   const [scheme, setScheme] = React.useState<'light' | 'dark' | null>(null);
@@ -59,7 +60,7 @@ export const Logo = /* @__PURE__ */ component<HTMLImageElement, LogoProps>('Logo
     [darkSrc, mark === 'all' ? null : darkMedia],
   ];
   const offered = sources.filter((s): s is [string, string] => !!s[0] && s[1] !== null);
-  const picture = <img {...rest} ref={(n) => { img.current = n; setRef(ref, n); }} src={mark === 'all' ? markSrc : src} alt={alt}
+  const picture = <img {...rest} ref={mergedRef} src={mark === 'all' ? markSrc : src} alt={alt}
     className={cn('dk-logo', 'dk-logo--' + oneOf(['sm', 'md', 'lg'] as const, size, 'md'), className)} data-component="logo" />;
   return offered.length
     ? <picture className="dk-logo__picture">{offered.map(([s, media]) => <source key={s + media} srcSet={s} media={media} />)}{picture}</picture>

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { pressFocuses } from '../../internal/affix';
-import { cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import type { InputProps } from '../Input/Input';
 import { component } from '../../internal/component';
@@ -123,11 +123,10 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   }
 
   const input = React.useRef<HTMLInputElement | null>(null);
-  const setRef = React.useCallback(function (node: HTMLInputElement | null) {
+  const setRef = useMergedRef(ref, function (node: HTMLInputElement | null) {
     input.current = node;
     nameRef(node);
-    if (typeof ref === 'function') ref(node); else if (ref) ref.current = node;
-  }, [ref, nameRef]);
+  });
   // A form reset puts the default number and country back (uncontrolled), in the field and in what the form sends; a
   // controlled field shows its value again (the browser reset the text to its first value).
   const [, rerender] = React.useState(0);

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, isInvalid, oneOf, omit, setRef, SIZES } from '../../internal/cn';
+import { cn, isInvalid, oneOf, omit, useMergedRef, SIZES } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
 import { warnOnce } from '../../internal/warn';
 import { Icon, type IconSource } from '../Icon/Icon';
@@ -57,7 +57,7 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
   rest.onChange = function (e: React.ChangeEvent<HTMLSelectElement>) { if (!controlled) setPicked(e.target.value); if (onChange) onChange(e); };
   // A form reset puts the native <select> back on its default; the placeholder look follows it.
   const own = React.useRef<HTMLSelectElement | null>(null);
-  const setRefs = React.useCallback(function (node: HTMLSelectElement | null) { own.current = node; nameRef(node); setRef(ref, node); }, [ref, nameRef]);
+  const setRefs = useMergedRef(ref, (node: HTMLSelectElement | null) => { own.current = node; nameRef(node); });
   const start = rest.defaultValue;
   useFormReset(own, () => { if (!controlled) setPicked(start); });
   // A value that matches no option shows the first one instead, and a form sends that, while the app holds its own

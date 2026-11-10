@@ -12,7 +12,7 @@ import { Switch } from '../components/Switch/Switch';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
-// neighbours sharing a point; with a mouse they keep the 24px of WCAG 2.5.8.
+// neighbours sharing a point; with a mouse they keep the 24px of WCAG 2.5.8, and the Splitter's handle a 16px one (GR270).
 const $ = (sel: string) => document.querySelector(sel) as HTMLElement;
 const box = (sel: string) => $(sel).getBoundingClientRect();
 /** Which of `sel` takes a press at (x, y), by its hit-… class, or '' for none. */
@@ -38,14 +38,15 @@ function Page() {
 }
 
 describe('touch-sized targets (EQ1)', () => {
-  test('with a mouse: 24px, so a press 20px off the middle misses', async () => {
+  test('with a mouse: 24px, so a press 20px off the middle misses; the Splitter handle takes one 3px off its sides but not 6px', async () => {
     await render(<Page />);
     expect(around('.hit-alone', '.dk-checkbox')).toEqual(['', '']);
     expect(around('.dk-switch', '.dk-switch')).toEqual(['', '']);
     expect(around('.hit-slider', '.dk-slider')).toEqual(['', '']);
     $('[role="separator"]').scrollIntoView({ block: 'center' });
       const h = box('[role="separator"]'), y = h.top + h.height / 2;
-    expect([document.elementFromPoint(h.left - 6, y)?.closest('[role="separator"]'), document.elementFromPoint(h.right + 6, y)?.closest('[role="separator"]')]).toEqual([null, null]);
+    const sep = (x: number) => document.elementFromPoint(x, y)?.closest('[role="separator"]') ?? null;
+    expect([sep(h.left - 3), sep(h.right + 3), sep(h.left - 6), sep(h.right + 6)]).toEqual([$('[role="separator"]'), $('[role="separator"]'), null, null]);
   });
 
   test('on a touch screen: 44px high, in a group only up to halfway into the gap, and a 24px Splitter grab zone', async () => {

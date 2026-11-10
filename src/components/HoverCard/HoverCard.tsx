@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, setRef } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useMergedRef } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
@@ -132,9 +132,10 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
   useTriggerRef(triggerRef, 'HoverCard');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
+  const triggerRefs = useMergedRef(childRef, (n) => { triggerRef.current = n; });
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const f: unknown = cp[name]; if (typeof f === 'function') (f as Handler)(e); fn(e); };
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
+    ref: triggerRefs,
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter and never a mouseleave. A touch pointer doesn't hover.
     onPointerEnter: chain('onPointerEnter', (e) => { if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); }),
@@ -143,10 +144,11 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
     onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } }),
     onBlur: chain('onBlur', (e) => { focused.current = false; blurred(e); }),
   });
+  const mergedRef = useMergedRef(ref, (n) => { cardRef.current = n; });
   return (
     <>
       {trigger}
-      <div {...omit(props, OWN)} ref={(n) => { cardRef.current = n; setRef(ref, n); }} id={id} {...{ popover: 'manual' }} hidden={!open || undefined}
+      <div {...omit(props, OWN)} ref={mergedRef} id={id} {...{ popover: 'manual' }} hidden={!open || undefined}
         className={cn('dk-hover-card', props.className)} style={props.style} data-component="hover-card" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined}
         onPointerEnter={(e) => { if (props.onPointerEnter) props.onPointerEnter(e); stay(); }}

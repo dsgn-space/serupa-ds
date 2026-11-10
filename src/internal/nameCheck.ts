@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { setRef } from './cn';
+import { useMergedRef } from './cn';
 import { warnOnce } from './warn';
 import { byId } from './root';
 
@@ -25,7 +25,7 @@ export function useNameCheck<T extends Element>(component: string, how: NameHow,
   React.useEffect(function () {
     if (process.env.NODE_ENV !== 'production' && node.current && !hasName(node.current, how === NAME_HOW.group)) warnOnce('no-name', `${component} has no accessible name, so a screen reader announces only its role. ${HOW[how]}`, 'name:' + component);
   }, [component, how]);
-  return React.useCallback(function (n: T | null) { node.current = n; if (ref) setRef(ref, n); }, [ref]);
+  return useMergedRef(ref, function (n: T | null) { node.current = n; });
 }
 
 /** How to name each kind of element, for useNameCheck's how. */

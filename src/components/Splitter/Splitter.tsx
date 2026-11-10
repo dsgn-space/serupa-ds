@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { announce } from '../../internal/announce';
-import { cn, domId, useIsoLayoutEffect } from '../../internal/cn';
+import { useMergedRef, cn, domId, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
@@ -217,8 +217,9 @@ export const Splitter = /* @__PURE__ */ component<HTMLDivElement, SplitterProps>
   const left = sliding ? Math.max(0, Math.min(2 * sliding.px, sliding.to === 'open' ? sliding.px - sliding.at : sliding.px + sliding.at)) : 0;
   const slideStyle = sliding ? { '--dk-splitter-from': along((sliding.to === 'open' ? -left : left) * back), '--dk-splitter-px': sliding.px + 'px', '--dk-splitter-shut': clip('100%'),
     '--dk-splitter-clip-from': clip(Math.max(0, sliding.to === 'open' ? left : sliding.px - left) + 'px') } as React.CSSProperties : null;
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; styled(n); });
   return (
-    <div {...rest} style={slideStyle ? { ...rest.style, ...slideStyle } : rest.style} ref={(n) => { root.current = n; styled(n); if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; }}
+    <div {...rest} style={slideStyle ? { ...rest.style, ...slideStyle } : rest.style} ref={mergedRef}
       className={cn('dk-splitter', 'dk-splitter--' + direction, className)} data-component="splitter" data-direction={direction}
       data-placing={placing || undefined} data-slide={sliding ? (sliding.run ? 'run' : 'start') : undefined} data-slide-to={sliding ? sliding.to : undefined} onPointerDownCapture={onPlace}>
       <div ref={setPaneA} id={first} tabIndex={scrollsA ? 0 : undefined} className="dk-splitter__pane dk-splitter__pane--first" style={{ flexBasis: size + '%' }} hidden={(collapsed && !(sliding && sliding.to === 'closed')) || undefined} inert={(collapsed && !!sliding) || undefined}

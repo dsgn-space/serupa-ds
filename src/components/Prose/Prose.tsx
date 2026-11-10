@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, omit, setRef } from '../../internal/cn';
+import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 
 export interface ProseProps extends React.HTMLAttributes<HTMLElement> {
@@ -35,6 +35,7 @@ function syncScrollers(root: HTMLElement) {
 export const Prose = /* @__PURE__ */ component<HTMLElement, ProseProps>('Prose', function Prose(props, ref) {
   const rest = omit(props, { as: 1, className: 1 });
   const root = React.useRef<HTMLElement | null>(null);
+  const rootRefs = useMergedRef(ref, (n) => { root.current = n; });
   React.useEffect(() => {
     const el = root.current;
     if (!el) return;
@@ -49,6 +50,6 @@ export const Prose = /* @__PURE__ */ component<HTMLElement, ProseProps>('Prose',
     return () => { if (ro) ro.disconnect(); if (mo) mo.disconnect(); };
   }, []);
   return React.createElement(oneOf(TAGS, props.as, 'div'), Object.assign(rest, {
-    ref: function (n: HTMLElement | null) { root.current = n; setRef(ref, n); }, 'data-component': 'prose', className: cn('dk-prose', props.className),
+    ref: rootRefs, 'data-component': 'prose', className: cn('dk-prose', props.className),
   }));
 });

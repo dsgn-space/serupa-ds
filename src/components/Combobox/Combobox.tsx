@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { pressFocuses } from '../../internal/affix';
-import { cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { warnOnce } from '../../internal/warn';
@@ -264,6 +264,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const [active, setActive] = React.useState(-1);    // index into opts
   const box = React.useRef<HTMLSpanElement | null>(null);
   const input = React.useRef<HTMLInputElement | null>(null);
+  const mergedRef = useMergedRef(ref, (n) => { input.current = n; nameRef(n); });
   const pop = React.useRef<HTMLDivElement | null>(null);
   const locked = !!rest.disabled || !!rest.readOnly;
   const showClear = !!props.clearable && (multi ? values.length > 0 : value != null) && !locked;
@@ -522,7 +523,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (out && a >= win.end) rows.push(...lone());
   }
   const field = (
-      <input {...rest} ref={(n) => { input.current = n; nameRef(n); if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; }}
+      <input {...rest} ref={mergedRef}
         type="text" role="combobox" aria-expanded={open} aria-controls={open ? listId : undefined} aria-autocomplete="list" aria-haspopup="listbox"
         aria-activedescendant={open && activeShown ? base + '-opt-' + active : undefined}
         autoComplete={rest.autoComplete || 'off'} autoCorrect="off" autoCapitalize={rest.autoCapitalize ?? 'off'} spellCheck={false} className="dk-input__field" value={text}

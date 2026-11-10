@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
@@ -127,12 +127,13 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
     },
   };
   useAutoFocus(props.autoFocus, () => root.current);   // through the delegation below; the <div> ignored it
+  // ref.current.focus() (a form library focusing the first invalid field) lands on the first box that can be
+  // checked; the <div> took no focus (L8E91).
+  const groupRef = useMergedRef(ref, function (n: HTMLDivElement | null) {
+    root.current = n; delegateFocus(n, () => n && n.querySelector<HTMLElement>('input:enabled'));
+  });
   return (
-    <div {...rest} ref={function (n) {
-      // ref.current.focus() (a form library focusing the first invalid field) lands on the first box that can be
-      // checked; the <div> took no focus (L8E91).
-      root.current = n; delegateFocus(n, () => n && n.querySelector<HTMLElement>('input:enabled')); setRef(ref, n);
-    }} role="group" aria-disabled={props.disabled || undefined}
+    <div {...rest} ref={groupRef} role="group" aria-disabled={props.disabled || undefined}
       className={cn('dk-checkbox-group', 'dk-checkbox-group--' + orientation, invalid && 'dk-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
       <GroupContext.Provider value={ctx}>{props.children}</GroupContext.Provider>
     </div>
@@ -205,11 +206,10 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
     rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
   }
   const own = React.useRef<HTMLInputElement | null>(null);
-  const setRefs = React.useCallback(function (node: HTMLInputElement | null) {
+  const setRefs = useMergedRef(ref, function (node: HTMLInputElement | null) {
     own.current = node;
     nameRef(node);
-    setRef(ref, node);
-  }, [ref, nameRef]);
+  });
   // The server markup can't carry the DOM property, so the box also renders data-indeterminate, which draws the
   // dash until this runs (GI3); from then on the property alone draws it.
   useIsoLayoutEffect(function () { const i = own.current; if (i) { i.indeterminate = mixed; i.removeAttribute('data-indeterminate'); } });   // every render: a click clears it natively

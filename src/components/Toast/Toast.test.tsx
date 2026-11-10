@@ -85,12 +85,18 @@ describe('Toast', () => {
       await landed();
       const t = () => toasts()[0];
       const swipe = async (dx: number, dy: number, o: { type?: string; ms?: number; rest?: number } = {}) => {
-        const r = t().getBoundingClientRect(), x = r.left + 40, y = r.top + 10, steps = 5;
-        const ev = (name: string, cx: number, cy: number) => t().dispatchEvent(new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: o.type || 'touch', clientX: cx, clientY: cy }));
-        ev('pointerdown', x, y);
-        for (let i = 1; i <= steps; i++) { await new Promise((f) => setTimeout(f, (o.ms ?? 100) / steps)); ev('pointermove', x + (dx * i) / steps, y + (dy * i) / steps); }
+        const r = t().getBoundingClientRect(), x = r.left + 40, y = r.top + 10, steps = 5, ms = o.ms ?? 100, t0 = performance.now();
+        // Each event is stamped with the time the gesture means it at: the speed is read from the stamps, and a busy
+        // runner's timers can run late enough to turn a gentle flick into a slow drag.
+        const ev = (name: string, cx: number, cy: number, at: number) => {
+          const e = new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: o.type || 'touch', clientX: cx, clientY: cy });
+          Object.defineProperty(e, 'timeStamp', { value: t0 + at });
+          t().dispatchEvent(e);
+        };
+        ev('pointerdown', x, y, 0);
+        for (let i = 1; i <= steps; i++) { await new Promise((f) => setTimeout(f, ms / steps)); ev('pointermove', x + (dx * i) / steps, y + (dy * i) / steps, (ms * i) / steps); }
         if (o.rest) await new Promise((f) => setTimeout(f, o.rest));
-        ev('pointerup', x + dx, y + dy);
+        ev('pointerup', x + dx, y + dy, ms + (o.rest ?? 0));
       };
       const w = t().offsetWidth;
       await swipe(40, 0, { ms: 400, rest: 150 });
@@ -563,13 +569,14 @@ describe('Toast: time in the waiting line (FO1)', () => {
 
   test('closed with the mouse, focus isn\'t handed to the toast next to it, so that one\'s time keeps running (FO1)', async () => {
     await render(<App />);
-    React.act(() => { toast({ title: 'Stays a while', duration: 600 }); toast({ title: 'Close me', duration: 0 }); });
+    // Long enough to outlast the click on a busy runner (600 ms didn't), short enough to watch it run out.
+    React.act(() => { toast({ title: 'Stays a while', duration: 2000 }); toast({ title: 'Close me', duration: 0 }); });
     await expect.poll(() => toasts().length).toBe(2);
     await userEvent.click(toasts()[1].querySelector('button[aria-label="Dismiss"]')!);
     await away();
     await expect.poll(titles).toEqual(['Stays a while']);
     expect(toasts()[0].contains(document.activeElement)).toBe(false);
-    await expect.poll(titles, { timeout: 2000 }).toEqual([]);
+    await expect.poll(titles, { timeout: 4000 }).toEqual([]);
   });
 });
 

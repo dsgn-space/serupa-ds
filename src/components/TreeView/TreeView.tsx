@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { component } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
@@ -218,8 +218,9 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   };
   const ctx = React.useMemo(() => ({ store: st, api: api }), [st]);
 
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; nameRef(n); styled(n); });
   return (
-    <ul {...rest} ref={function (n) { root.current = n; nameRef(n); styled(n); setRef(ref, n); }} role="tree"
+    <ul {...rest} ref={mergedRef} role="tree"
       aria-multiselectable={multi || undefined}
       className={cn('dk-tree-view', props.className)} data-component="tree-view" onKeyDown={onKeyDown}
       onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}

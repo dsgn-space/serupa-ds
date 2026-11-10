@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, oneOf, setRef } from '../../internal/cn';
+import { cn, oneOf, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
@@ -99,8 +99,9 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
       </> : null}
     </span>
   );
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} onFocus={onFocus} onBlur={onBlur} className={cn('dk-save-status', 'dk-save-status--' + status, className)} data-component="save-status" data-state={status}>
+    <div {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} className={cn('dk-save-status', 'dk-save-status--' + status, className)} data-component="save-status" data-state={status}>
       {/* In one fixed order, not "leaving, then coming": a status that comes back while it's still fading out
           (saving, saved, saving within a moment) would otherwise be moved in the page, which starts its fade over
           from nothing, and the label blinked out for a few frames (GR127). Kept where it is, it turns back. */}
