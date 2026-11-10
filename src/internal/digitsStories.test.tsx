@@ -41,7 +41,7 @@ const LATIN: Record<string, string> = {
   PhoneInput: 'the field and its value are ASCII digits, so the calling codes beside them (+20, Egypt (+20)) match what people type and dial (GR45)',
   // A label pack's text (the provider's labels, English and Indonesian) is the app's words: an app with an Arabic
   // pack writes its own digits there.
-  ErrorSummary: 'the title is the label pack\'s errorSummaryTitle(n)', Stepper: "the compact summary is the label pack's stepOf(n, total)", Tour: "the step count is the label pack's stepOf(n, total), as Stepper's",
+  Stepper: "the compact summary is the label pack's stepOf(n, total)", Tour: "the step count is the label pack's stepOf(n, total), as Stepper's",
   FilterBar: "the results count is the label pack's filterResults(n), as Stepper's",
   DataGrid: "a cell's text is the app's (its column's format, or the field as text), the same text it edits, copies and pastes to a spreadsheet",
 };
