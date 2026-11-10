@@ -297,4 +297,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + '～' + to,
   repeats: '繰り返し',
   noEvents: '今月の予定はありません。',
+  scrollArea: 'スクロールするコンテンツ',
 };

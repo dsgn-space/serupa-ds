@@ -298,4 +298,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' – ' + to,
   repeats: 'Tekrarlanır',
   noEvents: 'Bu ay etkinlik yok.',
+  scrollArea: 'Kaydırılabilir içerik',
 };

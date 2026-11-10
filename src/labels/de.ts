@@ -301,4 +301,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' bis ' + to,
   repeats: 'Wiederholt sich',
   noEvents: 'Keine Termine in diesem Monat.',
+  scrollArea: 'Scrollbarer Inhalt',
 };

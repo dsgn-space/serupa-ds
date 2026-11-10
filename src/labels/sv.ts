@@ -298,4 +298,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' till ' + to,
   repeats: 'Upprepas',
   noEvents: 'Inga händelser den här månaden.',
+  scrollArea: 'Rullbart innehåll',
 };

@@ -298,4 +298,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' tot ' + to,
   repeats: 'Herhaalt',
   noEvents: 'Geen afspraken deze maand.',
+  scrollArea: 'Scrollbare inhoud',
 };

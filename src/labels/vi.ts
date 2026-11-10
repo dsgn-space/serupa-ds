@@ -298,4 +298,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'từ ' + from + ' đến ' + to,
   repeats: 'Lặp lại',
   noEvents: 'Không có sự kiện nào trong tháng này.',
+  scrollArea: 'Nội dung cuộn',
 };

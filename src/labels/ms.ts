@@ -298,4 +298,5 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + ' hingga ' + to,
   repeats: 'Berulang',
   noEvents: 'Tiada acara bulan ini.',
+  scrollArea: 'Kandungan boleh tatal',
 };
