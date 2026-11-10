@@ -43,7 +43,7 @@ Drawn from the `Default` story.
 
 - `columns` is controlled: apply the new columns from `onMove`, which also gives the move (`item`, `from` and `to`, each a column id and index) for saving.
 - `getLabel` names each card in words; it's read on its buttons and in every announcement, so keep it short and unique on the board ("Fix login", not "Task").
-- `renderCard` draws what's on the card. Put links and buttons there as you like; the handle and the menu are Kanban's.
+- `renderCard` draws what's on the card. Put links and buttons there as you like; the handle and the menu are Kanban's. Each card redraws only when its item, place or `renderCard` changes, so on a big board define `renderCard` outside the component or in a `useCallback`: a new function every render redraws every card.
 - `limit` warns, it doesn't block: a column past its limit says "Over limit", and cards can still move in. Refuse a move in `onMove` if your process needs that.
 - Name the board with `aria-label` ("Sprint 42"). Set `headingLevel` to fit the page's outline (3 by default).
 
