@@ -17,6 +17,14 @@
   - option "Singapore"
   - option "Thailand"
 
+# ReadOnly
+- combobox "Country":
+  - option "Choose a country" [disabled]
+  - option "Indonesia" [selected]
+  - option "Malaysia"
+  - option "Singapore"
+  - option "Thailand"
+
 # States
 - combobox "Size small":
   - option "Small" [selected]
