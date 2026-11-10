@@ -132,6 +132,41 @@
       - cell "Editor"
       - cell "87"
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- table "Team members":
+  - caption: Team members
+  - rowgroup:
+    - row "Name Role Status Calls":
+      - columnheader "Name"
+      - columnheader "Role"
+      - columnheader "Status"
+      - columnheader "Calls"
+  - rowgroup:
+    - row:
+      - cell
+      - cell
+      - cell
+      - cell
+    - row:
+      - cell
+      - cell
+      - cell
+      - cell
+    - row:
+      - cell
+      - cell
+      - cell
+      - cell
+    - row:
+      - cell
+      - cell
+      - cell
+      - cell
+
 # Overflow
 - region "Team members, with every role and how many calls each made this quarter":
   - table "Team members, with every role and how many calls each made this quarter":
