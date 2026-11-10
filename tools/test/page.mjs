@@ -423,11 +423,15 @@ for (const scheme of ['light', 'dark']) {
     await other.goto(`${base}/?away`);
     await other.evaluate(() => localStorage.setItem('serupa-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })));
     await other.close();
+    // Chromium hands another tab's write to a renderer's copy of the storage a moment later, not at once: on a loaded
+    // machine the cached page could come back, read the old choice in pageshow and keep it (a flake in CI, blue-light →
+    // blue-light). Wait until this tab's own renderer sees the write, as a real user's would long before pressing Back.
+    await q.waitForFunction(() => (localStorage.getItem('serupa-theme') || '').includes('violet'), null, { timeout: 10000 }).catch(() => undefined);
     await q.goBack({ waitUntil: 'commit' });
     await q.waitForFunction(() => document.readyState === 'complete', null, { timeout: 10000 }).catch(() => undefined);
     // Since the crossfade (30), a theme change while the page is shown goes through a View Transition, which sets
     // data-theme in its update callback a frame or so later, not in pageshow itself: wait for it (or time out).
-    await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 5000 }).catch(() => undefined);
+    await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 10000 }).catch(() => undefined);
     const back = await q.evaluate(() => ({ cached: window.__stayed === true, reasons: /** @type {any} */ (performance.getEntriesByType('navigation')[0]).notRestoredReasons, theme: document.documentElement.getAttribute('data-theme') }));
     await full.close();
     t('Getting started\'s plain page: Back brings it from the back/forward cache (nothing blocks it)', back.cached && !back.reasons, JSON.stringify(back.reasons));
