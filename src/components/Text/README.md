@@ -17,6 +17,7 @@ const { Text } = window.Serupa;
 - Paragraphs, captions and short lines of supporting text, such as "Last edited 2 hours ago".
 - Changing the size, tone or weight of part of a sentence, with `as="span"`.
 - A single line that may be too long for its space, such as a file name, cut short with `truncate`.
+- A preview of a long description, review or comment, cut after a few lines with `lines`.
 - User content with long words or URLs: they break onto the next line, even in a flex row or grid column, rather than push the layout wider.
 
 ## When not to use
@@ -39,6 +40,7 @@ const { Text } = window.Serupa;
 - Every tone keeps 4.5:1 on `surface` in all six themes (`Text.test.tsx`). On other backgrounds, check it yourself.
 - Don't use color alone to say something is wrong: say it in the words too.
 - A truncated line hides the rest: put the full text in a `title` or somewhere else on the page.
+- With `lines`, the hidden lines are still read by screen readers and found by find-in-page; only the eye misses them. Give people who see the screen a way to the rest: a link to the full item, or a "Show more" button that sets `lines` to undefined and says `aria-expanded`.
 - **Keyboard:** none: inline text, not focusable.
 
 ## Props
@@ -51,6 +53,7 @@ const { Text } = window.Serupa;
 | `tone` | `'default'` \| `'muted'` \| `'primary'` \| `'danger'` | inherited | `text`, `text-muted`, `primary` or `danger-text` |
 | `weight` | `'normal'` \| `'medium'` \| `'semibold'` \| `'bold'` | inherited | 400, 500, 600 or 700 |
 | `truncate` | boolean | `false` | One line, cut with an ellipsis. It becomes a block, so give it a width or a parent that has one |
+| `lines` | number | none | At most this many lines, the last cut with an ellipsis (CSS line-clamp), for a preview of long text. Ignored with `truncate` |
 | `measure` | boolean | `false` | Caps the line at about 65 characters (`container-prose`, 65ch in the text's own size), for running text on a wide page. A span stays inline, so use it on a block (`p`, `div`, `li`) |
 
 Text has no margins (space it with the layout). `className`, `style`, `ref`, `htmlFor` (with `as="label"`) and everything else go to the element, which has `data-component="text"`.
