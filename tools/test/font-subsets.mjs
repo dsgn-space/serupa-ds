@@ -1,10 +1,10 @@
 // Inter split by script (F6, tools/fonts/subset.py): tokens.css gives each file its unicode-range, so an English page
 // downloads the latin files only, and text in every script Inter covers draws exactly as with the whole font (the
-// same pixels: no glyph, feature or weight lost). Chromium.
+// same pixels: no glyph, feature or weight lost; pixel for pixel in Chromium, which can turn hinting off).
 //   node tools/test/font-subsets.mjs
 import fs from 'node:fs';
 import path from 'node:path';
-import { PROJECT, browser, read, report, done, servePages } from './lib.mjs';
+import { ENGINE, PROJECT, browser, read, report, done, servePages } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -68,7 +68,11 @@ const differ = (x, y) => p.evaluate(async ([x, y]) => {
   }
   return n ? `${n} of ${ia.width * ia.height} pixels differ, x ${left}-${right}` : '';
 }, [x, y]);
-for (let i = 0; i < LINES.length; i++) {
+// Pixel for pixel in Chromium, with its hinting off. Firefox and WebKit hint a web font (there's no switch for it), and
+// FreeType's autohinter measures each file from its own glyphs, so a split line lands a pixel off the whole font's
+// in them however right the files are. The files are the same in every engine; what is the engine's own, that an
+// English page fetches only the latin files, is checked in all three.
+for (let i = 0; i < (ENGINE === 'chromium' ? LINES.length : 0); i++) {
   const d = a[i] === c[i] ? '' : await differ(a[i], c[i]);
   t(`${LINES[i][0]} draws the same pixels as with the whole font`, !d, d);
 }
