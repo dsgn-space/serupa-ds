@@ -7,6 +7,13 @@
    the others move at once.
    --------------------------------------------------------------- */
 @layer dk.components {
+/* Focus Not Obscured (WCAG 2.4.11, GR222): while toasts show, the page's scroll padding at their edge is the room they
+   take (--dk-toaster-space-top or -bottom, measured by the Toaster), so tabbing to a control under them scrolls it clear
+   instead of leaving it behind a toast. Only while one shows at that edge, and in the components layer, so a page's
+   own scroll-padding (a sticky header's) still wins; a Fab's padding at the same edge is the Fab's (it rises above
+   the toasts). */
+:root:has([data-position^="top"] [data-toast]:not([data-leaving])) { scroll-padding-top: var(--dk-toaster-space-top, var(--spacing-0)); }
+:root:has([data-position^="bottom"] [data-toast]:not([data-leaving])) { scroll-padding-bottom: var(--dk-toaster-space-bottom, var(--spacing-0)); }
 .dk-toaster {
   --dk-toast-offset: var(--toast-offset, var(--spacing-4));
   position: fixed;
