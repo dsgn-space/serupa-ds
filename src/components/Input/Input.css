@@ -75,7 +75,7 @@
   cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-.dk-input-action--icon { aspect-ratio: var(--aspect-square); padding: var(--spacing-0); color: var(--input-action, var(--text-muted)); }
+.dk-input-action--icon { block-size: var(--sizing-full); aspect-ratio: var(--aspect-square); padding: var(--spacing-0); color: var(--input-action, var(--text-muted)); }
 .dk-input-action__icon { display: inline-flex; }
 .dk-input-action__icon .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) {
