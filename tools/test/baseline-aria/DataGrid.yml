@@ -33,6 +33,45 @@
       - gridcell "9"
       - gridcell "110.000"
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+    - row:
+      - gridcell
+      - gridcell
+      - gridcell
+      - gridcell
+
 # LongText
 - grid "Stock":
   - rowgroup:

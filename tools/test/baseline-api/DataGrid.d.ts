@@ -28,5 +28,9 @@ interface DataGridProps extends Omit<React.TableHTMLAttributes<HTMLTableElement>
     rowKey?: string | undefined;
     onRowsChange?: ((rows: DataGridRow[], details: DataGridRowsChangeDetails) => void) | undefined;
     size?: "md" | "sm" | undefined;
+    busy?: boolean | undefined;
+    loadingRows?: number | undefined;
+    loadingLabel?: string | undefined;
+    message?: React.ReactNode;
 }
 declare const DataGrid: React.ForwardRefExoticComponent<DataGridProps & React.RefAttributes<HTMLTableElement>>;
