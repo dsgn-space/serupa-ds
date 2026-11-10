@@ -37,6 +37,15 @@ describe('TimeZonePicker', () => {
     expect(input().value).toBe('New York');
   });
 
+  test('readOnly, from Combobox: focusable and aria-readonly, shows its zone, and neither typing nor a press opens the list or changes it', async () => {
+    const changes: unknown[] = [];
+    await render(<form id="tz-form" onSubmit={(e) => e.preventDefault()}><TimeZonePicker aria-label="Time zone" name="tz" readOnly defaultValue="Asia/Jakarta" at={AT} onValueChange={(v) => changes.push(v)} /></form>);
+    await userEvent.click(input());
+    await userEvent.keyboard('{ArrowDown}New{Enter}');
+    expect([document.activeElement === input(), input().getAttribute('aria-readonly') ?? String(input().readOnly), input().value, document.querySelectorAll('[role="option"]').length, changes,
+      new FormData(document.getElementById('tz-form') as HTMLFormElement).get('tz')]).toEqual([true, 'true', 'Jakarta', 0, [], 'Asia/Jakarta']);
+  });
+
   test('typing finds a city, a zone name, an IANA name or an offset', async () => {
     await render(<TimeZonePicker aria-label="Time zone" at={AT} zones={['Asia/Jakarta', 'Asia/Bangkok', 'Asia/Kolkata', 'America/Argentina/Buenos_Aires', 'Australia/Adelaide']} />);
     const typed = async (text: string) => { await userEvent.clear(input()); await userEvent.type(input(), text); return shown(); };
