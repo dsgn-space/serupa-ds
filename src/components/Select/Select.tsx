@@ -23,6 +23,8 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
   placeholder?: string | undefined;
   /** The options: strings, { value, label, disabled }, or groups { label, options }. Or pass <option> and <optgroup> children (after these). */
   options?: Array<SelectOption | SelectOptionGroup> | undefined;
+  /** Shows the value without letting it change: still focusable and read out (aria-readonly), and a form still sends it, unlike disabled. Keys, a press and the phone's picker don't change it, and onChange doesn't run. */
+  readOnly?: boolean | undefined;
 }
 
 /* Select: a native <select> styled like Input. size "sm", "md" (default) or "lg" (the control heights);
@@ -30,7 +32,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
    something is picked); options (strings, { value, label, disabled } or groups { label, options }) or your own
    <option> children. Renders <span class="dk-select"> around the <select>: className and style go to the box,
    every other prop (value, defaultValue, onChange, name, disabled, required, aria-*…) and ref to the <select>. */
-const OWN = { size: 1, invalid: 1, leftIcon: 1, placeholder: 1, options: 1, children: 1, className: 1, style: 1, multiple: 1 } as const;
+const OWN = { size: 1, invalid: 1, leftIcon: 1, placeholder: 1, options: 1, children: 1, className: 1, style: 1, multiple: 1, readOnly: 1 } as const;
 
 function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined): React.ReactNode[] {
   return (list || []).map(function (o, i) {
@@ -66,10 +68,23 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
     const s = own.current;
     if (process.env.NODE_ENV !== 'production' && controlled && cur != null && s && ![...s.options].some((o) => o.value === String(cur))) warnOnce('select-value', `Select: value "${String(cur)}" matches no option, so it shows "${s.value}" and a form sends that. Set value to one of the options' values, or add an option for it.`);
   }, [controlled, cur]);
+  const shown = React.useRef('');
+  // every render: the value it shows, which a read-only change goes back to.
+  React.useEffect(() => { if (own.current) shown.current = own.current.value; });
+  // Read-only: a native <select> has no readonly, so the keys and the press that open or change it are cancelled,
+  // and a change that still gets through (a phone's picker) is put back, without onChange.
+  const readOnly = !!props.readOnly;
+  if (readOnly) {
+    rest['aria-readonly'] = true;
+    const { onKeyDown, onMouseDown } = rest;
+    rest.onKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => { if (onKeyDown) onKeyDown(e); if (e.key !== 'Tab' && e.key !== 'Escape' && !e.ctrlKey && !e.metaKey) e.preventDefault(); };
+    rest.onMouseDown = (e: React.MouseEvent<HTMLSelectElement>) => { if (onMouseDown) onMouseDown(e); e.preventDefault(); e.currentTarget.focus(); };
+    rest.onChange = (e: React.ChangeEvent<HTMLSelectElement>) => { e.target.value = shown.current; };
+  }
   const empty = hasPh && (cur == null || cur === '');
   const left = asIcon(props.leftIcon);
   return (
-    <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', rest.disabled && 'dk-select--disabled', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
+    <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', rest.disabled && 'dk-select--disabled', readOnly && 'dk-select--readonly', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
       {left == null || left === false ? null : <span className="dk-select__icon dk-select__icon--left" aria-hidden key="left">{left}</span>}
       <select {...rest} ref={setRefs} className="dk-select__field" key="field">
         {hasPh ? <option value="" disabled key="__placeholder">{props.placeholder}</option> : null}
