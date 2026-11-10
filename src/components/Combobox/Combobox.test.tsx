@@ -566,7 +566,8 @@ describe('Combobox', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Countries />);
+    // In English, whatever language the browser runs in: the digits' own test follows.
+    await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
     el('cb').focus();
     await userEvent.keyboard('{ArrowDown}');
     await new Promise((r) => setTimeout(r, 900));
@@ -601,7 +602,7 @@ describe('Combobox', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Countries />);
+    await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
     el('cb').focus();
     await userEvent.keyboard('{ArrowDown}zzz');
     await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('No results');
