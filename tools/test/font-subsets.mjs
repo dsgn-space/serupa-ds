@@ -47,7 +47,7 @@ const shots = async (name, css) => {
   await p.goto(pages.write(name, `<!doctype html><meta charset="utf-8"><style>${css} body{font-family:T;font-size:22px;margin:8px} p{width:max-content}</style>${text}`));
   // Load every face first: one with a unicode-range only starts loading when layout meets one of its characters, and
   // on a busy runner fonts.ready can settle before that.
-  await p.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(() => ok()))); });
+  await p.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(() => ok(undefined)))); });
   const out = [];
   for (let i = 0; i < LINES.length; i++) out.push((await p.locator('p').nth(i).screenshot()).toString('base64'));
   return out;

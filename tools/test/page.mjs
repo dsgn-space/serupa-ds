@@ -356,7 +356,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   // Tabs at once in Chromium only: Firefox and WebKit give focus to one tab of a browser, so a preview that opens a
   // panel or shows a focus ring in another tab differs (the cross-browser run, 8 Nov 2026).
   const four = ENGINE === 'chromium' ? [0, 1, 2, 3] : [0];
-  await inParallel(jobs, four, ({ src, out }) => new Promise((resolve, reject) => execFile(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), src, '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css'), '--components'], (err) => (err ? reject(err) : resolve()))));
+  await inParallel(jobs, four, ({ src, out }) => new Promise((resolve, reject) => execFile(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), src, '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css'), '--components'], (err) => (err ? reject(err) : resolve(undefined)))));
   const diffs = await inParallel(jobs, four, async ({ full: fullUrl, min }) => {
     const a = await styles(fullUrl), z = await styles(min);
     const d = []; a.forEach((x, i) => { if (x !== z[i]) { const A = x.split(';'), Z = (z[i] || '').split(';'); A.forEach((y, j) => { if (y !== Z[j]) d.push(`${i} ${y} ≠ ${Z[j]}`); }); } });

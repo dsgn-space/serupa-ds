@@ -149,7 +149,7 @@ try {
   const chrome = await wd.evaluate(() => ({ w: outerWidth - innerWidth }));
   for (const [w] of [[700, 2], [900, 3], [1100, 4], [1400, 5]]) {
     await wd.size(w + chrome.w, 900);
-    await wd.evaluate((w) => new Promise((ok) => { const t0 = Date.now(); (function poll() { if (Math.abs(innerWidth - w) < 2 || Date.now() - t0 > 3000) ok(); else setTimeout(poll, 50); })(); }), w);
+    await wd.evaluate((w) => new Promise((ok) => { const t0 = Date.now(); (function poll() { if (Math.abs(innerWidth - w) < 2 || Date.now() - t0 > 3000) ok(undefined); else setTimeout(poll, 50); })(); }), w);
     const r = await wd.evaluate(() => ({ iw: innerWidth, cols: getComputedStyle(document.getElementById('r')).gridTemplateColumns.split(' ').length, h: getComputedStyle(document.getElementById('h')).display }));
     const want = r.iw >= 1280 ? 5 : r.iw >= 1024 ? 4 : r.iw >= 768 ? 3 : r.iw >= 640 ? 2 : 1;
     t(`responsive at ${r.iw}px: ${want} columns, md:block ${r.iw >= 768 ? 'shown' : 'hidden'}`, r.cols === want && r.h === (r.iw >= 768 ? 'block' : 'none'), JSON.stringify(r));
