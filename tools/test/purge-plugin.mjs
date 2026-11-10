@@ -40,7 +40,7 @@ try {
   // Vite: a production build of the page.
   const { build } = await import('vite');
   const out = await build({ root: dir, logLevel: 'silent', configFile: false, resolve: { alias: { 'serupa-ds': path.join(PROJECT, 'dist') } }, plugins: [serupaPurge({ keep: ['@safe.txt'] })], build: { outDir: path.join(dir, 'out'), write: false } });
-  const css = [out].flat().flatMap((o) => o.output).filter((a) => a.fileName.endsWith('.css')).map((a) => a.source).join('\n');
+  const css = [out].flat().flatMap((o) => /** @type {any} */ (o).output).filter((a) => a.fileName.endsWith('.css')).map((a) => a.source).join('\n');
   t('Vite: the build keeps the utility classes the sources use', has(css, 'flex') && has(css, 'md:grid-cols-3'), css.length);
   t('Vite: it drops one they don\'t use, and --keep\'s safelist file works', !has(css, 'grid-cols-5') && has(css, 'gap-7'), css.length);
   t('Vite: utilities-extra.css is trimmed too (from-primary stays, from-danger goes)', has(css, 'from-primary') && has(css, 'bg-linear-to-r') && !has(css, 'from-danger'), css.length);
