@@ -306,4 +306,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 cell inklistrad' : n(count) + ' celler inklistrade'),
   dataGridHint: 'Piltangenterna flyttar mellan celler. Enter eller F2 redigerar en cell, Escape avbryter.',
   scrollArea: 'Rullbart innehåll',
+  showMore: 'Visa mer',
+  showLess: 'Visa mindre',
 };

@@ -309,4 +309,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 Zelle eingefügt' : n(count) + ' Zellen eingefügt'),
   dataGridHint: 'Pfeiltasten wechseln die Zelle. Enter oder F2 bearbeitet eine Zelle, Escape bricht ab.',
   scrollArea: 'Scrollbarer Inhalt',
+  showMore: 'Mehr anzeigen',
+  showLess: 'Weniger anzeigen',
 };

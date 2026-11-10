@@ -309,4 +309,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 cella incollata' : n(count) + ' celle incollate'),
   dataGridHint: 'Le frecce spostano tra le celle. Invio o F2 modifica una cella, Esc annulla.',
   scrollArea: 'Contenuto scorrevole',
+  showMore: 'Mostra di più',
+  showLess: 'Mostra meno',
 };

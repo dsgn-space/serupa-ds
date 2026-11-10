@@ -309,4 +309,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => 'Wklejono komórki: ' + n(count),
   dataGridHint: 'Strzałki przechodzą między komórkami. Enter lub F2 edytuje komórkę, Escape anuluje.',
   scrollArea: 'Przewijana zawartość',
+  showMore: 'Pokaż więcej',
+  showLess: 'Pokaż mniej',
 };

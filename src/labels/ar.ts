@@ -310,4 +310,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => 'الخلايا الملصقة: ' + n(count),
   dataGridHint: 'تنقل مفاتيح الأسهم بين الخلايا. يعدّل Enter أو F2 الخلية، ويلغي Escape.',
   scrollArea: 'محتوى قابل للتمرير',
+  showMore: 'عرض المزيد',
+  showLess: 'عرض أقل',
 };

@@ -312,4 +312,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => 'Вставлено ячеек: ' + n(count),
   dataGridHint: 'Стрелки перемещают между ячейками. Enter или F2 — изменить ячейку, Escape — отменить.',
   scrollArea: 'Прокручиваемое содержимое',
+  showMore: 'Показать больше',
+  showLess: 'Показать меньше',
 };

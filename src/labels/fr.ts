@@ -311,4 +311,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => (count === 1 ? '1 cellule collée' : n(count) + ' cellules collées'),
   dataGridHint: 'Les flèches passent d’une cellule à l’autre. Entrée ou F2 modifie une cellule, Échap annule.',
   scrollArea: 'Contenu défilant',
+  showMore: 'Afficher plus',
+  showLess: 'Afficher moins',
 };

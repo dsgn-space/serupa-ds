@@ -1,0 +1,17 @@
+{
+  "showMore": {
+    "$description": "ShowMore's component tokens. Each one is an optional override: set the CSS variable (--show-more-<name>) on the page, a container or one ShowMore, and every ShowMore inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the text and the button (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--show-more-gap"
+          }
+        }
+      }
+    }
+  }
+}

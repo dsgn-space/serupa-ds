@@ -306,4 +306,6 @@ export const labels: SerupaLabels = {
   dataGridPasted: (count) => 'Đã dán ' + n(count) + ' ô',
   dataGridHint: 'Phím mũi tên di chuyển giữa các ô. Enter hoặc F2 sửa ô, Escape hủy.',
   scrollArea: 'Nội dung cuộn',
+  showMore: 'Xem thêm',
+  showLess: 'Thu gọn',
 };

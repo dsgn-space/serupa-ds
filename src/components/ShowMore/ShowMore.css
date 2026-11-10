@@ -1,0 +1,13 @@
+/* ---------------------------------------------------------------
+   ShowMore: the text, cut after `lines` lines with an ellipsis while closed (line-clamp), and a small link-style
+   button under it, 4px away, its words lined up with the text's start (its padding reaches out past it). Every value reads one of its own tokens (show-more.tokens.json), which
+   fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-show-more { display: flex; flex-direction: column; align-items: flex-start; gap: var(--show-more-gap, var(--spacing-1)); }
+.dk-show-more__text { align-self: stretch; overflow-wrap: anywhere; }
+.dk-show-more__text > :first-child { margin-block-start: var(--spacing-0); }
+.dk-show-more__text > :last-child { margin-block-end: var(--spacing-0); }
+.dk-show-more > .dk-show-more__toggle { margin-inline-start: calc(var(--spacing-0) - var(--button-padding-x-sm, var(--spacing-2))); }
+.dk-show-more__text--cut { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-show-more-lines); line-clamp: var(--dk-show-more-lines); overflow: hidden; }
+}
