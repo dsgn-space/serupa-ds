@@ -50,18 +50,20 @@ describe('Text', () => {
     expect([s.display, s.whiteSpace, s.textOverflow, e.scrollWidth > e.clientWidth, e.clientWidth]).toEqual(['block', 'nowrap', 'ellipsis', true, 80]);
   });
 
-  test('lines: at most that many lines, the last cut with an ellipsis; the rest stays in the page; ignored with truncate', async () => {
+  test('lines: at most that many lines (up to 6), the last cut with an ellipsis, without a style attribute; the rest stays in the page; ignored with truncate', async () => {
     const long = 'A long description that runs over several lines in a narrow column, so only the first few show. '.repeat(4);
     await render(<div style={{ width: '160px' }}>
       <Text id="two" size="sm" lines={2}>{long}</Text>
       <Text id="all" size="sm">{long}</Text>
       <Text id="both" size="sm" lines={2} truncate>{long}</Text>
+      <Text id="many" size="sm" lines={9}>{long}</Text>
     </div>);
     const two = el('two'), lh = parseFloat(css(two).lineHeight);
     expect(Math.round(two.getBoundingClientRect().height)).toBe(Math.round(lh * 2));
     expect(el('all').getBoundingClientRect().height).toBeGreaterThan(lh * 4);
     expect(two.scrollHeight).toBeGreaterThan(two.clientHeight);
     expect(two.textContent).toBe(long);
+    expect([two.hasAttribute('style'), Math.round(el('many').getBoundingClientRect().height)]).toEqual([false, Math.round(lh * 6)]);
     expect(css(el('both')).whiteSpace).toBe('nowrap');
     expect(el('both').className).not.toMatch(/dk-text--clamp/);
   });

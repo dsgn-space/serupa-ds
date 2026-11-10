@@ -23,5 +23,11 @@
 .dk-text--measure { max-inline-size: var(--container-prose); }
 .dk-text--truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .dk-text--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-text-lines); line-clamp: var(--dk-text-lines); overflow: hidden; }
+.dk-text--clamp[data-lines="1"] { --dk-text-lines: var(--line-clamp-1); }
+.dk-text--clamp[data-lines="2"] { --dk-text-lines: var(--line-clamp-2); }
+.dk-text--clamp[data-lines="3"] { --dk-text-lines: var(--line-clamp-3); }
+.dk-text--clamp[data-lines="4"] { --dk-text-lines: var(--line-clamp-4); }
+.dk-text--clamp[data-lines="5"] { --dk-text-lines: var(--line-clamp-5); }
+.dk-text--clamp[data-lines="6"] { --dk-text-lines: var(--line-clamp-6); }
 span.dk-text--truncate, strong.dk-text--truncate, em.dk-text--truncate, small.dk-text--truncate, label.dk-text--truncate { display: block; }
 }

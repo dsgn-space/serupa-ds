@@ -53,7 +53,7 @@ const { Text } = window.Serupa;
 | `tone` | `'default'` \| `'muted'` \| `'primary'` \| `'danger'` | inherited | `text`, `text-muted`, `primary` or `danger-text` |
 | `weight` | `'normal'` \| `'medium'` \| `'semibold'` \| `'bold'` | inherited | 400, 500, 600 or 700 |
 | `truncate` | boolean | `false` | One line, cut with an ellipsis. It becomes a block, so give it a width or a parent that has one |
-| `lines` | number | none | At most this many lines, the last cut with an ellipsis (CSS line-clamp), for a preview of long text. Ignored with `truncate` |
+| `lines` | number | none | At most this many lines (1 to 6; more counts as 6), the last cut with an ellipsis (CSS line-clamp), for a preview of long text. It sets no style attribute, so it holds under a strict Content Security Policy. Ignored with `truncate` |
 | `measure` | boolean | `false` | Caps the line at about 65 characters (`container-prose`, 65ch in the text's own size), for running text on a wide page. A span stays inline, so use it on a block (`p`, `div`, `li`) |
 
 Text has no margins (space it with the layout). `className`, `style`, `ref`, `htmlFor` (with `as="label"`) and everything else go to the element, which has `data-component="text"`.
