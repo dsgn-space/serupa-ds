@@ -196,6 +196,29 @@ describe('Radio', () => {
     expect([input('p').checked, input('q').checked, document.getElementById('dis')!.getAttribute('aria-disabled')]).toEqual([true, false, 'true']);
   });
 
+  test('readOnly group: aria-readonly on the group, radios focusable (not disabled); arrows, Space and clicks leave the choice and focus, and neither onValueChange nor a radio\'s onChange runs; the form still sends it; default cursor, no hover change', async () => {
+    const changes: string[] = [];
+    await render(<Grid><form id="ro-form"><button type="button" id="ro-before">before</button>
+      <RadioGroup id="ro" aria-label="Plan" name="plan" readOnly defaultValue="b" onValueChange={(v) => changes.push('group:' + v)}>
+        <Radio id="ro-a" value="a" onChange={() => changes.push('radio:a')}>Alpha</Radio><Radio id="ro-b" value="b">Bravo</Radio><Radio id="ro-c" value="c">Charlie</Radio>
+      </RadioGroup></form>
+      <RadioGroup aria-label="Editable"><Radio id="rw" value="x">X</Radio></RadioGroup></Grid>);
+    input('ro-before').focus();
+    await userEvent.tab();
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowUp}{ArrowUp}{ArrowUp} ');
+    const at = document.activeElement?.id;
+    await userEvent.click(page.getByText('Charlie'));
+    await userEvent.click(input('ro-a'));
+    const checked = ['ro-a', 'ro-b', 'ro-c'].filter((id) => input(id).checked);
+    const sent = new FormData(document.getElementById('ro-form') as HTMLFormElement).get('plan');
+    await userEvent.hover(input('rw'));
+    const hoverEditable = css(input('rw')).borderTopColor;
+    await userEvent.hover(input('ro-c'));
+    expect([at, checked, changes, sent, document.getElementById('ro')!.getAttribute('aria-readonly'), input('ro-a').disabled]).toEqual(['ro-b', ['ro-b'], [], 'b', 'true', false]);
+    expect([css(wrap('ro-c')).cursor, wrap('ro-c').className]).toEqual(['default', expect.stringMatching(/dk-radio--readonly/)]);
+    expect(css(input('ro-c')).borderTopColor).not.toBe(hoverEditable);
+  });
+
   test('on its own: name and defaultChecked as usual; an unknown size falls back to md; keyboard focus: a 2px focus-ring outline 2px out, like Button, with a transparent gap', async () => {
     await render(<Grid><button id="before">Before</button><Solo /></Grid>);
     expect([input('s1').checked, input('s1').name, wrap('s2').dataset.size]).toEqual([true, 'solo', 'md']);
