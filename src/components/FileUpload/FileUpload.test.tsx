@@ -241,6 +241,11 @@ describe('FileUpload', () => {
     const el = rootOf('dis');
     expect([choose(el).disabled, input(el).disabled]).toEqual([true, true]);
     await expect.poll(() => getComputedStyle(el.querySelector(ZONE)!).opacity).toBe('0.5');
+    // The button inside is faded once, with the area, as every other disabled control is (at 0.5): its own disabled
+    // fade on top took it to 0.25.
+    let shown = 1;
+    for (let n: Element | null = choose(el); n && n !== el; n = n.parentElement) shown *= Number(getComputedStyle(n).opacity);
+    expect(shown).toBe(0.5);
   });
 
   test('in a Field with an error and required: the button is described by "Required" first, then the error (a button supports neither aria-invalid nor aria-errormessage, TF1b), the input is aria-invalid, the native input required, the area outlined in danger; nothing leaks onto the wrapper and React doesn\'t warn', async () => {

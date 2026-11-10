@@ -47,6 +47,8 @@
 .dk-file-upload__failed { color: var(--file-upload-error-color, var(--danger-text)); }
 .dk-file-upload__done .dk-icon, .dk-file-upload__failed .dk-icon { font-size: var(--spacing-4); }
 .dk-file-upload--disabled .dk-file-upload__zone { opacity: var(--opacity-disabled); cursor: not-allowed; }
+/* The area's fade covers the button in it: the disabled Button's own fade on top took it to a quarter. */
+.dk-file-upload--disabled .dk-file-upload__zone .dk-btn { opacity: var(--opacity-100); }
 .dk-file-upload--invalid .dk-file-upload__zone { border-style: solid; border-color: var(--file-upload-zone-border-invalid, var(--danger)); }
 .dk-file-upload--readonly .dk-file-upload__zone { cursor: default; }
 @media (prefers-reduced-motion: reduce) { .dk-file-upload__zone { transition: none; } }
