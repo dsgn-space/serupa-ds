@@ -48,7 +48,10 @@ const look = () => {
   };
 };
 const draw = async (html, css) => {
-  const head = css ? '<link rel="stylesheet" href="tokens.test.css"><link rel="stylesheet" href="../dist/bundle.css">' : '';
+  // content-visibility: auto (TreeView's rows) leaves a row's text out of innerText until the browser has decided, a
+  // frame or so after load, that the row is near the view: read at once, a drawn tree could look hidden by the
+  // stylesheet (a flake in CI). It hides nothing, so the styled page draws every element.
+  const head = css ? '<link rel="stylesheet" href="tokens.test.css"><link rel="stylesheet" href="../dist/bundle.css"><style>* { content-visibility: visible !important; }</style>' : '';
   const file = path.join(TMP, `no-css-${css ? 'with' : 'without'}.html`);
   fs.writeFileSync(file, `<!doctype html><html data-theme="blue-light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${head}</head><body>${html}</body></html>`);
   await p.goto('file://' + file);
