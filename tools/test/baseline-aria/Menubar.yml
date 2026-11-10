@@ -1,0 +1,34 @@
+# Disabled
+- menubar "Editor":
+  - menuitem "File"
+  - menuitem "Edit" [disabled]
+  - menuitem "View"
+
+# LongText
+- menubar "Editor":
+  - menuitem "Berkas dan dokumen yang dibuka"
+  - menuitem "Edit"
+  - menuitem "View"
+  - menuitem "Help"
+
+# Open
+- menubar "Editor":
+  - menuitem "File"
+  - menuitem "Edit" [expanded]
+  - menu "Edit":
+    - menuitem "Undo"
+    - menuitem "Redo"
+    - separator
+    - menuitem "Cut"
+    - menuitem "Copy"
+    - menuitem "Paste"
+  - menuitem "View"
+  - menuitem "Help"
+
+# Playground
+- menubar "Editor":
+  - menuitem "File"
+  - menuitem "Edit"
+  - menuitem "View"
+  - menuitem "Help"
+
