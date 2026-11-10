@@ -23,6 +23,9 @@ const config: StorybookConfig = {
   typescript: {
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {
+      // The components only (tsconfig.json's project, src/): the docs' own blocks and Storybook's preview have no props
+      // table, and outside that project the plugin skipped them with a warning each.
+      include: ['src/**/*.tsx'],
       shouldExtractLiteralValuesFromEnum: true,
       shouldRemoveUndefinedFromOptional: true,
       propFilter: (prop) => {
