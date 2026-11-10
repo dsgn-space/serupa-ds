@@ -394,4 +394,23 @@ describe('Image loading motion', () => {
     await render(<Pic id="normal" alt="" ratio="video" loading="eager" srcSet={list} sizes="200px" />);
     expect([frame('normal').querySelector('img')!.getAttribute('loading'), frame('normal').querySelector('img')!.getAttribute('srcset')]).toEqual(['eager', list]);
   });
+
+  test('100 Images ask for the reduced-data query at most once, through re-renders, and add at most one listener to it (GR278)', async () => {
+    const real = window.matchMedia;
+    let asked = 0, listened = 0;
+    window.matchMedia = ((q: string) => {
+      const m = real.call(window, q);
+      if (q.includes('reduced-data')) {
+        asked++;
+        const add = m.addEventListener.bind(m);
+        m.addEventListener = ((type: string, ...rest: unknown[]) => { listened++; return (add as (...a: unknown[]) => void)(type, ...rest); }) as typeof m.addEventListener;
+      }
+      return m;
+    });
+    try {
+      const { rerender } = await render(<Row>{Array.from({ length: 100 }, (_, i) => <Pic key={i} id={'many' + i} alt="" />)}</Row>);
+      await rerender(<Row>{Array.from({ length: 100 }, (_, i) => <Pic key={i} id={'many' + i} alt="" ratio="square" />)}</Row>);
+      expect([asked <= 1, listened <= 1]).toEqual([true, true]);
+    } finally { window.matchMedia = real; }
+  });
 });

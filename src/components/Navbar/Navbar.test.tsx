@@ -70,7 +70,7 @@ describe('Navbar', () => {
     expect(vis('#nav .dk-navbar__toggle')).toBe(false);
   });
 
-  test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored', async () => {
+  test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored; only the current page has a 2px primary bar along its bottom, and it darkens under the pointer', async () => {
     await render(<Main />);
     const cur = q('#nav [aria-current]');
     expect([cur.textContent, cur.getAttribute('aria-current')]).toEqual(['Dashboard', 'page']);
@@ -79,8 +79,11 @@ describe('Navbar', () => {
     expect([rest.fontSize, rest.fontWeight, rest.bg]).toEqual(['14px', '500', 'rgba(0, 0, 0, 0)']);
     expect(active.bg).not.toBe(rest.bg);
     expect(active.color).not.toBe(rest.color);
+    expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px -2px 0px 0px inset$/)]);
     await userEvent.hover(el('lp'));
-    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color]).toEqual([active.bg, active.color]);
+    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([active.bg, active.color, 'none']);
+    await userEvent.hover(cur);
+    await expect.poll(() => css(cur).backgroundColor).not.toBe(active.bg);
     await away();
   });
 
@@ -480,6 +483,18 @@ describe('NavbarMenu (RU14)', () => {
       <NavbarMenu label="Resources"><NavbarMenuLink href="#docs">Docs</NavbarMenuLink></NavbarMenu>
     </Navbar></>);
     expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);
+  });
+
+  test('the current menu link has a 2px primary bar at its start (the end in right to left) that a hovered link never has', async () => {
+    await render(<Mega />);
+    await userEvent.click(button('Products').element());
+    const alerts = page.getByRole('link', { name: 'Alerts' }).element(), dash = page.getByRole('link', { name: 'Dashboards' }).element();
+    expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/);
+    await userEvent.hover(dash);
+    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([css(alerts).backgroundColor, 'none']);
+    document.documentElement.dir = 'rtl';
+    try { expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/); } finally { document.documentElement.dir = ''; }
+    await away();
   });
 
   test('a disclosure: a button with aria-expanded that shows a panel of titled groups; each link is named by its text and described by its line', async () => {

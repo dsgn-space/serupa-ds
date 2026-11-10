@@ -202,6 +202,10 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
         const b = li.getBoundingClientRect();
         if (b.top + b.height / 2 < middle) index++;
       }
+      // Only a new place re-renders the board: most moves stay in the same one, and the card itself follows the
+      // pointer through its transform, not through state (GR239: every move re-rendered every card).
+      const d = current.current;
+      if (d && d.pointer && d.key === p.key && d.to.column === column && d.to.index === index && d.from.column === at.column && d.from.index === at.index) return d;
       const next = { key: p.key, from: at, to: { column, index }, pointer: true };
       setDrag(next);
       return next;
@@ -226,7 +230,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
       };
       nudge(board.current, true);
       nudge(d ? lists()[d.to.column] || null : null, false);
-      if (scrolled) placeAt(p);
+      if (scrolled) { placeAt(p); followRef.current(); }
       frame = requestAnimationFrame(tick);
     };
     const move = (ev: PointerEvent) => {
@@ -238,6 +242,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
       dragged.current = true;
       ev.preventDefault();
       placeAt(p);
+      followRef.current();
       if (!frame) frame = requestAnimationFrame(tick);
     };
     const end = (cancel: boolean) => (ev: PointerEvent) => {
@@ -259,18 +264,22 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     stop.current = off;
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', cancel);
   };
-  // The dragged card sits under the pointer, wherever the board has placed it.
-  // every render: each pointer move re-renders; outside a drag it only clears a transform left behind.
-  useIsoLayoutEffect(() => {
-    const p = pointer.current, cards = board.current ? [...board.current.querySelectorAll<HTMLElement>('li[data-key]')] : [];
+  // The dragged card sits under the pointer, wherever the board has placed it: after each render that moves it, and
+  // on each pointer move or scroll that doesn't (those leave the board's state alone).
+  const follow = () => {
+    const p = pointer.current, d = current.current, cards = board.current ? [...board.current.querySelectorAll<HTMLElement>('li[data-key]')] : [];
     for (const li of cards) {
-      if (p && p.moved && drag && drag.pointer && li.dataset.key === String(drag.key)) {
+      if (p && p.moved && d && d.pointer && li.dataset.key === String(d.key)) {
         li.style.transform = '';
         const b = li.getBoundingClientRect();
         li.style.transform = 'translate(' + Math.round(p.x - p.gx - b.left) + 'px, ' + Math.round(p.y - p.gy - b.top) + 'px)';
       } else if (li.style.transform) li.style.transform = '';
     }
-  });
+  };
+  const followRef = React.useRef(follow);
+  followRef.current = follow;
+  // every render: a render moves the cards; outside a drag it only clears a transform left behind.
+  useIsoLayoutEffect(() => { follow(); });
 
   return (<>
     {/* Disabled, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}

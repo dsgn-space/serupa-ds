@@ -7,7 +7,7 @@ import { useExit } from '../../internal/useExit';
 import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { Loader } from '../Loader/Loader';
+import { LoaderRing } from '../../internal/loaderRing';
 import type { InputProps } from '../Input/Input';
 import { component } from '../../internal/component';
 import { FieldContext, useFieldControl } from '../../internal/field';
@@ -553,7 +553,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         <Icon icon={icons.ExpandMore} />
       </button>
       <div ref={pop} className="dk-combobox__popup" {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} onMouseDown={keep}>
-        {loading ? <div className="dk-combobox__message" role="status"><Loader size="sm" delay={0} label="" />{props.loadingText || sds.labels.loadingResults}</div> : null}
+        {loading ? <div className="dk-combobox__message" role="status"><LoaderRing size="sm" />{props.loadingText || sds.labels.loadingResults}</div> : null}
         <div ref={setListbox} id={listId} role="listbox" className="dk-combobox__listbox" style={win.before || win.after ? { '--dk-cbx-before': win.before + 'px', '--dk-cbx-after': win.after + 'px' } as React.CSSProperties : undefined} aria-multiselectable={multi || undefined} aria-labelledby={rest['aria-labelledby'] || (rest['aria-label'] ? undefined : fieldLabel)} aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label']}>
           {/* Only while open (and fading out): a closed Combobox with thousands of options keeps none of them in the page. */}
           {shownList ? rows : null}

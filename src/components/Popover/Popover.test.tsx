@@ -447,3 +447,18 @@ describe('Popover inside a form (GR170)', () => {
     } finally { warn.mockRestore(); }
   });
 });
+
+describe('Popover sheet="mobile": the narrow-screen query (GR278)', () => {
+  test('50 mobile Popovers make the query at most once, through re-renders', async () => {
+    const real = window.matchMedia;
+    let asked = 0;
+    window.matchMedia = ((q: string) => { if (q.includes('width')) asked++; return real.call(window, q); });
+    try {
+      const many = (label: string) => <>{Array.from({ length: 50 }, (_, i) => <Popover key={i} title="Note" sheet="mobile" trigger={<Button>{label + i}</Button>}><p>Note</p></Popover>)}</>;
+      const { rerender } = await render(many('Note '));
+      await rerender(many('Info '));
+      expect(asked).toBeLessThanOrEqual(1);
+    } finally { window.matchMedia = real; }
+  });
+});
+

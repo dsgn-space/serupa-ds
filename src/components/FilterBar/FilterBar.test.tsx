@@ -37,6 +37,15 @@ describe('FilterBar', () => {
     await expect.element(page.getByRole('button', { name: 'Clear all' })).toBeVisible();
   });
 
+  test('a date range with one end says "from" or "until" in words, not a bare dash, in the chip and its name (GR295)', async () => {
+    const { rerender } = await render(<Bar start={{ due: { start: '2026-11-02', end: null } }} />);
+    await expect.element(chip('Due from Nov 2, 2026')).toBeVisible();
+    await rerender(<Bar key="b" start={{ due: { start: null, end: '2026-11-08' } }} />);
+    await expect.element(chip('Due until Nov 8, 2026')).toBeVisible();
+    await rerender(<SerupaProvider locale="id-ID" labels={idLabels}><FilterBar fields={fields} defaultValue={{ due: { start: '2026-11-02', end: null } }} /></SerupaProvider>);
+    await expect.element(chip(/^Due sejak 2 Nov 2026$/)).toBeVisible();
+  });
+
   test('keyboard: Tab goes through each chip and its ×, then "Add filter" and "Clear all"; Space on a chip opens its editor; ArrowDown and ArrowUp move in the menu', async () => {
     await render(<Bar start={{ owner: 'Ana', archived: true }} />);
     const names = () => document.activeElement?.getAttribute('aria-label') || focused();

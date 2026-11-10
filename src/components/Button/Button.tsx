@@ -11,9 +11,9 @@ import { block, both, chain, pressKey, releaseKey } from '../../internal/interac
 import { warnOnce } from '../../internal/warn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { Loader } from '../Loader/Loader';
 import { component } from '../../internal/component';
 import { BUTTON_VARIANTS, buttonClass } from './buttonClass';
+import { LoaderRing } from '../../internal/loaderRing';
 import { feedbackHold, spinnerDelay } from '../../internal/timing';
 // React 19's form status, read off the namespace: Preact's compat layer has no useFormStatus (and no form actions), so
 // a named import would stop the whole package loading there. Without it a submit button is never pending on its own.
@@ -171,7 +171,8 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   }, [loading]);
 
   // Loading: the spinner sits in the center over the hidden content (label and icons), so the width stays the same.
-  const spin = <Loader className="dk-btn__spinner" label="" delay={0} />;   // decorative: the button announces loadingText itself
+  // Decorative (the button announces loadingText itself): Loader's ring, without the rest of Loader (GR311).
+  const spin = <LoaderRing className="dk-btn__spinner" />;
   let content: React.ReactNode[] = iconOnly ? [slot(props.icon, 'only')] : [
     slot(props.leftIcon, 'left'),
     props.children == null || (props.children as unknown) === false ? null : <span className="dk-btn__label" key="label">{props.children}</span>,
