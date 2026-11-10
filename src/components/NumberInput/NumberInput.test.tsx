@@ -265,7 +265,10 @@ describe('NumberInput', () => {
   test('GR175: percent without a step: leaving it unedited keeps 0.15, typing 15 gives 0.15, ArrowUp from 15% is 16%, and one shown decimal keeps 0.125', async () => {
     const calls: (number | null)[] = [];
     await render(<><NumberInput id="p" aria-label="Rate" locale="en-US" defaultValue={0.15} formatOptions={{ style: 'percent' }} onValueChange={(n) => calls.push(n)} />
-      <NumberInput id="q" aria-label="Fine rate" locale="en-US" defaultValue={0.1} formatOptions={{ style: 'percent', maximumFractionDigits: 1 }} onValueChange={(n) => calls.push(n)} /></>);
+      <NumberInput id="q" aria-label="Fine rate" locale="en-US" defaultValue={0.1} formatOptions={{ style: 'percent', maximumFractionDigits: 1 }} onValueChange={(n) => calls.push(n)} />
+      {/* Somewhere for Tab to go: from the page's last field, Firefox takes focus out of the page, which NumberInput
+          treats as switching windows, so it keeps the typed text as it is (windowBlur). */}
+      <button type="button">After</button></>);
     const p = document.getElementById('p') as HTMLInputElement, q = document.getElementById('q') as HTMLInputElement;
     await userEvent.click(p);
     await userEvent.tab();
