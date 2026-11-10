@@ -308,6 +308,7 @@ suite:
       - .test-tmp/
       - tools/test/baseline-visual/**/*.actual.png
       - .vitest/blob/
+      - .vitest/narrowed
 
 # Coverage of the component tests (V8, floors in vitest.config.ts): the three shards' blob reports merged into one
 # (vitest --merge-reports), on every pipeline that runs them whole, so a drop fails the merge request, not main after it.
@@ -325,12 +326,16 @@ coverage:
     - if: $CI_PIPELINE_SOURCE == "web" || $SERUPA_FULL_CI == "1"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $SERUPA_WIDE == "1"
+    # Every merge request: a narrowed one's report covers the components it tests, and the check below asks only that
+    # every function it adds runs in a test, so a merge can't take main under the floors (the floors run on whole runs).
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
   variables:
     RESULT_CACHE: "off"
   script:
-    - ls .vitest/blob/
+    - if ! ls .vitest/blob/* >/dev/null 2>&1; then echo "No component tests ran, so there is no coverage to check."; exit 0; fi
+    - if [ -f .vitest/narrowed ]; then echo "Narrowed run ($(tr '\n' ' ' < .vitest/narrowed)); the floors are checked on main's full run."; export SERUPA_NO_FLOORS=1; fi
     - node node_modules/vitest/vitest.mjs --merge-reports .vitest/blob --coverage
+    - if [ -n "$SINCE" ]; then node tools/coverage-new-functions.mjs "$SINCE"; fi
   after_script:
     - node tools/test/vitest/coverage-summary.mjs || true
   artifacts:
