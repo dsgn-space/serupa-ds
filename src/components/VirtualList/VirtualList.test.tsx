@@ -3,7 +3,8 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
-import { ListItem } from '../List/List';
+import { Avatar } from '../Avatar/Avatar';
+import { List, ListItem, ListLoadingItems } from '../List/List';
 import { VirtualList } from './VirtualList';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -269,5 +270,18 @@ describe('VirtualList', () => {
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);
+  });
+
+  // The README's loading recipe: until the first rows arrive, a busy List of ListLoadingItems in the rows' shape.
+  test('the loading recipe: ListLoadingItems rows are as tall as the VirtualList rows that replace them', async () => {
+    const person = (i: number) => <ListItem leading={<Avatar name={'Ada ' + i} alt="" size="sm" />} title={'Ada ' + i} description="ada@example.com" />;
+    await render(<div style={{ width: 400 }}>
+      <List id="wait" aria-label="Members" busy><ListLoadingItems rows={3} description leading="sm" label="Loading members" /></List>
+      <VirtualList id="v" aria-label="Members" count={3} renderItem={person} />
+    </div>);
+    expect(el('wait').getAttribute('aria-busy')).toBe('true');
+    const heights = (id: string) => rows(id).map((r) => r.getBoundingClientRect().height);
+    await expect.poll(() => heights('v').length).toBe(3);
+    expect(heights('wait')).toEqual(heights('v'));
   });
 });
