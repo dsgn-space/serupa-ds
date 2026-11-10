@@ -563,13 +563,14 @@ describe('Toast: time in the waiting line (FO1)', () => {
 
   test('closed with the mouse, focus isn\'t handed to the toast next to it, so that one\'s time keeps running (FO1)', async () => {
     await render(<App />);
-    React.act(() => { toast({ title: 'Stays a while', duration: 600 }); toast({ title: 'Close me', duration: 0 }); });
+    // Long enough to outlast the click on a busy runner (600 ms didn't), short enough to watch it run out.
+    React.act(() => { toast({ title: 'Stays a while', duration: 2000 }); toast({ title: 'Close me', duration: 0 }); });
     await expect.poll(() => toasts().length).toBe(2);
     await userEvent.click(toasts()[1].querySelector('button[aria-label="Dismiss"]')!);
     await away();
     await expect.poll(titles).toEqual(['Stays a while']);
     expect(toasts()[0].contains(document.activeElement)).toBe(false);
-    await expect.poll(titles, { timeout: 2000 }).toEqual([]);
+    await expect.poll(titles, { timeout: 4000 }).toEqual([]);
   });
 });
 
