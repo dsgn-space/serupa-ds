@@ -206,6 +206,13 @@ describe('Tabs', () => {
     expect([sel.getBoundingClientRect().height, css(el('dv').querySelector('[role="tablist"]')).borderBottomStyle, s.borderTopLeftRadius, getComputedStyle(sel, '::after').content]).toEqual([32, 'none', '6px', 'none']);
   });
 
+  test('size lg: 44px tabs with 16px text and a 20px icon, the same height as a large Button and Input', async () => {
+    await render(<Tabs id="lg" size="lg"><Set3 icon /></Tabs>);
+    const sel = selected('lg'), s = css(sel);
+    expect([sel.getBoundingClientRect().height, s.fontSize, s.paddingLeft, sel.querySelector('svg')!.getBoundingClientRect().width])
+      .toEqual([44, '16px', '16px', 20]);
+  });
+
   test('unknown variant and size fall back to line and md; --tabs-indicator and --tabs-height-md override', async () => {
     await setup();
     const sel = selected('bad');
