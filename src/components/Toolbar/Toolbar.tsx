@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 
 export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -94,8 +94,9 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('
     sync();
     next.focus();
   };
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={function (n) { root.current = n; setRef(ref, n); }} role="toolbar" aria-orientation={vertical ? 'vertical' : 'horizontal'}
+    <div {...rest} ref={mergedRef} role="toolbar" aria-orientation={vertical ? 'vertical' : 'horizontal'}
       className={cn('dk-toolbar', vertical && 'dk-toolbar--vertical', props.className)} data-component="toolbar" data-orientation={vertical ? 'vertical' : 'horizontal'}
       onFocus={onFocus} onKeyDown={onKeyDown}>
       {props.children}

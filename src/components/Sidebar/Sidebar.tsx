@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { useCut } from '../../internal/useCut';
 import { useExit } from '../../internal/useExit';
 import { Icon, type IconSource } from '../Icon/Icon';
@@ -131,9 +131,10 @@ export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>('Sid
   const flush = () => { if (run.length) { body.push(<ul key={'l' + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
   flattenChildren(props.children).forEach((c) => { if (isSection(c)) { flush(); body.push(c); } else run.push(c); });
   flush();
+  const mergedRef = useMergedRef(ref, (n) => { nav.current = n; });
   return (
     <SidebarContext.Provider value={{ collapsed: shown, depth: 0 }}>
-      <nav {...rest} aria-label={props['aria-label'] || sds.labels.mainNavigation} ref={(n) => { nav.current = n; setRef(ref, n); }} data-component="sidebar" data-collapsed={shown ? '' : undefined}
+      <nav {...rest} aria-label={props['aria-label'] || sds.labels.mainNavigation} ref={mergedRef} data-component="sidebar" data-collapsed={shown ? '' : undefined}
         data-slide={slide || undefined} onTransitionEnd={(e) => { onEnd(e); if (props.onTransitionEnd) props.onTransitionEnd(e); }}
         className={cn('dk-sidebar', shown && 'dk-sidebar--collapsed', props.className)}>
         {props.header != null ? <div className="dk-sidebar__header">{props.header}</div> : null}

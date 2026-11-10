@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useValidityMessages } from '../../internal/validity';
-import { cn, domId, isInvalid, oneOf, omit, setRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { component } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
@@ -96,11 +96,10 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
     return function () { cancelAnimationFrame(raf); ro.disconnect(); };
   }, [js, fit]);
 
-  const setRefs = React.useCallback(function (node: HTMLTextAreaElement | null) {
+  const setRefs = useMergedRef(ref, function (node: HTMLTextAreaElement | null) {
     own.current = node;
-    setRef(ref, node);
     nameRef(node);
-  }, [ref, nameRef]);
+  });
   // The field's rows (--dk-ta-rows, for the CSS auto-resize) are a style attribute, which a strict CSP drops from
   // server HTML: applied again right after hydration.
   const restyle = useServerStyles<HTMLSpanElement>();

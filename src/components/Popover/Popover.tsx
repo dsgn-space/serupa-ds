@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import type { Placement } from '../../internal/position';
@@ -126,8 +126,9 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>('
   useTriggerRef(triggerRef, 'Popover');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
+  const triggerRefs = useMergedRef(childRef, (n) => { triggerRef.current = n; });
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
+    ref: triggerRefs,
     'aria-haspopup': 'dialog',
     'aria-expanded': open,
     'aria-controls': open ? id : undefined,
@@ -136,10 +137,11 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>('
   const titled = props.title != null && props.title !== false && props.title !== '';
   const H = ('h' + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 2)) as 'h2';
   const content = typeof props.children === 'function' ? (props.children as (c: () => void) => React.ReactNode)(() => close('close', true)) : props.children;
+  const mergedRef = useMergedRef(ref, (n) => { panelRef.current = n; if (!titled) nameRef(n); });
   return (
     <>
       {trigger}
-      <div {...omit(props, OWN)} ref={(n) => { panelRef.current = n; setRef(ref, n); if (!titled) nameRef(n); }} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
+      <div {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-labelledby={titled ? id + '-title' : props['aria-labelledby']} aria-label={titled ? undefined : props['aria-label']}
         className={cn('dk-popover', sheet && 'dk-popover--sheet', props.className)} style={props.style} data-component="popover" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined} onKeyDown={onKeyDown} onBlur={onBlur}>

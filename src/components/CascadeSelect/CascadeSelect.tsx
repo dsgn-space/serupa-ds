@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useFieldControl } from '../../internal/field';
@@ -234,9 +234,10 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
 
   const labelFor = (c: number) => (props.levels && props.levels[c]) || L.cascadeLevel(c + 1);
   const empty = !value.length;
+  const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
     <div className={cn('dk-cascade-select', 'dk-cascade-select--size-' + size, invalid && 'dk-cascade-select--invalid', disabled && 'dk-cascade-select--disabled', open && 'dk-cascade-select--open', props.className)} style={props.style} data-component="cascade-select" data-state={open ? 'open' : 'closed'}>
-      <button {...rest} ref={(n) => { button.current = n; setRef(ref, n); }} type="button" role="combobox" className="dk-cascade-select__button"
+      <button {...rest} ref={mergedRef} type="button" role="combobox" className="dk-cascade-select__button"
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>

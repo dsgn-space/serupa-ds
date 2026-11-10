@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
 import { Discard } from '../Dialog/Dialog';
@@ -257,8 +257,9 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const named = rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined);
   const region = !scrolls ? {} : named ? { tabIndex: 0, role: 'region', 'aria-labelledby': named }
     : rest['aria-label'] ? { tabIndex: 0, role: 'region', 'aria-label': rest['aria-label'] } : { tabIndex: 0 };
+  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
-    <dialog {...rest} ref={(n) => { el.current = n; nameRef(n); setRef(ref, n); }}
+    <dialog {...rest} ref={mergedRef}
       aria-modal={modal ? 'true' : undefined}
       aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}

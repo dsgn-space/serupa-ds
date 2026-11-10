@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
@@ -144,9 +144,10 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
     if (ro) { ro.observe(el); for (const t of tabs) ro.observe(t); }
     return () => { if (ro) ro.disconnect(); };
   });
+  const mergedRef = useMergedRef(ref, (n) => { self.current = n; });
   return (
     <TabsContext.Provider value={ctx}>
-      <div {...rest} ref={(n) => { self.current = n; if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; }}
+      <div {...rest} ref={mergedRef}
         onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}
         onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) focusedIn.current = false; if (rest.onBlur) rest.onBlur(e); }}
         className={cn('dk-tabs', 'dk-tabs--' + variant, size === 'sm' && 'dk-tabs--sm', vertical && 'dk-tabs--vertical', props.className)} data-component="tabs" data-variant={variant} data-orientation={vertical ? 'vertical' : 'horizontal'} />
@@ -282,7 +283,8 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>('
     tabs[next].focus();
     if (!ctx.manual && tabs[next].dataset.value != null) ctx.select(tabs[next].dataset.value as string);
   };
-  return <div {...props} ref={(n) => { list.current = n; setRef(ref, n); }} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}
+  const mergedRef2 = useMergedRef(ref, (n) => { list.current = n; });
+  return <div {...props} ref={mergedRef2} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}
     className={cn('dk-tabs__list', props.className)} data-fade-before={fade.before ? '' : undefined} data-fade-after={fade.after ? '' : undefined} onKeyDown={onKeyDown} />;
 });
 
@@ -344,8 +346,9 @@ export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>
     el.addEventListener('invalid', revealInvalid, true);   // a required field in it, on submit, selects its tab (L8E100)
     return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
   }, []);
+  const mergedRef3 = useMergedRef(ref, (n) => { own.current = n; });
   return (
-    <div tabIndex={selected ? 0 : -1} {...rest} ref={(n) => { own.current = n; setRef(ref, n); }} role="tabpanel" id={ctx.base + '-panel-' + safe(props.value)} aria-labelledby={ctx.base + '-tab-' + safe(props.value)}
+    <div tabIndex={selected ? 0 : -1} {...rest} ref={mergedRef3} role="tabpanel" id={ctx.base + '-panel-' + safe(props.value)} aria-labelledby={ctx.base + '-tab-' + safe(props.value)}
       hidden={!selected} data-state={selected ? 'active' : 'inactive'} className={cn('dk-tabs__panel', props.className)}>
       {selected || keep ? props.children : null}
     </div>

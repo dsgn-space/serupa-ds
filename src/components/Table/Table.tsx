@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useScrolls } from '../../internal/useScrolls';
 import { flushSync } from 'react-dom';
 import { announce } from '../../internal/announce';
-import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
 import { Button } from '../Button/Button';
@@ -266,7 +266,7 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
     const tr = t instanceof HTMLElement ? t.closest<HTMLElement>('[data-index]') : null;
     return tr && tr.parentElement === tb ? Number(tr.dataset.index) : null;
   };
-  const setNode = React.useCallback((n: HTMLTableSectionElement | null) => { body.current = n; setRef(ref, n); }, [ref]);
+  const setNode = useMergedRef(ref, (n: HTMLTableSectionElement | null) => { body.current = n; });
   return (
     <tbody {...rest} ref={setNode} className={cn('dk-table__body', 'dk-table__body--virtual', props.className)}
       onFocus={(e) => { setFocused(indexOf(e.target, e.currentTarget)); if (props.onFocus) props.onFocus(e); }}
@@ -353,7 +353,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
     if ((sort === 'ascending' || sort === 'descending') && button.current) announce(labels.tableSorted((button.current.textContent || '').trim(), sort));
   }, [sort, labels]);
   const th = React.useRef<HTMLTableCellElement | null>(null);
-  const setTh = React.useCallback((n: HTMLTableCellElement | null) => { th.current = n; setRef(ref, n); }, [ref]);
+  const setTh = useMergedRef(ref, (n: HTMLTableCellElement | null) => { th.current = n; });
   const handle = React.useRef<HTMLSpanElement | null>(null);
   // The handle's keys, drag and double-click, as native listeners: the newest width and callback through a ref.
   const live = React.useRef({ min, max, current, controlled, onWidthChange: props.onWidthChange });
@@ -525,7 +525,7 @@ export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableAct
   const rest = omit(props, { count: 1, onClear: 1, clearLabel: 1, className: 1, children: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
   const self = React.useRef<HTMLDivElement | null>(null);
-  const setRefs = React.useCallback((e: HTMLDivElement | null) => { self.current = e; setRef(ref, e); }, [ref]);
+  const setRefs = useMergedRef(ref, (e: HTMLDivElement | null) => { self.current = e; });
   const id = domId('dk-tab', React.useId());
   const said = labels.tableSelected(count);
   // Hidden (not removed) at 0, so focus is still in it here and can go to the table's "Select all" before it's lost.

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, isInvalid, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { cn, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { component } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
@@ -79,6 +79,7 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
       {ch ? (props.mask ? '•' : ch) : null}
     </span>);
   }
+  const mergedRef = useMergedRef(ref, (n) => { input.current = n; nameRef(n); });
   return (
     <span className={cn('dk-pin-input', 'dk-pin-input--size-' + size, invalid && 'dk-pin-input--invalid', rest.disabled && 'dk-pin-input--disabled', rest.readOnly && 'dk-pin-input--readonly', props.className)}
       style={props.style} data-component="pin-input" data-size={size}>
@@ -98,7 +99,7 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
           const el = e.currentTarget;
           if (!e.defaultPrevented && clean(e.clipboardData.getData('text')).length === length) el.setSelectionRange(0, el.value.length);
         }}
-        ref={function (n) { input.current = n; nameRef(n); setRef(ref, n); }} className="dk-pin-input__field" />
+        ref={mergedRef} className="dk-pin-input__field" />
     </span>
   );
 });

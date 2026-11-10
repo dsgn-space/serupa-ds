@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit, setRef } from '../../internal/cn';
+import { cn, domId, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
@@ -77,7 +77,7 @@ export const Attachment = /* @__PURE__ */ component<HTMLDivElement, AttachmentPr
   const name = <MiddleCutName name={props.name} id={base + '-name'} cls={NAME} />;
   const removeLabel = props.removeLabel || ((n: string) => L.remove + ' ' + n);
   return (
-    <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-attachment', failed && 'dk-attachment--error', uploading && 'dk-attachment--uploading', disabled && 'dk-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
+    <div {...rest} ref={ref} className={cn('dk-attachment', failed && 'dk-attachment--error', uploading && 'dk-attachment--uploading', disabled && 'dk-attachment--disabled', props.className)} data-component="attachment" data-kind={kind}>
       <Icon icon={ICONS[kind]} className="dk-attachment__icon" />
       <span className="dk-attachment__body">
         {props.href && !disabled ? (

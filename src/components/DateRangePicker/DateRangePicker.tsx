@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
+import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
 import { addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, startOfMonth, toDay } from '../../internal/dates';
 import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
@@ -204,8 +204,9 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus={first} hideOutside={two}
       isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} />
   );
+  const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
   return (
-    <span {...rest} ref={(n) => { box.current = n; delegateFocus(n, start); if (typeof ref === 'function') ref(n); else if (ref) ref.current = n; }} role="group"
+    <span {...rest} ref={mergedRef} role="group"
       className={cn('dk-input', 'dk-input--size-' + size, 'dk-date-range-picker', invalid && 'dk-input--invalid', disabled && 'dk-input--disabled', readOnly && 'dk-input--readonly', className)}
       data-component="date-range-picker" data-state={open ? 'open' : 'closed'} data-size={size}>
       {field('start')}

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import { config } from '../../internal/config';
 import type { Placement } from '../../internal/position';
@@ -117,15 +117,16 @@ export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu',
   }, [open]);
 
   const keys = menuKeys(menuRef, typed, close);
-  const panelRef = React.useCallback((n: HTMLDivElement | null) => { menuRef.current = n; setRef(ref, n); }, [ref]);
+  const panelRef = useMergedRef(ref, (n: HTMLDivElement | null) => { menuRef.current = n; });
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => { if (props.onKeyDown) props.onKeyDown(e); if (!e.defaultPrevented) keys(e); };
 
   const child = oneElement<TriggerProps>(props.trigger, 'Menu', 'trigger');
   useTriggerRef(triggerRef, 'Menu');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
+  const mergedRef = useMergedRef(childRef, (n) => { triggerRef.current = n; });
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
+    ref: mergedRef,
     id: cp.id || own + '-button',
     'aria-haspopup': 'menu',
     'aria-expanded': open,
@@ -241,14 +242,15 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
 
   const keys = menuKeys(menuRef, typed, close);
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => { if (props.onKeyDown) props.onKeyDown(e); if (!e.defaultPrevented) keys(e); };
-  const panelRef = React.useCallback((n: HTMLDivElement | null) => { menuRef.current = n; setRef(ref, n); }, [ref]);
+  const panelRef = useMergedRef(ref, (n: HTMLDivElement | null) => { menuRef.current = n; });
 
   const child = oneElement<TriggerProps>(props.target, 'ContextMenu', 'target');
   useTriggerRef(targetRef, 'ContextMenu');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
+  const mergedRef2 = useMergedRef(childRef, (n) => { targetRef.current = n; });
   const target = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { targetRef.current = n; if (childRef) setRef(childRef, n); },
+    ref: mergedRef2,
     onContextMenu: (e: React.MouseEvent<HTMLElement>) => {
       if (cp.onContextMenu) cp.onContextMenu(e);
       if (e.defaultPrevented || props.disabled) return;
@@ -510,10 +512,11 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>('Men
     if (isComposing(e) || !(e.target instanceof HTMLElement) || e.target.closest('[role="menu"]') !== panelRef.current) return;
     if (e.key === 'Escape' || e.key === (rtl() ? 'ArrowRight' : 'ArrowLeft')) { e.preventDefault(); e.stopPropagation(); hide(true); }
   };
+  const mergedRef3 = useMergedRef(ref, (n) => { itemRef.current = n; });
   return (
     <>
       {React.createElement('div', Object.assign(rest, {
-        ref: (n: HTMLElement | null) => { itemRef.current = n; setRef(ref, n); },
+        ref: mergedRef3,
         role: 'menuitem', tabIndex: -1, 'aria-haspopup': 'menu', 'aria-expanded': open, 'aria-controls': open ? id : undefined,
         'aria-disabled': props.disabled || undefined, 'data-state': open ? 'open' : 'closed',
         className: cn('dk-menu__item', 'dk-menu__item--sub', props.className),

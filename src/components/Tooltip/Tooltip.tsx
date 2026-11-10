@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
@@ -174,11 +174,12 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   const touch = (e: React.SyntheticEvent) => 'pointerType' in e && e.pointerType === 'touch';
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own: unknown = cp[name]; if (typeof own === 'function') (own as Handler)(e); fn(e); };
   const childRef = elementRef<HTMLElement>(child);
+  const anchorRefs = useMergedRef(childRef, (n) => { anchorRef.current = n; }, passedRef);
   const aria = props.role === 'label' ? 'aria-labelledby' : 'aria-describedby';
   const merged = [cp[aria], id].filter(Boolean).join(' ');
   const trigger = React.cloneElement(child, {
     ...fwd,
-    ref: (n: HTMLElement | null) => { anchorRef.current = n; if (childRef) setRef(childRef, n); if (passedRef) setRef(passedRef, n); },
+    ref: anchorRefs,
     [aria]: merged,
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter after its pointerdown and never a mouseleave, so the

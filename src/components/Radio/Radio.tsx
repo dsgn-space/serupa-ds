@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, omit, oneOf, setRef, SIZES } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -91,15 +91,16 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
     to.click();
   };
   useAutoFocus(props.autoFocus, () => root.current);   // through the delegation below; the <div> ignored it (L8E93)
+  // ref.current.focus() (a form library focusing the first invalid field) lands on the radio in the Tab order, the
+  // checked one or else the first that can be picked; the <div> took no focus. aria-required given to the group
+  // is kept, not overwritten by the required prop (L8E90).
+  const groupRef = useMergedRef(ref, function (n: HTMLDivElement | null) {
+    root.current = n;
+    delegateFocus(n, () => n && (n.querySelector<HTMLElement>('input:checked:enabled') || n.querySelector<HTMLElement>('input:enabled')));
+    nameRef(n);
+  });
   return (
-    <div {...rest} ref={function (n) {
-      root.current = n;
-      // ref.current.focus() (a form library focusing the first invalid field) lands on the radio in the Tab order, the
-      // checked one or else the first that can be picked; the <div> took no focus. aria-required given to the group
-      // is kept, not overwritten by the required prop (L8E90).
-      delegateFocus(n, () => n && (n.querySelector<HTMLElement>('input:checked:enabled') || n.querySelector<HTMLElement>('input:enabled')));
-      nameRef(n); setRef(ref, n);
-    }} role="radiogroup" aria-invalid={invalid || undefined} aria-required={props.required || rest['aria-required'] || undefined} aria-disabled={props.disabled || undefined}
+    <div {...rest} ref={groupRef} role="radiogroup" aria-invalid={invalid || undefined} aria-required={props.required || rest['aria-required'] || undefined} aria-disabled={props.disabled || undefined}
       className={cn('dk-radio-group', 'dk-radio-group--' + orientation, invalid && 'dk-radio-group--invalid', props.className)} data-component="radio-group" data-orientation={orientation}>
       <RadioContext.Provider value={ctx}>{props.children}</RadioContext.Provider>
     </div>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { setRef } from './cn';
+import { useMergedRef } from './cn';
 
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -12,7 +12,7 @@ const never = () => () => {}, yes = () => true, no = () => false;
 export function useServerStyles<T extends Element>(ref?: React.ForwardedRef<T>): (node: T | null) => void {
   const hydrating = !React.useSyncExternalStore(never, yes, no);
   const pending = React.useRef(hydrating);   // set by the first render only: true when it was the hydration's
-  return React.useCallback(function (node: T | null) {
+  return useMergedRef(ref, function (node: T | null) {
     if (node && pending.current) {
       pending.current = false;
       for (const el of [node, ...node.querySelectorAll('[style]')]) {
@@ -28,8 +28,7 @@ export function useServerStyles<T extends Element>(ref?: React.ForwardedRef<T>):
         } else fromProps(el as HTMLElement);
       }
     }
-    if (ref) setRef(ref, node);
-  }, [ref]);
+  });
 }
 
 /* Firefox keeps a blocked style attribute but empties it, so there's no text to apply again. The style React
