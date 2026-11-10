@@ -18,6 +18,28 @@
 - textbox "Note": No limit
 - text: "8"
 
+# DoFitWidth
+- text: Postcode
+- textbox "Postcode": "10110"
+- text: Street address
+- textbox "Street address": Jalan Sudirman 12
+
+# DoHelpfulError
+- text: Email
+- textbox "Email" [invalid]: ana.example.com
+- text: Enter an email with an @, like ana@example.com.
+
+# DontFullWidthShort
+- text: Postcode
+- textbox "Postcode": "10110"
+- text: Street address
+- textbox "Street address": Jalan Sudirman 12
+
+# DontVagueError
+- text: Email
+- textbox "Email" [invalid]: ana.example.com
+- text: Invalid input.
+
 # Icons
 - textbox "Search"
 - textbox "Website":
