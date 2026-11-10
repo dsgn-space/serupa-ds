@@ -45,6 +45,22 @@ Drawn from the `Default` story.
 - **Text size** follows the surrounding text: put the list in `text-sm` for a compact summary.
 - Write terms as short nouns ("Owner", not "The owner of this project is"). Show an empty value as a dash or "Not set", never as nothing, so the term isn't left alone.
 
+### Loading and failed
+
+- **Loading:** show the terms, which you already know, and a skeleton [Loader](../Loader/README.md) in each item's details, with `aria-busy` on the list. Pick the Loader's `size` by the list's text size (`sm` for `text-xs`, `md` for `text-sm`, `lg` for `text-base`): each skeleton line is as tall as a line of that text, so the rows don't move when the details arrive. Give the first Loader a `label` ("Loading order") and the others `label=""`: a screen reader hears the wait once, after the loader's delay, and a quick load says nothing.
+- **Failed:** in place of the list, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+{state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>The order didn't load.</Alert>
+  : <DescriptionList aria-busy={state === 'loading' || undefined}>
+      {FIELDS.map((f, i) => (
+        <DescriptionItem key={f.key} term={f.term}>
+          {state === 'loading' ? <Loader variant="skeleton" size="md" label={i === 0 ? 'Loading order' : ''} /> : order[f.key]}
+        </DescriptionItem>
+      ))}
+    </DescriptionList>}
+```
+
 ## Accessibility
 
 - **Role and name:** a `<dl>` with `<dt>` terms and `<dd>` details; each pair is wrapped in a `<div>`, which HTML allows in a `<dl>`. Give the list a heading before it, or `aria-label`, when the page has several.
