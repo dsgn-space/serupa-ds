@@ -5,7 +5,7 @@ interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultV
     defaultValue?: string | undefined;
     onValueChange?: ((value: string) => void) | undefined;
     variant?: TabsVariant | undefined;
-    size?: "md" | "sm" | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
     activation?: "auto" | "manual" | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
 }

@@ -5,6 +5,16 @@
   - tab "Month"
 - paragraph: "Showing: week"
 
+# Large
+- tablist "Project":
+  - tab "Overview" [selected]
+  - tab "Activity"
+  - tab "Members"
+  - tab "Settings" [disabled]
+- tabpanel "Overview": Atlas is on track for the March release.
+- tabpanel "Activity": Ada updated the roadmap 2 hours ago.
+- tabpanel "Members": 6 members, 2 pending invites.
+
 # Overflow
 - tablist "Months":
   - tab "Jan"
