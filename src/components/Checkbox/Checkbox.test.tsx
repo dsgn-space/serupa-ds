@@ -365,6 +365,35 @@ describe('CheckboxGroup', () => {
     await render(tree);
     expect([input('ssr-m').indeterminate, input('ssr-m').hasAttribute('data-indeterminate'), input('ssr-all').indeterminate]).toEqual([true, false, true]);
   });
+  test('variant card: a bordered card pressed as a whole, a 2px primary border once checked, the focus ring round the card; Space still toggles', async () => {
+    const onValueChange = vi.fn();
+    await render(<CheckboxGroup aria-label="Add-ons" variant="card" defaultValue={['a']} onValueChange={onValueChange}>
+      <Checkbox value="a" description="Rp 15.000">Gift wrap</Checkbox>
+      <Checkbox value="b" description="A printed note">Greeting card</Checkbox>
+      <Checkbox value="c" variant="default">Plain</Checkbox>
+    </CheckboxGroup>);
+    const [a, b, c] = page.getByRole('checkbox').elements() as HTMLInputElement[];
+    const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
+    expect(card(a).className).toMatch(/dk-checkbox--card/);
+    expect(card(c).className).not.toMatch(/dk-checkbox--card/);
+    expect(page.getByRole('group').element().className).toMatch(/dk-checkbox-group--card/);
+    const shell = css(card(b));
+    expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
+    expect(css(card(a)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a)).boxShadow).toContain('0px 0px 0px 1px');
+    expect(css(card(b)).borderTopColor).toBe(color('var(--border)'));
+    await userEvent.click(page.getByText('A printed note', { exact: true }));
+    expect(b.checked).toBe(true);
+    expect(onValueChange).toHaveBeenLastCalledWith(['a', 'b'], expect.anything());
+    await userEvent.keyboard(' ');
+    expect(b.checked).toBe(false);
+    expect(document.activeElement).toBe(b);
+    expect(css(card(b)).outlineStyle).toBe('solid');
+    expect(css(b).outlineStyle).toBe('none');
+    await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
+    expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
+  });
+
   test('L8E91 ref.current.focus() on a CheckboxGroup (a form library focusing the first invalid field) focuses its first box that isn\'t disabled', async () => {
     const g = React.createRef<HTMLDivElement>();
     await render(<CheckboxGroup ref={g} aria-label="Toppings"><Checkbox value="ham" disabled>Ham</Checkbox><Checkbox value="egg">Egg</Checkbox></CheckboxGroup>);
