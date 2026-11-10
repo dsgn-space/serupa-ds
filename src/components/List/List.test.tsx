@@ -219,7 +219,7 @@ describe('List', () => {
 });
 
 describe('List loading (GR316)', () => {
-  test('busy sets aria-busy; ListLoadingItems rows are as tall as the rows that replace them, with or without a description, icon or Avatar, named once', async () => {
+  test('busy sets aria-busy; ListLoadingItems rows are as tall as the rows that replace them, with or without a description, icon or Avatar, and the wait is said once', async () => {
     type Lead = 'icon' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
     const CASES: Array<{ id: string; description: boolean; leading: Lead }> = [
       { id: 'plain', description: false, leading: undefined },
@@ -241,8 +241,10 @@ describe('List loading (GR316)', () => {
     }
     const { rerender } = await render(<Lists busy />);
     expect(CASES.map((c) => [el(c.id).getAttribute('aria-busy'), el(c.id).children.length])).toEqual(CASES.map(() => ['true', 2]));
-    await expect.element(page.getByRole('progressbar', { name: 'Loading desc-md' })).toBeInTheDocument();
-    expect(page.getByRole('progressbar').all().length).toBe(CASES.length);
+    // The placeholders are hidden from screen readers; each list's label is said once, after the loader's delay.
+    expect(page.getByRole('progressbar').all().length).toBe(0);
+    expect(CASES.every((c) => [...el(c.id).querySelectorAll('li > div > *')].every((x) => x.querySelector('[aria-hidden="true"]') || x.getAttribute('aria-hidden') === 'true'))).toBe(true);
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading desc-md');
     const loading = CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height);
     await rerender(<Lists busy={false} />);
     expect(CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height)).toEqual(loading);

@@ -5,7 +5,8 @@ import { config } from '../../internal/config';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
-import { Loader } from '../Loader/Loader';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { useSettings } from '../../internal/provider';
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -110,17 +111,20 @@ const LEADS = ['icon', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 /* ListLoadingItems: placeholder rows inside a List, built from the rows' own parts (padding, gap, text lines, a
    circle the size of the leading icon or Avatar), so each is as tall as the row that replaces it and nothing moves.
-   Only the first placeholder has a name, so a screen reader hears "Loading" once. */
+   They're decorative: the label is said once, after the loader's delay, and the List's busy marks it as loading. */
 /** Placeholder rows (skeletons) the height of real ListItems, while a List's rows load. Put it inside the List and set its busy. */
 export function ListLoadingItems(props: ListLoadingItemsProps): React.ReactElement {
   const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));
   const lead = props.leading == null ? null : oneOf(LEADS, props.leading, 'md');
+  const sds = useSettings();
+  const label = props.label == null ? sds.labels.loading : props.label;
+  const waiting = !useSkeletonShown(label);
   const out: React.ReactNode[] = [];
   for (let r = 0; r < rows; r++) out.push(
     <li key={r} className="dk-list__item dk-list__loading">
       <div className="dk-list__main dk-list__main--static">
-        {lead ? <span className={'dk-list__leading dk-list__leading--' + lead}><Loader variant="skeleton" shape="circle" label="" /></span> : null}
-        <span className="dk-list__text"><Loader variant="skeleton" lines={props.description ? 2 : 1} label={r === 0 ? props.label : ''} /></span>
+        {lead ? <span className={'dk-list__leading dk-list__leading--' + lead}><SkeletonArt shape="circle" waiting={waiting} /></span> : null}
+        <span className="dk-list__text"><SkeletonArt lines={props.description ? 2 : 1} waiting={waiting} /></span>
       </div>
     </li>,
   );
