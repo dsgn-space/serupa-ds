@@ -5,7 +5,7 @@ import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
-import { Loader } from '../Loader/Loader';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { en as words } from './labels';
 
 /** A row of data: any object; its id is read from the `rowKey` field ("id" by default). */
@@ -240,13 +240,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
               </tr>
             );
           })}
-          {Array.from({ length: placeholders }, (_, r) => (
-            <tr key={'loading-' + r} role="row" className="dk-data-grid__loading">
-              {columns.map((col, c) => (
-                <td key={col.key} role="gridcell" className="dk-data-grid__cell"><Loader variant="skeleton" label={r === 0 && c === 0 ? props.loadingLabel : ''} /></td>
-              ))}
-            </tr>
-          ))}
+          {placeholders ? <LoadingRows rows={placeholders} columns={columns} label={props.loadingLabel == null ? L.loading : props.loadingLabel} /> : null}
           {message != null && (
             <tr role="row" aria-rowindex={2}>
               <td role="gridcell" colSpan={columns.length} aria-colspan={columns.length} className="dk-data-grid__cell dk-data-grid__message">{message}</td>
@@ -258,3 +252,14 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     </div>
   );
 });
+
+/* The placeholder rows: decorative skeletons in Loader's classes (without Loader's weight), shown after the loader's
+   delay, when the label is said once; the grid's aria-busy marks it as loading. */
+function LoadingRows(props: { rows: number; columns: DataGridColumn[]; label: string }) {
+  const waiting = !useSkeletonShown(props.label);
+  return Array.from({ length: props.rows }, (_, r) => (
+    <tr key={'loading-' + r} role="row" className="dk-data-grid__loading">
+      {props.columns.map((col) => <td key={col.key} role="gridcell" className="dk-data-grid__cell"><SkeletonArt waiting={waiting} /></td>)}
+    </tr>
+  ));
+}
