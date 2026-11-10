@@ -7,6 +7,7 @@ import { useLocale, useSettings } from '../../internal/provider';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { isComposing } from '../../internal/ime';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { useServerStyles } from '../../internal/serverStyles';
 import { Button } from '../Button/Button';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, type SortDirection } from '../Table/Table';
 import { en as words } from './labels';
@@ -68,7 +69,8 @@ const WIDTH = 640;   // before the box is measured: the server render and the fi
 // Stands in for the plot until the first numbers arrive: a block as tall as the plot, so nothing jumps.
 function ChartPlaceholder({ height, label }: { height: number; label: string }) {
   const shown = useSkeletonShown(label);
-  return <div className="dk-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
+  const ref = useServerStyles<HTMLDivElement>();   // the height holds under a strict CSP too
+  return <div ref={ref} className="dk-chart__placeholder" style={{ blockSize: height }}><SkeletonArt shape="rect" waiting={!shown} /></div>;
 }
 
 /** Round ticks from lo to hi, about count of them, in steps of 1, 2, 2.5 or 5 times a power of ten. */
