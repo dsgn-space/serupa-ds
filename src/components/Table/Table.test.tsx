@@ -866,7 +866,7 @@ describe('Table column tools (RU10)', () => {
 });
 
 describe('Table loading and messages (GR316)', () => {
-  test('busy sets aria-busy; TableLoadingRows draws a placeholder in every cell, its rows as tall as real ones in both sizes, named once', async () => {
+  test('busy sets aria-busy; TableLoadingRows draws a placeholder in every cell, its rows as tall as real ones in both sizes, and the wait is said once', async () => {
     function Loading(props: { size?: 'sm' | 'md'; busy: boolean }) {
       return <Table id={'tl-' + (props.size || 'md')} size={props.size} busy={props.busy} caption="Projects">
         {head()}
@@ -880,8 +880,11 @@ describe('Table loading and messages (GR316)', () => {
       expect(rows.map((r) => r.children.length)).toEqual([3, 3, 3, 3]);
     }
     // One name for the whole table: the rest of the placeholders are hidden from screen readers.
-    await expect.element(page.getByRole('progressbar', { name: 'Loading projects' }).first()).toBeInTheDocument();
-    expect(page.getByRole('progressbar').all().length).toBe(2);
+    // The placeholders are hidden from screen readers; the wait is said once, after the loader's delay.
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
+    // Once shown, no cell is a progress bar a screen reader can land on; the table's aria-busy says it's loading.
+    expect(page.getByRole('progressbar').all().length).toBe(0);
+    expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
     const loadingHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
     await rerender(<div style={{ width: '600px' }}><Loading busy={false} /><Loading size="sm" busy={false} /></div>);
     const realHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
