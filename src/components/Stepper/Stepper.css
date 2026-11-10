@@ -60,6 +60,10 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
   margin: var(--dk-step-line-top) var(--stepper-connector-gap, var(--spacing-2)) var(--spacing-0);
 }
 .dk-stepper--horizontal .dk-stepper__head { flex-shrink: 0; max-width: calc(var(--sizing-full) - var(--spacing-8)); }
+/* The last step has no line after it, so its head may take the step's whole width. Leaving room for a line there
+   squeezed its title to a letter or two a line ("Re / vi / e / w"), as the step is only as wide as its head. While
+   the script measures, the step is its head's full width, so this leaves it whole. */
+.dk-stepper--horizontal .dk-stepper__step:last-child .dk-stepper__head { max-width: var(--sizing-full); }
 .dk-stepper--vertical .dk-stepper__connector {
   position: absolute; inset-inline-start: var(--dk-step-line-start); width: var(--dk-step-line);
   top: calc(var(--dk-step-size) + var(--stepper-connector-gap, var(--spacing-2))); bottom: var(--stepper-connector-gap, var(--spacing-2));
