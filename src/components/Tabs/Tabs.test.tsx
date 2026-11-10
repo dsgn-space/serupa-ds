@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, press, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { Tab, TabList, TabPanel, Tabs } from './Tabs';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -372,7 +372,7 @@ describe('Tabs on the server', () => {
       await on;
       const moving = list.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty);
       const mid = parseFloat(css(list).getPropertyValue('--dk-tabs-fade-a'));
-      await Promise.all(list.getAnimations().map((a) => a.finished));
+      await settled(list);
       expect([moving, mid >= 0 && mid < 32, css(list).getPropertyValue('--dk-tabs-fade-a')]).toEqual([['--dk-tabs-fade-a'], true, '32px']);
     });
   });
@@ -403,7 +403,7 @@ describe('Tabs on the server', () => {
       const moves = tabs[2].getAnimations({ subtree: true }).filter((a): a is CSSTransition => a instanceof CSSTransition && (a.effect as KeyframeEffect).pseudoElement === '::after');
       const start = moves.find((a) => a.transitionProperty === 'translate'), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0].translate)) : NaN;
       expect([moves.map((a) => a.transitionProperty).sort(), Math.round(shift)]).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
-      await Promise.all(moves.map((a) => a.finished));
+      await Promise.all(moves.map((a) => a.finished.catch(() => {})));
       expect([getComputedStyle(tabs[2], '::after').translate, getComputedStyle(tabs[2], '::after').scale]).toEqual(['none', 'none']);
 
       const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
@@ -414,7 +414,7 @@ describe('Tabs on the server', () => {
       const px = (c: string) => (c.match(/-?[\d.]+px/g) || []).slice(0, 4).map((n) => Math.round(parseFloat(n)));
       // Cut to the last tab: its start edge is where that tab starts, from this one's (the fill spans both).
       expect([cuts.map((a) => a.transitionProperty), px(first)[3], /round/.test(first), cuts.some((a) => a.transitionProperty === 'scale')]).toEqual([['clip-path'], Math.round(from.offsetLeft - to.offsetLeft), true, false]);
-      await Promise.all(cuts.map((a) => a.finished));
+      await Promise.all(cuts.map((a) => a.finished.catch(() => {})));
       const rest = getComputedStyle(to, '::before'), r = to.getBoundingClientRect(), box = { w: parseFloat(rest.width), cut: px(rest.clipPath) };
       expect([Math.round(box.w - box.cut[1] - box.cut[3]), box.cut[0], box.cut[2], /round/.test(rest.clipPath)]).toEqual([Math.round(r.width), 0, 0, true]);
     });

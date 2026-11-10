@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { css } from '../../../tools/test/vitest/helpers';
+import { css, settled } from '../../../tools/test/vitest/helpers';
 import { IconButton, type IconButtonProps } from './IconButton';
 import { Tooltip } from '../Tooltip/Tooltip';
 
@@ -77,7 +77,7 @@ describe('IconButton', () => {
     await userEvent.keyboard(' ');
     expect(clicks).toBe(2);
     const e = el('ib');
-    await Promise.all(e.getAnimations().map((a) => a.finished));   // the ring fades in
+    await settled(e);   // the ring fades in
     const probe = document.createElement('span');
     probe.style.color = 'var(--dk-btn-ring)';
     e.appendChild(probe);
