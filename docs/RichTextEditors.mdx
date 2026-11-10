@@ -37,7 +37,7 @@ function Editor({ label, value, onChange, ...field }) {
     <ToggleButton variant="ghost" icon={icon} aria-label={label} pressed={editor.isActive(name)} onPressedChange={run} />
   );
   return (
-    <div className="editor">
+    <div data-editor="">
       <Toolbar aria-label="Text formatting">
         <ButtonGroup aria-label="Style">
           {mark('bold', 'Bold', 'format_bold', () => editor.chain().focus().toggleBold().run())}
@@ -67,16 +67,16 @@ Lexical is the same shape: put its `ContentEditable` inside `Prose`, pass it wha
 Draw the box around the toolbar and the editable area with the field tokens, so it matches Input and Textarea in all six themes, in forced colors, and when a theme changes them:
 
 ```css
-.editor {
+[data-editor] {
   border: var(--border-width-1) solid var(--field-border);
   border-radius: var(--radius-control);
   background: var(--field);
   color: var(--text);
 }
-@media (hover: hover) { .editor:hover { border-color: var(--field-border-hover); } }
-.editor:focus-within { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
-.editor .ProseMirror { min-height: var(--spacing-32); padding: var(--spacing-2) var(--spacing-3); outline: none; }
-.editor .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--placeholder); float: inline-start; height: 0; pointer-events: none; }
+@media (hover: hover) { [data-editor]:hover { border-color: var(--field-border-hover); } }
+[data-editor]:focus-within { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+[data-editor] .ProseMirror { min-height: var(--spacing-32); padding: var(--spacing-2) var(--spacing-3); outline: none; }
+[data-editor] .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--placeholder); float: inline-start; height: 0; pointer-events: none; }
 ```
 
 The ring goes round the whole box while the focus is anywhere in it, toolbar included, so it's clear which field the buttons work on. The editable area draws no ring of its own.
