@@ -25,6 +25,7 @@ export const InField: Story = {
 
 /** Starting on Type: the typed full name is the signature. */
 export const Typed: Story = { args: { defaultMethod: 'type' } };
+export const ReadOnly: Story = { args: { readOnly: true, defaultValue: { method: 'type', name: 'Dewi Lestari', svg: '' } } };
 
 export const Disabled: Story = { args: { disabled: true } };
 

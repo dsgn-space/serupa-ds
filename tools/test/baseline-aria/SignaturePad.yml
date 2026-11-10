@@ -39,6 +39,14 @@
   - button "Undo" [disabled]
   - button "Clear" [disabled]
 
+# ReadOnly
+- group "Signature":
+  - radiogroup "Signature method":
+    - radio "Draw"
+    - radio "Type" [checked]
+  - text: Full name
+  - textbox "Full name": Dewi Lestari
+
 # Typed
 - group "Signature":
   - radiogroup "Signature method":
