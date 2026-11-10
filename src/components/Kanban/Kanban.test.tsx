@@ -169,7 +169,9 @@ describe('Kanban', () => {
     for (let i = 1; i <= 20; i++) window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 3, clientX: a.x + 24 + i, clientY: a.y + 4 }));
     await new Promise((r) => requestAnimationFrame(r));
     expect(renders - before).toBe(0);
-    expect(li.style.transform).toBe('translate(40px, 0px)');
+    // The offset, read as a matrix: Firefox writes translate(40px, 0px) back as translate(40px).
+    const m = new DOMMatrix(li.style.transform);
+    expect([m.e, m.f]).toEqual([40, 0]);
     window.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 3, clientX: a.x, clientY: a.y }));
     await expect.poll(() => li.style.transform).toBe('');
   });
