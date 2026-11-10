@@ -40,6 +40,24 @@ Drawn from the `Disabled` story.
 - Keep a day from an API or database as the plain `"yyyy-mm-dd"` string and pass it as is: `value="2026-10-24"`, and store `iso` from `onValueChange`. `new Date("2026-10-24")` is UTC midnight, which is 23 October anywhere west of Greenwich; DatePicker warns once in the console when it's given such a Date there.
 - Match the `size` of the other fields in the same form.
 
+## Date and time
+
+For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with [TimePicker](../TimePicker/README.md) in one `Field group`. It reads as one question with one legend, one hint and one error, and each part keeps its own label for screen readers.
+
+```tsx
+<Field group label="Publish at" hint="Your time zone, Asia/Jakarta" error={error}>
+  <div className="flex flex-wrap gap-3">
+    <Field label="Date"><DatePicker value={day} onValueChange={(_, iso) => setDay(iso)} min={today} invalid={!!error && !day} /></Field>
+    <Field label="Time"><TimePicker value={time} onValueChange={setTime} step={900} invalid={!!error && !time} /></Field>
+  </div>
+</Field>
+```
+
+- **Check them together,** when the form is sent: one message for the pair, in the group's `error`, naming what's missing or wrong ("Choose a time", "Pick a time after now"). Set `invalid` only on the part that's at fault, so its border says where to look, and move focus to it: a screen reader then reads the legend and the error with it.
+- **Say whose time it is.** The legend's hint names the zone when it isn't obvious. When people in other zones use the form (a meeting across offices), add a [TimeZonePicker](../TimeZonePicker/README.md) as a third part, defaulting to the browser's zone (`Intl.DateTimeFormat().resolvedOptions().timeZone`).
+- **Store the parts, not a local Date.** Keep the day (`"yyyy-mm-dd"`), the time (`"HH:mm"`) and the zone's IANA name, and let the server turn them into an instant. A `Date` built in the browser takes the browser's zone, which is wrong when the zone was chosen.
+- **Keep the order of the locale's sentences:** date first, then time, then zone. On a narrow screen the parts wrap onto separate lines.
+
 ## Behavior
 
 - With `presets`, a list of shortcuts sits beside the days in the popup, after them in reading order and under them on a narrow screen. Your own take a day or a function that returns one, so "Next Monday" follows today: `presets={[{ label: "Next Monday", value: nextMonday }]}`. A shortcut whose day can't be chosen is disabled.
@@ -118,3 +136,4 @@ The field itself uses Input's box (the `dk-input` classes and `--input-*` tokens
 - [Field](../Field/README.md): the label, hint and error around it.
 - [DateRangePicker](../DateRangePicker/README.md): two dates, start and end.
 - [Calendar](../Calendar/README.md): the calendar on its own, always visible.
+- [TimePicker](../TimePicker/README.md) and [TimeZonePicker](../TimeZonePicker/README.md): the time and its zone, for a date and time (see Date and time).

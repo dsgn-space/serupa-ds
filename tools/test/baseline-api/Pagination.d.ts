@@ -17,7 +17,7 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     linkAs?: React.ElementType | undefined;
     siblings?: number | undefined;
     boundaries?: number | undefined;
-    size?: "md" | "sm" | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
     "aria-label"?: string | undefined;
     previousLabel?: string | undefined;
     nextLabel?: string | undefined;

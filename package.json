@@ -199,6 +199,10 @@
       "onFail": "error"
     }
   },
+  "allowScripts": {
+    "esbuild": true,
+    "fsevents": true
+  },
   "overrides": {
     "typescript-eslint": {
       "typescript": "$typescript"

@@ -40,6 +40,8 @@ export const Extras: Story = {
     <Badge tone="primary" count={8} />
     <Badge variant="solid" tone="danger" count={120} />
     <Badge onRemove={() => {}}>Design</Badge>
+    <Badge variant="solid" tone="primary" onRemove={() => {}}>Primary</Badge>
+    <Badge variant="solid" onRemove={() => {}}>Neutral</Badge>
     <Badge tone="danger" dot aria-label="New messages" />
   </Row>,
 };

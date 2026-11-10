@@ -8,7 +8,7 @@ const meta = {
   args: { variant: 'line', size: 'md', activation: 'auto' },
   argTypes: {
     variant: { control: 'inline-radio', options: ['line', 'pill'] },
-    size: { control: 'inline-radio', options: ['sm', 'md'] },
+    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
     activation: { control: 'inline-radio', options: ['auto', 'manual'] },
     orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
   },
@@ -32,6 +32,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const Pill: Story = { args: { variant: 'pill', size: 'sm' } };
+/** 44px tabs with 16px text, beside large fields and buttons or on a touch screen. */
+export const Large: Story = { args: { size: 'lg' } };
 export const Controlled: Story = {
   render: function Render() {
     const [v, setV] = React.useState('week');

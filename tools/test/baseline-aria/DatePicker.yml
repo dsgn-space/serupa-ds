@@ -1,3 +1,17 @@
+# DateAndTime
+- group "Meeting starts":
+  - text: Meeting starts In the time zone you choose Date
+  - textbox "Date":
+    - /placeholder: mm/dd/yyyy
+  - button "Choose a date"
+  - text: Time
+  - combobox "Time": 9:00 AM
+  - button "Choose a time"
+  - text: Time zone
+  - combobox "Time zone": Jakarta
+  - button "Show options"
+- button "Schedule"
+
 # Disabled
 - textbox "Date" [disabled]:
   - /placeholder: mm/dd/yyyy

@@ -58,6 +58,16 @@ Drawn from the `LongLabel` story.
 - Stack sets vertically: they're quicker to scan than a row.
 - For a set whose answer is a list of values, use `CheckboxGroup`. It holds the list, gives every box one `name`, and passes `size`, `invalid`, `disabled` and `required` down.
 - Put a `selectAll` box first when people often want all or none. It needs no `value`.
+- `variant="card"` makes each box a bordered card, pressed as a whole: for a few choices that each need a sentence or a price (add-ons, features, interests during onboarding). The boxes stay native, so Space, the form value and `selectAll` work as in a plain group. Keep cards to a handful; a long list scans faster as plain boxes.
+
+```tsx
+<Field label="Add-ons" group>
+  <CheckboxGroup variant="card" orientation="horizontal" defaultValue={['wrap']}>
+    <Checkbox value="wrap" description="Rp 15.000">Gift wrap</Checkbox>
+    <Checkbox value="card" description="A printed note, free">Greeting card</Checkbox>
+  </CheckboxGroup>
+</Field>
+```
 
 ## States
 
@@ -71,6 +81,7 @@ Drawn from the `LongLabel` story.
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
 | Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` box; also when a parent fieldset (`Field group disabled`) is disabled |
+| Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the tick shows it too); the focus ring goes round the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
 
 ## Accessibility
 
@@ -103,6 +114,7 @@ Drawn from the `LongLabel` story.
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `indeterminate` | boolean | `false` | A dash, announced as "mixed". Set it from your state: a click clears it natively, and the next render puts it back if the prop is still true |
 | `invalid` | boolean | `false` | A danger border (while unchecked) and focus ring, and `aria-invalid` |
+| `variant` | `'default'` \| `'card'` | the group's, or `'default'` | `'card'`: the box, label and description in a bordered card pressed as a whole |
 | `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't change it; a checked box is still submitted |
 
 | `selectAll` | boolean | `false` | In a `CheckboxGroup`: checks or clears every other box; checked when all are, indeterminate when some are |
@@ -121,6 +133,7 @@ Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disa
 | `name` | `string` | generated | Every box's name, so each checked one is submitted with its value |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | Stacked, or a wrapping row |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | | The boxes' size, unless a Checkbox sets its own |
+| `variant` | `'default'` \| `'card'` | `'default'` | Every box's look, unless one sets its own. Cards fill the column, or share a wrapping row (each at least 192px) with `orientation="horizontal"`, 12px apart |
 | `invalid` | boolean | `false` | A danger border on every unchecked box, and `aria-invalid` on each box. Field's `error` sets it |
 | `disabled` | boolean | `false` | Disables every box |
 | `required` | boolean | `false` | At least one box must be checked |
@@ -147,6 +160,10 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-description-color` | `text-muted` | The description |
 | `--checkbox-focus-ring` | `focus-ring` | The focus ring |
 | `--checkbox-invalid` | `danger` | Border and focus ring when invalid |
+| `--checkbox-card-bg` | `surface` | A card checkbox's background. |
+| `--checkbox-card-border` | `border` | A card's border. |
+| `--checkbox-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
+| `--checkbox-card-border-checked` | `primary` | A checked card's border, 2px. |
 
 **Sizing**
 
@@ -158,6 +175,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-icon-size-sm` | `spacing-3` | Check size, sm (12px). |
 | `--checkbox-icon-size-md` | `spacing-3.5` | Check size, md (14px). |
 | `--checkbox-icon-size-lg` | `spacing-4` | Check size, lg (16px). |
+| `--checkbox-card-min-width` | `spacing-48` | The narrowest a card gets in a horizontal group before the row wraps (192px). |
 
 **Spacing**
 
@@ -166,6 +184,15 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-gap` | `spacing-2` | Box to label (8px) |
 | `--checkbox-group-gap` | `spacing-2` | Between boxes in a CheckboxGroup stack, and between rows (8px) |
 | `--checkbox-group-gap-horizontal` | `spacing-4` | Between boxes in a CheckboxGroup row (16px) |
+| `--checkbox-card-padding` | `spacing-4` | Space inside a card (16px). |
+| `--checkbox-card-gap` | `spacing-3` | Space between a card's box and its text (12px). |
+| `--checkbox-card-group-gap` | `spacing-3` | Space between cards in a group (12px). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--checkbox-card-label-weight` | `font-medium` | A card's label weight (500). |
 
 **Border**
 
@@ -173,6 +200,12 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | --- | --- | --- |
 | `--checkbox-border-width` | `border-width-1` | Border width (1px) |
 | `--checkbox-radius` | `radius-inner` | Corner radius (4px) |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--checkbox-card-radius` | `radius-surface` | A card's corners (8px). |
 
 **Motion**
 

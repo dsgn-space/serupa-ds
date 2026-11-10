@@ -272,6 +272,43 @@ describe('Radio', () => {
     ])).toEqual([]);
   });
 
+  test('variant card: a bordered card pressed as a whole, a 2px primary border once checked, the focus ring round the card; the arrows still move the choice', async () => {
+    const onValueChange = vi.fn();
+    await render(<RadioGroup aria-label="Delivery" variant="card" defaultValue="a" onValueChange={onValueChange}>
+      <Radio value="a" description="3 to 5 days">Standard</Radio>
+      <Radio value="b" description="Next day">Express</Radio>
+      <Radio value="c" variant="default">Plain</Radio>
+    </RadioGroup>);
+    const [a, b, c] = page.getByRole('radio').elements() as HTMLInputElement[];
+    const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
+    expect(card(a).className).toMatch(/dk-radio--card/);
+    expect(card(c).className).not.toMatch(/dk-radio--card/);
+    expect(page.getByRole('radiogroup').element().className).toMatch(/dk-radio-group--card/);
+    const shell = css(card(b));
+    expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
+    expect(css(card(a)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a)).boxShadow).toContain('0px 0px 0px 1px');
+    expect(css(card(a)).backgroundColor).toBe(css(card(b)).backgroundColor);
+    expect(css(card(b)).borderTopColor).toBe(color('var(--border)'));
+    // Pressed anywhere on the card, the description included.
+    await userEvent.click(page.getByText('Next day', { exact: true }));
+    expect(b.checked).toBe(true);
+    expect(onValueChange).toHaveBeenLastCalledWith('b', expect.anything());
+    await userEvent.keyboard('{ArrowUp}');
+    expect(a.checked).toBe(true);
+    expect(document.activeElement).toBe(a);
+    expect(css(card(a)).outlineStyle).toBe('solid');
+    expect(css(a).outlineStyle).toBe('none');
+    // Its name is the label alone; the description describes it.
+    await expect.element(page.getByRole('radio', { name: 'Express', exact: true })).toHaveAccessibleDescription('Next day');
+  });
+
+  test('variant card: a checked card\'s border 3:1 on the card and the page, in all six themes', () => {
+    expect(lowContrast([
+      ['checked card border', 'var(--primary)', 'var(--surface)', 3],
+    ])).toEqual([]);
+  });
+
   test('pressed: the circle shrinks to 90% while the row is held, on scale alone, and springs back; not when disabled (ED1)', async () => {
     await withMotion(async () => {
       await render(<RadioGroup aria-label="Press"><Radio id="pr" value="a">Press me</Radio><Radio id="pq" value="b" disabled>Off</Radio></RadioGroup>);

@@ -17,6 +17,31 @@
       - button "Next page"
 - text: Showing page 6 of 12
 
+# Large
+- navigation "Pagination":
+  - paragraph: 1–20 of 160
+  - text: Items per page
+  - combobox "Items per page":
+    - option "20" [selected]
+    - option "50"
+  - list:
+    - listitem:
+      - button "Previous page" [disabled]
+    - listitem:
+      - button "Page 1": "1"
+    - listitem:
+      - button "Page 2": "2"
+    - listitem:
+      - button "Page 3": "3"
+    - listitem:
+      - button "Page 4": "4"
+    - listitem:
+      - button "Page 5": "5"
+    - listitem:
+      - button "Page 8": "8"
+    - listitem:
+      - button "Next page"
+
 # Links
 - navigation "Pagination":
   - list:
