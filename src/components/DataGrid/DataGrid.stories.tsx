@@ -1,5 +1,8 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { EmptyState } from '../EmptyState/EmptyState';
 import { DataGrid, type DataGridCellChange, type DataGridColumn, type DataGridRow } from './DataGrid';
 
 const COLUMNS: DataGridColumn[] = [
@@ -45,6 +48,23 @@ export const Small: Story = { render: () => <Editable size="sm" /> };
 
 /** Read only: no onRowsChange, so cells move, select and copy, but don't edit. */
 export const ReadOnly: Story = {};
+
+function States() {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'empty' | 'failed'>('loading');
+  return (
+    <div style={{ display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      <DataGrid aria-label="Stock" columns={COLUMNS} rows={state === 'loaded' ? ROWS : []} busy={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
+        message={state === 'failed'
+          ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Stock didn't load. Check your connection and try again.</Alert>
+          : <EmptyState size="sm" title="No products yet" description="Add a product to start tracking its stock." />} />
+    </div>
+  );
+}
+/** Loading, empty and failed: placeholder rows while busy, then a message across every column. */
+export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: () => <States /> };
 
 // The stress story (G14): long words and more columns than fit, so the frame scrolls sideways.
 export const LongText: Story = {

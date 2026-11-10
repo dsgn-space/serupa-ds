@@ -43,6 +43,22 @@ Drawn from the `Playground` story.
 - `onRowsChange(rows, { changes })` is called once per edit, paste or Delete over a range. `rows` is the new rows with each changed field set to the text typed or pasted; `changes` lists every cell that changed, `{ rowId, column, value }`. Set `rows` from it, or parse and check `changes` first (a number column gets text). A change you don't take leaves the old text. Without `onRowsChange`, nothing is editable.
 - A pasted block fills from the active cell (or the top-left of the range), as far as the grid goes, skipping read-only columns; one value pasted over a range fills all of it.
 
+### Loading, empty and failed
+
+The grid keeps its header row in every state, so the page doesn't move and people know what's coming.
+
+- **Loading:** set `busy` with no `rows` yet. The grid draws `loadingRows` placeholder rows (3 by default; about as many as will come), each as tall as a real one at either `size`, so nothing jumps when the data arrives. Name the wait in `loadingLabel` ("Loading stock"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `busy` sets `aria-busy` on the grid while it lasts. To reload rows already shown, keep them and set `busy`.
+- **Empty:** no `rows` and a `message` holding an `EmptyState size="sm"`: what's missing, and the action that adds the first one. It's one cell across every column.
+- **Failed:** the same `message` with a danger `Alert`, which says what didn't load and offers Retry in `actions`. A danger Alert is `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+<DataGrid aria-label="Stock" columns={columns} rows={state === 'loaded' ? rows : []}
+  busy={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
+  message={state === 'failed'
+    ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Stock didn't load.</Alert>
+    : <EmptyState size="sm" title="No products yet" />} />
+```
+
 ## Accessibility
 
 - **Role and name:** a `<table role="grid">` named by `aria-label`, with `aria-rowcount`, `aria-colcount` and `aria-multiselectable`; column headers and `gridcell`s with `aria-selected`; cells in a read-only column of an editable grid have `aria-readonly`. A hidden line describes how to edit. Copies and pastes are announced ("4 cells copied").
@@ -74,6 +90,10 @@ Drawn from the `Playground` story.
 | `rowKey` | `string` | `"id"` | The field that holds a row's id. |
 | `onRowsChange` | `(rows: DataGridRow[], details: { changes: DataGridCellChange[] }) => void` | | The new rows, and `{ rowId, column, value }` for each cell changed. Without it, nothing edits. |
 | `size` | `"sm" \| "md"` | `"md"` | The cells' padding. |
+| `busy` | `boolean` | `false` | Rows are loading: sets `aria-busy`, and with no rows shows placeholders. |
+| `loadingRows` | `number` | `3` | How many placeholder rows. |
+| `loadingLabel` | `string` | `"Loading"` | Said once as the placeholders appear. |
+| `message` | `ReactNode` | | Shown across every column when there are no rows and it isn't busy: an EmptyState or an Alert. |
 
 `className` goes to the frame; `ref`, `aria-*` and other props go to the `<table>`.
 
@@ -98,6 +118,7 @@ Each is an optional override: set it on the page, a container or one DataGrid. T
 | `--data-grid-padding-x` | `spacing-3` | Space at a cell's sides (12px). |
 | `--data-grid-padding-y` | `spacing-2` | Space above and below a cell's text (8px). |
 | `--data-grid-padding-y-sm` | `spacing-1` | The same with size sm (4px). |
+| `--data-grid-message-padding` | `spacing-6` | Space around the message shown in place of rows (24px). |
 | `--data-grid-border-width` | `border-width-1` | The frame's and lines' width (1px). |
 | `--data-grid-radius` | `radius-surface` | The frame's corners. |
 <!-- token-table:end -->
