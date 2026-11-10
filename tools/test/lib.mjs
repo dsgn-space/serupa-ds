@@ -178,6 +178,22 @@ export function serve(dir) {
   return { base: `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`, close: () => server.close() };
 }
 
+// Pages of a suite's own, served over http with the project: write(name, html) returns the page's URL, and at(file)
+// a project file's (tokens.css, fonts/…), for the page to link. Not file:// URLs: WebKit won't load a stylesheet or a
+// font from another folder into a file:// page (the font's load() rejects with a NetworkError), and Firefox reports
+// no request for one. The folder is the suite's own, inside the project (.test-tmp-*, ignored), since other suites
+// empty .test-tmp/ while this one runs; close() removes it.
+export function servePages(prefix) {
+  const dir = fs.mkdtempSync(path.join(PROJECT, `.test-tmp-${prefix}-`));
+  const server = serve(PROJECT);
+  const at = (file) => `${server.base}/${path.relative(PROJECT, path.join(PROJECT, file)).split(path.sep).map(encodeURIComponent).join('/')}`;
+  return {
+    at,
+    write: (name, html) => { fs.writeFileSync(path.join(dir, name), html); return at(path.relative(PROJECT, path.join(dir, name))); },
+    close: () => { server.close(); fs.rmSync(dir, { recursive: true, force: true }); },
+  };
+}
+
 // The end of a suite run with node: exit 0 if it passed. Under Vitest, which owns the process, a failed result is
 // already a failed test.
 export function done(ok) { if (!vt) process.exit(ok ? 0 : 1); }

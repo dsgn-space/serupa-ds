@@ -3,7 +3,7 @@ import '../../../tokens.css';
 import '../../../src/styles/base.css';
 import '../../../src/styles/index.css';
 import { afterEach, beforeEach, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { announcerIdle } from '../../../src/internal/announce';
 import { resetWarnings } from '../../../src/internal/warn';
 
@@ -36,6 +36,15 @@ document.head.appendChild(still);
 // hovers whatever the next test renders there, which then reads its hover look: so it goes back after each.
 document.body.style.padding = '16px';
 afterEach(() => userEvent.hover(document.documentElement, { position: { x: 0, y: 0 }, force: true }));
+// A test that narrows the page (page.viewport) and doesn't put it back leaves every later test in its file, in random
+// order, at that size: in Firefox the clicks of those tests then landed beside their targets (Accordion, after its
+// 320px test). After each test, the page goes back to the size it had when the test started (a file's own size, set in
+// its beforeAll, stays).
+let size: [number, number] = [0, 0];
+beforeEach(() => { size = [window.innerWidth, window.innerHeight]; });
+afterEach(async () => {
+  if (window.innerWidth !== size[0] || window.innerHeight !== size[1]) await page.viewport(size[0], size[1]);
+});
 // The two live regions are shared by the whole page (internal/announce.ts): what one test queued would otherwise be
 // said during the next one, which then reads it as its own. Let it finish, then empty them.
 afterEach(async () => {
