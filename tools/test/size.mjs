@@ -89,7 +89,10 @@ const KEYS = ['alone', 'share', 'css'];
 // "share" is the difference of two gzipped builds, so it moves when any other code changes: one unrelated edit
 // moved other folders' shares by up to 20 B (26 Oct 2026), and a few merges in a day add up. A share is over its
 // budget only past this many bytes, so merges that each passed don't turn main red together by "0.0 KiB" (SZ2).
-// "alone" and "css" measure only what the folder pulls in, so they don't move with other folders and get no margin.
+// "css" is a difference of two gzipped files too (components.css with and without the folder), so it moves the same
+// way: Badge's new tones took Fab's css 3 B over 1.4 KiB on 10 Nov 2026 with no change to Fab, and twelve merge
+// requests failed on it before main was fixed (GR347). It gets the same margin. "alone" measures only what the
+// folder pulls in, so it doesn't move with other folders and gets none.
 const SHARE_NOISE = 64;
 
 const gz = (buf) => zlib.gzipSync(buf, { level: 9 }).length;
@@ -201,7 +204,7 @@ const LABEL = { alone: 'imported alone', share: 'adds to the whole package', css
 const overAlone = new Set(folders.filter((n) => budgets[n] && measured[n].alone > budgets[n].alone * 1024));
 const made = Object.fromEntries(await Promise.all([...overAlone].map(async (n) => [n, await inputsOf(pick(names[n]))])));
 const own = folders.flatMap((n) => (budgets[n]
-  ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'share' ? SHARE_NOISE : 0),
+  ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'alone' ? 0 : SHARE_NOISE),
     detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json${k === 'alone' && made[n] ? ` (${made[n]})` : ''}` }))
   : [{ name: `${n} has size budgets`, ok: false, detail: `run node tools/test/size.mjs --update ${n} and commit tools/test/baseline-size/${n}.json` }]));
 // Size over time (nightly, as the benchmarks are): a budget allows 5% over what a folder weighed when it was set, so a
