@@ -2,6 +2,7 @@
 import '../tools/typescript/api.mjs';
 import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
+import remarkGfm from 'remark-gfm';
 import { buildUtilities } from '../tools/utilities/build.mjs';
 import { buildRegistry } from '../tools/build/registry.mjs';
 
@@ -14,7 +15,9 @@ buildRegistry(fileURLToPath(new URL('..', import.meta.url)));
 const config: StorybookConfig = {
   framework: { name: '@storybook/react-vite', options: {} },
   stories: ['../docs/**/*.mdx', '../src/**/*.mdx', '../src/**/*.stories.tsx'],
-  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
+  // The docs pages write their tables in Markdown ("| Block | Use it for |"), which is GitHub's extension, not
+  // CommonMark: without remark-gfm, MDX 3 printed them as raw text.
+  addons: ['@storybook/addon-a11y', { name: '@storybook/addon-docs', options: { mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } } } }],
   core: { disableTelemetry: true },
   docs: { defaultName: 'Docs' },
   // The props tables (<Controls /> on each Docs page) come from the TypeScript types and their TSDoc, inherited and
