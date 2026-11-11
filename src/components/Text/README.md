@@ -35,6 +35,11 @@ const { Text } = window.Serupa;
 - Give running text `measure` on a wide page (an article, a long description, help text), so each line stops near 65 characters: longer lines are hard to follow back to the next one. Lines under 80 characters are WCAG's advice (1.4.8, AAA). It's the same width as `max-w-prose` and Container's `size="prose"`, without the utility classes.
 - Text's tokens (`--text-color`, `--text-color-muted`, `--text-color-primary`, `--text-color-danger`) only change Text's tones. They're separate from the shared theme colors such as `--text` and `--text-muted`, which they default to, and from the type sizes such as `--text-sm`: overriding `--text-color-muted` changes muted Text, not every muted color on the page.
 
+### Do and don't
+
+- **Do:** Cut a preview with `lines` and link to the full item, so the rest is a press away. (`DoLinesWithLink`)
+- **Don't:** Cut text with no way to the rest: the hidden lines are lost to anyone who reads the screen. (`DontLinesAlone`)
+
 ## Accessibility
 
 - Every tone keeps 4.5:1 on `surface` in all six themes (`Text.test.tsx`). On other backgrounds, check it yourself.
