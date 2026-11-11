@@ -182,6 +182,14 @@ describe('KeyboardShortcuts', () => {
     expect(dialog()!.querySelector('[role="switch"]')).toBe(null);
   });
 
+  test('a one-key shortcut only listed in shortcuts, with no "?" and none set up, still shows the switch; a listed mod shortcut alone does not', async () => {
+    const screen = await render(<SerupaProvider locale="en" platform="other"><KeyboardShortcuts helpKeys={['mod', '/']} shortcuts={[{ keys: ['mod', 'S'], description: 'Save' }, { keys: ['G'], description: 'Go to' }]} defaultOpen /></SerupaProvider>);
+    await expect.poll(() => !!dialog()).toBe(true);
+    expect(dialog()!.querySelector('[role="switch"]')).not.toBe(null);
+    await screen.rerender(<SerupaProvider locale="en" platform="other"><KeyboardShortcuts helpKeys={['mod', '/']} shortcuts={[{ keys: ['mod', 'S'], description: 'Save' }]} defaultOpen /></SerupaProvider>);
+    await expect.poll(() => dialog()!.querySelector('[role="switch"]')).toBe(null);
+  });
+
   test('one group shows no heading; helpKeys changes the keys or turns them off; open and onOpenChange control it', async () => {
     const changes: boolean[] = [];
     function Controlled() {
