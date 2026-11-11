@@ -141,23 +141,41 @@ describe('Patterns/Session time-out', () => {
     expect(window.localStorage.getItem(KEY)).toBeNull();
   });
 
-  test('sending the message clears the draft once onSend resolves, and keeps it when onSend rejects', async () => {
+  test('sending the message clears the draft once onSend resolves, and keeps it when onSend rejects; each outcome shows on screen', async () => {
     const refused = vi.fn(() => Promise.reject(new Error('offline')));
     const first = await render(<SessionTimeout saveKey={KEY} onSend={refused} />);
     await userEvent.fill(first.getByLabelText('Subject'), 'Refund');
+    await userEvent.fill(first.getByLabelText('Message'), 'Charged twice');
     await first.getByRole('button', { name: 'Send message' }).click();
-    await vi.waitFor(() => expect(said()).toContain('wasn’t sent'));
-    expect(refused).toHaveBeenCalledWith({ subject: 'Refund', message: '' });
+    await expect.element(first.getByRole('alert')).toHaveTextContent('The message wasn’t sent. What you typed is kept: try again.');
+    expect(refused).toHaveBeenCalledWith({ subject: 'Refund', message: 'Charged twice' });
     expect((JSON.parse(window.sessionStorage.getItem(KEY)!) as { subject: string }).subject).toBe('Refund');
     await first.unmount();
     const onSend = vi.fn();
     const second = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
     await expect.element(second.getByLabelText('Subject')).toHaveValue('Refund');
     await second.getByRole('button', { name: 'Send message' }).click();
-    await vi.waitFor(() => expect(said()).toContain('Message sent.'));
-    expect(onSend).toHaveBeenCalledWith({ subject: 'Refund', message: '' });
+    const sent = second.getByRole('status').filter({ hasText: 'Message sent' });
+    await expect.element(sent).toBeVisible();
+    expect(active()).toBe(sent.element());
+    expect(onSend).toHaveBeenCalledWith({ subject: 'Refund', message: 'Charged twice' });
     expect(window.sessionStorage.getItem(KEY)).toBeNull();
     await expect.element(second.getByLabelText('Subject')).toHaveValue('');
+  });
+
+  test('an empty Subject or Message isn\'t sent: each says what\'s missing, and the first empty one takes focus', async () => {
+    const onSend = vi.fn();
+    const screen = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
+    await screen.getByRole('button', { name: 'Send message' }).click();
+    expect(onSend).not.toHaveBeenCalled();
+    await expect.element(screen.getByLabelText('Subject')).toHaveAccessibleDescription(/Enter a subject/);
+    await expect.element(screen.getByLabelText('Message')).toHaveAccessibleDescription(/Enter your message/);
+    expect(active()).toBe(screen.getByLabelText('Subject').element());
+    await userEvent.fill(screen.getByLabelText('Subject'), 'Refund');
+    await expect.element(screen.getByLabelText('Subject')).not.toHaveAccessibleDescription(/Enter a subject/);
+    await screen.getByRole('button', { name: 'Send message' }).click();
+    expect(active()).toBe(screen.getByLabelText('Message').element());
+    expect(onSend).not.toHaveBeenCalled();
   });
 
   test('while the message is sending, a second press doesn\'t send it again', async () => {
@@ -165,6 +183,7 @@ describe('Patterns/Session time-out', () => {
     const onSend = vi.fn(() => new Promise<void>((r) => { done = r; }));
     const screen = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
     await userEvent.fill(screen.getByLabelText('Subject'), 'Refund');
+    await userEvent.fill(screen.getByLabelText('Message'), 'Charged twice');
     const button = screen.getByRole('button', { name: 'Send message' });
     await button.click();
     await expect.element(button).toHaveAttribute('aria-busy', 'true');
@@ -174,7 +193,7 @@ describe('Patterns/Session time-out', () => {
     await userEvent.keyboard('{Enter}');
     expect(onSend).toHaveBeenCalledTimes(1);
     done();
-    await vi.waitFor(() => expect(said()).toContain('Message sent.'));
+    await expect.element(screen.getByText('Message sent. We’ll reply by email.')).toBeVisible();
     await expect.element(button).not.toHaveAttribute('aria-busy', 'true');
   });
 
