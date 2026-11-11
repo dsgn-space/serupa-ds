@@ -47,6 +47,21 @@ describe('ShowMore', () => {
     await expect.element(page.getByRole('button', { name: 'Show more' })).toBeInTheDocument();
   });
 
+  test('a web font that arrives after the first paint and lets the text fit takes the button away, though the box keeps its size', async () => {
+    // The font's rule is added only once it's measured, so nothing loads it sooner. Monospace is wider than Inter:
+    // the text takes three lines in it and two in Inter, and the two-line box is as tall either way.
+    const rule = document.createElement('style');
+    rule.textContent = "@font-face { font-family: SmLate; src: url(/fonts/InterVariable-latin.woff2) format('woff2'); }";
+    try {
+      await render(<div style={{ width: '300px', fontSize: '14px', lineHeight: '20px', fontFamily: 'SmLate, monospace' }}>
+        <ShowMore id="f" lines={2}>Fresh coffee, packed well and sent the same day, with a note from the roaster.</ShowMore></div>);
+      await expect.element(page.getByRole('button', { name: 'Show more' })).toBeInTheDocument();
+      document.head.append(rule);
+      await expect.poll(() => page.getByRole('button').query(), { timeout: 5000 }).toBeNull();
+      expect(text('f').scrollHeight).toBeLessThanOrEqual(text('f').clientHeight + 1);
+    } finally { rule.remove(); }
+  });
+
   test('lines runs from 1 to 6 (more counts as 6), set without a style attribute so a strict CSP keeps it', async () => {
     await render(<Narrow><ShowMore id="l1" lines={1}>{LONG}</ShowMore><ShowMore id="l9" lines={9}>{LONG}</ShowMore></Narrow>);
     expect([Math.round(text('l1').getBoundingClientRect().height), Math.round(text('l9').getBoundingClientRect().height), text('l9').hasAttribute('style')]).toEqual([20, 120, false]);
