@@ -165,6 +165,24 @@ describe('Blocks/Comment thread', () => {
     expect(said()).not.toContain('Comment saved');
   });
 
+  test('Save is busy until the save settles, so a double click sends the edit once', async () => {
+    let done = () => {};
+    const onEdit = vi.fn(() => new Promise<void>((ok) => { done = ok; }));
+    await render(<CommentThread comments={start} onReply={() => {}} onEdit={onEdit} />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
+    const form = (page.getByRole('textbox', { name: 'Edit comment' }).element() as HTMLTextAreaElement).form!;
+    const save = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    save.click();
+    await expect.poll(() => save.getAttribute('aria-busy')).toBe('true');
+    save.click();
+    form.requestSubmit();
+    expect(onEdit).toHaveBeenCalledTimes(1);
+    done();
+    await expect.poll(said).toContain('Comment saved');
+    expect(onEdit).toHaveBeenCalledTimes(1);
+  });
+
   test('every word can be given in the page language', async () => {
     await render(<CommentThread comments={[]} onReply={() => {}} labels={{ title: 'Komentar', noComments: 'Belum ada komentar.', reply: 'Balas', replyHint: (n) => `Paling banyak ${n} karakter.`, post: 'Kirim balasan' }} />);
     await expect.element(page.getByRole('region', { name: 'Komentar' })).toBeVisible();
