@@ -77,9 +77,9 @@ export const LongText: Story = {
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't"). The Toaster sits in a
-// corner of the screen, so these draw one toast in place, with the Toast's own classes, to sit side by side.
+// corner of the screen, so these draw one toast in place, with the Toast's own classes, to sit side by side. data-instant: drawn in place at once, not sliding in.
 function Sketch({ title, description, success, action }: { title: string; description?: string; success?: boolean; action?: string }) {
-  return <div className={'dk-toast dk-toast--' + (success ? 'success' : 'neutral')} style={{ width: 360, boxShadow: 'none' }}>
+  return <div className={'dk-toast dk-toast--' + (success ? 'success' : 'neutral')} data-instant="" style={{ width: 360, boxShadow: 'none' }}>
     {success ? <span className="dk-toast__icon" aria-hidden="true"><Icon icon={icons.CheckCircle} /></span> : null}
     <div className="dk-toast__content"><p className="dk-toast__title">{title}</p>{description ? <p className="dk-toast__description">{description}</p> : null}</div>
     {action ? <Button className="dk-toast__action" size="sm" variant="secondary">{action}</Button> : null}
