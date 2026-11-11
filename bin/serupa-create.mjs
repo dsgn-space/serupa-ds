@@ -7,7 +7,7 @@
 // its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
 // node_modules/serupa-ds, which matches the installed release.
 //
-// usage:  npx --package=gitlab:diki-stwn/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
+// usage:  npx --package=gitlab:diki-stwn-group/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
 //
 // The folder must be new or empty. The app installs this same release of serupa-ds (its tag, as the README's install
 // line does), and the React, Vite and TypeScript versions this release was tested with. --serupa <spec> installs
