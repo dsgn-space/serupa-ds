@@ -2,12 +2,17 @@
 // values that drift from the theme (a hex color that ignores dark mode, a 12px gap off the spacing scale).
 //   // stylelint.config.js
 //   export default { extends: ["serupa-ds/stylelint"] };
-// Three rules, each with the token family to use in its message:
+// Four rules, each with the token family to use in its message:
 //   serupa/no-raw-color     a color written out (#hex, rgb(), hsl(), oklch(), a named color) instead of a color token.
 //                           A named color counts only in a property that takes a color, so grid-area: tan passes.
 //   serupa/no-raw-spacing   a fixed length in margin, padding, gap or inset instead of a spacing token. A percentage
 //                           or a viewport or container unit (inset: 50%, 1vw) passes: no token says that
 //   serupa/no-raw-radius    a length in border-radius instead of a rounded token
+//   serupa/no-raw-motion    in transition and animation: a duration or delay written out instead of a motion role
+//                           (a duration under 1ms, the usual way to switch motion off, passes), an easing written
+//                           out (cubic-bezier(), linear(), steps(), ease, ease-in …) instead of an easing token, and
+//                           `all`, which animates every property that happens to change. A warning for now, so it
+//                           doesn't fail an app's lint on upgrade; it becomes an error in the next major.
 // A value inside var() is never flagged, its fallback included, and calc() over tokens passes. Turn one off, or
 // write `/* stylelint-disable-next-line serupa/no-raw-color -- why */` above a line that needs a raw value.
 import stylelint from 'stylelint';
@@ -34,6 +39,10 @@ const SPACING = /^(?:margin|padding|scroll-margin|scroll-padding)(?:-(?:top|righ
 const COLOR_PROPS = /^(?:-[a-z]+-)?(?:color|background(?:-color|-image)?|border(?:-(?:top|right|bottom|left|block|inline)(?:-(?:start|end))?)?(?:-color)?|border-color|border-image(?:-source)?|outline(?:-color)?|fill|stroke|(?:box|text)-shadow|caret-color|accent-color|text-stroke(?:-color)?|text-decoration(?:-color)?|text-emphasis(?:-color)?|column-rule(?:-color)?|scrollbar-color|filter|stop-color|flood-color|lighting-color)$/i;
 // A length that scales with its container or the viewport, which the spacing scale has no token for.
 const RELATIVE = /(?:%|v[whib]|vmin|vmax|[sdl]v[whib]|[sdl]vmin|[sdl]vmax|cq[whib]|cqmin|cqmax)$/i;
+const MOTION = /^(?:-webkit-)?(?:transition|animation)(?:-(?:duration|delay|timing-function))?$/i;
+const TIME = /^-?(\d*\.?\d+)(m?s)$/i;
+const EASING_FUNCTIONS = /^(?:cubic-bezier|linear|steps)$/i;
+const EASING_WORDS = new Set(['ease', 'ease-in', 'ease-out', 'ease-in-out']);
 const RADIUS = /^border(?:-(?:top|bottom|start|end)-(?:left|right|start|end))?-radius$/i;
 
 // The value's words and function names outside every var(), with the strings and url()s left out.
@@ -95,9 +104,27 @@ const radius = rule('serupa/no-raw-radius', {
   rejected: (v, p) => `${v} in ${p} is a radius written out: use a rounded token, such as var(--rounded-md) or var(--rounded-full)`,
 }, lengths(RADIUS, false));
 
+const motion = rule('serupa/no-raw-motion', {
+  rejected: (v, p) => v === 'all'
+    ? `all in ${p} animates every property that changes, layout and paint included: name the ones that should move, such as opacity var(--motion-enter-sm) var(--ease-enter)`
+    : TIME.test(v)
+      ? `${v} in ${p} is a duration written out: use a motion role, such as var(--motion-hover), var(--motion-enter-md) or var(--motion-exit-md), so it stays in step with the system`
+      : `${v} in ${p} is an easing written out: use an easing token, such as var(--ease-enter), var(--ease-exit), var(--ease-move) or var(--ease-spring)`,
+}, function* (decl) {
+  const all = /^(?:-webkit-)?transition(?:-property)?$/i.test(decl.prop);
+  if (!MOTION.test(decl.prop) && !all) return;
+  for (const { word, fn } of outsideVar(decl.value)) {
+    if (fn) { if (EASING_FUNCTIONS.test(word)) yield `${word}()`; continue; }
+    const time = TIME.exec(word);
+    if (time) { if (Number(time[1]) * (time[2].toLowerCase() === 's' ? 1000 : 1) >= 1) yield word; continue; }
+    if (all && word.toLowerCase() === 'all') yield word;
+    else if (MOTION.test(decl.prop) && EASING_WORDS.has(word.toLowerCase())) yield word;
+  }
+});
+
 /** @type {import("stylelint").Config} */
 const config = {
-  plugins: [color, spacing, radius],
-  rules: { 'serupa/no-raw-color': true, 'serupa/no-raw-spacing': true, 'serupa/no-raw-radius': true },
+  plugins: [color, spacing, radius, motion],
+  rules: { 'serupa/no-raw-color': true, 'serupa/no-raw-spacing': true, 'serupa/no-raw-radius': true, 'serupa/no-raw-motion': [true, { severity: 'warning' }] },
 };
 export default config;
