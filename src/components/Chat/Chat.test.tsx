@@ -8,6 +8,8 @@ import { idLabels } from '../../internal/labels';
 import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
 import type { ChatApprovalStatus } from './Chat';
 import { announcerIdle } from '../../internal/announce';
+// The tests that read digits say they mean en-US: with no locale, a number is in the browser's digits ("٣" in ar-EG).
+const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
 
 const log = () => document.querySelector('[role=log]') as HTMLElement;
 const atBottom = (el: HTMLElement) => el.scrollHeight - el.scrollTop - el.clientHeight <= 4;
@@ -263,7 +265,7 @@ describe('ChatMessage: versions of a regenerated reply', () => {
   }
 
   test('"2 / 3" between previous and next, named "Response 2 of 3", and each button moves and says where it is', async () => {
-    await render(<Versions />);
+    await render(<EnUS><Versions /></EnUS>);
     await expect.element(page.getByRole('group', { name: 'Response 2 of 3' })).toBeVisible();
     expect(find(document.getElementById('v')!, '2 / 3')).not.toBe(null);
     await page.getByRole('button', { name: 'Next response' }).click();
@@ -345,7 +347,7 @@ describe('ChatApproval', () => {
 
 describe('ChatCitation', () => {
   test('a link that says its number and the host, without "www."; or your own words', async () => {
-    await render(<><ChatCitation href="https://www.example.com/a" index={1} /><ChatCitation href="https://docs.example.com/b" index={2}>Refund policy</ChatCitation></>);
+    await render(<EnUS><ChatCitation href="https://www.example.com/a" index={1} /><ChatCitation href="https://docs.example.com/b" index={2}>Refund policy</ChatCitation></EnUS>);
     await expect.element(page.getByRole('link', { name: '1 example.com' })).toHaveAttribute('href', 'https://www.example.com/a');
     await expect.element(page.getByRole('link', { name: '2 Refund policy' })).toBeVisible();
   });
