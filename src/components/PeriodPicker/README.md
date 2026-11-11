@@ -72,7 +72,7 @@ Drawn from the `Months` story.
 | ← → | The period before or after, onto the page before or after past its ends |
 | ↑ ↓ | The same place a row up or down |
 | Home, End | The row's first or last period |
-| Page Up, Page Down | A year back or on (twelve years for years) |
+| PageUp, PageDown | A year back or on (twelve years for years) |
 | Enter, Space | Chooses the period and closes |
 | Escape | Closes without a change |
 

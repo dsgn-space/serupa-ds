@@ -168,8 +168,9 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   const exit = useExit(open, panel);
   useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--dk-pp-offset', onOutside: () => close(false), onFocusOutside: () => close(false), inside: button });
 
-  // every render: opening or a key asks for focus, and the period's button is there only after the render (and after
+  // Opening or a key asks for focus, and the period's button is there only after the render (and after
   // useAnchoredLayer has shown the popup: a hidden popover can't take focus).
+  // every render: the render that holds the asked-for button can't be known ahead; on the rest this returns at once.
   useIsoLayoutEffect(() => {
     if (!open || !wantFocus.current || !grid.current) return;
     wantFocus.current = false;

@@ -13,7 +13,8 @@ const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider lo
 const button = () => document.querySelector<HTMLButtonElement>('[role=combobox]')!;
 const panel = () => document.querySelector<HTMLElement>('[role=dialog]')!;
 const periods = () => [...panel().querySelectorAll<HTMLButtonElement>('[role=gridcell] button')];
-const focused = () => document.activeElement?.querySelector('.dk-visually-hidden')?.textContent ?? document.activeElement?.getAttribute('aria-label');
+// The focused period's name, from its hidden full name (the visible short one is aria-hidden), or a button's label.
+const focused = () => document.activeElement?.querySelector('span:not([aria-hidden])')?.textContent ?? document.activeElement?.getAttribute('aria-label');
 const shown = (e: Element) => [...e.querySelectorAll('[aria-hidden]')].map((x) => x.textContent).join('');
 // performance.now: Date is held at 12 March 2025 (the stories' clock), so it doesn't move.
 const until = async (ok: () => boolean, ms = 2000) => { const end = performance.now() + ms; while (!ok() && performance.now() < end) await settle(20); expect(ok()).toBe(true); };
@@ -133,7 +134,8 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'Q4 2025');
     await userEvent.keyboard('{ArrowRight}');
     await until(() => focused() === 'Q1 2026');
-    await userEvent.keyboard('{Enter}');
+    // Space chooses, as Enter does.
+    await userEvent.keyboard(' ');
     expect(changed).toHaveBeenCalledWith('2026-Q1', { start: new Date(2026, 0, 1), end: new Date(2026, 2, 31) });
     expect(button().textContent).toBe('Q1 2026');
   });
