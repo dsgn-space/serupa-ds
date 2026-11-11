@@ -309,6 +309,15 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('spaces around the typed text don\'t stop a match: " cote " still finds Côte d’Ivoire (GR277)', async () => {
+    await render(<Countries />);
+    await open();
+    await selectAll(); await userEvent.keyboard('cote ');
+    expect([st('cb').opts, st('cb').active]).toEqual([['Côte d’Ivoire'], 'Côte d’Ivoire']);
+    await selectAll(); await userEvent.keyboard(' egy');
+    expect(st('cb').opts).toEqual(['Egypt']);
+  });
+
   test('onCreate: text that isn\'t an option\'s label ends the list with Add "text"; Enter or a click adds it and picks the value onCreate returns; an exact label shows no add row; it says the add row when nothing matches (185)', async () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
