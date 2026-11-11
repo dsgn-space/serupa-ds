@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from '../Button/Button';
 import { FormattedNumber } from './FormattedNumber';
 
 const meta = {
@@ -30,6 +31,22 @@ export const Locales: Story = {
   render: () => <ul style={{ display: 'grid', gap: 'var(--spacing-1)', margin: 0, paddingInlineStart: 'var(--spacing-5)' }}>
     {['en-US', 'id-ID', 'de-DE', 'fr-FR', 'ar-EG', 'hi-IN'].map((l) => <li key={l} style={row}><span>{l}</span><FormattedNumber value={1234567.89} locale={l} /></li>)}
   </ul>,
+};
+
+/** With `animate`, only the characters that changed fade in: press the buttons and watch the total. */
+export const Animated: Story = {
+  render: function Animated() {
+    const [total, setTotal] = React.useState(1_485_000);
+    return (
+      <div style={{ display: 'grid', gap: 'var(--spacing-3)', justifyItems: 'start' }}>
+        <p style={{ margin: 0 }}>Total: <FormattedNumber value={total} format="currency" currency="IDR" animate /></p>
+        <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+          <Button variant="secondary" onClick={() => setTotal((t) => t + 15_000)}>Add <FormattedNumber value={15_000} format="currency" currency="IDR" /></Button>
+          <Button variant="secondary" onClick={() => setTotal((t) => t + 1_000_000)}>Add <FormattedNumber value={1_000_000} format="currency" currency="IDR" /></Button>
+        </div>
+      </div>
+    );
+  },
 };
 
 export const LongValue: Story = {
