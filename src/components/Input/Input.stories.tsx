@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input, InputAction } from './Input';
 import { NumberInput } from '../NumberInput/NumberInput';
+import { Field } from '../Field/Field';
 import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
@@ -102,4 +103,26 @@ export const LongValue: Story = {
       <Input {...args} placeholder="A placeholder far longer than the input is wide" />
     </div>
   ),
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a width that fits what goes in, so the field says how much to type. */
+export const DoFitWidth: Story = {
+  name: 'Do: a width that fits',
+  render: () => <Col><Field label="Postcode"><Input className="w-24" inputMode="numeric" defaultValue="10110" /></Field><Field label="Street address"><Input defaultValue="Jalan Sudirman 12" /></Field></Col>,
+};
+/** Don't: every field full width, a five-digit postcode as wide as a street address. */
+export const DontFullWidthShort: Story = {
+  name: "Don't: everything full width",
+  render: () => <Col><Field label="Postcode"><Input inputMode="numeric" defaultValue="10110" /></Field><Field label="Street address"><Input defaultValue="Jalan Sudirman 12" /></Field></Col>,
+};
+/** Do: an error that says how to fix it. */
+export const DoHelpfulError: Story = {
+  name: 'Do: an error that helps',
+  render: () => <Col><Field label="Email" error="Enter an email with an @, like ana@example.com."><Input type="email" defaultValue="ana.example.com" /></Field></Col>,
+};
+/** Don't: an error that only says something is wrong. */
+export const DontVagueError: Story = {
+  name: "Don't: a vague error",
+  render: () => <Col><Field label="Email" error="Invalid input."><Input type="email" defaultValue="ana.example.com" /></Field></Col>,
 };
