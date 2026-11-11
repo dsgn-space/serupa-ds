@@ -20,7 +20,8 @@ import { announce } from '../../internal/announce';
      words under each field, saying how to fix it.
    - 2.4.3 and 4.1.3: moving to the code step and to the end puts focus on the new step's heading, so a screen reader
      says where it is. "Send a new code" says on screen that the code went, in a status region a screen reader reads
-     without moving focus off the button.
+     without moving focus off the button, or that it couldn't go when onResend rejects. "Back to email and password"
+     leaves the code step for the first one, keeping the email, with focus on its heading.
    - Each word is a label, English by default. The checks against a server are the app's: `check` and `verify`. */
 
 export type AuthStep = 'password' | 'code' | 'done';
@@ -46,6 +47,10 @@ export interface AuthCardLabels {
   failed: string;
   resend: string;
   resent: string;
+  /** When onResend's promise rejects: said in the same status region, in place of "We sent a new code". */
+  resendFailed: string;
+  /** On the code step: back to the email and password, to sign in as someone else or fix a typo. */
+  back: string;
   doneTitle: string;
   doneMessage: string;
   doneLink: string;
@@ -70,6 +75,8 @@ const english: AuthCardLabels = {
   failed: 'Couldn’t check that. Check your connection and try again.',
   resend: 'Send a new code',
   resent: 'We sent a new code to your phone. It works for 10 minutes.',
+  resendFailed: 'Couldn’t send a new code. Check your connection and try again.',
+  back: 'Back to email and password',
   doneTitle: 'You’re signed in',
   doneMessage: 'Welcome back. Taking you to your dashboard.',
   doneLink: 'Go to your dashboard',
@@ -82,8 +89,9 @@ export interface AuthCardProps {
   check: Check<[email: string, password: string]>;
   /** Your server's check of the one-time code. Without it there is no code step: a right password ends on done. */
   verify?: Check<[code: string]> | undefined;
-  /** Sends a new code when "Send a new code" is pressed. */
-  onResend?: (() => void) | undefined;
+  /** Sends a new code when "Send a new code" is pressed. Return its promise: the button is busy until it settles, and
+   *  a rejection says the code didn't go. */
+  onResend?: (() => void | PromiseLike<unknown>) | undefined;
   /** Runs once the person is signed in, on the done step. */
   onSignedIn?: (() => void) | undefined;
   /** Where "Forgot your password?" goes. */
@@ -141,8 +149,20 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
   // same as last time (a second wrong password).
   const [tries, setTries] = React.useState(0);
   const fail = () => { setFailure(true); announce(l.failed); };
-  // How many times a new code was asked for. Each ask puts a new line in the status region below, so it is said every time.
+  // How many times a new code was asked for, and whether the last ask failed. Each answer puts a new line in the
+  // status region below, so it is said every time.
   const [sent, setSent] = React.useState(0);
+  const [resendFailed, setResendFailed] = React.useState(false);
+  const [resending, setResending] = React.useState(false);
+  const resend = () => {
+    if (resending) return;
+    setCode(''); setCodeError(null);
+    const out = onResend?.();
+    const done = (ok: boolean) => { setResending(false); setResendFailed(!ok); setSent((n) => n + 1); };
+    if (!thenable(out)) { done(true); return; }
+    setResending(true);
+    out.then(() => done(true), () => done(false));
+  };
   // A new step puts focus on its heading (tabIndex -1), so the change is said and the next Tab goes on from there.
   const heading = React.useRef<HTMLHeadingElement | null>(null);
   const moved = React.useRef(false);
@@ -203,12 +223,13 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
         <Button type="submit" loading={busy}>{l.verify}</Button>
         {failure ? <p className="m-0 text-sm text-danger-text">{l.failed}</p> : null}
         <div className="flex flex-col">
-          <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); setSent((n) => n + 1); onResend?.(); }}>{l.resend}</Button>
-          {/* Always there, so a reader is listening before the first ask; a new keyed line is added for each ask.
+          <Button type="button" variant="ghost" loading={resending} onClick={resend}>{l.resend}</Button>
+          {/* Always there, so a reader is listening before the first ask; a new keyed line is added for each answer.
               Empty, it takes no room, so the step looks the same until a code is asked for. */}
           <div role="status" className="text-sm text-text-muted">
-            {sent ? <p key={sent} className="m-0 mt-2">{l.resent}</p> : null}
+            {sent ? <p key={sent} className={resendFailed ? 'm-0 mt-2 text-danger-text' : 'm-0 mt-2'}>{resendFailed ? l.resendFailed : l.resent}</p> : null}
           </div>
+          <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); setSent(0); setFailure(false); setPassword(''); go('password'); }}>{l.back}</Button>
         </div>
       </form>
     </section>

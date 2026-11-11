@@ -99,6 +99,25 @@ describe('Patterns/Sign-up', () => {
     await expect.element(screen.getByRole('link', { name: 'Go to your dashboard' })).toBeInTheDocument();
   });
 
+  test('the wrong-code error points to "Send a new code", which is there: busy while it sends, then says the code went or that it couldn’t', async () => {
+    let fail = true, settle = () => {};
+    const onResend = vi.fn(() => new Promise<void>((ok, no) => { settle = () => (fail ? no(new Error('offline')) : ok()); }));
+    const screen = await render(<SignUp start="code" onResend={onResend} initial={{ email: 'ana@example.com' }} />);
+    const status = () => (screen.container.querySelector('[role="status"]') as HTMLElement).textContent;
+    const button = screen.getByRole('button', { name: 'Send a new code' });
+    await button.click();
+    await expect.element(button).toHaveAttribute('aria-busy', 'true');
+    (button.element() as HTMLButtonElement).click();
+    expect(onResend).toHaveBeenCalledWith('ana@example.com');
+    expect(onResend).toHaveBeenCalledTimes(1);
+    settle();
+    await expect.poll(status).toBe('Couldn’t send a new code. Check your connection and try again.');
+    fail = false;
+    await button.click();
+    settle();
+    await expect.poll(status).toBe('We sent a new code to ana@example.com. It works for 10 minutes.');
+  });
+
   test('a refused account stays on the form', async () => {
     const screen = await render(<SignUp onSubmit={() => Promise.reject(new Error('no'))} initial={{ name: 'A', email: 'a@b.co', password: 'blue whales sing', terms: true }} />);
     await screen.getByRole('button', { name: 'Create account' }).click();
