@@ -80,7 +80,7 @@ describe('Patterns/Notifications', () => {
 
   test('unread ones have the drawer\'s dot before the title, in primary, and a semibold title; read ones keep the room for it, hidden', async () => {
     await render(<Notifications />);
-    const rows = titles(), dot = (li: Element) => li.querySelector('.dk-notification-center__dot') as HTMLElement;
+    const rows = titles(), dot = (li: Element) => li.querySelector('span[aria-hidden="true"]:empty') as HTMLElement;
     const seen = rows.map((li) => getComputedStyle(dot(li)).visibility);
     expect(seen).toEqual(['visible', 'visible', 'visible', 'hidden', 'hidden']);
     const probe = document.createElement('span'); probe.style.color = 'var(--primary)'; document.body.append(probe);
