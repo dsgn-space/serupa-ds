@@ -7,6 +7,7 @@ import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { en as words } from './labels';
+import { useStickyHead } from '../../internal/stickyHead';
 
 /** A row of data: any object; its id is read from the `rowKey` field ("id" by default). */
 export type DataGridRow = Record<string, unknown>;
@@ -53,6 +54,12 @@ export interface DataGridProps<R extends object = DataGridRow> extends Omit<Reac
   onRowsChange?: ((rows: R[], details: DataGridRowsChangeDetails) => void) | undefined;
   /** The cells' size: "sm", "md" (the default) or "lg" (16px text, rows at least 44px, for touch). */
   size?: 'sm' | 'md' | 'lg' | undefined;
+  /** Keeps the header row in view while the grid scrolls inside a frame with a height (give it one with
+   *  containerProps), so the column names stay in sight far down a long grid. The cell the keyboard moves to scrolls
+   *  in below the header, not under it. Default: false. */
+  stickyHeader?: boolean | undefined;
+  /** Props for the scrolling frame around the grid, such as `style={{ maxHeight: 480 }}` for stickyHeader. */
+  containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
   /** Its rows are loading (or reloading): sets aria-busy, and while there are no rows yet, shows placeholder rows
    *  the height of real ones. Default: false. */
   busy?: boolean | undefined;
@@ -66,7 +73,7 @@ export interface DataGridProps<R extends object = DataGridRow> extends Omit<Reac
 }
 
 type Pos = { r: number; c: number };
-const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, busy: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
+const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, stickyHeader: 1, containerProps: 1, busy: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
 const textOf = (col: DataGridColumn, row: DataGridRow) => (col.format ? col.format(row) : row[col.key] == null ? '' : String(row[col.key]));
 // Clipboard text as rows of cells: tab between cells, a line break between rows (what spreadsheets copy).
 const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map((l) => l.split('\t'));
@@ -195,10 +202,14 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const tabStop = (r: number, c: number) => (r === cur.r && c === cur.c ? 0 : -1);
   // With no rows: placeholders the height of real rows while busy (only the first says "Loading", once), otherwise
   // the app's message in one cell across every column. Neither is a cell the arrow keys reach.
+  const frame = React.useRef<HTMLDivElement>(null);
+  // A sticky header covers the top of the frame: measured, so the active cell scrolls in below it (the CSS reads --dk-data-grid-head).
+  useStickyHead(frame, !!props.stickyHeader, 'thead', '--dk-data-grid-head');
   const placeholders = !rows.length && props.busy ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
+  const cp = props.containerProps || {};
   return (
-    <div className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.className)} data-component="data-grid">
+    <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid">
       <table {...rest} ref={(n) => { table.current = n; setRef(ref, n); }}
         role="grid" aria-busy={props.busy || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
         className="dk-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>

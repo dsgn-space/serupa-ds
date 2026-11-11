@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useScrolls } from '../../internal/useScrolls';
+import { useStickyHead } from '../../internal/stickyHead';
 import { flushSync } from 'react-dom';
 import { announce } from '../../internal/announce';
 import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
@@ -127,30 +128,8 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   const frame = React.useRef<HTMLDivElement>(null);
   const scrolls = useScrolls(frame);
   const cid = domId('dk-tc', React.useId());
-  // A sticky header covers the top of the frame: measure it, so focus scrolls in below it (the CSS reads --dk-table-head).
-  const sticky = !!props.stickyHeader;
-  React.useEffect(() => {
-    const el = frame.current, head = el && el.querySelector<HTMLElement>('.dk-table__head');
-    if (!el || !sticky || !head || typeof ResizeObserver === 'undefined') return;
-    const set = () => el.style.setProperty('--dk-table-head', head.getBoundingClientRect().height + 'px');
-    const ro = new ResizeObserver(set);
-    ro.observe(head);
-    set();
-    // Firefox leaves scroll-padding out when it decides whether a focused control needs scrolling, so one that is partly
-    // under the header stays there (WCAG 2.4.11). After the browser's own focus scroll, the frame moves by what's still covered.
-    let raf = 0;
-    const onFocus = (e: FocusEvent) => {
-      const t = e.target as HTMLElement;
-      if (t === el || head.contains(t)) return;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const covered = el.getBoundingClientRect().top + el.clientTop + head.getBoundingClientRect().height - t.getBoundingClientRect().top;
-        if (covered > 0) el.scrollTop -= covered;
-      });
-    };
-    el.addEventListener('focusin', onFocus);
-    return () => { ro.disconnect(); cancelAnimationFrame(raf); el.removeEventListener('focusin', onFocus); el.style.removeProperty('--dk-table-head'); };
-  }, [sticky]);
+  // A sticky header covers the top of the frame: measured, so focus scrolls in below it (the CSS reads --dk-table-head).
+  useStickyHead(frame, !!props.stickyHeader, '.dk-table__head', '--dk-table-head');
   // A name on the frame belongs to its region role: a plain div that doesn't scroll can't carry one (axe aria-prohibited-attr).
   const { 'aria-label': frameLabel, 'aria-labelledby': frameLabelledBy, ...cp } = props.containerProps || {};
   const hasCaption = props.caption != null && props.caption !== false && props.caption !== '';
