@@ -8,7 +8,7 @@
   --dk-popover-offset: var(--popover-offset, var(--spacing-2));
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--popover-z-index, var(--z-popover));
   width: var(--popover-width, var(--container-3xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4));
-  margin: var(--spacing-0); padding: var(--popover-padding, var(--spacing-4)); overflow-y: auto; overscroll-behavior: contain;
+  margin: var(--spacing-0); padding: var(--popover-padding, var(--space-content)); overflow-y: auto; overscroll-behavior: contain;
   border: var(--popover-border-width, var(--border-width-1)) solid var(--popover-border, var(--border-overlay)); border-radius: var(--popover-radius, var(--radius-surface));
   background: var(--popover-bg, var(--surface-overlay)); color: var(--popover-text, var(--text));
   box-shadow: var(--popover-shadow, var(--elevation-overlay));
@@ -42,7 +42,7 @@
 .dk-popover--sheet {
   inset: auto var(--spacing-0) var(--spacing-0); width: var(--sizing-full); max-width: none; max-height: calc(var(--sizing-dvh) - var(--popover-sheet-gap, var(--spacing-16)));
   border-width: var(--popover-border-width, var(--border-width-1)) var(--spacing-0) var(--spacing-0); border-radius: var(--popover-sheet-radius, var(--rounded-xl)) var(--popover-sheet-radius, var(--rounded-xl)) var(--spacing-0) var(--spacing-0);
-  padding-bottom: max(var(--popover-padding, var(--spacing-4)), env(safe-area-inset-bottom));
+  padding-bottom: max(var(--popover-padding, var(--space-content)), env(safe-area-inset-bottom));
   transform-origin: bottom;
 }
 /* Inset: the sheet meets the screen's sides and foot, where an outside ring would be cut off (GR113). */

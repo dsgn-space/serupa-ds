@@ -156,7 +156,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |
 | `--dialog-width-md` | `container-lg` | size="md", the default (512px). |
 | `--dialog-width-lg` | `container-2xl` | size="lg" (672px). |
-| `--dialog-padding` | `spacing-6` | Padding inside the panel (24px). |
+| `--dialog-padding` | `space-surface` | Padding inside the panel (24px). |
 | `--dialog-gap` | `spacing-4` | Space between the header, body and footer (16px). |
 | `--dialog-margin` | `spacing-4` | The least space between the panel and the edge of the screen (16px). |
 | `--dialog-title-weight` | `font-semibold` | The title's weight (600). |

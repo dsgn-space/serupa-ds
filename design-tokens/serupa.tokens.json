@@ -4872,7 +4872,7 @@
     "space-content": {
       "$type": "dimension",
       "$value": "{spacing.spacing-4}",
-      "$description": "The default padding and gap: inside a menu or popover, between fields of a form. 16px.",
+      "$description": "The default padding and gap: inside a popover, between fields of a form. Popover reads it for its padding. 16px.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-content"
@@ -4882,7 +4882,7 @@
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a card, dialog or drawer. 24px.",
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-surface"

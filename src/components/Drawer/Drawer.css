@@ -40,7 +40,7 @@
 .dk-drawer__panel {
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
   width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
-  padding: var(--drawer-padding, var(--spacing-6));
+  padding: var(--drawer-padding, var(--space-surface));
   background: var(--drawer-bg, var(--surface-overlay));
   box-shadow: var(--drawer-shadow, var(--elevation-modal));
   position: relative;
@@ -94,8 +94,8 @@
 .dk-drawer__body:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-drawer__footer {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); flex-shrink: 0;
-  margin: var(--spacing-0) calc(var(--spacing-0) - var(--drawer-padding, var(--spacing-6))) calc(var(--spacing-0) - var(--drawer-padding, var(--spacing-6)));
-  padding: var(--spacing-4) var(--drawer-padding, var(--spacing-6));
+  margin: var(--spacing-0) calc(var(--spacing-0) - var(--drawer-padding, var(--space-surface))) calc(var(--spacing-0) - var(--drawer-padding, var(--space-surface)));
+  padding: var(--spacing-4) var(--drawer-padding, var(--space-surface));
   border-top: var(--drawer-border-width, var(--border-width-1)) solid var(--drawer-border, var(--border));
 }
 /* A long label wraps onto more lines instead of ending in an ellipsis (GR74): on a phone the footer is narrowest
@@ -106,7 +106,7 @@
 /* Safe areas: on a phone with a notch or a home bar (with viewport-fit=cover), the panel's padding and the
    footer clear them; elsewhere env() is 0 and nothing changes. */
 .dk-drawer__panel {
-  --dk-drawer-pad: var(--drawer-padding, var(--spacing-6));
+  --dk-drawer-pad: var(--drawer-padding, var(--space-surface));
   padding-top: max(var(--dk-drawer-pad), env(safe-area-inset-top));
   padding-bottom: max(var(--dk-drawer-pad), env(safe-area-inset-bottom));
 }
