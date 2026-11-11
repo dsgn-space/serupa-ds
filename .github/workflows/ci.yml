@@ -310,8 +310,12 @@ jobs:
       - shell: bash
         env:
           SINCE: ${{ needs.plan.outputs.since }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           set -e
+          # The move from GitLab brings GitLab main's history in one pull request, so against GitHub's old main every
+          # function GitLab already merged looks new. That pull request alone checks against GitLab main instead.
+          if [ "$HEAD_REF" = migrate/from-gitlab ] && [ -n "$SINCE" ]; then SINCE=61aa5acd40a52926578eb51db37d7bd5c4b159be; fi
           if ! ls .vitest/blob/* >/dev/null 2>&1; then echo "No component tests ran, so there is no coverage to check."; exit 0; fi
           if [ -f .vitest/narrowed ]; then echo "Narrowed run; the floors are checked on whole runs."; export SERUPA_NO_FLOORS=1; fi
           node node_modules/vitest/vitest.mjs --merge-reports .vitest/blob --coverage
