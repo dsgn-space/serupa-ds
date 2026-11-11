@@ -2,6 +2,8 @@
 
 Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. With `focusable` it shows while it has keyboard focus, for a control only keyboard users need. For the page's "Skip to content" link, use [SkipLink](../SkipLink/README.md).
 
+**Also called:** screen-reader only, sr-only.
+
 ```jsx
 const { VisuallyHidden } = window.Serupa;
 
