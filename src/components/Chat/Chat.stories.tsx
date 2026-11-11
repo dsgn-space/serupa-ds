@@ -1,6 +1,10 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Chat, ChatComposer, ChatDivider, ChatMessage } from './Chat';
+import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
+import type { ChatApprovalStatus } from './Chat';
+import { HoverCard } from '../HoverCard/HoverCard';
+import { Meter } from '../Meter/Meter';
+import { Select } from '../Select/Select';
 import { Avatar } from '../Avatar/Avatar';
 import { Attachment } from '../Attachment/Attachment';
 
@@ -62,6 +66,76 @@ export const ComposerWithFiles: Story = {
   name: 'Composer with files',
   render: () => <div style={{ maxWidth: 520 }}><ChatComposer defaultValue="Both photos attached."
     attachments={<><Attachment name="Site photo.jpg" bytes={3_400_000} progress={60} onRemove={() => {}} /><Attachment name="Floor plan.png" bytes={820_000} onRemove={() => {}} /></>} /></div>,
+};
+
+// An assistant at work: "Thinking…" until its words come, then how it got there (closed by default), the steps it took, and the reply.
+export const AgentReply: Story = {
+  name: 'Agent reply',
+  render: (args) => <Frame>
+    <Chat {...args} className="flex-auto">
+      <ChatMessage own>Why was order 1042 refunded twice?</ChatMessage>
+      <ChatMessage author="Assistant" reasoningTime={12} reasoning={'The customer asked about two refunds. I should check the payment log for order 1042, then the support tickets for the same day.'}
+        steps={[
+          { id: 'log', label: 'Read the payment log for order 1042', status: 'done', detail: '2 refunds, 3 minutes apart' },
+          { id: 'tickets', label: 'Searched support tickets', status: 'done' },
+          { id: 'bank', label: 'Checked the bank\'s status page', status: 'failed', detail: 'It didn\'t answer' },
+        ]} branch={2} branches={3}>The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it.</ChatMessage>
+      <ChatMessage own>Yes, please.</ChatMessage>
+      <ChatMessage author="Assistant" thinking steps={[{ id: 'ticket', label: 'Opening a ticket', status: 'running' }]} />
+    </Chat>
+    <ChatComposer placeholder="Ask the assistant" actions={<AgentTools />} />
+  </Frame>,
+};
+
+// The composer's tools for an assistant: which model answers, and how much of its context is used, in words.
+function AgentTools() {
+  return <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', flex: 'none' }}>
+    <Select aria-label="Model" size="sm" defaultValue="balanced" style={{ inlineSize: 'var(--spacing-28)' }} options={[{ value: 'fast', label: 'Fast' }, { value: 'balanced', label: 'Balanced' }, { value: 'deep', label: 'Deep' }]} />
+    <Meter aria-label="Context used" size="sm" value={12_400} max={200_000} style={{ inlineSize: 'var(--spacing-12)', flex: 'none' }}
+      formatValue={(v, _min, max) => `${v.toLocaleString('en')} of ${max.toLocaleString('en')} tokens used`} />
+  </div>;
+}
+
+// An assistant asks before it acts. Approve or Deny leaves a one-line record in its place, and focus moves to it.
+export const Approval: Story = {
+  render: function Render(args) {
+    const [status, setStatus] = React.useState<ChatApprovalStatus>('pending');
+    return <Frame>
+      <Chat {...args} className="flex-auto">
+        <ChatMessage own>Please reverse the second refund.</ChatMessage>
+        <ChatMessage author="Assistant" attachments={
+          <ChatApproval status={status} onApprove={() => setStatus('approved')} onDeny={() => setStatus('denied')}
+            detail="Charges the customer's card again; they get an email.">Reverse refund 2 on order 1042 ($24.00)</ChatApproval>
+        }>This needs your OK first.</ChatMessage>
+      </Chat>
+      <ChatComposer placeholder="Ask the assistant" />
+    </Frame>;
+  },
+};
+
+// Sources in a reply, as numbered links; the second opens a preview when the pointer or focus rests on it.
+export const Citations: Story = {
+  render: (args) => <Frame>
+    <Chat {...args} className="flex-auto">
+      <ChatMessage own>How long do refunds take?</ChatMessage>
+      <ChatMessage author="Assistant">
+        Card refunds take 5 to 10 business days to show up <ChatCitation href="https://docs.example.com/refunds" index={1} />, and bank transfers
+        up to 3 days <HoverCard trigger={<ChatCitation href="https://www.example.com/help/transfers" index={2} />}>
+          <strong>Bank transfers</strong><p>How long a transfer takes, and what to do when it's late.</p>
+        </HoverCard>.
+      </ChatMessage>
+    </Chat>
+    <ChatComposer placeholder="Ask the assistant" />
+  </Frame>,
+};
+
+// Steps on their own, outside a message: each in progress, done or failed, in words as well as by its icon.
+export const Steps: Story = {
+  render: () => <div style={{ maxWidth: 420 }}><ChatSteps steps={[
+    { id: 'a', label: 'Searched the help centre', status: 'done', detail: '3 articles' },
+    { id: 'b', label: 'Called the orders API', status: 'failed', detail: 'Timed out after 10 seconds' },
+    { id: 'c', label: 'Trying the orders API again', status: 'running' },
+  ]} /></div>,
 };
 
 export const Disabled: Story = { render: () => <div style={{ maxWidth: 520 }}><ChatComposer disabled placeholder="This conversation is closed" /></div> };

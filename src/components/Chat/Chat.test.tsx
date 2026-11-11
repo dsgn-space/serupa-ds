@@ -5,7 +5,11 @@ import { cdp, page, server, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
-import { Chat, ChatComposer, ChatDivider, ChatMessage } from './Chat';
+import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
+import type { ChatApprovalStatus } from './Chat';
+import { announcerIdle } from '../../internal/announce';
+// The tests that read digits say they mean en-US: with no locale, a number is in the browser's digits ("٣" in ar-EG).
+const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
 
 const log = () => document.querySelector('[role=log]') as HTMLElement;
 const atBottom = (el: HTMLElement) => el.scrollHeight - el.scrollTop - el.clientHeight <= 4;
@@ -24,6 +28,7 @@ function find(root: Element, text: string | RegExp): HTMLElement | null {
   const all = [...root.querySelectorAll<HTMLElement>('*')].filter(ok);
   return all.find((e) => !all.some((x) => x !== e && e.contains(x))) || null;
 }
+const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
 const jumpButton = () => page.getByRole('button', { name: /new message/ }).query();
 
 describe('Chat', () => {
@@ -199,6 +204,181 @@ describe('ChatMessage', () => {
       expect(contrast(css(document.getElementById('d')).color, pg), th + ' divider').toBeGreaterThanOrEqual(4.5);
     }
     document.documentElement.removeAttribute('data-theme');
+  });
+});
+
+describe('ChatMessage: an agent at work', () => {
+  test('thinking says "Thinking…" until its words arrive, which take its place', async () => {
+    const r = await render(<ChatMessage id="t" author="Assistant" thinking />);
+    await expect.element(page.getByRole('progressbar', { name: 'Thinking…' })).toBeInTheDocument();
+    await r.rerender(<ChatMessage id="t" author="Assistant" thinking>Here it is</ChatMessage>);
+    expect([page.getByRole('progressbar', { name: 'Thinking…' }).query(), find(document.getElementById('t')!, 'Here it is') != null]).toEqual([null, true]);
+  });
+
+  test('reasoning sits closed under "Thought for 12 seconds", and opens from the keyboard', async () => {
+    await render(<ChatMessage id="r" author="Assistant" reasoning="First I checked the order." reasoningTime={12.2}>Done</ChatMessage>);
+    const d = document.querySelector<HTMLDetailsElement>('#r details')!;
+    const sum = d.querySelector('summary')!;
+    expect([d.open, sum.textContent]).toEqual([false, 'Thought for 12 seconds']);
+    sum.focus();
+    await userEvent.keyboard('{Enter}');
+    expect(d.open).toBe(true);
+    await expect.element(page.getByText('First I checked the order.')).toBeVisible();
+  });
+
+  test('without a time, or with a time that is not a number, it says "Reasoning"; one second is singular', async () => {
+    await render(<><ChatMessage id="a" reasoning="x">A</ChatMessage><ChatMessage id="b" reasoning="x" reasoningTime={NaN}>B</ChatMessage><ChatMessage id="c" reasoning="x" reasoningTime={1}>C</ChatMessage></>);
+    expect(['a', 'b', 'c'].map((id) => document.querySelector('#' + id + ' summary')!.textContent)).toEqual(['Reasoning', 'Reasoning', 'Thought for 1 second']);
+  });
+
+  test('steps sit above its words, in order', async () => {
+    await render(<ChatMessage id="s" steps={[{ id: '1', label: 'Read the order', status: 'done' }]}>Answer</ChatMessage>);
+    const m = document.getElementById('s')!;
+    expect(!!(find(m, /^Read the order/)!.compareDocumentPosition(find(m, 'Answer')!) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
+  });
+
+  test('its new words come from the labels', async () => {
+    await render(<SerupaProvider labels={idLabels}><ChatMessage id="i" thinking reasoning="x" reasoningTime={3} steps={[{ id: '1', label: 'Cari', status: 'running' }]} /></SerupaProvider>);
+    await expect.element(page.getByRole('progressbar', { name: 'Berpikir…' })).toBeInTheDocument();
+    const m = document.getElementById('i')!;
+    expect([m.querySelector('summary')!.textContent, m.querySelector('li')!.textContent]).toEqual(['Berpikir selama 3 detik', 'Cari, Berjalan']);
+  });
+
+  test('reasoning and a done step read 4.5:1 in all six themes', async () => {
+    await render(<ChatMessage id="c" reasoning="Why" reasoningTime={2} steps={[{ id: '1', label: 'Step', status: 'done' }]}>A</ChatMessage>);
+    const m = document.getElementById('c')!;
+    m.querySelector('details')!.open = true;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const pg = css(document.body).backgroundColor;
+      for (const el of [m.querySelector('summary')!, find(m, 'Why')!, find(m, /^Step/)!]) expect(contrast(css(el).color, pg), th + ' ' + el.textContent).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(m.querySelector('li svg')).color, pg), th + ' done icon').toBeGreaterThanOrEqual(3);
+    }
+    document.documentElement.removeAttribute('data-theme');
+  });
+});
+
+describe('ChatMessage: versions of a regenerated reply', () => {
+  function Versions({ start = 2 }: { start?: number }) {
+    const [b, setB] = React.useState(start);
+    return <ChatMessage id="v" author="Assistant" branch={b} branches={3} onBranchChange={setB}>{'Version ' + b}</ChatMessage>;
+  }
+
+  test('"2 / 3" between previous and next, named "Response 2 of 3", and each button moves and says where it is', async () => {
+    await render(<EnUS><Versions /></EnUS>);
+    await expect.element(page.getByRole('group', { name: 'Response 2 of 3' })).toBeVisible();
+    expect(find(document.getElementById('v')!, '2 / 3')).not.toBe(null);
+    await page.getByRole('button', { name: 'Next response' }).click();
+    await expect.element(page.getByText('Version 3')).toBeVisible();
+    await expect.poll(() => announcerIdle() && said()).toBe('Response 3 of 3');
+    await expect.element(page.getByRole('group', { name: 'Response 3 of 3' })).toBeVisible();
+  });
+
+  test('at either end its button stays focusable but does nothing', async () => {
+    await render(<Versions start={1} />);
+    const prev = page.getByRole('button', { name: 'Previous response' });
+    await expect.element(prev).toHaveAttribute('aria-disabled', 'true');
+    (prev.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    expect([document.activeElement, find(document.getElementById('v')!, 'Version 1') != null]).toEqual([prev.element(), true]);
+  });
+
+  test('one version, or none, draws no switcher; a number past the end shows the last', async () => {
+    await render(<><ChatMessage id="a" branch={1} branches={1}>A</ChatMessage><ChatMessage id="b" branch={9} branches={3}>B</ChatMessage></>);
+    expect([document.querySelector('#a [role=group]'), document.querySelector('#b [role=group]')!.getAttribute('aria-label')]).toEqual([null, 'Response 3 of 3']);
+  });
+});
+
+describe('ChatApproval', () => {
+  function Ask() {
+    const [status, setStatus] = React.useState<ChatApprovalStatus>('pending');
+    return <ChatApproval id="ap" status={status} detail="Charges the card again" onApprove={() => setStatus('approved')} onDeny={() => setStatus('denied')}>Reverse refund 2</ChatApproval>;
+  }
+
+  test('a group named by what it will do, with Approve and Deny', async () => {
+    await render(<Ask />);
+    await expect.element(page.getByRole('group', { name: 'Reverse refund 2' })).toBeVisible();
+    await expect.element(page.getByText('Charges the card again')).toBeVisible();
+    await expect.element(page.getByRole('button', { name: 'Approve' })).toBeVisible();
+    await expect.element(page.getByRole('button', { name: 'Deny' })).toBeVisible();
+  });
+
+  test('Approve leaves "Approved: …", said once, with focus on it', async () => {
+    await render(<Ask />);
+    await page.getByRole('button', { name: 'Approve' }).click();
+    const el = document.getElementById('ap')!;
+    await expect.poll(() => el.textContent).toBe('Approved: Reverse refund 2');
+    expect([document.activeElement, page.getByRole('button').query()]).toEqual([el, null]);
+    await expect.poll(() => announcerIdle() && said()).toBe('Approved: Reverse refund 2');
+  });
+
+  test('Deny from the keyboard leaves "Denied: …"', async () => {
+    await render(<Ask />);
+    (page.getByRole('button', { name: 'Deny' }).element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => document.getElementById('ap')!.textContent).toBe('Denied: Reverse refund 2');
+    expect(document.activeElement).toBe(document.getElementById('ap'));
+  });
+
+  test('answered elsewhere, it says so but leaves focus where it is', async () => {
+    const r = await render(<><button>Elsewhere</button><ChatApproval id="ap">Do it</ChatApproval></>);
+    (page.getByRole('button', { name: 'Elsewhere' }).element() as HTMLElement).focus();
+    await r.rerender(<><button>Elsewhere</button><ChatApproval id="ap" status="approved">Do it</ChatApproval></>);
+    await expect.poll(() => announcerIdle() && said()).toBe('Approved: Do it');
+    expect(document.activeElement!.textContent).toBe('Elsewhere');
+  });
+
+  test('its words come from the labels', async () => {
+    await render(<SerupaProvider labels={idLabels}><ChatApproval id="ap" status="denied">X</ChatApproval><ChatApproval>Y</ChatApproval></SerupaProvider>);
+    expect(document.getElementById('ap')!.textContent).toBe('Ditolak: X');
+    await expect.element(page.getByRole('button', { name: 'Setujui' })).toBeVisible();
+  });
+
+  test('text and the record read 4.5:1 in all six themes', async () => {
+    await render(<><ChatApproval id="p" detail="Why">Do it</ChatApproval><ChatApproval id="d" status="approved">Done it</ChatApproval></>);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const pg = css(document.body).backgroundColor;
+      for (const el of [find(document.getElementById('p')!, 'Do it')!, find(document.getElementById('p')!, 'Why')!, document.getElementById('d')!]) expect(contrast(css(el).color, pg), th + ' ' + el.textContent).toBeGreaterThanOrEqual(4.5);
+    }
+    document.documentElement.removeAttribute('data-theme');
+  });
+});
+
+describe('ChatCitation', () => {
+  test('a link that says its number and the host, without "www."; or your own words', async () => {
+    await render(<EnUS><ChatCitation href="https://www.example.com/a" index={1} /><ChatCitation href="https://docs.example.com/b" index={2}>Refund policy</ChatCitation></EnUS>);
+    await expect.element(page.getByRole('link', { name: '1 example.com' })).toHaveAttribute('href', 'https://www.example.com/a');
+    await expect.element(page.getByRole('link', { name: '2 Refund policy' })).toBeVisible();
+  });
+
+  test('a relative link names this site; the number is in the locale\'s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><ChatCitation href="/help" index={3} /></SerupaProvider>);
+    expect(page.getByRole('link').element().textContent).toBe('٣localhost');
+  });
+
+  test('its text reads 4.5:1 on a bubble in all six themes', async () => {
+    await render(<ChatMessage id="m">See <ChatCitation href="https://example.com" index={1} /></ChatMessage>);
+    const a = document.querySelector('#m a')!;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect(contrast(css(a).color, css(a).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
+    }
+    document.documentElement.removeAttribute('data-theme');
+  });
+});
+
+describe('ChatSteps', () => {
+  test('a list of steps, each saying its state in words, with its detail', async () => {
+    await render(<ChatSteps steps={[{ id: 'a', label: 'Search', status: 'done', detail: '3 results' }, { id: 'b', label: 'Read', status: 'running' }, { id: 'c', label: 'Write', status: 'failed' }]} />);
+    const items = [...document.querySelectorAll('ol li')];
+    expect(items.map((li) => li.textContent)).toEqual(['Search, Done3 results', 'Read, In progress', 'Write, Failed']);
+    expect(items.map((li) => li.firstElementChild!.getAttribute('aria-hidden'))).toEqual(['true', 'true', 'true']);   // each icon is decoration: the words say it
+  });
+
+  test('no steps draws nothing', async () => {
+    const { container } = await render(<ChatSteps steps={[]} />);
+    expect(container.querySelector('ol')?.children.length ?? 0).toBe(0);
   });
 });
 
