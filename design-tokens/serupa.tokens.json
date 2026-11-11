@@ -4543,7 +4543,7 @@
         "value": 1.5,
         "unit": "rem"
       },
-      "$description": "`6` (`p-6`, `m-6`, `gap-6`…): 24px. Card padding.",
+      "$description": "`6` (`p-6`, `m-6`, `gap-6`…): 24px. Dialog and drawer padding.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--spacing-6"
