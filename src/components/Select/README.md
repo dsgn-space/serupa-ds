@@ -47,6 +47,13 @@ Drawn from the `WithIcon` story.
 - Pick a sensible default when there is one; use a placeholder only when no default makes sense.
 - Match its size to the inputs and buttons beside it.
 
+### Do and don't
+
+- **Do:** Give it a label above, in a [Field](../Field/README.md), which stays in view after a choice is made. (`DoLabelAbove`)
+- **Don't:** Use the placeholder as the only label: once a value is chosen, nothing says what the field was for. (`DontPlaceholderLabel`)
+- **Do:** Show two to four choices as [radios](../Radio/README.md), all in view at once. (`DoRadiosForFew`)
+- **Don't:** Hide a few choices in a Select: people have to open it to see what they can pick. (`DontSelectForFew`)
+
 ## States
 
 | State | Look |
