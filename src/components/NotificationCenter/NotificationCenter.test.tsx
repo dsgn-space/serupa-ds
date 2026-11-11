@@ -125,6 +125,19 @@ describe('NotificationCenter', () => {
     expect(drawer()!.textContent).toContain('No notifications yet');
   });
 
+  test('settingsHref: the footer starts with a "Notification settings" link to it, the buttons stay at the end; with nothing else, the link alone', async () => {
+    const screen = await render(<NotificationCenter defaultOpen items={list} onMarkAllRead={() => {}} settingsHref="/settings/notifications" />);
+    await expect.poll(() => drawer() !== null).toBe(true);
+    const link = () => [...drawer()!.querySelectorAll('a')].find((a) => a.textContent === 'Notification settings')!;
+    expect(link().getAttribute('href')).toBe('/settings/notifications');
+    const all = button('Mark all as read');
+    expect([link().compareDocumentPosition(all) & Node.DOCUMENT_POSITION_FOLLOWING, link().getBoundingClientRect().left < all.getBoundingClientRect().left]).toEqual([Node.DOCUMENT_POSITION_FOLLOWING, true]);
+    await screen.rerender(<NotificationCenter defaultOpen items={[]} settingsHref="/settings/notifications" />);
+    expect([!!link(), drawer()!.querySelectorAll('button').length]).toEqual([true, 1]);   // the link, and only the ×
+    await screen.rerender(<SerupaProvider labels={idLabels}><NotificationCenter defaultOpen items={[]} settingsHref="/s" /></SerupaProvider>);
+    await expect.poll(() => [...drawer()!.querySelectorAll('a')].map((a) => a.textContent)).toEqual(['Pengaturan notifikasi']);
+  });
+
   test('side, size and the other Drawer props go to the Drawer', async () => {
     const screen = await render(<NotificationCenter defaultOpen items={list} side="left" size="sm" />);
     await expect.poll(() => drawer()?.dataset.side).toBe('left');

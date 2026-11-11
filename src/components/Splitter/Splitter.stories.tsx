@@ -4,7 +4,7 @@ import { Splitter } from './Splitter';
 
 const Pane = (p: { children: React.ReactNode }) => <div style={{ padding: 'var(--spacing-4)', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{p.children}</div>;
 const meta = {
-  title: 'Components/Layout/Splitter',
+  title: 'Components/Layout and type/Splitter',
   component: Splitter,
   args: { orientation: 'horizontal', defaultSize: 30, min: 15, max: 70, collapsible: true, separatorLabel: 'Folders', children: [<Pane key="a">Folders</Pane>, <Pane key="b">Messages</Pane>] },
   argTypes: { direction: { control: 'inline-radio', options: ['horizontal', 'vertical'] } },

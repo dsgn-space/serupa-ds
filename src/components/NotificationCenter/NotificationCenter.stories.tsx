@@ -60,6 +60,9 @@ export const ToastHistory: Story = {
   },
 };
 export const Empty: Story = { args: { defaultOpen: true, items: [] } };
+
+/** With `settingsHref`: the footer starts with a link to the notification settings. */
+export const WithSettings: Story = { args: { defaultOpen: true, settingsHref: '#settings/notifications', onMarkAllRead: () => {}, onClear: () => {} } };
 // The stress story (G14): long titles and descriptions wrap, and the dot and button stay at the end.
 export const LongText: Story = {
   args: {
