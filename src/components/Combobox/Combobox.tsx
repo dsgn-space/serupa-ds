@@ -434,24 +434,35 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     const o = x || usable[0];   // as Enter on a list that was there: the exact label, else the first match or the add row
     if (o) pick(o); else hide('select');
   });
+  // Inline completion: the first suggestion that starts with the text fills in the rest, selected, and the new text
+  // is returned. Never after a deletion (Backspace on "Jak" mustn't bring back "Jakarta"), or while composing.
+  const complete = (el: HTMLInputElement, t: string) => {
+    const head = fold(t);
+    const o = inline && t ? opts.find((x) => !x.disabled && x.folded.startsWith(head) && fold(x.label.slice(0, t.length)) === head) : undefined;
+    if (!o || o.label.length <= t.length) return t;
+    // Set on the field now too: typing "a" over the selected "akarta" of "jakarta" leaves the text as it was, so
+    // nothing renders and only this selects the rest again.
+    const n = t.length;
+    t = t + o.label.slice(n);
+    select.current = [n, t.length];
+    el.value = t;
+    el.setSelectionRange(n, t.length);
+    return t;
+  };
+  const onCompositionEnd = (e: React.CompositionEvent<HTMLInputElement>) => {
+    if (rest.onCompositionEnd) rest.onCompositionEnd(e);
+    if (!free || !inline) return;
+    const el = e.currentTarget, t = complete(el, el.value);
+    if (t !== text) { commit(t === '' ? null : t); setText(t); }
+  };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     later.current = null;
     let t = e.target.value;
     if (free) {
-      // Inline completion: the first suggestion that starts with what was typed fills in the rest, selected, unless
-      // the change was a deletion (Backspace on "Jak" mustn't bring back "Jakarta").
-      const kind = (e.nativeEvent as InputEvent).inputType || '';
-      const head = fold(t);
-      const o = inline && t && !kind.startsWith('delete') ? opts.find((x) => !x.disabled && x.folded.startsWith(head) && fold(x.label.slice(0, t.length)) === head) : undefined;
-      if (o && o.label.length > t.length) {
-        // Set on the field now too: typing "a" over the selected "akarta" of "jakarta" leaves the text as it was, so
-        // nothing renders and only this selects the rest again.
-        const n = t.length;
-        t = t + o.label.slice(n);
-        select.current = [n, t.length];
-        e.target.value = t;
-        e.target.setSelectionRange(n, t.length);
-      }
+      // Not while an input method is composing (Japanese, Chinese, Korean): the text is still being chosen there, and
+      // completing it would replace it under the IME. onCompositionEnd completes it once it's confirmed.
+      const kind = (e.nativeEvent as InputEvent).inputType || '', composing = isComposing(e) || kind === 'insertCompositionText';
+      if (!kind.startsWith('delete') && !composing) t = complete(e.target, t);
       commit(t === '' ? null : t);
     }
     setText(t); setTyped(true);
@@ -591,7 +602,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         // With multiple, the text is empty once tags are picked, so a native required blocked the form with tags in
         // it: the browser's check needs a tag or text, and screen readers still hear "required" (L8E18).
         required={multi && values.length ? false : rest.required} aria-required={rest['aria-required'] ?? (rest.required || undefined)}
-        onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur}
+        onChange={onChange} onCompositionEnd={onCompositionEnd} onKeyDown={onKeyDown} onBlur={onBlur}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show('selected'); }} />
   );
   return (

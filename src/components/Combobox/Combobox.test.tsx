@@ -1099,6 +1099,22 @@ describe('Combobox: freeText, the typed text is the value', () => {
     expect(f.value).toBe('jay');
   });
 
+  test('inline completion waits for an input method (Japanese, Chinese, Korean) to confirm its text, then completes it once', async () => {
+    await render(<Combobox id="ime" aria-label="City" freeText inlineComplete options={['東京', '東京都庁', '大阪']} />);
+    const f = el('ime');
+    f.focus();
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    const compose = (v: string) => { setValue.call(f, v); f.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertCompositionText', data: v, isComposing: true })); };
+    f.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    compose('と');
+    compose('東');
+    await settle(30);
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['東', 1, 1]);   // left alone under the IME
+    f.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東' }));
+    await settle(30);
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['東京', 1, 2]);
+  });
+
   test('inline completion keeps the case typed, and only completes from the start of a label', async () => {
     await render(<City inline />);
     const f = el('ft');
@@ -1117,7 +1133,7 @@ describe('Combobox: limit', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Combobox id="lim" aria-label="Item" options={MANY} limit={5} />);
+    await render(<SerupaProvider locale="en-US"><Combobox id="lim" aria-label="Item" options={MANY} limit={5} /></SerupaProvider>);   // digits read as en-US
     el('lim').focus();
     await userEvent.keyboard('item');
     expect(st('lim').opts).toEqual(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']);
@@ -1131,7 +1147,7 @@ describe('Combobox: limit', () => {
   });
 
   test('its words come from the labels', async () => {
-    await render(<SerupaProvider labels={idLabels}><Combobox id="lim" aria-label="Item" options={MANY} limit={10} defaultOpen /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Combobox id="lim" aria-label="Item" options={MANY} limit={10} defaultOpen /></SerupaProvider>);
     await expect.poll(() => messagesOf(popOf('lim')).map((m) => m.textContent)).toEqual(['+20 lagi, terus ketik']);
   });
 });
