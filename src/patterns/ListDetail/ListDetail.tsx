@@ -83,6 +83,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
   // "Back to messages" closes it at once, and takes back the entry it added, which the listener below then ignores.
   const back = () => { close(); if (pushed.current) { pushed.current = false; history.back(); } };
   const closeRef = React.useRef(close);
+  // every render: the popstate listener reads the latest close through this ref.
   React.useEffect(() => { closeRef.current = close; });
   React.useEffect(() => {
     const onPop = () => { if (pushed.current) { pushed.current = false; closeRef.current(); } };
