@@ -55,6 +55,13 @@ Drawn from the `Disabled` story.
 </Field>
 ```
 
+### Do and don't
+
+- **Do:** Cards when each option needs a line to choose by: a delivery time, a price, what a plan includes. (`DoCardsWithDetails`)
+- **Don't:** Cards for options that explain themselves, such as sizes: the borders add bulk and nothing to choose by, so a plain row reads faster. (`DontCardsForShortOptions`)
+- **Do:** Radios for two to about five options, all in view at once. (`DoFewOptions`)
+- **Don't:** A long column of radios, such as every province: people scroll and scan a list a Select or Combobox would search. (`DontLongList`)
+
 ## States
 
 | State | Look |
