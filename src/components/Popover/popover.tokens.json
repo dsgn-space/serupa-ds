@@ -134,7 +134,7 @@
     "spacing": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-4}",
+        "$value": "{spacing.space-content}",
         "$description": "Space inside the panel (16px).",
         "$extensions": {
           "com.serupa": {
