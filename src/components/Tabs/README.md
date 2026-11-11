@@ -54,6 +54,13 @@ Drawn from the `Pill` story.
 - Show a tab people can't use yet as `disabled` rather than leaving it out, when knowing it exists helps them.
 - Tabs that can be closed: when the selected tab is removed, uncontrolled Tabs select the next enabled tab (or else the previous one) and call `onValueChange`. If focus was on the closed tab (its own close button, or a Delete key you handle), it moves to the tab now selected, not to the page. With `value`, set it to another tab yourself when you remove the selected one; Tabs warns in the console otherwise.
 
+### Do and don't
+
+- **Do:** Keep each label to a word or two, so every tab stays in view. (`DoShortLabels`)
+- **Don't:** Write long labels: the row scrolls, and people miss the tabs past the edge. (`DontLongLabels`)
+- **Do:** Use a [SegmentedControl](../SegmentedControl/README.md) to pick a value, such as a period, for the same content. (`DoSegmentedForValue`)
+- **Don't:** Use tabs for that: tabs say each choice has its own panel, and screen readers announce them that way. (`DontTabsForValue`)
+
 ## Accessibility
 
 - `role="tablist"`, `"tab"` and `"tabpanel"`, with `aria-selected`, `aria-controls` and `aria-labelledby` set for you.

@@ -5,6 +5,30 @@
   - tab "Month"
 - paragraph: "Showing: week"
 
+# DoSegmentedForValue
+- radiogroup "Period":
+  - radio "Day"
+  - radio "Week" [checked]
+  - radio "Month"
+
+# DoShortLabels
+- tablist "Project":
+  - tab "Overview" [selected]
+  - tab "Activity"
+  - tab "Members"
+
+# DontLongLabels
+- tablist "Project":
+  - tab "Project overview" [selected]
+  - tab "Recent team activity"
+  - tab "Members and roles"
+
+# DontTabsForValue
+- tablist "Period":
+  - tab "Day"
+  - tab "Week" [selected]
+  - tab "Month"
+
 # Large
 - tablist "Project":
   - tab "Overview" [selected]
