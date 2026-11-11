@@ -1,0 +1,115 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Hooks and helpers" />
+
+# Hooks and helpers
+
+The package exports what its own components use, so a component you build reads the same settings, speaks through the same live regions and moves the same way. Import each one from `serupa-ds`. All of them are safe in server-rendered HTML: on the server they do nothing, or return the value the page is hydrated with, so nothing mismatches.
+
+## The provider's settings
+
+`useSerupa()` gives the nearest [`SerupaProvider`](?path=/docs/guides-localization--docs)'s settings: `locale`, `labels` (the built-in words), `icons` and `platform`. `useLocale(own?)` gives the locale the components use: `own` when given, else the provider's, else the browser's. In server HTML that's `en-US` until hydration unless the provider sets it, so set `<SerupaProvider locale>` from the request.
+
+```tsx
+import { useLocale } from "serupa-ds";
+
+function SavedAt({ at }: { at: Date }) {
+  const locale = useLocale();
+  return <span>{at.toLocaleTimeString(locale)}</span>;
+}
+```
+
+`useCollator(options?)` gives an `Intl.Collator` for that locale, so a list sorts the way its readers expect ("Ébène" next to "Ebony", not after "Zebra"). `plural(locale, count, forms)` picks the words for `count` by that language's plural rules, with `#` replaced by the count written the locale's way. Give `other`, and the forms the language uses.
+
+```tsx
+import { plural, useCollator, useLocale } from "serupa-ds";
+
+function People({ names }: { names: string[] }) {
+  const locale = useLocale();
+  const collator = useCollator();
+  const sorted = [...names].sort(collator.compare);
+  return <p>{plural(locale, sorted.length, { one: "# person", other: "# people" })}: {sorted.join(", ")}</p>;
+}
+```
+
+## Telling screen readers what changed
+
+`announce(text, { assertive? })` says `text` through the components' live regions. They move into an open Dialog or Drawer, so it's heard there too. Keep `assertive` for errors: it interrupts whatever is being read. Say what happened in a few words, as [Messages and feedback](?path=/docs/guides-messages-and-feedback--docs) describes, and say it only when nothing on screen took focus to say it already.
+
+```tsx
+import { announce } from "serupa-ds";
+
+async function archive(id: string) {
+  await api.archive(id);
+  announce("Archived");
+}
+```
+
+`announcePage({ title?, focus? })` does what a full page load would after a client-side route change: it focuses the new page's main heading (the `h1` in `<main>`, made focusable with `tabindex="-1"`) and says the page's title (`document.title` by default) unless the focused heading already says it. `focus` takes an element or a selector, or `false` to leave focus where it is. Set the title, then call it in an effect once the new page has rendered. [Build a page](?path=/docs/guides-build-a-page--docs) lists what else the page sets.
+
+```tsx
+import { announcePage } from "serupa-ds";
+
+function useRouteChange(pathname: string, title: string) {
+  React.useEffect(() => {
+    document.title = `${title} · Acme`;
+    announcePage();
+  }, [pathname]);
+}
+```
+
+## Motion
+
+`useReducedMotion()` is true when the visitor asked for less motion. CSS transitions already follow the setting through the [motion tokens](?path=/docs/foundations-motion--docs), so use it only for motion you run from JavaScript, such as a smooth scroll or a count going up.
+
+```tsx
+import { useReducedMotion } from "serupa-ds";
+
+function BackToTop() {
+  const reduce = useReducedMotion();
+  return <button onClick={() => window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" })}>Back to top</button>;
+}
+```
+
+`withViewTransition(update, { types? })` runs a state change as a View Transition, so what it moves glides to its new place instead of jumping. Mark what should travel with `view-transition-name` or the `view-transition-match` class. It uses `motion-change-md` with `ease-move`, only crossfades under reduced motion, and applies the change at once where the browser has no View Transitions.
+
+```tsx
+import { withViewTransition } from "serupa-ds";
+
+<SegmentedControl value={view} onValueChange={(v) => withViewTransition(() => setView(v))} options={views} />
+```
+
+`withoutTransitions(change, element?)` runs `change`, such as setting `data-theme` on a section, and finishes the color transitions it starts inside `element` (the whole page by default), so the new theme's colors arrive at once instead of fading control by control. Motion such as a menu fading out runs on. `theme.js` does this for the page's own theme switch, so use it for a section with a theme of its own.
+
+```tsx
+import { withoutTransitions } from "serupa-ds";
+
+withoutTransitions(() => { panel.dataset.theme = "dark"; }, panel);
+```
+
+## Screen width and media queries
+
+Prefer CSS where it can do the job: a utility such as `md:grid-cols-2` switches without any script. Use a hook when the markup itself changes, such as a Drawer on a phone and a Sidebar on a laptop. `useBreakpoint(name)` is true when the screen is at least `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px) wide, the same widths as the `screen-*` tokens and the responsive utilities. `useMediaQuery(query)` answers any media query, such as `'(hover: hover)'`. Both follow the window as it changes. Server HTML and hydration use `serverValue` (default `false`), and the browser's answer follows right after, so pick the `serverValue` that most visitors have.
+
+```tsx
+import { useBreakpoint } from "serupa-ds";
+
+function Navigation() {
+  const wide = useBreakpoint("lg", { serverValue: true });
+  return wide ? <Sidebar items={items} /> : <Navbar brand="Acme">{links}</Navbar>;
+}
+```
+
+## Copying
+
+`useCopyToClipboard({ copiedLabel?, announce?, timeout? })` is [CopyButton](?path=/docs/components-actions-copybutton--docs)'s copying for a control that isn't a CopyButton, such as a "Copy link" menu item. `copy(value)` resolves `true` once the value is on the clipboard and `false` when the browser refuses. `copied` stays true for `timeout` ms (2 seconds by default). It says "Copied", or why it couldn't copy, to screen readers unless `announce` is `false`. It works inside a modal Dialog, and where the clipboard API is refused.
+
+```tsx
+import { useCopyToClipboard } from "serupa-ds";
+
+function CopyLinkItem({ url }: { url: string }) {
+  // The menu closes as the item is chosen, so the hook's "Copied" to screen readers is what confirms it.
+  const { copy } = useCopyToClipboard();
+  return <MenuItem onSelect={() => copy(url)}>Copy link</MenuItem>;
+}
+```
