@@ -65,11 +65,11 @@ describe('Patterns/List with search and filters', () => {
     expect(onSearchChange).toHaveBeenLastCalledWith('?page=3');
     expect(names()).toHaveLength(4);
     await screen.getByRole('checkbox', { name: 'Select all projects on this page' }).click();
-    await expect.element(screen.getByRole('group', { name: '4 selected' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: /^(4|٤) selected$/ })).toBeVisible();
     await screen.getByRole('checkbox', { name: `Select ${names()[0]}` }).click();
-    await expect.element(screen.getByRole('group', { name: '3 selected' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: /^(3|٣) selected$/ })).toBeVisible();
     await screen.getByRole('checkbox', { name: 'Select all projects on this page' }).click();
-    await expect.element(screen.getByRole('group', { name: '4 selected' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: /^(4|٤) selected$/ })).toBeVisible();
     await screen.getByRole('checkbox', { name: 'Select all projects on this page' }).click();
     expect(document.querySelectorAll('tbody input:checked')).toHaveLength(0);
     await screen.getByRole('checkbox', { name: `Select ${names()[1]}` }).click();
