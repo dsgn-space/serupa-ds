@@ -32,7 +32,7 @@ export interface FileUploadStatus {
   state: 'uploading' | 'done' | 'error';
   /** While uploading, how far along, from 0 to 100. Leave it out when you can't tell: the bar then moves on its own. */
   progress?: number | undefined;
-  /** With 'error', what went wrong. Default: "Upload failed". */
+  /** With 'error', what went wrong. Default: "Couldn’t upload". */
   message?: React.ReactNode | undefined;
 }
 export type FileRejection = { file: File; reason: 'type' | 'size' | 'count' | 'folder' | 'duplicate'; message: string };

@@ -59,7 +59,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => min + ':1 से कम, पढ़ने में मुश्किल हो सकती है',
   loadingResults: 'लोड हो रहा है…',
   loadFailed: 'विकल्प लोड नहीं हो सके। फिर से कोशिश करने के लिए टाइप करें।',
-  noResults: 'कोई नतीजा नहीं',
+  noResults: 'कोई नतीजा नहीं। दूसरे शब्द आज़माएँ।',
   resultsCount: (count) => n(count) + (count === 1 ? ' नतीजा' : ' नतीजे'),
   showOptions: 'विकल्प दिखाएँ',
   clearValue: (label) => (label ? label + ' हटाएँ' : 'हटाएँ'),

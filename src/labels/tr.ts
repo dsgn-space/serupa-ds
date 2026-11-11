@@ -60,7 +60,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => min.replace('.', ',') + ':1 altında, okunması zor olabilir',
   loadingResults: 'Yükleniyor…',
   loadFailed: 'Seçenekler yüklenemedi. Yeniden denemek için yazın.',
-  noResults: 'Sonuç yok',
+  noResults: 'Sonuç yok. Başka kelimeler deneyin.',
   resultsCount: (count) => n(count) + ' sonuç',
   showOptions: 'Seçenekleri göster',
   clearValue: (label) => (label ? label + ' temizle' : 'Temizle'),

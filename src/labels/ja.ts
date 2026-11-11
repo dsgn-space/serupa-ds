@@ -59,7 +59,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => min + ':1未満のため、読みにくい場合があります',
   loadingResults: '読み込み中…',
   loadFailed: '選択肢を読み込めませんでした。入力すると再試行します。',
-  noResults: '結果はありません',
+  noResults: '結果はありません。別の言葉で試してください。',
   resultsCount: (count) => n(count) + '件の結果',
   showOptions: '選択肢を表示',
   clearValue: (label) => (label ? label + 'をクリア' : 'クリア'),
