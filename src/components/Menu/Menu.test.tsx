@@ -885,3 +885,28 @@ describe('Menu inside a shadow root (GR60)', () => {
     } finally { host.remove(); }
   });
 });
+
+describe('Menu labels line up', () => {
+  const lefts = (m: Element) => [...m.querySelectorAll<HTMLElement>(':scope > [role^="menuitem"] > .dk-menu__label, :scope > [role="group"] > [role^="menuitem"] > .dk-menu__label, :scope > [role="group"] > .dk-menu__group-label')].map((l) => Math.round(l.getBoundingClientRect().left + (l.classList.contains('dk-menu__group-label') ? parseFloat(getComputedStyle(l).paddingLeft) : 0)));   // where the text starts
+  test('items without an icon or a check keep their space, so every label (and group heading) starts in one column; a menu with neither keeps its plain inset; a submenu works out its own', async () => {
+    await render(<div>
+      <Menu defaultOpen trigger={<Button>Mixed</Button>}>
+        <MenuItem icon="content_copy">Copy</MenuItem>
+        <MenuItem>Paste</MenuItem>
+        <MenuGroup label="View"><MenuCheckboxItem checked>Show grid</MenuCheckboxItem><MenuItem icon="zoom_in">Zoom in</MenuItem><MenuItem>Reset</MenuItem></MenuGroup>
+        <MenuSub label="More"><MenuItem>Rename</MenuItem><MenuItem>Archive</MenuItem></MenuSub>
+      </Menu>
+    </div>);
+    const m = openMenu()!;
+    const all = lefts(m);
+    expect(all).toEqual(Array(7).fill(all[0]));
+    // The label column is past both an icon and a check, each 16px with the 8px gap, after the 8px inset.
+    expect(all[0] - Math.round(m.querySelector<HTMLElement>('[role="menuitem"]')!.getBoundingClientRect().left)).toBe(8 + 24 + 24);
+    // The submenu has no icons or checks: its labels sit at the plain inset.
+    await userEvent.keyboard('{End}{ArrowRight}');
+    const sub = [...document.querySelectorAll<HTMLElement>('.dk-menu--sub')].find((x) => !x.hidden)!;
+    await expect.poll(() => !!sub && sub.matches(':popover-open')).toBe(true);
+    const item = sub.querySelector<HTMLElement>('[role="menuitem"]')!;
+    expect(lefts(sub).map((l) => l - Math.round(item.getBoundingClientRect().left))).toEqual([8, 8]);
+  });
+});
