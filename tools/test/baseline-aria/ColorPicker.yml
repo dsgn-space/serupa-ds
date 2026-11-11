@@ -40,7 +40,7 @@
   - radio "White"
 - textbox "Custom color": "#000000"
 - textbox "Hex code"
-- text: Pick a color for the label.
+- text: Choose a color for the label.
 
 # Large
 - radiogroup "Label color":

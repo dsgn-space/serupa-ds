@@ -20,7 +20,7 @@
   - radio "5 stars"
 
 # InAField
-- text: How was your stay? Pick again to clear.
+- text: How was your stay? Choose it again to clear.
 - radiogroup "How was your stay?":
   - radio "1 star"
   - radio "2 stars"
@@ -49,7 +49,7 @@
   - radio "3 stars"
   - radio "4 stars"
   - radio "5 stars"
-- text: Pick a rating to send your review.
+- text: Choose a rating to send your review.
 
 # Overflow
 - radiogroup "Your rating":

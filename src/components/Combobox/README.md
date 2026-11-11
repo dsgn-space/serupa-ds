@@ -5,7 +5,7 @@ A text field with a list of options that narrows as you type: pick a country, an
 ```tsx
 import { Combobox } from "serupa-ds";
 
-<Combobox aria-label="Country" placeholder="Pick a country" options={["Argentina", "Brazil", "Canada"]} />
+<Combobox aria-label="Country" placeholder="Choose a country" options={["Argentina", "Brazil", "Canada"]} />
 
 const [owner, setOwner] = React.useState<string | null>(null);
 <Combobox aria-label="Owner" value={owner} onValueChange={setOwner} clearable
