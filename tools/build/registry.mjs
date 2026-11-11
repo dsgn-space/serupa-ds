@@ -135,7 +135,9 @@ export function componentIndex(root = ROOT, { plain = false } = {}) {
     // Links between guides (../Combobox/README.md) point from the README instead.
     const sentence = (/^.*?[.!?](?=\s|$)/.exec(intro) || [intro])[0].replace(/[\\|]/g, '\\$&').replace(/\]\(\.\.\//g, '](src/components/');
     const st = status(n, root), mark = st === 'stable' ? '' : ` (${st})`;
-    (groups[group ?? 'Other'] ||= []).push(plain ? `- **${n}**${mark}: ${sentence.replace(/\\([\\|])/g, '$1').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')}` : `| [${n}](src/components/${n}/README.md)${mark} | ${sentence} |`);
+    // The other names it's known by (snackbar, dropzone), so an agent asked for one finds the component.
+    const also = (/^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(guide) || [])[1];
+    (groups[group ?? 'Other'] ||= []).push(plain ? `- **${n}**${mark}: ${sentence.replace(/\\([\\|])/g, '$1').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')}${also ? ` Also called: ${also}.` : ''}` : `| [${n}](src/components/${n}/README.md)${mark} | ${sentence} |`);
   }
   return Object.keys(groups).sort((a, b) => Number(a === 'Other') - Number(b === 'Other') || a.localeCompare(b))
     .map((g) => (plain ? `### ${g}\n\n${groups[g].join('\n')}\n` : `### ${g}\n\n| Component | What it's for |\n| --- | --- |\n${groups[g].join('\n')}\n`)).join('\n');

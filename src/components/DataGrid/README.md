@@ -2,6 +2,8 @@
 
 A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. The app keeps the rows; `onRowsChange` gives the new rows and which cells changed.
 
+**Also called:** spreadsheet, editable data table.
+
 ```tsx
 import { DataGrid } from "serupa-ds";
 

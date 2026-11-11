@@ -2,6 +2,8 @@
 
 A short label for status, counts and categories, optionally clickable. One size (20px tall, `text-xs`, 12px icons) in three styles (**subtle**, **solid**, **outline**), six tones built on the status colors and 17 palette tones for categories and tags. Every tone and style keeps 4.5:1 text in all six themes. Extras: a status dot, a leading icon, a count and a remove button. States: hover, focus and active on clickable badges, and loading on any badge.
 
+**Also called:** tag, chip, pill, label.
+
 ```jsx
 const { Badge } = window.Serupa;
 

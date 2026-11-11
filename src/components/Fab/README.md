@@ -2,6 +2,8 @@
 
 A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. It's a primary [Button](../Button/README.md), so loading, disabled and focus all work the same.
 
+**Also called:** floating action button.
+
 ```jsx
 const { Fab } = window.Serupa;
 

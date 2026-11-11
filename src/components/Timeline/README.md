@@ -2,6 +2,8 @@
 
 An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content. Use it for activity feeds, order history and audit logs, so people can see what happened and when.
 
+**Also called:** activity feed, history.
+
 ```tsx
 import { Timeline, TimelineItem } from "serupa-ds";
 
