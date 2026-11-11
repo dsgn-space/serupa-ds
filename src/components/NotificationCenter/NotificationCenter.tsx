@@ -105,9 +105,21 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
   const markAll = !!onMarkAllRead && items.some((n) => !n.read), clear = !!onClear && items.length > 0;
   const clearButton = React.useRef<HTMLButtonElement | null>(null);
   const fromFooter = React.useRef(false);
-  const footer = markAll || clear ? <>
+  // "Clear all" can't be undone, so it asks first, in the footer: the question, a destructive "Clear all" that does it,
+  // and "Keep them", which has focus, so a second Enter or a stray tap doesn't empty the list.
+  const [asking, setAsking] = React.useState(false);
+  const keep = React.useRef<HTMLButtonElement | null>(null);
+  const askId = base + '-ask';
+  useIsoLayoutEffect(() => { if (asking) keep.current?.focus(); }, [asking]);
+  // The list emptied some other way while it asked: the question goes with it.
+  React.useEffect(() => { if (!clear) setAsking(false); }, [clear]);
+  const footer = asking && clear ? <>
+    <p className="dk-notification-center__ask" id={askId}>{labels.clearNotificationsConfirm}</p>
+    <Button destructive variant="outline" size="sm" onClick={() => { fromFooter.current = true; setAsking(false); onClear?.(); }}>{labels.clearNotifications}</Button>
+    <Button ref={keep} variant="ghost" size="sm" aria-describedby={askId} onClick={() => { setAsking(false); requestAnimationFrame(() => clearButton.current?.focus()); }}>{labels.keepNotifications}</Button>
+  </> : markAll || clear ? <>
     {markAll ? <Button variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onMarkAllRead?.(); }}>{labels.markAllRead}</Button> : null}
-    {clear ? <Button ref={clearButton} variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onClear?.(); }}>{labels.clearNotifications}</Button> : null}
+    {clear ? <Button ref={clearButton} variant="ghost" size="sm" onClick={() => setAsking(true)}>{labels.clearNotifications}</Button> : null}
   </> : null;
   // The row focus is in, if any. When the app takes that row away (an inbox that hides read ones, so "Mark as read"
   // removes the row it just focused), focus goes to the row now in its place, else the last, else the empty line,
