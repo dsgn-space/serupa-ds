@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { SerupaProvider } from '../../internal/provider';
 import { ListSearch, readView, writeView } from './ListSearch';
 
 const active = () => document.activeElement as HTMLElement;
@@ -60,7 +61,7 @@ describe('Patterns/List with search and filters', () => {
 
   test('a page is kept in the address, and selection works by row and by page', async () => {
     const onSearchChange = vi.fn();
-    const screen = await render(<ListSearch onSearchChange={onSearchChange} />);
+    const screen = await render(<SerupaProvider locale="en"><ListSearch onSearchChange={onSearchChange} /></SerupaProvider>);
     await screen.getByRole('button', { name: /^Page (3|٣)$/ }).click();
     expect(onSearchChange).toHaveBeenLastCalledWith('?page=3');
     expect(names()).toHaveLength(4);
