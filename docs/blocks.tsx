@@ -57,9 +57,19 @@ function anatomyAt(md: string): (string | Anatomy)[] {
 }
 
 /** A component's guidelines (its README.md), without the title the page already has. */
+/** A component's guide as an agent reads it: a line saying what it is and where it comes from, then the README as it
+ *  is, so an agent pasted it knows the import, the props and the accessibility rules without a link it can't open. */
+export function forAgent(name: string, source: string): string {
+  return `<!-- ${pkg.name} ${pkg.version}: the ${name} component's usage guide. Import it with: import { ${name} } from "${pkg.name}"; -->\n\n${source.trim()}\n`;
+}
+
 export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
   return <>
+    {name && <div className="sb-copy-guide">
+      <CopyButton value={() => forAgent(name, source)} size="sm">Copy for AI</CopyButton>
+      <span>The whole guide as Markdown, to paste into a coding agent.</span>
+    </div>}
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
     {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <Markdown key={i}>{relink(part)}</Markdown>
