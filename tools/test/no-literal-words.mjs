@@ -6,15 +6,18 @@ import rule from '../lint/no-literal-words.mjs';
 import { done, report } from './lib.mjs';
 
 const linter = new Linter({ configType: 'flat' });
+/** @type {(allow?: string[]) => import('eslint').Linter.Config[]} */
 const config = (allow) => [{
   files: ['**/*.jsx'],
   languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
-  plugins: { serupa: { rules: { 'no-literal-words': rule } } },
+  plugins: { serupa: { rules: { 'no-literal-words': /** @type {import('eslint').Rule.RuleModule} */ (rule) } } },
   rules: { 'serupa/no-literal-words': ['error', ...(allow ? [{ allow }] : [])] },
 }];
+/** @param {string} code @param {string[]} [allow] */
 const flagged = (code, allow) => linter.verify(code, config(allow), 'x.jsx').map((m) => m.ruleId === 'serupa/no-literal-words' ? m.message.match(/"(.*)"$/)?.[1] : `${m.ruleId}: ${m.message}`);
 
 const R = [];
+/** @param {string} name @param {string} code @param {string[]} want @param {string[]} [allow] */
 const t = (name, code, want, allow) => {
   const got = flagged(code, allow);
   R.push({ name, ok: JSON.stringify(got) === JSON.stringify(want), detail: `flagged ${JSON.stringify(got)}, expected ${JSON.stringify(want)}` });
