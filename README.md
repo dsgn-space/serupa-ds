@@ -14,10 +14,10 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitLab
 
 ```sh
-npm install gitlab:diki-stwn/serupa-ds#v14.2.0
+npm install gitlab:diki-stwn-group/serupa-ds#v14.2.0
 ```
 
-The repository lives on [GitLab](https://gitlab.com/diki-stwn/serupa-ds) for now, and each release is a tag there. The release files, their SHA-256 and the build attestations that GitHub's Releases page carried return when the repository moves back to GitHub; until then, the tag is the release.
+The repository lives on [GitLab](https://gitlab.com/diki-stwn-group/serupa-ds) for now, and each release is a tag there. The release files, their SHA-256 and the build attestations that GitHub's Releases page carried return when the repository moves back to GitHub; until then, the tag is the release.
 
 Always pin a tag (`#v14.2.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
@@ -26,7 +26,7 @@ To update later, change the tag in `package.json` (or run the install again with
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=gitlab:diki-stwn/serupa-ds#v14.2.0 serupa-create my-app
+npx --package=gitlab:diki-stwn-group/serupa-ds#v14.2.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev

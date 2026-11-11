@@ -407,7 +407,7 @@ export function UpgradeGuide() {
     const prev = Number(m.version.split('.')[0]) - 1;
     const mine = auto.filter((t) => t.version === m.version);
     const intro = m.next
-      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://gitlab.com/diki-stwn/serupa-ds/-/tree/main/docs/rfcs) has the proposal.`
+      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://gitlab.com/diki-stwn-group/serupa-ds/-/tree/main/docs/rfcs) has the proposal.`
       : m.date ? `Released ${m.date}.` : '';
     const run = mine.length
       ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`

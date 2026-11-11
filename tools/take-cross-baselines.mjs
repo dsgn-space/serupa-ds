@@ -12,7 +12,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const PROJECT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const API = `${process.env.CI_API_V4_URL || 'https://gitlab.com/api/v4'}/projects/${encodeURIComponent(process.env.SERUPA_GITLAB_PROJECT || 'diki-stwn/serupa-ds')}`;
+const API = `${process.env.CI_API_V4_URL || 'https://gitlab.com/api/v4'}/projects/${encodeURIComponent(process.env.SERUPA_GITLAB_PROJECT || 'diki-stwn-group/serupa-ds')}`;
 const pipeline = process.argv[2];
 if (!/^\d+$/.test(pipeline || '') || !process.env.GITLAB_TOKEN) {
   console.error('Usage: GITLAB_TOKEN=… node tools/take-cross-baselines.mjs <pipeline id>  (the pipeline whose cross-browser visual jobs failed)');
