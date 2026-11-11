@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 
 export interface ProseProps extends React.HTMLAttributes<HTMLElement> {
   /** The element. Default: 'div'. 'article' for a post or a help page that stands on its own. */
@@ -47,7 +48,9 @@ export const Prose = /* @__PURE__ */ component<HTMLElement, ProseProps>('Prose',
     watch();
     const mo = typeof MutationObserver === 'undefined' ? null : new MutationObserver(() => { watch(); sync(); });
     if (mo) mo.observe(el, { childList: true, subtree: true, characterData: true });
-    return () => { if (ro) ro.disconnect(); if (mo) mo.disconnect(); };
+    // A web font that arrives late makes a line wider or narrower in a box that keeps its size: no observer sees it.
+    const stop = onFontsLoaded(sync);
+    return () => { if (ro) ro.disconnect(); if (mo) mo.disconnect(); stop(); };
   }, []);
   return React.createElement(oneOf(TAGS, props.as, 'div'), Object.assign(rest, {
     ref: rootRefs, 'data-component': 'prose', className: cn('dk-prose', props.className),
