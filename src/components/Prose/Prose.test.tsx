@@ -75,7 +75,7 @@ describe('Prose', () => {
     // 280px inside the block (about 380px) whatever fonts the machine has; the late one (PrLate) is Inter at its size,
     // about 252px, which fits. Its rule is added only once the block is measured, so nothing loads it sooner. A fixed
     // line height, and no scrollbar to take room (as with overlay scrollbars), so the box's size never changes.
-    const wide = new FontFace('PrWide', 'url(/fonts/InterVariable-latin.woff2)', { sizeAdjust: '150%' });
+    const wide = new FontFace('PrWide', 'url(/fonts/InterVariable-latin.woff2)', { sizeAdjust: '150%' } as FontFaceDescriptors);   // sizeAdjust: in every browser, not yet in TypeScript's DOM types
     await wide.load();
     document.fonts.add(wide);
     const rule = document.createElement('style');

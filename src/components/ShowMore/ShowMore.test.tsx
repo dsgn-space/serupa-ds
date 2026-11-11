@@ -51,7 +51,7 @@ describe('ShowMore', () => {
     // The first font is Inter drawn half as large again (SmWide, loaded before the render), so the text takes three
     // lines, whatever fonts the machine has; the late one (SmLate) is Inter at its size, two lines. Its rule is added
     // only once the text is measured, so nothing loads it sooner, and the two-line box is as tall either way.
-    const wide = new FontFace('SmWide', 'url(/fonts/InterVariable-latin.woff2)', { sizeAdjust: '150%' });
+    const wide = new FontFace('SmWide', 'url(/fonts/InterVariable-latin.woff2)', { sizeAdjust: '150%' } as FontFaceDescriptors);   // sizeAdjust: in every browser, not yet in TypeScript's DOM types
     await wide.load();
     document.fonts.add(wide);
     const rule = document.createElement('style');
