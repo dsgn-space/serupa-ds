@@ -24,7 +24,8 @@ t('its description says when to use it, in at most 1024 characters and without a
 
 // The components index, between the markers registry.mjs writes.
 const index = /<!-- components:start[^>]*-->([\s\S]*?)<!-- components:end -->/.exec(skill)?.[1] ?? '';
-const listed = [...index.matchAll(/^- \*\*(\w+)\*\*:/gm)].map((m) => m[1]);
+// A beta component's line reads "- **Name** (beta): …".
+const listed = [...index.matchAll(/^- \*\*(\w+)\*\*(?: \([^)]*\))?:/gm)].map((m) => m[1]);
 t('it has a components index (node tools/build/registry.mjs --readme writes it)', listed.length, 'no "- **Name**:" lines between the components markers');
 const gone = listed.filter((n) => !components[n]);
 t('every component it lists is in the package (dist/components.json)', !gone.length, `${gone.join(', ')}: run node tools/build/registry.mjs --readme`);
