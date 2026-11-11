@@ -37,6 +37,58 @@
   - radio "Team" [disabled]
   - text: Team
 
+# DoCardsWithDetails
+- radiogroup "Delivery":
+  - radio "Standard" [checked]
+  - text: Standard 3 to 5 days, free
+  - radio "Express"
+  - text: Express Next day, Rp 25.000
+
+# DoFewOptions
+- radiogroup "Contact me by":
+  - radio "Email" [checked]
+  - text: Email
+  - radio "Phone"
+  - text: Phone
+  - radio "Post"
+  - text: Post
+
+# DontCardsForShortOptions
+- radiogroup "Size":
+  - radio "S"
+  - text: S
+  - radio "M" [checked]
+  - text: M
+  - radio "L"
+  - text: L
+
+# DontLongList
+- radiogroup "Province":
+  - radio "Aceh"
+  - text: Aceh
+  - radio "Bali" [checked]
+  - text: Bali
+  - radio "Banten"
+  - text: Banten
+  - radio "Bengkulu"
+  - text: Bengkulu
+  - radio "Gorontalo"
+  - text: Gorontalo
+  - radio "Jakarta"
+  - text: Jakarta
+  - radio "Jambi"
+  - text: Jambi
+  - radio "Jawa Barat"
+  - text: Jawa Barat
+  - radio "Jawa Tengah"
+  - text: Jawa Tengah
+  - radio "Jawa Timur"
+  - text: Jawa Timur
+  - radio "Kalimantan Barat"
+  - text: Kalimantan Barat
+  - radio "Lampung"
+  - text: Lampung
+
 # Horizontal
 - radiogroup "Plan":
   - radio "Free"
