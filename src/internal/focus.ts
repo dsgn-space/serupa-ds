@@ -31,8 +31,8 @@ export function useAutoFocus(on: boolean | undefined, target: () => HTMLElement 
 
 /** For a control that can disable itself when used (a next arrow that reaches the last page): call the returned
  *  function from its handler with the control and where focus should go instead. After the render, if the control
- *  held focus and is now disabled, gone, or focus fell to <body>, focus moves to that other control (as Carousel's
- *  arrows do), so a keyboard user isn't thrown back to the top of the page. */
+ *  held focus and is now disabled, gone, or focus fell to <body>, focus moves to that other control (as Calendar's
+ *  and Pagination's arrows do), so a keyboard user isn't thrown back to the top of the page. */
 export function useFocusHandover(): (from: HTMLElement, to: () => HTMLElement | null | undefined) => void {
   const pending = React.useRef<{ from: HTMLElement; to: () => HTMLElement | null | undefined } | null>(null);
   // every render: acts only after a handler asked, once the render it caused has disabled the control or not.
