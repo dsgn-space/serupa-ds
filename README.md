@@ -11,13 +11,13 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 
 ## Getting started
 
-### 1. Install a released version from GitLab
+### 1. Install a released version from GitHub
 
 ```sh
-npm install gitlab:diki-stwn-group/serupa-ds#v14.2.0
+npm install github:dsgn-space/serupa-ds#v14.2.0
 ```
 
-The repository lives on [GitLab](https://gitlab.com/diki-stwn-group/serupa-ds) for now, and each release is a tag there. The release files, their SHA-256 and the build attestations that GitHub's Releases page carried return when the repository moves back to GitHub; until then, the tag is the release.
+Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
 Always pin a tag (`#v14.2.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
@@ -26,7 +26,7 @@ To update later, change the tag in `package.json` (or run the install again with
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=gitlab:diki-stwn-group/serupa-ds#v14.2.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v14.2.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -483,7 +483,7 @@ It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Cop
 
 A second skill, `skills/serupa-review/SKILL.md`, reviews a change to an app's UI. It checks what lint can't judge: a widget built by hand where a component exists, the app's part of accessibility, the right feedback for a message, and the words. Findings come grouped as Must fix, Should fix and Nice to have, each with its problem, fix and what happens if it's skipped, and end with a one-line verdict. The `serupa-agents` section points agents at it too.
 
-Or install the skill with the `skills` command, `npx skills add diki-stwn/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
+Or install the skill with the `skills` command, `npx skills add dsgn-space/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
 
 ## Browser support
 
@@ -519,7 +519,7 @@ What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, an
 
 ## Credits
 
-Serupa is designed and built by **Diki** ([@diki-stwn](https://gitlab.com/diki-stwn)). It was called the Diki Design System up to version 4. It isn't open source: all rights are reserved ([LICENSE](LICENSE)), and `package.json` says so with `"license": "UNLICENSED"`.
+Serupa is designed and built by **Diki** ([@diki-stwn](https://github.com/diki-stwn)). It was called the Diki Design System up to version 4. It isn't open source: all rights are reserved ([LICENSE](LICENSE)), and `package.json` says so with `"license": "UNLICENSED"`.
 
 The system is self-contained: every file it needs is in it, and nothing loads from another server. It builds on these open-source works; their licenses are in `licenses/`.
 
