@@ -33,7 +33,7 @@ export const OtherControls: Story = {
 export const Group: Story = {
   name: 'Group of checkboxes or radios',
   render: () => <div className="flex flex-col gap-4">
-    <Field group label="Notifications" hint="Pick any">
+    <Field group label="Notifications" hint="Choose any">
       <Checkbox defaultChecked>Email</Checkbox><Checkbox>SMS</Checkbox>
     </Field>
     <Field group required label="Plan" error="Choose a plan">
