@@ -38,12 +38,14 @@ formatNumber(1234, "id-ID", { format: "compact" })                  // "1,2 rb",
 - Options Intl rejects, such as a currency `"US"` or a unit `"km/h"`, write the plain number with a `number-options` warning in development, rather than throwing and unmounting the page.
 - Each locale and set of options builds its `Intl.NumberFormat` once and keeps it, so a long table of numbers re-renders without building thousands of formatters.
 - In a table column, numbers line up on tabular digits; align the column to the end too.
+- `animate` makes a changed value show what moved: only the characters that differ from the last value fade in out of a slight blur ("Rp 1.485.000" to "Rp 1.500.000" fades "500"). Use it for a number that changes now and then while someone watches it: a cart total, a dashboard figure after a filter, a count after an action. Leave it off for a value that ticks every second (a timer, a live price), where the fade would never settle, and in long tables.
 
 ## Accessibility
 
 - It's a `<data>` whose `value` holds the number for machines; screen readers read its words.
 - A compact number's full value is in `title`, which shows on hover but isn't reliably read out. Where the exact figure matters, show it as text.
 - It doesn't wrap: "Rp 150.000" stays on one line.
+- With `animate`, the changed characters stay inline text, so a screen reader still reads one number. The change isn't announced: when it matters, say it with `announce()` as well. With reduced motion, the characters change at once.
 - **Keyboard:** none: inline text, not focusable.
 
 ## Props
@@ -56,6 +58,7 @@ formatNumber(1234, "id-ID", { format: "compact" })                  // "1,2 rb",
 | `currency` | `string` | | With `currency`: the ISO 4217 code, `"IDR"`, `"USD"`. |
 | `unit` | `string` | | With `unit`: a unit `Intl.NumberFormat` knows. |
 | `options` | `Intl.NumberFormatOptions` | | Any other options; they win. |
+| `animate` | `boolean` | `false` | When the value changes, the characters that changed fade in over `motion-change-sm`. |
 | `locale` | `string` | the provider's, else the browser's | When it differs from the provider's, the element carries `lang`, so screen readers read the number in that language. |
 Every other prop, `className` and `ref` go to the `<data>`, which has `data-component="formatted-number"` and `data-format`. Your own `title` wins over the compact tooltip.
 
@@ -63,4 +66,4 @@ Every other prop, `className` and `ref` go to the `<data>`, which has `data-comp
 
 ## Component tokens
 
-None: it uses the surrounding text's font and color, with tabular digits.
+None: it uses the surrounding text's font and color, with tabular digits. With `animate`, the change uses the `motion-change-sm` role, `ease-enter` and `blur-xs`.

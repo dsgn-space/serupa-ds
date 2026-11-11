@@ -14,6 +14,7 @@ import { PinInput } from '../../components/PinInput/PinInput';
 import { Icon } from '../../components/Icon/Icon';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Alert } from '../../components/Alert/Alert';
+import { announce } from '../../internal/announce';
 
 /* Sign-up: name, email, an optional phone, a password whose rules are shown before typing, and the terms; then a
    code sent by email; then done. For an app to copy. What it carries (WCAG 2.2):
@@ -25,6 +26,8 @@ import { Alert } from '../../components/Alert/Alert';
    - 3.3.1, 3.3.3: Create account with problems shows an ErrorSummary that takes focus and links to each field, and
      each field says what to do.
    - 3.3.7: "Change email" on the code step goes back with every answer kept, so nothing is typed twice.
+   - 4.1.3: "Send a new code", which the wrong-code error points to, says in a status region that the code went, or
+     that it couldn't (onResend rejected), without moving focus off the button.
    - 2.4.3, 4.1.3: each new step puts focus on its heading, so the change is said and Tab goes on from there.
    Creating the account and sending the code are the app's job: onSubmit and verify stand in for them. */
 
@@ -42,6 +45,9 @@ export interface SignUpProps {
   failed?: boolean | undefined;
   /** The app's check of the code. Default: "123456". */
   verify?: ((code: string) => boolean) | undefined;
+  /** Sends a new code to the email, from "Send a new code". Return its promise: the button is busy until it settles,
+   *  and a rejection says the code didn't go. */
+  onResend?: ((email: string) => void | PromiseLike<unknown>) | undefined;
 }
 
 const MIN = 12;
@@ -68,7 +74,7 @@ export function signUpProblems(v: SignUpValues): ErrorSummaryItem[] {
 const empty: SignUpValues = { name: '', email: '', phone: '', password: '', terms: false };
 
 /** The sign-up page: a skip link, then main with the step's form. */
-export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed, verify = (c) => c === '123456' }: SignUpProps) {
+export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed, verify = (c) => c === '123456', onResend }: SignUpProps) {
   const [step, setStep] = React.useState<SignUpStep>(start);
   const [v, setV] = React.useState<SignUpValues>({ ...empty, ...initial });
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
@@ -78,6 +84,16 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
   const [busy, setBusy] = React.useState(false);
   // onSubmit rejected (the server refused, or the network failed): say so over the button, and keep what was typed.
   const [failed, setFailed] = React.useState(!!startFailed);
+  // Each answer to "Send a new code" is a new keyed line in the status region, so it's said every time.
+  const [sent, setSent] = React.useState<{ n: number; ok: boolean }>({ n: 0, ok: true });
+  const [resending, setResending] = React.useState(false);
+  const resend = () => {
+    if (resending) return;
+    setCode(''); setCodeError('');
+    const done = (ok: boolean) => { setResending(false); setSent((s) => ({ n: s.n + 1, ok })); };
+    setResending(true);
+    Promise.resolve().then(() => onResend?.(v.email)).then(() => done(true), () => done(false));
+  };
   const heading = React.useRef<HTMLHeadingElement>(null);
   const moved = React.useRef(false);
   React.useEffect(() => { if (moved.current) heading.current?.focus(); }, [step]);
@@ -98,8 +114,11 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
   };
   const check = (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.length < 6) setCodeError('Enter the 6-digit code from the email');
-    else if (!verify(code)) setCodeError('That code isn’t right. Check the latest email, or send a new code');
+    // The same error again (a second wrong code) doesn't change the field's words, so the field doesn't say it again:
+    // it's said here.
+    const show = (message: string) => { if (message === codeError) announce(message); setCodeError(message); };
+    if (code.length < 6) show('Enter the 6-digit code from the email');
+    else if (!verify(code)) show('That code isn’t right. Check the latest email, or send a new code');
     else { setCodeError(''); go('done'); }
   };
 
@@ -157,7 +176,12 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
                 <Button type="submit">Verify email</Button>
               </form>
               <div className="flex flex-wrap gap-3">
-                <Button variant="ghost" onClick={() => { setCode(''); setCodeError(''); go('form'); }}>Change email</Button>
+                <Button variant="ghost" loading={resending} onClick={resend}>Send a new code</Button>
+                <Button variant="ghost" onClick={() => { setCode(''); setCodeError(''); setSent({ n: 0, ok: true }); go('form'); }}>Change email</Button>
+              </div>
+              {/* Always there, so a reader is listening before the first ask; empty, it takes no room. */}
+              <div role="status" className="text-sm text-text-muted">
+                {sent.n ? <p key={sent.n} className={sent.ok ? 'm-0' : 'm-0 text-danger-text'}>{sent.ok ? `We sent a new code to ${v.email || 'your email'}. It works for 10 minutes.` : 'Couldn’t send a new code. Check your connection and try again.'}</p> : null}
               </div>
             </>
           ) : (
