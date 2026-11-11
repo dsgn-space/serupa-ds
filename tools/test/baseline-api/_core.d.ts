@@ -1,4 +1,4 @@
-// exports: announce, announcePage, type AnnouncePageOptions, configure, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useCollator, useLocale, useSerupa, version, withoutTransitions, withViewTransition
+// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, version, withoutTransitions, withViewTransition
 import * as React from "react";
 type ThemeBrand = "blue" | "emerald" | "violet" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
@@ -92,6 +92,32 @@ declare function withoutTransitions(change: () => void, element?: HTMLElement): 
 declare function withViewTransition(update: () => void, options?: {
     types?: string[];
 }): Promise<void>;
+declare const BREAKPOINTS: {
+    readonly sm: 640;
+    readonly md: 768;
+    readonly lg: 1024;
+    readonly xl: 1280;
+    readonly "2xl": 1536;
+};
+type Breakpoint = keyof typeof BREAKPOINTS;
+declare function useMediaQuery(query: string, options?: {
+    serverValue?: boolean | undefined;
+}): boolean;
+declare function useBreakpoint(name: Breakpoint, options?: {
+    serverValue?: boolean | undefined;
+}): boolean;
+declare function useReducedMotion(): boolean;
+interface CopyToClipboardOptions {
+    copiedLabel?: string | undefined;
+    announce?: boolean | undefined;
+    timeout?: number | undefined;
+}
+interface CopyToClipboard {
+    copy: (value: (() => Promise<string> | string) | string) => Promise<boolean>;
+    copied: boolean;
+    error: unknown;
+}
+declare function useCopyToClipboard(options?: CopyToClipboardOptions): CopyToClipboard;
 type CustomIconName = never;
 declare const customIcons: readonly CustomIconName[];
 declare function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void;
@@ -116,6 +142,10 @@ declare global {
             useCollator: typeof useCollator;
             useLocale: typeof useLocale;
             useSerupa: typeof useSerupa;
+            useBreakpoint: typeof useBreakpoint;
+            useCopyToClipboard: typeof useCopyToClipboard;
+            useMediaQuery: typeof useMediaQuery;
+            useReducedMotion: typeof useReducedMotion;
             withoutTransitions: typeof withoutTransitions;
             withViewTransition: typeof withViewTransition;
             theme?: ThemeApi;

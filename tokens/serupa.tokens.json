@@ -470,12 +470,7 @@
         "fallbacks": [
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial",
-              "Helvetica",
-              "Liberation Sans",
-              "Arimo"
-            ],
+            "local": ["Arial", "ArialMT", "Helvetica", "Liberation Sans", "LiberationSans", "Arimo"],
             "weight": "400",
             "style": "normal",
             "sizeAdjust": "105.31%",
@@ -486,12 +481,7 @@
           },
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial Bold",
-              "Helvetica Bold",
-              "Liberation Sans Bold",
-              "Arimo Bold"
-            ],
+            "local": ["Arial Bold", "Arial-BoldMT", "Helvetica Bold", "Helvetica-Bold", "Liberation Sans Bold", "LiberationSans-Bold", "Arimo Bold", "Arimo-Bold", "Arial", "Helvetica", "Liberation Sans", "Arimo"],
             "weight": "700",
             "style": "normal",
             "sizeAdjust": "101.06%",
@@ -502,12 +492,7 @@
           },
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial Italic",
-              "Helvetica Oblique",
-              "Liberation Sans Italic",
-              "Arimo Italic"
-            ],
+            "local": ["Arial Italic", "Arial-ItalicMT", "Helvetica Oblique", "Helvetica-Oblique", "Liberation Sans Italic", "LiberationSans-Italic", "Arimo Italic", "Arimo-Italic", "Arial", "Helvetica", "Liberation Sans", "Arimo"],
             "weight": "400",
             "style": "italic",
             "sizeAdjust": "105.81%",
@@ -518,12 +503,7 @@
           },
           {
             "family": "Inter Fallback",
-            "local": [
-              "Arial Bold Italic",
-              "Helvetica Bold Oblique",
-              "Liberation Sans Bold Italic",
-              "Arimo Bold Italic"
-            ],
+            "local": ["Arial Bold Italic", "Arial-BoldItalicMT", "Helvetica Bold Oblique", "Helvetica-BoldOblique", "Liberation Sans Bold Italic", "LiberationSans-BoldItalic", "Arimo Bold Italic", "Arimo-BoldItalic", "Arial", "Helvetica", "Liberation Sans", "Arimo"],
             "weight": "700",
             "style": "italic",
             "sizeAdjust": "101.54%",
@@ -1177,6 +1157,74 @@
         }
       }
     },
+    "success-hover": {
+      "$type": "color",
+      "$value": "{color.green-500}",
+      "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-400}",
+            "violet-light": "{green-500}",
+            "violet-dark": "{green-400}",
+            "emerald-light": "{green-500}",
+            "emerald-dark": "{green-400}"
+          }
+        }
+      }
+    },
+    "on-success": {
+      "$type": "color",
+      "$value": "{color.green-950}",
+      "$description": "Alias. Text and icons on `success` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-950}",
+            "violet-light": "{green-950}",
+            "violet-dark": "{green-950}",
+            "emerald-light": "{green-950}",
+            "emerald-dark": "{green-950}"
+          },
+          "contrastMore": {
+            "light": "{white}",
+            "dark": "{green-950}"
+          }
+        }
+      }
+    },
+    "success-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.green-100}",
+      "$description": "Alias. Hover fill of an interactive `success-subtle` surface; `success-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-900}",
+            "violet-light": "{green-100}",
+            "violet-dark": "{green-900}",
+            "emerald-light": "{green-100}",
+            "emerald-dark": "{green-900}"
+          }
+        }
+      }
+    },
+    "success-border": {
+      "$type": "color",
+      "$value": "{color.green-300}",
+      "$description": "Alias. Border of a success outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{green-800}",
+            "violet-light": "{green-300}",
+            "violet-dark": "{green-800}",
+            "emerald-light": "{green-300}",
+            "emerald-dark": "{green-800}"
+          }
+        }
+      }
+    },
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
@@ -1229,6 +1277,74 @@
           "contrastMore": {
             "light": "{amber-900}",
             "dark": "{amber-200}"
+          }
+        }
+      }
+    },
+    "warning-hover": {
+      "$type": "color",
+      "$value": "{color.amber-500}",
+      "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-400}",
+            "violet-light": "{amber-500}",
+            "violet-dark": "{amber-400}",
+            "emerald-light": "{amber-500}",
+            "emerald-dark": "{amber-400}"
+          }
+        }
+      }
+    },
+    "on-warning": {
+      "$type": "color",
+      "$value": "{color.amber-950}",
+      "$description": "Alias. Text and icons on `warning` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-950}",
+            "violet-light": "{amber-950}",
+            "violet-dark": "{amber-950}",
+            "emerald-light": "{amber-950}",
+            "emerald-dark": "{amber-950}"
+          },
+          "contrastMore": {
+            "light": "{white}",
+            "dark": "{amber-950}"
+          }
+        }
+      }
+    },
+    "warning-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.amber-100}",
+      "$description": "Alias. Hover fill of an interactive `warning-subtle` surface; `warning-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-900}",
+            "violet-light": "{amber-100}",
+            "violet-dark": "{amber-900}",
+            "emerald-light": "{amber-100}",
+            "emerald-dark": "{amber-900}"
+          }
+        }
+      }
+    },
+    "warning-border": {
+      "$type": "color",
+      "$value": "{color.amber-300}",
+      "$description": "Alias. Border of a warning outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{amber-800}",
+            "violet-light": "{amber-300}",
+            "violet-dark": "{amber-800}",
+            "emerald-light": "{amber-300}",
+            "emerald-dark": "{amber-800}"
           }
         }
       }
@@ -1405,6 +1521,70 @@
         }
       }
     },
+    "info-hover": {
+      "$type": "color",
+      "$value": "{color.sky-800}",
+      "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-300}",
+            "violet-light": "{sky-800}",
+            "violet-dark": "{sky-300}",
+            "emerald-light": "{sky-800}",
+            "emerald-dark": "{sky-300}"
+          }
+        }
+      }
+    },
+    "on-info": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-950}",
+            "violet-light": "{white}",
+            "violet-dark": "{sky-950}",
+            "emerald-light": "{white}",
+            "emerald-dark": "{sky-950}"
+          }
+        }
+      }
+    },
+    "info-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.sky-100}",
+      "$description": "Alias. Hover fill of an interactive `info-subtle` surface; `info-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-900}",
+            "violet-light": "{sky-100}",
+            "violet-dark": "{sky-900}",
+            "emerald-light": "{sky-100}",
+            "emerald-dark": "{sky-900}"
+          }
+        }
+      }
+    },
+    "info-border": {
+      "$type": "color",
+      "$value": "{color.sky-300}",
+      "$description": "Alias. Border of a info outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{sky-800}",
+            "violet-light": "{sky-300}",
+            "violet-dark": "{sky-800}",
+            "emerald-light": "{sky-300}",
+            "emerald-dark": "{sky-800}"
+          }
+        }
+      }
+    },
     "link-visited": {
       "$type": "color",
       "$value": "{color.violet-700}",
@@ -1423,16 +1603,16 @@
     },
     "chart-1": {
       "$type": "color",
-      "$value": "{color.blue-700}",
-      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.blue-800}",
+      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{blue-300}",
-            "violet-light": "{blue-700}",
-            "violet-dark": "{blue-300}",
-            "emerald-light": "{blue-700}",
-            "emerald-dark": "{blue-300}"
+            "blue-dark": "{blue-500}",
+            "violet-light": "{blue-800}",
+            "violet-dark": "{blue-500}",
+            "emerald-light": "{blue-800}",
+            "emerald-dark": "{blue-500}"
           },
           "utilities": false
         }
@@ -1441,7 +1621,7 @@
     "chart-2": {
       "$type": "color",
       "$value": "{color.orange-600}",
-      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1457,16 +1637,16 @@
     },
     "chart-3": {
       "$type": "color",
-      "$value": "{color.teal-800}",
-      "$description": "Alias. Chart series 3 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.pink-800}",
+      "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{teal-300}",
-            "violet-light": "{teal-800}",
-            "violet-dark": "{teal-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
+            "blue-dark": "{pink-600}",
+            "violet-light": "{pink-800}",
+            "violet-dark": "{pink-600}",
+            "emerald-light": "{pink-800}",
+            "emerald-dark": "{pink-600}"
           },
           "utilities": false
         }
@@ -1474,16 +1654,16 @@
     },
     "chart-4": {
       "$type": "color",
-      "$value": "{color.pink-500}",
-      "$description": "Alias. Chart series 4 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.lime-600}",
+      "$description": "Alias. Chart series 4 (lime): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{pink-600}",
-            "violet-light": "{pink-500}",
-            "violet-dark": "{pink-600}",
-            "emerald-light": "{pink-500}",
-            "emerald-dark": "{pink-600}"
+            "blue-dark": "{lime-600}",
+            "violet-light": "{lime-600}",
+            "violet-dark": "{lime-600}",
+            "emerald-light": "{lime-600}",
+            "emerald-dark": "{lime-600}"
           },
           "utilities": false
         }
@@ -1491,16 +1671,16 @@
     },
     "chart-5": {
       "$type": "color",
-      "$value": "{color.violet-700}",
-      "$description": "Alias. Chart series 5 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.yellow-800}",
+      "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{violet-300}",
-            "violet-light": "{violet-700}",
-            "violet-dark": "{violet-300}",
-            "emerald-light": "{violet-700}",
-            "emerald-dark": "{violet-300}"
+            "blue-dark": "{yellow-700}",
+            "violet-light": "{yellow-800}",
+            "violet-dark": "{yellow-700}",
+            "emerald-light": "{yellow-800}",
+            "emerald-dark": "{yellow-700}"
           },
           "utilities": false
         }
@@ -1508,16 +1688,16 @@
     },
     "chart-6": {
       "$type": "color",
-      "$value": "{color.amber-600}",
-      "$description": "Alias. Chart series 6 (amber): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.teal-600}",
+      "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{amber-600}",
-            "violet-light": "{amber-600}",
-            "violet-dark": "{amber-600}",
-            "emerald-light": "{amber-600}",
-            "emerald-dark": "{amber-600}"
+            "blue-dark": "{teal-600}",
+            "violet-light": "{teal-600}",
+            "violet-dark": "{teal-600}",
+            "emerald-light": "{teal-600}",
+            "emerald-dark": "{teal-600}"
           },
           "utilities": false
         }
@@ -1525,16 +1705,16 @@
     },
     "chart-7": {
       "$type": "color",
-      "$value": "{color.emerald-800}",
-      "$description": "Alias. Chart series 7 (emerald): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.violet-800}",
+      "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{emerald-300}",
-            "violet-light": "{emerald-800}",
-            "violet-dark": "{emerald-300}",
-            "emerald-light": "{emerald-800}",
-            "emerald-dark": "{emerald-300}"
+            "blue-dark": "{violet-500}",
+            "violet-light": "{violet-800}",
+            "violet-dark": "{violet-500}",
+            "emerald-light": "{violet-800}",
+            "emerald-dark": "{violet-500}"
           },
           "utilities": false
         }
@@ -1542,15 +1722,15 @@
     },
     "chart-8": {
       "$type": "color",
-      "$value": "{color.red-500}",
-      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.red-600}",
+      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
             "blue-dark": "{red-600}",
-            "violet-light": "{red-500}",
+            "violet-light": "{red-600}",
             "violet-dark": "{red-600}",
-            "emerald-light": "{red-500}",
+            "emerald-light": "{red-600}",
             "emerald-dark": "{red-600}"
           },
           "utilities": false
@@ -6338,7 +6518,7 @@
         "value": 1.5,
         "unit": "rem"
       },
-      "$description": "`6` (`p-6`, `m-6`, `gap-6`…): 24px. Card padding."
+      "$description": "`6` (`p-6`, `m-6`, `gap-6`…): 24px. Dialog and drawer padding."
     },
     "spacing-7": {
       "$type": "dimension",
@@ -6537,12 +6717,12 @@
     "space-content": {
       "$type": "dimension",
       "$value": "{spacing.spacing-4}",
-      "$description": "The default padding and gap: inside a menu or popover, between fields of a form. 16px."
+      "$description": "The default padding and gap: inside a popover, between fields of a form. Popover reads it for its padding. 16px."
     },
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a card, dialog or drawer. 24px."
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px."
     },
     "space-section": {
       "$type": "dimension",

@@ -4,11 +4,21 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.secondary}",
-        "$description": "The empty part of the bar.",
+        "$value": "{color.surface}",
+        "$description": "The empty part of the bar, inside its edge.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--meter-track"
+          }
+        }
+      },
+      "track-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The track's 1px edge, which marks the whole scale at 3:1 on the page (WCAG 1.4.11).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-track-border"
           }
         }
       },

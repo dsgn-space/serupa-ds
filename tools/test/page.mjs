@@ -4,10 +4,10 @@
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { ENGINE, PROJECT, writePage, browser, cleanup, report, done } from './lib.mjs';
+import { ENGINE, PROJECT, writePage, browser, cleanup, report, done, inParallel, serve } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -18,7 +18,7 @@ const RESP = '<div id="r" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
 const respUrl = writePage('responsive.html', RESP);
 const expect = [[390, 1, 'none', 14], [640, 2, 'none', 14], [768, 3, 'block', 14], [1024, 4, 'block', 20], [1280, 5, 'block', 20], [1536, 6, 'block', 20]];
 for (const [w, cols, disp, fs_] of expect) {
-  const p = await b.newPage({ viewport: { width: w, height: 600 } });
+  const p = await b.newPage({ viewport: { width: Number(w), height: 600 } });
   await p.goto(respUrl);
   const r = await p.evaluate(() => ({ cols: getComputedStyle(document.getElementById('r')).gridTemplateColumns.split(' ').length, disp: getComputedStyle(document.getElementById('h')).display, fs: parseFloat(getComputedStyle(document.getElementById('s')).fontSize) }));
   t(`responsive at ${w}px: ${cols} columns, hidden→${disp}, text ${fs_}px`, r.cols === cols && r.disp === disp && r.fs === fs_, JSON.stringify(r));
@@ -51,7 +51,7 @@ for (const [w, cols, disp, fs_] of expect) {
 }
 
 // 3. theme.js (with reduced motion, so a switch is synchronous; the crossfade it makes otherwise is checked after)
-for (const scheme of ['light', 'dark']) {
+for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   const ctx = await b.newContext({ colorScheme: scheme, reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="emerald" data-mode="auto"' }));
@@ -173,15 +173,32 @@ for (const scheme of ['light', 'dark']) {
   // A choice saved by 4.x (as "diki-theme") is kept, and reset() forgets it for good.
   const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
-  const url = writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' });
-  await p.goto(url);
+  // A reload straight after a storage write could start before the browser held the write, and read the old value
+  // (it failed that way on a busy runner). Another page of the same origin sees the write only once the browser has
+  // it, so each reload waits until that page reads the new value. It reads rather than waits for a storage event:
+  // headless WebKit never sent the event to the other page, over file:// or http. Over http, so the two pages share
+  // an origin (WebKit gives each file:// page one of its own).
+  const srv = serve(PROJECT);
+  const web = (file) => `${srv.base}/${path.relative(PROJECT, fileURLToPath(file)).split(path.sep).join('/')}`;
+  const watch = await ctx.newPage();
+  await watch.goto(web(writePage('theme-watch.html', '<p>x</p>')));
+  const stored = (key) => watch.evaluate((k) => localStorage.getItem(k), key);
+  const held = (key, before) => watch.waitForFunction(([k, b]) => localStorage.getItem(k) !== b, [key, before]);
+  await p.goto(web(writePage('theme.html', '<p>x</p>', { theme: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' })));
   await p.evaluate(() => { localStorage.clear(); localStorage.setItem('diki-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })); });
+  await held('diki-theme', null);
   await p.reload();
-  t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', (await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join())) === 'violet-dark,,true');
+  const moved = await p.evaluate(() => [document.documentElement.getAttribute('data-theme'), localStorage.getItem('diki-theme'), !!localStorage.getItem('serupa-theme')].join());
+  t('theme.js: a theme chosen on 4.x ("diki-theme") is kept and moved to "serupa-theme"', moved === 'violet-dark,,true', moved);
+  await held('serupa-theme', null);
+  const before = await stored('serupa-theme');
   await p.evaluate(() => Serupa.theme.reset());
+  await held('serupa-theme', before);
   await p.reload();
-  t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', (await p.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'blue-light');
+  const after = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  t('theme.js: after reset(), a reload stays on the page default (the 4.x choice doesn\'t come back)', after === 'blue-light', after);
   await ctx.close();
+  srv.close();
 }
 
 {
@@ -216,7 +233,7 @@ for (const scheme of ['light', 'dark']) {
     Serupa.theme.set({ mode: 'dark' });
     document.querySelector('.thumb').style.translate = '16px';
     const bg = (s) => getComputedStyle(document.querySelector(s)).backgroundColor;
-    return [document.getAnimations().map((a) => a.transitionProperty).sort().join(' '), bg('.row') === bg('.still')];
+    return [document.getAnimations().map((a) => /** @type {CSSTransition} */ (a).transitionProperty).sort().join(' '), bg('.row') === bg('.still')];
   });
   t('theme.js: switching theme changes every color at once, while a menu fading and a switch sliding in the same tick run on', r.join() === 'opacity scale translate,true', r.join());
   await p.close();
@@ -312,26 +329,46 @@ for (const scheme of ['light', 'dark']) {
     const p = await b.newPage({ viewport: { width: 1000, height: 700 } });
     await p.goto(url);
     await p.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
-    await p.waitForTimeout(150);   // previews that open a popover do it on a 50 ms timer
+    // Settled: React has mounted (the page renders it from a script) and nothing changed for 300 ms, which also
+    // covers previews that open a popover on a 50 ms timer. A fixed wait wasn't enough on a busy CI runner, where
+    // the trimmed page was compared while still half-rendered.
+    await p.waitForLoadState('networkidle');
+    await p.evaluate(() => new Promise((resolve) => {
+      let quiet = setTimeout(done, 300);
+      const mo = new MutationObserver(() => { clearTimeout(quiet); quiet = setTimeout(done, 300); });
+      const cap = setTimeout(done, 10000);
+      function done() { mo.disconnect(); clearTimeout(cap); requestAnimationFrame(() => requestAnimationFrame(() => resolve(undefined))); }
+      mo.observe(document, { subtree: true, childList: true, attributes: true, characterData: true });
+    }));
+    // An Image fades in only when its picture arrives a moment after mount (dk-image--fades), which load timing
+    // decides, not the CSS: two loads of one page can differ there. Taken off in both before the comparison.
+    await p.evaluate(() => { for (const e of document.querySelectorAll('.dk-image--fades')) e.classList.remove('dk-image--fades'); });
     const r = await p.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e); const o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return e.className + ' ' + o.sort().join(';'); }));
     await p.close(); return r;
   };
-  let full = 0, small = 0;
-  for (const c of comps) {
+  // Four at a time: every page is written first (writePage rewrites the shared tokens file, which a page loading
+  // meanwhile could read half-written), then the trims run as parallel processes and the pages load in parallel tabs.
+  const jobs = comps.map((c) => {
     const src = path.join(PROJECT, 'src', 'components', c, 'preview.html');
     const html = fs.readFileSync(src, 'utf8');
     const head = (html.match(/<style>[\s\S]*?<\/style>/) || [''])[0] + '<style>*{animation:none!important;transition:none!important}</style>';
     const body = html.slice(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
     const out = path.join(dir, `purge-${c}.css`);
-    execFileSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), src, '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css'), '--components'], { stdio: 'ignore' });
-    const keptOnly = execFileSync(process.execPath, ['-e', `process.stdout.write(String(require('fs').statSync(${JSON.stringify(out)}).size))`]).toString();
-    const a = await styles(writePage(`pc-full-${c}.html`, body, { react: true, extraHead: head }));
-    const z = await styles(writePage(`pc-min-${c}.html`, body, { react: true, extraHead: head, bundle: `purge-${c}.css` }));
+    return { c, src, out, full: writePage(`pc-full-${c}.html`, body, { react: true, extraHead: head }), min: writePage(`pc-min-${c}.html`, body, { react: true, extraHead: head, bundle: `purge-${c}.css` }) };
+  });
+  // Tabs at once in Chromium only: Firefox and WebKit give focus to one tab of a browser, so a preview that opens a
+  // panel or shows a focus ring in another tab differs (the cross-browser run, 8 Nov 2026).
+  const four = ENGINE === 'chromium' ? [0, 1, 2, 3] : [0];
+  await inParallel(jobs, four, ({ src, out }) => new Promise((resolve, reject) => execFile(process.execPath, [path.join(PROJECT, 'bin', 'serupa-purge.mjs'), src, '-o', out, '--css', path.join(PROJECT, 'dist', 'bundle.css'), '--components'], (err) => (err ? reject(err) : resolve(undefined)))));
+  const diffs = await inParallel(jobs, four, async ({ full: fullUrl, min }) => {
+    const a = await styles(fullUrl), z = await styles(min);
     const d = []; a.forEach((x, i) => { if (x !== z[i]) { const A = x.split(';'), Z = (z[i] || '').split(';'); A.forEach((y, j) => { if (y !== Z[j]) d.push(`${i} ${y} ≠ ${Z[j]}`); }); } });
     if (a.length !== z.length) d.unshift(`${a.length} elements with the full CSS, ${z.length} with the trimmed`);
-    full += fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size; small += Number(keptOnly);
-    t(`serupa-purge --components: ${c}'s preview renders identically`, !d.length, d.slice(0, 3).join(' | '));
-  }
+    return d;
+  });
+  const bundleSize = fs.statSync(path.join(PROJECT, 'dist', 'bundle.css')).size;
+  const full = bundleSize * jobs.length, small = jobs.reduce((n, { out }) => n + fs.statSync(out).size, 0);
+  jobs.forEach(({ c }, i) => t(`serupa-purge --components: ${c}'s preview renders identically`, !diffs[i].length, diffs[i].slice(0, 3).join(' | ')));
   t(`serupa-purge --components: ${comps.length} previews average ${(small / comps.length / 1024).toFixed(0)} KB of CSS`, small < full);
 }
 
@@ -389,11 +426,15 @@ for (const scheme of ['light', 'dark']) {
     await other.goto(`${base}/?away`);
     await other.evaluate(() => localStorage.setItem('serupa-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })));
     await other.close();
+    // Chromium hands another tab's write to a renderer's copy of the storage a moment later, not at once: on a loaded
+    // machine the cached page could come back, read the old choice in pageshow and keep it (a flake in CI, blue-light →
+    // blue-light). Wait until this tab's own renderer sees the write, as a real user's would long before pressing Back.
+    await q.waitForFunction(() => (localStorage.getItem('serupa-theme') || '').includes('violet'), null, { timeout: 10000 }).catch(() => undefined);
     await q.goBack({ waitUntil: 'commit' });
     await q.waitForFunction(() => document.readyState === 'complete', null, { timeout: 10000 }).catch(() => undefined);
     // Since the crossfade (30), a theme change while the page is shown goes through a View Transition, which sets
     // data-theme in its update callback a frame or so later, not in pageshow itself: wait for it (or time out).
-    await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 5000 }).catch(() => undefined);
+    await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 10000 }).catch(() => undefined);
     const back = await q.evaluate(() => ({ cached: window.__stayed === true, reasons: /** @type {any} */ (performance.getEntriesByType('navigation')[0]).notRestoredReasons, theme: document.documentElement.getAttribute('data-theme') }));
     await full.close();
     t('Getting started\'s plain page: Back brings it from the back/forward cache (nothing blocks it)', back.cached && !back.reasons, JSON.stringify(back.reasons));

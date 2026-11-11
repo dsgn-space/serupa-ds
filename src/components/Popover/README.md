@@ -44,6 +44,7 @@ Drawn from the `Bottom` story, opened.
 - The trigger is one element that passes its ref and props on to a DOM element: a Button, IconButton or link, or your own component written with `React.forwardRef` (or the `ref` prop in React 19) that spreads what it gets. A text, several elements or a Fragment throws an error that names the component, and a trigger that drops its ref warns once in the console ("Serupa: Menu's trigger doesn't forward its ref to an element.").
 - Keep it small: a few fields or a short paragraph. If it needs scrolling, use a [Drawer](../Drawer/README.md) or a [Dialog](../Dialog/README.md).
 - Give it a `title`, or an `aria-label` when there's none, so it has a name.
+- Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 - Use the function form of `children` to close it from a Done, Cancel or submit button.
 - When it holds only text, set `initialFocus="panel"`: there's no control inside to focus.
 - On a phone, a panel by its button is small to tap and covers what's around it. Set `sheet="mobile"` and under 640px it becomes a sheet along the foot of the screen, the screen's width, as Dialog's `fullScreen="mobile"` fills it; `sheet` makes it one everywhere. For a sheet people pull taller, or one with a backdrop, use a bottom [Drawer](../Drawer/README.md) with `snapPoints`.
@@ -103,7 +104,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-title-size` | `text-sm` | The title (14px). |
 | `--popover-title-weight` | `font-semibold` | The title's weight (600). |
 | `--popover-width` | `container-3xs` | The panel's width (256px; it never gets wider than the screen). |
-| `--popover-padding` | `spacing-4` | Space inside the panel (16px). |
+| `--popover-padding` | `space-content` | Space inside the panel (16px). |
 | `--popover-gap` | `spacing-2` | Space under the title (8px). |
 | `--popover-offset` | `spacing-2` | The gap between the panel and its trigger (8px). |
 | `--popover-sheet-gap` | `spacing-16` | The room a sheet leaves above it, at its tallest (64px). |

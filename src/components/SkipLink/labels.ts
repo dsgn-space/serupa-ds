@@ -5,8 +5,8 @@ export interface SkipLinkLabels {
   skipToContent: string;
 }
 export const en: SkipLinkLabels = {
-  skipToContent: "Skip to content",
+  skipToContent: 'Skip to content',
 };
 export const id: SkipLinkLabels = {
-  skipToContent: "Langsung ke konten",
+  skipToContent: 'Langsung ke konten',
 };

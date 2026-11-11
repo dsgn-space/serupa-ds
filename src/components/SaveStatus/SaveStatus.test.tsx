@@ -6,6 +6,7 @@ import { THEMES, contrast, css, keepMotion } from '../../../tools/test/vitest/he
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { Loader } from '../Loader/Loader';
 import { SaveStatus } from './SaveStatus';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -32,9 +33,11 @@ describe('SaveStatus', () => {
   });
 
   test('Try again pressed from the keyboard: focus stays in the status as the error goes, not on the page (L8E55)', async () => {
+    // The save ends when the test says, so a busy runner can't skip past "saving" before it's checked.
+    let finish = () => {};
     function Own() {
       const [st, setSt] = React.useState<'error' | 'saving' | 'saved'>('error');
-      return <><button id="before">Before</button><SaveStatus id="sr" status={st} onRetry={() => { setSt('saving'); setTimeout(() => setSt('saved'), 50); }} /></>;
+      return <><button id="before">Before</button><SaveStatus id="sr" status={st} onRetry={() => { setSt('saving'); finish = () => { React.act(() => setSt('saved')); }; }} /></>;
     }
     await render(<Own />);
     el('before').focus();
@@ -43,12 +46,38 @@ describe('SaveStatus', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => el('sr').dataset.state).toBe('saving');
     await expect.poll(() => document.activeElement).toBe(el('sr'));
+    finish();
     await expect.poll(() => el('sr').dataset.state).toBe('saved');
     expect(document.activeElement).toBe(el('sr'));
     // Tab goes on from where it was, and the status isn't a tab stop.
     await userEvent.tab({ shift: true });
     expect(document.activeElement).toBe(el('before'));
     expect(el('sr').hasAttribute('tabindex')).toBe(false);
+  });
+
+  test('inside a shadow root, Try again from the keyboard keeps focus in the status too', async () => {
+    let finish = () => {};
+    function Own() {
+      const [st, setSt] = React.useState<'error' | 'saving' | 'saved'>('error');
+      return <><button id="sbefore">Before</button><SaveStatus id="ssr" status={st} onRetry={() => { setSt('saving'); finish = () => { React.act(() => setSt('saved')); }; }} /></>;
+    }
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<Own />, { container: inner });
+      const root = host.shadowRoot!, sr = root.getElementById('ssr')!;
+      (root.getElementById('sbefore') as HTMLElement).focus();
+      await userEvent.tab();
+      expect(root.activeElement?.textContent).toBe('Try again');
+      await userEvent.keyboard('{Enter}');
+      await expect.poll(() => sr.dataset.state).toBe('saving');
+      await expect.poll(() => root.activeElement).toBe(sr);
+      finish();
+      await expect.poll(() => sr.dataset.state).toBe('saved');
+      expect(root.activeElement).toBe(sr);
+    } finally { host.remove(); }
   });
 
   test('saved with savedAt says how long ago, in a <time>', async () => {
@@ -124,5 +153,20 @@ describe('SaveStatus motion (KW19)', () => {
     mo.disconnect();
     const now = [...e.children].find((c) => !(c as HTMLElement).inert) as HTMLElement;
     expect([now === saving, moved.includes(saving), now.textContent]).toEqual([true, false, 'Saving…']);
+  });
+});
+
+// GR311: SaveStatus drew its saving ring with the whole Loader; it now draws Loader's ring itself, the same markup.
+describe('saving ring', () => {
+  const SOURCE = import.meta.glob<string>('./SaveStatus.tsx', { query: '?raw', import: 'default', eager: true })['./SaveStatus.tsx'];
+  test('SaveStatus does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <SaveStatus id="ring-save" status="saving" />
+      <div id="ring-loader"><Loader className="dk-save-status__icon" size="sm" label="" delay={0} /></div>
+    </>);
+    const ring = () => document.querySelector('#ring-save [data-component="loader"]');
+    await expect.poll(ring).toBeTruthy();
+    expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });

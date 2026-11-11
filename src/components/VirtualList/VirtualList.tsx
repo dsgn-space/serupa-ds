@@ -1,10 +1,10 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, omit, setRef } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useVirtual } from "../../internal/virtual";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useVirtual } from '../../internal/virtual';
 
-export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "children"> {
+export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children'> {
   /** How many rows there are. */
   count: number;
   /** Draws row `index`: a ListItem (or another element that passes its props and style on to an <li>). */
@@ -16,11 +16,11 @@ export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListEle
   /** Rows drawn beyond each edge of the view, so a fast scroll doesn't show a gap. Default: 4. */
   overscan?: number | undefined;
   /** 'plain' (default) or 'card': inside a bordered, rounded frame, as List. */
-  variant?: "plain" | "card" | undefined;
+  variant?: 'plain' | 'card' | undefined;
   /** Lines between rows. Default: true. */
   divided?: boolean | undefined;
   /** 'ul' (default) or 'ol' when the order matters. */
-  as?: "ul" | "ol" | undefined;
+  as?: 'ul' | 'ol' | undefined;
 }
 
 /* VirtualList: a List of any length that draws only the rows in view, plus a few either side (useVirtual in
@@ -30,20 +30,20 @@ export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListEle
    of view, so focus is never lost. className and every other prop go to the <ul>. */
 /** A List of thousands of rows that draws only the ones in view: same rows, same look, fast at any length.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualListProps>("VirtualList", function VirtualList(props, ref) {
+export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualListProps>('VirtualList', function VirtualList(props, ref) {
   const rest = omit(props, { count: 1, renderItem: 1, itemKey: 1, estimatedItemHeight: 1, overscan: 1, variant: 1, divided: 1, as: 1, className: 1, style: 1, onFocus: 1, onBlur: 1 } as const);
   const count = Math.max(0, Math.floor(props.count) || 0);
   const estimate = props.estimatedItemHeight && props.estimatedItemHeight > 0 ? props.estimatedItemHeight : 56;
   const r = useVirtual({ count, estimate, overscan: props.overscan != null && props.overscan >= 0 ? props.overscan : 4 });
   // The row that has focus, kept drawn (in place, absolutely) while it's out of the window.
   const [focused, setFocused] = React.useState<number | null>(null);
-  const variant = oneOf(["plain", "card"] as const, props.variant, "plain");
+  const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
 
   const { renderItem, itemKey } = props;
   const row = (i: number, out: boolean) => {
     const el = renderItem(i) as React.ReactElement<{ style?: React.CSSProperties }>;
-    const style = out ? { ...el.props.style, position: "absolute" as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
-    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, "data-index": i, "aria-posinset": i + 1, "aria-setsize": count, style } as React.Attributes);
+    const style = out ? { ...el.props.style, position: 'absolute' as const, insetInline: 0, top: r.offsetOf(i) } : el.props.style;
+    return React.cloneElement(el, { key: itemKey ? itemKey(i) : i, 'data-index': i, 'aria-posinset': i + 1, 'aria-setsize': count, style } as React.Attributes);
   };
   const rows: React.ReactElement[] = [];
   const keep = focused != null && focused < count && (focused < r.start || focused >= r.end) ? focused : null;
@@ -52,16 +52,16 @@ export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualLi
   if (keep != null && keep >= r.end) rows.push(row(keep, true));
 
   const indexOf = (t: EventTarget | null, list: Element) => {
-    const li = t instanceof HTMLElement ? t.closest<HTMLElement>("[data-index]") : null;
+    const li = t instanceof HTMLElement ? t.closest<HTMLElement>('[data-index]') : null;
     return li && li.parentElement === list ? Number(li.dataset.index) : null;
   };
   const attach = r.ref;
-  const setNode = React.useCallback((n: HTMLUListElement | null) => { attach(n); setRef(ref, n); }, [attach, ref]);
-  return React.createElement(oneOf(["ul", "ol"] as const, props.as, "ul"), Object.assign(rest, {
+  const setNode = useMergedRef(ref, (n: HTMLUListElement | null) => { attach(n); });
+  return React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
     ref: setNode,
-    "data-component": "virtual-list", role: rest.role ?? "list", tabIndex: rest.tabIndex ?? 0,
-    className: cn("dk-list", "dk-virtual-list", variant === "card" && "dk-list--card", props.divided !== false && "dk-list--divided", props.className),
-    style: { ...props.style, "--dk-vl-before": r.before + "px", "--dk-vl-after": r.after + "px" } as React.CSSProperties,
+    'data-component': 'virtual-list', role: rest.role ?? 'list', tabIndex: rest.tabIndex ?? 0,
+    className: cn('dk-list', 'dk-virtual-list', variant === 'card' && 'dk-list--card', props.divided !== false && 'dk-list--divided', props.className),
+    style: { ...props.style, '--dk-vl-before': r.before + 'px', '--dk-vl-after': r.after + 'px' } as React.CSSProperties,
     // A row Tab reaches is scrolled into view by the list, not only the browser: Firefox scrolled with the guessed
     // heights, and the rows measured on the way left the focused one below the view. scrollToIndex keeps it in view
     // while they're measured; a row already in view doesn't move.

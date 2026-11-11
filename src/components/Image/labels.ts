@@ -6,10 +6,10 @@ export interface ImageLabels {
   removeImage: string;
 }
 export const en: ImageLabels = {
-  viewImage: "View image",
-  removeImage: "Remove image",
+  viewImage: 'View image',
+  removeImage: 'Remove image',
 };
 export const id: ImageLabels = {
-  viewImage: "Lihat gambar",
-  removeImage: "Hapus gambar",
+  viewImage: 'Lihat gambar',
+  removeImage: 'Hapus gambar',
 };

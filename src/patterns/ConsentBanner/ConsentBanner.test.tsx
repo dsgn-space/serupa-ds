@@ -45,8 +45,8 @@ describe('Patterns/Consent banner', () => {
     await screen.getByRole('button', { name: 'Reject analytics cookies' }).click();
     expect(onChange).toHaveBeenCalledWith('rejected');
     expect(window.localStorage.getItem(KEY)).toBe('rejected');
-    await vi.waitFor(() => expect(active().textContent).toContain("You've rejected analytics cookies."));
-    await expect.element(screen.getByRole('radio', { name: "No, don't use analytics cookies" })).toBeChecked();
+    await vi.waitFor(() => expect(active().textContent).toContain('You’ve rejected analytics cookies.'));
+    await expect.element(screen.getByRole('radio', { name: 'No, don’t use analytics cookies' })).toBeChecked();
     await screen.getByRole('button', { name: 'Hide this message' }).click();
     expect(banner()).toBeNull();
     expect(active().id).toBe('main');
@@ -55,7 +55,7 @@ describe('Patterns/Consent banner', () => {
   test('accepting says so too', async () => {
     const screen = await render(<ConsentBanner />);
     await screen.getByRole('button', { name: 'Accept analytics cookies' }).click();
-    await vi.waitFor(() => expect(active().textContent).toContain("You've accepted analytics cookies."));
+    await vi.waitFor(() => expect(active().textContent).toContain('You’ve accepted analytics cookies.'));
   });
 
   test('a saved answer means no banner, and the settings show it', async () => {
@@ -72,16 +72,16 @@ describe('Patterns/Consent banner', () => {
     await screen.getByRole('radio', { name: 'Yes, use analytics cookies' }).click();
     await screen.getByRole('button', { name: 'Save cookie settings' }).click();
     expect(onChange).toHaveBeenLastCalledWith('accepted');
-    await vi.waitFor(() => expect(said()).toContain("Your cookie settings were saved. You've accepted analytics cookies."));
+    await vi.waitFor(() => expect(said()).toContain('Your cookie settings were saved. You’ve accepted analytics cookies.'));
     expect(banner()).toBeNull();
   });
 
   test('saving the settings while the message shows keeps the message', async () => {
     const screen = await render(<ConsentBanner initial={null} />);
     await screen.getByRole('button', { name: 'Accept analytics cookies' }).click();
-    await screen.getByRole('radio', { name: "No, don't use analytics cookies" }).click();
+    await screen.getByRole('radio', { name: 'No, don’t use analytics cookies' }).click();
     await screen.getByRole('button', { name: 'Save cookie settings' }).click();
-    await vi.waitFor(() => expect(banner()?.textContent).toContain("You've rejected analytics cookies."));
+    await vi.waitFor(() => expect(banner()?.textContent).toContain('You’ve rejected analytics cookies.'));
   });
 
   test('a storage that throws is ignored', async () => {
@@ -89,7 +89,7 @@ describe('Patterns/Consent banner', () => {
     const set = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('full'); });
     const screen = await render(<ConsentBanner saveKey={KEY} />);
     await screen.getByRole('button', { name: 'Accept analytics cookies' }).click();
-    await vi.waitFor(() => expect(active().textContent).toContain("You've accepted"));
+    await vi.waitFor(() => expect(active().textContent).toContain('You’ve accepted'));
     get.mockRestore();
     set.mockRestore();
   });

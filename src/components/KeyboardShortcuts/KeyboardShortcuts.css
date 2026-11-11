@@ -6,8 +6,7 @@
 @layer dk.components {
 .dk-keyboard-shortcuts__group + .dk-keyboard-shortcuts__group { margin-top: var(--keyboard-shortcuts-group-gap, var(--spacing-5)); }
 .dk-keyboard-shortcuts__heading { margin: var(--spacing-0) var(--spacing-0) var(--spacing-1); font-size: var(--text-sm); font-weight: var(--keyboard-shortcuts-heading-weight, var(--font-semibold)); color: var(--keyboard-shortcuts-heading, var(--text-muted)); }
-.dk-keyboard-shortcuts__list, .dk-keyboard-shortcuts__keys { margin: var(--spacing-0); }
-.dk-keyboard-shortcuts__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-1) var(--spacing-4); padding-block: var(--keyboard-shortcuts-row-padding, var(--spacing-2)); }
+.dk-keyboard-shortcuts__list { gap: var(--spacing-0); }   /* a DescriptionList, split: what a shortcut does, then its keys */
+.dk-keyboard-shortcuts__list > .dk-keyboard-shortcuts__row { align-items: center; gap: var(--spacing-1) var(--spacing-4); padding-block: var(--keyboard-shortcuts-row-padding, var(--spacing-2)); }
 .dk-keyboard-shortcuts__row + .dk-keyboard-shortcuts__row { border-top: var(--border-width-1) solid var(--keyboard-shortcuts-divider, var(--border)); }
-.dk-keyboard-shortcuts__description { min-width: var(--spacing-0); overflow-wrap: anywhere; }
 }

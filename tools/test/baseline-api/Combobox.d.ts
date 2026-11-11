@@ -3,7 +3,7 @@ interface ComboboxLabels {
     loadingResults: string;
     loadFailed: string;
     noResults: string;
-    resultsCount: (count: number) => string;
+    resultsCount: (count: number, formatted: string) => string;
     showOptions: string;
     clearValue: (label: string) => string;
     createOption: (text: string) => string;
@@ -21,7 +21,7 @@ interface ComboboxOptionGroup<V extends string = string> {
     options: readonly ComboboxOption<V>[];
     disabled?: boolean;
 }
-interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, "defaultValue" | "onChange" | "prefix" | "rightIcon" | "showCount" | "suffix" | "type" | "value"> {
+interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, "actions" | "defaultValue" | "onChange" | "prefix" | "rightIcon" | "showCount" | "suffix" | "type" | "value"> {
     options?: readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[] | undefined;
     loadOptions?: ((text: string, context: {
         signal: AbortSignal;

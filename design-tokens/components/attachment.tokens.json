@@ -1,0 +1,161 @@
+{
+  "attachment": {
+    "$description": "Attachment's component tokens. Each one is an optional override: set the CSS variable (--attachment-<name>) on the page, a container or one Attachment, and every Attachment inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The file name (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The kind and size (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-muted"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The kind icon (3:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-icon"
+          }
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A linked name (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-link"
+          }
+        }
+      },
+      "link-hover": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "A linked name under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-link-hover"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The outline.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-border"
+          }
+        }
+      },
+      "border-error": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The outline of a failed upload (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-border-error"
+          }
+        }
+      },
+      "error": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "A failed upload's message (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-error"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a focused link.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "The corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space inside (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-padding"
+          }
+        }
+      },
+      "padding-start": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space before the icon (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-padding-start"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space between the icon, the name and the buttons (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-gap"
+          }
+        }
+      },
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-80}",
+        "$description": "The widest it grows (320px); a narrower container makes it narrower.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--attachment-max-width"
+          }
+        }
+      }
+    }
+  }
+}

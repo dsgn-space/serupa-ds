@@ -27,7 +27,7 @@ try {
     ['no sources', [], 'no source files or folders given'],
   ]) {
     const r = cli(...args);
-    t(`stops on ${label}, saying so`, r.status === 2 && r.stderr.includes(word) && r.stderr.includes('usage:') && !/\n\s+at /.test(r.stderr), `exit ${r.status}: ${r.stderr.slice(0, 300)}`);
+    t(`stops on ${label}, saying so`, r.status === 2 && String(r.stderr).includes(String(word)) && String(r.stderr).includes('usage:') && !/\n\s+at /.test(String(r.stderr)), `exit ${r.status}: ${String(r.stderr).slice(0, 300)}`);
   }
   const ok = cli('page.html', '-o', 'out.css');
   t('a correct command still writes the file', ok.status === 0 && fs.existsSync(path.join(dir, 'out.css')), ok.stderr.slice(0, 300));
@@ -54,6 +54,13 @@ try {
   let out = '', error = '';
   try { out = purge('.a\\110000 b { color: red } .\\31 0 { color: blue } .x\\D800 { color: green }', new Set(['10', 'a�b', 'x�'])); } catch (e) { error = String(e); }
   t('reads a CSS escape for no character as U+FFFD instead of throwing', !error && out.includes('color: red') && out.includes('color: blue') && out.includes('color: green'), error || out);
+
+  // A selector list with nested parentheses (ButtonGroup's :is(.x, .y + :not(.z)), GR217): split only at its top-level
+  // commas, so a dropped component's selector goes whole and the rest stays valid CSS.
+  const nested = purge('.dk-button-group > :is(.dk-btn--primary, .dk-btn--primary + :not(.dk-btn)) + .dk-btn--primary, .dk-btn { color: red }', new Set(), new Set(['dk-button-group']));
+  t('splits a selector list only at its top-level commas', nested.trim() === '.dk-btn { color: red }', nested);
+  const kept = purge('.dk-btn:is(.a, .b + :not(.c)), .dk-x[title="1,2"] { color: red }', new Set(['a', 'b', 'c']));
+  t('keeps a selector whose parentheses or attribute value hold commas, whole', kept.includes('.dk-btn:is(.a, .b + :not(.c))') && kept.includes('.dk-x[title="1,2"]'), kept);
 
   // @starting-style holds rules like @media does: a dropped component's or an unused class's go with it.
   const start = purge('@starting-style { .dk-dialog { opacity: 0 } .dk-btn { opacity: 0 } .grid { opacity: 0 } }', new Set(), new Set(['dk-dialog']));

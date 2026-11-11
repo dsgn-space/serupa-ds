@@ -1,0 +1,95 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Rich text editors" />
+
+# Rich text editors
+
+Serupa has no rich text editor of its own: a good one is a large project, and the open source ones are better than one a design system could keep up. Use an editor built on ProseMirror (Tiptap) or Lexical, and give it Serupa's look: its content inside [Prose](?path=/docs/components-content-prose--docs), its box drawn with the field tokens, and its buttons a [Toolbar](?path=/docs/components-actions-toolbar--docs) of [ToggleButton](?path=/docs/components-actions-togglebutton--docs)s. Then it looks and behaves like a Textarea that formats.
+
+## The parts
+
+| Part | Use | Why |
+| --- | --- | --- |
+| The editable area | The editor's own element, inside `Prose` | Headings, lists, quotes and code read as they will once published, in every theme |
+| Its box | Your own class, read from the field tokens | The same border, background, hover and focus ring as Input and Textarea |
+| Bold, italic, lists | `Toolbar` of `ToggleButton`s (`variant="ghost"`), in `ButtonGroup`s | One Tab stop, the arrow keys across, `aria-pressed` for what's on |
+| Fewer used commands | A `Menu` in the Toolbar, or a [Menubar](?path=/docs/components-overlays-menubar--docs) for a full editor | Insert table, export, page setup: out of the way, still one keyboard path |
+| Its label, hint and error | `Field` | The hint and error describe the editable area, and an error marks it invalid |
+
+## With Tiptap
+
+```tsx
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { ButtonGroup, Field, Prose, ToggleButton, Toolbar } from 'serupa-ds';
+
+// Field hands its one child the control's id, aria-describedby (the hint and error) and aria-invalid: pass them on to
+// the editable element, with the label's words as its name (a <label for> doesn't name a contenteditable).
+function Editor({ label, value, onChange, ...field }) {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: value,
+    editorProps: { attributes: { ...field, role: 'textbox', 'aria-multiline': 'true', 'aria-label': label } },
+    onUpdate: ({ editor }) => onChange(editor.getHTML()),
+  });
+  if (!editor) return null;
+  const mark = (name, label, icon, run) => (
+    <ToggleButton variant="ghost" icon={icon} aria-label={label} pressed={editor.isActive(name)} onPressedChange={run} />
+  );
+  return (
+    <div data-editor="">
+      <Toolbar aria-label="Text formatting">
+        <ButtonGroup aria-label="Style">
+          {mark('bold', 'Bold', 'format_bold', () => editor.chain().focus().toggleBold().run())}
+          {mark('italic', 'Italic', 'format_italic', () => editor.chain().focus().toggleItalic().run())}
+        </ButtonGroup>
+        <ButtonGroup aria-label="Lists">
+          {mark('bulletList', 'Bulleted list', 'format_list_bulleted', () => editor.chain().focus().toggleBulletList().run())}
+          {mark('orderedList', 'Numbered list', 'format_list_numbered', () => editor.chain().focus().toggleOrderedList().run())}
+        </ButtonGroup>
+      </Toolbar>
+      <Prose className="max-w-none">
+        <EditorContent editor={editor} />
+      </Prose>
+    </div>
+  );
+}
+
+<Field label="Notes" hint="Shown to the customer on the invoice.">
+  <Editor label="Notes" value={notes} onChange={setNotes} />
+</Field>
+```
+
+Lexical is the same shape: put its `ContentEditable` inside `Prose`, pass it what Field hands the editor and the label's words as `aria-label`, and run its commands from the ToggleButtons (`editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')`), reading what's on from the selection in an update listener.
+
+## Its box
+
+Draw the box around the toolbar and the editable area with the field tokens, so it matches Input and Textarea in all six themes, in forced colors, and when a theme changes them:
+
+```css
+[data-editor] {
+  border: var(--border-width-1) solid var(--field-border);
+  border-radius: var(--radius-control);
+  background: var(--field);
+  color: var(--text);
+}
+@media (hover: hover) { [data-editor]:hover { border-color: var(--field-border-hover); } }
+[data-editor]:focus-within { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+[data-editor] .ProseMirror { min-height: var(--spacing-32); padding: var(--spacing-2) var(--spacing-3); outline: none; }
+[data-editor] .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--placeholder); float: inline-start; height: 0; pointer-events: none; }
+```
+
+The ring goes round the whole box while the focus is anywhere in it, toolbar included, so it's clear which field the buttons work on. The editable area draws no ring of its own.
+
+## Accessibility
+
+- **Name and description:** the editable element is a `textbox` with `aria-multiline="true"`, named with the label's words and described by the field's hint and error. Without that, a screen reader says "edit text" and nothing else.
+- **Keyboard:** Tab goes from the toolbar to the text and on out of the field. Keep the editor's own shortcuts (Ctrl+B, Ctrl+I) and put them in each button's `aria-keyshortcuts` and a [Tooltip](?path=/docs/components-overlays-tooltip--docs). Don't take Tab for indenting outside a list, which traps keyboard users in the field; indent with toolbar buttons instead, or with Tab only while the cursor is in a list.
+- **State:** each ToggleButton's `pressed` follows the selection, so `aria-pressed` says what's on where the cursor is.
+- **Output:** sanitize the HTML before you show it anywhere else, and show it inside `Prose`, so what people wrote reads the same as it did while they wrote it.
+- **Read only:** for a field shown read only, show the HTML inside `Prose` with the box's read-only background (`var(--field-readonly)`), not a disabled editor: people can still reach and read it.
+
+## When not to use one
+
+- Plain text, even long: use a [Textarea](?path=/docs/components-forms-textarea--docs). Formatting people don't need is more to learn and more to sanitize.
+- A comment with a link or two: a Textarea with Markdown, shown through Prose, is simpler for everyone.

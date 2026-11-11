@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, domId, elementRef, omit, setRef } from "../../internal/cn";
-import { oneElement, useTriggerRef } from "../../internal/trigger";
-import type { Placement } from "../../internal/position";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { useExit } from "../../internal/useExit";
-import { component } from "../../internal/component";
-import { isComposing } from "../../internal/ime";
-import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
-import { cardIntent, cardLeave } from "../../internal/timing";
+'use client';
+import * as React from 'react';
+import { cn, domId, elementRef, omit, useMergedRef } from '../../internal/cn';
+import { oneElement, useTriggerRef } from '../../internal/trigger';
+import type { Placement } from '../../internal/position';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { useExit } from '../../internal/useExit';
+import { component } from '../../internal/component';
+import { isComposing } from '../../internal/ime';
+import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
+import { cardIntent, cardLeave } from '../../internal/timing';
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -49,8 +49,8 @@ const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1
    opens it where the browser has interest invokers, and elsewhere it never opens there, so the link itself goes to
    the details and nothing may live only in the card. */
 /** A preview card for a link, shown on hover and keyboard focus, that may hold links of its own. */
-export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProps>("HoverCard", function HoverCard(props, ref) {
-  const own = domId("dk-hcard", React.useId());
+export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProps>('HoverCard', function HoverCard(props, ref) {
+  const own = domId('dk-hcard', React.useId());
   const id = props.id || own;
   const [inner, setInner] = React.useState(!!props.defaultOpen);
   const controlled = props.open !== undefined;
@@ -71,15 +71,15 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
   // goes on to whatever else handles it.
   const muted = React.useRef(false);
   const armed = React.useRef<((e: KeyboardEvent) => void) | null>(null);
-  const unarm = () => { if (armed.current) document.removeEventListener("keydown", armed.current, true); armed.current = null; };
+  const unarm = () => { if (armed.current) document.removeEventListener('keydown', armed.current, true); armed.current = null; };
   const later = (v: boolean, ms: number, reason: OpenChangeReason) => {
     window.clearTimeout(timer.current); unarm();
     if (v && muted.current) return;
     timer.current = window.setTimeout(() => { unarm(); set(v, reason); }, ms);
     if (!v || openRef.current) return;
-    const esc = (e: KeyboardEvent) => { if (e.key !== "Escape" || isComposing(e)) return; window.clearTimeout(timer.current); unarm(); muted.current = true; };
+    const esc = (e: KeyboardEvent) => { if (e.key !== 'Escape' || isComposing(e)) return; window.clearTimeout(timer.current); unarm(); muted.current = true; };
     armed.current = esc;
-    document.addEventListener("keydown", esc, true);
+    document.addEventListener('keydown', esc, true);
   };
   const unmute = () => { muted.current = false; };
   const stay = () => window.clearTimeout(timer.current);
@@ -89,68 +89,70 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
 
   // Closing: the content stays (inert) while the card fades out; one open on arrival doesn't fade in.
   const exit = useExit(open, cardRef);
-  useAnchoredLayer(open, cardRef, triggerRef, { placement: props.placement, offsetVar: "--dk-hover-card-offset", watch: props.children, onOutside: () => set(false, "outside"), inside: triggerRef });
+  useAnchoredLayer(open, cardRef, triggerRef, { placement: props.placement, offsetVar: '--dk-hover-card-offset', watch: props.children, onOutside: () => set(false, 'outside'), inside: triggerRef });
 
   // Escape closes it from anywhere while it's open (the trigger may only be hovered). It's the top layer, so it
   // takes that Escape: caught first and stopped, so a Dialog around it stays open. From inside, focus goes back.
   React.useEffect(() => {
     if (!open) return;
     const esc = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || isComposing(e)) return;
+      if (e.key !== 'Escape' || isComposing(e)) return;
       e.preventDefault(); e.stopPropagation();
       const card = cardRef.current, back = !!card && card.contains(e.target as Node);
-      set(false, "escape");
+      set(false, 'escape');
       if (back && triggerRef.current) triggerRef.current.focus();
     };
-    document.addEventListener("keydown", esc, true);
-    return () => document.removeEventListener("keydown", esc, true);
+    document.addEventListener('keydown', esc, true);
+    return () => document.removeEventListener('keydown', esc, true);
   }, [open, set]);
 
   // Focus moving somewhere other than the trigger or the card closes it, after the same grace as the pointer.
   const within = (to: EventTarget | null) => !!to && ((!!cardRef.current && cardRef.current.contains(to as Node)) || (!!triggerRef.current && triggerRef.current.contains(to as Node)));
-  const blurred = (e: React.SyntheticEvent) => { if (!within((e as React.FocusEvent).relatedTarget)) { unmute(); later(false, closeDelay, "blur"); } };
-  const touch = (e: React.SyntheticEvent) => "pointerType" in e && (e as React.PointerEvent).pointerType === "touch";
+  const blurred = (e: React.SyntheticEvent) => { if (!within((e as React.FocusEvent).relatedTarget)) { unmute(); later(false, closeDelay, 'blur'); } };
+  const touch = (e: React.SyntheticEvent) => 'pointerType' in e && (e as React.PointerEvent).pointerType === 'touch';
   // Interest invokers (174): the trigger points at the card with interestfor, so where the browser has them, a long
   // press on a touch screen opens it at once (Chrome on Android), as a resting pointer does with a mouse. The
   // browser's own showing and hiding are cancelled and the card opens itself; a tap outside or Escape closes it. An
   // interest while the pointer is over the trigger or it has keyboard focus is one this component already handles
   // (with its delay and Escape cancelling a waiting open), so it's left alone.
   const hovered = React.useRef(false), focused = React.useRef(false);
-  const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, "hover"); };
+  const fromInterest = () => { if (!props.disabled && !hovered.current && !focused.current) set(true, 'hover'); };
   const interest = React.useRef(fromInterest); interest.current = fromInterest;
   React.useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
     const on = (e: Event) => { e.preventDefault(); interest.current(); };
     const lose = (e: Event) => { e.preventDefault(); };
-    card.addEventListener("interest", on);
-    card.addEventListener("loseinterest", lose);
-    return () => { card.removeEventListener("interest", on); card.removeEventListener("loseinterest", lose); };
+    card.addEventListener('interest', on);
+    card.addEventListener('loseinterest', lose);
+    return () => { card.removeEventListener('interest', on); card.removeEventListener('loseinterest', lose); };
   }, []);
 
-  const child = oneElement<TriggerProps>(props.trigger, "HoverCard", "trigger");
-  useTriggerRef(triggerRef, "HoverCard");
+  const child = oneElement<TriggerProps>(props.trigger, 'HoverCard', 'trigger');
+  useTriggerRef(triggerRef, 'HoverCard');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
-  const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const f: unknown = cp[name]; if (typeof f === "function") (f as Handler)(e); fn(e); };
+  const triggerRefs = useMergedRef(childRef, (n) => { triggerRef.current = n; });
+  const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const f: unknown = cp[name]; if (typeof f === 'function') (f as Handler)(e); fn(e); };
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
+    ref: triggerRefs,
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter and never a mouseleave. A touch pointer doesn't hover.
-    onPointerEnter: chain("onPointerEnter", (e) => { if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, "hover"); }),
-    onPointerLeave: chain("onPointerLeave", (e) => { if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, "hover"); } }),
+    onPointerEnter: chain('onPointerEnter', (e) => { if (touch(e)) return; hovered.current = true; if (openRef.current) stay(); else later(true, openDelay, 'hover'); }),
+    onPointerLeave: chain('onPointerLeave', (e) => { if (!touch(e)) { hovered.current = false; unmute(); later(false, closeDelay, 'hover'); } }),
     // Keyboard focus only (focus-visible): a click on the link is on its way to the page it opens.
-    onFocus: chain("onFocus", (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(":focus-visible")) { focused.current = true; later(true, openDelay, "focus"); } }),
-    onBlur: chain("onBlur", (e) => { focused.current = false; blurred(e); }),
+    onFocus: chain('onFocus', (e) => { const t = e.target as HTMLElement; if (openRef.current) stay(); else if (!t.matches || t.matches(':focus-visible')) { focused.current = true; later(true, openDelay, 'focus'); } }),
+    onBlur: chain('onBlur', (e) => { focused.current = false; blurred(e); }),
   });
+  const mergedRef = useMergedRef(ref, (n) => { cardRef.current = n; });
   return (
     <>
       {trigger}
-      <div {...omit(props, OWN)} ref={(n) => { cardRef.current = n; setRef(ref, n); }} id={id} {...{ popover: "manual" }} hidden={!open || undefined}
-        className={cn("dk-hover-card", props.className)} style={props.style} data-component="hover-card" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}
+      <div {...omit(props, OWN)} ref={mergedRef} id={id} {...{ popover: 'manual' }} hidden={!open || undefined}
+        className={cn('dk-hover-card', props.className)} style={props.style} data-component="hover-card" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined}
         onPointerEnter={(e) => { if (props.onPointerEnter) props.onPointerEnter(e); stay(); }}
-        onPointerLeave={(e) => { if (props.onPointerLeave) props.onPointerLeave(e); if (!touch(e)) later(false, closeDelay, "hover"); }}
+        onPointerLeave={(e) => { if (props.onPointerLeave) props.onPointerLeave(e); if (!touch(e)) later(false, closeDelay, 'hover'); }}
         onFocus={(e) => { if (props.onFocus) props.onFocus(e); stay(); }}
         onBlur={(e) => { if (props.onBlur) props.onBlur(e); blurred(e); }}>
         {open || exit.leaving ? props.children : null}

@@ -338,12 +338,14 @@ describe('SegmentedControl', () => {
       await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
       const [a, b] = items('sl');
       const ind = el('sl').firstElementChild as HTMLElement;
-      // A click from the page itself, so the transitions are read a frame after the choice. A driver click (userEvent)
-      // comes back after a round trip, which in WebKit can outlast the 200ms slide, leaving nothing to read. One press
-      // (detail 1), as a mouse's: a click with none is a key's, which puts it there at once (KW1).
+      // A click from the page itself, and the transitions read as soon as React has drawn the choice (a microtask
+      // later; reading them resolves the styles that start them). A driver click (userEvent) comes back after a round
+      // trip, and even a frame's wait outlasted the 200ms slide on a busy runner in WebKit, leaving nothing to read.
+      // One press (detail 1), as a mouse's: a click with none is a key's, which puts it there at once (KW1).
+      const slides = () => document.getAnimations().filter((x): x is CSSTransition => x instanceof CSSTransition && (x.effect as KeyframeEffect).target === ind);
       b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
-      await new Promise(requestAnimationFrame);
-      const moves = document.getAnimations().filter((x): x is CSSTransition => x instanceof CSSTransition && (x.effect as KeyframeEffect).target === ind);
+      for (let i = 0; i < 20 && !slides().length; i++) await Promise.resolve();
+      const moves = slides();
       expect(moves.map((x) => [(x.effect as KeyframeEffect).pseudoElement, x.transitionProperty]).sort()).toEqual([['::after', 'clip-path'], ['::before', 'clip-path']]);
       // The border layer starts cut to the first segment (nothing cut from its start, the second segment's extra width
       // from its end) and ends cut to the second.
@@ -362,9 +364,39 @@ describe('SegmentedControl', () => {
       expect(off('sl')).toEqual([0, 0]);
     });
   });
+  test('the indicator sits exactly on its segment, to the fraction of a pixel, at any text width', async () => {
+    const labels = ['Board view', 'Timeline', 'Calendar views', 'Mi', 'Ünïcödé widths', 'Week', 'Agenda list', 'Quarterly'];
+    await document.fonts.ready;
+    // A little letter spacing, so every control is a fraction of a pixel wide on any machine: with hinted fonts the
+    // labels can come out whole pixels, and a rounding bug (offsetWidth) wouldn't show.
+    await render(<div style={{ letterSpacing: '0.0137em' }}>{labels.map((l, i) => <SegmentedControl key={l} id={'fr' + i} aria-label="View" options={[{ value: 'a', label: 'List ' + i }, { value: 'b', label: l }]} defaultValue="b" />)}</div>);
+    // A font face these labels need first (Ünïcödé's) can arrive after the first measure and widen them; the control
+    // measures again when its segments resize. Measured once the fonts are in and that's done (CI read 1 to 8px off).
+    await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+    const gaps = labels.flatMap((_, i) => {
+      const ind = el('fr' + i).querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('fr' + i).querySelector('[aria-checked=true]')!.getBoundingClientRect();
+      return [Math.abs(ind.left - c.left), Math.abs(ind.width - c.width)];
+    });
+    expect(gaps.every((g) => g < 0.02), gaps.map((g) => g.toFixed(3)).join(' ')).toBe(true);
+  });
+  test('inside a scaled container, the indicator still sits on its segment', async () => {
+    await render(<div style={{ transform: 'scale(0.5)', transformOrigin: '0 0' }}><SegmentedControl id="sc" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }, { value: 'c', label: 'Timeline' }]} defaultValue="c" /></div>);
+    // A web font that arrives after the first measure widens the labels, and the control measures again when its
+    // segments resize (ar-EG on CI read 72.5/39 against 74.5/42.5). Measured once the fonts are in and that's done.
+    await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+    const ind = el('sc').querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = el('sc').querySelector('[aria-checked=true]')!.getBoundingClientRect();
+    expect([Math.abs(ind.left - c.left) < 0.5, Math.abs(ind.width - c.width) < 0.5], `${ind.left}/${ind.width} against ${c.left}/${c.width}`).toEqual([true, true]);
+  });
   test('from the keyboard (KW1): an arrow moves the indicator at once, with no slide', async () => {
     await withMotion(async () => {
       await render(<SegmentedControl id="sk" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }]} defaultValue="a" />);
+      // As in the slide test: a web font that arrives after the arrow widens the labels, and the indicator is measured
+      // again a frame later, so it read a few pixels off (ar-EG on CI, [-2, -5]). The fonts are in, and the control
+      // has measured them, before the key.
+      await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+      await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
       const ind = el('sk').firstElementChild as HTMLElement;
       items('sk')[0].focus();
       await userEvent.keyboard('{ArrowRight}');

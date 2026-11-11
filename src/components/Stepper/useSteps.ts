@@ -1,7 +1,7 @@
-"use client";
-import * as React from "react";
-import { useIsoLayoutEffect } from "../../internal/cn";
-import type { StepperProps, StepperStep } from "./Stepper";
+'use client';
+import * as React from 'react';
+import { useIsoLayoutEffect } from '../../internal/cn';
+import type { StepperProps, StepperStep } from './Stepper';
 
 export interface UseStepsOptions {
   /** The steps, as Stepper takes them. A step's status from here is kept; a failed check adds 'error'. */
@@ -27,9 +27,9 @@ export interface UseSteps {
   isFirst: boolean;
   isLast: boolean;
   /** Spread on Stepper: steps (with errors marked), current, and onStepClick going back to finished steps. */
-  stepperProps: Pick<StepperProps, "steps" | "current" | "onStepClick">;
+  stepperProps: Pick<StepperProps, 'steps' | 'current' | 'onStepClick'>;
   /** Spread on each step's container: every step stays rendered, the others hidden, so what was typed in them stays. */
-  panelProps: (index: number) => { id: string; hidden: boolean; "aria-labelledby": string };
+  panelProps: (index: number) => { id: string; hidden: boolean; 'aria-labelledby': string };
   /** Spread on each step's heading: focus moves to it when the step changes, so a screen reader says where people are. */
   headingProps: (index: number) => { id: string; tabIndex: -1; ref: (node: HTMLElement | null) => void };
 }
@@ -94,13 +94,13 @@ export function useSteps(options: UseStepsOptions): UseSteps {
   };
   const back = () => { if (now.current > 0 && !busy.current) move(now.current - 1); };
 
-  const steps = options.steps.map((s, i) => (failed.has(i) ? { ...s, status: "error" as const } : s));
+  const steps = options.steps.map((s, i) => (failed.has(i) ? { ...s, status: 'error' as const } : s));
   return {
     current, next, back, goTo,
     isFirst: current === 0,
     isLast: current === count - 1,
     stepperProps: { steps, current, onStepClick: (i: number) => { void goTo(i); } },
-    panelProps: (i) => ({ id: `${id}-step-${i}`, hidden: i !== current, "aria-labelledby": `${id}-title-${i}` }),
+    panelProps: (i) => ({ id: `${id}-step-${i}`, hidden: i !== current, 'aria-labelledby': `${id}-title-${i}` }),
     headingProps: (i) => ({ id: `${id}-title-${i}`, tabIndex: -1, ref: (n) => { if (n) headings.current.set(i, n); else headings.current.delete(i); } }),
   };
 }

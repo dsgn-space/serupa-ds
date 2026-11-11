@@ -180,7 +180,7 @@ describe('Menu', () => {
   test('click opens it under the button (start-aligned, 4px away, at least 192px, top layer) on the first item; items have tabindex -1; groups are named', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    await Promise.all(document.getAnimations().map((a) => a.finished));
+    await settled();
     const b = el('mb'), m = menuOf('mb'), g = m.querySelector('[role="group"]')!;
     expect([b.getAttribute('aria-expanded'), m.getAttribute('role'), m.matches(':popover-open')]).toEqual(['true', 'menu', true]);
     expect([near(rect(m).top - rect(b).bottom, 4), near(rect(m).left, rect(b).left), m.offsetWidth >= 192]).toEqual([true, true, true]);
@@ -440,7 +440,7 @@ describe('Menu', () => {
   test('look: 4px padding, 8px corners, shadow-lg; 32px items, text-sm, 6px corners, 16px icons', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    await Promise.all(document.getAnimations().map((a) => a.finished));
+    await settled();
     const m = menuOf('mb'), it = m.querySelector<HTMLElement>('[role="menuitem"]')!, s = getComputedStyle(m), i = getComputedStyle(it);
     expect([s.paddingTop, s.borderTopLeftRadius, it.offsetHeight, i.fontSize, i.borderTopLeftRadius]).toEqual(['4px', '8px', 32, '14px', '6px']);
     expect(s.boxShadow).toMatch(/10px 15px -3px/);
@@ -451,7 +451,7 @@ describe('Menu', () => {
     const long = 'Move this conversation to the archive and stop notifications about it from now on';
     await render(<Menu trigger={<Button id="mw" size="sm">More</Button>}><MenuItem>Short</MenuItem><MenuItem id="ml">{long}</MenuItem></Menu>);
     await userEvent.click(el('mw'));
-    await Promise.all(document.getAnimations().map((a) => a.finished));
+    await settled();
     const m = menuOf('mw'), short = m.querySelector<HTMLElement>('[role="menuitem"]')!, item = el('ml');
     expect([near(rect(m).width, 320), short.offsetHeight, item.offsetHeight > 32, item.scrollWidth <= item.clientWidth]).toEqual([true, 32, true, true]);
   });
@@ -759,18 +759,32 @@ describe('Menu: motion (DZ1)', () => {
   test('opens with a transition and fades and shrinks out faster, its items kept (inert) until the fade ends; focus is back at once', async () => {
     await withMotion(async () => {
       await render(<Actions chosen={[]} />);
-      await userEvent.click(el('mb'));
-      const m = menuOf('mb');
-      expect([runs(m), m.getAnimations().some((a) => a instanceof CSSAnimation)]).toEqual([[['opacity', 150], ['scale', 150]], false]);
-      await settled(m, { subtree: true });
-      expect([getComputedStyle(m).opacity, getComputedStyle(m).scale]).toEqual(['1', 'none']);
-      await userEvent.click(el('mb'));
-      expect([openMenu(), document.activeElement]).toEqual([undefined, el('mb')]);
-      if (!holds()) { expect(getComputedStyle(m).display).toBe('none'); return; }
-      expect([getComputedStyle(m).display, m.inert, m.querySelectorAll('[role="menuitem"]').length, runs(m)]).toEqual(['block', true, 5, [['opacity', 100], ['scale', 100]]]);
-      await settled(m, { subtree: true });
-      await expect.poll(() => m.querySelectorAll('[role="menuitem"]').length).toBe(0);
-      expect(getComputedStyle(m).display).toBe('none');
+      // Each look is taken as the menu's transitions start, not after the click returns: a click is a round trip
+      // through the driver, and on a busy runner the 150ms open or 100ms fade can be over by then.
+      let opening: unknown[] | undefined, closing: unknown[] | undefined;
+      const look = (e: Event) => {
+        const t = e.target as HTMLElement;
+        if (t.getAttribute('role') !== 'menu') return;
+        if (!t.inert) opening ??= [runs(t), t.getAnimations().some((a) => a instanceof CSSAnimation)];
+        else closing ??= [getComputedStyle(t).display, t.inert, t.querySelectorAll('[role="menuitem"]').length, runs(t)];
+      };
+      document.addEventListener('transitionrun', look, true);
+      try {
+        await userEvent.click(el('mb'));
+        const m = menuOf('mb');
+        await expect.poll(() => opening).toBeDefined();
+        expect(opening).toEqual([[['opacity', 150], ['scale', 150]], false]);
+        await settled(m, { subtree: true });
+        expect([getComputedStyle(m).opacity, getComputedStyle(m).scale]).toEqual(['1', 'none']);
+        await userEvent.click(el('mb'));
+        expect([openMenu(), document.activeElement]).toEqual([undefined, el('mb')]);
+        if (!holds()) { expect(getComputedStyle(m).display).toBe('none'); return; }
+        await expect.poll(() => closing).toBeDefined();
+        expect(closing).toEqual(['block', true, 5, [['opacity', 100], ['scale', 100]]]);
+        await settled(m, { subtree: true });
+        await expect.poll(() => m.querySelectorAll('[role="menuitem"]').length).toBe(0);
+        expect(getComputedStyle(m).display).toBe('none');
+      } finally { document.removeEventListener('transitionrun', look, true); }
     });
   });
 

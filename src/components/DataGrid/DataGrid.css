@@ -1,0 +1,42 @@
+/* ---------------------------------------------------------------
+   DataGrid: a bordered, rounded frame (scrolling sideways when too wide) around a grid of text-sm cells with a 1px
+   line between each, a surface-muted header row in muted, font-medium text, and a primary-subtle wash on the
+   selected range. The active cell has a 2px focus ring inside it; one being edited holds a borderless input that
+   fills it. Every value reads one of its own tokens (data-grid.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-data-grid {
+  box-sizing: border-box; max-width: var(--sizing-full); overflow: auto; overscroll-behavior-x: contain;
+  border: var(--data-grid-border-width, var(--border-width-1)) solid var(--data-grid-border, var(--border)); border-radius: var(--data-grid-radius, var(--radius-surface));
+  background: var(--data-grid-bg, var(--surface));
+}
+.dk-data-grid__table { width: var(--sizing-full); border-collapse: collapse; color: var(--data-grid-text, var(--text)); font-family: var(--font-sans); font-size: var(--data-grid-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
+.dk-data-grid__header, .dk-data-grid__cell {
+  position: relative; padding: var(--data-grid-padding-y, var(--spacing-2)) var(--data-grid-padding-x, var(--spacing-3)); text-align: start; white-space: nowrap;
+  border: var(--data-grid-border-width, var(--border-width-1)) solid var(--data-grid-line, var(--border));
+}
+.dk-data-grid--sm :is(.dk-data-grid__header, .dk-data-grid__cell) { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
+.dk-data-grid--lg .dk-data-grid__table { font-size: var(--data-grid-font-size-lg, var(--text-base)); line-height: var(--text-base--line-height); }
+.dk-data-grid--lg :is(.dk-data-grid__header, .dk-data-grid__cell:not(.dk-data-grid__cell--editing), .dk-data-grid__input) { padding: var(--data-grid-padding-y-lg, var(--spacing-2\.5)) var(--data-grid-padding-x-lg, var(--spacing-4)); }
+.dk-data-grid--lg .dk-data-grid__loading > .dk-data-grid__cell { height: calc(var(--text-base--line-height) + var(--data-grid-padding-y-lg, var(--spacing-2\.5)) + var(--data-grid-padding-y-lg, var(--spacing-2\.5))); }   /* a placeholder row as tall as a 16px row */
+.dk-data-grid__table tr > :first-child { border-inline-start: var(--spacing-0); }
+.dk-data-grid__table tr > :last-child { border-inline-end: var(--spacing-0); }
+.dk-data-grid__table thead > tr > * { border-top: var(--spacing-0); }
+.dk-data-grid__table tbody > tr:last-child > * { border-bottom: var(--spacing-0); }
+.dk-data-grid__header { background: var(--data-grid-header-bg, var(--surface-muted)); color: var(--data-grid-header-text, var(--text-muted)); font-weight: var(--data-grid-header-weight, var(--font-medium)); }
+.dk-data-grid__cell--center { text-align: center; }
+.dk-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
+.dk-data-grid__cell--selected { background: var(--data-grid-selected-bg, var(--primary-subtle)); }
+.dk-data-grid__header:focus-visible, .dk-data-grid__cell:focus-visible, .dk-data-grid__cell--editing {
+  outline: var(--focus-ring-width) solid var(--data-grid-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); z-index: var(--z-10);
+}
+.dk-data-grid__cell--editing { padding: var(--spacing-0); }
+.dk-data-grid__input {
+  box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-16); margin: var(--spacing-0); border: var(--spacing-0); outline: none;
+  padding: var(--data-grid-padding-y, var(--spacing-2)) var(--data-grid-padding-x, var(--spacing-3)); font: inherit; text-align: inherit;
+  background: var(--data-grid-input-bg, var(--field)); color: var(--data-grid-text, var(--text));
+}
+.dk-data-grid--sm .dk-data-grid__input { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
+.dk-data-grid__message { white-space: normal; text-align: center; padding: var(--data-grid-message-padding, var(--spacing-6)); }
+@media (forced-colors: active) { .dk-data-grid__cell--selected { forced-color-adjust: none; background: Highlight; color: HighlightText; } }
+}

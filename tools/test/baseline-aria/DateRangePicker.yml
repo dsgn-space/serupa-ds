@@ -89,6 +89,16 @@
     - text: 03/14/2025
   - button "Choose dates"
 
+# WithPresets
+- group "Dates":
+  - textbox "Start date":
+    - /placeholder: mm/dd/yyyy
+    - text: 03/10/2025
+  - textbox "End date":
+    - /placeholder: mm/dd/yyyy
+    - text: 03/14/2025
+  - button "Choose dates"
+
 # WithValue
 - group "Dates":
   - textbox "Start date":

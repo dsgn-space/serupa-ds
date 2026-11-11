@@ -4,5 +4,5 @@ export interface TimeZonePickerLabels {
   /** TimeZonePicker: after the offset of the reader's own zone, at the top of the list ("UTC+07:00 · Your time zone"). */
   timeZoneYours: string;
 }
-export const en: TimeZonePickerLabels = { timeZoneYours: "Your time zone" };
-export const id: TimeZonePickerLabels = { timeZoneYours: "Zona waktu Anda" };
+export const en: TimeZonePickerLabels = { timeZoneYours: 'Your time zone' };
+export const id: TimeZonePickerLabels = { timeZoneYours: 'Zona waktu Anda' };

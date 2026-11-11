@@ -1,5 +1,5 @@
-import { announce } from "./announce";
-import { activeIn } from "./root";
+import { announce } from './announce';
+import { activeIn } from './root';
 
 /** What announcePage takes: the title to say (default: document.title), and where focus goes (default: the h1 in
  * <main>, else the first h1, else <main>; an element or a selector; false leaves focus where it is). */
@@ -16,16 +16,16 @@ export interface AnnouncePageOptions {
    new page has rendered, in an effect on the location. */
 /** After a client-side route change: focuses the new page's main heading and says its title to screen readers. */
 export function announcePage(options?: AnnouncePageOptions): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === 'undefined') return;
   const o = options || {};
   const pick = (s: string) => document.querySelector(s);
-  const target = o.focus === false ? null : o.focus && typeof o.focus === "object" ? o.focus : o.focus ? pick(o.focus) : pick("main h1") || pick("h1") || pick("main");
+  const target = o.focus === false ? null : o.focus && typeof o.focus === 'object' ? o.focus : o.focus ? pick(o.focus) : pick('main h1') || pick('h1') || pick('main');
   if (target instanceof HTMLElement || target instanceof SVGElement) {
-    if (!target.hasAttribute("tabindex") && target.tabIndex < 0) target.setAttribute("tabindex", "-1");
+    if (!target.hasAttribute('tabindex') && target.tabIndex < 0) target.setAttribute('tabindex', '-1');
     target.focus();
   }
   // Focus read in the target's own document or shadow root (document.activeElement is the shadow host there).
-  const read = target && activeIn(target) === target ? (target.textContent || "").trim() : "";
+  const read = target && activeIn(target) === target ? (target.textContent || '').trim() : '';
   const title = (o.title != null ? o.title : document.title).trim();
   if (title && title !== read) announce(title);
 }

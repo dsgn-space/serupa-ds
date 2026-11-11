@@ -1,6 +1,9 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { List, ListItem, type ListProps } from './List';
+import { List, ListItem, ListLoadingItems, type ListProps } from './List';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { EmptyState } from '../EmptyState/EmptyState';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 import { IconButton } from '../IconButton/IconButton';
@@ -73,3 +76,20 @@ export const LongText: Story = {
   },
   render: (args) => <div style={{ width: 260 }}><List {...args} /></div>,
 };
+
+// Loading, empty and failed: the placeholders have the rows' shape, and a failure offers Retry.
+function States(args: ListProps) {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'empty' | 'failed'>('loading');
+  return (
+    <div style={{ maxWidth: 480, display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Members didn't load. Check your connection and try again.</Alert>
+        : state === 'empty' ? <EmptyState size="sm" title="No members yet" description="Invite people to work on this project with you." />
+        : state === 'loaded' ? <Members {...args} />
+        : <List {...args} busy><ListLoadingItems rows={4} description leading="sm" label="Loading members" /></List>}
+    </div>
+  );
+}
+export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };

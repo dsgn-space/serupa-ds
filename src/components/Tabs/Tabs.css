@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Tabs: a row of tabs (.dk-tabs__list > .dk-tabs__tab) over panels (.dk-tabs__panel). line (default): a border
    under the row and a 2px primary line under the selected tab, whose label turns from text-muted to text.
-   pill: no border; the selected tab is filled in primary. Tabs are 36px tall (32px with size sm), text-sm,
+   pill: no border; the selected tab is filled in primary. Tabs are 36px tall (32px with size sm, 44px with 16px text with size lg), text-sm,
    font-medium. A 2px focus ring, 50% when disabled. When the row overflows, the edge with more tabs fades out over
    32px. vertical: a column at the start with the line on its end side. Every value goes through --tabs-* tokens.
    --------------------------------------------------------------- */
@@ -78,6 +78,8 @@
   transition: color var(--motion-hover) var(--ease-move), background-color var(--motion-hover) var(--ease-move);
 }
 .dk-tabs--sm .dk-tabs__tab { height: var(--tabs-height-sm, var(--control-height-md)); }
+.dk-tabs--lg .dk-tabs__tab { height: var(--tabs-height-lg, var(--control-height-lg)); padding-inline: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-tabs--lg .dk-tabs__icon .dk-icon { font-size: var(--spacing-5); }
 .dk-tabs__icon { display: inline-flex; }
 .dk-tabs__icon .dk-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .dk-tabs__tab:hover:not(:disabled) { color: var(--tabs-text-hover, var(--text)); } }

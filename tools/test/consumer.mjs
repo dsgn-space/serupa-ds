@@ -30,7 +30,8 @@ const run = (args, cwd) => {
 // it, so a release that went out broken (a file left out, a bad package.json) fails here and not in someone's app.
 // The checkout is the tag's, so the cases in tools/test/ssr/ are the ones that version shipped with.
 const release = process.argv.includes('--release');
-const repo = pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '');
+// --release runs in the GitHub release workflow, which downloads the tarball from that repository's release.
+const repo = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-consumer-'));
 let tarball;
 if (release) tarball = `${repo}/releases/download/v${pkg.version}/${pkg.name}-${pkg.version}.tgz`;
@@ -149,7 +150,9 @@ if (made.status === 0) {
   const css = fs.existsSync(path.join(out, 'assets')) ? fs.readdirSync(path.join(out, 'assets')).filter((f) => f.endsWith('.css')) : [];
   const size = css.reduce((n, f) => n + fs.statSync(path.join(out, 'assets', f)).size, 0);
   const whole = fs.statSync(path.join(shipped, 'bundle.css')).size;
-  results.push({ name: 'Starter: its CSS is trimmed (serupaPurge), under half of bundle.css', ok: size > 0 && size < whole / 2, detail: `${size} of ${whole} bytes` });
+  // With components: true the starter's ten components are kept and the rest dropped: about a tenth of bundle.css,
+  // where keeping every component's styles came to over a quarter.
+  results.push({ name: 'Starter: its CSS is trimmed to the classes and components it uses (serupaPurge), under a sixth of bundle.css', ok: size > 0 && size < whole / 6, detail: `${size} of ${whole} bytes` });
 }
 fs.rmSync(tmp, { recursive: true, force: true });
 for (const x of results) console.log(`${x.ok ? 'PASS' : 'FAIL'}  ${x.name}${x.ok || !x.detail ? '' : '\n      ' + x.detail}`);

@@ -1,0 +1,35 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Notifications.stories';
+
+<Meta of={Stories} />
+
+# Notifications
+
+A bell in the Navbar that opens the latest notifications in a drawer, and a full inbox page with a filter, Mark as read and Mark all as read. Both read the same list.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The app tells people about things that happened while they were away: mentions, finished exports, failed payments.
+- Not for something people must act on now: show an Alert on the page they're on, or a Dialog.
+- Not for every change on every project: that's an activity feed (the Activity feed block) on the project's page.
+
+## What each part is for
+
+- **The bell is named with its count**, "Notifications, 3 unread", so the number is heard as well as seen in its badge (4.1.2). With nothing unread it's just "Notifications".
+- **The drawer** (Notification center) shows the latest five, with the same Mark as read, for a quick look from any page.
+- **The inbox page** has every notification, newest first, with how long ago each happened.
+- **Unread ones say "Unread" in words** and have a bolder title, so it isn't shown by a dot or weight alone (1.4.1).
+- **The filter** (All or Unread) is a Segmented control, and the count beside it is a status, so a change is said politely (4.1.3).
+- **Mark as read** is a button on each unread one, named with its title. Its button goes away once it's read (and under "Unread" the notification too), so focus goes to the next unread one's button, or to the heading when none are left. **Mark all as read** puts focus on the heading as it turns disabled. Focus never falls to the top of the page (2.4.3). In the drawer, focus stays in the drawer.
+- **Mark all as read** is off when there's nothing to mark.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.AllRead} />
+
+## What stays the app's job
+
+- **The notifications.** Load them from your server and pass them as `items`, newest first. Load more with Load more if there are many.
+- **What's read.** `onMarkRead` and `onMarkAllRead` hear the changes: store them, so the count is right on the next visit and on other devices.
+- **Where each one leads.** Give each a link to what it's about (the comment, the export, the billing page), and mark it read when followed.

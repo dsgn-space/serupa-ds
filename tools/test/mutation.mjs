@@ -49,7 +49,11 @@ function targets() {
   // The components first, then the internal files from a different one each night, so a run that --minutes cuts
   // short still reaches every file over a few nights.
   const from = day % own.length;
-  return [...Array.from({ length: 5 }, (_, i) => component(all[(day * 5 + i) % all.length])), ...own.slice(from), ...own.slice(0, from)];
+  // SERUPA_SHARD=k/n (CI's nightly runs n jobs side by side): five components each, so n shards cover 5n a night, and
+  // every n-th of the rest, starting with the k-th.
+  const [k, n] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
+  const list = [...Array.from({ length: 5 * n }, (_, i) => component(all[(day * 5 * n + i) % all.length])), ...own.slice(from), ...own.slice(0, from)];
+  return [...new Map(list.map((t) => [t.file, t])).values()].filter((_, i) => i % n === k - 1);
 }
 
 // The mutants of a file: where, what goes there, and a label "line:col from → to".
@@ -85,6 +89,7 @@ function mutants(file, text) {
 
 // One Vitest for the whole run (its start, with every story drawn in Node, takes a few seconds), made again after a
 // mutant that hangs.
+/** @type {any} */
 let vitest = null;
 const start = async () => { vitest = await createVitest('test', { project: ['components'], watch: false, reporters: [{}], silent: true }); };
 const passes = async (specs, ms) => {

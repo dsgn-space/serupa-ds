@@ -6,5 +6,5 @@ export interface CodeBlockLabels {
   /** CodeBlock: the name of the code's scroll area when it has no title or language. */
   codeName: string;
 }
-export const en: CodeBlockLabels = { codeCopy: "Copy code", codeName: "Code" };
-export const id: CodeBlockLabels = { codeCopy: "Salin kode", codeName: "Kode" };
+export const en: CodeBlockLabels = { codeCopy: 'Copy code', codeName: 'Code' };
+export const id: CodeBlockLabels = { codeCopy: 'Salin kode', codeName: 'Kode' };

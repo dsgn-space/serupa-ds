@@ -1,4 +1,4 @@
-import type { IconData } from "./material/types";
+import type { IconData } from './material/types';
 
 /* Custom icons: your own SVGs, built in by tools/icons/build.mjs. Each is the inner markup of a
    24×24 SVG, cleaned by the build (shapes only, drawn in currentColor), so it's safe to insert.
@@ -15,7 +15,7 @@ export const customIcons: readonly CustomIconName[] = /* @__PURE__ */ Object.fre
 // @icons:end
 
 export function hasIcon(name: unknown): name is string {
-  return typeof name === "string" && Object.prototype.hasOwnProperty.call(ICONS, name);
+  return typeof name === 'string' && Object.prototype.hasOwnProperty.call(ICONS, name);
 }
 
 /* Material Symbols by name. Components import the icons they draw (src/material/builtin.ts), so a bundle keeps only
@@ -41,9 +41,9 @@ export const iconChunks: {
   part: (name: string) => Promise<Readonly<Record<string, unknown>>>;
   all: () => Promise<Readonly<Record<string, unknown>>>;
 } = {
-  named: () => import("./material/named"),
-  part: (name) => import("./material/parts").then((m) => m.loadPart(name)),
-  all: () => import("./material/icons"),
+  named: () => import('./material/named'),
+  part: (name) => import('./material/parts').then((m) => m.loadPart(name)),
+  all: () => import('./material/icons'),
 };
 
 /** Loads the icon for a name (Icon calls it when it meets a name it doesn't know yet): the components' own icons first,
@@ -92,5 +92,5 @@ export function getRegisteredIcon(name: string): IconData | undefined {
 }
 
 export function isIconData(x: unknown): x is IconData {
-  return !!x && typeof x === "object" && typeof (x as IconData).name === "string" && typeof (x as IconData).d === "string";
+  return !!x && typeof x === 'object' && typeof (x as IconData).name === 'string' && typeof (x as IconData).d === 'string';
 }

@@ -118,6 +118,20 @@ export async function inParallel(items, workers, fn) {
   await Promise.all(workers.map(async (w) => { while (next < items.length) { const i = next++; out[i] = await fn(items[i], w); } }));
   return out;
 }
+// inParallel, then each item with a failed result once more, on its own: a story that fails once on a busy machine
+// (one picture of 1,372 on 7 Nov 2026) shouldn't cost a whole rerun. A failure that repeats stays a failure. Every
+// item that passed only the second time is named, so a story that keeps needing it shows up.
+//   results: arrays of { name, ok, detail }, one per item; id(item) names it in the note.
+export async function inParallelRetry(items, workers, fn, id) {
+  const out = await inParallel(items, workers, fn);
+  const again = out.map((r, i) => (r.some((x) => !x.ok) ? i : -1)).filter((i) => i >= 0);
+  if (!again.length) return out;
+  const second = await inParallel(again.map((i) => items[i]), workers, fn);
+  const passed = [];
+  again.forEach((i, k) => { out[i] = second[k]; if (second[k].every((x) => x.ok)) passed.push(id(items[i])); });
+  console.log(`Tried ${again.length} failed item${again.length === 1 ? '' : 's'} again: ${passed.length ? `passed the second time: ${passed.join(', ')}` : 'none passed'}.`);
+  return out;
+}
 
 // Under Vitest (npm run test:checks) each result is a test of its own, so the reporter lists it with the component
 // tests and -t picks one out; run with node, a suite prints its results and exits with whether they passed.
@@ -164,6 +178,22 @@ export function serve(dir) {
   return { base: `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`, close: () => server.close() };
 }
 
+// Pages of a suite's own, served over http with the project: write(name, html) returns the page's URL, and at(file)
+// a project file's (tokens.css, fonts/…), for the page to link. Not file:// URLs: WebKit won't load a stylesheet or a
+// font from another folder into a file:// page (the font's load() rejects with a NetworkError), and Firefox reports
+// no request for one. The folder is the suite's own, inside the project (.test-tmp-*, ignored), since other suites
+// empty .test-tmp/ while this one runs; close() removes it.
+export function servePages(prefix) {
+  const dir = fs.mkdtempSync(path.join(PROJECT, `.test-tmp-${prefix}-`));
+  const server = serve(PROJECT);
+  const at = (file) => `${server.base}/${path.relative(PROJECT, path.join(PROJECT, file)).split(path.sep).map(encodeURIComponent).join('/')}`;
+  return {
+    at,
+    write: (name, html) => { fs.writeFileSync(path.join(dir, name), html); return at(path.relative(PROJECT, path.join(dir, name))); },
+    close: () => { server.close(); fs.rmSync(dir, { recursive: true, force: true }); },
+  };
+}
+
 // The end of a suite run with node: exit 0 if it passed. Under Vitest, which owns the process, a failed result is
 // already a failed test.
 export function done(ok) { if (!vt) process.exit(ok ? 0 : 1); }
@@ -185,6 +215,13 @@ const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(release|codeql|changeset|visual-baselines|cross-browser)\.yml)`, 'licenses/.*',
   String.raw`tools/test/(?!(lib|run|visual|storybook)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`,
+  // The skill eval's tasks and graded apps, the local-check and release tooling, the GitLab pipeline, and the notes
+  // no story shows (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
+  'tools/skill-eval/.*', String.raw`tools/(ci|local-checks-gate|setup|tag-release)\.mjs`, String.raw`\.gitlab-ci\.yml`,
+  String.raw`(AGENTS|CLAUDE|ROADMAP|SECURITY)\.md`, 'skills/.*',
+  // The docs' Markdown that no page shows (the dev warnings' sections, the ADRs, the RFCs: Storybook builds only
+  // .mdx, and docs/blocks.tsx imports foundations.md alone); the checks that read them run whole on every MR.
+  String.raw`docs/(?!foundations\.md$)[\w/-]+\.md`,
 ].join('|') + ')$');
 // Pull requests test only what they change (run.mjs --since <ref>); the merge queue and main run everything.
 // The components a list of changed files touches, or null when a file outside the component folders (shared code,
@@ -194,13 +231,44 @@ const NEUTRAL = new RegExp('^(' + [
 // stories and tests (and a pattern that shows the block) can change. Their Introduction pages are docs pages of their
 // own, named by file as storybook.mjs names a page ("Introduction.mdx").
 export const FOLDERS = ['components', 'blocks', 'patterns'];
+// A component's name in kebab case, as its classes (dk-<kebab>), data-component and tokens file use it: DatePicker is
+// date-picker, and a run of capitals stays one word, so OTPInput is otp-input and QRCode qr-code (R7: the generator,
+// the contract and the --since scope each had their own, and they disagreed on names like these).
+export const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').toLowerCase();
+// The component, block or pattern folder a kebab-case name belongs to (otp-input → OTPInput), or null.
+export function folderForKebab(k) {
+  for (const d of FOLDERS) {
+    const DIR = path.join(PROJECT, 'src', d);
+    const hit = fs.existsSync(DIR) && fs.readdirSync(DIR).find((n) => kebab(n) === k);
+    if (hit) return hit;
+  }
+  return null;
+}
+// Shared files a new component adds its lines to: its labels in every language, the icons it draws, the package's
+// exports. A change that only adds lines to these can't change how another component looks or behaves (a duplicate
+// key fails the typecheck), so --since leaves them out of the scope (run.mjs), and the new component's own folder
+// decides it. A change that removes or edits a line in one still tests everything.
+export const ADDITIVE = /^src\/(labels\/[\w-]+\.ts|material\/[\w-]+\.ts|index\.ts)$/;
+// A shared test (src/internal/*.test.tsx) changes no component: it runs itself (run.mjs adds it) and widens nothing.
+export const SHARED_TEST = /^src\/internal\/[\w-]+\.test\.tsx?$/;
+/** The changed files that decide the scope: rows of `git diff --numstat` ("added\tremoved\tfile"), without the
+ * ADDITIVE files that only gained lines and without the shared tests. */
+export function scopeFiles(numstat) {
+  return numstat.split('\n').filter(Boolean).map((l) => l.split('\t'))
+    .filter(([added, removed, f]) => !SHARED_TEST.test(f) && !(ADDITIVE.test(f) && removed === '0' && added !== '-')).map(([, , f]) => f);
+}
 export function affectedComponents(files) {
   const names = new Set();
   for (const f of files) {
     const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
       || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
+      || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
       || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
+    // A component's own tokens (design-tokens/components/avatar-group.tokens.json is AvatarGroup's).
+    const tokens = /^design-tokens\/components\/([a-z][\w-]*)\.tokens\.json$/.exec(f);
     if (m) names.add(m[1]);
+    // A tokens file of no folder (its component removed or renamed) can change nothing: test everything to be sure.
+    else if (tokens) { const n = folderForKebab(tokens[1]); if (!n) return null; names.add(n); }
     else if (!NEUTRAL.test(f)) return null;
   }
   return names;
@@ -220,7 +288,13 @@ export function withDependents(names) {
   const imports = (n, test) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.tsx?$/.test(f) && test(f))
     .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/from ["'](?:\.\.\/)+(?:(?:components|blocks|patterns)\/)?([A-Z]\w*)/g)].map((m) => m[1])));
   const folders = [...dirs.keys()];
-  const code = new Map(folders.map((n) => [n, imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f))]));
+  // Another component's classes count as using it (GR192): DatePicker draws its field with Input's .dk-input box, Fab
+  // reads .dk-navbar--sticky. "dk-date-picker__x" is DatePicker's; a class no component is named after counts for none.
+  const byKebab = new Map(folders.map((n) => [kebab(n), n]));
+  const classes = (n) => new Set(fs.readdirSync(dirs.get(n)).filter((f) => /\.(tsx?|css)$/.test(f) && !/\.(test|stories)\.tsx?$/.test(f))
+    .flatMap((f) => [...fs.readFileSync(path.join(dirs.get(n), f), 'utf8').matchAll(/\bdk-([a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => byKebab.get(m[1])))
+    .filter((c) => c && c !== n));
+  const code = new Map(folders.map((n) => [n, new Set([...imports(n, (f) => !/\.(test|stories)\.tsx?$/.test(f)), ...classes(n)])]));
   const shown = new Map(folders.map((n) => [n, imports(n, (f) => /\.(test|stories)\.tsx?$/.test(f))]));
   const all = new Set(names);
   for (let grew = true; grew;) {

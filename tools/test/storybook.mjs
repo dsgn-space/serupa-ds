@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { PAGES, PROJECT, browser, fixClock, inParallel, openUrl, report, serve, onlyComponents } from './lib.mjs';
+import { PAGES, PROJECT, browser, fixClock, inParallel, inParallelRetry, openUrl, report, serve, onlyComponents } from './lib.mjs';
 
 const DIR = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(DIR, 'index.json'))) {
@@ -62,12 +62,33 @@ async function open(w, e, run) {
   return '';
 }
 
+// The story already open in another run: the theme and contrast change in place, through Storybook's own channel, as
+// its toolbar changes them, instead of loading the page again (a load is most of a story's time, and axe-core is
+// added again with each one). '' when it rendered; anything else and the caller opens the page as usual.
+async function switchTo(w, run) {
+  const [theme, contrast = 'default'] = run.split('+');
+  const [brand, mode] = theme.split('-');
+  w.errors = [];
+  const ok = await w.page.evaluate(({ brand, mode, contrast }) => new Promise((done) => {
+    const ch = /** @type {any} */ (window).__STORYBOOK_ADDONS_CHANNEL__;
+    if (!ch) { done(false); return; }
+    const timer = setTimeout(() => done(false), 10000);
+    ch.once('storyRendered', () => { clearTimeout(timer); done(true); });
+    ch.emit('updateGlobals', { globals: { brand, mode, contrast } });
+  }), { brand, mode, contrast }).catch(() => false);
+  if (!ok) return 'did not switch';
+  await w.page.evaluate(() => document.fonts.ready.then(() => undefined));
+  await w.page.waitForTimeout(150);
+  return '';
+}
+
 // SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
 // the docs pages are checked in the first shard.
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories and docs pages of the components it touches.
 const only = onlyComponents();
-const mine = (e) => !only || only.has(e.importPath.split('/')[3]);   // ./src/components/<Name>/…
+// ./src/components/<Name>/…, or a page of docs/ by its file (./docs/Upgrading.mdx is "docs/Upgrading.mdx").
+const mine = (e) => { const p = e.importPath.split('/'); return !only || only.has(p[1] === 'docs' ? `docs/${p[2]}` : p[3]); };
 const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
 const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
 async function checkDocs(e, w) {
@@ -178,23 +199,39 @@ async function pageRules(page) {
   });
   return landed ? [...out, `page: ${landed}`] : out;
 }
+// One theme of a story: switched in place when the page is already loaded, else opened. Its problems, whether it was
+// switched, whether the page is loaded now, and whether axe ran.
+async function themeRun(w, e, th, loaded) {
+  const switched = loaded && !(await switchTo(w, th));
+  const notReady = switched ? '' : await open(w, e, th);
+  if (notReady) return { switched, loaded: false, checked: false, problems: [`${th}: ${notReady}`] };
+  const shown = await w.page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th.split('+')[0] && (document.documentElement.getAttribute('data-contrast') === 'more') === th.endsWith('+more') && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
+  if (!shown || w.errors.length) return { switched, loaded: true, checked: false, problems: [`${th}: ${w.errors[0] || 'did not render'}`] };
+  if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
+  const v = await w.page.evaluate(async () => {
+    const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
+    // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
+    const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
+    return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
+      .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
+  });
+  return { switched, loaded: true, checked: true, problems: v.length ? [`${th}: ${v.join('; ')}`] : [] };
+}
 async function checkStory(e, w) {
   const out = [];
   const problems = [];
-  for (const th of RUNS) {
-    const notReady = await open(w, e, th);
-    if (notReady) { problems.push(`${th}: ${notReady}`); continue; }
-    const shown = await w.page.evaluate((th) => !document.body.classList.contains('sb-show-errordisplay') && document.querySelector('#storybook-root')?.children.length > 0 && document.documentElement.getAttribute('data-theme') === th.split('+')[0] && (document.documentElement.getAttribute('data-contrast') === 'more') === th.endsWith('+more') && getComputedStyle(document.documentElement).backgroundColor === getComputedStyle(document.body).backgroundColor, th);
-    if (!shown || w.errors.length) { problems.push(`${th}: ${w.errors[0] || 'did not render'}`); continue; }
-    await w.page.addScriptTag({ content: axe });
-    const v = await w.page.evaluate(async () => {
-      const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
-      // WCAG 1.4.3 exempts text that is part of an inactive control: a disabled Field's dimmed label and hint, or the dimmed text in a disabled Input box (PhoneInput's "+62").
-      const inactive = (n) => document.querySelector(n.target.join(' '))?.closest('.dk-field--disabled, .dk-input--disabled, :disabled, [aria-disabled="true"]');
-      return r.violations.map((x) => ({ ...x, nodes: x.id === 'color-contrast' ? x.nodes.filter((n) => !inactive(n)) : x.nodes }))
-        .filter((x) => x.nodes.length).map((x) => `${x.id} (${x.nodes.map((n) => n.target.join(' ')).slice(0, 2).join(', ')})`);
-    });
-    if (v.length) problems.push(`${th}: ${v.join('; ')}`);
+  // The first run opens the page and the others switch it in place; the first theme and its extra checks (they add
+  // style sheets and resize the page) come last, on a fresh load.
+  let loaded = false;
+  for (const th of [...RUNS.slice(1), RUNS[0]]) {
+    // A story that keeps state across a re-render can look different after a switch: a fresh load decides, as it did
+    // before switching.
+    // The first theme, with its extra checks, always starts from a fresh load.
+    let found = await themeRun(w, e, th, loaded && th !== RUNS[0]);
+    if (found.switched && found.problems.length) found = await themeRun(w, e, th, false);
+    loaded = found.loaded;
+    problems.push(...found.problems);
+    if (!found.checked) continue;
     if (th === RUNS[0] && e.title.startsWith('Patterns/')) problems.push(...(await pageRules(w.page)));
     if (th === RUNS[0]) {
       await w.page.setViewportSize({ width: 320, height: 256 });
@@ -220,8 +257,8 @@ async function checkStory(e, w) {
   out.push(t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in all six themes and with more contrast, with text at 200%, wider text spacing and at 320px`, !problems.length, problems.slice(0, 3).join('\n      ')));
   return out;
 }
-R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(await inParallel(stories, workers, recycled(checkStory))).flat());
+R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(await inParallelRetry(stories, workers, recycled(checkStory), (e) => e.id)).flat());
 await b.close();
 close();
 console.log(`(${docs.length} docs pages, ${stories.length} stories × ${RUNS.length} runs: six themes and more contrast; 200% text, text spacing and 320px in the first)`);
-process.exit(report('Storybook', R) ? 0 : 1);
+process.exitCode = report('Storybook', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe

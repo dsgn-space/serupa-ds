@@ -1,6 +1,6 @@
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
-import { lastInputKeyboard, listenForInput } from "./lastInput";
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
+import { lastInputKeyboard, listenForInput } from './lastInput';
 
 /** For a layer that fades out (DZ1): `leaving` stays true after `open` turns false until the layer's transitions
  *  end, or turns false at once where none run (no overlay support), so its content can stay while it fades rather
@@ -19,7 +19,7 @@ export function useExit(open: boolean, layer: React.RefObject<HTMLElement | null
   useIsoLayoutEffect(() => {
     const p = layer.current;
     if (!leaving || !p) return;
-    const runs = typeof p.getAnimations === "function" ? p.getAnimations() : [];
+    const runs = typeof p.getAnimations === 'function' ? p.getAnimations() : [];
     if (!runs.length) { setLeaving(false); return; }
     let on = true;
     void Promise.all(runs.map((a) => a.finished.catch(() => {}))).then(() => { if (on) setLeaving(false); });

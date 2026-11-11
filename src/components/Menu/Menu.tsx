@@ -1,20 +1,20 @@
-"use client";
-import * as React from "react";
-import { cn, domId, elementRef, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { oneElement, useTriggerRef } from "../../internal/trigger";
-import { config } from "../../internal/config";
-import type { Placement } from "../../internal/position";
-import { typeahead, typing, type Typed } from "../../internal/typeahead";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { useExit } from "../../internal/useExit";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { component } from "../../internal/component";
-import { isComposing } from "../../internal/ime";
-import * as icons from "../../material/builtin";
-import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
-import { submenuIntent } from "../../internal/timing";
-import { activeIn } from "../../internal/root";
+'use client';
+import * as React from 'react';
+import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { oneElement, useTriggerRef } from '../../internal/trigger';
+import { config } from '../../internal/config';
+import type { Placement } from '../../internal/position';
+import { typeahead, typing, type Typed } from '../../internal/typeahead';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { useExit } from '../../internal/useExit';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { component } from '../../internal/component';
+import { isComposing } from '../../internal/ime';
+import * as icons from '../../material/builtin';
+import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
+import { submenuIntent } from '../../internal/timing';
+import { activeIn } from '../../internal/root';
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -33,13 +33,13 @@ export interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'c
   /** Called when it asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' (Tab) | 'select' (an item chosen) }. */
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** The menu's name for screen readers. Default: the trigger's text, by aria-labelledby. */
-  'aria-label'?: string;
+  'aria-label'?: string | undefined;
   /** Classes on the menu panel. The other HTML attributes (id, data-*, aria-*) and the ref go on the panel too. */
   className?: string | undefined;
   /** Styles on the menu panel. */
   style?: React.CSSProperties | undefined;
 }
-const OWN_MENU = { trigger: 1, children: 1, "aria-label": 1, "aria-labelledby": 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, onKeyDown: 1 } as const;
+const OWN_MENU = { trigger: 1, children: 1, 'aria-label': 1, 'aria-labelledby': 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
 interface Ctx { close: (reason: OpenChangeReason, focusTrigger: boolean) => void; open: boolean; typed: React.RefObject<Typed> }
 const MenuContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
@@ -63,17 +63,17 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
     const panel = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>('[role="menu"]') : null;
     const list = itemsOf(panel || menuRef.current), i = list.indexOf(activeIn(e.currentTarget) as HTMLElement);   // its own root's focus, in a shadow root too (GR60)
     const go = (n: number) => { e.preventDefault(); if (list.length) list[(n + list.length) % list.length].focus(); };
-    if (e.key === "ArrowDown") go(i + 1);
-    else if (e.key === "ArrowUp") go(i < 0 ? list.length - 1 : i - 1);
-    else if (e.key === "Home") go(0);
-    else if (e.key === "End") go(list.length - 1);
-    else if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close("escape", true); }
-    else if (e.key === "Tab") close("blur", false);
+    if (e.key === 'ArrowDown') go(i + 1);
+    else if (e.key === 'ArrowUp') go(i < 0 ? list.length - 1 : i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(list.length - 1);
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close('escape', true); }
+    else if (e.key === 'Tab') close('blur', false);
     // Space only while a word is being typed ("my files"); otherwise the item chose itself on it.
     else if (e.key.length === 1 && (/\S/.test(e.key) || typing(typed.current)) && !e.ctrlKey && !e.metaKey && !e.altKey) {
       // Taken, so a page shortcut on the same letter (useShortcut("g")) doesn't also run: a menu is no text field (L8E42).
       e.preventDefault();
-      const n = typeahead(typed.current, e.key, list.map((it) => (it.querySelector(".dk-menu__label") || it).textContent || ""), i);
+      const n = typeahead(typed.current, e.key, list.map((it) => (it.querySelector('.dk-menu__label') || it).textContent || ''), i);
       if (n >= 0) list[n].focus();
     }
   };
@@ -85,17 +85,17 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
    goes back to the button. Tab, a click outside or choosing an item closes it. It sits in the top layer next to the button.
    A MenuSub's panel sits inside the menu's element, so the keys bubble here and work on the panel the focus is in. */
 /** A list of actions behind a button: MenuItem, MenuGroup and MenuSeparator inside. */
-export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>("Menu", function Menu(props, ref) {
-  const own = domId("dk-menu", React.useId());
+export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu', function Menu(props, ref) {
+  const own = domId('dk-menu', React.useId());
   const id = props.id || own;
   const [inner, setInner] = React.useState(!!props.defaultOpen);
   const controlled = props.open !== undefined;
   const open = controlled ? !!props.open : inner;
   const menuRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
-  const focusOn = React.useRef<"first" | "last" | null>(null);
+  const focusOn = React.useRef<'first' | 'last' | null>(null);
   const pressed = React.useRef(0);
-  const typed = React.useRef<Typed>({ text: "", at: 0 });
+  const typed = React.useRef<Typed>({ text: '', at: 0 });
   const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => { if (!controlled) setInner(v); if (ask.current) ask.current(v, { reason }); }, [controlled]);
   const close = React.useCallback((reason: OpenChangeReason, focusTrigger: boolean) => { set(false, reason); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
@@ -105,66 +105,67 @@ export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>("Menu",
   // A press outside the menu and its button closes it (focus stays where the press put it).
   // Its items stay, inert, while it fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, menuRef);
-  useAnchoredLayer(open, menuRef, triggerRef, { placement: props.placement, fallback: "bottom-start", offsetVar: "--dk-menu-offset", onOutside: () => close("outside", false), inside: triggerRef });
+  useAnchoredLayer(open, menuRef, triggerRef, { placement: props.placement, fallback: 'bottom-start', offsetVar: '--dk-menu-offset', onOutside: () => close('outside', false), inside: triggerRef });
   // On open, focus goes to the first item (or the last, opened with ↑).
   useIsoLayoutEffect(() => {
     const menu = menuRef.current;
     if (!open || !menu) return;
     const list = items();
-    const target = focusOn.current === "last" ? list[list.length - 1] : list[0];
+    const target = focusOn.current === 'last' ? list[list.length - 1] : list[0];
     focusOn.current = null;
     if (target) target.focus(); else menu.focus();
   }, [open]);
 
   const keys = menuKeys(menuRef, typed, close);
-  const panelRef = React.useCallback((n: HTMLDivElement | null) => { menuRef.current = n; setRef(ref, n); }, [ref]);
+  const panelRef = useMergedRef(ref, (n: HTMLDivElement | null) => { menuRef.current = n; });
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => { if (props.onKeyDown) props.onKeyDown(e); if (!e.defaultPrevented) keys(e); };
 
-  const child = oneElement<TriggerProps>(props.trigger, "Menu", "trigger");
-  useTriggerRef(triggerRef, "Menu");
+  const child = oneElement<TriggerProps>(props.trigger, 'Menu', 'trigger');
+  useTriggerRef(triggerRef, 'Menu');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
+  const mergedRef = useMergedRef(childRef, (n) => { triggerRef.current = n; });
   const trigger = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { triggerRef.current = n; if (childRef) setRef(childRef, n); },
-    id: cp.id || own + "-button",
-    "aria-haspopup": "menu",
-    "aria-expanded": open,
-    "aria-controls": open ? id : undefined,
+    ref: mergedRef,
+    id: cp.id || own + '-button',
+    'aria-haspopup': 'menu',
+    'aria-expanded': open,
+    'aria-controls': open ? id : undefined,
     onPointerDown: (e: React.PointerEvent<HTMLElement>) => {
       if (cp.onPointerDown) cp.onPointerDown(e);
       // A mouse opens it on the press (a touch or pen, the keys, and a trigger with its own onClick, which may stop
       // it, keep the click), so it can be dragged onto an item and let go there.
-      if (e.defaultPrevented || cp.onClick || e.pointerType !== "mouse" || e.button !== 0 || e.currentTarget.matches(':disabled, [aria-disabled="true"]')) return;
+      if (e.defaultPrevented || cp.onClick || e.pointerType !== 'mouse' || e.button !== 0 || e.currentTarget.matches(':disabled, [aria-disabled="true"]')) return;
       const at = pressed.current = e.timeStamp || 1;
-      if (open) close("trigger", true);
-      else { focusOn.current = "first"; set(true, "trigger"); }
+      if (open) close('trigger', true);
+      else { focusOn.current = 'first'; set(true, 'trigger'); }
       const up = (u: PointerEvent) => {
-        document.removeEventListener("pointerup", up, true);
-        document.removeEventListener("pointercancel", up, true);
+        document.removeEventListener('pointerup', up, true);
+        document.removeEventListener('pointercancel', up, true);
         // The click that follows (on the button, or wherever the press and release meet) is this press's.
         setTimeout(() => { pressed.current = 0; });
-        const item = !open && u.type === "pointerup" && u.timeStamp - at > 200 && u.target instanceof Element ? u.target.closest<HTMLElement>('[role^="menuitem"]') : null;
+        const item = !open && u.type === 'pointerup' && u.timeStamp - at > 200 && u.target instanceof Element ? u.target.closest<HTMLElement>('[role^="menuitem"]') : null;
         if (item && menuRef.current && menuRef.current.contains(item)) item.click();
       };
-      document.addEventListener("pointerup", up, true);
-      document.addEventListener("pointercancel", up, true);
+      document.addEventListener('pointerup', up, true);
+      document.addEventListener('pointercancel', up, true);
     },
     // Keeps the focus on the item the press put it on.
     onMouseDown: (e: React.MouseEvent<HTMLElement>) => { if (cp.onMouseDown) cp.onMouseDown(e); if (pressed.current) e.preventDefault(); },
-    onClick: (e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented || pressed.current) return; if (!open) focusOn.current = "first"; set(!open, "trigger"); },
+    onClick: (e: React.MouseEvent<HTMLElement>) => { if (cp.onClick) cp.onClick(e); if (e.defaultPrevented || pressed.current) return; if (!open) focusOn.current = 'first'; set(!open, 'trigger'); },
     onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
       if (cp.onKeyDown) cp.onKeyDown(e);
       // With Alt, Ctrl or ⌘ the arrows are the browser's or the system's (⌘+↓ scrolls to the page's end): leave them (L8E36).
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); focusOn.current = e.key === "ArrowUp" ? "last" : "first"; set(true, "trigger"); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); focusOn.current = e.key === 'ArrowUp' ? 'last' : 'first'; set(true, 'trigger'); }
     },
   });
   return (
     <MenuContext.Provider value={ctx}>
       {trigger}
-      <div {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: "manual" }} hidden={!open || undefined}
-        aria-label={props["aria-label"]} aria-labelledby={props["aria-label"] || props["aria-labelledby"] ? props["aria-labelledby"] : cp.id || (triggerRef.current && triggerRef.current.id) || own + "-button"}
-        className={cn("dk-menu", props.className)} style={props.style} data-component="menu" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}
+      <div {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
+        aria-label={props['aria-label']} aria-labelledby={props['aria-label'] || props['aria-labelledby'] ? props['aria-labelledby'] : cp.id || (triggerRef.current && triggerRef.current.id) || own + '-button'}
+        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
       </div>
@@ -191,14 +192,14 @@ export interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   /** Styles on the menu panel. */
   style?: React.CSSProperties | undefined;
 }
-const OWN_CONTEXT = { target: 1, children: 1, "aria-label": 1, open: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onKeyDown: 1 } as const;
+const OWN_CONTEXT = { target: 1, children: 1, 'aria-label': 1, open: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
 /* ContextMenu: a Menu opened from an area instead of a button, at the pointer on a right-click (or a long press,
    which browsers turn into contextmenu) or at the focused element on Shift+F10 or the Menu key. Its items, keys,
    top layer and closing are Menu's; when it closes after a choice or Escape, focus goes back to where it was. */
 /** A Menu that opens at the pointer on a right-click, or at the focused element on Shift+F10 or the Menu key. */
-export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenuProps>("ContextMenu", function ContextMenu(props, ref) {
-  const own = domId("dk-ctxmenu", React.useId());
+export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenuProps>('ContextMenu', function ContextMenu(props, ref) {
+  const own = domId('dk-ctxmenu', React.useId());
   const id = props.id || own;
   const [inner, setInner] = React.useState(false);
   const controlled = props.open !== undefined;
@@ -208,7 +209,7 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
   const point = React.useRef<HTMLSpanElement | null>(null);
   const targetRef = React.useRef<HTMLElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
-  const typed = React.useRef<Typed>({ text: "", at: 0 });
+  const typed = React.useRef<Typed>({ text: '', at: 0 });
   const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
   const set = React.useCallback((v: boolean, reason: OpenChangeReason) => { if (!controlled) setInner(v); if (ask.current) ask.current(v, { reason }); }, [controlled]);
   const close = React.useCallback((reason: OpenChangeReason, focusBack: boolean) => {
@@ -222,7 +223,7 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
 
   // Its items stay, inert, while it fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, menuRef);
-  useAnchoredLayer(open && !!spot, menuRef, point, { placement: "bottom-start", offsetVar: "--dk-menu-offset", onOutside: () => close("outside", false), watch: spot && spot.x + "," + spot.y });
+  useAnchoredLayer(open && !!spot, menuRef, point, { placement: 'bottom-start', offsetVar: '--dk-menu-offset', onOutside: () => close('outside', false), watch: spot && spot.x + ',' + spot.y });
   useIsoLayoutEffect(() => {
     const menu = menuRef.current;
     if (!open || !menu) return;
@@ -234,21 +235,22 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
     const was = activeIn(targetRef.current);
     if (!open) back.current = was instanceof HTMLElement && was !== document.body ? was : null;
     setAt({ x: x, y: y });
-    if (!open) set(true, "trigger");
+    if (!open) set(true, 'trigger');
   };
   // From the keyboard, at the focused element's lower start corner.
   const fromElement = (el: EventTarget) => { const r = (el instanceof Element ? el : targetRef.current || document.body).getBoundingClientRect(); show(r.left, r.bottom); };
 
   const keys = menuKeys(menuRef, typed, close);
   const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => { if (props.onKeyDown) props.onKeyDown(e); if (!e.defaultPrevented) keys(e); };
-  const panelRef = React.useCallback((n: HTMLDivElement | null) => { menuRef.current = n; setRef(ref, n); }, [ref]);
+  const panelRef = useMergedRef(ref, (n: HTMLDivElement | null) => { menuRef.current = n; });
 
-  const child = oneElement<TriggerProps>(props.target, "ContextMenu", "target");
-  useTriggerRef(targetRef, "ContextMenu");
+  const child = oneElement<TriggerProps>(props.target, 'ContextMenu', 'target');
+  useTriggerRef(targetRef, 'ContextMenu');
   const cp = child.props;
   const childRef = elementRef<HTMLElement>(child);
+  const mergedRef2 = useMergedRef(childRef, (n) => { targetRef.current = n; });
   const target = React.cloneElement(child, {
-    ref: (n: HTMLElement | null) => { targetRef.current = n; if (childRef) setRef(childRef, n); },
+    ref: mergedRef2,
     onContextMenu: (e: React.MouseEvent<HTMLElement>) => {
       if (cp.onContextMenu) cp.onContextMenu(e);
       if (e.defaultPrevented || props.disabled) return;
@@ -259,15 +261,15 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
     onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
       if (cp.onKeyDown) cp.onKeyDown(e);
       if (e.defaultPrevented || props.disabled) return;
-      if ((e.key === "F10" && e.shiftKey) || e.key === "ContextMenu") { e.preventDefault(); fromElement(e.target); }
+      if ((e.key === 'F10' && e.shiftKey) || e.key === 'ContextMenu') { e.preventDefault(); fromElement(e.target); }
     },
   });
   return (
     <MenuContext.Provider value={ctx}>
       {target}
-      <span ref={point} className="dk-menu__point" aria-hidden style={spot ? { left: spot.x + "px", top: spot.y + "px" } : undefined} />
-      <div {...omit(props, OWN_CONTEXT)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: "manual" }} hidden={!open || undefined} aria-label={props["aria-label"]}
-        className={cn("dk-menu", props.className)} style={props.style} data-component="menu" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}
+      <span ref={point} className="dk-menu__point" aria-hidden style={spot ? { left: spot.x + 'px', top: spot.y + 'px' } : undefined} />
+      <div {...omit(props, OWN_CONTEXT)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} aria-label={props['aria-label']}
+        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
       </div>
@@ -303,19 +305,19 @@ interface MenuItemBaseProps extends MenuItemOwnProps, Omit<React.HTMLAttributes<
   rel?: string | undefined;
 }
 
-const KEY_NAMES: Record<string, string> = { "⌘": "Meta", cmd: "Meta", command: "Meta", meta: "Meta", "⌥": "Alt", opt: "Alt", option: "Alt", alt: "Alt",
-  "⇧": "Shift", shift: "Shift", "⌃": "Control", ctrl: "Control", control: "Control", "⏎": "Enter", "↵": "Enter", enter: "Enter", return: "Enter",
-  "⌫": "Backspace", del: "Delete", delete: "Delete", esc: "Escape", "⎋": "Escape", tab: "Tab", space: "Space", "↑": "ArrowUp", "↓": "ArrowDown", "←": "ArrowLeft", "→": "ArrowRight", "+": "Plus", plus: "Plus" };
+const KEY_NAMES: Record<string, string> = { '⌘': 'Meta', cmd: 'Meta', command: 'Meta', meta: 'Meta', '⌥': 'Alt', opt: 'Alt', option: 'Alt', alt: 'Alt',
+  '⇧': 'Shift', shift: 'Shift', '⌃': 'Control', ctrl: 'Control', control: 'Control', '⏎': 'Enter', '↵': 'Enter', enter: 'Enter', return: 'Enter',
+  '⌫': 'Backspace', del: 'Delete', delete: 'Delete', esc: 'Escape', '⎋': 'Escape', tab: 'Tab', space: 'Space', '↑': 'ArrowUp', '↓': 'ArrowDown', '←': 'ArrowLeft', '→': 'ArrowRight', '+': 'Plus', plus: 'Plus' };
 /** "⌘⇧K", "Ctrl+Shift+P", "Cmd-K" or "Alt F4" as aria-keyshortcuts wants it: "Meta+Shift+K", "Control+Shift+P",
     "Meta+K", "Alt+F4". A + or - key at the end stays a key ("Ctrl++" is "Control+Plus"), and "G then I" is two
     presses, space-separated: "G I". */
 export function keyShortcuts(shortcut: string): string {
-  return shortcut.trim().split(/\s+then\s+/i).map(chord).filter(Boolean).join(" ");
+  return shortcut.trim().split(/\s+then\s+/i).map(chord).filter(Boolean).join(' ');
 }
 function chord(text: string): string {
   const parts: string[] = [];
   // A last + or - after a separator (or alone) is the key itself, not a separator.
-  let last = "";
+  let last = '';
   const end = /(^|[+\-\s⌘⌥⇧⌃])([+-])$/.exec(text);
   if (end) { last = end[2]; text = text.slice(0, text.length - 1); }
   const tokens = text.split(/\s*[+-]\s*|\s+/).filter(Boolean);
@@ -327,11 +329,11 @@ function chord(text: string): string {
     const named = KEY_NAMES[rest] || KEY_NAMES[rest.toLowerCase()];
     parts.push(named || (rest.length === 1 ? rest.toUpperCase() : rest));
   }
-  return parts.join("+");
+  return parts.join('+');
 }
 
 /** One action in a Menu. */
-const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>("MenuItem", function MenuItem(props, ref) {
+const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>('MenuItem', function MenuItem(props, ref) {
   const ctx = React.useContext(MenuContext);
   const rest = omit(props, { onSelect: 1, icon: 1, shortcut: 1, destructive: 1, disabled: 1, className: 1, children: 1, onClick: 1, onKeyDown: 1, onPointerMove: 1, as: 1 });
   const own = { onClick: props.onClick, onKeyDown: props.onKeyDown, onPointerMove: props.onPointerMove };
@@ -341,17 +343,17 @@ const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>("
     if (props.onSelect) props.onSelect(e);
     // onSelect may move focus itself (to the next row, after deleting this one): then it stays there (L8E21).
     const a = activeIn(e.currentTarget);
-    if (!e.defaultPrevented && ctx) ctx.close("select", !a || a === document.body || !!a.closest('[role="menu"]'));
+    if (!e.defaultPrevented && ctx) ctx.close('select', !a || a === document.body || !!a.closest('[role="menu"]'));
   };
-  const onClick = (e: React.MouseEvent<HTMLElement>) => { if (own.onClick) own.onClick(e); if (linked && !props.disabled) { if (props.onSelect) props.onSelect(e); if (ctx) ctx.close("select", false); return; } choose(e); };
+  const onClick = (e: React.MouseEvent<HTMLElement>) => { if (own.onClick) own.onClick(e); if (linked && !props.disabled) { if (props.onSelect) props.onSelect(e); if (ctx) ctx.close('select', false); return; } choose(e); };
   const onKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (own.onKeyDown) own.onKeyDown(e);
     if (e.defaultPrevented) return;
-    if (e.key === " " && ctx && typing(ctx.typed.current)) return;   // part of a typed word: the menu's typeahead takes it
-    if (e.key === "Enter" || e.key === " ") {
+    if (e.key === ' ' && ctx && typing(ctx.typed.current)) return;   // part of a typed word: the menu's typeahead takes it
+    if (e.key === 'Enter' || e.key === ' ') {
       if (linked && !props.disabled) {
         // Enter follows a link by itself; Space doesn't, so it clicks the link as Enter would (L8E66).
-        if (e.key === " ") { e.preventDefault(); e.currentTarget.click(); }
+        if (e.key === ' ') { e.preventDefault(); e.currentTarget.click(); }
         return;
       }
       choose(e); e.preventDefault();
@@ -359,13 +361,13 @@ const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>("
   };
   const isLink = linked && !props.disabled;
   if (!isLink) delete rest.href;
-  if (props.shortcut && rest["aria-keyshortcuts"] == null) rest["aria-keyshortcuts"] = keyShortcuts(props.shortcut);
-  if (isLink && rest.target === "_blank" && rest.rel == null) rest.rel = "noopener noreferrer";
+  if (props.shortcut && rest['aria-keyshortcuts'] == null) rest['aria-keyshortcuts'] = keyShortcuts(props.shortcut);
+  if (isLink && rest.target === '_blank' && rest.rel == null) rest.rel = 'noopener noreferrer';
   // MenuCheckboxItem and MenuRadioItem pass their role and aria-checked: a check slot goes before the label.
-  const checkable = !isLink && (rest.role === "menuitemcheckbox" || rest.role === "menuitemradio");
-  return React.createElement(isLink ? props.as || config.link : "div", Object.assign(rest, {
-    ref: ref, role: checkable ? rest.role : "menuitem", tabIndex: -1, "aria-disabled": props.disabled || undefined,
-    className: cn("dk-menu__item", props.destructive && "dk-menu__item--destructive", props.className),
+  const checkable = !isLink && (rest.role === 'menuitemcheckbox' || rest.role === 'menuitemradio');
+  return React.createElement(isLink ? props.as || config.link : 'div', Object.assign(rest, {
+    ref: ref, role: checkable ? rest.role : 'menuitem', tabIndex: -1, 'aria-disabled': props.disabled || undefined,
+    className: cn('dk-menu__item', props.destructive && 'dk-menu__item--destructive', props.className),
     onClick: onClick, onKeyDown: onKeyDown, onPointerMove: (e: React.PointerEvent<HTMLElement>) => { if (own.onPointerMove) own.onPointerMove(e); if (activeIn(e.currentTarget) !== e.currentTarget) e.currentTarget.focus(); },
   }),
     checkable ? <span className="dk-menu__check" aria-hidden="true"><Icon icon={icons.Check} /></span> : null,
@@ -400,10 +402,10 @@ export interface MenuCheckboxItemProps extends CheckableProps {
    label while it's on. Choosing it asks for the other state and closes the menu, as MenuItem does; call
    event.preventDefault() in onSelect to keep the menu open. */
 /** A setting in a Menu that's on or off, such as "Show grid". */
-export const MenuCheckboxItem = /* @__PURE__ */ component<HTMLElement, MenuCheckboxItemProps>("MenuCheckboxItem", function MenuCheckboxItem(props, ref) {
+export const MenuCheckboxItem = /* @__PURE__ */ component<HTMLElement, MenuCheckboxItemProps>('MenuCheckboxItem', function MenuCheckboxItem(props, ref) {
   const rest = omit(props, { checked: 1, onCheckedChange: 1, onSelect: 1, icon: 1, shortcut: 1 });
   const onSelect = (e: React.SyntheticEvent) => { if (props.onCheckedChange) props.onCheckedChange(!props.checked); if (props.onSelect) props.onSelect(e); };
-  return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: "menuitemcheckbox", "aria-checked": !!props.checked }} onSelect={onSelect} />;
+  return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemcheckbox', 'aria-checked': !!props.checked }} onSelect={onSelect} />;
 });
 
 interface RadioCtx { value: string | undefined; choose: (value: string) => void }
@@ -419,7 +421,7 @@ export interface MenuRadioGroupProps extends Omit<MenuGroupProps, 'defaultValue'
 /* MenuRadioGroup: MenuRadioItems of which one is chosen (role menuitemradio, aria-checked), such as a sort order.
    It's a MenuGroup, so label gives it a heading that names it. */
 /** A group of MenuRadioItems, one of them chosen. */
-export const MenuRadioGroup = /* @__PURE__ */ component<HTMLDivElement, MenuRadioGroupProps>("MenuRadioGroup", function MenuRadioGroup(props, ref) {
+export const MenuRadioGroup = /* @__PURE__ */ component<HTMLDivElement, MenuRadioGroupProps>('MenuRadioGroup', function MenuRadioGroup(props, ref) {
   const rest = omit(props, { value: 1, onValueChange: 1 });
   const ask = React.useRef(props.onValueChange); ask.current = props.onValueChange;
   // Choosing the item that's chosen already changes nothing, so it isn't told.
@@ -433,11 +435,11 @@ export interface MenuRadioItemProps extends CheckableProps {
 }
 
 /** One choice in a MenuRadioGroup. */
-export const MenuRadioItem = /* @__PURE__ */ component<HTMLElement, MenuRadioItemProps>("MenuRadioItem", function MenuRadioItem(props, ref) {
+export const MenuRadioItem = /* @__PURE__ */ component<HTMLElement, MenuRadioItemProps>('MenuRadioItem', function MenuRadioItem(props, ref) {
   const group = React.useContext(RadioContext);
   const rest = omit(props, { value: 1, onSelect: 1, icon: 1, shortcut: 1 });
   const onSelect = (e: React.SyntheticEvent) => { if (group) group.choose(props.value); if (props.onSelect) props.onSelect(e); };
-  return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: "menuitemradio", "aria-checked": !!group && group.value === props.value }} onSelect={onSelect} />;
+  return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemradio', 'aria-checked': !!group && group.value === props.value }} onSelect={onSelect} />;
 });
 
 export interface MenuSubProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
@@ -457,8 +459,8 @@ export interface MenuSubProps extends Omit<React.HTMLAttributes<HTMLElement>, 'c
    pointer can cross the items in between on its way: it closes a moment after the focus settles on another item
    of its menu. Choosing an item in it closes the whole menu. */
 /** An item that opens a submenu of more items. */
-export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>("MenuSub", function MenuSub(props, ref) {
-  const id = domId("dk-menu-sub", React.useId());
+export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>('MenuSub', function MenuSub(props, ref) {
+  const id = domId('dk-menu-sub', React.useId());
   const rest = omit(props, { label: 1, icon: 1, disabled: 1, className: 1, children: 1, onClick: 1, onKeyDown: 1, onPointerMove: 1, onPointerLeave: 1 });
   const [own, setOpen] = React.useState(false);
   // Closed with its menu: a submenu open when its menu closes fades out with it rather than stay open inside it.
@@ -472,7 +474,7 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>("Men
   const hover = React.useRef(false);   // the pointer is on the item and it opens in a moment
   const stop = () => { clearTimeout(timer.current); hover.current = false; };
   const later = (fn: () => void) => { stop(); timer.current = setTimeout(fn, submenuIntent); };
-  const rtl = () => !!itemRef.current && getComputedStyle(itemRef.current).direction === "rtl";
+  const rtl = () => !!itemRef.current && getComputedStyle(itemRef.current).direction === 'rtl';
   const show = (focus: boolean) => {
     stop();
     if (props.disabled) return;
@@ -484,7 +486,7 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>("Men
 
   // Its items stay, inert, while it fades out (DZ1).
   const exit = useExit(open, panelRef);
-  useAnchoredLayer(open, panelRef, itemRef, { placement: open && rtl() ? "left-start" : "right-start", fallback: "right-start", offsetVar: "--dk-menu-sub-offset" });
+  useAnchoredLayer(open, panelRef, itemRef, { placement: open && rtl() ? 'left-start' : 'right-start', fallback: 'right-start', offsetVar: '--dk-menu-sub-offset' });
   useIsoLayoutEffect(() => {
     if (!open || !focusFirst.current) return;
     focusFirst.current = false;
@@ -501,26 +503,27 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>("Men
       clearTimeout(timer.current);
       if (t !== item && !(panelRef.current && panelRef.current.contains(t)) && parent.contains(t)) timer.current = setTimeout(() => { setOpen(false); }, submenuIntent);
     };
-    document.addEventListener("focusin", onFocus);
-    return () => { document.removeEventListener("focusin", onFocus); };
+    document.addEventListener('focusin', onFocus);
+    return () => { document.removeEventListener('focusin', onFocus); };
   }, [open]);
 
-  const opens = (key: string) => key === "Enter" || key === " " || key === (rtl() ? "ArrowLeft" : "ArrowRight");
+  const opens = (key: string) => key === 'Enter' || key === ' ' || key === (rtl() ? 'ArrowLeft' : 'ArrowRight');
   const onPanelKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (isComposing(e) || !(e.target instanceof HTMLElement) || e.target.closest('[role="menu"]') !== panelRef.current) return;
-    if (e.key === "Escape" || e.key === (rtl() ? "ArrowRight" : "ArrowLeft")) { e.preventDefault(); e.stopPropagation(); hide(true); }
+    if (e.key === 'Escape' || e.key === (rtl() ? 'ArrowRight' : 'ArrowLeft')) { e.preventDefault(); e.stopPropagation(); hide(true); }
   };
+  const mergedRef3 = useMergedRef(ref, (n) => { itemRef.current = n; });
   return (
     <>
-      {React.createElement("div", Object.assign(rest, {
-        ref: (n: HTMLElement | null) => { itemRef.current = n; setRef(ref, n); },
-        role: "menuitem", tabIndex: -1, "aria-haspopup": "menu", "aria-expanded": open, "aria-controls": open ? id : undefined,
-        "aria-disabled": props.disabled || undefined, "data-state": open ? "open" : "closed",
-        className: cn("dk-menu__item", "dk-menu__item--sub", props.className),
+      {React.createElement('div', Object.assign(rest, {
+        ref: mergedRef3,
+        role: 'menuitem', tabIndex: -1, 'aria-haspopup': 'menu', 'aria-expanded': open, 'aria-controls': open ? id : undefined,
+        'aria-disabled': props.disabled || undefined, 'data-state': open ? 'open' : 'closed',
+        className: cn('dk-menu__item', 'dk-menu__item--sub', props.className),
         onClick: (e: React.MouseEvent<HTMLElement>) => { if (props.onClick) props.onClick(e); if (!e.defaultPrevented) show(true); },
         onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
           if (props.onKeyDown) props.onKeyDown(e);
-          if (e.defaultPrevented || isComposing(e) || !opens(e.key) || (e.key === " " && parent && typing(parent.typed.current))) return;
+          if (e.defaultPrevented || isComposing(e) || !opens(e.key) || (e.key === ' ' && parent && typing(parent.typed.current))) return;
           e.preventDefault(); e.stopPropagation(); show(true);
         },
         onPointerMove: (e: React.PointerEvent<HTMLElement>) => {
@@ -531,10 +534,10 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>("Men
         onPointerLeave: (e: React.PointerEvent<HTMLElement>) => { if (props.onPointerLeave) props.onPointerLeave(e); if (hover.current) stop(); },
       }),
         props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
-        <span className="dk-menu__label" id={id + "-label"}>{props.label}</span>,
+        <span className="dk-menu__label" id={id + '-label'}>{props.label}</span>,
         <span className="dk-menu__chevron" aria-hidden="true"><Icon icon={icons.ChevronRight} /></span>)}
-      <div ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: "manual" }} hidden={!open || undefined} data-instant={exit.instant ? "" : undefined} aria-labelledby={id + "-label"}
-        className="dk-menu dk-menu--sub" data-component="menu" data-state={open ? "open" : "closed"} inert={!open || undefined} onKeyDown={onPanelKey}>
+      <div ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined} data-instant={exit.instant ? '' : undefined} aria-labelledby={id + '-label'}
+        className="dk-menu dk-menu--sub" data-component="menu" data-state={open ? 'open' : 'closed'} inert={!open || undefined} onKeyDown={onPanelKey}>
         {open || exit.leaving ? props.children : null}
       </div>
     </>
@@ -547,11 +550,11 @@ export interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** Items that belong together, with an optional heading. */
-export const MenuGroup = /* @__PURE__ */ component<HTMLDivElement, MenuGroupProps>("MenuGroup", function MenuGroup(props, ref) {
+export const MenuGroup = /* @__PURE__ */ component<HTMLDivElement, MenuGroupProps>('MenuGroup', function MenuGroup(props, ref) {
   const rest = omit(props, { label: 1, className: 1, children: 1 });
-  const id = domId("dk-mg", React.useId());
+  const id = domId('dk-mg', React.useId());
   return (
-    <div {...rest} ref={ref} role="group" aria-labelledby={props.label != null ? id : undefined} className={cn("dk-menu__group", props.className)}>
+    <div {...rest} ref={ref} role="group" aria-labelledby={props.label != null ? id : undefined} className={cn('dk-menu__group', props.className)}>
       {props.label != null ? <div className="dk-menu__group-label" id={id} role="presentation">{props.label}</div> : null}
       {props.children}
     </div>
@@ -561,6 +564,6 @@ export const MenuGroup = /* @__PURE__ */ component<HTMLDivElement, MenuGroupProp
 export type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** A line between groups of items. */
-export const MenuSeparator = /* @__PURE__ */ component<HTMLDivElement, MenuSeparatorProps>("MenuSeparator", function MenuSeparator(props, ref) {
-  return <div {...props} ref={ref} role="separator" className={cn("dk-menu__separator", props.className)} />;
+export const MenuSeparator = /* @__PURE__ */ component<HTMLDivElement, MenuSeparatorProps>('MenuSeparator', function MenuSeparator(props, ref) {
+  return <div {...props} ref={ref} role="separator" className={cn('dk-menu__separator', props.className)} />;
 });

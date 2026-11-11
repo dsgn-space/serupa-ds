@@ -14,18 +14,23 @@
 .dk-table__caption { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
 .dk-table__cell { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; vertical-align: middle; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
 .dk-table--sm .dk-table__cell { padding-block: var(--table-padding-y-sm, var(--spacing-2)); }
-.dk-table__body .dk-table__row:last-child .dk-table__cell, .dk-table__foot .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
+.dk-table__body > tr:not([hidden]):not(:has(~ tr:not([hidden]))) > .dk-table__cell, .dk-table__body .dk-table__row:last-child .dk-table__cell, .dk-table__foot .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
 .dk-table__foot .dk-table__row:first-child .dk-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
 .dk-table__body:has(+ .dk-table__foot) .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
 .dk-table__header { background: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium)); white-space: nowrap; }
 .dk-table__cell--center { text-align: center; }
 .dk-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
-.dk-table__body .dk-table__row { transition: background-color var(--motion-hover) var(--ease-move); }
-.dk-table--striped .dk-table__body .dk-table__row:nth-child(even) { background: var(--table-row-bg-hover, var(--surface-muted)); }
+/* The row background eases only while the pointer is over the body, so a row's hover and a click on its own box still
+   ease, while "select all" in the header (or from script) repaints every row at once instead of starting a transition
+   per row (GR168). Reduced motion keeps it off. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .dk-table__body:hover .dk-table__row { transition: background-color var(--motion-hover) var(--ease-move); } }
+/* Every other row of data, not counting the detail rows under them. --dk-table-row carries a row's shading to its
+   pinned cells, which paint their own background over the cells scrolling under them. */
+.dk-table--striped .dk-table__body .dk-table__row:nth-child(even of :is(.dk-table__row, .dk-table__spacer)) { --dk-table-row: var(--table-row-bg-hover, var(--surface-muted)); background: var(--dk-table-row); }
 @media (hover: hover) {
-  .dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover { background: var(--table-row-bg-hover, var(--surface-muted)); }
+  .dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover { --dk-table-row: var(--table-row-bg-hover, var(--surface-muted)); background: var(--dk-table-row); }
 }
-.dk-table__row--selected, .dk-table .dk-table__body .dk-table__row--selected, .dk-table .dk-table__body .dk-table__row:has(> .dk-table__select :checked) { background: var(--table-row-bg-selected, var(--surface-muted)); }
+.dk-table__row--selected, .dk-table .dk-table__body .dk-table__row--selected, .dk-table .dk-table__body .dk-table__row:has(> .dk-table__select :checked) { --dk-table-row: var(--table-row-bg-selected, var(--surface-muted)); background: var(--dk-table-row); }
 .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--border-width-2)) 0 0 var(--table-row-indicator-selected, var(--primary)); }
 .dk-table__row--selected:dir(rtl) > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--border-width-2))) 0 0 var(--table-row-indicator-selected, var(--primary)); }
 .dk-table__select { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
@@ -47,6 +52,11 @@
   .dk-table--sticky { container-type: scroll-state; }
   @container scroll-state(scrollable: top) { .dk-table__head .dk-table__cell { box-shadow: var(--table-head-shadow-scrolled, var(--elevation-part)); } }
 }
+/* layout="fixed": the columns take the header cells' widths and keep them whatever the rows hold; long text wraps
+   in its cell instead of widening the column. The select column keeps the checkbox's width. */
+.dk-table--fixed .dk-table__table { table-layout: fixed; }
+.dk-table--fixed .dk-table__cell { overflow-wrap: anywhere; }
+.dk-table--fixed .dk-table__select { width: var(--checkbox-size-md, var(--spacing-4)); }
 /* What the keyboard focuses in the frame scrolls into view below the sticky header, not under it (WCAG 2.4.11).
    Table measures the header into --dk-table-head; until then, one md header row (40px). */
 .dk-table--sticky { scroll-padding-top: var(--dk-table-head, var(--spacing-10)); }
@@ -76,7 +86,45 @@
 @media (hover: hover) { .dk-table__row--link:hover .dk-table__row-link { text-decoration: underline; } }
 .dk-table__row--link:has(.dk-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media (forced-colors: active) { .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { border-inline-start: var(--table-indicator-width, var(--border-width-2)) solid Highlight; } }
-@media (prefers-reduced-motion: reduce) { .dk-table__body .dk-table__row { transition: none; } }
+/* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */
+.dk-table__header--resizable { position: relative; }
+.dk-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }
+.dk-table__resize::after { content: ""; position: absolute; inset-block: var(--spacing-2); inset-inline-end: var(--spacing-0); width: var(--border-width-2); background: var(--table-border, var(--border)); }
+@media (hover: hover) { .dk-table__resize:hover::after { background: var(--table-resize-active, var(--primary)); } }
+.dk-table__resize:active::after, .dk-table__resize:focus-visible::after { background: var(--table-resize-active, var(--primary)); }
+.dk-table__resize:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (forced-colors: active) { .dk-table__resize::after { background: CanvasText; } }
+/* pinStart and pinEnd: the first or last cell of each row stays put while the rest scroll under it, on the row's own
+   shading. Header cells keep the header's. */
+.dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child { position: sticky; inset-inline-start: var(--spacing-0); z-index: var(--z-20); background: var(--dk-table-row, var(--table-bg, var(--surface))); }
+.dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child { position: sticky; inset-inline-end: var(--spacing-0); z-index: var(--z-20); background: var(--dk-table-row, var(--table-bg, var(--surface))); }
+.dk-table--pin-start .dk-table__head tr > .dk-table__cell:first-child, .dk-table--pin-end .dk-table__head tr > .dk-table__cell:last-child { background: var(--table-header-bg, var(--surface-muted)); }
+.dk-table--sticky.dk-table--pin-start .dk-table__head .dk-table__cell:first-child, .dk-table--sticky.dk-table--pin-end .dk-table__head .dk-table__cell:last-child { z-index: var(--z-30); }
+/* While there's more to scroll to under a pinned column, it lifts with a shadow on its inner edge (as the sticky header
+   does): a state of the scroll, where scroll-state queries are supported; elsewhere it stays flat. */
+@supports (container-type: scroll-state) {
+  .dk-table--pin-start, .dk-table--pin-end { container-type: scroll-state; }
+  /* On a hairline at the cell's inner edge, clipped to the side away from the cell: the cell's own box-shadow is the
+     selected row's bar. */
+  .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child::after, .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child::after { content: ""; position: absolute; inset-block: var(--spacing-0); width: var(--spacing-px); pointer-events: none; }
+  .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child::after { inset-inline-end: var(--spacing-0); clip-path: inset(var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4)) var(--spacing-0) var(--spacing-px)); }
+  .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child::after { inset-inline-start: var(--spacing-0); clip-path: inset(var(--spacing-0) var(--spacing-px) var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4))); }
+  .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child:dir(rtl)::after { clip-path: inset(var(--spacing-0) var(--spacing-px) var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4))); }
+  .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child:dir(rtl)::after { clip-path: inset(var(--spacing-0) calc(var(--spacing-0) - var(--spacing-4)) var(--spacing-0) var(--spacing-px)); }
+  @container scroll-state(scrollable: inline-start) { .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child::after { box-shadow: var(--table-pin-shadow-scrolled, var(--elevation-part)); } }
+  @container scroll-state(scrollable: inline-end) { .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child::after { box-shadow: var(--table-pin-shadow-scrolled, var(--elevation-part)); } }
+}
+/* Expandable rows: a narrow cell with a chevron that turns down while the row's details, the full-width row under it,
+   are shown. */
+.dk-table__expand { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
+.dk-table__expand-button .dk-icon { --dk-table-turn: 90deg; transition: rotate var(--motion-change-sm) var(--ease-move); }
+.dk-table__expand-button:dir(rtl) .dk-icon { --dk-table-turn: -90deg; }
+.dk-table__expand-button--open .dk-icon { rotate: var(--dk-table-turn); }
+.dk-table__detail-cell { padding-block: var(--table-padding-x, var(--spacing-3)); }
+/* TableColumnsMenu: one checkbox per column, in a column. */
+.dk-table-columns { display: flex; flex-direction: column; gap: var(--spacing-2); }
+.dk-table-width { display: flex; flex-wrap: wrap; gap: var(--spacing-2); width: auto; }
+.dk-table-width:not(:popover-open) { display: none; }
 /* Print: the whole table, not its scrolled window; the header row repeats on every page, and a row isn't split
    across two pages. */
 @media print {
@@ -91,6 +139,6 @@
 .dk-table__spacer { border: var(--spacing-0); }
 /* TableActionBar: a tinted bar above the table while rows are selected: the count, the actions, then Clear at the end. */
 .dk-table-action-bar:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-3); margin-bottom: var(--spacing-2); padding: var(--table-action-bar-padding, var(--spacing-2)) var(--spacing-3); border-radius: var(--table-radius, var(--radius-surface)); background: var(--table-action-bar-bg, var(--primary-subtle)); color: var(--table-action-bar-text, var(--text)); font-size: var(--text-sm); }
-.dk-table-action-bar__count { font-weight: var(--table-action-bar-weight, var(--font-semibold)); }
+.dk-table-action-bar__count { font-weight: var(--table-action-bar-weight, var(--font-semibold)); font-variant-numeric: tabular-nums; }
 .dk-table-action-bar__actions { display: flex; flex-wrap: wrap; gap: var(--spacing-2); margin-inline-end: auto; }
 }

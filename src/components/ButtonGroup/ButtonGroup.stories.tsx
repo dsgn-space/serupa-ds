@@ -12,7 +12,7 @@ const meta = {
     'aria-label': 'Clipboard',
     children: [<Button key="c" variant="outline" leftIcon="content_copy">Copy</Button>, <Button key="x" variant="outline" leftIcon="content_cut">Cut</Button>, <Button key="p" variant="outline" leftIcon="content_paste">Paste</Button>],
   },
-  argTypes: { orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] }, children: { control: false } },
+  argTypes: { orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] }, children: { control: false } },
 } satisfies Meta<typeof ButtonGroup>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -29,12 +29,12 @@ export const Vertical: Story = {
 export const SmallIcons: Story = {
   render: () => (
     <div className="flex gap-4 items-start">
-      <ButtonGroup aria-label="Text alignment">
-        {['format_align_left', 'format_align_center', 'format_align_right'].map((i) => <IconButton key={i} variant="outline" size="sm" icon={i} label={i.replace('format_align_', 'Align ')} />)}
+      <ButtonGroup size="sm" aria-label="Text alignment">
+        {['format_align_left', 'format_align_center', 'format_align_right'].map((i) => <IconButton key={i} variant="outline" icon={i} label={i.replace('format_align_', 'Align ')} />)}
       </ButtonGroup>
-      <ButtonGroup orientation="vertical" aria-label="Zoom">
-        <IconButton variant="outline" size="sm" icon="add" label="Zoom in" />
-        <IconButton variant="outline" size="sm" icon="remove" label="Zoom out" />
+      <ButtonGroup size="sm" orientation="vertical" aria-label="Zoom">
+        <IconButton variant="outline" icon="add" label="Zoom in" />
+        <IconButton variant="outline" icon="remove" label="Zoom out" />
       </ButtonGroup>
     </div>
   ),
@@ -56,7 +56,7 @@ export const LongLabels: Story = {
       <ButtonGroup {...args}>
         <Button variant="outline">Copy every selected row</Button>
         <Button variant="outline">Cut</Button>
-        <Button variant="outline">{"Donaudampfschifffahrtsgesellschaft"}</Button>
+        <Button variant="outline">{'Donaudampfschifffahrtsgesellschaft'}</Button>
       </ButtonGroup>
     </div>
   ),

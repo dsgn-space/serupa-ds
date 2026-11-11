@@ -1,18 +1,18 @@
 # Default
-- strong: You're offline
+- strong: You’re offline
 
 # DropAndReturn
 - button "Drop the connection"
 
 # LongText
-- strong: You're offline
+- strong: You’re offline
 - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung forms are kept on this device and sent when the connection comes back.
 
 # Playground
-- strong: You're offline
+- strong: You’re offline
 - text: Changes are kept and sent when you're back.
 
 # WithMoreWords
-- strong: You're offline
+- strong: You’re offline
 - text: Changes are kept on this device and sent when you're back.
 

@@ -18,13 +18,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '.
 const TEXT = 'The quick brown fox jumps over the lazy dog. Settings, accounts and billing are saved when you press Save. '
   + 'Search for a name, then choose a team member from the list to add them to this project. Your password must have '
   + 'at least 12 characters. Showing 1 to 20 of 248 results. Are you sure you want to delete this file? You can undo it.';
-// The names local() can match: the full names of Arial and of the fonts made with its metrics.
+// The names local() can match: the full names of Arial and of the fonts made with its metrics, each followed by its
+// PostScript name. WebKit matches a bold or italic face only by its PostScript name (Arial-BoldMT), and Chromium and
+// Firefox by either. Last come the bare family names: WebKit on Linux matches local() through fontconfig by family
+// only, so the bold and italic faces would find nothing there and draw in another font, 7 to 10% wider.
 /** @type {Array<[string, number, string[]]>} */
 const FACES = [
-  ['normal', 400, ['Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
-  ['normal', 700, ['Arial Bold', 'Helvetica Bold', 'Liberation Sans Bold', 'Arimo Bold']],
-  ['italic', 400, ['Arial Italic', 'Helvetica Oblique', 'Liberation Sans Italic', 'Arimo Italic']],
-  ['italic', 700, ['Arial Bold Italic', 'Helvetica Bold Oblique', 'Liberation Sans Bold Italic', 'Arimo Bold Italic']],
+  ['normal', 400, ['Arial', 'ArialMT', 'Helvetica', 'Liberation Sans', 'LiberationSans', 'Arimo']],
+  ['normal', 700, ['Arial Bold', 'Arial-BoldMT', 'Helvetica Bold', 'Helvetica-Bold', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
+  ['italic', 400, ['Arial Italic', 'Arial-ItalicMT', 'Helvetica Oblique', 'Helvetica-Oblique', 'Liberation Sans Italic', 'LiberationSans-Italic', 'Arimo Italic', 'Arimo-Italic', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
+  ['italic', 700, ['Arial Bold Italic', 'Arial-BoldItalicMT', 'Helvetica Bold Oblique', 'Helvetica-BoldOblique', 'Liberation Sans Bold Italic', 'LiberationSans-BoldItalic', 'Arimo Bold Italic', 'Arimo-BoldItalic', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
 ];
 // A percentage with 3 decimals, rounded up: browsers round a line's ascent and descent to whole pixels, so a metric
 // a hair under Inter's would make some lines a pixel shorter.

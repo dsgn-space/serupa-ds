@@ -7,6 +7,8 @@ Rules:
 - Optional sections go where shown and are left out when they have nothing to say.
 - Write for someone choosing and using the component, not someone maintaining it. Short sentences, plain words, by the rules in
   CONTRIBUTING.md's "Writing the docs": lead with the point, describe the component as it is now (history goes in the changeset).
+- Follow the design principles (docs/foundations/DesignPrinciples.mdx): a rule in the guide, and each Do and don't pair, should
+  trace back to one of them. When two pull apart, accessibility wins.
 - Name the alternative whenever you say "don't use this": a guide that says "not for X" without saying what to use instead leaves the reader stuck.
 - Link other guides as ../<Name>/README.md; Storybook turns those into links to the component's page.
 - The page title comes from Storybook, so the "# <Name>" line is dropped there but kept for GitHub.
@@ -50,6 +52,15 @@ Drawn from the `<Story>` story.
 <!-- Required. How to use it well: content and writing guidance, layout, combining it with other components, common mistakes. Replaces the old "Guidelines", "Usage guidelines", "Writing it" and "Standards" sections. -->
 
 - <Guidance.>
+
+### Do and don't
+
+<!-- Recommended for the main usage rules. Each Do is followed by its Don't, and each names the story that shows it
+(export it from the component's stories file). The Storybook page draws each pair side by side, marked "✓ Do" and
+"✗ Don't" in words; tools/test/guides.mjs checks that they pair up and that the stories exist. -->
+
+- **Do:** <The rule, shown done right.> (`Do<Something>`)
+- **Don't:** <The mistake it prevents, and why it hurts.> (`Dont<Something>`)
 
 ### <Variant, size or feature name>
 

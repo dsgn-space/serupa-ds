@@ -6,7 +6,7 @@ const meta = {
   title: 'Components/Navigation/Pagination',
   component: Pagination,
   args: { count: 10, defaultPage: 1 },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
 } satisfies Meta<typeof Pagination>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -23,6 +23,8 @@ export const Controlled: Story = {
 export const Links: Story = { args: { count: 20, defaultPage: 10, getHref: (n: number) => '#page-' + n } };
 
 export const Small: Story = { args: { count: 8, size: 'sm', siblings: 0 } };
+/** 44px squares with 16px text, beside large fields and buttons or on a touch screen. */
+export const Large: Story = { args: { count: 8, size: 'lg', siblings: 1, total: 160, pageSize: 20, pageSizeOptions: [20, 50] } };
 
 export const Overflow: Story = {
   args: { count: 120, defaultPage: 60 },

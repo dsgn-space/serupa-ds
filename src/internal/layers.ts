@@ -1,11 +1,11 @@
-import { pageShared } from "./pageShared";
+import { pageShared } from './pageShared';
 
 // The open modal dialogs (Dialog and Drawer, shown with showModal()), innermost last. While one is open the
 // browser makes everything outside it inert: screen readers skip it and it can't be clicked. So what the whole
 // page shares (the live regions, the Toaster) moves into the innermost open modal, and back when it closes.
 // Kept once per page (pageShared), so a second copy of the package on the page sees the same modals.
 // module state: browser only: showModal() fills it, and a server never opens a dialog.
-const page = /* @__PURE__ */ pageShared("layers@1", () => ({ modals: [] as HTMLElement[], listeners: new Set<() => void>() }));
+const page = /* @__PURE__ */ pageShared('layers@1', () => ({ modals: [] as HTMLElement[], listeners: new Set<() => void>() }));
 
 /** The innermost open modal, or null. */
 export const topModal = (): HTMLElement | null => page.modals[page.modals.length - 1] || null;
@@ -21,10 +21,10 @@ export function onModalChange(fn: () => void): () => void {
  *  them) and would make the page behind 15px wider, shifting it sideways. So when the first modal opens, a page that
  *  shows a scrollbar keeps its space (scrollbar-gutter: stable, under data-dk-gutter); one that doesn't gets none. */
 export function modalOpening(): void {
-  if (page.modals.length || typeof document === "undefined") return;
+  if (page.modals.length || typeof document === 'undefined') return;
   const root = document.documentElement;
-  if (window.innerWidth - root.clientWidth > 0) root.setAttribute("data-dk-gutter", "");
-  else root.removeAttribute("data-dk-gutter");
+  if (window.innerWidth - root.clientWidth > 0) root.setAttribute('data-dk-gutter', '');
+  else root.removeAttribute('data-dk-gutter');
 }
 
 /** Dialog and Drawer call this right after showModal(). */

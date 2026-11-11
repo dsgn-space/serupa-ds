@@ -26,11 +26,11 @@ t('serupa-ds/labels/en and /id are enLabels and idLabels', packs.en.labels === e
 const reasons = ['valueMissing', 'typeMismatch', 'badInput', 'tooShort', 'tooLong', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'patternMismatch'];
 const SAMPLES = {
   avatarStatus: ['online', 'busy', 'away', 'offline'].map((s) => [s]),
-  avatarMore: [[1], [5]], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]], sparklineSummary: [['Revenue', '12', '18', '9', '21']],
+  avatarMore: [[1, '1'], [5, '5']], slideOf: [[2, 5]], slidesOf: [[1, 3, 9]], sparklineSummary: [['Revenue', '12', '18', '9', '21']],
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
-  contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0], [1], [5]], moreResults: [[1], [40]],
+  contrast: [['4.5']], lowContrast: [['3']], resultsCount: [[0, '0'], [1, '1'], [5, '5']], dataGridEdit: [['Qty']], dataGridCopied: [[1], [4]], dataGridPasted: [[1], [6]], moreResults: [[1], [40]],
   clearValue: [['Size'], ['']], createOption: [['Research']], valueAdded: [['Red']], valueRemoved: [['Red']], inputNotAccepted: [['31/02']], formatHint: [['DD/MM/YYYY']],
-  errorSummaryTitle: [[1], [3]],
+  errorSummaryTitle: [[1, '1'], [3, '3']],
   fileWrongType: [['a.exe', ['image']], ['a.exe', ['image', 'video', 'PDF']], ['a.exe', undefined]], fileTooLarge: [['a.png', '5 MB']],
   fileTooMany: [['a.png', 1], ['a.png', 3]], fileOnlyOne: [['a.png']], fileMissing: [[true], [false]], fileFolder: [['photos']], fileAlreadyAdded: [['a.png']],
   filesAdded: [[['a.png']], [['a.png', 'b.png']]], fileRemoved: [['a.png']],
@@ -39,24 +39,33 @@ const SAMPLES = {
   keyName: [['Up arrow'], ['Space'], ['Enter']], showingOf: [[10, 50]], loadedMore: [[1], [10]], meterZone: [['92%', 'high'], ['10%', 'low'], ['50%', 'medium']],
   itemsOf: [[1, 1, 9], [1, 10, 90]], progressComplete: [['Upload'], ['']], ratingStars: [[1], [3.5], [5]], ratingValue: [[3, 5]],
   reorderGrabbed: [['Apples', 2, 5]], reorderMoved: [['Apples', 3, 5]], reorderDropped: [['Apples', 3, 5]], reorderCancelled: [['Apples', 2, 5]],
-  stepOf: [[2, 4]], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1], [3]],
-  commandsCount: [[0], [1], [5]],
-  chartKind: [['line'], ['bar']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
+  stepOf: [[2, 4, '2', '4']], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1, '1'], [3, '3']], tableResizeColumn: [['Name']], tableRowDetails: [['Order 1001']],
+  commandsCount: [[0, '0'], [1, '1'], [5, '5']],
+  chartKind: [['line'], ['bar'], ['area'], ['donut']], chartShare: [['120', '25%']], chartTotal: [['480']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
+  chatNewMessages: [[1], [3]], notificationsUnread: [[1], [2]], eventCount: [[0], [1], [3]], moreEvents: [[1], [2]], eventTime: [['9:30 AM', '10:00 AM']],
+  kanbanMoveTo: [['Fix login']], kanbanCount: [['6', '5']], kanbanGrabbed: [['Fix login', 'To do', 1, 3]], kanbanMoved: [['Fix login', 'Done', 2, 5]], kanbanDropped: [['Fix login', 'Done', 2, 5]], kanbanCancelled: [['Fix login', 'To do', 1, 3]],
+  cascadePath: [[['Jawa Barat', 'Kota Bandung']]], cascadeLevel: [[1], [3]], cascadeHasMore: [[false], [true]],
+  filterIs: [['Status', 'Open or Closed']], filterFrom: [['Due', 'Nov 2, 2026']], filterUntil: [['Due', 'Nov 8, 2026']], filterContains: [['Title', 'bug']], filterAny: [['Status']], filterRemove: [['Status']], filterResults: [[1, '1'], [24, '24']],
   toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
 };
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
 const SILENT_IN_ENGLISH = new Set(['invalidValue']);
 // Words that are often the same in another language (a brand, an abbreviation, a loanword).
-const SAME_OK = new Set(['menu', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint']);
+const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf', 'cascadePath', 'chartShare']);
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
-  de: ['fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName'],
-  es: ['generalShortcuts'],
-  ms: ['edit'],
-  nl: ['sliderMaximum', 'codeName'],
-  sv: ['sliderMaximum', 'colorName'],
-  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName'],
+  de: ['tableDetails', 'fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
+  es: ['generalShortcuts', 'attachmentAudio', 'chartTotal'],
+  ms: ['edit', 'attachmentAudio', 'attachmentVideo'],
+  nl: ['tableDetails', 'sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],
+  sv: ['sliderMaximum', 'colorName', 'attachmentVideo', 'contextualInfo'],
+  fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName', 'attachmentImage', 'attachmentDoc', 'attachmentArchive', 'attachmentCode', 'attachmentAudio', 'chatMessage'],
+  it: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],
+  id: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],   // "File": the loanword Content and voice keeps, as FileUpload says
+  tr: ['attachmentVideo'],
+  vi: ['attachmentVideo'],
+  pt: ['chartTotal'],
 };
 const sameOk = (l, k) => SAME_OK.has(k) || (SAME_IN[l] || []).includes(k);
 

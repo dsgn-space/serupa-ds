@@ -7,7 +7,7 @@ const meta = {
   component: RadioGroup,
   subcomponents: { Radio },
   args: { 'aria-label': 'Plan', defaultValue: 'pro', orientation: 'vertical', size: 'md' },
-  argTypes: { orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
+  argTypes: { variant: { control: 'inline-radio', options: ['default', 'card'] }, orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   render: (args) => <RadioGroup {...args}>
     <Radio value="free">Free</Radio>
     <Radio value="pro" description="Everything in Free, plus unlimited projects">Pro</Radio>
@@ -18,9 +18,21 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
+
+/** Cards: each radio a bordered card, for a few choices that each need a sentence or a price. */
+export const Cards: Story = {
+  args: { 'aria-label': 'Delivery', variant: 'card', orientation: 'horizontal', defaultValue: 'standard' },
+  render: (args) => <RadioGroup {...args}>
+    <Radio value="standard" description="3 to 5 days, free">Standard</Radio>
+    <Radio value="express" description="Next day, Rp 25.000">Express</Radio>
+    <Radio value="pickup" description="Collect from the Bandung store today" disabled>Pick up</Radio>
+  </RadioGroup>,
+};
+export const CardsInvalid: Story = { args: { variant: 'card', invalid: true, defaultValue: undefined } };
 export const Horizontal: Story = { args: { orientation: 'horizontal' } };
 export const Invalid: Story = { args: { invalid: true, defaultValue: undefined } };
 export const Disabled: Story = { args: { disabled: true } };
+export const ReadOnly: Story = { args: { readOnly: true } };
 
 export const Controlled: Story = {
   render: function ControlledDemo() {
@@ -40,8 +52,46 @@ export const LongLabels: Story = {
       <RadioGroup {...args}>
         <Radio value="free">Free, for one person working on a handful of projects</Radio>
         <Radio value="pro" description="Everything in Free, plus unlimited projects, guests and a full year of version history">Pro</Radio>
-        <Radio value="team">{"Donaudampfschifffahrtsgesellschaft"}</Radio>
+        <Radio value="team">{'Donaudampfschifffahrtsgesellschaft'}</Radio>
       </RadioGroup>
     </div>
   ),
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: cards whose options each carry a detail to choose by. */
+export const DoCardsWithDetails: Story = {
+  name: 'Do: cards with details',
+  args: { 'aria-label': 'Delivery', variant: 'card', orientation: 'horizontal', defaultValue: 'standard' },
+  render: (args) => <RadioGroup {...args}>
+    <Radio value="standard" description="3 to 5 days, free">Standard</Radio>
+    <Radio value="express" description="Next day, Rp 25.000">Express</Radio>
+  </RadioGroup>,
+};
+/** Don't: cards for options that need no explanation. */
+export const DontCardsForShortOptions: Story = {
+  name: "Don't: cards for short options",
+  args: { 'aria-label': 'Size', variant: 'card', orientation: 'horizontal', defaultValue: 'm' },
+  render: (args) => <RadioGroup {...args}>
+    {['S', 'M', 'L'].map((v) => <Radio key={v} value={v.toLowerCase()}>{v}</Radio>)}
+  </RadioGroup>,
+};
+/** Do: a few options, all in view. */
+export const DoFewOptions: Story = {
+  name: 'Do: a few options',
+  args: { 'aria-label': 'Contact me by', defaultValue: 'email' },
+  render: (args) => <RadioGroup {...args}>
+    <Radio value="email">Email</Radio>
+    <Radio value="phone">Phone</Radio>
+    <Radio value="post">Post</Radio>
+  </RadioGroup>,
+};
+const PROVINCES = ['Aceh', 'Bali', 'Banten', 'Bengkulu', 'Gorontalo', 'Jakarta', 'Jambi', 'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Kalimantan Barat', 'Lampung'];
+/** Don't: a long column of radios a Select or Combobox would search. */
+export const DontLongList: Story = {
+  name: "Don't: a long list",
+  args: { 'aria-label': 'Province', defaultValue: 'Bali' },
+  render: (args) => <RadioGroup {...args}>
+    {PROVINCES.map((p) => <Radio key={p} value={p}>{p}</Radio>)}
+  </RadioGroup>,
 };

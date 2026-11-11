@@ -7,6 +7,9 @@ import path from 'node:path';
 import { PROJECT, report, done } from './lib.mjs';
 import { CHECKS, TASKS, grade, gradeTask, startOf } from '../skill-eval/grade.mjs';
 import { REVIEWS, gradeReview, sourceOf } from '../skill-eval/review.mjs';
+import os from 'node:os';
+import { CHECKS as APP_CHECKS, table as appTable, didTask, readDir } from '../skill-eval/agentic.mjs';
+import { files as createFiles } from '../../bin/serupa-create.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -73,8 +76,8 @@ const BAD = [
   ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport { Mail } from 'lucide-react';")],
   ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport { motion } from 'framer-motion';")],
   ['no-extras', GOOD.replace("import * as React from 'react';", "import * as React from 'react';\nimport styled from 'styled-components';")],
-  ['no-extras', GOOD.replace('export function', "const PrimaryButton = (props: React.ComponentProps<typeof Button>) => <Button variant=\"primary\" size=\"lg\" {...props} />;\nexport function")],
-  ['no-extras', GOOD.replace('export function', "function AppField({ children, ...rest }: React.ComponentProps<typeof Field>) {\n  return (\n    <Field {...rest}>{children}</Field>\n  );\n}\nexport function")],
+  ['no-extras', GOOD.replace('export function', 'const PrimaryButton = (props: React.ComponentProps<typeof Button>) => <Button variant="primary" size="lg" {...props} />;\nexport function')],
+  ['no-extras', GOOD.replace('export function', 'function AppField({ children, ...rest }: React.ComponentProps<typeof Field>) {\n  return (\n    <Field {...rest}>{children}</Field>\n  );\n}\nexport function')],
 ];
 for (const [check, src] of BAD) {
   const r = grade(src, ['Field', 'Input', 'Button|Link']);
@@ -125,7 +128,7 @@ const requoted = phone.replace(/'/g, '"');
 t('a change that also rewrites the old code fails "surgical" alone', tidy(requoted, 'add-phone').join() .startsWith('surgical') && tidy(requoted, 'add-phone').length === 1, tidy(requoted, 'add-phone').join(', '));
 const legacy = startOf(task('legacy-page'));
 const search = legacy.replace("import { Card, Heading, Stack, Text } from 'serupa-ds';", "import { Card, Heading, SearchInput, Stack, Text } from 'serupa-ds';")
-  .replace("export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {", "export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {\n  const [q, setQ] = React.useState('');")
+  .replace('export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {', "export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {\n  const [q, setQ] = React.useState('');")
   .replace('<Heading level={1}>Items</Heading>', '<Heading level={1}>Items</Heading>\n        <SearchInput aria-label="Search items" value={q} onChange={(e) => setQ(e.target.value)} />')
   .replace('{items.map((item) => (', '{items.filter((item) => item.name.toLowerCase().includes(q.toLowerCase())).map((item) => (');
 t("the start's own hand-built button and hex colors don't count against the change", !tidy(search, 'legacy-page').length, tidy(search, 'legacy-page').join(', '));
@@ -179,5 +182,31 @@ for (const c of REVIEWS) {
   const leak = c.planted.filter((p) => p.case && new RegExp(p.find).test(sourceOf(c)) && !['ok-button', 'submit-word'].includes(p.id)).map((p) => p.id);
   t(`review case ${c.id}: no component a fix names is already in the file`, !leak.length, leak.join(', '));
 }
+
+// Agentic mode's table (agentic.mjs): a failed check is bold, and a run graded again later, with no cost or time,
+// leaves those cells to the runs that have them.
+const pass = Object.fromEntries(APP_CHECKS.map((c) => [c, { ok: true, why: '' }]));
+const row = appTable([{ id: 'sign-in', runs: [
+  { grade: pass, cost: 0.2, ms: 60000 },
+  { grade: { ...pass, axe: { ok: false, why: 'blue-dark: color-contrast (1)' } } },
+] }]);
+t('agentic table: a failed check is bold with its reason listed', row.includes('**1/2**') && row.includes('sign-in, axe: blue-dark: color-contrast (1)'), row);
+t('agentic table: cost and time are the means of the runs that recorded them', row.includes('| 0.20 | 1.0 |'), row);
+t('agentic table: a run with no cost doesn\'t make NaN', !row.includes('NaN'), row);
+// The task check (GR191): the starter app passes the other checks by itself, so a run must have changed it and used
+// what the task asks for, and a run whose agent failed fails every check.
+{
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-didtask-'));
+  const app = (body) => { fs.mkdirSync(path.join(tmp, 'r.1', 'src'), { recursive: true }); fs.writeFileSync(path.join(tmp, 'r.1', 'src', 'App.tsx'), body); return path.join(tmp, 'r.1'); };
+  const starter = didTask(app(createFiles({ name: 'eval-app', serupa: 'file:serupa-ds.tgz', brand: 'blue' })['src/App.tsx']), { expect: ['Button'] });
+  t('agentic task check: the untouched starter fails', !starter.ok && /starter/.test(starter.why), JSON.stringify(starter));
+  const half = didTask(app("import { Field, Input as I } from 'serupa-ds';\nexport default () => null;\n"), { expect: ['Field', 'Input', 'AlertDialog|Dialog', 'Button'] });
+  t('agentic task check: half the expected components (an alias counts) pass, and the rest are named', half.ok && half.why === "doesn't use AlertDialog|Dialog, Button", JSON.stringify(half));
+  fs.writeFileSync(path.join(tmp, 'r.1', 'grade.json'), JSON.stringify({ grade: Object.fromEntries(APP_CHECKS.map((c) => [c, { ok: true, why: '' }])), error: 'Command failed: claude -p' }));
+  const failed = readDir(tmp)[0].runs[0].grade;
+  t('agentic: a run whose agent failed fails every check, with the error', APP_CHECKS.every((c) => !failed[c].ok && /agent run failed/.test(failed[c].why)), JSON.stringify(failed));
+  fs.rmSync(tmp, { recursive: true, force: true });
+}
+t('agentic mode has a dated run in tools/skill-eval/results/', fs.readdirSync(results).some((n) => /^\d{4}-\d{2}-\d{2}-agentic\.md$/.test(n)), 'run node tools/skill-eval/agentic.mjs and commit its results');
 
 done(report('Skill eval grader', R));

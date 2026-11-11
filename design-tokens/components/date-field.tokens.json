@@ -1,0 +1,73 @@
+{
+  "dateField": {
+    "$description": "DateField's component tokens. Each one is an optional override: set the CSS variable (--date-field-<name>) on the page, a container or one DateField, and every DateField inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "label": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The labels over the boxes (4.5:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-label"
+          }
+        }
+      }
+    },
+    "typography": {
+      "label-size": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-sm}",
+        "$description": "The labels' text (14px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-label-size"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space between the boxes (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-gap"
+          }
+        }
+      },
+      "label-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between a label and its box (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-label-gap"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "short-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "The day and month boxes' width, for two digits (64px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-short-width"
+          }
+        }
+      },
+      "year-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "The year box's width, for four digits (96px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-field-year-width"
+          }
+        }
+      }
+    }
+  }
+}

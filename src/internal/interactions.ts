@@ -18,15 +18,15 @@ export function both<E extends React.SyntheticEvent>(a: Handler<E> | undefined, 
 }
 
 function inactive(el: HTMLElement): boolean {
-  return (el as HTMLButtonElement).disabled || el.getAttribute("aria-disabled") === "true" || el.classList.contains("dk-btn--link");
+  return (el as HTMLButtonElement).disabled || el.getAttribute('aria-disabled') === 'true' || el.classList.contains('dk-btn--link');
 }
 
 // Enter presses like Space does (Space already sets :active): data-pressed while the key is down.
 export function pressKey(e: React.KeyboardEvent<HTMLElement>): void {
   const el = e.currentTarget;
-  if ((e.key === "Enter" || e.key === " ") && !e.repeat && !inactive(el)) el.setAttribute("data-pressed", "");
+  if ((e.key === 'Enter' || e.key === ' ') && !e.repeat && !inactive(el)) el.setAttribute('data-pressed', '');
 }
 
 export function releaseKey(e: React.SyntheticEvent<HTMLElement>): void {
-  e.currentTarget.removeAttribute("data-pressed");
+  e.currentTarget.removeAttribute('data-pressed');
 }

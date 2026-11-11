@@ -280,18 +280,18 @@ describe('CheckboxGroup', () => {
     expect([box('mail').required, box('sms').required, form.checkValidity()]).toEqual([false, false, true]);
   });
 
-  test('required: the browser says "Select at least one option." (the group\'s message, in the provider\'s words), not its one-box message, until a box is checked; a box\'s own message is left alone (EW1)', async () => {
+  test('required: the browser says "Choose at least one option." (the group\'s message, in the provider\'s words), not its one-box message, until a box is checked; a box\'s own message is left alone (EW1)', async () => {
     const bx = (v: string) => document.querySelector<HTMLInputElement>(`input[value="${v}"]`)!;
     await render(<><form id="rqm"><CheckboxGroup aria-label="Contact" name="via" required>
       <Checkbox value="mail">Email</Checkbox><Checkbox value="sms">SMS</Checkbox>
     </CheckboxGroup></form><SerupaProvider locale="id-ID" labels={idLabels}><CheckboxGroup aria-label="Kontak" required><Checkbox value="wa">WhatsApp</Checkbox></CheckboxGroup></SerupaProvider>
     <CheckboxGroup aria-label="Own"><Checkbox value="own">Own</Checkbox></CheckboxGroup></>);
     bx('own').setCustomValidity('Mine');
-    expect([bx('mail').validationMessage, bx('sms').validationMessage, bx('wa').validationMessage]).toEqual(['Select at least one option.', 'Select at least one option.', 'Pilih setidaknya satu opsi.']);
+    expect([bx('mail').validationMessage, bx('sms').validationMessage, bx('wa').validationMessage]).toEqual(['Choose at least one option.', 'Choose at least one option.', 'Centang setidaknya satu pilihan.']);
     await userEvent.click(bx('mail'));
     expect([bx('mail').validationMessage, bx('sms').validationMessage, (document.getElementById('rqm') as HTMLFormElement).checkValidity(), bx('own').validationMessage]).toEqual(['', '', true, 'Mine']);
     await userEvent.click(bx('mail'));   // none again
-    expect(bx('sms').validationMessage).toBe('Select at least one option.');
+    expect(bx('sms').validationMessage).toBe('Choose at least one option.');
   });
 
   test('a form gets every checked value under the name, and a reset brings back defaultValue', async () => {
@@ -342,6 +342,16 @@ describe('CheckboxGroup', () => {
       await press(el('pd').closest('label')!, () => expect(css(box('pd')).scale).toBe('none'));
     });
   });
+  test('the fill eases only under the pointer or focus; a box changed from elsewhere changes at once, so select all on 1,000 rows starts no transitions (GR168)', async () => {
+    await withMotion(async () => {
+      await render(<><Checkbox id="far">Far</Checkbox><Checkbox id="near">Near</Checkbox></>);
+      const input = (id: string) => document.getElementById(id) as HTMLElement;
+      expect(css(input('far')).transitionDuration.split(', ').every((d) => d === '0s')).toBe(true);
+      await userEvent.hover(input('near').closest('label')!);
+      expect(css(input('near')).transitionProperty).toBe('background-color, border-color');
+      expect(css(input('far')).transitionDuration.split(', ').every((d) => d === '0s')).toBe(true);
+    });
+  });
   test('server markup: an indeterminate box, and a select-all box with some checked, show the dash on the fill before the script runs; once it runs, the native state takes over (GI3)', async () => {
     const tree = <><Checkbox id="ssr-m" indeterminate>Some</Checkbox>
       <CheckboxGroup aria-label="Toppings" defaultValue={['ham']}><Checkbox id="ssr-all" selectAll>All</Checkbox><Checkbox value="ham">Ham</Checkbox><Checkbox value="cheese">Cheese</Checkbox></CheckboxGroup></>;
@@ -355,6 +365,35 @@ describe('CheckboxGroup', () => {
     await render(tree);
     expect([input('ssr-m').indeterminate, input('ssr-m').hasAttribute('data-indeterminate'), input('ssr-all').indeterminate]).toEqual([true, false, true]);
   });
+  test('variant card: a bordered card pressed as a whole, a 2px primary border once checked, the focus ring round the card; Space still toggles', async () => {
+    const onValueChange = vi.fn();
+    await render(<CheckboxGroup aria-label="Add-ons" variant="card" defaultValue={['a']} onValueChange={onValueChange}>
+      <Checkbox value="a" description="Rp 15.000">Gift wrap</Checkbox>
+      <Checkbox value="b" description="A printed note">Greeting card</Checkbox>
+      <Checkbox value="c" variant="default">Plain</Checkbox>
+    </CheckboxGroup>);
+    const [a, b, c] = page.getByRole('checkbox').elements() as HTMLInputElement[];
+    const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
+    expect(card(a).className).toMatch(/dk-checkbox--card/);
+    expect(card(c).className).not.toMatch(/dk-checkbox--card/);
+    expect(page.getByRole('group').element().className).toMatch(/dk-checkbox-group--card/);
+    const shell = css(card(b));
+    expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
+    expect(css(card(a)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a)).boxShadow).toContain('0px 0px 0px 1px');
+    expect(css(card(b)).borderTopColor).toBe(color('var(--border)'));
+    await userEvent.click(page.getByText('A printed note', { exact: true }));
+    expect(b.checked).toBe(true);
+    expect(onValueChange).toHaveBeenLastCalledWith(['a', 'b'], expect.anything());
+    await userEvent.keyboard(' ');
+    expect(b.checked).toBe(false);
+    expect(document.activeElement).toBe(b);
+    expect(css(card(b)).outlineStyle).toBe('solid');
+    expect(css(b).outlineStyle).toBe('none');
+    await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
+    expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
+  });
+
   test('L8E91 ref.current.focus() on a CheckboxGroup (a form library focusing the first invalid field) focuses its first box that isn\'t disabled', async () => {
     const g = React.createRef<HTMLDivElement>();
     await render(<CheckboxGroup ref={g} aria-label="Toppings"><Checkbox value="ham" disabled>Ham</Checkbox><Checkbox value="egg">Egg</Checkbox></CheckboxGroup>);

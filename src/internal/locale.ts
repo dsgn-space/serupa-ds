@@ -9,7 +9,7 @@ const checked = new Map<string, string | undefined>();
 export function canonicalLocale(locale: string): string | undefined {
   if (checked.has(locale)) return checked.get(locale);
   let ok: string | undefined;
-  try { ok = Intl.getCanonicalLocales(locale.trim().replace(/_/g, "-"))[0]; } catch { ok = undefined; }
+  try { ok = Intl.getCanonicalLocales(locale.trim().replace(/_/g, '-'))[0]; } catch { ok = undefined; }
   if (checked.size > 100) checked.clear();
   checked.set(locale, ok);
   return ok;

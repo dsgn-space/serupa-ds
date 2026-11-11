@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.1.0
+npm install gitlab:diki-stwn-group/serupa-ds#v14.2.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -49,14 +49,14 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa. `Icon` has Material Symbols, and the motion tokens and the components' own transitions cover animation.
 5. **Shared props.** `size` is `'sm' | 'md' | 'lg'`, at heights of 24, 32 and 44px. Form controls take `invalid` and `disabled`, and get their label, hint and error from `Field`.
 6. **Pick feedback by how long it stays.** To confirm that something worked ("Saved", "Invite sent"), call `toast("Saved")`, and render one `<Toaster />` near the app's root. It goes away on its own and screen readers hear it. Use an `Alert` for a message that must stay on the page until it's dealt with, and `SaveStatus` for autosave.
-7. **Words.** Every button starts with a verb that says what it does ("Save changes", "Send message"), never "OK", "Submit" or "Click here", and a dialog's title uses the same verb ("Delete project?" has a "Delete" button). Sentence case everywhere. No exclamation marks, emoji or "Oops". An error says what to do: "Enter your email", not "This field is required" or "Invalid input"; "We couldn't load your projects. Try again.", not "Something went wrong". An empty state says what goes here and offers to add the first one. The rest is in Content and voice: https://github.com/diki-stwn/serupa-ds/blob/main/docs/foundations.md#content-and-voice
+7. **Words.** Every button starts with a verb that says what it does ("Save changes", "Send message"), never "OK", "Submit" or "Click here", and a dialog's title uses the same verb ("Delete project?" has a "Delete" button). Sentence case everywhere. No exclamation marks, emoji or "Oops". An error says what to do: "Enter your email", not "This field is required" or "Invalid input"; "We couldn't load your projects. Try again.", not "Something went wrong". An empty state says what goes here and offers to add the first one. The rest is in Content and voice: https://gitlab.com/diki-stwn-group/serupa-ds/-/blob/main/docs/foundations.md#content-and-voice
 8. **In an existing app, change only what the task needs.** Leave the other code, its formatting and its names as they are, even a hand-built button or a raw color next to your change. Use Serupa for what you add, and end the answer by naming the parts that could move to Serupa rather than moving them.
 
 ## Accessibility: what the app must do
 
 The components meet their part of WCAG 2.2 AA. The page meets the rest only if you also do these, in every answer, however short:
 
-- **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<Container as="main">`) and add a "Skip to content" link (`<VisuallyHidden focusable>`).
+- **Page:** set `<html lang>` and a unique `<title>`. Use one `main` (`<Container as="main">`) and start it with `<SkipLink />`, the "Skip to content" link, which moves focus to the main content (`id="main"`).
 - **Headings:** one `h1` per page and no skipped levels. Heading's `level` sets the element, and its look can differ.
 - **Names:**
   - Wrap every form control in `<Field label="…">`. A placeholder is not a label.
@@ -66,7 +66,7 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 - **Errors:** say what's wrong and how to fix it, next to the field. On submit, move focus to the first error or to an ErrorSummary.
 - **Color:** in your own content, color never carries meaning alone. Add text, an icon or a pattern.
 - **Focus:** never use `outline: none` alone (use `outline-hidden` if you must). Keep targets at least 24px, and keep sticky headers off the focused element (`scroll-padding-top`).
-- **Route changes:** call `announcePage()` after a client-side route change. Say status changes with `announce("Saved")`, not with a visual change alone.
+- **Route changes:** call `announcePage()` after a client-side route change. Say status changes with `announce("Saved")`, not with a visual change alone. When markup must change with the screen width, use `useBreakpoint('md')` (the same widths as the `md:` utilities), not your own `matchMedia`; `useReducedMotion()` gates an animation you run from JavaScript; `useCopyToClipboard()` copies from a control that isn't a CopyButton, such as a menu item.
 - **Motion:** use the motion tokens, and don't animate anything that `prefers-reduced-motion` would want still.
 
 ## Before you finish
@@ -77,7 +77,7 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 
 ## Components
 
-Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. It's on the component's Storybook page and in the repository at `src/components/<Name>/README.md` (https://github.com/diki-stwn/serupa-ds).
+Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. It's on the component's Storybook page and in the repository at `src/components/<Name>/README.md` (https://gitlab.com/diki-stwn-group/serupa-ds).
 
 <!-- components:start (written by tools/build/registry.mjs) -->
 
@@ -96,10 +96,12 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 ### Content
 
 - **Accordion**: A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections.
+- **Attachment** (beta): A file shown as one compact row: an icon for its kind, the name, the kind and size, and, while it uploads, a bar.
 - **Avatar**: A small picture of a person (a circle) or of a team, project or organisation (a square).
 - **AvatarGroup**: Avatars in an overlapping row, such as the people on a project or the assignees of a task.
 - **Card**: A surface that groups related content and its actions: a summary, a settings panel, an item in a grid.
 - **Carousel**: One slide at a time, with previous and next buttons, a dot per slide and swipe.
+- **Chat** (beta): A conversation: messages in a log that stays at the newest one while the reader is there, day dividers, and a composer where Enter sends.
 - **CodeBlock** (beta): Code for people to read and copy: an install command, a config file, an example.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette.
@@ -159,7 +161,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Switch**: An on/off setting that takes effect at once.
 - **Textarea**: A multi-line text field, Input's sibling: a native `<textarea>` in a box.
 - **TimePicker**: A time-of-day field: people type a time, or pick one from a list.
-- **TimeZonePicker** (beta): A searchable list of time zones by city, each with its offset now and its name in the reader's language; the value is the IANA name.
+- **TimeZonePicker** (beta): A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
 - **TypeToConfirm**: A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted.
 
 ### Layout

@@ -1,15 +1,15 @@
-"use client";
-import * as React from "react";
-import { cn, isInvalid, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import type { IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { component } from "../../internal/component";
-import { useFormReset } from "../../internal/useFormReset";
-import { lastInputKeyboard, listenForInput } from "../../internal/lastInput";
-import { useFieldLabel } from "../../internal/fieldLabel";
-import { useFieldControl } from "../../internal/field";
-import { delegateFocus, useAutoFocus } from "../../internal/focus";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
+'use client';
+import * as React from 'react';
+import { cn, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import type { IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { component } from '../../internal/component';
+import { useFormReset } from '../../internal/useFormReset';
+import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
+import { useFieldLabel } from '../../internal/fieldLabel';
+import { useFieldControl } from '../../internal/field';
+import { delegateFocus, useAutoFocus } from '../../internal/focus';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 
 export interface SegmentedControlOption<V extends string = string> {
   value: V;
@@ -18,7 +18,7 @@ export interface SegmentedControlOption<V extends string = string> {
   /** An icon name or element before the label. */
   icon?: IconSource | undefined;
   /** The segment's name when it shows only an icon. */
-  "aria-label"?: string | undefined;
+  'aria-label'?: string | undefined;
   /** Turns this segment off. */
   disabled?: boolean | undefined;
 }
@@ -50,7 +50,7 @@ export interface SegmentedControlProps<V extends string = string> extends Omit<R
   readOnly?: boolean | undefined;
 }
 
-const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, form: 1, invalid: 1, required: 1, readOnly: 1, "aria-invalid": 1, "aria-required": 1, "aria-readonly": 1, autoFocus: 1, className: 1 } as const;
+const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, form: 1, invalid: 1, required: 1, readOnly: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-readonly': 1, autoFocus: 1, className: 1 } as const;
 
 /* SegmentedControl: picks one of a few options shown side by side, such as a view (List, Board) or a period
    (Day, Week, Month). It's a radio group: one Tab stop, arrow keys move and select (Home and End too), and
@@ -58,18 +58,18 @@ const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, 
    segment. For switching panels of content, use Tabs; for independent on/off buttons, ButtonGroup with
    ToggleButton. */
 /** Picks one of a few options shown side by side: a radio group drawn as segments. */
-export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, SegmentedControlProps>("SegmentedControl", function SegmentedControl(props, ref) {
-  const nameRef = useNameCheck("SegmentedControl", NAME_HOW.group);   // warns when it has no accessible name
+export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, SegmentedControlProps>('SegmentedControl', function SegmentedControl(props, ref) {
+  const nameRef = useNameCheck('SegmentedControl', NAME_HOW.group);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: one in a row with a note after it
   // (<div><SegmentedControl /><span>UTC</span></div>) was left unnamed, undescribed and enabled (L8E85).
   props = useFieldControl(props);
   const rest = omit(props, OWN);
   const options = props.options || [];
   const disabled = !!props.disabled;
-  const invalid = isInvalid(props.invalid, props["aria-invalid"]);
-  const truthy = (a: unknown) => a === true || a === "true";
-  const readOnly = !!props.readOnly || truthy(props["aria-readonly"]);
-  const required = !!props.required || truthy(props["aria-required"]);
+  const invalid = isInvalid(props.invalid, props['aria-invalid']);
+  const truthy = (a: unknown) => a === true || a === 'true';
+  const readOnly = !!props.readOnly || truthy(props['aria-readonly']);
+  const required = !!props.required || truthy(props['aria-required']);
   const usable = options.filter((o) => !o.disabled && !disabled);
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<string | undefined>(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value);
@@ -78,7 +78,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value); }, props.form);
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const [box, setBox] = React.useState<{ x: number; w: number } | null>(null);
-  const size = props.size === "sm" || props.size === "lg" ? props.size : "md";
+  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
   // In a Field, its label names the group (Field's <label for> can't reach a radiogroup); its own name wins.
   const fieldLabel = useFieldLabel(props.id);
   // ref.current.focus() and autoFocus land on the segment in the Tab order: the selected one, or else the first
@@ -94,15 +94,15 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   };
   // A label cut with an ellipsis shows in full as its segment's title on hover (the same words as its name, so nothing
   // is read twice), as Button does.
-  const [cut, setCut] = React.useState("");
+  const [cut, setCut] = React.useState('');
   // fullWidth: equal segments while every label fits its equal share; when one doesn't, they share by content as
   // without it, still filling the width, so a short label leaves its spare room to a long one (GR50).
   const [tight, setTight] = React.useState(false);
   const measure = React.useCallback(() => {
     const r = root.current, b = value != null ? buttons.current[value] : null;
-    let c = "", total = 0, n = 0, most = 0;
+    let c = '', total = 0, n = 0, most = 0;
     for (const k in buttons.current) {
-      const btn = buttons.current[k], l = btn?.querySelector<HTMLElement>(".dk-segmented__label");
+      const btn = buttons.current[k], l = btn?.querySelector<HTMLElement>('.dk-segmented__label');
       if (!btn) continue;
       total += btn.offsetWidth; n++;
       if (props.fullWidth) {   // the width its content asks for: padding, then the icon and the whole label, gap apart
@@ -111,12 +111,19 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
         for (const kid of kids) need += kid === l ? l.scrollWidth : kid.offsetWidth;
         most = Math.max(most, need);
       }
-      if (l && l.scrollWidth > l.clientWidth) c += k + "\n";
+      if (l && l.scrollWidth > l.clientWidth) c += k + '\n';
     }
     setCut(c);
     setTight(!!props.fullWidth && n > 0 && most > total / n + 0.5);
     if (!r || !b) { setBox(null); return; }
-    const x = b.offsetLeft, w = b.offsetWidth;
+    // From the boxes, not offsetLeft and offsetWidth: those round to whole pixels, and segments are as wide as their
+    // text, so the indicator sat up to half a pixel off its segment. The boxes include any scale on an ancestor (a
+    // zoomed preview), and left and width are in the control's own pixels, so they're scaled back (k). offsetWidth is
+    // rounded, so a control as wide as its text differs from its box by up to half a pixel with no scale at all: under a
+    // pixel apart is no scale (k is exactly 1), and a real one is read from the unrounded computed width.
+    const rb = r.getBoundingClientRect(), bb = b.getBoundingClientRect();
+    const k = !rb.width || Math.abs(r.offsetWidth - rb.width) < 1 ? 1 : (parseFloat(getComputedStyle(r).width) || r.offsetWidth) / rb.width;
+    const x = (bb.left - rb.left) * k - r.clientLeft, w = bb.width * k;
     setBox((p) => (p && p.x === x && p.w === w ? p : { x, w }));   // the same box when nothing moved, so a slide under way runs on
   }, [value, props.fullWidth]);
   useIsoLayoutEffect(measure, [measure, options.length, size, tight]);
@@ -127,23 +134,23 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const indicator = React.useRef<HTMLSpanElement | null>(null);
   const last = React.useRef<{ x: number; w: number; v: string | undefined } | null>(null);
   const sliding = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const settle = (el: HTMLElement, at: { x: number; w: number }) => { el.removeAttribute("data-slide"); el.style.left = at.x + "px"; el.style.width = at.w + "px"; };
+  const settle = (el: HTMLElement, at: { x: number; w: number }) => { el.removeAttribute('data-slide'); el.style.left = at.x + 'px'; el.style.width = at.w + 'px'; };
   useIsoLayoutEffect(() => {
     const was = last.current, el = indicator.current;
     last.current = box ? { ...box, v: value } : null;
     clearTimeout(sliding.current);
-    if (el && box && el.hasAttribute("data-slide")) settle(el, box);
+    if (el && box && el.hasAttribute('data-slide')) settle(el, box);
     if (!el || !box || !was || was.v === value || !box.w || (was.x === box.x && was.w === box.w) || lastInputKeyboard()) return;
     const l = Math.min(was.x, box.x), r = Math.max(was.x + was.w, box.x + box.w);
-    const cut = (at: { x: number; w: number }) => { el.style.setProperty("--dk-seg-l", at.x - l + "px"); el.style.setProperty("--dk-seg-r", r - at.x - at.w + "px"); };
-    el.setAttribute("data-flip", "");
-    el.setAttribute("data-slide", "");
-    el.style.left = l + "px";
-    el.style.width = r - l + "px";
+    const cut = (at: { x: number; w: number }) => { el.style.setProperty('--dk-seg-l', at.x - l + 'px'); el.style.setProperty('--dk-seg-r', r - at.x - at.w + 'px'); };
+    el.setAttribute('data-flip', '');
+    el.setAttribute('data-slide', '');
+    el.style.left = l + 'px';
+    el.style.width = r - l + 'px';
     cut(was);
     void el.offsetWidth;
-    el.removeAttribute("data-flip");
-    const t = getComputedStyle(el, "::after"), ms = (parseFloat(t.transitionDuration) + parseFloat(t.transitionDelay)) * 1000 || 0;
+    el.removeAttribute('data-flip');
+    const t = getComputedStyle(el, '::after'), ms = (parseFloat(t.transitionDuration) + parseFloat(t.transitionDelay)) * 1000 || 0;
     cut(box);
     if (ms > 0) sliding.current = setTimeout(() => settle(el, box), ms); else settle(el, box);
   }, [box]);
@@ -151,7 +158,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   useIsoLayoutEffect(listenForInput, []);
   React.useEffect(() => {
     const r = root.current;
-    if (!r || typeof ResizeObserver === "undefined") return;
+    if (!r || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => measure());
     ro.observe(r);
     for (const k in buttons.current) { const b = buttons.current[k]; if (b) ro.observe(b); }
@@ -165,19 +172,19 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (!usable.length || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
     // Read-only, the arrows move focus from the focused segment and leave the selection where it is. With nothing
     // checked that can be chosen (no value, or a disabled one), they go from the focused segment too (L8E72).
     const from = readOnly || !usable.some((o) => o.value === value) ? e.currentTarget.dataset.value : value;
     const i = usable.findIndex((o) => o.value === from);
     let n: number;
     switch (e.key) {
-      case "ArrowRight": n = i + (rtl ? -1 : 1); break;
-      case "ArrowDown": n = i + 1; break;
-      case "ArrowLeft": n = i + (rtl ? 1 : -1); break;
-      case "ArrowUp": n = i - 1; break;
-      case "Home": n = 0; break;
-      case "End": n = usable.length - 1; break;
+      case 'ArrowRight': n = i + (rtl ? -1 : 1); break;
+      case 'ArrowDown': n = i + 1; break;
+      case 'ArrowLeft': n = i + (rtl ? 1 : -1); break;
+      case 'ArrowUp': n = i - 1; break;
+      case 'Home': n = 0; break;
+      case 'End': n = usable.length - 1; break;
       default: return;
     }
     e.preventDefault();
@@ -188,30 +195,31 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const onFocus = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onFocus && crossing(e)) rest.onFocus(e); };
   const onBlur = (e: React.FocusEvent<HTMLDivElement>) => { if (rest.onBlur && crossing(e)) rest.onBlur(e); };
   const checkedUsable = usable.some((o) => o.value === value);
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; nameRef(n); delegateFocus(n, tabStop); });
   return (
-    <div {...rest} ref={(n) => { root.current = n; nameRef(n); delegateFocus(n, tabStop); setRef(ref, n); }}
+    <div {...rest} ref={mergedRef}
       role="radiogroup" aria-disabled={disabled || undefined}
       aria-invalid={invalid || undefined} aria-required={required || undefined} aria-readonly={readOnly || undefined}
-      aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : fieldLabel)}
-      className={cn("dk-segmented", "dk-segmented--size-" + size, props.fullWidth && "dk-segmented--full", props.fullWidth && tight && "dk-segmented--fit", disabled && "dk-segmented--disabled", invalid && "dk-segmented--invalid", readOnly && "dk-segmented--readonly", props.className)}
+      aria-labelledby={props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel)}
+      className={cn('dk-segmented', 'dk-segmented--size-' + size, props.fullWidth && 'dk-segmented--full', props.fullWidth && tight && 'dk-segmented--fit', disabled && 'dk-segmented--disabled', invalid && 'dk-segmented--invalid', readOnly && 'dk-segmented--readonly', props.className)}
       data-component="segmented-control" data-size={size} onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       {box ? <span ref={indicator} className="dk-segmented__indicator" aria-hidden style={{ left: box.x, width: box.w }} /> : null}
       {options.map((o) => {
         const on = o.value === value, off = disabled || !!o.disabled;
         const icon = asIcon(o.icon);
-        const hasLabel = o.label != null && o.label !== false && o.label !== "";
+        const hasLabel = o.label != null && o.label !== false && o.label !== '';
         const tab = off ? -1 : on || (!checkedUsable && usable[0] && usable[0].value === o.value) ? 0 : -1;
         return (
           <button key={o.value} ref={(n) => { buttons.current[o.value] = n; }} type="button" role="radio" aria-checked={on}
-            aria-label={o["aria-label"]} title={typeof o.label === "string" && !o["aria-label"] && cut.split("\n").includes(o.value) ? o.label : undefined} disabled={off} tabIndex={tab} data-value={o.value}
-            className={cn("dk-segmented__item", on && "dk-segmented__item--selected", !hasLabel && "dk-segmented__item--icon-only")}
+            aria-label={o['aria-label']} title={typeof o.label === 'string' && !o['aria-label'] && cut.split('\n').includes(o.value) ? o.label : undefined} disabled={off} tabIndex={tab} data-value={o.value}
+            className={cn('dk-segmented__item', on && 'dk-segmented__item--selected', !hasLabel && 'dk-segmented__item--icon-only')}
             onClick={() => choose(o.value)} onKeyDown={onKeyDown}>
             {icon != null && icon !== false ? <span className="dk-segmented__icon" aria-hidden>{icon}</span> : null}
             {hasLabel ? <span className="dk-segmented__label">{o.label}</span> : null}
           </button>
         );
       })}
-      {props.name ? <input type="hidden" name={props.name} form={props.form} value={value ?? ""} disabled={disabled} /> : null}
+      {props.name ? <input type="hidden" name={props.name} form={props.form} value={value ?? ''} disabled={disabled} /> : null}
     </div>
   );
 }) as (<V extends string = string>(props: SegmentedControlProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };

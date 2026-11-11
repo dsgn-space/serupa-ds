@@ -25,6 +25,18 @@ function Controlled({ calls }: { calls: string[] }) {
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('ColorPicker', () => {
+  test('size md, the default: 32px swatches', async () => {
+    await render(<ColorPicker aria-label="C" swatches={SW} size="md" />);
+    expect(Math.round(swatch('Blue').getBoundingClientRect().height)).toBe(32);
+  });
+
+  test('size lg: 44px swatches and custom color, a 44px hex field, 16px text, like the other large controls', async () => {
+    await render(<ColorPicker aria-label="C" swatches={SW} size="lg" defaultValue="#1d4ed8" />);
+    const native = document.querySelector('input[type=color]') as HTMLInputElement;
+    const box = (e: Element) => Math.round(e.getBoundingClientRect().width) + 'x' + Math.round(e.getBoundingClientRect().height);
+    expect([box(swatch('Blue')), box(native), Math.round(hex().parentElement!.getBoundingClientRect().height), css(hex()).fontSize]).toEqual(['44x44', '44x44', 44, '16px']);
+  });
+
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<ColorPicker aria-label="C" swatches={SW} defaultValue="#1d4ed8" />);
     const t = document.querySelector('[role=radio]') as HTMLElement;
@@ -287,6 +299,28 @@ describe('ColorPicker', () => {
     expect(group().getAttribute('aria-labelledby')).toBe(lbl.id);
     (document.querySelector('[data-component=color-picker]') as HTMLElement).focus();
     expect(document.activeElement === swatch('Yellow')).toBe(true);
+  });
+
+  test('readOnly: aria-readonly on the swatches, which stay focusable; a click, the arrows, the hex field and the browser\'s well change nothing, and the well doesn\'t open; the form still sends the color', async () => {
+    const calls: string[] = [];
+    await render(<form id="f" onSubmit={(e) => e.preventDefault()}><ColorPicker aria-label="C" swatches={SW} defaultValue="#fde047" name="color" readOnly onValueChange={(v) => calls.push(v)} onValueCommit={(v) => calls.push('commit ' + v)} /></form>);
+    await userEvent.click(swatch('Blue'));
+    swatch('Yellow').focus();
+    await userEvent.keyboard('{ArrowRight}{End}');
+    const at = document.activeElement === swatch('Yellow');
+    await userEvent.click(hex());
+    await userEvent.keyboard('{Backspace}00ff00{Enter}');
+    const native = document.querySelector('input[type="color"]') as HTMLInputElement;
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    native.dispatchEvent(click);
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }), tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    native.dispatchEvent(enter); native.dispatchEvent(tab);
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(native, '#00ff00');
+    native.dispatchEvent(new Event('input', { bubbles: true }));
+    native.dispatchEvent(new Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+    expect([at, calls, group().getAttribute('aria-readonly'), radios().some((r) => r.disabled), hex().readOnly, hex().value, click.defaultPrevented && enter.defaultPrevented && !tab.defaultPrevented, swatch('Yellow').getAttribute('aria-checked'),
+      new FormData(document.getElementById('f') as HTMLFormElement).get('color')]).toEqual([true, [], 'true', false, true, 'fde047', true, 'true', '#fde047']);
   });
 
   test('disabled, custom={false}, size sm and name: no field, disabled swatches, a hidden input with the value', async () => {

@@ -1,17 +1,17 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, oneOf, useIsoLayoutEffect } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { Drawer, type DrawerProps } from "../Drawer/Drawer";
-import { Button } from "../Button/Button";
-import { IconButton } from "../IconButton/IconButton";
-import { Icon } from "../Icon/Icon";
-import { RelativeTime } from "../RelativeTime/RelativeTime";
-import { watchToasts, type ToastTone } from "../Toast/Toast";
-import * as icons from "../../material/builtin";
-import type { IconData } from "../../material/types";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit, oneOf, useIsoLayoutEffect } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { Drawer, type DrawerProps } from '../Drawer/Drawer';
+import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
+import { Icon } from '../Icon/Icon';
+import { RelativeTime } from '../RelativeTime/RelativeTime';
+import { watchToasts, type ToastTone } from '../Toast/Toast';
+import * as icons from '../../material/builtin';
+import type { IconData } from '../../material/types';
+import { en as words } from './labels';
 
 /** One notification in the list. */
 export interface NotificationItem {
@@ -45,9 +45,9 @@ export interface NotificationCenterProps extends DrawerProps {
   items: NotificationItem[];
   /** Called with an unread one's id when its "Mark as read" is chosen. Without it, there's no button. */
   onMarkRead?: ((id: string) => void) | undefined;
-  /** Called when "Mark all as read" in the footer is chosen. Without it, there's no button. */
+  /** Called when "Mark all as read" in the footer is chosen; the button shows while one is unread. Without it, there's no button. */
   onMarkAllRead?: (() => void) | undefined;
-  /** Called when "Clear all" in the footer is chosen. Without it, there's no button. */
+  /** Called when "Clear all" in the footer is chosen; the button shows while the list has any. Without it, there's no button. */
   onClear?: (() => void) | undefined;
   /** What shows with no notifications. Default: "No notifications yet" (labels.noNotifications). */
   empty?: React.ReactNode | undefined;
@@ -87,22 +87,39 @@ export function useToastHistory(options?: ToastHistoryOptions): ToastHistory {
 }
 
 const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error };
-const TONES: readonly ToastTone[] = ["neutral", "info", "success", "warning", "danger"];
+const TONES: readonly ToastTone[] = ['neutral', 'info', 'success', 'warning', 'danger'];
 
 /* NotificationCenter: a Drawer listing past notifications, newest first: each with its tone icon, title,
    description and time, and unread ones with a dot, a bolder title and "Mark as read". The footer has "Mark all as
    read" and "Clear all". Feed it useToastHistory() for the toasts already shown, or your own list. */
 /** A drawer of past notifications with read states: feed it useToastHistory() or your own list. */
-export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, NotificationCenterProps>("NotificationCenter", function NotificationCenter(props, ref) {
+export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, NotificationCenterProps>('NotificationCenter', function NotificationCenter(props, ref) {
   const labels = useSettings(words).labels;
-  const base = domId("dk-nc", React.useId());
+  const base = domId('dk-nc', React.useId());
   // The Drawer's own props are named below, so its other attributes (id, aria-*) pass through in rest.
   const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, empty: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
     side: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1 } as const);
   const { items, onMarkRead, onMarkAllRead, onClear } = props;
-  const footer = onMarkAllRead || onClear ? <>
-    {onMarkAllRead ? <Button variant="ghost" size="sm" onClick={onMarkAllRead}>{labels.markAllRead}</Button> : null}
-    {onClear ? <Button variant="ghost" size="sm" onClick={onClear}>{labels.clearNotifications}</Button> : null}
+  // Each footer button only while it has something to do: "Mark all as read" while one is unread, "Clear all" while
+  // the list has any (GR176). The one chosen may go away with it, so focus moves on (see below) instead of dropping.
+  const markAll = !!onMarkAllRead && items.some((n) => !n.read), clear = !!onClear && items.length > 0;
+  const clearButton = React.useRef<HTMLButtonElement | null>(null);
+  const fromFooter = React.useRef(false);
+  // "Clear all" can't be undone, so it asks first, in the footer: the question, a destructive "Clear all" that does it,
+  // and "Keep them", which has focus, so a second Enter or a stray tap doesn't empty the list.
+  const [asking, setAsking] = React.useState(false);
+  const keep = React.useRef<HTMLButtonElement | null>(null);
+  const askId = base + '-ask';
+  useIsoLayoutEffect(() => { if (asking) keep.current?.focus(); }, [asking]);
+  // The list emptied some other way while it asked: the question goes with it.
+  React.useEffect(() => { if (!clear) setAsking(false); }, [clear]);
+  const footer = asking && clear ? <>
+    <p className="dk-notification-center__ask" id={askId}>{labels.clearNotificationsConfirm}</p>
+    <Button destructive variant="outline" size="sm" onClick={() => { fromFooter.current = true; setAsking(false); onClear?.(); }}>{labels.clearNotifications}</Button>
+    <Button ref={keep} variant="ghost" size="sm" aria-describedby={askId} onClick={() => { setAsking(false); requestAnimationFrame(() => clearButton.current?.focus()); }}>{labels.keepNotifications}</Button>
+  </> : markAll || clear ? <>
+    {markAll ? <Button variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onMarkAllRead?.(); }}>{labels.markAllRead}</Button> : null}
+    {clear ? <Button ref={clearButton} variant="ghost" size="sm" onClick={() => setAsking(true)}>{labels.clearNotifications}</Button> : null}
   </> : null;
   // The row focus is in, if any. When the app takes that row away (an inbox that hides read ones, so "Mark as read"
   // removes the row it just focused), focus goes to the row now in its place, else the last, else the empty line,
@@ -110,8 +127,14 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
   const list = React.useRef<HTMLUListElement | null>(null);
   const none = React.useRef<HTMLParagraphElement | null>(null);
   const at = React.useRef(-1);
-  const rowOf = (t: EventTarget | null) => { const l = list.current, li = t instanceof Element ? t.closest("li") : null; return l && li && li.parentElement === l ? Array.prototype.indexOf.call(l.children, li) : -1; };
+  const rowOf = (t: EventTarget | null) => { const l = list.current, li = t instanceof Element ? t.closest('li') : null; return l && li && li.parentElement === l ? Array.prototype.indexOf.call(l.children, li) : -1; };
   useIsoLayoutEffect(() => {
+    if (fromFooter.current) {
+      fromFooter.current = false;
+      const active = document.activeElement;
+      if (!active || active === document.body || !active.isConnected) (clearButton.current || list.current?.firstElementChild as HTMLElement | null || none.current)?.focus();
+      return;
+    }
     if (at.current < 0) return;
     const active = document.activeElement, l = list.current;
     if (active && active !== document.body && active.isConnected) { at.current = rowOf(active); return; }
@@ -121,21 +144,21 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
     if (to) to.focus();
   }, [items]);
   return (
-    <Drawer {...rest} ref={ref} className={cn("dk-notification-center", props.className)} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
+    <Drawer {...rest} ref={ref} className={cn('dk-notification-center', props.className)} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
       side={props.side} size={props.size} modal={props.modal} closeButton={props.closeButton} closeLabel={props.closeLabel} closeOnBackdrop={props.closeOnBackdrop} swipeToClose={props.swipeToClose} initialFocus={props.initialFocus} finalFocus={props.finalFocus}
       title={props.title != null ? props.title : labels.notificationCenter} footer={footer}>
       {items.length ? (
         <ul role="list" className="dk-notification-center__list" ref={list}
-          onFocus={(e) => { at.current = rowOf(e.target); }} onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) at.current = -1; }}>
+          onFocus={(e) => { at.current = rowOf(e.target); fromFooter.current = false; }} onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) at.current = -1; }}>
           {items.map((n, i) => {
-            const tone = oneOf(TONES, n.tone, "neutral"), icon = ICONS[tone], titleId = base + "-" + i;
+            const tone = oneOf(TONES, n.tone, 'neutral'), icon = ICONS[tone], titleId = base + '-' + i;
             return (
               // Focusable from script only: "Mark as read" goes away once chosen, and focus stays on its row.
-              <li key={n.id} tabIndex={-1} className={cn("dk-notification-center__item", "dk-notification-center__item--" + tone)} data-tone={tone} data-read={n.read ? "" : undefined}>
+              <li key={n.id} tabIndex={-1} className={cn('dk-notification-center__item', 'dk-notification-center__item--' + tone)} data-tone={tone} data-read={n.read ? '' : undefined}>
                 {icon ? <span className="dk-notification-center__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
                 <div className="dk-notification-center__content">
                   <p className="dk-notification-center__title">
-                    {n.read ? null : <span className="dk-visually-hidden">{labels.unreadNotification + ": "}</span>}
+                    {n.read ? null : <span className="dk-visually-hidden">{labels.unreadNotification + ': '}</span>}
                     <span id={titleId}>{n.title}</span>
                   </p>
                   {n.description != null ? <p className="dk-notification-center__description">{n.description}</p> : null}
@@ -144,7 +167,7 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
                 {n.read ? null : <span className="dk-notification-center__dot" aria-hidden="true" />}
                 {/* Every unread row has one, so it's described by its row's title: "Mark as read, button, Invoice paid" (TF4).
                     The title tooltip is kept, which IconButton leaves out when it's described. */}
-                {!n.read && onMarkRead ? <IconButton icon={icons.Check} label={labels.markRead} title={labels.markRead} aria-describedby={titleId} size="sm" onClick={(e) => { e.currentTarget.closest("li")?.focus(); onMarkRead(n.id); }} /> : null}
+                {!n.read && onMarkRead ? <IconButton icon={icons.Check} label={labels.markRead} title={labels.markRead} aria-describedby={titleId} size="sm" onClick={(e) => { e.currentTarget.closest('li')?.focus(); onMarkRead(n.id); }} /> : null}
               </li>
             );
           })}

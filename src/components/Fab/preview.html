@@ -16,22 +16,22 @@
   function Row(label, kids) { return h('div', { className: 'row' }, h('span', { className: 'lbl' }, label), kids); }
   ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
     Row('Sizes', [
-      h(T.Fab, { key: 1, icon: 'add', label: 'New project', position: 'static', 'data-visual-target': '' }),
-      h(T.Fab, { key: 2, icon: 'add', label: 'New project', size: 'sm', position: 'static' })
+      h(T.Fab, { key: 1, icon: 'add', label: 'New project', placement: 'static', 'data-visual-target': '' }),
+      h(T.Fab, { key: 2, icon: 'add', label: 'New project', size: 'sm', placement: 'static' })
     ]),
     Row('Extended', [
-      h(T.Fab, { key: 1, icon: 'edit', label: 'Compose', extended: true, position: 'static' }),
-      h(T.Fab, { key: 2, icon: 'edit', label: 'Compose', extended: true, size: 'sm', position: 'static' })
+      h(T.Fab, { key: 1, icon: 'edit', label: 'Compose', extended: true, placement: 'static' }),
+      h(T.Fab, { key: 2, icon: 'edit', label: 'Compose', extended: true, size: 'sm', placement: 'static' })
     ]),
     Row('States', [
-      h(T.Fab, { key: 1, icon: 'delete', label: 'Delete', destructive: true, position: 'static' }),
-      h(T.Fab, { key: 2, icon: 'save', label: 'Saving', loading: true, position: 'static' }),
-      h(T.Fab, { key: 3, icon: 'add', label: 'New project', disabled: true, position: 'static' })
+      h(T.Fab, { key: 1, icon: 'delete', label: 'Delete', destructive: true, placement: 'static' }),
+      h(T.Fab, { key: 2, icon: 'save', label: 'Saving', loading: true, placement: 'static' }),
+      h(T.Fab, { key: 3, icon: 'add', label: 'New project', disabled: true, placement: 'static' })
     ]),
     Row('Positions', h('div', { className: 'screen' },
-      h(T.Fab, { icon: 'add', label: 'Top start', size: 'sm', position: 'top-start' }),
-      h(T.Fab, { icon: 'add', label: 'Top end', size: 'sm', position: 'top-end' }),
-      h(T.Fab, { icon: 'chat', label: 'Bottom start', size: 'sm', position: 'bottom-start' }),
+      h(T.Fab, { icon: 'add', label: 'Top start', size: 'sm', placement: 'top-start' }),
+      h(T.Fab, { icon: 'add', label: 'Top end', size: 'sm', placement: 'top-end' }),
+      h(T.Fab, { icon: 'chat', label: 'Bottom start', size: 'sm', placement: 'bottom-start' }),
       h(T.Fab, { icon: 'add', label: 'Bottom end' })))
   ));
 </script>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Chat — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+  #root > div { display: flex; flex-direction: column; height: 420px; max-width: 520px; border: 1px solid var(--border); border-radius: 8px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
+    h(T.Chat, { 'aria-label': 'Conversation with Support', style: { flex: 'auto' } },
+      h(T.ChatDivider, { key: 'd', date: new Date() }),
+      h(T.ChatMessage, { key: 'a', author: 'Rina Kusuma', avatar: h(T.Avatar, { size: 'sm', name: 'Rina Kusuma' }), time: new Date(Date.now() - 300000) }, 'Hi! How can I help you today?'),
+      h(T.ChatMessage, { key: 'b', own: true, time: new Date() }, 'My invoice shows the wrong address.')),
+    h(T.ChatComposer, null)));
+</script>
+</body>
+</html>

@@ -7,7 +7,7 @@
    A server keeps one copy per module, as before: globalThis there outlives every request, and none of this is
    used in a server render. */
 export function pageShared<T extends object>(name: string, make: () => T): T {
-  if (typeof document === "undefined") return make();
-  const key = Symbol.for("serupa-ds/" + name), page: Record<symbol, T | undefined> = globalThis;
+  if (typeof document === 'undefined') return make();
+  const key = Symbol.for('serupa-ds/' + name), page: Record<symbol, T | undefined> = globalThis;
   return page[key] || (page[key] = make());
 }

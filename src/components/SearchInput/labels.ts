@@ -7,10 +7,10 @@ export interface SearchInputLabels {
   clearSearch: string;
 }
 export const en: SearchInputLabels = {
-  searching: "Searching",
-  clearSearch: "Clear search",
+  searching: 'Searching',
+  clearSearch: 'Clear search',
 };
 export const id: SearchInputLabels = {
-  searching: "Mencari",
-  clearSearch: "Hapus pencarian",
+  searching: 'Mencari',
+  clearSearch: 'Hapus pencarian',
 };

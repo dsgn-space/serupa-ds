@@ -1,0 +1,265 @@
+'use client';
+import * as React from 'react';
+import { cn, domId, oneOf, omit, setRef } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { announce } from '../../internal/announce';
+import { isComposing } from '../../internal/ime';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
+import { en as words } from './labels';
+
+/** A row of data: any object; its id is read from the `rowKey` field ("id" by default). */
+export type DataGridRow = Record<string, unknown>;
+
+/** One column. */
+export interface DataGridColumn {
+  /** The row field it shows, and its id in a change. */
+  key: string;
+  /** The column's header text. */
+  header: string;
+  /** Whether its cells can be edited and pasted into. Default: false. */
+  editable?: boolean | undefined;
+  /** Where its text sits: "start" (the default), "center", or "end" for numbers (tabular figures). */
+  align?: 'start' | 'center' | 'end' | undefined;
+  /** Its width, as CSS (120, "8rem", "20%"). Default: as wide as its content needs. */
+  width?: number | string | undefined;
+  /** The cell's text from the row: what's shown, edited, copied and searched. Default: the field as a string. */
+  format?: ((row: DataGridRow) => string) | undefined;
+}
+
+/** One cell changed: by an edit, a paste, or Delete. `value` is the text typed or pasted; parse it yourself. */
+export interface DataGridCellChange {
+  rowId: string;
+  column: string;
+  value: string;
+}
+
+/** What onRowsChange says besides the new rows: each cell that changed. */
+export interface DataGridRowsChangeDetails {
+  changes: DataGridCellChange[];
+}
+
+export interface DataGridProps extends Omit<React.TableHTMLAttributes<HTMLTableElement>, 'rows'> {
+  /** The columns, in order. */
+  columns: DataGridColumn[];
+  /** The rows, in order. */
+  rows: DataGridRow[];
+  /** The field that holds each row's id. Default: "id". */
+  rowKey?: string | undefined;
+  /** Called with the new rows after an edit, a paste or Delete over a range, each changed field set to the text
+   *  typed or pasted, and every cell that changed in `details.changes`. Set rows from it, or parse the changes
+   *  yourself; a change you don't take shows the old text again. Without it, nothing is editable. */
+  onRowsChange?: ((rows: DataGridRow[], details: DataGridRowsChangeDetails) => void) | undefined;
+  /** The cells' size: "sm", "md" (the default) or "lg" (16px text, rows at least 44px, for touch). */
+  size?: 'sm' | 'md' | 'lg' | undefined;
+  /** Its rows are loading (or reloading): sets aria-busy, and while there are no rows yet, shows placeholder rows
+   *  the height of real ones. Default: false. */
+  busy?: boolean | undefined;
+  /** How many placeholder rows show while busy with no rows: about as many as will load. Default: 3. */
+  loadingRows?: number | undefined;
+  /** Said once as the placeholders appear ("Loading timesheet"), after the loader's delay. Default: "Loading" (labels.loading). */
+  loadingLabel?: string | undefined;
+  /** Shown in one row across every column when there are no rows and it isn't busy: an EmptyState when there are
+   *  none, or an Alert with Retry when they didn't load. */
+  message?: React.ReactNode;
+}
+
+type Pos = { r: number; c: number };
+const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, busy: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
+const textOf = (col: DataGridColumn, row: DataGridRow) => (col.format ? col.format(row) : row[col.key] == null ? '' : String(row[col.key]));
+// Clipboard text as rows of cells: tab between cells, a line break between rows (what spreadsheets copy).
+const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map((l) => l.split('\t'));
+
+/* DataGrid: a spreadsheet-like grid of cells, for data people work on in place (a price list, a stock count, a
+   timesheet): native table markup with role="grid" (WAI-ARIA grid pattern). One cell is a Tab stop; the arrow keys,
+   Home and End (with Ctrl, the grid's ends) and Page Up and Page Down move it. Shift with them, or Shift+click,
+   selects a range; Ctrl+A all. Enter or F2 edits an editable cell, typing starts an edit with that character,
+   Enter or Tab saves (moving down or on), Escape cancels; Delete clears the range. Copy gives the range as
+   tab-separated text; paste fills from the cell, so a block copied from a spreadsheet lands as a block. The app
+   keeps the rows: onRowsChange gives the new ones and what changed. Column headers are part of the grid and say their name. */
+/** A grid of cells to move through with the arrow keys, edit in place, select, copy and paste, like a spreadsheet.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProps>('DataGrid', function DataGrid(props, ref) {
+  const rest = omit(props, OWN);
+  const L = useSettings(words).labels;
+  const base = domId('dk-dg', React.useId());
+  const { columns, rows } = props;
+  const key = props.rowKey || 'id';
+  const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
+  const canEdit = !!props.onRowsChange;
+  const lastRow = rows.length;   // row 0 is the header row
+  const lastCol = columns.length - 1;
+  const [at, setAt] = React.useState<Pos>({ r: rows.length ? 1 : 0, c: 0 });
+  const [anchor, setAnchor] = React.useState<Pos | null>(null);
+  const [edit, setEdit] = React.useState<{ text: string } | null>(null);
+  const table = React.useRef<HTMLTableElement | null>(null);
+  const focusCell = React.useRef(false);
+  const cur = { r: Math.min(at.r, lastRow), c: Math.min(at.c, Math.max(lastCol, 0)) };
+
+  // The range: from the anchor to the active cell, in body rows only.
+  const range = anchor ? { r1: Math.max(1, Math.min(anchor.r, cur.r)), r2: Math.max(anchor.r, cur.r), c1: Math.min(anchor.c, cur.c), c2: Math.max(anchor.c, cur.c) }
+    : cur.r > 0 ? { r1: cur.r, r2: cur.r, c1: cur.c, c2: cur.c } : null;
+  const inRange = (r: number, c: number) => !!range && r >= range.r1 && r <= range.r2 && c >= range.c1 && c <= range.c2;
+
+  const cellEl = (p: Pos) => table.current && table.current.querySelector<HTMLElement>(`[data-cell="${p.r}-${p.c}"]`);
+  // Focus follows the active cell once it moved by a key or a click (not on the first render, or when rows change).
+  // every render: a move sets focusCell, and the cell to focus only exists once that render is on the page.
+  React.useEffect(() => {
+    if (!focusCell.current || edit) return;
+    focusCell.current = false;
+    cellEl(cur)?.focus();
+  });
+
+  const move = (p: Pos, extend: boolean) => {
+    const next = { r: Math.max(0, Math.min(lastRow, p.r)), c: Math.max(0, Math.min(lastCol, p.c)) };
+    setAnchor(extend ? anchor || cur : null);
+    setAt(next);
+    focusCell.current = true;
+  };
+  const editable = (p: Pos) => canEdit && p.r > 0 && !!columns[p.c] && !!columns[p.c].editable;
+  const change = (changes: DataGridCellChange[]) => {
+    if (!changes.length || !props.onRowsChange) return;
+    const next = rows.map((row) => {
+      const mine = changes.filter((x) => x.rowId === String(row[key]));
+      if (!mine.length) return row;
+      const copy: DataGridRow = { ...row };
+      for (const x of mine) copy[x.column] = x.value;
+      return copy;
+    });
+    props.onRowsChange(next, { changes });
+  };
+  const save = (text: string, then: Pos | null) => {
+    const row = rows[cur.r - 1], col = columns[cur.c];
+    if (row && col && text !== textOf(col, row)) change([{ rowId: String(row[key]), column: col.key, value: text }]);
+    setEdit(null);
+    focusCell.current = true;
+    if (then) move(then, false);
+  };
+
+  const rtl = () => !!table.current && getComputedStyle(table.current).direction === 'rtl';
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
+    props.onKeyDown?.(e);
+    if (e.defaultPrevented || edit || isComposing(e)) return;
+    const ctrl = e.ctrlKey || e.metaKey, shift = e.shiftKey, back = rtl() ? 1 : -1;
+    const go = (p: Pos) => { e.preventDefault(); move(p, shift); };
+    switch (e.key) {
+      case 'ArrowDown': return go({ r: cur.r + 1, c: cur.c });
+      case 'ArrowUp': return go({ r: cur.r - 1, c: cur.c });
+      case 'ArrowRight': return go({ r: cur.r, c: ctrl ? (back < 0 ? lastCol : 0) : cur.c - back });
+      case 'ArrowLeft': return go({ r: cur.r, c: ctrl ? (back < 0 ? 0 : lastCol) : cur.c + back });
+      case 'Home': return go(ctrl ? { r: 1, c: 0 } : { r: cur.r, c: 0 });
+      case 'End': return go(ctrl ? { r: lastRow, c: lastCol } : { r: cur.r, c: lastCol });
+      case 'PageDown': return go({ r: cur.r + 10, c: cur.c });
+      case 'PageUp': return go({ r: Math.max(1, cur.r - 10), c: cur.c });
+    }
+    if (ctrl && e.key.toLowerCase() === 'a') { e.preventDefault(); setAnchor({ r: 1, c: 0 }); setAt({ r: lastRow, c: lastCol }); return; }
+    if (ctrl || e.altKey) return;
+    if ((e.key === 'Enter' || e.key === 'F2') && editable(cur)) { e.preventDefault(); setEdit({ text: textOf(columns[cur.c], rows[cur.r - 1]) }); return; }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && range) {
+      e.preventDefault();
+      const list: DataGridCellChange[] = [];
+      for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) if (editable({ r, c }) && textOf(columns[c], rows[r - 1])) list.push({ rowId: String(rows[r - 1][key]), column: columns[c].key, value: '' });
+      change(list);
+      return;
+    }
+    // A character typed on an editable cell starts an edit with it, as in a spreadsheet.
+    if (e.key.length === 1 && e.key !== ' ' && editable(cur)) { e.preventDefault(); setEdit({ text: e.key }); }
+  };
+
+  const onCopy = (e: React.ClipboardEvent<HTMLTableElement>) => {
+    props.onCopy?.(e);
+    if (edit || !range || e.defaultPrevented) return;
+    const lines: string[] = [];
+    for (let r = range.r1; r <= range.r2; r++) lines.push(columns.slice(range.c1, range.c2 + 1).map((col) => textOf(col, rows[r - 1])).join('\t'));
+    e.preventDefault();
+    e.clipboardData.setData('text/plain', lines.join('\n'));
+    announce(L.dataGridCopied((range.r2 - range.r1 + 1) * (range.c2 - range.c1 + 1)));
+  };
+  const onPaste = (e: React.ClipboardEvent<HTMLTableElement>) => {
+    props.onPaste?.(e);
+    if (edit || e.defaultPrevented || cur.r < 1) return;
+    e.preventDefault();
+    const block = parseTsv(e.clipboardData.getData('text/plain'));
+    // One value pasted over a range fills the range; a block fills from the active cell, as far as the grid goes.
+    const one = block.length === 1 && block[0].length === 1 && range;
+    const list: DataGridCellChange[] = [];
+    const put = (r: number, c: number, v: string) => { if (r <= lastRow && c <= lastCol && editable({ r, c })) list.push({ rowId: String(rows[r - 1][key]), column: columns[c].key, value: v }); };
+    if (one) { for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) put(r, c, block[0][0]); }
+    else { const r0 = range ? range.r1 : cur.r, c0 = range ? range.c1 : cur.c; block.forEach((line, i) => line.forEach((v, j) => put(r0 + i, c0 + j, v))); }
+    change(list);
+    if (list.length) announce(L.dataGridPasted(list.length));
+  };
+
+  const pick = (p: Pos, e: React.MouseEvent) => { if (edit) return; move(p, e.shiftKey && p.r > 0); };
+  const tabStop = (r: number, c: number) => (r === cur.r && c === cur.c ? 0 : -1);
+  // With no rows: placeholders the height of real rows while busy (only the first says "Loading", once), otherwise
+  // the app's message in one cell across every column. Neither is a cell the arrow keys reach.
+  const placeholders = !rows.length && props.busy ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
+  const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
+  return (
+    <div className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.className)} data-component="data-grid">
+      <table {...rest} ref={(n) => { table.current = n; setRef(ref, n); }}
+        role="grid" aria-busy={props.busy || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
+        className="dk-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>
+        <thead>
+          <tr role="row" aria-rowindex={1}>
+            {columns.map((col, c) => (
+              <th key={col.key} role="columnheader" scope="col" aria-colindex={c + 1} tabIndex={tabStop(0, c)} data-cell={`0-${c}`}
+                className={cn('dk-data-grid__header', col.align && col.align !== 'start' && 'dk-data-grid__cell--' + col.align)}
+                style={col.width != null ? { width: col.width } : undefined} onClick={(e) => pick({ r: 0, c }, e)}>{col.header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => {
+            const r = i + 1;
+            return (
+              <tr key={String(row[key])} role="row" aria-rowindex={r + 1}>
+                {columns.map((col, c) => {
+                  const active = r === cur.r && c === cur.c, sel = inRange(r, c);
+                  const editing = active && edit;
+                  return (
+                    <td key={col.key} role="gridcell" aria-colindex={c + 1} tabIndex={editing ? -1 : tabStop(r, c)} data-cell={`${r}-${c}`}
+                      aria-selected={sel} aria-readonly={canEdit && !col.editable ? true : undefined}
+                      className={cn('dk-data-grid__cell', col.align && col.align !== 'start' && 'dk-data-grid__cell--' + col.align, sel && 'dk-data-grid__cell--selected', editing && 'dk-data-grid__cell--editing')}
+                      onClick={(e) => pick({ r, c }, e)} onDoubleClick={() => { if (editable({ r, c })) setEdit({ text: textOf(col, row) }); }}>
+                      {editing ? (
+                        <input className="dk-data-grid__input" aria-label={L.dataGridEdit(col.header)} ref={(n) => { if (n && document.activeElement !== n) n.focus(); }} defaultValue={edit.text}
+                          onFocus={(e) => { const n = e.currentTarget.value.length; e.currentTarget.setSelectionRange(n, n); }}
+                          onBlur={(e) => { if (edit) save(e.currentTarget.value, null); }}
+                          onKeyDown={(e) => {
+                            if (isComposing(e)) return;
+                            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setEdit(null); focusCell.current = true; }
+                            else if (e.key === 'Enter') { e.preventDefault(); save(e.currentTarget.value, { r: Math.min(r + 1, lastRow), c }); }
+                            else if (e.key === 'Tab') { e.preventDefault(); save(e.currentTarget.value, { r, c: Math.max(0, Math.min(lastCol, c + (e.shiftKey ? -1 : 1))) }); }
+                          }} />
+                      ) : textOf(col, row)}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+          {placeholders ? <LoadingRows rows={placeholders} columns={columns} label={props.loadingLabel == null ? L.loading : props.loadingLabel} /> : null}
+          {message != null && (
+            <tr role="row" aria-rowindex={2}>
+              <td role="gridcell" colSpan={columns.length} aria-colspan={columns.length} className="dk-data-grid__cell dk-data-grid__message">{message}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <p hidden id={base + '-hint'}>{L.dataGridHint}</p>
+    </div>
+  );
+});
+
+/* The placeholder rows: decorative skeletons in Loader's classes (without Loader's weight), shown after the loader's
+   delay, when the label is said once; the grid's aria-busy marks it as loading. */
+function LoadingRows(props: { rows: number; columns: DataGridColumn[]; label: string }) {
+  const waiting = !useSkeletonShown(props.label);
+  return Array.from({ length: props.rows }, (_, r) => (
+    <tr key={'loading-' + r} role="row" className="dk-data-grid__loading">
+      {props.columns.map((col) => <td key={col.key} role="gridcell" className="dk-data-grid__cell"><SkeletonArt waiting={waiting} /></td>)}
+    </tr>
+  ));
+}

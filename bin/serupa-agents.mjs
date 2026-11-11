@@ -44,8 +44,11 @@ export function withSection(text, title = 'Agents') {
 export const CLAUDE = '@AGENTS.md\n';
 
 function main(argv) {
-  const [dir = '.'] = argv;
-  if (dir.startsWith('-')) { console.error('usage: serupa-agents [folder]'); return 2; }
+  const USAGE = 'usage: serupa-agents [folder]';
+  if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); return 0; }
+  const [dir = '.', extra] = argv;
+  if (dir.startsWith('-')) { console.error(`serupa-agents: unknown option ${dir}\n${USAGE}`); return 2; }
+  if (extra !== undefined) { console.error(`serupa-agents: one folder only, not ${extra}\n${USAGE}`); return 2; }
   if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) { console.error(`${dir} isn't a folder.`); return 1; }
   const agents = path.join(dir, 'AGENTS.md'), claude = path.join(dir, 'CLAUDE.md');
   const before = fs.existsSync(agents) ? fs.readFileSync(agents, 'utf8') : '';

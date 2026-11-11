@@ -1,6 +1,6 @@
-"use client";
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
+'use client';
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
 
 /* useVirtual: the windowing behind VirtualList (and, later, any long list that draws only what's in view). Given the
    scrolling element, how many rows there are and a guess at a row's height, it says which rows to draw (start to end,
@@ -17,7 +17,7 @@ import { useIsoLayoutEffect } from "./cn";
    CAP the scroll range is scaled down: the scroll position is a fraction of the whole, the rows for that fraction
    are drawn, and the space before them puts them under the view. Dragging the scrollbar then moves through the rows
    at total / CAP times the pointer, as in react-window's and TanStack Virtual's large lists, and every row is reached
-   (GR92); the arrow and Page keys and the wheel step through the rows themselves, row by row, as in a short list
+   (GR92); Home and End go straight to either end, and the arrow and Page keys and the wheel step through the rows themselves, row by row, as in a short list
    (GR94). */
 export interface VirtualOptions {
   /** How many rows there are. */
@@ -168,16 +168,17 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       // End: the last row, kept at the bottom while the rows on the way are measured. The browser's own End scrolls to
       // the end of the range as it stands, and in WebKit the rows then measured taller than the guess left the view at
       // row 408 of 1,000 (FW1). Home the same way: back from the end, rows measured on the way up moved the top it
-      // aimed for, and it stopped at row 13 (GR139).
-      if ((e.key === "End" || e.key === "Home") && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      // aimed for, and it stopped at row 13 (GR139). Past CAP too: the browser's smooth scroll back up sometimes
+      // stopped a pixel short of the top, where the list keeps the wheel (GR291); here the top is set at once.
+      if ((e.key === 'End' || e.key === 'Home') && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
-        toEdge.current(e.key === "End");
+        toEdge.current(e.key === 'End');
         return;
       }
       // PageUp and PageDown: a screen at once, not the browser's smooth scroll. The rows it measures on the way move
       // the view's row, the list scrolls by as much to keep it, and the animation then carried on from there: the first
       // PageUp after End went back one row of eight (GR142).
-      if ((e.key === "PageUp" || e.key === "PageDown") && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      if ((e.key === 'PageUp' || e.key === 'PageDown') && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
         scroller.scrollTop += by(scroller.clientHeight);
         read();
@@ -195,12 +196,12 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       e.preventDefault();
       step(d);
     };
-    scroller.addEventListener("scroll", read, { passive: true });
-    scroller.addEventListener("keydown", onKey);
-    scroller.addEventListener("wheel", onWheel, { passive: false });
-    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => { read(); remeasured(); }) : null;
+    scroller.addEventListener('scroll', read, { passive: true });
+    scroller.addEventListener('keydown', onKey);
+    scroller.addEventListener('wheel', onWheel, { passive: false });
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => { read(); remeasured(); }) : null;
     if (ro) ro.observe(scroller);
-    return () => { scroller.removeEventListener("scroll", read); scroller.removeEventListener("keydown", onKey); scroller.removeEventListener("wheel", onWheel); if (ro) ro.disconnect(); };
+    return () => { scroller.removeEventListener('scroll', read); scroller.removeEventListener('keydown', onKey); scroller.removeEventListener('wheel', onWheel); if (ro) ro.disconnect(); };
   }, [scroller]);
 
   // Forget sizes past the end when rows go away, and the pinned row when the rows change.
@@ -243,7 +244,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     }
     let changed = false;
     const holder = (options.rows && options.rows()) || el;
-    for (const r of holder.querySelectorAll<HTMLElement>(":scope > [data-index], :scope > [role=group] > [data-index]")) {
+    for (const r of holder.querySelectorAll<HTMLElement>(':scope > [data-index], :scope > [role=group] > [data-index]')) {
       const i = Number(r.dataset.index), h = r.getBoundingClientRect().height;
       if (!(i < count) || !h) continue;
       if (sizes.has(i) && Math.abs((sizes.get(i) ?? 0) - h) < 0.5) continue;
@@ -269,7 +270,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     live.current.pin = { i: index, end: want !== a };
   };
 
-  // every render: Home and End use this render's rows and offsets.
+  // every render: Home and End use this render's rows and offsets (past CAP, scrollToIndex goes to the very top or bottom).
   useIsoLayoutEffect(() => { toEdge.current = (last) => { if (count) scrollToIndex(last ? count - 1 : 0); }; });
 
   const drawn = offsets[end] - offsets[start];

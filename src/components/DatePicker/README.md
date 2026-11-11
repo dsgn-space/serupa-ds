@@ -20,7 +20,7 @@ const [due, setDue] = React.useState<Date | null>(null);
 ## When not to use
 
 - A start and an end date: use [DateRangePicker](../DateRangePicker/README.md) instead.
-- A date people know by heart and that's far from today, such as a date of birth: a plain [Input](../Input/README.md) with a format hint (or separate day, month and year fields) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
+- A date people know by heart and that's far from today, such as a date of birth: a [DateField](../DateField/README.md) (day, month and year boxes) is quicker than paging back decades. DatePicker still accepts typing, so it works, but the calendar adds nothing.
 - Only a month or a year: use a [Select](../Select/README.md).
 - A calendar that's always on the page, such as a scheduling view: use [Calendar](../Calendar/README.md) on its own.
 
@@ -40,8 +40,27 @@ Drawn from the `Disabled` story.
 - Keep a day from an API or database as the plain `"yyyy-mm-dd"` string and pass it as is: `value="2026-10-24"`, and store `iso` from `onValueChange`. `new Date("2026-10-24")` is UTC midnight, which is 23 October anywhere west of Greenwich; DatePicker warns once in the console when it's given such a Date there.
 - Match the `size` of the other fields in the same form.
 
+## Date and time
+
+For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with [TimePicker](../TimePicker/README.md) in one `Field group`. It reads as one question with one legend, one hint and one error, and each part keeps its own label for screen readers.
+
+```tsx
+<Field group label="Publish at" hint="Your time zone, Asia/Jakarta" error={error}>
+  <div className="flex flex-wrap gap-3">
+    <Field label="Date"><DatePicker value={day} onValueChange={(_, iso) => setDay(iso)} min={today} invalid={!!error && !day} /></Field>
+    <Field label="Time"><TimePicker value={time} onValueChange={setTime} step={900} invalid={!!error && !time} /></Field>
+  </div>
+</Field>
+```
+
+- **Check them together,** when the form is sent: one message for the pair, in the group's `error`, naming what's missing or wrong ("Choose a time", "Pick a time after now"). Set `invalid` only on the part that's at fault, so its border says where to look, and move focus to it: a screen reader then reads the legend and the error with it.
+- **Say whose time it is.** The legend's hint names the zone when it isn't obvious. When people in other zones use the form (a meeting across offices), add a [TimeZonePicker](../TimeZonePicker/README.md) as a third part, defaulting to the browser's zone (`Intl.DateTimeFormat().resolvedOptions().timeZone`).
+- **Store the parts, not a local Date.** Keep the day (`"yyyy-mm-dd"`), the time (`"HH:mm"`) and the zone's IANA name, and let the server turn them into an instant. A `Date` built in the browser takes the browser's zone, which is wrong when the zone was chosen.
+- **Keep the order of the locale's sentences:** date first, then time, then zone. On a narrow screen the parts wrap onto separate lines.
+
 ## Behavior
 
+- With `presets`, a list of shortcuts sits beside the days in the popup, after them in reading order and under them on a narrow screen. Your own take a day or a function that returns one, so "Next Monday" follows today: `presets={[{ label: "Next Monday", value: nextMonday }]}`. A shortcut whose day can't be chosen is disabled.
 - People type in the locale's numeric order (11/22/2025 in en-US, 22.11.2025 in de-DE) or as `2025-11-22` anywhere. Digits alone work too, as typed on a number keypad: `11222025` or `112225` in en-US, `22112025` in de-DE, or `20251122`. A two-digit year is the one within 50 years of today: in 2026, `85` is 1985 and `30` is 2030, so birth dates and deadlines both read right. A date pasted with its month as a word reads too, in the locale or in English, in full or cut short: `12 Mei 2025`, `May 12, 2025`, `12. März 2025`.
 - The field always uses Gregorian years and Latin digits, so a date reads back as the same day in every locale: Thai shows 22/11/2025 rather than the Buddhist year 2568, and Persian shows 2025/11/22 rather than ۱۴۰۴/۰۹/۰۱. Digits typed in another script (٢٢/١١/٢٠٢٥) are read too. The calendar's month and weekday names stay in the locale.
 - The text is read on blur and on Enter. A date that can't be read, or one that can't be chosen, puts back the last good value. An empty field clears it. Switching to another window or browser tab isn't leaving the field: the text waits until people come back.
@@ -74,7 +93,7 @@ Drawn from the `Disabled` story.
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `value` / `defaultValue` | `Date \| string \| null` | | The chosen day, controlled or not: a Date, or a plain `"yyyy-mm-dd"` string. |
 | `onValueChange` | `(date: Date \| null, iso: string \| null) => void` | | Called with the new day (local midnight) and the same day as `"yyyy-mm-dd"`, or `null` twice when the field is cleared. |
-| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). |
+| `onInvalidInput` | `(text, reason) => void` | | Called when typed text is put back: `"unreadable"` (not a date) or `"unavailable"` (outside `min`..`max` or disabled). Screen readers also hear that it wasn't accepted (`inputNotAccepted`). The same words show under the field (`.dk-input-rejected`, read with it) until the text changes. |
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. `min` and `max` take a Date or `"yyyy-mm-dd"`. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. When it differs from the provider's, the field and the calendar carry `lang`, so screen readers read them in that language. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
@@ -83,6 +102,7 @@ Drawn from the `Disabled` story.
 | `name` | `string` | | Adds a hidden input that sends `yyyy-mm-dd`. With `form`, the hidden input belongs to that form too. |
 | `placeholder` | `string` | the locale's pattern, such as `mm/dd/yyyy` | |
 | `buttonLabel` | `string` | `"Choose a date"` | The calendar button's name, and the popup's. |
+| `presets` | `boolean \| DatePreset[]` | | Shortcuts beside the calendar: `true` for Today, Tomorrow and In a week, or your own `{ label, value }`. Picking one fills the field and closes the popup. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 
@@ -116,3 +136,4 @@ The field itself uses Input's box (the `dk-input` classes and `--input-*` tokens
 - [Field](../Field/README.md): the label, hint and error around it.
 - [DateRangePicker](../DateRangePicker/README.md): two dates, start and end.
 - [Calendar](../Calendar/README.md): the calendar on its own, always visible.
+- [TimePicker](../TimePicker/README.md) and [TimeZonePicker](../TimeZonePicker/README.md): the time and its zone, for a date and time (see Date and time).

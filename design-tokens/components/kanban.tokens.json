@@ -1,0 +1,173 @@
+{
+  "kanban": {
+    "$description": "Kanban's component tokens. Each one is an optional override: set the CSS variable (--kanban-<name>) on the page, a container or one board, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Titles and card text (4.5:1 on the column and the card).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Counts, handles and the empty column's words (4.5:1 on the column).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-muted"
+          }
+        }
+      },
+      "column-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A column's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-column-bg"
+          }
+        }
+      },
+      "card-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A card's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-bg"
+          }
+        }
+      },
+      "card-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A card's outline.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-border"
+          }
+        }
+      },
+      "target-border": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The outline of the column a moving card would land in (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-target-border"
+          }
+        }
+      },
+      "over": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "A count over its column's limit (4.5:1 on the column).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-over"
+          }
+        }
+      },
+      "handle-active": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A picked-up card's handle.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-handle-active"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a focused handle.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "column-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "A column's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-column-radius"
+          }
+        }
+      },
+      "card-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "A card's corners (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-radius"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "card-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "The card being dragged.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-shadow"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between columns (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-gap"
+          }
+        }
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space inside a column (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-padding"
+          }
+        }
+      },
+      "card-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space inside a card (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-padding"
+          }
+        }
+      },
+      "column-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-72}",
+        "$description": "A column's width (288px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-column-width"
+          }
+        }
+      }
+    }
+  }
+}

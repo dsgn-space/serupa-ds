@@ -22,6 +22,7 @@ import acr from './acr.json';
 import { componentTests } from './generated/tested';
 import { changesFor } from './changes';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
+import { DoDont, doDontAt } from './doDont';
 // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
 const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
 
@@ -60,8 +61,9 @@ export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
   return <>
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
-    {anatomyAt(source.replace(/^# .*\n+/, '')).map((part, i) => (typeof part === 'string'
+    {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <Markdown key={i}>{relink(part)}</Markdown>
+      : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
     {name && <ComponentChanges name={name} />}
@@ -144,7 +146,7 @@ const val = (v: Token['value']) => (typeof v === 'string' ? v : Object.values(v)
 export function TokenTable({ group, preview }: { group: string; preview?: 'space' | 'radius' | 'shadow' | 'duration' | 'none' }) {
   const g = T[group];
   const show = (t: Token) => {
-    const v = `var(--${t.name})`;
+    const v = `var(--${t.name.replace(/\./g, '\\.')})`;   // --spacing-0\.5: a dot in a custom property's name is escaped in CSS
     if (preview === 'space') return <div style={{ height: 12, width: v, background: 'var(--primary)', borderRadius: 2 }} />;
     if (preview === 'radius') return <div style={{ height: 40, width: 40, border: '2px solid var(--primary)', borderRadius: v }} />;
     if (preview === 'shadow') return <div style={{ height: 40, width: 64, background: 'var(--surface)', boxShadow: t.name.startsWith('text-') ? undefined : v, textShadow: t.name.startsWith('text-') ? v : undefined, borderRadius: 6, display: 'grid', placeItems: 'center' }}>{t.name.startsWith('text-') ? 'Aa' : ''}</div>;
@@ -275,7 +277,11 @@ const labelUse: Record<string, string> = {};
     if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
   }
 }
-const word = (v: SerupaLabels[keyof SerupaLabels]) => (typeof v === 'function' ? v('n' as unknown as number) : v);
+// A function label is shown with "n" for its first argument; one that takes a list (cascadePath) can't, so it says so.
+const word = (v: SerupaLabels[keyof SerupaLabels]) => {
+  if (typeof v !== 'function') return v;
+  try { return v('n' as unknown as number); } catch { return '(built from its arguments)'; }
+};
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {
   return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
@@ -401,7 +407,7 @@ export function UpgradeGuide() {
     const prev = Number(m.version.split('.')[0]) - 1;
     const mine = auto.filter((t) => t.version === m.version);
     const intro = m.next
-      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://github.com/diki-stwn/serupa-ds/tree/main/docs/rfcs) has the proposal.`
+      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://gitlab.com/diki-stwn-group/serupa-ds/-/tree/main/docs/rfcs) has the proposal.`
       : m.date ? `Released ${m.date}.` : '';
     const run = mine.length
       ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`

@@ -1,0 +1,77 @@
+# TableOfContents
+
+An "On this page" list of links to the sections of a long page, as a navigation landmark. It reads the page's headings (or takes a list), marks the section being read as the page scrolls, and a click scrolls to that section and moves focus to its heading.
+
+```jsx
+const { TableOfContents } = window.Serupa;
+
+// from the h2 and h3 headings in <main>
+<aside className="sticky top-4"><TableOfContents /></aside>
+
+// from one article, under a 64px sticky header
+<TableOfContents container="#article" offset={80} />
+
+// your own list
+<TableOfContents items={[{ id: "install", label: "Installation" }, { id: "npm", label: "With npm", level: 3 }]} />
+```
+
+## When to use
+
+- A long page people scan and jump around in: documentation, a policy, a settings page with many sections, a long form.
+- Beside the content on a wide screen, kept in view with `position: sticky`.
+
+## When not to use
+
+- Moving between pages: use a [Sidebar](../Sidebar/README.md) or [Tabs](../Tabs/README.md).
+- A short page with two or three sections: the headings are enough.
+- Steps people go through in order: use a [Stepper](../Stepper/README.md).
+
+## Anatomy
+
+Drawn from the `Playground` story.
+
+1. **Title** (`.dk-toc__title`): "On this page"; it names the landmark.
+2. **Link** (`.dk-toc__link`): one section; deeper ones step in, and the current one is marked by its weight and a line in primary.
+
+## Usage
+
+- Keep it to two levels (the default `h2, h3`): deeper lists are hard to scan.
+- Give the headings `scroll-margin-top` the height of any sticky header, and set `offset` to about the same plus a little, so a section counts as reached when its heading clears the header.
+- Headings without an `id` get one from their text ("Beta part" becomes `beta-part`), kept unique on the page, so links to them can be shared: a page opened with one (`#beta-part`) scrolls to that heading once its id is made. Headings added, removed or renamed later, such as content loaded after the page, update the list.
+- On a phone, put it at the top of the page or in an [Accordion](../Accordion/README.md), not beside the text.
+
+## Accessibility
+
+- **Role and name:** a `nav` landmark named by its title (or `aria-label` with `title={null}`), holding a list of links. The current section's link has `aria-current="location"`, and is marked by weight and a line, not by color alone.
+- **Keyboard:** Tab moves through the links; Enter follows one. Focus then moves to the section's heading, so the next Tab continues from there in the content.
+- **Motion:** the scroll is smooth only when the reader hasn't asked for reduced motion.
+- **Contrast:** links read 4.5:1 on the page, the current section's line 3:1, in all six themes (`TableOfContents.test.tsx`).
+- **What's still yours:** headings that say what each section is about.
+
+## Props
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `items` | `TocItem[]` | | `{ id, label, level? }`: your own entries instead of the headings |
+| `container` | `Element \| string` | `<main>`, else `<body>` | Where to read the headings from. They may scroll with the page or in a pane of their own (`overflow: auto`). |
+| `headings` | `string` | `"h2, h3"` | Which headings it lists |
+| `title` | `ReactNode \| null` | "On this page" | The title and the landmark's name; `null` for none |
+| `offset` | `number` | `96` | How far from the top of the window (or of the pane the headings scroll in), in pixels, a heading counts as reached |
+| `id` | `string` | | Goes to the `<nav>`. |
+
+`className`, `ref` and other props go to the `<nav>`.
+
+## Component tokens
+
+Each is an optional override: set it on the page, a container or one TableOfContents. The list lives in `src/components/TableOfContents/table-of-contents.tokens.json` (also in `design-tokens/components/`).
+
+<!-- token-table:start (made from table-of-contents.tokens.json by npm run tokens: edit the descriptions there) -->
+| Token | Default | Use |
+| --- | --- | --- |
+| `--table-of-contents-muted` | `text-muted` | The links (4.5:1 on the page). |
+| `--table-of-contents-title` | `text` | The title, and a link under the pointer (4.5:1). |
+| `--table-of-contents-current` | `text` | The current section's link (4.5:1). |
+| `--table-of-contents-line` | `border` | The line along the links. |
+| `--table-of-contents-line-current` | `primary` | The line beside the current section's link (3:1). |
+| `--table-of-contents-focus-ring` | `focus-ring` | The ring around a focused link. |
+<!-- token-table:end -->

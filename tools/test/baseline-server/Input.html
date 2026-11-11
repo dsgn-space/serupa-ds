@@ -1,3 +1,47 @@
+<!-- Actions -->
+<div class="flex flex-col gap-3" style="max-width:320px">
+<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
+<input aria-label="Coupon code" type="text" class="dk-input__field" value="WELCOME10"/>
+<span class="dk-input__actions">
+<button type="button" class="dk-input-action dk-input-action--text" data-component="input-action">Apply</button>
+</span>
+</span>
+<span class="dk-input dk-input--size-md dk-input--readonly" data-component="input" data-size="md">
+<input aria-label="Invite link" readOnly="" type="text" class="dk-input__field" value="https://serupa.app/join/7f3k2"/>
+<span class="dk-input__actions">
+<button type="button" class="dk-input-action dk-input-action--icon" data-component="input-action" aria-label="Copy invite link">
+<span class="dk-input-action__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="content_copy" class="dk-icon">
+</span>
+</span>
+</button>
+</span>
+</span>
+<span class="dk-input dk-input--size-sm" data-component="input" data-size="sm">
+<input aria-label="Filter" type="text" class="dk-input__field" value="Bandung"/>
+<span class="dk-input__actions">
+<button type="button" class="dk-input-action dk-input-action--icon" data-component="input-action" aria-label="Clear filter">
+<span class="dk-input-action__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="close" class="dk-icon">
+</span>
+</span>
+</button>
+</span>
+</span>
+<span class="dk-input dk-input--size-lg" data-component="input" data-size="lg">
+<input aria-label="Gift card number" type="text" class="dk-input__field" value="GC-4417"/>
+<span class="dk-input__actions">
+<button type="button" class="dk-input-action dk-input-action--text" data-component="input-action">Redeem</button>
+</span>
+</span>
+<span class="dk-input dk-input--size-md dk-input--disabled" data-component="input" data-size="md">
+<input aria-label="Referral code" disabled="" type="text" class="dk-input__field" value="ANA-2026"/>
+<span class="dk-input__actions">
+<button type="button" disabled="" class="dk-input-action dk-input-action--text" data-component="input-action">Check</button>
+</span>
+</span>
+</div>
+
 <!-- Count -->
 <div class="flex flex-col gap-3" style="max-width:320px">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
@@ -14,6 +58,88 @@
 </span>
 </div>
 
+<!-- DoFitWidth -->
+<div class="flex flex-col gap-3" style="max-width:320px">
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_1_-control" id="dk-f_R_1_-label">Postcode</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md w-24" data-component="input" data-size="md">
+<input inputMode="numeric" id="dk-f_R_1_-control" type="text" class="dk-input__field" value="10110"/>
+</span>
+</div>
+</div>
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_2_-control" id="dk-f_R_2_-label">Street address</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
+<input id="dk-f_R_2_-control" type="text" class="dk-input__field" value="Jalan Sudirman 12"/>
+</span>
+</div>
+</div>
+</div>
+
+<!-- DoHelpfulError -->
+<div class="flex flex-col gap-3" style="max-width:320px">
+<div class="dk-field dk-field--invalid" data-component="field">
+<label class="dk-field__label" for="dk-f_R_0_-control" id="dk-f_R_0_-label">Email</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md dk-input--invalid" data-component="input" data-size="md">
+<input type="email" id="dk-f_R_0_-control" aria-describedby="dk-f_R_0_-error" aria-errormessage="dk-f_R_0_-error" aria-invalid="true" autoCapitalize="off" autoCorrect="off" spellCheck="false" class="dk-input__field" value="ana.example.com"/>
+</span>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_0_-error">Enter an email with an @, like ana@example.com.</span>
+</div>
+</div>
+</div>
+
+<!-- DontFullWidthShort -->
+<div class="flex flex-col gap-3" style="max-width:320px">
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_1_-control" id="dk-f_R_1_-label">Postcode</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
+<input inputMode="numeric" id="dk-f_R_1_-control" type="text" class="dk-input__field" value="10110"/>
+</span>
+</div>
+</div>
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_2_-control" id="dk-f_R_2_-label">Street address</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
+<input id="dk-f_R_2_-control" type="text" class="dk-input__field" value="Jalan Sudirman 12"/>
+</span>
+</div>
+</div>
+</div>
+
+<!-- DontVagueError -->
+<div class="flex flex-col gap-3" style="max-width:320px">
+<div class="dk-field dk-field--invalid" data-component="field">
+<label class="dk-field__label" for="dk-f_R_0_-control" id="dk-f_R_0_-label">Email</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md dk-input--invalid" data-component="input" data-size="md">
+<input type="email" id="dk-f_R_0_-control" aria-describedby="dk-f_R_0_-error" aria-errormessage="dk-f_R_0_-error" aria-invalid="true" autoCapitalize="off" autoCorrect="off" spellCheck="false" class="dk-input__field" value="ana.example.com"/>
+</span>
+</div>
+<div class="dk-field__error">
+<span aria-hidden="true" data-icon="error" class="dk-icon dk-field__error-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-280q17 0 28.5-11.5t11.5-28.5-11.5-28.5-28.5-11.5-28.5 11.5-11.5 28.5 11.5 28.5 28.5 11.5zm0-160q17 0 28.5-11.5t11.5-28.5v-160q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v160q0 17 11.5 28.5t28.5 11.5zm0 360q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5z">
+</path>
+</svg>
+</span>
+<span id="dk-f_R_0_-error">Invalid input.</span>
+</div>
+</div>
+</div>
+
 <!-- Icons -->
 <div class="flex flex-col gap-3" style="max-width:320px">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
@@ -28,6 +154,17 @@
 <span class="dk-input__icon dk-input__icon--right" aria-hidden="true">
 <span aria-hidden="true" data-icon="link" class="dk-icon">
 </span>
+</span>
+</span>
+<span class="dk-input dk-input--size-md dk-input--readonly" data-component="input" data-size="md">
+<input aria-label="Invite link" readOnly="" type="text" class="dk-input__field" value="https://serupa.app/join/7f3k2"/>
+<span class="dk-input__actions">
+<button type="button" class="dk-input-action dk-input-action--icon" data-component="input-action" aria-label="Copy invite link">
+<span class="dk-input-action__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="content_copy" class="dk-icon">
+</span>
+</span>
+</button>
 </span>
 </span>
 </div>
@@ -97,7 +234,7 @@
 <button type="button" tabindex="-1" class="dk-number-input__step" aria-label="Decrease">
 <span aria-hidden="true" data-icon="remove" class="dk-icon">
 <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
-<path d="m240-440q-17 0-28.5-11.5-11.5-11.5-11.5-28.5 0-17 11.5-28.5 11.5-11.5 28.5-11.5h480q17 0 28.5 11.5 11.5 11.5 11.5 28.5 0 17-11.5 28.5-11.5 11.5-28.5 11.5z">
+<path d="m240-440q-17 0-28.5-11.5t-11.5-28.5 11.5-28.5 28.5-11.5h480q17 0 28.5 11.5t11.5 28.5-11.5 28.5-28.5 11.5z">
 </path>
 </svg>
 </span>
@@ -105,7 +242,7 @@
 <button type="button" tabindex="-1" class="dk-number-input__step" aria-label="Increase">
 <span aria-hidden="true" data-icon="add" class="dk-icon">
 <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
-<path d="m440-440h-200q-17 0-28.5-11.5-11.5-11.5-11.5-28.5 0-17 11.5-28.5 11.5-11.5 28.5-11.5h200v-200q0-17 11.5-28.5 11.5-11.5 28.5-11.5 17 0 28.5 11.5 11.5 11.5 11.5 28.5v200h200q17 0 28.5 11.5 11.5 11.5 11.5 28.5 0 17-11.5 28.5-11.5 11.5-28.5 11.5h-200v200q0 17-11.5 28.5-11.5 11.5-28.5 11.5-17 0-28.5-11.5-11.5-11.5-11.5-28.5z">
+<path d="m440-440h-200q-17 0-28.5-11.5t-11.5-28.5 11.5-28.5 28.5-11.5h200v-200q0-17 11.5-28.5t28.5-11.5 28.5 11.5 11.5 28.5v200h200q17 0 28.5 11.5t11.5 28.5-11.5 28.5-28.5 11.5h-200v200q0 17-11.5 28.5t-28.5 11.5-28.5-11.5-11.5-28.5z">
 </path>
 </svg>
 </span>

@@ -268,10 +268,19 @@ export function readRegistry(js) {
 }
 
 function main(argv) {
+  const USAGE = 'usage: node tools/icons/build.mjs [icon folder] [--check] [--project <folder>]';
+  if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); process.exit(0); }
   const opt = (k) => { const i = argv.indexOf(k); return i >= 0 ? argv.splice(i, 2)[1] : null; };
   const check = argv.includes('--check');
   argv = argv.filter((a) => a !== '--check');
-  const P = path.resolve(opt('--project') || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..'));
+  const project = opt('--project');
+  const stop = (why) => { console.error(`${why}\n${USAGE}`); process.exit(2); };
+  const unknown = argv.find((a) => a.startsWith('-'));
+  if (unknown) stop(`Unknown option ${unknown}`);
+  if (argv.length > 1) stop(`One icon folder only, not ${argv.slice(1).join(' ')}`);
+  // A folder named on the command line must be there: a mistyped one would read as no icons and empty src/icons.ts.
+  if (argv[0] && !fs.existsSync(argv[0])) stop(`No such folder: ${argv[0]}`);
+  const P = path.resolve(project || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..'));
   const folder = argv[0] ? path.resolve(argv[0]) : path.join(P, 'assets', 'Icons');
   const jp = path.join(P, 'src', 'icons.ts');
   let icons, js, next;

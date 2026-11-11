@@ -8,9 +8,9 @@ export const en: KbdLabels = {
   keyName: (name) => name,
 };
 const ID_KEYS: Record<string, string> = {
-  "Up arrow": "Panah atas", "Down arrow": "Panah bawah", "Left arrow": "Panah kiri", "Right arrow": "Panah kanan",
-  Space: "Spasi", Delete: "Hapus", Backspace: "Hapus mundur",
-  "Page Up": "Halaman atas", "Page Down": "Halaman bawah", Function: "Fungsi",
+  'Up arrow': 'Panah atas', 'Down arrow': 'Panah bawah', 'Left arrow': 'Panah kiri', 'Right arrow': 'Panah kanan',
+  Space: 'Spasi', Delete: 'Hapus', Backspace: 'Hapus mundur',
+  'Page Up': 'Halaman atas', 'Page Down': 'Halaman bawah', Function: 'Fungsi',
 };
 export const id: KbdLabels = {
   keyName: (name) => ID_KEYS[name] || name,

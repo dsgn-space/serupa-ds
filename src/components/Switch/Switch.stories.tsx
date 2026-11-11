@@ -34,7 +34,7 @@ export const States: Story = {
 export const Pending: Story = {
   render: function Render() {
     const [on, setOn] = React.useState(false), [saving, setSaving] = React.useState(false);
-    return <Switch checked={on} pending={saving} onChange={(e) => { setOn(e.currentTarget.checked); setSaving(true); setTimeout(() => { setSaving(false); }, 1500); }}>Sync contacts</Switch>;
+    return <Switch checked={on} loading={saving} onChange={(e) => { setOn(e.currentTarget.checked); setSaving(true); setTimeout(() => { setSaving(false); }, 1500); }}>Sync contacts</Switch>;
   },
 };
 
@@ -42,7 +42,7 @@ export const LongLabel: Story = {
   render: (args) => (
     <div style={{ width: 240 }}>
       <Switch {...args} description="Updates install overnight while the device is charging and connected to Wi-Fi.">
-        Install updates automatically, including {"Donaudampfschifffahrtsgesellschaft"} add-ons
+        Install updates automatically, including {'Donaudampfschifffahrtsgesellschaft'} add-ons
       </Switch>
     </div>
   ),

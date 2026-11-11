@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { Rating } from './Rating';
 import { idLabels } from '../../internal/labels';
 import { Field } from '../Field/Field';
@@ -250,5 +250,22 @@ describe('Rating', () => {
       expect(w.every((x) => x === 22), w.join(' ')).toBe(true);
       expect(pitch(targets('nm')).every((d) => d >= 24), pitch(targets('nm')).join(' ')).toBe(true);
     });
+  });
+});
+
+describe('Rating in forced colors (GR270)', () => {
+  test('an empty star is an outline in the text color, not GrayText, which means disabled; a disabled Rating is all GrayText', async () => {
+    await render(<><Rating id="on" aria-label="Score" defaultValue={2} /><Rating id="off" aria-label="Off" defaultValue={2} disabled /></>);
+    const empty = (id: string) => document.getElementById(id)!.querySelectorAll<HTMLElement>('[class$="__empty"]')[4], svg = (id: string) => empty(id).querySelector('svg')!;
+    const r = await forcedColors(async (active) => (active ? {
+      grayText: css(Object.assign(document.body.appendChild(document.createElement('span')), { style: 'color: GrayText' })).color,
+      on: [css(empty('on')).color, css(svg('on')).stroke !== 'none', css(svg('on')).strokeWidth],
+      off: css(empty('off')).color,
+    } : null));
+    if (r) {
+      expect(r.on[0]).not.toBe(r.grayText);
+      expect([r.on[1], r.on[2]]).toEqual([true, '56px']);
+      expect(r.off).toBe(r.grayText);
+    }
   });
 });

@@ -161,7 +161,8 @@ for (const [, prop, val] of comp.matchAll(/([a-z-]+)\s*:\s*([^;{}]+);/g)) {
 check('components: Button and Icon use only tokens', !bad.size, [...bad].sort().slice(0, 10).join('; '));
 
 // 6. self-contained (a link the console warnings print isn't something the page loads: internal/warn.ts)
-const LINKS = ['https://github.com/diki-stwn/serupa-ds/blob/main/docs/warnings.md#'];
+// nor is the SVG namespace, which a standalone SVG document names (SignaturePad's value).
+const LINKS = ['https://gitlab.com/diki-stwn-group/serupa-ds/-/blob/main/docs/warnings.md#', 'http://www.w3.org/2000/svg'];
 let extra = '';
 for (const f of ['src/styles/base.css', 'src/theme.js']) if (fs.existsSync(path.join(P, f))) extra += read(f);
 const ext = [...(cssRaw + js + extra).matchAll(/(?:https?:)?\/\/[a-z0-9.-]+\.[a-z]{2,}\/[^\s"')]*/g)].map((m) => m[0]).filter((u) => !u.startsWith('//') && !LINKS.some((l) => u.startsWith(l)));
@@ -231,7 +232,8 @@ const ORDER = '@layer dk.tokens, dk.base, dk.components, dk.utilities;';
 const layered = { 'tokens.css': 'dk.tokens', 'dist/base.css': 'dk.base', 'dist/components.css': 'dk.components', 'dist/utilities.css': 'dk.utilities', 'dist/utilities-extra.css': 'dk.utilities' };
 const unlayered = [];
 for (const [f, layer] of Object.entries(layered)) {
-  const body = stripComments(read(f)).trim();
+  // Read with the whitespace a minifier may drop put back: "@layer a,b{" is "@layer a, b {".
+  const body = stripComments(read(f)).trim().replace(/@layer\s+([^;{]+?)\s*([;{])/g, (_, names, end) => `@layer ${names.split(/\s*,\s*/).join(', ')}${end === '{' ? ' {' : ';'}`);
   if (!body.startsWith(ORDER)) { unlayered.push(`${f}: doesn't start with "${ORDER}"`); continue; }
   // Outside the layer blocks there may only be the order statement, @font-face and @property (page-wide either way).
   let rest = body.slice(ORDER.length), depth = 0, outside = '';
@@ -293,7 +295,7 @@ if (!jsBrands) brandIssues.push('src/theme.js: no "var BRANDS = [...]" found');
 else if (!same(listOf(jsBrands[1]), BRANDS)) brandIssues.push(`src/theme.js: BRANDS is [${listOf(jsBrands[1]).join(', ')}], tokens.json gives [${BRANDS.join(', ')}]`);
 const jsDoc = /data-brand\s+([a-z0-9 |]+?)\s+\(default: ([a-z0-9]+)\)/.exec(themeJs);
 if (!jsDoc || !same(jsDoc[1].split('|').map((s) => s.trim()), BRANDS) || jsDoc[2] !== BRANDS[0]) brandIssues.push(`src/theme.js: the header should read "data-brand  ${BRANDS.join(' | ')}  (default: ${BRANDS[0]})"`);
-const jsDefault = /pick\(root\.getAttribute\("data-brand"\), BRANDS, "([^"]+)"\)/.exec(themeJs);
+const jsDefault = /pick\(root\.getAttribute\(["']data-brand["']\), BRANDS, ["']([^"']+)["']\)/.exec(themeJs);
 if (!jsDefault || jsDefault[1] !== BRANDS[0]) brandIssues.push(`src/theme.js: the default brand should be "${BRANDS[0]}" (the first theme's brand)`);
 const tsType = /export type ThemeBrand\s*=\s*([^;]+);/.exec(read('src/theme-types.ts'));
 if (!tsType) brandIssues.push('src/theme-types.ts: no ThemeBrand type found');

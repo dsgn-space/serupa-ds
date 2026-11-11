@@ -1,7 +1,7 @@
 // The browser script (serupa.iife.js): reads React from window.React and puts
 // the components on window.Serupa, for plain pages without a bundler.
-import * as Serupa from "./index";
-import { iconChunks, loadAllIcons } from "./icons";
+import * as Serupa from './index';
+import { iconChunks, loadAllIcons } from './icons';
 
 // Everything the package exports (index.ts), so a new component reaches plain pages without a line here.
 window.Serupa = Object.assign(window.Serupa || {}, Serupa);
@@ -12,10 +12,10 @@ window.Serupa = Object.assign(window.Serupa || {}, Serupa);
 // script-src 'self' covers it). A page that names many icons can include serupa-icons.iife.js itself to skip the wait.
 // Read now: document.currentScript is only set while this script first runs.
 const self = document.currentScript as HTMLScriptElement | null;
-const from = self && self.src ? new URL("serupa-icons.iife.js", self.src).href : "";
+const from = self && self.src ? new URL('serupa-icons.iife.js', self.src).href : '';
 iconChunks.all = () => window.SerupaIcons ? Promise.resolve(window.SerupaIcons) : new Promise((resolve, reject) => {
   const fail = (why: string) => { tag.remove(); reject(new Error(`${why}; include serupa-icons.iife.js on the page to draw every icon by name`)); };
-  const tag = document.createElement("script");
+  const tag = document.createElement('script');
   if (!from) return fail("serupa.iife.js couldn't tell its own address");
   tag.onload = () => window.SerupaIcons ? resolve(window.SerupaIcons) : fail(`${from} didn't set window.SerupaIcons`);
   tag.onerror = () => fail(`${from} didn't load`);

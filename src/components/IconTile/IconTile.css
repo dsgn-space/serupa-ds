@@ -1,0 +1,28 @@
+/* ---------------------------------------------------------------
+   IconTile: an icon centered in a tinted, rounded square (or a circle). Sizes sm 32px, md 40px, lg 48px, xl 64px,
+   with 16, 20, 24 and 32px icons; tones neutral, primary and the four statuses, each a subtle fill with the icon in
+   the tone's text color (3:1 or more, IconTile.test.tsx). In forced colors, an outline keeps the tile's shape.
+   Structure: .dk-icon-tile (a <span>) > .dk-icon-tile__icon (a <span> around the Icon or your element).
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-icon-tile {
+  --dk-icon-tile-size: var(--spacing-10); --dk-icon-tile-icon: var(--spacing-5);
+  --dk-icon-tile-bg: var(--icon-tile-neutral-bg, var(--secondary)); --dk-icon-tile-fg: var(--icon-tile-neutral-icon, var(--text-muted));
+  box-sizing: border-box; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
+  width: var(--dk-icon-tile-size); height: var(--dk-icon-tile-size);
+  border-radius: var(--icon-tile-radius, var(--radius-surface)); background: var(--dk-icon-tile-bg); color: var(--dk-icon-tile-fg);
+}
+.dk-icon-tile__icon { display: inline-flex; font-size: var(--dk-icon-tile-icon); }
+.dk-icon-tile__icon > .dk-icon { font-size: var(--dk-icon-tile-icon); }
+.dk-icon-tile__icon > svg:not(.dk-icon svg) { width: var(--dk-icon-tile-icon); height: var(--dk-icon-tile-icon); }
+.dk-icon-tile--sm { --dk-icon-tile-size: var(--spacing-8); --dk-icon-tile-icon: var(--spacing-4); border-radius: var(--icon-tile-radius-sm, var(--radius-control)); }
+.dk-icon-tile--lg { --dk-icon-tile-size: var(--spacing-12); --dk-icon-tile-icon: var(--spacing-6); }
+.dk-icon-tile--xl { --dk-icon-tile-size: var(--spacing-16); --dk-icon-tile-icon: var(--spacing-8); border-radius: var(--icon-tile-radius-xl, var(--radius-container)); }
+.dk-icon-tile.dk-icon-tile--circle { border-radius: var(--radius-pill); }
+.dk-icon-tile--primary { --dk-icon-tile-bg: var(--icon-tile-primary-bg, var(--primary-subtle)); --dk-icon-tile-fg: var(--icon-tile-primary-icon, var(--primary)); }
+.dk-icon-tile--success { --dk-icon-tile-bg: var(--icon-tile-success-bg, var(--success-subtle)); --dk-icon-tile-fg: var(--icon-tile-success-icon, var(--success-text)); }
+.dk-icon-tile--warning { --dk-icon-tile-bg: var(--icon-tile-warning-bg, var(--warning-subtle)); --dk-icon-tile-fg: var(--icon-tile-warning-icon, var(--warning-text)); }
+.dk-icon-tile--danger { --dk-icon-tile-bg: var(--icon-tile-danger-bg, var(--danger-subtle)); --dk-icon-tile-fg: var(--icon-tile-danger-icon, var(--danger-text)); }
+.dk-icon-tile--info { --dk-icon-tile-bg: var(--icon-tile-info-bg, var(--info-subtle)); --dk-icon-tile-fg: var(--icon-tile-info-icon, var(--info-text)); }
+@media (forced-colors: active) { .dk-icon-tile { outline: var(--border-width-1) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--border-width-1)); } }
+}

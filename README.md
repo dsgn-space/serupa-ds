@@ -11,32 +11,22 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 
 ## Getting started
 
-### 1. Install a released version from GitHub
+### 1. Install a released version from GitLab
 
 ```sh
-npm install github:diki-stwn/serupa-ds#v14.1.0
+npm install gitlab:diki-stwn-group/serupa-ds#v14.2.0
 ```
 
-Or install the same release from its file on the Releases page, which needs no git on the machine and puts the file's checksum in your lockfile:
+The repository lives on [GitLab](https://gitlab.com/diki-stwn-group/serupa-ds) for now, and each release is a tag there. The release files, their SHA-256 and the build attestations that GitHub's Releases page carried return when the repository moves back to GitHub; until then, the tag is the release.
 
-```sh
-npm install https://github.com/diki-stwn/serupa-ds/releases/download/v14.1.0/serupa-ds-14.1.0.tgz
-```
-
-To check a downloaded file before you install it: the release notes give its SHA-256, and releases after 10.1.0 also carry a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit. With the [GitHub CLI](https://cli.github.com):
-
-```sh
-gh attestation verify ./serupa-ds-14.1.0.tgz --repo diki-stwn/serupa-ds
-```
-
-Always pin a tag (`#v14.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.2.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:diki-stwn/serupa-ds#v14.1.0 serupa-create my-app
+npx --package=gitlab:diki-stwn-group/serupa-ds#v14.2.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -115,7 +105,7 @@ import { serupaPurge } from 'serupa-ds/purge';
 export default { plugins: [react(), serupaPurge()] };
 ```
 
-`vite build` then ships the component styles (about 220 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
+`vite build` then ships the component styles (about 380 KB) and only the utility classes your code uses; the dev server keeps every class, so a class you add shows at once. It reads whichever of `src/`, `index.html`, `app/`, `pages/` and `components/` your project has (or `content: ['src', 'docs']`), and trims only Serupa's stylesheets (`utilities-extra.css` too, if you import it), never your own CSS. With Next.js, webpack, or a stylesheet that `@import`s `bundle.css`, use the PostCSS plugin instead:
 
 ```js
 // postcss.config.mjs
@@ -132,7 +122,7 @@ npx serupa-purge src -o public/bundle.min.css
 
 Class names must appear whole in your code: name the ones it builds at runtime (`"grid-cols-" + n`) with `keep: ['grid-cols-2', '@safelist.txt']` in either plugin, or `--keep` on the command line.
 
-To also drop the styles of components your code never names, pass `components: true` (or `--components`): an app that only uses Button gets about 48 KB instead of 189 KB. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
+To also drop the styles of components your code never names, pass `components: true` (or `--components`): an app that only uses Button gets about 51 KB instead of 375 KB. An app made with `serupa-create` has it on. A component counts as used when its name appears in your sources (`<Button`, `import { Button }`, `Serupa.Button`), and the components it needs come along (IconButton brings Button and Icon).
 
 ```sh
 npx serupa-purge src -o public/bundle.min.css --components
@@ -160,7 +150,7 @@ npx serupa-usage src
 | `dist/theme.js` | Automatic dark mode and the theme switcher API. |
 | `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. Escape turns it off. `Serupa.debug.inspect(element)` and `Serupa.debug.contrast(element)` give the same as objects. Leave it out of production. |
 | `dist/eslint.js` (`serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
-| `dist/stylelint.js` (`serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length or a radius written out where a token belongs. See Getting started in Storybook. |
+| `dist/stylelint.js` (`serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
 | `dist/testing.js` (`serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
 | `dist/purge.js` (`serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
 | `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. Both are made from `tokens/serupa.tokens.json` in the repository. |
@@ -178,6 +168,10 @@ The package also exports what the components use themselves, so a component you 
 | `announce(text, { assertive? })` | Says `text` to screen readers through the components' live regions, which move into an open Dialog or Drawer so it's heard there too. `assertive` interrupts: only for errors. |
 | `announcePage({ title?, focus? })` | After a client-side route change, does what a full page load would: focuses the new page's main heading (the `h1` in `<main>`, made focusable with `tabindex="-1"`) and says its title (`document.title` by default) to screen readers, unless the focused heading already says it. `focus` takes an element or a selector, or `false` to leave focus where it is. Call it in an effect once the new page has rendered. |
 | `withViewTransition(update, { types? })` | Runs a state change as a View Transition, so what it moves glides to its new place instead of jumping: a list reordered or filtered, a card expanded, a layout switched. Mark what should travel with `view-transition-name` or the `view-transition-match` class. It uses `motion-change-md` with `ease-move`, only crossfades under reduced motion, and applies the change at once where View Transitions are missing. |
+| `useBreakpoint(name, { serverValue? })` | Whether the screen is at least `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px) wide: the `screen-*` tokens, so markup the hook picks switches at the same width as the `md:` utilities around it. Kept up to date as the window resizes. |
+| `useMediaQuery(query, { serverValue? })` | Whether any CSS media query matches now, such as `'(hover: hover)'`, kept up to date. Server HTML and hydration use `serverValue` (default `false`) and the browser's answer follows right after, so nothing mismatches. Prefer CSS where it can do the job: a hook is for when the markup itself changes. |
+| `useReducedMotion()` | Whether the visitor asked for less motion, to skip an animation you run from JavaScript (a smooth scroll, a count going up). CSS transitions already follow the setting through the motion tokens. |
+| `useCopyToClipboard({ copiedLabel?, announce?, timeout? })` | CopyButton's copying for a control that isn't a CopyButton, such as a "Copy link" menu item: `copy(value)` resolves `true` once it's on the clipboard (`false` when the browser refuses), `copied` stays true for `timeout` ms, and it says "Copied", or why it couldn't, to screen readers unless `announce` is `false`. It works inside a modal Dialog and where the clipboard API is refused. |
 
 ```tsx
 import { announce, useLocale } from "serupa-ds";
@@ -201,6 +195,20 @@ function RouteAnnouncer({ path }: { path: string }) {
     announcePage();
   }, [path]);
   return null;
+}
+```
+
+```tsx
+import { Button, Menu, MenuItem, toast, useBreakpoint, useCopyToClipboard } from "serupa-ds";
+
+function ShareMenu({ url }: { url: string }) {
+  const wide = useBreakpoint("md");
+  const { copy } = useCopyToClipboard({ announce: false });   // the toast says it
+  return (
+    <Menu trigger={<Button variant="secondary">{wide ? "Share project" : "Share"}</Button>}>
+      <MenuItem icon="link" onSelect={() => { void copy(url).then((ok) => toast(ok ? "Link copied" : "Couldn't copy the link")); }}>Copy link</MenuItem>
+    </Menu>
+  );
 }
 ```
 
@@ -252,10 +260,12 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | Component | What it's for |
 | --- | --- |
 | [Accordion](src/components/Accordion/README.md) | A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. |
+| [Attachment](src/components/Attachment/README.md) (beta) | A file shown as one compact row: an icon for its kind, the name, the kind and size, and, while it uploads, a bar. |
 | [Avatar](src/components/Avatar/README.md) | A small picture of a person (a circle) or of a team, project or organisation (a square). |
 | [AvatarGroup](src/components/AvatarGroup/README.md) | Avatars in an overlapping row, such as the people on a project or the assignees of a task. |
 | [Card](src/components/Card/README.md) | A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. |
 | [Carousel](src/components/Carousel/README.md) | One slide at a time, with previous and next buttons, a dot per slide and swipe. |
+| [Chat](src/components/Chat/README.md) (beta) | A conversation: messages in a log that stays at the newest one while the reader is there, day dividers, and a composer where Enter sends. |
 | [CodeBlock](src/components/CodeBlock/README.md) (beta) | Code for people to read and copy: an install command, a config file, an example. |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
@@ -321,6 +331,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Switch](src/components/Switch/README.md) | An on/off setting that takes effect at once. |
 | [Textarea](src/components/Textarea/README.md) | A multi-line text field, Input's sibling: a native `<textarea>` in a box. |
 | [TimePicker](src/components/TimePicker/README.md) | A time-of-day field: people type a time, or pick one from a list. |
+| [TimeZonePicker](src/components/TimeZonePicker/README.md) (beta) | A searchable list of time zones, by city, with each one's offset now and its name in the reader's language. |
 | [TypeToConfirm](src/components/TypeToConfirm/README.md) | A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted. |
 
 ### Layout
@@ -394,7 +405,7 @@ The system follows [Semantic Versioning](https://semver.org): the version is in 
 
 Each component is **stable** unless it says otherwise. A component marked **beta** is ready to use, but its API may still change in a minor release, and that release's changeset says how; an **alpha** one is still taking shape and may change in any release. A **deprecated** one keeps working until the next major removes it. The status is in the doc comment on the component's export (`@beta`, `@alpha` or `@deprecated`), so your editor shows it on hover, and it also appears above the component's guide in Storybook and after its name in the index below.
 
-Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next major. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
+Names are never removed in a minor or patch release: they're marked deprecated in `CHANGELOG.md`, keep working, and go in the next scheduled major, at least four weeks after the release that deprecated them. Breaking changes are held for one scheduled major at a time (the next is 15.0.0, proposed in [docs/rfcs/15.0.0.md](docs/rfcs/15.0.0.md)), and the previous major gets bug and security fixes for four weeks after a new one ships. [CONTRIBUTING.md](CONTRIBUTING.md#release-cadence-and-support) has the details. The test suite enforces it: a utility class that disappears is reported as a breaking change. To release: each pull request carries a changeset (`npx changeset`: patch, minor or major, and the note); on `main` a "Release" pull request gathers them into the next version and `CHANGELOG.md`, and merging it tags the version and makes a GitHub release (see `tools/README.md`).
 
 ## Design tokens for design tools
 
@@ -504,11 +515,11 @@ The source is in `src/`: one folder per component in `src/components/<Name>/` (t
 
 `npm run new-component -- <Name> --group <Storybook group>` starts one: it writes the folder with every file the contract asks for, already wired to the tokens, the layers and the docs, plus its server-render case, and marks each place that needs your words `TODO(new-component)` (the contract check fails while one is left), then prints the remaining steps. A new component lives in its own folder and nothing else needs a line for it: its `index.ts` says what the package exports, its words go in its `labels.ts` (with the Indonesian), and `tools/build/registry.mjs` builds the export list, the CSS import list and the label sets from the folders into `src/generated/` (not committed). Its stylesheet joins `components.css` after the ones listed in `src/styles/cascade.txt`; list it there only when it must come before another component's styles. Its server-render case is `tools/test/ssr/<Name>.mjs`, and `node tools/test/api.mjs --update` writes its `tools/test/baseline-api/<Name>.d.ts`, and `node tools/test/size.mjs --update <Name>` its size budgets, `tools/test/baseline-size/<Name>.json`. So two pull requests that add or change different components don't conflict.
 
-What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares all 25,559 utility classes and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
+What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares every utility class (its count is in `tools/README.md`) and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
 
-Serupa is designed and built by **Diki** ([@diki-stwn](https://github.com/diki-stwn)). It was called the Diki Design System up to version 4. It isn't open source: all rights are reserved ([LICENSE](LICENSE)), and `package.json` says so with `"license": "UNLICENSED"`.
+Serupa is designed and built by **Diki** ([@diki-stwn](https://gitlab.com/diki-stwn)). It was called the Diki Design System up to version 4. It isn't open source: all rights are reserved ([LICENSE](LICENSE)), and `package.json` says so with `"license": "UNLICENSED"`.
 
 The system is self-contained: every file it needs is in it, and nothing loads from another server. It builds on these open-source works; their licenses are in `licenses/`.
 

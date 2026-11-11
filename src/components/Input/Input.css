@@ -5,6 +5,9 @@
    .dk-input__field (the native <input>), .dk-input__count, .dk-input__icon--right. Every value goes through --input-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
+/* Under DatePicker, DateRangePicker, TimePicker or NumberInput when typed text was put back (GR232): why, in the
+   hint's color and size, until the text changes. A block of its own after the field's box. */
+.dk-input-rejected { display: block; margin-block-start: var(--spacing-1); color: var(--input-rejected-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
 .dk-input {
   --dk-input-h: var(--input-height-md, var(--control-height-md));
   --dk-input-px: var(--input-padding-x-md, var(--spacing-3));
@@ -60,4 +63,33 @@
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .dk-input:not(.dk-input--size-lg) .dk-input__field { font-size: var(--text-base); } }
+/* actions: InputAction buttons at the end of the box, a 2px inset from its edge, each the field's height less the
+   border and that inset (26px at md). An icon action is a muted icon shaded on hover, a text action ("Apply") is in
+   the primary color. Each has its own focus ring inside the box's. At size sm an action is 18px, so a box behind it
+   reaches out to 24px to press (WCAG 2.5.8), as SearchInput's clear button does. */
+.dk-input:has(> .dk-input__actions) { padding-inline-end: var(--input-actions-inset, var(--spacing-0\.5)); }
+.dk-input__actions { display: inline-flex; flex-shrink: 0; align-self: stretch; align-items: stretch; gap: var(--input-actions-inset, var(--spacing-0\.5)); box-sizing: border-box; padding-block: var(--input-actions-inset, var(--spacing-0\.5)); }
+.dk-input-action {
+  position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-sizing: border-box;
+  margin: var(--spacing-0); padding: var(--spacing-0) var(--input-action-padding-x, var(--spacing-2));
+  border: var(--spacing-0); border-radius: var(--input-action-radius, var(--radius-inner)); background: transparent;
+  color: var(--input-action-text, var(--primary)); font: inherit; font-weight: var(--font-medium); white-space: nowrap;
+  cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
+}
+.dk-input-action--icon { block-size: var(--sizing-full); aspect-ratio: var(--aspect-square); padding: var(--spacing-0); color: var(--input-action, var(--text-muted)); }
+.dk-input-action__icon { display: inline-flex; }
+.dk-input-action__icon .dk-icon { font-size: var(--dk-input-icon); }
+@media (hover: hover) {
+  .dk-input-action--text:hover:not(:disabled) { background: var(--input-action-text-bg-hover, var(--primary-subtle)); }
+  .dk-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--secondary)); color: var(--input-action-hover, var(--text)); }
+}
+.dk-input-action:focus-visible { outline: var(--focus-ring-width) solid var(--input-action-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+/* Disabled on its own (an Apply waiting for a code), it dims as Button does, with no hover shade. In a disabled
+   field the whole box is dimmed already, so the action isn't dimmed twice. */
+.dk-input-action:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-input--disabled .dk-input-action:disabled, .dk-input:where(:has(.dk-input__field:disabled)) .dk-input-action:disabled { opacity: var(--opacity-100); }
+.dk-input-action::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+@media (prefers-reduced-motion: reduce) { .dk-input-action { transition: none; } }
 }

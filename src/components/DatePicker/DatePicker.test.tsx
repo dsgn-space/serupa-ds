@@ -84,7 +84,7 @@ describe('DatePicker', () => {
     await type('dpi', 'soon');
     await type('dpi', '03/04/2030');
     expect([el('dpi').value, calls]).toEqual(['05/10/2026', ['soon:unreadable', '03/04/2030:unavailable']]);
-    await expect.poll(() => announcerA()?.textContent).toContain('"03/04/2030" wasn\'t accepted, so the previous value was kept.');
+    await expect.poll(() => announcerA()?.textContent).toContain('“03/04/2030” wasn’t accepted, so the previous value was kept.');
   });
 
   test('in a 500px tall window with the field at mid-height, the calendar stays on screen and scrolls inside, so its last week can be reached', async () => {
@@ -298,11 +298,19 @@ describe('DatePicker: motion (DZ1)', () => {
       const ms = (a: Animation) => Number(a.effect!.getComputedTiming().duration);
       const runs = (e: Element) => e.getAnimations().filter((a) => a instanceof CSSTransition && /^(opacity|scale)$/.test(a.transitionProperty)).map((a) => [(a as CSSTransition).transitionProperty, ms(a)]).sort();
       await render(<DatePicker id="mo" aria-label="Due" locale="en-US" defaultValue={new Date(2026, 2, 1)} />);
-      await userEvent.click(button('mo'));
       const p = popup('mo');
+      // Clicks from the page itself, read as soon as React has drawn them: a driver click (userEvent) comes back after
+      // a round trip, which on a busy runner outlasted the 150ms fade (Chromium read no transition). One press
+      // (detail 1), as a mouse's: a click with none is a key's, which opens and closes it at once (KW1).
+      const press = async (want: boolean) => {
+        button('mo').focus();   // as a mouse press does, before its click
+        button('mo').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
+        for (let i = 0; i < 20 && (p.hidden !== want || !runs(p).length); i++) await Promise.resolve();
+      };
+      await press(false);
       expect([runs(p), p.getAnimations().some((a) => a instanceof CSSAnimation)]).toEqual([[['opacity', 150], ['scale', 150]], false]);
       await settled(p);
-      await userEvent.click(button('mo'));
+      await press(true);
       expect([p.hidden, document.activeElement]).toEqual([true, button('mo')]);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (CSS.supports('overlay', 'auto')) {
@@ -318,5 +326,32 @@ describe('DatePicker: motion (DZ1)', () => {
       await userEvent.keyboard('{Escape}');
       expect([p.hidden, getComputedStyle(p).display, p.getAnimations().length, document.activeElement]).toEqual([true, 'none', 0, el('mo')]);
     });
+  });
+
+  test('GR161: a value it can\'t read ("tomorrow", month 13, 31 February) warns once per component in development, as no date is shown; "" and a real day don\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const said = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => /date-string/.test(m));
+      await render(<form><DatePicker id="ds0" aria-label="Z" locale="en-US" value="" onValueChange={() => {}} /><DatePicker id="ds1" aria-label="A" locale="en-US" defaultValue="2026-02-28" /></form>);
+      expect(said()).toEqual([]);
+      await render(<DatePicker id="ds2" aria-label="B" locale="en-US" value="2026-02-31" onValueChange={() => {}} />);
+      expect(el('ds2').value).toBe('');
+      expect(said()).toEqual([expect.stringMatching(/DatePicker: "2026-02-31" is not a day of the calendar/)]);
+      await render(<><DatePicker id="ds3" aria-label="C" value="tomorrow" onValueChange={() => {}} /><Calendar aria-label="D" value="2026-13-01" /></>);
+      expect(said()).toEqual([expect.anything(), expect.stringMatching(/Calendar: "2026-13-01" is not a day of the calendar/)]);
+    } finally { warn.mockRestore(); }
+  });
+});
+
+describe('DatePicker presets (RU11)', () => {
+  test('presets in the popup: picking one fills the field and closes the popup, back on the field', async () => {
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
+    await render(<DatePicker id="dpp" aria-label="Due" locale="en-US" presets />);
+    await userEvent.click(button('dpp'));
+    await userEvent.click(page.getByRole('button', { name: 'Tomorrow' }));
+    expect(el('dpp').value).toBe(new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).format(tomorrow));
+    await expect.poll(() => popup('dpp').hidden).toBe(true);
+    expect(document.activeElement).toBe(el('dpp'));
   });
 });

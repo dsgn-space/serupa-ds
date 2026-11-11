@@ -46,7 +46,7 @@ export const Overflow: Story = {
   args: { max: 3 },
   render: (args) => (
     <div style={{ width: 160 }}>
-      <AvatarGroup {...args}>{[...DEMO, ...DEMO.map((n) => n + ' II'), "Donaudampfschifffahrtsgesellschaftskapitänskajüte"].map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>
+      <AvatarGroup {...args}>{[...DEMO, ...DEMO.map((n) => n + ' II'), 'Donaudampfschifffahrtsgesellschaftskapitänskajüte'].map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>
     </div>
   ),
 };

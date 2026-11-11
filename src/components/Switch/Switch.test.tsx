@@ -182,7 +182,7 @@ describe('Switch', () => {
     function Saving() {
       const [on, setOn] = React.useState(false), [busy, setBusy] = React.useState(false);
       return <form id="pd-form">
-        <Switch id="pd" name="sync" checked={on} pending={busy} onChange={(e) => { onChange(); setOn(e.currentTarget.checked); setBusy(true); }}>Sync</Switch>
+        <Switch id="pd" name="sync" checked={on} loading={busy} onChange={(e) => { onChange(); setOn(e.currentTarget.checked); setBusy(true); }}>Sync</Switch>
         <Switch id="pd-on" defaultChecked pending>Backup</Switch>
         <button type="button" id="pd-done" onClick={() => { setBusy(false); }}>Saved</button>
       </form>;
@@ -287,5 +287,16 @@ describe('Switch', () => {
       await expect.poll(() => css(thumb('ps')).scale).toBe('none');
       await press(el('pd').closest('label')!, () => expect(css(thumb('pd')).scale).toBe('none'));
     });
+  });
+});
+
+describe('Switch: pending, the old name of loading', () => {
+  test('still marks it busy as loading does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Switch id="old-pending" pending onChange={() => {}} checked={false}>Sync</Switch>);
+      expect(el('old-pending').getAttribute('aria-busy')).toBe('true');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('switch-pending'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

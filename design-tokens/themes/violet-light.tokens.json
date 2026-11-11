@@ -309,6 +309,46 @@
         }
       }
     },
+    "success-hover": {
+      "$type": "color",
+      "$value": "{color.green-500}",
+      "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-hover"
+        }
+      }
+    },
+    "on-success": {
+      "$type": "color",
+      "$value": "{color.green-950}",
+      "$description": "Alias. Text and icons on `success` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--on-success"
+        }
+      }
+    },
+    "success-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.green-100}",
+      "$description": "Alias. Hover fill of an interactive `success-subtle` surface; `success-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-subtle-hover"
+        }
+      }
+    },
+    "success-border": {
+      "$type": "color",
+      "$value": "{color.green-300}",
+      "$description": "Alias. Border of a success outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--success-border"
+        }
+      }
+    },
     "warning": {
       "$type": "color",
       "$value": "{color.amber-600}",
@@ -336,6 +376,46 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--warning-text"
+        }
+      }
+    },
+    "warning-hover": {
+      "$type": "color",
+      "$value": "{color.amber-500}",
+      "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-hover"
+        }
+      }
+    },
+    "on-warning": {
+      "$type": "color",
+      "$value": "{color.amber-950}",
+      "$description": "Alias. Text and icons on `warning` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--on-warning"
+        }
+      }
+    },
+    "warning-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.amber-100}",
+      "$description": "Alias. Hover fill of an interactive `warning-subtle` surface; `warning-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-subtle-hover"
+        }
+      }
+    },
+    "warning-border": {
+      "$type": "color",
+      "$value": "{color.amber-300}",
+      "$description": "Alias. Border of a warning outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--warning-border"
         }
       }
     },
@@ -439,6 +519,46 @@
         }
       }
     },
+    "info-hover": {
+      "$type": "color",
+      "$value": "{color.sky-800}",
+      "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-hover"
+        }
+      }
+    },
+    "on-info": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--on-info"
+        }
+      }
+    },
+    "info-subtle-hover": {
+      "$type": "color",
+      "$value": "{color.sky-100}",
+      "$description": "Alias. Hover fill of an interactive `info-subtle` surface; `info-text` stays 4.5:1+ on it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-subtle-hover"
+        }
+      }
+    },
+    "info-border": {
+      "$type": "color",
+      "$value": "{color.sky-300}",
+      "$description": "Alias. Border of a info outline control or callout.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--info-border"
+        }
+      }
+    },
     "link-visited": {
       "$type": "color",
       "$value": "{color.fuchsia-700}",
@@ -451,8 +571,8 @@
     },
     "chart-1": {
       "$type": "color",
-      "$value": "{color.blue-700}",
-      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.blue-800}",
+      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-1"
@@ -462,7 +582,7 @@
     "chart-2": {
       "$type": "color",
       "$value": "{color.orange-600}",
-      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-2"
@@ -471,8 +591,8 @@
     },
     "chart-3": {
       "$type": "color",
-      "$value": "{color.teal-800}",
-      "$description": "Alias. Chart series 3 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.pink-800}",
+      "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-3"
@@ -481,8 +601,8 @@
     },
     "chart-4": {
       "$type": "color",
-      "$value": "{color.pink-500}",
-      "$description": "Alias. Chart series 4 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.lime-600}",
+      "$description": "Alias. Chart series 4 (lime): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-4"
@@ -491,8 +611,8 @@
     },
     "chart-5": {
       "$type": "color",
-      "$value": "{color.violet-700}",
-      "$description": "Alias. Chart series 5 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.yellow-800}",
+      "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-5"
@@ -501,8 +621,8 @@
     },
     "chart-6": {
       "$type": "color",
-      "$value": "{color.amber-600}",
-      "$description": "Alias. Chart series 6 (amber): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.teal-600}",
+      "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-6"
@@ -511,8 +631,8 @@
     },
     "chart-7": {
       "$type": "color",
-      "$value": "{color.emerald-800}",
-      "$description": "Alias. Chart series 7 (emerald): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.violet-800}",
+      "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-7"
@@ -521,8 +641,8 @@
     },
     "chart-8": {
       "$type": "color",
-      "$value": "{color.red-500}",
-      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours alternate darker and lighter, and `chart-gap` keeps them apart.",
+      "$value": "{color.red-600}",
+      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-8"

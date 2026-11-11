@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { page, userEvent } from 'vitest/browser';
+import { THEMES, contrast, css, lowContrast } from '../../../tools/test/vitest/helpers';
 import { Timeline, TimelineItem } from './Timeline';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -112,5 +112,80 @@ describe('Timeline', () => {
     const body = q(el('lw'), '.dk-timeline__body');
     expect([el('box').scrollWidth <= 241, body.scrollWidth <= body.clientWidth + 1, rect(body).right <= rect(el('box')).right + 1]).toEqual([true, true, true]);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+  });
+});
+
+describe('Timeline orientation="horizontal" (RU12)', () => {
+  const Row = (p: { stack?: boolean; dir?: 'rtl' }) => <div dir={p.dir}>
+    <Timeline id="h" orientation="horizontal" stackWhenNarrow={p.stack} aria-label="Order tracking" className="mine">
+      <TimelineItem id="h1" title="Ordered" time="12 Mar">Two items, paid by card, packed at the warehouse.</TimelineItem>
+      <TimelineItem id="h2" title="Shipped" time="13 Mar" />
+      <TimelineItem id="h3" title="Out for delivery" time="15 Mar" />
+      <TimelineItem id="h4" title="Delivered" time="16 Mar" />
+    </Timeline>
+  </div>;
+
+  test('events in a row along the line, each 192px wide, the rail above the body; the list is still a list', async () => {
+    await render(<div style={{ width: 1000 }}><Row /></div>);
+    await expect.element(page.getByRole('list')).toBeInTheDocument();
+    expect(page.getByRole('listitem').all().length).toBe(4);
+    const [a, b] = [rect(el('h1')), rect(el('h2'))];
+    expect([a.top, Math.round(b.left - a.left), Math.round(a.width) >= 192]).toEqual([b.top, Math.round(a.width), true]);
+    expect(rect(q(el('h1'), '.dk-timeline__rail')).bottom).toBeLessThanOrEqual(rect(q(el('h1'), '.dk-timeline__body')).top);
+    // Every marker on one line, however long an event's text.
+    expect(rect(q(el('h1'), '.dk-timeline__marker')).top).toBe(rect(q(el('h2'), '.dk-timeline__marker')).top);
+  });
+
+  test('className and style go to the box around the <ol>; ref and the rest to the <ol>', async () => {
+    const ref = React.createRef<HTMLOListElement>();
+    await render(<Timeline id="r" ref={ref} orientation="horizontal" aria-label="Phases" className="mine" style={{ maxWidth: 300 }} data-x="y"><TimelineItem title="One" /></Timeline>);
+    const box = el('r').parentElement!;
+    expect([ref.current === el('r'), el('r').dataset.x, box.classList.contains('mine'), box.style.maxWidth, box.dataset.orientation]).toEqual([true, 'y', true, '300px', 'horizontal']);
+  });
+
+  test('while it scrolls, the box is a Tab stop and a region with the name (or "Timeline"); when it fits, or is stacked, it isn\'t, and the list keeps the name (GR281)', async () => {
+    await render(<div style={{ width: 300 }}><Timeline id="s1" orientation="horizontal" aria-label="Phases"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    await expect.element(page.getByRole('region', { name: 'Phases' })).toBeInTheDocument();
+    expect(el('s1').parentElement!.tabIndex).toBe(0);
+    await render(<div style={{ width: 300 }}><Timeline id="s2" orientation="horizontal"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    await expect.element(page.getByRole('region', { name: 'Timeline' })).toBeInTheDocument();
+    await render(<div style={{ width: 900 }}><Timeline id="s3" orientation="horizontal" aria-label="Fits"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    await render(<div style={{ width: 360 }}><Timeline id="s4" orientation="horizontal" stackWhenNarrow aria-label="Stacked"><TimelineItem title="One" /><TimelineItem title="Two" /></Timeline></div>);
+    for (const id of ['s3', 's4']) expect([el(id).parentElement!.hasAttribute('tabindex'), el(id).parentElement!.getAttribute('role')]).toEqual([false, null]);
+    await expect.element(page.getByRole('list', { name: 'Fits' })).toBeInTheDocument();
+    await expect.element(page.getByRole('list', { name: 'Stacked' })).toBeInTheDocument();
+  });
+
+  test('past its width it scrolls sideways in its own box, not the page; Tab reaches the box and an arrow key scrolls it', async () => {
+    await render(<div style={{ width: 320 }}><Row /></div>);
+    const box = el('h').parentElement!;
+    expect([box.scrollWidth > box.clientWidth, Math.round(rect(box).width), css(box).overscrollBehaviorInline]).toEqual([true, 320, 'contain']);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(box);
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.poll(() => box.scrollLeft).toBeGreaterThan(0);
+    const moved = box.scrollLeft;
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect.poll(() => box.scrollLeft).toBeLessThan(moved);
+  });
+
+  test('right to left, the first event is at the right', async () => {
+    await render(<div style={{ width: 1000 }}><Row dir="rtl" /></div>);
+    expect(rect(el('h1')).left).toBeGreaterThan(rect(el('h2')).left);
+  });
+
+  test('stackWhenNarrow: under 480px of box the events go down a line; wider, they stay in a row', async () => {
+    await render(<div style={{ width: 360 }}><Row stack /></div>);
+    const box = el('h').parentElement!;
+    expect([rect(el('h2')).top > rect(el('h1')).bottom - 1, box.scrollWidth <= box.clientWidth]).toEqual([true, true]);
+  });
+
+  test('stackWhenNarrow in a box 480px or wider: the events stay in a row', async () => {
+    await render(<div style={{ width: 1000 }}><Row stack /></div>);
+    expect(rect(el('h1')).top).toBe(rect(el('h2')).top);
+  });
+
+  test('the scrolling box\'s focus ring keeps 3:1 on the page in all six themes', () => {
+    expect(lowContrast([['focus ring', 'var(--focus-ring)', 'var(--surface)', 3]])).toEqual([]);
   });
 });

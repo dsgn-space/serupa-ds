@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, settle, withMotion } from '../../../tools/test/vitest/helpers';
+import { page, userEvent } from 'vitest/browser';
+import { color, contrast, css, press, settle, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { SerupaProvider } from '../../internal/provider';
-import { Table, TableActionBar, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableVirtualBody, type SortDirection } from './Table';
+import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
 const ROWS: Array<[string, string, number]> = [['Ada', 'Admin', 1200], ['Grace', 'Editor', 30], ['Linus', 'Viewer', 450]];
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -100,6 +100,19 @@ describe('Table', () => {
     expect([e.textAlign, e.fontVariantNumeric]).toEqual(['end', 'tabular-nums']);
   });
 
+  test('a row\'s background eases only while the pointer is over the body, so select all from the header repaints every row at once (GR168)', async () => {
+    await withMotion(async () => {
+      await render(<Table id="gr168"><TableHead><TableRow><TableHeaderCell id="gr168h">Name</TableHeaderCell></TableRow></TableHead>
+        <TableBody><TableRow id="gr168a"><TableCell>Ada</TableCell></TableRow><TableRow id="gr168b"><TableCell>Bo</TableCell></TableRow></TableBody></Table>);
+      const row = (id: string) => document.getElementById(id) as HTMLElement;
+      await userEvent.hover(document.getElementById('gr168h')!);
+      expect([css(row('gr168a')).transitionDuration, css(row('gr168b')).transitionDuration]).toEqual(['0s', '0s']);
+      await userEvent.hover(row('gr168a'));
+      expect(css(row('gr168a')).transitionProperty).toBe('background-color');
+      expect(css(row('gr168a')).transitionDuration).not.toBe('0s');
+    });
+  });
+
   test('selected: shaded, a 2px primary bar at its start; no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
@@ -160,7 +173,7 @@ describe('Table', () => {
     expect(rows[0].hasAttribute('aria-selected')).toBe(false);
     await userEvent.hover(rows[0].querySelector('td')!);
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
-    await Promise.all(rows[0].getAnimations().map((a) => a.finished));
+    await settled(rows[0]);
     expect(css(rows[0]).backgroundColor).toBe(NONE);
     await away();
   });
@@ -369,17 +382,26 @@ const barButton = (name: string) => [...el('bar').querySelectorAll('button')].fi
 describe('TableActionBar (62)', () => {
   test('hidden with nothing selected; "2 selected", the actions and "Clear selection" while rows are; a group named by the count', async () => {
     const log: string[] = [];
-    await render(<Picker log={log} />);
+    await render(<SerupaProvider locale="en"><Picker log={log} /></SerupaProvider>);
     expect(el('bar').hidden).toBe(true);
     await userEvent.click(box('Select Ada'));
     await userEvent.click(box('Select Linus'));
     await expect.poll(() => el('bar').hidden).toBe(false);
     expect(el('bar').getAttribute('role')).toBe('group');
     expect(document.getElementById(el('bar').getAttribute('aria-labelledby')!)?.textContent).toBe('2 selected');
+    expect(getComputedStyle(document.getElementById(el('bar').getAttribute('aria-labelledby')!)!).fontVariantNumeric).toBe('tabular-nums');   // the count doesn't shift as it changes
     expect([...el('bar').querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Delete', 'Clear selection']);
     await userEvent.click(barButton('Delete'));
     expect(log).toEqual(['delete Ada,Linus']);
     await expect.poll(() => el('bar').hidden).toBe(true);
+  });
+
+  test('the count is in the locale\'s digits and grouping: "٢ selected" in ar-EG, "1,200 selected" in en-US', async () => {
+    await render(<>
+      <SerupaProvider locale="ar-EG"><TableActionBar id="bar-ar" count={2} /></SerupaProvider>
+      <SerupaProvider locale="en-US"><TableActionBar id="bar-many" count={1200} /></SerupaProvider>
+    </>);
+    expect(['bar-ar', 'bar-many'].map((b) => document.getElementById(el(b).getAttribute('aria-labelledby')!)?.textContent)).toEqual(['٢ selected', '1,200 selected']);
   });
 
   test('hiding with focus in it (Clear, or an action that empties the selection) moves focus to the table\'s "Select all", not the page', async () => {
@@ -418,13 +440,13 @@ describe('TableActionBar (62)', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Picker log={[]} />);
+    await render(<SerupaProvider locale="en"><Picker log={[]} /></SerupaProvider>);
     await new Promise((r) => setTimeout(r, 300));
     expect(said.filter((t) => /selected/.test(t))).toEqual([]);
     await userEvent.click(box('Select all rows'));
     await expect.poll(() => said.at(-1)).toMatch(/3 selected$/);
     seen.disconnect();
-    expect([idLabels.tableSelected(3), idLabels.clearSelection]).toEqual(['3 dipilih', 'Hapus pilihan']);
+    expect([idLabels.tableSelected(3, '3'), idLabels.clearSelection]).toEqual(['3 dipilih', 'Hapus pilihan']);
   });
 
   test('GR55: a bar rendered only while rows are selected reads out its first count', async () => {
@@ -432,7 +454,7 @@ describe('TableActionBar (62)', () => {
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     const screen = await render(<div />);
-    await screen.rerender(<TableActionBar id="bar" count={1} />);
+    await screen.rerender(<SerupaProvider locale="en"><TableActionBar id="bar" count={1} /></SerupaProvider>);
     await expect.poll(() => said.at(-1)).toMatch(/1 selected$/);
     seen.disconnect();
   });
@@ -442,7 +464,7 @@ describe('TableActionBar (62)', () => {
     expect([...el('bar').querySelectorAll('button')].map((b) => b.textContent)).toEqual(['Export']);
     await screen.rerender(<TableActionBar id="bar" count={1} onClear={() => {}} clearLabel="Deselect" />);
     expect(barButton('Deselect')).toBeTruthy();
-    await screen.rerender(<SerupaProvider labels={idLabels}><TableActionBar id="bar" count={4} onClear={() => {}} /></SerupaProvider>);
+    await screen.rerender(<SerupaProvider locale="id-ID" labels={idLabels}><TableActionBar id="bar" count={4} onClear={() => {}} /></SerupaProvider>);
     expect(el('bar').textContent).toBe('4 dipilihHapus pilihan');
   });
 
@@ -555,6 +577,22 @@ describe('TableVirtualBody (51)', () => {
     </Table>;
   }
   const drawn = () => [...el('vt').querySelectorAll<HTMLElement>('tbody > tr[data-index]')];
+  test('aria-rowcount goes with the virtual body: a table that switches to drawing every row has none left (GR270)', async () => {
+    function Switch({ all }: { all: boolean }) {
+      return <Table id="vs" caption="Orders">
+        <TableHead><TableRow><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
+        {all
+          ? <TableBody><TableRow><TableCell>Order 1</TableCell></TableRow><TableRow><TableCell>Order 2</TableCell></TableRow></TableBody>
+          : <TableVirtualBody count={500} renderRow={(i) => <TableRow><TableCell>{'Order ' + i}</TableCell></TableRow>} />}
+      </Table>;
+    }
+    const { rerender } = await render(<Switch all={false} />);
+    await frames();
+    expect(el('vs').getAttribute('aria-rowcount')).toBe('501');
+    await rerender(<Switch all />);
+    expect(el('vs').hasAttribute('aria-rowcount')).toBe(false);
+  });
+
   test('draws only the rows in view, with aria-rowindex under the header and aria-rowcount on the table; the frame scrolls through all 10,000', async () => {
     await render(<Big />);
     await frames();
@@ -614,5 +652,259 @@ describe('TableVirtualBody (51)', () => {
     f.scrollTop = 200000;
     await frames(); await frames();
     expect([document.activeElement === link, link.isConnected, drawn().length < 45]).toEqual([true, true, true]);
+  });
+});
+
+describe('Table layout="fixed" (PT4)', () => {
+  const PAGES = [[['Ada', 'Admin'], ['Grace', 'Editor']], [['Maximiliana Wolfeschlegelsteinhausen', 'Viewer'], ['Li', 'Owner of the whole billing and invoicing workspace']]];
+  function Paged(p: { page: number; layout?: 'auto' | 'fixed'; widths?: boolean }) {
+    return <div style={{ width: 480 }}><Table caption="Users" layout={p.layout}>
+      <TableHead><TableRow><TableHeaderCell id="h1" width={p.widths ? '30%' : undefined}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody>{PAGES[p.page].map(([a, b]) => <TableRow key={a}><TableCell>{a}</TableCell><TableCell>{b}</TableCell></TableRow>)}</TableBody>
+    </Table></div>;
+  }
+  const widths = () => [el('h1').getBoundingClientRect().width, el('h2').getBoundingClientRect().width];
+
+  test('with auto layout the columns follow each page\'s content; fixed keeps them the same on both pages, and long text wraps', async () => {
+    const s = await render(<Paged page={0} />);
+    const auto0 = widths();
+    await s.rerender(<Paged page={1} />);
+    expect(widths()).not.toEqual(auto0);
+    await s.rerender(<Paged page={0} layout="fixed" />);
+    const fixed0 = widths();
+    expect(Math.abs(fixed0[0] - fixed0[1])).toBeLessThanOrEqual(1);   // no widths: they share the table
+    await s.rerender(<Paged page={1} layout="fixed" />);
+    expect(widths()).toEqual(fixed0);
+    expect(s.getByText('Owner of the whole billing and invoicing workspace').element().getBoundingClientRect().height).toBeGreaterThan(30);
+  });
+
+  test('a header cell\'s width sets its column, as a CSS length or pixels; the select column stays the checkbox\'s width', async () => {
+    const s = await render(<Paged page={0} layout="fixed" widths />);
+    expect(widths()[0]).toBeCloseTo(480 * 0.3, -1);
+    await s.rerender(<div style={{ width: 480 }}><Table caption="T" layout="fixed"><TableHead><TableRow><TableSelectCell header label="Select all rows" /><TableHeaderCell id="h1" width={200} style={{ color: 'red' }}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead></Table></div>);
+    expect(el('h1').style.width).toBe('200px');
+    expect(el('h1').style.color).toBe('red');
+    const box = s.getByRole('checkbox').element().closest('th')!.getBoundingClientRect().width;
+    expect(box).toBeLessThan(48);
+  });
+});
+
+describe('Table column tools (RU10)', () => {
+  function Resizing(p: { onWidthChange?: (w: number) => void; dir?: 'rtl' }) {
+    const [width, setWidth] = React.useState(160);
+    const change = p.onWidthChange ? (n: number) => { setWidth(n); p.onWidthChange!(n); } : undefined;
+    return <div style={{ width: 600 }} dir={p.dir}><Table caption="Users" layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id="h1" resizable width={change ? width : 160} minWidth={80} maxWidth={400} onWidthChange={change}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Maximiliana Wolfeschlegelsteinhausen</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table></div>;
+  }
+  const w = () => el('h1').getBoundingClientRect().width;
+
+  test('a resizable header has a focusable separator named for its column; arrows step 16px, Home and End go to the limits', async () => {
+    const seen: number[] = [];
+    const s = await render(<Resizing onWidthChange={(n) => seen.push(n)} />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    await expect.element(handle).toHaveAttribute('aria-orientation', 'vertical');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '160');
+    await expect.element(handle).toHaveAttribute('aria-valuemin', '80');
+    await expect.element(handle).toHaveAttribute('aria-valuemax', '400');
+    (handle.element() as HTMLElement).focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+    expect(w()).toBeCloseTo(176, 0);
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '144');
+    await userEvent.keyboard('{Home}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '80');
+    await userEvent.keyboard('{End}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '400');
+    expect(seen).toEqual([176, 160, 144, 80, 400]);
+  });
+
+  test('in a right-to-left table ArrowLeft widens the column', async () => {
+    const s = await render(<Resizing dir="rtl" />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    (handle.element() as HTMLElement).focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+  });
+
+  test('dragging the handle changes the width, within the limits; a double-click fits the widest cell on one line', async () => {
+    const s = await render(<Resizing />);
+    const h = s.getByRole('separator').element() as HTMLElement;
+    const r = h.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const fire = (type: string, dx: number) => h.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, button: 0, clientX: x + dx, clientY: y }));
+    fire('pointerdown', 0); fire('pointermove', 50); fire('pointerup', 50);
+    await expect.poll(w).toBeCloseTo(210, 0);
+    fire('pointerdown', 0); fire('pointermove', -500); fire('pointerup', -500);
+    await expect.poll(w).toBeCloseTo(80, 0);
+    await userEvent.dblClick(h);
+    const text = s.getByText('Maximiliana Wolfeschlegelsteinhausen').element() as HTMLElement;
+    await expect.poll(() => text.getBoundingClientRect().height).toBeLessThan(48);   // one line, in the cell's padding
+    expect(w()).toBeGreaterThan(210);
+    expect(w()).toBeLessThan(400);
+  });
+
+  test('a click or Enter on the handle opens Narrower, Wider and Fit, so no width needs a drag (2.5.7, GR296)', async () => {
+    const s = await render(<Resizing />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    const h = handle.element() as HTMLElement;
+    expect(document.getElementById(h.getAttribute('aria-describedby')!)!.textContent).toBe('Press Enter for width buttons');
+    await userEvent.click(h);
+    const dialog = page.getByRole('dialog', { name: 'Resize Name column' });
+    await expect.element(dialog).toBeVisible();
+    await userEvent.click(page.getByRole('button', { name: 'Wider' }));
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
+    expect(w()).toBeCloseTo(176, 0);
+    await userEvent.click(page.getByRole('button', { name: 'Narrower' }));
+    await userEvent.click(page.getByRole('button', { name: 'Narrower' }));
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '144');
+    await userEvent.click(page.getByRole('button', { name: 'Fit to content' }));
+    const text = s.getByText('Maximiliana Wolfeschlegelsteinhausen').element() as HTMLElement;
+    await expect.poll(() => text.getBoundingClientRect().height).toBeLessThan(48);
+    expect(w()).toBeLessThan(400);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => document.querySelector('[role=dialog]')!.matches(':popover-open')).toBe(false);
+    expect(document.activeElement).toBe(h);
+    await userEvent.keyboard('{Home}{Enter}');
+    await expect.element(dialog).toBeVisible();
+    await expect.element(page.getByRole('button', { name: 'Narrower' })).toBeDisabled();   // at its 80px least
+  });
+
+  test('the click that ends a drag doesn\'t open the popover; with no width set, the value is the drawn width (GR296)', async () => {
+    const s = await render(<div style={{ width: 600 }}><Table caption="Users" layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id="h1" resizable>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Ada</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table></div>);
+    const h = s.getByRole('separator').element() as HTMLElement;
+    await expect.poll(() => Number(h.getAttribute('aria-valuenow'))).toBeCloseTo(w(), 0);
+    const r = h.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const fire = (type: string, dx: number) => h.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, button: 0, clientX: x + dx, clientY: y }));
+    fire('pointerdown', 0); fire('pointermove', 40); fire('pointerup', 40);
+    h.click();
+    await settle();
+    expect(document.querySelector('[role=dialog]')!.matches(':popover-open')).toBe(false);
+  });
+
+  function Wide(p: { pin?: boolean }) {
+    return <div style={{ width: 300 }}><Table id="tw" caption="Wide" layout="fixed" pinStart={p.pin} pinEnd={p.pin}>
+      <TableHead><TableRow><TableHeaderCell width={100}>Name</TableHeaderCell><TableHeaderCell width={200}>A</TableHeaderCell><TableHeaderCell width={200}>B</TableHeaderCell><TableHeaderCell width={80}>Act</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="first">Ada</TableCell><TableCell>a</TableCell><TableCell>b</TableCell><TableCell id="last">Edit</TableCell></TableRow></TableBody>
+    </Table></div>;
+  }
+  test('pinStart and pinEnd keep the first and last columns in view while the rest scroll sideways', async () => {
+    const s = await render(<Wide />);
+    const frame = el('tw').parentElement as HTMLElement;   // the scrolling frame around the <table>
+    const at = () => [el('first').getBoundingClientRect().left, el('last').getBoundingClientRect().right];
+    const before = at();
+    frame.scrollLeft = 120;
+    await settle();
+    expect(at()[0]).toBeLessThan(before[0] - 100);   // unpinned: it scrolls away
+    await s.rerender(<Wide pin />);
+    frame.scrollLeft = 0;
+    await settle();
+    const start = at(), box = frame.getBoundingClientRect();
+    expect(start[1]).toBeLessThanOrEqual(box.right);   // the last column sits at the frame's end
+    frame.scrollLeft = 120;
+    await settle();
+    expect(at()[0]).toBeCloseTo(start[0], 0);
+    expect(at()[1]).toBeCloseTo(start[1], 0);
+  });
+
+  test('TableColumnsMenu: a checkbox per column; a required column and the last one shown can\'t be cleared', async () => {
+    const seen: { id: string; visible: boolean }[] = [];
+    function Menu() {
+      const [cols, set] = React.useState<TableColumnOption[]>([{ id: 'name', label: 'Name', visible: true, required: true }, { id: 'role', label: 'Role', visible: true }, { id: 'calls', label: 'Calls', visible: false }]);
+      return <TableColumnsMenu columns={cols} onColumnsChange={(next, d) => { seen.push(d); set(next); }} />;
+    }
+    const s = await render(<Menu />);
+    await s.getByRole('button', { name: 'Columns' }).click();
+    const dialog = s.getByRole('dialog', { name: 'Columns' });
+    await expect.element(dialog).toBeVisible();
+    await expect.element(s.getByRole('checkbox', { name: 'Name' })).toBeChecked();
+    await expect.element(s.getByRole('checkbox', { name: 'Name' })).toBeDisabled();
+    await expect.element(s.getByRole('checkbox', { name: 'Calls' })).not.toBeChecked();
+    await s.getByRole('checkbox', { name: 'Calls' }).click();
+    await expect.element(s.getByRole('checkbox', { name: 'Calls' })).toBeChecked();
+    expect(seen).toEqual([{ id: 'calls', visible: true }]);   // and the list came back with Calls shown
+    // Without a required column, the last one shown can't be cleared.
+    await s.rerender(<TableColumnsMenu columns={[{ id: 'a', label: 'A', visible: true }, { id: 'b', label: 'B', visible: false }]} onColumnsChange={() => {}} />);
+    await s.getByRole('button', { name: 'Columns' }).click();
+    await expect.element(s.getByRole('checkbox', { name: 'A' })).toBeDisabled();
+    await expect.element(s.getByRole('checkbox', { name: 'B' })).toBeEnabled();
+  });
+
+  function Expanding(p: { striped?: boolean }) {
+    const [open, setOpen] = React.useState<Record<string, boolean>>({});
+    return <Table caption="Orders" striped={p.striped}>
+      <TableHead><TableRow><TableExpandCell header /><TableHeaderCell>Order</TableHeaderCell></TableRow></TableHead>
+      <TableBody>{['1', '2', '3'].map((n) => <React.Fragment key={n}>
+        <TableRow data-row={n}><TableExpandCell label={'Order ' + n} expanded={!!open[n]} controls={'d' + n} onExpandedChange={(v) => setOpen({ ...open, [n]: v })} /><TableCell>Order {n}</TableCell></TableRow>
+        <TableDetailRow id={'d' + n} open={!!open[n]} colSpan={2}>Notes for {n}</TableDetailRow>
+      </React.Fragment>)}</TableBody>
+    </Table>;
+  }
+  test('TableExpandCell: a button per row named for it, with aria-expanded and aria-controls; it shows the row\'s details', async () => {
+    const s = await render(<Expanding />);
+    await expect.element(s.getByRole('columnheader', { name: 'Details' })).toBeInTheDocument();
+    const b = s.getByRole('button', { name: 'Details, Order 2' });
+    await expect.element(b).toHaveAttribute('aria-expanded', 'false');
+    await expect.element(b).toHaveAttribute('aria-controls', 'd2');
+    await expect.element(s.getByText('Notes for 2')).not.toBeVisible();
+    await b.click();
+    await expect.element(b).toHaveAttribute('aria-expanded', 'true');
+    await expect.element(s.getByText('Notes for 2')).toBeVisible();
+    expect(el('d2').querySelector('td')!.colSpan).toBe(2);
+  });
+
+  test('striped shades every other data row, whether or not detail rows sit between them', async () => {
+    const s = await render(<Expanding striped />);
+    const shade = () => ['1', '2', '3'].map((n) => getComputedStyle(q('[data-row="' + n + '"]')).backgroundColor !== NONE);
+    expect(shade()).toEqual([false, true, false]);
+    await s.getByRole('button', { name: 'Details, Order 1' }).click();
+    expect(shade()).toEqual([false, true, false]);
+  });
+
+  test('Indonesian labels', async () => {
+    const s = await render(<SerupaProvider labels={idLabels}><Resizing /><Expanding /></SerupaProvider>);
+    await expect.element(s.getByRole('separator', { name: 'Ubah lebar kolom Name' })).toBeInTheDocument();
+    await expect.element(s.getByRole('button', { name: 'Rincian Order 1' })).toBeInTheDocument();
+    await expect.element(s.getByRole('columnheader', { name: 'Rincian' })).toBeInTheDocument();
+  });
+});
+
+describe('Table loading and messages (GR316)', () => {
+  test('busy sets aria-busy; TableLoadingRows draws a placeholder in every cell, its rows as tall as real ones in both sizes, and the wait is said once', async () => {
+    function Loading(props: { size?: 'sm' | 'md'; busy: boolean }) {
+      return <Table id={'tl-' + (props.size || 'md')} size={props.size} busy={props.busy} caption="Projects">
+        {head()}
+        {props.busy ? <TableLoadingRows columns={3} rows={4} label="Loading projects" /> : body()}
+      </Table>;
+    }
+    const { rerender } = await render(<div style={{ width: '600px' }}><Loading busy /><Loading size="sm" busy /></div>);
+    for (const id of ['tl-md', 'tl-sm']) {
+      const table = el(id), rows = [...table.querySelectorAll('tbody tr')] as HTMLElement[];
+      expect(table.getAttribute('aria-busy')).toBe('true');
+      expect(rows.map((r) => r.children.length)).toEqual([3, 3, 3, 3]);
+    }
+    // One name for the whole table: the rest of the placeholders are hidden from screen readers.
+    // The placeholders are hidden from screen readers; the wait is said once, after the loader's delay.
+    await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading projects');
+    // Once shown, no cell is a progress bar a screen reader can land on; the table's aria-busy says it's loading.
+    expect(page.getByRole('progressbar').all().length).toBe(0);
+    expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
+    const loadingHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
+    await rerender(<div style={{ width: '600px' }}><Loading busy={false} /><Loading size="sm" busy={false} /></div>);
+    const realHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
+    expect(loadingHeights).toEqual(realHeights);
+    expect(el('tl-md').hasAttribute('aria-busy')).toBe(false);
+  });
+
+  test('TableMessageRow is one cell across every column, for an empty or failed load', async () => {
+    await render(<Table id="tmsg" caption="Projects">{head()}<TableBody><TableMessageRow colSpan={3} id="msg"><span role="alert">Couldn't load projects.</span><Button>Retry</Button></TableMessageRow></TableBody></Table>);
+    const row = el('msg');
+    expect([row.tagName, row.children.length, (row.firstElementChild as HTMLTableCellElement).colSpan]).toEqual(['TR', 1, 3]);
+    expect(row.getBoundingClientRect().width).toBe((el('tmsg').querySelector('thead tr') as HTMLElement).getBoundingClientRect().width);
+    await expect.element(page.getByRole('alert')).toHaveTextContent("Couldn't load projects.");
   });
 });

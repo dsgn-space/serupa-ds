@@ -13,6 +13,7 @@ import { Button } from '../components/Button/Button';
 import { Combobox } from '../components/Combobox/Combobox';
 import { CommandPalette } from '../components/CommandPalette/CommandPalette';
 import { CopyButton } from '../components/CopyButton/CopyButton';
+import { DataGrid } from '../components/DataGrid/DataGrid';
 import { Dialog } from '../components/Dialog/Dialog';
 import { EmptyState } from '../components/EmptyState/EmptyState';
 import { Field } from '../components/Field/Field';
@@ -27,6 +28,7 @@ import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
+import { Kanban } from '../components/Kanban/Kanban';
 import { SortableList } from '../components/SortableList/SortableList';
 import { Splitter } from '../components/Splitter/Splitter';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../components/Table/Table';
@@ -64,10 +66,10 @@ const SITES: Record<string, Site> = {
     act: async () => { React.act(() => { toast({ title: 'Upload failed', tone: 'danger', duration: 0 }); }); }, says: /Upload failed/, assertive: true },
   'Combobox: how many options match once typing stops': {
     ui: () => <Combobox aria-label="Planet" options={['Mars', 'Mercury', 'Venus']} />,
-    act: async () => { await userEvent.click($('input[role="combobox"]')); await userEvent.keyboard('M'); }, says: /2 results/ },
+    act: async () => { await userEvent.click($('input[role="combobox"]')); await userEvent.keyboard('M'); }, says: /[2٢] results/ },
   'CommandPalette: how many commands match once typing stops (the palette is a dialog on top)': {
     ui: (s) => <CommandPalette open={!!s} hotkey={false} commands={[{ id: 'a', label: 'Mars' }, { id: 'b', label: 'Mercury' }, { id: 'c', label: 'Venus' }]} />,
-    act: async (next) => { await next(); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('M'); }, says: /2 commands/ },
+    act: async (next) => { await next(); await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('combobox'); await userEvent.keyboard('M'); }, says: /[2٢] commands/ },
   'EmptyState: a result with announce as it appears': {
     ui: (s) => (s ? <EmptyState announce title="No results for “mars”" /> : <span />),
     act: (next) => next(), says: /No results for “mars”/ },
@@ -76,7 +78,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /Enter an email address with an @/ },
   'OfflineBanner: the connection drops': {
     ui: (s) => <OfflineBanner online={s !== 1} />,
-    act: (next) => next(), says: /You're offline/ },
+    act: (next) => next(), says: /You’re offline/ },
   'FileUpload: a file added': {
     ui: () => <FileUpload id="fu" />,
     act: async () => { await userEvent.upload($('#fu'), [new File(['x'], 'report.pdf', { type: 'application/pdf' })]); }, says: /report\.pdf added/ },
@@ -91,10 +93,16 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /20 more loaded\. Showing 40 of 134/ },
   'NumberInput: typed text that isn\'t a number': {
     ui: () => <NumberInput id="qty" aria-label="Quantity" defaultValue={5} />,
-    act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /"abc" wasn't accepted/, assertive: true },
+    act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /“abc” wasn’t accepted/, assertive: true },
   'SortableList: picking an item up with Space': {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
+  'DataGrid: how many cells were copied': {
+    ui: () => <DataGrid aria-label="Stock" columns={[{ key: 'name', header: 'Name' }, { key: 'qty', header: 'Qty' }]} rows={[{ id: 'a', name: 'Kopi', qty: 4 }]} />,
+    act: async () => { await userEvent.click(document.querySelector('[role="gridcell"]') as HTMLElement); await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}'); await userEvent.copy(); }, says: /2 cells copied/ },
+  'Kanban: picking a card up with Space': {
+    ui: () => <Kanban aria-label="Board" columns={[{ id: 'a', title: 'To do', items: ITEMS }, { id: 'b', title: 'Done', items: [] }]} getKey={(t) => t.id} getLabel={(t) => t.name} renderCard={(t) => t.name} onMove={() => {}} />,
+    act: async () => { $('button[aria-label="Move Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*To do.*2.*3/ },
   'Splitter: a press on the handle that starts placing it': {
     ui: () => <Splitter style={{ width: '400px', height: '100px' }}><p>Start</p><p>End</p></Splitter>,
     act: async () => { await userEvent.click($('[role=separator]')); }, says: /Press where the handle should go/ },
@@ -118,7 +126,7 @@ const SITES: Record<string, Site> = {
     act: async () => { await userEvent.click($('#copy')); }, says: /Copied/ },
   'CopyButton: copying failed': {
     ui: () => <CopyButton id="copy" value="https://serupa.dev" />,
-    act: async () => { writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError')); vi.spyOn(document, 'execCommand').mockReturnValue(false); await userEvent.click($('#copy')); }, says: /Couldn't copy/, assertive: true },
+    act: async () => { writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError')); vi.spyOn(document, 'execCommand').mockReturnValue(false); await userEvent.click($('#copy')); }, says: /Couldn’t copy/, assertive: true },
 };
 
 let writeText: ReturnType<typeof vi.fn>;

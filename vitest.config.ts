@@ -28,6 +28,10 @@ export default defineConfig({
   oxc: { jsx: { runtime: 'automatic' } },
   // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
   optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime', 'axe-core'] },
+  // No file watcher in CI: a run never re-runs on a change, and the watcher walks the whole checkout, npm's cache
+  // (.npm/) included. With 28 jobs on one runner it ran the host out of inotify handles: EMFILE on every file, 4 MB of
+  // log, and a failed shard on main (pipeline 3053377020, 11 Nov 2026).
+  server: { watch: process.env.CI ? null : { ignored: ['**/.npm/**'] } },
   plugins: [{
     // /__slow-picture__.svg answers after a second, so a test can see a picture while it loads in every engine
     // (lazy loading below the fold can't do that: each engine starts lazy pictures at its own distance). With
@@ -56,10 +60,15 @@ export default defineConfig({
         globalSetup: ['./tools/test/vitest/serverStories.ts'],
         // SERUPA_ONLY (run.mjs --since): the story-wide tests go through only these components' stories (storiesToRun).
         // SERUPA_BENCH (the nightly Benchmarks run): mountTime.test.tsx mounts each story more times.
-        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH },
+        // SERUPA_COVERAGE (CI's full runs): the code is instrumented, so the time budgets allow for it.
+        provide: { only: process.env.SERUPA_ONLY ?? null, bench: !!process.env.SERUPA_BENCH, coverage: !!process.env.SERUPA_COVERAGE },
         // In Firefox the test files run side by side in frames of one page, and so share its one mouse: a hover in
         // one file landed in the middle of a drag in another. One file at a time there.
         fileParallelism: process.env.SERUPA_BROWSER !== 'firefox',
+        // With coverage on (CI's full runs and the nightly), V8 collects for the whole shared page between tests, and on
+        // a busy runner that can stall a test of 80 ms past the default limit (T6: CommandPalette's "limit caps the rows"
+        // and Chat's six-theme contrast). Only the time limit moves; every assertion still holds.
+        ...(process.env.SERUPA_COVERAGE ? { testTimeout: 60_000 } : {}),
         browser: {
           enabled: true,
           headless: true,
@@ -92,12 +101,13 @@ export default defineConfig({
         // Shared code, the cross-browser comparison (npm run test:safari), the visual and Storybook steps, which
         // run.mjs shards across CI jobs, the install on older Node (consumer.mjs, its own CI job) and the framework
         // apps (frameworks.mjs, its own CI job; pack.mjs is shared by the two) and the mutation run (mutation.mjs,
-        // nightly: it starts a components Vitest of its own).
+        // nightly: it starts a components Vitest of its own), and the proof brand's leak report (proof-brand.mjs, a
+        // report on demand, not a check).
         // In Firefox and WebKit (the nightly Cross-browser run), also the checks that are Chromium's by design (GR135):
         // scroll-lock.mjs needs Chromium's switch that shows classic scrollbars, and utilities.mjs compares each
         // class's computed styles with Chromium's baseline, which other engines write differently (538px for 539px);
         // tools/test/compat.mjs is the comparison between engines.
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,
@@ -112,11 +122,15 @@ export default defineConfig({
       // here, and tools/test/icon-names.mjs checks them as built, on a page. src/labels/ holds the language packs, which
       // no component imports: tools/test/label-packs.mjs builds each one and says every word of it.
       exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/material/**', 'src/**/*.d.ts', 'src/browser*.ts', 'src/labels/**'],
-      reporter: ['text-summary', 'html', 'json-summary'],
+      // json (coverage-final.json): each function's line, for the coverage job's added-functions check on a merge request.
+      reporter: ['text-summary', 'html', 'json-summary', 'json'],
       reportsDirectory: 'coverage',
       // Floors a little under the full run's figures on 25 Oct 2026 (96.2 / 88.6 / 98.9 / 99.6 %), so a change
       // that drops coverage fails. Raise them by hand when the figures climb; they never go down.
-      thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 },
+      // A CI shard (SERUPA_SHARD) runs a third of the files, so its own figures mean nothing: the floors are checked on
+      // the shards' merged report (the coverage job, vitest --merge-reports).
+      // SERUPA_NO_FLOORS: a narrowed merge request's report (the coverage job), which leaves most of src/ unrun on purpose.
+      ...(process.env.SERUPA_SHARD || process.env.SERUPA_NO_FLOORS ? {} : { thresholds: { statements: 95.5, branches: 88, functions: 98.5, lines: 99.3 } }),
     },
   },
 });

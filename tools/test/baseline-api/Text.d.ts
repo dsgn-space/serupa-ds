@@ -8,6 +8,7 @@ interface TextProps extends React.HTMLAttributes<HTMLElement> {
     tone?: TextTone | undefined;
     weight?: TextWeight | undefined;
     truncate?: boolean | undefined;
+    lines?: number | undefined;
     measure?: boolean | undefined;
     htmlFor?: string | undefined;
 }

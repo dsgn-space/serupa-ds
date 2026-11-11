@@ -1,18 +1,18 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, setRef } from "../../internal/cn";
-import { removeAndRefocus } from "../../internal/removeFocus";
-import { useServerStyles } from "../../internal/serverStyles";
-import { Dialog } from "../Dialog/Dialog";
-import { Icon } from "../Icon/Icon";
-import { IconButton } from "../IconButton/IconButton";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { warnOnce } from "../../internal/warn";
-import { schemeOf, useThemeChanges } from "../../internal/scheme";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
-import { quickArrival } from "../../internal/timing";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, useMergedRef } from '../../internal/cn';
+import { removeAndRefocus } from '../../internal/removeFocus';
+import { useServerStyles } from '../../internal/serverStyles';
+import { Dialog } from '../Dialog/Dialog';
+import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { warnOnce } from '../../internal/warn';
+import { schemeOf, useThemeChanges } from '../../internal/scheme';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
+import { quickArrival } from '../../internal/timing';
 
 export type ImageRatio = 'auto' | 'square' | '4:3' | 'video' | number;
 
@@ -68,21 +68,21 @@ export interface ImageSource {
   height?: number | undefined;
 }
 
-const RATIOS = ["auto", "square", "4:3", "video"] as const;
+const RATIOS = ['auto', 'square', '4:3', 'video'] as const;
 const never = () => () => {}, yes = () => true, no = () => false;
 
 // sizes for a lazy picture whose srcSet lists widths: "auto" lets the browser pick by the width the picture is laid out
 // at (it knows that before a lazy picture loads), with what was given, or the whole screen, where auto isn't known.
 function autoSizes(lazy: boolean, srcSet: string | undefined, sizes: string | undefined): string | undefined {
-  if (!lazy || !/\dw\s*(,|$)/.test(srcSet || "") || /^\s*auto\b/i.test(sizes || "")) return sizes;
-  return sizes ? "auto, " + sizes : "auto";
+  if (!lazy || !/\dw\s*(,|$)/.test(srcSet || '') || /^\s*auto\b/i.test(sizes || '')) return sizes;
+  return sizes ? 'auto, ' + sizes : 'auto';
 }
 
 // The largest candidate in a srcSet ("a.jpg 400w, b.jpg 1600w" or "a.jpg 1x, b.jpg 2x"), for the viewer when there's
 // no fullSrc, or with least, the smallest, for a reader saving data.
 function largest(srcSet: string | undefined, least?: boolean): string | undefined {
   let best: string | undefined, most = 0;
-  for (const m of (srcSet || "").matchAll(/(?:^|,)\s*(\S+?)\s+(\d+(?:\.\d+)?)[wx]\s*(?=,|$)/g)) if (!best || (least ? +m[2] < most : +m[2] > most)) { most = +m[2]; best = m[1]; }
+  for (const m of (srcSet || '').matchAll(/(?:^|,)\s*(\S+?)\s+(\d+(?:\.\d+)?)[wx]\s*(?=,|$)/g)) if (!best || (least ? +m[2] < most : +m[2] > most)) { most = +m[2]; best = m[1]; }
   return best;
 }
 
@@ -94,31 +94,42 @@ function shownDark(i: HTMLImageElement | null, darkSrc: string | undefined): str
 /* Saving data: the reader turned on Data Saver (navigator.connection.saveData) or prefers-reduced-data. A server
    doesn't know, so it's false until the page's script runs. */
 type Connection = EventTarget & { saveData?: boolean };
-const REDUCED = "(prefers-reduced-data: reduce)";
+const REDUCED = '(prefers-reduced-data: reduce)';
 const connection = () => (navigator as Navigator & { connection?: Connection }).connection;
 // No matchMedia (jsdom, where apps run their unit tests) means no preference, not a crash on every Image (L8E45).
-const reducedData = () => (typeof matchMedia === "function" ? matchMedia(REDUCED) : null);
+// The query is made once, and every Image shares one pair of listeners (GR278: a new query each render, and two
+// listeners for each Image).
+// module state: browser only. The server snapshot is "no", so a server render never makes the query or subscribes;
+// what's kept is the visitor's own browser setting.
+let dataQuery: MediaQueryList | undefined;
+const reducedData = () => dataQuery || (typeof matchMedia === 'function' ? (dataQuery = matchMedia(REDUCED)) : null);
 const savingData = () => { const m = reducedData(); return !!(connection() || {}).saveData || !!(m && m.matches); };
+const dataTold = new Set<() => void>();
+let dataHeard = false;
 function onSaveData(f: () => void) {
-  const c = connection(), m = reducedData();
-  if (c) c.addEventListener("change", f);
-  if (m) m.addEventListener("change", f);
-  return () => { if (c) c.removeEventListener("change", f); if (m) m.removeEventListener("change", f); };
+  if (!dataHeard) {
+    dataHeard = true;
+    const c = connection(), m = reducedData(), tell = () => dataTold.forEach((g) => g());
+    if (c) c.addEventListener('change', tell);
+    if (m) m.addEventListener('change', tell);
+  }
+  dataTold.add(f);
+  return () => { dataTold.delete(f); };
 }
 
 /* The viewer's picture: the frame's placeholder (and its sweep) while it loads, the frame's fallback if it fails. The
    stage has the picture's shape (its width and height, the thumbnail's, then its own once it arrives), within the
    screen. The Dialog is titled with the alt text, so the picture itself has alt="" and isn't read twice. */
 function Full({ src, alt, fallback, shape }: { src: string; alt: string; fallback: React.ReactNode; shape: [number, number] | null }) {
-  const [state, setState] = React.useState<"loading" | "loaded" | "error">("loading");
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'error'>('loading');
   const [own, setOwn] = React.useState<[number, number] | null>(null);
   const [w, h] = own || shape || [4, 3];
   return (
-    <span className={cn("dk-image__stage", "dk-image--" + state)} data-state={state} style={{ "--dk-image-ratio": w + " / " + h, "--dk-image-w": own || shape ? w + "px" : "100%" } as React.CSSProperties}>
-      {state === "error"
-        ? <span className="dk-image__fallback" role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
+    <span className={cn('dk-image__stage', 'dk-image--' + state)} data-state={state} style={{ '--dk-image-ratio': w + ' / ' + h, '--dk-image-w': own || shape ? w + 'px' : '100%' } as React.CSSProperties}>
+      {state === 'error'
+        ? <span className="dk-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
         : <img src={src} alt="" className="dk-image__full" decoding="async"
-            onLoad={(e) => { const i = e.currentTarget; if (i.naturalWidth > 0) setOwn([i.naturalWidth, i.naturalHeight]); setState("loaded"); }} onError={() => setState("error")} />}
+            onLoad={(e) => { const i = e.currentTarget; if (i.naturalWidth > 0) setOwn([i.naturalWidth, i.naturalHeight]); setState('loaded'); }} onError={() => setState('error')} />}
     </span>
   );
 }
@@ -132,23 +143,24 @@ function Full({ src, alt, fallback, shape }: { src: string; alt: string; fallbac
    back). onRemove adds a remove button in the corner. alt is required. ref, className and other img props go
    to the <img>, which stays (hidden) under the fallback if it fails; frameProps to the frame. */
 /** A picture in a frame with a ratio, a loading placeholder and an error fallback; optionally opens full size or can be removed. */
-export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Image", function Image(props, ref) {
+export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>('Image', function Image(props, ref) {
   const frame = React.useRef<HTMLSpanElement | null>(null);
   const restyle = useServerStyles<HTMLSpanElement>(frame);
   const sds = useSettings(words);
   const { src, alt, ratio: _r, fit: _f, rounded, fallback, viewable, fullSrc, viewLabel, onRemove, removeLabel, frameProps, className, onLoad, onError, loading, priority, decoding, fetchPriority, sources, sizes, darkSrc, dim, ...rest } = props;
   // Saving data, only a priority picture loads at once, and each loads the smallest version its srcSet lists.
   const thrifty = React.useSyncExternalStore(onSaveData, savingData, no);
-  const load = thrifty && !priority ? "lazy" : loading || (priority ? "eager" : "lazy");
-  const lazy = load === "lazy";
+  const load = thrifty && !priority ? 'lazy' : loading || (priority ? 'eager' : 'lazy');
+  const lazy = load === 'lazy';
   const small = (srcSet: string | undefined) => (thrifty ? largest(srcSet, true) : undefined);
   const least = (srcSet: string | undefined) => small(srcSet) || srcSet;
   const sizing = (srcSet: string | undefined, given: string | undefined) => (small(srcSet) ? undefined : autoSizes(lazy, srcSet, given));
-  const ratio = typeof props.ratio === "number" && props.ratio > 0 ? props.ratio : oneOf(RATIOS, props.ratio as string, "auto");
-  const fit = oneOf(["cover", "contain"] as const, props.fit, "cover");
-  const [state, setState] = React.useState<"loading" | "loaded" | "error">("loading");
+  const ratio = typeof props.ratio === 'number' && props.ratio > 0 ? props.ratio : oneOf(RATIOS, props.ratio as string, 'auto');
+  const fit = oneOf(['cover', 'contain'] as const, props.fit, 'cover');
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'error'>('loading');
   const [open, setOpen] = React.useState(false);
   const img = React.useRef<HTMLImageElement | null>(null);
+  const mergedRef = useMergedRef(ref, (n) => { img.current = n; });
   // The picture is hidden while it loads only once the page's script runs (live), so server-rendered HTML paints
   // it as soon as it arrives, with or without JavaScript. A lazy one still loading a frame after mount is hidden
   // and fades in when it arrives; one that arrives within quickArrival ms of mount just appears (no fade as a page
@@ -158,7 +170,7 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Im
   const [live, setLive] = React.useState(false);
   const since = React.useRef(0);
   const served = React.useRef(React.useSyncExternalStore(never, yes, no) ? null : src);   // the src the server drew
-  React.useEffect(() => { setState("loading"); }, [src]);
+  React.useEffect(() => { setState('loading'); }, [src]);
   // An image already in the cache can finish before React listens. Only the first src can: React listens from then
   // on, and right after a new src Firefox still says complete about the old picture.
   const listening = React.useRef(false);
@@ -167,8 +179,8 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Im
     listening.current = true;
     // WebKit picks a srcset candidate after mount and until then says complete, with nothing chosen (currentSrc
     // ""), which isn't broken: its load or error event comes.
-    const choosing = i && !i.currentSrc && !i.naturalWidth && (i.srcset || (i.parentElement && i.parentElement.tagName === "PICTURE"));
-    if (first && i && i.complete && !choosing) { setState(i.naturalWidth > 0 ? "loaded" : "error"); return; }
+    const choosing = i && !i.currentSrc && !i.naturalWidth && (i.srcset || (i.parentElement && i.parentElement.tagName === 'PICTURE'));
+    if (first && i && i.complete && !choosing) { setState(i.naturalWidth > 0 ? 'loaded' : 'error'); return; }
     since.current = performance.now();
     if (served.current === src) return;
     const f = requestAnimationFrame(() => { if (img.current && !img.current.complete) setLive(true); });
@@ -177,47 +189,47 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>("Im
   // darkSrc is a <source> for prefers-color-scheme: dark, which is all the server knows. In the browser, a theme that
   // fixes the frame's color-scheme (a *-dark or *-light data-theme, a data-mode) decides instead, again whenever one changes.
   const themes = useThemeChanges(!!darkSrc);
-  const [scheme, setScheme] = React.useState<"light" | "dark" | null>(null);
+  const [scheme, setScheme] = React.useState<'light' | 'dark' | null>(null);
   React.useEffect(() => { if (darkSrc && frame.current) setScheme(schemeOf(frame.current)); }, [darkSrc, themes]);
   const arrived = () => { if (performance.now() - since.current < quickArrival) setLive(false); };
-  const named = (base: string) => (alt ? base + ": " + alt : base);
+  const named = (base: string) => (alt ? base + ': ' + alt : base);
   // With ratio "auto", width and height (the picture's size) shape the frame before the picture arrives, so the
   // page doesn't jump when it loads.
   const w = Number(props.width), h = Number(props.height);
-  const sized = ratio === "auto" && w > 0 && h > 0;
+  const sized = ratio === 'auto' && w > 0 && h > 0;
   React.useEffect(() => {   // in the browser only, once per page
-    if (process.env.NODE_ENV !== "production" && ratio === "auto" && !sized) warnOnce("image-size", 'Image: with ratio "auto" and no width and height, the frame has no height until the picture loads, so the page jumps. Pass the picture\'s width and height, or a ratio.');
+    if (process.env.NODE_ENV !== 'production' && ratio === 'auto' && !sized) warnOnce('image-size', 'Image: with ratio "auto" and no width and height, the frame has no height until the picture loads, so the page jumps. Pass the picture\'s width and height, or a ratio.');
   }, [ratio, sized]);
   // A fixed ratio with nothing sizing the picture (its className or style; the frame's own width wins anyway) takes the
   // container's width, so the frame has its shape before the picture arrives and keeps it if it fails (GR21).
-  const fill = ratio !== "auto" && !className && !rest.style;
-  const shape = typeof ratio === "number" ? { "--dk-image-ratio": String(ratio) } : sized ? { "--dk-image-ratio": w + " / " + h, width: w } : null;
+  const fill = ratio !== 'auto' && !className && !rest.style;
+  const shape = typeof ratio === 'number' ? { '--dk-image-ratio': String(ratio) } : sized ? { '--dk-image-ratio': w + ' / ' + h, width: w } : null;
   const frameStyle = shape ? { ...shape, ...(frameProps && frameProps.style) } as React.CSSProperties : frameProps && frameProps.style;
   // A picture that fails stays in the frame, hidden, under the fallback: what was passed to it (className, style, id,
   // data-*, a ref) keeps working, and the frame keeps the size they give it (GJ1).
-  const failed = state === "error"
-    ? <span className="dk-image__fallback" role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
+  const failed = state === 'error'
+    ? <span className="dk-image__fallback" role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}>{fallback != null ? fallback : <Icon icon={icons.BrokenImage} />}</span>
     : null;
-  const picture = <img {...rest} ref={(n) => { img.current = n; setRef(ref, n); }} src={src} alt={alt} loading={load} srcSet={least(rest.srcSet)}
-        sizes={sizing(rest.srcSet, sizes)} decoding={decoding || "async"} fetchPriority={fetchPriority || (priority ? "high" : undefined)}
-        className={cn("dk-image__img", className)} onLoad={(e) => { arrived(); setState("loaded"); if (onLoad) onLoad(e); }} onError={(e) => { setLive(false); setState("error"); if (onError) onError(e); }} />;
+  const picture = <img {...rest} ref={mergedRef} src={src} alt={alt} loading={load} srcSet={least(rest.srcSet)}
+        sizes={sizing(rest.srcSet, sizes)} decoding={decoding || 'async'} fetchPriority={fetchPriority || (priority ? 'high' : undefined)}
+        className={cn('dk-image__img', className)} onLoad={(e) => { arrived(); setState('loaded'); if (onLoad) onLoad(e); }} onError={(e) => { setLive(false); setState('error'); if (onError) onError(e); }} />;
   // With sources, a <picture> (display: contents, so the <img> lays out as before) offers them ahead of src.
   const shown = (sources && sources.length) || darkSrc
     ? <picture className="dk-image__picture">
-        {darkSrc ? <source srcSet={darkSrc} media={scheme === "dark" ? "all" : scheme === "light" ? "not all" : "(prefers-color-scheme: dark)"} /> : null}
+        {darkSrc ? <source srcSet={darkSrc} media={scheme === 'dark' ? 'all' : scheme === 'light' ? 'not all' : '(prefers-color-scheme: dark)'} /> : null}
         {(sources || []).map((o, k) => <source key={k} srcSet={least(o.srcSet)} media={o.media} type={o.type} sizes={sizing(o.srcSet, o.sizes)} width={o.width} height={o.height} />)}
         {picture}
       </picture>
     : picture;
   return (
     <span {...frameProps} ref={restyle} style={frameStyle}
-      className={cn("dk-image", "dk-image--ratio-" + (typeof ratio === "number" ? "custom" : ratio.replace(":", "-")), sized && "dk-image--sized", fill && "dk-image--fill", "dk-image--" + fit, dim && "dk-image--dim", rounded !== false && "dk-image--rounded", "dk-image--" + state, live && !priority && "dk-image--fades", frameProps && frameProps.className)}
+      className={cn('dk-image', 'dk-image--ratio-' + (typeof ratio === 'number' ? 'custom' : ratio.replace(':', '-')), sized && 'dk-image--sized', fill && 'dk-image--fill', 'dk-image--' + fit, dim && 'dk-image--dim', rounded !== false && 'dk-image--rounded', 'dk-image--' + state, live && !priority && 'dk-image--fades', frameProps && frameProps.className)}
       data-component="image" data-state={state}>
-      {viewable && state !== "error"
+      {viewable && state !== 'error'
         ? <button type="button" className="dk-image__view" aria-label={viewLabel || named(sds.labels.viewImage)} aria-haspopup="dialog" onClick={() => setOpen(true)}>{shown}</button>
         : shown}
       {failed}
-      {onRemove ? <IconButton className="dk-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, ".dk-image", ".dk-image__remove")} /> : null}
+      {onRemove ? <IconButton className="dk-image__remove" icon={icons.Close} label={removeLabel || named(sds.labels.removeImage)} size="sm" variant="secondary" shape="round" hideTitle onClick={(e) => removeAndRefocus(e, onRemove, '.dk-image', '.dk-image__remove')} /> : null}
       {viewable ? (
         <Dialog open={open} onOpenChange={setOpen} size="lg" title={alt || undefined} aria-label={alt ? undefined : viewLabel || sds.labels.image} className="dk-image__viewer">
           {open ? <Full src={fullSrc || shownDark(img.current, darkSrc) || largest(rest.srcSet) || src} alt={alt} fallback={fallback} shape={w > 0 && h > 0 ? [w, h] : img.current && img.current.naturalWidth > 0 ? [img.current.naturalWidth, img.current.naturalHeight] : null} /> : null}

@@ -1,6 +1,6 @@
 // exports: ErrorSummary, type ErrorSummaryItem, type ErrorSummaryProps
 interface ErrorSummaryLabels {
-    errorSummaryTitle: (count: number) => string;
+    errorSummaryTitle: (count: number, formatted: string) => string;
 }
 interface ErrorSummaryItem {
     field: string;

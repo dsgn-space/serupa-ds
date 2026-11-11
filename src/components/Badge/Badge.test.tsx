@@ -5,6 +5,8 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, css, keepMotion, press, tabTo, settled } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
+import { Loader } from '../Loader/Loader';
+import { Tooltip } from '../Tooltip/Tooltip';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
 const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
@@ -201,12 +203,18 @@ describe('Badge', () => {
     expect(n).toBe(TONES.length * 3 * 6);
   });
 
-  test('palette tones each have their own color, and the status tones map to green, amber, red and sky; primary is the theme\'s primary', async () => {
+  test('palette tones each have their own color; the status tones follow their roles (GR249) and primary is the theme\'s primary', async () => {
     await show();
     const pal = ['violet', 'teal', 'amber'].map((t) => VARIANTS.map((v) => { const s = css(tv(t, v)); return v === 'outline' ? s.borderTopColor : s.backgroundColor; }));
     for (const k of [0, 1, 2]) expect(new Set(pal.map((x) => x[k])).size).toBe(3);
-    expect(css(tv('success', 'solid')).backgroundColor).toBe(css(tv('green', 'solid')).backgroundColor);
-    expect(css(tv('warning', 'subtle')).color).toBe(css(tv('amber', 'subtle')).color);
+    expect(css(tv('success', 'solid')).backgroundColor).toBe(color('var(--success)'));
+    expect(css(tv('success', 'solid')).color).toBe(color('var(--on-success)'));
+    expect(css(tv('warning', 'subtle')).color).toBe(color('var(--warning-text)'));
+    expect(css(tv('info', 'subtle')).backgroundColor).toBe(color('var(--info-subtle)'));
+    expect(css(tv('danger', 'outline')).borderTopColor).toBe(color('var(--danger)'));
+    // A page that sets the role moves its badges.
+    document.documentElement.style.setProperty('--success', 'rgb(1, 2, 3)');
+    try { expect(css(tv('success', 'solid')).backgroundColor).toBe('rgb(1, 2, 3)'); } finally { document.documentElement.style.removeProperty('--success'); }
     expect(css(tv('primary', 'solid')).backgroundColor).toBe(color('var(--primary)'));
   });
 
@@ -307,6 +315,27 @@ describe('Badge', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => removed.join()).toBe('Design,Research');
     expect(el('tags').querySelectorAll(BADGE).length).toBe(0);
+  });
+
+  test('removable solid badges: the remove button\'s focus ring, where it runs over the fill, keeps 3:1 against it in every tone and all six themes', async () => {
+    await render(<div>{TONES.map((t) => <Badge key={t} variant="solid" tone={t} data-rt={t} onRemove={() => {}}>{t}</Badge>)}</div>);
+    const low: string[] = [];
+    try {
+      for (const t of TONES) {
+        const b = q(`[data-rt="${t}"]`), x = b.querySelector('button')!;
+        await tabTo(x);
+        for (const th of THEMES) {
+          document.documentElement.setAttribute('data-theme', th);
+          const a = getComputedStyle(x, '::after'), fill = over(rgb(css(b).backgroundColor), surface());
+          // the band of the ring next to the fill: an inner ring drawn by box-shadow, else the outline itself
+          const inner = a.boxShadow !== 'none' ? a.boxShadow.slice(0, a.boxShadow.indexOf(')') + 1) : a.outlineColor;
+          const r = ratio(over(rgb(inner), fill), fill);
+          if (r < 3) low.push(`${th} ${t}: ${r.toFixed(2)}`);
+        }
+        document.documentElement.setAttribute('data-theme', 'blue-light');
+      }
+    } finally { document.documentElement.setAttribute('data-theme', 'blue-light'); }
+    expect(low).toEqual([]);
   });
 
   test('subtle: a 1px outline in the text color at 20% (every tone), --badge-subtle-border: 0% removes it; solid stays borderless', async () => {
@@ -622,6 +651,11 @@ describe('focus after removing a tag (179)', () => {
     await new Promise((r) => setTimeout(r, 30));
     expect(focused()).toBe('Remove Kept');
   });
+  test('in a Tooltip, which shows the cut label itself, a cut badge has no title of its own', async () => {
+    await render(<div style={{ width: '120px' }}><Tooltip content="Takes a minute"><Badge id="tipped" onClick={() => {}}>Export every report as a spreadsheet</Badge></Tooltip></div>);
+    await settled();
+    expect([el('tipped').hasAttribute('aria-describedby'), el('tipped').getAttribute('title')]).toEqual([true, null]);
+  });
   test('a cut label shows in full as the title (EV1); one that fits, a count, or a badge with its own title or name gets none', async () => {
     const LONG = 'Waiting for the design review to finish';
     function Box() {
@@ -640,5 +674,20 @@ describe('focus after removing a tag (179)', () => {
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => el('grow').getAttribute('title')).toBe(LONG);
     expect([el('fits').hasAttribute('title'), el('named').hasAttribute('title'), el('own').title, el('grow').textContent]).toEqual([false, false, 'Mine', LONG]);
+  });
+});
+
+// GR311: Badge drew its loading ring with the whole Loader; it now draws Loader's ring itself, the same markup.
+describe('loading ring', () => {
+  const SOURCE = import.meta.glob<string>('./Badge.tsx', { query: '?raw', import: 'default', eager: true })['./Badge.tsx'];
+  test('Badge does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <Badge id="ring-badge" loading>Sync</Badge>
+      <div id="ring-loader"><Loader label="" delay={0} /></div>
+    </>);
+    const ring = () => document.querySelector('#ring-badge [data-component="loader"]');
+    await expect.poll(ring).toBeTruthy();
+    expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });

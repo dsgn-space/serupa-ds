@@ -1,17 +1,18 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, setRef } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { announce } from "../../internal/announce";
-import { Icon } from "../Icon/Icon";
-import { Loader } from "../Loader/Loader";
-import { Button } from "../Button/Button";
-import { RelativeTime } from "../RelativeTime/RelativeTime";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, useMergedRef } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { announce } from '../../internal/announce';
+import { activeIn } from '../../internal/root';
+import { Icon } from '../Icon/Icon';
+import { LoaderRing } from '../../internal/loaderRing';
+import { Button } from '../Button/Button';
+import { RelativeTime } from '../RelativeTime/RelativeTime';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
 
-export type SaveState = "idle" | "saving" | "saved" | "error";
+export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 export interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Where saving is: 'idle' (nothing to say, renders empty), 'saving', 'saved' or 'error'. */
@@ -24,9 +25,9 @@ export interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   errorText?: React.ReactNode | undefined;
 }
 
-const STATES: readonly SaveState[] = ["idle", "saving", "saved", "error"];
+const STATES: readonly SaveState[] = ['idle', 'saving', 'saved', 'error'];
 // The faces' fixed order in the page (GR127).
-const ORDER: readonly SaveState[] = ["saving", "saved", "error"];
+const ORDER: readonly SaveState[] = ['saving', 'saved', 'error'];
 
 /* SaveStatus: a small line saying whether an autosaving form or document is saved: a ring and "Saving…", a check and
    "Saved 2 minutes ago" (the time kept current), or an error icon, "Couldn't save" and a Try again button. Screen
@@ -34,20 +35,20 @@ const ORDER: readonly SaveState[] = ["saving", "saved", "error"];
    comes and goes with every save), and the time ticking isn't either. The wrapper keeps its place when idle, so the
    layout doesn't jump. className and other props go to the wrapper <div>. */
 /** Whether autosaved changes are saved: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with Try again; announced politely. */
-export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusProps>("SaveStatus", function SaveStatus(props, ref) {
+export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusProps>('SaveStatus', function SaveStatus(props, ref) {
   const sds = useSettings(words);
   const { status: _s, savedAt, onRetry, errorText, className, ...rest } = props;
-  const status = oneOf(STATES, props.status, "idle");
+  const status = oneOf(STATES, props.status, 'idle');
   const text = React.useRef<HTMLSpanElement | null>(null);
   // A first "Saved" isn't news, but a first error is: a SaveStatus rendered only once a save fails
   // ({failed && <SaveStatus status="error" />}) says it too.
-  const before = React.useRef<SaveState>(status === "error" ? "idle" : status);
+  const before = React.useRef<SaveState>(status === 'error' ? 'idle' : status);
   React.useEffect(() => {
     const was = before.current;
     before.current = status;
     if (was === status) return;
-    if (status === "saved") announce(sds.labels.saved);
-    else if (status === "error" && text.current) announce(text.current.textContent || sds.labels.saveFailed);
+    if (status === 'saved') announce(sds.labels.saved);
+    else if (status === 'error' && text.current) announce(text.current.textContent || sds.labels.saveFailed);
   }, [status, sds.labels]);
   // The status going out stays a moment, inert and hidden from screen readers, in the same cell as the one coming in,
   // so the two cross-fade (KW19). One keyed list, so the face going out is the same element, which then transitions; with no transition to wait for (reduced motion still fades, a test page doesn't) it
@@ -55,15 +56,15 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
   const [shown, setShown] = React.useState(status);
   const [gone, setGone] = React.useState<SaveState | null>(null);
   const [changed, setChanged] = React.useState(false);   // the first status just shows; later ones come in
-  if (shown !== status) { setShown(status); setGone(shown === "idle" ? null : shown); setChanged(true); }
+  if (shown !== status) { setShown(status); setGone(shown === 'idle' ? null : shown); setChanged(true); }
   const leaving = React.useRef<HTMLSpanElement | null>(null);
   // Try again pressed from the keyboard: its face goes inert as the status moves on, which drops focus to the page.
   // Focus stays in the status instead (focusable only until it leaves), so Tab goes on from here (L8E55).
   const root = React.useRef<HTMLDivElement | null>(null);
   const focusedIn = React.useRef(false);
   React.useLayoutEffect(() => {
-    const r = root.current, a = document.activeElement;
-    const lost = !a || a === document.body || !a.isConnected || (r && r.contains(a) && a.closest("[inert]"));
+    const r = root.current, a = activeIn(r);   // in its own document or shadow root, where document.activeElement is the host (GR60)
+    const lost = !a || a === document.body || !a.isConnected || (r && r.contains(a) && a.closest('[inert]'));
     if (!r || !focusedIn.current || !lost) return;
     r.tabIndex = -1;
     r.focus();
@@ -73,33 +74,34 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
     if (rest.onBlur) rest.onBlur(e);
     const to = e.relatedTarget as Node | null;
     // An inert face blurs with nowhere to go: that's the case above, not leaving.
-    if (to ? !e.currentTarget.contains(to) : !(e.target as Element).closest("[inert]")) {
+    if (to ? !e.currentTarget.contains(to) : !(e.target as Element).closest('[inert]')) {
       focusedIn.current = false;
-      if (e.target === e.currentTarget) e.currentTarget.removeAttribute("tabindex");
+      if (e.target === e.currentTarget) e.currentTarget.removeAttribute('tabindex');
     }
   };
   React.useLayoutEffect(() => {
     if (!gone) return;
     const s = leaving.current && getComputedStyle(leaving.current);
-    const ms = s ? Math.max(...s.transitionDuration.split(",").map((d) => parseFloat(d) * (d.trim().endsWith("ms") ? 1 : 1000))) : 0;
+    const ms = s ? Math.max(...s.transitionDuration.split(',').map((d) => parseFloat(d) * (d.trim().endsWith('ms') ? 1 : 1000))) : 0;
     if (!(ms > 0)) { setGone(null); return; }
     const t = window.setTimeout(() => setGone(null), ms + 50);
     return () => window.clearTimeout(t);
   }, [gone]);
-  const face = (st: SaveState, out: boolean) => st === "idle" ? null : (
-    <span key={st} ref={out ? leaving : undefined} className={"dk-save-status__face dk-save-status__face--" + st} data-leaving={out ? "" : undefined} data-entering={!out && changed ? "" : undefined} inert={out || undefined} aria-hidden={out || undefined}
-      onTransitionEnd={out ? (e) => { if (e.target === e.currentTarget && e.propertyName === "opacity") setGone(null); } : undefined}>
-      {st === "saving" ? <><Loader className="dk-save-status__icon" size="sm" label="" delay={0} /><span className="dk-save-status__text">{sds.labels.saving}</span></> : null}
-      {st === "saved" ? <><Icon className="dk-save-status__icon" icon={icons.Check} /><span className="dk-save-status__text">{sds.labels.saved}{savedAt != null ? <> <RelativeTime date={savedAt} /></> : null}</span></> : null}
-      {st === "error" ? <>
+  const face = (st: SaveState, out: boolean) => st === 'idle' ? null : (
+    <span key={st} ref={out ? leaving : undefined} className={'dk-save-status__face dk-save-status__face--' + st} data-leaving={out ? '' : undefined} data-entering={!out && changed ? '' : undefined} inert={out || undefined} aria-hidden={out || undefined}
+      onTransitionEnd={out ? (e) => { if (e.target === e.currentTarget && e.propertyName === 'opacity') setGone(null); } : undefined}>
+      {st === 'saving' ? <><LoaderRing className="dk-save-status__icon" size="sm" /><span className="dk-save-status__text">{sds.labels.saving}</span></> : null}
+      {st === 'saved' ? <><Icon className="dk-save-status__icon" icon={icons.Check} /><span className="dk-save-status__text">{sds.labels.saved}{savedAt != null ? <> <RelativeTime date={savedAt} /></> : null}</span></> : null}
+      {st === 'error' ? <>
         <Icon className="dk-save-status__icon" icon={icons.Error} />
         <span className="dk-save-status__text" ref={out ? undefined : text}>{errorText != null ? errorText : sds.labels.saveFailed}</span>
         {onRetry ? <Button className="dk-save-status__retry" variant="link" size="sm" onClick={() => onRetry()}>{sds.labels.retrySave}</Button> : null}
       </> : null}
     </span>
   );
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; });
   return (
-    <div {...rest} ref={(n) => { root.current = n; setRef(ref, n); }} onFocus={onFocus} onBlur={onBlur} className={cn("dk-save-status", "dk-save-status--" + status, className)} data-component="save-status" data-state={status}>
+    <div {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} className={cn('dk-save-status', 'dk-save-status--' + status, className)} data-component="save-status" data-state={status}>
       {/* In one fixed order, not "leaving, then coming": a status that comes back while it's still fading out
           (saving, saved, saving within a moment) would otherwise be moved in the page, which starts its fade over
           from nothing, and the label blinked out for a few frames (GR127). Kept where it is, it turns back. */}

@@ -1,7 +1,7 @@
-import * as React from "react";
-import { cn, omit } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { fold } from "../../internal/fold";
+import * as React from 'react';
+import { cn, omit } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { fold } from '../../internal/fold';
 
 export interface HighlightProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** The text to show. */
@@ -20,11 +20,11 @@ const UNIT = /.\p{M}*/suy;
 /** Where query matches text, as [start, end) offsets into text (UTF-16), in order and not overlapping. Matched as
     fold() matches: case, accents and width ignored. */
 export function highlightRanges(text: string, query: string | ReadonlyArray<string>, words?: boolean): Array<[number, number]> {
-  const terms = (typeof query === "string" ? [query] : query).flatMap((q) => (words ? q.split(/\s+/) : [q.trim()])).map(fold).filter(Boolean);
+  const terms = (typeof query === 'string' ? [query] : query).flatMap((q) => (words ? q.split(/\s+/) : [q.trim()])).map(fold).filter(Boolean);
   if (!terms.length || !text) return [];
   // The folded text, and for each folded character the offset of the original character it came from, so a match
   // in the folded text ("ss") maps back to the text people see ("ß").
-  let folded = "";
+  let folded = '';
   const from: number[] = [], to: number[] = [];
   for (let i = 0; i < text.length;) {
     // A letter with the marks after it, folded together: decomposed "и" + "̆" (as macOS writes file names) is й,
@@ -60,10 +60,10 @@ export function highlightRanges(text: string, query: string | ReadonlyArray<stri
    written, so "strasse" marks "Straße". The marks are <mark> (a highlight to assistive tech that announces it),
    in --highlight-* colors, and Mark/MarkText in forced-colors mode. className and other props go to the <span>. */
 /** Text with the parts that match a search marked, ignoring case and accents. */
-export const Highlight = /* @__PURE__ */ component<HTMLSpanElement, HighlightProps>("Highlight", function Highlight(props, ref) {
+export const Highlight = /* @__PURE__ */ component<HTMLSpanElement, HighlightProps>('Highlight', function Highlight(props, ref) {
   const rest = omit(props, { children: 1, query: 1, words: 1, className: 1 } as const);
-  const text = typeof props.children === "string" ? props.children : String(props.children ?? "");
-  const ranges = highlightRanges(text, props.query ?? "", props.words);
+  const text = typeof props.children === 'string' ? props.children : String(props.children ?? '');
+  const ranges = highlightRanges(text, props.query ?? '', props.words);
   const parts: React.ReactNode[] = [];
   let at = 0;
   ranges.forEach(([s, e], i) => {
@@ -72,5 +72,5 @@ export const Highlight = /* @__PURE__ */ component<HTMLSpanElement, HighlightPro
     at = e;
   });
   if (at < text.length) parts.push(text.slice(at));
-  return <span {...rest} ref={ref} className={cn("dk-highlight", props.className)} data-component="highlight">{parts}</span>;
+  return <span {...rest} ref={ref} className={cn('dk-highlight', props.className)} data-component="highlight">{parts}</span>;
 });

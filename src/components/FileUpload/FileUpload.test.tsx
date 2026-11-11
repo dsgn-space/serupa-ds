@@ -102,9 +102,16 @@ describe('FileUpload', () => {
     expect(list(el)).toEqual(['photo.png 2 kB image', 'report.pdf 768 kB picture_as_pdf']);
     await expect.poll(() => [...input(el).files!].map((f) => f.name).join()).toBe('photo.png,report.pdf');
     await userEvent.upload(input(el), [file('notes.txt', 'text/plain', 10), file('huge.png', 'image/png', 2_000_000), file('photo.png', 'image/png', 2048)]);
-    expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn\'t an image or PDF. / huge.png is larger than 1 MB. / photo.png is already added.', 'type,size,duplicate']);
+    expect([list(el).length, errs(el), rejects.join(';')]).toEqual([2, 'alert: notes.txt isn’t an image or PDF. / huge.png is larger than 1 MB. / photo.png is already added.', 'type,size,duplicate']);
     await userEvent.upload(input(el), [file('a.jpg', 'image/jpeg', 100), file('b.jpg', 'image/jpeg', 100)]);
-    expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn\'t added: up to 3 files.']);
+    expect([list(el).length, errs(el)]).toEqual([3, 'alert: b.jpg wasn’t added: up to 3 files.']);
+  });
+
+  test('a row shows the icon Attachment shows for the file\'s kind, by MIME type and then by extension (RU6)', async () => {
+    await render(<FileUpload data-testid="kinds" multiple />);
+    const el = q('[data-testid=kinds]');
+    await userEvent.upload(input(el), [file('Q3.xlsx', '', 10), file('notes.txt', 'text/plain', 10), file('app.tsx', '', 10), file('deck.pptx', '', 10), file('data.bin', '', 10)]);
+    expect(items(el).map((li) => li.querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon)).toEqual(['table_chart', 'description', 'code', 'slideshow', 'draft']);
   });
 
   test('N9: pasting files with focus on the choose button adds them, checked like dropped ones; a paste with no files, or read-only, adds nothing', async () => {
@@ -122,7 +129,7 @@ describe('FileUpload', () => {
     choose(el).focus();
     expect(paste(choose(el), file('image.png', 'image/png', 40), file('notes.txt', 'text/plain', 10))).toBe(true);
     await expect.poll(() => names(el)).toBe('image.png');
-    expect([input(el).files!.length, errs(el)]).toEqual([1, 'alert: notes.txt isn\'t an image or PDF.']);
+    expect([input(el).files!.length, errs(el)]).toEqual([1, 'alert: notes.txt isn’t an image or PDF.']);
     expect(paste(choose(el))).toBe(false);
     expect(names(el)).toBe('image.png');
     const ro = rootOf('ro');
@@ -234,6 +241,11 @@ describe('FileUpload', () => {
     const el = rootOf('dis');
     expect([choose(el).disabled, input(el).disabled]).toEqual([true, true]);
     await expect.poll(() => getComputedStyle(el.querySelector(ZONE)!).opacity).toBe('0.5');
+    // The button inside is faded once, with the area, as every other disabled control is (at 0.5): its own disabled
+    // fade on top took it to 0.25.
+    let shown = 1;
+    for (let n: Element | null = choose(el); n && n !== el; n = n.parentElement) shown *= Number(getComputedStyle(n).opacity);
+    expect(shown).toBe(0.5);
   });
 
   test('in a Field with an error and required: the button is described by "Required" first, then the error (a button supports neither aria-invalid nor aria-errormessage, TF1b), the input is aria-invalid, the native input required, the area outlined in danger; nothing leaks onto the wrapper and React doesn\'t warn', async () => {
@@ -353,7 +365,7 @@ describe('FileUpload', () => {
       await userEvent.upload(input(rootOf(id)), [file('photo.heic', 'image/heic', 10)]);
       msgs.push(errs(rootOf(id))!);
     }
-    expect(msgs).toEqual(['alert: photo.heic isn\'t a PNG or JPG.', 'alert: photo.heic isn\'t an SVG.', 'alert: photo.heic isn\'t an audio file or MP4.', 'alert: photo.heic: this type of file isn\'t accepted.']);
+    expect(msgs).toEqual(['alert: photo.heic isn’t a PNG or JPG.', 'alert: photo.heic isn’t an SVG.', 'alert: photo.heic isn’t an audio file or MP4.', 'alert: photo.heic: this type of file isn’t accepted.']);
   });
   test('L8E12: accept takes the names a file picker treats as one: .jpg lets photo.jpeg in, image/jpg a JPEG, .tiff a .tif', async () => {
     await render(<><FileUpload id="ax" multiple accept=".jpg,.tiff" /><FileUpload id="am" multiple accept="image/jpg" /></>);
@@ -447,13 +459,32 @@ describe('FileUpload: long file names (GR17)', () => {
   const fits = (el: Element) => el.scrollWidth <= el.clientWidth + 0.5;
   test.each(['ltr', 'rtl'])('a long name is cut in the middle in a %s page: the year and extension stay, the whole name is its title and is read once', async (dir) => {
     await render(<div dir={dir} style={{ width: 320 }}><FileUpload id={'gr17-' + dir} readOnly files={[file(LONG + '2025.pdf', 'application/pdf', 10), file(LONG + '2026.pdf', 'application/pdf', 10), file('a b.pdf', 'application/pdf', 10)]} /></div>);
-    // Each name holds the start (cut), the end (kept) and the whole name for screen readers, in that order.
+    // A cut name holds the start (cut), the end (kept) and the whole name for screen readers, in that order; one that
+    // fits is one run of text, then the whole name.
     const rows = items(rootOf('gr17-' + dir)).map((li) => li.querySelector('[title]')!);
-    const shown = rows.map((n) => { const [start, end] = n.children; return [end.textContent, fits(end), fits(start), css(n).direction]; });
-    expect(shown).toEqual([['t-2025.pdf', true, false, 'ltr'], ['t-2026.pdf', true, false, 'ltr'], ['a b.pdf', true, true, 'ltr']]);
-    // The start ends where the end begins, with nothing lost or doubled, and a short name isn't cut at all.
-    expect(rows.map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start.textContent + end.textContent, whole.textContent, start.getAttribute('aria-hidden'), end.getAttribute('aria-hidden')]; })).toEqual(
-      [LONG + '2025.pdf', LONG + '2026.pdf', 'a b.pdf'].map((n) => [n, n, n, 'true', 'true']));
+    await expect.poll(() => rows.map((n) => n.children.length)).toEqual([3, 3, 2]);
+    const shown = rows.slice(0, 2).map((n) => { const [start, end] = n.children; return [end.textContent, fits(end), fits(start), css(n).direction]; });
+    expect(shown).toEqual([['t-2025.pdf', true, false, 'ltr'], ['t-2026.pdf', true, false, 'ltr']]);
+    expect([rows[2].children[0].textContent, fits(rows[2].children[0] as HTMLElement)]).toEqual(['a b.pdf', true]);
+    // The start ends where the end begins, with nothing lost or doubled.
+    expect(rows.slice(0, 2).map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start.textContent + end.textContent, whole.textContent, start.getAttribute('aria-hidden'), end.getAttribute('aria-hidden')]; })).toEqual(
+      [LONG + '2025.pdf', LONG + '2026.pdf'].map((n) => [n, n, n, 'true', 'true']));
+  });
+
+  // A Devanagari conjunct with its vowel sign, a ZWJ family emoji and a decomposed accent are each one character.
+  const NAMES = ['राष्ट्रीय रिपोर्ट.pdf', '👨‍👩‍👧‍👦.pdf', 'Cafe\u0301 menu.pdf'];
+  test('Devanagari, a ZWJ emoji and a decomposed accent show whole while they fit, and are cut between characters people see when they don\'t', async () => {
+    const long = NAMES.map((n) => 'Lampiran panjang sekali untuk rapat bulanan ' + n);
+    await render(<><div style={{ width: 460 }}><FileUpload id="gw" readOnly files={NAMES.map((n) => file(n, 'application/pdf', 10))} /></div>
+      <div style={{ width: 320 }}><FileUpload id="gc" readOnly files={long.map((n) => file(n, 'application/pdf', 10))} /></div></>);
+    const parts = (id: string) => items(rootOf(id)).map((li) => [...li.querySelector('[title]')!.children].filter((c) => c.getAttribute('aria-hidden') === 'true').map((c) => c.textContent));
+    expect(parts('gw')).toEqual(NAMES.map((n) => [n]));
+    await expect.poll(() => parts('gc').map((p) => p.length)).toEqual([2, 2, 2]);
+    const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+    for (const [i, [a, b]] of parts('gc').entries()) {
+      expect(a + b).toBe(long[i]);
+      expect(Array.from(seg.segment(long[i]), (x) => x.index)).toContain(a.length);
+    }
   });
 });
 
@@ -504,7 +535,7 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
     const first = rootOf('fr').querySelector('[role=alert]');
     await userEvent.upload(input(rootOf('fr')), [file('a.pdf', 'application/pdf', 10)]);
     const second = rootOf('fr').querySelector('[role=alert]');
-    expect([errs(rootOf('fr')), second !== first, first!.isConnected]).toEqual(['alert: a.pdf isn\'t a PNG.', true, false]);
+    expect([errs(rootOf('fr')), second !== first, first!.isConnected]).toEqual(['alert: a.pdf isn’t a PNG.', true, false]);
   });
 });
 

@@ -62,7 +62,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 ## Accessibility
 
 - It's a `<nav>` landmark with lists of links; section titles name their lists.
-- The current page has `aria-current="page"` and a shaded background. A group holding it is text-colored, so the trail stays visible when it's closed.
+- The current page has `aria-current="page"`, a shaded background and a 2px bar in the primary color at its start. Hover shades an item the same way but never draws the bar, so a hovered item never reads as the current page; the current page itself darkens one step under the pointer. A group holding it is text-colored, so the trail stays visible when it's closed.
 - A group is a button with `aria-expanded` and `aria-controls`.
 - Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus, on a group's button too. Use a string `label` so the tooltip can show it.
 - Collapsed, an item's badge is hidden on screen like its label but still read: the tooltip names the item ("Inbox") and the badge describes it ("4"), and an 8px dot on the icon's corner shows there is one. The dot keeps 3:1 in all six themes, and is CanvasText in forced-colors mode.
@@ -97,7 +97,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 | --- | --- | --- | --- |
 | `label` | node | required | The item's text |
 | `icon` | an icon name or element | none | A 20px icon; top-level items need one to show when collapsed |
-| `active` | boolean | `false` | The current page: shaded, with `aria-current="page"` |
+| `active` | boolean | `false` | The current page: shaded, with a bar in the primary color and `aria-current="page"` |
 | `badge` | node | none | At the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read the badge |
 | `children` | SidebarItems | none | Makes it a group: a button that shows and hides them. They unfold and fold with the chevron, as an Accordion panel does (only a fade under reduced motion) |
 | `defaultOpen` | boolean | open when a child is active | Whether a group starts open |
@@ -125,8 +125,11 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-bg-hover` | `highlight` | An item's background on hover. |
 | `--sidebar-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past hover. |
 | `--sidebar-item-bg-active` | `highlight` | The current page's item background. |
+| `--sidebar-item-bg-active-hover` | `pressed` | The current page's item background under the pointer: one step past its rest. |
+| `--sidebar-item-indicator` | `primary` | The 2px bar at the start of the current page's item, which hover never draws. |
 | `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--sidebar-focus-gap-color` | `surface` | The gap between the focus ring and a filled item (the current page, or a hovered or pressed one), so the ring keeps 3:1 against what it touches. |
 
 **Type**
 

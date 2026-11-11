@@ -2,7 +2,7 @@
 import type { IconData } from "./types";
 
 /** The first name in each part (src/material/part/), in order. */
-const FIRST = ["10k", "add_call", "app_settings_alt", "avg_pace", "book_4", "call_log", "clock_arrow_up", "create_new_folder", "developer_board_off", "draw_collage", "event_list", "filter_list", "format_indent_decrease", "grade", "high_quality", "interests", "leaderboard", "lyrics", "money", "nest_tag", "open_run", "pets", "print_error", "repeat_one", "school", "settings_remote", "sms_failed", "stat_0", "tab_new_right", "title", "unpaved_road", "watch_vibration"];
+const FIRST = ["10k", "add_business", "app_shortcut", "avg_pace", "book_3", "call_missed", "clock_loader_40", "credit_card_heart", "developer_mode_tv", "drive_export", "event_repeat", "filter_retrolux", "format_ink_highlighter", "grain", "highlight_alt", "inventory", "left_click", "magic_button", "money_off_csred", "nest_thermostat_gen_3", "oral_disease", "phone_callback", "priority", "replace_audio", "score", "settings_system_daydream", "snowboarding", "stat_3", "tab_new_right", "title", "unpin", "watch_vibration"];
 // One import per part, written out so a bundler sees each one and makes it a chunk of its own.
 const PARTS: Array<() => Promise<Readonly<Record<string, IconData>>>> = [
   () => import("./part/00"),

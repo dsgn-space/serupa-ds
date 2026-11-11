@@ -80,7 +80,7 @@ Drawn from the `Pill` story.
 | `defaultValue` | string | the first enabled tab | The tab selected at first (uncontrolled) |
 | `onValueChange` | `(value) => void` | | Called when a tab is chosen |
 | `variant` | `'line'` \| `'pill'` | `'line'` | A line under the selected tab, or the selected tab filled in `primary` |
-| `size` | `'sm'` \| `'md'` | `'md'` | 32px or 36px tabs |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 32px, 36px or 44px tabs; `lg` has 16px text, to sit beside large fields and buttons and give a touch-sized target |
 | `activation` | `'auto'` \| `'manual'` | `'auto'` | Whether arrow keys also select, or only move (then Enter or Space selects). Use manual when a panel is slow to show |
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | A row over the panels, or a column beside them (`aria-orientation`, ↑ ↓). The line variant's line moves to the column's end side |
 
@@ -119,6 +119,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | --- | --- | --- |
 | `--tabs-height-sm` | `control-height-md` | A tab's height with size="sm" (32px). |
 | `--tabs-height-md` | `spacing-9` | A tab's height with size="md", the default (36px). |
+| `--tabs-height-lg` | `control-height-lg` | A tab's height with size="lg" (44px), the touch-target size. |
 
 **Border**
 

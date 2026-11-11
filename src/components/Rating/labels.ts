@@ -7,10 +7,10 @@ export interface RatingLabels {
   ratingValue: (value: number, max: number) => string;
 }
 export const en: RatingLabels = {
-  ratingStars: (value) => (value === 1 ? "1 star" : value + " stars"),
-  ratingValue: (value, max) => value + " out of " + max,
+  ratingStars: (value) => (value === 1 ? '1 star' : value + ' stars'),
+  ratingValue: (value, max) => value + ' out of ' + max,
 };
 export const id: RatingLabels = {
-  ratingStars: (value) => String(value).replace(".", ",") + " bintang",
-  ratingValue: (value, max) => String(value).replace(".", ",") + " dari " + max,
+  ratingStars: (value) => String(value).replace('.', ',') + ' bintang',
+  ratingValue: (value, max) => String(value).replace('.', ',') + ' dari ' + max,
 };

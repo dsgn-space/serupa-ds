@@ -69,7 +69,7 @@
    (176): darker in light themes, lighter in dark, the way the brand steps go, so its text keeps its contrast. With
    no --button-primary-bg, --dk-btn-hover reads an unset variable, so it falls back to primary-hover. */
 .dk-btn--primary {
-  /* stylelint-disable-next-line serupa/no-raw-value -- the lightness step of one brand shade (600 to 700, 400 to 300) in OKLCH */
+  /* stylelint-disable-next-line serupa/no-raw-value, function-disallowed-list -- a relative color from the brand token; the lightness step of one brand shade (600 to 700, 400 to 300) in OKLCH */
   --dk-btn-hover: light-dark(oklch(from var(--button-primary-bg) calc(l - 0.06) c h), oklch(from var(--button-primary-bg) calc(l + 0.1) c h));
 }
 @media (hover: hover) { .dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-primary-bg-hover, var(--dk-btn-hover, var(--primary-hover))); } }

@@ -1,18 +1,19 @@
-"use client";
-import * as React from "react";
-import { cn, domId, oneOf, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { IconButton } from "../IconButton/IconButton";
-import { Discard } from "../Dialog/Dialog";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import { modalClosed, modalOpened, modalOpening, wasDismissal } from "../../internal/layers";
-import * as icons from "../../material/builtin";
-import { useScrolls } from "../../internal/useScrolls";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { isComposing } from "../../internal/ime";
-import { deepActive } from "../../internal/root";
-import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
-import { project, rubber, settleTime, speed, track, type Samples } from "../../internal/fling";
+'use client';
+import * as React from 'react';
+import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { warnOnce } from '../../internal/warn';
+import { IconButton } from '../IconButton/IconButton';
+import { Discard } from '../Dialog/Dialog';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import { modalClosed, modalOpened, modalOpening, wasDismissal } from '../../internal/layers';
+import * as icons from '../../material/builtin';
+import { useScrolls } from '../../internal/useScrolls';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { isComposing } from '../../internal/ime';
+import { deepActive } from '../../internal/root';
+import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
+import { project, rubber, settleTime, speed, track, type Samples } from '../../internal/fling';
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -62,15 +63,15 @@ const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, side: 1, size: 1, title:
    panel with no backdrop, beside a page that stays usable. unsaved puts Dialog's "Discard changes?" question between
    a request to close and onOpenChange(false). */
 /** A modal panel that slides in from an edge: navigation, filters, details. */
-export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>("Drawer", function Drawer(props, ref) {
-  const nameRef = useNameCheck("Drawer", NAME_HOW.title);   // warns when it has no accessible name
+export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>('Drawer', function Drawer(props, ref) {
+  const nameRef = useNameCheck('Drawer', NAME_HOW.title);   // warns when it has no accessible name
   const sds = useSettings();
   const rest = omit(props, OWN);
-  const base = domId("dk-drw", React.useId());
+  const base = domId('dk-drw', React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
-  const side = oneOf(["right", "left", "top", "bottom"] as const, props.side, "right");
-  const size = oneOf(["sm", "md", "lg"] as const, props.size, "md");
+  const side = oneOf(['right', 'left', 'top', 'bottom'] as const, props.side, 'right');
+  const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const showClose = props.closeButton !== false;
   const modal = props.modal !== false;
   const backdrop = modal && props.closeOnBackdrop !== false;
@@ -91,10 +92,10 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   React.useEffect(() => {
     if (!open || !props.unsaved) return;
     const stay = (e: BeforeUnloadEvent) => { e.preventDefault(); };
-    window.addEventListener("beforeunload", stay);
-    return () => window.removeEventListener("beforeunload", stay);
+    window.addEventListener('beforeunload', stay);
+    return () => window.removeEventListener('beforeunload', stay);
   }, [open, props.unsaved]);
-  const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
+  const has = (n: React.ReactNode) => n != null && n !== false && n !== '';
   // Open on arrival: there from the first frame, so it doesn't slide in; it closes, and opens again, with motion.
   const arrived = React.useRef(open); if (!open) arrived.current = false;
 
@@ -104,7 +105,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     if (!back.current) return;   // never opened, or already given back
     const f = final.current && final.current.current, b = f && f.isConnected ? f : back.current;
     if (!keep) back.current = null;
-    if (go && b && b.isConnected && typeof b.focus === "function") b.focus();
+    if (go && b && b.isConnected && typeof b.focus === 'function') b.focus();
   };
   // Bumped when the browser closed it while open was true: open again, unless the parent said false.
   const [reopened, reopen] = React.useState(0);
@@ -113,26 +114,29 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     if (!d) return;
     if (open && !d.open) {
       if (!back.current) back.current = deepActive() as HTMLElement | null;   // kept when it opens again (inside a shadow root, not its host)
+      // It renders where it's placed: inside a page <form>, its own form nests in that one (Enter reloads the page) and
+      // Enter in its field submits the page's form, as with Popover.
+      if (process.env.NODE_ENV !== 'production' && d.parentElement?.closest('form') && d.querySelector('form, textarea, input:not([type=checkbox], [type=radio], [type=hidden])')) warnOnce('overlay-in-form', "Drawer: it's inside a <form> and holds a form or a field, so Enter there submits the page's form, or reloads the page. Place the Drawer after the form.", 'Drawer:overlay-in-form');
       // Non-modal: shown in place (not the top layer), so it isn't on the modal stack and the page stays usable.
-      if (!modal) { if (typeof d.show === "function") d.show(); else d.setAttribute("open", ""); }
+      if (!modal) { if (typeof d.show === 'function') d.show(); else d.setAttribute('open', ''); }
       else {
         modalOpening();
-        if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+        if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
         modalOpened(d);
       }
       // A child's autoFocus ran while the dialog was still hidden, and showModal() then focused the first focusable
       // (the ×). React doesn't write the autofocus attribute, so data-autofocus (or autofocus in plain HTML) marks it;
       // initialFocus, when it points inside, wins over both.
       const want = initial.current && initial.current.current;
-      const own = want && d.contains(want) ? want : d.querySelector<HTMLElement>("[data-autofocus], [autofocus]");
-      if (own && typeof own.focus === "function") own.focus();
+      const own = want && d.contains(want) ? want : d.querySelector<HTMLElement>('[data-autofocus], [autofocus]');
+      if (own && typeof own.focus === 'function') own.focus();
     } else if (open) {
       // Already open: StrictMode ran the unmount cleanup (which took it off the modal stack) and mounts it again.
       if (modal) modalOpened(d);
     } else {
       // Non-modal, focus may have moved on to the page: it goes back only from inside the drawer.
       const inside = modal || d.contains(deepActive());
-      if (d.open) { if (typeof d.close === "function") d.close(); else d.removeAttribute("open"); }
+      if (d.open) { if (typeof d.close === 'function') d.close(); else d.removeAttribute('open'); }
       modalClosed(d);
       giveBack(inside);
     }
@@ -146,11 +150,11 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   // A non-modal dialog gets no cancel event from Escape: its own keydown does it, for focus anywhere inside.
   const onKeyDown = (e: React.KeyboardEvent<HTMLDialogElement>) => {
     if (rest.onKeyDown) rest.onKeyDown(e);
-    if (modal || e.defaultPrevented || e.key !== "Escape" || isComposing(e)) return;
-    if (e.target instanceof Element && e.target.closest("dialog") !== e.currentTarget) return;   // a dialog opened from inside it
-    e.preventDefault(); request("escape");
+    if (modal || e.defaultPrevented || e.key !== 'Escape' || isComposing(e)) return;
+    if (e.target instanceof Element && e.target.closest('dialog') !== e.currentTarget) return;   // a dialog opened from inside it
+    e.preventDefault(); request('escape');
   };
-  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); if (e.target !== e.currentTarget) return; e.preventDefault(); request("escape"); };
+  const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); if (e.target !== e.currentTarget) return; e.preventDefault(); request('escape'); };
   // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
   // cancel, such as Chromium's second Escape with no click in between): if open is still true, ask to close. A
   // parent that keeps open true gets it shown again, so open stays the truth.
@@ -163,12 +167,12 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     // unsaved: show it again now, so the question opens on top of it, and ask.
     if (unsaved.current) {
       const d = e.currentTarget;
-      if (!modal) { if (typeof d.show === "function") d.show(); }
-      else { modalOpening(); if (typeof d.showModal === "function") d.showModal(); modalOpened(d); }
-      setAsking("api");
+      if (!modal) { if (typeof d.show === 'function') d.show(); }
+      else { modalOpening(); if (typeof d.showModal === 'function') d.showModal(); modalOpened(d); }
+      setAsking('api');
       return;
     }
-    close("api");
+    close('api');
     reopen((n) => n + 1);
   };
   // A press that starts on the panel (selecting text, say) and ends on the backdrop clicks the <dialog> too: only a
@@ -182,14 +186,14 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   // keeps it open. Let go, the panel carries on from under the finger at the finger's speed (fling.ts): out past its
   // edge and then closed, or back (no motion when reduced).
   const swipe = props.swipeToClose !== false;
-  const horiz = side === "left" || side === "right", away = side === "right" || side === "bottom" ? 1 : -1;
+  const horiz = side === 'left' || side === 'right', away = side === 'right' || side === 'bottom' ? 1 : -1;
   const settling = React.useRef<(() => void) | null>(null);
-  const shift = (d: number) => horiz ? d * away + "px 0" : "0 " + d * away + "px";
+  const shift = (d: number) => horiz ? d * away + 'px 0' : '0 ' + d * away + 'px';
   const drag = React.useRef<{ id: number; x: number; y: number; d: number; at: number; on: boolean; s: Samples } | null>(null);
   const onSwipeDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const t = e.target as Element;
-    if (!swipe || e.pointerType !== "touch" || !e.isPrimary || t.closest("input, textarea, select, [contenteditable]")) return;
-    if (!horiz && t.closest(".dk-drawer__body")) return;
+    if (!swipe || e.pointerType !== 'touch' || !e.isPrimary || t.closest('input, textarea, select, [contenteditable]')) return;
+    if (!horiz && t.closest('.dk-drawer__body')) return;
     drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, d: 0, at: 0, on: false, s: [{ t: e.timeStamp, p: 0 }] };
   };
   const onSwipeMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -200,7 +204,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
       if (across > 10 && across > Math.abs(d)) { drag.current = null; return; }
       if (Math.abs(d) < 10) return;
       g.on = true;
-      e.currentTarget.setAttribute("data-dragging", "");   // follows the finger, with no transition behind it
+      e.currentTarget.setAttribute('data-dragging', '');   // follows the finger, with no transition behind it
       try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a pointer that already ended */ }
       // Caught while it settles: it stays under the finger, and that settle never finishes.
       if (settling.current) settling.current();
@@ -211,69 +215,70 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     // (data-inward), the panel's ::after (a copy of its background past its edge) fills the gap behind it.
     g.at = d >= 0 ? d : rubber(d, INWARD);
     e.currentTarget.style.translate = shift(g.at);
-    e.currentTarget.toggleAttribute("data-inward", g.at < 0);
+    e.currentTarget.toggleAttribute('data-inward', g.at < 0);
   };
   const onSwipeEnd = (e: React.PointerEvent<HTMLDivElement>) => {
     const g = drag.current;
     if (!g || e.pointerId !== g.id) return;
     drag.current = null;
     const p = e.currentTarget, size = horiz ? p.offsetWidth : p.offsetHeight;
-    p.removeAttribute("data-dragging");
-    if (!g.on) { p.style.translate = ""; delete p.dataset.inward; return; }
+    p.removeAttribute('data-dragging');
+    if (!g.on) { p.style.translate = ''; delete p.dataset.inward; return; }
     const v = speed(g.s);   // px per ms, toward the edge
     // Where it would come to rest with the momentum it was let go with (KW11), as a scroll would: past a third, it
     // closes, so a slow drag still moving that way goes on to close instead of springing back at its last pixel.
-    const out = e.type === "pointerup" && (v > FLICK || (g.d + project(v) > size / 3 && v > -0.1));
+    const out = e.type === 'pointerup' && (v > FLICK || (g.d + project(v) > size / 3 && v > -0.1));
     const left = out ? size - g.at : Math.abs(g.at);
     const done = () => {
       delete p.dataset.settling;
       delete p.dataset.inward;
-      if (!out) { p.style.translate = ""; return; }
+      if (!out) { p.style.translate = ''; return; }
       // unsaved: it comes back, and asks.
-      if (unsaved.current) { p.style.translate = ""; request("swipe"); return; }
-      close("swipe");
+      if (unsaved.current) { p.style.translate = ''; request('swipe'); return; }
+      close('swipe');
       // Back in place once it's closed (two frames: the close renders first), so it opens from the edge next time.
-      requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) p.style.translate = ""; }));
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) p.style.translate = ''; }));
     };
     // Carries on at the finger's speed when it was moving that way; from a stop or a flick back, briskly.
-    p.style.setProperty("--dk-drawer-settle", settleTime(left, (out ? v : -v) > 0 ? v : 0) + "ms");
-    p.dataset.settling = "";
+    p.style.setProperty('--dk-drawer-settle', settleTime(left, (out ? v : -v) > 0 ? v : 0) + 'ms');
+    p.dataset.settling = '';
     if (!left || !parseFloat(getComputedStyle(p).transitionDuration)) { done(); return; }
-    const end = (ev: TransitionEvent) => { if (ev.target === p && ev.propertyName === "translate") { stop(); done(); } };
-    const stop = () => { p.removeEventListener("transitionend", end); delete p.dataset.settling; settling.current = null; };
-    p.addEventListener("transitionend", end);
+    const end = (ev: TransitionEvent) => { if (ev.target === p && ev.propertyName === 'translate') { stop(); done(); } };
+    const stop = () => { p.removeEventListener('transitionend', end); delete p.dataset.settling; settling.current = null; };
+    p.addEventListener('transitionend', end);
     settling.current = stop;
-    p.style.translate = out ? shift(size) : "";
+    p.style.translate = out ? shift(size) : '';
   };
-  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && downOnBackdrop.current && e.target === e.currentTarget && !wasDismissal(e.nativeEvent)) request("outside"); downOnBackdrop.current = false; };
+  const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && downOnBackdrop.current && e.target === e.currentTarget && !wasDismissal(e.nativeEvent)) request('outside'); downOnBackdrop.current = false; };
   // A body taller than the panel takes Tab focus, so it can be scrolled from the keyboard when nothing in it is
   // focusable (only Chromium scrolls it with focus on the ×). It's a region named like the drawer, as Table's frame is.
   const [body, setBody] = React.useState<HTMLDivElement | null>(null);
   const scrolls = useScrolls(body);
-  const named = rest["aria-labelledby"] || (has(props.title) ? base + "-title" : undefined);
-  const region = !scrolls ? {} : named ? { tabIndex: 0, role: "region", "aria-labelledby": named }
-    : rest["aria-label"] ? { tabIndex: 0, role: "region", "aria-label": rest["aria-label"] } : { tabIndex: 0 };
+  const named = rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined);
+  const region = !scrolls ? {} : named ? { tabIndex: 0, role: 'region', 'aria-labelledby': named }
+    : rest['aria-label'] ? { tabIndex: 0, role: 'region', 'aria-label': rest['aria-label'] } : { tabIndex: 0 };
+  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
-    <dialog {...rest} ref={(n) => { el.current = n; nameRef(n); setRef(ref, n); }}
-      aria-modal={modal ? "true" : undefined}
-      aria-labelledby={rest["aria-labelledby"] || (has(props.title) ? base + "-title" : undefined)}
-      aria-describedby={rest["aria-describedby"] || (has(props.description) ? base + "-desc" : undefined)}
-      className={cn("dk-drawer", "dk-drawer--" + side, "dk-drawer--" + size, !modal && "dk-drawer--nonmodal", props.className)} data-component="drawer" data-state={open ? "open" : "closed"} data-side={side} data-size={size} data-instant={arrived.current ? "" : undefined}
+    <dialog {...rest} ref={mergedRef}
+      aria-modal={modal ? 'true' : undefined}
+      aria-labelledby={rest['aria-labelledby'] || (has(props.title) ? base + '-title' : undefined)}
+      aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
+      className={cn('dk-drawer', 'dk-drawer--' + side, 'dk-drawer--' + size, !modal && 'dk-drawer--nonmodal', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrived.current ? '' : undefined}
       onKeyDown={onKeyDown} onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
       <div className="dk-drawer__panel" onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
         {has(props.title) || has(props.description) || showClose ? (
           <div className="dk-drawer__header">
             <div className="dk-drawer__heading">
-              {has(props.title) ? <h2 className="dk-drawer__title" id={base + "-title"}>{props.title}</h2> : null}
-              {has(props.description) ? <p className="dk-drawer__description" id={base + "-desc"}>{props.description}</p> : null}
+              {has(props.title) ? <h2 className="dk-drawer__title" id={base + '-title'}>{props.title}</h2> : null}
+              {has(props.description) ? <p className="dk-drawer__description" id={base + '-desc'}>{props.description}</p> : null}
             </div>
-            {showClose ? <IconButton className="dk-drawer__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" hideTitle onClick={() => request("close")} /> : null}
+            {showClose ? <IconButton className="dk-drawer__close" icon={icons.Close} label={props.closeLabel || sds.labels.close} size="sm" hideTitle onClick={() => request('close')} /> : null}
           </div>
         ) : null}
         {has(props.children) ? <div {...region} ref={setBody} className="dk-drawer__body">{props.children}</div> : null}
         {has(props.footer) ? <div className="dk-drawer__footer">{props.footer}</div> : null}
       </div>
-      {props.unsaved || asking ? <Discard open={!!asking && open} onKeep={() => setAsking(null)} onDiscard={() => { const why = asking || "close"; setAsking(null); close(why); }} /> : null}
+      {props.unsaved || asking ? <Discard open={!!asking && open} onKeep={() => setAsking(null)} onDiscard={() => { const why = asking || 'close'; setAsking(null); close(why); }} /> : null}
     </dialog>
   );
 });

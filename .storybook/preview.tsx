@@ -9,6 +9,7 @@ import tokens from '../tokens.json';
 import * as ALL_ICONS from '../src/material/icons';
 import { registerIcons } from '../src/icons';
 import { CONTENT, ContentContext, type Content } from './content';
+import { proofCss } from './proof-brand';
 
 // Every icon name draws at once in Storybook (apps load the full set the first time they need it).
 registerIcons(ALL_ICONS);
@@ -17,6 +18,13 @@ registerIcons(ALL_ICONS);
 // so a brand added there shows up here with no edit (ADR-0003).
 const BRANDS = [...new Set(tokens.color.themes.map((t: { id: string }) => t.id.replace(/-(light|dark)$/, '')))];
 const DEFAULT_BRAND = BRANDS[0];
+// The proof brand (.storybook/proof-brand.ts): Storybook only, not in tokens.json, so not shipped and not in the screenshots.
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.dataset.proofBrand = '';
+  style.textContent = proofCss(tokens as never);
+  document.head.appendChild(style);
+}
 
 // The toolbar picks a brand and a mode; together they are the page's data-theme, as theme.js sets it. Contrast
 // and density set data-contrast and data-density, the page's other theme axes; their defaults leave the attribute off,
@@ -88,7 +96,7 @@ const preview: Preview = {
     brand: {
       description: 'Brand',
       toolbar: { title: 'Brand', icon: 'paintbrush', dynamicTitle: true, items:
-        BRANDS.map((b) => ({ value: b, title: b[0].toUpperCase() + b.slice(1) })) },
+        [...BRANDS.map((b) => ({ value: b, title: b[0].toUpperCase() + b.slice(1) })), { value: 'proof', title: 'Proof (Storybook only)' }] },
     },
     mode: {
       description: 'Light or dark',
@@ -124,6 +132,9 @@ const preview: Preview = {
     },
   },
   initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', motion: '1', content: 'demo' },
+  // Every story is shot by tools/test/visual.mjs unless its file says tags: ['!visual'], which takes this tag away.
+  // A "!" tag only removes a tag, so this one has to be here for it to remove (GR285).
+  tags: ['visual'],
   decorators: [WithTheme],
   parameters: {
     layout: 'padded',
@@ -136,8 +147,8 @@ const preview: Preview = {
     options: {
       storySort: (a, b) => {
         const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Upgrading', 'Changelog'];
-        const foundations = ['Colors', 'Themes', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
-          'Content and voice', 'Accessibility', 'Utility classes', 'Icons'];
+        const foundations = ['Design principles', 'Colors', 'Themes', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
+          'Content and voice', 'Ethical design', 'Accessibility', 'Utility classes', 'Icons'];
         const at = (list, name) => { const i = list.indexOf(name); return i < 0 ? list.length : i; };
         const x = a.title.split('/'), y = b.title.split('/');
         if (x[0] !== y[0]) return at(order, x[0]) - at(order, y[0]);

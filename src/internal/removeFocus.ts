@@ -1,5 +1,5 @@
-import type * as React from "react";
-import { activeIn } from "./root";
+import type * as React from 'react';
+import { activeIn } from './root';
 
 /* Removing an item by its own × drops focus on <body> when the × had it. Once the item is gone, focus moves to the
    next × among its siblings (the items in the same list, each maybe in its own <li>), else the one before it. A

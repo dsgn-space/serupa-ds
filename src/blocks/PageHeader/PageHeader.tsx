@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import { Breadcrumb, BreadcrumbItem } from '../../components/Breadcrumb/Breadcrumb';
 import { Heading } from '../../components/Heading/Heading';

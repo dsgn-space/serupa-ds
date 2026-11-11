@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
@@ -49,7 +49,7 @@ function save(key: string | undefined, choice: ConsentChoice) {
 }
 
 const SETTINGS = 'cookie-settings';
-const said = (c: ConsentChoice) => `You've ${c === 'accepted' ? 'accepted' : 'rejected'} analytics cookies.`;
+const said = (c: ConsentChoice) => `You’ve ${c === 'accepted' ? 'accepted' : 'rejected'} analytics cookies.`;
 
 /** A page with a cookie banner at its top, a cookie settings section and a footer link back to it. */
 export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps) {
@@ -79,7 +79,7 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
             {banner === 'ask' ? (
               <>
                 <Heading level={2} id="consent-title" className="text-lg">Cookies on Acme</Heading>
-                <p className="m-0 text-sm">We use essential cookies to make the site work. We'd also like to set analytics cookies to learn how the site is used, so we can make it better. We won't set them unless you accept.</p>
+                <p className="m-0 text-sm">We use essential cookies to make the site work. We’d also like to set analytics cookies to learn how the site is used, so we can make it better. We won’t set them unless you accept.</p>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button onClick={() => answer('accepted')}>Accept analytics cookies</Button>
                   <Button onClick={() => answer('rejected')}>Reject analytics cookies</Button>
@@ -106,12 +106,12 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
         </div>
         <Card as="section" aria-labelledby={`${SETTINGS}-title`} id={SETTINGS} className="flex flex-col gap-4">
           <Heading level={2} id={`${SETTINGS}-title`}>Cookie settings</Heading>
-          <p className="m-0 text-sm">Essential cookies keep you signed in and remember what's in your basket. They're always on, because the site doesn't work without them.</p>
+          <p className="m-0 text-sm">Essential cookies keep you signed in and remember what’s in your basket. They’re always on, because the site doesn’t work without them.</p>
           <form onSubmit={saveSettings} className="flex flex-col gap-4">
             <Field label="Use analytics cookies?" hint="They tell us which pages are visited and for how long. Nothing that names you." group>
               <RadioGroup name="analytics" value={draft} onValueChange={(v) => setDraft(v)}>
                 <Radio value="accepted">Yes, use analytics cookies</Radio>
-                <Radio value="rejected">No, don't use analytics cookies</Radio>
+                <Radio value="rejected">No, don’t use analytics cookies</Radio>
               </RadioGroup>
             </Field>
             <div><Button type="submit">Save cookie settings</Button></div>

@@ -118,7 +118,7 @@ const seen = [];
 try {
   const page = await br.newPage();
   for (const [b] of html) {
-    for (const mode of ['light', 'dark']) {
+    for (const mode of /** @type {const} */ (['light', 'dark'])) {
       await page.emulateMedia({ colorScheme: mode });
       await page.setViewportSize({ width: 375, height: 800 });
       await page.goto(pathToFileURL(path.join(D, `${b}.html`)).href);

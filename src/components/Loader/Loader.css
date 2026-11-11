@@ -53,6 +53,7 @@
   opacity: var(--loader-pixel-dim, var(--opacity-15));
   animation: dk-loader-pixel var(--loader-pixel-duration, var(--duration-1200)) var(--ease-in-out) infinite both;
 }
+/* stylelint-disable-next-line color-named -- inside the SVG mask: black cuts, white keeps; not a color anyone sees */
 .dk-loader__px-cut { fill: none; stroke: black; stroke-width: var(--loader-pixel-divider-width, var(--stroke-width-1)); }
 .dk-loader__px-divider { fill: none; stroke: currentColor; stroke-width: var(--loader-pixel-divider-width, var(--stroke-width-1)); stroke-opacity: var(--loader-pixel-divider, var(--opacity-10)); }
 .dk-loader--pixel .dk-loader__art > svg { filter: drop-shadow(0 0 var(--loader-pixel-glow, var(--spacing-0)) currentColor); }

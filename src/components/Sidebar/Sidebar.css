@@ -5,8 +5,10 @@
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
 @layer dk.components {
+.dk-sidebar:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-sidebar {
-  box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0;
+  --dk-bar: var(--border-width-2);
+  box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0; max-inline-size: var(--sizing-full);
   background: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
   transition: clip-path var(--motion-change-md) var(--ease-move);
 }
@@ -59,8 +61,14 @@
 @media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--highlight)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
-.dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); }
-.dk-sidebar__item:focus-visible { outline: var(--focus-ring-width) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+/* The current page: a bar at the start that hover never draws, so a hovered item never reads as "you are here", and
+   one step darker under the pointer, so hovering it answers too. */
+.dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--sidebar-item-indicator, var(--primary)); }
+@media (hover: hover) { .dk-sidebar__item[aria-current="page"]:hover { background: var(--sidebar-item-bg-active-hover, var(--pressed)); } }
+/* The ring is inset, since the scrolling body and the nested list's clip would cut one outside the item. A gap in the surface
+   color sits inside it, because the ring is under 3:1 on the highlight fill (the current page, hover, pressed); it hides the
+   current page's bar, which the ring covers anyway. */
+.dk-sidebar__item:focus-visible { outline: var(--focus-ring-width) solid var(--sidebar-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); box-shadow: inset 0 0 0 calc(var(--focus-ring-width) + var(--spacing-0\.5)) var(--sidebar-focus-gap-color, var(--surface)); }
 .dk-sidebar__item--nested { padding-inline-start: var(--sidebar-nested-indent, var(--spacing-11)); }
 .dk-sidebar__icon { position: relative; display: inline-flex; flex-shrink: 0; }
 /* collapsed: a dot on the icon's top end corner for an item with a badge, ringed in the sidebar's background */

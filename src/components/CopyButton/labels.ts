@@ -6,10 +6,10 @@ export interface CopyButtonLabels {
   copyFailed: string;
 }
 export const en: CopyButtonLabels = {
-  copied: "Copied",
-  copyFailed: "Couldn't copy. Select the text and copy it yourself.",
+  copied: 'Copied',
+  copyFailed: 'Couldn’t copy. Select the text and copy it yourself.',
 };
 export const id: CopyButtonLabels = {
-  copied: "Disalin",
-  copyFailed: "Gagal menyalin. Pilih teksnya lalu salin sendiri.",
+  copied: 'Disalin',
+  copyFailed: 'Gagal menyalin. Pilih teksnya lalu salin sendiri.',
 };

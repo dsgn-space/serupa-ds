@@ -3,9 +3,11 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, settled, withMotion } from '../../../tools/test/vitest/helpers';
+import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
+import { hoverLeave } from '../../internal/timing';
 import { Tooltip, coolTooltips } from './Tooltip';
 
 // Every test starts cold: the warm-up (EC1) would otherwise carry over from the test before.
@@ -35,7 +37,7 @@ describe('Tooltip', () => {
 
   test('onOpenChange says why: hover in and out, focus and blur from the keyboard, escape', async () => {
     const why: string[] = [];
-    await render(<div style={{ padding: '80px' }}><button id="tbefore">Before</button><Tooltip content="Why" delay={0} onOpenChange={(v, d) => why.push((v ? 'show ' : 'hide ') + d.reason)}><button id="twhy">Why</button></Tooltip></div>);
+    await render(<div style={{ padding: '80px' }}><button id="tbefore">Before</button><Tooltip content="Why" openDelay={0} onOpenChange={(v, d) => why.push((v ? 'show ' : 'hide ') + d.reason)}><button id="twhy">Why</button></Tooltip></div>);
     await userEvent.hover(el('twhy'));
     await expect.poll(() => isOpen('twhy')).toBe(true);
     await away();
@@ -56,7 +58,7 @@ describe('Tooltip', () => {
     const asks: string[] = [];
     await render(<div style={{ padding: '80px' }}>
       <Tooltip content="Quiet" onOpenChange={(v, d) => asks.push((v ? 'show ' : 'hide ') + d.reason)}><button id="l8e106a">Quiet</button></Tooltip>
-      <Tooltip content="Off" disabled delay={0} onOpenChange={(v, d) => asks.push('off ' + (v ? 'show ' : 'hide ') + d.reason)}><button id="l8e106b">Off</button></Tooltip>
+      <Tooltip content="Off" disabled openDelay={0} onOpenChange={(v, d) => asks.push('off ' + (v ? 'show ' : 'hide ') + d.reason)}><button id="l8e106b">Off</button></Tooltip>
     </div>);
     await userEvent.hover(el('l8e106a'));   // passes on before the delay: never shown
     await away();
@@ -92,10 +94,12 @@ describe('Tooltip', () => {
     expect([t.dataset.side, t.matches(':popover-open')]).toEqual(['top', true]);
     expect(near(rect(a).top - rect(t).bottom, 6)).toBe(true);
     expect(near(rect(t).left + rect(t).width / 2, rect(a).left + rect(a).width / 2)).toBe(true);
+    // The grace is timed the same way, from before the pointer leaves: a busy runner can take longer than the grace
+    // to move the pointer, so a check straight after the move could find it already closed.
+    const t1 = performance.now();
     await away();
-    await settle(50);
-    expect(isOpen('a')).toBe(true);
     await expect.poll(() => isOpen('a')).toBe(false);
+    expect(performance.now() - t1).toBeGreaterThanOrEqual(hoverLeave);
   });
 
   test('the pointer can move onto the tooltip without it closing (hoverable); Escape hides it even while hovered (dismissible)', async () => {
@@ -111,7 +115,7 @@ describe('Tooltip', () => {
 
   test('Escape while the pointer waits out the delay cancels the show; leaving and coming back shows it again (GR89)', async () => {
     const asks: string[] = [];
-    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file" delay={500} onOpenChange={(v, d) => asks.push(v + ' ' + d.reason)}><button id="a">Edit</button></Tooltip></div>);
+    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file" openDelay={500} onOpenChange={(v, d) => asks.push(v + ' ' + d.reason)}><button id="a">Edit</button></Tooltip></div>);
     await userEvent.hover(el('a'));
     await settle(150);
     await userEvent.keyboard('{Escape}');
@@ -143,7 +147,7 @@ describe('Tooltip', () => {
   });
 
   test('a tap doesn\'t open it later (touch pointerenter, then the compatibility mouseenter), and a press outside hides an open one', async () => {
-    await render(<><Tooltip content="Save" delay={50}><button id="t">Save</button></Tooltip><p id="out">Page</p></>);
+    await render(<><Tooltip content="Save" openDelay={50}><button id="t">Save</button></Tooltip><p id="out">Page</p></>);
     const b = el('t'), fire = (type: string, init: PointerEventInit = { pointerType: 'touch' }) => b.dispatchEvent(new PointerEvent(type, { bubbles: type !== 'pointerenter', ...init }));
     fire('pointerenter'); fire('pointerdown'); fire('pointerup');
     b.dispatchEvent(new MouseEvent('mouseenter')); b.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
@@ -176,7 +180,7 @@ describe('Tooltip', () => {
   });
 
   test('an interest while the pointer is over the element is the hover\'s: Escape during the delay still cancels the show (174, GR89)', async () => {
-    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file" delay={500}><button id="a">Edit</button></Tooltip></div>);
+    await render(<div style={{ padding: '120px 200px' }}><Tooltip content="Edit the file" openDelay={500}><button id="a">Edit</button></Tooltip></div>);
     await userEvent.hover(el('a'));
     await settle(150);
     await userEvent.keyboard('{Escape}');
@@ -192,7 +196,7 @@ describe('Tooltip', () => {
       const [open, set] = React.useState(false); setOpen = set;
       return <Tooltip content="Controlled" open={open} onOpenChange={(v) => { opens.push(v); }}><button id="d">Controlled</button></Tooltip>;
     }
-    await render(<><Controlled /><Tooltip content="Never" disabled delay={0}><button id="e">Disabled</button></Tooltip></>);
+    await render(<><Controlled /><Tooltip content="Never" disabled openDelay={0}><button id="e">Disabled</button></Tooltip></>);
     await userEvent.hover(el('d'));
     await settle(500);
     expect([isOpen('d'), opens.join()]).toEqual([false, 'true']);
@@ -205,8 +209,8 @@ describe('Tooltip', () => {
 
   test('no room above: it flips below and stays on screen; an overflow: hidden parent can\'t clip it', async () => {
     await render(<>
-      <div style={{ position: 'fixed', top: '0px', left: '300px' }}><Tooltip content="Flipped" delay={0}><button id="g">Top edge</button></Tooltip></div>
-      <div style={{ overflow: 'hidden', width: '60px', height: '30px', position: 'relative', margin: '120px 200px' }}><Tooltip content="Not clipped by overflow hidden" delay={0}><button id="h">Clip</button></Tooltip></div>
+      <div style={{ position: 'fixed', top: '0px', left: '300px' }}><Tooltip content="Flipped" openDelay={0}><button id="g">Top edge</button></Tooltip></div>
+      <div style={{ overflow: 'hidden', width: '60px', height: '30px', position: 'relative', margin: '120px 200px' }}><Tooltip content="Not clipped by overflow hidden" openDelay={0}><button id="h">Clip</button></Tooltip></div>
     </>);
     await userEvent.hover(el('g'));
     await expect.poll(() => { const g = rect(tipOf('g')); return [tipOf('g').dataset.side, isOpen('g') && g.top >= 0 && g.left >= 0 && g.right <= innerWidth && g.bottom <= innerHeight]; }).toEqual(['bottom', true]);
@@ -222,7 +226,7 @@ describe('Tooltip', () => {
   });
 
   test('look: text-xs, 6px corners, 4px 8px padding, 240px at most; --tooltip-bg overrides one', async () => {
-    await render(<Tooltip content="Tokens" delay={0} style={{ '--tooltip-bg': 'rgb(1, 2, 3)' } as React.CSSProperties}><button id="f">Tokens</button></Tooltip>);
+    await render(<Tooltip content="Tokens" openDelay={0} style={{ '--tooltip-bg': 'rgb(1, 2, 3)' } as React.CSSProperties}><button id="f">Tokens</button></Tooltip>);
     await userEvent.hover(el('f'));
     await expect.poll(() => isOpen('f')).toBe(true);
     const s = getComputedStyle(tipOf('f'));
@@ -233,7 +237,7 @@ describe('Tooltip', () => {
     function InDialog() {
       const [open, setOpen] = React.useState(false);
       return <><button id="dopen" onClick={() => setOpen(true)}>Open dialog</button>
-        <Dialog id="tdlg" open={open} onOpenChange={setOpen} title="In a dialog"><Tooltip content="Inside" delay={0}><button id="i">Inside</button></Tooltip></Dialog></>;
+        <Dialog id="tdlg" open={open} onOpenChange={setOpen} title="In a dialog"><Tooltip content="Inside" openDelay={0}><button id="i">Inside</button></Tooltip></Dialog></>;
     }
     await render(<InDialog />);
     await userEvent.click(el('dopen'));
@@ -300,7 +304,7 @@ describe('Tooltip warm-up (EC1)', () => {
       const t = tipOf('sl');
       const moves = t.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort();
       expect([moves, t.getAnimations().some((a) => a instanceof CSSAnimation), t.dataset.side]).toEqual([['opacity', 'translate'], false, 'bottom']);
-      await Promise.all(t.getAnimations().map((a) => a.finished));
+      await settled(t);
       expect([css(t).opacity, css(t).translate]).toEqual(['1', 'none']);
     });
   });
@@ -355,5 +359,39 @@ describe('Tooltip content is plain text (PT5)', () => {
     expect(calls()).toHaveLength(1);
     expect(String(calls()[0][0])).toMatch(/use a Popover/);
     warn.mockRestore();
+  });
+  test('a Button label cut with an ellipsis shows in full over the hint, hidden from screen readers, and the Button gets no title', async () => {
+    const long = 'Benachrichtigungseinstellungen öffnen und anpassen';
+    await render(<div style={{ width: 200, padding: 40 }}>
+      <Tooltip content="Strg + ," defaultOpen><Button id="cut">{long}</Button></Tooltip>
+    </div>);
+    await settled();
+    const tip = () => document.getElementById(el('cut').getAttribute('aria-describedby')!)!;
+    const full = tip().querySelector('[aria-hidden="true"]');
+    expect([full && full.textContent, tip().textContent, el('cut').getAttribute('title')]).toEqual([long, long + 'Strg + ,', null]);
+    expect(full!.getBoundingClientRect().bottom).toBeLessThanOrEqual(tip().getBoundingClientRect().bottom);
+  });
+
+  test('a label that fits, and role="label", show only the content', async () => {
+    await render(<div style={{ width: 400, padding: 40 }}>
+      <Tooltip content="Strg + ," defaultOpen><Button id="fit">Settings</Button></Tooltip>
+      <Tooltip content="Named" role="label" defaultOpen><Button id="lab" style={{ maxWidth: 40 }}>Benachrichtigungseinstellungen</Button></Tooltip>
+    </div>);
+    await settled();
+    const fit = document.getElementById(el('fit').getAttribute('aria-describedby')!)!;
+    const lab = document.getElementById(el('lab').getAttribute('aria-labelledby')!.split(' ').pop()!)!;
+    expect([fit.textContent, lab.textContent]).toEqual(['Strg + ,', 'Named']);
+  });
+});
+
+describe('Tooltip: delay, the old name of openDelay', () => {
+  test('still waits as openDelay does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Tooltip content="Old name" delay={0}><button id="old-delay">Old</button></Tooltip>);
+      await userEvent.hover(document.getElementById('old-delay')!);
+      await expect.poll(() => document.querySelector('[role=tooltip]')?.textContent).toBe('Old name');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('tooltip-delay'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });
