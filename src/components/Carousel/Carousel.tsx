@@ -1,19 +1,19 @@
-"use client";
-import * as React from "react";
-import { cn, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { useServerStyles } from "../../internal/serverStyles";
-import { Icon } from "../Icon/Icon";
-import { IconButton } from "../IconButton/IconButton";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { flattenChildren } from "../../internal/children";
-import { useSettings } from "../../internal/provider";
-import * as icons from "../../material/builtin";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { en as words } from "./labels";
-import { project, rubber, settleTime, speed, track as sample, type Samples } from "../../internal/fling";
+'use client';
+import * as React from 'react';
+import { cn, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { useServerStyles } from '../../internal/serverStyles';
+import { Icon } from '../Icon/Icon';
+import { IconButton } from '../IconButton/IconButton';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { flattenChildren } from '../../internal/children';
+import { useSettings } from '../../internal/provider';
+import * as icons from '../../material/builtin';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { en as words } from './labels';
+import { project, rubber, settleTime, speed, track as sample, type Samples } from '../../internal/fling';
 
-export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
+export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   /** The slides, one per child (pictures, cards, anything). */
   children?: React.ReactNode | undefined;
   /** What the carousel shows, such as "Featured products": it names the region. Required unless you give aria-label, or aria-labelledby pointing at a visible heading. */
@@ -43,34 +43,34 @@ export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "
 }
 export interface CarouselPerView { base?: number; sm?: number; md?: number; lg?: number }
 
-const WIDTHS = [["sm", 640], ["md", 768], ["lg", 1024]] as const;
+const WIDTHS = [['sm', 640], ['md', 768], ['lg', 1024]] as const;
 const whole = (n: unknown) => Math.max(1, Math.floor(Number(n)) || 1);
-type Bp = "base" | "sm" | "md" | "lg";
-function perAt(per: CarouselProps["perView"], count: number): Record<Bp, number> | null {
-  if (per == null || typeof per !== "object") return null;
+type Bp = 'base' | 'sm' | 'md' | 'lg';
+function perAt(per: CarouselProps['perView'], count: number): Record<Bp, number> | null {
+  if (per == null || typeof per !== 'object') return null;
   const cap = Math.max(1, count), out = { base: Math.min(whole(per.base), cap) } as Record<Bp, number>;
   let n = out.base;
   for (const [k] of WIDTHS) { if (per[k] != null) n = Math.min(whole(per[k]), cap); out[k] = n; }
   return out;
 }
 /** The slides per view at the screen width now, following the matchMedia queries as the width changes. */
-function usePerView(per: CarouselProps["perView"]): number {
-  const map = per != null && typeof per === "object" ? per : null;
+function usePerView(per: CarouselProps['perView']): number {
+  const map = per != null && typeof per === 'object' ? per : null;
   const pick = () => {
     if (!map) return whole(per);
     let n = whole(map.base);
-    for (const [k, w] of WIDTHS) if (map[k] != null && typeof window !== "undefined" && window.matchMedia && window.matchMedia("(min-width: " + w + "px)").matches) n = whole(map[k]);
+    for (const [k, w] of WIDTHS) if (map[k] != null && typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(min-width: ' + w + 'px)').matches) n = whole(map[k]);
     return n;
   };
   const [n, setN] = React.useState(() => map ? whole(map.base) : whole(per));
   const key = map ? [map.base, map.sm, map.md, map.lg].join() : String(whole(per));
   useIsoLayoutEffect(() => {
     setN(pick());
-    if (!map || typeof window === "undefined" || !window.matchMedia) return;
-    const mqs = WIDTHS.map(([, w]) => window.matchMedia("(min-width: " + w + "px)"));
+    if (!map || typeof window === 'undefined' || !window.matchMedia) return;
+    const mqs = WIDTHS.map(([, w]) => window.matchMedia('(min-width: ' + w + 'px)'));
     const on = () => setN(pick());
-    mqs.forEach((m) => m.addEventListener("change", on));
-    return () => mqs.forEach((m) => m.removeEventListener("change", on));
+    mqs.forEach((m) => m.addEventListener('change', on));
+    return () => mqs.forEach((m) => m.removeEventListener('change', on));
   }, [key]);
   return n;
 }
@@ -86,8 +86,8 @@ const SWIPE = 40; // px a swipe must travel to change the slide
 const FLICK = 0.3; // px per ms over the last 100ms: a shorter swipe this fast changes the slide too
 
 /** One slide at a time, with previous and next buttons, dots and swipe. */
-export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("Carousel", function Carousel(props, ref) {
-  const nameRef = useNameCheck("Carousel", NAME_HOW.label);   // warns when it has no accessible name
+export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('Carousel', function Carousel(props, ref) {
+  const nameRef = useNameCheck('Carousel', NAME_HOW.label);   // warns when it has no accessible name
   const restyle = useServerStyles(ref);
   const sds = useSettings(words);
   const rest = omit(props, OWN);
@@ -118,12 +118,12 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
   // A loop going on past the last slide (or back past the first) carries on that way instead of rewinding: the
   // first slides are shown again after the last (or the last before the first), the track moves there, and once it
   // stops it's put back at the real index without a transition. virt is where the track stands meanwhile.
-  const [wrap, setWrap] = React.useState<{ virt: number; edge: "after" | "before" } | null>(null);
+  const [wrap, setWrap] = React.useState<{ virt: number; edge: 'after' | 'before' } | null>(null);
   const [snap, setSnap] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const dragged = React.useRef(false);   // a drag just ended: the click that follows it doesn't count
   const prevBtn = React.useRef<HTMLButtonElement>(null), nextBtn = React.useRef<HTMLButtonElement>(null);
-  const refocus = React.useRef<"prev" | "next" | "dot" | null>(null);
+  const refocus = React.useRef<'prev' | 'next' | 'dot' | null>(null);
 
   const go = (i: number, ms: number | null = null) => {
     const next = loop ? ((i % (last + 1)) + last + 1) % (last + 1) : clamp(i);
@@ -132,52 +132,52 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
     const moves = !!track.current && parseFloat(getComputedStyle(track.current).transitionDuration) > 0;
     // Only when the slides shown again are out of view, so none is in two places (count >= 2 per view).
     if (loop && moves && !wrap && count >= 2 * per) {
-      if (i === last + 1 && index === last) setWrap({ virt: count, edge: "after" });
-      else if (i === -1 && index === 0) setWrap({ virt: -per, edge: "before" });
+      if (i === last + 1 && index === last) setWrap({ virt: count, edge: 'after' });
+      else if (i === -1 && index === 0) setWrap({ virt: -per, edge: 'before' });
     }
     if (!controlled) setOwn(next);
     if (props.onIndexChange) props.onIndexChange(next);
   };
-  const rtl = () => !!viewport.current && getComputedStyle(viewport.current).direction === "rtl";
+  const rtl = () => !!viewport.current && getComputedStyle(viewport.current).direction === 'rtl';
   // The direction as laid out (a dir attribute or CSS direction), so the track and chevrons can follow it.
-  const [dir, setDir] = React.useState<"ltr" | "rtl">("ltr");
+  const [dir, setDir] = React.useState<'ltr' | 'rtl'>('ltr');
   // every render: an ancestor's dir or direction can change without a render of ours; reading it is a style lookup, not a layout.
-  useIsoLayoutEffect(() => { const d = rtl() ? "rtl" : "ltr"; if (d !== dir) setDir(d); });
+  useIsoLayoutEffect(() => { const d = rtl() ? 'rtl' : 'ltr'; if (d !== dir) setDir(d); });
 
   const onDotsKey = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const back = rtl() ? "ArrowRight" : "ArrowLeft", fwd = rtl() ? "ArrowLeft" : "ArrowRight";
+    const back = rtl() ? 'ArrowRight' : 'ArrowLeft', fwd = rtl() ? 'ArrowLeft' : 'ArrowRight';
     let to = -1;
     if (e.key === back) to = loop ? page - 1 : Math.max(0, page - 1);
     else if (e.key === fwd) to = loop ? page + 1 : Math.min(pages - 1, page + 1);
-    else if (e.key === "Home") to = 0;
-    else if (e.key === "End") to = pages - 1;
+    else if (e.key === 'Home') to = 0;
+    else if (e.key === 'End') to = pages - 1;
     else return;
     e.preventDefault();
     to = ((to % pages) + pages) % pages;
-    refocus.current = "dot";   // focus the current dot once the index settles (a controlled parent may say no)
+    refocus.current = 'dot';   // focus the current dot once the index settles (a controlled parent may say no)
     go(pageStart(to));
   };
   const arrow = (step: 1 | -1) => {
     const to = index + step;
-    if (!loop && (to <= 0 || to >= last)) refocus.current = step > 0 ? "prev" : "next";   // this button hides at the end: keep focus on the other
+    if (!loop && (to <= 0 || to >= last)) refocus.current = step > 0 ? 'prev' : 'next';   // this button hides at the end: keep focus on the other
     go(to);
   };
   // every render: puts focus back after a key or button moved the slides, once the render has moved them.
   useIsoLayoutEffect(() => {
     const r = refocus.current;
     refocus.current = null;
-    if (r === "dot") (dotsRef.current?.children[page] as HTMLElement | undefined)?.focus();
+    if (r === 'dot') (dotsRef.current?.children[page] as HTMLElement | undefined)?.focus();
     else if (r) {
       // its own root's focus: inside a shadow root that's null once the hidden button lost it, not the body (GR90)
       const a = activeIn(viewport.current);
-      if (!a || a === prevBtn.current || a === nextBtn.current || a === document.body) (r === "prev" ? prevBtn : nextBtn).current?.focus();
+      if (!a || a === prevBtn.current || a === nextBtn.current || a === document.body) (r === 'prev' ? prevBtn : nextBtn).current?.focus();
     }
   });
 
   const onPointerDown = (e: React.PointerEvent) => {
-    if (last < 1 || (e.pointerType === "mouse" && e.button !== 0)) return;
+    if (last < 1 || (e.pointerType === 'mouse' && e.button !== 0)) return;
     drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, s: [{ t: e.timeStamp, p: e.clientX }] };
     dragged.current = false;
   };
@@ -215,7 +215,7 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
   };
   // The track stopped after a loop carried on: put it at the real index at once, then let it move again.
   const onTrackEnd = (e: React.TransitionEvent) => {
-    if (e.target !== e.currentTarget || e.propertyName !== "transform" || !wrap) return;
+    if (e.target !== e.currentTarget || e.propertyName !== 'transform' || !wrap) return;
     setSnap(true); setWrap(null);
   };
   React.useEffect(() => {
@@ -227,29 +227,29 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
   const onPointerCancel = (e: React.PointerEvent) => { if (drag.current && drag.current.id === e.pointerId) { drag.current = null; dragged.current = false; setOffset(0); } };
   const onPointerLeave = (e: React.PointerEvent) => { if (offset === 0) onPointerCancel(e); };
 
-  const style = { ...props.style, "--dk-carousel-index": wrap ? wrap.virt : index, "--dk-carousel-count": count,
-    ...(settle != null ? { "--dk-carousel-settle": settle + "ms", "--dk-carousel-ease": "var(--ease-fling)" } : null),
-    ...(perMap ? { "--dk-carousel-per-base": perMap.base, "--dk-carousel-per-sm": perMap.sm, "--dk-carousel-per-md": perMap.md, "--dk-carousel-per-lg": perMap.lg } as Record<string, number> : { "--dk-carousel-per": per }),
-    "--dk-carousel-drag": offset + "px" } as React.CSSProperties;
+  const style = { ...props.style, '--dk-carousel-index': wrap ? wrap.virt : index, '--dk-carousel-count': count,
+    ...(settle != null ? { '--dk-carousel-settle': settle + 'ms', '--dk-carousel-ease': 'var(--ease-fling)' } : null),
+    ...(perMap ? { '--dk-carousel-per-base': perMap.base, '--dk-carousel-per-sm': perMap.sm, '--dk-carousel-per-md': perMap.md, '--dk-carousel-per-lg': perMap.lg } as Record<string, number> : { '--dk-carousel-per': per }),
+    '--dk-carousel-drag': offset + 'px' } as React.CSSProperties;
   const multi = perMap ? Math.max(perMap.base, perMap.sm, perMap.md, perMap.lg) > 1 : per > 1;
   // The widths where a dot is past the last page, so CSS hides it there until the dots are counted again after mount.
-  const pastAt = (k: number) => perMap ? (["sm", "md", "lg"] as const).filter((b) => k >= Math.ceil(count / perMap[b])).join(" ") || undefined : undefined;
+  const pastAt = (k: number) => perMap ? (['sm', 'md', 'lg'] as const).filter((b) => k >= Math.ceil(count / perMap[b])).join(' ') || undefined : undefined;
   const shown = (i: number) => i >= index && i < index + per;
   const prevOff = !loop && index === 0, nextOff = !loop && index >= last;
 
   return (
-    <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn("dk-carousel", multi && "dk-carousel--multi", props.className)} style={style}
-      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest["aria-label"]} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? "" : undefined}>
+    <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('dk-carousel', multi && 'dk-carousel--multi', props.className)} style={style}
+      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
       <div className="dk-carousel__viewport" ref={viewport} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
         onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onPointerLeave={onPointerLeave}
         onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe
         onClickCapture={(e) => { if (dragged.current && e.detail) { dragged.current = false; e.preventDefault(); e.stopPropagation(); } }}   // a swipe across a link isn't a click
-        data-dragging={offset ? "" : undefined}>
-        <div className="dk-carousel__track" aria-live="polite" ref={track} onTransitionEnd={onTrackEnd} data-snap={snap ? "" : undefined}>
+        data-dragging={offset ? '' : undefined}>
+        <div className="dk-carousel__track" aria-live="polite" ref={track} onTransitionEnd={onTrackEnd} data-snap={snap ? '' : undefined}>
           {slides.map((s, i) => (
             <div key={(s as React.ReactElement).key ?? i} className="dk-carousel__slide" role="group" aria-roledescription={sds.labels.slideRole} aria-label={name(i, count)}
-              aria-hidden={shown(i) ? undefined : true} inert={!shown(i)} data-active={shown(i) ? "" : undefined}
-              data-wrap={wrap && (wrap.edge === "after" ? i < per : i >= count - per) ? wrap.edge : undefined}>
+              aria-hidden={shown(i) ? undefined : true} inert={!shown(i)} data-active={shown(i) ? '' : undefined}
+              data-wrap={wrap && (wrap.edge === 'after' ? i < per : i >= count - per) ? wrap.edge : undefined}>
               {s}
             </div>
           ))}
@@ -266,7 +266,7 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>("C
       {props.dots !== false && last > 0 ? (
         <div className="dk-carousel__dots" ref={dotsRef} onKeyDown={onDotsKey}>
           {Array.from({ length: pages }, (_, k) => (
-            <button key={k} type="button" className="dk-carousel__dot" aria-label={dotName(k)} aria-current={k === page ? "true" : undefined}
+            <button key={k} type="button" className="dk-carousel__dot" aria-label={dotName(k)} aria-current={k === page ? 'true' : undefined}
               tabIndex={k === page ? 0 : -1} data-past={pastAt(k)} onClick={() => go(pageStart(k))} />
           ))}
         </div>

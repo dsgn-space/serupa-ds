@@ -1,17 +1,17 @@
-"use client";
-import * as React from "react";
-import { cn, domId, oneOf, omit } from "../../internal/cn";
-import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
-import { flattenChildren } from "../../internal/children";
-import * as icons from "../../material/builtin";
-import { useSettings } from "../../internal/provider";
-import { warnOnce } from "../../internal/warn";
-import { revealInvalid } from "../../internal/untilFound";
-import { buttonClass } from "../Button/buttonClass";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, oneOf, omit } from '../../internal/cn';
+import { Icon } from '../Icon/Icon';
+import { component } from '../../internal/component';
+import { flattenChildren } from '../../internal/children';
+import * as icons from '../../material/builtin';
+import { useSettings } from '../../internal/provider';
+import { warnOnce } from '../../internal/warn';
+import { revealInvalid } from '../../internal/untilFound';
+import { buttonClass } from '../Button/buttonClass';
+import { en as words } from './labels';
 
-export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
+export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
   /** 'single' (default): opening one closes the others. 'multiple': any number can be open. */
   type?: 'single' | 'multiple' | undefined;
   /** The open items' values (controlled). Use with onValueChange. */
@@ -31,7 +31,7 @@ export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement
   showExpandAll?: boolean | undefined;
 }
 
-export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Identifies the item in value. Default: its position ("0", "1"…). */
   value?: string | undefined;
   /** The title: what the heading button says. */
@@ -45,7 +45,7 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
   keepMounted?: boolean | undefined;
 }
 
-const toMs = (t: string) => (parseFloat(t) || 0) * (t.trim().endsWith("ms") ? 1 : 1000);
+const toMs = (t: string) => (parseFloat(t) || 0) * (t.trim().endsWith('ms') ? 1 : 1000);
 
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
@@ -54,14 +54,14 @@ const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
    pattern). Arrow keys, Home and End move between the titles. className and every other prop go to the
    wrapper. */
 /** Items that show and hide their content under heading buttons; one open at a time, or several. */
-export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProps>("Accordion", function Accordion(props, ref) {
+export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProps>('Accordion', function Accordion(props, ref) {
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1, onKeyDown: 1 });
   const labels = useSettings(words).labels;
-  const single = props.type !== "multiple";
+  const single = props.type !== 'multiple';
   const controlled = props.value !== undefined;
   const [inner, setInner] = React.useState<string[]>(() => (props.defaultValue || []).slice(0, single ? 1 : undefined));
   const open = controlled ? (props.value as string[]) : inner;
-  if (process.env.NODE_ENV !== "production" && single && controlled && open.length > 1) warnOnce("accordion-single-value", `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
+  if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
   const collapsible = props.collapsible !== false;
   const onChange = React.useRef(props.onValueChange);
   onChange.current = props.onValueChange;
@@ -77,20 +77,20 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
     if (next !== open) change(next);
   }, [open, single, collapsible, change]);
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? (props.headingLevel as number) : 3;
-  const variant = oneOf(["plain", "card"] as const, props.variant, "plain");
+  const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
   function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (props.onKeyDown) props.onKeyDown(e);
     const t = e.target as HTMLElement;
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E29).
-    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || !t.classList.contains("dk-accordion__trigger") || t.closest(".dk-accordion") !== e.currentTarget) return;
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || !t.classList.contains('dk-accordion__trigger') || t.closest('.dk-accordion') !== e.currentTarget) return;
     // An item hidden by the hidden attribute or CSS (a filtered FAQ) can't take focus: skip it rather than stick (L8E83).
-    const all = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>(".dk-accordion__trigger")).filter((b) => b.closest(".dk-accordion") === e.currentTarget && !b.disabled && b.getClientRects().length > 0);
+    const all = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('.dk-accordion__trigger')).filter((b) => b.closest('.dk-accordion') === e.currentTarget && !b.disabled && b.getClientRects().length > 0);
     const i = all.indexOf(t as HTMLButtonElement);
-    const to = e.key === "ArrowDown" ? all[(i + 1) % all.length] : e.key === "ArrowUp" ? all[(i - 1 + all.length) % all.length] : e.key === "Home" ? all[0] : e.key === "End" ? all[all.length - 1] : null;
+    const to = e.key === 'ArrowDown' ? all[(i + 1) % all.length] : e.key === 'ArrowUp' ? all[(i - 1 + all.length) % all.length] : e.key === 'Home' ? all[0] : e.key === 'End' ? all[all.length - 1] : null;
     if (to) { e.preventDefault(); to.focus(); }
   }
   let n = 0;
-  const items = flattenChildren(props.children).map((c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ "data-index"?: string }>, { "data-index": String(n++) }) : c);
+  const items = flattenChildren(props.children).map((c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ 'data-index'?: string }>, { 'data-index': String(n++) }) : c);
   // Each open panel is a region landmark (DP1). Past six that could be open at once, landmarks crowd the list screen
   // readers offer, so the panels are plain groups of content under their headings (the APG's advice).
   const many = !single && items.filter(React.isValidElement).length > 6;
@@ -99,14 +99,14 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
   if (props.showExpandAll && !single) {
     const values = items.flatMap((c) => {
       if (!React.isValidElement(c)) return [];
-      const p = c.props as AccordionItemProps & { "data-index"?: string };
-      return p.disabled ? [] : [p.value != null ? p.value : String(p["data-index"])];
+      const p = c.props as AccordionItemProps & { 'data-index'?: string };
+      return p.disabled ? [] : [p.value != null ? p.value : String(p['data-index'])];
     });
     const allOpen = values.length > 0 && values.every((v) => open.indexOf(v) >= 0);
     const onAll = () => change(allOpen ? open.filter((v) => values.indexOf(v) < 0) : open.concat(values.filter((v) => open.indexOf(v) < 0)));
     all = (
       <div className="dk-accordion__toolbar">
-        <button type="button" className={buttonClass({ variant: "link", size: "sm", className: "dk-accordion__all" })} onClick={onAll} disabled={!values.length}>
+        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'dk-accordion__all' })} onClick={onAll} disabled={!values.length}>
           {allOpen ? labels.collapseAll : labels.expandAll}
         </button>
       </div>
@@ -114,7 +114,7 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
   }
   return (
     <AccordionContext.Provider value={{ open, toggle, level, collapsible, single, many }}>
-      <div {...rest} ref={ref} onKeyDown={onKeyDown} data-component="accordion" className={cn("dk-accordion", variant === "card" && "dk-accordion--card", props.className)}>{all}{items}</div>
+      <div {...rest} ref={ref} onKeyDown={onKeyDown} data-component="accordion" className={cn('dk-accordion', variant === 'card' && 'dk-accordion--card', props.className)}>{all}{items}</div>
     </AccordionContext.Provider>
   );
 });
@@ -123,17 +123,17 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
    grows to its height as it unfolds (a fade and a clip), and folds back as it shrinks; closed content is hidden from everyone, but find-in-page can still
    find it (hidden="until-found"), which opens the item. */
 /** One item in an Accordion: a title button and the content it shows and hides. */
-export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, AccordionItemProps>("AccordionItem", function AccordionItem(props, ref) {
+export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, AccordionItemProps>('AccordionItem', function AccordionItem(props, ref) {
   const ctx = React.useContext(AccordionContext);
   const rest = omit(props, { value: 1, title: 1, disabled: 1, keepMounted: 1, className: 1, children: 1 });
-  const index = String(rest["data-index"] || "0");
-  delete rest["data-index"];
+  const index = String(rest['data-index'] || '0');
+  delete rest['data-index'];
   const value = props.value != null ? props.value : index;
   const open = !!ctx && ctx.open.indexOf(value) >= 0;
-  const id = domId("dk-acc", React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
+  const id = domId('dk-acc', React.useId());   // its own id, not its position, so ids stay unique however items are wrapped
   // an open item in a single, non-collapsible accordion can't close: say so with aria-disabled
   const locked = !!ctx && open && ctx.single && !ctx.collapsible;
-  const H = ("h" + (ctx ? ctx.level : 3)) as "h3";
+  const H = ('h' + (ctx ? ctx.level : 3)) as 'h3';
   // Closed content is hidden="until-found": hidden from everyone, but the browser's find-in-page still searches it,
   // and on a match fires beforematch, which opens the item. It's set once the closing animation ends, so the
   // content stays visible while it folds away. React renders any hidden value as hidden="", so it's set here.
@@ -150,16 +150,16 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
   const [mounted, setMounted] = React.useState(open || keep);
   if ((open || keep) && !mounted) setMounted(true);
   React.useLayoutEffect(function () {
-    const el = content.current, panel = el && el.closest<HTMLElement>(".dk-accordion__panel");
+    const el = content.current, panel = el && el.closest<HTMLElement>('.dk-accordion__panel');
     if (!el || !panel) return;
-    if (open || (!findable && keep)) { el.removeAttribute("hidden"); return; }
+    if (open || (!findable && keep)) { el.removeAttribute('hidden'); return; }
     const style = getComputedStyle(panel);
-    const delays = style.transitionDelay.split(",");
-    const ms = Math.max(0, ...style.transitionDuration.split(",").map((d, i) => toMs(d) + toMs(delays[i] || "0")));
+    const delays = style.transitionDelay.split(',');
+    const ms = Math.max(0, ...style.transitionDuration.split(',').map((d, i) => toMs(d) + toMs(delays[i] || '0')));
     // The panel keeps its content shown until the fold ends. CSS alone (a discrete content-visibility transition)
     // isn't enough: WebKit sometimes drops it, and the panel lost its height at the start of the fold.
-    const hold = (on: boolean) => { panel.style.contentVisibility = on ? "visible" : ""; };
-    const hide = () => { hold(false); if (grow.current) grow.current.cancel(); if (findable) el.setAttribute("hidden", "until-found"); if (!keep) setMounted(false); };
+    const hold = (on: boolean) => { panel.style.contentVisibility = on ? 'visible' : ''; };
+    const hide = () => { hold(false); if (grow.current) grow.current.cancel(); if (findable) el.setAttribute('hidden', 'until-found'); if (!keep) setMounted(false); };
     if (ms) hold(true);
     if (!ms || !el.isConnected || panel.getBoundingClientRect().height === 0) { hide(); return; }
     const t = setTimeout(hide, ms);
@@ -172,20 +172,20 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
   const grow = React.useRef<Animation | null>(null);
   const was = React.useRef(open);
   React.useLayoutEffect(function () {
-    const panel = content.current && content.current.closest<HTMLElement>(".dk-accordion__panel");
+    const panel = content.current && content.current.closest<HTMLElement>('.dk-accordion__panel');
     if (!panel || was.current === open) return;
     was.current = open;
     const from = grow.current ? panel.getBoundingClientRect().height : open ? 0 : panel.offsetHeight;
     if (grow.current) { grow.current.cancel(); grow.current = null; }
-    const fade = typeof panel.getAnimations === "function" ? panel.getAnimations().find((a) => (a as CSSTransition).transitionProperty === "opacity") : null;
+    const fade = typeof panel.getAnimations === 'function' ? panel.getAnimations().find((a) => (a as CSSTransition).transitionProperty === 'opacity') : null;
     const timing = fade && fade.effect ? fade.effect.getTiming() : null;
-    if (!timing || !timing.duration || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!timing || !timing.duration || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const to = open ? panel.offsetHeight : 0;
     if (from === to) return;
     // Closing, it slows to a stop on ease-move rather than the fade's ease-exit, which would end what's below at full speed.
-    const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue("--ease-move").trim() || timing.easing;
-    grow.current = panel.animate({ height: [from + "px", to + "px"] }, { duration: timing.duration, easing, fill: open ? "none" : "forwards" });
-    grow.current.id = "dk-accordion-height";
+    const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue('--ease-move').trim() || timing.easing;
+    grow.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: timing.duration, easing, fill: open ? 'none' : 'forwards' });
+    grow.current.id = 'dk-accordion-height';
     if (open) grow.current.onfinish = () => { grow.current = null; };
   }, [open]);
   React.useEffect(() => () => { if (grow.current) grow.current.cancel(); }, []);
@@ -193,20 +193,20 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
     const el = content.current;
     if (!el) return;
     const onMatch = () => { if (toggle.current) toggle.current(); };
-    el.addEventListener("beforematch", onMatch);
-    el.addEventListener("invalid", revealInvalid, true);   // a required field in it, on submit, opens it (L8E99)
-    return () => { el.removeEventListener("beforematch", onMatch); el.removeEventListener("invalid", revealInvalid, true); };
+    el.addEventListener('beforematch', onMatch);
+    el.addEventListener('invalid', revealInvalid, true);   // a required field in it, on submit, opens it (L8E99)
+    return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
   }, []);
   return (
-    <div {...rest} ref={ref} data-state={open ? "open" : "closed"} className={cn("dk-accordion__item", open && "dk-accordion__item--open", props.disabled && "dk-accordion__item--disabled", props.className)}>
+    <div {...rest} ref={ref} data-state={open ? 'open' : 'closed'} className={cn('dk-accordion__item', open && 'dk-accordion__item--open', props.disabled && 'dk-accordion__item--disabled', props.className)}>
       <H className="dk-accordion__heading">
-        <button type="button" id={id + "-t"} className="dk-accordion__trigger" aria-expanded={open} aria-controls={id + "-p"} disabled={props.disabled}
+        <button type="button" id={id + '-t'} className="dk-accordion__trigger" aria-expanded={open} aria-controls={id + '-p'} disabled={props.disabled}
           aria-disabled={locked ? true : undefined} onClick={() => { if (ctx && !locked) ctx.toggle(value); }}>
           <span className="dk-accordion__title">{props.title}</span>
           <Icon icon={icons.ExpandMore} className="dk-accordion__icon" />
         </button>
       </H>
-      <div id={id + "-p"} role={open && !(ctx && ctx.many) ? "region" : undefined} aria-labelledby={id + "-t"} className="dk-accordion__panel">
+      <div id={id + '-p'} role={open && !(ctx && ctx.many) ? 'region' : undefined} aria-labelledby={id + '-t'} className="dk-accordion__panel">
         <div className="dk-accordion__clip"><div ref={content} className="dk-accordion__content" hidden={startsClosed || undefined}>{mounted ? props.children : null}</div></div>
       </div>
     </div>

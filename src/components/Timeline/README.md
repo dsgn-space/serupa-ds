@@ -12,6 +12,9 @@ import { Timeline, TimelineItem } from "serupa-ds";
   <TimelineItem title="Payment confirmed" time="12 Mar, 09:15" status="success" icon="check" />
   <TimelineItem title="Out for delivery" time="15 Mar, 08:02" />
 </Timeline>
+
+// milestones along a line, scrolling sideways in its own box; down a line again under 480px
+<Timeline orientation="horizontal" stackWhenNarrow aria-label="Order tracking">…</Timeline>
 ```
 
 ## When to use
@@ -43,11 +46,12 @@ Drawn from the `Alternate` story.
 - Give `dateTime` a machine-readable value whenever `time` is relative or shortened ("2 hours ago"), so the moment stays exact. Without `dateTime` the time is a plain `<span>`: a `<time>` needs a value machines can read.
 - Use icons for a few kinds of event that people learn to scan for; dots are enough otherwise.
 - `align="alternate"` suits a wide page with short entries. Below 768px it falls back to one side.
+- `orientation="horizontal"` suits a few milestones with short titles: order tracking, a project's phases. Each event is 192px wide (wider when there's room), and past the width it has the timeline scrolls sideways in its own box, so the page never does. Set `stackWhenNarrow` to show the events down a line when its box is under 480px wide, as on a phone, instead of scrolling. A long history of events reads better vertical.
 
 ## Accessibility
 
 - **Role and name:** an `<ol>`: screen readers announce a list and how many events it has (with `role="list"`, so Safari does too). Name it with `aria-label` or `aria-labelledby` when the page has more than one list.
-- **Keyboard:** nothing in the timeline itself is focusable. Links and buttons you put in the content keep their own focus.
+- **Keyboard:** nothing in a vertical timeline is focusable. Links and buttons you put in the content keep their own focus. While a horizontal timeline scrolls, its box takes focus, with a focus ring, so arrow keys scroll it (WCAG 2.1.1), and it's a region named by the `aria-label` or `aria-labelledby` you give the Timeline, or by the `timeline` label ("Timeline"). When the events fit, or `stackWhenNarrow` has stacked them, it's no Tab stop, and the name stays on the list.
 - **Contrast:** titles and content read 4.5:1 on the page, and times do too, in all six themes (`Timeline.test.tsx`).
 - **Markers:** the marker and line are `aria-hidden`. Color is decoration, so the title has to carry the status. In forced colors, the dots and line draw in the system text color.
 - **What's still yours:** a meaningful order, a title for every event, and a `dateTime` when the shown time is relative.
@@ -59,10 +63,19 @@ Drawn from the `Alternate` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `align` | `'start' \| 'alternate'` | `'start'` | `'alternate'` puts events on both sides of a centered line from 768px up |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | `'horizontal'` puts events along a line, following the text direction, scrolling sideways in its own box |
+| `stackWhenNarrow` | `boolean` | `false` | With `orientation="horizontal"`, shows events down a line when its box is under 480px wide |
 | `children` | `TimelineItem`s | | The events, in order |
 | `id` | `string` | | Goes to the `<ol>` |
 
-`className`, `ref` and other props go to the `<ol>`.
+`className`, `ref` and other props go to the `<ol>`. With `orientation="horizontal"`, `className`, `style`, `aria-label` and `aria-labelledby` go to the scrolling box around it (`data-component="timeline"`, `data-orientation="horizontal"`), and the rest still to the `<ol>`.
+
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | To a horizontal timeline's box while it scrolls, then to any links or buttons in its events |
+| ← → | Scroll a focused horizontal timeline sideways |
 
 ### TimelineItem
 
@@ -108,6 +121,7 @@ Each is an optional override: set it on the page, a container or one Timeline. T
 | `--timeline-dot-info` | `info` | The dot of a info event. |
 | `--timeline-icon-info` | `info-text` | The icon of a info event (3:1 on its circle). |
 | `--timeline-icon-bg-info` | `info-subtle` | The circle behind a info event's icon. |
+| `--timeline-focus-ring` | `focus-ring` | The ring around a horizontal timeline's scrolling box when the keyboard is in it. |
 
 **Border**
 
@@ -124,4 +138,11 @@ Each is an optional override: set it on the page, a container or one Timeline. T
 | `--timeline-icon-size` | `spacing-4` | An icon in the marker (16px). |
 | `--timeline-gap` | `spacing-3` | Between the marker and the body (12px). |
 | `--timeline-item-gap` | `spacing-6` | Between one event and the next (24px). |
+| `--timeline-item-width` | `spacing-48` | Each event's width in a horizontal timeline (192px); events grow to fill a wider box. |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--timeline-radius` | `radius-inner` | The corners of a horizontal timeline's scrolling box, which its focus ring follows (4px). |
 <!-- token-table:end -->

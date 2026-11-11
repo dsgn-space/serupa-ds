@@ -1,29 +1,30 @@
-"use client";
-import * as React from "react";
-import { cn, domId, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { pressFocuses, useAffixes } from "../../internal/affix";
-import { Icon } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import type { InputProps } from "../Input/Input";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import { isComposing } from "../../internal/ime";
-import { formatNumber, parseNumber } from "../../internal/numbers";
-import { gridPlaces, roundTo } from "../../internal/step";
-import { useLocale, useOwnLang, useSettings } from "../../internal/provider";
-import { minorDigits, pinCurrencyDigits } from "../../internal/currency";
-import { useFormReset } from "../../internal/useFormReset";
-import { reject } from "../../internal/rejectInput";
-import * as icons from "../../material/builtin";
-import { en as NumberInputWords } from "./labels";
-import { en as DatePickerWords } from "../DatePicker/labels";
-import { windowBlur } from "../../internal/focus";
-import { holdDelay, holdRepeat } from "../../internal/timing";
+'use client';
+import * as React from 'react';
+import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { pressFocuses, useAffixes } from '../../internal/affix';
+import { Icon } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import type { InputProps } from '../Input/Input';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import { isComposing } from '../../internal/ime';
+import { formatNumber, parseNumber } from '../../internal/numbers';
+import { gridPlaces, roundTo } from '../../internal/step';
+import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import { minorDigits, pinCurrencyDigits } from '../../internal/currency';
+import { useFormReset } from '../../internal/useFormReset';
+import { reject } from '../../internal/rejectInput';
+import * as icons from '../../material/builtin';
+import { en as NumberInputWords } from './labels';
+import { en as DatePickerWords } from '../DatePicker/labels';
+import { windowBlur } from '../../internal/focus';
+import { warnOnce } from '../../internal/warn';
+import { holdDelay, holdRepeat } from '../../internal/timing';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, NumberInputWords, DatePickerWords);
 
-export interface NumberInputProps extends Omit<InputProps, "type" | "showCount" | "value" | "defaultValue" | "rightIcon" | "min" | "max" | "step"> {
+export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'value' | 'defaultValue' | 'rightIcon' | 'min' | 'max' | 'step'> {
   /** The number (controlled), or null when the field is empty. Use with onValueChange. */
   value?: number | null | undefined;
   /** The number at first (uncontrolled). */
@@ -33,7 +34,7 @@ export interface NumberInputProps extends Omit<InputProps, "type" | "showCount" 
   /** Called when typed text isn't kept as it is, with the text and why: "range" when a number outside min..max is
       brought back within them (on blur or Enter), so a form can say "Quantity was reduced to 100"; "unreadable" when
       the text isn't a number and the previous one comes back, which is also said to screen readers. */
-  onInvalidInput?: ((text: string, reason: "range" | "unreadable") => void) | undefined;
+  onInvalidInput?: ((text: string, reason: 'range' | 'unreadable') => void) | undefined;
   /** The smallest allowed number. The field snaps to it when it loses focus. */
   min?: number | undefined;
   /** The largest allowed number. */
@@ -73,33 +74,38 @@ const keyed = (key: string) => (key ? (JSON.parse(key) as Intl.NumberFormatOptio
    the text is parsed, clamped to min..max, rounded to the step's decimals and written back in the locale's form. It uses Input's box and tokens: className and style go to the box; ref and
    every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
 /** A number field with − and + buttons, arrow keys, min, max and step. */
-export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>("NumberInput", function NumberInput(props, ref) {
-  const nameRef = useNameCheck("NumberInput", NAME_HOW.field);   // warns when it has no accessible name
+export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>('NumberInput', function NumberInput(props, ref) {
+  const nameRef = useNameCheck('NumberInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, prefix: 1, suffix: 1, className: 1, style: 1, value: 1, defaultValue: 1, onValueChange: 1, onInvalidInput: 1, min: 1, max: 1, step: 1, largeStep: 1, steppers: 1, decrementLabel: 1, incrementLabel: 1, locale: 1, formatOptions: 1, numberingSystem: 1, currency: 1, minorUnits: 1 } as const);
-  const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  if (invalid) rest["aria-invalid"] = true;
+  const size = oneOf(SIZES, props.size, 'md');
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  if (invalid) rest['aria-invalid'] = true;
   // Without a locale from the prop or a provider: en-US on the server and while hydrating, then the browser's.
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   // A currency's decimals are pinned (pinCurrencyDigits), so the server and every browser write the same amount.
-  const given: Intl.NumberFormatOptions | undefined = props.currency ? { style: "currency", currency: props.currency, ...props.formatOptions } : props.formatOptions;
+  const given: Intl.NumberFormatOptions | undefined = props.currency ? { style: 'currency', currency: props.currency, ...props.formatOptions } : props.formatOptions;
   const formatOptions = given && pinCurrencyDigits(given);
   // With minorUnits, the props are whole cents (1999) and the field works in the currency's units (19.99).
-  const minor = !!(props.minorUnits && formatOptions?.style === "currency" && formatOptions.currency);
+  const minor = !!(props.minorUnits && formatOptions?.style === 'currency' && formatOptions.currency);
   const factor = minor ? 10 ** minorDigits(formatOptions.currency!) : 1;
   // Out as whole minor units for every currency, yen (no minor digits) too: a typed 2.5 is 3, as the field shows (GR154).
   const out = (n: number) => (minor ? Math.round(n * factor) : n);
   const major = (n: number | null | undefined) => (n == null || factor === 1 ? n : n / factor);
-  const step = Number(props.step) > 0 ? Number(props.step) / factor : 1;
+  // A percent's value is the fraction (0.15 shows 15%), so without a step it moves one percent, not 100% (GR175).
+  const step = Number(props.step) > 0 ? Number(props.step) / factor : formatOptions?.style === 'percent' ? 0.01 : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
   const min = props.min != null && isFinite(props.min) ? (major(props.min) as number) : undefined;
   const max = props.max != null && isFinite(props.max) ? (major(props.max) as number) : undefined;
-  // Money keeps the decimals it's shown with (19.99 with a step of 1), so what people see is the value.
+  // min above max: no value can be entered, and assistive tech hears a range that runs backwards (GR161).
+  if (process.env.NODE_ENV !== 'production' && min != null && max != null && min > max) warnOnce('number-range', `NumberInput: min (${props.min}) is above max (${props.max}), so no value fits. Swap them, or check where they come from.`);
+  // Money keeps the decimals it's shown with (19.99 with a step of 1), so what people see is the value. A percent keeps
+  // the ones it's shown with too, two more as a fraction: 12.5% with one decimal is 0.125 (GR175).
   // formatOptions by value: the memos read the options back from their key (keyed), so an inline object doesn't redo them.
-  const optionsKey = formatOptions ? JSON.stringify(formatOptions) : "";
-  const shownPlaces = React.useMemo(() => { const o = keyed(optionsKey); return o?.style === "currency" ? new Intl.NumberFormat(locale, o).resolvedOptions().maximumFractionDigits ?? 0 : 0; },
+  const optionsKey = formatOptions ? JSON.stringify(formatOptions) : '';
+  const shownPlaces = React.useMemo(() => { const o = keyed(optionsKey); const shown = o?.style === 'currency' || o?.style === 'percent' ? new Intl.NumberFormat(locale, o).resolvedOptions().maximumFractionDigits ?? 0 : 0;
+    return o?.style === 'percent' ? shown + 2 : shown; },
     [locale, optionsKey]);
   const places = Math.max(gridPlaces(min, step), shownPlaces);
   // What the shown number is multiplied by: 100 for the percent style, 1 otherwise.
@@ -110,13 +116,13 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const digits = props.numberingSystem || formatOptions?.numberingSystem;
   const shownOptions = React.useMemo((): Intl.NumberFormatOptions => ({ ...(keyed(optionsKey) || { useGrouping: false, maximumFractionDigits: 20 }),
     numberingSystem: digits || new Intl.NumberFormat(locale).resolvedOptions().numberingSystem }), [locale, optionsKey, digits]);
-  const show = (v: number | null) => (v == null ? "" : formatNumber(v, locale, shownOptions));
+  const show = (v: number | null) => (v == null ? '' : formatNumber(v, locale, shownOptions));
   // A value is taken as it's shown (GR47): one with more decimals than the format writes (19.995 as US$20,00) is the
   // number shown, so the form sends what people see, and leaving the field without an edit changes nothing.
   const asShown = (v: number | null | undefined): number | null => {
     if (v == null || !formatOptions) return v ?? null;
     const n = parseNumber(show(v), locale);
-    return typeof n === "number" ? n / scale : v;
+    return typeof n === 'number' ? n / scale : v;
   };
   const controlled = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<number | null>(() => asShown(major(props.defaultValue)));
@@ -156,6 +162,12 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     const n = parseNumber(s, locale);
     return n != null && scale !== 1 ? n / scale : n;
   };
+  // A finished entry: a decimal mark left at the end ("5." or "7,") is read without it, since nothing more is coming.
+  // While typing it stays "not a number yet", so the value doesn't move under the caret (GR235).
+  const finished = (s: string): number | null | undefined => {
+    const n = parse(s), t = s.trim();
+    return n === undefined && /[.,\u066b]$/.test(t) ? parse(t.slice(0, -1)) : n;
+  };
   const commit = (v: number | null) => {
     if (!controlled) setOwnValue(v);
     if (v !== value && props.onValueChange) props.onValueChange(v == null ? v : out(v));
@@ -167,7 +179,7 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const nudge = (by: number) => {
     if (locked) return;
     const base = parse(text);
-    const from = typeof base === "number" ? base : (value ?? (min !== undefined && min > 0 ? min - step : max !== undefined && max < 0 ? max + step : 0));
+    const from = typeof base === 'number' ? base : (value ?? (min !== undefined && min > 0 ? min - step : max !== undefined && max < 0 ? max + step : 0));
     // From a typed value off the grid of min and step, the first step lands on the grid point in that direction, as
     // the native field and Slider do: 0.1 and ↑ with step 0.25 gives 0.25, not 0.35. Money shown with finer decimals
     // than its step ($19.99 with a step of $1) keeps them, so ↑ is $20.99.
@@ -176,7 +188,9 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     const to = onGrid ? k + by : by > 0 ? Math.floor(k) + by : Math.ceil(k) + by;
     put(fit(origin + to * step));
   };
+  const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRejected('');
     setText(e.target.value); typing.current = true;
     const n = parse(e.target.value);   // a number out of range waits for blur, which clamps it
     if (n === null || (n !== undefined && (min === undefined || n >= min) && (max === undefined || n <= max))) commit(n);
@@ -185,12 +199,15 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const outside = (n: number) => (min !== undefined && n < min) || (max !== undefined && n > max);
   const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (windowBlur(e)) { if (rest.onBlur) rest.onBlur(e); return; }   // switched windows: still typing
-    const n = parse(text), typed = typing.current;
+    // Tabbing through a field nobody typed in leaves the value alone, even one outside min and max that the app
+    // set: clamping it would change the app's value and report a range error for something no one entered (GR236).
+    if (!typing.current) { if (rest.onBlur) rest.onBlur(e); return; }
+    const n = finished(text);
     const v = n == null ? null : fit(n === undefined ? (value ?? 0) : n);
     const out = n === undefined ? value : v;
     put(out);
-    if (n === undefined && typed) reject(text, "unreadable", props.onInvalidInput, sds.labels.inputNotAccepted);
-    else if (n != null && outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), "range");
+    if (n === undefined) reject(text, 'unreadable', props.onInvalidInput, sds.labels.inputNotAccepted, setRejected);
+    else if (n != null && outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range');
     if (rest.onBlur) rest.onBlur(e);
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -198,25 +215,26 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     if (e.defaultPrevented || isComposing(e)) return;
     const k = e.key, big = e.shiftKey ? large : 1;
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E29).
-    if ((e.altKey || e.ctrlKey || e.metaKey) && k !== "Enter") return;
-    if (k === "ArrowUp") nudge(big);
-    else if (k === "ArrowDown") nudge(-big);
-    else if (k === "PageUp") nudge(large);
-    else if (k === "PageDown") nudge(-large);
-    else if (k === "Home" && min !== undefined && !locked) put(min);
-    else if (k === "End" && max !== undefined && !locked) put(max);
-    else if (k === "Enter") {
-      const n = parse(text);
-      if (n != null) { put(fit(n)); if (outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), "range"); }
+    if ((e.altKey || e.ctrlKey || e.metaKey) && k !== 'Enter') return;
+    if (k === 'ArrowUp') nudge(big);
+    else if (k === 'ArrowDown') nudge(-big);
+    else if (k === 'PageUp') nudge(large);
+    else if (k === 'PageDown') nudge(-large);
+    else if (k === 'Home' && min !== undefined && !locked) put(min);
+    else if (k === 'End' && max !== undefined && !locked) put(max);
+    else if (k === 'Enter') {
+      const n = finished(text);
+      if (n != null) { put(fit(n)); if (outside(n) && props.onInvalidInput) props.onInvalidInput(text.trim(), 'range'); }
       return;
     }
     else return;
     e.preventDefault();
   };
   const current = parse(text);
-  const now = typeof current === "number" ? current : value;
+  const now = typeof current === 'number' ? current : value;
   const left = asIcon(props.leftIcon);
-  const affix = useAffixes(props.prefix, props.suffix, domId("dk-ni", React.useId()), el);
+  const niId = domId('dk-ni', React.useId());
+  const affix = useAffixes(props.prefix, props.suffix, niId, el);
   const press = (by: number) => { nudge(by); if (el.current && document.activeElement !== el.current) el.current.focus({ preventScroll: true }); };
   // Holding − or + repeats: one step on the press, then after 400ms one every 50ms, until the pointer goes up or
   // leaves the button, Escape, or the end of the range. The press already stepped, so its click doesn't; a click with
@@ -225,11 +243,11 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const hold = React.useRef<{ by: number; timer: number } | null>(null);
   const stop = React.useCallback(() => { const h = hold.current; if (h) { window.clearTimeout(h.timer); window.clearInterval(h.timer); h.timer = 0; } }, []);
   React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") stop(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') stop(); };
     // The press's click comes right after pointerup, if at all (not when it ended off the button): forget the press after it.
     const up = () => { stop(); window.setTimeout(() => { hold.current = null; }, 0); };
-    window.addEventListener("pointerup", up); window.addEventListener("pointercancel", stop); window.addEventListener("blur", stop); window.addEventListener("keydown", onKey);
-    return () => { stop(); window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", stop); window.removeEventListener("blur", stop); window.removeEventListener("keydown", onKey); };
+    window.addEventListener('pointerup', up); window.addEventListener('pointercancel', stop); window.addEventListener('blur', stop); window.addEventListener('keydown', onKey);
+    return () => { stop(); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', stop); window.removeEventListener('blur', stop); window.removeEventListener('keydown', onKey); };
   }, [stop]);
   const atEnd = (by: number) => locked || (by < 0 ? min !== undefined && now != null && now <= min : max !== undefined && now != null && now >= max);
   // every render: the end of the range disables the button, and a disabled button gets no pointerup, so a hold stops there.
@@ -247,19 +265,21 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     onContextMenu: (e: React.MouseEvent) => { if (hold.current && hold.current.timer) e.preventDefault(); },   // a long touch
     onClick: () => { if (hold.current) hold.current = null; else press(by); },
   });
+  const mergedRef = useMergedRef(ref, (n) => { el.current = n; nameRef(n); });
   return (
-    <span className={cn("dk-input dk-number-input", "dk-input--size-" + size, invalid && "dk-input--invalid", rest.disabled && "dk-input--disabled", rest.readOnly && "dk-input--readonly", props.steppers !== false && "dk-number-input--steppers", props.className)}
+    <>
+    <span className={cn('dk-input dk-number-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.steppers !== false && 'dk-number-input--steppers', props.className)}
       style={props.style} data-component="number-input" data-size={size} onMouseDown={pressFocuses(el)}>
       {left != null && left !== false ? <span className="dk-input__icon dk-input__icon--left" aria-hidden>{left}</span> : null}
       {affix.prefix}
-      <input {...rest} ref={(n) => { el.current = n; nameRef(n); if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
-        lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? "decimal" : "numeric")}
+      <input {...rest} ref={mergedRef}
+        lang={rest.lang ?? lang} type="text" inputMode={rest.inputMode || (places > 0 || (min !== undefined && min < 0) || min === undefined ? 'decimal' : 'numeric')}
         role="spinbutton" aria-valuenow={now ?? undefined} aria-valuetext={formatOptions && now != null ? show(now) : undefined} aria-valuemin={min} aria-valuemax={max}
-        autoComplete={rest.autoComplete || "off"} className="dk-input__field" value={text}
-        aria-describedby={cn(rest["aria-describedby"], affix.ids) || undefined}
+        autoComplete={rest.autoComplete || 'off'} className="dk-input__field" value={text}
+        aria-describedby={cn(rest['aria-describedby'], affix.ids, rejected && niId + '-rejected') || undefined}
         onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} onFocus={rest.onFocus} />
       {affix.suffix}
-      {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? "" : String(out(value))} /> : null}
+      {name ? <input type="hidden" ref={raw} name={name} form={rest.form} disabled={rest.disabled} value={value == null ? '' : String(out(value))} /> : null}
       {props.steppers !== false ? (
         <span className="dk-number-input__steppers">
           <button type="button" tabIndex={-1} className="dk-number-input__step" aria-label={props.decrementLabel || sds.labels.decrease} aria-controls={rest.id}
@@ -273,5 +293,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
         </span>
       ) : null}
     </span>
+      {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}
+      {rejected && <span id={niId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
+    </>
   );
 });

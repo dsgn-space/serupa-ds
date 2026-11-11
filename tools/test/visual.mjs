@@ -11,7 +11,8 @@
 //                                                in parallel)
 // A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
 // Left out: the Playground stories (the default story with Storybook's controls, which another story shows), the
-// components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file).
+// components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file, which takes away the
+// "visual" tag .storybook/preview.tsx gives every story: index.json lists the tags left, never the "!" ones).
 // Hover and focus act on the element a story marks with data-visual-target (both states), or
 // data-visual-target="hover" / ="focus" (one each); without one, hover is on the story's first enabled button, link
 // or field, and focus wherever the first Tab lands. Focus comes from pressing Tab, so :focus-visible applies.
@@ -23,18 +24,23 @@
 // touches only components (SERUPA_ONLY), since a component can't change them.
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
+import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
-const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+// Firefox and WebKit (SERUPA_BROWSER, baseline-visual-<engine>/): what differs between engines is layout, text and
+// the CSS each supports, not the theme's colours, so a lighter set: each story at rest in blue-light and on the other
+// axes, two pictures where Chromium has up to twenty. Nightly (cross-browser visual in .gitlab-ci.yml).
+const LIGHT = ENGINE !== 'chromium';
+const THEMES = LIGHT ? ['blue-light'] : ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+const STATES = LIGHT ? [] : ['hover', 'focus'];
 const SKIP = ['VisuallyHidden'];  // nothing to see
 // Components whose states (checked, selected, current, progress, drag-over) are easy to lose in forced colors: each
 // story is also shot with forced-colors: active, as <Story>-forced-colors.png.
 // The other axes, all at once in blue-light at rest: one picture per story catches a change on any of them.
 const AXES = 'dir:rtl;contrast:more;density:compact';
-const FORCED = ['Checkbox', 'FileUpload', 'Loader', 'Progress', 'Radio', 'SegmentedControl', 'Slider', 'Switch', 'Table', 'Tabs'];
+const FORCED = LIGHT ? [] : ['Checkbox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
 
 const SB = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(SB, 'index.json'))) {
@@ -44,14 +50,14 @@ if (!fs.existsSync(path.join(SB, 'index.json'))) {
 const component = (e) => e.importPath.split('/')[3];   // ./src/components/<Name>/<Name>.stories.tsx
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 const all = Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
-  .filter((e) => e.type === 'story' && e.exportName !== 'Playground' && !(e.tags || []).includes('!visual') && !SKIP.includes(component(e)))
+  .filter((e) => e.type === 'story' && e.exportName !== 'Playground' && (e.tags || []).includes('visual') && !SKIP.includes(component(e)))
   .sort((a, b) => a.id.localeCompare(b.id));
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories of the components the change touches.
 const only = onlyComponents();
 const stories = all.filter((e) => !only || only.has(component(e))).filter((_, i) => i % shards === shard - 1);
 // Every baseline a story can have, to find the ones whose story is gone.
 const expected = new Set(all.flatMap((e) => [
-  ...THEMES.flatMap((th) => ['rest', 'hover', 'focus'].map((s) => `${component(e)}/${e.exportName}-${th}-${s}.png`)),
+  ...THEMES.map((th) => `${component(e)}/${e.exportName}-${th}-rest.png`), ...STATES.map((s) => `${component(e)}/${e.exportName}-${THEMES[0]}-${s}.png`),
   ...(FORCED.includes(component(e)) ? [`${component(e)}/${e.exportName}-forced-colors.png`] : []),
   `${component(e)}/${e.exportName}-axes.png`,
 ]));
@@ -68,12 +74,41 @@ if (want && b.version() !== want) {
     + 'Run "npx playwright install". Where that download is blocked (a container whose network doesn\'t allow cdn.playwright.dev), '
     + 'leave this step to CI: node tools/ci.mjs --skip visual. Don\'t update baselines from another build.');
 }
+// The baselines' text is drawn with sub-pixel colour (fontconfig's stock settings on Linux). A machine whose
+// fontconfig forces grayscale draws every picture with text differently: say so once instead of failing them all.
+if (process.platform === 'linux' && !LIGHT) {
+  const probe = await b.newPage({ viewport: { width: 200, height: 40 } });
+  await probe.setContent('<p style="font:16px sans-serif;margin:8px">Sub-pixel text</p>');
+  const png = (await probe.screenshot()).toString('base64');
+  const colour = await probe.evaluate(async (src) => {
+    const img = new Image();
+    img.src = `data:image/png;base64,${src}`;
+    await img.decode();
+    const c = document.createElement('canvas');
+    Object.assign(c, { width: img.width, height: img.height });
+    const g = /** @type {CanvasRenderingContext2D} */ (c.getContext('2d'));
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) > 20) n++;
+    return n;
+  }, png);
+  await probe.close();
+  if (!colour) {
+    await b.close();
+    close();
+    fail('Text is drawn in grayscale here, but the baselines have sub-pixel colour (fontconfig\'s stock settings, as on CI), '
+      + 'so every picture with text would fail. A rule in /etc/fonts/conf.d forces it (some cloud images ship '
+      + '12-unhinted-grayscale.conf): node tools/setup.mjs moves it aside. Don\'t update baselines from this machine.');
+  }
+}
 // Several pages at once (PAGES), each in its own context so focus and the pointer stay its own.
-const pages = await Promise.all(Array.from({ length: PAGES }, async () => {
+async function newPage() {
   const context = await b.newContext({ viewport: { width: 900, height: 600 }, deviceScaleFactor: 1 });
   await fixClock(context);   // today is CLOCK, so a story that shows today draws the same picture every day
   return context.newPage();
-}));
+}
+const pages = await Promise.all(Array.from({ length: PAGES }, newPage));
 const R = [];
 
 async function diff(page, a, bb) {   // share of differing pixels and the box they fall in, computed in the browser (no image libraries needed)
@@ -131,9 +166,27 @@ async function open(page, e, theme, more = '') {
   if (!drawn) return 'did not render in 15 s';
   if (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay'))) return 'Storybook shows an error';
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}' });
-  // Every font face loaded, so no glyph draws late.
-  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+  // Every font face loaded, so no glyph draws late. A face the engine can't load (WebKit rejected one with a
+  // NetworkError) draws in its fallback, which the picture shows; it doesn't stop the run.
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))); await document.fonts.ready; });
   await page.waitForTimeout(150);   // stories that open a popover do it on a short timer
+  return '';
+}
+
+// The story already open at rest: the theme changes in place, through Storybook's own channel, as its toolbar changes
+// it, instead of loading the page again (a load was three quarters of this check's time). '' when it rendered.
+async function switchTo(page, theme) {
+  const [brand, mode] = theme.split('-');
+  const ok = await page.evaluate(({ brand, mode }) => new Promise((done) => {
+    const ch = /** @type {any} */ (window).__STORYBOOK_ADDONS_CHANNEL__;
+    if (!ch) { done(false); return; }
+    const timer = setTimeout(() => done(false), 10000);
+    ch.once('storyRendered', () => { clearTimeout(timer); done(true); });
+    ch.emit('updateGlobals', { globals: { brand, mode } });
+  }), { brand, mode }).catch(() => false);
+  if (!ok || (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) !== theme) return 'did not switch';
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))); await document.fonts.ready; });
+  await page.waitForTimeout(150);
   return '';
 }
 
@@ -163,10 +216,15 @@ async function checkStory(e, page) {
   const out = [];
   const c = component(e);
   fs.mkdirSync(path.join(DIR, c), { recursive: true });
-  for (const th of THEMES) {
-    for (const state of th === THEMES[0] ? ['rest', 'hover', 'focus'] : ['rest']) {
+  // Every theme at rest first, on one page load (each next theme switched in place), then hover and focus, which
+  // each start from a fresh load.
+  let atRest = false;
+  for (const [th, state] of [...THEMES.map((th) => [th, 'rest']), ...STATES.map((st) => [THEMES[0], st])]) {
+    {
       const name = `${c}/${e.exportName}-${th}-${state}`;
-      const notReady = await open(page, e, th);
+      const switched = atRest && state === 'rest' && !(await switchTo(page, th));
+      const notReady = switched ? '' : await open(page, e, th);
+      atRest = !notReady && state === 'rest';
       if (notReady) { out.push({ name, ok: false, detail: notReady }); continue; }
       if (state !== 'rest') {
         // What to hover and focus: the element marked data-visual-target="hover" / ="focus" for this state, else the one
@@ -184,7 +242,10 @@ async function checkStory(e, page) {
           continue;
         }
       }
-      const r = await compare(page, name);
+      let r = await compare(page, name);
+      // A story that keeps state across a re-render (an open context menu, a timer's warning, a playground's own
+      // state) can differ after a switch: the fresh load decides, as it did before switching.
+      if (switched && r && !r.ok && !(await open(page, e, th))) r = await compare(page, name);
       if (r) out.push(r);
     }
   }
@@ -207,7 +268,25 @@ async function checkStory(e, page) {
   }
   return out;
 }
-R.push(...(await inParallel(stories, pages, checkStory)).flat());
+// Each page starts a new context every RECYCLE stories: the browser keeps memory from story to story, and a long
+// run crashed a tab (Slider's Read only, emerald-dark, 7 Nov 2026), which ended the whole step. A tab that crashes
+// anyway now fails only its story, and the page is replaced.
+const RECYCLE = 40;
+const slots = pages.map((page) => ({ page, used: 0 }));
+/** @type {(s: { page: import('playwright').Page, used: number }) => Promise<void>} */
+const renew = async (s) => { await s.page.context().close().catch(() => {}); s.page = await newPage(); s.used = 0; };
+const guarded = async (e, s) => {
+  if (++s.used > RECYCLE) await renew(s);
+  try { return await checkStory(e, s.page); }
+  catch (err) {
+    if (!/crash|closed/i.test(String(err?.message))) throw err;
+    await renew(s);
+    return [{ name: `${component(e)}/${e.exportName}`, ok: false, detail: `the tab crashed: ${String(err.message).split('\n')[0]}` }];
+  }
+};
+// A story that fails is shot once more (not with --update, which writes what it shoots).
+R.push(...(await (update ? inParallel(stories, slots, guarded) : inParallelRetry(stories, slots, guarded, (e) => e.id))).flat());
+pages.splice(0, pages.length, ...slots.map((s) => s.page));
 
 // The token sheets: each Foundations page, one picture per data-token-sheet element.
 const sheetPages = shard === 1 && !only ? Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json'), 'utf8')).entries)
@@ -223,7 +302,7 @@ async function checkSheets(e, page) {
   const drawn = await page.waitForFunction(() => document.querySelector('#storybook-docs .sbdocs-content')?.children.length > 0, null, { timeout: 15000 }).then(() => true, () => false);
   if (!drawn) { sheetsFailed = true; return [{ name: pageName, ok: false, detail: 'did not render in 15 s' }]; }
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
-  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load())); await document.fonts.ready; });
+  await page.evaluate(async () => { await Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))); await document.fonts.ready; });
   await page.waitForTimeout(150);
   // A page without token blocks (Accessibility, Icons) has nothing to shoot.
   for (const sheet of await page.locator('[data-token-sheet]').evaluateAll((ns) => ns.map((n) => n.dataset.tokenSheet))) {
@@ -247,4 +326,4 @@ if (update) {
 }
 if (shard === 1) R.push({ name: 'every baseline belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}; add the "update-visual-baselines" label to remove them` });
 console.log(`(${stories.length} stories, ${sheetPages.length} Foundations pages)`);
-process.exit(report('Visual', R) ? 0 : 1);
+process.exitCode = report('Visual', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe

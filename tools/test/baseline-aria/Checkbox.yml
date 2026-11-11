@@ -1,3 +1,48 @@
+# Cards
+- group "Add-ons":
+  - text: Add-ons
+  - group:
+    - checkbox "Gift wrap" [checked]
+    - text: Gift wrap Rp 15.000
+    - checkbox "Greeting card"
+    - text: Greeting card A printed note, free
+    - checkbox "Insurance" [disabled]
+    - text: Insurance Not for this shipping method
+
+# CardsInvalid
+- group "Interests":
+  - text: Interests
+  - group:
+    - checkbox "Design" [invalid]
+    - text: Design Components, tokens and patterns
+    - checkbox "Engineering" [invalid]
+    - text: Engineering
+  - text: Choose at least one.
+
+# DoCardsWithDetails
+- group "Add-ons":
+  - checkbox "Gift wrap" [checked]
+  - text: Gift wrap Rp 15.000
+  - checkbox "Greeting card"
+  - text: Greeting card A printed note, free
+
+# DoPositiveLabel
+- checkbox "Email me about orders"
+- text: Email me about orders
+
+# DontCardsForShortOptions
+- group "Colour":
+  - checkbox "Red" [checked]
+  - text: Red
+  - checkbox "Green"
+  - text: Green
+  - checkbox "Blue"
+  - text: Blue
+
+# DontNegativeLabel
+- checkbox "Don't email me about orders"
+- text: Don't email me about orders
+
 # Group
 - group "Teams to notify":
   - text: Teams to notify 1 picked

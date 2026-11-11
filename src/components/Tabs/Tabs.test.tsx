@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, press, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { Tab, TabList, TabPanel, Tabs } from './Tabs';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -206,6 +206,15 @@ describe('Tabs', () => {
     expect([sel.getBoundingClientRect().height, css(el('dv').querySelector('[role="tablist"]')).borderBottomStyle, s.borderTopLeftRadius, getComputedStyle(sel, '::after').content]).toEqual([32, 'none', '6px', 'none']);
   });
 
+  test('size lg: 44px tabs with 16px text and a 20px icon, the same height as a large Button and Input', async () => {
+    await render(<Tabs id="lg" size="lg"><Set3 icon /></Tabs>);
+    // The first tab is picked after mount, as in setup(), and the named icon draws once its set has loaded.
+    await expect.poll(() => !!selected('lg')?.querySelector('svg')).toBe(true);
+    const sel = selected('lg'), s = css(sel);
+    expect([sel.getBoundingClientRect().height, s.fontSize, s.paddingLeft, sel.querySelector('svg')!.getBoundingClientRect().width])
+      .toEqual([44, '16px', '16px', 20]);
+  });
+
   test('unknown variant and size fall back to line and md; --tabs-indicator and --tabs-height-md override', async () => {
     await setup();
     const sel = selected('bad');
@@ -372,7 +381,7 @@ describe('Tabs on the server', () => {
       await on;
       const moving = list.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty);
       const mid = parseFloat(css(list).getPropertyValue('--dk-tabs-fade-a'));
-      await Promise.all(list.getAnimations().map((a) => a.finished));
+      await settled(list);
       expect([moving, mid >= 0 && mid < 32, css(list).getPropertyValue('--dk-tabs-fade-a')]).toEqual([['--dk-tabs-fade-a'], true, '32px']);
     });
   });
@@ -403,7 +412,7 @@ describe('Tabs on the server', () => {
       const moves = tabs[2].getAnimations({ subtree: true }).filter((a): a is CSSTransition => a instanceof CSSTransition && (a.effect as KeyframeEffect).pseudoElement === '::after');
       const start = moves.find((a) => a.transitionProperty === 'translate'), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0].translate)) : NaN;
       expect([moves.map((a) => a.transitionProperty).sort(), Math.round(shift)]).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
-      await Promise.all(moves.map((a) => a.finished));
+      await Promise.all(moves.map((a) => a.finished.catch(() => {})));
       expect([getComputedStyle(tabs[2], '::after').translate, getComputedStyle(tabs[2], '::after').scale]).toEqual(['none', 'none']);
 
       const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
@@ -414,7 +423,7 @@ describe('Tabs on the server', () => {
       const px = (c: string) => (c.match(/-?[\d.]+px/g) || []).slice(0, 4).map((n) => Math.round(parseFloat(n)));
       // Cut to the last tab: its start edge is where that tab starts, from this one's (the fill spans both).
       expect([cuts.map((a) => a.transitionProperty), px(first)[3], /round/.test(first), cuts.some((a) => a.transitionProperty === 'scale')]).toEqual([['clip-path'], Math.round(from.offsetLeft - to.offsetLeft), true, false]);
-      await Promise.all(cuts.map((a) => a.finished));
+      await Promise.all(cuts.map((a) => a.finished.catch(() => {})));
       const rest = getComputedStyle(to, '::before'), r = to.getBoundingClientRect(), box = { w: parseFloat(rest.width), cut: px(rest.clipPath) };
       expect([Math.round(box.w - box.cut[1] - box.cut[3]), box.cut[0], box.cut[2], /round/.test(rest.clipPath)]).toEqual([Math.round(r.width), 0, 0, true]);
     });
@@ -429,11 +438,18 @@ describe('Tabs indicator from the keyboard (KW1)', () => {
         const tabs = [...el(id).querySelectorAll<HTMLElement>('[role="tab"]')];
         const on = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true')!;
         const runs = (t: HTMLElement) => t.getAnimations({ subtree: true }).filter((a) => a instanceof CSSTransition && /^(translate|scale|clip-path)$/.test(a.transitionProperty)).length;
+        // The click comes from the page itself and the slide is read as soon as React has drawn it: a driver click
+        // (userEvent) comes back after a round trip, which on a busy runner outlasted the slide. One press (detail 1),
+        // as a mouse's: a click with none is a key's, which moves it at once.
+        const click = async (t: HTMLElement) => {
+          t.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
+          for (let i = 0; i < 20 && !runs(t); i++) await Promise.resolve();
+        };
         const was = on();
         was.focus();
         await userEvent.keyboard('{ArrowLeft}');
         expect([id, on() !== was, runs(on())]).toEqual([id, true, 0]);
-        await userEvent.click(was);
+        await click(was);
         expect([id, on() === was, runs(was) > 0]).toEqual([id, true, true]);
       }
     });

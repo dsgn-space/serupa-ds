@@ -50,12 +50,13 @@ toast.undo({ title: "Moved to trash", commit: () => deleteFile(file), onUndo: ()
 - Use one `action` at most, for something quick such as Undo; the toast may go before people reach it.
 - Every toast goes by itself after 5 seconds, one with an action too. Turn that off with `autoDismiss: false` only for a message someone has to act on, such as a failed upload with Retry; it then stays until it's closed. `<Toaster duration autoDismiss>` sets both for the whole app, and a toast's own options win.
 - For work that takes a while, show a toast with `autoDismiss: false` and replace it by `id` when the work is done, as above, or hand the work to `toast.promise`.
-- Render one `<Toaster>` for the whole app, and keep its `position` the same on every page. If two are mounted at once (one in a layout and one in a page), only the newer shows toasts, so none appears twice, and a development warning says so; when it unmounts, the older one takes over.
+- Render one `<Toaster>` for the whole app, and keep its `placement` the same on every page. If two are mounted at once (one in a layout and one in a page), only the newer shows toasts, so none appears twice, and a development warning says so; when it unmounts, the older one takes over.
 - A burst can't bury the page: at most `limit` toasts show (3), and the same message again (same words and tone, with no `id` or `action`) adds a count to the toast that's showing ("Network error ×12") and starts its time over, rather than stacking. The stack stays clear of a phone's notch and home indicator. On a short screen, such as a phone in landscape, only as many as fit show, and the rest wait under the "+2 more" line, so none runs off the top or bottom. On a phone, a toast's action goes under the text, lined up with it, so the text keeps its width.
 - On a touch screen, swipe a toast sideways to dismiss it. It follows the finger and fades as it goes. Let go past a third of its width, or flick it (even gently), and it carries on at your finger's speed and closes. Otherwise it slides back. Its time stops while it's under your finger.
 
 ## Accessibility
 
+- Focus is never left behind a toast (WCAG 2.4.11): while toasts show at the top or bottom edge, the page's scroll padding there is the room they take, so tabbing to a control under them scrolls it clear. A page's own `scroll-padding` still wins.
 - Each new toast is read out through the shared polite live region, so it doesn't interrupt. A repeat that only adds to a toast's count isn't read each time: once the burst stops (a second with no repeat), the message is read once more with the count ("Network error. 12 times.", `labels.toastRepeated`). The count reads as "12 times" with the title, not "×12".
 - The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1), so a toast with an `action` can go by itself like any other: hovering it, or reaching it with F8, holds it. Give one `autoDismiss: false` when people have to act on it. For anything they must act on before going on, an Alert or a Dialog is still better.
 - F8 moves focus to the newest toast (a screen reader reads it, and Tab reaches its buttons), and F8 or Escape takes focus back to where it was. The first toast with an action adds "Press F8 to reach it." to what's announced (`labels.toastShortcut`), while a Toaster is in the page. When a toast closes with keyboard focus in it (its ×, its action, or `toast.dismiss()`), focus goes back where F8 came from, or else to the toast next to it. Closed with the mouse, focus isn't moved to the next toast, so that one's time keeps running.
@@ -94,11 +95,11 @@ Shows `messages.loading` while `work` (a promise, or a function that returns one
 
 ### toast.undo(options)
 
-The undo pattern, in place of a confirmation: do the action in the page at once (the item leaves the list), and let `toast.undo` hold the real work until it's sure. It shows a toast with an Undo button, and takes `toast()` options except `action` and `autoDismiss`, plus:
+The undo pattern, in place of a confirmation: do the action in the page at once (the item leaves the list), and let `toast.undo` hold the real work until it's sure. It shows a toast with an Undo button, and takes `toast()` options except `action`, plus the ones below. Its time follows `autoDismiss` and `duration` like any toast's, so a Toaster with `autoDismiss={false}`, which some apps need for WCAG 2.2.1 (Timing Adjustable), keeps an undo toast until it's closed too.
 
 | Option | Type | Notes |
 | --- | --- | --- |
-| `commit` | `() => void` | Required. Does the action for good. It runs once, when the toast closes without Undo: its time runs out, it's closed with ×, `toast.dismiss` closes it, or the page is left (`pagehide`). |
+| `commit` | `() => void` | Required. Does the action for good. It runs once, when the toast closes without Undo: its time runs out, it's closed with ×, `toast.dismiss` closes it, or the page is left (`pagehide`). It also runs when a new `toast.undo` with the same `id` replaces it, and when no Toaster shows it (none is mounted, or the last one unmounts), since its Undo can't be reached then; that case warns in development (`toast-undo-no-toaster`). |
 | `onUndo` | `() => void` | Runs instead of `commit` when Undo is chosen: put things back. |
 | `undoLabel` | string | The button's text. Default: "Undo" (`labels.undo`). |
 
@@ -109,7 +110,8 @@ It returns the toast's id. Keep the usual duration or longer, so people have tim
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the Toaster's root `<section>`, the region toasts show in. |
-| `position` | `'bottom-end'` \| `'bottom-start'` \| `'bottom-center'` \| `'top-start'` \| `'top-center'` \| `'top-end'` | `'bottom-end'` | Where toasts appear, 16px from the edges; start and end follow the text direction. The newest is nearest the edge |
+| `placement` | `'bottom-end'` \| `'bottom-start'` \| `'bottom-center'` \| `'top-start'` \| `'top-center'` \| `'top-end'` | `'bottom-end'` | Where toasts appear, 16px from the edges; start and end follow the text direction. The newest is nearest the edge |
+| `position` | | | Deprecated, removed in 15.0.0: use `placement` |
 | `label` | string | `'Notifications'` | The region's name |
 | `dismissLabel` | string | `'Dismiss'` | The close buttons' name |
 | `duration` | number | `5000` | How long each toast stays, in milliseconds, unless it sets its own |

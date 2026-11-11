@@ -1,8 +1,8 @@
-"use client";
-import * as React from "react";
-import { cn, domId, oneOf, omit } from "../../internal/cn";
-import { config } from "../../internal/config";
-import { component } from "../../internal/component";
+'use client';
+import * as React from 'react';
+import { cn, domId, oneOf, omit } from '../../internal/cn';
+import { config } from '../../internal/config';
+import { component } from '../../internal/component';
 
 export type CardVariant = 'outline' | 'elevated' | 'filled';
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
@@ -31,31 +31,31 @@ export interface CardProps extends React.HTMLAttributes<HTMLElement> {
    one, an empty link over the card named by the card's text (the "stretched link" pattern, so buttons inside
    aren't nested in a link). className, ref and every other prop go to the card element; href, target, rel and
    aria-label go to the link. */
-const INTERACTIVE = "a[href], button, input, select, textarea, label, summary, [tabindex]";
+const INTERACTIVE = 'a[href], button, input, select, textarea, label, summary, [tabindex]';
 const OWN = { variant: 1, padding: 1, as: 1, className: 1, href: 1, target: 1, rel: 1, children: 1 } as const;
 
-type CardLinkProps = { href: string; target?: string; rel?: string; "aria-label"?: string };
+type CardLinkProps = { href: string; target?: string; rel?: string; 'aria-label'?: string };
 // The link a linked card hands its CardHeader for the title; null outside one.
 const CardLinkContext = /* @__PURE__ */ React.createContext<CardLinkProps | null>(null);
-const VARIANTS: readonly CardVariant[] = ["outline", "elevated", "filled"];
-const PADDINGS: readonly CardPadding[] = ["none", "sm", "md", "lg"];
-const TAGS = ["div", "section", "article", "li"] as const;
+const VARIANTS: readonly CardVariant[] = ['outline', 'elevated', 'filled'];
+const PADDINGS: readonly CardPadding[] = ['none', 'sm', 'md', 'lg'];
+const TAGS = ['div', 'section', 'article', 'li'] as const;
 
 /** A surface that groups related content and actions: CardHeader, CardBody and CardFooter inside. With href, the whole card is a link. */
-export const Card = /* @__PURE__ */ component<HTMLElement, CardProps>("Card", function Card(props, ref) {
+export const Card = /* @__PURE__ */ component<HTMLElement, CardProps>('Card', function Card(props, ref) {
   const rest = omit(props, OWN);
-  const variant = oneOf(VARIANTS, props.variant, "outline");
-  const padding = oneOf(PADDINGS, props.padding, "md");
-  const base = domId("dk-card", React.useId());
+  const variant = oneOf(VARIANTS, props.variant, 'outline');
+  const padding = oneOf(PADDINGS, props.padding, 'md');
+  const base = domId('dk-card', React.useId());
   const isLink = props.href != null;
-  const cls = cn("dk-card", variant !== "outline" && "dk-card--" + variant, padding !== "md" && "dk-card--padding-" + padding, isLink && "dk-card--link", props.className);
-  const tag = oneOf(TAGS, props.as, "div");
+  const cls = cn('dk-card', variant !== 'outline' && 'dk-card--' + variant, padding !== 'md' && 'dk-card--padding-' + padding, isLink && 'dk-card--link', props.className);
+  const tag = oneOf(TAGS, props.as, 'div');
   // A plain Card inside a link Card's content ends that card's link: its own CardHeader title stays text (L8E65).
   const inLink = React.useContext(CardLinkContext) != null;
-  if (!isLink) return React.createElement(tag, Object.assign(rest, { ref: ref, className: cls, "data-component": "card", "data-variant": variant }),
+  if (!isLink) return React.createElement(tag, Object.assign(rest, { ref: ref, className: cls, 'data-component': 'card', 'data-variant': variant }),
     inLink ? <CardLinkContext.Provider value={null}>{props.children}</CardLinkContext.Provider> : props.children);
-  const link: CardLinkProps = { href: props.href!, target: props.target, rel: props.target === "_blank" && props.rel == null ? "noopener noreferrer" : props.rel, "aria-label": rest["aria-label"] };
-  delete rest["aria-label"];
+  const link: CardLinkProps = { href: props.href!, target: props.target, rel: props.target === '_blank' && props.rel == null ? 'noopener noreferrer' : props.rel, 'aria-label': rest['aria-label'] };
+  delete rest['aria-label'];
   // A direct CardHeader with a title takes the link; otherwise the card gets an empty one, named by its own text.
   const titled = React.Children.toArray(props.children).some((c) => React.isValidElement(c) && c.type === CardHeader && hasContent((c.props as CardHeaderProps).title));
   const id = rest.id || base;
@@ -69,30 +69,30 @@ export const Card = /* @__PURE__ */ component<HTMLElement, CardProps>("Card", fu
     if (e.defaultPrevented || !(t instanceof Element) || t.closest(INTERACTIVE)) return null;
     const sel = window.getSelection();
     if (sel && !sel.isCollapsed && e.currentTarget.contains(sel.anchorNode)) return null;
-    return e.currentTarget.querySelector<HTMLAnchorElement>(".dk-card__link");
+    return e.currentTarget.querySelector<HTMLAnchorElement>('.dk-card__link');
   };
   // A browser treats a click it didn't make as a plain one, so a Ctrl, Cmd or Shift click, or a middle click, would
   // navigate this tab away instead of opening another: open the other tab here (ER1). Only for a web, mailto or tel
   // link: a javascript: URL (React's blocked one, or a data: URL) would just open a blank tab (GR13).
-  const away = (a: HTMLAnchorElement) => { if (/^(https?|mailto|tel):$/.test(a.protocol)) window.open(a.href, "_blank", "noopener"); };
+  const away = (a: HTMLAnchorElement) => { if (/^(https?|mailto|tel):$/.test(a.protocol)) window.open(a.href, '_blank', 'noopener'); };
   const onClick = (e: React.MouseEvent<HTMLElement>) => {
     if (own) own(e);
     const a = target(e);
     if (!a) return;
     if (e.ctrlKey || e.metaKey || e.shiftKey) away(a);
-    else a.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, altKey: e.altKey }));
+    else a.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, altKey: e.altKey }));
   };
   const onAuxClick = (e: React.MouseEvent<HTMLElement>) => {
     if (ownAux) ownAux(e);
     const a = e.button === 1 ? target(e) : null;
     if (a) away(a);
   };
-  return React.createElement(tag, Object.assign(rest, { id: id, ref: ref, className: cls, "data-component": "card", "data-variant": variant, onClick: onClick, onAuxClick: onAuxClick }),
-    titled ? null : React.createElement(config.link, { ...link, className: "dk-card__link dk-card__link--cover", "aria-labelledby": link["aria-label"] ? undefined : id, key: "link" }),
+  return React.createElement(tag, Object.assign(rest, { id: id, ref: ref, className: cls, 'data-component': 'card', 'data-variant': variant, onClick: onClick, onAuxClick: onAuxClick }),
+    titled ? null : React.createElement(config.link, { ...link, className: 'dk-card__link dk-card__link--cover', 'aria-labelledby': link['aria-label'] ? undefined : id, key: 'link' }),
     <CardLinkContext.Provider value={titled ? link : null} key="content">{props.children}</CardLinkContext.Provider>);
 });
 
-const hasContent = (n: React.ReactNode) => n != null && n !== false && n !== "";
+const hasContent = (n: React.ReactNode) => n != null && n !== false && n !== '';
 
 export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** The card's title, as a heading. */
@@ -106,15 +106,15 @@ export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 }
 
 /** The card's title, an optional description and an optional action at the end. Any children come after the description. */
-export const CardHeader = /* @__PURE__ */ component<HTMLDivElement, CardHeaderProps>("CardHeader", function CardHeader(props, ref) {
+export const CardHeader = /* @__PURE__ */ component<HTMLDivElement, CardHeaderProps>('CardHeader', function CardHeader(props, ref) {
   const rest = omit(props, { title: 1, description: 1, action: 1, headingLevel: 1, className: 1, children: 1 });
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 3 : (props.headingLevel as number);
   const has = hasContent;
   const link = React.useContext(CardLinkContext);
   return (
-    <div {...rest} ref={ref} className={cn("dk-card__header", props.className)}>
+    <div {...rest} ref={ref} className={cn('dk-card__header', props.className)}>
       <div className="dk-card__heading">
-        {has(props.title) ? React.createElement("h" + level, { className: "dk-card__title" }, link ? React.createElement(config.link, { ...link, className: "dk-card__link" }, props.title) : props.title) : null}
+        {has(props.title) ? React.createElement('h' + level, { className: 'dk-card__title' }, link ? React.createElement(config.link, { ...link, className: 'dk-card__link' }, props.title) : props.title) : null}
         {has(props.description) ? <p className="dk-card__description">{props.description}</p> : null}
         {props.children}
       </div>
@@ -126,8 +126,8 @@ export const CardHeader = /* @__PURE__ */ component<HTMLDivElement, CardHeaderPr
 export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** The card's main content. */
-export const CardBody = /* @__PURE__ */ component<HTMLDivElement, CardBodyProps>("CardBody", function CardBody(props, ref) {
-  return <div {...props} ref={ref} className={cn("dk-card__body", props.className)} />;
+export const CardBody = /* @__PURE__ */ component<HTMLDivElement, CardBodyProps>('CardBody', function CardBody(props, ref) {
+  return <div {...props} ref={ref} className={cn('dk-card__body', props.className)} />;
 });
 
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -136,8 +136,8 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** The card's actions, in a wrapping row at the end. */
-export const CardFooter = /* @__PURE__ */ component<HTMLDivElement, CardFooterProps>("CardFooter", function CardFooter(props, ref) {
+export const CardFooter = /* @__PURE__ */ component<HTMLDivElement, CardFooterProps>('CardFooter', function CardFooter(props, ref) {
   const rest = omit(props, { justify: 1, className: 1 });
-  const j = oneOf(["start", "end", "between"] as const, props.justify, "end");
-  return <div {...rest} ref={ref} className={cn("dk-card__footer", j !== "end" && "dk-card__footer--" + j, props.className)} />;
+  const j = oneOf(['start', 'end', 'between'] as const, props.justify, 'end');
+  return <div {...rest} ref={ref} className={cn('dk-card__footer', j !== 'end' && 'dk-card__footer--' + j, props.className)} />;
 });

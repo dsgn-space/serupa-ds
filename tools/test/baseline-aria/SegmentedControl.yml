@@ -22,7 +22,7 @@
   - radio "Day"
   - radio "Week" [checked]
   - radio "Month"
-- text: Pick the period to report on
+- text: Choose the period to report on
 
 # LongLabels
 - radiogroup "Report":

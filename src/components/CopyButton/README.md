@@ -21,6 +21,15 @@ import { CopyButton } from "serupa-ds";
 - For sharing to another app: use the Web Share API (`navigator.share`) where it's offered.
 - For text people will edit first: put it in an Input and let them select it.
 
+## Anatomy
+
+Drawn from the `VariantsAndSizes` story.
+
+1. **Icons** (`.dk-copy-btn__icons`): the copy icon and, in the same place, the check that replaces it once copied.
+2. **Copy icon** (`.dk-copy-btn__icon--copy`): shown until a copy.
+3. **Copied icon** (`.dk-copy-btn__icon--done`): shown for a moment after a copy.
+4. **Labels** (`.dk-copy-btn__labels`): "Copy" and "Copied" in the same place, so the button keeps the width of the longer one.
+
 ## Usage
 
 - Show the text next to the button too, so people can see what they copy and select it themselves if copying fails.
@@ -31,7 +40,7 @@ import { CopyButton } from "serupa-ds";
 
 - Copies with the Clipboard API, and falls back to the older `execCommand("copy")` on pages where that API isn't available (plain `http:` or an iframe without permission).
 - Then shows a check (success color) and "Copied" for `timeout` ms (2000). Both labels take the same space, so the button doesn't change width. The copy icon cross-fades into the check (a short scale and blur when motion is allowed).
-- If the browser refuses, it says "Couldn't copy. Select the text and copy it yourself." (`labels.copyFailed`) and calls `onCopyError`.
+- If the browser refuses, it says "Couldn’t copy. Select the text and copy it yourself." (`labels.copyFailed`) and calls `onCopyError`.
 - Your `onClick` runs first; call `event.preventDefault()` in it to stop the copy.
 
 ## Accessibility

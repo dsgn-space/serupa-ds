@@ -5,8 +5,8 @@ export interface CheckboxLabels {
   selectAtLeastOne: string;
 }
 export const en: CheckboxLabels = {
-  selectAtLeastOne: "Select at least one option.",
+  selectAtLeastOne: 'Choose at least one option.',
 };
 export const id: CheckboxLabels = {
-  selectAtLeastOne: "Pilih setidaknya satu opsi.",
+  selectAtLeastOne: 'Centang setidaknya satu pilihan.',
 };

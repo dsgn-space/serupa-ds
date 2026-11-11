@@ -3,7 +3,8 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
-import { ListItem } from '../List/List';
+import { Avatar } from '../Avatar/Avatar';
+import { List, ListItem, ListLoadingItems } from '../List/List';
 import { VirtualList } from './VirtualList';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -175,41 +176,54 @@ describe('VirtualList', () => {
     expect([r.top >= box.top - 1, r.bottom <= box.bottom + 1, el('v').scrollTop > 0]).toEqual([true, true, true]);
   });
 
-  test('GR94: past the height limit (10,000,000 rows), the arrow and Page keys and the wheel move through the rows as in a short list, and stop at either end', async () => {
-    const first = () => { const box = el('v').getBoundingClientRect().top; return Number(rows('v').find((x) => x.getBoundingClientRect().bottom > box + 1)!.getAttribute('aria-posinset')); };
+  // GR94 in two tests, each well inside the time limit on a busy runner (12-17s as one, with coverage). Waits are for
+  // what the test needs, not fixed sleeps: the rows to stop changing before a key, then the rows it should bring.
+  const huge = async () => {
     await render(<VirtualList id="v" aria-label="Rows" count={10_000_000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
+  };
+  const first = () => { const box = el('v').getBoundingClientRect().top; return Number(rows('v').find((x) => x.getBoundingClientRect().bottom > box + 1)!.getAttribute('aria-posinset')); };
+  const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const steady = async () => { let last = NaN; await expect.poll(async () => { const now = first(); const same = now === last; last = now; await frame(); return same; }).toBe(true); return last; };
+
+  test('GR94: past the height limit (10,000,000 rows), the arrow and Page keys and the wheel move through the rows as in a short list', async () => {
+    await huge();
     const h = rows('v')[1].getBoundingClientRect().height, page = Math.floor(el('v').clientHeight * 0.875 / h);
     await scrollTo('v', (el('v').scrollHeight - el('v').clientHeight) / 2);
-    await new Promise((r) => setTimeout(r, 300));
     el('v').focus();
-    const step = async (key: string, rows: number) => {
-      const was = first();
-      await userEvent.keyboard(key);
-      await new Promise((r) => setTimeout(r, 100));
-      expect(Math.abs(first() - was - rows), key).toBeLessThanOrEqual(1);
+    const step = async (move: () => unknown, by: number, what: string) => {
+      const was = await steady();
+      await move();
+      await expect.poll(() => Math.abs(first() - was - by), { message: what }).toBeLessThanOrEqual(1);
     };
-    await step('{ArrowDown}', 40 / h);
-    await step('{ArrowDown}', 40 / h);
-    await step('{PageDown}', page);
-    await step('{PageUp}', -page);
-    await step('{ArrowUp}', -40 / h);
-    let was = first();
-    el('v').dispatchEvent(new WheelEvent('wheel', { deltaY: 3 * h, bubbles: true, cancelable: true }));
-    await new Promise((r) => setTimeout(r, 100));
-    expect(Math.abs(first() - was - 3)).toBeLessThanOrEqual(1);
-    // At the top, the wheel up is left to the page; Home and End still go to either end.
-    await userEvent.keyboard('{Home}');
-    await expect.poll(() => titles('v')[0], { timeout: 5000 }).toBe('Row 1');   // the browser's smooth scroll
-    const up = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true });
-    el('v').dispatchEvent(up);
-    expect(up.defaultPrevented).toBe(false);
+    const key = (k: string) => () => userEvent.keyboard(k);
+    await step(key('{ArrowDown}'), 40 / h, 'ArrowDown');
+    await step(key('{ArrowDown}'), 40 / h, 'ArrowDown');
+    await step(key('{PageDown}'), page, 'PageDown');
+    await step(key('{PageUp}'), -page, 'PageUp');
+    await step(key('{ArrowUp}'), -40 / h, 'ArrowUp');
+    await step(() => el('v').dispatchEvent(new WheelEvent('wheel', { deltaY: 3 * h, bubbles: true, cancelable: true })), 3, 'wheel');
+  });
+
+  test('GR94: past the height limit, End and Home go to either end; there ArrowDown stops, and the wheel up is left to the page', async () => {
+    await huge();
+    el('v').focus();
     await userEvent.keyboard('{End}');
     await expect.poll(() => rows('v').at(-1)?.getAttribute('aria-posinset'), { timeout: 5000 }).toBe('10000000');
-    was = first();
+    const was = await steady();
     await userEvent.keyboard('{ArrowDown}');
     await new Promise((r) => setTimeout(r, 100));
     expect(first()).toBe(was);
+    await userEvent.keyboard('{Home}');
+    // The list sets the top itself: the browser's smooth scroll sometimes stopped a pixel short of it, where the list
+    // rightly keeps the wheel (GR291).
+    expect(el('v').scrollTop).toBe(0);
+    await expect.poll(() => titles('v')[0], { timeout: 5000 }).toBe('Row 1');
+    await new Promise((r) => setTimeout(r, 300));
+    expect(el('v').scrollTop).toBe(0);
+    const up = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true });
+    el('v').dispatchEvent(up);
+    expect(up.defaultPrevented).toBe(false);
   });
 
   test('GR91, GR92: End on 600,000 and 1,000,000 rows taller than the guess reaches the last row without an update loop; past the browser\'s height limit the scroll range is scaled down, and the top comes back', async () => {
@@ -256,5 +270,18 @@ describe('VirtualList', () => {
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);
+  });
+
+  // The README's loading recipe: until the first rows arrive, a busy List of ListLoadingItems in the rows' shape.
+  test('the loading recipe: ListLoadingItems rows are as tall as the VirtualList rows that replace them', async () => {
+    const person = (i: number) => <ListItem leading={<Avatar name={'Ada ' + i} alt="" size="sm" />} title={'Ada ' + i} description="ada@example.com" />;
+    await render(<div style={{ width: 400 }}>
+      <List id="wait" aria-label="Members" busy><ListLoadingItems rows={3} description leading="sm" label="Loading members" /></List>
+      <VirtualList id="v" aria-label="Members" count={3} renderItem={person} />
+    </div>);
+    expect(el('wait').getAttribute('aria-busy')).toBe('true');
+    const heights = (id: string) => rows(id).map((r) => r.getBoundingClientRect().height);
+    await expect.poll(() => heights('v').length).toBe(3);
+    expect(heights('wait')).toEqual(heights('v'));
   });
 });

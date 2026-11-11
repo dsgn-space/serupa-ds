@@ -13,16 +13,16 @@ export interface LoadMoreLabels {
   allLoaded: string;
 }
 export const en: LoadMoreLabels = {
-  loadMore: "Load more",
+  loadMore: 'Load more',
   showingOf: (shown, total) => `Showing ${shown} of ${total}`,
   loadedMore: (added) => `${added} more loaded`,
-  moreLoaded: "More loaded",
-  allLoaded: "You’ve reached the end",
+  moreLoaded: 'More loaded',
+  allLoaded: 'You’ve reached the end',
 };
 export const id: LoadMoreLabels = {
-  loadMore: "Muat lagi",
+  loadMore: 'Muat lagi',
   showingOf: (shown, total) => `Menampilkan ${shown} dari ${total}`,
   loadedMore: (added) => `${added} lagi dimuat`,
-  moreLoaded: "Berikutnya dimuat",
-  allLoaded: "Sudah sampai akhir",
+  moreLoaded: 'Berikutnya dimuat',
+  allLoaded: 'Sudah sampai akhir',
 };

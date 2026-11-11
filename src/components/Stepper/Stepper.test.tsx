@@ -43,6 +43,15 @@ function App(props: { sref?: React.Ref<HTMLElement> }) {
 const setup = async (sref?: React.Ref<HTMLElement>) => { clicks = []; await render(<App sref={sref} />, { wrapper: EnUS }); };
 
 describe('Stepper', () => {
+  test('the last step\'s title keeps its words whole on one line when the row has room, in a column as in a flex container', async () => {
+    await render(<EnUS><div style={{ width: '868px' }}><Stepper id="ls" steps={STEPS} current={0} /></div>
+      <div style={{ width: '868px', display: 'flex', flexDirection: 'column' }}><Stepper id="lc" steps={STEPS} current={0} onStepClick={() => {}} /></div></EnUS>);
+    for (const id of ['ls', 'lc']) {
+      const t = lis(id)[3].querySelector<HTMLElement>(inStep(TITLE))!, a = lis(id)[0].querySelector<HTMLElement>(inStep(TITLE))!;
+      expect([id, t.textContent, Math.round(rect(t).height)]).toEqual([id, 'Review', Math.round(rect(a).height)]);
+    }
+  });
+
   test('step numbers are written in the digits of the locale, as Calendar writes its days: ٣ ٤ in ar-EG', async () => {
     await render(<SerupaProvider locale="ar-EG"><Stepper id="sar" current={1} steps={[{ title: 'One' }, { title: 'Two' }, { title: 'Three' }, { title: 'Four' }]} /></SerupaProvider>);
     const shown = [...el('sar').querySelectorAll(inStep(IND))].map((e) => e.textContent);
@@ -231,7 +240,7 @@ describe('Stepper', () => {
       const [w, set] = React.useState(320); setW = set;
       return <div id="box" style={{ width: w + 'px' }}><Stepper id="nar" steps={STEPS} current={2} /><Stepper id="nv" orientation="vertical" steps={STEPS} current={2} /></div>;
     }
-    await render(<Narrow />);
+    await render(<SerupaProvider locale="en"><Narrow /></SerupaProvider>);
     const n = el('nar');
     expect(n.className).toMatch(/dk-stepper--compact/);
     expect(n.scrollWidth).toBeLessThanOrEqual(320);

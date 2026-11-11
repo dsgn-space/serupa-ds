@@ -15,35 +15,48 @@ const region = () => document.querySelector('[data-dk-announcer]') as HTMLElemen
 const para = (id: string, text: string) => [...el(id).querySelectorAll('p')].find((p) => p.textContent === text) ?? null;
 const wait = (ms: number) => new Promise((ok) => setTimeout(ok, ms));
 
-// A list that loads `step` more per press, up to `all`, each load taking `ms`.
-function Paged({ id = 'lm', step = 10, all = 30, ms = 50, infinite = false, onLoad = () => {}, endText }: { id?: string; step?: number; all?: number; ms?: number; infinite?: boolean; onLoad?: () => void; endText?: React.ReactNode }) {
+// A list that loads `step` more per press, up to `all`, each load taking `ms`, or, with `held`, until the test calls the finisher it adds there.
+function Paged({ id = 'lm', step = 10, all = 30, ms = 50, infinite = false, onLoad = () => {}, endText, held }: { id?: string; step?: number; all?: number; ms?: number; infinite?: boolean; onLoad?: () => void; endText?: React.ReactNode; held?: (() => void)[] }) {
   const [n, setN] = React.useState(step);
-  const load = () => { onLoad(); return new Promise<void>((done) => setTimeout(() => { setN((x) => Math.min(x + step, all)); done(); }, ms)); };
+  const load = () => {
+    onLoad();
+    return new Promise<void>((done) => {
+      const finish = () => { setN((x) => Math.min(x + step, all)); done(); };
+      if (held) held.push(finish); else setTimeout(finish, ms);
+    });
+  };
   return <div><ul>{Array.from({ length: n }, (_, i) => <li key={i}>Item {i + 1}</li>)}</ul><LoadMore id={id} onLoadMore={load} count={n} total={all} hasMore={n < all} infinite={infinite} endText={endText} /></div>;
 }
 
 describe('LoadMore', () => {
-  test('a <div> with "Showing 20 of 134" over an outline Load more button; ref, className and other props reach it', async () => {
+  test('a <div> with "Showing 20 of 134" (tabular digits) over an outline Load more button; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<SerupaProvider locale="en-US"><LoadMore id="x" ref={ref} className="extra" data-x="y" onLoadMore={() => {}} count={20} total={1340} /></SerupaProvider>);   // pinned: 1,340 follows the browser's locale
     const e = el('x');
     expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', true, 'dk-load-more extra', 'y', 'load-more']);
     expect([para('x', 'Showing 20 of 1,340')?.textContent, button('x').textContent, button('x').className.includes('dk-btn--outline')]).toEqual(['Showing 20 of 1,340', 'Load more', true]);
+    // Its digits are tabular, so the count doesn't shift sideways as it grows.
+    expect(getComputedStyle(para('x', 'Showing 20 of 1,340')!).fontVariantNumeric).toBe('tabular-nums');
   });
 
   test('pressing it loads (one press until the promise settles), says what was added, keeps focus on the button, and focuses the end text when the last page leaves no button', async () => {
     await expect.poll(announcerIdle, { timeout: 3000 }).toBe(true);
     let loads = 0;
-    await render(<SerupaProvider locale="en-US"><button id="before">Before</button><Paged onLoad={() => loads++} /></SerupaProvider>);
+    // Each load waits for the test, so the second press lands while the first is still loading however slow the machine.
+    const held: (() => void)[] = [];
+    await render(<SerupaProvider locale="en-US"><button id="before">Before</button><Paged onLoad={() => loads++} held={held} /></SerupaProvider>);
     el('before').focus();
     await userEvent.tab();   // past the list's items, which aren't focusable, to the button
     expect(document.activeElement).toBe(button('lm'));
     await userEvent.keyboard('{Enter}');
     button('lm').click();
     expect([loads, button('lm').getAttribute('aria-busy')]).toEqual([1, 'true']);
+    held.shift()!();
     await expect.poll(() => region().textContent, { timeout: 3000 }).toBe('10 more loaded. Showing 20 of 30.');
     expect(document.activeElement).toBe(button('lm'));
     await userEvent.keyboard('{Enter}');
+    await expect.poll(() => held.length).toBe(1);
+    held.shift()!();
     await expect.poll(() => para('lm', 'You’ve reached the end') !== null, { timeout: 3000 }).toBe(true);
     const end = para('lm', 'You’ve reached the end')!;
     // Focus moves in an effect after the commit that shows the end text, so WebKit can show the text a beat first.

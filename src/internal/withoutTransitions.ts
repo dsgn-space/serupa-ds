@@ -9,7 +9,7 @@ const COLOR = /color|shadow|fill|stroke/;
  *  scale, translate) runs on. theme.js does this for the page. */
 export function withoutTransitions(change: () => void, element?: HTMLElement): void {
   change();
-  const el = element || (typeof document !== "undefined" ? document.documentElement : null);
+  const el = element || (typeof document !== 'undefined' ? document.documentElement : null);
   if (!el || !el.getAnimations) return;
   for (const a of el.getAnimations({ subtree: true })) if (a instanceof CSSTransition && COLOR.test(a.transitionProperty)) a.finish();
 }

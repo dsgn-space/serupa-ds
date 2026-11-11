@@ -22,12 +22,15 @@ One thing, here a project: where it sits, its name and details, its parts in tab
 - **Overview** edits each detail in place with Inline edit: Enter saves, Escape puts it back. An empty name says "Enter a name for the project." and keeps the old one (3.3.1).
 - **Tabs** split the parts, and each panel is named by its tab (1.3.1). Keep them few: three or four.
 - **Removing a task happens at once**, with Undo in a toast. It's removed for good only when the toast goes, so nothing needs "Are you sure?" first (3.3.4). Focus goes to the next task's Remove, or to the list's heading when none are left, never to the top of the page (2.4.3).
-- **Deleting the project can't be undone**, so it sits apart in Settings, and its dialog says what will be lost and asks for the project's name before the button works (Type to confirm). Pasting the name is fine (3.3.8).
+- **Deleting the project can’t be undone**, so it sits apart in Settings, and its dialog says what will be lost and asks for the project's name before the button works (Type to confirm). Pasting the name is fine (3.3.8).
 - **After the delete**, the page says the project is gone, with its h1 focused and a link back to the projects.
+- **A delete that fails says so.** The dialog stays open with an alert, "Couldn’t delete Website redesign. Try again.", and focus stays on its button, so the person knows the delete didn't go through and can try again (3.3.1, 4.1.3). Never leave a rejected promise unhandled: the person can't tell whether the record is gone.
+- **The dialog counts what's still there**, "its 1 task and files", with the word that fits the number, so it says exactly what will be lost (3.3.4). Undo toasts still open when the delete goes through close without removing anything more.
+- **Dates in the reader's locale.** Created reads "14 September 2026" in en-GB, from `Intl.DateTimeFormat` with the provider's locale, and keeps the ISO date in `<time dateTime>`.
 - **A skip link** first, into main, as on every page.
 
 ## What stays the app's job
 
-- **Storing the changes.** `onRename` gets a saved name or description, `onRemoveTask` a task once its Undo has passed, and `onDelete` the delete: return its promise, and the button shows it's busy until it settles.
+- **Storing the changes.** `onRename` gets a saved name or description, `onRemoveTask` a task once its Undo has passed, and `onDelete` the delete: return its promise, and the button shows it's busy until it settles. If it rejects, the dialog says the delete failed; put the reason in your own logs.
 - **Where it goes after the delete.** Here the page says so in place. An app may go to the list instead, with a toast that says what was deleted.
 - **Who may delete.** Hide or disable the danger zone for people who can't, with a line that says who can.

@@ -1,15 +1,15 @@
-"use client";
-import * as React from "react";
-import { cn } from "../../internal/cn";
-import { ButtonBase, type ButtonAsButtonProps } from "../Button/Button";
-import { Icon } from "../Icon/Icon";
-import { component } from "../../internal/component";
-import { deepActive } from "../../internal/root";
-import { useSettings } from "../../internal/provider";
-import { announce } from "../../internal/announce";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
-import { feedbackHold } from "../../internal/timing";
+'use client';
+import * as React from 'react';
+import { cn } from '../../internal/cn';
+import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
+import { Icon } from '../Icon/Icon';
+import { component } from '../../internal/component';
+import { writeText as write, writeTextLater as writeLater } from '../../internal/clipboard';
+import { useSettings } from '../../internal/provider';
+import { announce } from '../../internal/announce';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
+import { feedbackHold } from '../../internal/timing';
 
 export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'leftIcon' | 'rightIcon' | 'loading' | 'loadingText'> {
   /** What to copy: the text, or a function that returns it (or a promise of it) when the button is pressed. */
@@ -28,47 +28,12 @@ export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'on
   onCopyError?: ((error: unknown) => void) | undefined;
 }
 
-// The clipboard API needs a secure page and focus; the old execCommand route covers the rest.
-async function write(text: string, at: Element): Promise<void> {
-  if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
-    try { await navigator.clipboard.writeText(text); return; } catch (e) { if (!fallback(text, at)) throw e; return; }
-  }
-  if (!fallback(text, at)) throw new Error("Copying isn't available here.");
-}
-// A value that's fetched goes to the clipboard as a promise, written within the press: Safari refuses a write once the
-// press's user activation has run out, as it may have by the time a fetch ends. Without ClipboardItem (or if the
-// browser turns the promise down), it's written once it's there, as before.
-function writeLater(text: Promise<string>, at: Element): Promise<string> {
-  const clip = typeof navigator !== "undefined" ? navigator.clipboard : undefined;
-  const after = () => text.then((t) => write(t, at).then(() => t));
-  if (typeof ClipboardItem === "undefined" || !clip || !clip.write) return after();
-  const blob = text.then((t) => new Blob([t], { type: "text/plain" }));
-  blob.catch(() => {});   // a value that fails is reported through the write below, not again as unhandled
-  let item: ClipboardItem;
-  try { item = new ClipboardItem({ "text/plain": blob }); } catch { return after(); }
-  return clip.write([item]).then(() => text, after);
-}
-// The text goes in the button's modal <dialog> when it's in one: the page behind a modal is inert, and a textarea
-// there can't be selected, so nothing was copied while the button said "Copied" (L8E96).
-function fallback(text: string, at: Element): boolean {
-  if (typeof document === "undefined") return false;
-  const ta = document.createElement("textarea");
-  ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0"; ta.style.insetInlineStart = "-9999px";
-  const back = deepActive() as HTMLElement | null;   // read through shadow roots: inside one, the button, not the host (GR95)
-  (at.closest("dialog") || document.body).appendChild(ta); ta.select();
-  let ok = false;
-  try { ok = document.execCommand("copy"); } catch { ok = false; }
-  ta.remove();
-  if (back && back.focus) back.focus();
-  return ok;
-}
-
 /* CopyButton: a Button that copies value to the clipboard, then shows a check and "Copied" for timeout ms and
    says "Copied" to screen readers (politely). If the browser refuses, it says labels.copyFailed instead and calls
    onCopyError. Both labels take the same space, so the button doesn't change width. iconOnly shows just the icon.
    Variant defaults to "outline" and size to "sm"; every other Button prop and ref go to the <button>. */
 /** A button that copies text to the clipboard, then shows "Copied" with a check and says so to screen readers. */
-export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButtonProps>("CopyButton", function CopyButton(props, ref) {
+export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButtonProps>('CopyButton', function CopyButton(props, ref) {
   const sds = useSettings(words);
   const { value, children, copiedLabel, iconOnly, timeout, onCopy, onCopyError, className, variant, size, ...rest } = props;   // the rest is the Button's
   const [copied, setCopied] = React.useState(false);
@@ -76,16 +41,16 @@ export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButto
   React.useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   const label = children == null || (children as unknown) === false ? sds.labels.copy : children;
   const done = copiedLabel || sds.labels.copied;
-  const name = typeof label === "string" ? label : sds.labels.copy;
+  const name = typeof label === 'string' ? label : sds.labels.copy;
   const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (props.onClick) props.onClick(e);
     if (e.defaultPrevented) return;
     try {
       // Nothing awaited before the write starts, so it's still inside the press.
-      const got = typeof value === "function" ? value() : value;
+      const got = typeof value === 'function' ? value() : value;
       let text: string;
       const at = e.currentTarget;
-      if (typeof got === "string") { text = got; await write(text, at); } else text = await writeLater(Promise.resolve(got), at);
+      if (typeof got === 'string') { text = got; await write(text, at); } else text = await writeLater(Promise.resolve(got), at);
       setCopied(true);
       announce(done);
       if (timer.current) clearTimeout(timer.current);
@@ -105,15 +70,15 @@ export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButto
     <Icon icon={icons.Check} className="dk-copy-btn__icon dk-copy-btn__icon--done" />
   </span>;
   const common = {
-    ...rest, ref: ref as React.Ref<HTMLElement>, onClick, variant: variant || "outline", size: size || "sm",
-    "data-copied": copied ? "" : undefined, className: cn("dk-copy-btn", copied && "dk-copy-btn--copied", className),
+    ...rest, ref: ref as React.Ref<HTMLElement>, onClick, variant: variant || 'outline', size: size || 'sm',
+    'data-copied': copied ? '' : undefined, className: cn('dk-copy-btn', copied && 'dk-copy-btn--copied', className),
   };
   if (iconOnly) return <ButtonBase {...common} icon={glyph} aria-label={copied ? done : name} title={rest.title ?? name} />;
   // Both labels sit in one grid cell, so the button keeps the wider one's width; only the current one is read out.
   return <ButtonBase {...common} leftIcon={glyph}>
     <span className="dk-copy-btn__labels">
-      <span className={cn("dk-copy-btn__label", copied && "dk-copy-btn__label--off")} aria-hidden={copied || undefined}>{label}</span>
-      <span className={cn("dk-copy-btn__label", !copied && "dk-copy-btn__label--off")} aria-hidden={!copied || undefined}>{done}</span>
+      <span className={cn('dk-copy-btn__label', copied && 'dk-copy-btn__label--off')} aria-hidden={copied || undefined}>{label}</span>
+      <span className={cn('dk-copy-btn__label', !copied && 'dk-copy-btn__label--off')} aria-hidden={!copied || undefined}>{done}</span>
     </span>
   </ButtonBase>;
 });

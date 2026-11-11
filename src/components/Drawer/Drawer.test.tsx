@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { flushSync } from 'react-dom';
-import { afterAll, beforeEach, describe, expect, test } from 'vitest';
+import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
@@ -244,13 +244,20 @@ describe('Drawer', () => {
     expect(closedBy).toEqual(['opener', 'opener']);
   });
 
-  // A touch drag along x through `path`: [dx from the start, ms after the move before].
+  // A touch drag along x through `path`: [dx from the start, ms after the move before]. Each event carries the time
+  // the path gives it as its timeStamp, which the swipe speed is read from: a busy runner's late timer would otherwise
+  // stretch 100ms to 300 and turn a flick into a slow drag (a flake in CI).
   const trace = async (p: HTMLElement, path: [number, number][], up = true) => {
     const r = p.getBoundingClientRect(), x = r.left + 40, y = r.top + 40;
-    const ev = (name: string, cx: number) => p.dispatchEvent(new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 8, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y }));
+    let t = performance.now();
+    const ev = (name: string, cx: number) => {
+      const e = new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 8, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y });
+      Object.defineProperty(e, 'timeStamp', { value: t });
+      p.dispatchEvent(e);
+    };
     ev('pointerdown', x);
     let at = 0;
-    for (const [dx, ms] of path) { await new Promise((f) => setTimeout(f, ms)); ev('pointermove', x + dx); at = dx; }
+    for (const [dx, ms] of path) { await new Promise((f) => setTimeout(f, ms)); t += ms; ev('pointermove', x + dx); at = dx; }
     if (up) ev('pointerup', x + at);
   };
 
@@ -307,7 +314,7 @@ describe('Drawer', () => {
     await trace(p, [[-40, 100], [-120, 100], [-200, 100]], false);
     const moved = -parseFloat(p.style.translate);
     const behind = getComputedStyle(p, '::after');
-    expect([moved > 10 && moved < 24, behind.content, behind.translate, behind.backgroundColor === getComputedStyle(p).backgroundColor]).toEqual([true, '""', "100%", true]);   // a copy just past its edge
+    expect([moved > 10 && moved < 24, behind.content, behind.translate, behind.backgroundColor === getComputedStyle(p).backgroundColor]).toEqual([true, '""', '100%', true]);   // a copy just past its edge
     p.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerId: 8, isPrimary: true, pointerType: 'touch', clientX: 0, clientY: 0 }));
     await expect.poll(() => p.style.translate).toBe('');
     await expect.poll(() => getComputedStyle(p, '::after').content).toBe('none');   // back in place: no copy, so nothing spills
@@ -862,5 +869,18 @@ describe('Drawer: unsaved (13)', () => {
     await userEvent.click(button('Discard'));
     await expect.poll(() => form().open).toBe(false);
     expect(why).toEqual(['api']);
+  });
+
+  test('opened inside a <form> with a field or form in it, it warns once (overlay-in-form); outside a form, or with only text, it doesn\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const calls = () => warn.mock.calls.filter(([m]) => /overlay-in-form/.test(String(m)) && /^Drawer:/.test(String(m)));
+    try {
+      const { rerender } = await render(<><Drawer open title="Share" onOpenChange={() => {}}><input aria-label="Email" /></Drawer><form><Drawer open title="Info" onOpenChange={() => {}}>Plain words.</Drawer></form></>);
+      expect(calls()).toHaveLength(0);
+      await rerender(<></>);
+      await render(<form><Drawer open title="Rename" onOpenChange={() => {}}><input aria-label="Name" /></Drawer></form>);
+      expect(calls()).toHaveLength(1);
+      expect(String(calls()[0][0])).toMatch(/^Drawer: it's inside a <form>/);
+    } finally { warn.mockRestore(); }
   });
 });

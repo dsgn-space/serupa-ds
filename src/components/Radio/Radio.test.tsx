@@ -196,6 +196,29 @@ describe('Radio', () => {
     expect([input('p').checked, input('q').checked, document.getElementById('dis')!.getAttribute('aria-disabled')]).toEqual([true, false, 'true']);
   });
 
+  test('readOnly group: aria-readonly on the group, radios focusable (not disabled); arrows, Space and clicks leave the choice and focus, and neither onValueChange nor a radio\'s onChange runs; the form still sends it; default cursor, no hover change', async () => {
+    const changes: string[] = [];
+    await render(<Grid><form id="ro-form"><button type="button" id="ro-before">before</button>
+      <RadioGroup id="ro" aria-label="Plan" name="plan" readOnly defaultValue="b" onValueChange={(v) => changes.push('group:' + v)}>
+        <Radio id="ro-a" value="a" onChange={() => changes.push('radio:a')}>Alpha</Radio><Radio id="ro-b" value="b">Bravo</Radio><Radio id="ro-c" value="c">Charlie</Radio>
+      </RadioGroup></form>
+      <RadioGroup aria-label="Editable"><Radio id="rw" value="x">X</Radio></RadioGroup></Grid>);
+    input('ro-before').focus();
+    await userEvent.tab();
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowUp}{ArrowUp}{ArrowUp} ');
+    const at = document.activeElement?.id;
+    await userEvent.click(page.getByText('Charlie'));
+    await userEvent.click(input('ro-a'));
+    const checked = ['ro-a', 'ro-b', 'ro-c'].filter((id) => input(id).checked);
+    const sent = new FormData(document.getElementById('ro-form') as HTMLFormElement).get('plan');
+    await userEvent.hover(input('rw'));
+    const hoverEditable = css(input('rw')).borderTopColor;
+    await userEvent.hover(input('ro-c'));
+    expect([at, checked, changes, sent, document.getElementById('ro')!.getAttribute('aria-readonly'), input('ro-a').disabled]).toEqual(['ro-b', ['ro-b'], [], 'b', 'true', false]);
+    expect([css(wrap('ro-c')).cursor, wrap('ro-c').className]).toEqual(['default', expect.stringMatching(/dk-radio--readonly/)]);
+    expect(css(input('ro-c')).borderTopColor).not.toBe(hoverEditable);
+  });
+
   test('on its own: name and defaultChecked as usual; an unknown size falls back to md; keyboard focus: a 2px focus-ring outline 2px out, like Button, with a transparent gap', async () => {
     await render(<Grid><button id="before">Before</button><Solo /></Grid>);
     expect([input('s1').checked, input('s1').name, wrap('s2').dataset.size]).toEqual([true, 'solo', 'md']);
@@ -246,6 +269,43 @@ describe('Radio', () => {
       ['dot on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
       ['invalid', 'var(--danger)', 'var(--surface)', 3],
+    ])).toEqual([]);
+  });
+
+  test('variant card: a bordered card pressed as a whole, a 2px primary border once checked, the focus ring round the card; the arrows still move the choice', async () => {
+    const onValueChange = vi.fn();
+    await render(<RadioGroup aria-label="Delivery" variant="card" defaultValue="a" onValueChange={onValueChange}>
+      <Radio value="a" description="3 to 5 days">Standard</Radio>
+      <Radio value="b" description="Next day">Express</Radio>
+      <Radio value="c" variant="default">Plain</Radio>
+    </RadioGroup>);
+    const [a, b, c] = page.getByRole('radio').elements() as HTMLInputElement[];
+    const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
+    expect(card(a).className).toMatch(/dk-radio--card/);
+    expect(card(c).className).not.toMatch(/dk-radio--card/);
+    expect(page.getByRole('radiogroup').element().className).toMatch(/dk-radio-group--card/);
+    const shell = css(card(b));
+    expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
+    expect(css(card(a)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a)).boxShadow).toContain('0px 0px 0px 1px');
+    expect(css(card(a)).backgroundColor).toBe(css(card(b)).backgroundColor);
+    expect(css(card(b)).borderTopColor).toBe(color('var(--border)'));
+    // Pressed anywhere on the card, the description included.
+    await userEvent.click(page.getByText('Next day', { exact: true }));
+    expect(b.checked).toBe(true);
+    expect(onValueChange).toHaveBeenLastCalledWith('b', expect.anything());
+    await userEvent.keyboard('{ArrowUp}');
+    expect(a.checked).toBe(true);
+    expect(document.activeElement).toBe(a);
+    expect(css(card(a)).outlineStyle).toBe('solid');
+    expect(css(a).outlineStyle).toBe('none');
+    // Its name is the label alone; the description describes it.
+    await expect.element(page.getByRole('radio', { name: 'Express', exact: true })).toHaveAccessibleDescription('Next day');
+  });
+
+  test('variant card: a checked card\'s border 3:1 on the card and the page, in all six themes', () => {
+    expect(lowContrast([
+      ['checked card border', 'var(--primary)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 

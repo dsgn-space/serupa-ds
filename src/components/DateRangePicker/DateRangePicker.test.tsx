@@ -307,3 +307,55 @@ describe('DateRangePicker popup on a phone (GR9)', () => {
     expect(box('narrow').scrollWidth).toBeLessThanOrEqual(box('narrow').clientWidth + 1);
   });
 });
+
+describe('DateRangePicker presets (RU11)', () => {
+  const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const presetBtns = (tid: string) => [...pop(tid).querySelectorAll<HTMLButtonElement>('[role=group][aria-label=Shortcuts] button')];
+  test('presets: a named group after the months; one sets both ends, shows its month and stays open, pressed; one outside min and max is disabled', async () => {
+    const got: string[] = [];
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const min = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 10);
+    await render(<DateRangePicker data-testid="pre" aria-label="Report" locale="en-US" min={min} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await userEvent.click(btn('pre'));
+    const group = pop('pre').querySelector('[role=group][aria-label=Shortcuts]')!;
+    expect(group.getAttribute('aria-label')).toBe('Shortcuts');
+    expect(presetBtns('pre').map((b) => b.textContent)).toEqual(['Today', 'Yesterday', 'Last 7 days', 'Last 30 days', 'This month', 'Last month']);
+    // In reading order the shortcuts come after the days.
+    expect(days('pre').at(-1)!.compareDocumentPosition(group) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(presetBtns('pre').map((b) => b.getAttribute('aria-disabled'))).toEqual([null, null, null, 'true', min.getDate() === 1 ? null : 'true', 'true']);
+    const week = presetBtns('pre')[2];
+    await userEvent.click(week);
+    const from = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 6);
+    expect(got).toEqual([iso(from) + '..' + iso(t)]);
+    expect(isOpen('pre')).toBe(true);
+    expect(week.getAttribute('aria-pressed')).toBe('true');
+    expect(day('pre', iso(from))?.closest('td')?.getAttribute('aria-selected')).toBe('true');
+    presetBtns('pre')[3].click();   // disabled: nothing happens
+    expect(got).toHaveLength(1);
+  });
+
+  test('with max today, "This month" is the month so far and can be picked (GR287)', async () => {
+    const got: string[] = [];
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
+    await userEvent.click(btn('mx'));
+    const month = presetBtns('mx')[4];
+    expect([month.textContent, month.getAttribute('aria-disabled')]).toEqual(['This month', null]);
+    await userEvent.click(month);
+    expect(got).toEqual([iso(new Date(t.getFullYear(), t.getMonth(), 1)) + '..' + iso(t)]);
+    expect(month.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  test('your own presets, as values or functions; without presets there is no list', async () => {
+    await render(<>
+      <DateRangePicker data-testid="own" aria-label="Stay" locale="en-US" presets={[{ label: 'Spring break', value: { start: '2025-03-10', end: '2025-03-14' } }, { label: 'Late March', value: () => ({ start: '2025-03-24', end: '2025-03-28' }) }]} />
+      <DateRangePicker data-testid="none" aria-label="Plain" locale="en-US" />
+    </>);
+    await userEvent.click(btn('own'));
+    await userEvent.click(presetBtns('own')[1]);
+    expect(vals('own')).toBe('03/24/2025 – 03/28/2025');
+    expect(inRange('own')).toBe('03-25,03-26,03-27');
+    await userEvent.click(btn('none'));
+    expect(pop('none').querySelector('[role=group]')).toBe(null);
+  });
+});

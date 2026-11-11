@@ -1,3 +1,80 @@
+# Area
+- figure "Visitors and sign-ups":
+  - text: Visitors and sign-ups
+  - button "Show as table"
+  - group "Area chart":
+    - group "Visitors":
+      - 'img "Visitors, Jan: 120"'
+      - 'img "Visitors, Feb: 132"'
+      - 'img "Visitors, Mar: 101"'
+      - 'img "Visitors, Apr: 134"'
+      - 'img "Visitors, May: 190"'
+      - 'img "Visitors, Jun: 230"'
+      - 'img "Visitors, Jul: 210"'
+      - 'img "Visitors, Aug: 182"'
+      - 'img "Visitors, Sep: 191"'
+      - 'img "Visitors, Oct: 234"'
+      - 'img "Visitors, Nov: 290"'
+      - 'img "Visitors, Dec: 330"'
+    - group "Sign-ups":
+      - 'img "Sign-ups, Jan: 20"'
+      - 'img "Sign-ups, Feb: 42"'
+      - 'img "Sign-ups, Mar: 31"'
+      - 'img "Sign-ups, Apr: 54"'
+      - 'img "Sign-ups, May: 60"'
+      - 'img "Sign-ups, Jun: 73"'
+      - 'img "Sign-ups, Jul: 80"'
+      - 'img "Sign-ups, Aug: 64"'
+      - 'img "Sign-ups, Sep: 71"'
+      - 'img "Sign-ups, Oct: 94"'
+      - 'img "Sign-ups, Nov: 110"'
+      - 'img "Sign-ups, Dec: 142"'
+
+# AreaStacked
+- figure "Orders by channel":
+  - text: Orders by channel
+  - button "Show as table"
+  - group "Area chart":
+    - group "Shop":
+      - 'img "Shop, Jan: 40"'
+      - 'img "Shop, Feb: 42"'
+      - 'img "Shop, Mar: 45"'
+      - 'img "Shop, Apr: 50"'
+      - 'img "Shop, May: 52"'
+      - 'img "Shop, Jun: 60"'
+      - 'img "Shop, Jul: 58"'
+      - 'img "Shop, Aug: 62"'
+      - 'img "Shop, Sep: 66"'
+      - 'img "Shop, Oct: 70"'
+      - 'img "Shop, Nov: 82"'
+      - 'img "Shop, Dec: 95"'
+    - group "App":
+      - 'img "App, Jan: 20"'
+      - 'img "App, Feb: 24"'
+      - 'img "App, Mar: 30"'
+      - 'img "App, Apr: 34"'
+      - 'img "App, May: 40"'
+      - 'img "App, Jun: 46"'
+      - 'img "App, Jul: 50"'
+      - 'img "App, Aug: 56"'
+      - 'img "App, Sep: 60"'
+      - 'img "App, Oct: 66"'
+      - 'img "App, Nov: 74"'
+      - 'img "App, Dec: 88"'
+    - group "Partners":
+      - 'img "Partners, Jan: 10"'
+      - 'img "Partners, Feb: 12"'
+      - 'img "Partners, Mar: 11"'
+      - 'img "Partners, Apr: 14"'
+      - 'img "Partners, May: 16"'
+      - 'img "Partners, Jun: 18"'
+      - 'img "Partners, Jul: 17"'
+      - 'img "Partners, Aug: 20"'
+      - 'img "Partners, Sep: 22"'
+      - 'img "Partners, Oct: 24"'
+      - 'img "Partners, Nov: 28"'
+      - 'img "Partners, Dec: 30"'
+
 # AsTable
 - figure "Visitors and sign-ups":
   - text: Visitors and sign-ups
@@ -82,6 +159,31 @@
       - 'img "2027 target, South: 400"'
       - 'img "2027 target, East: 600"'
       - 'img "2027 target, West: 380"'
+
+# Donut
+- figure "Traffic by source":
+  - text: Traffic by source
+  - button "Show as table"
+  - group "Donut chart":
+    - 'img "Search: 4,200 (42%)"'
+    - 'img "Direct: 2,600 (26%)"'
+    - 'img "Social: 1,800 (18%)"'
+    - 'img "Email: 900 (9%)"'
+    - 'img "Referral: 500 (5%)"'
+
+# DonutOther
+- figure "Orders by province":
+  - text: Orders by province
+  - button "Show as table"
+  - group "Donut chart":
+    - 'img "Jawa Barat: 920 (22%)"'
+    - 'img "Jawa Timur: 780 (19%)"'
+    - 'img "Jawa Tengah: 640 (15%)"'
+    - 'img "DKI Jakarta: 610 (15%)"'
+    - 'img "Banten: 330 (7.9%)"'
+    - 'img "Sumatera Utara: 280 (6.7%)"'
+    - 'img "Sulawesi Selatan: 210 (5%)"'
+    - 'img "Other: 390 (9.4%)"'
 
 # EightBars
 - figure "Every chart color, with its pattern":
@@ -243,6 +345,13 @@
       - 'img "Sign-ups, Oct: 94"'
       - 'img "Sign-ups, Nov: 110"'
       - 'img "Sign-ups, Dec: 142"'
+
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- figure "Visitors and sign-ups"
 
 # LongText
 - figure "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice in a narrow column":

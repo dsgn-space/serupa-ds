@@ -1,18 +1,18 @@
-"use client";
-import * as React from "react";
-import { cn, isInvalid, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { useServerStyles } from "../../internal/serverStyles";
-import { component } from "../../internal/component";
-import { useFormReset } from "../../internal/useFormReset";
-import { useFieldsetDisabled } from "../../internal/useFieldsetDisabled";
-import { snap as snapToGrid } from "../../internal/step";
-import { useFieldLabel } from "../../internal/fieldLabel";
-import { useFieldControl } from "../../internal/field";
-import { delegateFocus, useAutoFocus } from "../../internal/focus";
-import { useLocale, useSettings } from "../../internal/provider";
-import { displayNumber } from "../../internal/numbers";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, isInvalid, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { useServerStyles } from '../../internal/serverStyles';
+import { component } from '../../internal/component';
+import { useFormReset } from '../../internal/useFormReset';
+import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
+import { snap as snapToGrid } from '../../internal/step';
+import { useFieldLabel } from '../../internal/fieldLabel';
+import { useFieldControl } from '../../internal/field';
+import { delegateFocus, useAutoFocus } from '../../internal/focus';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { en as words } from './labels';
 
 export type SliderValue = number | [number, number];
 /** A mark on a Slider's track: a value, and optional text shown under it. */
@@ -59,10 +59,10 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   showValue?: boolean | undefined;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, "aria-required": 1, "aria-invalid": 1, "aria-readonly": 1, autoFocus: 1, className: 1, "aria-label": 1, "aria-labelledby": 1, "aria-describedby": 1, "aria-errormessage": 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
 
 // The marks to draw: every step for true (every largeStep steps when that's over 100 ticks), or the listed values on the track.
-function markList(marks: SliderProps["marks"], min: number, max: number, step: number, large: number): SliderMark[] {
+function markList(marks: SliderProps['marks'], min: number, max: number, step: number, large: number): SliderMark[] {
   if (Array.isArray(marks)) return marks.filter((m) => m && isFinite(m.value) && m.value >= min && m.value <= max);
   if (marks !== true) return [];
   const every = (max - min) / step > 100 ? step * large : step, out: SliderMark[] = [];
@@ -77,10 +77,10 @@ function markList(marks: SliderProps["marks"], min: number, max: number, step: n
    onValueChange fires as it moves, onValueCommit once when a drag or key press that changed it ends. */
 /** Picks a number, or a range with two thumbs, on a track. */
 // The text a slider nudges inward to keep inside its box (GM2).
-const FIT = ".dk-slider__mark-label > span, .dk-slider__value > span";
+const FIT = '.dk-slider__mark-label > span, .dk-slider__value > span';
 
-export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Slider", function Slider(props, ref) {
-  const nameRef = useNameCheck("Slider", NAME_HOW.field);   // warns when it has no accessible name
+export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Slider', function Slider(props, ref) {
+  const nameRef = useNameCheck('Slider', NAME_HOW.field);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: a Slider in a row with its unit
   // after it (<div><Slider /><span>dB</span></div>) was left unnamed, undescribed and enabled (L8E84).
   props = useFieldControl(props);
@@ -106,8 +106,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   // A disabled <fieldset> around it disables it too, as it does native inputs.
   const inDisabledFieldset = useFieldsetDisabled(root);
   const disabled = !!props.disabled || inDisabledFieldset;
-  const invalid = isInvalid(props.invalid, props["aria-invalid"]);
-  const readOnly = !!props.readOnly || props["aria-readonly"] === true || props["aria-readonly"] === "true";
+  const invalid = isInvalid(props.invalid, props['aria-invalid']);
+  const readOnly = !!props.readOnly || props['aria-readonly'] === true || props['aria-readonly'] === 'true';
   const still = disabled || readOnly;   // nothing moves the value
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
   const out = (vs: number[]): SliderValue => (isRange ? [vs[0], vs[1]] : vs[0]);
@@ -134,9 +134,9 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   // nothing and calls no onValueCommit, as a key at the end doesn't (L8E109).
   const from = React.useRef<number[]>([]);
   const fromPoint = (x: number) => {
-    const r = root.current!.querySelector(".dk-slider__track")!.getBoundingClientRect();
+    const r = root.current!.querySelector('.dk-slider__track')!.getBoundingClientRect();
     let share = r.width ? (x - r.left) / r.width : 0;
-    if (getComputedStyle(root.current!).direction === "rtl") share = 1 - share;
+    if (getComputedStyle(root.current!).direction === 'rtl') share = 1 - share;
     return min + Math.min(1, Math.max(0, share)) * (max - min);
   };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -162,18 +162,18 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (still || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
     const by = (e.shiftKey ? large : 1) * step, v = latest.current[i];
     let n: number;
     switch (e.key) {
-      case "ArrowUp": n = v + by; break;
-      case "ArrowDown": n = v - by; break;
-      case "ArrowRight": n = rtl ? v - by : v + by; break;
-      case "ArrowLeft": n = rtl ? v + by : v - by; break;
-      case "PageUp": n = v + large * step; break;
-      case "PageDown": n = v - large * step; break;
-      case "Home": n = isRange && i === 1 ? latest.current[0] : min; break;
-      case "End": n = isRange && i === 0 ? latest.current[1] : max; break;
+      case 'ArrowUp': n = v + by; break;
+      case 'ArrowDown': n = v - by; break;
+      case 'ArrowRight': n = rtl ? v - by : v + by; break;
+      case 'ArrowLeft': n = rtl ? v + by : v - by; break;
+      case 'PageUp': n = v + large * step; break;
+      case 'PageDown': n = v - large * step; break;
+      case 'Home': n = isRange && i === 1 ? latest.current[0] : min; break;
+      case 'End': n = isRange && i === 0 ? latest.current[1] : max; break;
       default: return;
     }
     e.preventDefault();
@@ -189,10 +189,10 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   const names = props.thumbLabels || [sds.labels.sliderMinimum, sds.labels.sliderMaximum];
   // In a Field, its label names the slider (or a range's group) and its hint and error describe the thumb (or the group).
   const fieldLabel = useFieldLabel(props.id);
-  const labelledBy = props["aria-labelledby"] ?? (props["aria-label"] ? undefined : fieldLabel);
+  const labelledBy = props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel);
   const lo = isRange ? pct(vals[0]) : 0, hi = pct(vals[vals.length - 1]);
   const marks = markList(props.marks, min, max, step, large);
-  const labelled = marks.some((m) => m.label != null && m.label !== false && m.label !== "");
+  const labelled = marks.some((m) => m.label != null && m.label !== false && m.label !== '');
   // The value chip and the mark labels center on their points, but one near an end would hang past the slider and
   // widen the page (a hidden chip too): each is nudged inward to stay inside the slider's box (GM2).
   const fit = React.useCallback(() => {
@@ -200,10 +200,10 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
     if (!el) return;
     const parts = Array.from(el.querySelectorAll<HTMLElement>(FIT));
     if (!parts.length) return;
-    for (const p of parts) p.style.removeProperty("--dk-slider-nudge");
+    for (const p of parts) p.style.removeProperty('--dk-slider-nudge');
     const box = el.getBoundingClientRect();
     const by = parts.map((p) => { const r = p.getBoundingClientRect(); return r.width >= box.width ? 0 : Math.max(0, box.left - r.left) - Math.max(0, r.right - box.right); });
-    parts.forEach((p, i) => { if (by[i]) p.style.setProperty("--dk-slider-nudge", by[i] + "px"); });
+    parts.forEach((p, i) => { if (by[i]) p.style.setProperty('--dk-slider-nudge', by[i] + 'px'); });
   }, []);
   // Fitted again when the slider resizes, and when a label or the chip does on its own: a web font that loads after
   // the first fit makes the text wider or narrower while the slider keeps its size, and the old nudge would be wrong.
@@ -215,7 +215,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   };
   useIsoLayoutEffect(() => { fit(); watch(); });   // every render: the values, marks and their text may have moved them
   React.useEffect(() => {
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const o = new ResizeObserver(fit);
     ro.current = [o, new WeakSet()];
     watch();
@@ -223,32 +223,32 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>("Sl
   }, [fit]);
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); restyle(n); }}
-      role={isRange ? "group" : rest.role} aria-label={isRange ? props["aria-label"] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
-      aria-describedby={isRange ? props["aria-describedby"] : undefined}
-      className={cn("dk-slider", props.size === "sm" ? "dk-slider--size-sm" : "dk-slider--size-md", disabled && "dk-slider--disabled", readOnly && "dk-slider--readonly", invalid && "dk-slider--invalid", labelled && "dk-slider--mark-labels", props.className)}
-      data-component="slider" data-size={props.size === "sm" ? "sm" : "md"} data-disabled={disabled ? "" : undefined} data-readonly={readOnly ? "" : undefined} data-invalid={invalid ? "" : undefined}
+      role={isRange ? 'group' : rest.role} aria-label={isRange ? props['aria-label'] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
+      aria-describedby={isRange ? props['aria-describedby'] : undefined}
+      className={cn('dk-slider', props.size === 'sm' ? 'dk-slider--size-sm' : 'dk-slider--size-md', disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.className)}
+      data-component="slider" data-size={props.size === 'sm' ? 'sm' : 'md'} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
       onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       <div className="dk-slider__track">
-        <div className="dk-slider__fill" style={{ insetInlineStart: lo + "%", inlineSize: hi - lo + "%" }} />
+        <div className="dk-slider__fill" style={{ insetInlineStart: lo + '%', inlineSize: hi - lo + '%' }} />
         {marks.map((m, i) => (
-          <span key={i} className="dk-slider__mark" style={{ insetInlineStart: pct(m.value) + "%" }} aria-hidden="true">
+          <span key={i} className="dk-slider__mark" style={{ insetInlineStart: pct(m.value) + '%' }} aria-hidden="true">
             {m.value > min && m.value < max ? <span className="dk-slider__tick" /> : null}
             {m.label != null && m.label !== false ? <span className="dk-slider__mark-label"><span>{m.label}</span></span> : null}
           </span>
         ))}
         {vals.map((v, i) => (
-          <span key={i} ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__thumb" style={{ insetInlineStart: pct(v) + "%" }}
+          <span key={i} ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__thumb" style={{ insetInlineStart: pct(v) + '%' }}
             role="slider" tabIndex={disabled ? -1 : 0} aria-valuenow={v} aria-valuemin={isRange && i === 1 ? vals[0] : min} aria-valuemax={isRange && i === 0 ? vals[1] : max}
             aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation="horizontal" aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
             // The error goes where aria-invalid is: on the root <div> it pointed nowhere a screen reader looks (L8E87).
-            aria-errormessage={invalid ? props["aria-errormessage"] : undefined}
-            aria-label={isRange ? names[i] : props["aria-label"]} aria-labelledby={isRange ? undefined : labelledBy}
-            aria-describedby={isRange ? undefined : props["aria-describedby"]}
+            aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
+            aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
+            aria-describedby={isRange ? undefined : props['aria-describedby']}
             onKeyDown={onKeyDown(i)}>{props.showValue ? <span className="dk-slider__value" aria-hidden="true"><span>{text(v)}</span></span> : null}</span>
         ))}
       </div>
-      {props.name ? vals.map((v, i) => <input key={"in" + i} type="hidden" name={props.name} form={props.form} value={v} disabled={disabled} />) : null}
+      {props.name ? vals.map((v, i) => <input key={'in' + i} type="hidden" name={props.name} form={props.form} value={v} disabled={disabled} />) : null}
     </div>
   );
 }) as (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };

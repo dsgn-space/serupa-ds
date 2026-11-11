@@ -1,0 +1,269 @@
+# Default
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - text: "3"
+    - list "To do":
+      - listitem:
+        - button "Move Fix login on Safari"
+        - text: Fix login on Safari Bug
+        - button "Move Fix login on Safari to…"
+      - listitem:
+        - button "Move Write the release notes"
+        - text: Write the release notes
+        - button "Move Write the release notes to…"
+      - listitem:
+        - button "Move Translate checkout into Indonesian"
+        - text: Translate checkout into Indonesian
+        - button "Move Translate checkout into Indonesian to…"
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - text: 3 of 2 Over limit
+    - list "In progress":
+      - listitem:
+        - button "Move Dark mode for charts"
+        - text: Dark mode for charts
+        - button "Move Dark mode for charts to…"
+      - listitem:
+        - button "Move Invoice PDF export"
+        - text: Invoice PDF export Feature
+        - button "Move Invoice PDF export to…"
+      - listitem:
+        - button "Move Audit form labels"
+        - text: Audit form labels
+        - button "Move Audit form labels to…"
+  - region "In review":
+    - heading "In review" [level=3]
+    - text: 1 of 3
+    - list "In review":
+      - listitem:
+        - button "Move Cart summary block"
+        - text: Cart summary block
+        - button "Move Cart summary block to…"
+  - region "Done":
+    - heading "Done" [level=3]
+    - text: "0"
+    - list "Done":
+      - listitem: No cards
+
+# Disabled
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - text: "3"
+    - list "To do":
+      - listitem: Fix login on Safari Bug
+      - listitem: Write the release notes
+      - listitem: Translate checkout into Indonesian
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - text: 3 of 2 Over limit
+    - list "In progress":
+      - listitem: Dark mode for charts
+      - listitem: Invoice PDF export Feature
+      - listitem: Audit form labels
+  - region "In review":
+    - heading "In review" [level=3]
+    - text: 1 of 3
+    - list "In review":
+      - listitem: Cart summary block
+  - region "Done":
+    - heading "Done" [level=3]
+    - text: "0"
+    - list "Done":
+      - listitem: No cards
+
+# HeadingLevel
+- group "Board":
+  - region "To do":
+    - heading "To do" [level=2]
+    - text: "3"
+    - list "To do":
+      - listitem:
+        - button "Move Fix login on Safari"
+        - text: Fix login on Safari Bug
+        - button "Move Fix login on Safari to…"
+      - listitem:
+        - button "Move Write the release notes"
+        - text: Write the release notes
+        - button "Move Write the release notes to…"
+      - listitem:
+        - button "Move Translate checkout into Indonesian"
+        - text: Translate checkout into Indonesian
+        - button "Move Translate checkout into Indonesian to…"
+  - region "In progress":
+    - heading "In progress" [level=2]
+    - text: 3 of 2 Over limit
+    - list "In progress":
+      - listitem:
+        - button "Move Dark mode for charts"
+        - text: Dark mode for charts
+        - button "Move Dark mode for charts to…"
+      - listitem:
+        - button "Move Invoice PDF export"
+        - text: Invoice PDF export Feature
+        - button "Move Invoice PDF export to…"
+      - listitem:
+        - button "Move Audit form labels"
+        - text: Audit form labels
+        - button "Move Audit form labels to…"
+
+# LongText
+- group "Sprint 42":
+  - region "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung":
+    - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung" [level=3]
+    - text: "1"
+    - list "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung":
+      - listitem:
+        - button "Move Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung 🎉 and a title long enough to wrap twice"
+        - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung 🎉 and a title long enough to wrap twice
+        - button "Move Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung 🎉 and a title long enough to wrap twice to…"
+  - region "Many":
+    - heading "Many" [level=3]
+    - text: 12 of 4 Over limit
+    - list "Many":
+      - listitem:
+        - button "Move Card 1"
+        - text: Card 1
+        - button "Move Card 1 to…"
+      - listitem:
+        - button "Move Card 2"
+        - text: Card 2
+        - button "Move Card 2 to…"
+      - listitem:
+        - button "Move Card 3"
+        - text: Card 3
+        - button "Move Card 3 to…"
+      - listitem:
+        - button "Move Card 4"
+        - text: Card 4
+        - button "Move Card 4 to…"
+      - listitem:
+        - button "Move Card 5"
+        - text: Card 5
+        - button "Move Card 5 to…"
+      - listitem:
+        - button "Move Card 6"
+        - text: Card 6
+        - button "Move Card 6 to…"
+      - listitem:
+        - button "Move Card 7"
+        - text: Card 7
+        - button "Move Card 7 to…"
+      - listitem:
+        - button "Move Card 8"
+        - text: Card 8
+        - button "Move Card 8 to…"
+      - listitem:
+        - button "Move Card 9"
+        - text: Card 9
+        - button "Move Card 9 to…"
+      - listitem:
+        - button "Move Card 10"
+        - text: Card 10
+        - button "Move Card 10 to…"
+      - listitem:
+        - button "Move Card 11"
+        - text: Card 11
+        - button "Move Card 11 to…"
+      - listitem:
+        - button "Move Card 12"
+        - text: Card 12
+        - button "Move Card 12 to…"
+
+# Narrow
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - text: "3"
+    - list "To do":
+      - listitem:
+        - button "Move Fix login on Safari"
+        - text: Fix login on Safari Bug
+        - button "Move Fix login on Safari to…"
+      - listitem:
+        - button "Move Write the release notes"
+        - text: Write the release notes
+        - button "Move Write the release notes to…"
+      - listitem:
+        - button "Move Translate checkout into Indonesian"
+        - text: Translate checkout into Indonesian
+        - button "Move Translate checkout into Indonesian to…"
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - text: 3 of 2 Over limit
+    - list "In progress":
+      - listitem:
+        - button "Move Dark mode for charts"
+        - text: Dark mode for charts
+        - button "Move Dark mode for charts to…"
+      - listitem:
+        - button "Move Invoice PDF export"
+        - text: Invoice PDF export Feature
+        - button "Move Invoice PDF export to…"
+      - listitem:
+        - button "Move Audit form labels"
+        - text: Audit form labels
+        - button "Move Audit form labels to…"
+  - region "In review":
+    - heading "In review" [level=3]
+    - text: 1 of 3
+    - list "In review":
+      - listitem:
+        - button "Move Cart summary block"
+        - text: Cart summary block
+        - button "Move Cart summary block to…"
+  - region "Done":
+    - heading "Done" [level=3]
+    - text: "0"
+    - list "Done":
+      - listitem: No cards
+
+# Playground
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - text: "3"
+    - list "To do":
+      - listitem:
+        - button "Move Fix login on Safari"
+        - text: Fix login on Safari Bug
+        - button "Move Fix login on Safari to…"
+      - listitem:
+        - button "Move Write the release notes"
+        - text: Write the release notes
+        - button "Move Write the release notes to…"
+      - listitem:
+        - button "Move Translate checkout into Indonesian"
+        - text: Translate checkout into Indonesian
+        - button "Move Translate checkout into Indonesian to…"
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - text: 3 of 2 Over limit
+    - list "In progress":
+      - listitem:
+        - button "Move Dark mode for charts"
+        - text: Dark mode for charts
+        - button "Move Dark mode for charts to…"
+      - listitem:
+        - button "Move Invoice PDF export"
+        - text: Invoice PDF export Feature
+        - button "Move Invoice PDF export to…"
+      - listitem:
+        - button "Move Audit form labels"
+        - text: Audit form labels
+        - button "Move Audit form labels to…"
+  - region "In review":
+    - heading "In review" [level=3]
+    - text: 1 of 3
+    - list "In review":
+      - listitem:
+        - button "Move Cart summary block"
+        - text: Cart summary block
+        - button "Move Cart summary block to…"
+  - region "Done":
+    - heading "Done" [level=3]
+    - text: "0"
+    - list "Done":
+      - listitem: No cards
+

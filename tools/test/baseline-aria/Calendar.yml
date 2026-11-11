@@ -942,3 +942,113 @@
       - gridcell "Saturday, April 5, 2025":
         - button "Saturday, April 5, 2025": "5"
 
+# WithPresets
+- button "Previous month"
+- heading "September 2025" [level=2]
+- button "Next month"
+- grid "September 2025":
+  - rowgroup:
+    - row "Sunday Monday Tuesday Wednesday Thursday Friday Saturday":
+      - columnheader "Sunday"
+      - columnheader "Monday"
+      - columnheader "Tuesday"
+      - columnheader "Wednesday"
+      - columnheader "Thursday"
+      - columnheader "Friday"
+      - columnheader "Saturday"
+  - rowgroup:
+    - row "Sunday, August 31, 2025 Monday, September 1, 2025 Tuesday, September 2, 2025 Wednesday, September 3, 2025 Thursday, September 4, 2025 Friday, September 5, 2025 Saturday, September 6, 2025":
+      - gridcell "Sunday, August 31, 2025":
+        - button "Sunday, August 31, 2025": "31"
+      - gridcell "Monday, September 1, 2025" [selected]:
+        - button "Monday, September 1, 2025": "1"
+      - gridcell "Tuesday, September 2, 2025":
+        - button "Tuesday, September 2, 2025": "2"
+      - gridcell "Wednesday, September 3, 2025":
+        - button "Wednesday, September 3, 2025": "3"
+      - gridcell "Thursday, September 4, 2025":
+        - button "Thursday, September 4, 2025": "4"
+      - gridcell "Friday, September 5, 2025":
+        - button "Friday, September 5, 2025": "5"
+      - gridcell "Saturday, September 6, 2025":
+        - button "Saturday, September 6, 2025": "6"
+    - row "Sunday, September 7, 2025 Monday, September 8, 2025 Tuesday, September 9, 2025 Wednesday, September 10, 2025 Thursday, September 11, 2025 Friday, September 12, 2025 Saturday, September 13, 2025":
+      - gridcell "Sunday, September 7, 2025":
+        - button "Sunday, September 7, 2025": "7"
+      - gridcell "Monday, September 8, 2025":
+        - button "Monday, September 8, 2025": "8"
+      - gridcell "Tuesday, September 9, 2025":
+        - button "Tuesday, September 9, 2025": "9"
+      - gridcell "Wednesday, September 10, 2025":
+        - button "Wednesday, September 10, 2025": "10"
+      - gridcell "Thursday, September 11, 2025":
+        - button "Thursday, September 11, 2025": "11"
+      - gridcell "Friday, September 12, 2025":
+        - button "Friday, September 12, 2025": "12"
+      - gridcell "Saturday, September 13, 2025":
+        - button "Saturday, September 13, 2025": "13"
+    - row "Sunday, September 14, 2025 Monday, September 15, 2025 Tuesday, September 16, 2025 Wednesday, September 17, 2025 Thursday, September 18, 2025 Friday, September 19, 2025 Saturday, September 20, 2025":
+      - gridcell "Sunday, September 14, 2025":
+        - button "Sunday, September 14, 2025": "14"
+      - gridcell "Monday, September 15, 2025":
+        - button "Monday, September 15, 2025": "15"
+      - gridcell "Tuesday, September 16, 2025":
+        - button "Tuesday, September 16, 2025": "16"
+      - gridcell "Wednesday, September 17, 2025":
+        - button "Wednesday, September 17, 2025": "17"
+      - gridcell "Thursday, September 18, 2025":
+        - button "Thursday, September 18, 2025": "18"
+      - gridcell "Friday, September 19, 2025":
+        - button "Friday, September 19, 2025": "19"
+      - gridcell "Saturday, September 20, 2025":
+        - button "Saturday, September 20, 2025": "20"
+    - row "Sunday, September 21, 2025 Monday, September 22, 2025 Tuesday, September 23, 2025 Wednesday, September 24, 2025 Thursday, September 25, 2025 Friday, September 26, 2025 Saturday, September 27, 2025":
+      - gridcell "Sunday, September 21, 2025":
+        - button "Sunday, September 21, 2025": "21"
+      - gridcell "Monday, September 22, 2025":
+        - button "Monday, September 22, 2025": "22"
+      - gridcell "Tuesday, September 23, 2025":
+        - button "Tuesday, September 23, 2025": "23"
+      - gridcell "Wednesday, September 24, 2025":
+        - button "Wednesday, September 24, 2025": "24"
+      - gridcell "Thursday, September 25, 2025":
+        - button "Thursday, September 25, 2025": "25"
+      - gridcell "Friday, September 26, 2025":
+        - button "Friday, September 26, 2025": "26"
+      - gridcell "Saturday, September 27, 2025":
+        - button "Saturday, September 27, 2025": "27"
+    - row "Sunday, September 28, 2025 Monday, September 29, 2025 Tuesday, September 30, 2025 Wednesday, October 1, 2025 Thursday, October 2, 2025 Friday, October 3, 2025 Saturday, October 4, 2025":
+      - gridcell "Sunday, September 28, 2025":
+        - button "Sunday, September 28, 2025": "28"
+      - gridcell "Monday, September 29, 2025":
+        - button "Monday, September 29, 2025": "29"
+      - gridcell "Tuesday, September 30, 2025":
+        - button "Tuesday, September 30, 2025": "30"
+      - gridcell "Wednesday, October 1, 2025":
+        - button "Wednesday, October 1, 2025": "1"
+      - gridcell "Thursday, October 2, 2025":
+        - button "Thursday, October 2, 2025": "2"
+      - gridcell "Friday, October 3, 2025":
+        - button "Friday, October 3, 2025": "3"
+      - gridcell "Saturday, October 4, 2025":
+        - button "Saturday, October 4, 2025": "4"
+    - row "Sunday, October 5, 2025 Monday, October 6, 2025 Tuesday, October 7, 2025 Wednesday, October 8, 2025 Thursday, October 9, 2025 Friday, October 10, 2025 Saturday, October 11, 2025":
+      - gridcell "Sunday, October 5, 2025":
+        - button "Sunday, October 5, 2025": "5"
+      - gridcell "Monday, October 6, 2025":
+        - button "Monday, October 6, 2025": "6"
+      - gridcell "Tuesday, October 7, 2025":
+        - button "Tuesday, October 7, 2025": "7"
+      - gridcell "Wednesday, October 8, 2025":
+        - button "Wednesday, October 8, 2025": "8"
+      - gridcell "Thursday, October 9, 2025":
+        - button "Thursday, October 9, 2025": "9"
+      - gridcell "Friday, October 10, 2025":
+        - button "Friday, October 10, 2025": "10"
+      - gridcell "Saturday, October 11, 2025":
+        - button "Saturday, October 11, 2025": "11"
+- group "Shortcuts":
+  - button "Start of term" [pressed]
+  - button "Mid-term break"
+  - button "End of term"
+

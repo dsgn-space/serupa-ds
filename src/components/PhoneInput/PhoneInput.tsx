@@ -1,21 +1,22 @@
-"use client";
-import * as React from "react";
-import { pressFocuses } from "../../internal/affix";
-import { cn, isInvalid, omit, oneOf, SIZES } from "../../internal/cn";
-import { Icon } from "../Icon/Icon";
-import type { InputProps } from "../Input/Input";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { useFieldControl } from "../../internal/field";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { useLocale, useSettings } from "../../internal/provider";
-import { collatorFor } from "../../internal/collator";
-import * as icons from "../../material/builtin";
-import { warnOnce } from "../../internal/warn";
-import { useFormReset } from "../../internal/useFormReset";
-import { latinDigits } from "../../internal/digits";
-import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, phoneOnly, stripTrunk, toE164, type PhoneCountry } from "./phone";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { pressFocuses } from '../../internal/affix';
+import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
+import { Icon } from '../Icon/Icon';
+import type { InputProps } from '../Input/Input';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { useFieldControl } from '../../internal/field';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { useLocale, useSettings } from '../../internal/provider';
+import { collatorFor } from '../../internal/collator';
+import * as icons from '../../material/builtin';
+import { warnOnce } from '../../internal/warn';
+import { useFormReset } from '../../internal/useFormReset';
+import { latinDigits } from '../../internal/digits';
+import { PHONE_COUNTRIES, formatNational, isPhoneComplete, parsePhone, phoneCountry, phoneOnly, stripTrunk, toE164, type PhoneCountry } from './phone';
+import { en as words } from './labels';
+import { isComposing } from '../../internal/ime';
 
 /** What onValueChange reports with the E.164 number. */
 export interface PhoneValueDetails {
@@ -27,7 +28,7 @@ export interface PhoneValueDetails {
   complete: boolean;
 }
 
-export interface PhoneInputProps extends Omit<InputProps, "type" | "showCount" | "prefix" | "suffix" | "value" | "defaultValue" | "onChange" | "leftIcon" | "rightIcon"> {
+export interface PhoneInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'value' | 'defaultValue' | 'onChange' | 'leftIcon' | 'rightIcon'> {
   /** The number in E.164, such as "+6281234567890", or "" (controlled). Use with onValueChange. */
   value?: string | undefined;
   /** The number at first (uncontrolled), in E.164. */
@@ -68,19 +69,19 @@ const caretAfter = (text: string, n: number): number => {
    Pasting or typing "+…" picks the country from the calling code; a typed trunk "0" is dropped. className and
    style go to the box; ref and the other input props to the tel <input>. */
 /** A phone number field: a country menu and a tel field that groups the number as people type, reporting E.164 ("+6281234567890"). */
-export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInputProps>("PhoneInput", function PhoneInput(props, ref) {
+export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInputProps>('PhoneInput', function PhoneInput(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
-  const nameRef = useNameCheck("PhoneInput", NAME_HOW.field);   // warns when it has no accessible name
+  const nameRef = useNameCheck('PhoneInput', NAME_HOW.field);   // warns when it has no accessible name
   const sds = useSettings(words);
   const locale = useLocale();
   const rest = omit(props, own);
-  const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  if (invalid) rest["aria-invalid"] = true;
+  const size = oneOf(SIZES, props.size, 'md');
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  if (invalid) rest['aria-invalid'] = true;
 
   // The rows this field knows: the built-in ones, with any rows passed in countries in place of the same code.
   const table = React.useMemo(function () {
-    const mine = (props.countries || []).filter((c): c is PhoneCountry => typeof c === "object" && !!c && !!c.code);
+    const mine = (props.countries || []).filter((c): c is PhoneCountry => typeof c === 'object' && !!c && !!c.code);
     if (!mine.length) return PHONE_COUNTRIES;
     const codes = new Set(mine.map((c) => c.code.toUpperCase()));
     return mine.map((c) => ({ ...c, code: c.code.toUpperCase() })).concat(PHONE_COUNTRIES.filter((c) => !codes.has(c.code)));
@@ -92,18 +93,18 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   const hydrated = React.useSyncExternalStore(never, yes, no);
   const list = React.useMemo(function () {
     const pick = (code: string | undefined) => (code ? table.find((c) => c.code === code.toUpperCase()) : undefined);
-    const picked = props.countries ? props.countries.map((c) => pick(typeof c === "string" ? c : c && c.code)).filter((c): c is PhoneCountry => !!c) : table.slice();
+    const picked = props.countries ? props.countries.map((c) => pick(typeof c === 'string' ? c : c && c.code)).filter((c): c is PhoneCountry => !!c) : table.slice();
     const order = collatorFor(locale);
     let names: Intl.DisplayNames | undefined;
-    try { names = new Intl.DisplayNames([locale], { type: "region" }); } catch { names = undefined; }
+    try { names = new Intl.DisplayNames([locale], { type: 'region' }); } catch { names = undefined; }
     return picked.map((c) => ({ c, name: (names && names.of(c.code)) || c.code })).sort((a, b) => order.compare(a.name, b.name));
   }, [props.countries, table, locale]);
-  const fallback = find(props.defaultCountry) || find(regionOf(locale)) || find("US") || phoneCountry("US")!;
-  const start = parsePhone(props.value ?? props.defaultValue ?? "", props.country ?? props.defaultCountry, table);
+  const fallback = find(props.defaultCountry) || find(regionOf(locale)) || find('US') || phoneCountry('US')!;
+  const start = parsePhone(props.value ?? props.defaultValue ?? '', props.country ?? props.defaultCountry, table);
 
   const [ownCountry, setOwnCountry] = React.useState<string>(() => (start ? start.country.code : fallback.code));
   const country = find(props.country) || find(ownCountry) || fallback;
-  const [national, setNational] = React.useState(() => (start ? start.national : ""));
+  const [national, setNational] = React.useState(() => (start ? start.national : ''));
   // A calling code being typed ("+", "+4", "00"): shown as typed until it names a country, which it then picks, as a
   // pasted "+44 …" does. Without it the lone "+" formats to nothing, and "+44 20…" became a US number (GR83).
   const [lead, setLead] = React.useState<string | null>(null);
@@ -111,33 +112,32 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   // through the menu (a change per arrow) doesn't leave it cut to the shortest country passed on the way.
   const typed = React.useRef(national);
   // A controlled value that changed from outside (not the one this field just reported) is read again.
-  const reported = React.useRef(start ? toE164(start.national, start.country) : "");
+  const reported = React.useRef(start ? toE164(start.national, start.country) : '');
   let shown = national;
   if (props.value !== undefined && props.value !== reported.current) {
     const p = parsePhone(props.value, country.code, table);
-    shown = p ? p.national : "";
+    shown = p ? p.national : '';
     reported.current = props.value;
     if (shown !== national) { setNational(shown); typed.current = shown; }
     if (p && p.country.code !== country.code && props.country === undefined) setOwnCountry(p.country.code);
   }
 
   const input = React.useRef<HTMLInputElement | null>(null);
-  const setRef = React.useCallback(function (node: HTMLInputElement | null) {
+  const setRef = useMergedRef(ref, function (node: HTMLInputElement | null) {
     input.current = node;
     nameRef(node);
-    if (typeof ref === "function") ref(node); else if (ref) ref.current = node;
-  }, [ref, nameRef]);
+  });
   // A form reset puts the default number and country back (uncontrolled), in the field and in what the form sends; a
   // controlled field shows its value again (the browser reset the text to its first value).
   const [, rerender] = React.useState(0);
   useFormReset(input, () => {
     setLead(null);
     if (props.value === undefined) {
-      const d = parsePhone(props.defaultValue ?? "", props.defaultCountry, table);
-      setNational(d ? d.national : "");
-      typed.current = d ? d.national : "";
+      const d = parsePhone(props.defaultValue ?? '', props.defaultCountry, table);
+      setNational(d ? d.national : '');
+      typed.current = d ? d.national : '';
       if (props.country === undefined) setOwnCountry(d ? d.country.code : fallback.code);
-      reported.current = d ? toE164(d.national, d.country) : "";
+      reported.current = d ? toE164(d.national, d.country) : '';
     }
     rerender((n) => n + 1);
     // React can render that before the browser resets the fields (it runs right after this event), and the reset
@@ -179,21 +179,21 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
     // Digits in any script as ASCII, and full-width "＋" and digits as the usual ones: an Arabic or Persian keyboard
     // types ٠٨١٢, a Japanese IME ０８１２, and they're the same number (GR43). One character stays one, so the caret holds.
     // A pasted tel: link or a number with an extension keeps only the number (GR128, GR129).
-    const raw = phoneOnly(latinDigits(e.target.value.normalize("NFKC"))), at = Math.min(e.target.selectionStart ?? raw.length, raw.length);
-    let before = raw.slice(0, at).replace(/\D/g, "").length;
+    const raw = phoneOnly(latinDigits(e.target.value.normalize('NFKC'))), at = Math.min(e.target.selectionStart ?? raw.length, raw.length);
+    let before = raw.slice(0, at).replace(/\D/g, '').length;
     // A lone "0" waits as typed, so the "00" of "0044" can come together: where it's the trunk prefix (Germany) it
     // stripped to nothing, and the +1 pattern wrote it "(0" (GR85). The next digit decides what it was: "06" is still
     // Rome's number in Italy.
-    if (raw.trim() === "0") { commit("", country); setLead("0"); caret.current = 1; return; }
+    if (raw.trim() === '0') { commit('', country); setLead('0'); caret.current = 1; return; }
     if (/^\s*(\+|00)/.test(raw)) {
       const p = parsePhone(raw, country.code, table);
       if (p) { const d = commit(p.national, p.country); caret.current = formatNational(d, p.country).length; return; }
       // Only the start of a calling code so far: keep it in the field, and the number empty, until it names a country.
       const code = raw.trim();
-      if (/^(\+|00)\d{0,3}$/.test(code)) { commit("", country); setLead(code); caret.current = code.length; return; }
-      if (process.env.NODE_ENV !== "production" && raw.replace(/\D/g, "").length > 3) warnOnce("phone-code", `PhoneInput: "${raw.trim()}" starts with a calling code PhoneInput doesn't know, so its digits are read as a number in ${country.code}. Pass the country's row in countries.`);
+      if (/^(\+|00)\d{0,3}$/.test(code)) { commit('', country); setLead(code); caret.current = code.length; return; }
+      if (process.env.NODE_ENV !== 'production' && raw.replace(/\D/g, '').length > 3) warnOnce('phone-code', `PhoneInput: "${raw.trim()}" starts with a calling code PhoneInput doesn't know, so its digits are read as a number in ${country.code}. Pass the country's row in countries.`);
     }
-    const all = raw.replace(/\D/g, "");
+    const all = raw.replace(/\D/g, '');
     let digits = stripTrunk(all, country);
     // Too long for a national number but starts with the calling code ("62 812…" typed with Indonesia picked): the
     // code was typed without "+", so it's dropped rather than written twice.
@@ -208,15 +208,16 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
     props.onKeyDown?.(e);
     const el = e.currentTarget, s = el.selectionStart, end = el.selectionEnd;
     // With Alt, Ctrl or ⌘ held, Backspace and Delete take a word or the line: the browser's, not one digit (L8E30).
-    // A readOnly field takes no edit from them either (L8E69).
-    if (e.defaultPrevented || el.readOnly || e.altKey || e.ctrlKey || e.metaKey || s == null || s !== end || (e.key !== "Backspace" && e.key !== "Delete")) return;
-    const back = e.key === "Backspace";
+    // A readOnly field takes no edit from them either (L8E69), and while an input method is composing they edit the
+    // composition (Safari sends the keydown with isComposing).
+    if (e.defaultPrevented || el.readOnly || isComposing(e) || e.altKey || e.ctrlKey || e.metaKey || s == null || s !== end || (e.key !== 'Backspace' && e.key !== 'Delete')) return;
+    const back = e.key === 'Backspace';
     let i = back ? s - 1 : s;
     if (i < 0 || i >= text.length || /\d/.test(text[i])) return;
     while (i >= 0 && i < text.length && !/\d/.test(text[i])) i += back ? -1 : 1;
     if (i < 0 || i >= text.length) return;
     e.preventDefault();
-    const n = text.slice(0, i).replace(/\D/g, "").length;   // digits before the one removed
+    const n = text.slice(0, i).replace(/\D/g, '').length;   // digits before the one removed
     commit(shown.slice(0, n) + shown.slice(n + 1), country);
     caret.current = caretAfter(formatNational(shown.slice(0, n) + shown.slice(n + 1), country), n);
   };
@@ -229,9 +230,9 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   // The 244 options as elements made once per list, so typing (a render per key) doesn't rebuild and compare them all.
   // The calling code sits in a left-to-right isolate (U+2066 … U+2069; an option can't be styled), so a right-to-left
   // page writes "مصر (+20)", not "(20+)" (GR49).
-  const options = React.useMemo(() => list.map(({ c, name }) => <option key={(hydrated ? "" : "server-") + c.code} value={c.code} suppressHydrationWarning>{name + " (\u2066+" + c.dial + "\u2069)"}</option>), [list, hydrated]);
+  const options = React.useMemo(() => list.map(({ c, name }) => <option key={(hydrated ? '' : 'server-') + c.code} value={c.code} suppressHydrationWarning>{name + ' (\u2066+' + c.dial + '\u2069)'}</option>), [list, hydrated]);
   return (
-    <span className={cn("dk-input dk-phone-input", "dk-input--size-" + size, invalid && "dk-input--invalid", rest.disabled && "dk-input--disabled", rest.readOnly && "dk-input--readonly", props.className)}
+    <span className={cn('dk-input dk-phone-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
       style={props.style} data-component="phone-input" data-size={size} onMouseDown={pressFocuses(input)}>
       <span className="dk-phone-input__country">
         <span className="dk-phone-input__dial" aria-hidden>+{country.dial}</span>

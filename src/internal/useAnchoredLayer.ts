@@ -1,7 +1,8 @@
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
-import { markDismissal } from "./layers";
-import { cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Placement } from "./position";
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
+import { onFontsLoaded } from './fontsLoaded';
+import { markDismissal } from './layers';
+import { cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Placement } from './position';
 
 type Ref = React.RefObject<HTMLElement | null>;
 
@@ -33,7 +34,7 @@ export interface AnchoredLayerOptions {
     moving outside them and the anchor calls onFocusOutside. Focus is the caller's: do it in a layout effect
     declared after this hook, which runs once the layer is shown and placed. */
 export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: AnchoredLayerOptions): void {
-  const { placement, fallback = "bottom", offsetVar, inside, matchWidth, watch, docked } = opts;
+  const { placement, fallback = 'bottom', offsetVar, inside, matchWidth, watch, docked } = opts;
   const outside = React.useRef(opts.onOutside), focusOutside = React.useRef(opts.onFocusOutside);
   // every render: keeps the latest callbacks, so the listeners below needn't be added again when they change.
   useIsoLayoutEffect(() => { outside.current = opts.onOutside; focusOutside.current = opts.onFocusOutside; });
@@ -42,36 +43,40 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     if (!p) return;
     if (!open || !a) { hideLayer(p); return; }
     if (docked) {
-      for (const k of ["left", "top", "max-height", "max-width", "overflow-y", "min-width"]) p.style.removeProperty(k);
-      p.setAttribute("data-side", "bottom");
+      for (const k of ['left', 'top', 'max-height', 'max-width', 'overflow-y', 'min-width']) p.style.removeProperty(k);
+      p.setAttribute('data-side', 'bottom');
       showLayer(p);
       return;
     }
     // A first guess at the side before it shows: showing resolves the layer's first style, which is when an entry
     // from @starting-style keyed on data-side (Tooltip's slide) is fixed. placeLayer corrects it on a flip.
-    firstSide(p, (placement || fallback || "bottom").split("-")[0]);
+    firstSide(p, (placement || fallback || 'bottom').split('-')[0]);
     showLayer(p);
     // The gap and the page's direction are style reads: once, and again only when sizes change (a density or
     // theme switch), not on every scroll.
     let offset = 0, rtl = false;
     const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(); };
     const update = () => {
-      if (matchWidth) p.style.minWidth = a.offsetWidth + "px";
+      if (matchWidth) p.style.minWidth = a.offsetWidth + 'px';
       placeLayer(p, a, placement, offset, fallback, rtl);
     };
     const resized = () => { measure(); update(); };
     // Scrolling inside the layer doesn't move it.
     const scrolled = (e: Event) => { if (!(e.target instanceof Node && p.contains(e.target))) update(); };
     resized();
-    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(resized) : null;
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(resized) : null;
     if (ro) { ro.observe(p); ro.observe(a); }
-    window.addEventListener("scroll", scrolled, true); window.addEventListener("resize", resized);
+    window.addEventListener('scroll', scrolled, true); window.addEventListener('resize', resized);
+    // A web font arriving moves text, and the anchor in it, without a resize a ResizeObserver sees: an inline
+    // anchor (a Link in a sentence) has no box for one, and one further down only moves.
+    const fontsOff = onFontsLoaded(resized);
     // A phone's keyboard opening, or pinch-zoom, moves the visual viewport without a window resize or scroll.
     const vv = window.visualViewport;
-    if (vv) { vv.addEventListener("resize", resized); vv.addEventListener("scroll", update); }
+    if (vv) { vv.addEventListener('resize', resized); vv.addEventListener('scroll', update); }
     return () => {
-      if (ro) ro.disconnect(); window.removeEventListener("scroll", scrolled, true); window.removeEventListener("resize", resized);
-      if (vv) { vv.removeEventListener("resize", resized); vv.removeEventListener("scroll", update); }
+      if (ro) ro.disconnect(); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
+      fontsOff();
+      if (vv) { vv.removeEventListener('resize', resized); vv.removeEventListener('scroll', update); }
     };
   }, [open, layer, anchor, placement, fallback, offsetVar, matchWidth, watch, docked]);
   React.useEffect(() => {
@@ -82,7 +87,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const down = (e: PointerEvent) => {
       touch = false;
       if (within(e.target, [layer, inside])) return;
-      if (e.pointerType === "touch") touch = true;
+      if (e.pointerType === 'touch') touch = true;
       else if (outside.current) { markDismissal(e); outside.current(); }
     };
     const cancel = () => { touch = false; };
@@ -92,19 +97,19 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
       if (!within(e.target, [layer, inside]) && outside.current) { markDismissal(e); outside.current(); }
     };
     const focus = (e: FocusEvent) => { if (focusOutside.current && !within(e.target, [layer, anchor, inside])) focusOutside.current(); };
-    document.addEventListener("pointerdown", down, true);
-    document.addEventListener("pointercancel", cancel, true);
-    document.addEventListener("click", click, true);
-    document.addEventListener("focusin", focus, true);
+    document.addEventListener('pointerdown', down, true);
+    document.addEventListener('pointercancel', cancel, true);
+    document.addEventListener('click', click, true);
+    document.addEventListener('focusin', focus, true);
     // The <dialog> or Drawer it sits in closing (a close() from code, a form's method="dialog") hides it with them,
     // but it stayed open and was back, open, the next time they opened (L8E104).
-    const box = layer.current && layer.current.parentElement && layer.current.parentElement.closest("dialog");
+    const box = layer.current && layer.current.parentElement && layer.current.parentElement.closest('dialog');
     const shut = () => { if (outside.current) outside.current(); };
-    if (box) box.addEventListener("close", shut);
+    if (box) box.addEventListener('close', shut);
     return () => {
-      if (box) box.removeEventListener("close", shut);
-      document.removeEventListener("pointerdown", down, true); document.removeEventListener("pointercancel", cancel, true);
-      document.removeEventListener("click", click, true); document.removeEventListener("focusin", focus, true);
+      if (box) box.removeEventListener('close', shut);
+      document.removeEventListener('pointerdown', down, true); document.removeEventListener('pointercancel', cancel, true);
+      document.removeEventListener('click', click, true); document.removeEventListener('focusin', focus, true);
     };
   }, [open, layer, anchor, inside]);
 }

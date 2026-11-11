@@ -25,6 +25,11 @@
   padding-inline: calc(var(--tree-view-indent, var(--spacing-4)) * var(--dk-tree-level, 0) + var(--tree-view-item-padding-x, var(--spacing-1))) var(--tree-view-item-padding-x, var(--spacing-1));
   border-radius: var(--tree-view-item-radius, var(--rounded-sm));
   cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  /* A row out of view isn't laid out until it scrolls near, at its own height while it waits (once drawn, the
+     height it had), so a tree of thousands of rows opens in a fraction of the time. Its text stays in the page,
+     for find in page and screen readers. The height held is the content's, inside the padding. */
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto calc(var(--tree-view-item-height, var(--control-height-md)) - var(--spacing-2));   /* the padding, above and below */
 }
 @media (hover: hover) { .dk-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--secondary)); } }
 /* Pressed: one step past hover while held, at once. Not on the picked row or a disabled one. */

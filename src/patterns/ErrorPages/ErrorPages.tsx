@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
@@ -33,9 +33,9 @@ export interface ErrorPageProps {
 const SITE = 'Acme';
 const TITLES: Record<ErrorPageKind, string> = {
   'not-found': 'Page not found',
-  offline: "You're offline",
+  offline: 'You’re offline',
   server: 'Something went wrong on our side',
-  'no-access': "You don't have access to this page",
+  'no-access': 'You don’t have access to this page',
 };
 
 /** One error page: a skip link, a header link home, then main with what happened, what to do, and a way back. */
@@ -75,13 +75,13 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
     server: {
       icon: 'error',
       what: 'Try again in a moment',
-      why: <>It isn't something you did. If it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
+      why: <>It isn’t something you did. If it keeps happening, contact support{reference ? <> and give them this reference: <span className="font-mono">{reference}</span></> : null}.</>,
       actions: <><Button onClick={retry}>Try again</Button>{toHome}</>,
     },
     'no-access': {
       icon: 'lock',
       what: 'Ask for access, or sign in with another account',
-      why: "This page belongs to a team or a person you aren't signed in as. Whoever shared the link can give you access.",
+      why: 'This page belongs to a team or a person you aren’t signed in as. Whoever shared the link can give you access.',
       actions: <>{toHome}<Button href="#sign-in" variant="secondary">Sign in as someone else</Button></>,
     },
   }[kind];
@@ -97,7 +97,7 @@ export function ErrorPage({ kind, onRetry, home = '/', reference }: ErrorPagePro
         <EmptyState icon={body.icon} headingLevel={2} title={body.what} description={body.why} actions={body.actions} />
         {kind === 'offline' ? (
           // Always there, so a screen reader is listening before the connection comes back.
-          <div role="status" className="text-center text-sm">{online ? "You're back online. Try again to load the page." : null}</div>
+          <div role="status" className="text-center text-sm">{online ? 'You’re back online. Try again to load the page.' : null}</div>
         ) : null}
       </main>
     </div>

@@ -13,18 +13,18 @@ export interface CarouselLabels {
   slideRole: string;
 }
 export const en: CarouselLabels = {
-  previousSlide: "Previous slide",
-  nextSlide: "Next slide",
-  slideOf: (slide, total) => slide + " of " + total,
-  slidesOf: (first, last, total) => first + "–" + last + " of " + total,
-  carouselRole: "carousel",
-  slideRole: "slide",
+  previousSlide: 'Previous slide',
+  nextSlide: 'Next slide',
+  slideOf: (slide, total) => slide + ' of ' + total,
+  slidesOf: (first, last, total) => first + '–' + last + ' of ' + total,
+  carouselRole: 'carousel',
+  slideRole: 'slide',
 };
 export const id: CarouselLabels = {
-  previousSlide: "Slide sebelumnya",
-  nextSlide: "Slide berikutnya",
-  slideOf: (slide, total) => slide + " dari " + total,
-  slidesOf: (first, last, total) => first + "–" + last + " dari " + total,
-  carouselRole: "korsel",
-  slideRole: "slide",
+  previousSlide: 'Slide sebelumnya',
+  nextSlide: 'Slide berikutnya',
+  slideOf: (slide, total) => slide + ' dari ' + total,
+  slidesOf: (first, last, total) => first + '–' + last + ' dari ' + total,
+  carouselRole: 'korsel',
+  slideRole: 'slide',
 };

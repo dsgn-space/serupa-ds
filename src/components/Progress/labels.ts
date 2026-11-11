@@ -5,8 +5,8 @@ export interface ProgressLabels {
   progressComplete: (name: string) => string;
 }
 export const en: ProgressLabels = {
-  progressComplete: (name) => (name ? name + ": complete" : "Complete"),
+  progressComplete: (name) => (name ? name + ': complete' : 'Complete'),
 };
 export const id: ProgressLabels = {
-  progressComplete: (name) => (name ? name + ": selesai" : "Selesai"),
+  progressComplete: (name) => (name ? name + ': selesai' : 'Selesai'),
 };

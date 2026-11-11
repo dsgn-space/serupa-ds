@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DescriptionList — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  var item = function (t, d, x) { return h(T.DescriptionItem, Object.assign({ key: t, term: t }, x), d); };
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { display: 'grid', gap: 24, maxWidth: 560 } },
+    h(T.DescriptionList, null, item('Name', 'Northwind redesign'), item('Owner', 'Ayu Lestari'), item('Created', '14 March 2026')),
+    h(T.DescriptionList, { layout: 'stacked' }, item('Name', 'Northwind redesign'), item('Owner', 'Ayu Lestari')),
+    h(T.DescriptionList, { layout: 'split', dividers: true }, item('Subtotal', 'Rp 240.000'), item('Delivery', 'Free'), item('Total', 'Rp 240.000', { emphasis: true }))));
+</script>
+</body>
+</html>

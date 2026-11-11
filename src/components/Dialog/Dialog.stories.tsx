@@ -66,3 +66,32 @@ export const UnsavedChanges: Story = {
     </>;
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't"). A modal dialog opens
+// over the whole page, so these draw its panel in place, with the Dialog's own classes, to sit side by side.
+function Sketch({ title, description, footer }: { title: string; description?: string; footer: React.ReactNode }) {
+  return <div className="dk-dialog__panel" style={{ width: 360, boxShadow: 'none', border: '1px solid var(--border)' }}>
+    <div className="dk-dialog__header"><div className="dk-dialog__heading"><h2 className="dk-dialog__title">{title}</h2>{description ? <p className="dk-dialog__description">{description}</p> : null}</div></div>
+    <div className="dk-dialog__footer">{footer}</div>
+  </div>;
+}
+/** Do: a title that asks the question, and buttons named for what they do. */
+export const DoAskTheQuestion: Story = {
+  name: 'Do: ask the question',
+  render: () => <Sketch title="Delete Atlas?" description="This removes the project and its files. It can’t be undone." footer={<><Button variant="secondary">Keep project</Button><Button destructive>Delete project</Button></>} />,
+};
+/** Don't: "Are you sure?" with OK and Cancel, which say nothing about what happens. */
+export const DontAreYouSure: Story = {
+  name: "Don't: Are you sure?",
+  render: () => <Sketch title="Are you sure?" description="This action can’t be undone." footer={<><Button variant="secondary">Cancel</Button><Button destructive>OK</Button></>} />,
+};
+/** Do: the main action last, at the end of the footer, where the eye ends. */
+export const DoMainActionLast: Story = {
+  name: 'Do: the main action last',
+  render: () => <Sketch title="Invite people" description="They’ll get an email with a link." footer={<><Button variant="secondary">Cancel</Button><Button>Send invite</Button></>} />,
+};
+/** Don't: the main action first, so people read past it to the way out. */
+export const DontMainActionFirst: Story = {
+  name: "Don't: the main action first",
+  render: () => <Sketch title="Invite people" description="They’ll get an email with a link." footer={<><Button>Send invite</Button><Button variant="secondary">Cancel</Button></>} />,
+};

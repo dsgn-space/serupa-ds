@@ -104,6 +104,19 @@ describe('CommandPalette', () => {
     } finally { history.replaceState(null, '', before || location.pathname + location.search); }
   });
 
+  test('an href that isn\'t a web page, mailto: or tel: (javascript:, data:) runs nothing and warns once', async () => {
+    const w = window as unknown as { __cmdkRan?: number };
+    w.__cmdkRan = 0;
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<CommandPalette id="x" defaultOpen commands={[{ id: 'js', label: 'Run', href: 'javascript:window.__cmdkRan=1' }, { id: 'jsu', label: 'Run upper', href: ' JavaScript:window.__cmdkRan=2' }]} />);
+      options()[0].click();
+      await expect.poll(() => isOpen('x')).toBe(false);
+      await new Promise((r) => setTimeout(r, 50));
+      expect([w.__cmdkRan, warn.mock.calls.filter((c) => String(c[0]).includes('command-palette-href') || String(c[0]).includes("isn't a web page")).length]).toEqual([0, 1]);
+    } finally { warn.mockRestore(); delete w.__cmdkRan; }
+  });
+
   test('a command runs after the palette has closed and given focus back: its onSelect can focus a field on the page (GR97)', async () => {
     const order: string[] = [];
     function App() {
@@ -167,7 +180,7 @@ describe('CommandPalette', () => {
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
     try {
-      await render(<CommandPalette defaultOpen commands={COMMANDS} />);
+      await render(<SerupaProvider locale="en"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);
       await userEvent.type(field(), 'pro');
       await expect.poll(() => said.at(-1)).toBe('1 command');   // the disabled one isn't counted
       await userEvent.type(field(), 'zzz');
@@ -196,6 +209,22 @@ describe('CommandPalette', () => {
       expect([el('cp').getAttribute('aria-label'), field().getAttribute('aria-label')]).toEqual(['Palet perintah', 'Cari perintah dan halaman']);
       await userEvent.type(field(), 'pro');
       await expect.poll(() => said.at(-1)).toBe('1 perintah');
+    } finally { seen.disconnect(); }
+  });
+
+  test('the count it says is in the locale\'s digits and grouping: "١ command" in ar-EG, "1,200 commands" in en-US', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    try {
+      const { unmount } = await render(<SerupaProvider locale="ar-EG"><CommandPalette defaultOpen commands={COMMANDS} /></SerupaProvider>);
+      await userEvent.type(field(), 'pro');
+      await expect.poll(() => said.at(-1)).toBe('١ command');
+      await unmount();
+      const many = Array.from({ length: 1200 }, (_, i) => ({ id: 'c' + i, label: 'Command ' + i }));
+      await render(<SerupaProvider locale="en-US"><CommandPalette defaultOpen commands={many} limit={2000} /></SerupaProvider>);
+      await userEvent.type(field(), 'com');
+      await expect.poll(() => said.at(-1)).toBe('1,200 commands');
     } finally { seen.disconnect(); }
   });
 

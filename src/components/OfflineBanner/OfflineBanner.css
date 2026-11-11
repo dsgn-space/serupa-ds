@@ -40,7 +40,7 @@
 .dk-offline-banner { --dk-offline-gap: var(--spacing-2); }
 :root:has(.dk-offline-banner--bottom:not([data-leaving])) { scroll-padding-bottom: var(--dk-offline-banner-space, var(--spacing-16)); }
 :root:has(.dk-offline-banner--top:not([data-leaving])) { scroll-padding-top: var(--dk-offline-banner-space, calc(var(--dk-navbar-offset, var(--spacing-0)) + var(--spacing-16))); }
-.dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom)); }
+.dk-offline-banner--bottom { inset-block-end: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-bottom), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--offline-banner-offset, var(--spacing-4)))); }   /* above a BottomNav */
 .dk-offline-banner--top { inset-block-start: max(var(--offline-banner-offset, var(--spacing-4)), env(safe-area-inset-top)); }
 /* Below a sticky Navbar, which already keeps clear of the notch: over it, the bar hid its brand, its actions and the
    Menu button, so the phone's navigation couldn't be opened while offline (GR134). */

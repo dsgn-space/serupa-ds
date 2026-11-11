@@ -1,6 +1,6 @@
-import { latinDigits } from "./digits";
-import { fold } from "./fold";
-import { warnOnce } from "./warn";
+import { latinDigits } from './digits';
+import { fold } from './fold';
+import { warnOnce } from './warn';
 
 // Calendar dates without times: local midnight, so days compare and step reliably across daylight saving.
 
@@ -19,23 +19,29 @@ export const startOfWeek = (d: Date, weekStartsOn: number) => addDays(d, -((d.ge
 export const compare = (a: Date, b: Date) => day(a).getTime() - day(b).getTime();
 export const isValid = (d: unknown): d is Date => d instanceof Date && !isNaN(d.getTime());
 /** yyyy-mm-dd, for forms and APIs. */
-export const isoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+export const isoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 /** A day given as a Date or a plain "yyyy-mm-dd" string (read as that local day, not UTC midnight), or null when
  *  it's neither. With who, warns once about a Date at UTC midnight west of Greenwich: new Date("2026-10-24") is
  *  23 Oct there, so pass the string instead. An ISO date and time as an API sends it ("2026-10-24T00:00:00Z",
  *  "2026-10-24 09:30:00") is read as the day it writes, its time ignored, and with who warns once (L8E10). */
 export function toDay(v: unknown, who?: string): Date | null {
-  if (typeof v === "string") {
+  if (typeof v === 'string') {
     const m = /^(\d{4})-(\d{2})-(\d{2})([T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/.exec(v.trim());
-    if (!m) return null;
-    if (process.env.NODE_ENV !== "production" && who && m[4])
-      warnOnce("datetime-string", `${who}: "${v.trim()}" is a date and time; it's read as ${m[1]}-${m[2]}-${m[3]}, the day it writes, and its time is ignored. Pass the "yyyy-mm-dd" day itself.`, who + ":datetime");
+    // A string it can't read, or a day that doesn't exist (2026-02-31), shows as an empty field (GR161).
+    if (!m) {
+      if (process.env.NODE_ENV !== 'production' && who && v.trim()) warnOnce('date-string', `${who}: "${v.trim()}" isn't a "yyyy-mm-dd" day, so no date is shown. Pass the day as "yyyy-mm-dd" or a Date.`, who + ':string');
+      return null;
+    }
+    if (process.env.NODE_ENV !== 'production' && who && m[4])
+      warnOnce('datetime-string', `${who}: "${v.trim()}" is a date and time; it's read as ${m[1]}-${m[2]}-${m[3]}, the day it writes, and its time is ignored. Pass the "yyyy-mm-dd" day itself.`, who + ':datetime');
     const d = new Date(2000, +m[2] - 1, +m[3]); d.setFullYear(+m[1]);
-    return d.getMonth() === +m[2] - 1 && d.getDate() === +m[3] ? d : null;
+    const real = d.getMonth() === +m[2] - 1 && d.getDate() === +m[3];
+    if (process.env.NODE_ENV !== 'production' && who && !real) warnOnce('date-string', `${who}: "${v.trim()}" is not a day of the calendar, so no date is shown. Check the month and the day.`, who + ':string');
+    return real ? d : null;
   }
   if (!isValid(v)) return null;
-  if (process.env.NODE_ENV !== "production" && who && v.getTimezoneOffset() > 0 && v.getUTCHours() + v.getUTCMinutes() + v.getUTCSeconds() + v.getUTCMilliseconds() === 0)
-    warnOnce("utc-date", `${who}: a Date at UTC midnight (${v.toISOString()}) is ${isoDate(v)} here, the day before. A Date made from "yyyy-mm-dd" is UTC; pass the "yyyy-mm-dd" string itself instead.`, who + ":utc");
+  if (process.env.NODE_ENV !== 'production' && who && v.getTimezoneOffset() > 0 && v.getUTCHours() + v.getUTCMinutes() + v.getUTCSeconds() + v.getUTCMilliseconds() === 0)
+    warnOnce('utc-date', `${who}: a Date at UTC midnight (${v.toISOString()}) is ${isoDate(v)} here, the day before. A Date made from "yyyy-mm-dd" is UTC; pass the "yyyy-mm-dd" string itself instead.`, who + ':utc');
   return day(v);
 }
 
@@ -49,10 +55,10 @@ export function firstDayOfWeek(locale?: string): number {
   try {
     // getWeekInfo() (and the older weekInfo) are newer than TypeScript's Intl types.
     const l: Intl.Locale & { getWeekInfo?: () => { firstDay?: number }; weekInfo?: { firstDay?: number } } = new Intl.Locale(locale || new Intl.DateTimeFormat().resolvedOptions().locale);
-    const info = typeof l.getWeekInfo === "function" ? l.getWeekInfo() : l.weekInfo;
+    const info = typeof l.getWeekInfo === 'function' ? l.getWeekInfo() : l.weekInfo;
     if (info && info.firstDay) return info.firstDay % 7;
-    const region = l.region || (typeof l.maximize === "function" ? l.maximize().region : undefined);
-    if (region) return SUNDAY_FIRST.test(region) ? 0 : SATURDAY_FIRST.test(region) ? 6 : region === "MV" ? 5 : 1;
+    const region = l.region || (typeof l.maximize === 'function' ? l.maximize().region : undefined);
+    if (region) return SUNDAY_FIRST.test(region) ? 0 : SATURDAY_FIRST.test(region) ? 6 : region === 'MV' ? 5 : 1;
   } catch { /* no Intl.Locale */ }
   return 0;
 }
@@ -63,22 +69,22 @@ export function firstDayOfWeek(locale?: string): number {
 // module state: a cache by locale; the same locale gives the same format in every request.
 const numericFormats = new Map<string, Intl.DateTimeFormat>();
 function numeric(locale?: string): Intl.DateTimeFormat {
-  const key = locale || "";
+  const key = locale || '';
   let f = numericFormats.get(key);
-  if (!f) numericFormats.set(key, f = new Intl.DateTimeFormat(locale, { year: "numeric", month: "2-digit", day: "2-digit", calendar: "gregory", numberingSystem: "latn" }));
+  if (!f) numericFormats.set(key, f = new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'gregory', numberingSystem: 'latn' }));
   return f;
 }
-type Field = "day" | "month" | "year";
+type Field = 'day' | 'month' | 'year';
 // module state: a cache by locale, as numericFormats. A DatePicker reads both on every render and every keystroke.
 const shapes = new Map<string, { order: readonly Field[]; pattern: string }>();
 function shape(locale?: string) {
-  const key = locale || "";
+  const key = locale || '';
   let s = shapes.get(key);
   if (!s) {
     const parts = numeric(locale).formatToParts(new Date(2001, 10, 22));
     shapes.set(key, s = {
-      order: Object.freeze(parts.filter((p) => p.type === "day" || p.type === "month" || p.type === "year").map((p) => p.type as Field)),
-      pattern: parts.map((p) => (p.type === "day" ? "dd" : p.type === "month" ? "mm" : p.type === "year" ? "yyyy" : p.value)).join(""),
+      order: Object.freeze(parts.filter((p) => p.type === 'day' || p.type === 'month' || p.type === 'year').map((p) => p.type as Field)),
+      pattern: parts.map((p) => (p.type === 'day' ? 'dd' : p.type === 'month' ? 'mm' : p.type === 'year' ? 'yyyy' : p.value)).join(''),
     });
   }
   return s;
@@ -100,40 +106,40 @@ export function parseDate(text: string, locale?: string, now: Date = new Date())
   if (month) {
     if (nums.length !== 2) return null;
     const y = nums.findIndex((n) => n.length === 4), yi = y < 0 ? 1 : y;
-    return fromParts([nums[1 - yi], String(month), nums[yi]], ["day", "month", "year"], now);
+    return fromParts([nums[1 - yi], String(month), nums[yi]], ['day', 'month', 'year'], now);
   }
   // Digits alone, as typed on a number keypad: 6 or 8 of them, split in the locale's order (11222001 and 112201 in
   // en-US, 22112001 in de-DE), or as an ISO yyyymmdd. When both make a date (20011122 in de-DE is also 20.01.1122),
   // the one nearer now wins.
   if (nums.length === 1 && (nums[0].length === 6 || nums[0].length === 8)) {
     const run = nums[0], yl = run.length - 4;
-    const read = (order: readonly string[]) => { let i = 0; const parts = order.map((k) => { const n = k === "year" ? yl : 2; i += n; return run.slice(i - n, i); }); return fromParts(parts, order, now); };
-    const mine = read(own), iso = yl === 4 ? read(["year", "month", "day"]) : null;
+    const read = (order: readonly string[]) => { let i = 0; const parts = order.map((k) => { const n = k === 'year' ? yl : 2; i += n; return run.slice(i - n, i); }); return fromParts(parts, order, now); };
+    const mine = read(own), iso = yl === 4 ? read(['year', 'month', 'day']) : null;
     if (!mine || !iso) return mine || iso;
     return Math.abs(iso.getFullYear() - now.getFullYear()) < Math.abs(mine.getFullYear() - now.getFullYear()) ? iso : mine;
   }
   if (nums.length !== 3) return null;
   // A leading 4-digit year is ISO (2001-11-22), unless the locale itself writes the year first in another order
   // (Kyrgyz: year-day-month).
-  return fromParts(nums, /^\d{4}$/.test(nums[0]) && own[0] !== "year" ? ["year", "month", "day"] : own, now);
+  return fromParts(nums, /^\d{4}$/.test(nums[0]) && own[0] !== 'year' ? ['year', 'month', 'day'] : own, now);
 }
 // Month names in the locale and in English, long and short, as they stand alone and inside a date (Russian "май"
 // and "мая"), folded and without a closing dot.
 // module state: a cache by locale, as numericFormats; a locale's month names are the same in every request.
 const monthNames = new Map<string, string[][]>();
 function monthsOf(locale?: string): string[][] {
-  const key = locale || "";
+  const key = locale || '';
   let m = monthNames.get(key);
   if (!m) {
     m = Array.from({ length: 12 }, () => [] as string[]);
-    for (const loc of [locale, "en"]) {
-      for (const month of ["long", "short"] as const) {
+    for (const loc of [locale, 'en']) {
+      for (const month of ['long', 'short'] as const) {
         let alone: Intl.DateTimeFormat, inDate: Intl.DateTimeFormat;
-        try { alone = new Intl.DateTimeFormat(loc, { month }); inDate = new Intl.DateTimeFormat(loc, { day: "numeric", month }); } catch { continue; }
+        try { alone = new Intl.DateTimeFormat(loc, { month }); inDate = new Intl.DateTimeFormat(loc, { day: 'numeric', month }); } catch { continue; }
         for (let i = 0; i < 12; i++) {
-          const d = new Date(2000, i, 1), part = inDate.formatToParts(d).find((p) => p.type === "month");
-          for (const name of [alone.format(d), part ? part.value : ""]) {
-            const f = fold(name).replace(/\.$/, "");
+          const d = new Date(2000, i, 1), part = inDate.formatToParts(d).find((p) => p.type === 'month');
+          for (const name of [alone.format(d), part ? part.value : '']) {
+            const f = fold(name).replace(/\.$/, '');
             if (f && !/^\d+$/.test(f) && !m[i].includes(f)) m[i].push(f);
           }
         }
@@ -159,7 +165,7 @@ function monthIn(text: string, locale?: string): number {
 function fromParts(nums: string[], order: readonly string[], now: Date): Date | null {
   const v: Record<string, number> = {};
   order.forEach((k, i) => { v[k] = Number(nums[i]); });
-  if (nums[order.indexOf("year")].length <= 2) {
+  if (nums[order.indexOf('year')].length <= 2) {
     const y = now.getFullYear();
     v.year += y - (y % 100);
     if (v.year - y > 49) v.year -= 100;

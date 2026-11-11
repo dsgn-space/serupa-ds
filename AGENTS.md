@@ -29,13 +29,27 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
-Before you push, `node tools/ci.mjs --since main` runs every job CI requires, the component tests in all four second languages included (`--skip changeset` when the pull request takes `no-changeset`).
+Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
+
+## Pull requests and CI
+
+The repo is on GitHub. Every change goes on its own branch and pull request, never straight to `main`. Turn on auto-merge once a pull request is ready: it joins the merge queue when its own checks pass, and the queue merges it when the queue's run passes. Never merge one that isn't green, and never bypass the queue.
+
+- A pull request's own run (`.github/workflows/ci.yml`) is the quick check: build, types and lint, the changeset check, the fix proof, the checks, and the tests and Visual of the components it changes.
+- The merge queue runs everything, unnarrowed, on the commit that becomes `main` (up to five pull requests at once): Storybook's pages, consumer, frameworks and the cross-browser component tests too. `main`'s own run is then build only.
+- Without the queue (repository variable `SERUPA_QUEUE` not `1`), a pull request runs everything itself.
+- Jobs run in Playwright's image on GitHub's runners or the project's own (repository variables `SERUPA_RUNNER` and `SERUPA_X86_RUNNER`; see "The CI runner" in `tools/README.md`). The nightly jobs are in `.github/workflows/nightly.yml`, `.github/workflows/cross-browser.yml`, `.github/workflows/canary.yml` and `.github/workflows/screen-readers.yml`.
+
+On a fresh machine or cloud session, `node tools/setup.mjs` (with any Node) first fetches the Node major `devEngines` asks for, runs `npm ci`, and installs the Chromium revision Playwright pins from Chrome for Testing; put the Node it names on PATH. Run the fast checks above before pushing; push fixes in one batch, since every push restarts the pull request's run.
+
+Releases are the Release workflow's job again: merging the Release pull request tags the version (a prebuilt commit off `main`) and makes the GitHub release.
 
 ## Every pull request
 
 - **One change per pull request.** Fixes for the same component go in one pull request. Different components go in different ones.
 - **A fix starts with a test that fails on main.** Write the bug as a user meets it, see the test fail, then fix it. CI runs the changed tests against the base commit's `src/` (`tools/fix-proof.mjs`) and fails when they all pass there; a fix only the screenshots show takes the `no-repro-test` label.
 - **Stay in your lane.** Something else you notice goes in an issue or the work queue, not in this pull request. Remove only what your own change left unused.
+- **Every function you add to `src/` runs in a test.** The coverage job names any added function no test ran (`tools/coverage-new-functions.mjs`), because one untested handler can take main under its coverage floor. Cover it in the component's own tests, or remove it when nothing calls it.
 - **A changeset** (`npx changeset`) when a project using the package gets something different. Otherwise the `no-changeset` label: only tests, tools, docs or workflows changed.
 - **Baselines move only on purpose, in the same pull request, with the reason:**
   - Roles, names or structure: `npm run test:aria:update` (`tools/test/baseline-aria/`).
@@ -43,7 +57,7 @@ Before you push, `node tools/ci.mjs --since main` runs every job CI requires, th
   - The public API: `node tools/test/api.mjs --update` (`tools/test/baseline-api/`).
   - A component's size: `node tools/test/size.mjs --update <Name>` (`tools/test/baseline-size/`).
   - Shared code (`src/internal/`, the labels) that grows: raise the "All components (index.js)" line of `TOTALS` in `tools/test/size.mjs` by up to 0.5 KiB, with a dated note. A bigger raise needs a reason in the pull request. This goes for any pull request that takes the total over, not only shared code: raise the line in that same pull request, rather than waiting for another one to make room.
-  - Looks: add the `update-visual-baselines` label as soon as the pull request opens, so CI draws the new screenshots. Then review them in all six themes: the Design QA job's summary shows each changed story in every theme, before and after.
+  - Looks: add the `update-visual-baselines` label as soon as the pull request opens, so CI draws the new screenshots. Then review them in all six themes: the Design QA job's summary shows each changed story in every theme, before and after. The Firefox and WebKit pictures (`tools/test/baseline-visual-firefox/`, `tools/test/baseline-visual-webkit/`) are checked nightly by Cross-browser.
 - **WCAG 2.2 AA in all six themes.**
 - **Docs follow [Writing the docs](CONTRIBUTING.md#writing-the-docs):** lead with the point, say how it is now, no queue ids for readers.
 - **A failing test is fixed, never skipped.** When it fails in one browser only, find out whether the browser has a real bug (fix the component) or the test assumes too much (fix the test).

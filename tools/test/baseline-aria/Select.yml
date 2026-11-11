@@ -1,6 +1,53 @@
+# DoLabelAbove
+- text: Country
+- combobox "Country":
+  - option "Choose a country" [disabled] [selected]
+  - option "Brunei"
+  - option "Cambodia"
+  - option "Indonesia"
+  - option "Laos"
+  - option "Malaysia"
+  - option "Myanmar"
+  - option "Philippines"
+  - option "Singapore"
+  - option "Thailand"
+  - option "Vietnam"
+
+# DoRadiosForFew
+- group "Delivery":
+  - text: Delivery
+  - radiogroup:
+    - radio "Standard" [checked]
+    - text: Standard
+    - radio "Express"
+    - text: Express
+    - radio "Pick up"
+    - text: Pick up
+
+# DontPlaceholderLabel
+- combobox "Country":
+  - option "Country" [disabled] [selected]
+  - option "Brunei"
+  - option "Cambodia"
+  - option "Indonesia"
+  - option "Laos"
+  - option "Malaysia"
+  - option "Myanmar"
+  - option "Philippines"
+  - option "Singapore"
+  - option "Thailand"
+  - option "Vietnam"
+
+# DontSelectForFew
+- text: Delivery
+- combobox "Delivery":
+  - option "Standard" [selected]
+  - option "Express"
+  - option "Pick up"
+
 # Groups
 - combobox "Country":
-  - option "Pick a plan" [disabled] [selected]
+  - option "Choose a plan" [disabled] [selected]
 
 # LongOptions
 - combobox "Country":
@@ -13,6 +60,14 @@
 - combobox "Country":
   - option "Choose a country" [disabled] [selected]
   - option "Indonesia"
+  - option "Malaysia"
+  - option "Singapore"
+  - option "Thailand"
+
+# ReadOnly
+- combobox "Country":
+  - option "Choose a country" [disabled]
+  - option "Indonesia" [selected]
   - option "Malaysia"
   - option "Singapore"
   - option "Thailand"

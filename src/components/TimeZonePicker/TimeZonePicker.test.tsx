@@ -37,6 +37,15 @@ describe('TimeZonePicker', () => {
     expect(input().value).toBe('New York');
   });
 
+  test('readOnly, from Combobox: focusable and aria-readonly, shows its zone, and neither typing nor a press opens the list or changes it', async () => {
+    const changes: unknown[] = [];
+    await render(<form id="tz-form" onSubmit={(e) => e.preventDefault()}><TimeZonePicker aria-label="Time zone" name="tz" readOnly defaultValue="Asia/Jakarta" at={AT} onValueChange={(v) => changes.push(v)} /></form>);
+    await userEvent.click(input());
+    await userEvent.keyboard('{ArrowDown}New{Enter}');
+    expect([document.activeElement === input(), input().getAttribute('aria-readonly') ?? String(input().readOnly), input().value, document.querySelectorAll('[role="option"]').length, changes,
+      new FormData(document.getElementById('tz-form') as HTMLFormElement).get('tz')]).toEqual([true, 'true', 'Jakarta', 0, [], 'Asia/Jakarta']);
+  });
+
   test('typing finds a city, a zone name, an IANA name or an offset', async () => {
     await render(<TimeZonePicker aria-label="Time zone" at={AT} zones={['Asia/Jakarta', 'Asia/Bangkok', 'Asia/Kolkata', 'America/Argentina/Buenos_Aires', 'Australia/Adelaide']} />);
     const typed = async (text: string) => { await userEvent.clear(input()); await userEvent.type(input(), text); return shown(); };
@@ -53,5 +62,28 @@ describe('TimeZonePicker', () => {
     await render(<TimeZonePicker aria-label="Time zone" at={AT} zones={['Pacific/Kiritimati', own, 'Pacific/Pago_Pago']} />);
     await userEvent.click(input());
     await expect.poll(() => document.querySelector('[role="option"]')?.getAttribute('aria-description') ?? '').toMatch(/· Your time zone$/);
+  });
+});
+
+describe('TimeZonePicker: current names (GR174)', () => {
+  test('a value under its current name shows, whatever spelling the browser lists; the list and timeZoneInfo use the current names', async () => {
+    expect(allTimeZones()).toEqual(expect.arrayContaining(['Europe/Kyiv', 'Asia/Kolkata', 'Asia/Ho_Chi_Minh']));
+    expect(allTimeZones()).not.toContain('Europe/Kiev');
+    expect(timeZoneInfo('Europe/Kiev', 'en-US', AT)!.city).toBe('Kyiv');
+    const onValueChange = vi.fn();
+    await render(<><TimeZonePicker aria-label="Kyiv" at={AT} defaultValue="Europe/Kyiv" onValueChange={onValueChange} /><TimeZonePicker aria-label="Old" at={AT} defaultValue="Asia/Calcutta" /></>);
+    const [kyiv, old] = [...document.querySelectorAll<HTMLInputElement>('input[role="combobox"]')];
+    expect([kyiv.value, old.value]).toEqual(['Kyiv', 'Kolkata']);
+  });
+
+  test('typing finds a city by its current name, its old name, or a common abbreviation or big city', async () => {
+    await render(<TimeZonePicker aria-label="Time zone" at={AT} />);
+    const find = async (text: string) => { await userEvent.clear(input()); await userEvent.type(input(), text); return shown(); };
+    expect(await find('kyiv')).toContain('Kyiv');
+    expect(await find('kiev')).toContain('Kyiv');
+    expect(await find('ho chi minh')).toContain('Ho Chi Minh');
+    expect(await find('mumbai')).toEqual(['Kolkata']);
+    expect(await find('pst')).toContain('Los Angeles');
+    expect(await find('wib')).toContain('Jakarta');
   });
 });

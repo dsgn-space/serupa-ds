@@ -39,7 +39,7 @@ export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 240 }}>
       <Heading {...args} level={1}>Quarterly results for every region, team and product line</Heading>
-      <Heading {...args}>{"Donaudampfschifffahrtsgesellschaftskapitänskajüte"}</Heading>
+      <Heading {...args}>{'Donaudampfschifffahrtsgesellschaftskapitänskajüte'}</Heading>
     </div>
   ),
 };

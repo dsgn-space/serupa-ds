@@ -17,8 +17,8 @@ const int = (r: () => number, lo: number, hi: number) => lo + Math.floor(r() * (
 // A number with up to 4 decimals, from 0.0001 to about ten billion, either sign.
 function number(r: () => number): number {
   // Written out and read as one decimal, so the value is the double nearest it (a sum would add its own error).
-  const whole = r() < 0.2 ? 0 : Math.floor(Math.pow(10, r() * 10)), frac = Array.from({ length: int(r, 0, 4) }, () => int(r, 0, 9)).join("");
-  return Number((r() < 0.3 ? "-" : "") + whole + (frac ? "." + frac : ""));
+  const whole = r() < 0.2 ? 0 : Math.floor(Math.pow(10, r() * 10)), frac = Array.from({ length: int(r, 0, 4) }, () => int(r, 0, 9)).join('');
+  return Number((r() < 0.3 ? '-' : '') + whole + (frac ? '.' + frac : ''));
 }
 
 describe(`round trips over random values (seed ${SEED})`, () => {
@@ -67,7 +67,7 @@ describe(`round trips over random values (seed ${SEED})`, () => {
         // A number that starts with another country's area on the same calling code is that country's.
         if (others.some((a) => national.startsWith(a))) continue;
         const e164 = toE164(national, c), text = formatPhone(e164, c.code), p = parsePhone(text, c.code);
-        if (!p || p.country.code !== c.code || toE164(p.national, p.country) !== e164) bad.push(`${c.code} ${e164} "${text}" → ${p ? p.country.code + " " + p.national : p}`);
+        if (!p || p.country.code !== c.code || toE164(p.national, p.country) !== e164) bad.push(`${c.code} ${e164} "${text}" → ${p ? p.country.code + ' ' + p.national : p}`);
       }
     }
     expect(bad.slice(0, 20)).toEqual([]);

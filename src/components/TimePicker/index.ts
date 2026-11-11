@@ -1,3 +1,3 @@
 // The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.
-export { TimePicker } from "./TimePicker";
-export type { TimePickerProps } from "./TimePicker";
+export { TimePicker } from './TimePicker';
+export type { TimePickerProps } from './TimePicker';

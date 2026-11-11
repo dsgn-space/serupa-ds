@@ -7,10 +7,10 @@ export interface TypeToConfirmLabels {
   typePhraseFirst: (phrase: string) => string;
 }
 export const en: TypeToConfirmLabels = {
-  typeToConfirm: "To confirm, type",
-  typePhraseFirst: (phrase) => "Type “" + phrase + "” first",
+  typeToConfirm: 'To confirm, type',
+  typePhraseFirst: (phrase) => 'Type “' + phrase + '” first',
 };
 export const id: TypeToConfirmLabels = {
-  typeToConfirm: "Untuk mengonfirmasi, ketik",
-  typePhraseFirst: (phrase) => "Ketik “" + phrase + "” dulu",
+  typeToConfirm: 'Untuk mengonfirmasi, ketik',
+  typePhraseFirst: (phrase) => 'Ketik “' + phrase + '” dulu',
 };

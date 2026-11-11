@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
 import { Field } from '../Field/Field';
+import { Loader } from '../Loader/Loader';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 const modded = (t: Element, key: string) => ['ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
@@ -308,6 +309,15 @@ describe('Combobox', () => {
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
   });
 
+  test('spaces around the typed text don\'t stop a match: " cote " still finds Côte d’Ivoire (GR277)', async () => {
+    await render(<Countries />);
+    await open();
+    await selectAll(); await userEvent.keyboard('cote ');
+    expect([st('cb').opts, st('cb').active]).toEqual([['Côte d’Ivoire'], 'Côte d’Ivoire']);
+    await selectAll(); await userEvent.keyboard(' egy');
+    expect(st('cb').opts).toEqual(['Egypt']);
+  });
+
   test('onCreate: text that isn\'t an option\'s label ends the list with Add "text"; Enter or a click adds it and picks the value onCreate returns; an exact label shows no add row; it says the add row when nothing matches (185)', async () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
@@ -565,7 +575,8 @@ describe('Combobox', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Countries />);
+    // In English, whatever language the browser runs in: the digits' own test follows.
+    await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
     el('cb').focus();
     await userEvent.keyboard('{ArrowDown}');
     await new Promise((r) => setTimeout(r, 900));
@@ -573,7 +584,25 @@ describe('Combobox', () => {
     await userEvent.keyboard('an');
     await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('2 results');
     seen.disconnect();
-    expect([idLabels.resultsCount(2), DEFAULT_LABELS.resultsCount(1)]).toEqual(['2 hasil', '1 result']);
+    expect([idLabels.resultsCount(2, '2'), DEFAULT_LABELS.resultsCount(1, '1')]).toEqual(['2 hasil', '1 result']);
+  });
+
+  test('the count said is in the locale\'s digits and grouping: "٢ results" in ar-EG, "1,200 results" in en-US', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    const many = Array.from({ length: 1200 }, (_, i) => 'Item ' + (i + 1));
+    await render(<>
+      <SerupaProvider locale="ar-EG"><Combobox id="cb-ar" aria-label="Country" options={COUNTRIES} /></SerupaProvider>
+      <SerupaProvider locale="en-US"><Combobox id="cb-many" aria-label="Item" options={many} /></SerupaProvider>
+    </>);
+    el('cb-ar').focus();
+    await userEvent.keyboard('an');
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('٢ results');
+    el('cb-many').focus();
+    await userEvent.keyboard('item');
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('1,200 results');
+    seen.disconnect();
   });
 
   // GR53: "No results" sat in a role=status row inserted with its text already in it, which VoiceOver and JAWS don't
@@ -582,7 +611,7 @@ describe('Combobox', () => {
     const said: string[] = [];
     const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
     seen.observe(document.body, { subtree: true, childList: true, characterData: true });
-    await render(<Countries />);
+    await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
     el('cb').focus();
     await userEvent.keyboard('{ArrowDown}zzz');
     await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('No results');
@@ -814,12 +843,18 @@ describe('Combobox loadOptions (DG1)', () => {
     expect(s.calls.map((c) => c.text)).toEqual(['']);
     s.calls[0].ok(['Argentina', 'Brazil']);
     await expect.poll(() => st('d').opts).toEqual(['Argentina', 'Brazil']);
-    await userEvent.keyboard('per');
-    expect(s.calls.length).toBe(1);   // still typing
-    await expect.poll(() => s.calls.length).toBe(2);
+    // The pause runs on a fake clock, so slow keystrokes (a busy runner) can't outlast it and load early.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      await userEvent.keyboard('per');
+      await React.act(async () => { vi.advanceTimersByTime(149); });
+      expect(s.calls.length).toBe(1);   // still typing
+      await React.act(async () => { vi.advanceTimersByTime(1); });
+    } finally { vi.useRealTimers(); }
+    expect(s.calls.length).toBe(2);
     expect(s.calls[1].text).toBe('per');
     s.calls[1].fail();
-    await expect.poll(() => status('d')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('d')).toBe('Couldn’t load options. Type to try again.');
     await userEvent.keyboard('u');
     await expect.poll(() => s.calls.length).toBe(3);
     s.calls[2].ok(['Peru']);
@@ -842,7 +877,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await render(<div style={{ width: '320px' }}><Combobox id="y" aria-label="Country" loadOptions={thrown} debounce={0} /></div>);
     el('y').focus();
     await userEvent.keyboard('a');
-    await expect.poll(() => status('y')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('y')).toBe('Couldn’t load options. Type to try again.');
   });
 
   test('a picked option keeps its label when later answers leave it out; unmounting aborts the request in flight', async () => {
@@ -868,11 +903,15 @@ describe('Combobox loadOptions (DG1)', () => {
   test('entry: the list fades in and grows from its top edge with a transition, not keyframes; only the fade under reduced motion (EF1)', async () => {
     await withMotion(async () => {
       await render(<Countries />);
+      // Caught as each starts, so a busy runner that lets the fade end before the click returns still sees it.
+      const pop = popOf('cb'), started: string[] = [], keyframes: string[] = [];
+      pop.addEventListener('transitionrun', (e) => { if (e.target === pop) started.push(e.propertyName); });
+      pop.addEventListener('animationstart', (e) => { keyframes.push(e.animationName); });
       await userEvent.click(toggleOf('cb'));
-      const pop = popOf('cb');
-      const moves = pop.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort();
-      expect([moves, pop.getAnimations().some((a) => a instanceof CSSAnimation), pop.dataset.side, css(pop).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
-      await Promise.all(pop.getAnimations().map((a) => a.finished));
+      await expect.poll(() => started.length).toBeGreaterThanOrEqual(2);
+      const moves = [...started].sort();
+      expect([moves, keyframes.length > 0 || pop.getAnimations().some((a) => a instanceof CSSAnimation), pop.dataset.side, css(pop).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
+      await settled(pop);
       expect([css(pop).opacity, css(pop).scale]).toEqual(['1', 'none']);
     });
   });
@@ -884,13 +923,20 @@ describe('Combobox loadOptions (DG1)', () => {
       await userEvent.click(toggleOf('cb'));
       const pop = popOf('cb');
       await settled(pop);
+      // What the list is like as its fade starts, taken then: on a busy runner the 100ms fade can end before the
+      // click returns.
+      let fading: unknown[] | undefined;
+      const look = (e: TransitionEvent) => { if (e.target === pop && !fading) fading = [css(pop).display, pop.inert, pop.querySelectorAll('[role=option]').length, runs(pop)]; };
+      pop.addEventListener('transitionrun', look);
       await userEvent.click(toggleOf('cb'));
       expect([pop.hidden, toggleOf('cb').getAttribute('aria-expanded')]).toEqual([true, 'false']);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (CSS.supports('overlay', 'auto')) {
-        expect([css(pop).display, pop.inert, pop.querySelectorAll('[role=option]').length, runs(pop)]).toEqual(['flex', true, 7, [['opacity', 100], ['scale', 100]]]);
+        await expect.poll(() => fading).toBeDefined();
+        expect(fading).toEqual(['flex', true, 7, [['opacity', 100], ['scale', 100]]]);
         await settled(pop);
       }
+      pop.removeEventListener('transitionrun', look);
       await expect.poll(() => pop.querySelectorAll('[role=option]').length).toBe(0);
       expect(css(pop).display).toBe('none');
       await userEvent.click(toggleOf('cb'));
@@ -924,7 +970,7 @@ describe('Combobox loadOptions (DG1)', () => {
     await expect.poll(() => [st('w2').text, got]).toEqual(['Bandung', ['Bandung', 'Bandung']]);
     await userEvent.keyboard('{Control>}a{/Control}x{Enter}');
     s.calls.at(-1)!.fail();
-    await expect.poll(() => status('w2')).toBe("Couldn't load options. Type to try again.");
+    await expect.poll(() => status('w2')).toBe('Couldn’t load options. Type to try again.');
     expect(st('w2').text).toBe('x');
   });
 
@@ -958,5 +1004,32 @@ describe('Combobox loadOptions (DG1)', () => {
     await expect.poll(() => activeOf('ac')?.textContent).toContain('Zz');
     await userEvent.keyboard('{Enter}');
     expect([made, st('ac').text]).toEqual([['Zz'], 'Zz']);
+  });
+
+  test('GR161: options that share a value warn once in development (picking the second showed the first one\'s label); distinct values don\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const said = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => /combobox-duplicate-value/.test(m));
+      const screen = await render(<Combobox aria-label="Pick" options={[{ value: 'x', label: 'One' }, { value: 'y', label: 'Two' }]} />);
+      expect(said()).toEqual([]);
+      await screen.rerender(<Combobox aria-label="Pick" options={[{ value: 'x', label: 'One' }, { label: 'More', options: [{ value: 'x', label: 'Two' }] }]} />);
+      await expect.poll(said).toHaveLength(1);
+      expect(said()[0]).toMatch(/more than one option has the value "x"/);
+    } finally { warn.mockRestore(); }
+  });
+});
+
+// GR311: Combobox drew its loading ring with the whole Loader; it now draws Loader's ring itself, the same markup.
+describe('loading ring', () => {
+  const SOURCE = import.meta.glob<string>('./Combobox.tsx', { query: '?raw', import: 'default', eager: true })['./Combobox.tsx'];
+  test('Combobox does not load Loader, and its ring is the markup Loader draws', async () => {
+    expect(SOURCE).not.toMatch(/from '\.\.\/Loader\//);
+    await render(<>
+      <Combobox id="ring-combo" aria-label="Person" options={[]} filter={false} loading defaultOpen />
+      <div id="ring-loader"><Loader size="sm" delay={0} label="" /></div>
+    </>);
+    const ring = () => document.querySelector('[role="status"] > [data-component="loader"]');
+    await expect.poll(ring).toBeTruthy();
+    expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });

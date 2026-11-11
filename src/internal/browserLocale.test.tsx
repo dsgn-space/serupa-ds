@@ -53,4 +53,18 @@ describe('the browser locale', () => {
     flushSync(() => window.dispatchEvent(new Event('languagechange')));   // back to the real browser's
     expect(document.getElementById('n')!.textContent).toBe(own);
   });
+
+  test('one languagechange listener for a 1,000-row table, not one per component (GR241), and none left after unmount', async () => {
+    const real = window.addEventListener, realRemove = window.removeEventListener;
+    let added = 0, removed = 0;
+    window.addEventListener = function (this: Window, type: string, ...rest: unknown[]) { if (type === 'languagechange') added++; return (real as (...a: unknown[]) => void).call(this, type, ...rest); } as typeof window.addEventListener;
+    window.removeEventListener = function (this: Window, type: string, ...rest: unknown[]) { if (type === 'languagechange') removed++; return (realRemove as (...a: unknown[]) => void).call(this, type, ...rest); } as typeof window.removeEventListener;
+    try {
+      const { rerender } = await render(<Rows n={1000} />);
+      expect(document.querySelectorAll('td')).toHaveLength(2000);
+      await rerender(<Rows n={1} />);
+      // At most the one shared listener (added here if no earlier test in this page read the locale), never removed.
+      expect([added <= 1, removed]).toEqual([true, 0]);
+    } finally { window.addEventListener = real; window.removeEventListener = realRemove; }
+  });
 });

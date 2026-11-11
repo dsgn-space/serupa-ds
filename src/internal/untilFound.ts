@@ -7,7 +7,7 @@ export function revealInvalid(e: Event): void {
   const t = e.target as HTMLInputElement, f = t.form;
   const first = f ? Array.from(f.elements).find((x) => (x as HTMLInputElement).willValidate && !(x as HTMLInputElement).validity.valid) : t;
   let hid = 0;
-  if (first === t) for (let h; (h = t.closest("[hidden=until-found]")); hid = 1) { h.dispatchEvent(new Event("beforematch")); h.removeAttribute("hidden"); }
+  if (first === t) for (let h; (h = t.closest('[hidden=until-found]')); hid = 1) { h.dispatchEvent(new Event('beforematch')); h.removeAttribute('hidden'); }
   // The item opens on React's next render, which may come a frame or two later: focus as soon as the field takes it.
   let n = 0;
   const go = () => { t.focus(); if (t.ownerDocument.activeElement !== t && n++ < 10) requestAnimationFrame(go); else t.reportValidity(); };

@@ -14,6 +14,31 @@ Work on the repository with **Node 26**: `nvm use` (or `fnm use`) reads `.nvmrc`
 
 ## A new component
 
+**Before any code, a proposal.** Open an issue titled "Proposal: <Name>" and answer the four questions below. A component joins the system only when it clears the bar: it solves one problem that at least three real screens have, in different products or flows, and nothing already in the system covers it. A maintainer answers with accepted, parked or declined, and the reason.
+
+```md
+## The problem
+What someone is trying to do, and what goes wrong today without this component. One paragraph, no solution yet.
+
+## Three real uses
+Three or more screens where this is needed now, each in a different product or flow: what the screen is, what the
+component does there, and a link or a screenshot. Hypothetical uses don't count towards the three.
+
+## Prior art
+How two or three other design systems or well-known products do this, and what to take from each or leave out.
+
+## Why a composition won't do
+The closest you can get with what's already here (Stack, Card, List, Popover, Field and the rest), and what it gets
+wrong: the accessibility, the behaviour or the amount of code each screen would repeat. If a recipe in the docs would
+do, say so and stop here.
+```
+
+**Parked ideas.** A proposal that doesn't clear the bar yet is listed here with its reason, so the next person to want it starts from what was found. A parked idea comes back when the reason no longer holds, such as a third real use turning up.
+
+| Idea | Why it's parked | Comes back when |
+| --- | --- | --- |
+| *None yet* | | |
+
 **First, pick a direction by looking.** `npm run new-component -- <Name> --directions` writes one story, Directions/<Name> in `src/directions/`, with two or three takes behind one Storybook switch. The takes should differ in kind, such as layout, density or motion, not in polish. Draw each one just far enough to judge, flip between them, and pick one. Write the pick and the reason in the pull request, then delete the file. The contract check fails while it's there, so it never merges.
 
 1. `npm run new-component -- <Name> --group <Storybook group>` writes `src/components/<Name>/` with every file the contract asks for, already wired to the system: the component through `component()`, its CSS in `@layer dk.components` reading its own tokens, its tokens file, stories, a starting test, the Storybook page, the usage guide with its required headings, the preview page and the server-render case.
@@ -106,6 +131,38 @@ Every component names the same things the same way, so learning one teaches the 
 - **A console warning** about a mistake goes through `warnOnce()` (`src/internal/warn.ts`), inside `if (process.env.NODE_ENV !== "production" && …)`, so a production build drops it and its text. Its first argument is a code (`"tabs-value"`) with a section in [docs/warnings.md](docs/warnings.md), which the warning links to. `node tools/test/dev-warnings.mjs` fails on a warning that isn't guarded or has no section.
 
 `node tools/test/props.mjs` checks the callbacks: a component's own `on…Change` names a prop it has, and only a native wrapper has a plain `onChange`. The known exceptions are listed in it with their reasons.
+
+### API naming table
+
+One idea has one name in every component. A new prop takes the name in the first column, and an older prop that says it another way gets that name as an alias in a minor (the old name `@deprecated`, with a development warning) and loses the old one in the next scheduled major.
+
+| Idea | Name | Not |
+| --- | --- | --- |
+| A composite's value | `value`, `defaultValue`, `onValueChange(value, details?)` | `onChange` (only a native wrapper keeps it), `onSelect` for a value |
+| An overlay's open state | `open`, `defaultOpen`, `onOpenChange(open, details?)` | `visible`, `show`, `isOpen` |
+| Which way parts run | `orientation`: `'horizontal' \| 'vertical'` | `direction`, `layout` |
+| Where an overlay or a floating part sits | `placement`, such as `'bottom-start'` or `'top-right'` | `position`, `side` alone |
+| What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color |
+| The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
+| Busy while something runs | `loading` | `pending`, `busy` |
+| The wait before an overlay opens or closes | `openDelay`, `closeDelay` (ms) | `delay`, `showDelay` |
+| Turning a part off | `hideX` (a part on by default may also take `x={false}`) | `noX`, `xHidden`, `disableX` |
+| Can't be used | `disabled` (and `disabledReason`) | `enabled`, `inactive` |
+| Size of a control | `size`: `'sm' \| 'md' \| 'lg'` | `small`, `compact` |
+
+A value named `default` in a prop's union means the prop's default: `tone="default"` must be what you get with no `tone`. A name that reads like one in the "Not" column but means something else stays, with why, in `NAME_KEPT` in `tools/test/props.mjs`: Stack's `direction` is the CSS `flex-direction` it sets, and Loader's `delay` is how long a load runs before the spinner shows.
+
+`node tools/test/props.mjs` holds every prop to the orientation, placement, loading and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+
+## Release cadence and support
+
+Breaking changes come together, on a schedule, so a project upgrades once rather than every few days (GR247).
+
+- **Minors and patches go out at least twice a week.** On Monday and Thursday (Jakarta time), and on any other weekday with an accessibility or security fix waiting, the tooling lane turns the pending changesets into a release from a green `main` (`npm run version-packages`, a `Release: <version>` merge request, then `node tools/tag-release.mjs --make --push`; see AGENTS.md). No more than four days pass between releases while changesets wait, so a project pinned to a tag is never far behind `main`. A day with nothing pending has no release.
+- **One scheduled major.** Every breaking changeset (`"serupa-ds": major`) waits for the next scheduled major, 15.0.0, and adds its section to [docs/rfcs/15.0.0.md](docs/rfcs/15.0.0.md) in the same merge request. Fixes and new features keep shipping as minors and patches in the meantime.
+- **A deprecation lives at least four weeks.** A name is deprecated in a minor (it keeps working, with a development warning and `removed in N.0.0`), and a major may remove it only 28 days or more after the release that deprecated it. `node tools/test/deprecations.mjs` fails a pending major changeset that removes a name sooner, and says from which date it may.
+- **The previous major gets fixes for four weeks.** For 28 days after a major ships, bug fixes and security fixes also go out as patches of the major before it (14.x after 15.0.0), from a `14.x` branch. New features go only into the new major.
+- **Deprecate before you rename.** A renamed prop, class or token keeps its old name as a deprecated alias for at least those four weeks (see the [API naming table](#api-naming-table)). The major then only removes.
 
 ## Pull requests
 

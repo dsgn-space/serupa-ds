@@ -36,6 +36,9 @@ t('every major changeset says how to migrate', !noNote.length, `add "**Migration
 for (const f of fs.readdirSync(path.join(PROJECT, 'docs', 'rfcs')).filter((x) => /^\d+\.0\.0\.md$/.test(x))) {
   const text = fs.readFileSync(path.join(PROJECT, 'docs', 'rfcs', f), 'utf8');
   t(`docs/rfcs/${f} starts with its title and a status`, text.startsWith(`# RFC: ${f.replace(/\.md$/, '')}\n`) && /^\*\*Status:\*\* /m.test(text));
+  // Once its major is in the changelog, the RFC says so, rather than asking for comments on what already shipped (GR131).
+  const v = f.replace(/\.md$/, '');
+  if (read('CHANGELOG.md').includes(`\n## [${v}]`)) t(`docs/rfcs/${f}: ${v} has shipped, so its status says "Released in ${v}"`, new RegExp(`^\\*\\*Status:\\*\\* Released in ${v.replace(/\./g, '\\.')}\\b`, 'm').test(text), `set the status line to "**Status:** Released in ${v} (<date>)."`);
 }
 
 // The upgrade guide.
@@ -67,11 +70,16 @@ one('CommonIconName → IconName, without importing it twice', "import { type Co
 one('CommonIconName next to IconName in one import is one name', "import type { CommonIconName, IconName } from 'serupa-ds';", "import type { IconName } from 'serupa-ds';");
 one('bundle.js → serupa.iife.js in a page; bundle.css stays', '<script src="node_modules/serupa-ds/dist/bundle.js"></script><link href="node_modules/serupa-ds/dist/bundle.css">', '<script src="node_modules/serupa-ds/dist/serupa.iife.js"></script><link href="node_modules/serupa-ds/dist/bundle.css">', 'index.html');
 one('a file type it doesn\'t read is left', 'serupa-ds/bundle.js', 'serupa-ds/bundle.js', 'notes.txt');
-const left = fix("const props = { noTitle: true };\nexport const X = () => <IconButton {...props} />;");
+const left = fix('const props = { noTitle: true };\nexport const X = () => <IconButton {...props} />;');
 t('a noTitle it can\'t rename is listed with its line', left.notes.length === 1 && left.notes[0].line === 1 && left.notes[0].id === 'icon-button-hide-title', JSON.stringify(left.notes));
 const css = fix('.x { --badge-ripple-opacity: 0; }\n.dk-btn__ripples { display: none }', 'app.css');
 t('a removed ripple token or class is listed, not changed', css.notes.length === 2 && css.text.includes('--badge-ripple-opacity'), JSON.stringify(css.notes));
-t('--from 12 runs only the 13.0.0 changes', transformsAfter('12.3.1').every((x) => x.version === '13.0.0') && transformsAfter(12).length >= 2);
+t('--from 12 runs only the changes of 13.0.0 and later', transformsAfter('12.3.1').every((x) => Number(x.version.split('.')[0]) >= 13) && transformsAfter(12).some((x) => x.version === '13.0.0'));
+// 14.0.0 has nothing to rename, but a 13.x project that uses what it moved or removed is told where (GR130).
+const p14 = fix('import "serupa-ds/bundle.css";\n<SerupaProvider labels={{ moreResults: (n) => `${n} more` }}>\n  <div className="bg-linear-to-r from-blue-500 mask-b-from-50%" />', 'App.tsx', '13.0.0');
+t('14.0.0: moved mask and gradient classes and the removed moreResults label are listed with their lines', p14.notes.length === 2 && p14.notes.some((n) => n.id === 'utilities-extra' && n.line === 3 && n.message.includes('utilities-extra.css') && n.message.includes('bg-linear-to-r')) && p14.notes.some((n) => n.id === 'combobox-more-results' && n.line === 2) && !Object.keys(p14.counts).length, JSON.stringify(p14.notes));
+t('14.0.0: a file that imports utilities-extra.css, a mask-image property and words like to-do are left', !fix('import "serupa-ds/utilities-extra.css";\n<div className="mask-t-from-0" />', 'a.tsx').notes.length && !fix('<div style="mask-image: url(a.svg)" class="go-to-top">Things to-do from-here</div>', 'a.html').notes.length);
+t('14.0.0: a removed .dk-combobox__more rule is listed in a stylesheet', fix('.dk-combobox__more { color: red }', 'app.css').notes.some((n) => n.id === 'combobox-more-results'));
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 
@@ -87,7 +95,7 @@ try {
     ['a source that isn\'t there', ['missing'], 'no such file or folder: missing'],
   ]) {
     const r = cli(...args);
-    t(`stops on ${label}, saying so`, r.status === 2 && r.stderr.includes(word) && r.stderr.includes('usage:') && !/\n\s+at /.test(r.stderr), `exit ${r.status}: ${r.stderr.slice(0, 200)}`);
+    t(`stops on ${label}, saying so`, r.status === 2 && String(r.stderr).includes(String(word)) && String(r.stderr).includes('usage:') && !/\n\s+at /.test(String(r.stderr)), `exit ${r.status}: ${String(r.stderr).slice(0, 200)}`);
   }
   fs.mkdirSync(path.join(tmp, 'src', 'node_modules'), { recursive: true });
   fs.writeFileSync(path.join(tmp, 'src', 'App.tsx'), '<IconButton noTitle />');
@@ -96,6 +104,11 @@ try {
   t('without --write it says what it would change and changes nothing', dry.status === 0 && /would change src\/App\.tsx: icon-button-hide-title ×1/.test(dry.stdout) && fs.readFileSync(path.join(tmp, 'src', 'App.tsx'), 'utf8') === '<IconButton noTitle />', dry.stdout + dry.stderr);
   const wet = cli('src', '--from', '12', '--write');
   t('--write changes the file and leaves node_modules alone', wet.status === 0 && fs.readFileSync(path.join(tmp, 'src', 'App.tsx'), 'utf8') === '<IconButton hideTitle />' && fs.readFileSync(path.join(tmp, 'src', 'node_modules', 'x.tsx'), 'utf8').includes('noTitle'), wet.stdout + wet.stderr);
+  fs.writeFileSync(path.join(tmp, 'src', 'Old.tsx'), '<SerupaProvider labels={{ moreResults: f }}>\n<p className="bg-linear-to-r from-blue-500" />');
+  const on13 = cli('src', '--from', '13.0.0');
+  t('a 13.x project is told what to check by hand and where the rest is, not just "Nothing to change."', on13.status === 0 && on13.stdout.includes('To check by hand (2)') && /src\/Old\.tsx:2: .*utilities-extra/.test(on13.stdout) && /src\/Old\.tsx:1: .*moreResults/.test(on13.stdout) && /Upgrading page/.test(on13.stdout) && on13.stdout.includes('since 13.x'), on13.stdout);
+  const list13 = cli('--list', '--from', '13.0.0');
+  t('--list --from 13.0.0 prints the 14.0.0 changes', list13.status === 0 && list13.stdout.includes('utilities-extra') && list13.stdout.includes('combobox-more-results'), list13.stdout);
   const list = cli('--list');
   t('--list prints every change with its version', list.status === 0 && TRANSFORMS.every((x) => list.stdout.includes(x.id)), list.stdout);
 } finally { fs.rmSync(tmp, { recursive: true, force: true }); }

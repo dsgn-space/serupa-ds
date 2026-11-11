@@ -1,5 +1,5 @@
-import * as React from "react";
-import { warnOnce } from "./warn";
+import * as React from 'react';
+import { warnOnce } from './warn';
 
 /* The trigger contract (G9): Popover, Menu, ContextMenu and Tooltip clone the one element they're given, adding a
    ref, ARIA and handlers. A text, several elements or a Fragment can't take them, and React.Children.only's own error
@@ -14,6 +14,6 @@ export function oneElement<P>(node: React.ReactNode, who: string, where: string)
  *  panel can't be placed next to it or give focus back to it. */
 export function useTriggerRef(ref: React.RefObject<HTMLElement | null>, who: string): void {
   React.useEffect(function () {
-    if (process.env.NODE_ENV !== "production" && !ref.current) warnOnce("trigger-ref", `Serupa: ${who}'s trigger doesn't forward its ref to an element.`, "ref" + who);
+    if (process.env.NODE_ENV !== 'production' && !ref.current) warnOnce('trigger-ref', `Serupa: ${who}'s trigger doesn't forward its ref to an element.`, 'ref' + who);
   }, [ref, who]);
 }

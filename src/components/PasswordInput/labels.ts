@@ -7,10 +7,10 @@ export interface PasswordInputLabels {
   capsLockOn: string;
 }
 export const en: PasswordInputLabels = {
-  showPassword: "Show password",
-  capsLockOn: "Caps Lock is on",
+  showPassword: 'Show password',
+  capsLockOn: 'Caps Lock is on',
 };
 export const id: PasswordInputLabels = {
-  showPassword: "Tampilkan kata sandi",
-  capsLockOn: "Caps Lock aktif",
+  showPassword: 'Tampilkan kata sandi',
+  capsLockOn: 'Caps Lock aktif',
 };

@@ -1,0 +1,37 @@
+/* ---------------------------------------------------------------
+   SignaturePad: a small switch (Draw, Type), a line of how-to text, then a box to sign in: an outlined surface with a
+   line near its foot, where the strokes are drawn in ink, or the typed name is shown slanted in a serif face. Undo
+   and Clear sit under the drawing box; the typing field sits above the typed name. Every value reads one of its own
+   tokens (signature-pad.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-signature-pad { display: flex; flex-direction: column; align-items: stretch; gap: var(--signature-pad-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-signature-pad__method { align-self: flex-start; }
+.dk-signature-pad__how { margin: var(--spacing-0); color: var(--signature-pad-hint, var(--text-muted)); }
+.dk-signature-pad__label { font-weight: var(--font-medium); }
+.dk-signature-pad__box {
+  position: relative; block-size: var(--signature-pad-height, var(--spacing-40)); overflow: hidden;
+  border: var(--border-width-1) solid var(--signature-pad-border, var(--field-border)); border-radius: var(--signature-pad-radius, var(--radius-control));
+  background: var(--signature-pad-bg, var(--surface));
+}
+.dk-signature-pad--invalid .dk-signature-pad__box { border-color: var(--signature-pad-border-invalid, var(--danger)); }
+.dk-signature-pad__area { display: block; inline-size: var(--sizing-full); block-size: var(--sizing-full); touch-action: none; cursor: crosshair; user-select: none; -webkit-user-select: none; }
+.dk-signature-pad__area--typed, .dk-signature-pad--readonly .dk-signature-pad__area { cursor: default; }
+.dk-signature-pad--disabled .dk-signature-pad__area { cursor: not-allowed; }
+.dk-signature-pad__strokes { fill: none; stroke: var(--signature-pad-ink, var(--text)); stroke-width: var(--signature-pad-stroke, var(--border-width-2)); stroke-linecap: round; stroke-linejoin: round; }
+/* Left to right on any page, as in the saved SVG (its x is from the left): on a right-to-left page the name ended at
+   its x, past the box's left edge. */
+.dk-signature-pad__typed { fill: var(--signature-pad-ink, var(--text)); font-family: var(--font-serif); font-style: italic; font-size: var(--text-3xl); direction: ltr; }
+.dk-signature-pad__line {
+  position: absolute; inset-inline: var(--spacing-4); inset-block-end: var(--spacing-8); pointer-events: none;
+  border-block-end: var(--border-width-1) solid var(--signature-pad-line, var(--text-muted));
+}
+.dk-signature-pad__actions { display: flex; flex-wrap: wrap; gap: var(--spacing-1); justify-content: flex-end; }
+.dk-signature-pad--disabled .dk-signature-pad__box { opacity: var(--opacity-disabled); }
+@media (forced-colors: active) {
+  .dk-signature-pad__box { border-color: CanvasText; }
+  .dk-signature-pad__strokes { stroke: CanvasText; }
+  .dk-signature-pad__typed { fill: CanvasText; }
+  .dk-signature-pad__line { border-color: CanvasText; }
+}
+}

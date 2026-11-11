@@ -1,7 +1,8 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Input } from './Input';
+import { Input, InputAction } from './Input';
 import { NumberInput } from '../NumberInput/NumberInput';
+import { Field } from '../Field/Field';
 import { iconArg } from '../../../.storybook/icon-arg';
 
 const meta = {
@@ -29,6 +30,7 @@ export const Icons: Story = {
   render: () => <Col>
     <Input leftIcon="search" aria-label="Search" placeholder="Search" />
     <Input type="url" rightIcon="link" aria-label="Website" placeholder="https://" />
+    <Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />
   </Col>,
 };
 
@@ -69,6 +71,20 @@ export const Masked: Story = {
   </Col>,
 };
 
+/** Buttons inside the box, at the end: an icon action named by its label, or a text action such as Apply. Each comes
+    after the field in the Tab order, and a disabled Input disables them too. */
+function ActionsDemo() {
+  const [code, setCode] = React.useState('WELCOME10');
+  return <Col>
+      <Input aria-label="Coupon code" value={code} onChange={(e) => setCode(e.target.value)} actions={<InputAction label="Apply" />} />
+      <Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />
+      <Input size="sm" aria-label="Filter" defaultValue="Bandung" actions={<InputAction icon="close" label="Clear filter" />} />
+      <Input size="lg" aria-label="Gift card number" defaultValue="GC-4417" actions={<InputAction label="Redeem" />} />
+      <Input aria-label="Referral code" disabled defaultValue="ANA-2026" actions={<InputAction label="Check" />} />
+    </Col>;
+}
+export const Actions: Story = { render: () => <ActionsDemo /> };
+
 /** A <fieldset disabled> disables the fields inside, and they look disabled too. */
 export const InDisabledFieldset: Story = {
   name: 'In a disabled fieldset',
@@ -87,4 +103,26 @@ export const LongValue: Story = {
       <Input {...args} placeholder="A placeholder far longer than the input is wide" />
     </div>
   ),
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a width that fits what goes in, so the field says how much to type. */
+export const DoFitWidth: Story = {
+  name: 'Do: a width that fits',
+  render: () => <Col><Field label="Postcode"><Input className="w-24" inputMode="numeric" defaultValue="10110" /></Field><Field label="Street address"><Input defaultValue="Jalan Sudirman 12" /></Field></Col>,
+};
+/** Don't: every field full width, a five-digit postcode as wide as a street address. */
+export const DontFullWidthShort: Story = {
+  name: "Don't: everything full width",
+  render: () => <Col><Field label="Postcode"><Input inputMode="numeric" defaultValue="10110" /></Field><Field label="Street address"><Input defaultValue="Jalan Sudirman 12" /></Field></Col>,
+};
+/** Do: an error that says how to fix it. */
+export const DoHelpfulError: Story = {
+  name: 'Do: an error that helps',
+  render: () => <Col><Field label="Email" error="Enter an email with an @, like ana@example.com."><Input type="email" defaultValue="ana.example.com" /></Field></Col>,
+};
+/** Don't: an error that only says something is wrong. */
+export const DontVagueError: Story = {
+  name: "Don't: a vague error",
+  render: () => <Col><Field label="Email" error="Invalid input."><Input type="email" defaultValue="ana.example.com" /></Field></Col>,
 };

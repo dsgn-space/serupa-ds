@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag, withMotion } from '../../../tools/test/vitest/helpers';
+import { contrast, css, drag, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { SortableList } from './SortableList';
@@ -278,13 +278,27 @@ describe('SortableList', () => {
       const row = (name: string) => handle(name).closest('li') as HTMLElement;
       const top = (name: string) => row(name).getBoundingClientRect().top;
       const before = { gemini: top('Gemini'), mercury: top('Mercury') };
-      handle('Gemini').focus();
-      await userEvent.keyboard(' {ArrowDown}');
-      const moving = ['Gemini', 'Mercury'].map((n) => row(n).getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty));
-      // A frame in, each is still near its old place: Gemini above its new slot, Mercury below its new one.
-      expect([moving, Math.abs(top('Gemini') - before.gemini) < Math.abs(top('Gemini') - before.mercury), row('Apollo').getAnimations().length])
-        .toEqual([[['translate'], ['translate']], true, 0]);
-      await Promise.all(document.getAnimations().map((a) => a.finished));
+      // Each row's transitions, and where Gemini is as its slide starts, taken as each one starts: by the time the
+      // key press's round trip came back, on a busy machine the slide was past halfway (or over), and Gemini was
+      // already nearer its new slot than its old one.
+      // (Grabbing fades the row's border and shadow too; only the moves are counted.)
+      const ran: Record<string, string[]> = { Gemini: [], Mercury: [], Apollo: [] };
+      let geminiAtStart: number | null = null;
+      const onRun = (e: TransitionEvent) => {
+        if (e.propertyName !== 'translate') return;
+        for (const n of Object.keys(ran)) if (e.target === row(n)) ran[n].push(e.propertyName);
+        if (e.target === row('Gemini') && geminiAtStart == null) geminiAtStart = top('Gemini');
+      };
+      document.addEventListener('transitionrun', onRun, true);
+      try {
+        handle('Gemini').focus();
+        await userEvent.keyboard(' {ArrowDown}');
+        await expect.poll(() => ran.Gemini.length > 0 && ran.Mercury.length > 0).toBe(true);
+      } finally { document.removeEventListener('transitionrun', onRun, true); }
+      // As it starts, each is still at its old place: Gemini above its new slot, Mercury below its new one.
+      expect([ran.Gemini, ran.Mercury, Math.abs(geminiAtStart! - before.gemini) < Math.abs(geminiAtStart! - before.mercury), ran.Apollo])
+        .toEqual([['translate'], ['translate'], true, []]);
+      await settled();
       expect([names(), Math.round(top('Gemini')), Math.round(top('Mercury')), css(row('Gemini')).translate])
         .toEqual([['Apollo', 'Mercury', 'Gemini', 'Artemis'], Math.round(before.mercury), Math.round(before.gemini), 'none']);
     });

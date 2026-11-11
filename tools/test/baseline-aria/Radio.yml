@@ -1,3 +1,21 @@
+# Cards
+- radiogroup "Delivery":
+  - radio "Standard" [checked]
+  - text: Standard 3 to 5 days, free
+  - radio "Express"
+  - text: Express Next day, Rp 25.000
+  - radio "Pick up" [disabled]
+  - text: Pick up Collect from the Bandung store today
+
+# CardsInvalid
+- radiogroup "Plan" [invalid]:
+  - radio "Free"
+  - text: Free
+  - radio "Pro"
+  - text: Pro Everything in Free, plus unlimited projects
+  - radio "Team"
+  - text: Team
+
 # Controlled
 - radiogroup "Contact by":
   - radio "Email" [checked]
@@ -18,6 +36,58 @@
   - text: Pro Everything in Free, plus unlimited projects
   - radio "Team" [disabled]
   - text: Team
+
+# DoCardsWithDetails
+- radiogroup "Delivery":
+  - radio "Standard" [checked]
+  - text: Standard 3 to 5 days, free
+  - radio "Express"
+  - text: Express Next day, Rp 25.000
+
+# DoFewOptions
+- radiogroup "Contact me by":
+  - radio "Email" [checked]
+  - text: Email
+  - radio "Phone"
+  - text: Phone
+  - radio "Post"
+  - text: Post
+
+# DontCardsForShortOptions
+- radiogroup "Size":
+  - radio "S"
+  - text: S
+  - radio "M" [checked]
+  - text: M
+  - radio "L"
+  - text: L
+
+# DontLongList
+- radiogroup "Province":
+  - radio "Aceh"
+  - text: Aceh
+  - radio "Bali" [checked]
+  - text: Bali
+  - radio "Banten"
+  - text: Banten
+  - radio "Bengkulu"
+  - text: Bengkulu
+  - radio "Gorontalo"
+  - text: Gorontalo
+  - radio "Jakarta"
+  - text: Jakarta
+  - radio "Jambi"
+  - text: Jambi
+  - radio "Jawa Barat"
+  - text: Jawa Barat
+  - radio "Jawa Tengah"
+  - text: Jawa Tengah
+  - radio "Jawa Timur"
+  - text: Jawa Timur
+  - radio "Kalimantan Barat"
+  - text: Kalimantan Barat
+  - radio "Lampung"
+  - text: Lampung
 
 # Horizontal
 - radiogroup "Plan":
@@ -47,6 +117,15 @@
   - text: Donaudampfschifffahrtsgesellschaft
 
 # Playground
+- radiogroup "Plan":
+  - radio "Free"
+  - text: Free
+  - radio "Pro" [checked]
+  - text: Pro Everything in Free, plus unlimited projects
+  - radio "Team"
+  - text: Team
+
+# ReadOnly
 - radiogroup "Plan":
   - radio "Free"
   - text: Free

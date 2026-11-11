@@ -3,6 +3,7 @@
 //   node tools/test/size.mjs --update Name    set Name's budgets from what it weighs now (5% and 0.1 KiB over); with no
 //                                             name, only the component folders that have no budgets yet
 //   node tools/test/size.mjs --update Name --only alone    set that one budget and keep the others
+//   node tools/test/size.mjs --json size.json --previous last.json   and compare with last night's (nightly, below)
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand). Over budget fails; when a change is worth the bytes, raise the budget in the same pull request,
 // so the growth is a decision someone reviews.
@@ -39,10 +40,10 @@ import { purge, unusedComponentClasses, usedClasses } from '../../bin/serupa-pur
 const TOTALS = {
   'All components (index.js)': [73.4, 59.3, 'share'],   // +0.5 KiB on 2 Nov 2026: main sat at 0 B spare after the day's merges, and Navbar's shadow-root focus fix (GR95) takes it a few bytes over; the rest is room for Rating's target size (GR104) and the components queued behind it; +0.2 KiB on 2 Nov 2026: Icon size steps and weights (116+76) took main 49 B over; +0.5 KiB on 1 Nov 2026: main sat at 0 B spare, and TableRow href (TF3) takes the bundle 0.2 over; the rest is room for the narrow-screen and shadow-root fixes queued behind it; +0.2 KiB on 1 Nov 2026: Slider refits its end labels when a web font changes their width (main sat within bytes of the line and this took it 99 B over); +1.0 KiB on 31 Oct 2026: a standing margin (main at 113.4 of 113.6, and four queued accessibility fixes, RelativeTime and the untilFound helper for ErrorSummary, Accordion and Tabs, add about 0.4; it leaves about 0.8 spare after them, so a one-line fix doesn't need a raise of its own); +0.3 KiB on 31 Oct 2026: headroom for one-line accessibility fixes (RadioGroup ref.focus, #1191, leaves main at 0 B spare, and CheckboxGroup's ref.current.focus() needs 5 B more); +0.2 KiB on 31 Oct 2026: the shared field-control call (useFieldControl) in Slider (#1172) took main 16 B over, and SegmentedControl (#1173) and ColorPicker (#1175) add the same call; +1.0 KiB on 31 Oct 2026: headroom for shared code (after #1047 main sat within bytes of the line and #1048 went 3 B over; three lanes land shared code at once, and 0.5 left none for the day); +0.5 KiB on 31 Oct 2026: headroom for shared code (#997, #1000, #1001 and #1002 landed together and took main 57 B over); +0.5 KiB on 26 Oct 2026: headroom for shared code (main sat 0.2 KiB under, and #735, #777 and #781 each went 0.0 to 0.1 over it); +0.2 KiB on 26 Oct 2026: Firefox strict-CSP server styles applied from React's props (internal/serverStyles.ts, FW1); +1.0 KiB on 25 Oct 2026: headroom for shared code (the trigger contract, internal/trigger.ts, G9, needs 0.2 with the total at its budget); +0.3 KiB on 25 Oct 2026: SerupaProvider keeping inline labels and icons stable (internal/provider.tsx, U2) needs 0.12 over the 48 B left; +0.2 KiB on 25 Oct 2026: the open-change reasons (internal/openChange.ts, #531) took the shared code 0.1 over once that day's merges landed together; +1.6 KiB on 25 Oct 2026: label text (every folder's labels.ts, FileUpload's refusal messages too) counts as shared code; +0.9 the same day: the accessible-name warnings (internal/nameCheck.ts)
   'components.css': [28.5, 53.6, 'css'],
-  'serupa.iife.js': [123.5, 99.0, 'share'],   // 119.4 on 31 Oct 2026, once the full icon table moved to serupa-icons.iife.js (PF1); 610.1 with it
+  'serupa.iife.js': [126.8, 99.0, 'share'],   // +0.3 KiB on 11 Nov 2026: the public hooks useMediaQuery, useBreakpoint, useReducedMotion and useCopyToClipboard (internal/media.ts, internal/clipboard.ts) are on window.Serupa too, and took it 21 B over; +0.5 KiB on 10 Nov 2026: the shared control size (internal/controlSize.ts) that ButtonGroup and Toolbar pass to their buttons took it 69 B over, with main within bytes of the line; +2.3 KiB on 9 Nov 2026: main went 3 B over (165.5 of 165.5), and raises of 0.2 at a time turned main red with each shared-code merge; this gives it the same standing room as index.js (about 2.5 KiB, 1.5%), and real growth is still caught by each folder's budget and the nightly trend check (3% in a night); +0.2 KiB on 9 Nov 2026: the deprecated aliases of the API naming table (Tooltip delay, Switch pending, Field layout, Splitter direction, Fab and Toaster position), each with its development warning, until 15.0.0 removes them; they took it 0.1 over. 119.4 on 31 Oct 2026, once the full icon table moved to serupa-icons.iife.js (PF1); 610.1 with it
 };
 // KiB, gzipped: [budget, the size it was set at]. The totals that count shared code move with the budget.
-const LABELS = [3.1, 1.9];   // +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over; 3.1 the same day for the words of CodeBlock (50), OfflineBanner (58) and Chart (CH2), about 3.05 with all three
+const LABELS = [4.4, 1.9];   // +0.1 KiB on 10 Nov 2026: ShowMore's words (!253) and the locale-count labels merged at once took enLabels 9 B over 4.3 (GR329). +0.2 KiB on 9 Nov 2026 for SignaturePad's ten labels (RU9, 18 B over 4.0 with them, before Chart's). +0.1 KiB on 9 Nov 2026 for Chart's area and donut words (chartOther, chartShare, chartTotal). +0.1 KiB on 8 Nov 2026 for Table's column tools (resize, columns menu, row details: 40 B over). +0.1 KiB on 8 Nov 2026 for the date presets' nine labels (RU11). +0.2 KiB on 8 Nov 2026 for EventCalendar's words (RU8). +0.3 KiB on 7 Nov 2026 for CascadeSelect's words (about 0.1 KiB over 3.4), with room for the three ReUI components queued behind it (FilterBar, StatusTracker, TableOfContents), so each doesn't raise it again. +0.1 KiB on 7 Nov 2026 for Kanban's words (86 B over 3.2 by themselves, on top of Chat's). +0.1 KiB on 7 Nov 2026 for Chat's words (31 B over). +0.1 KiB on 6 Nov 2026: slack so neighbouring changes don't each raise it (four component lanes at once on GitLab). +0.1 KiB on 2 Nov 2026: main sat at its line after Sparkline's summary (CH3), and FileUpload's upload status (fileError, N9+48, #1450) takes enLabels 7 B over; 3.1 the same day for the words of CodeBlock (50), OfflineBanner (58) and Chart (CH2), about 3.05 with all three
 // KiB, gzipped: PhoneInput's country table (PHONE_COUNTRIES in phone.ts, the calling codes, groupings and lengths;
 // 2.4 on 26 Oct 2026). It's data, not code, and grows a row at a time, so it has its own line: a country added is
 // a choice made here, not a few bytes lost in PhoneInput's own budget.
@@ -51,7 +52,7 @@ const PHONE_DATA = 2.8;
 // 31 Oct 2026 with the choice read again on a return from the back/forward cache (FEC6: 2.37), and to 2.5 on 2 Nov
 // 2026 with the brands a page names in data-brands (I5: 2.44), and to 2.7 the same
 // day with the crossfade on a switch (30), and to 2.9 the same day with switches in a row, and during an app's own View Transition (GR115: 2.86).
-const FIXED = { 'utilities.css': 168, 'base.css': 1.85, 'theme.js': 2.9, 'tokens.css': 10.3, 'serupa-icons.iife.js': 525 };   // tokens.css: 7.4 on 31 Oct 2026, once it shipped without the description comments (PF2), 8.5 on 1 Nov 2026 with a unicode-range @font-face per script (F6), 0.7 KiB that saves 240 KiB of font on an English page; 8.7 the same day with the four Inter Fallback faces (144), so text doesn't move when Inter arrives; 9.0 the same day with the line heights and CJK fonts by lang (143); 9.6 the same day with the opt-in data-type-scale="fluid" axis (22); 10.0 the same day with the 30 chart colors (CH1); 10.3 on 2 Nov 2026 with the 15 role tokens for corners, shadows and spacing (E13, I6: 10.2 with both); serupa-icons.iife.js: 492.9 the same day, every Material Symbol, loaded only when a plain page names one outside the everyday set (PF1)
+const FIXED = { 'utilities.css': 168, 'base.css': 1.85, 'theme.js': 2.9, 'tokens.css': 10.5, 'serupa-icons.iife.js': 450 };   // tokens.css: 7.4 on 31 Oct 2026, once it shipped without the description comments (PF2), 8.5 on 1 Nov 2026 with a unicode-range @font-face per script (F6), 0.7 KiB that saves 240 KiB of font on an English page; 8.7 the same day with the four Inter Fallback faces (144), so text doesn't move when Inter arrives; 9.0 the same day with the line heights and CJK fonts by lang (143); 9.6 the same day with the opt-in data-type-scale="fluid" axis (22); 10.0 the same day with the 30 chart colors (CH1); 10.3 on 2 Nov 2026 with the 15 role tokens for corners, shadows and spacing (E13, I6: 10.2 with both); 10.5 on 8 Nov 2026 with the 12 status tokens for success, warning and info hover, on-, border and subtle hover; serupa-icons.iife.js: 492.9 the same day, every Material Symbol, loaded only when a plain page names one outside the everyday set (PF1); 450 on 9 Nov 2026 (430.4), once each path writes its smooth curves as t (the same drawing, 26% shorter)
 // KiB as shipped (woff2 is compressed already). Since F6 (1 Nov 2026) tokens.css points at Inter split by script
 // (tools/fonts/subset.py), so an English page downloads the latin files: 103.3 and 113.2 KiB, against 344 and 379
 // for the whole fonts, which still ship for a page that links them itself.
@@ -78,7 +79,8 @@ export function SignIn() {
 // comes along (512.7 on 25 Oct 2026). Icon's README and Getting started say so; this keeps the number in sight.
 // 550 on 1 Nov 2026 (548.5): the table is now 32 parts (I1), and a build that inlines them wraps each part and the
 // re-exports in its own module helpers. A build that splits loads one part of about 25 KiB instead of the table.
-const NO_SPLIT = 550;
+// 505 on 9 Nov 2026 (485.2): each path writes its smooth curves as t, the same drawing in 26% fewer characters.
+const NO_SPLIT = 505;
 
 const DIR = path.join(HERE, 'baseline-size');
 const COMP = path.join(PROJECT, 'src', 'components');
@@ -96,6 +98,13 @@ const br = (buf) => zlib.brotliCompressSync(buf, { params: { [zlib.constants.BRO
 const lazy = { name: 'lazy', setup(b) { b.onResolve({ filter: /.*/ }, (a) => a.kind === 'dynamic-import' ? { path: a.path, external: true } : undefined); } };
 const build = async (code, plugins) => (await esbuild.build({ stdin: { contents: code, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom'], plugins, logLevel: 'silent' })).outputFiles[0].contents;
 const bundled = async (code) => gz(await build(code, [lazy]));
+// What a folder imported alone is made of, largest first, for a failure's detail: the files and their minified
+// bytes, so a size that differs between machines (or grew) says which file brought the difference.
+const inputsOf = async (code) => {
+  const r = await esbuild.build({ stdin: { contents: code, resolveDir: PROJECT }, bundle: true, minify: true, write: false, metafile: true, format: 'esm', external: ['react', 'react-dom'], plugins: [lazy], logLevel: 'silent' });
+  const ins = Object.entries(Object.values(r.metafile.outputs)[0].inputs).sort((a, b) => b[1].bytesInOutput - a[1].bytesInOutput);
+  return `${ins.length} files, largest: ${ins.slice(0, 8).map(([f, i]) => `${f.replace(/^dist\/js\//, '')} ${i.bytesInOutput} B`).join(', ')}`;
+};
 const file = (f) => gz(fs.readFileSync(path.join(PROJECT, 'dist', f)));
 
 // What each folder exports (its index.ts, as the package's index.js re-exports it), and its CSS in the build's order.
@@ -139,7 +148,7 @@ if (ui > 0) {
 
 const budgets = Object.fromEntries(folders.map((n) => [n, fs.existsSync(budgetFile(n)) ? JSON.parse(fs.readFileSync(budgetFile(n), 'utf8')) : null]));
 const sum = (k) => folders.reduce((t, n) => t + (budgets[n]?.[k] || 0), 0);
-const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(at + sum(k) - was + (k === 'share' ? LABELS[0] - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
+const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(Number(at) + sum(String(k)) - Number(was) + (k === 'share' ? LABELS[0] - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
 BUDGET['bundle.css'] = +(BUDGET['components.css'] + BUDGET['utilities.css']).toFixed(1);
 const size = { 'All components (index.js)': whole }, brotli = {};
 for (const f of ['components.css', 'utilities.css', 'bundle.css', 'base.css', 'theme.js', 'serupa.iife.js', 'serupa-icons.iife.js']) { size[f] = file(f); brotli[f] = br(fs.readFileSync(path.join(PROJECT, 'dist', f))); }
@@ -189,9 +198,27 @@ const phoneData = gz((await esbuild.build({ stdin: { contents: "export { PHONE_C
 totals.push({ name: `PhoneInput's country table (PHONE_COUNTRIES): ${kib(phoneData)} KiB gzipped, within ${PHONE_DATA} KiB`, ok: phoneData <= PHONE_DATA * 1024 && phoneData >= 1024,
   detail: phoneData < 1024 ? 'not measured: the table should bundle from src/components/PhoneInput/phone.ts' : `${over(phoneData - PHONE_DATA * 1024)} over; if the countries are worth it, raise PHONE_DATA in tools/test/size.mjs` });
 const LABEL = { alone: 'imported alone', share: 'adds to the whole package', css: 'adds to components.css' };
+const overAlone = new Set(folders.filter((n) => budgets[n] && measured[n].alone > budgets[n].alone * 1024));
+const made = Object.fromEntries(await Promise.all([...overAlone].map(async (n) => [n, await inputsOf(pick(names[n]))])));
 const own = folders.flatMap((n) => (budgets[n]
   ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'share' ? SHARE_NOISE : 0),
-    detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json` }))
+    detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json${k === 'alone' && made[n] ? ` (${made[n]})` : ''}` }))
   : [{ name: `${n} has size budgets`, ok: false, detail: `run node tools/test/size.mjs --update ${n} and commit tools/test/baseline-size/${n}.json` }]));
+// Size over time (nightly, as the benchmarks are): a budget allows 5% over what a folder weighed when it was set, so a
+// package that grows a little with every merge passes for months. --json writes tonight's sizes; --previous compares
+// them with the last night's and fails when a total, the starter page or a folder imported alone grew 3% (and 0.2 KiB)
+// in one night without its budget moving.
+const flag = (f) => (process.argv.includes(f) ? process.argv[process.argv.indexOf(f) + 1] : null);
+const tonight = { totals: Object.fromEntries(rows.map((r) => [r.name, r.now])), starter, alone: Object.fromEntries(folders.filter((n) => measured[n]).map((n) => [n, measured[n].alone])) };
+if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify(tonight, null, 1));
+const trend = [];
+if (flag('--previous') && fs.existsSync(flag('--previous'))) {
+  const last = JSON.parse(fs.readFileSync(flag('--previous'), 'utf8'));
+  const grew = (name, was, now) => trend.push({ name: `${name}: ${kib(was)} → ${kib(now)} KiB since last night`, ok: !(was && now > was * 1.03 && now - was > 0.2 * 1024),
+    detail: `${(100 * (now / was - 1)).toFixed(1)}% in one night: find the merge that grew it and decide whether it's worth the bytes` });
+  for (const [n, now] of Object.entries(tonight.totals)) grew(n, last.totals?.[n], now);
+  grew('Starter page', last.starter, starter);
+  for (const [n, now] of Object.entries(tonight.alone)) if (last.alone?.[n]) grew(`${n} imported alone`, last.alone[n], now);
+}
 const orphans = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => !folders.includes(f.replace(/\.json$/, ''))) : [];
-done(report('Size', [...totals, ...own, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));
+done(report('Size', [...totals, ...own, ...trend, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));

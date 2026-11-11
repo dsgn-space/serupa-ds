@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, oneOf, omit } from "../../internal/cn";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { Button } from "../Button/Button";
-import { component } from "../../internal/component";
-import { useSettings } from "../../internal/provider";
-import * as icons from "../../material/builtin";
-import type { IconData } from "../../material/types";
-import { rootOf } from "../../internal/root";
+'use client';
+import * as React from 'react';
+import { cn, oneOf, omit } from '../../internal/cn';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { Button } from '../Button/Button';
+import { component } from '../../internal/component';
+import { useSettings } from '../../internal/provider';
+import * as icons from '../../material/builtin';
+import type { IconData } from '../../material/types';
+import { rootOf } from '../../internal/root';
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
 
@@ -31,7 +31,7 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
    danger or neutral. role is "alert" for warning and danger (read at once when it appears) and "status" for the
    others; pass role to change it. className and every other prop go to the box. */
 const OWN = { tone: 1, title: 1, icon: 1, actions: 1, onDismiss: 1, dismissLabel: 1, className: 1, children: 1 } as const;
-const TONES: readonly AlertTone[] = ["info", "success", "warning", "danger", "neutral"];
+const TONES: readonly AlertTone[] = ['info', 'success', 'warning', 'danger', 'neutral'];
 const ICONS: Record<AlertTone, IconData> = { info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error, neutral: icons.Info };
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -40,7 +40,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
 // the current one, tabindex -1: L8E23). A handler that moves focus, or keeps the alert, is left alone.
 function dismissAndRefocus(e: React.MouseEvent<HTMLElement>, onDismiss: () => void): void {
   // Inside a shadow root, what has focus and what can take it are the root's, not the page's (GR60).
-  const me = e.currentTarget, box = me.closest(".dk-alert"), doc = me.ownerDocument, r = rootOf(me);
+  const me = e.currentTarget, box = me.closest('.dk-alert'), doc = me.ownerDocument, r = rootOf(me);
   const near = box && r.activeElement === me ? Array.from(r.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((el) => el.tabIndex >= 0 && !box.contains(el)) : [];
   const next = near.filter((el) => box!.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING);
   const prev = near.filter((el) => !next.includes(el)).reverse();
@@ -54,15 +54,15 @@ function dismissAndRefocus(e: React.MouseEvent<HTMLElement>, onDismiss: () => vo
 }
 
 /** A message about the page or a task: a tinted box with an icon, an optional title, actions and a close button. */
-export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>("Alert", function Alert(props, ref) {
+export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>('Alert', function Alert(props, ref) {
   const sds = useSettings();
   const rest = omit(props, OWN);
-  const tone = oneOf(TONES, props.tone, "info");
-  const has = (n: React.ReactNode) => n != null && n !== false && n !== "";
-  if (rest.role == null) rest.role = tone === "warning" || tone === "danger" ? "alert" : "status";
+  const tone = oneOf(TONES, props.tone, 'info');
+  const has = (n: React.ReactNode) => n != null && n !== false && n !== '';
+  if (rest.role == null) rest.role = tone === 'warning' || tone === 'danger' ? 'alert' : 'status';
   const icon = props.icon === false ? null : props.icon == null || props.icon === true ? <Icon icon={ICONS[tone]} /> : asIcon(props.icon);
   return (
-    <div {...rest} ref={ref} className={cn("dk-alert", "dk-alert--" + tone, props.className)} data-component="alert" data-tone={tone}>
+    <div {...rest} ref={ref} className={cn('dk-alert', 'dk-alert--' + tone, props.className)} data-component="alert" data-tone={tone}>
       {icon ? <span className="dk-alert__icon" aria-hidden="true">{icon}</span> : null}
       <div className="dk-alert__content">
         {has(props.title) ? <p className="dk-alert__title">{props.title}</p> : null}

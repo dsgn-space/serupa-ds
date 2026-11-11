@@ -1,0 +1,111 @@
+{
+  "bottomNav": {
+    "$description": "BottomNav's component tokens. Each one is an optional override: set the CSS variable (--bottom-nav-<name>) on the page, a container or one BottomNav, and every BottomNav inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "The bar's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-bg"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The hairline along its top.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-border"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A link's icon and label (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-text"
+          }
+        }
+      },
+      "text-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A link under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-text-hover"
+          }
+        }
+      },
+      "icon-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The pill behind the icon under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-icon-bg-hover"
+          }
+        }
+      },
+      "text-active": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The current page's icon and label (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-text-active"
+          }
+        }
+      },
+      "icon-bg-active": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The pill behind the current page's icon.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-icon-bg-active"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The keyboard focus ring, inside the link.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-focus-ring"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "The bar's height above the safe-area inset (64px); links fill it, so each is a 64px-tall target.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-height"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-40}",
+        "$description": "Its stacking: with a sticky Navbar, under dialogs and toasts.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-z-index"
+          }
+        }
+      }
+    }
+  }
+}

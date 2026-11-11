@@ -20,7 +20,7 @@ export const CSS = path.join(ROOT, 'src', 'components', 'Badge', 'Badge.css');
 const START = '/* badge-palette:start (made from tokens.json by npm run tokens: edit tools/tokens/badge-palette.mjs) */';
 const END = '/* badge-palette:end */';
 const GRAYS = new Set(['slate', 'gray', 'zinc', 'neutral', 'stone']);
-// The status tones, by the family each reads.
+// The status tones, by the family each reads (their colors come from the status roles, not these families).
 export const STATUS = { success: 'green', warning: 'amber', danger: 'red', info: 'sky' };
 
 const hexOf = (colors, name) => {
@@ -53,12 +53,16 @@ export function rules(tokens) {
   const light = (f) => ({ sbg: v(`${f.name}-100`), sfg: v(`${f.name}-700`), xbg: v(`${f.name}-${f.solid}`), xfg: v('white'), o: v(`${f.name}-700`), obd: v(`${f.name}-700`) });
   const dark = (f) => ({ sbg: v(`${f.name}-950`), sfg: v(`${f.name}-300`), xbg: v(`${f.name}-400`), xfg: v(`${f.name}-950`), o: v(`${f.name}-300`), obd: v(`${f.name}-400`) });
   const both = (f) => { const l = light(f), d = dark(f); return Object.fromEntries(Object.keys(l).map((k) => [k, `light-dark(${l[k]}, ${d[k]})`])); };
+  // A status tone follows its roles (success-subtle, success-text, success, on-success), so a theme or page that sets
+  // --success or --danger moves its badges too (GR249); each is a --badge-<status>-* component token. A clickable solid one
+  // moves toward <status>-hover on hover and press, which keeps on-<status> at 4.5:1+ whether that is dark or white.
+  const statusTone = (t) => `.dk-badge--tone-${t} { --dk-badge-sbg: var(--badge-${t}-subtle-bg, var(--${t}-subtle)); --dk-badge-sfg: var(--badge-${t}-subtle-text, var(--${t}-text)); --dk-badge-xbg: var(--badge-${t}-solid-bg, var(--${t})); --dk-badge-xfg: var(--badge-${t}-solid-text, var(--on-${t})); --dk-badge-ofg: var(--badge-${t}-outline-text, var(--${t}-text)); --dk-badge-obd: var(--badge-${t}-outline-border, var(--${t})); --dk-badge-xhover: var(--badge-${t}-solid-hover, var(--${t}-hover)); }`;
   const tone = (name, fam) => `.dk-badge--tone-${name} { --dk-badge-sbg: var(--dk-bdg-${fam}-sbg); --dk-badge-sfg: var(--dk-bdg-${fam}-sfg); --dk-badge-xbg: var(--dk-bdg-${fam}-xbg); --dk-badge-xfg: var(--dk-bdg-${fam}-xfg); --dk-badge-ofg: var(--dk-bdg-${fam}-o); --dk-badge-obd: var(--dk-bdg-${fam}-obd); }`;
   return [
     `:root, [data-theme$="-light"] { --dk-bdg-xlayer: var(--black); ${set(light)} }`,
     `[data-theme$="-dark"] { --dk-bdg-xlayer: var(--white); ${set(dark)} }`,
     `:root:is([data-brand], [data-mode]):not([data-theme]), [data-mode]:not([data-theme]) { --dk-bdg-xlayer: light-dark(var(--black), var(--white)); ${set(both)} }`,
-    ...Object.entries(STATUS).map(([name, fam]) => tone(name, fam)),
+    ...Object.keys(STATUS).map(statusTone),
     ...fams.map((f) => tone(f.name, f.name)),
   ].join('\n');
 }

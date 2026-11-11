@@ -1,0 +1,30 @@
+/* ---------------------------------------------------------------
+   FilterBar: a wrapping row: the chips, "Add filter", "Clear all", any actions, then the results count at the end.
+   A chip is one outlined box (border, 6px corners, surface background, 28px tall like a sm control plus its border):
+   its text button, then a small × button. A chip with nothing chosen yet is dashed. The editor in the popover is a
+   column of its control and a Done button at the end.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--filter-bar-gap, var(--spacing-2)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--filter-bar-text, var(--text)); }
+.dk-filter-bar__chips { display: contents; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.dk-filter-bar__chip, .dk-filter-bar__add { display: inline-flex; align-items: center; min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full); }
+.dk-filter-bar__chip {
+  gap: var(--spacing-0\.5); padding-inline-end: var(--spacing-0\.5); border: var(--border-width-1) solid var(--filter-bar-chip-border, var(--field-border));
+  border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: var(--filter-bar-chip-bg, var(--surface));
+}
+.dk-filter-bar__chip--empty { border-style: dashed; }
+.dk-filter-bar__edit {
+  min-inline-size: var(--spacing-0); min-block-size: var(--control-height-sm); margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2) var(--spacing-1);
+  border: var(--spacing-0); border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: transparent; color: inherit; font: inherit; font-weight: var(--font-medium);
+  text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; touch-action: manipulation;
+}
+@media (hover: hover) { .dk-filter-bar__edit:hover { text-decoration: underline; } }
+.dk-filter-bar__edit:focus-visible { outline: var(--focus-ring-width) solid var(--filter-bar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-filter-bar__edit[aria-expanded="true"] { color: var(--filter-bar-chip-open, var(--primary)); }
+.dk-filter-bar__count { margin-inline-start: auto; color: var(--filter-bar-muted, var(--text-muted)); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dk-filter-bar__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); }
+.dk-filter-bar__editor { display: flex; flex-direction: column; gap: var(--spacing-3); min-inline-size: var(--filter-bar-editor-width, var(--spacing-56)); }
+.dk-filter-bar__options { max-block-size: var(--spacing-72); overflow-y: auto; overscroll-behavior-block: contain; }
+.dk-filter-bar__done { align-self: flex-end; }
+@media (forced-colors: active) { .dk-filter-bar__chip { border-color: CanvasText; } }
+}

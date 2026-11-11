@@ -49,6 +49,25 @@ Drawn from the `FullScreen` story.
 - Use `alert` only for decisions people must make. It hides the × and stops a backdrop click from closing it.
 - Keep the body short. Pick `size="sm"` for a confirmation and `lg` only when the content needs the width.
 - For a long form on a phone, use `fullScreen="mobile"`. Under 640px the panel fills the screen with square corners, and the footer sits at the bottom, clear of the home bar.
+- For a form in the dialog, give the form an `id` and make the main button in `footer` its submit button with `form`, so Enter in a field submits it as it would on a page. The footer sits outside the form, and without it, Enter in a dialog with more than one field does nothing. On a failed submit, move focus to the first field with an error (or an ErrorSummary for a long form), as a page does:
+
+```tsx
+<Dialog open={open} onOpenChange={setOpen} title="New project"
+  footer={<><Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button><Button type="submit" form="new-project">Create project</Button></>}>
+  <form id="new-project" onSubmit={(e) => { e.preventDefault(); if (!name.trim()) { setError("Enter a project name"); nameRef.current?.focus(); return; } create(name); }}>
+    <Field label="Project name" required error={error}><Input ref={nameRef} value={name} onChange={(e) => setName(e.target.value)} /></Field>
+  </form>
+</Dialog>
+```
+
+- Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
+
+### Do and don't
+
+- **Do:** Ask the question in the title, and name the buttons for what they do: "Delete Atlas?", with Keep project and Delete project. (`DoAskTheQuestion`)
+- **Don't:** Ask "Are you sure?" with OK and Cancel: people have to read the rest to learn what OK does. (`DontAreYouSure`)
+- **Do:** Put the main action last in `footer`, where reading ends. (`DoMainActionLast`)
+- **Don't:** Put it first: people pass it on the way to Cancel, and the order differs from every other dialog. (`DontMainActionFirst`)
 
 ## Behavior
 
@@ -144,7 +163,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |
 | `--dialog-width-md` | `container-lg` | size="md", the default (512px). |
 | `--dialog-width-lg` | `container-2xl` | size="lg" (672px). |
-| `--dialog-padding` | `spacing-6` | Padding inside the panel (24px). |
+| `--dialog-padding` | `space-surface` | Padding inside the panel (24px). |
 | `--dialog-gap` | `spacing-4` | Space between the header, body and footer (16px). |
 | `--dialog-margin` | `spacing-4` | The least space between the panel and the edge of the screen (16px). |
 | `--dialog-title-weight` | `font-semibold` | The title's weight (600). |

@@ -6,11 +6,11 @@ export interface MeterLabels {
       ("92%, high"). zone is where the value falls: under low, between low and high, or over high. */
   meterZone: (value: string, zone: MeterZone) => string;
 }
-const EN: Record<MeterZone, string> = { low: "low", medium: "medium", high: "high" };
-const ID: Record<MeterZone, string> = { low: "rendah", medium: "sedang", high: "tinggi" };
+const EN: Record<MeterZone, string> = { low: 'low', medium: 'medium', high: 'high' };
+const ID: Record<MeterZone, string> = { low: 'rendah', medium: 'sedang', high: 'tinggi' };
 export const en: MeterLabels = {
-  meterZone: (value, zone) => value + ", " + EN[zone],
+  meterZone: (value, zone) => value + ', ' + EN[zone],
 };
 export const id: MeterLabels = {
-  meterZone: (value, zone) => value + ", " + ID[zone],
+  meterZone: (value, zone) => value + ', ' + ID[zone],
 };

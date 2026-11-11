@@ -80,6 +80,17 @@ describe('Blocks/Comment thread', () => {
     expect(mine().element().textContent).toContain('Yes, I will try 20px.');
   });
 
+  test('the Escape that cancels an input method\'s composition keeps the edit open (GR299)', async () => {
+    await render(<Harness />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    // The edit box takes focus once it has drawn, which in WebKit can be after the click returns.
+    await expect.poll(() => document.activeElement?.getAttribute('role') === 'textbox' || document.activeElement instanceof HTMLTextAreaElement).toBe(true);
+    const box = document.activeElement as HTMLElement;
+    box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true, cancelable: true }));
+    await new Promise((r) => setTimeout(r, 100));
+    expect([box.isConnected, document.activeElement === box]).toEqual([true, true]);
+  });
+
   test('Delete moves focus to the next comment, and Undo brings it back focused without deleting', async () => {
     const onDelete = vi.fn();
     await render(<Harness onDelete={onDelete} />);
@@ -116,15 +127,15 @@ describe('Blocks/Comment thread', () => {
   test('a reply that fails keeps its words in the box and ends the loading state', async () => {
     let fail = () => {};
     const onReply = vi.fn(() => new Promise<void>((_, no) => { fail = () => no(new Error('offline')); }));
-    await render(<CommentThread comments={start} onReply={onReply} />);
+    const view = await render(<CommentThread comments={start} onReply={onReply} />);
     await userEvent.fill(page.getByRole('textbox', { name: 'Reply' }), 'Still here');
     await userEvent.click(page.getByRole('button', { name: 'Post reply' }));
     await expect.element(page.getByRole('button', { name: 'Post reply' })).toHaveAttribute('aria-busy', 'true');
     fail();
     await expect.poll(() => (page.getByRole('button', { name: 'Post reply' }).element() as HTMLButtonElement).getAttribute('aria-busy')).not.toBe('true');
     await expect.element(page.getByRole('textbox', { name: 'Reply' })).toHaveValue('Still here');
-    await expect.element(page.getByText("Couldn't post the reply. Try again.")).toBeVisible();
-    await expect.poll(said).toContain("Couldn't post the reply");
+    await expect.element(view.locator.getByText('Couldn’t post the reply. Try again.')).toBeVisible();
+    await expect.poll(said).toContain('Couldn’t post the reply');
     expect(said()).not.toContain('Reply posted');
   });
 
@@ -144,14 +155,32 @@ describe('Blocks/Comment thread', () => {
   });
 
   test('a save that fails keeps the box open with its words, and says so once (GR144)', async () => {
-    await render(<CommentThread comments={start} onReply={() => {}} onEdit={() => Promise.reject(new Error('offline'))} />);
+    const view = await render(<CommentThread comments={start} onReply={() => {}} onEdit={() => Promise.reject(new Error('offline'))} />);
     await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
     await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
     await userEvent.click(page.getByRole('button', { name: 'Save' }));
-    await expect.element(page.getByText("Couldn't save the comment. Try again.")).toBeVisible();
-    await expect.poll(said).toContain("Couldn't save the comment");
+    await expect.element(view.locator.getByText('Couldn’t save the comment. Try again.')).toBeVisible();
+    await expect.poll(said).toContain('Couldn’t save the comment');
     await expect.element(page.getByRole('textbox', { name: 'Edit comment' })).toHaveValue('Yes, 24px.');
     expect(said()).not.toContain('Comment saved');
+  });
+
+  test('Save is busy until the save settles, so a double click sends the edit once', async () => {
+    let done = () => {};
+    const onEdit = vi.fn(() => new Promise<void>((ok) => { done = ok; }));
+    await render(<CommentThread comments={start} onReply={() => {}} onEdit={onEdit} />);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    await userEvent.fill(page.getByRole('textbox', { name: 'Edit comment' }), 'Yes, 24px.');
+    const form = (page.getByRole('textbox', { name: 'Edit comment' }).element() as HTMLTextAreaElement).form!;
+    const save = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    save.click();
+    await expect.poll(() => save.getAttribute('aria-busy')).toBe('true');
+    save.click();
+    form.requestSubmit();
+    expect(onEdit).toHaveBeenCalledTimes(1);
+    done();
+    await expect.poll(said).toContain('Comment saved');
+    expect(onEdit).toHaveBeenCalledTimes(1);
   });
 
   test('every word can be given in the page language', async () => {

@@ -10,7 +10,7 @@ const src = read('src/internal/currency.ts');
 const table = (name) => {
   const body = src.slice(src.indexOf(`const ${name}:`), src.indexOf('})();', src.indexOf(`const ${name}:`)));
   const t = {};
-  for (const [, list, n] of body.matchAll(/of "([A-Z ]+)"\.split\(" "\)\) t\[c\] = (\d)/g)) for (const c of list.split(' ')) t[c] = Number(n);
+  for (const [, list, n] of body.matchAll(/of ["']([A-Z ]+)["']\.split\(["'] ["']\)\) t\[c\] = (\d)/g)) for (const c of list.split(' ')) t[c] = Number(n);
   return t;
 };
 const iso = table('DIGITS'), shown = table('SHOWN');

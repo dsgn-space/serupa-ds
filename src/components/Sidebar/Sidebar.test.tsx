@@ -6,6 +6,7 @@ import { config, configure } from '../../internal/config';
 import { cdp, server, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press, tabTo, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { Sidebar, SidebarItem as I, SidebarSection as S } from './Sidebar';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
@@ -72,6 +73,13 @@ describe('Sidebar', () => {
       .toEqual([true, true, true, '#router/r', 'page', 'BUTTON']);
   });
 
+  test('in a container narrower than its width (320 px at 125% text), it fits the container instead of overflowing it', async () => {
+    await render(<div id="narrow" style={{ width: 200, height: 300, display: 'flex' }}><Sidebar id="sbn" aria-label="Main"><I href="#a" label="Inbox" /></Sidebar></div>);
+    const nav = document.getElementById('sbn')!;
+    expect(nav.getBoundingClientRect().width).toBeLessThanOrEqual(200);
+    expect(document.getElementById('narrow')!.scrollWidth).toBeLessThanOrEqual(200);
+  });
+
   test('a <nav aria-label="Main">, 256px wide, the parent\'s height, a 1px inner edge; refs and props reach it', async () => {
     const sref = React.createRef<HTMLElement>(), iref = React.createRef<HTMLAnchorElement>();
     await render(<App sref={sref} iref={iref} />);
@@ -95,15 +103,24 @@ describe('Sidebar', () => {
     expect([s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft]).toEqual(['14px', '500', '8px', '12px']);
   });
 
-  test('muted items, shaded and text-colored on hover; the current page the same', async () => {
+  test('muted items, shaded and text-colored on hover; the current page also has a 2px primary bar at its start that hover never draws, and darkens under the pointer', async () => {
     await render(<App />);
-    const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor'];
+    const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor', 'boxShadow'];
     await expect.poll(() => pick(el('iinbox'), keys)[1]).toBe('rgba(0, 0, 0, 0)');
     const rest = pick(el('iinbox'), keys), current = pick(el('ihome'), keys);
     expect(current[0]).not.toBe(rest[0]);
+    expect(rest[2]).toBe('none');
+    expect(current[2]).toMatch(/\) 2px 0px 0px 0px inset$/);
     await userEvent.hover(el('iinbox'));
-    await expect.poll(() => pick(el('iinbox'), keys)).toEqual(current);
+    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], current[1], 'none']);
+    await userEvent.hover(el('ihome'));
+    await expect.poll(() => css(el('ihome')).backgroundColor).not.toBe(current[1]);
     await away();
+  });
+
+  test('right to left: the current page’s bar is at the right edge', async () => {
+    await render(<div dir="rtl"><App /></div>);
+    expect(css(el('ihome')).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/);
   });
 
   test('a badge sits at the end, 12px in', async () => {
@@ -242,15 +259,19 @@ describe('Sidebar', () => {
         React.act(() => setCollapsed(to));
         const widths = new Set<number>(), props = new Set<string>();
         const t0 = performance.now();
+        let frames = 0;
         while (n.dataset.slide !== undefined && performance.now() - t0 < 1000) {
           widths.add(Math.round(page.getBoundingClientRect().left));
           for (const a of n.getAnimations({ subtree: true })) if (a instanceof CSSTransition && (a.effect as KeyframeEffect).target === n) props.add(a.transitionProperty);
+          frames++;
           await new Promise((r) => requestAnimationFrame(r));
         }
         // While it slides the page sits still: one position (expanding, the new one; collapsing, the old one).
         expect([widths.size, [...props].sort(), Math.round(rect(n).width), n.dataset.slide]).toEqual([1, ['clip-path', 'translate'], w, undefined]);
-        // The class and clip changes at the start and end each lay out once; a width transition laid out on every frame.
-        if (session) expect((await layouts()) - before).toBeLessThanOrEqual(6);
+        // The class and clip changes at the start and end each lay out once; a width transition laid out on every frame
+        // (at least frames + 2). Idle this is 3 to 6 over about 16 frames; on a loaded machine 7 or 8, from style
+        // changes that land in separate frames, so the limit is 10 and holds only when there were frames enough to tell.
+        if (session && frames >= 12) expect((await layouts()) - before, `${frames} frames`).toBeLessThanOrEqual(10);
       }
       React.act(() => setCollapsed(true));
       await new Promise((r) => setTimeout(r, 60));
@@ -451,6 +472,21 @@ describe('Sidebar', () => {
     expect([low, n]).toEqual([[], 12]);
   });
 
+  test('focus ring on the current page keeps 3:1 against both sides in all six themes: a surface gap inside it, not the highlight fill', async () => {
+    await render(<App />);
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
+    await tabTo(el('ihome'));
+    const low: string[] = []; let n = 0;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const s = css(el('ihome')), gap = /rgba?\([^)]*\)/.exec(s.boxShadow)?.[0] ?? s.backgroundColor;
+      for (const [name, on] of [['outside', css(el('sb')).backgroundColor], ['inside', gap]]) { const r = contrast(s.outlineColor, on); n++; if (r < 3) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    still.remove();
+    expect([low, n]).toEqual([[], 12]);
+  });
+
   test('pressed: an item held down fills with pressed, one step past hover', async () => {
     await render(<App />);
     const i = el('iinbox');
@@ -478,5 +514,32 @@ describe('Sidebar', () => {
     await userEvent.click(el('gfix'));
     expect(el('gfix').getAttribute('aria-expanded')).toBe('true');
     expect(calls).toEqual([[true, 'trigger'], [false, 'trigger']]);
+  });
+  test('a label cut later, by a font that loads or changes, gets its title then; in a Tooltip, which shows the cut label itself, none', async () => {
+    const long = 'Benachrichtigungseinstellungen und Datenschutz';
+    await render(<div style={{ height: 600 }}><Sidebar aria-label="Late">
+      <S><I id="late" href="#a" icon="settings" label="Notifications" />
+        <Tooltip content="Opens in a new tab"><I id="tipped" href="#b" icon="mail" label={long} /></Tooltip></S>
+    </Sidebar></div>);
+    await settled();
+    expect([el('late').getAttribute('title'), el('tipped').getAttribute('title')]).toEqual([null, null]);
+    // A wider font in the same box: the label's size doesn't change, so only the font event says so.
+    [...el('late').querySelectorAll('span')].find((n) => n.textContent === 'Notifications')!.style.letterSpacing = '12px';
+    document.fonts.dispatchEvent(new Event('loadingdone'));
+    await expect.poll(() => el('late').title).toBe('Notifications');
+  });
+  test('a label cut with an ellipsis shows in full as the item\'s title (GR117); a short one, a title of its own and the rail have none', async () => {
+    const long = 'Benachrichtigungseinstellungen und Datenschutz';
+    const { rerender } = await render(<div style={{ height: 600 }}><Sidebar aria-label="Cut">
+      <S><I id="long" href="#a" icon="settings" label={long} /><I id="short" href="#b" icon="home" label="Home" /><I id="own" href="#c" icon="mail" label={long} title="Mine" />
+        <I id="grp" icon="folder" label={long}><I href="#d" label="Child" /></I></S>
+    </Sidebar></div>);
+    await settled();
+    expect([el('long').title, el('short').getAttribute('title'), el('own').title, el('grp').title]).toEqual([long, null, 'Mine', long]);
+    await rerender(<div style={{ height: 600 }}><Sidebar aria-label="Cut" collapsed>
+      <S><I id="long" href="#a" icon="settings" label={long} /></S>
+    </Sidebar></div>);
+    await settled();
+    expect(el('long').getAttribute('title')).toBe(null);
   });
 });

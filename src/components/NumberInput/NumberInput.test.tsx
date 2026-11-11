@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render as mount } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
@@ -262,6 +262,30 @@ describe('NumberInput', () => {
     expect([field('a').value, field('b').value]).toEqual(['1500,25', '1500.25']);
   });
 
+  test('GR175: percent without a step: leaving it unedited keeps 0.15, typing 15 gives 0.15, ArrowUp from 15% is 16%, and one shown decimal keeps 0.125', async () => {
+    const calls: (number | null)[] = [];
+    await render(<><NumberInput id="p" aria-label="Rate" locale="en-US" defaultValue={0.15} formatOptions={{ style: 'percent' }} onValueChange={(n) => calls.push(n)} />
+      <NumberInput id="q" aria-label="Fine rate" locale="en-US" defaultValue={0.1} formatOptions={{ style: 'percent', maximumFractionDigits: 1 }} onValueChange={(n) => calls.push(n)} />
+      {/* Somewhere for Tab to go: from the page's last field, Firefox takes focus out of the page, which NumberInput
+          treats as switching windows, so it keeps the typed text as it is (windowBlur). */}
+      <button type="button">After</button></>);
+    const p = document.getElementById('p') as HTMLInputElement, q = document.getElementById('q') as HTMLInputElement;
+    await userEvent.click(p);
+    await userEvent.tab();
+    expect([p.value, calls]).toEqual(['15%', []]);
+    await userEvent.click(p);
+    await userEvent.keyboard('{ArrowUp}');
+    expect([p.value, calls.at(-1)]).toEqual(['16%', 0.16]);
+    await userEvent.clear(p);
+    await userEvent.type(p, '15');
+    await userEvent.tab();
+    expect([p.value, calls.at(-1)]).toEqual(['15%', 0.15]);
+    await userEvent.clear(q);
+    await userEvent.type(q, '12.5');
+    await userEvent.tab();
+    expect([q.value, calls.at(-1)]).toEqual(['12.5%', 0.125]);
+  });
+
   test('formatOptions: IDR currency shows "Rp 1.500" with an aria-valuetext, reads "2.000" back, and ArrowUp steps from it; percent shows 15% for 0.15', async () => {
     const calls: Array<number | null> = [];
     await render(<Col>
@@ -416,6 +440,26 @@ describe('NumberInput', () => {
     expect(field('qty').value).toBe('7');
   });
 
+  test('a decimal mark left at the end ("5." or "7,") is read without it on blur and Enter, not reported as unreadable (GR235)', async () => {
+    const seen: string[] = [], got: Array<number | null> = [];
+    await render(<Col><NumberInput id="tr" aria-label="Weight" defaultValue={1} onValueChange={(v) => got.push(v)} onInvalidInput={(t, why) => seen.push(t + ':' + why)} /></Col>);
+    await fill('tr', '5.');
+    await blur('tr');
+    const afterBlur = field('tr').value;
+    await fill('tr', '7,');
+    field('tr').focus();
+    await userEvent.keyboard('{Enter}');
+    expect([seen, afterBlur, field('tr').value, got.at(-1)]).toEqual([[], '5', '7', 7]);
+  });
+
+  test('tabbing through a controlled value outside min and max leaves it alone: no onValueChange, no range report (GR236)', async () => {
+    const seen: string[] = [], got: Array<number | null> = [];
+    await render(<Col><NumberInput id="ctl" aria-label="Quantity" value={150} max={100} onValueChange={(v) => got.push(v)} onInvalidInput={(t, why) => seen.push(t + ':' + why)} /></Col>);
+    field('ctl').focus();
+    await blur('ctl');
+    expect([got, seen, field('ctl').value]).toEqual([[], [], '150']);
+  });
+
   test('onInvalidInput: a number out of range is brought back and reported as "range" (blur and Enter); text that isn\'t a number as "unreadable", and said', async () => {
     const seen: string[] = [];
     await render(<Col><NumberInput id="inv" aria-label="Quantity" defaultValue={5} min={0} max={100} onInvalidInput={(t, why) => seen.push(t + ':' + why)} /></Col>);
@@ -432,7 +476,7 @@ describe('NumberInput', () => {
     expect([seen, field('inv').value]).toEqual([['250:range', '-4:range', 'abc:unreadable'], '42']);
     await fill('inv', 'xyz');
     await blur('inv');
-    await expect.poll(() => announcerIdle() && document.querySelector('[data-dk-announcer-assertive]')!.textContent).toMatch(/"xyz" wasn't accepted/);
+    await expect.poll(() => announcerIdle() && document.querySelector('[data-dk-announcer-assertive]')!.textContent).toMatch(/“xyz” wasn’t accepted/);
   });
 
   test('steppers={false}: no buttons', async () => {
@@ -493,5 +537,16 @@ describe('NumberInput', () => {
     const t = document.getElementById('mk') as HTMLInputElement;
     t.focus();
     expect([modified(t, 'ArrowUp'), modified(t, 'PageDown'), modified(t, 'Home'), t.value]).toEqual([[false, false, false], [false, false, false], [false, false, false], '5']);
+  });
+
+  test('GR161: min above max warns once in development (aria-valuemin was above aria-valuemax); a range the right way round doesn\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const said = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => /number-range/.test(m));
+      await mount(<NumberInput aria-label="Fine" min={1} max={10} />);
+      expect(said()).toEqual([]);
+      await mount(<NumberInput aria-label="Backwards" min={10} max={1} />);
+      expect(said()).toEqual([expect.stringMatching(/min \(10\) is above max \(1\)/)]);
+    } finally { warn.mockRestore(); }
   });
 });

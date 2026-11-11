@@ -25,7 +25,7 @@ export const LongLabel: Story = {
     <div className="flex flex-col gap-4 text-sm text-text" style={{ width: 240 }}>
       <span>Above</span>
       <Divider {...args} label="or continue with a single sign-on provider" />
-      <Divider {...args} label={"Donaudampfschifffahrtsgesellschaftskapitänskajüte"} />
+      <Divider {...args} label={'Donaudampfschifffahrtsgesellschaftskapitänskajüte'} />
       <span>Below</span>
     </div>
   ),

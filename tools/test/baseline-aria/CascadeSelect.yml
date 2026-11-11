@@ -1,0 +1,87 @@
+# Chosen
+- combobox "Wilayah": Jawa Barat › Kota Bandung › Coblong
+
+# ControlledValue
+- combobox "Wilayah": Jawa Timur › Kota Surabaya › Gubeng
+- status: jatim / surabaya / gubeng
+
+# InAField
+- text: Alamat Provinsi, kabupaten atau kota, lalu kecamatan.
+- combobox "Alamat" [invalid]: Pilih wilayah
+- text: Pilih kecamatan.
+
+# Loading
+- combobox "Wilayah": Pilih wilayah
+
+# LongText
+- combobox "Wilayah" [expanded]: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung › A label long enough to wrap twice in a narrow column, number 4
+- dialog "Wilayah":
+  - text: Provinsi
+  - listbox "Provinsi":
+    - option "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung" [selected]
+    - option "Provinsi 1"
+    - option "Provinsi 2"
+    - option "Provinsi 3"
+    - option "Provinsi 4"
+    - option "Provinsi 5"
+    - option "Provinsi 6"
+    - option "Provinsi 7"
+    - option "Provinsi 8"
+    - option "Provinsi 9"
+    - option "Provinsi 10"
+    - option "Provinsi 11"
+    - option "Provinsi 12"
+  - text: Kabupaten/Kota
+  - listbox "Kabupaten/Kota":
+    - option "A label long enough to wrap twice in a narrow column, number 1"
+    - option "A label long enough to wrap twice in a narrow column, number 2"
+    - option "A label long enough to wrap twice in a narrow column, number 3"
+    - option "A label long enough to wrap twice in a narrow column, number 4" [selected]
+    - option "A label long enough to wrap twice in a narrow column, number 5"
+    - option "A label long enough to wrap twice in a narrow column, number 6"
+    - option "A label long enough to wrap twice in a narrow column, number 7"
+    - option "A label long enough to wrap twice in a narrow column, number 8"
+    - option "A label long enough to wrap twice in a narrow column, number 9"
+    - option "A label long enough to wrap twice in a narrow column, number 10"
+    - option "A label long enough to wrap twice in a narrow column, number 11"
+    - option "A label long enough to wrap twice in a narrow column, number 12"
+    - option "A label long enough to wrap twice in a narrow column, number 13"
+    - option "A label long enough to wrap twice in a narrow column, number 14"
+
+# Open
+- combobox "Wilayah" [expanded]: Jawa Barat › Kota Bandung › Coblong
+- dialog "Wilayah":
+  - text: Provinsi
+  - listbox "Provinsi":
+    - option "Jawa Barat" [selected]
+    - option "Jawa Tengah"
+    - option "Jawa Timur"
+    - option "Bali"
+    - option "Papua" [disabled]
+  - text: Kabupaten/Kota
+  - listbox "Kabupaten/Kota":
+    - option "Kota Bandung" [selected]
+    - option "Kabupaten Bogor"
+    - option "Kota Bekasi"
+  - text: Kecamatan
+  - listbox "Kecamatan":
+    - option "Coblong" [selected]
+    - option "Sukajadi"
+    - option "Cicendo"
+    - option "Lengkong" [disabled]
+
+# ParentsToo
+- combobox "Wilayah": Jawa Tengah
+
+# Playground
+- combobox "Wilayah": Pilih wilayah
+
+# ReadOnly
+- combobox "Wilayah": Jawa Barat › Kota Bandung › Coblong
+
+# States
+- combobox "Size small": Bali › Kota Denpasar › Denpasar Selatan
+- combobox "Size large": Large
+- combobox "Invalid" [invalid]: Required
+- combobox "Disabled" [disabled]: Jawa Timur › Kota Surabaya › Gubeng
+

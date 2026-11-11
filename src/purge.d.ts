@@ -12,8 +12,8 @@ export interface SerupaPurgeOptions {
 /** A Vite plugin (vite.config.js `plugins`): trims Serupa's stylesheets in `vite build`; the dev server serves them whole. */
 export declare function serupaPurge(options?: SerupaPurgeOptions): {
   name: string;
-  apply: "build";
-  enforce: "pre";
+  apply: 'build';
+  enforce: 'pre';
   configResolved(config: { root: string }): void;
   buildStart(): void;
   transform(code: string, id: string): { code: string; map: null } | null;

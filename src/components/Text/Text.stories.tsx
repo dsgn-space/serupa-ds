@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Text } from './Text';
+import { Link } from '../Link/Link';
 
 const meta = {
   title: 'Components/Layout and type/Text',
@@ -34,11 +35,29 @@ export const Truncate: Story = {
   render: () => <div style={{ width: 200 }}><Text truncate>quarterly-report-final-version-2.pdf</Text></div>,
 };
 
+/** Lines: a long review cut after three lines; the rest is still in the page. */
+export const Lines: Story = {
+  render: () => <div style={{ maxWidth: 320 }}><Text lines={3}>Arrived two days early and well packed. The coffee is fresher than what I buy at the market: bright, a little fruity, and not bitter even as a strong espresso. I've ordered it three times now and it has been the same every time, which matters more to me than anything else. The 250 g bag lasts about two weeks.</Text></div>,
+};
+
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 200 }}>
       <Text {...args}>Invite people to work on this project with you, and give each of them only the access they need.</Text>
-      <Text {...args}>{"Donaudampfschifffahrtsgesellschaftskapitänskajüte"}</Text>
+      <Text {...args}>{'Donaudampfschifffahrtsgesellschaftskapitänskajüte'}</Text>
     </div>
   ),
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const REVIEW = 'Arrived two days early and well packed. The coffee is fresher than what I buy at the market: bright, a little fruity, and not bitter even as a strong espresso. I have ordered it three times now and it has been the same every time.';
+/** Do: a cut preview with a link to the full review. */
+export const DoLinesWithLink: Story = {
+  name: 'Do: lines with a link',
+  render: () => <div style={{ maxWidth: 320 }}><Text lines={2}>{REVIEW}</Text><Link href="#review-1">Read the whole review</Link></div>,
+};
+/** Don't: a cut preview with no way to the rest. */
+export const DontLinesAlone: Story = {
+  name: "Don't: lines alone",
+  render: () => <div style={{ maxWidth: 320 }}><Text lines={2}>{REVIEW}</Text></div>,
 };

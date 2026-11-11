@@ -7,12 +7,12 @@ export interface ErrorBoundaryLabels {
   tryAgain: string;
 }
 export const en: ErrorBoundaryLabels = {
-  errorTitle: "Something went wrong",
-  errorDescription: "This part of the page couldn't load.",
-  tryAgain: "Try again",
+  errorTitle: 'Something went wrong',
+  errorDescription: 'This part of the page couldn’t load.',
+  tryAgain: 'Try again',
 };
 export const id: ErrorBoundaryLabels = {
-  errorTitle: "Terjadi kesalahan",
-  errorDescription: "Bagian halaman ini tidak dapat dimuat.",
-  tryAgain: "Coba lagi",
+  errorTitle: 'Terjadi kesalahan',
+  errorDescription: 'Bagian halaman ini tidak dapat dimuat.',
+  tryAgain: 'Coba lagi',
 };

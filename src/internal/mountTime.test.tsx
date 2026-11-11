@@ -23,6 +23,10 @@ const OWN_BUDGET: Record<string, number> = {
 };
 // The nightly Benchmarks run takes the fastest of more, so a night's time moves less with the machine.
 const RUNS = inject('bench') ? 15 : 5;
+// With coverage on (CI's full runs), every line counts itself as it runs, which made VirtualList's Playground take
+// 20.8 ms against 20 on a busy runner (8 Nov 2026). Twice the budget there; the narrowed merge request runs and the
+// nightly Benchmarks run have no coverage and keep the budget as it is, so a slow story still fails there.
+const SLOWER = inject('coverage') ? 2 : 1;
 const frame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
 
 async function mountTime(ui: React.ReactElement): Promise<number> {
@@ -45,13 +49,23 @@ describe('mount time', () => {
     test(`${name} stories each mount within their budget`, async () => {
       const slow: string[] = [], times: Record<string, number> = {};
       for (const [exportName, ui] of list) {
-        const ms = await mountTime(ui);
+        // Over budget: measure again after a pause, up to four times with longer pauses (0.5, 1, 2 and 4 s), and keep the
+        // fastest. Noise only ever makes a mount slower, so the fastest is the honest number, and it stops at the first
+        // time under budget, so a story within it costs nothing more. On a shared CI machine another job's burst can slow
+        // all five runs at once, and two short pauses weren't always enough (Kanban/LongText measured 20.6 ms against 20
+        // on 8 Nov 2026, and 20.4 ms after both pauses that night); a story that is really too slow is still too slow
+        // after 7.5 s of pauses.
+        const budget = (OWN_BUDGET[`${name}/${exportName}`] ?? BUDGET) * SLOWER;
+        let ms = await mountTime(ui);
+        for (let again = 0; again < 4 && ms > budget; again++) {
+          await new Promise((r) => setTimeout(r, 500 * 2 ** again));
+          ms = Math.min(ms, await mountTime(ui));
+        }
         times[`${name}/${exportName}`] = ms;
-        const budget = OWN_BUDGET[`${name}/${exportName}`] ?? BUDGET;
         if (ms > budget) slow.push(`${exportName}: ${ms.toFixed(1)} ms (budget ${budget})`);
       }
       await commands.recordBench('mount', times);
       expect(slow).toEqual([]);
-    });
+    }, 120_000);   // the pauses above, when a busy machine slows several of a component's stories
   }
 });

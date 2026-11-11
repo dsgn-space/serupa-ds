@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { parseChangeset } from './changesets.mjs';
+import { entriesOf, parseChangeset } from './changesets.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 const DIR = path.join(P, '.changeset');
@@ -25,10 +25,7 @@ for (const f of files) {
   const { bump: kind, body: raw, error } = parseChangeset(fs.readFileSync(path.join(DIR, f), 'utf8'), name);
   if (error) throw new Error(`.changeset/${f}: ${error}`);
   if (RANK[kind] > RANK[bump]) bump = kind;
-  // Each "- " line is one entry (its indented lines go with it); text with no bullets is one entry.
-  const body = raw.trim();
-  const entries = /^- /m.test(body) ? body.split(/\n(?=- )/).map((e) => e.replace(/^- /, '')) : [body.replace(/\n+/g, ' ')];
-  for (const e of entries) {
+  for (const e of entriesOf(raw)) {
     // "Fixed: …", or with a scope, "Fixed (Combobox): …", which files under Fixed as "Combobox: …".
     const s = /^(Added|Changed|Deprecated|Removed|Fixed|Security)(?:\s*\(([^)]+)\))?:\s*/.exec(e);
     const text = s ? (s[2] ? `${s[2]}: ` : '') + e.slice(s[0].length) : e;
@@ -46,9 +43,13 @@ let current = null;
 for (const line of u[1].split('\n')) {
   const h = /^### (\w+)/.exec(line);
   if (h) { current = SECTIONS.includes(h[1]) ? h[1] : (have[h[1]] = have[h[1]] || [], h[1]); continue; }
-  if (current && line.trim()) {
-    if (/^- /.test(line)) have[current].push(line.slice(2)); else have[current][have[current].length - 1] += '\n' + line;
-  }
+  if (!line.trim()) continue;
+  // A note outside a "### Section", or text before a section's first "- ", has nowhere to go: stop rather than drop
+  // it (T8). tools/README.md says notes can be written under [Unreleased] by hand.
+  if (!current) throw new Error(`CHANGELOG.md: "${line.trim()}" under [Unreleased] is outside a "### Added/Changed/…" section`);
+  if (/^- /.test(line)) have[current].push(line.slice(2));
+  else if (!have[current].length) throw new Error(`CHANGELOG.md: "${line.trim()}" under [Unreleased] "### ${current}" comes before its first "- " note`);
+  else have[current][have[current].length - 1] += '\n' + line;
 }
 const order = [...SECTIONS, ...Object.keys(have).filter((s) => !SECTIONS.includes(s))];
 const merged = order.map((s) => /** @type {[string, string[]]} */ ([s, [...(have[s] || []), ...(notes[s] || [])]])).filter(([, list]) => list.length)

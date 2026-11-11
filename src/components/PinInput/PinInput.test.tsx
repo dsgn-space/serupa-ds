@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, page, server, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, pasteText, withMotion } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { PinInput } from './PinInput';
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
@@ -80,22 +80,18 @@ describe('PinInput', () => {
 
   test('L8E105: a whole code pasted after a part typed replaces it, instead of being added after it and cut off', async () => {
     const done = vi.fn();
-    await render(<div><input id="l8e105src" defaultValue="483 921" /><PinInput id="p" aria-label="Code" onComplete={done} /></div>);
-    el('l8e105src').select();
-    await userEvent.copy();
+    await render(<div><PinInput id="p" aria-label="Code" onComplete={done} /></div>);
     await userEvent.click(el('p'));
     await userEvent.keyboard('12');
-    await userEvent.paste();
+    pasteText(el('p'), '483 921');
     expect([shown('p'), done.mock.calls]).toEqual(['483921', [['483921']]]);
   });
 
   test('a part of a code pasted is added to what is typed', async () => {
-    await render(<div><input id="l8e105src" defaultValue="34" /><PinInput id="p" aria-label="Code" length={4} /></div>);
-    el('l8e105src').select();
-    await userEvent.copy();
+    await render(<div><PinInput id="p" aria-label="Code" length={4} /></div>);
     await userEvent.click(el('p'));
     await userEvent.keyboard('12');
-    await userEvent.paste();
+    pasteText(el('p'), '34');
     expect(shown('p')).toBe('1234');
   });
 
@@ -205,9 +201,22 @@ describe('PinInput', () => {
     el('pm').focus();
     await expect.poll(() => boxes('pm')[0].classList.contains('dk-pin-input__box--active')).toBe(true);
     expect([shadows(boxes('pm')[0]), css(boxes('pm')[0]).boxShadow]).toEqual([0, expect.stringMatching(/0px 0px 0px 1px/)]);
-    await userEvent.keyboard('7');
-    await expect.poll(() => boxes('pm')[1].classList.contains('dk-pin-input__box--active')).toBe(true);
-    expect([shadows(boxes('pm')[1]), shadows(boxes('pm')[0])]).toEqual([0, 1]);
+    // Counted as each transition starts, not after the key returns: a key is a round trip through the driver, and on a
+    // busy runner the fade out can be over by then ([0, 0]).
+    const started = [0, 0];
+    const count = (i: number) => (e: TransitionEvent) => { if (e.target === boxes('pm')[i] && e.propertyName === 'box-shadow') started[i]++; };
+    const [c0, c1] = [count(0), count(1)];
+    boxes('pm')[0].addEventListener('transitionrun', c0);
+    boxes('pm')[1].addEventListener('transitionrun', c1);
+    try {
+      await userEvent.keyboard('7');
+      await expect.poll(() => boxes('pm')[1].classList.contains('dk-pin-input__box--active')).toBe(true);
+      await expect.poll(() => started[0]).toBe(1);
+      expect([started[1], shadows(boxes('pm')[1])]).toEqual([0, 0]);
+    } finally {
+      boxes('pm')[0].removeEventListener('transitionrun', c0);
+      boxes('pm')[1].removeEventListener('transitionrun', c1);
+    }
   }));
 
   test('with Alt, Ctrl or ⌘ the arrows are left to the browser (Alt+← goes back a page) (L8E29)', async () => {
@@ -215,5 +224,13 @@ describe('PinInput', () => {
     const t = document.querySelector('#mk input, input#mk') as HTMLElement;
     t.focus();
     expect([modified(t, 'ArrowLeft'), modified(t, 'Home')]).toEqual([[false, false, false], [false, false, false]]);
+  });
+
+  test('while an input method is composing (Safari sends the keydown), the arrows, Home and End are left to it', async () => {
+    await render(<PinInput id="ck" aria-label="Code" length={4} type="alphanumeric" defaultValue="ab" />);
+    const t = document.querySelector('#ck input, input#ck') as HTMLElement;
+    t.focus();
+    const composing = (key: string) => { const ev = new KeyboardEvent('keydown', { key, isComposing: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; };
+    expect([composing('ArrowLeft'), composing('ArrowDown'), composing('Home')]).toEqual([false, false, false]);
   });
 });

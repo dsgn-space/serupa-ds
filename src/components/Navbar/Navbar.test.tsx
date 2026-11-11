@@ -4,7 +4,8 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, forcedColors, keepMotion, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
-import { Navbar, NavbarLink } from './Navbar';
+import { Menu, MenuItem } from '../Menu/Menu';
+import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
@@ -69,7 +70,7 @@ describe('Navbar', () => {
     expect(vis('#nav .dk-navbar__toggle')).toBe(false);
   });
 
-  test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored', async () => {
+  test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored; only the current page has a 2px primary bar along its bottom, and it darkens under the pointer', async () => {
     await render(<Main />);
     const cur = q('#nav [aria-current]');
     expect([cur.textContent, cur.getAttribute('aria-current')]).toEqual(['Dashboard', 'page']);
@@ -78,8 +79,11 @@ describe('Navbar', () => {
     expect([rest.fontSize, rest.fontWeight, rest.bg]).toEqual(['14px', '500', 'rgba(0, 0, 0, 0)']);
     expect(active.bg).not.toBe(rest.bg);
     expect(active.color).not.toBe(rest.color);
+    expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px -2px 0px 0px inset$/)]);
     await userEvent.hover(el('lp'));
-    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color]).toEqual([active.bg, active.color]);
+    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([active.bg, active.color, 'none']);
+    await userEvent.hover(cur);
+    await expect.poll(() => css(cur).backgroundColor).not.toBe(active.bg);
     await away();
   });
 
@@ -239,6 +243,44 @@ describe('Navbar', () => {
     }
     await resize(1100);
     expect(el('brand').scrollWidth > el('brand').clientWidth).toBe(false);
+  });
+
+  test('small screens with actions wider than the screen: they scroll within the bar, so the menu button stays on screen and the page never scrolls sideways', async () => {
+    // Two button groups (a language and a theme switch) are wider than 320px on their own, so the brand giving way
+    // isn't enough: the menu button was pushed past the edge and the page scrolled.
+    await render(<Navbar id="nav" brand={<a href="#home">Serupa</a>} actions={<>
+      <Button size="sm" variant="outline">English</Button><Button size="sm" variant="outline">Bahasa Indonesia</Button>
+      <Button size="sm" variant="outline">Auto</Button><Button size="sm" variant="outline">Light</Button><Button size="sm" variant="outline" id="last">Dark</Button>
+    </>}>
+      <NavbarLink href="#dash">Dashboard</NavbarLink>
+    </Navbar>);
+    for (const w of [390, 320]) {
+      await resize(w);
+      const acts = q('#nav .dk-navbar__actions');
+      expect([w, Math.round(toggle().getBoundingClientRect().right) <= w, document.documentElement.scrollWidth <= w, w > 320 || acts.scrollWidth > acts.clientWidth]).toEqual([w, true, true, true]);
+    }
+    // The last action is reached by Tab: focus scrolls it into view inside the bar, with its focus ring unclipped.
+    el('last').focus();
+    await expect.poll(() => Math.round(el('last').getBoundingClientRect().right) <= Math.round(q('#nav .dk-navbar__actions').getBoundingClientRect().right)).toBe(true);
+    await resize(1100);
+    expect(q('#nav .dk-navbar__actions').scrollWidth > q('#nav .dk-navbar__actions').clientWidth).toBe(false);
+  });
+
+  test('360px: a Menu among scrolling actions opens in full, not clipped by the bar (it opens in the top layer)', async () => {
+    await render(<Navbar id="nav" brand={<a href="#home">Serupa</a>} actions={<>
+      <Button size="sm" variant="outline">English</Button><Button size="sm" variant="outline">Bahasa Indonesia</Button>
+      <Menu trigger={<Button size="sm" variant="outline" id="acct">Account</Button>}>
+        <MenuItem>Profile</MenuItem><MenuItem>Settings</MenuItem><MenuItem id="out">Sign out</MenuItem>
+      </Menu>
+    </>}>
+      <NavbarLink href="#dash">Dashboard</NavbarLink>
+    </Navbar>);
+    await resize(360);
+    await userEvent.click(el('acct'));
+    await expect.poll(() => q('[role=menu]')?.getBoundingClientRect().height ?? 0).toBeGreaterThan(60);
+    // What's drawn at the last item's middle is that item: nothing cut it off at the bar's edge.
+    const r = el('out').getBoundingClientRect();
+    expect([r.top > q('#nav .dk-navbar__actions').getBoundingClientRect().bottom, el('out').contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2))]).toEqual([true, true]);
   });
 
   test('320px: a brand given as plain text ends in an ellipsis too, and never runs under the actions (GR79, GR81)', async () => {
@@ -410,5 +452,108 @@ describe('Navbar panel motion (GH2)', () => {
     expect(fades()).toMatch(/opacity/);
     await expect.poll(() => !!(toggle().compareDocumentPosition(nav()) & Node.DOCUMENT_POSITION_PRECEDING)).toBe(true);
     expect([vis('#nav nav'), nav().inert]).toEqual([false, false]);
+  });
+});
+
+describe('NavbarMenu (RU14)', () => {
+  function Mega() {
+    return <><Navbar id="mega" brand={<a href="#home">Serupa</a>}>
+      <NavbarLink href="#dash">Dashboard</NavbarLink>
+      <NavbarMenu label="Products">
+        <NavbarMenuGroup title="Analytics">
+          <NavbarMenuLink href="#dashboards" description="Charts and reports for your team">Dashboards</NavbarMenuLink>
+          <NavbarMenuLink href="#alerts" active>Alerts</NavbarMenuLink>
+        </NavbarMenuGroup>
+        <NavbarMenuGroup title="Payments">
+          <NavbarMenuLink href="#billing" description="Invoices and plans">Billing</NavbarMenuLink>
+        </NavbarMenuGroup>
+      </NavbarMenu>
+      <NavbarMenu label="Resources">
+        <NavbarMenuLink href="#docs">Docs</NavbarMenuLink>
+        <NavbarMenuLink href="#blog">Blog</NavbarMenuLink>
+      </NavbarMenu>
+    </Navbar><button type="button">After</button><p style={{ marginTop: 480 }}>Page</p></>;
+  }
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const expanded = (name: string) => button(name).element().getAttribute('aria-expanded');
+
+  test('active: the menu button says it holds the current page, with aria-current="true" (GR297)', async () => {
+    await render(<><Navbar brand={<a href="#home">Serupa</a>}>
+      <NavbarMenu label="Products" active><NavbarMenuLink href="#alerts" active>Alerts</NavbarMenuLink></NavbarMenu>
+      <NavbarMenu label="Resources"><NavbarMenuLink href="#docs">Docs</NavbarMenuLink></NavbarMenu>
+    </Navbar></>);
+    expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);
+  });
+
+  test('the current menu link has a 2px primary bar at its start (the end in right to left) that a hovered link never has', async () => {
+    await render(<Mega />);
+    await userEvent.click(button('Products').element());
+    const alerts = page.getByRole('link', { name: 'Alerts' }).element(), dash = page.getByRole('link', { name: 'Dashboards' }).element();
+    expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/);
+    await userEvent.hover(dash);
+    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([css(alerts).backgroundColor, 'none']);
+    document.documentElement.dir = 'rtl';
+    try { expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/); } finally { document.documentElement.dir = ''; }
+    await away();
+  });
+
+  test('a disclosure: a button with aria-expanded that shows a panel of titled groups; each link is named by its text and described by its line', async () => {
+    await render(<Mega />);
+    const b = button('Products').element();
+    expect([b.tagName, expanded('Products'), document.getElementById(b.getAttribute('aria-controls')!)!.hidden]).toEqual(['BUTTON', 'false', true]);
+    expect(page.getByRole('menu').elements()).toHaveLength(0);
+    await userEvent.click(b);
+    expect(expanded('Products')).toBe('true');
+    await expect.element(page.getByRole('group', { name: 'Analytics' })).toBeVisible();
+    const link = page.getByRole('link', { name: 'Dashboards' });
+    await expect.element(link).toHaveAccessibleDescription('Charts and reports for your team');
+    await expect.element(page.getByRole('link', { name: 'Alerts' })).toHaveAttribute('aria-current', 'page');
+    // Wide, the panel spans the bar, under it.
+    const bar = el('mega').getBoundingClientRect(), panel = document.getElementById(b.getAttribute('aria-controls')!)!.getBoundingClientRect();
+    expect(Math.round(panel.width)).toBe(Math.round(bar.width));
+    expect(Math.abs(panel.top - bar.bottom)).toBeLessThanOrEqual(1);
+  });
+
+  test('Tab goes from the button into its links; Escape closes it and puts focus back on the button', async () => {
+    await render(<Mega />);
+    button('Products').element().focus();
+    await userEvent.keyboard('{Enter}');
+    expect(expanded('Products')).toBe('true');
+    await userEvent.tab();
+    expect(document.activeElement).toBe(page.getByRole('link', { name: 'Dashboards' }).element());
+    await userEvent.keyboard('{Escape}');
+    expect(expanded('Products')).toBe('false');
+    expect(document.activeElement).toBe(button('Products').element());
+  });
+
+  test('one open at a time; a press outside, focus leaving it or following a link closes it', async () => {
+    await render(<Mega />);
+    await userEvent.click(button('Products'));
+    await userEvent.click(button('Resources'));
+    expect([expanded('Products'), expanded('Resources')]).toEqual(['false', 'true']);
+    await userEvent.click(page.getByText('Page'));
+    expect(expanded('Resources')).toBe('false');
+    await userEvent.click(button('Resources'));
+    page.getByRole('link', { name: 'Blog' }).element().focus();
+    await userEvent.tab();   // past the last link, to the button after the bar
+    expect(expanded('Resources')).toBe('false');
+    await userEvent.click(button('Resources'));
+    await userEvent.click(page.getByRole('link', { name: 'Docs' }));
+    expect(expanded('Resources')).toBe('false');
+  });
+
+  test('in the small-screen menu it opens in place, and Escape closes it but leaves the menu open', async () => {
+    await resize(375);
+    await render(<Mega />);
+    await userEvent.click(page.getByRole('button', { name: 'Menu' }));
+    await userEvent.click(button('Products'));
+    const link = page.getByRole('link', { name: 'Billing' }).element();
+    const b = button('Products').element().getBoundingClientRect();
+    expect(link.getBoundingClientRect().top).toBeGreaterThan(b.bottom - 1);   // under its button, in the flow
+    expect(link.getBoundingClientRect().right).toBeLessThanOrEqual(375);
+    link.focus();
+    await userEvent.keyboard('{Escape}');
+    expect(expanded('Products')).toBe('false');
+    expect(page.getByRole('button', { name: 'Menu' }).element().getAttribute('aria-expanded')).toBe('true');
   });
 });

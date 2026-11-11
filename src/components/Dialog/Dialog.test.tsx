@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { flushSync } from 'react-dom';
-import { afterAll, beforeEach, describe, expect, test } from 'vitest';
+import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
@@ -632,23 +632,38 @@ describe('Dialog: motion (DZ1)', () => {
       const ctl: Partial<Ctl> = {};
       await render(<App asks={[]} ctl={ctl} />);
       const d = dlg('dlg'), pn = panel('dlg');
+      // Held where they start: the click is a round trip to the browser, and on a busy runner it could come back after
+      // the 250ms the transitions run, with none left to read (a flake in CI). transitionrun comes from the page itself.
+      const held = new Set<Animation>();
+      const hold = () => { for (const a of [...pn.getAnimations(), ...backdropOf(d)]) if (!held.has(a)) { a.pause(); held.add(a); } };
+      d.addEventListener('transitionrun', hold);
       await userEvent.click(el('opener'));
+      await expect.poll(() => held.size).toBe(3);
+      d.removeEventListener('transitionrun', hold);
       const enter = pn.getAnimations();
       expect([enter.filter((a) => a instanceof CSSTransition).map((a) => (a).transitionProperty).sort(), enter.some((a) => a instanceof CSSAnimation), enter.map(ms)]).toEqual([['opacity', 'scale'], false, [200, 200]]);
       expect(backdropOf(d).map((a) => [(a as CSSTransition).transitionProperty, ms(a)])).toEqual([['opacity', 200]]);
       // A sequence: the backdrop starts at once, the panel motion-sequence (50ms) later.
       const delay = (a: Animation) => Number(a.effect!.getTiming().delay);
       expect([enter.map(delay), backdropOf(d).map(delay)]).toEqual([[50, 50], [0]]);
+      for (const a of held) a.play();
       await settled();
       expect([getComputedStyle(pn).opacity, getComputedStyle(pn).scale]).toEqual(['1', 'none']);
 
+      // Held where they start too, as on the way in: the 150ms close could be over before the click comes back.
+      const closing = new Set<Animation>();
+      const holdClose = () => { for (const a of document.getAnimations()) { const target = (a.effect as KeyframeEffect | null)?.target; if ((target === d || target === pn) && !closing.has(a)) { a.pause(); closing.add(a); } } };
+      d.addEventListener('transitionrun', holdClose);
       await userEvent.click(page.getByRole('button', { name: 'Cancel' }));
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       const holds = CSS.supports('overlay', 'auto');
+      if (holds) await expect.poll(() => pn.getAnimations().length).toBe(2);
+      d.removeEventListener('transitionrun', holdClose);
       expect([isOpen('dlg'), document.activeElement, getComputedStyle(d).display]).toEqual([false, el('opener'), holds ? 'flex' : 'none']);
-      if (!holds) return;
+      if (!holds) { for (const a of closing) a.play(); return; }
       expect([getComputedStyle(d).pointerEvents, pn.getAnimations().map(ms), backdropOf(d).map(ms)]).toEqual(['none', [150, 150], [150]]);
       // 60ms into the 150ms fade, held there: a real 60ms wait on a busy runner could land at the end of the fade.
+      for (const a of closing) if ((a.effect as KeyframeEffect).target !== pn) a.play();
       for (const a of pn.getAnimations()) { a.pause(); a.currentTime = 60; }
       const mid = Number(getComputedStyle(pn).opacity);
       expect(mid).toBeGreaterThan(0.05);
@@ -693,5 +708,18 @@ describe('Dialog: motion (DZ1)', () => {
       expect(seen.length).toBeGreaterThan(1);
       expect(seen.filter(([x, y]) => Math.abs(x - at[0]) > 1 || Math.abs(y - at[1]) > 1)).toEqual([]);
     });
+  });
+
+  test('opened inside a <form> with a field or form in it, it warns once (overlay-in-form); outside a form, or with only text, it doesn\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const calls = () => warn.mock.calls.filter(([m]) => /overlay-in-form/.test(String(m)) && /^Dialog:/.test(String(m)));
+    try {
+      const { rerender } = await render(<><Dialog open title="Share" onOpenChange={() => {}}><input aria-label="Email" /></Dialog><form><Dialog open title="Info" onOpenChange={() => {}}>Plain words.</Dialog></form></>);
+      expect(calls()).toHaveLength(0);
+      await rerender(<></>);
+      await render(<form><Dialog open title="Rename" onOpenChange={() => {}}><input aria-label="Name" /></Dialog></form>);
+      expect(calls()).toHaveLength(1);
+      expect(String(calls()[0][0])).toMatch(/^Dialog: it's inside a <form>/);
+    } finally { warn.mockRestore(); }
   });
 });

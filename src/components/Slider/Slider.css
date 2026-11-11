@@ -54,6 +54,8 @@
   flex: none; white-space: nowrap; padding: var(--spacing-0\.5) var(--spacing-1\.5); border-radius: var(--rounded-md);
   background: var(--slider-value-bg, var(--surface-inverse)); color: var(--slider-value-text, var(--text-inverse));
   font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium);
+  /* Digits of one width, so the bubble keeps its width while a drag changes the number (GR162). */
+  font-variant-numeric: tabular-nums;
 }
 .dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:focus > .dk-slider__value { opacity: var(--opacity-100); }
 @media (hover: hover) { .dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:hover > .dk-slider__value { opacity: var(--opacity-100); } }

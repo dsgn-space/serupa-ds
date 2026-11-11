@@ -157,6 +157,23 @@ describe('AvatarGroup', () => {
     expect([low, n]).toEqual([[], 6]);
   });
 
+  test('the popover\'s "N more" for the unloaded people is in the locale\'s digits and grouping: "١٬٢٣٤ more" in ar-EG, "1,234 more" in en-US', async () => {
+    await render(<Col>
+      <SerupaProvider locale="ar-EG"><AvatarGroup id="arl" max={1} total={1236} showMore>{av(2)}</AvatarGroup></SerupaProvider>
+      <SerupaProvider locale="en-US"><AvatarGroup id="enl" max={1} total={1236} showMore>{av(2)}</AvatarGroup></SerupaProvider>
+    </Col>);
+    const last = async (id: string) => {
+      const b = more(id)!;
+      await userEvent.click(b);
+      await expect.poll(() => b.getAttribute('aria-expanded')).toBe('true');
+      const items = document.getElementById(b.getAttribute('aria-controls')!)!.querySelectorAll('li');
+      const text = items[items.length - 1].textContent;
+      await userEvent.keyboard('{Escape}');
+      return text;
+    };
+    expect([await last('arl'), await last('enl')]).toEqual(['١٬٢٣٤ more', '1,234 more']);
+  });
+
   // DS1: "+N" was a span, so keyboard and touch users could never see who's behind it.
   test('showMore: "+2" is a button with the same name that Tab reaches; it opens a popover listing the hidden people by name, then "N more" for the unloaded ones', async () => {
     await render(<><button>before</button><AvatarGroup id="sm" label="Team" max={3} total={7} showMore>{av(5)}</AvatarGroup></>, { wrapper: EnUS });

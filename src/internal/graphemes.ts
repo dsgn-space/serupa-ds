@@ -4,7 +4,7 @@
 
 // module state: one locale-free segmenter, made on first use.
 let seg: Intl.Segmenter | null | undefined;
-const segmenter = () => (seg === undefined ? (seg = typeof Intl !== "undefined" && "Segmenter" in Intl ? new Intl.Segmenter(undefined, { granularity: "grapheme" }) : null) : seg);
+const segmenter = () => (seg === undefined ? (seg = typeof Intl !== 'undefined' && 'Segmenter' in Intl ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null) : seg);
 
 /** The text split into the characters people see. */
 export function graphemes(text: string): string[] {
@@ -37,6 +37,6 @@ export function limitEdit(before: string, after: string, max: number): { value: 
   while (end < a.length - start && end < b.length - start && a[a.length - 1 - end] === b[b.length - 1 - end]) end++;
   const head = b.slice(0, start), added = b.slice(start, b.length - end), tail = b.slice(b.length - end);
   const keep = Math.max(0, max - head.length - tail.length);
-  const kept = head.join("") + added.slice(0, keep).join("");
-  return { value: kept + tail.join(""), caret: kept.length };
+  const kept = head.join('') + added.slice(0, keep).join('');
+  return { value: kept + tail.join(''), caret: kept.length };
 }

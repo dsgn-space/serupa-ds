@@ -1,6 +1,30 @@
 # Confirmation
 - button "Invite people"
 
+# DoAskTheQuestion
+- heading "Delete Atlas?" [level=2]
+- paragraph: This removes the project and its files. It can’t be undone.
+- button "Keep project"
+- button "Delete project"
+
+# DoMainActionLast
+- heading "Invite people" [level=2]
+- paragraph: They’ll get an email with a link.
+- button "Cancel"
+- button "Send invite"
+
+# DontAreYouSure
+- heading "Are you sure?" [level=2]
+- paragraph: This action can’t be undone.
+- button "Cancel"
+- button "OK"
+
+# DontMainActionFirst
+- heading "Invite people" [level=2]
+- paragraph: They’ll get an email with a link.
+- button "Send invite"
+- button "Cancel"
+
 # FullScreen
 - button "Invite people"
 

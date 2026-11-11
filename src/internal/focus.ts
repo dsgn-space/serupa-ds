@@ -1,6 +1,6 @@
-import * as React from "react";
-import { useIsoLayoutEffect } from "./cn";
-import { activeIn } from "./root";
+import * as React from 'react';
+import { useIsoLayoutEffect } from './cn';
+import { activeIn } from './root';
 
 /* A control drawn inside a wrapper (Slider's thumbs, SegmentedControl's segments) keeps its ref on the wrapper, so
    ref.current.focus() would land nowhere: a form library that focuses the first invalid field after a failed submit
@@ -10,7 +10,10 @@ import { activeIn } from "./root";
 /** Makes el.focus() focus what target() returns instead; nothing when it returns null (a disabled control, as a
  *  disabled input ignores focus()). Call it from the wrapper's ref callback, before handing the element on. */
 export function delegateFocus(el: HTMLElement | null, target: () => HTMLElement | null | undefined): void {
-  if (el) el.focus = (options?: FocusOptions) => { const t = target(); if (t) t.focus(options); };
+  // Defined on el itself rather than assigned: a test tool that wraps HTMLElement.prototype.focus in a setter
+  // (Storybook's) would otherwise take the assignment as its own, and every element's focus() on the page would
+  // then go to this control.
+  if (el) Object.defineProperty(el, 'focus', { configurable: true, value: (options?: FocusOptions) => { const t = target(); if (t) t.focus(options); } });
 }
 
 /** A blur from the window or browser tab losing focus (people went to copy something from another app): the field is
@@ -28,8 +31,8 @@ export function useAutoFocus(on: boolean | undefined, target: () => HTMLElement 
 
 /** For a control that can disable itself when used (a next arrow that reaches the last page): call the returned
  *  function from its handler with the control and where focus should go instead. After the render, if the control
- *  held focus and is now disabled, gone, or focus fell to <body>, focus moves to that other control (as Carousel's
- *  arrows do), so a keyboard user isn't thrown back to the top of the page. */
+ *  held focus and is now disabled, gone, or focus fell to <body>, focus moves to that other control (as Calendar's
+ *  and Pagination's arrows do), so a keyboard user isn't thrown back to the top of the page. */
 export function useFocusHandover(): (from: HTMLElement, to: () => HTMLElement | null | undefined) => void {
   const pending = React.useRef<{ from: HTMLElement; to: () => HTMLElement | null | undefined } | null>(null);
   // every render: acts only after a handler asked, once the render it caused has disabled the control or not.

@@ -47,7 +47,7 @@ Drawn from the `Default` story.
 - Write each `label` as the action or page in a few words, starting with the word people would type ("New project", not "Create a new project").
 - Add `keywords` for the other words people use ("preferences" for Settings, "dark mode" for Switch theme). They find the command but aren't shown.
 - Give commands a `group` ("Pages", "Actions"); groups are listed in the order they first appear. Commands with none go under "Commands".
-- A command runs its `onSelect`, or goes to its `href`, after the palette has closed, so focus is back on the page. `onSelect` on the palette runs for every command, after the command's own.
+- A command runs its `onSelect`, or goes to its `href`, after the palette has closed, so focus is back on the page. An `href` must be a web page (a path on your site, `http` or `https`), `mailto:` or `tel:`. Any other URL, such as `javascript:` or `data:`, does nothing and warns in development, so a command list built from user data can't run script. `onSelect` on the palette runs for every command, after the command's own.
 - `shortcut` only shows the keys. Set the shortcut itself up with [useShortcut](../KeyboardShortcuts/README.md), so the palette teaches it.
 - Mount one palette per app, near the root. The ⌘K shortcut is listed in [KeyboardShortcuts](../KeyboardShortcuts/README.md); change it with `hotkey`, or turn it off with `hotkey={false}` and open it yourself.
 - Keep `commands` the same array between renders (state, a constant or `useMemo`). While searching it lists the best 50 matches (`limit`).

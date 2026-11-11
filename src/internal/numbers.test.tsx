@@ -31,6 +31,14 @@ describe('typed numbers', () => {
     expect(parseNumber(c, locale), c).toBe(1500);
   });
 
+  test('a paste longer than any number is undefined at once, not after seconds of backtracking (GR277); 100 characters still read', () => {
+    const start = performance.now();
+    expect(parseNumber('a'.repeat(64000) + '1a1', 'en-US')).toBeUndefined();
+    expect(performance.now() - start).toBeLessThan(1000);
+    expect(parseNumber('Rp ' + '1'.repeat(98), 'id-ID')).toBe(Number('1'.repeat(98)));
+    expect(parseNumber('Rp ' + '1'.repeat(99), 'id-ID')).toBeUndefined();
+  });
+
   test('a negative written the accounting way, in parentheses, or with a trailing minus stays negative', () => {
     expect([parseNumber('(1,234.50)', 'en-US'), parseNumber('1234.5-', 'en-US'), parseNumber('(Rp 1.500)', 'id-ID'), parseNumber('(15', 'en-US')]).toEqual([-1234.5, -1234.5, -1500, 15]);
     for (const locale of ['en-US', 'id-ID', 'de-DE']) {

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
@@ -90,7 +90,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
   const tick = (id: string, on: boolean) => {
     const done = steps.map((s) => s.id).filter((x) => (x === id ? on : state.done.includes(x)));
     update({ ...state, done });
-    announce(done.length === steps.length ? `${count(done.length)}. You're all set.` : count(done.length));
+    announce(done.length === steps.length ? `${count(done.length)}. You’re all set.` : count(done.length));
   };
 
   // After hiding or showing, focus goes to what took the place of the button that was pressed.
@@ -132,7 +132,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
                 formatValue={(v) => count(v)} />
               {finished ? (
                 <Card>
-                  <EmptyState icon="check_circle" headingLevel={3} title="You're all set"
+                  <EmptyState icon="check_circle" headingLevel={3} title="You’re all set"
                     description="Your workspace is ready. Everything here stays where you left it."
                     actions={<Button href={dashboardHref}>Go to your dashboard</Button>} />
                 </Card>
@@ -166,7 +166,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
           <Heading level={2} id="projects-title">Your projects</Heading>
           <Card variant="filled">
             <EmptyState icon="folder_open" headingLevel={3} title="No projects yet"
-              description="A project holds a piece of work: its tasks, its files and the talk about them. Start with one you're doing now."
+              description="A project holds a piece of work: its tasks, its files and the talk about them. Start with one you’re doing now."
               actions={<Button href="#new-project">Create a project</Button>} />
           </Card>
         </section>

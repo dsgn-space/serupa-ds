@@ -2,5 +2,5 @@
 // serupa-ds/icons: import the icons you use and only those ship.
 //   import { Add, ArrowForward } from "serupa-ds/icons";
 //   <Button leftIcon={Add}>New</Button>   <Icon icon={ArrowForward} />
-export * from "./icons";
-export type { IconData } from "./types";
+export * from './icons';
+export type { IconData } from './types';

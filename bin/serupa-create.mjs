@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // Start a new app with Serupa set up (135): Vite, React and TypeScript, the stylesheets in order, theme.js first in
 // <head> so the page never flashes the wrong theme, a skip link and main landmark, a theme switch, a small form,
-// and serupaPurge() so `npm run build` ships only the classes the app uses. `npm run check` is the app's "done":
+// and serupaPurge() so `npm run build` ships only the classes and components the app uses. `npm run check` is the app's "done":
 // the types, ESLint with jsx-a11y and serupa-ds/eslint (an <Image> with no alt), and Stylelint with
 // serupa-ds/stylelint (a raw color, spacing or radius where a token belongs), so the app's coding agent can check
 // its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
 // node_modules/serupa-ds, which matches the installed release.
 //
-// usage:  npx --package=github:diki-stwn/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
+// usage:  npx --package=gitlab:diki-stwn-group/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
 //
 // The folder must be new or empty. The app installs this same release of serupa-ds (its tag, as the README's install
 // line does), and the React, Vite and TypeScript versions this release was tested with. --serupa <spec> installs
@@ -123,9 +123,10 @@ function serupaTheme(): Plugin {
   };
 }
 
-// serupaPurge() trims Serupa's stylesheets in \`vite build\` to the classes your code uses; the dev server keeps them all.
+// serupaPurge() trims Serupa's stylesheets in \`vite build\` to the classes and components your code uses (a component
+// counts once its name is in src/, as \`<Button\` or \`import { Button }\`); the dev server keeps them all.
 export default defineConfig({
-  plugins: [serupaTheme(), serupaPurge()],
+  plugins: [serupaTheme(), serupaPurge({ components: true })],
   build: {
     rollupOptions: {
       // The components' "use client" lines are for React Server Components; a browser bundle doesn't need them kept.
@@ -224,19 +225,24 @@ To update Serupa, change the tag of \`serupa-ds\` in \`package.json\`, run \`npm
 }
 
 function main(argv) {
+  const USAGE = 'usage: serupa-create <folder> [--brand blue|violet|emerald]';
+  if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); return 0; }
   const opt = (flag) => { const i = argv.indexOf(flag); if (i < 0) return undefined; const v = argv[i + 1]; argv.splice(i, 2); return v; };
   const brand = opt('--brand') ?? 'blue';
   let serupa = opt('--serupa');
-  const [dir] = argv;
-  if (!dir || dir.startsWith('-')) { console.error('usage: serupa-create <folder> [--brand blue|violet|emerald]'); return 2; }
+  const unknown = argv.find((a) => a.startsWith('-'));
+  if (unknown) { console.error(`serupa-create: unknown option ${unknown}\n${USAGE}`); return 2; }
+  const [dir, extra] = argv;
+  if (!dir || extra !== undefined) { console.error(USAGE); return 2; }
   if (!BRANDS.includes(brand)) { console.error(`--brand is one of ${BRANDS.join(', ')}, not "${brand}"`); return 2; }
   const target = path.resolve(dir);
   if (fs.existsSync(target) && fs.readdirSync(target).length) { console.error(`${dir} isn't empty: pick a new folder.`); return 1; }
   const name = path.basename(target).toLowerCase().replace(/[^a-z0-9-._~]+/g, '-').replace(/^[-._]+/, '') || 'app';
   if (!serupa) {
     const pkg = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'));
-    const repo = pkg.repository.url.replace(/^git\+https:\/\/github\.com\//, '').replace(/\.git$/, '');
-    serupa = `github:${repo}#v${pkg.version}`;
+    const repo = pkg.repository.url.replace(/^git\+https:\/\/(?:github|gitlab)\.com\//, '').replace(/\.git$/, '');
+    // The GitLab interim: release tags are on GitLab (tools/tag-release.mjs), not GitHub. Back to github: on the move back.
+    serupa = `gitlab:${repo}#v${pkg.version}`;
   }
   for (const [file, text] of Object.entries(files({ name, serupa, brand }))) {
     fs.mkdirSync(path.dirname(path.join(target, file)), { recursive: true });

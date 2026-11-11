@@ -9,7 +9,7 @@ const said = () => [...document.querySelectorAll('[aria-live="polite"]')].map((e
 const KEY = 'serupa-test-session';
 const WAIT = { timeout: 5000 };
 
-afterEach(() => { window.localStorage.removeItem(KEY); });
+afterEach(() => { window.sessionStorage.removeItem(KEY); });
 
 // Session time-out (PT14): a warning well before the end, one action to stay, the time said at sensible steps, and
 // nothing typed lost.
@@ -32,12 +32,12 @@ describe('Patterns/Session time-out', () => {
     const screen = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
     await screen.getByLabelText('Message').click();
     await vi.waitFor(() => expect(active().textContent).toBe('Stay signed in'), WAIT);
-    await expect.element(screen.getByRole('alertdialog', { name: "You'll be signed out soon" })).toBeVisible();
-    await vi.waitFor(() => expect(said()).toContain("You'll be signed out in 2 seconds."));
+    await expect.element(screen.getByRole('alertdialog', { name: 'You’ll be signed out soon' })).toBeVisible();
+    await vi.waitFor(() => expect(said()).toContain('You’ll be signed out in 2 seconds.'));
     await userEvent.keyboard('{Enter}');
     expect(onExtend).toHaveBeenCalledTimes(1);
     await vi.waitFor(() => expect(document.querySelector('dialog[open]')).toBeNull());
-    await vi.waitFor(() => expect(said()).toContain("You're still signed in."));
+    await vi.waitFor(() => expect(said()).toContain('You’re still signed in.'));
     expect(active().tagName).toBe('TEXTAREA');
   });
 
@@ -60,9 +60,9 @@ describe('Patterns/Session time-out', () => {
     const screen = await render(<SessionTimeout duration={3} warnBefore={1} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(screen.getByLabelText('Subject'), 'Invoice is wrong');
     await userEvent.fill(screen.getByLabelText('Message'), 'Charged twice in May.');
-    await vi.waitFor(() => expect(active().textContent).toBe("You've been signed out"), WAIT);
+    await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
     expect(onExpire).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(window.localStorage.getItem(KEY)!)).toEqual({ subject: 'Invoice is wrong', message: 'Charged twice in May.' });
+    expect(JSON.parse(window.sessionStorage.getItem(KEY)!)).toEqual({ subject: 'Invoice is wrong', message: 'Charged twice in May.' });
     await screen.getByRole('button', { name: 'Sign in again' }).click();
     await expect.element(screen.getByLabelText('Subject')).toHaveValue('Invoice is wrong');
     await expect.element(screen.getByLabelText('Message')).toHaveValue('Charged twice in May.');
@@ -92,7 +92,7 @@ describe('Patterns/Session time-out', () => {
   });
 
   test('a draft saved before a reload comes back', async () => {
-    window.localStorage.setItem(KEY, JSON.stringify({ subject: 'Saved', message: 'Before the reload' }));
+    window.sessionStorage.setItem(KEY, JSON.stringify({ subject: 'Saved', message: 'Before the reload' }));
     const screen = await render(<SessionTimeout saveKey={KEY} />);
     await expect.element(screen.getByLabelText('Subject')).toHaveValue('Saved');
   });
@@ -102,16 +102,61 @@ describe('Patterns/Session time-out', () => {
     const first = await render(<SessionTimeout duration={4} warnBefore={3} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(first.getByLabelText('Subject'), 'Private');
     await first.getByRole('button', { name: 'Sign out' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe("You've signed out"));
+    await vi.waitFor(() => expect(active().textContent).toBe('You’ve signed out'));
     expect(onExpire).toHaveBeenCalledTimes(1);
-    expect(window.localStorage.getItem(KEY)).toBeNull();
+    expect(window.sessionStorage.getItem(KEY)).toBeNull();
     await first.getByRole('button', { name: 'Sign in again' }).click();
     await expect.element(first.getByLabelText('Subject')).toHaveValue('');
     await first.unmount();
     const onExtend = vi.fn(() => Promise.reject(new Error('offline')));
     const second = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
     await second.getByRole('button', { name: 'Stay signed in' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe("You've been signed out"), WAIT);
+    await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
+  });
+
+  test('drafts are kept for the tab only, never in localStorage, and only the subject and message', async () => {
+    window.sessionStorage.setItem(KEY, JSON.stringify({ subject: 'Hi', message: 'There', password: 'hunter2' }));
+    const screen = await render(<SessionTimeout saveKey={KEY} />);
+    await userEvent.fill(screen.getByLabelText('Message'), 'There again');
+    expect(JSON.parse(window.sessionStorage.getItem(KEY)!)).toEqual({ subject: 'Hi', message: 'There again' });
+    expect(window.localStorage.getItem(KEY)).toBeNull();
+  });
+
+  test('sending the message clears the draft once onSend resolves, and keeps it when onSend rejects', async () => {
+    const refused = vi.fn(() => Promise.reject(new Error('offline')));
+    const first = await render(<SessionTimeout saveKey={KEY} onSend={refused} />);
+    await userEvent.fill(first.getByLabelText('Subject'), 'Refund');
+    await first.getByRole('button', { name: 'Send message' }).click();
+    await vi.waitFor(() => expect(said()).toContain('wasn’t sent'));
+    expect(refused).toHaveBeenCalledWith({ subject: 'Refund', message: '' });
+    expect((JSON.parse(window.sessionStorage.getItem(KEY)!) as { subject: string }).subject).toBe('Refund');
+    await first.unmount();
+    const onSend = vi.fn();
+    const second = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
+    await expect.element(second.getByLabelText('Subject')).toHaveValue('Refund');
+    await second.getByRole('button', { name: 'Send message' }).click();
+    await vi.waitFor(() => expect(said()).toContain('Message sent.'));
+    expect(onSend).toHaveBeenCalledWith({ subject: 'Refund', message: '' });
+    expect(window.sessionStorage.getItem(KEY)).toBeNull();
+    await expect.element(second.getByLabelText('Subject')).toHaveValue('');
+  });
+
+  test('while the message is sending, a second press doesn\'t send it again', async () => {
+    let done!: () => void;
+    const onSend = vi.fn(() => new Promise<void>((r) => { done = r; }));
+    const screen = await render(<SessionTimeout saveKey={KEY} onSend={onSend} />);
+    await userEvent.fill(screen.getByLabelText('Subject'), 'Refund');
+    const button = screen.getByRole('button', { name: 'Send message' });
+    await button.click();
+    await expect.element(button).toHaveAttribute('aria-busy', 'true');
+    // A second press while busy: a click (straight on the element, since the browser's own click waits for a busy
+    // button to be ready) and Enter on the focused button.
+    (button.element() as HTMLButtonElement).click();
+    await userEvent.keyboard('{Enter}');
+    expect(onSend).toHaveBeenCalledTimes(1);
+    done();
+    await vi.waitFor(() => expect(said()).toContain('Message sent.'));
+    await expect.element(button).not.toHaveAttribute('aria-busy', 'true');
   });
 
   test('a storage that throws is ignored', async () => {

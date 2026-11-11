@@ -97,7 +97,7 @@ describe('TimePicker', () => {
     await fill('tpi', 'lunch');
     await fill('tpi', '22:00');
     expect([el('tpi').value, calls]).toEqual(['09:00', ['lunch:unreadable', '22:00:unavailable']]);
-    await expect.poll(() => announcerA()?.textContent).toContain('"22:00" wasn\'t accepted');
+    await expect.poll(() => announcerA()?.textContent).toContain('“22:00” wasn’t accepted');
   });
 
   test('a role="combobox" field (aria-haspopup="listbox", collapsed) in a dk-input box, labelled by Field; a "Choose a time" clock button out of the tab order; ref and className', async () => {
@@ -291,7 +291,7 @@ describe('TimePicker: autocomplete', () => {
       const list = document.getElementById(el('tp').getAttribute('aria-controls')!) as HTMLElement;
       const moves = list.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort();
       expect([moves, list.getAnimations().some((a) => a instanceof CSSAnimation), list.dataset.side, css(list).transformOrigin.split(' ')[1]]).toEqual([['opacity', 'scale'], false, 'bottom', '0px']);
-      await Promise.all(list.getAnimations().map((a) => a.finished));
+      await settled(list);
       expect([css(list).opacity, css(list).scale]).toEqual(['1', 'none']);
     });
   });

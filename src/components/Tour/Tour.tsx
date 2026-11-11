@@ -1,17 +1,18 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { component } from "../../internal/component";
-import type { OpenChangeDetails, OpenChangeReason } from "../../internal/openChange";
-import { showLayer, type Placement } from "../../internal/position";
-import { useSettings } from "../../internal/provider";
-import { useAnchoredLayer } from "../../internal/useAnchoredLayer";
-import { useExit } from "../../internal/useExit";
-import * as icons from "../../material/builtin";
-import { Button } from "../Button/Button";
-import { IconButton } from "../IconButton/IconButton";
-import { en as stepper } from "../Stepper/labels";
-import { en as tour } from "./labels";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { component } from '../../internal/component';
+import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
+import { showLayer, type Placement } from '../../internal/position';
+import { deepActive, rootOf } from '../../internal/root';
+import { useLocale, useSettings } from '../../internal/provider';
+import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
+import { useExit } from '../../internal/useExit';
+import * as icons from '../../material/builtin';
+import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
+import { en as stepper } from '../Stepper/labels';
+import { en as tour } from './labels';
 
 // Its words, with Stepper's ("Step 2 of 4"): a property read here would keep this module in every bundle.
 const words = /* @__PURE__ */ Object.assign({}, stepper, tour);
@@ -29,7 +30,7 @@ export interface TourStep {
   placement?: Placement | undefined;
 }
 
-export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "title" | "role" | "content"> {
+export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'title' | 'role' | 'content'> {
   /** The steps, in order. */
   steps: readonly TourStep[];
   /** Show it yourself (controlled), with onOpenChange. */
@@ -52,9 +53,10 @@ export interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
 
 const OWN = { steps: 1, open: 1, defaultOpen: 1, onOpenChange: 1, step: 1, defaultStep: 1, onStepChange: 1, onFinish: 1, headingLevel: 1, className: 1, id: 1 } as const;
 
-// The element a step points at, if it's on the page now.
-function find(t: TourStep["target"]): HTMLElement | null {
-  const el = typeof t === "string" ? document.querySelector(t) : t && "current" in t ? t.current : t;
+// The element a step points at, if it's on the page now. A selector is looked up in the tour's own document or
+// shadow root, so a tour inside a shadow root finds its targets there.
+function find(t: TourStep['target'], near: Node | null): HTMLElement | null {
+  const el = typeof t === 'string' ? rootOf(near).querySelector(t) : t && 'current' in t ? t.current : t;
   return el instanceof Element ? (el as HTMLElement) : null;
 }
 
@@ -65,9 +67,11 @@ function find(t: TourStep["target"]): HTMLElement | null {
    ends it and focus goes back to where it was. */
 /** A guided tour: steps that point at parts of the page, one at a time, with Back, Next and Done.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour", function Tour(props, ref) {
-  const sds = useSettings(words);
-  const own = domId("dk-tour", React.useId());
+const TABBABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type=hidden]), select:not(:disabled), textarea:not(:disabled), [tabindex], [contenteditable="true"]';
+
+export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour', function Tour(props, ref) {
+  const sds = useSettings(words), locale = useLocale();
+  const own = domId('dk-tour', React.useId());
   const id = props.id || own;
   const steps = props.steps || [];
   const [ownOpen, setOwnOpen] = React.useState(!!props.defaultOpen);
@@ -98,26 +102,26 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
   const next = () => {
     if (!last) { go(at + 1); return; }
     if (props.onFinish) props.onFinish();
-    close("close");
+    close('close');
   };
 
   // The step's element: found each time a step shows (it may have appeared since), brought into view and ringed.
   useIsoLayoutEffect(() => {
-    const el = open && step ? find(step.target) : null;
+    const el = open && step ? find(step.target, panel.current) : null;
     anchor.current = el;
     setTarget(el);
     if (!el) return;
-    el.scrollIntoView({ block: "nearest", inline: "nearest" });
-    el.setAttribute("data-tour-target", "");
-    return () => el.removeAttribute("data-tour-target");
+    el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    el.setAttribute('data-tour-target', '');
+    return () => el.removeAttribute('data-tour-target');
   }, [open, step]);
   const exit = useExit(open, panel);
-  useAnchoredLayer(open && !!target, panel, anchor, { placement: step && step.placement, offsetVar: "--dk-tour-offset", watch: target });
+  useAnchoredLayer(open && !!target, panel, anchor, { placement: step && step.placement, offsetVar: '--dk-tour-offset', watch: target });
   // A step with nothing to point at: the panel in the middle of the screen (the class), shown here.
   useIsoLayoutEffect(() => {
     const p = panel.current;
     if (!open || target || !p) return;
-    p.style.top = p.style.left = "";
+    p.style.top = p.style.left = '';
     showLayer(p);
   }, [open, target]);
   // Focus: where it was is kept when the tour opens, each step's panel takes it (so its title and text are read),
@@ -125,42 +129,54 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>("Tour",
   useIsoLayoutEffect(() => {
     const p = panel.current;
     if (!open || !p) return;
-    if (!opener.current) opener.current = document.activeElement;
+    if (!opener.current) opener.current = deepActive();   // inside a shadow root, what had focus there, not its host
     p.focus({ preventScroll: true });
   }, [open, at]);
   useIsoLayoutEffect(() => {
     if (open) return;
-    const back = opener.current as HTMLElement | null, p = panel.current, now = document.activeElement;
+    const back = opener.current as HTMLElement | null, p = panel.current, now = deepActive();
     opener.current = null;
-    if (back && back.isConnected && typeof back.focus === "function" && (!now || now === document.body || (!!p && p.contains(now)))) back.focus({ preventScroll: true });
+    if (back && back.isConnected && typeof back.focus === 'function' && (!now || now === document.body || (!!p && p.contains(now)))) back.focus({ preventScroll: true });
   }, [open]);
 
   // Escape ends it, from anywhere in the panel: a listener on the panel itself, as it isn't an interactive element.
+  // Tab and Shift+Tab go round the panel's own controls: past Next, focus would land on the page under the panel,
+  // where nobody can see it (WCAG 2.4.11). The page is still a click away, as the tour isn't modal.
   useIsoLayoutEffect(() => {
     const p = panel.current;
     if (!open || !p) return;
     const esc = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || e.defaultPrevented || e.isComposing) return;
-      e.preventDefault(); e.stopPropagation(); close("escape");
+      if (e.defaultPrevented || e.isComposing) return;
+      if (e.key === 'Tab' && !e.altKey && !e.ctrlKey && !e.metaKey) {
+        const stops = Array.prototype.filter.call(p.querySelectorAll(TABBABLE), (n: HTMLElement) => n.tabIndex >= 0 && n.getClientRects().length > 0) as HTMLElement[];
+        if (!stops.length) return;
+        const now = deepActive(), first = stops[0], end = stops[stops.length - 1];
+        const to = e.shiftKey ? (now === first || now === p ? end : null) : (now === end ? first : null);
+        if (to) { e.preventDefault(); to.focus(); }
+        return;
+      }
+      if (e.key !== 'Escape') return;
+      e.preventDefault(); e.stopPropagation(); close('escape');
     };
-    p.addEventListener("keydown", esc);
-    return () => p.removeEventListener("keydown", esc);
+    p.addEventListener('keydown', esc);
+    return () => p.removeEventListener('keydown', esc);
   }, [open, close]);
 
+  const mergedRef = useMergedRef(ref, (n) => { panel.current = n; });
   if (!step) return null;
-  const H = ("h" + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 2)) as "h2";
+  const H = ('h' + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? props.headingLevel : 2)) as 'h2';
   return (
-    <div {...omit(props, OWN)} ref={(n) => { panel.current = n; setRef(ref, n); }} id={id} role="dialog" tabIndex={-1} {...{ popover: "manual" }}
-      hidden={!open || undefined} inert={!open || undefined} aria-labelledby={id + "-title"} aria-describedby={step.content != null ? id + "-text" : undefined}
-      className={cn("dk-tour", !target && "dk-tour--center", props.className)} data-component="tour" data-state={open ? "open" : "closed"} data-instant={exit.instant ? "" : undefined}>
+    <div {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }}
+      hidden={!open || undefined} inert={!open || undefined} aria-labelledby={id + '-title'} aria-describedby={step.content != null ? id + '-text' : undefined}
+      className={cn('dk-tour', !target && 'dk-tour--center', props.className)} data-component="tour" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}>
       {open || exit.leaving ? <>
         <div className="dk-tour__head">
-          <H id={id + "-title"} className="dk-tour__title">{step.title}</H>
-          <IconButton className="dk-tour__close" icon={icons.Close} label={sds.labels.close} size="sm" hideTitle onClick={() => close("close")} />
+          <H id={id + '-title'} className="dk-tour__title">{step.title}</H>
+          <IconButton className="dk-tour__close" icon={icons.Close} label={sds.labels.close} size="sm" hideTitle onClick={() => close('close')} />
         </div>
-        {step.content != null ? <div id={id + "-text"} className="dk-tour__text">{step.content}</div> : null}
+        {step.content != null ? <div id={id + '-text'} className="dk-tour__text">{step.content}</div> : null}
         <div className="dk-tour__foot">
-          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length)}</span> : null}
+          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length, new Intl.NumberFormat(locale).format(at + 1), new Intl.NumberFormat(locale).format(steps.length))}</span> : null}
           <span className="dk-tour__actions">
             {at > 0 ? <Button size="sm" variant="secondary" onClick={() => go(at - 1)}>{sds.labels.tourBack}</Button> : null}
             <Button size="sm" onClick={next}>{last ? sds.labels.tourDone : sds.labels.tourNext}</Button>

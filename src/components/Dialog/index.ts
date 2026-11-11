@@ -1,3 +1,3 @@
 // The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.
-export { Dialog, useUnsavedChanges } from "./Dialog";
-export type { DialogProps } from "./Dialog";
+export { Dialog, useUnsavedChanges } from './Dialog';
+export type { DialogProps } from './Dialog';

@@ -1,10 +1,10 @@
-"use client";
-import * as React from "react";
-import { cn, domId, isInvalid, oneOf, omit, SIZES } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useFieldControl } from "../../internal/field";
-import { NAME_HOW, useNameCheck } from "../../internal/nameCheck";
-import { warnOnce } from "../../internal/warn";
+'use client';
+import * as React from 'react';
+import { cn, domId, isInvalid, oneOf, omit, SIZES } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useFieldControl } from '../../internal/field';
+import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { warnOnce } from '../../internal/warn';
 
 export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'role'> {
   /** 'sm' (28 by 16px track, text-xs), 'md' (36 by 20px, text-sm, default) or 'lg' (44 by 24px, text-base). */
@@ -20,6 +20,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   /** Focusable and read out (aria-readonly), but a click or Space doesn't flip it; an on switch is still submitted. */
   readOnly?: boolean | undefined;
   /** While a change is being saved: a small Loader turns on the thumb, aria-busy is set, and clicks and Space don't flip it, so it can't be sent twice. It stays focusable. Set checked when the save succeeds. */
+  loading?: boolean | undefined;
+  /** @deprecated Use loading, as Button names it (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
   pending?: boolean | undefined;
   /** Called with the new state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
   onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
@@ -30,21 +32,21 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
    labelPosition "end" (default) or "start"; invalid. Renders <label class="dk-switch">: className and style go
    to the label, every other prop (checked, defaultChecked, onChange, name, disabled, aria-*…) and ref to the
    <input>. */
-const OWN = { size: 1, invalid: 1, pending: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
+const OWN = { size: 1, invalid: 1, loading: 1, pending: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
 
 // Safari 18 draws <input type="checkbox" switch> as a native switch and, on iOS, gives a haptic tick when it flips.
 // appearance: none keeps our drawn track; the attribute is spelled out as switch="" so React writes it.
-const NATIVE_SWITCH = { switch: "" } as React.InputHTMLAttributes<HTMLInputElement>;
+const NATIVE_SWITCH = { switch: '' } as React.InputHTMLAttributes<HTMLInputElement>;
 
 /** An on/off setting that applies at once: a native checkbox with role="switch" (ref, checked, onChange and every input attribute go to it), drawn as a track and thumb; className and style go to the <label> around it. */
-export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>("Switch", function Switch(props, ref) {
-  const nameRef = useNameCheck("Switch", NAME_HOW.label, ref);   // warns when it has no accessible name
-  if (process.env.NODE_ENV !== "production" && (props as { label?: unknown }).label != null) warnOnce("label-prop", "Switch: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", "label-prop:Switch");
+export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>('Switch', function Switch(props, ref) {
+  const nameRef = useNameCheck('Switch', NAME_HOW.label, ref);   // warns when it has no accessible name
+  if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Switch: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Switch');
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, "md");
-  const invalid = isInvalid(props.invalid, rest["aria-invalid"]);
-  if (invalid) rest["aria-invalid"] = true;
+  const size = oneOf(SIZES, props.size, 'md');
+  const invalid = isInvalid(props.invalid, rest['aria-invalid']);
+  if (invalid) rest['aria-invalid'] = true;
   const checkedChange = props.onCheckedChange;
   if (checkedChange) {
     const before = rest.onChange;
@@ -53,23 +55,24 @@ export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>("
   // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
   // puts the switch back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
   // Pending blocks a flip the same way, with aria-busy instead: it isn't read-only, it's waiting.
-  const readOnly = !!rest.readOnly, pending = !!props.pending;
-  if (pending) rest["aria-busy"] = true;
+  if (process.env.NODE_ENV !== 'production' && props.pending != null) warnOnce('switch-pending', 'Switch: pending is deprecated and removed in 15.0.0. Use loading, which does the same.');
+  const readOnly = !!rest.readOnly, pending = !!(props.loading ?? props.pending);
+  if (pending) rest['aria-busy'] = true;
   if (readOnly || pending) {
-    if (readOnly) rest["aria-readonly"] = true;
+    if (readOnly) rest['aria-readonly'] = true;
     // React calls a checkbox's onChange from its click, so yours is left out; a no-op one in its place keeps React from
     // warning about a checked field without onChange while a controlled switch is pending (L8E74).
     rest.onChange = () => {};
     const onClick = rest.onClick;
     rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
   }
-  const base = domId("dk-sw", React.useId()), labelId = base + "-label", descId = base + "-desc";
-  const hasLabel = props.children != null && props.children !== false && props.children !== "";
-  const hasDesc = props.description != null && props.description !== false && props.description !== "";
-  if (hasDesc) rest["aria-describedby"] = cn(rest["aria-describedby"], descId);
-  if (hasDesc && hasLabel && rest["aria-label"] == null && rest["aria-labelledby"] == null) rest["aria-labelledby"] = labelId;   // the description stays out of the name
+  const base = domId('dk-sw', React.useId()), labelId = base + '-label', descId = base + '-desc';
+  const hasLabel = props.children != null && props.children !== false && props.children !== '';
+  const hasDesc = props.description != null && props.description !== false && props.description !== '';
+  if (hasDesc) rest['aria-describedby'] = cn(rest['aria-describedby'], descId);
+  if (hasDesc && hasLabel && rest['aria-label'] == null && rest['aria-labelledby'] == null) rest['aria-labelledby'] = labelId;   // the description stays out of the name
   return (
-    <label className={cn("dk-switch", "dk-switch--size-" + size, props.labelPosition === "start" && "dk-switch--label-start", invalid && "dk-switch--invalid", rest.disabled && "dk-switch--disabled", readOnly && "dk-switch--readonly", pending && "dk-switch--pending", !hasLabel && !hasDesc && "dk-switch--bare", props.className)} style={props.style} data-component="switch" data-size={size} data-pending={pending ? "" : undefined}>
+    <label className={cn('dk-switch', 'dk-switch--size-' + size, props.labelPosition === 'start' && 'dk-switch--label-start', invalid && 'dk-switch--invalid', rest.disabled && 'dk-switch--disabled', readOnly && 'dk-switch--readonly', pending && 'dk-switch--pending', !hasLabel && !hasDesc && 'dk-switch--bare', props.className)} style={props.style} data-component="switch" data-size={size} data-pending={pending ? '' : undefined}>
       <span className="dk-switch__control" key="control">
         <input {...rest} {...NATIVE_SWITCH} ref={nameRef} type="checkbox" role="switch" className="dk-switch__input" key="input" />
         <span className="dk-switch__thumb" aria-hidden key="thumb">{pending ? <span className="dk-switch__spinner" key="spin" /> : null}</span>

@@ -47,6 +47,13 @@ Drawn from the `WithIcon` story.
 - Pick a sensible default when there is one; use a placeholder only when no default makes sense.
 - Match its size to the inputs and buttons beside it.
 
+### Do and don't
+
+- **Do:** Give it a label above, in a [Field](../Field/README.md), which stays in view after a choice is made. (`DoLabelAbove`)
+- **Don't:** Use the placeholder as the only label: once a value is chosen, nothing says what the field was for. (`DontPlaceholderLabel`)
+- **Do:** Show two to four choices as [radios](../Radio/README.md), all in view at once. (`DoRadiosForFew`)
+- **Don't:** Hide a few choices in a Select: people have to open it to see what they can pick. (`DontSelectForFew`)
+
 ## States
 
 | State | Look |
@@ -56,12 +63,14 @@ Drawn from the `WithIcon` story.
 | Hover | `field-border-hover` |
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, default cursor, no hover change; the value at full contrast |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor |
 
 ## Accessibility
 
 - On iOS the field's text is 16px at every size, so Safari doesn't zoom the page when it takes focus; the box keeps its height.
 - It's the browser's own select, so screen readers, the keyboard (arrows, Home/End, type to find) and the phone's picker all work without extra code.
+- `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.
 - Every select needs a name: Field, a `<label htmlFor>` or `aria-label`. The placeholder isn't a label.
 - The chevron and left icon are decorative and don't take clicks: a click anywhere in the box opens the select.
 - Text and placeholder keep 4.5:1 on `field`; the chevron, border, focus ring and invalid border 3:1, in all six themes (`Select.test.tsx`).
@@ -86,6 +95,7 @@ Drawn from the `WithIcon` story.
 | `placeholder` | string | | A first, empty option shown in the placeholder color until something is picked. It can't be picked back. An uncontrolled Select starts on it |
 | `leftIcon` | icon name or element | | A decorative icon before the text (14, 16 or 20px, in `text-muted`) |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
+| `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), and a form still sends the value, unlike `disabled`; keys, a press and the phone's picker don't change it, and `onChange` doesn't run |
 
 Everything else (`value`, `defaultValue`, `onChange`, `name`, `disabled`, `required`, `id`, `aria-*`) and `ref` go to the `<select>`. `className` and `style` go to the box, so `className="w-48"` sets its width (full width by default). The box has `data-component="select"` and `data-size`. `multiple` isn't supported (a native multi-select is hard to use): it's ignored with a warning; use checkboxes. Inside a `<fieldset disabled>` the box takes the disabled look too, as the native select is disabled with it.
 
@@ -99,7 +109,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--select-bg` | `field` | Background, and the options where the browser draws them |
-| `--select-bg-disabled` | `field-readonly` | Background when disabled |
+| `--select-bg-disabled` | `field-readonly` | Background when read-only or disabled |
 | `--select-text` | `text` | The chosen value, and the options where the browser draws them |
 | `--select-border` | `field-border` | Border |
 | `--select-border-hover` | `field-border-hover` | Border on hover |

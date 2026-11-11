@@ -8,12 +8,12 @@ export interface BreadcrumbLabels {
   morePages: string;
 }
 export const en: BreadcrumbLabels = {
-  breadcrumb: "Breadcrumb",
-  showHiddenPages: "Show all pages",
-  morePages: "More pages",
+  breadcrumb: 'Breadcrumb',
+  showHiddenPages: 'Show all pages',
+  morePages: 'More pages',
 };
 export const id: BreadcrumbLabels = {
-  breadcrumb: "Navigasi jejak",
-  showHiddenPages: "Tampilkan semua halaman",
-  morePages: "Halaman lainnya",
+  breadcrumb: 'Navigasi jejak',
+  showHiddenPages: 'Tampilkan semua halaman',
+  morePages: 'Halaman lainnya',
 };

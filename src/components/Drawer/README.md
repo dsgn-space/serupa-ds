@@ -43,6 +43,7 @@ Drawn from the `Bottom` story.
 - Put the actions in `footer` so they stay in view, with the main action last.
 - Set `closeOnBackdrop={false}` when closing would lose work, such as unsaved edits.
 - Set `modal={false}` for a panel people use alongside the page, such as an item's details next to a list they keep clicking through.
+- Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 
 ## Behavior
 
@@ -116,7 +117,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |
-| `--drawer-padding` | `spacing-6` | Padding inside the panel (24px). |
+| `--drawer-padding` | `space-surface` | Padding inside the panel (24px). |
 | `--drawer-gap` | `spacing-4` | Space between the header and the body (16px). |
 | `--drawer-border-width` | `border-width-1` | The line above the footer (1px). |
 | `--drawer-radius` | `radius-container` | The corners on the open side of a top or bottom drawer (12px). |

@@ -1,14 +1,14 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, useIsoLayoutEffect } from "../../internal/cn";
-import { component } from "../../internal/component";
-import { useAutoFocus } from "../../internal/focus";
-import { announce } from "../../internal/announce";
-import { isComposing } from "../../internal/ime";
-import { useSettings } from "../../internal/provider";
-import { Icon } from "../Icon/Icon";
-import * as icons from "../../material/builtin";
-import { en as words } from "./labels";
+'use client';
+import * as React from 'react';
+import { useMergedRef, cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { component } from '../../internal/component';
+import { useAutoFocus } from '../../internal/focus';
+import { announce } from '../../internal/announce';
+import { isComposing } from '../../internal/ime';
+import { useSettings } from '../../internal/provider';
+import { Icon } from '../Icon/Icon';
+import * as icons from '../../material/builtin';
+import { en as words } from './labels';
 
 export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children' | 'onChange'> {
   /** The items, in order. Controlled: pass the new order back from onReorder. */
@@ -28,7 +28,7 @@ export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLULis
   /** Which way the items run: "vertical" (default), a column, or "horizontal", a row (tabs, chips, a board's columns)
    *  that drags and auto-scrolls sideways. In a row, Left and Right follow the reading direction, so in right-to-left
    *  ArrowLeft moves an item later. */
-  orientation?: "vertical" | "horizontal" | undefined;
+  orientation?: 'vertical' | 'horizontal' | undefined;
 }
 
 type Drag = { key: string | number; from: number; to: number; pointer: boolean };
@@ -38,7 +38,7 @@ type Drag = { key: string | number; from: number; to: number; pointer: boolean }
    announced ("Apollo, position 3 of 5"). A drag moves the other items out of the way as it goes and is only
    reported on drop (onReorder), so a cancelled one changes nothing. A <ul> of <li>; className and props go to the <ul>. */
 /** A list people reorder by dragging a handle or with the keyboard, with every move announced. */
-export const SortableList = /* @__PURE__ */ component<HTMLUListElement, SortableListProps<unknown>>("SortableList", function SortableList(props, ref) {
+export const SortableList = /* @__PURE__ */ component<HTMLUListElement, SortableListProps<unknown>>('SortableList', function SortableList(props, ref) {
   const rest = omit(props, { items: 1, getKey: 1, getLabel: 1, renderItem: 1, onReorder: 1, disabled: 1, reorderLabel: 1, orientation: 1, className: 1, autoFocus: 1 } as const);
   const sds = useSettings(words);
   const { getKey, getLabel } = props;
@@ -46,16 +46,16 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
   const [drag, setDrag] = React.useState<Drag | null>(null);
   const current = React.useRef(drag);
   current.current = drag;
-  const hintId = domId("dk-sl", React.useId()) + "-hint";
+  const hintId = domId('dk-sl', React.useId()) + '-hint';
   const list = React.useRef<HTMLUListElement | null>(null);
   const handles = React.useRef(new Map<string | number, HTMLButtonElement>());
   // start and at are the pointer along the list's axis: clientY in a column, clientX in a row.
   const pointer = React.useRef<{ id: number; key: string | number; start: number; at: number; grab: number; moved: boolean } | null>(null);
-  const row = props.orientation === "horizontal";
+  const row = props.orientation === 'horizontal';
   // Where a box starts and how long it is along the axis.
   const lead = (b: DOMRect) => row ? b.left : b.top, span = (b: DOMRect) => row ? b.width : b.height;
-  const rtl = () => row && !!list.current && getComputedStyle(list.current).direction === "rtl";
-  useAutoFocus(props.autoFocus, () => list.current && list.current.querySelector<HTMLButtonElement>(".dk-sortable-list__handle"));
+  const rtl = () => row && !!list.current && getComputedStyle(list.current).direction === 'rtl';
+  useAutoFocus(props.autoFocus, () => list.current && list.current.querySelector<HTMLButtonElement>('.dk-sortable-list__handle'));
   const total = items.length;
   const from = drag ? items.findIndex((it) => getKey(it) === drag.key) : -1;
   // While dragging, the list shows the item at its new place; nothing is reported until it's dropped.
@@ -90,13 +90,13 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     if (!drag || drag.pointer || isComposing(e)) return;
     const k = e.key;
     let to = drag.to;
-    const back = rtl() ? "ArrowRight" : "ArrowLeft", on = rtl() ? "ArrowLeft" : "ArrowRight";
-    if (k === "ArrowUp" || k === back) to = Math.max(0, to - 1);
-    else if (k === "ArrowDown" || k === on) to = Math.min(total - 1, to + 1);
-    else if (k === "Home") to = 0;
-    else if (k === "End") to = total - 1;
-    else if (k === "Escape") { e.preventDefault(); e.stopPropagation(); finish(drag, false); return; }
-    else if (k === "Tab") { finish(drag, false); return; }
+    const back = rtl() ? 'ArrowRight' : 'ArrowLeft', on = rtl() ? 'ArrowLeft' : 'ArrowRight';
+    if (k === 'ArrowUp' || k === back) to = Math.max(0, to - 1);
+    else if (k === 'ArrowDown' || k === on) to = Math.min(total - 1, to + 1);
+    else if (k === 'Home') to = 0;
+    else if (k === 'End') to = total - 1;
+    else if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(drag, false); return; }
+    else if (k === 'Tab') { finish(drag, false); return; }
     else return;
     e.preventDefault();
     if (to !== drag.to) {
@@ -121,8 +121,8 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     if (shownAt.current === -1) { shownAt.current = drag.to; return; }
     if (shownAt.current === drag.to) return;
     shownAt.current = drag.to;
-    const row = h && h.closest("li");
-    if (row && typeof row.scrollIntoView === "function") row.scrollIntoView({ block: "nearest", inline: "nearest" });
+    const row = h && h.closest('li');
+    if (row && typeof row.scrollIntoView === 'function') row.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   });
 
   // Pointer: press a handle and move more than a few pixels to drag; the row follows the pointer. The moves are
@@ -136,10 +136,10 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     if (drag && !drag.pointer && e.button === 0 && !props.disabled) {
       dropping.current = true;
       // Released off the handle, there's no click: then the blur counts after all.
-      window.addEventListener("pointerup", () => setTimeout(() => { if (dropping.current) { dropping.current = false; onBlur(); } }), { once: true });
+      window.addEventListener('pointerup', () => setTimeout(() => { if (dropping.current) { dropping.current = false; onBlur(); } }), { once: true });
     }
     if (props.disabled || e.button !== 0 || (drag && !drag.pointer)) return;
-    const li = e.currentTarget.closest("li") as HTMLElement, c = row ? e.clientX : e.clientY;
+    const li = e.currentTarget.closest('li') as HTMLElement, c = row ? e.clientX : e.clientY;
     pointer.current = { id: e.pointerId, key, start: c, at: c, grab: c - lead(li.getBoundingClientRect()), moved: false };
     // In a right-to-left row the first item is on the right, so "before" is further right.
     const flip = rtl();
@@ -168,7 +168,7 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     const scroller = (): HTMLElement => {
       for (let n: HTMLElement | null = list.current; n && n !== document.body; n = n.parentElement) {
         const o = row ? getComputedStyle(n).overflowX : getComputedStyle(n).overflowY;
-        if ((o === "auto" || o === "scroll") && (row ? n.scrollWidth > n.clientWidth : n.scrollHeight > n.clientHeight)) return n;
+        if ((o === 'auto' || o === 'scroll') && (row ? n.scrollWidth > n.clientWidth : n.scrollHeight > n.clientHeight)) return n;
       }
       return (document.scrollingElement || document.documentElement) as HTMLElement;
     };
@@ -213,11 +213,11 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     const off = () => {
       pointer.current = null; stop.current = null;
       if (frame) { cancelAnimationFrame(frame); frame = 0; }
-      window.removeEventListener("pointermove", moveTo); window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", cancel);
+      window.removeEventListener('pointermove', moveTo); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', cancel);
     };
     if (stop.current) stop.current();
     stop.current = off;
-    window.addEventListener("pointermove", moveTo); window.addEventListener("pointerup", up); window.addEventListener("pointercancel", cancel);
+    window.addEventListener('pointermove', moveTo); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', cancel);
   };
   const tops = React.useRef(new Map<string, number>());
   // The rows that change place glide there (FLIP): each starts where it showed (mid-way through an earlier move, or
@@ -229,20 +229,20 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     const held = pointer.current && drag && drag.pointer ? String(drag.key) : null;
     const next = new Map<string, number>(), moved: [HTMLElement, number][] = [];
     for (const r of rows) {
-      const key = r.dataset.key || "", top = row ? r.offsetLeft : r.offsetTop, was = tops.current.get(key);
+      const key = r.dataset.key || '', top = row ? r.offsetLeft : r.offsetTop, was = tops.current.get(key);
       next.set(key, top);
       if (was === undefined || was === top || key === held) continue;
       const cs = getComputedStyle(r);
-      const t = cs.transform === "none" ? null : new DOMMatrix(cs.transform);
-      const shift = (t ? (row ? t.m41 : t.m42) : 0) + (parseFloat(cs.translate.split(" ")[row ? 0 : 1]) || 0);
+      const t = cs.transform === 'none' ? null : new DOMMatrix(cs.transform);
+      const shift = (t ? (row ? t.m41 : t.m42) : 0) + (parseFloat(cs.translate.split(' ')[row ? 0 : 1]) || 0);
       const dy = Math.round(was + shift - top);
       if (dy) moved.push([r, dy]);
     }
     tops.current = next;
     if (!moved.length || !list.current) return;
-    for (const [r, dy] of moved) { r.dataset.flip = ""; r.style.translate = row ? dy + "px 0" : "0 " + dy + "px"; }
+    for (const [r, dy] of moved) { r.dataset.flip = ''; r.style.translate = row ? dy + 'px 0' : '0 ' + dy + 'px'; }
     void list.current.offsetWidth;   // one reflow: they start from where they were
-    for (const [r] of moved) { delete r.dataset.flip; r.style.translate = ""; }
+    for (const [r] of moved) { delete r.dataset.flip; r.style.translate = ''; }
   });
 
   // The dragged row sits where the pointer is, between the others.
@@ -251,22 +251,23 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     const p = pointer.current, rows = list.current ? [...list.current.children] as HTMLElement[] : [];
     for (const r of rows) {
       if (p && drag && drag.pointer && r.dataset.key === String(drag.key)) {
-        r.style.transform = "";
-        r.style.transform = (row ? "translateX(" : "translateY(") + Math.round(p.at - p.grab - lead(r.getBoundingClientRect())) + "px)";
-      } else if (r.style.transform) r.style.transform = "";
+        r.style.transform = '';
+        r.style.transform = (row ? 'translateX(' : 'translateY(') + Math.round(p.at - p.grab - lead(r.getBoundingClientRect())) + 'px)';
+      } else if (r.style.transform) r.style.transform = '';
     }
   });
 
   const name = props.reorderLabel || sds.labels.reorder;
+  const mergedRef = useMergedRef(ref, (n) => { list.current = n; });
   return (<>
-    <ul role="list" {...rest} ref={(n) => { list.current = n; if (typeof ref === "function") ref(n); else if (ref) ref.current = n; }}
-      className={cn("dk-sortable-list", drag && "dk-sortable-list--sorting", props.disabled && "dk-sortable-list--disabled", props.className)} data-component="sortable-list" data-orientation={row ? "horizontal" : undefined}>
+    <ul role="list" {...rest} ref={mergedRef}
+      className={cn('dk-sortable-list', drag && 'dk-sortable-list--sorting', props.disabled && 'dk-sortable-list--disabled', props.className)} data-component="sortable-list" data-orientation={row ? 'horizontal' : undefined}>
       {shown.map((it, index) => {
         const key = getKey(it), dragging = !!drag && drag.key === key;
         return (
-          <li key={key} data-key={String(key)} className={cn("dk-sortable-list__item", dragging && "dk-sortable-list__item--dragging")} data-state={dragging ? "dragging" : undefined}>
+          <li key={key} data-key={String(key)} className={cn('dk-sortable-list__item', dragging && 'dk-sortable-list__item--dragging')} data-state={dragging ? 'dragging' : undefined}>
             {props.disabled ? null : (
-              <button type="button" className="dk-sortable-list__handle" aria-label={name + " " + label(it)} aria-describedby={hintId} aria-pressed={dragging && !drag.pointer}
+              <button type="button" className="dk-sortable-list__handle" aria-label={name + ' ' + label(it)} aria-describedby={hintId} aria-pressed={dragging && !drag.pointer}
                 ref={(n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); }}
                 onClick={onClick(key, index)} onKeyDown={onKeyDown} onBlur={onBlur}
                 onPointerDown={onPointerDown(key)}>

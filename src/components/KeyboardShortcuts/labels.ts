@@ -9,12 +9,12 @@ export interface KeyboardShortcutsLabels {
   showShortcuts: string;
 }
 export const en: KeyboardShortcutsLabels = {
-  keyboardShortcuts: "Keyboard shortcuts",
-  generalShortcuts: "General",
-  showShortcuts: "Show keyboard shortcuts",
+  keyboardShortcuts: 'Keyboard shortcuts',
+  generalShortcuts: 'General',
+  showShortcuts: 'Show keyboard shortcuts',
 };
 export const id: KeyboardShortcutsLabels = {
-  keyboardShortcuts: "Pintasan keyboard",
-  generalShortcuts: "Umum",
-  showShortcuts: "Tampilkan pintasan keyboard",
+  keyboardShortcuts: 'Pintasan keyboard',
+  generalShortcuts: 'Umum',
+  showShortcuts: 'Tampilkan pintasan keyboard',
 };

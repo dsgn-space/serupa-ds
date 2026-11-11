@@ -19,7 +19,7 @@ export const InAField: Story = {
   args: { 'aria-label': undefined },
   render: function Render(args) {
     const [v, setV] = React.useState<number | null>(null);
-    return <Field label="How was your stay?" hint="Pick again to clear.">
+    return <Field label="How was your stay?" hint="Choose it again to clear.">
       <Rating {...args} value={v} onValueChange={setV} clearable name="stay" />
     </Field>;
   },
@@ -34,7 +34,7 @@ export const Sizes: Story = {
 };
 export const Invalid: Story = {
   args: { 'aria-label': undefined, defaultValue: undefined },
-  render: (args) => <Field label="How was your stay?" error="Pick a rating to send your review." required>
+  render: (args) => <Field label="How was your stay?" error="Choose a rating to send your review." required>
     <Rating {...args} name="stay" />
   </Field>,
 };

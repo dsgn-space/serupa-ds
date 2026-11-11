@@ -7,22 +7,23 @@ export interface CommandPaletteLabels {
   searchCommands: string;
   /** CommandPalette: shown, and said, when nothing matches what was typed. */
   noCommands: string;
-  /** CommandPalette: said once typing stops, with how many commands match. */
-  commandsCount: (count: number) => string;
+  /** CommandPalette: said once typing stops, with how many commands match. `formatted` is the count in the locale's
+   *  digits and grouping; `count` is there for plural rules. */
+  commandsCount: (count: number, formatted: string) => string;
   /** CommandPalette: the group for commands given no group. */
   otherCommands: string;
 }
 export const en: CommandPaletteLabels = {
-  commandPalette: "Command palette",
-  searchCommands: "Search commands and pages",
-  noCommands: "No matching commands",
-  commandsCount: (count) => count === 1 ? "1 command" : count + " commands",
-  otherCommands: "Commands",
+  commandPalette: 'Command palette',
+  searchCommands: 'Search commands and pages',
+  noCommands: 'No matching commands',
+  commandsCount: (count, formatted = String(count)) => formatted + (count === 1 ? ' command' : ' commands'),
+  otherCommands: 'Commands',
 };
 export const id: CommandPaletteLabels = {
-  commandPalette: "Palet perintah",
-  searchCommands: "Cari perintah dan halaman",
-  noCommands: "Tidak ada perintah yang cocok",
-  commandsCount: (count) => count + " perintah",
-  otherCommands: "Perintah",
+  commandPalette: 'Palet perintah',
+  searchCommands: 'Cari perintah dan halaman',
+  noCommands: 'Tidak ada perintah yang cocok',
+  commandsCount: (count, formatted = String(count)) => formatted + ' perintah',
+  otherCommands: 'Perintah',
 };

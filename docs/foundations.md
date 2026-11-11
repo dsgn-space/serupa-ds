@@ -118,9 +118,17 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
 | `success-subtle` | `green-50` | `green-950` | Success alert / badge background. |
 | `success-text` | `green-700` | `green-300` | Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+). Class `text-success-text`. |
+| `success-hover` | `green-500` | `green-400` | Hover / pressed state of `success` fills. |
+| `on-success` | `green-950` | `green-950` | Text and icons on `success` fills (4.5:1+). |
+| `success-subtle-hover` | `green-100` | `green-900` | Hover fill of an interactive `success-subtle` surface. |
+| `success-border` | `green-300` | `green-800` | Border of a success outline control or callout. |
 | `warning` | `amber-600` | `amber-500` | Warning icons and fills; put dark text on it. Not for text: use `warning-text`. |
 | `warning-subtle` | `amber-50` | `amber-950` | Warning alert / badge background. |
 | `warning-text` | `amber-700` | `amber-300` | Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+). Class `text-warning-text`. |
+| `warning-hover` | `amber-500` | `amber-400` | Hover / pressed state of `warning` fills. |
+| `on-warning` | `amber-950` | `amber-950` | Text and icons on `warning` fills (4.5:1+). |
+| `warning-subtle-hover` | `amber-100` | `amber-900` | Hover fill of an interactive `warning-subtle` surface. |
+| `warning-border` | `amber-300` | `amber-800` | Border of a warning outline control or callout. |
 | `danger` | `red-600` | `red-600` | Errors, destructive buttons; white text on it. |
 | `danger-hover` | `red-700` | `red-700` | Hover / pressed state of `danger`. |
 | `on-danger` | `white` | `white` | Text and icons on `danger` fills. |
@@ -131,6 +139,10 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `info` | `sky-700` | `sky-400` | Informational icons and text. |
 | `info-subtle` | `sky-50` | `sky-950` | Info alert / badge background. |
 | `info-text` | `sky-700` | `sky-300` | Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+). Class `text-info-text`. |
+| `info-hover` | `sky-800` | `sky-300` | Hover / pressed state of `info` fills. |
+| `on-info` | `white` | `sky-950` | Text and icons on `info` fills (4.5:1+). |
+| `info-subtle-hover` | `sky-100` | `sky-900` | Hover fill of an interactive `info-subtle` surface. |
+| `info-border` | `sky-300` | `sky-800` | Border of an info outline control or callout. |
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. |
 | `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
 | `field-border` | `zinc-500` | `zinc-400` | Border of form fields: 3:1+ on `field` and `surface` (WCAG 1.4.11, a control's boundary). |
@@ -339,7 +351,9 @@ The spacing scale, named `spacing-<step>`: 1 step = 4px (`spacing-4` = 16px = `p
 - Stay on the scale: `1` (4px), `2` (8px), `3` (12px), `4` (16px), `6` (24px), `8` (32px), `12` (48px) and `16` (64px) cover most layouts.
 - Spacing inside a group should be smaller than the spacing between groups.
 
-**Roles.** Five steps have names for what they space, for layouts and your own components: `space-inline` (4px, an icon and its label), `space-related` (8px, the parts of one control, or items that belong together such as a label and its input), `space-content` (16px, the default padding and gap), `space-surface` (24px, the padding of a card, dialog or drawer) and `space-section` (32px, between groups or sections of a page).
+**Roles.** Five steps have names for what they space, for layouts and your own components: `space-inline` (4px, an icon and its label), `space-related` (8px, the parts of one control, or items that belong together such as a label and its input), `space-content` (16px, the default padding and gap), `space-surface` (24px, the padding of a dialog, a drawer or a large card) and `space-section` (32px, between groups or sections of a page).
+
+Dialog, Drawer and Card `padding="lg"` read `space-surface` for their padding, and Popover reads `space-content`, so setting a role on `:root` (or on a part of the page) makes them denser or roomier with it. A component's own token still wins: `--dialog-padding` changes only dialogs. The other roles are names for your own layouts; no component reads them.
 
 ### Padding and margin
 
@@ -1037,6 +1051,19 @@ How the words in a product built with the system should read: labels, hints, err
 - Leave out words that tell the reader something should be quick for them: "simply", "just", "obviously", "of course", "easy". When it isn't quick for them, the word makes them feel slow; when it is, the word adds nothing. "Add an email address", not "Just add an email address".
 - Use plain, neutral terms: "allow list" and "block list", not "whitelist" and "blacklist"; "main" and "replica" (or "primary" and "secondary"), not "master" and "slave".
 
+**Words to use**
+
+One word for one act, so a form reads in one voice and someone using voice control can say what they see. The components' own words follow this list.
+
+| Use | Not | For |
+| --- | --- | --- |
+| choose | pick, select | taking one or more options from a set: "Choose a date", "Choose at least one option." |
+| select | click, tap, press | acting on a control whatever the input: "Select Save". Also for selecting items or text to act on them: "Select all rows" |
+| enter | type, input, fill in | putting a value in a field: "Enter your email" |
+| sign in, sign out | log in, login, log out | starting and ending a session: "Sign in", "We signed you out" |
+| remove | delete | taking something out of a list or a field, when the thing itself stays: a Badge's remove button |
+| delete | remove | destroying the thing itself, usually after a confirmation: "Delete project" |
+
 **Capitalization and punctuation**
 
 - Sentence case everywhere: titles, buttons, labels, menu items, tabs and column headings. "Save changes", not "Save Changes". Proper nouns keep their capitals.
@@ -1067,7 +1094,7 @@ Say what happened and how to fix it, in that order, next to the thing that needs
 | Error 413 | report.pdf is larger than 10 MB |
 | This field is required | Enter your email |
 | Something went wrong | We couldn't save your changes. Try again. |
-| photo.heic: this type of file isn't accepted. | photo.heic isn't a PNG or JPG. |
+| photo.heic: this type of file isn’t accepted. | photo.heic isn’t a PNG or JPG. |
 
 - Put a field's error in Field's `error`, so it's tied to the control and read with it.
 - If nothing the person does will fix it, say so and say what happens next: "We couldn't reach the server. Your changes are kept and will be sent when you're back online."
@@ -1093,6 +1120,60 @@ Close buttons, loading text, pagination and the other built-in words come from o
 - Overlays close with "Close" (Dialog, Drawer); notices go away with "Dismiss" (Alert, Toast).
 - Loading is "Loading…" everywhere; give a specific one when you can: `loadingText="Saving…"`.
 - When you change one, keep the patterns above: a verb for a button, sentence case, no full stop.
+
+**In Indonesian**
+
+`idLabels` and any Indonesian copy follow the rules above, and these as well.
+
+- **Anda, not kamu.** Address the person as "Anda", with a capital A wherever it falls in the sentence ("Zona waktu Anda"). A button or a hint needs neither: the plain verb says it ("Simpan", "Pilih file"). Don't switch to "kamu" for a casual product. A product with that voice changes the labels through `<SerupaProvider labels>`, every one of them, so the two never mix on one screen.
+- **Buttons are the base verb:** "Simpan", "Kirim", "Hapus", "Coba lagi". The me- form is for something under way, with the ellipsis: "Menyimpan…", "Memuat…". A done thing takes di-: "3 dihapus", "Disalin".
+- **No "silakan", "mohon" or "maaf"** in the words the components say, as no "please" or "sorry" in English.
+- **Loanwords.** Use the Indonesian word people already use on their phones and computers: "unduh", "unggah", "kata sandi", "salin", "pengaturan", "pencarian". Keep the loanword where it is the everyday word and the Indonesian one would make people stop: "file", "email", "online", "offline", "slide", "filter". Pick one word for each thing and use it everywhere: "file", not "file" in one place and "berkas" in another; "pilihan", not "pilihan" and "opsi". Loanwords aren't set in italics in an interface, and Indonesian affixes don't go on English words ("mengunggah", not "meng-upload").
+- **Plurals.** A number already says there's more than one, so the noun stays as it is: "3 file", "12 pesan baru", never "3 file-file". `plural()` takes the same form for one and many.
+- **Dates and times.** Day, month, year, with no comma: "24 Okt 2026" or "24 Oktober 2026". Times use a full stop, "14.30", as `Intl.DateTimeFormat` writes for `id-ID`. Let the locale write both.
+- **Numbers and money.** A full stop groups thousands and a comma marks decimals: "12.400", "2,5 MB". Rupiah goes before the amount, and whole rupiah need no ",00": "Rp 12.400" (`maximumFractionDigits: 0`). Let `Intl.NumberFormat` with `id-ID` write them; never build one by hand from the English form.
+- **Ranges.** In a sentence write "sampai" ("3 sampai 12"); in a short label use an en dash with no spaces ("1–5"), as in English.
+
+## Ethical design
+
+A product built with the system asks for people's time, money and data honestly. Each choice is one the person makes for themselves, with what it costs in plain sight, and a "no" counts as much as a "yes". These rules sit beside Content and voice and Accessibility: a page can pass WCAG and still push someone into a choice they didn't mean to make.
+
+**Choices of equal weight**
+
+- Two answers to one question look alike: the same kind of button, side by side, in the same words ("Accept analytics cookies", "Reject analytics cookies"). Neither is a link, a paler color or one more step away. ConsentBanner works this way.
+- A recommended option says so in words ("Recommended"), and the others stay as clear to see and to choose.
+- A safe default (staying signed in, keeping a draft) can be the main button. A choice that earns the product money or data can't be the only one that looks like a button.
+
+**No confirmshaming**
+
+- The way out starts with a verb that says what it does, as any button does: "Skip", "Keep my current plan", "Close offer". Never "No, I don't want to save money" or "I prefer to pay full price".
+- No guilt, no sad faces, no "Are you sure you want to miss out?".
+
+**Nothing extra ticked for them**
+
+- Extras are off until the person turns them on: newsletters, add-ons, insurance, a tip, sharing with partners. A Checkbox or Switch for one of them starts unchecked.
+- Agreeing to the terms and agreeing to marketing are separate questions. Never fold one into the other.
+- The cheapest way to get what they came for is the default (standard delivery, monthly billing, the plan they're on), unless they choose otherwise.
+
+**Leaving takes no more than joining**
+
+- Cancelling, unsubscribing, deleting an account or turning notifications off takes no more steps than signing up or turning them on, and happens in the product, not by phone or email.
+- Say when a plan renews and what it will cost before someone chooses it, and how to cancel.
+- One confirmation is enough. No offer screens between the person and the button they asked for, and no "Contact us to cancel".
+
+**Honest time and numbers**
+
+- A timer counts down to something real, such as a session ending or a code expiring, and says what happens at zero. No timers that start again on reload, and no "offer ends in 10:00" that never ends.
+- Scarcity and popularity are true, current and checkable: "3 left" only when there are 3, "Popular with teams" only when it is.
+- The price shown is the price paid. Delivery, fees and taxes show before the last step, and the total on the button or next to it is the total charged.
+- Counts are true counts: an unread badge counts things the person hasn't seen, never a made-up nudge to come back.
+
+**Their data, their call**
+
+- Ask for data when it's needed and say why ("For the receipt and the delivery updates"). Mark what's optional.
+- Keep only what the feature needs, for as long as it needs it, and say what's kept in the browser (SECURITY.md lists what the components store).
+
+When a pattern breaks one of these, the fix is in the pattern, not in the words around it.
 
 ## Accessibility standard
 

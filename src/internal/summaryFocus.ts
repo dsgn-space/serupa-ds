@@ -7,7 +7,7 @@ let quiet: Element | null = null;
 
 /** Called by ErrorSummary as it takes focus: its form (or the page) is quiet for this commit. */
 export function summaryTookFocus(box: Element): void {
-  quiet = box.closest("form") || box.ownerDocument.body;
+  quiet = box.closest('form') || box.ownerDocument.body;
   queueMicrotask(() => { quiet = null; });
 }
 

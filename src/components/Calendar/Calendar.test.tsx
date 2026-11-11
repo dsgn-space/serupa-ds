@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { color, css, forcedColors, iconPoints, press } from '../../../tools/test/vitest/helpers';
@@ -306,5 +306,76 @@ describe('Calendar follows a value set from outside (L8E103)', () => {
     expect([title(), stop()]).toEqual(['May 2025', '2025-05-20']);
     await r.rerender(<Cal value={new Date(2025, 3, 2)} month={new Date(2025, 4, 1)} months={months} />);
     expect([title(), stop()]).toEqual(['May 2025', '2025-05-20']);
+  });
+});
+
+// A server whose date isn't the visitor's (a UTC server, a visitor in Jakarta before 7am): the page must hydrate
+// with no mismatch, and today is the visitor's (GR210).
+describe('server-rendered on another day than the visitor\'s', () => {
+  async function hydrateFrom(serverDay: Date, visitorDay: Date, ui: React.ReactElement) {
+    const { renderToString } = await import('react-dom/server');
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(serverDay);
+      const host = document.createElement('div');
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      vi.setSystemTime(visitorDay);
+      const errors: string[] = [], logError = console.error;
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      let root: ReturnType<typeof hydrateRoot> | undefined;
+      try {
+        flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+        await new Promise((r) => setTimeout(r, 30));
+      } finally { console.error = logError; }
+      return { host, errors, done: () => { root?.unmount(); host.remove(); } };
+    } finally { vi.useRealTimers(); }
+  }
+  const today = (host: HTMLElement) => [...host.querySelectorAll('[aria-current="date"]')].map((b) => (b as HTMLElement).dataset.date);
+
+  for (const [name, ui] of [['with a value', <Calendar key="v" aria-label="Day" defaultValue={new Date(2026, 10, 3)} />], ['with no value', <Calendar key="n" aria-label="Day" />]] as const) {
+    test(`${name}: no mismatch, and today is the visitor's day`, async () => {
+      const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), ui);
+      try {
+        expect(r.errors).toEqual([]);
+        expect(today(r.host)).toEqual(['2026-11-08']);
+        expect([...r.host.querySelectorAll('button')].filter((b) => b.classList.contains('dk-calendar__day--today')).map((b) => b.dataset.date)).toEqual(['2026-11-08']);
+      } finally { r.done(); }
+    });
+  }
+
+  test('presets: no mismatch, and the pressed preset follows the visitor\'s today, not the server\'s (GR286)', async () => {
+    const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), <Calendar aria-label="Day" locale="en-US" presets defaultValue={new Date(2026, 10, 8)} />);
+    try {
+      expect(r.errors).toEqual([]);
+      expect([...r.host.querySelectorAll('button[aria-pressed="true"]')].map((b) => b.textContent)).toEqual(['Today']);
+    } finally { r.done(); }
+  });
+});
+
+describe('Calendar presets (RU11)', () => {
+  const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  test('presets={true}: Today, Tomorrow and In a week after the days; one picks its day and shows its month; one past max is disabled', async () => {
+    const got: string[] = [];
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const max = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 3);
+    await render(<Calendar id="cp" locale="en-US" presets max={max} onValueChange={(_d, s) => got.push(s)} />);
+    const group = page.getByRole('group', { name: 'Shortcuts' });
+    await expect.element(group).toBeInTheDocument();
+    const btns = [...group.element().querySelectorAll('button')];
+    expect(btns.map((b) => [b.textContent, b.getAttribute('aria-disabled')])).toEqual([['Today', null], ['Tomorrow', null], ['In a week', 'true']]);
+    await userEvent.click(btns[1]);
+    const tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
+    expect(got).toEqual([iso(tomorrow)]);
+    expect(btns[1].getAttribute('aria-pressed')).toBe('true');
+    expect(document.querySelector(`#cp [data-date="${iso(tomorrow)}"]`)!.closest('td')!.getAttribute('aria-selected')).toBe('true');
+  });
+  test('your own presets jump to their month; without presets there is no list', async () => {
+    await render(<><Calendar id="co" locale="en-US" defaultMonth={new Date(2025, 0, 1)} presets={[{ label: 'Launch', value: '2025-06-15' }]} /><Calendar id="cn" locale="en-US" /></>);
+    await userEvent.click(page.getByRole('button', { name: 'Launch' }));
+    expect(document.querySelector('#co [data-date="2025-06-15"]')!.closest('td')!.getAttribute('aria-selected')).toBe('true');
+    expect(document.querySelector('#cn [role=group]')).toBe(null);
   });
 });

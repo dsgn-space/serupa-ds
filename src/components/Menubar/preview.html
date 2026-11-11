@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Menubar — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h(T.Menubar, { 'aria-label': 'Editor' },
+      h(T.MenubarMenu, { label: 'File' }, h(T.MenuItem, { shortcut: '⌘N' }, 'New'), h(T.MenuItem, { shortcut: '⌘O' }, 'Open…')),
+      h(T.MenubarMenu, { label: 'Edit' }, h(T.MenuItem, { shortcut: '⌘Z' }, 'Undo'), h(T.MenuItem, { shortcut: '⇧⌘Z' }, 'Redo')),
+      h(T.MenubarMenu, { label: 'View' }, h(T.MenuItem, null, 'Zoom in'), h(T.MenuItem, null, 'Zoom out'))));
+</script>
+</body>
+</html>

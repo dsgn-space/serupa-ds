@@ -1,0 +1,53 @@
+/* ---------------------------------------------------------------
+   Chat: a scrolling column of messages, newest at the bottom, with a "N new messages" button floating over its
+   bottom edge while the reader is further up. ChatMessage: others' messages at the start with a 32px avatar, own
+   messages at the end; the text in a bubble (surface-muted for others, primary-subtle for own, 12px corners), the
+   author and time above it in small muted text, files under it, and "Sending…" or a danger "Not sent" under that.
+   ChatDivider: the day, small and muted, centered between two hairlines. ChatComposer: a one-line field that grows
+   to six lines, with the send button at its end.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-chat { position: relative; display: flex; flex-direction: column; min-block-size: var(--spacing-0); min-inline-size: var(--spacing-0); font-family: var(--font-sans); color: var(--chat-text, var(--text)); }
+.dk-chat__log {
+  display: flex; flex-direction: column; gap: var(--chat-gap, var(--spacing-3)); flex: auto; min-block-size: var(--spacing-0);
+  overflow-y: auto; overscroll-behavior: contain; padding: var(--chat-padding, var(--spacing-4)); border-radius: var(--radius-inner);
+}
+/* The ring sits just inside the log, so a parent that clips (a panel, a drawer) doesn't cut it off. */
+/* stylelint-disable-next-line serupa/no-raw-value -- -1 turns the ring width into an inward offset */
+.dk-chat__log:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+.dk-chat__older { display: flex; justify-content: center; }
+.dk-chat__jump { position: absolute; inset-block-end: var(--spacing-3); inset-inline: var(--spacing-0); inline-size: var(--sizing-fit); margin-inline: auto; box-shadow: var(--shadow-md); }
+
+.dk-chat-message { display: flex; align-items: flex-end; gap: var(--spacing-2); max-inline-size: var(--sizing-4-5); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-chat-message--own { flex-direction: row-reverse; align-self: flex-end; }
+.dk-chat-message--follow { margin-block-start: calc(var(--spacing-1) - var(--chat-gap, var(--spacing-3))); }
+.dk-chat-message__avatar { display: flex; flex: none; inline-size: var(--spacing-8); }
+.dk-chat-message--own .dk-chat-message__avatar:empty { display: none; }
+.dk-chat-message__main { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-1); min-inline-size: var(--spacing-0); }
+.dk-chat-message--own .dk-chat-message__main { align-items: flex-end; }
+.dk-chat-message__head { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--spacing-2); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-chat-message__author { color: var(--chat-text, var(--text)); font-weight: var(--font-medium); overflow-wrap: anywhere; }
+.dk-chat-message__bubble {
+  max-inline-size: var(--sizing-full); padding: var(--chat-bubble-padding-y, var(--spacing-2)) var(--chat-bubble-padding-x, var(--spacing-3));
+  border: var(--border-width-1) solid transparent; border-radius: var(--chat-bubble-radius, var(--rounded-xl));
+  background: var(--chat-bubble-bg, var(--surface-muted)); color: var(--chat-text, var(--text)); white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.dk-chat-message--own .dk-chat-message__bubble { background: var(--chat-own-bubble-bg, var(--primary-subtle)); }
+.dk-chat-message--failed .dk-chat-message__bubble { border-color: var(--chat-failed-border, var(--danger)); }
+.dk-chat-message__attachments { display: flex; flex-wrap: wrap; gap: var(--spacing-2); max-inline-size: var(--sizing-full); }
+.dk-chat-message--own .dk-chat-message__attachments { justify-content: flex-end; }
+.dk-chat-message__status { display: inline-flex; align-items: center; gap: var(--spacing-1); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-chat-message__status--failed { color: var(--chat-error, var(--danger-text)); }
+.dk-chat-message__status .dk-icon { font-size: var(--spacing-4); }
+
+.dk-chat-divider { display: flex; align-items: center; gap: var(--spacing-3); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
+.dk-chat-divider::before, .dk-chat-divider::after { content: ""; flex: auto; border-block-start: var(--border-width-1) solid var(--chat-divider, var(--border)); }
+.dk-chat-divider__text { flex: none; max-inline-size: var(--sizing-3-4); text-align: center; overflow-wrap: anywhere; }
+
+.dk-chat-composer { display: flex; flex-direction: column; gap: var(--spacing-2); padding: var(--chat-padding, var(--spacing-4)); padding-block-start: var(--spacing-2); }
+.dk-chat-composer__attachments { display: flex; flex-wrap: wrap; gap: var(--spacing-2); }
+.dk-chat-composer__row { display: flex; align-items: flex-end; gap: var(--spacing-2); }
+.dk-chat-composer__field { flex: auto; min-inline-size: var(--spacing-0); }
+/* Forced colors drop the bubble fills: an outline keeps each message's edge. */
+@media (forced-colors: active) { .dk-chat-message__bubble { border-color: CanvasText; } }
+}

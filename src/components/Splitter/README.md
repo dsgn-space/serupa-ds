@@ -10,7 +10,7 @@ import { Splitter } from "serupa-ds";
   <MessageList />
 </Splitter>
 
-<Splitter direction="vertical" defaultSize={70} separatorLabel="Editor">
+<Splitter orientation="vertical" defaultSize={70} separatorLabel="Editor">
   <Editor />
   <Terminal />
 </Splitter>
@@ -55,7 +55,7 @@ Drawn from the `Playground` story.
 
 - **Role and name:** the WAI-ARIA window splitter pattern. The handle is a focusable `role="separator"` with `aria-orientation`, `aria-valuenow` (the first pane's size in percent), `aria-valuemin`, `aria-valuemax` and `aria-controls` pointing at the first pane. It's named by `separatorLabel`, or "Resize panes" (the `resizePanes` label, "Ubah ukuran panel" in `idLabels`).
 - **Keyboard:** Tab reaches the handle; the table below says what each key does there.
-- **Touch:** on a touch screen the 8px handle takes a press over 24px, reaching 8px into each pane without moving anything, so a finger can grab it.
+- **Grab zone:** the 8px handle takes a press over 16px with a mouse or pen, reaching 4px into each pane without moving anything, and over 24px on a touch screen, reaching 8px, so a finger can grab it.
 - **Contrast:** the handle's line is 3:1 on the page in all six themes, and the focus ring shows around the handle (`Splitter.test.tsx`). In forced colors the line uses the system's text and highlight colors.
 - **What's still yours:** a name for each pane's content (a heading, or `nav` and `main` landmarks inside), and a layout that still works when a pane is at `min`.
 
@@ -65,7 +65,7 @@ Drawn from the `Playground` story.
 | --- | --- |
 | Tab | To the handle, between the first pane's content and the second's |
 | ArrowLeft, ArrowRight | Move the handle by `step` (a side-by-side Splitter; left and right as you see them, also right to left) |
-| ArrowUp, ArrowDown | Move the handle by `step` (`direction="vertical"`) |
+| ArrowUp, ArrowDown | Move the handle by `step` (`orientation="vertical"`) |
 | Home, End | Move the handle to `min` and `max` |
 | Enter | With `collapsible`: collapse the first pane, or bring it back at its last size |
 
@@ -75,7 +75,8 @@ Drawn from the `Playground` story.
 | --- | --- | --- | --- |
 | `id` | `string` | | Goes to the root `<div>`. |
 | `children` | two `ReactNode`s | | The first and second panes. The handle resizes the first; the second takes the rest. |
-| `direction` | `'horizontal' \| 'vertical'` | `'horizontal'` | Side by side (the first at the start) or stacked (the first on top). |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Side by side (the first at the start) or stacked (the first on top). |
+| `direction` | | | Deprecated, removed in 15.0.0: use `orientation` |
 | `size` | `number` | | The first pane's size in percent (controlled). |
 | `defaultSize` | `number` | `50` | The first pane's size at first (uncontrolled). `0` starts it collapsed when `collapsible`. |
 | `onSizeChange` | `(size: number) => void` | | Each new size in percent, while dragging or moving with the keys. |

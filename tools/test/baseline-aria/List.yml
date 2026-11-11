@@ -23,6 +23,17 @@
       - /url: "#"
     - button "More for Margaret Hamilton"
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Empty"
+- button "Failed"
+- list "Members":
+  - listitem
+  - listitem
+  - listitem
+  - listitem
+
 # LongText
 - list "Members":
   - listitem: Maria Magdalena von Hohenzollern-Sigmaringen maria.magdalena.hohenzollern@example.com Administrator

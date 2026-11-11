@@ -39,7 +39,7 @@ Drawn from the `ReadOnly` story.
 - Say the allowed types and the largest size in `hint` ("PNG or JPG, up to 5 MB"), and keep it in step with `accept` and `maxSize`.
 - Without `multiple`, a new file replaces the old one; set `multiple` (and `maxFiles` if there's a limit) when people may add several.
 - Use `onReject` if you need to log refused files or show the reason elsewhere; the messages already show under the area.
-- A refused type says what the field takes, in words from `accept`: "photo.heic isn't a PNG or JPG." Types with no short name, such as `application/vnd.ms-excel`, get "photo.heic: this type of file isn't accepted."
+- A refused type says what the field takes, in words from `accept`: "photo.heic isn’t a PNG or JPG." Types with no short name, such as `application/vnd.ms-excel`, get "photo.heic: this type of file isn’t accepted."
 - Change `title` and `buttonLabel` to name what's expected ("Drag your CV here", "Choose a CV").
 - Uploading as files are added: keep each file's upload in your state and return it from `fileStatus`. Pass `onRetry` to give a failed file a retry button, and remove a file from `files` to cancel it.
 
@@ -59,6 +59,7 @@ const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
 - Removing a file moves focus to the next file's remove button, or the one before it, so clearing several files stays in the list; with none left, focus goes to the choose button.
 - A long file name is cut in the middle, as Finder and Drive do: "quarterly-report-fi…t-2026.pdf". The last few characters and the extension stay, so files that differ only by year or version still look different. Hover shows the full name, and it's laid out in its own direction. It is cut wherever FileUpload sits, a grid cell or a flex row included, so a long name never widens the page.
 - With `fileStatus`, each file shows its upload: while `uploading`, a small bar under its name, filled to `progress` (0 to 100) or moving on its own without one; when `done`, "Complete" with a check after its size; on `error`, a danger outline and the `message` (default "Upload failed") under its name, and with `onRetry` a "Try again" button before the remove button. FileUpload doesn't upload anything itself.
+- Each file's icon shows its kind, the same icon an [Attachment](../Attachment/README.md) shows for it: PDF, image, spreadsheet, document, slides, archive, code, audio, video or other, from its MIME type and then its extension.
 - With `thumbnails`, an image file shows a 40px picture of itself in place of its type icon. The picture is decoded in the browser (`createImageBitmap`) and drawn on a canvas, so no URL made from the file reaches the page. An image the browser can't decode, such as HEIC in most browsers, keeps the icon.
 - The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
 - `readOnly` shows the files without remove buttons and ignores the button and drops; the files are still submitted. `disabled` also fades it and leaves the files out of the form.

@@ -10,6 +10,8 @@
 // wrapper of a native element, which takes value and onChange from React's own types, has a plain onChange.
 // And booleans are named in the positive (CONTRIBUTING.md): for what they turn on or show, never noX, xHidden, enabled
 // or disableX; hideX turns a part off.
+// And one name for one idea: no prop says direction, layout, position, pending or delay where the API naming table in
+// CONTRIBUTING.md has orientation, placement, loading or openDelay (NAME_GAPS lists the ones still to move).
 //   node tools/test/props.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -93,6 +95,20 @@ const isBoolean = (p) => {
   const t = d && checker.getNonNullableType(checker.getTypeOfSymbolAtLocation(p, d));
   return !!t && (!!(t.flags & ts.TypeFlags.Boolean) || (t.isUnion() && t.types.every((u) => !!(u.flags & ts.TypeFlags.BooleanLiteral))));
 };
+// One name for one idea (CONTRIBUTING.md, API naming table, GR268): these props say it another way. Each maps to
+// the name to use instead.
+const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', pending: 'loading', delay: 'openDelay (and closeDelay)' };
+// Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
+// the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
+const NAME_GAPS = {};
+// Names that look like the ones above but mean something else, each with why. They stay.
+const NAME_KEPT = {
+  'StackProps.direction': "'row' or 'column', the flex-direction it sets, by the CSS name",
+  'LoaderProps.delay': 'how long a load runs before the spinner shows: not an overlay, so not openDelay',
+  'DescriptionListProps.layout': "'stacked', 'inline' or 'split': how each term sits beside its description, not an orientation",
+  'TableProps.layout': "'auto' or 'fixed', the table-layout it sets, by the CSS name",
+};
+const nameGaps = new Set();
 const booleanGaps = new Set();
 let booleans = 0;
 const gaps = new Set();
@@ -131,6 +147,12 @@ for (const name of fs.readdirSync(DIR).sort()) {
       if (key in BOOLEAN_GAPS) { booleanGaps.add(key); R.push({ name: `${name}: ${key} is still a known gap (${BOOLEAN_GAPS[key]})`, ok: wrong, detail: wrong ? '' : 'it reads in the positive now: take it out of BOOLEAN_GAPS' }); }
       else if (wrong) R.push({ name: `${name}: ${key} is named in the positive`, ok: false, detail: `name it for what it turns on or shows (CONTRIBUTING.md, API conventions): hideX to turn a part off, a part shown by default turned off with ={false}; never noX, xHidden, enabled or disableX` });
     }
+    for (const p of props.filter((q) => mine(q) && !kept(q) && q.name in NAME_FOR)) {
+      const key = `${e.name}.${p.name}`;
+      if (key in NAME_KEPT) { nameGaps.add(key); continue; }
+      if (key in NAME_GAPS) { nameGaps.add(key); R.push({ name: `${name}: ${key} is still a known gap (${NAME_GAPS[key]})`, ok: true }); }
+      else R.push({ name: `${name}: ${key} uses the API naming table's name`, ok: false, detail: `call it ${NAME_FOR[p.name]} (CONTRIBUTING.md, API naming table)` });
+    }
     for (const p of props.filter((q) => mine(q) && /^on\w*Change$/.test(q.name))) {
       callbacks++;
       const x = p.name.slice(2, -6), key = `${e.name}.${p.name}`;
@@ -160,6 +182,7 @@ for (const name of fs.readdirSync(DIR).sort()) {
   R.push({ name: `${name}: the guide's Props section names every prop, and its table names only real ones`, ok: !missing.length && !unknown.length,
     detail: [missing.length && `not in the guide: ${missing.join(', ')}`, unknown.length && `in the table but not a prop: ${unknown.join(', ')}`].filter(Boolean).join('; ') });
 }
+for (const key of [...Object.keys(NAME_GAPS), ...Object.keys(NAME_KEPT)].filter((k) => !nameGaps.has(k))) R.push({ name: `${key} in NAME_GAPS still uses that name`, ok: false, detail: 'no such prop now: take it out of NAME_GAPS or NAME_KEPT' });
 for (const key of Object.keys(BOOLEAN_GAPS).filter((k) => !booleanGaps.has(k))) R.push({ name: `${key} in BOOLEAN_GAPS is still a boolean`, ok: false, detail: 'no such prop now: take it out of BOOLEAN_GAPS' });
 for (const key of Object.keys(SHAPE_GAPS).filter((k) => !shapes.has(k))) R.push({ name: `${key} in SHAPE_GAPS is still a callback with a second argument`, ok: false, detail: 'no such callback now: take it out of SHAPE_GAPS' });
 for (const key of Object.keys(NAMING_GAPS).filter((k) => !gaps.has(k))) R.push({ name: `${key} in NAMING_GAPS is still a callback`, ok: false, detail: 'no such prop now: take it out of NAMING_GAPS' });

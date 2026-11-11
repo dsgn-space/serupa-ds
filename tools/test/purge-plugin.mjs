@@ -8,6 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import postcss from 'postcss';
+import { transform } from 'lightningcss';
 import { PROJECT, report, done, fail } from './lib.mjs';
 import { purge, usedClasses } from '../../bin/serupa-purge.mjs';
 
@@ -39,13 +40,16 @@ try {
   // Vite: a production build of the page.
   const { build } = await import('vite');
   const out = await build({ root: dir, logLevel: 'silent', configFile: false, resolve: { alias: { 'serupa-ds': path.join(PROJECT, 'dist') } }, plugins: [serupaPurge({ keep: ['@safe.txt'] })], build: { outDir: path.join(dir, 'out'), write: false } });
-  const css = [out].flat().flatMap((o) => o.output).filter((a) => a.fileName.endsWith('.css')).map((a) => a.source).join('\n');
+  const css = [out].flat().flatMap((o) => /** @type {any} */ (o).output).filter((a) => a.fileName.endsWith('.css')).map((a) => a.source).join('\n');
   t('Vite: the build keeps the utility classes the sources use', has(css, 'flex') && has(css, 'md:grid-cols-3'), css.length);
   t('Vite: it drops one they don\'t use, and --keep\'s safelist file works', !has(css, 'grid-cols-5') && has(css, 'gap-7'), css.length);
   t('Vite: utilities-extra.css is trimmed too (from-primary stays, from-danger goes)', has(css, 'from-primary') && has(css, 'bg-linear-to-r') && !has(css, 'from-danger'), css.length);
   t('Vite: the component styles stay', has(css, 'dk-btn') && has(css, 'dk-dialog'), css.length);
   t('Vite: the app\'s own CSS is left alone, a rule named like a utility too', has(css, 'my-card') && has(css, 'grid-cols-7'), css.length);
-  t('Vite: the stylesheet is about the size the command makes, not 2 MB', css.length < 400_000, `${Math.round(css.length / 1024)} KB`);
+  // Trimmed means well under half of bundle.css (a quarter on 9 Nov 2026: 391 of 1,648 KB); a fixed byte count broke as
+  // components were added, while an untrimmed file is the whole of it.
+  const trimmed = (n) => n < bundle.length / 2;
+  t('Vite: the stylesheet is about the size the command makes, not the whole bundle.css', trimmed(css.length), `${Math.round(css.length / 1024)} of ${Math.round(bundle.length / 1024)} KB`);
   t('Vite: the dev server is left alone (apply: "build")', serupaPurge().apply === 'build');
 
   // PostCSS: bundle.css itself, an app file, and an app file with bundle.css's rules @imported into it.
@@ -58,9 +62,16 @@ try {
   const merged = postcss.parse(app, { from: path.join(dir, 'src', 'app.css') });
   merged.append(postcss.parse(bundle, { from: BUNDLE }).nodes);
   const mixed = (await postcss([serupaPurgePostcss({ root: dir })]).process(merged, { from: path.join(dir, 'src', 'app.css') })).css;
-  t('PostCSS: rules @imported from bundle.css are trimmed, the importing file\'s are kept', mixed.startsWith(app) && has(mixed, 'flex') && !has(mixed, 'grid-cols-5') && mixed.length < 400_000, mixed.slice(0, 200));
+  t('PostCSS: rules @imported from bundle.css are trimmed, the importing file\'s are kept', mixed.startsWith(app) && has(mixed, 'flex') && !has(mixed, 'grid-cols-5') && trimmed(mixed.length), `${Math.round(mixed.length / 1024)} of ${Math.round(bundle.length / 1024)} KB: ${mixed.slice(0, 200)}`);
   const lean = await run(bundle, BUNDLE, { components: true });
   t('PostCSS: components: true drops the components the sources never name', has(lean, 'dk-btn') && !has(lean, 'dk-dialog') && lean.length < own.length, `${lean.length} vs ${own.length}`);
+  // The trimmed CSS must still parse: Vite's default minifier (lightningcss) stops the build on a broken rule, which
+  // browsers would silently drop (C1: a comma inside :is(… :not(…)) split one ButtonGroup rule into two halves).
+  const parses = (css) => { try { transform({ filename: 'bundle.css', code: Buffer.from(css), minify: true, errorRecovery: false }); return ''; } catch (e) { return String(e.message); } };
+  for (const [mode, css] of [['default', own], ['components: true', lean]]) {
+    const err = parses(css);
+    t(`PostCSS (${mode}): the trimmed bundle.css parses with lightningcss, as Vite's minifier reads it`, !err, err);
+  }
   let error = '';
   try { await run(bundle, BUNDLE, { content: ['nowhere'] }); } catch (e) { error = String(e.message); }
   t('a content path that isn\'t there stops the build, saying which', error.includes('no such file or folder') && error.includes('nowhere'), error);

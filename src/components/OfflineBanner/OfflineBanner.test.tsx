@@ -34,7 +34,7 @@ describe('OfflineBanner', () => {
     await rerender(<OfflineBanner id="x" online={false} ref={ref} className="extra" data-x="y" placement="inline">Changes are kept.</OfflineBanner>);
     const e = document.getElementById('x')!;
     expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.state])
-      .toEqual(['DIV', "You're offline Changes are kept.", true, 'dk-offline-banner dk-offline-banner--inline extra', 'y', 'offline-banner', 'offline']);
+      .toEqual(['DIV', 'You’re offline Changes are kept.', true, 'dk-offline-banner dk-offline-banner--inline extra', 'y', 'offline-banner', 'offline']);
     expect(e.getAttribute('role')).toBe(null);   // said through the live region once, not read again as a live region
   });
 
@@ -45,13 +45,13 @@ describe('OfflineBanner', () => {
       await render(<OfflineBanner onOnlineChange={onOnlineChange} />);
       expect(bar()).toBe(null);
       await React.act(async () => network(false));
-      expect([bar()?.dataset.state, bar()?.textContent]).toEqual(['offline', "You're offline"]);
+      expect([bar()?.dataset.state, bar()?.textContent]).toEqual(['offline', 'You’re offline']);
       await React.act(() => wait(700));   // the live region's turn ends (a quick drop and return is said as one)
       await React.act(async () => network(true));
       expect([bar()?.dataset.state, bar()?.textContent]).toEqual(['back', 'Back online']);
       await React.act(() => wait(2400));
       await expect.poll(() => bar()).toBe(null);
-      await expect.poll(() => heard.said).toEqual(["You're offline", 'Back online']);
+      await expect.poll(() => heard.said).toEqual(['You’re offline', 'Back online']);
       expect(onOnlineChange.mock.calls).toEqual([[false], [true]]);
     } finally { heard.stop(); real(); }
   });
@@ -84,7 +84,7 @@ describe('OfflineBanner', () => {
       await rerender(<></>);
       await render(<OfflineBanner online={false} />);
       expect(bar()?.dataset.state).toBe('offline');
-      await expect.poll(() => heard.said).toEqual(["You're offline"]);
+      await expect.poll(() => heard.said).toEqual(['You’re offline']);
     } finally { heard.stop(); }
   });
 
@@ -188,5 +188,25 @@ describe('OfflineBanner', () => {
       }
       expect([covered, document.activeElement!.id]).toEqual([[], 'n0']);
     } finally { await page.viewport(900, 700); }
+  });
+
+  test('GR172: two bottom bars at once: the page gets the larger room, keeps it while one shows, and gets its own padding back after both, in either order', async () => {
+    const room = () => Number(/^calc\((\d+)px\)$/.exec(document.body.style.paddingBlockEnd)?.[1] ?? 0);
+    const space = () => document.documentElement.style.getPropertyValue('--dk-offline-banner-space');
+    const A = <OfflineBanner key="a" online={false}>Changes are kept.</OfflineBanner>, B = <OfflineBanner key="b" online={false} />;
+    document.body.style.paddingBlockEnd = '3px';
+    try {
+      const { rerender } = await render(<>{A}{B}</>);
+      expect(room()).toBeGreaterThan(40);
+      await rerender(<>{null}{B}</>);
+      expect([room() > 40, /^\d+px$/.test(space())], 'a went first').toEqual([true, true]);
+      await rerender(<>{null}{null}</>);
+      expect([document.body.style.paddingBlockEnd, space()], 'a went first').toEqual(['3px', '']);
+      await rerender(<>{A}{B}</>);
+      await rerender(<>{A}{null}</>);
+      expect([room() > 40, /^\d+px$/.test(space())], 'b went first').toEqual([true, true]);
+      await rerender(<>{null}{null}</>);
+      expect([document.body.style.paddingBlockEnd, space()], 'b went first').toEqual(['3px', '']);
+    } finally { document.body.style.paddingBlockEnd = ''; }
   });
 });

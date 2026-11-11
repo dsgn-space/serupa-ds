@@ -6,8 +6,8 @@ import { Button } from '../Button/Button';
 const meta = {
   title: 'Components/Feedback/Toast',
   component: Toaster,
-  args: { position: 'bottom-end' },
-  argTypes: { position: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom-center', 'top-start', 'top-center', 'top-end'] }, duration: { control: 'number' }, autoDismiss: { control: 'boolean' } },
+  args: { placement: 'bottom-end' },
+  argTypes: { placement: { control: 'select', options: ['bottom-end', 'bottom-start', 'bottom-center', 'top-start', 'top-center', 'top-end'] }, duration: { control: 'number' }, autoDismiss: { control: 'boolean' } },
   render: (args) => (
     <div className="flex flex-wrap gap-2">
       <Toaster {...args} />
@@ -28,15 +28,15 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 // Shows the given toasts while the story is open (they stay until closed), and clears them when it closes.
-function Showing(props: { position?: React.ComponentProps<typeof Toaster>['position']; limit?: number; toasts: Parameters<typeof toast>[0][] }) {
+function Showing(props: { placement?: React.ComponentProps<typeof Toaster>['placement']; limit?: number; toasts: Parameters<typeof toast>[0][] }) {
   // The toasts it opened with: shown once on mount, not again when a re-render passes a new array.
   const toasts = React.useRef(props.toasts);
   React.useEffect(() => { toasts.current.forEach((o) => toast(typeof o === 'string' ? { title: o, duration: 0 } : { duration: 0, ...o })); return () => toast.dismiss(); }, []);
-  return <Toaster position={props.position} limit={props.limit} />;
+  return <Toaster placement={props.placement} limit={props.limit} />;
 }
 
 export const Tones: Story = {
-  render: (args) => <Showing position={args.position} limit={5} toasts={[
+  render: (args) => <Showing placement={args.placement} limit={5} toasts={[
     'Link copied',
     { title: 'New version available', description: 'Reload to update.', tone: 'info' },
     { title: 'Changes saved', tone: 'success' },
@@ -45,30 +45,30 @@ export const Tones: Story = {
   ]} />,
 };
 export const WithAction: Story = {
-  render: (args) => <Showing position={args.position} toasts={[{ title: 'Moved to trash', description: 'Atlas and 3 files.', action: { label: 'Undo', onClick: () => {} } }]} />,
+  render: (args) => <Showing placement={args.placement} toasts={[{ title: 'Moved to trash', description: 'Atlas and 3 files.', action: { label: 'Undo', onClick: () => {} } }]} />,
 };
 export const TopStart: Story = {
-  args: { position: 'top-start' },
-  render: (args) => <Showing position={args.position} toasts={['Copied to clipboard']} />,
+  args: { placement: 'top-start' },
+  render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const BottomCenter: Story = {
-  args: { position: 'bottom-center' },
-  render: (args) => <Showing position={args.position} toasts={['Copied to clipboard']} />,
+  args: { placement: 'bottom-center' },
+  render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard']} />,
 };
 export const TopCenter: Story = {
-  args: { position: 'top-center' },
-  render: (args) => <Showing position={args.position} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
+  args: { placement: 'top-center' },
+  render: (args) => <Showing placement={args.placement} toasts={['Copied to clipboard', { title: 'Changes saved', tone: 'success' }]} />,
 };
 /** A burst: the same error three times is one toast with a count, and past the limit (3) the rest wait under "+2 more". */
 export const Burst: Story = {
-  render: (args) => <Showing position={args.position} toasts={[
+  render: (args) => <Showing placement={args.placement} toasts={[
     'Photo 1 uploaded', 'Photo 2 uploaded', 'Photo 3 uploaded', 'Photo 4 uploaded',
     { title: 'Network error', tone: 'danger' }, { title: 'Network error', tone: 'danger' }, { title: 'Network error', tone: 'danger' },
   ]} />,
 };
 
 export const LongText: Story = {
-  render: (args) => <Showing position={args.position} toasts={[
+  render: (args) => <Showing placement={args.placement} toasts={[
     { title: 'Your export of every project, task and comment from the last year is ready', description: 'Download it within 7 days from Settings. Donaudampfschifffahrtsgesellschaftskapitänskajüte.', tone: 'success', action: { label: 'Download the export', onClick: () => {} } },
   ]} />,
 };

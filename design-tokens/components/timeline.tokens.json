@@ -221,6 +221,16 @@
             "cssVar": "--timeline-icon-bg-info"
           }
         }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a horizontal timeline's scrolling box when the keyboard is in it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--timeline-focus-ring"
+          }
+        }
       }
     },
     "border": {
@@ -283,6 +293,28 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--timeline-item-gap"
+          }
+        }
+      },
+      "item-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-48}",
+        "$description": "Each event's width in a horizontal timeline (192px); events grow to fill a wider box.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--timeline-item-width"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "The corners of a horizontal timeline's scrolling box, which its focus ring follows (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--timeline-radius"
           }
         }
       }

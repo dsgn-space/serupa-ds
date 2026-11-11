@@ -1,0 +1,139 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DoDontExample } from '../doDont';
+import { Badge } from '../../src/components/Badge/Badge';
+import { Button } from '../../src/components/Button/Button';
+import { Field } from '../../src/components/Field/Field';
+import { Input } from '../../src/components/Input/Input';
+import { Progress } from '../../src/components/Progress/Progress';
+import { Select } from '../../src/components/Select/Select';
+
+<Meta title="Foundations/Design principles" />
+
+# Design principles
+
+These principles guide how Serupa's components, tokens and docs are made. Use them to decide cases a guide doesn't cover, and to settle design reviews.
+
+When principles conflict, accessibility comes first.
+
+## Accessible
+
+Everyone can use it, whatever their device, input or ability.
+
+- Every component meets WCAG 2.2 AA in all six themes, and tests check it.
+- Color is never the only signal. A status has a word; a chart series has a shape.
+- Targets are at least 24px, and 44px on touch screens.
+
+<DoDontExample
+  doText="Pair the color with a word."
+  doExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <Badge tone="danger" dot>Overdue</Badge></span>}
+  dontText="Rely on color alone."
+  dontExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <span aria-hidden="true" style={{ display: 'inline-block', inlineSize: 8, blockSize: 8, borderRadius: 4, background: 'var(--danger)' }} /></span>}
+/>
+
+## Native
+
+Build on what the browser already does well.
+
+- Use native elements first: `<select>`, `<dialog>`, `<input>`. They bring the phone's picker, autofill and screen-reader support with them.
+- Add newer CSS and HTML as progressive enhancement, with today's behavior as the fallback.
+
+<DoDontExample
+  doText="Style the native control."
+  doExample={<div style={{ inlineSize: 260 }}><Field label="Country"><Select options={['Indonesia', 'Malaysia', 'Singapore']} /></Field></div>}
+  dontText="Rebuild a native control with `div` elements."
+  dontExample={<Source language="tsx" dark={false} code={'<div className="dropdown" onClick={toggle}>\n  {open && options.map((o) => (\n    <div onClick={() => pick(o)}>{o}</div>\n  ))}\n</div>'} />}
+/>
+
+## Clear
+
+Say what things do, in the words people use.
+
+- Label actions with what they do: "Delete project", not "OK".
+- Follow conventions people already know: × closes, Escape cancels, the main action comes last.
+- Use one word for one thing across the system. See [Content and voice](?path=/docs/foundations-content-and-voice--docs).
+
+<DoDontExample
+  doText="Name buttons after their action."
+  doExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></div>}
+  dontText="Use Yes and No."
+  dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
+/>
+
+## Focused
+
+Show what matters and leave out the rest.
+
+- One primary action per view.
+- Show fewer options up front, and the rest on request.
+- Add decoration only when it carries meaning. Keep motion short, and turn it off for `prefers-reduced-motion`.
+
+<DoDontExample
+  doText="Make one action primary."
+  doExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">Cancel</Button><Button variant="secondary">Preview</Button><Button>Publish</Button></div>}
+  dontText="Make every action primary."
+  dontExample={<div style={{ display: 'flex', gap: 8 }}><Button>Cancel</Button><Button>Preview</Button><Button>Publish</Button></div>}
+/>
+
+## Complete
+
+Design every state, not just the ideal one.
+
+- Each component covers rest, hover, focus, pressed, invalid, read-only, disabled, loading and empty, at every size and in every theme.
+- Errors say how to fix the problem.
+- Sizes line up across components: a 32px input sits next to a 32px button.
+
+<DoDontExample
+  doText="Say how to fix the error."
+  doExample={<div style={{ inlineSize: 260 }}><Field label="Email" error="Enter an email with an @, like ana@example.com."><Input type="email" defaultValue="ana.example.com" /></Field></div>}
+  dontText="Only say that something is wrong."
+  dontExample={<div style={{ inlineSize: 260 }}><Field label="Email" error="Invalid input."><Input type="email" defaultValue="ana.example.com" /></Field></div>}
+/>
+
+## Honest
+
+Show what is actually happening.
+
+- Respond to input right away.
+- Show progress that reflects real work, and announce the result to screen readers.
+- Don't fake it: no progress on a timer, no "Saved" before the save finishes.
+
+<DoDontExample
+  doText="Report real progress."
+  doExample={<div style={{ inlineSize: 260 }}><Progress value={40} label="Uploading 4 of 10 files" /></div>}
+  dontText="Fill a bar on a timer."
+  dontExample={<Source language="tsx" dark={false} code={'useEffect(() => {\n  const t = setInterval(() =>\n    setValue((v) => Math.min(v + 10, 99)), 500);\n  return () => clearInterval(t);\n}, []);'} />}
+/>
+
+## Lightweight
+
+Ship only what the page needs.
+
+- No runtime dependencies beyond React.
+- Each component has a size budget, checked in CI.
+- Icons and fonts load only the parts a page uses.
+
+<DoDontExample
+  doText="Import the components you use."
+  doExample={<Source language="tsx" dark={false} code={"import { Button, Field, Input } from 'serupa-ds';\n// fades and slides come with the components, from the motion tokens"} />}
+  dontText="Add a library for one effect."
+  dontExample={<Source language="tsx" dark={false} code={"import { motion } from 'some-animation-library';\n\n<motion.div animate={{ opacity: 1 }} /> // tens of KB for one fade"} />}
+/>
+
+## Consistent
+
+Solve the same problem the same way.
+
+- Components use tokens, never raw values, and a test checks it.
+- Similar components share sizes, states and keys.
+- Changes follow semantic versioning. A renamed prop keeps its old name, with a warning, until the next major.
+
+<DoDontExample
+  doText="Use tokens."
+  doExample={<Source language="css" dark={false} code={'.card {\n  padding: var(--spacing-4);\n  color: var(--text-muted);\n  border-radius: var(--radius-surface);\n}'} />}
+  dontText="Hard-code values."
+  dontExample={<Source language="css" dark={false} code={'.card {\n  padding: 15px;\n  color: #6b7280;\n  border-radius: 7px;\n}'} />}
+/>
+
+## Influences
+
+These principles draw on Dieter Rams' ten principles for good design, Jakob Nielsen's usability heuristics, the Gestalt principles, the Laws of UX, Microsoft's inclusive design, and the design principles of Shopify Polaris, IBM Carbon, Atlassian, Google Material and Vercel Geist.

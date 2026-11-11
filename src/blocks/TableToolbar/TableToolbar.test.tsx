@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell } from '../../components/Table/Table';
 import { Button } from '../../components/Button/Button';
+import { SerupaProvider } from '../../internal/provider';
 import { TableToolbar } from './TableToolbar';
 
 const PROJECTS = [
@@ -84,7 +85,7 @@ describe('Blocks/Table toolbar', () => {
   });
 
   test('selected rows show the count, the bulk actions and Clear selection, just before the table', async () => {
-    await render(<Selected />);
+    await render(<SerupaProvider locale="en"><Selected /></SerupaProvider>);   // English words and digits, whatever the browser's language
     const bar = page.getByRole('group', { name: '2 selected' });
     await expect.element(bar).toBeVisible();
     await expect.element(bar.getByRole('button', { name: 'Export' })).toBeVisible();

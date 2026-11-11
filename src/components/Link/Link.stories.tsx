@@ -32,7 +32,7 @@ export const UnderlineOnHover: Story = {
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 200 }}>
-      <Text>Read <Link {...args}>the complete guide to setting up single sign-on for your organisation</Link> first, or <Link {...args} href="https://example.com" external>{"Donaudampfschifffahrtsgesellschaft"}</Link>.</Text>
+      <Text>Read <Link {...args}>the complete guide to setting up single sign-on for your organisation</Link> first, or <Link {...args} href="https://example.com" external>{'Donaudampfschifffahrtsgesellschaft'}</Link>.</Text>
     </div>
   ),
 };

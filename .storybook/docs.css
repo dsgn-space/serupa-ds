@@ -57,3 +57,18 @@ html, body { background-color: var(--surface); }
 .sb-anatomy__box { box-sizing: border-box; border: 2px solid var(--primary); border-radius: 4px; }
 .sb-anatomy__n { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 10px; background: var(--primary); color: var(--on-primary); font: 600 12px/1 var(--font-sans); }
 @media (forced-colors: active) { .sb-anatomy__box { border-color: Highlight; } .sb-anatomy__n { background: Highlight; color: HighlightText; forced-color-adjust: none; } }
+
+/* Do and don't (docs/doDont.tsx): each pair side by side, stacked when the page is narrow. The verdict is in words
+   (✓ Do, ✗ Don't) above the rule, with a success or danger bar along the top. */
+.sb-dodont { display: grid; gap: 24px; margin: 16px 0 24px; }
+.sb-dodont__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.sb-dodont__item { display: flex; flex-direction: column; margin: 0; border: 1px solid var(--border); border-top: 4px solid var(--success); border-radius: 8px; background: var(--surface); overflow: hidden; }
+.sb-dodont__item--dont { border-top-color: var(--danger); }
+.sb-dodont__stage { flex: auto; display: grid; place-items: center; padding: 24px 16px; }
+.sb-dodont__stage .docs-story, .sb-dodont__stage .sbdocs-preview { margin: 0; border: 0; box-shadow: none; background: transparent; }
+.sb-dodont__caption { padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface-muted); color: var(--text); font: 400 14px/20px var(--font-sans); }
+.sb-dodont__caption p { margin: 4px 0 0; }
+.sb-dodont__stage .docblock-source { inline-size: 100%; margin: 0; }
+.sb-dodont__verdict { color: var(--success-text); font-weight: 600; }
+.sb-dodont__item--dont .sb-dodont__verdict { color: var(--danger-text); }
+@media (forced-colors: active) { .sb-dodont__item { border-top-color: CanvasText; } }

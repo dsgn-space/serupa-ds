@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>CascadeSelect — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  var regions = [
+    { value: 'jabar', label: 'Jawa Barat', children: [
+      { value: 'bandung', label: 'Kota Bandung', children: [{ value: 'coblong', label: 'Coblong' }, { value: 'sukajadi', label: 'Sukajadi' }] },
+      { value: 'bogor', label: 'Kabupaten Bogor', children: [{ value: 'cibinong', label: 'Cibinong' }] }] },
+    { value: 'bali', label: 'Bali', children: [{ value: 'denpasar', label: 'Kota Denpasar', children: [{ value: 'denpasar-selatan', label: 'Denpasar Selatan' }] }] }];
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: 360 } },
+    h(T.CascadeSelect, { 'aria-label': 'Wilayah', options: regions, levels: ['Provinsi', 'Kabupaten/Kota', 'Kecamatan'], defaultValue: ['jabar', 'bandung', 'coblong'] })));
+</script>
+</body>
+</html>

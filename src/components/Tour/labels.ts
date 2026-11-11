@@ -9,12 +9,12 @@ export interface TourLabels {
   tourDone: string;
 }
 export const en: TourLabels = {
-  tourBack: "Back",
-  tourNext: "Next",
-  tourDone: "Done",
+  tourBack: 'Back',
+  tourNext: 'Next',
+  tourDone: 'Done',
 };
 export const id: TourLabels = {
-  tourBack: "Kembali",
-  tourNext: "Berikutnya",
-  tourDone: "Selesai",
+  tourBack: 'Kembali',
+  tourNext: 'Berikutnya',
+  tourDone: 'Selesai',
 };

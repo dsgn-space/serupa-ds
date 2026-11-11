@@ -56,7 +56,7 @@ export const LongText: Story = {
   args: { query: 'kapitän' },
   render: (args) => (
     <div style={{ width: 200 }}>
-      <Highlight {...args}>{"Donaudampfschifffahrtsgesellschaftskapitänskajüte, a cabin on the Danube"}</Highlight>
+      <Highlight {...args}>{'Donaudampfschifffahrtsgesellschaftskapitänskajüte, a cabin on the Danube'}</Highlight>
     </div>
   ),
 };

@@ -52,13 +52,14 @@
   .dk-splitter__handle::before { background: CanvasText; }
   .dk-splitter__handle:focus-visible::before { background: Highlight; }
 }
-/* Touch (EQ1): a 24px grab zone, invisible, reaching 8px into each pane: the 8px handle is too thin for a finger.
-   Raised over the panes so their edges don't take the press. */
-@media (pointer: coarse) {
-  .dk-splitter__handle { position: relative; z-index: var(--z-10); }
-  .dk-splitter__handle::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; inset: var(--spacing-0) var(--dk-reach); }
-  .dk-splitter--vertical > .dk-splitter__handle::after { inset: var(--dk-reach) var(--spacing-0); }
-}
+/* Grab zone (EQ1, GR270): an invisible zone wider than the 8px handle, reaching into each pane without moving anything,
+   raised over the panes so their edges don't take the press. 16px for a mouse or pen, reaching 4px into each pane, which
+   leaves most of the first pane's scrollbar beside it; 24px on a touch screen, reaching 8px, since 8px is too thin for a
+   finger. The handle shows hover anywhere in it. */
+.dk-splitter__handle { position: relative; z-index: var(--z-10); }
+.dk-splitter__handle::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-4)) / 2)); content: ""; position: absolute; inset: var(--spacing-0) var(--dk-reach); }
+.dk-splitter--vertical > .dk-splitter__handle::after { inset: var(--dk-reach) var(--spacing-0); }
+@media (pointer: coarse) { .dk-splitter__handle::after { --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); } }
 /* Print (GR59): the panes' whole content, not their scrolled windows. The Splitter drops the height it was given
    (style or class, hence !important), the panes stop scrolling and grow to fit, and the separator isn't printed:
    a 60-row Table in a 300px pane printed 4 rows. */

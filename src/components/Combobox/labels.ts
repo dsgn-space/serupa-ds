@@ -7,8 +7,9 @@ export interface ComboboxLabels {
   loadFailed: string;
   /** Combobox when nothing matches. */
   noResults: string;
-  /** Combobox, said once typing stops: how many options match. */
-  resultsCount: (count: number) => string;
+  /** Combobox, said once typing stops: how many options match. `formatted` is the count in the locale's digits and
+   *  grouping; `count` is there for plural rules. */
+  resultsCount: (count: number, formatted: string) => string;
   /** Combobox chevron button. */
   showOptions: string;
   /** Combobox × button, with the field's label when it has one ("Clear Country"). */
@@ -21,24 +22,24 @@ export interface ComboboxLabels {
   valueRemoved: (label: string) => string;
 }
 export const en: ComboboxLabels = {
-  loadingResults: "Loading…",
-  loadFailed: "Couldn't load options. Type to try again.",
-  noResults: "No results",
-  resultsCount: (count) => count === 1 ? "1 result" : count + " results",
-  showOptions: "Show options",
-  clearValue: (label) => label ? "Clear " + label : "Clear",
-  createOption: (text) => "Add \u201c" + text + "\u201d",
-  valueAdded: (label) => label + " added",
-  valueRemoved: (label) => label + " removed",
+  loadingResults: 'Loading…',
+  loadFailed: 'Couldn’t load options. Type to try again.',
+  noResults: 'No results',
+  resultsCount: (count, formatted = String(count)) => formatted + (count === 1 ? ' result' : ' results'),
+  showOptions: 'Show options',
+  clearValue: (label) => label ? 'Clear ' + label : 'Clear',
+  createOption: (text) => 'Add \u201c' + text + '\u201d',
+  valueAdded: (label) => label + ' added',
+  valueRemoved: (label) => label + ' removed',
 };
 export const id: ComboboxLabels = {
-  loadingResults: "Memuat…",
-  loadFailed: "Gagal memuat pilihan. Ketik untuk mencoba lagi.",
-  noResults: "Tidak ada hasil",
-  resultsCount: (count) => count + " hasil",
-  showOptions: "Tampilkan pilihan",
-  clearValue: (label) => label ? "Hapus " + label : "Hapus",
-  createOption: (text) => "Tambahkan \u201c" + text + "\u201d",
-  valueAdded: (label) => label + " ditambahkan",
-  valueRemoved: (label) => label + " dihapus",
+  loadingResults: 'Memuat…',
+  loadFailed: 'Gagal memuat pilihan. Ketik untuk mencoba lagi.',
+  noResults: 'Tidak ada hasil',
+  resultsCount: (count, formatted = String(count)) => formatted + ' hasil',
+  showOptions: 'Tampilkan pilihan',
+  clearValue: (label) => label ? 'Hapus ' + label : 'Hapus',
+  createOption: (text) => 'Tambahkan \u201c' + text + '\u201d',
+  valueAdded: (label) => label + ' ditambahkan',
+  valueRemoved: (label) => label + ' dihapus',
 };

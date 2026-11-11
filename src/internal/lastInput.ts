@@ -5,12 +5,12 @@ let keyed = false, listening = false;
 
 /** Starts noting the last input, once for the page. Call it from a layout effect when the component mounts. */
 export function listenForInput(): void {
-  if (listening || typeof document === "undefined") return;
+  if (listening || typeof document === 'undefined') return;
   listening = true;
-  document.addEventListener("keydown", () => { keyed = true; }, true);
-  document.addEventListener("pointerdown", () => { keyed = false; }, true);
+  document.addEventListener('keydown', () => { keyed = true; }, true);
+  document.addEventListener('pointerdown', () => { keyed = false; }, true);
   // A click with no presses (detail 0) came from a key or a screen reader, as Enter on a button does.
-  document.addEventListener("click", (e) => { keyed = e.detail === 0; }, true);
+  document.addEventListener('click', (e) => { keyed = e.detail === 0; }, true);
 }
 
 /** Whether the last input was a key (or a click a key or screen reader made), not a pointer or a touch. */

@@ -1,18 +1,19 @@
-"use client";
-import * as React from "react";
-import { cn, domId, omit, setRef, useIsoLayoutEffect } from "../../internal/cn";
-import { useExit } from "../../internal/useExit";
-import { Icon, type IconSource } from "../Icon/Icon";
-import { asIcon } from "../Icon/asIcon";
-import { Tooltip } from "../Tooltip/Tooltip";
-import { config } from "../../internal/config";
-import { Menu, MenuItem, MenuSub } from "../Menu/Menu";
-import { component } from "../../internal/component";
-import { activeIn } from "../../internal/root";
-import { flattenChildren } from "../../internal/children";
-import { useSettings } from "../../internal/provider";
-import type { OpenChangeDetails } from "../../internal/openChange";
-import * as icons from "../../material/builtin";
+'use client';
+import * as React from 'react';
+import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { useCut } from '../../internal/useCut';
+import { useExit } from '../../internal/useExit';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
+import { Tooltip } from '../Tooltip/Tooltip';
+import { config } from '../../internal/config';
+import { Menu, MenuItem, MenuSub } from '../Menu/Menu';
+import { component } from '../../internal/component';
+import { activeIn } from '../../internal/root';
+import { flattenChildren } from '../../internal/children';
+import { useSettings } from '../../internal/provider';
+import type { OpenChangeDetails } from '../../internal/openChange';
+import * as icons from '../../material/builtin';
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -24,10 +25,10 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** Narrows it to icons only (64px). Labels show as tooltips, and groups open their items in a menu. Default: false. */
   collapsed?: boolean | undefined;
   /** The nav's accessible name. Default: "Main". */
-  "aria-label"?: string | undefined;
+  'aria-label'?: string | undefined;
 }
 
-export interface SidebarSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface SidebarSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** A small heading over the section's items. Hidden when the sidebar is collapsed. */
   title?: React.ReactNode | undefined;
   /** SidebarItems. */
@@ -40,7 +41,7 @@ export interface SidebarItemOwnProps {
   label: React.ReactNode;
   /** An icon before the label: a Material Symbols or custom name, or an element. Top-level items need one to show when collapsed. */
   icon?: IconSource | undefined;
-  /** The current page: shaded, with aria-current="page". Default: false. */
+  /** The current page: shaded, with a bar in the primary color and aria-current="page". Default: false. */
   active?: boolean | undefined;
   /** Something at the end, such as a count Badge. Collapsed, a dot on the icon shows there is one, and screen readers still read it. */
   badge?: React.ReactNode | undefined;
@@ -75,15 +76,15 @@ function isSection(c: React.ReactNode): boolean {
    badges, nested groups), and a footer pinned to the bottom. collapsed narrows it to an icon rail. It takes
    its parent's height; className and every other prop go to the <nav>. */
 /** A vertical nav for an app's pages: sections of items with icons, badges and nested groups; collapses to an icon rail. */
-export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sidebar", function Sidebar(props, ref) {
+export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>('Sidebar', function Sidebar(props, ref) {
   const sds = useSettings();
-  const rest = omit(props, { header: 1, footer: 1, collapsed: 1, className: 1, children: 1, "aria-label": 1 });
+  const rest = omit(props, { header: 1, footer: 1, collapsed: 1, className: 1, children: 1, 'aria-label': 1 });
   const collapsed = !!props.collapsed;
   // The column's width changes once, not on every frame (EA1): expanding widens it at the start, collapsing narrows
   // it at the end, and in between a clip-path (with a line for the edge) slides, which the compositor runs alone.
   // shown is the layout (rail or full); slide is the clip: "rail" or "full" while it moves, "" at rest.
   const [shown, setShownNow] = React.useState(collapsed);
-  const [slide, setSlide] = React.useState<"" | "rail" | "full">("");
+  const [slide, setSlide] = React.useState<'' | 'rail' | 'full'>('');
   const nav = React.useRef<HTMLElement | null>(null);
   // Switching between the rail and the full list re-renders the items (a group's nested list becomes a Menu, a
   // link gets its tooltip), so the focused one goes away and focus would fall to <body>. The top-level item it was
@@ -91,22 +92,22 @@ export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sid
   const keep = React.useRef<Element | null>(null);
   const setShown = React.useCallback((v: boolean) => {
     const n = nav.current, a = activeIn(n);   // its own root's focus, in a shadow root too (GR90)
-    let li = n && a && n.contains(a) ? a.closest(".dk-sidebar__li") : null;
-    for (let up = li && li.parentElement ? li.parentElement.closest(".dk-sidebar__li") : null; up && n && n.contains(up); up = up.parentElement ? up.parentElement.closest(".dk-sidebar__li") : null) li = up;
+    let li = n && a && n.contains(a) ? a.closest('.dk-sidebar__li') : null;
+    for (let up = li && li.parentElement ? li.parentElement.closest('.dk-sidebar__li') : null; up && n && n.contains(up); up = up.parentElement ? up.parentElement.closest('.dk-sidebar__li') : null) li = up;
     keep.current = li;
     setShownNow(v);
   }, []);
   useIsoLayoutEffect(() => {
     const li = keep.current, n = nav.current;
     keep.current = null;
-    if (li && li.isConnected && n && !n.contains(activeIn(n))) { const to = li.querySelector<HTMLElement>("a[href], button"); if (to) to.focus(); }
+    if (li && li.isConnected && n && !n.contains(activeIn(n))) { const to = li.querySelector<HTMLElement>('a[href], button'); if (to) to.focus(); }
   }, [shown]);
   const want = React.useRef(collapsed);
   const timer = React.useRef<{ raf?: number; end?: ReturnType<typeof setTimeout> }>({});
   const settle = React.useCallback(() => {
     clearTimeout(timer.current.end);
     if (want.current) setShown(true);
-    setSlide("");
+    setSlide('');
   }, [setShown]);
   useIsoLayoutEffect(() => {
     if (want.current === collapsed) return;
@@ -114,27 +115,28 @@ export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sid
     const n = nav.current, t = timer.current;
     cancelAnimationFrame(t.raf as number);
     clearTimeout(t.end);
-    const ms = n ? Math.max(...getComputedStyle(n).transitionDuration.split(",").map((d) => parseFloat(d) * (/ms/.test(d) ? 1 : 1000))) : 0;
-    if (!ms) { setShown(collapsed); setSlide(""); return; }   // no motion (reduced motion): snap
+    const ms = n ? Math.max(...getComputedStyle(n).transitionDuration.split(',').map((d) => parseFloat(d) * (/ms/.test(d) ? 1 : 1000))) : 0;
+    if (!ms) { setShown(collapsed); setSlide(''); return; }   // no motion (reduced motion): snap
     // From rest, show the clip's start for a frame before it moves; mid-way, turn back from where it is.
-    const from = slide === "" ? (collapsed ? "full" : "rail") : null;
+    const from = slide === '' ? (collapsed ? 'full' : 'rail') : null;
     if (!collapsed) setShown(false);
-    const go = () => { setSlide(collapsed ? "rail" : "full"); t.end = setTimeout(settle, ms + 100); };
+    const go = () => { setSlide(collapsed ? 'rail' : 'full'); t.end = setTimeout(settle, ms + 100); };
     if (from) { setSlide(from); t.raf = requestAnimationFrame(() => { t.raf = requestAnimationFrame(go); }); } else go();
   }, [collapsed]);
   React.useEffect(() => () => { cancelAnimationFrame(timer.current.raf as number); clearTimeout(timer.current.end); }, []);
-  const onEnd = (e: React.TransitionEvent<HTMLElement>) => { if (e.target === e.currentTarget && e.propertyName === "clip-path" && (slide === "rail") === want.current) settle(); };
+  const onEnd = (e: React.TransitionEvent<HTMLElement>) => { if (e.target === e.currentTarget && e.propertyName === 'clip-path' && (slide === 'rail') === want.current) settle(); };
   // runs of loose items get their own list
   const body: React.ReactNode[] = [];
   let run: React.ReactNode[] = [];
-  const flush = () => { if (run.length) { body.push(<ul key={"l" + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
+  const flush = () => { if (run.length) { body.push(<ul key={'l' + body.length} className="dk-sidebar__list">{run}</ul>); run = []; } };
   flattenChildren(props.children).forEach((c) => { if (isSection(c)) { flush(); body.push(c); } else run.push(c); });
   flush();
+  const mergedRef = useMergedRef(ref, (n) => { nav.current = n; });
   return (
     <SidebarContext.Provider value={{ collapsed: shown, depth: 0 }}>
-      <nav {...rest} aria-label={props["aria-label"] || sds.labels.mainNavigation} ref={(n) => { nav.current = n; setRef(ref, n); }} data-component="sidebar" data-collapsed={shown ? "" : undefined}
+      <nav {...rest} aria-label={props['aria-label'] || sds.labels.mainNavigation} ref={mergedRef} data-component="sidebar" data-collapsed={shown ? '' : undefined}
         data-slide={slide || undefined} onTransitionEnd={(e) => { onEnd(e); if (props.onTransitionEnd) props.onTransitionEnd(e); }}
-        className={cn("dk-sidebar", shown && "dk-sidebar--collapsed", props.className)}>
+        className={cn('dk-sidebar', shown && 'dk-sidebar--collapsed', props.className)}>
         {props.header != null ? <div className="dk-sidebar__header">{props.header}</div> : null}
         <div className="dk-sidebar__body">{body}</div>
         {props.footer != null ? <div className="dk-sidebar__footer">{props.footer}</div> : null}
@@ -144,12 +146,12 @@ export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>("Sid
 });
 
 /** A group of items in a Sidebar, with an optional small heading. */
-export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarSectionProps>("SidebarSection", function SidebarSection(props, ref) {
+export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarSectionProps>('SidebarSection', function SidebarSection(props, ref) {
   const rest = omit(props, { title: 1, className: 1, children: 1 });
-  const id = domId("dk-sbs", React.useId());
-  const titled = props.title != null && props.title !== false && props.title !== "";
+  const id = domId('dk-sbs', React.useId());
+  const titled = props.title != null && props.title !== false && props.title !== '';
   return (
-    <div {...rest} ref={ref} className={cn("dk-sidebar__section", props.className)}>
+    <div {...rest} ref={ref} className={cn('dk-sidebar__section', props.className)}>
       {titled ? <div id={id} className="dk-sidebar__section-title">{props.title}</div> : null}
       <ul className="dk-sidebar__list" aria-labelledby={titled ? id : undefined}>{props.children}</ul>
     </div>
@@ -167,7 +169,7 @@ const activeWithin = (k: ItemElement): boolean => !!k.props.active || itemsOf(k.
 function railItems(kids: ItemElement[]): React.ReactNode {
   return kids.map((k, i) => {
     const key = k.key != null ? k.key : i, inner = itemsOf(k.props.children);
-    const common = { icon: k.props.icon, "aria-current": activeWithin(k) ? ("page" as const) : undefined, className: cn("dk-sidebar__menu-item", k.props.className) };
+    const common = { icon: k.props.icon, 'aria-current': activeWithin(k) ? ('page' as const) : undefined, className: cn('dk-sidebar__menu-item', k.props.className) };
     if (inner.length) return <MenuSub key={key} {...common} label={k.props.label}>{railItems(inner)}</MenuSub>;
     return <MenuItem key={key} {...omit(k.props, ITEM_OWN) as object} onClick={undefined} as={k.props.as} {...common}
       onSelect={k.props.onClick as ((e: React.SyntheticEvent) => void) | undefined}>{k.props.label}</MenuItem>;
@@ -178,7 +180,7 @@ function railItems(kids: ItemElement[]): React.ReactNode {
    hides them. Collapsed: only the icon, with the label as a tooltip; a group opens its items in a Menu. The ref
    goes to the link or the group's button. */
 /** An item in a Sidebar: a link, or a group of nested items. */
-const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("SidebarItem", function SidebarItem(props, ref) {
+const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('SidebarItem', function SidebarItem(props, ref) {
   const ctx = React.useContext(SidebarContext);
   const rest = omit(props, ITEM_OWN);
   const kids = itemsOf(props.children);
@@ -192,9 +194,9 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("Sideb
   const open = props.open !== undefined ? !!props.open : own;
   const toggle = () => {
     if (props.open === undefined) setOwn(!open);
-    if (props.onOpenChange) props.onOpenChange(!open, { reason: "trigger" });
+    if (props.onOpenChange) props.onOpenChange(!open, { reason: 'trigger' });
   };
-  const listId = domId("dk-sbi", React.useId());
+  const listId = domId('dk-sbi', React.useId());
   // A group's nested list unfolds and folds as Accordion's panel does (GM4): it stays (inert) while it folds away.
   const nested = React.useRef<HTMLUListElement | null>(null);
   const exit = useExit(open, nested);
@@ -203,24 +205,33 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("Sideb
   const dot = rail && props.badge != null && props.badge !== false;
   // There the tooltip is the item's name (aria-labelledby replaces its text), so the badge is read as its
   // description: "Inbox", then "4".
-  const badgeId = listId + "-badge";
-  if (dot) rest["aria-describedby"] = cn(rest["aria-describedby"], badgeId);
+  const badgeId = listId + '-badge';
+  const described = !!rest['aria-describedby'];
+  if (dot) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
+  // A text label cut with an ellipsis shows in full as the item's title on hover, as Button's does (GR117). Not in
+  // the rail, where the tooltip already names it, with a title of its own, or in a Tooltip (its aria-describedby, given
+  // before the rail's badge adds one), which shows the cut label itself.
+  const text = typeof props.label === 'string' || typeof props.label === 'number' ? String(props.label) : '';
+  const tipOk = !!text && !rail && rest.title == null && !described;
+  const labelEl = React.useRef<HTMLSpanElement | null>(null);
+  const cut = useCut(tipOk, text, () => labelEl.current);
+  if (cut && tipOk) rest.title = text;
   const inner = (chevron: boolean) => <>
     {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}{dot ? <span className="dk-sidebar__dot" aria-hidden="true" /> : null}</span> : null}
-    <span className="dk-sidebar__label">{props.label}</span>
+    <span className="dk-sidebar__label" ref={labelEl}>{props.label}</span>
     {props.badge != null ? <span className="dk-sidebar__badge" id={dot ? badgeId : undefined}>{props.badge}</span> : null}
     {chevron && !rail ? <Icon icon={icons.ExpandMore} className="dk-sidebar__chevron" /> : null}
   </>;
   // An item with children is a button, not a link: its other attributes and handlers go to the button. Its events and
   // ref are typed for HTMLElement, which both the link and the button are.
   const btnProps = omit(rest, { href: 1, target: 1, rel: 1, download: 1, hrefLang: 1, ping: 1, referrerPolicy: 1, type: 1, onClick: 1 });
-  const cls = cn("dk-sidebar__item", ctx.depth > 0 && "dk-sidebar__item--nested", (props.active || (group && childActive)) && "dk-sidebar__item--active", props.className);
+  const cls = cn('dk-sidebar__item', ctx.depth > 0 && 'dk-sidebar__item--nested', (props.active || (group && childActive)) && 'dk-sidebar__item--active', props.className);
 
   if (group && rail) {
     return (
       <li className="dk-sidebar__li">
         <Menu placement="right-start" trigger={
-          props.label != null && props.label !== false && props.label !== ""
+          props.label != null && props.label !== false && props.label !== ''
             ? <Tooltip content={props.label} placement="right" role="label"><button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls}>{inner(false)}</button></Tooltip>
             : <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls}>{inner(false)}</button>
         }>
@@ -231,7 +242,7 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("Sideb
   }
   if (group) {
     return (
-      <li className="dk-sidebar__li" data-state={open ? "open" : "closed"}>
+      <li className="dk-sidebar__li" data-state={open ? 'open' : 'closed'}>
         <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e); toggle(); }}>{inner(true)}</button>
         <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
           <ul ref={nested} id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={!open && !exit.leaving} inert={!open || undefined} data-instant={exit.arrived || undefined}>{kids}</ul>
@@ -239,10 +250,10 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>("Sideb
       </li>
     );
   }
-  const link = React.createElement(props.as || config.link, Object.assign(rest, { ref: ref, className: cls, "aria-current": props.active ? "page" : undefined }), inner(false));
+  const link = React.createElement(props.as || config.link, Object.assign(rest, { ref: ref, className: cls, 'aria-current': props.active ? 'page' : undefined }), inner(false));
   return (
     <li className="dk-sidebar__li">
-      {rail && props.label != null && props.label !== false && props.label !== "" ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}
+      {rail && props.label != null && props.label !== false && props.label !== '' ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}
     </li>
   );
 });

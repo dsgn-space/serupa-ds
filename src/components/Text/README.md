@@ -17,6 +17,7 @@ const { Text } = window.Serupa;
 - Paragraphs, captions and short lines of supporting text, such as "Last edited 2 hours ago".
 - Changing the size, tone or weight of part of a sentence, with `as="span"`.
 - A single line that may be too long for its space, such as a file name, cut short with `truncate`.
+- A preview of a long description, review or comment, cut after a few lines with `lines`, when the full item is a link away. To open the rest in place, use [ShowMore](../ShowMore/README.md).
 - User content with long words or URLs: they break onto the next line, even in a flex row or grid column, rather than push the layout wider.
 
 ## When not to use
@@ -34,11 +35,17 @@ const { Text } = window.Serupa;
 - Give running text `measure` on a wide page (an article, a long description, help text), so each line stops near 65 characters: longer lines are hard to follow back to the next one. Lines under 80 characters are WCAG's advice (1.4.8, AAA). It's the same width as `max-w-prose` and Container's `size="prose"`, without the utility classes.
 - Text's tokens (`--text-color`, `--text-color-muted`, `--text-color-primary`, `--text-color-danger`) only change Text's tones. They're separate from the shared theme colors such as `--text` and `--text-muted`, which they default to, and from the type sizes such as `--text-sm`: overriding `--text-color-muted` changes muted Text, not every muted color on the page.
 
+### Do and don't
+
+- **Do:** Cut a preview with `lines` and link to the full item, so the rest is a press away. (`DoLinesWithLink`)
+- **Don't:** Cut text with no way to the rest: the hidden lines are lost to anyone who reads the screen. (`DontLinesAlone`)
+
 ## Accessibility
 
 - Every tone keeps 4.5:1 on `surface` in all six themes (`Text.test.tsx`). On other backgrounds, check it yourself.
 - Don't use color alone to say something is wrong: say it in the words too.
 - A truncated line hides the rest: put the full text in a `title` or somewhere else on the page.
+- With `lines`, the hidden lines are still read by screen readers and found by find-in-page; only the eye misses them. Give people who see the screen a way to the rest: a link to the full item, or, to open it in place, [ShowMore](../ShowMore/README.md) instead of Text.
 - **Keyboard:** none: inline text, not focusable.
 
 ## Props
@@ -51,6 +58,7 @@ const { Text } = window.Serupa;
 | `tone` | `'default'` \| `'muted'` \| `'primary'` \| `'danger'` | inherited | `text`, `text-muted`, `primary` or `danger-text` |
 | `weight` | `'normal'` \| `'medium'` \| `'semibold'` \| `'bold'` | inherited | 400, 500, 600 or 700 |
 | `truncate` | boolean | `false` | One line, cut with an ellipsis. It becomes a block, so give it a width or a parent that has one |
+| `lines` | number | none | At most this many lines (1 to 6; more counts as 6), the last cut with an ellipsis (CSS line-clamp), for a preview of long text. It sets no style attribute, so it holds under a strict Content Security Policy. Ignored with `truncate` |
 | `measure` | boolean | `false` | Caps the line at about 65 characters (`container-prose`, 65ch in the text's own size), for running text on a wide page. A span stays inline, so use it on a block (`p`, `div`, `li`) |
 
 Text has no margins (space it with the layout). `className`, `style`, `ref`, `htmlFor` (with `as="label"`) and everything else go to the element, which has `data-component="text"`.
