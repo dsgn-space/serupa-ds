@@ -44,4 +44,12 @@ await t('own-block: styling another block\'s element (Input\'s field, Button\'s 
 .dk-combobox > .dk-btn__icon { opacity: 0; }`), ['serupa/own-block', 'serupa/own-block'], own(), combobox);
 await t('own-block: a known crossing passes, and a known one no longer there is flagged', layered('.dk-combobox .dk-input__field { cursor: pointer; }'), ['serupa/own-block'], own({ Combobox: ['dk-input', 'dk-calendar'] }), combobox);
 
+// The project's own config (stylelint.config.mjs) on a component file: raw colors are flagged (GR276), and the ways the
+// components legitimately name a color pass: transparent, currentColor, color-mix() of tokens, black in a mask.
+const configured = async (code) => (await stylelint.lint({ code, codeFilename: path.join(PROJECT, 'src', 'components', 'Card', 'Card.css'), configFile: path.join(PROJECT, 'stylelint.config.mjs') })).results[0].warnings.map((w) => w.rule).filter((r) => !r.startsWith('serupa/')).sort();
+const tc = async (name, code, want) => { const got = await configured(code); R.push({ name, ok: JSON.stringify(got) === JSON.stringify(want), detail: `flagged ${JSON.stringify(got)}, expected ${JSON.stringify(want)}` }); };
+await tc('raw colors in a component: hex, a named color and a color function are flagged', layered('.dk-card { color: #1a1a1a; border-color: red; background: rgb(0 0 0); }'), ['color-named', 'color-no-hex', 'function-disallowed-list']);
+await tc('colors from tokens pass, and so do transparent, currentColor, color-mix() and black in a mask', layered(`.dk-card { color: var(--card-text, var(--text)); border-color: transparent; fill: currentColor; background: color-mix(in oklch, var(--card-bg, var(--surface)) 80%, transparent); }
+.dk-card__fade { mask-image: linear-gradient(transparent, black); --dk-card-fade: color-mix(in srgb, black 16%, transparent); }`), []);
+
 done(report('Stylelint rules', R));

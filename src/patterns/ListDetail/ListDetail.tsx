@@ -79,6 +79,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
       <Heading level={2} size="lg" id="messages-title">Messages ({messages.length})</Heading>
       <List divided>
         {messages.map((m) => (
+          // eslint-disable-next-line jsx-a11y-x/click-events-have-key-events, jsx-a11y-x/no-noninteractive-element-interactions -- with href, ListItem is a link, which Enter follows: onClick runs on the link
           <ListItem key={m.id} title={m.subject} description={<>{m.from} · <time dateTime={m.date}>{day(m.date, locale, 'medium')}</time></>} href={`#${m.id}`}
             linkProps={{ id: `message-${m.id}` }} selected={open?.id === m.id} onClick={choose(m)} />
         ))}

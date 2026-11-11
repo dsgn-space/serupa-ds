@@ -81,7 +81,7 @@ export default tseslint.config(
     // a field's wrapper that forwards a click or mousedown to its input, an option reached by aria-activedescendant,
     // a native dialog closed by a click on its backdrop, a scrolling pane that takes Tab, a group that hands focus
     // to one item (roving tabindex). The queue's TF1 line names the ones to fix in their components.
-    files: ['src/components/**/*.tsx', 'docs/**/*.tsx'],
+    files: ['src/components/**/*.tsx', 'src/blocks/**/*.tsx', 'src/patterns/**/*.tsx', 'docs/**/*.tsx'],
     ignores: ['src/components/**/*.test.tsx'],
     plugins: { 'jsx-a11y-x': jsxA11y },
     settings: { 'jsx-a11y-x': { components: a11yComponents(import.meta.dirname), polymorphicPropName: 'as' } },

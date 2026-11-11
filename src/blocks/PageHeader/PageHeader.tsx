@@ -58,6 +58,7 @@ export function PageHeader({ breadcrumb, title, description, primary, secondary 
     <div className="flex flex-col gap-4 border-b border-border pb-4">
       {breadcrumb?.length ? (
         <Breadcrumb>
+          {/* eslint-disable-next-line jsx-a11y-x/anchor-is-valid -- the last crumb is the current page: BreadcrumbItem renders it as text, not a link */}
           {breadcrumb.map((b, i) => <BreadcrumbItem key={b.label} href={i < breadcrumb.length - 1 ? b.href : undefined}>{b.label}</BreadcrumbItem>)}
         </Breadcrumb>
       ) : null}
