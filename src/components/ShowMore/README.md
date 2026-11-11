@@ -34,6 +34,11 @@ Drawn from the `Expanded` story.
 - Keep the children to text and inline content (links, emphasis) or a few paragraphs. A cut line is drawn with an ellipsis; a table or image inside would be cut off without one.
 - Controlled, `expanded` with `onExpandedChange`, when something else opens it too (a "Show all" for the page). Otherwise `defaultExpanded`.
 
+### Do and don't
+
+- **Do:** Show enough to judge whether to read on: two or three lines of a review. (`DoEnoughLines`)
+- **Don't:** One line, which says too little, so people open every one to find out. (`DontOneLine`)
+
 ## Accessibility
 
 - **Role and name:** the button is a `<button>` named "Show more", then "Show less" (the `showMore` and `showLess` labels), with `aria-expanded` and `aria-controls` pointing at the text.

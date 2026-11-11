@@ -24,3 +24,9 @@ export const Paragraphs: Story = {
 };
 // The stress story (G14): long words and a long label; the visual baselines show how it copes.
 export const LongText: Story = { args: { children: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung ' + REVIEW } };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: three lines, enough to judge whether to read on. */
+export const DoEnoughLines: Story = { name: 'Do: enough lines', args: { lines: 3 } };
+/** Don't: one line, which says too little. */
+export const DontOneLine: Story = { name: "Don't: one line", args: { lines: 1 } };
