@@ -27,7 +27,7 @@ interface DataGridProps extends Omit<React.TableHTMLAttributes<HTMLTableElement>
     rows: DataGridRow[];
     rowKey?: string | undefined;
     onRowsChange?: ((rows: DataGridRow[], details: DataGridRowsChangeDetails) => void) | undefined;
-    size?: "md" | "sm" | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
     busy?: boolean | undefined;
     loadingRows?: number | undefined;
     loadingLabel?: string | undefined;

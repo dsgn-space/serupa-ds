@@ -26,7 +26,7 @@ const apply = (rows: DataGridRow[], changes: DataGridCellChange[]) => rows.map((
   return next;
 });
 
-function Editable(props: { size?: 'sm' | 'md' }) {
+function Editable(props: { size?: 'sm' | 'md' | 'lg' }) {
   const [rows, setRows] = React.useState(ROWS);
   return <DataGrid aria-label="Stock" columns={COLUMNS} rows={rows} onRowsChange={(_, { changes }) => setRows((r) => apply(r, changes))} size={props.size} />;
 }
@@ -45,6 +45,9 @@ export const Playground: Story = {};
 export const Edit: Story = { render: () => <Editable /> };
 
 export const Small: Story = { render: () => <Editable size="sm" /> };
+
+/** Large: 16px text and rows at least 44px tall, for touch screens and a grid that is the page's main task. */
+export const Large: Story = { render: () => <Editable size="lg" /> };
 
 /** Read only: no onRowsChange, so cells move, select and copy, but don't edit. */
 export const ReadOnly: Story = {};

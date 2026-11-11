@@ -170,6 +170,20 @@ describe('DataGrid', () => {
     document.documentElement.removeAttribute('data-theme');
   });
 
+  test('sizes: sm, md and lg rows grow in that order; lg has 16px text and rows at least 44px tall, editing included, and its placeholders match', async () => {
+    await render(<>{(['sm', 'md', 'lg'] as const).map((z) => <DataGrid key={z} id={z} aria-label={z} size={z} columns={COLS} rows={ROWS} onRowsChange={() => {}} />)}
+      <DataGrid id="lgl" aria-label="lg loading" size="lg" columns={COLS} rows={[]} busy /></>);
+    const row = (id: string) => document.querySelector(`#${id} tbody tr`)!.getBoundingClientRect().height;
+    expect(row('sm')).toBeLessThan(row('md'));
+    expect(row('lg')).toBeGreaterThanOrEqual(44);
+    expect([css(document.querySelector('#lg td')).fontSize, document.getElementById('lg')!.closest('[data-component="data-grid"]')!.className]).toEqual(['16px', 'dk-data-grid dk-data-grid--lg']);
+    expect(Math.abs(row('lgl') - row('lg'))).toBeLessThan(2);
+    const lgCell = document.querySelector('#lg td') as HTMLElement;
+    const before = lgCell.getBoundingClientRect().height;
+    await userEvent.dblClick(lgCell);
+    expect(Math.abs((document.querySelector('#lg td') as HTMLElement).getBoundingClientRect().height - before)).toBeLessThan(2);
+  });
+
   test('busy with no rows: aria-busy and placeholder rows as tall as real ones, the first named once; then the rows', async () => {
     const { rerender } = await render(<DataGrid aria-label="Stock" columns={COLS} rows={[]} busy loadingRows={4} loadingLabel="Loading stock" />);
     const grid = page.getByRole('grid').element() as HTMLTableElement;
