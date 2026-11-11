@@ -39,4 +39,20 @@ describe('Textarea autoResize, measured in script', () => {
       expect(errors).toEqual([]);
     } finally { removeEventListener('error', onError); }
   });
+
+  test('refits when a web font arrives and the text wraps to fewer lines, though the field keeps its width', async () => {
+    // The font's rule is added only once the field is measured, so nothing loads it sooner. Monospace is wider than
+    // Inter, so the same text takes fewer lines once Inter arrives.
+    const rule = document.createElement('style');
+    rule.textContent = "@font-face { font-family: TaLate; src: url(/fonts/InterVariable-latin.woff2) format('woff2'); }";
+    try {
+      const text = 'Every line of this note wraps in a narrow field, and the font that arrives later is narrower than the one drawn first, so it needs fewer lines.';
+      await render(<div style={{ width: '200px', fontFamily: 'TaLate, monospace' }}><Textarea id="js-font" autoResize rows={1} defaultValue={text} aria-label="Late font" style={{ fontFamily: 'inherit' }} /></div>);
+      const before = height('js-font');
+      document.head.append(rule);
+      await expect.poll(() => height('js-font'), { timeout: 5000 }).toBeLessThan(before);
+      // ...to the height the text needs now: nothing hidden, nothing spare.
+      expect(el('js-font').scrollHeight).toBeLessThanOrEqual(el('js-font').clientHeight);
+    } finally { rule.remove(); }
+  });
 });

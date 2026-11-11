@@ -340,6 +340,9 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
       function done() { mo.disconnect(); clearTimeout(cap); requestAnimationFrame(() => requestAnimationFrame(() => resolve(undefined))); }
       mo.observe(document, { subtree: true, childList: true, attributes: true, characterData: true });
     }));
+    // An Image fades in only when its picture arrives a moment after mount (dk-image--fades), which load timing
+    // decides, not the CSS: two loads of one page can differ there. Taken off in both before the comparison.
+    await p.evaluate(() => { for (const e of document.querySelectorAll('.dk-image--fades')) e.classList.remove('dk-image--fades'); });
     const r = await p.evaluate(() => [...document.querySelectorAll('body *')].map((e) => { const s = getComputedStyle(e); const o = []; for (let i = 0; i < s.length; i++) o.push(s[i] + ':' + s.getPropertyValue(s[i])); return e.className + ' ' + o.sort().join(';'); }));
     await p.close(); return r;
   };

@@ -11,114 +11,129 @@ import { Select } from '../../src/components/Select/Select';
 
 # Design principles
 
-Eight principles behind every component, token and guide in Serupa. Use them to choose between two good answers, in a review, and when a guide doesn't cover your case.
+These principles guide how Serupa's components, tokens and docs are made. Use them to decide cases a guide doesn't cover, and to settle design reviews.
 
-**Accessibility wins.** When two principles pull apart, the answer that works for more people is the one we take: a visible label over a cleaner look, a 24px target over a tighter row, words over a color that says it alone.
+When principles conflict, accessibility comes first.
 
-## 1. Everyone, from the start
+## Accessible
 
-Design for the edges and the middle is covered. People use Serupa with a keyboard, a screen reader, a phone in one hand, 200% zoom, a slow connection or a color they can't tell apart.
+Everyone can use it, whatever their device, input or ability.
 
-**What it means here:** every component meets WCAG 2.2 AA in all six themes, checked by tests, not by eye. Meaning never rests on color alone: a status has a word, a chart series has a shape. Targets are at least 24px, and 44px on touch.
+- Every component meets WCAG 2.2 AA in all six themes, and tests check it.
+- Color is never the only signal. A status has a word; a chart series has a shape.
+- Targets are at least 24px, and 44px on touch screens.
 
 <DoDontExample
-  doText="Say the status in words, with color as a second signal."
+  doText="Pair the color with a word."
   doExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <Badge tone="danger" dot>Overdue</Badge></span>}
-  dontText="Let a red dot say it alone: people who can't tell red apart, and screen readers, get nothing."
+  dontText="Rely on color alone."
   dontExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <span aria-hidden="true" style={{ display: 'inline-block', inlineSize: 8, blockSize: 8, borderRadius: 4, background: 'var(--danger)' }} /></span>}
 />
 
-## 2. Built on the platform
+## Native
 
-The browser already knows how to be a select, a dialog or a form. We style it and fill the gaps, and keep what it gives for free.
+Build on what the browser already does well.
 
-**What it means here:** native elements first (`<select>`, `<dialog>`, `<input type="date">` where it fits), so the phone's picker, autofill, find in page and assistive technology work without extra code. New CSS and HTML features come in as progressive enhancement, with today's behavior as the fallback.
+- Use native elements first: `<select>`, `<dialog>`, `<input>`. They bring the phone's picker, autofill and screen-reader support with them.
+- Add newer CSS and HTML as progressive enhancement, with today's behavior as the fallback.
 
 <DoDontExample
-  doText="Use the native control, styled: the system picker on phones, type-to-find and the screen reader all work."
+  doText="Style the native control."
   doExample={<div style={{ inlineSize: 260 }}><Field label="Country"><Select options={['Indonesia', 'Malaysia', 'Singapore']} /></Field></div>}
-  dontText="Rebuild it from `div`s for looks: keyboard, touch and screen-reader support have to be re-made, and some always go missing."
+  dontText="Rebuild a native control with `div` elements."
   dontExample={<Source language="tsx" dark={false} code={'<div className="dropdown" onClick={toggle}>\n  {open && options.map((o) => (\n    <div onClick={() => pick(o)}>{o}</div>\n  ))}\n</div>'} />}
 />
 
-## 3. Clear before clever
+## Clear
 
-People should know what something does before they use it, in the words they would use themselves. Familiar beats novel: people spend most of their time in other products, and expect ours to work the same way.
+Say what things do, in the words people use.
 
-**What it means here:** labels name what happens ("Delete project", not "OK"). Patterns follow what people already know: a × closes, Escape cancels, the main action comes last. One word means one thing across the whole system (see [Content and voice](?path=/docs/foundations-content-and-voice--docs)).
+- Label actions with what they do: "Delete project", not "OK".
+- Follow conventions people already know: × closes, Escape cancels, the main action comes last.
+- Use one word for one thing across the system. See [Content and voice](?path=/docs/foundations-content-and-voice--docs).
 
 <DoDontExample
-  doText="Name each button for what it does."
+  doText="Name buttons after their action."
   doExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></div>}
-  dontText="Yes and No make people go back and read the question to know which is which."
+  dontText="Use Yes and No."
   dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
 />
 
-## 4. Quiet until it matters
+## Focused
 
-Every element on a screen competes for attention. The fewer there are, the faster people find the one they need. Design stays in the background until there's something to say.
+Show what matters and leave out the rest.
 
-**What it means here:** one primary action per view. Fewer choices shown at once, more on request (a Menu, a "Show more"). Decoration only when it carries meaning: no shadow, gradient or animation for its own sake. Motion is short, has a reason, and stops for `prefers-reduced-motion`.
+- One primary action per view.
+- Show fewer options up front, and the rest on request.
+- Add decoration only when it carries meaning. Keep motion short, and turn it off for `prefers-reduced-motion`.
 
 <DoDontExample
-  doText="One primary action, the others quieter, so the main one is found at a glance."
+  doText="Make one action primary."
   doExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">Cancel</Button><Button variant="secondary">Preview</Button><Button>Publish</Button></div>}
-  dontText="Every action primary: nothing stands out, and people stop to compare."
+  dontText="Make every action primary."
   dontExample={<div style={{ display: 'flex', gap: 8 }}><Button>Cancel</Button><Button>Preview</Button><Button>Publish</Button></div>}
 />
 
-## 5. Every state, every case
+## Complete
 
-A component is finished when its worst moment is designed, not its best one: the empty list, the long name, the slow network, the error, the right-to-left page.
+Design every state, not just the ideal one.
 
-**What it means here:** each component designs and tests rest, hover, focus, active, invalid, read-only, disabled, loading and empty, at every size, in every theme, in four languages and in forced colors. Errors say how to put things right. Sizes line up across components, so a 32px input sits beside a 32px button.
+- Each component covers rest, hover, focus, pressed, invalid, read-only, disabled, loading and empty, at every size and in every theme.
+- Errors say how to fix the problem.
+- Sizes line up across components: a 32px input sits next to a 32px button.
 
 <DoDontExample
-  doText="An error that says how to fix it."
+  doText="Say how to fix the error."
   doExample={<div style={{ inlineSize: 260 }}><Field label="Email" error="Enter an email with an @, like ana@example.com."><Input type="email" defaultValue="ana.example.com" /></Field></div>}
-  dontText="An error that only says something is wrong, and leaves people guessing."
+  dontText="Only say that something is wrong."
   dontExample={<div style={{ inlineSize: 260 }}><Field label="Email" error="Invalid input."><Input type="email" defaultValue="ana.example.com" /></Field></div>}
 />
 
-## 6. Honest and responsive
+## Honest
 
-Show what is really happening, as soon as it happens. An answer within about 400ms keeps people in the flow; past that, they need to see that work is under way and how far it has got.
+Show what is actually happening.
 
-**What it means here:** a press answers at once. Waiting shows a skeleton or a progress that reflects real work, and finishing is announced to screen readers too. Nothing pretends: no fake progress, no "Saved" before the save, no control that looks pressable and isn't.
+- Respond to input right away.
+- Show progress that reflects real work, and announce the result to screen readers.
+- Don't fake it: no progress on a timer, no "Saved" before the save finishes.
 
 <DoDontExample
-  doText="Progress that follows the real work, in words people can check."
+  doText="Report real progress."
   doExample={<div style={{ inlineSize: 260 }}><Progress value={40} label="Uploading 4 of 10 files" /></div>}
-  dontText="A bar that fills on a timer: it says nothing true, and stalls at 99% when the work is slow."
+  dontText="Fill a bar on a timer."
   dontExample={<Source language="tsx" dark={false} code={'useEffect(() => {\n  const t = setInterval(() =>\n    setValue((v) => Math.min(v + 10, 99)), 500);\n  return () => clearInterval(t);\n}, []);'} />}
 />
 
-## 7. Light by default
+## Lightweight
 
-Every kilobyte is downloaded, parsed and run on someone's phone, often on a slow network and an old battery. A design system multiplies that cost across every page that uses it.
+Ship only what the page needs.
 
-**What it means here:** no runtime dependencies beyond React. Each component is held to a size budget in CI, and imports only what it uses. Icons and fonts load only the parts a page needs. Animation uses the compositor and stops for reduced motion.
+- No runtime dependencies beyond React.
+- Each component has a size budget, checked in CI.
+- Icons and fonts load only the parts a page uses.
 
 <DoDontExample
-  doText="Import the components you use, and let their own CSS do the animating."
+  doText="Import the components you use."
   doExample={<Source language="tsx" dark={false} code={"import { Button, Field, Input } from 'serupa-ds';\n// fades and slides come with the components, from the motion tokens"} />}
-  dontText="Pull in a library for one effect: every visitor downloads all of it."
+  dontText="Add a library for one effect."
   dontExample={<Source language="tsx" dark={false} code={"import { motion } from 'some-animation-library';\n\n<motion.div animate={{ opacity: 1 }} /> // tens of KB for one fade"} />}
 />
 
-## 8. Consistent by construction, careful with change
+## Consistent
 
-Consistency comes from shared parts, not from discipline: when every color, space and size is a token, a whole product moves together. And because products build on Serupa, every change to it is a change to them.
+Solve the same problem the same way.
 
-**What it means here:** components use tokens, never raw values (a test checks it). Similar things look and behave alike, from the size scale to the keys. Changes follow semantic versioning: a rename keeps the old name as a deprecated alias with a warning until the next major, and every change comes with a changelog entry.
+- Components use tokens, never raw values, and a test checks it.
+- Similar components share sizes, states and keys.
+- Changes follow semantic versioning. A renamed prop keeps its old name, with a warning, until the next major.
 
 <DoDontExample
-  doText="Use tokens, so themes, dark mode and brands follow."
+  doText="Use tokens."
   doExample={<Source language="css" dark={false} code={'.card {\n  padding: var(--spacing-4);\n  color: var(--text-muted);\n  border-radius: var(--radius-surface);\n}'} />}
-  dontText="Hard-code values: they drift from the system and stay the same color in dark mode."
+  dontText="Hard-code values."
   dontExample={<Source language="css" dark={false} code={'.card {\n  padding: 15px;\n  color: #6b7280;\n  border-radius: 7px;\n}'} />}
 />
 
 ## Influences
 
-These are our own words, drawn from work we admire: Dieter Rams' ten principles for good design; Jakob Nielsen's ten usability heuristics; the Gestalt principles of grouping; the Laws of UX (Fitts's, Hick's and Jakob's laws, the Doherty threshold); Microsoft's inclusive design; and the principles of Shopify Polaris, IBM Carbon, Atlassian, Google Material and Vercel Geist.
+These principles draw on Dieter Rams' ten principles for good design, Jakob Nielsen's usability heuristics, the Gestalt principles, the Laws of UX, Microsoft's inclusive design, and the design principles of Shopify Polaris, IBM Carbon, Atlassian, Google Material and Vercel Geist.

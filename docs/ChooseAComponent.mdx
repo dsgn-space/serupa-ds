@@ -15,6 +15,7 @@ Some components look alike but say different things to a screen reader and behav
 | Choosing from a few options that change a view right away, such as Day, Week, Month | [SegmentedControl](?path=/docs/components-forms-segmentedcontrol--docs) |
 | Choosing from about 5 to 10 options, where space is short | [Select](?path=/docs/components-forms-select--docs) |
 | Searching a long list, such as countries or people | [Combobox](?path=/docs/components-forms-combobox--docs) |
+| Choosing inside a hierarchy, one level at a time, such as province, then city, then district | [CascadeSelect](?path=/docs/components-forms-cascadeselect--docs) |
 | Typing an answer that may not be in any list | [Input](?path=/docs/components-forms-input--docs) |
 | Rating something with stars | [Rating](?path=/docs/components-forms-rating--docs) |
 
@@ -51,6 +52,7 @@ Never use two radios for on and off: one Checkbox or Switch says it in one contr
 | Typing a day they know by heart, such as a date of birth | [DateField](?path=/docs/components-forms-datefield--docs) |
 | Picking a start and an end day | [DateRangePicker](?path=/docs/components-forms-daterangepicker--docs) |
 | Seeing a month that stays on the page, such as a booking view | [Calendar](?path=/docs/components-forms-calendar--docs) |
+| Seeing events on a day, week or month, such as a team calendar | [EventCalendar](?path=/docs/components-data-display-eventcalendar--docs) |
 | Picking a time of day | [TimePicker](?path=/docs/components-forms-timepicker--docs) |
 | Picking a day and a time together, such as when a meeting starts | A [DatePicker](?path=/docs/components-forms-datepicker--docs) and a TimePicker in one Field group, as its "Date and time" section shows |
 | Picking a color | [ColorPicker](?path=/docs/components-forms-colorpicker--docs) |
@@ -66,6 +68,8 @@ Never use two radios for on and off: one Checkbox or Switch says it in one contr
 | Writing a few sentences or more | [Textarea](?path=/docs/components-forms-textarea--docs) |
 | Changing one value in place, such as a page title, without opening a form | [InlineEdit](?path=/docs/components-forms-inlineedit--docs) |
 | Confirming an action that can't be undone, such as deleting a project, by typing its name | [TypeToConfirm](?path=/docs/components-forms-typetoconfirm--docs) |
+| Signing, such as a delivery or a consent form, with a typed name always on offer | [SignaturePad](?path=/docs/components-forms-signaturepad--docs) |
+| Adding files, by choosing or dropping them | [FileUpload](?path=/docs/components-forms-fileupload--docs); each file it lists, or one sent in a message, is an [Attachment](?path=/docs/components-content-attachment--docs) |
 
 Wrap every form control in a [Field](?path=/docs/components-forms-field--docs), which gives it its label, hint and error. When a form is sent with errors, put an [ErrorSummary](?path=/docs/components-forms-errorsummary--docs) at its top.
 
@@ -98,6 +102,8 @@ The rule: a Button does, a Link goes. A link that runs code, or a button that ch
 | A long form, filters, or details they check while looking at the page | [Drawer](?path=/docs/components-overlays-drawer--docs) |
 | The messages that came in while they were away | [NotificationCenter](?path=/docs/components-overlays-notificationcenter--docs) |
 | The list of the app's keyboard shortcuts | [KeyboardShortcuts](?path=/docs/components-overlays-keyboardshortcuts--docs) |
+| To jump to any page or action by typing its name | [CommandPalette](?path=/docs/components-overlays-commandpalette--docs) (to search the content of one list or page, a SearchInput) |
+| A short guided walk past the main parts of a new screen | [Tour](?path=/docs/components-overlays-tour--docs) |
 
 Nothing anyone needs to do the task goes only in a Tooltip: touch screens never show it, and nothing inside it can be reached. When an explanation needs to reach everyone, or hold a link, use ContextualHelp; when it's needed to finish the task, put it on the page.
 
@@ -130,6 +136,8 @@ Nothing anyone needs to do the task goes only in a Tooltip: touch screens never 
 | People are… | Use |
 | --- | --- |
 | Moving between the app's main pages | [Navbar](?path=/docs/components-navigation-navbar--docs) or [Sidebar](?path=/docs/components-navigation-sidebar--docs) |
+| Moving between 3 to 5 main pages on a phone, with a thumb | [BottomNav](?path=/docs/components-navigation-bottomnav--docs) (on a wide screen, the Navbar or Sidebar instead) |
+| Jumping to a section of a long page, such as a guide | [TableOfContents](?path=/docs/components-navigation-tableofcontents--docs) |
 | Going back up the pages above this one | [Breadcrumb](?path=/docs/components-navigation-breadcrumb--docs) |
 | Switching between views of the same thing, on one page | [Tabs](?path=/docs/components-navigation-tabs--docs) |
 | Opening and closing sections, such as FAQs | [Accordion](?path=/docs/components-content-accordion--docs) |
@@ -146,11 +154,34 @@ Nothing anyone needs to do the task goes only in a Tooltip: touch screens never 
 | A line or two of text each, such as people or files | [List](?path=/docs/components-content-list--docs) |
 | Data with columns to compare or sort | [Table](?path=/docs/components-content-table--docs) |
 | Data people edit cell by cell, or copy to and from a spreadsheet | [DataGrid](?path=/docs/components-content-datagrid--docs) |
+| Pairs of a label and a value, such as an order's details | [DescriptionList](?path=/docs/components-content-descriptionlist--docs) |
+| Thousands of rows, too many for a List or Table to draw at once | [VirtualList](?path=/docs/components-content-virtuallist--docs) |
+| Cards that move between stages, such as tasks from To do to Done | [Kanban](?path=/docs/components-content-kanban--docs) (for one list people reorder, a SortableList) |
+| Rows narrowed by a few filters people add and remove, such as Status is Open | [FilterBar](?path=/docs/components-forms-filterbar--docs) above the List or Table |
 | Long text each, such as reviews or descriptions, opened in place | [ShowMore](?path=/docs/components-content-showmore--docs) |
 | Long text each, as a preview that links to the full item | [Text](?path=/docs/components-layout-and-type-text--docs) with `lines` |
 | Pictures or a lot of content each | [Card](?path=/docs/components-content-card--docs)s in a [Grid](?path=/docs/components-layout-and-type-grid--docs) |
 | A trend over time, or amounts to compare across a few categories | [Chart](?path=/docs/components-data-display-chart--docs) |
+| A trend in the space of a word, such as in a table cell or next to a number | [Sparkline](?path=/docs/components-data-display-sparkline--docs) |
 | Events in order of time | [Timeline](?path=/docs/components-data-display-timeline--docs) |
+| Messages in a conversation, such as a support chat | [Chat](?path=/docs/components-content-chat--docs) |
 | Lines of code to read or copy, such as an install command | [CodeBlock](?path=/docs/components-content-codeblock--docs) |
 
 [Grid](?path=/docs/components-layout-and-type-grid--docs) and [Stack](?path=/docs/components-layout-and-type-stack--docs) lay out the page. A Table is for data only.
+
+## Pictures and people
+
+| Showing… | Use |
+| --- | --- |
+| A person or a team, with a photo or initials | [Avatar](?path=/docs/components-content-avatar--docs), or an [AvatarGroup](?path=/docs/components-content-avatargroup--docs) for several |
+| A photo or a picture that is content, such as a product shot | [Image](?path=/docs/components-content-image--docs) |
+| A drawing that sets the scene, such as on an empty page | [Illustration](?path=/docs/components-feedback-illustration--docs) |
+| An icon in a tinted square, such as on a settings row or a card header | [IconTile](?path=/docs/components-content-icontile--docs) |
+
+## Layout
+
+| People need… | Use |
+| --- | --- |
+| Two panes side by side, sized by dragging, such as a list and its detail | [Splitter](?path=/docs/components-layout-splitter--docs) |
+| A side panel that opens over the page and closes again | A Drawer (one that stays, the Sidebar) |
+| A box of its own that scrolls, such as a long list in a panel | [ScrollArea](?path=/docs/components-layout-and-type-scrollarea--docs) |
