@@ -2,6 +2,8 @@
 
 A month of events: meetings, deadlines, bookings. People see what's on each day, move through the month by keyboard, and open an event. On a phone, or by choice, the same month shows as an agenda: a list of the days that have events.
 
+**Also called:** scheduler, agenda.
+
 ```tsx
 import { EventCalendar } from "serupa-ds";
 

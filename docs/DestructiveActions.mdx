@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Destructive actions" />
+
+# Destructive actions
+
+Match the protection to how hard the action is to reverse. "Are you sure?" on everything trains people to click through without reading, so the dialog that matters gets ignored too.
+
+## Pick by how hard it is to undo
+
+| The action is… | Do this |
+| --- | --- |
+| Everyday, and quick to put back: archive a message, remove an item from a list, move a file to the trash | Do it at once and offer Undo, with `toast.undo` ([Toast](?path=/docs/components-feedback-toast--docs)) |
+| Permanent, but small: delete a comment, revoke one invite | Confirm with a [Dialog](?path=/docs/components-overlays-dialog--docs) with `alert` that names what will be lost |
+| Permanent and big: delete a project, a workspace or an account | A Dialog with [TypeToConfirm](?path=/docs/components-forms-typetoconfirm--docs): people type the name before the button works |
+
+## Undo, not "Are you sure?"
+
+Take the item out of the page at once, and hand the real work to `toast.undo` as its `commit`: it runs only when the toast closes without Undo. Undo runs `onUndo` instead, which puts the item back, and nothing was lost. It's faster than a dialog for the many times people meant it, and safer for the few times they didn't.
+
+## The confirmation dialog
+
+- The title asks about the thing by name: "Delete Atlas?", not "Are you sure?".
+- The description says what will be lost and that it can't be undone: "Its 12 files and their history will be deleted. This can't be undone."
+- The buttons say what they do: "Delete project" and "Keep project", never "Yes" and "No" or "OK" and "Cancel".
+- The confirming button is the one `destructive` primary button on the screen. The other is `secondary`.
+- Focus starts on the safe button (`initialFocus`), so a quick Enter doesn't delete.
+- `alert` hides the ×, and a click on the backdrop doesn't close it, so the choice is made on purpose. Escape still cancels.
+
+## Destructive buttons elsewhere
+
+Use the [Button](?path=/docs/components-actions-button--docs)'s `destructive` only for actions that delete or can't be undone. Pick its variant by emphasis, as for any action: `outline` for "Delete" in a settings row, `ghost` for "Remove" on a list row, `link` for an inline "Revoke". Keep the solid one for the confirming step.
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Archive at once, with Undo in a toast | "Are you sure you want to archive?" for every message |
+| "Delete Atlas?" with "Delete project" and "Keep project" | "Are you sure?" with "Yes" and "No" |
+| Type the workspace's name to delete it | Type to confirm before deleting a comment |
+| Focus on "Keep project" when the dialog opens | Focus on "Delete project", where Enter deletes |

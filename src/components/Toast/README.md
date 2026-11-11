@@ -2,6 +2,8 @@
 
 A short message that confirms something happened ("Changes saved", "Moved to trash") without getting in the way. Call `toast()` from anywhere; messages show in the `<Toaster>`, which you render once near the root of the app, and go away on their own.
 
+**Also called:** snackbar, notification.
+
 ```jsx
 const { Toaster, toast } = window.Serupa;
 

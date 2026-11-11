@@ -84,7 +84,7 @@ describe('SortableList', () => {
     await userEvent.keyboard('{End}');
     expect(names()).toEqual(['Apollo', 'Gemini', 'Artemis', 'Mercury']);
     await userEvent.keyboard('{Escape}');
-    await said('Cancelled. Mercury is back at position 3 of 4.');
+    await said('Canceled. Mercury is back at position 3 of 4.');
     expect([names(), moves, document.activeElement === handle('Mercury')]).toEqual([['Apollo', 'Gemini', 'Mercury', 'Artemis'], [], true]);
     await userEvent.keyboard('{Enter}{Home}{Enter}');
     expect([names(), moves]).toEqual([['Mercury', 'Apollo', 'Gemini', 'Artemis'], [{ from: 2, to: 0 }]]);

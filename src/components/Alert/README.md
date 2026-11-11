@@ -2,6 +2,8 @@
 
 A message about the page or a task: something saved, something to know, something that went wrong. It's a tinted box with an icon, an optional title, a message, optional actions and an optional close button.
 
+**Also called:** callout, banner, inline message.
+
 ```jsx
 const { Alert, Button } = window.Serupa;
 

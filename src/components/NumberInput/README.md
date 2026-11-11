@@ -2,6 +2,8 @@
 
 A field for a number, with − and + buttons at the end. People can type freely; the arrow keys and buttons change it by `step`, and it's kept within `min` and `max`. It uses Input's box, sizes and tokens.
 
+**Also called:** nudger, quantity input, counter, spin button.
+
 ```tsx
 import { NumberInput } from "serupa-ds";
 

@@ -9,6 +9,7 @@ import { PROJECT, report, done } from './lib.mjs';
 
 const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'Props', 'Component tokens'];
 const DIR = path.join(PROJECT, 'src', 'components');
+const COMPONENTS = new Set(fs.readdirSync(DIR).map((n) => n.toLowerCase()));
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 for (const name of fs.readdirSync(DIR).sort()) {
@@ -24,6 +25,14 @@ for (const name of fs.readdirSync(DIR).sort()) {
   const order = REQUIRED.filter((h) => headings.includes(h)).map((h) => headings.indexOf(h));
   const inOrder = order.every((v, i) => !i || v > order[i - 1]);
   t(`${name}: the guide has ${REQUIRED.join(', ')}, in that order`, !missing.length && inOrder, missing.length ? `missing: ${missing.join(', ')}` : `order: ${headings.join(' · ')}`);
+  // Other names (LG1): an optional "**Also called:**" line right under the first paragraph, which Guides/Choose a
+  // component lists. A name another component has (Stepper, Calendar) would send the reader to the wrong page.
+  const also = /^\*\*Also called:\*\* (.+)$/m.exec(md);
+  if (also) {
+    const intro = md.split(/^## /m)[0], names = also[1].replace(/\.\s*$/, '').split(/,\s*/);
+    const taken = names.filter((n) => n.toLowerCase().replace(/\s+/g, '') !== name.toLowerCase() && COMPONENTS.has(n.toLowerCase().replace(/\s+/g, '')));
+    t(`${name}: "Also called" sits in the intro and names no other component`, intro.includes(also[0]) && !taken.length && names.every(Boolean), taken.length ? `another component's name: ${taken.join(', ')}` : 'move it under the first paragraph');
+  }
   // Where an id lands (BC2): the root, the native field inside, or nowhere. A reader needs to know before pointing a
   // <label htmlFor>, aria-describedby or a link at it. A `| \`id\` |` row, or `id` named in prose, under Props.
   const props = (md.split(/^## Props\s*$/m)[1] || '').split(/^## /m)[0];
@@ -79,4 +88,15 @@ const unplaced = fs.readdirSync(DIR).filter((n) => fs.existsSync(path.join(DIR, 
 t('Choose a component: every component is on the page, or on the nothing-alike list in tools/test/guides.mjs', !unplaced.length, `not placed: ${unplaced.join(', ')}`);
 const placedAlone = ALONE.filter((n) => choose.includes(`-${n.toLowerCase()}--docs)`) || !fs.existsSync(path.join(DIR, n, `${n}.tsx`)));
 t('Choose a component: the nothing-alike list names only components that exist and are not on the page', !placedAlone.length, `take off the list: ${placedAlone.join(', ')}`);
+// Every docs page link in docs/ (?path=/docs/<id>--docs) goes to a page that exists: a component's stories or an
+// MDX page, by its title as Storybook makes the id ("Guides/Choose a component" → guides-choose-a-component).
+const storyId = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const titles = new Set();
+const walk = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules' && e.name !== 'generated') walk(p); } else if (/\.(stories\.tsx|mdx)$/.test(e.name)) for (const m of fs.readFileSync(p, 'utf8').matchAll(/(?:^\s*title: |<Meta title=)['"]([^'"]+)['"]/gm)) titles.add(storyId(m[1])); } };
+walk(path.join(PROJECT, 'src')); walk(path.join(PROJECT, 'docs'));
+const broken = [];
+for (const f of fs.readdirSync(path.join(PROJECT, 'docs')).filter((n) => n.endsWith('.mdx'))) {
+  for (const m of fs.readFileSync(path.join(PROJECT, 'docs', f), 'utf8').matchAll(/\?path=\/docs\/([a-z0-9-]+)--docs/g)) if (!titles.has(m[1])) broken.push(`${f}: ${m[1]}`);
+}
+t('every docs page link in docs/*.mdx goes to a page that exists', !broken.length, broken.slice(0, 12).join(', '));
 done(report('Usage guides', R));

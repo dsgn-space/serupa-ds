@@ -2,6 +2,8 @@
 
 Shows that something is loading when you can't say how far along it is. Six looks: a **ring** (a quarter arc turning on a faint track), **spokes** (eight spokes ticking round a circle, like the iOS activity indicator), **dots** (three pulsing dots), **pixel** (a 3×3 grid of square pixels with a wave of light running through it), **text** (words with a shine sweeping through them) and **skeleton** (placeholder shapes where the content will be, with the same shine).
 
+**Also called:** spinner, skeleton, loading indicator.
+
 Called Spinner before 3.0.0: see the upgrade table in the changelog.
 
 ```jsx

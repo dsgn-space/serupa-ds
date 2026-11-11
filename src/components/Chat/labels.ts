@@ -23,7 +23,7 @@ export const en: ChatLabels = {
   chatLoadingOlder: 'Loading earlier messages',
   chatSending: 'Sending…',
   chatNotSent: 'Not sent',
-  chatRetry: 'Retry',
+  chatRetry: 'Try again',
   chatYou: 'You',
   chatMessage: 'Message',
   chatSend: 'Send',

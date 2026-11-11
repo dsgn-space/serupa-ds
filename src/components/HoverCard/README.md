@@ -2,6 +2,8 @@
 
 A preview of what a link points to: a person, a page, a repository. It opens when the pointer rests on the link, or keyboard focus stays on it, so people can check who or what it is before they follow it.
 
+**Also called:** preview card, link preview.
+
 ```tsx
 import { HoverCard, Link, Avatar } from "serupa-ds";
 
