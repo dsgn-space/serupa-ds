@@ -17,21 +17,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CLAUDE, withSection } from './serupa-agents.mjs';
 
-// The versions the repository tests with: tools/test/create-app.mjs fails when they drift from its devDependencies.
-export const VERSIONS = {
-  react: '19.3.1',
-  'react-dom': '19.3.1',
-  vite: '8.3.5',
-  typescript: '7.0.2',
-  '@types/react': '19.3.0',
-  '@types/react-dom': '19.3.0',
-  '@types/node': '26.6.5',
-  eslint: '10.13.0',
-  'typescript-eslint': '8.72.1',
-  '@typescript/typescript6': '6.0.2',
-  'eslint-plugin-jsx-a11y-x': '0.2.0',
-  stylelint: '17.16.0',
-};
+// The versions the repository tests with, read from its own package.json (which every install of the package has), so
+// a dependency bump in the repository moves the starter app with it.
+const NAMES = ['react', 'react-dom', 'vite', 'typescript', '@types/react', '@types/react-dom', '@types/node', 'eslint', 'typescript-eslint', '@typescript/typescript6', 'eslint-plugin-jsx-a11y-x', 'stylelint'];
+const { devDependencies } = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'));
+export const VERSIONS = Object.fromEntries(NAMES.map((name) => [name, devDependencies[name]]));
 const BRANDS = ['blue', 'violet', 'emerald'];
 
 /**
