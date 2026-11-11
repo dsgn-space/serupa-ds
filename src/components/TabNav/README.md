@@ -72,12 +72,11 @@ Drawn from the `Default` story.
 
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
-| `href` | string | | Where the link goes |
 | `current` | boolean | `false` | This is the page people are on: `aria-current="page"`, drawn as the selected tab |
 | `icon` | string \| element | | An icon before the label: an icon name or any element |
 | `as` | element type | `configure({ link })`, else `'a'` | Your router's link component; it gets the rest of the props |
 
-`className`, `ref` and other props go to the link, which sits in an `<li>`. It has `data-state="active"` or `"inactive"`.
+`href`, `className`, `ref` and other props go to the link, which sits in an `<li>`. It has `data-state="active"` or `"inactive"`.
 
 ## Component tokens
 
