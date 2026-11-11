@@ -108,7 +108,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Tillbaka',
   cascadeLoading: 'Läser in…',
   cascadeEmpty: 'Inga alternativ',
-  cascadeFailed: 'Det gick inte att läsa in alternativen',
+  cascadeFailed: 'Det gick inte att läsa in alternativen. Öppna alternativet igen för att försöka på nytt.',
   filterBar: 'Filter',
   filterAdd: 'Lägg till filter',
   filterClear: 'Rensa alla',
