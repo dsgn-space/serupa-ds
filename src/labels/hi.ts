@@ -201,6 +201,8 @@ export const labels: SerupaLabels = {
   markRead: 'पढ़ी हुई मार्क करें',
   markAllRead: 'सभी को पढ़ा हुआ मार्क करें',
   clearNotifications: 'सभी हटाएँ',
+  clearNotificationsConfirm: 'सभी सूचनाएँ हटाएँ? इसे पूर्ववत नहीं किया जा सकता।',
+  keepNotifications: 'रहने दें',
   notificationsUnread: (count) => (count ? 'सूचनाएँ, ' + n(count) + ' अपठित' : 'सूचनाएँ'),
   decrease: 'घटाएँ',
   increase: 'बढ़ाएँ',

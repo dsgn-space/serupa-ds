@@ -51,7 +51,25 @@ describe('NotificationCenter', () => {
     // Nothing unread is left, so "Mark all as read" has nothing to do and is gone (GR176).
     expect(button('Mark all as read')).toBeUndefined();
     await userEvent.click(button('Clear all'));
+    // It asks first, with focus on "Keep them"; the "Clear all" in the question does it.
+    expect(log).toEqual(['read a']);
+    await expect.poll(() => document.activeElement).toBe(button('Keep them'));
+    await userEvent.click(button('Clear all'));
     expect(log).toEqual(['read a', 'clear']);
+  });
+
+  test('"Clear all" asks first, since it can\'t be undone: "Keep them" has focus and goes back to "Clear all" with nothing cleared', async () => {
+    const log: string[] = [];
+    await render(<Controlled log={log} />);
+    await expect.poll(() => drawer() !== null).toBe(true);
+    button('Clear all').focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => document.activeElement).toBe(button('Keep them'));
+    const ask = document.getElementById(button('Keep them').getAttribute('aria-describedby')!)!;
+    expect([ask.textContent, button('Clear all').className.includes('destructive'), button('Mark all as read')]).toEqual(['Clear every notification? This can’t be undone.', true, undefined]);
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => document.activeElement).toBe(button('Clear all'));
+    expect([log, button('Keep them'), rows().length]).toEqual([[], undefined, 2]);
   });
 
   test('GR176: each footer button shows only while it has something to do, and focus moves on when the chosen one goes: "Mark all as read" to "Clear all", "Clear all" to the empty line', async () => {
@@ -66,6 +84,7 @@ describe('NotificationCenter', () => {
     await expect.poll(() => button('Mark all as read')).toBeUndefined();
     expect(document.activeElement).toBe(button('Clear all'));
     await userEvent.keyboard('{Enter}');
+    await userEvent.click(button('Clear all'));
     await expect.poll(() => rows().length).toBe(0);
     expect(button('Clear all')).toBeUndefined();
     expect(drawer()!.contains(document.activeElement)).toBe(true);

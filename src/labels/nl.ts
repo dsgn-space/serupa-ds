@@ -202,6 +202,8 @@ export const labels: SerupaLabels = {
   markRead: 'Als gelezen markeren',
   markAllRead: 'Alles als gelezen markeren',
   clearNotifications: 'Alles wissen',
+  clearNotificationsConfirm: 'Alle meldingen wissen? Dit kan niet ongedaan worden gemaakt.',
+  keepNotifications: 'Bewaren',
   notificationsUnread: (count) => (count ? 'Meldingen, ' + n(count) + ' ongelezen' : 'Meldingen'),
   decrease: 'Verlagen',
   increase: 'Verhogen',

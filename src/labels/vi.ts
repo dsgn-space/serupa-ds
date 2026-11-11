@@ -202,6 +202,8 @@ export const labels: SerupaLabels = {
   markRead: 'Đánh dấu đã đọc',
   markAllRead: 'Đánh dấu tất cả là đã đọc',
   clearNotifications: 'Xóa tất cả',
+  clearNotificationsConfirm: 'Xóa tất cả thông báo? Không thể hoàn tác.',
+  keepNotifications: 'Giữ lại',
   notificationsUnread: (count) => (count ? 'Thông báo, ' + n(count) + ' chưa đọc' : 'Thông báo'),
   decrease: 'Giảm',
   increase: 'Tăng',
