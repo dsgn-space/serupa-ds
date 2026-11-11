@@ -17,11 +17,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CLAUDE, withSection } from './serupa-agents.mjs';
 
-// The versions the repository tests with, read from its own package.json (which every install of the package has), so
-// a dependency bump in the repository moves the starter app with it.
-const NAMES = ['react', 'react-dom', 'vite', 'typescript', '@types/react', '@types/react-dom', '@types/node', 'eslint', 'typescript-eslint', '@typescript/typescript6', 'eslint-plugin-jsx-a11y-x', 'stylelint'];
-const { devDependencies } = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'));
-export const VERSIONS = Object.fromEntries(NAMES.map((name) => [name, devDependencies[name]]));
+// The versions this release was tested with: dist/starter.json, which the build writes from the repository's
+// devDependencies (a release's package.json leaves them out), so a dependency bump moves the starter app with it.
+export const VERSIONS = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../dist/starter.json', import.meta.url)), 'utf8'));
 const BRANDS = ['blue', 'violet', 'emerald'];
 
 /**
