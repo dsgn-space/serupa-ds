@@ -93,20 +93,21 @@ describe('DataGrid', () => {
   });
 
   test('copy gives the range as tab-separated text; paste fills a block from the cell, skipping read-only cells', async () => {
+    // Clipboard events with their own DataTransfer, not the system clipboard: the test files run side by side in one
+    // browser, and another file's copy between this one's copy and paste pasted the wrong text (11 Nov 2026).
+    const clip = (type: 'copy' | 'paste', text = '') => {
+      const data = new DataTransfer();
+      if (text) data.setData('text/plain', text);
+      document.activeElement!.dispatchEvent(new ClipboardEvent(type, { clipboardData: data, bubbles: true, cancelable: true }));
+      return data.getData('text/plain');
+    };
     const onChange = vi.fn();
-    await render(<><textarea aria-label="Out" /><Live onChange={onChange} /></>);
+    await render(<Live onChange={onChange} />);
     await userEvent.click(cell('Kopi'));
     await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowRight}{/Shift}');
-    await userEvent.copy();
-    await userEvent.click(page.getByRole('textbox', { name: 'Out' }));
-    await userEvent.paste();
-    await expect.element(page.getByRole('textbox', { name: 'Out' })).toHaveValue('Kopi\t4\nTeh\t9');
-    const src = page.getByRole('textbox', { name: 'Out' }).element() as HTMLTextAreaElement;
-    src.value = 'Madu\t2\tX9\nAren\t5\tX8';
-    src.select();
-    await userEvent.copy();
+    expect(clip('copy')).toBe('Kopi\t4\nTeh\t9');
     await userEvent.click(cell('Teh'));
-    await userEvent.paste();
+    clip('paste', 'Madu\t2\tX9\nAren\t5\tX8');
     expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }, { rowId: 'b', column: 'qty', value: '2' }, { rowId: 'c', column: 'name', value: 'Aren' }, { rowId: 'c', column: 'qty', value: '5' }]);
   });
 
