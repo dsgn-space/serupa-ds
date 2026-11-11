@@ -10,7 +10,7 @@ test('a warning links its section of docs/warnings.md on GitLab, once per key', 
     warnOnce('toaster-twice', 'Toaster: another Toaster is already mounted.');
     warnOnce('toaster-twice', 'Toaster: another Toaster is already mounted.');
     expect(warn.mock.calls.map((c) => String(c[0]))).toEqual([
-      'Toaster: another Toaster is already mounted. (Serupa warning toaster-twice: https://gitlab.com/diki-stwn/serupa-ds/-/blob/main/docs/warnings.md#toaster-twice)',
+      'Toaster: another Toaster is already mounted. (Serupa warning toaster-twice: https://gitlab.com/diki-stwn-group/serupa-ds/-/blob/main/docs/warnings.md#toaster-twice)',
     ]);
   } finally { warn.mockRestore(); }
 });

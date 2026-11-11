@@ -27,4 +27,4 @@ What this major is about, in two or three sentences.
 - **Migration:** … (`serupa-migrate` makes it / by hand)
 ```
 
-Each release's breaking entries, with their migration notes, are collected in the docs' [Upgrading](https://gitlab.com/diki-stwn/serupa-ds/-/blob/main/docs/Upgrading.mdx) page, made from the changelog and the changesets.
+Each release's breaking entries, with their migration notes, are collected in the docs' [Upgrading](https://gitlab.com/diki-stwn-group/serupa-ds/-/blob/main/docs/Upgrading.mdx) page, made from the changelog and the changesets.

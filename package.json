@@ -8,11 +8,11 @@
   "author": "Diki (https://gitlab.com/diki-stwn)",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/diki-stwn/serupa-ds.git"
+    "url": "git+https://gitlab.com/diki-stwn-group/serupa-ds.git"
   },
-  "homepage": "https://gitlab.com/diki-stwn/serupa-ds#readme",
+  "homepage": "https://gitlab.com/diki-stwn-group/serupa-ds#readme",
   "bugs": {
-    "url": "https://gitlab.com/diki-stwn/serupa-ds/-/issues"
+    "url": "https://gitlab.com/diki-stwn-group/serupa-ds/-/issues"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
