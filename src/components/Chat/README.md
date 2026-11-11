@@ -39,12 +39,12 @@ Drawn from the `Statuses` story.
 5. **Status** (`.dk-chat-message__status`): "Sending…", or "Not sent" with Retry.
 6. **Composer** (`.dk-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
 
-An assistant's reply (the `AgentReply` story) adds three parts above its bubble:
+An assistant's reply (the `AgentReply` story) adds these parts:
 
-7. **Reasoning** (`.dk-chat-message__reasoning`): "Thought for 12 seconds", closed until the reader opens it.
-8. **Steps** (`.dk-chat-steps`): the tools it called, each in progress, done or failed.
-9. **Thinking** (`.dk-chat-message__thinking`): "Thinking…" with a shine, until the first words arrive.
-10. **Versions** (`.dk-chat-message__branches`): "2 / 3" between previous and next, under a regenerated reply.
+- **Reasoning** (`.dk-chat-message__reasoning`): "Thought for 12 seconds", closed until the reader opens it.
+- **Steps** (`.dk-chat-steps`): the tools it called, each in progress, done or failed.
+- **Thinking** (`.dk-chat-message__thinking`): "Thinking…" with a shine, until the first words arrive.
+- **Versions** (`.dk-chat-message__branches`): "2 / 3" between previous and next, under a regenerated reply.
 
 An assistant also asks before it acts with a `ChatApproval` card (`.dk-chat-approval`, the `Approval` story), and names its sources with `ChatCitation` chips (`.dk-chat-citation`, the `Citations` story).
 
