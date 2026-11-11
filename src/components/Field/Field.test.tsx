@@ -318,7 +318,7 @@ describe('FormErrors', () => {
       return <FormErrors errors={errors}>
         <Field id="fe2-email" label="Email"><Input name="email" /></Field>
         <Field id="fe2-code" label="Code" error="Enter the code"><Input name="code" /></Field>
-        <Field id="fe2-terms" label="Terms" name="terms"><Checkbox id="fe2-terms" label="I agree" /></Field>
+        <Field label="Terms" name="terms"><Checkbox id="fe2-terms">I agree</Checkbox></Field>
       </FormErrors>;
     }
     const screen = await render(<Form errors={{ email: 'That email is taken', code: 'Server says no', terms: 'Agree to the terms' }} />);
