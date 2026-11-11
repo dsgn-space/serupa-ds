@@ -7,6 +7,7 @@ import { Pagination } from '../../components/Pagination/Pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from '../../components/Table/Table';
 import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
+import { Toaster, toast } from '../../components/Toast/Toast';
 
 /* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
@@ -19,7 +20,10 @@ import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
    - 2.4.8, 3.2.3: the search, filters, sort and page are kept in the address (`?q=&status=&sort=&page=`), so Back,
      a reload and a shared link all show the same list. Writing the address is the app's job: `onSearchChange`
      gets the new query string.
-   - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3. */
+   - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3, and lets go of the
+     selected rows it hides, so "2 selected" never counts rows nobody can see, and a bulk action never reaches them.
+   - 4.1.3: Archive and Export say what they did in a toast. Archive takes the rows away at once, with Undo; it's done
+     for good (onArchive) only when the toast closes without Undo. */
 
 export interface Project { name: string; status: 'Active' | 'Paused' | 'Done'; owner: string; updated: string }
 type SortKey = 'name' | 'updated';
@@ -34,6 +38,10 @@ export interface ListSearchProps {
   onSearchChange?: ((search: string) => void) | undefined;
   /** Rows on a page. Default: 10. */
   pageSize?: number | undefined;
+  /** Archives the rows for good, by name: called once the "Archived" toast closes without Undo. */
+  onArchive?: ((names: string[]) => void) | undefined;
+  /** Exports the selected rows, by name. */
+  onExport?: ((names: string[]) => void) | undefined;
 }
 
 const OWNERS = ['Ana', 'Budi', 'Chen', 'Dewi'];
@@ -72,18 +80,42 @@ export function writeView(v: View): string {
 }
 
 /** The list page: a skip link, a header, then main with the h1, the search and filters, the table and the pages. */
-export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10 }: ListSearchProps) {
+export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport }: ListSearchProps) {
   const [view, setView] = React.useState<View>(() => readView(search));
   const [picked, setPicked] = React.useState<string[]>([]);
+  const [archived, setArchived] = React.useState<ReadonlySet<string>>(() => new Set());
+  const matches = (v: View) => {
+    const q = v.q.trim().toLowerCase();
+    return projects.filter((p) => !archived.has(p.name) && (!q || p.name.toLowerCase().includes(q)) && (!v.status || p.status === v.status) && (!v.owner || p.owner === v.owner));
+  };
   const change = (next: Partial<View>, keepPage = false) => {
     const v = { ...view, ...next, page: keepPage ? next.page ?? view.page : 1 };
     setView(v);
     onSearchChange?.(writeView(v));
+    // A narrower search or filter lets go of the selected rows it hides.
+    if (v.q !== view.q || v.status !== view.status || v.owner !== view.owner) {
+      const shown = new Set(matches(v).map((p) => p.name));
+      setPicked((was) => was.filter((n) => shown.has(n)));
+    }
+  };
+  const count = (n: number) => (n === 1 ? '1 project' : `${n} projects`);
+  const archive = () => {
+    const names = picked;
+    setArchived((was) => new Set([...was, ...names]));
+    setPicked([]);
+    toast.undo({
+      title: `Archived ${count(names.length)}`,
+      commit: () => onArchive?.(names),
+      onUndo: () => setArchived((was) => { const n = new Set(was); for (const x of names) n.delete(x); return n; }),
+    });
+  };
+  const exportRows = () => {
+    onExport?.(picked);
+    toast({ title: `Exported ${count(picked.length)}`, tone: 'success' });
   };
 
-  const q = view.q.trim().toLowerCase();
-  const found = projects
-    .filter((p) => (!q || p.name.toLowerCase().includes(q)) && (!view.status || p.status === view.status) && (!view.owner || p.owner === view.owner))
+  const live = projects.length - archived.size;
+  const found = matches(view)
     .sort((a, b) => (view.dir === 'ascending' ? 1 : -1) * a[view.sort].localeCompare(b[view.sort]));
   const pages = Math.max(1, Math.ceil(found.length / pageSize));
   const page = Math.min(view.page, pages);
@@ -113,11 +145,11 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
             { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
           ]}
-          results={found.length === projects.length ? `${found.length} projects` : `${found.length} of ${projects.length} projects`}
+          results={found.length === live ? `${found.length} projects` : `${found.length} of ${live} projects`}
           onClearFilters={clear}
           selectedCount={picked.length}
           onClearSelection={() => setPicked([])}
-          bulkActions={<><Button size="sm" variant="outline">Export</Button><Button size="sm" variant="outline" onClick={() => setPicked([])}>Archive</Button></>}
+          bulkActions={<><Button size="sm" variant="outline" onClick={exportRows}>Export</Button><Button size="sm" variant="outline" onClick={archive}>Archive</Button></>}
         >
           {found.length ? (
             <Table caption="Projects" hideCaption>
@@ -151,6 +183,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             aria-label="Projects pages" />
         ) : null}
       </main>
+      <Toaster />
     </div>
   );
 }

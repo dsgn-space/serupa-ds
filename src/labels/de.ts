@@ -205,6 +205,8 @@ export const labels: SerupaLabels = {
   markRead: 'Als gelesen markieren',
   markAllRead: 'Alle als gelesen markieren',
   clearNotifications: 'Alle löschen',
+  clearNotificationsConfirm: 'Alle Benachrichtigungen löschen? Das lässt sich nicht rückgängig machen.',
+  keepNotifications: 'Behalten',
   notificationsUnread: (count) => (count ? 'Benachrichtigungen, ' + n(count) + ' ungelesen' : 'Benachrichtigungen'),
   decrease: 'Verringern',
   increase: 'Erhöhen',

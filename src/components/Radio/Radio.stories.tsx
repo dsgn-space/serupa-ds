@@ -57,3 +57,41 @@ export const LongLabels: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: cards whose options each carry a detail to choose by. */
+export const DoCardsWithDetails: Story = {
+  name: 'Do: cards with details',
+  args: { 'aria-label': 'Delivery', variant: 'card', orientation: 'horizontal', defaultValue: 'standard' },
+  render: (args) => <RadioGroup {...args}>
+    <Radio value="standard" description="3 to 5 days, free">Standard</Radio>
+    <Radio value="express" description="Next day, Rp 25.000">Express</Radio>
+  </RadioGroup>,
+};
+/** Don't: cards for options that need no explanation. */
+export const DontCardsForShortOptions: Story = {
+  name: "Don't: cards for short options",
+  args: { 'aria-label': 'Size', variant: 'card', orientation: 'horizontal', defaultValue: 'm' },
+  render: (args) => <RadioGroup {...args}>
+    {['S', 'M', 'L'].map((v) => <Radio key={v} value={v.toLowerCase()}>{v}</Radio>)}
+  </RadioGroup>,
+};
+/** Do: a few options, all in view. */
+export const DoFewOptions: Story = {
+  name: 'Do: a few options',
+  args: { 'aria-label': 'Contact me by', defaultValue: 'email' },
+  render: (args) => <RadioGroup {...args}>
+    <Radio value="email">Email</Radio>
+    <Radio value="phone">Phone</Radio>
+    <Radio value="post">Post</Radio>
+  </RadioGroup>,
+};
+const PROVINCES = ['Aceh', 'Bali', 'Banten', 'Bengkulu', 'Gorontalo', 'Jakarta', 'Jambi', 'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Kalimantan Barat', 'Lampung'];
+/** Don't: a long column of radios a Select or Combobox would search. */
+export const DontLongList: Story = {
+  name: "Don't: a long list",
+  args: { 'aria-label': 'Province', defaultValue: 'Bali' },
+  render: (args) => <RadioGroup {...args}>
+    {PROVINCES.map((p) => <Radio key={p} value={p}>{p}</Radio>)}
+  </RadioGroup>,
+};
