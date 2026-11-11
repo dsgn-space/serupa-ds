@@ -97,6 +97,17 @@ async function checkDocs(e, w) {
   const ok = !notReady && await w.page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
   const missing = await w.page.evaluate(() => [...document.querySelectorAll('blockquote')].map((q) => q.textContent).filter((x) => /Missing README section/.test(x)));
   out.push(t(`docs · ${e.title}`, ok && !w.errors.length && !missing.length, [notReady, ...w.errors, ...missing].filter(Boolean).slice(0, 3).join(' | ')));
+  // Headings (GR361): each id once, so a link to a section or the table of contents lands on it, and no level skipped.
+  // Headings inside a story's canvas belong to the story, not to the page.
+  const headings = notReady ? null : await w.page.evaluate(() => {
+    const hs = [...document.querySelectorAll('#storybook-docs :is(h1, h2, h3, h4, h5, h6)')].filter((h) => !h.closest('.docs-story, .sb-story, #storybook-root'));
+    const ids = hs.map((h) => h.id).filter(Boolean), twice = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
+    const skips = [];
+    hs.reduce((prev, h) => { const l = +h.tagName[1]; if (prev && l > prev + 1) skips.push(`h${prev} to h${l} at "${h.textContent.trim().slice(0, 30)}"`); return l; }, 0);
+    return { twice, skips };
+  });
+  if (headings) out.push(t(`docs · ${e.title} · headings: each id once, no level skipped`, !headings.twice.length && !headings.skips.length,
+    [...headings.twice.map((id) => `id "${id}" twice`), ...headings.skips].slice(0, 4).join(' | ')));
   // In a dark mode the whole docs page follows the theme, so dark components aren't shown on white.
   const darkNotReady = await open(w, e, 'blue-dark');
   const dark = await w.page.evaluate(() => {

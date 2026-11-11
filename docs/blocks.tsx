@@ -1,7 +1,7 @@
 // Building blocks for the Storybook pages. Everything here reads tokens.json, README.md and the component
 // guidelines at build time, so the documentation can't drift from the system.
 import * as React from 'react';
-import { Markdown } from '@storybook/addon-docs/blocks';
+import { DocsContext, Markdown } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
 import foundations from './foundations.md?raw';
@@ -40,6 +40,32 @@ for (const src of Object.values(storyFiles)) {
   if (title) docsId[title.split('/').pop()!] = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 }
 
+/* Heading ids (GR361). markdown-to-jsx gives each heading an id from its text, without looking at the rest of the
+   page, so a guide's "States" section and the "States" story under it shared one, as did the Changelog's "Fixed" in
+   every release. One slugify per page block: an id already used in the block, a story's name on the page, or a
+   heading the page writes itself (reserve) takes -1, -2…, as Storybook's own story headings do. */
+type Slugify = (text: string, base: (text: string) => string) => string;
+function useSlugify(reserve: readonly string[] = []): Slugify {
+  const ctx = React.useContext(DocsContext);
+  let stories: string[] = [];
+  try { stories = ctx.componentStories().map((x) => x.name); } catch { /* a page of docs/ alone has no stories */ }
+  const taken = new Map<string, number>();
+  let seeded = false;
+  return (text, base) => {
+    if (!seeded) { seeded = true; for (const r of [...reserve, ...stories]) taken.set(base(r), 0); }
+    const id = base(text);
+    let out = id;
+    while (taken.has(out)) { const n = (taken.get(id) || 0) + 1; taken.set(id, n); out = id + '-' + n; }
+    taken.set(out, 0);
+    return out;
+  };
+}
+/** Markdown whose headings have ids no other heading on the page has (useSlugify). */
+export function DocMarkdown({ children, reserve, slugify }: { children: string; reserve?: readonly string[]; slugify?: Slugify }) {
+  const own = useSlugify(reserve);
+  return <Markdown options={{ slugify: slugify || own }}>{children}</Markdown>;
+}
+
 // Links between component guides (../Loader/README.md) become links to their Storybook pages.
 function relink(md: string): string {
   return md.replace(/\]\((?:\.\.\/)?(?:src\/components\/)?(\w+)\/README\.md(#[\w-]+)?\)/g, (_, name) => `](?path=/docs/${docsId[name] || `components-${name.toLowerCase()}`}--docs)`)
@@ -59,10 +85,11 @@ function anatomyAt(md: string): (string | Anatomy)[] {
 /** A component's guidelines (its README.md), without the title the page already has. */
 export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
+  const slugify = useSlugify();
   return <>
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
     {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
-      ? <Markdown key={i}>{relink(part)}</Markdown>
+      ? <DocMarkdown key={i} slugify={slugify}>{relink(part)}</DocMarkdown>
       : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
       : <AnatomyDiagram key={i} {...part} />))}
     {name && <TestedBehavior name={name} />}
@@ -131,10 +158,10 @@ export function ReadmeIntro() {
   return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
 }
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
-export function ReadmeSections({ headings }: { headings: string[] }) {
+export function ReadmeSections({ headings, reserve }: { headings: string[]; /** Headings the page writes itself, such as its title: theirs keep the plain id. */ reserve?: string[] }) {
   const parts = [ROOT, foundations].flatMap((md) => md.split(/\n(?=## )/));
   const md = headings.map((h) => parts.find((p) => p.startsWith(`## ${h}\n`)) || `> Missing README section: ${h}`).join('\n\n');
-  return <Markdown>{relink(md)}</Markdown>;
+  return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
 }
 
 const code = (s?: string) => (s || '').split(/`([^`]+)`/).map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
