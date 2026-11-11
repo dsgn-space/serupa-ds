@@ -163,12 +163,12 @@ describe('ChatMessage', () => {
     expect(find(document.getElementById('a')!, 'R')!.closest('[aria-hidden]')!.getAttribute('aria-hidden')).toBe('true');
   });
 
-  test('status: "Sending…", and "Not sent" with a Retry button that calls onRetry', async () => {
+  test('status: "Sending…", and "Not sent" with a "Try again" button that calls onRetry', async () => {
     let tries = 0;
     await render(<><ChatMessage id="s" own status="sending">A</ChatMessage><ChatMessage id="f" own status="failed" onRetry={() => tries++}>B</ChatMessage></>);
     expect(find(document.getElementById('s')!, 'Sending…')).not.toBe(null);
     expect(document.getElementById('f')!.classList.contains('dk-chat-message--failed')).toBe(true);
-    await userEvent.click(page.getByRole('button', { name: 'Retry' }));
+    await userEvent.click(page.getByRole('button', { name: 'Try again' }));
     expect(tries).toBe(1);
   });
 

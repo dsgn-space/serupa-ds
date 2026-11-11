@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabl
 import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { useLocale } from '../../internal/provider';
 
 /* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
@@ -55,6 +56,14 @@ const demo: Project[] = NAMES.map((name, i) => ({
   updated: new Date(Date.UTC(2026, 9, 28 - i)).toISOString().slice(0, 10),
 }));
 
+// "6 Nov 2026" in the reader's locale for "2026-11-06", read as that calendar day wherever the reader is; anything
+// else as it came. The <time> keeps the ISO day in dateTime.
+function shortDay(iso: string, locale: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return iso;
+  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+}
+
 /** The view from a query string, with anything missing or unknown at its default. */
 export function readView(search: string): View {
   const p = new URLSearchParams(search);
@@ -81,6 +90,7 @@ export function writeView(v: View): string {
 
 /** The list page: a skip link, a header, then main with the h1, the search and filters, the table and the pages. */
 export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport }: ListSearchProps) {
+  const locale = useLocale();
   const [view, setView] = React.useState<View>(() => readView(search));
   const [picked, setPicked] = React.useState<string[]>([]);
   const [archived, setArchived] = React.useState<ReadonlySet<string>>(() => new Set());
@@ -166,7 +176,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
                 <TableRow key={p.name} selected={picked.includes(p.name)}>
                   <TableSelectCell label={`Select ${p.name}`} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
                   <TableCell>{p.name}</TableCell><TableCell>{p.status}</TableCell><TableCell>{p.owner}</TableCell>
-                  <TableCell><time dateTime={p.updated}>{p.updated}</time></TableCell>
+                  <TableCell><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
                 </TableRow>
               ))}</TableBody>
             </Table>

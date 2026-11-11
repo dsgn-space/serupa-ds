@@ -121,6 +121,12 @@ describe('Patterns/List with search and filters', () => {
     expect(status()).toBe('23 projects');
   });
 
+  test('the Updated column reads as a day in the reader\'s locale, and keeps the ISO day in dateTime', async () => {
+    await render(<SerupaProvider locale="en-US"><ListSearch projects={[{ name: 'X', status: 'Active', owner: 'Ana', updated: '2026-11-06' }]} /></SerupaProvider>);
+    const time = document.querySelector('tbody time') as HTMLTimeElement;
+    expect([time.textContent, time.dateTime]).toEqual(['Nov 6, 2026', '2026-11-06']);
+  });
+
   test('no results says so in words and "Clear filters" brings every row back with focus on the search', async () => {
     const screen = await render(<ListSearch search="?q=rocket" />);
     await expect.element(screen.getByRole('heading', { name: 'No projects match “rocket”', level: 2 })).toBeVisible();

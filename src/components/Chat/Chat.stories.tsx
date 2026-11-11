@@ -32,7 +32,7 @@ export const Playground: Story = {
   render: (args) => <Frame><Chat {...args} className="flex-auto"><Conversation /></Chat><ChatComposer /></Frame>,
 };
 
-// Own messages on their way and one that didn't go, with Retry.
+// Own messages on their way and one that didn't go, with "Try again".
 export const Statuses: Story = {
   render: (args) => <Frame><Chat {...args} className="flex-auto"><Conversation sending failed /></Chat><ChatComposer defaultValue="Draft reply" /></Frame>,
 };

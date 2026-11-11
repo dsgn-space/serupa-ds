@@ -26,7 +26,7 @@ export const en: KanbanLabels = {
   kanbanGrabbed: (card, column, p, n) => 'Picked up ' + card + '. ' + column + ', position ' + p + ' of ' + n + '.',
   kanbanMoved: (card, column, p, n) => card + ', ' + column + ', position ' + p + ' of ' + n + '.',
   kanbanDropped: (card, column, p, n) => card + ' moved to ' + column + ', position ' + p + ' of ' + n + '.',
-  kanbanCancelled: (card, column, p, n) => 'Cancelled. ' + card + ' is back in ' + column + ', position ' + p + ' of ' + n + '.',
+  kanbanCancelled: (card, column, p, n) => 'Canceled. ' + card + ' is back in ' + column + ', position ' + p + ' of ' + n + '.',
   kanbanEmpty: 'No cards',
 };
 export const id: KanbanLabels = {
