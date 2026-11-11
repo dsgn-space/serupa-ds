@@ -163,7 +163,9 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   /** Which version of a regenerated reply this is, from 1, with branches (how many) and onBranchChange: shows
    *  "2 / 3" between previous and next buttons under the text. */
   branch?: number | undefined;
+  /** How many versions of the reply there are; 2 or more shows the switcher. */
   branches?: number | undefined;
+  /** Called with the version to show, from 1, when previous or next is pressed. */
   onBranchChange?: ((branch: number) => void) | undefined;
   /** The steps taken on the way to the reply (tools called, searches), above the text: a ChatSteps list. */
   steps?: readonly ChatStep[] | undefined;
@@ -238,7 +240,7 @@ export interface ChatStep {
   /** One line more, such as what it found or why it failed. */
   detail?: React.ReactNode | undefined;
 }
-export interface ChatStepsProps extends Omit<React.HTMLAttributes<HTMLOListElement>, 'children'> {
+export interface ChatStepsProps extends React.HTMLAttributes<HTMLOListElement> {
   /** The steps an assistant takes on its way to a reply (tool calls, searches), in order. */
   steps: readonly ChatStep[];
 }
@@ -250,7 +252,7 @@ const STEP_ICON = { done: icons.CheckCircle, failed: icons.Error } as const;
  *  @beta */
 export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsProps>('ChatSteps', function ChatSteps(props, ref) {
   const L = useSettings(words).labels;
-  const rest = omit(props, { steps: 1, className: 1 } as const);
+  const rest = omit(props, { steps: 1, children: 1, className: 1 } as const);
   const said = { running: L.chatStepRunning, done: L.chatStepDone, failed: L.chatStepFailed };
   return (
     <ol role="list" {...rest} ref={ref} className={cn('dk-chat-steps', props.className)} data-component="chat-steps">
@@ -271,14 +273,16 @@ export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsPr
 });
 
 export type ChatApprovalStatus = 'pending' | 'approved' | 'denied';
-export interface ChatApprovalProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
   /** What the assistant will do, in words: "Refund order 1042 ($24.00)". It names the card, and stays as its record. */
   children: React.ReactNode;
   /** More about it, such as the command it will run or the fields it will change. */
   detail?: React.ReactNode | undefined;
   /** 'pending' (default) asks; 'approved' and 'denied' leave a one-line record of the answer. */
   status?: ChatApprovalStatus | undefined;
+  /** Called by Approve: do the thing, then set status to 'approved'. */
   onApprove?: (() => void) | undefined;
+  /** Called by Deny: set status to 'denied'. */
   onDeny?: (() => void) | undefined;
 }
 
@@ -321,7 +325,7 @@ export const ChatApproval = /* @__PURE__ */ component<HTMLDivElement, ChatApprov
   );
 });
 
-export interface ChatCitationProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'children'> {
+export interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   /** Where the source is. */
   href: string;
   /** Its number in the reply, from 1. */

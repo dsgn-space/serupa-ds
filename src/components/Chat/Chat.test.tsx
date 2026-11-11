@@ -371,7 +371,7 @@ describe('ChatSteps', () => {
     await render(<ChatSteps steps={[{ id: 'a', label: 'Search', status: 'done', detail: '3 results' }, { id: 'b', label: 'Read', status: 'running' }, { id: 'c', label: 'Write', status: 'failed' }]} />);
     const items = [...document.querySelectorAll('ol li')];
     expect(items.map((li) => li.textContent)).toEqual(['Search, Done3 results', 'Read, In progress', 'Write, Failed']);
-    expect(items.map((li) => li.querySelector('svg, [role=status], .dk-loader') != null)).toEqual([true, true, true]);
+    expect(items.map((li) => li.firstElementChild!.getAttribute('aria-hidden'))).toEqual(['true', 'true', 'true']);   // each icon is decoration: the words say it
   });
 
   test('no steps draws nothing', async () => {

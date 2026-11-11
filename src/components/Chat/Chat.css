@@ -54,7 +54,7 @@
   cursor: pointer; list-style: none; font-weight: var(--font-medium);
 }
 .dk-chat-message__reasoning-toggle::-webkit-details-marker { display: none; }
-.dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); }
+@media (hover: hover) { .dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); } }
 .dk-chat-message__reasoning-toggle:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-chat-message__reasoning-icon { font-size: var(--spacing-4); }
 .dk-chat-message__reasoning[open] .dk-chat-message__reasoning-icon { rotate: var(--dk-chat-turn); }
@@ -100,7 +100,7 @@
   padding-inline: var(--spacing-1\.5); border: var(--border-width-1) solid var(--chat-divider, var(--border)); border-radius: var(--rounded-full);
   background: var(--chat-citation-bg, var(--surface)); color: var(--chat-text, var(--text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-decoration: none;
 }
-.dk-chat-citation:hover .dk-chat-citation__source { text-decoration: underline; }
+@media (hover: hover) { .dk-chat-citation:hover .dk-chat-citation__source { text-decoration: underline; } }
 .dk-chat-citation:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-chat-citation__index { font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
 .dk-chat-citation__source { min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -58,12 +58,12 @@ interface ChatStep {
     status: ChatStepStatus;
     detail?: React.ReactNode | undefined;
 }
-interface ChatStepsProps extends Omit<React.HTMLAttributes<HTMLOListElement>, "children"> {
+interface ChatStepsProps extends React.HTMLAttributes<HTMLOListElement> {
     steps: readonly ChatStep[];
 }
 declare const ChatSteps: React.ForwardRefExoticComponent<ChatStepsProps & React.RefAttributes<HTMLOListElement>>;
 type ChatApprovalStatus = "approved" | "denied" | "pending";
-interface ChatApprovalProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
     detail?: React.ReactNode | undefined;
     status?: ChatApprovalStatus | undefined;
@@ -71,7 +71,7 @@ interface ChatApprovalProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     onDeny?: (() => void) | undefined;
 }
 declare const ChatApproval: React.ForwardRefExoticComponent<ChatApprovalProps & React.RefAttributes<HTMLDivElement>>;
-interface ChatCitationProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
+interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     href: string;
     index: number;
     children?: React.ReactNode;
