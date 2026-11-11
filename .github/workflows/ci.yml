@@ -201,6 +201,7 @@ jobs:
           fetch-depth: ${{ needs.plan.outputs.since && '0' || '1' }}
       # A job that passed on this same tree against the same base passes again without running.
       - id: key
+        shell: bash
         env:
           JOB: ${{ matrix.group }}-${{ matrix.part }}-${{ matrix.shard }}
           SINCE: ${{ needs.plan.outputs.since }}
