@@ -5,6 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { List, ListItem } from '../../components/List/List';
 import { Splitter } from '../../components/Splitter/Splitter';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { useLocale } from '../../internal/provider';
 
 /* List and detail: a list of messages beside the one that's open, in two panes on a wide screen and one at a time on
@@ -17,6 +18,7 @@ import { useLocale } from '../../internal/provider';
    - 2.4.3: on a phone, opening a message puts focus on its heading, and Back puts it on the message it came from,
      still marked as open, so the place in the list is never lost. On a wide screen focus stays in the list.
    - 2.1.1: the panes' divider is a Splitter, moved with the arrow keys as well as by dragging.
+   - With no messages, an empty state says what will show up here, instead of two empty panes and "Messages (0)".
    Loading the messages is the app's job: pass them as `messages`, and onSelect hears which one is open. */
 
 export interface Message { id: string; from: string; subject: string; date: string; body: string }
@@ -109,9 +111,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
       <p className="m-0 text-sm text-text-muted">From {open.from}, <time dateTime={open.date}>{day(open.date, locale, 'long')}</time></p>
       <p className="m-0 max-w-prose">{open.body}</p>
     </section>
-  ) : (
-    <p className="m-0 p-4 text-text-muted">Choose a message to read it.</p>
-  );
+  ) : null;
 
   return (
     <div className="min-h-screen bg-surface-muted text-text">
@@ -121,13 +121,16 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 outline-none">
         <Heading level={1}>Inbox</Heading>
-        <div className="min-w-0 rounded-lg border border-border bg-surface">
+        {messages.length ? <div className="min-w-0 rounded-lg border border-border bg-surface">
           {wide ? (
             <Splitter defaultSize={35} min={25} max={60} separatorLabel="Resize the message list" className="h-96">
               {list}{detail}
             </Splitter>
           ) : showing && open ? detail : list}
-        </div>
+        </div> : (
+          <EmptyState icon="inbox" title="No messages yet" headingLevel={2} variant="dashed"
+            description="When someone writes to you, their message shows up here." />
+        )}
       </main>
     </div>
   );

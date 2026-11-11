@@ -38,6 +38,8 @@ export interface SignUpProps {
   initial?: Partial<SignUpValues> | undefined;
   /** The form passed its checks: create the account and send the code. A rejected promise stays on the form. */
   onSubmit?: ((values: SignUpValues) => unknown) | undefined;
+  /** Starts as after `onSubmit` was rejected: the form, with its answers, saying the account wasn't created. */
+  failed?: boolean | undefined;
   /** The app's check of the code. Default: "123456". */
   verify?: ((code: string) => boolean) | undefined;
 }
@@ -66,7 +68,7 @@ export function signUpProblems(v: SignUpValues): ErrorSummaryItem[] {
 const empty: SignUpValues = { name: '', email: '', phone: '', password: '', terms: false };
 
 /** The sign-up page: a skip link, then main with the step's form. */
-export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c === '123456' }: SignUpProps) {
+export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed, verify = (c) => c === '123456' }: SignUpProps) {
   const [step, setStep] = React.useState<SignUpStep>(start);
   const [v, setV] = React.useState<SignUpValues>({ ...empty, ...initial });
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
@@ -75,7 +77,7 @@ export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c ==
   const [codeError, setCodeError] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   // onSubmit rejected (the server refused, or the network failed): say so over the button, and keep what was typed.
-  const [failed, setFailed] = React.useState(false);
+  const [failed, setFailed] = React.useState(!!startFailed);
   const heading = React.useRef<HTMLHeadingElement>(null);
   const moved = React.useRef(false);
   React.useEffect(() => { if (moved.current) heading.current?.focus(); }, [step]);

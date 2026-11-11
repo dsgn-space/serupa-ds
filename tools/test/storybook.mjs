@@ -178,6 +178,9 @@ async function pageRules(page) {
     if (twice.length) v.push(`page: the id ${twice.slice(0, 3).map((x) => `"${x}"`).join(', ')} is used twice`);
     return v;
   }, PAGE_RULES);
+  // A story that opens on a modal dialog (a delete that failed) keeps Tab inside the dialog, as it should: the page
+  // behind it is inert, so its skip link is checked by the story without the dialog.
+  if (await page.evaluate(() => !!document.querySelector('dialog:modal, [aria-modal="true"]'))) return out;
   await page.evaluate(() => { document.activeElement?.blur(); window.scrollTo(0, 0); });
   await page.keyboard.press('Tab');
   const skip = await page.evaluate(() => {

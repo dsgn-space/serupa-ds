@@ -48,6 +48,16 @@ describe('Patterns/Sign-up', () => {
     expect(document.querySelector('[role=alert]')).toBe(null);
   });
 
+  test('failed starts as after a refused try: the form with its answers and the alert; trying again goes on', async () => {
+    const onSubmit = vi.fn(() => Promise.resolve());
+    await render(<SignUp failed onSubmit={onSubmit} initial={{ name: 'Ana', email: 'ana@example.com', password: 'blue whales sing', terms: true }} />);
+    await expect.element(page.getByText('Couldn’t create your account. Check your connection and try again.')).toBeVisible();
+    expect(input('sign-up-email').value).toBe('ana@example.com');
+    await userEvent.click(page.getByRole('button', { name: 'Create account' }));
+    await expect.poll(() => document.querySelector('h1')!.textContent).toBe('Check your email');
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   test('each rule says done as it is met', async () => {
     await render(<SignUp initial={{ email: 'ana@example.com' }} />);
     await userEvent.click(input('sign-up-password'));

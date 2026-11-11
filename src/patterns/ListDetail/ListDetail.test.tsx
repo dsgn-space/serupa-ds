@@ -77,15 +77,13 @@ describe('Patterns/List and detail', () => {
     expect(document.querySelector('main')!.textContent).not.toMatch(/\d{4}-\d{2}-\d{2}/);
   });
 
-  test('phone, nothing to open: a note instead of an empty pane', async () => {
-    await page.viewport(390, 800);
-    try {
-      await render(<ListDetail messages={[]} />);
-      expect(regions()).toEqual(['Messages (0)']);
-    } finally {
-      await page.viewport(900, 700);
+  test('no messages, wide or on a phone: an empty state that says what will show up here, not empty panes', async () => {
+    for (const [width, height] of [[390, 800], [900, 700]] as const) {
+      await page.viewport(width, height);
+      const screen = await render(<ListDetail messages={[]} />);
+      await expect.element(screen.getByRole('heading', { level: 2, name: 'No messages yet' })).toBeVisible();
+      expect([regions(), document.querySelector('[role="separator"]'), document.body.textContent?.includes('When someone writes to you')]).toEqual([[], null, true]);
+      await screen.unmount();
     }
-    await render(<ListDetail messages={[]} />);
-    expect(document.body.textContent).toMatch(/Choose a message to read it/);
   });
 });
