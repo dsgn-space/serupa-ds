@@ -7,6 +7,7 @@ import { isComposing } from '../../internal/ime';
 import { activeIn } from '../../internal/root';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { Loader } from '../Loader/Loader';
 import { Icon } from '../Icon/Icon';
 import { RelativeTime } from '../RelativeTime/RelativeTime';
 import { Textarea } from '../Textarea/Textarea';
@@ -152,14 +153,24 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   attachments?: React.ReactNode | undefined;
   /** The text is still arriving (a streamed reply): marked aria-busy, so screen readers wait for it whole. Default: false. */
   streaming?: boolean | undefined;
+  /** A reply that hasn't started yet: "Thinking…" in place of the text, said once by screen readers. Its words replace it when they come. Default: false. */
+  thinking?: boolean | undefined;
+  /** How the reply was reached (an assistant's reasoning), in a section closed by default above the text. */
+  reasoning?: React.ReactNode | undefined;
+  /** How long the reasoning took, in seconds, for the section's toggle: "Thought for 12 seconds". Without it, "Reasoning". */
+  reasoningTime?: number | undefined;
+  /** The steps taken on the way to the reply (tools called, searches), above the text: a ChatSteps list. */
+  steps?: readonly ChatStep[] | undefined;
 }
 
 /** One message in a Chat: author, avatar, time, text and attachments, with sending and failed states.
  *  @beta */
 export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessageProps>('ChatMessage', function ChatMessage(props, ref) {
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { children: 1, author: 1, avatar: 1, time: 1, own: 1, hideAuthor: 1, status: 1, onRetry: 1, attachments: 1, streaming: 1, className: 1 } as const);
+  const rest = omit(props, { children: 1, author: 1, avatar: 1, time: 1, own: 1, hideAuthor: 1, status: 1, onRetry: 1, attachments: 1, streaming: 1, thinking: 1, reasoning: 1, reasoningTime: 1, steps: 1, className: 1 } as const);
   const own = !!props.own, failed = props.status === 'failed';
+  const hasText = props.children != null && props.children !== '';
+  const time = Number(props.reasoningTime);
   const showAuthor = !props.hideAuthor && (props.author != null || own);
   return (
     <div {...rest} ref={ref} className={cn('dk-chat-message', own && 'dk-chat-message--own', failed && 'dk-chat-message--failed', props.hideAuthor && 'dk-chat-message--follow', props.className)}
@@ -172,7 +183,18 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
             {props.time != null ? <RelativeTime className="dk-chat-message__time" date={props.time} /> : null}
           </div>
         ) : props.hideAuthor ? <span className="dk-visually-hidden">{own ? L.chatYou : props.author}</span> : null}
-        {props.children != null && props.children !== '' ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
+        {props.reasoning != null ? (
+          <details className="dk-chat-message__reasoning">
+            <summary className="dk-chat-message__reasoning-toggle">
+              <Icon icon={icons.ExpandMore} className="dk-chat-message__reasoning-icon" />
+              {props.reasoningTime != null && isFinite(time) && time >= 0 ? L.chatThoughtFor(Math.round(time)) : L.chatReasoning}
+            </summary>
+            <div className="dk-chat-message__reasoning-text" dir="auto">{props.reasoning}</div>
+          </details>
+        ) : null}
+        {props.steps && props.steps.length ? <ChatSteps steps={props.steps} /> : null}
+        {hasText ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
+        {props.thinking && !hasText ? <Loader variant="text" size="sm" delay={0} label={L.chatThinking} className="dk-chat-message__thinking" /> : null}
         {props.attachments ? <div className="dk-chat-message__attachments">{props.attachments}</div> : null}
         {props.status === 'sending' ? <span className="dk-chat-message__status">{L.chatSending}</span> : null}
         {failed ? (
@@ -183,6 +205,48 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
         ) : null}
       </div>
     </div>
+  );
+});
+
+export type ChatStepStatus = 'running' | 'done' | 'failed';
+export interface ChatStep {
+  /** Kept across renders, so a step keeps its place as the list grows. */
+  id: string;
+  /** What the step does, in words: "Searching the help centre". */
+  label: React.ReactNode;
+  status: ChatStepStatus;
+  /** One line more, such as what it found or why it failed. */
+  detail?: React.ReactNode | undefined;
+}
+export interface ChatStepsProps extends Omit<React.HTMLAttributes<HTMLOListElement>, 'children'> {
+  /** The steps an assistant takes on its way to a reply (tool calls, searches), in order. */
+  steps: readonly ChatStep[];
+}
+
+const STEP_ICON = { done: icons.CheckCircle, failed: icons.Error } as const;
+
+/** An assistant's steps on its way to a reply, such as the tools it calls, each in progress, done or failed, in words
+ *  as well as by its icon. Put it in a ChatMessage, above the text.
+ *  @beta */
+export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsProps>('ChatSteps', function ChatSteps(props, ref) {
+  const L = useSettings(words).labels;
+  const rest = omit(props, { steps: 1, className: 1 } as const);
+  const said = { running: L.chatStepRunning, done: L.chatStepDone, failed: L.chatStepFailed };
+  return (
+    <ol {...rest} ref={ref} className={cn('dk-chat-steps', props.className)} data-component="chat-steps">
+      {(props.steps || []).map((step) => {
+        const status: ChatStepStatus = step.status === 'done' || step.status === 'failed' ? step.status : 'running';
+        return (
+          <li key={step.id} className={cn('dk-chat-steps__step', 'dk-chat-steps__step--' + status)} data-status={status}>
+            {status === 'running' ? <Loader size="sm" delay={0} label="" className="dk-chat-steps__icon" /> : <Icon icon={STEP_ICON[status]} className="dk-chat-steps__icon" />}
+            <span className="dk-chat-steps__text">
+              <span className="dk-chat-steps__label">{step.label}<span className="dk-visually-hidden">{', ' + said[status]}</span></span>
+              {step.detail != null ? <span className="dk-chat-steps__detail">{step.detail}</span> : null}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
   );
 });
 

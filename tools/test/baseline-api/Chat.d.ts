@@ -1,4 +1,4 @@
-// exports: Chat, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, ChatMessage, type ChatMessageProps, type ChatProps
+// exports: Chat, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, ChatMessage, type ChatMessageProps, type ChatProps, type ChatStep, ChatSteps, type ChatStepsProps, type ChatStepStatus
 interface ChatLabels {
     chatNewMessages: (count: number) => string;
     chatLoadOlder: string;
@@ -10,6 +10,12 @@ interface ChatLabels {
     chatMessage: string;
     chatSend: string;
     chatStop: string;
+    chatThinking: string;
+    chatThoughtFor: (seconds: number) => string;
+    chatReasoning: string;
+    chatStepRunning: string;
+    chatStepDone: string;
+    chatStepFailed: string;
 }
 interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -29,8 +35,23 @@ interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
     onRetry?: (() => void) | undefined;
     attachments?: React.ReactNode | undefined;
     streaming?: boolean | undefined;
+    thinking?: boolean | undefined;
+    reasoning?: React.ReactNode | undefined;
+    reasoningTime?: number | undefined;
+    steps?: readonly ChatStep[] | undefined;
 }
 declare const ChatMessage: React.ForwardRefExoticComponent<ChatMessageProps & React.RefAttributes<HTMLDivElement>>;
+type ChatStepStatus = "done" | "failed" | "running";
+interface ChatStep {
+    id: string;
+    label: React.ReactNode;
+    status: ChatStepStatus;
+    detail?: React.ReactNode | undefined;
+}
+interface ChatStepsProps extends Omit<React.HTMLAttributes<HTMLOListElement>, "children"> {
+    steps: readonly ChatStep[];
+}
+declare const ChatSteps: React.ForwardRefExoticComponent<ChatStepsProps & React.RefAttributes<HTMLOListElement>>;
 interface ChatDividerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     date?: Date | number | string | undefined;
     children?: React.ReactNode;

@@ -81,6 +81,16 @@
             "cssVar": "--chat-focus-ring"
           }
         }
+      },
+      "step-done": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "ChatSteps: a done step's check (3:1 on the surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-step-done"
+          }
+        }
       }
     },
     "radius": {
@@ -133,6 +143,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--chat-bubble-padding-y"
+          }
+        }
+      },
+      "reasoning-indent": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "ChatMessage: how far the reasoning text sits in from its rule.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-reasoning-indent"
           }
         }
       }

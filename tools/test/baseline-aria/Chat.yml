@@ -1,3 +1,24 @@
+# AgentReply
+- log "Conversation with Support":
+  - text: You Why was order 1042 refunded twice? Assistant
+  - group: Thought for 12 seconds
+  - list:
+    - listitem: Read the payment log for order 1042 , Done 2 refunds, 3 minutes apart
+    - listitem: Searched support tickets , Done
+    - listitem: Checked the bank's status page , Failed It didn't answer
+  - text: The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it. You Yes, please. Assistant
+  - list:
+    - listitem: Opening a ticket , In progress
+  - progressbar "Thinking…"
+- textbox "Message":
+  - /placeholder: Ask the assistant
+- combobox "Model":
+  - option "Fast"
+  - option "Balanced" [selected]
+  - option "Deep"
+- meter "Context used"
+- button "Send" [disabled]
+
 # ComposerWithFiles
 - text: Site photo.jpg Image 3.4 MB
 - progressbar "Site photo.jpg"
@@ -84,6 +105,12 @@
   - button "Retry"
 - textbox "Message": Draft reply
 - button "Send"
+
+# Steps
+- list:
+  - listitem: Searched the help centre , Done 3 articles
+  - listitem: Called the orders API , Failed Timed out after 10 seconds
+  - listitem: Trying the orders API again , In progress
 
 # Streaming
 - log "Conversation with Support": You Summarise this contract in three points. Assistant 1. The term is 12 months, renewing

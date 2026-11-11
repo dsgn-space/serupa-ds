@@ -48,6 +48,30 @@
 .dk-chat-composer__attachments { display: flex; flex-wrap: wrap; gap: var(--spacing-2); }
 .dk-chat-composer__row { display: flex; align-items: flex-end; gap: var(--spacing-2); }
 .dk-chat-composer__field { flex: auto; min-inline-size: var(--spacing-0); }
+.dk-chat-message__reasoning { --dk-chat-turn: 180deg; max-inline-size: var(--sizing-full); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-chat-message__reasoning-toggle {
+  display: inline-flex; align-items: center; gap: var(--spacing-1); min-block-size: var(--spacing-6); border-radius: var(--rounded-sm);
+  cursor: pointer; list-style: none; font-weight: var(--font-medium);
+}
+.dk-chat-message__reasoning-toggle::-webkit-details-marker { display: none; }
+.dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); }
+.dk-chat-message__reasoning-toggle:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-chat-message__reasoning-icon { font-size: var(--spacing-4); }
+.dk-chat-message__reasoning[open] .dk-chat-message__reasoning-icon { rotate: var(--dk-chat-turn); }
+.dk-chat-message__reasoning-text {
+  margin-block-start: var(--spacing-1); padding-inline-start: var(--chat-reasoning-indent, var(--spacing-3));
+  border-inline-start: var(--border-width-2) solid var(--chat-divider, var(--border)); white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.dk-chat-steps { display: flex; flex-direction: column; gap: var(--spacing-1); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; font-size: var(--text-xs); line-height: var(--text-xs--line-height); color: var(--chat-muted, var(--text-muted)); }
+.dk-chat-steps__step { display: flex; align-items: flex-start; gap: var(--spacing-2); }
+.dk-chat-steps__icon { flex: none; margin-block: var(--spacing-0); }
+.dk-chat-steps__icon.dk-icon { font-size: var(--spacing-4); }
+.dk-chat-steps__step--done .dk-chat-steps__icon { color: var(--chat-step-done, var(--success-text)); }
+.dk-chat-steps__step--failed .dk-chat-steps__icon { color: var(--chat-error, var(--danger-text)); }
+.dk-chat-steps__text { display: flex; flex-direction: column; min-inline-size: var(--spacing-0); }
+.dk-chat-steps__label { color: var(--chat-text, var(--text)); overflow-wrap: anywhere; }
+.dk-chat-steps__step--failed .dk-chat-steps__label { color: var(--chat-error, var(--danger-text)); }
+.dk-chat-steps__detail { overflow-wrap: anywhere; }
 /* Forced colors drop the bubble fills: an outline keeps each message's edge. */
 @media (forced-colors: active) { .dk-chat-message__bubble { border-color: CanvasText; } }
 }

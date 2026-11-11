@@ -39,6 +39,12 @@ Drawn from the `Statuses` story.
 5. **Status** (`.dk-chat-message__status`): "Sending…", or "Not sent" with Retry.
 6. **Composer** (`.dk-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
 
+An assistant's reply (the `AgentReply` story) adds three parts above its bubble:
+
+7. **Reasoning** (`.dk-chat-message__reasoning`): "Thought for 12 seconds", closed until the reader opens it.
+8. **Steps** (`.dk-chat-steps`): the tools it called, each in progress, done or failed.
+9. **Thinking** (`.dk-chat-message__thinking`): "Thinking…" with a shine, until the first words arrive.
+
 While the reader is further up and new messages arrive, a "3 new messages" button (`.dk-chat__jump`) sits at the bottom of the log; it scrolls down and focuses the log.
 
 ## Usage
@@ -52,6 +58,28 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 - Own messages: `own`, with `status="sending"` until the server confirms and `status="failed"` plus `onRetry` when it doesn't.
 - Files: pass [Attachment](../Attachment/README.md) elements to `attachments`, on a message or on the composer.
 - A streaming reply: grow the last message's text, with `streaming` on it, and `streaming` plus `onStop` on the composer. Take both off when it's done.
+
+### An assistant's reply
+
+- Before any words arrive, set `thinking` on the reply: it says "Thinking…" until its text comes, then the text takes its place.
+- The model's reasoning goes in `reasoning`, with `reasoningTime` in seconds: the reader sees "Thought for 12 seconds" and opens it when they want the why. Leave the time out and it says "Reasoning".
+- Tools it calls go in `steps`, in order, each `{ id, label, status, detail? }` with `status` `"running"`, `"done"` or `"failed"`. Give each a stable `id` and update its status as it ends. `ChatSteps` draws the same list on its own, outside a message.
+- A model picker and how much context is used sit in the composer's `actions`: a small [Select](../Select/README.md) named "Model" and a small [Meter](../Meter/README.md) whose `formatValue` says it in words ("12,400 of 200,000 tokens used"). The `AgentReply` story shows both.
+
+```tsx
+<ChatMessage
+  author="Assistant"
+  reasoning={reasoningText}
+  reasoningTime={12}
+  steps={[
+    { id: "search", label: "Searched the help centre", status: "done", detail: "3 articles" },
+    { id: "order", label: "Looking up order 4417", status: "running" },
+  ]}
+  thinking={!replyText}
+>
+  {replyText}
+</ChatMessage>
+```
 
 ## Behavior
 
@@ -70,6 +98,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 - **Status:** "Sending…" and "Not sent" are words under the message, not only a colour; a failed message also has a danger outline.
 - **Send:** an icon button named "Send" (and "Stop"); with nothing to send it's `aria-disabled` rather than removed from the Tab order.
 - **Contrast:** message text reads 4.5:1 on both bubbles, and times, dividers and "Not sent" 4.5:1 on the page, in all six themes (`Chat.test.tsx`).
+- **An assistant at work:** "Thinking…" is a progress bar with that name. Reasoning is a native disclosure (`details`), opened with Enter or Space. Each step says its state in words after its label ("Searched the help centre, Done"), not only by its icon. Steps are read with the reply when the log adds it; a step that changes later isn't announced, so say the outcome in the reply.
 - **What's still yours:** announcing a failure out loud if it matters right then (the log reads only additions), and moving focus after a send fails.
 
 ### Keyboard
@@ -108,6 +137,10 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 | `onRetry` | `() => void` | | Adds Retry to a failed message. |
 | `attachments` | `ReactNode` | | Attachment elements under the text. |
 | `streaming` | `boolean` | `false` | The text is still arriving. |
+| `thinking` | `boolean` | `false` | "Thinking…" while an assistant has no words yet; the text replaces it. |
+| `reasoning` | `ReactNode` | | The assistant's reasoning, in a section closed until it's opened. |
+| `reasoningTime` | `number` | | How long it thought, in seconds: "Thought for 12 seconds". |
+| `steps` | `ChatStep[]` | | Tools it called on the way, above the text (see ChatSteps). |
 
 ### ChatDivider
 
@@ -115,6 +148,14 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 | --- | --- | --- | --- |
 | `date` | `Date \| number \| string` | | "Today", "Yesterday", or the date in the locale's words. |
 | `children` | `ReactNode` | | Your own words in place of the date. |
+
+### ChatSteps
+
+The steps an assistant takes on its way to a reply, as an ordered list. `ChatMessage` draws it from `steps`; use it alone outside a message.
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `steps` | `ChatStep[]` | | Each `{ id, label, status, detail? }`; `status` is `"running"`, `"done"` or `"failed"`. |
 
 ### ChatComposer
 
@@ -148,9 +189,11 @@ Each is an optional override: set it on the page, a container or one Chat. The l
 | `--chat-error` | `danger-text` | "Not sent" (4.5:1 on the page). |
 | `--chat-divider` | `border` | The day divider's lines. |
 | `--chat-focus-ring` | `focus-ring` | The ring around the focused conversation. |
+| `--chat-step-done` | `success-text` | ChatSteps: a done step's check (3:1 on the surface). |
 | `--chat-bubble-radius` | `rounded-xl` | A bubble's corners (12px). |
 | `--chat-padding` | `spacing-4` | Space around the conversation and the composer (16px). |
 | `--chat-gap` | `spacing-3` | Space between messages (12px). |
 | `--chat-bubble-padding-x` | `spacing-3` | Space at a bubble's sides (12px). |
 | `--chat-bubble-padding-y` | `spacing-2` | Space above and below a bubble's text (8px). |
+| `--chat-reasoning-indent` | `spacing-3` | ChatMessage: how far the reasoning text sits in from its rule. |
 <!-- token-table:end -->

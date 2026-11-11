@@ -16,6 +16,15 @@ export interface ChatLabels {
   chatMessage: string;
   chatSend: string;
   chatStop: string;
+  /** ChatMessage: the status line while a reply hasn't started, said once by screen readers. */
+  chatThinking: string;
+  /** ChatMessage: the reasoning section's toggle, given how many seconds it took, or without a time. */
+  chatThoughtFor: (seconds: number) => string;
+  chatReasoning: string;
+  /** ChatSteps: each step's state in words, after its name. */
+  chatStepRunning: string;
+  chatStepDone: string;
+  chatStepFailed: string;
 }
 export const en: ChatLabels = {
   chatNewMessages: (count) => count === 1 ? '1 new message' : `${count} new messages`,
@@ -28,6 +37,12 @@ export const en: ChatLabels = {
   chatMessage: 'Message',
   chatSend: 'Send',
   chatStop: 'Stop',
+  chatThinking: 'Thinking…',
+  chatThoughtFor: (seconds) => seconds === 1 ? 'Thought for 1 second' : `Thought for ${seconds} seconds`,
+  chatReasoning: 'Reasoning',
+  chatStepRunning: 'In progress',
+  chatStepDone: 'Done',
+  chatStepFailed: 'Failed',
 };
 export const id: ChatLabels = {
   chatNewMessages: (count) => `${count} pesan baru`,
@@ -40,4 +55,10 @@ export const id: ChatLabels = {
   chatMessage: 'Pesan',
   chatSend: 'Kirim',
   chatStop: 'Berhenti',
+  chatThinking: 'Berpikir…',
+  chatThoughtFor: (seconds) => `Berpikir selama ${seconds} detik`,
+  chatReasoning: 'Penalaran',
+  chatStepRunning: 'Berjalan',
+  chatStepDone: 'Selesai',
+  chatStepFailed: 'Gagal',
 };
