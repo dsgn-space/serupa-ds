@@ -288,7 +288,7 @@ describe('Textarea actions', () => {
       <button id="next">Next</button>
     </div></EnUS>;
   }
-  const row = () => el('ac').parentElement!.querySelector<HTMLElement>('.dk-textarea__actions')!;
+  const row = () => el('ac').parentElement!.querySelector<HTMLElement>('fieldset')!;
   test('a row under the text, inside the box, its buttons at the end and after the field in the Tab order; it groups nothing for a screen reader', async () => {
     await render(<Comment />);
     const b = el('ac').parentElement!.getBoundingClientRect(), t = el('ac').getBoundingClientRect(), r = row().getBoundingClientRect(), send = el('send').getBoundingClientRect();
@@ -313,7 +313,7 @@ describe('Textarea actions', () => {
 
   test('with showCount the count starts the row, still describing the field', async () => {
     await render(<Comment showCount />);
-    const c = row().querySelector<HTMLElement>('.dk-textarea__count')!;
+    const c = document.getElementById(el('ac').getAttribute('aria-describedby')!.split(' ').pop()!)!;   // the count, found as what describes the field
     expect([row().firstElementChild === c, c.textContent, el('ac').getAttribute('aria-describedby') === c.id, Math.round(c.getBoundingClientRect().left + parseFloat(css(c).paddingLeft) - el('ac').getBoundingClientRect().left)]).toEqual([true, '10 / 200', true, 12]);   // its text lines up with the field's text
   });
 });
