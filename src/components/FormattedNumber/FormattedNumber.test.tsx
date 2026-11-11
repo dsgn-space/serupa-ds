@@ -121,3 +121,37 @@ describe('FormattedNumber: no negative zero (GR84)', () => {
     expect(renderToString(<FormattedNumber value={-0} locale="en-US" />)).toContain('>0</data>');
   });
 });
+
+describe('FormattedNumber: animate', () => {
+  const changed = (id: string) => Array.from(el(id).querySelectorAll('[data-changed]'), (s) => s.textContent);
+
+  test('the characters that changed are marked, lined up from the end; the text and value stay whole', async () => {
+    const { rerender } = await render(<FormattedNumber id="a1" value={9500} locale="en-US" animate />);
+    expect([el('a1').textContent, changed('a1')]).toEqual(['9,500', []]);
+    await rerender(<FormattedNumber id="a1" value={10500} locale="en-US" animate />);
+    expect([el('a1').textContent, el('a1').value, changed('a1')]).toEqual(['10,500', '10500', ['10']]);
+    await rerender(<FormattedNumber id="a1" value={10520} locale="en-US" animate />);
+    expect(changed('a1')).toEqual(['2']);
+  });
+
+  test('a re-render with the same value keeps the marked span; without animate, or on the server, it is plain text', async () => {
+    const { rerender } = await render(<FormattedNumber id="a2" value={12} locale="en-US" animate className="x" />);
+    await rerender(<FormattedNumber id="a2" value={13} locale="en-US" animate className="x" />);
+    const span = el('a2').querySelector('[data-changed]');
+    await rerender(<FormattedNumber id="a2" value={13} locale="en-US" animate className="y" />);
+    expect([span?.isConnected, el('a2').querySelector('[data-changed]') === span, el('a2').className]).toEqual([true, true, 'dk-formatted-number y']);
+
+    const plain = await render(<FormattedNumber id="a3" value={1} locale="en-US" />);
+    await plain.rerender(<FormattedNumber id="a3" value={2} locale="en-US" />);
+    expect([el('a3').children.length, el('a3').textContent]).toEqual([0, '2']);
+    expect(renderToString(<FormattedNumber value={5} locale="en-US" animate />)).toContain('>5</data>');
+  });
+
+  test('the change fades in over motion-change-sm while motion is allowed, and the span stays inline', async () => {
+    const { rerender } = await render(<FormattedNumber id="a4" value={1} locale="en-US" animate />);
+    await rerender(<FormattedNumber id="a4" value={2} locale="en-US" animate />);
+    const s = getComputedStyle(el('a4').querySelector('[data-changed]') as HTMLElement);
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    expect([s.display, s.animationName]).toEqual(['inline', reduced ? 'none' : 'dk-formatted-number-change']);
+  });
+});

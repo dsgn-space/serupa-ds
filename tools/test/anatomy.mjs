@@ -14,7 +14,7 @@ const DIR = path.join(PROJECT, 'src', 'components');
 // Components whose guide has no Anatomy section yet. The check fails when one gets it, so the entry is removed.
 const TODO = new Set([]);
 // Components that have parts but no story to draw them on, and why.
-const EXEMPT = { Toast: "toasts appear when toast() is called, not in a story's markup" };
+const EXEMPT = { Toast: "toasts appear when toast() is called, not in a story's markup", FormattedNumber: "its one part marks the characters a change replaced, so it exists only after the value changes, never in a story's first markup" };
 
 const section = (md) => {
   const at = md.search(/^## Anatomy\s*$/m);

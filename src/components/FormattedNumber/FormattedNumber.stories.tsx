@@ -32,6 +32,22 @@ export const Locales: Story = {
   </ul>,
 };
 
+/** With `animate`, only the characters that changed fade in: press the buttons and watch the total. */
+export const Animated: Story = {
+  render: function Animated() {
+    const [total, setTotal] = React.useState(1_485_000);
+    return (
+      <div style={{ display: 'grid', gap: 'var(--spacing-3)', justifyItems: 'start' }}>
+        <p style={{ margin: 0 }}>Total: <FormattedNumber value={total} format="currency" currency="IDR" animate /></p>
+        <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+          <button type="button" onClick={() => setTotal((t) => t + 15_000)}>Add Rp 15.000</button>
+          <button type="button" onClick={() => setTotal((t) => t + 1_000_000)}>Add Rp 1.000.000</button>
+        </div>
+      </div>
+    );
+  },
+};
+
 export const LongValue: Story = {
   render: () => (
     <p style={{ margin: 0, width: 120 }}>
