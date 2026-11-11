@@ -244,7 +244,7 @@ export const labels: SerupaLabels = {
   completed: 'выполнено',
   hasError: 'есть ошибка',
   hasWarning: 'требует внимания',
-  stepOf: (step, total) => 'Шаг ' + step + ' из ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Шаг ' + stepText + ' из ' + totalText,
   tourBack: 'Назад',
   tourNext: 'Далее',
   tourDone: 'Готово',

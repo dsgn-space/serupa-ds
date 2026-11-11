@@ -237,7 +237,7 @@ export const labels: SerupaLabels = {
   completed: '完了',
   hasError: 'エラーがあります',
   hasWarning: '確認が必要です',
-  stepOf: (step, total) => 'ステップ ' + step + '/' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'ステップ ' + stepText + '/' + totalText,
   tourBack: '戻る',
   tourNext: '次へ',
   tourDone: '完了',

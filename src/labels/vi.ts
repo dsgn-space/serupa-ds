@@ -238,7 +238,7 @@ export const labels: SerupaLabels = {
   completed: 'đã hoàn tất',
   hasError: 'có lỗi',
   hasWarning: 'cần chú ý',
-  stepOf: (step, total) => 'Bước ' + step + ' trên ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Bước ' + stepText + ' trên ' + totalText,
   tourBack: 'Quay lại',
   tourNext: 'Tiếp',
   tourDone: 'Xong',

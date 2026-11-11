@@ -238,7 +238,7 @@ export const labels: SerupaLabels = {
   completed: 'selesai',
   hasError: 'ada ralat',
   hasWarning: 'perlu perhatian',
-  stepOf: (step, total) => 'Langkah ' + step + ' daripada ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Langkah ' + stepText + ' daripada ' + totalText,
   tourBack: 'Kembali',
   tourNext: 'Seterusnya',
   tourDone: 'Selesai',

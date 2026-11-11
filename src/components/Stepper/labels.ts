@@ -6,18 +6,20 @@ export interface StepperLabels {
   hasError: string;
   /** Stepper: read after the title of a step with status "warning". */
   hasWarning: string;
-  /** Stepper, when the steps don't fit side by side and it shows only the current step's title: "Step 2 of 4". */
-  stepOf: (step: number, total: number) => string;
+  /** Stepper, when the steps don't fit side by side and it shows only the current step's title, and Tour's count:
+   *  "Step 2 of 4". `stepText` and `totalText` are the numbers in the locale's digits; `step` and `total` are there
+   *  for anything that needs the numbers themselves. */
+  stepOf: (step: number, total: number, stepText: string, totalText: string) => string;
 }
 export const en: StepperLabels = {
   completed: 'completed',
   hasError: 'has an error',
   hasWarning: 'needs attention',
-  stepOf: (step, total) => 'Step ' + step + ' of ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Step ' + stepText + ' of ' + totalText,
 };
 export const id: StepperLabels = {
   completed: 'selesai',
   hasError: 'ada kesalahan',
   hasWarning: 'perlu diperhatikan',
-  stepOf: (step, total) => 'Langkah ' + step + ' dari ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Langkah ' + stepText + ' dari ' + totalText,
 };
