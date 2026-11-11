@@ -114,6 +114,25 @@ describe('Patterns/Session time-out', () => {
     await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
   });
 
+  test('"Stay signed in" is busy while the server answers; when it can\'t, the warning stays open and says so, and trying again works', async () => {
+    let fail = true, settle = () => {};
+    const onExtend = vi.fn(() => new Promise<void>((ok, no) => { settle = () => (fail ? no(new Error('offline')) : ok()); }));
+    const screen = await render(<SessionTimeout duration={30} warnBefore={29} onExtend={onExtend} />);
+    const stay = screen.getByRole('button', { name: 'Stay signed in' });
+    await stay.click(WAIT);
+    await expect.element(stay).toHaveAttribute('aria-busy', 'true');
+    (stay.element() as HTMLButtonElement).click();
+    expect(onExtend).toHaveBeenCalledTimes(1);
+    settle();
+    await expect.element(screen.getByRole('alertdialog').getByText('Couldn’t keep you signed in. Check your connection and try again.')).toBeVisible();
+    await vi.waitFor(() => expect(said()).toContain('Couldn’t keep you signed in.'));
+    expect(stay.element().hasAttribute('aria-busy')).toBe(false);
+    fail = false;
+    await stay.click();
+    settle();
+    await vi.waitFor(() => expect(document.querySelector('dialog[open]')).toBeNull());
+  });
+
   test('drafts are kept for the tab only, never in localStorage, and only the subject and message', async () => {
     window.sessionStorage.setItem(KEY, JSON.stringify({ subject: 'Hi', message: 'There', password: 'hunter2' }));
     const screen = await render(<SessionTimeout saveKey={KEY} />);

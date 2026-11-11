@@ -135,8 +135,20 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
     setLeft(0);
     onExpire?.();
   };
+  // "Stay signed in" shows it's working while onExtend runs, and takes no second press. When it fails, the warning stays
+  // open and says so, with the time still counting, so the person can try again or save their work.
+  const [extending, setExtending] = React.useState(false);
+  const [extendFailed, setExtendFailed] = React.useState(false);
+  const extendingNow = React.useRef(false);
   const extend = async () => {
-    try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch { /* the session runs out as warned */ }
+    if (extendingNow.current) return;
+    extendingNow.current = true;
+    setExtending(true);
+    setExtendFailed(false);
+    try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch {
+      setExtendFailed(true);
+      announce('Couldn’t keep you signed in. Check your connection and try again.');
+    } finally { extendingNow.current = false; setExtending(false); }
   };
   // While a send is under way the button shows it and takes no more presses, so a second click doesn't send the
   // message twice (the ref covers a second press before the re-render).
@@ -198,10 +210,11 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
         onOpenChange={(open) => { if (!open) void extend(); }}
         footer={<>
           <Button variant="secondary" onClick={signOut}>Sign out</Button>
-          <Button data-autofocus onClick={() => void extend()}>Stay signed in</Button>
+          <Button data-autofocus loading={extending} onClick={() => void extend()}>Stay signed in</Button>
         </>}>
         <p className="m-0">You’ll be signed out in <strong>{timeLeft(left)}</strong> because nothing has happened for a while.</p>
         <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you’ve typed is kept. Signing out clears it.</p>
+        {extendFailed ? <p className="m-0 mt-2 text-sm text-danger-text">Couldn’t keep you signed in. Check your connection and try again.</p> : null}
       </Dialog>
     </div>
   );
