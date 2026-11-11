@@ -14,8 +14,10 @@
 #   ubuntu-24.04 runners had them), and tools/setup.mjs adds the Node major devEngines asks for and the Chromium
 #   revision this Playwright pins. The image's own Node and browsers are only a starting point.
 # - build makes dist/ and storybook-static/ once; the test jobs take them as artifacts.
-# - The suite's groups run in parallel: checks, visual and storybook in three shards each (SERUPA_SHARD). Three, not more: GitLab counts
-#   every job against the project's 500 in flight, and three keeps each shard within the component tests' 7 minutes.
+# - The suite's groups run in parallel: visual, storybook and the component tests in three shards each, the checks and
+#   the component tests' second language in two (SERUPA_SHARD). No more than that: GitLab's free tier counts every job
+#   against the project's 500 in flight, so a merge request's pipeline is kept to about 21 jobs (it was 26), and each
+#   shard stays within about 8 minutes.
 # - Results are kept (.result-cache): a job that passed on the same tree, against the same base, passes again at
 #   once without running. The same commit's next pipeline (a label, a description, auto-merge) costs seconds.
 # - Nightly: the pipeline schedule on main (Build > Pipeline schedules, 02:00 Jakarta) runs the whole suite
@@ -169,31 +171,26 @@ types and lint:
     - npm run typecheck
     - npm run lint
 
-changeset:
-  stage: build
-  timeout: 10m
-  rules:
-    # A merge request that ships nothing new takes the "no-changeset" label, as on GitHub.
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && ($SERUPA_CI_MODE == "runner" || $SERUPA_FULL_CI == "1") && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-changeset(,|$)/
-  cache: []
-  before_script: []
-  script:
-    - git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-    - node tools/changeset-check.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
-
-# A fix proves its test (tools/fix-proof.mjs): a merge request with a patch changeset that changes src/ must change a
-# test that fails on the base commit's src/. Anything else passes in seconds, before the browser is used. A fix only
-# the screenshots can show takes the "no-repro-test" label.
-fix proof:
+# The changeset check, and a fix proves its test (tools/fix-proof.mjs): one job rather than two, since each is seconds
+# of work and every job counts against GitLab's cap. A merge request that ships nothing new takes the "no-changeset"
+# label, as on GitHub. For the fix proof, a merge request with a patch changeset that changes src/ must change a test
+# that fails on the base commit's src/; anything else passes in seconds, before the browser is used. A fix only the
+# screenshots can show takes the "no-repro-test" label.
+changeset and fix proof:
   stage: build
   timeout: 20m
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && ($SERUPA_CI_MODE == "runner" || $SERUPA_FULL_CI == "1") && $CI_MERGE_REQUEST_LABELS !~ /(^|,)no-repro-test(,|$)/
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && ($SERUPA_CI_MODE == "runner" || $SERUPA_FULL_CI == "1")
   after_script: []
   script:
     - git fetch --quiet origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-    - if node tools/fix-proof.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --needed | grep -q '^needed=false'; then echo "Not a patch to src/, nothing to prove."; exit 0; fi
-    - node tools/fix-proof.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+    - |
+      if echo ",$CI_MERGE_REQUEST_LABELS," | grep -q ',no-changeset,'; then echo "no-changeset label: no changeset check."
+      else node tools/changeset-check.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"; fi
+    - |
+      if echo ",$CI_MERGE_REQUEST_LABELS," | grep -q ',no-repro-test,'; then echo "no-repro-test label: no fix proof."
+      elif node tools/fix-proof.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --needed | grep -q '^needed=false'; then echo "Not a patch to src/, nothing to prove."
+      else node tools/fix-proof.mjs "$CI_MERGE_REQUEST_DIFF_BASE_SHA"; fi
 
 .full-suite:
   rules:
@@ -288,15 +285,15 @@ suite:
   tags: [x86]
   parallel:
     matrix:
-      # The component tests in three shards, and their second run in another language beside them in three more
-      # (SERUPA_PART and SERUPA_SHARD, run.mjs): about 4 minutes each rather than 13 in one job. The coverage job,
-      # below, merges the base shards'.
+      # The component tests in three shards, and their second run in another language beside them in two more
+      # (SERUPA_PART and SERUPA_SHARD, run.mjs): about 4 to 8 minutes each rather than 13 in one job. The coverage
+      # job, below, merges the base shards'.
       - GROUP: components
         SERUPA_PART: base
         SERUPA_SHARD: [1/3, 2/3, 3/3]
       - GROUP: components
         SERUPA_PART: locale
-        SERUPA_SHARD: [1/3, 2/3, 3/3]
+        SERUPA_SHARD: [1/2, 2/2]
       - GROUP: visual
         SERUPA_SHARD: [1/3, 2/3, 3/3]
   variables:
@@ -362,14 +359,18 @@ suite portable:
   parallel:
     matrix:
       - GROUP: checks
-        SERUPA_SHARD: [1/3, 2/3, 3/3]
+        SERUPA_SHARD: [1/2, 2/2]
       - GROUP: storybook
         SERUPA_SHARD: [1/3, 2/3, 3/3]
 
 # The package installed into an empty project on the oldest Node package.json allows, and the one between
 # (tools/test/consumer.mjs). No npm ci: the repo's dependencies ask for Node 26, and the check needs only Node and dist/.
+# A merge request runs it on Node 22 only, the oldest and so the likeliest to break; main and the nightly run both.
 consumer:
-  extends: .full-suite
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $NODE != "22"
+      when: never
+    - !reference [.full-suite, rules]
   stage: test
   needs: [build]
   timeout: 20m
@@ -418,10 +419,6 @@ cross-browser:
     # SERUPA_VISUAL_UPDATE=1 (with SERUPA_CROSS=1 and SERUPA_CROSS_GROUPS=visual, from Run pipeline) draws them instead,
     # into the job's artifacts, to review and commit.
     - if: ($CI_PIPELINE_SOURCE == "api" || $CI_PIPELINE_SOURCE == "schedule" || $SERUPA_CROSS == "1") && $GROUP == "visual" && $SERUPA_CROSS_GROUPS =~ /visual/
-    # Every merge request: the component tests of the components it changes, in Firefox and WebKit; one that reaches
-    # beyond the component folders passes without running (--narrowed-only) and is left to the nightly. Narrowed (the
-    # browsers' own engines are slower, and Firefox runs one file at a time); the nightly runs them all.
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner" && $GROUP == "components"
     # A merge request that changes pictures (a Chromium baseline, or a Firefox or WebKit one): Visual in Firefox and
     # WebKit too, narrowed like the suite's, and required, so their baselines move in the same merge request rather
     # than going stale until the nightly finds them. When it fails on purpose, tools/take-cross-baselines.mjs
@@ -450,6 +447,40 @@ cross-browser:
     when: always
     expire_in: 14 days
     paths: [test-output.txt, tools/test/baseline-visual-firefox/, tools/test/baseline-visual-webkit/]
+
+# Every merge request: the component tests of the components it changes, in Firefox and then WebKit, in one job (two
+# would each set up for about a minute of tests, and count twice against GitLab's cap). One that reaches beyond the
+# component folders passes without running (--narrowed-only) and is left to the nightly. Narrowed (the browsers' own
+# engines are slower, and Firefox runs one file at a time); the nightly runs them all. Both browsers run even when the
+# first fails.
+cross-browser components:
+  stage: test
+  tags: [x86]
+  needs: [build]
+  timeout: 75m
+  allow_failure: true
+  variables:
+    PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    GROUP: components
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SERUPA_CI_MODE == "runner"
+  script:
+    - apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
+    - set -o pipefail
+    - |
+      failed=""
+      for BROWSER in firefox webkit; do
+        echo "== $BROWSER"
+        node tools/test/run.mjs --browser "$BROWSER" --group components --since "$CI_MERGE_REQUEST_DIFF_BASE_SHA" --narrowed-only 2>&1 | tee -a test-output.txt || failed="$failed $BROWSER"
+      done
+      if [ -n "$failed" ]; then echo "Failed in:$failed"; exit 1; fi
+  after_script:
+    - !reference [.result-cache, record]
+    - grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150 || true
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths: [test-output.txt]
 
 # Nightly (the schedule on main, 02:00 Jakarta; Build > Pipeline schedules). Besides the whole suite above:
 # Mutation testing (tools/test/mutation.mjs --rotate): five components picked by the day, then every src/internal file
