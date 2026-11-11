@@ -53,6 +53,22 @@ describe('Patterns/List and detail', () => {
     }
   });
 
+  test('phone: the browser\'s Back from a message returns to the list, focus on the message it came from, rather than leaving the page', async () => {
+    await page.viewport(390, 800);
+    // An entry of the test's own first, so a Back nothing takes stays on this page instead of leaving the test.
+    history.pushState(history.state, '');
+    try {
+      const screen = await render(<ListDetail />);
+      await screen.getByRole('link', { name: /New photos/ }).click();
+      expect(regions()).toEqual(['New photos for the home page']);
+      history.back();
+      await expect.poll(() => regions()).toEqual(['Messages (4)']);
+      await expect.poll(() => active().id).toBe('message-m3');
+    } finally {
+      await page.viewport(900, 700);
+    }
+  });
+
   test('dates read in the reader\'s locale, short in the list and long on the message, and keep the ISO day in dateTime', async () => {
     await render(<SerupaProvider locale="en-GB"><ListDetail /></SerupaProvider>);
     const times = [...document.querySelectorAll('main time')].map((t) => [t.textContent, (t as HTMLTimeElement).dateTime]);

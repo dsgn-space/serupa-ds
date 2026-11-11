@@ -19,7 +19,7 @@ export const Playground: Story = {};
 
 export const Groups: Story = {
   args: {
-    placeholder: 'Pick a plan',
+    placeholder: 'Choose a plan',
     options: [{ label: 'Monthly', options: [{ value: 'm-basic', label: 'Basic' }, { value: 'm-pro', label: 'Pro' }] },
       { label: 'Yearly', options: [{ value: 'y-basic', label: 'Basic' }, { value: 'y-pro', label: 'Pro', disabled: true }] }],
   },

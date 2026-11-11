@@ -42,7 +42,7 @@ export const LongLabels: Story = {
 
 export const Invalid: Story = {
   args: { 'aria-label': undefined, defaultValue: undefined },
-  render: (args) => <Field label="Label color" error="Pick a color for the label." required><ColorPicker {...args} /></Field>,
+  render: (args) => <Field label="Label color" error="Choose a color for the label." required><ColorPicker {...args} /></Field>,
 };
 export const Disabled: Story = { args: { disabled: true } };
 export const ReadOnly: Story = { args: { readOnly: true } };
