@@ -70,6 +70,7 @@ export const labels: SerupaLabels = {
   showOptions: 'Показати варіанти',
   clearValue: (label) => (label ? 'Очистити: ' + label : 'Очистити'),
   createOption: (text) => 'Додати «' + text + '»',
+  moreResults: (c) => 'Ще ' + n(c) + ', продовжуйте вводити',
   valueAdded: (label) => label + ': додано',
   valueRemoved: (label) => label + ': вилучено',
   copied: 'Скопійовано',

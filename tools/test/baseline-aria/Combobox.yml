@@ -1,3 +1,8 @@
+# FreeText
+- text: "City Any city; these are suggestions. Value: Bandung"
+- combobox "City": Bandung
+- button "Show options"
+
 # FromAServer
 - text: Country
 - combobox "Country"

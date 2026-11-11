@@ -65,6 +65,7 @@ export const labels: SerupaLabels = {
   showOptions: 'Visa alternativ',
   clearValue: (label) => (label ? 'Rensa ' + label : 'Rensa'),
   createOption: (text) => 'Lägg till ”' + text + '”',
+  moreResults: (c) => '+' + n(c) + ' till, fortsätt skriva',
   valueAdded: (label) => label + ' har lagts till',
   valueRemoved: (label) => label + ' har tagits bort',
   copied: 'Kopierat',

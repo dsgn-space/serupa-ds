@@ -65,6 +65,7 @@ export const labels: SerupaLabels = {
   showOptions: 'Opties tonen',
   clearValue: (label) => (label ? label + ' wissen' : 'Wissen'),
   createOption: (text) => '‘' + text + '’ toevoegen',
+  moreResults: (c) => '+' + n(c) + ' meer, typ verder',
   valueAdded: (label) => label + ' toegevoegd',
   valueRemoved: (label) => label + ' verwijderd',
   copied: 'Gekopieerd',

@@ -65,6 +65,7 @@ export const labels: SerupaLabels = {
   showOptions: 'Seçenekleri göster',
   clearValue: (label) => (label ? label + ' temizle' : 'Temizle'),
   createOption: (text) => '“' + text + '” ekle',
+  moreResults: (c) => '+' + n(c) + ' daha, yazmaya devam edin',
   valueAdded: (label) => label + ' eklendi',
   valueRemoved: (label) => label + ' kaldırıldı',
   copied: 'Kopyalandı',
