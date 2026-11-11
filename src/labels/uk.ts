@@ -243,7 +243,7 @@ export const labels: SerupaLabels = {
   completed: 'виконано',
   hasError: 'є помилка',
   hasWarning: 'потребує уваги',
-  stepOf: (step, total) => 'Крок ' + step + ' з ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Крок ' + stepText + ' з ' + totalText,
   tourBack: 'Назад',
   tourNext: 'Далі',
   tourDone: 'Готово',
