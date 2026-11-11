@@ -66,7 +66,7 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 - **Errors:** say what's wrong and how to fix it, next to the field. On submit, move focus to the first error or to an ErrorSummary.
 - **Color:** in your own content, color never carries meaning alone. Add text, an icon or a pattern.
 - **Focus:** never use `outline: none` alone (use `outline-hidden` if you must). Keep targets at least 24px, and keep sticky headers off the focused element (`scroll-padding-top`).
-- **Route changes:** call `announcePage()` after a client-side route change. Say status changes with `announce("Saved")`, not with a visual change alone.
+- **Route changes:** call `announcePage()` after a client-side route change. Say status changes with `announce("Saved")`, not with a visual change alone. When markup must change with the screen width, use `useBreakpoint('md')` (the same widths as the `md:` utilities), not your own `matchMedia`; `useReducedMotion()` gates an animation you run from JavaScript; `useCopyToClipboard()` copies from a control that isn't a CopyButton, such as a menu item.
 - **Motion:** use the motion tokens, and don't animate anything that `prefers-reduced-motion` would want still.
 
 ## Before you finish
