@@ -87,6 +87,16 @@ describe('Field', () => {
     expect(el('native-bad').hasAttribute('invalid')).toBe(false);
   });
 
+  test('right to left, a Latin label keeps its gap before "(optional)" instead of running into it', async () => {
+    await render(<div dir="rtl"><Field label="Address line 2" optional><input id="rtl-opt" /></Field></div>);
+    const label = el('rtl-opt').labels![0], marker = label.querySelector('.dk-field__optional') as HTMLElement;
+    const words = document.createRange();
+    words.selectNodeContents(label.firstChild!);
+    const w = words.getBoundingClientRect(), m = marker.getBoundingClientRect();
+    // The marker sits on the label's start side, which in a right-to-left page is its left, a margin away.
+    expect(Math.round(w.left - m.right), JSON.stringify([w.left, w.right, m.left, m.right])).toBeGreaterThanOrEqual(3);
+  });
+
   test('the default "(optional)" comes from the labels: Indonesian under an id-ID provider', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Field label="Catatan" optional><input id="opt-id" /></Field></SerupaProvider>);
     expect(el('opt-id').labels?.[0].textContent).toBe('Catatan(opsional)');

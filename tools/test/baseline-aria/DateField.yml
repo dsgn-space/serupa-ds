@@ -1,10 +1,10 @@
 # Checked
 - text: Date of birth For example, 27 3 2007
 - group "Date of birth":
-  - text: Month
-  - textbox "Month"
   - text: Day
   - textbox "Day"
+  - text: Month
+  - textbox "Month"
   - text: Year
   - textbox "Year"
 - button "Continue"
@@ -22,10 +22,10 @@
 # InField
 - text: Date of birth For example, 27 3 2007
 - group "Date of birth":
-  - text: Month
-  - textbox "Month"
   - text: Day
   - textbox "Day"
+  - text: Month
+  - textbox "Month"
   - text: Year
   - textbox "Year"
 
@@ -40,12 +40,12 @@
   - textbox "Tahun": "1945"
 
 # Invalid
-- text: Passport expiry date For example, 12 11 2031
+- text: Passport expiry date For example, 27 11 2031
 - group "Passport expiry date":
-  - text: Month
-  - textbox "Month" [invalid]
   - text: Day
   - textbox "Day" [invalid]
+  - text: Month
+  - textbox "Month" [invalid]
   - text: Year
   - textbox "Year" [invalid]
 - text: The expiry date must include a year

@@ -95,7 +95,7 @@
 .dk-toast__content { overflow-wrap: anywhere; hyphens: auto; display: flex; flex-direction: column; gap: var(--spacing-0\.5); flex: auto; min-width: var(--spacing-0); }
 .dk-toast__title { margin: var(--spacing-0); font-weight: var(--toast-title-weight, var(--font-semibold)); }
 /* "×12": the same message came 12 times. */
-.dk-toast__count { margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
+.dk-toast__count { unicode-bidi: isolate; margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
 /* "+2 more": toasts waiting past the Toaster's limit. */
 .dk-toaster__more { align-self: center; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-overlay)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--shadow-sm); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
   transition: opacity var(--motion-enter-md) var(--ease-enter); }
