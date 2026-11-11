@@ -148,7 +148,7 @@ Each is an optional override: set it on the page, a container or one Chat. The l
 | `--chat-error` | `danger-text` | "Not sent" (4.5:1 on the page). |
 | `--chat-divider` | `border` | The day divider's lines. |
 | `--chat-focus-ring` | `focus-ring` | The ring around the focused conversation. |
-| `--chat-bubble-radius` | `rounded-xl` | A bubble's corners (12px). |
+| `--chat-bubble-radius` | `radius-container` | A bubble's corners (12px). |
 | `--chat-padding` | `spacing-4` | Space around the conversation and the composer (16px). |
 | `--chat-gap` | `spacing-3` | Space between messages (12px). |
 | `--chat-bubble-padding-x` | `spacing-3` | Space at a bubble's sides (12px). |

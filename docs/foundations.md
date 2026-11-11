@@ -407,7 +407,7 @@ A container nested inside another should have a smaller radius than its parent.
 | `radius-container` | `rounded-xl` (12px) | Cards, dialogs, drawers and carousels |
 | `radius-pill` | `rounded-full` | Tracks and thumbs, steps, round buttons and swatches |
 
-Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart.
+Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart. The `serupa/radius-through-role` Stylelint rule holds the components to this: a corner that names `rounded-sm` up to `rounded-4xl` fails lint. `rounded-none`, `rounded-xs` (the hairline curve of a text mark, such as Highlight) and `rounded-full` pass.
 
 ## Borders and outlines
 
