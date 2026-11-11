@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as React from 'react';
 import { ErrorSummary } from './ErrorSummary';
-import { Field } from '../Field/Field';
+import { Field, FormErrors } from '../Field/Field';
+import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 
 const ERRORS = [
@@ -32,6 +33,24 @@ export const InAForm: Story = {
       <Field label="Start date" error="Start date must be today or in the future"><Input id="es-date" type="date" /></Field>
     </form>
   ),
+};
+// Errors from the server by field name: the summary and each Field read them from FormErrors. Typing in a field takes its
+// message away; sending again brings back the ones still wrong.
+export const FromTheServer: Story = {
+  args: { errors: undefined },
+  render: function Render(args) {
+    const [errors, setErrors] = React.useState<Record<string, string> | null>({ email: 'That email is already registered', username: 'Choose a username with no spaces' });
+    return (
+      <form noValidate style={{ display: 'grid', gap: 16, maxWidth: 480 }} onSubmit={(e) => { e.preventDefault(); setErrors({ email: 'That email is already registered', username: 'Choose a username with no spaces' }); }}>
+        <FormErrors errors={errors}>
+          <ErrorSummary {...args} />
+          <Field label="Email"><Input id="es-srv-email" name="email" type="email" defaultValue="sam@example.com" /></Field>
+          <Field label="Username"><Input id="es-srv-username" name="username" defaultValue="sam lee" /></Field>
+        </FormErrors>
+        <div><Button type="submit">Create account</Button></div>
+      </form>
+    );
+  },
 };
 // The stress story (G14): long words, long messages and many errors; the visual baselines show how it wraps.
 export const LongText: Story = {

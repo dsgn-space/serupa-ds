@@ -7,7 +7,7 @@ interface ErrorSummaryItem {
     message: React.ReactNode;
 }
 interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
-    errors: readonly ErrorSummaryItem[];
+    errors?: readonly ErrorSummaryItem[] | undefined;
     title?: React.ReactNode | undefined;
     headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
     description?: React.ReactNode | undefined;

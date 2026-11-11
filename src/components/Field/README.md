@@ -48,6 +48,20 @@ Drawn from the `Horizontal` story.
 - Stack fields with `gap-5` or `gap-6` between them.
 - For a dense settings page, use `orientation="horizontal"`: the labels line up in a column at the start and the controls beside them. Keep labels short enough for the 192px column (`--field-label-width`). Give fields a full-width parent: a horizontal field stacks again on its own once it's too narrow for both columns. A set of checkboxes or radios (`group`) stays stacked.
 
+### Errors from the server
+
+When the server answers a submit with errors by field name, wrap the form in `FormErrors` and pass them all at once. Each Field finds its own message by its control's `name` (or the Field's own `name`, for a control that names itself differently), and shows it like `error`: `aria-invalid` on the control, the message in its description. Typing in the field, or changing it, takes its message away, since it was about the value that was sent. A new `errors` object (the next submit) shows every message again, and `null` clears them. A Field's own `error` wins over the server's.
+
+```tsx
+<form action={send}>
+  <FormErrors errors={state.errors}>
+    <ErrorSummary />
+    <Field label="Email"><Input name="email" type="email" /></Field>
+    <Field label="Username"><Input name="username" /></Field>
+  </FormErrors>
+</form>
+```
+
 ### Layout
 
 Label, hint, control and error stack with 6px between them (`--field-gap`). With `orientation="horizontal"`, the label takes a 192px column (`--field-label-width`) 16px from the control (`--field-column-gap`). Its text sits on the control's first line (baselines aligned), and the hint and error go under the control. Once the control column would be narrower than 256px (`--field-control-min-width`), it wraps under the label, so the field is stacked again. The label is `text-sm` in `font-medium`; hint and error are `text-sm`. The error's 16px icon sits centered on its first line. A group's legend lays out exactly like a label.
