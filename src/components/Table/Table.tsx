@@ -524,13 +524,13 @@ export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCe
    checkbox of the table after it (the header's "Select all"), so it isn't lost: render it just before the Table. */
 /** The bar of actions for a table's selected rows: "3 selected", your buttons, and "Clear selection". */
 export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableActionBarProps>('TableActionBar', function TableActionBar(props, ref) {
-  const labels = useSettings(words).labels;
+  const labels = useSettings(words).labels, locale = useLocale();
   const rest = omit(props, { count: 1, onClear: 1, clearLabel: 1, className: 1, children: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
   const self = React.useRef<HTMLDivElement | null>(null);
   const setRefs = useMergedRef(ref, (e: HTMLDivElement | null) => { self.current = e; });
   const id = domId('dk-tab', React.useId());
-  const said = labels.tableSelected(count);
+  const said = labels.tableSelected(count, new Intl.NumberFormat(locale).format(count));
   // Hidden (not removed) at 0, so focus is still in it here and can go to the table's "Select all" before it's lost.
   useIsoLayoutEffect(() => {
     const bar = self.current;
