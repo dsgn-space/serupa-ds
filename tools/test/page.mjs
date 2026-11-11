@@ -410,35 +410,46 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   // back/forward cache, and Playwright turns it off unless asked.
   if (ENGINE === 'chromium') {
     const base = `http://127.0.0.1:${port}`;
-    const full = await chromium.launch({ channel: 'chromium', ignoreDefaultArgs: ['--disable-back-forward-cache'] });
-    const ctx = await full.newContext();
-    const q = await ctx.newPage();
-    // This page hears no storage events at all, as a cached page may not (Chromium does deliver them on return).
-    await q.addInitScript(() => {
-      const add = EventTarget.prototype.addEventListener;
-      EventTarget.prototype.addEventListener = function (type, ...rest) { if (this === window && type === 'storage') return; return add.call(this, type, ...rest); };
-    });
-    await q.goto(`${base}/`);
-    await q.waitForFunction(() => !!document.querySelector('#root button'), null, { timeout: 10000 }).catch(() => undefined);
-    const before = await q.evaluate(() => { window.__stayed = true; return document.documentElement.getAttribute('data-theme'); });
-    await q.goto(`${base}/?away`);
-    const other = await ctx.newPage();
-    await other.goto(`${base}/?away`);
-    await other.evaluate(() => localStorage.setItem('serupa-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })));
-    await other.close();
-    // Chromium hands another tab's write to a renderer's copy of the storage a moment later, not at once: on a loaded
-    // machine the cached page could come back, read the old choice in pageshow and keep it (a flake in CI, blue-light →
-    // blue-light). Wait until this tab's own renderer sees the write, as a real user's would long before pressing Back.
-    await q.waitForFunction(() => (localStorage.getItem('serupa-theme') || '').includes('violet'), null, { timeout: 10000 }).catch(() => undefined);
-    await q.goBack({ waitUntil: 'commit' });
-    await q.waitForFunction(() => document.readyState === 'complete', null, { timeout: 10000 }).catch(() => undefined);
-    // Since the crossfade (30), a theme change while the page is shown goes through a View Transition, which sets
-    // data-theme in its update callback a frame or so later, not in pageshow itself: wait for it (or time out).
-    await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 10000 }).catch(() => undefined);
-    const back = await q.evaluate(() => ({ cached: window.__stayed === true, reasons: /** @type {any} */ (performance.getEntriesByType('navigation')[0]).notRestoredReasons, theme: document.documentElement.getAttribute('data-theme') }));
-    await full.close();
+    // Once more when the restored page's own storage still held the old choice: Chromium hands another tab's write
+    // to each renderer's copy of the storage a moment later, and the cached page may live in another renderer than
+    // the one checked below, so on a loaded machine it can come back before the write reaches it (a flake in CI,
+    // blue-light → blue-light). That is the test's setup not happening, not theme.js missing it; a restored page
+    // that has the write and still shows the old theme fails at once.
+    const attempt = async () => {
+      const full = await chromium.launch({ channel: 'chromium', ignoreDefaultArgs: ['--disable-back-forward-cache'] });
+      const ctx = await full.newContext();
+      const q = await ctx.newPage();
+      const errors = [];
+      q.on('pageerror', (e) => errors.push(e.message));
+      // This page hears no storage events at all, as a cached page may not (Chromium does deliver them on return).
+      await q.addInitScript(() => {
+        const add = EventTarget.prototype.addEventListener;
+        EventTarget.prototype.addEventListener = function (type, ...rest) { if (this === window && type === 'storage') return; return add.call(this, type, ...rest); };
+      });
+      await q.goto(`${base}/`);
+      await q.waitForFunction(() => !!document.querySelector('#root button'), null, { timeout: 10000 }).catch(() => undefined);
+      const before = await q.evaluate(() => { window.__stayed = true; return document.documentElement.getAttribute('data-theme'); });
+      await q.goto(`${base}/?away`);
+      const other = await ctx.newPage();
+      await other.goto(`${base}/?away`);
+      await other.evaluate(() => localStorage.setItem('serupa-theme', JSON.stringify({ brand: 'violet', mode: 'dark' })));
+      await other.close();
+      // Wait until this tab's renderer sees the write, as a real user's would long before pressing Back.
+      await q.waitForFunction(() => (localStorage.getItem('serupa-theme') || '').includes('violet'), null, { timeout: 10000 }).catch(() => undefined);
+      await q.goBack({ waitUntil: 'commit' });
+      await q.waitForFunction(() => document.readyState === 'complete', null, { timeout: 10000 }).catch(() => undefined);
+      // Since the crossfade (30), a theme change while the page is shown goes through a View Transition, which sets
+      // data-theme in its update callback a frame or so later, not in pageshow itself: wait for it (or time out).
+      await q.waitForFunction(() => document.documentElement.getAttribute('data-theme') === 'violet-dark', null, { timeout: 10000 }).catch(() => undefined);
+      const back = await q.evaluate(() => ({ cached: window.__stayed === true, reasons: /** @type {any} */ (performance.getEntriesByType('navigation')[0]).notRestoredReasons, theme: document.documentElement.getAttribute('data-theme'), stored: localStorage.getItem('serupa-theme') }));
+      await full.close();
+      return { before, back, errors };
+    };
+    let run = await attempt();
+    if (run.back.theme !== 'violet-dark' && !(run.back.stored || '').includes('violet')) run = await attempt();
+    const { before, back, errors } = run;
     t('Getting started\'s plain page: Back brings it from the back/forward cache (nothing blocks it)', back.cached && !back.reasons, JSON.stringify(back.reasons));
-    t('theme.js: back from the cache, a theme picked in another tab meanwhile is applied though its storage event never arrived', before !== 'violet-dark' && back.theme === 'violet-dark', `${before} → ${back.theme}`);
+    t('theme.js: back from the cache, a theme picked in another tab meanwhile is applied though its storage event never arrived', before !== 'violet-dark' && back.theme === 'violet-dark', `${before} → ${back.theme} (stored: ${back.stored}${errors.length ? `; errors: ${errors.join(' | ')}` : ''})`);
   }
   server.close();
 }

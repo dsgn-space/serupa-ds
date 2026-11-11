@@ -16,7 +16,7 @@ export const en: SortableListLabels = {
   reorderGrabbed: (item, p, n) => 'Picked up ' + item + ', position ' + p + ' of ' + n + '.',
   reorderMoved: (item, p, n) => item + ', position ' + p + ' of ' + n + '.',
   reorderDropped: (item, p, n) => 'Dropped ' + item + ' at position ' + p + ' of ' + n + '.',
-  reorderCancelled: (item, p, n) => 'Cancelled. ' + item + ' is back at position ' + p + ' of ' + n + '.',
+  reorderCancelled: (item, p, n) => 'Canceled. ' + item + ' is back at position ' + p + ' of ' + n + '.',
 };
 export const id: SortableListLabels = {
   reorder: 'Ubah urutan',

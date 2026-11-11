@@ -8,6 +8,7 @@ import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Card } from '../../components/Card/Card';
+import { Alert } from '../../components/Alert/Alert';
 import { announce } from '../../internal/announce';
 
 /* Session time-out warning: warns well before a session ends, lets one action keep it, and loses nothing
@@ -135,25 +136,50 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
     setLeft(0);
     onExpire?.();
   };
+  // "Stay signed in" shows it's working while onExtend runs, and takes no second press. When it fails, the warning stays
+  // open and says so, with the time still counting, so the person can try again or save their work.
+  const [extending, setExtending] = React.useState(false);
+  const [extendFailed, setExtendFailed] = React.useState(false);
+  const extendingNow = React.useRef(false);
   const extend = async () => {
-    try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch { /* the session runs out as warned */ }
+    if (extendingNow.current) return;
+    extendingNow.current = true;
+    setExtending(true);
+    setExtendFailed(false);
+    try { await onExtend?.(); restart(); announce('You’re still signed in.'); } catch {
+      setExtendFailed(true);
+      announce('Couldn’t keep you signed in. Check your connection and try again.');
+    } finally { extendingNow.current = false; setExtending(false); }
   };
   // While a send is under way the button shows it and takes no more presses, so a second click doesn't send the
-  // message twice (the ref covers a second press before the re-render).
+  // message twice (the ref covers a second press before the re-render). An empty Subject or Message isn't sent: each
+  // says what's missing and the first takes focus. The outcome shows on screen, not only to a screen reader: a sent
+  // message is confirmed above the form, which takes focus (the form is empty again); a failed one says so beside
+  // the button, and what was typed stays.
   const [sending, setSending] = React.useState(false);
+  const [missing, setMissing] = React.useState<{ subject?: string; message?: string }>({});
+  const [outcome, setOutcome] = React.useState<'sent' | 'failed' | null>(null);
+  const sentRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => { if (outcome === 'sent') sentRef.current?.focus(); }, [outcome]);
   const sendingNow = React.useRef(false);
-  const send = async (e: React.FormEvent) => {
+  const send = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (sendingNow.current) return;
+    const form = e.currentTarget;
+    const empty = { subject: draft.subject.trim() ? undefined : 'Enter a subject', message: draft.message.trim() ? undefined : 'Enter your message' };
+    setMissing(empty);
+    if (empty.subject || empty.message) { setOutcome(null); (form.elements.namedItem(empty.subject ? 'subject' : 'message') as HTMLElement).focus(); return; }
     sendingNow.current = true;
     setSending(true);
-    try { await onSend?.(draft); } catch { announce('The message wasn’t sent. What you typed is kept: try again.'); return; } finally { sendingNow.current = false; setSending(false); }
+    setOutcome(null);
+    try { await onSend?.(draft); } catch { setOutcome('failed'); return; } finally { sendingNow.current = false; setSending(false); }
     forget(saveKey);
     setDraft({ subject: '', message: '' });
-    announce('Message sent.');
+    setOutcome('sent');
   };
   const type = (k: keyof Draft) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const next = { ...draft, [k]: e.target.value };
+    if (missing[k] && e.target.value.trim()) setMissing({ ...missing, [k]: undefined });
     setDraft(next);
     save(saveKey, next);
   };
@@ -180,14 +206,16 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
               <p className="m-0 text-text-muted">For your security, you’re signed out after {timeLeft(duration)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</p>
             </div>
             <Card as="section" aria-labelledby="message-title">
-              <form className="flex flex-col gap-4" onSubmit={(e) => void send(e)}>
+              <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
                 <Heading level={2} id="message-title">Your message</Heading>
-                <Field label="Subject">
+                {outcome === 'sent' ? <Alert ref={sentRef} tabIndex={-1} tone="success" className="outline-none">Message sent. We’ll reply by email.</Alert> : null}
+                <Field label="Subject" error={missing.subject}>
                   <Input name="subject" value={draft.subject} onChange={type('subject')} />
                 </Field>
-                <Field label="Message" hint="What happened, and what you expected.">
+                <Field label="Message" hint="What happened, and what you expected." error={missing.message}>
                   <Textarea name="message" rows={6} value={draft.message} onChange={type('message')} />
                 </Field>
+                {outcome === 'failed' ? <Alert tone="danger">The message wasn’t sent. What you typed is kept: try again.</Alert> : null}
                 <div><Button type="submit" loading={sending}>Send message</Button></div>
               </form>
             </Card>
@@ -198,10 +226,11 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
         onOpenChange={(open) => { if (!open) void extend(); }}
         footer={<>
           <Button variant="secondary" onClick={signOut}>Sign out</Button>
-          <Button data-autofocus onClick={() => void extend()}>Stay signed in</Button>
+          <Button data-autofocus loading={extending} onClick={() => void extend()}>Stay signed in</Button>
         </>}>
         <p className="m-0">You’ll be signed out in <strong>{timeLeft(left)}</strong> because nothing has happened for a while.</p>
         <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you’ve typed is kept. Signing out clears it.</p>
+        {extendFailed ? <p className="m-0 mt-2 text-sm text-danger-text">Couldn’t keep you signed in. Check your connection and try again.</p> : null}
       </Dialog>
     </div>
   );

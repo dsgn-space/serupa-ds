@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
+import { announcerIdle } from '../../internal/announce';
 import { SignUp, passwordRules, signUpProblems } from './SignUp';
 
 const active = () => document.activeElement as HTMLElement;
@@ -97,6 +98,41 @@ describe('Patterns/Sign-up', () => {
     await screen.getByRole('button', { name: 'Verify email' }).click();
     await expect.poll(() => active().textContent).toBe('Your account is ready');
     await expect.element(screen.getByRole('link', { name: 'Go to your dashboard' })).toBeInTheDocument();
+  });
+
+  test('the wrong-code error points to "Send a new code", which is there: busy while it sends, then says the code went or that it couldn’t', async () => {
+    let fail = true, settle = () => {};
+    const onResend = vi.fn(() => new Promise<void>((ok, no) => { settle = () => (fail ? no(new Error('offline')) : ok()); }));
+    const screen = await render(<SignUp start="code" onResend={onResend} initial={{ email: 'ana@example.com' }} />);
+    const status = () => (screen.container.querySelector('[role="status"]') as HTMLElement).textContent;
+    const button = screen.getByRole('button', { name: 'Send a new code' });
+    await button.click();
+    await expect.element(button).toHaveAttribute('aria-busy', 'true');
+    (button.element() as HTMLButtonElement).click();
+    expect(onResend).toHaveBeenCalledWith('ana@example.com');
+    expect(onResend).toHaveBeenCalledTimes(1);
+    settle();
+    await expect.poll(status).toBe('Couldn’t send a new code. Check your connection and try again.');
+    fail = false;
+    await button.click();
+    settle();
+    await expect.poll(status).toBe('We sent a new code to ana@example.com. It works for 10 minutes.');
+  });
+
+  test('a second wrong code is said again, though the words under the field are the same', async () => {
+    const screen = await render(<SignUp start="code" />);
+    const region = document.querySelector('[data-dk-announcer]') as HTMLElement;
+    await userEvent.click(input('sign-up-code'));
+    await userEvent.keyboard('111111');
+    await screen.getByRole('button', { name: 'Verify email' }).click();
+    await expect.poll(() => region.textContent).toContain('That code isn’t right');
+    await expect.poll(announcerIdle).toBe(true);
+    const heard: string[] = [];
+    const watch = new MutationObserver(() => heard.push(region.textContent || ''));
+    watch.observe(region, { childList: true, characterData: true, subtree: true });
+    await screen.getByRole('button', { name: 'Verify email' }).click();
+    await expect.poll(() => heard.at(-1)).toContain('That code isn’t right');
+    watch.disconnect();
   });
 
   test('a refused account stays on the form', async () => {

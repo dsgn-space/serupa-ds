@@ -36,7 +36,7 @@ Drawn from the `Statuses` story.
 2. **Divider** (`.dk-chat-divider`): the day the next messages were sent.
 3. **Message** (`.dk-chat-message`): avatar, then author and time, the bubble, files and status.
 4. **Bubble** (`.dk-chat-message__bubble`): what the message says; own messages are tinted and sit at the end.
-5. **Status** (`.dk-chat-message__status`): "Sending…", or "Not sent" with Retry.
+5. **Status** (`.dk-chat-message__status`): "Sending…", or "Not sent" with "Try again".
 6. **Composer** (`.dk-chat-composer`): the field, any actions, and Send (or Stop while a reply streams).
 
 An assistant's reply (the `AgentReply` story) adds these parts:

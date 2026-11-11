@@ -148,7 +148,7 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   hideAuthor?: boolean | undefined;
   /** An own message on its way ('sending', "Sending…" under it) or one that didn't go ('failed', "Not sent" and a Retry button with onRetry). */
   status?: 'sending' | 'failed' | undefined;
-  /** Called by the Retry button of a failed message. */
+  /** Called by the "Try again" button of a failed message. */
   onRetry?: (() => void) | undefined;
   /** Files sent with it, under the text: Attachment elements. */
   attachments?: React.ReactNode | undefined;

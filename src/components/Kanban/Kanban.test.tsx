@@ -108,7 +108,7 @@ describe('Kanban', () => {
     await render(<Board moves={moves} />);
     await userEvent.click(handle('Bravo'));
     await userEvent.keyboard('{ArrowRight}{ArrowRight}{Escape}');
-    await said('Cancelled. Bravo is back in To do, position 2 of 3.');
+    await said('Canceled. Bravo is back in To do, position 2 of 3.');
     expect([names(), moves.length]).toEqual([['To do: abc', 'Doing: d', 'Done: '], 0]);
   });
 
@@ -139,7 +139,7 @@ describe('Kanban', () => {
     await userEvent.click(handle('Alpha'));
     await userEvent.keyboard('{ArrowRight}');
     await userEvent.tab();
-    await said('Cancelled. Alpha is back in To do, position 1 of 3.');
+    await said('Canceled. Alpha is back in To do, position 1 of 3.');
     expect(names()).toEqual(['To do: abc', 'Doing: d', 'Done: ']);
   });
 
@@ -207,7 +207,7 @@ describe('Kanban', () => {
     await userEvent.keyboard('{ArrowDown}');
     await said('Alpha, To do, position 2 of 3.');
     await userEvent.click(document.getElementById('elsewhere')!);
-    await said('Cancelled. Alpha is back in To do, position 1 of 3.');
+    await said('Canceled. Alpha is back in To do, position 1 of 3.');
     expect([names(), moves.length]).toEqual([['To do: abc', 'Doing: d', 'Done: '], 0]);
   });
 
@@ -218,7 +218,7 @@ describe('Kanban', () => {
     h.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 2, clientX: a.x, clientY: a.y }));
     window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 2, clientX: a.x + 400, clientY: a.y }));
     window.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 2, clientX: a.x + 400, clientY: a.y }));
-    await said(/^Cancelled/);
+    await said(/^Canceled/);
     expect([names(), moves.length]).toEqual([['To do: abc', 'Doing: d', 'Done: '], 0]);
   });
 
