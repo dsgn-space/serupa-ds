@@ -45,7 +45,7 @@ describe('TabNav', () => {
     </div>);
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; }'; document.head.appendChild(still);
     const sel = (id: string) => el(id).querySelector<HTMLElement>('[aria-selected="true"]')!;
-    const other = (id: string) => el(id).querySelector<HTMLElement>('.dk-tabs__tab:not([aria-current="page"], [aria-selected="true"])')!;
+    const other = (id: string) => el(id).querySelector<HTMLElement>('a:not([aria-current]), [role="tab"]:not([aria-selected="true"])')!;
     for (const s of ['sm', 'md', 'lg']) {
       const a = current('n-' + s), b = sel('t-' + s);
       expect([a.offsetHeight, css(a).fontSize, css(a).color, getComputedStyle(a, '::after').backgroundColor, getComputedStyle(a, '::after').height, css(other('n-' + s)).color, css(a).textDecorationLine], s)
