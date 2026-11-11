@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -90,5 +90,18 @@ describe('ScrollArea', () => {
       expect(contrast(css(el('s')).outlineColor, css(el('bg')).backgroundColor), th + ' ring').toBeGreaterThanOrEqual(3);
     }
     document.documentElement.removeAttribute('data-theme');
+  });
+});
+
+describe('ScrollArea in print', () => {
+  test('printed, a vertical ScrollArea shows all of its content, not only the part scrolled into view; on screen it still scrolls', async () => {
+    await render(<ScrollArea id="p" aria-label="Policy" style={{ height: 120 }}>{rows(30)}</ScrollArea>);
+    const box = el('p');
+    expect(Math.round(box.getBoundingClientRect().height)).toBe(120);
+    await commands.printMedia(true);
+    try {
+      expect([Math.round(box.getBoundingClientRect().height) >= 1200, box.scrollHeight - box.clientHeight <= 1, getComputedStyle(box).maskImage]).toEqual([true, true, 'none']);
+    } finally { await commands.printMedia(false); }
+    expect(Math.round(box.getBoundingClientRect().height)).toBe(120);
   });
 });
