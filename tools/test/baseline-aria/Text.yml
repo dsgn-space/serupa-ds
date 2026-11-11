@@ -1,3 +1,11 @@
+# DoLinesWithLink
+- paragraph: "Arrived two days early and well packed. The coffee is fresher than what I buy at the market: bright, a little fruity, and not bitter even as a strong espresso. I have ordered it three times now and it has been the same every time."
+- link "Read the whole review":
+  - /url: "#review-1"
+
+# DontLinesAlone
+- paragraph: "Arrived two days early and well packed. The coffee is fresher than what I buy at the market: bright, a little fruity, and not bitter even as a strong espresso. I have ordered it three times now and it has been the same every time."
+
 # Lines
 - paragraph: "Arrived two days early and well packed. The coffee is fresher than what I buy at the market: bright, a little fruity, and not bitter even as a strong espresso. I've ordered it three times now and it has been the same every time, which matters more to me than anything else. The 250 g bag lasts about two weeks."
 

@@ -60,6 +60,11 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
     : <EmptyState size="sm" title="No products yet" />} />
 ```
 
+### Do and don't
+
+- **Do:** A DataGrid where people change values cell by cell, such as stock counts. (`DoEditable`)
+- **Don't:** A DataGrid for data nobody edits: every cell becomes a keyboard stop, and a Table reads row by row with less work. (`DontReadOnly`)
+
 ## Accessibility
 
 - **Role and name:** a `<table role="grid">` named by `aria-label`, with `aria-rowcount`, `aria-colcount` and `aria-multiselectable`; column headers and `gridcell`s with `aria-selected`; cells in a read-only column of an editable grid have `aria-readonly`. A hidden line describes how to edit. Copies and pastes are announced ("4 cells copied").

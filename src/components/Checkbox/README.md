@@ -69,6 +69,13 @@ Drawn from the `LongLabel` story.
 </Field>
 ```
 
+### Do and don't
+
+- **Do:** Say what a tick turns on: "Email me about orders". (`DoPositiveLabel`)
+- **Don't:** A label in the negative, such as "Don't email me", where a tick means no and people have to read it twice. (`DontNegativeLabel`)
+- **Do:** Cards for add-ons that each need a line to choose by, such as a price. (`DoCardsWithDetails`)
+- **Don't:** Cards for options that explain themselves, such as colours to filter by: plain checkboxes read faster. (`DontCardsForShortOptions`)
+
 ## States
 
 | State | Look |
