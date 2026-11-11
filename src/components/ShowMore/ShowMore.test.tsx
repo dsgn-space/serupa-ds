@@ -53,7 +53,7 @@ describe('ShowMore', () => {
     const rule = document.createElement('style');
     rule.textContent = "@font-face { font-family: SmLate; src: url(/fonts/InterVariable-latin.woff2) format('woff2'); }";
     try {
-      await render(<SerupaProvider locale="en"><div style={{ width: '300px', fontSize: '14px', lineHeight: '20px', fontFamily: 'SmLate, monospace' }}>
+      await render(<SerupaProvider locale="en"><div lang="en" style={{ width: '300px', fontSize: '14px', lineHeight: '20px', fontFamily: 'SmLate, monospace' }}>
         <ShowMore id="f" lines={2}>Fresh coffee, packed well and sent the same day, with a note from the roaster.</ShowMore></div></SerupaProvider>);
       await expect.element(page.getByRole('button', { name: 'Show more' })).toBeInTheDocument();
       document.head.append(rule);
