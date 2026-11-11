@@ -5,8 +5,9 @@ export interface TableLabels {
   table: string;
   /** Table: read out when a sortable column's order changes ("Sorted by Amount, ascending"). */
   tableSorted: (column: string, direction: 'ascending' | 'descending') => string;
-  /** TableActionBar: how many rows are selected, shown and read out ("3 selected"). */
-  tableSelected: (count: number) => string;
+  /** TableActionBar: how many rows are selected, shown and read out ("3 selected"). `formatted` is the count in the
+   *  locale's digits and grouping; `count` is there for plural rules. */
+  tableSelected: (count: number, formatted: string) => string;
   /** TableActionBar: the button that clears the selection. */
   clearSelection: string;
   /** TableHeaderCell resizable: the handle's name, given the column's name ("Resize Name column"). */
@@ -28,7 +29,7 @@ export interface TableLabels {
 export const en: TableLabels = {
   table: 'Table',
   tableSorted: (column, direction) => 'Sorted by ' + column + ', ' + direction + '.',
-  tableSelected: (n) => n + ' selected',
+  tableSelected: (count, formatted = String(count)) => formatted + ' selected',
   clearSelection: 'Clear selection',
   tableResizeColumn: (column) => 'Resize ' + column + ' column',
   tableNarrower: 'Narrower',
@@ -42,7 +43,7 @@ export const en: TableLabels = {
 export const id: TableLabels = {
   table: 'Tabel',
   tableSorted: (column, direction) => 'Diurutkan menurut ' + column + ', ' + (direction === 'ascending' ? 'naik' : 'turun') + '.',
-  tableSelected: (n) => n + ' dipilih',
+  tableSelected: (count, formatted = String(count)) => formatted + ' dipilih',
   clearSelection: 'Hapus pilihan',
   tableResizeColumn: (column) => 'Ubah lebar kolom ' + column,
   tableNarrower: 'Lebih sempit',

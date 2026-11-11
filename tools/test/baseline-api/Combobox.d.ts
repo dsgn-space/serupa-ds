@@ -3,7 +3,7 @@ interface ComboboxLabels {
     loadingResults: string;
     loadFailed: string;
     noResults: string;
-    resultsCount: (count: number) => string;
+    resultsCount: (count: number, formatted: string) => string;
     showOptions: string;
     clearValue: (label: string) => string;
     createOption: (text: string) => string;

@@ -11,6 +11,7 @@ Some components look alike but say different things to a screen reader and behav
 | People are… | Use |
 | --- | --- |
 | Choosing from 2 to about 5 options they should see at once | [Radio](?path=/docs/components-forms-radio--docs) (a RadioGroup) |
+| Choosing from a few options that each need a line to explain them, such as plans or delivery methods | [Radio](?path=/docs/components-forms-radio--docs) cards (a RadioGroup with `variant="card"`) |
 | Choosing from a few options that change a view right away, such as Day, Week, Month | [SegmentedControl](?path=/docs/components-forms-segmentedcontrol--docs) |
 | Choosing from about 5 to 10 options, where space is short | [Select](?path=/docs/components-forms-select--docs) |
 | Searching a long list, such as countries or people | [Combobox](?path=/docs/components-forms-combobox--docs) |
@@ -33,6 +34,7 @@ Never use two radios for on and off: one Checkbox or Switch says it in one contr
 | People are… | Use |
 | --- | --- |
 | Picking any number from a short list they should see at once | [Checkbox](?path=/docs/components-forms-checkbox--docs) (a CheckboxGroup) |
+| Picking add-ons that each need a line to explain them, such as gift wrap or insurance | [Checkbox](?path=/docs/components-forms-checkbox--docs) cards (a CheckboxGroup with `variant="card"`) |
 | Picking any number from a long list they search | [Combobox](?path=/docs/components-forms-combobox--docs) with `multiple` |
 | Putting items in their own order | [SortableList](?path=/docs/components-content-sortablelist--docs) |
 
@@ -50,6 +52,7 @@ Never use two radios for on and off: one Checkbox or Switch says it in one contr
 | Picking a start and an end day | [DateRangePicker](?path=/docs/components-forms-daterangepicker--docs) |
 | Seeing a month that stays on the page, such as a booking view | [Calendar](?path=/docs/components-forms-calendar--docs) |
 | Picking a time of day | [TimePicker](?path=/docs/components-forms-timepicker--docs) |
+| Picking a day and a time together, such as when a meeting starts | A [DatePicker](?path=/docs/components-forms-datepicker--docs) and a TimePicker in one Field group, as its "Date and time" section shows |
 | Picking a color | [ColorPicker](?path=/docs/components-forms-colorpicker--docs) |
 | Choosing a time zone, such as for their profile or a meeting | [TimeZonePicker](?path=/docs/components-forms-timezonepicker--docs) |
 
@@ -143,6 +146,8 @@ Nothing anyone needs to do the task goes only in a Tooltip: touch screens never 
 | A line or two of text each, such as people or files | [List](?path=/docs/components-content-list--docs) |
 | Data with columns to compare or sort | [Table](?path=/docs/components-content-table--docs) |
 | Data people edit cell by cell, or copy to and from a spreadsheet | [DataGrid](?path=/docs/components-content-datagrid--docs) |
+| Long text each, such as reviews or descriptions, opened in place | [ShowMore](?path=/docs/components-content-showmore--docs) |
+| Long text each, as a preview that links to the full item | [Text](?path=/docs/components-layout-and-type-text--docs) with `lines` |
 | Pictures or a lot of content each | [Card](?path=/docs/components-content-card--docs)s in a [Grid](?path=/docs/components-layout-and-type-grid--docs) |
 | A trend over time, or amounts to compare across a few categories | [Chart](?path=/docs/components-data-display-chart--docs) |
 | Events in order of time | [Timeline](?path=/docs/components-data-display-timeline--docs) |
