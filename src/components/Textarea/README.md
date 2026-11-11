@@ -1,6 +1,6 @@
 # Textarea
 
-A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize and a character count. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
+A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize, a character count and a row of actions under the text. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
 
 ```jsx
 const { Textarea } = window.Serupa;
@@ -14,6 +14,10 @@ const { Textarea } = window.Serupa;
 // a count under the text: "32 / 280"
 <Textarea id="bio" maxLength={280} showCount />
 
+// a comment box: Attach and Send in a row under the text, inside the box
+<Textarea aria-label="Comment" autoResize maxRows={8} showCount maxLength={2000}
+  actions={<><IconButton icon="attach_file" label="Attach a file" size="sm" variant="ghost" /><Button size="sm" type="submit">Comment</Button></>} />
+
 // invalid: say what's wrong in text, linked to the field
 <Textarea id="desc" invalid aria-describedby="desc-error" />
 <p id="desc-error">Write at least 20 characters.</p>
@@ -23,9 +27,11 @@ const { Textarea } = window.Serupa;
 
 - Answers that can run past one line: comments, descriptions, notes, messages.
 - Text with a length limit people need to plan around, such as a bio (with `maxLength` and `showCount`).
+- A comment or reply box with its buttons inside the frame, such as Attach and Send (with `actions`).
 
 ## When not to use
 
+- A conversation with an assistant or a person, where Enter sends and replies stream in: use [ChatComposer](../Chat/README.md).
 - A name, an email or a search: use [Input](../Input/README.md), or [SearchInput](../SearchInput/README.md) for a search.
 
 ## Anatomy
@@ -34,11 +40,13 @@ Drawn from the `Count` story.
 
 1. **Field** (`.dk-textarea__field`): where the text is typed; it can grow with it.
 2. **Count** (`.dk-textarea__count`): how many characters are left, announced as the limit nears.
+3. **Actions** (`.dk-textarea__actions`): an optional row of buttons under the text, inside the box.
 
 ## Usage
 
 - Size `rows` to the answer you expect, so people see how much to write: 2 or 3 for a short note, 5 or more for a description.
 - Use `autoResize` where the page has room to grow, such as a comment box; give it a `maxRows` so a long text doesn't push the page's buttons out of view.
+- Put a form's own buttons in `actions` only when they act on this text, such as Attach or Send. Use `size="sm"` buttons in a `md` Textarea, so the row stays low. The buttons go at the end of the row. To start a toolbar (bold, italic, a mention), give it `className="me-auto"`. They come after the field in the Tab order and are disabled with it. With `showCount`, the count starts the row.
 - Show a count only when there's a limit people need to plan around, and match the textarea's size to the inputs in the same form.
 
 ## States
@@ -82,6 +90,7 @@ Drawn from the `Count` story.
 | `maxRows` | number | | With `autoResize`: the most lines it grows to; past that the text scrolls. Unset: no limit |
 | `resize` | `'vertical'` \| `'none'` | `'vertical'` | A handle to drag the height, or a fixed height |
 | `invalid` | boolean | `false` | A danger border and focus ring, and `aria-invalid` |
+| `actions` | ReactNode | | A row under the text, inside the box: buttons such as Attach or Send, at the end. With `showCount`, the count starts the row. A disabled Textarea disables them too |
 | `showCount` | boolean | `false` | A character count under the text, in characters as people see them (an emoji is one): "32 / 280" with `maxLength`, "32" without. It turns from `text-muted` to `text` once `maxLength` is reached. The numbers are in the locale's digits, as Calendar's days are: "٣٢ / ٢٨٠" in Egyptian Arabic |
 
 Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `disabled`, `readOnly`, `required`, `name`, `id`, `aria-*`) and `ref` go to the `<textarea>`. `className` and `style` go to the box, so `className="w-96"` sets its width (full width by default). The box has `data-component="textarea"` and `data-size`. Inside a `<fieldset disabled>` the box takes the disabled look too, as the native field is disabled with it.
@@ -109,6 +118,8 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-sm` | `spacing-1` | Top and bottom padding, sm (4px). |
 | `--textarea-padding-y-md` | `spacing-1.5` | Top and bottom padding, md (6px). |
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
+| `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
+| `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |
 | `--textarea-radius` | `radius-control` | Corner radius (6px), like Input and Button |
 <!-- token-table:end -->

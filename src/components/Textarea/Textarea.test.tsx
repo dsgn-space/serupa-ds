@@ -279,3 +279,41 @@ describe('Textarea', () => {
     expect(shadows()).toBe(1);
   }));
 });
+
+describe('Textarea actions', () => {
+  function Comment(p: { disabled?: boolean; showCount?: boolean }) {
+    return <EnUS><div style={{ width: '360px' }}>
+      <Textarea id="ac" aria-label="Comment" disabled={p.disabled} showCount={p.showCount} maxLength={p.showCount ? 200 : undefined} defaultValue="Looks good"
+        actions={<><button type="button" id="attach">Attach</button><button type="submit" id="send">Send</button></>} />
+      <button id="next">Next</button>
+    </div></EnUS>;
+  }
+  const row = () => el('ac').parentElement!.querySelector<HTMLElement>('.dk-textarea__actions')!;
+  test('a row under the text, inside the box, its buttons at the end and after the field in the Tab order; it groups nothing for a screen reader', async () => {
+    await render(<Comment />);
+    const b = el('ac').parentElement!.getBoundingClientRect(), t = el('ac').getBoundingClientRect(), r = row().getBoundingClientRect(), send = el('send').getBoundingClientRect();
+    expect([r.top >= t.bottom - 0.5, r.bottom <= b.bottom, Math.round(b.right - send.right), row().getAttribute('role'), el('ac').parentElement!.className.includes('dk-textarea--actions')]).toEqual([true, true, 7, 'none', true]);
+    el('ac').focus();
+    await userEvent.tab();
+    expect(document.activeElement!.id).toBe('attach');
+    await userEvent.tab(); await userEvent.tab();
+    expect(document.activeElement!.id).toBe('next');
+  });
+
+  test('disabled with the field; a press on the row\'s empty space focuses the field, a press on a button doesn\'t', async () => {
+    const { rerender } = await render(<Comment disabled />);
+    expect([(el('attach') as unknown as HTMLButtonElement).matches(':disabled'), (el('send') as unknown as HTMLButtonElement).matches(':disabled')]).toEqual([true, true]);
+    await rerender(<Comment />);
+    const r = row().getBoundingClientRect();
+    await userEvent.click(row(), { position: { x: 10, y: r.height / 2 } });
+    expect(document.activeElement).toBe(el('ac'));
+    await userEvent.click(el('attach'));
+    expect(document.activeElement!.id).toBe('attach');
+  });
+
+  test('with showCount the count starts the row, still describing the field', async () => {
+    await render(<Comment showCount />);
+    const c = row().querySelector<HTMLElement>('.dk-textarea__count')!;
+    expect([row().firstElementChild === c, c.textContent, el('ac').getAttribute('aria-describedby') === c.id, Math.round(c.getBoundingClientRect().left + parseFloat(css(c).paddingLeft) - el('ac').getBoundingClientRect().left)]).toEqual([true, '10 / 200', true, 12]);   // its text lines up with the field's text
+  });
+});
