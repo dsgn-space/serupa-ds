@@ -686,7 +686,7 @@ describe('Button disabled', () => {
       {VARIANTS.flatMap((v) => [<Button key={v} variant={v} disabled>Save</Button>, <Button key={v + 'd'} variant={v} destructive disabled>Delete</Button>])}
       <Button href="#x" disabled>Docs</Button>
     </div>);
-    const buttons = [...document.querySelectorAll<HTMLElement>('#dis .dk-btn')];
+    const buttons = [...document.querySelectorAll<HTMLElement>('#dis > *')];
     const back = (b: HTMLElement) => { const bg = getComputedStyle(b).backgroundColor; return /rgba\(0, 0, 0, 0\)|transparent/.test(bg) ? getComputedStyle(b.parentElement!).backgroundColor : bg; };
     const low: string[] = [];
     // Colors read at once, not part-way through the color transition a theme change starts.
