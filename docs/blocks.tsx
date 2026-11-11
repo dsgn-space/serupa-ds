@@ -146,7 +146,7 @@ const val = (v: Token['value']) => (typeof v === 'string' ? v : Object.values(v)
 export function TokenTable({ group, preview }: { group: string; preview?: 'space' | 'radius' | 'shadow' | 'duration' | 'none' }) {
   const g = T[group];
   const show = (t: Token) => {
-    const v = `var(--${t.name.replace(/\./g, '\\.')})`;   // --spacing-0\.5: a dot in a custom property's name is escaped in CSS
+    const v = `var(--${t.name.replace(/[\\.]/g, '\\$&')})`;   // --spacing-0\.5: a dot in a custom property's name is escaped in CSS
     if (preview === 'space') return <div style={{ height: 12, width: v, background: 'var(--primary)', borderRadius: 2 }} />;
     if (preview === 'radius') return <div style={{ height: 40, width: 40, border: '2px solid var(--primary)', borderRadius: v }} />;
     if (preview === 'shadow') return <div style={{ height: 40, width: 64, background: 'var(--surface)', boxShadow: t.name.startsWith('text-') ? undefined : v, textShadow: t.name.startsWith('text-') ? v : undefined, borderRadius: 6, display: 'grid', placeItems: 'center' }}>{t.name.startsWith('text-') ? 'Aa' : ''}</div>;

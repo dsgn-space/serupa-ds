@@ -44,8 +44,11 @@ const sh = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: 'inherit',
 let nodeBin = path.dirname(process.execPath);
 if (Number(process.versions.node.split('.')[0]) < want) {
   const index = await (await fetch('https://nodejs.org/dist/index.json')).json();
-  const version = index.map((/** @type {{ version: string }} */ d) => d.version).find((v) => v.startsWith(`v${want}.`));
-  if (!version) { console.error(`nodejs.org has no Node ${want} release.`); process.exit(1); }
+  const found = index.map((/** @type {{ version: string }} */ d) => d.version).find((v) => v.startsWith(`v${want}.`));
+  const m = /^v(\d+)\.(\d+)\.(\d+)$/.exec(found || '');
+  if (!m) { console.error(`nodejs.org has no Node ${want} release.`); process.exit(1); }
+  // Rebuilt from its numbers, so nothing but digits and dots from the index reaches a path or the tar command line.
+  const version = `v${Number(m[1])}.${Number(m[2])}.${Number(m[3])}`;
   const name = `node-${version}-${plat}-${arch}`;
   const dir = path.join(os.homedir(), '.local', name);
   if (!fs.existsSync(path.join(dir, 'bin', 'node'))) {
