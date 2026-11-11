@@ -9,6 +9,7 @@ import { Tooltip } from '../Tooltip/Tooltip';
 import { ContextMenu, keyShortcuts, Menu, MenuCheckboxItem, MenuGroup, MenuItem, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuSub } from './Menu';
 import { page } from 'vitest/browser';
 import { useShortcut } from '../KeyboardShortcuts/KeyboardShortcuts';
+import { SerupaProvider } from '../../internal/provider';
 
 const modded = (t: Element, key: string) => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -466,6 +467,20 @@ describe('Menu', () => {
     expect(items.map((i) => i.getAttribute('aria-keyshortcuts'))).toEqual(['Meta+E', 'Control+Shift+KeyP', null]);
     expect([items[0].querySelector('kbd')!.textContent, items[0].querySelector('kbd')!.getAttribute('aria-hidden')]).toEqual(['⌘E', 'true']);
     await expect.element(page.getByRole('menuitem', { name: 'Edit', exact: true })).toBeInTheDocument();
+  });
+
+  test('shortcut as keys follows the platform: ["mod", "shift", "K"] is "⇧⌘K" (Meta) on an Apple device, modifiers in each platform's order, and "Ctrl+Shift+K" (Control) elsewhere', async () => {
+    const items = (id: string) => [...menuOf(id).querySelectorAll<HTMLElement>('[role=menuitem]')].map((i) => [i.querySelector('kbd')!.textContent, i.getAttribute('aria-keyshortcuts')]);
+    const menu = (id: string) => <Menu open trigger={<Button id={id}>More</Button>}>
+      <MenuItem shortcut={['mod', 'shift', 'K']}>Search</MenuItem>
+      <MenuItem shortcut={['alt', 'up']}>Move up</MenuItem>
+      <MenuItem shortcut={['mod', '+']}>Zoom in</MenuItem>
+    </Menu>;
+    const screen = await render(<SerupaProvider platform="other">{menu('kso')}</SerupaProvider>);
+    expect(items('kso')).toEqual([['Ctrl+Shift+K', 'Control+Shift+K'], ['Alt+↑', 'Alt+ArrowUp'], ['Ctrl++', 'Control+Plus']]);
+    await screen.unmount();
+    await render(<SerupaProvider platform="apple">{menu('ksa')}</SerupaProvider>);
+    expect(items('ksa')).toEqual([['⇧⌘K', 'Meta+Shift+K'], ['⌥↑', 'Alt+ArrowUp'], ['⌘+', 'Meta+Plus']]);
   });
 
   test('keyShortcuts: Mac symbols written together, words with + or spaces, named keys, single letters upper case', () => {
