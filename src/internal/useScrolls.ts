@@ -11,7 +11,8 @@ import { useIsoLayoutEffect } from './cn';
 export function useScrolls(target: HTMLElement | null | React.RefObject<HTMLElement | null>, onMeasure?: () => void): boolean {
   const [scrolls, setScrolls] = React.useState(false);
   const measured = React.useRef(onMeasure);
-  useIsoLayoutEffect(() => { measured.current = onMeasure; });   // the latest, before the measuring effect below runs
+  // every render: keeps the latest callback (often a new function each render), before the measuring effect below runs.
+  useIsoLayoutEffect(() => { measured.current = onMeasure; });
   useIsoLayoutEffect(() => {
     const el = target && 'current' in target ? target.current : target;
     if (!el) return;
