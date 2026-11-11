@@ -20,25 +20,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [components, checks, storybook]
+        # Visual against tools/test/baseline-visual-<browser>/ (visual.mjs), drawn in this same image.
+        group: [components, checks, storybook, visual]
         browser: [firefox, webkit]
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --cpus 4
+    env:
+      # Firefox and WebKit from the image's own browsers.
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: .nvmrc
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps ${{ matrix.browser }}
-      - run: sudo apt-get install -y --no-install-recommends fonts-liberation
+          browsers: "false"
+      - run: apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
       - name: Build the package
         run: npm run build
       - name: Build Storybook
-        if: matrix.group == 'storybook'
+        if: matrix.group == 'storybook' || matrix.group == 'visual'
         run: npm run build-storybook
       - name: ${{ matrix.group }} in ${{ matrix.browser }}
         shell: bash
@@ -80,5 +84,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RESULT: ${{ needs.components.result }}
-          JOBS: components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit
+          JOBS: components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
         run: node tools/nightly-issue.mjs artifacts "$RESULT"

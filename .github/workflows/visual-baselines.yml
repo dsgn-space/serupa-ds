@@ -22,7 +22,13 @@ permissions: {}
 jobs:
   render:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-24.04
+    # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --cpus 4
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /github/home/.cache/ms-playwright
     timeout-minutes: 45
     permissions:
       contents: read
@@ -33,13 +39,7 @@ jobs:
           persist-credentials: false
           # The base branch's history too, to find where the pull request started (git merge-base).
           fetch-depth: 0
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      # --ignore-scripts: npm ci would otherwise run the "prepare" build, and the next step builds.
-      - run: npm ci --ignore-scripts
-      - uses: ./.github/actions/playwright
+      - uses: ./.github/actions/setup
       - name: Render the baselines
         run: |
           base=$(git merge-base "origin/$BASE_REF" HEAD)

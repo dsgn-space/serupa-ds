@@ -1,0 +1,44 @@
+name: Setup
+description: >-
+  What every CI job needs, as the GitLab jobs had it: run inside Playwright's image (the job's container), tools/setup.mjs
+  adds the Node major devEngines asks for, npm ci, and the Chromium revision Playwright pins (Chrome for Testing on x64),
+  with npm's download cache and the browser kept between runs.
+inputs:
+  browsers:
+    description: "false for jobs that never start a browser (build, types and lint)"
+    default: "true"
+  install:
+    description: "false to leave node_modules alone (no npm ci)"
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - id: v
+      shell: bash
+      run: |
+        echo "playwright=$(node -p "require('./package-lock.json').packages['node_modules/playwright-core']?.version || 'none'")" >> "$GITHUB_OUTPUT"
+        echo "arch=$(uname -m)" >> "$GITHUB_OUTPUT"
+    - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.npm
+        key: npm-${{ steps.v.outputs.arch }}-${{ hashFiles('package-lock.json') }}
+        restore-keys: npm-${{ steps.v.outputs.arch }}-
+    - if: inputs.browsers == 'true'
+      id: browser
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.cache/ms-playwright
+        key: chromium-${{ steps.v.outputs.arch }}-${{ steps.v.outputs.playwright }}
+    # Unzip only for a first Chromium download, when the cache doesn't have it yet.
+    - if: inputs.browsers == 'true' && steps.browser.outputs.cache-hit != 'true'
+      shell: bash
+      run: command -v unzip >/dev/null || { apt-get update -qq && apt-get install -y -qq --no-install-recommends unzip >/dev/null; }
+    - shell: bash
+      env:
+        FLAGS: ${{ inputs.browsers != 'true' && '--no-browsers' || '' }} ${{ inputs.install != 'true' && '--no-ci' || '' }}
+      run: |
+        # The checkout belongs to the runner's user, the container runs as root.
+        git config --global --add safe.directory "$PWD"
+        node tools/setup.mjs $FLAGS
+        NODE_DIR="$(ls -d "$HOME"/.local/node-v*/bin 2>/dev/null | sort -V | tail -1 || true)"
+        if [ -n "$NODE_DIR" ]; then echo "$NODE_DIR" >> "$GITHUB_PATH"; fi
