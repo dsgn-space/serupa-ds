@@ -220,6 +220,8 @@ export const labels: SerupaLabels = {
   markRead: 'Позначити як прочитане',
   markAllRead: 'Позначити все як прочитане',
   clearNotifications: 'Очистити все',
+  clearNotificationsConfirm: 'Очистити всі сповіщення? Це не можна скасувати.',
+  keepNotifications: 'Залишити',
   notificationsUnread: (count) => (count ? 'Сповіщення, непрочитаних: ' + n(count) : 'Сповіщення'),
   decrease: 'Зменшити',
   increase: 'Збільшити',

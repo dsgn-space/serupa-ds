@@ -218,6 +218,8 @@ export const labels: SerupaLabels = {
   markRead: 'Marcar como leída',
   markAllRead: 'Marcar todo como leído',
   clearNotifications: 'Borrar todo',
+  clearNotificationsConfirm: '¿Borrar todas las notificaciones? No se puede deshacer.',
+  keepNotifications: 'Conservarlas',
   notificationsUnread: (count) => (count ? 'Notificaciones, ' + n(count) + ' sin leer' : 'Notificaciones'),
   decrease: 'Disminuir',
   increase: 'Aumentar',

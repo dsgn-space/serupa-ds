@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   markRead: '标为已读',
   markAllRead: '全部标为已读',
   clearNotifications: '全部清除',
+  clearNotificationsConfirm: '清除所有通知？此操作无法撤消。',
+  keepNotifications: '保留',
   notificationsUnread: (count) => (count ? '通知，' + n(count) + ' 条未读' : '通知'),
   decrease: '减少',
   increase: '增加',

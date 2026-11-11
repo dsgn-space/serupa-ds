@@ -117,7 +117,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |
-| `--drawer-padding` | `spacing-6` | Padding inside the panel (24px). |
+| `--drawer-padding` | `space-surface` | Padding inside the panel (24px). |
 | `--drawer-gap` | `spacing-4` | Space between the header and the body (16px). |
 | `--drawer-border-width` | `border-width-1` | The line above the footer (1px). |
 | `--drawer-radius` | `radius-container` | The corners on the open side of a top or bottom drawer (12px). |

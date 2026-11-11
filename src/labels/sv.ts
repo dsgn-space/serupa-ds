@@ -215,6 +215,8 @@ export const labels: SerupaLabels = {
   markRead: 'Markera som läst',
   markAllRead: 'Markera alla som lästa',
   clearNotifications: 'Rensa alla',
+  clearNotificationsConfirm: 'Rensa alla aviseringar? Det går inte att ångra.',
+  keepNotifications: 'Behåll dem',
   notificationsUnread: (count) => (count ? 'Aviseringar, ' + n(count) + ' olästa' : 'Aviseringar'),
   decrease: 'Minska',
   increase: 'Öka',

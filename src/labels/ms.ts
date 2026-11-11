@@ -215,6 +215,8 @@ export const labels: SerupaLabels = {
   markRead: 'Tandai sebagai dibaca',
   markAllRead: 'Tandai semua sebagai dibaca',
   clearNotifications: 'Kosongkan semua',
+  clearNotificationsConfirm: 'Kosongkan semua pemberitahuan? Tindakan ini tidak boleh dibatalkan.',
+  keepNotifications: 'Simpan',
   notificationsUnread: (count) => (count ? 'Pemberitahuan, ' + n(count) + ' belum dibaca' : 'Pemberitahuan'),
   decrease: 'Kurangkan',
   increase: 'Tambah',

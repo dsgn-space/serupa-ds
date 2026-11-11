@@ -217,6 +217,8 @@ export const labels: SerupaLabels = {
   markRead: '읽음으로 표시',
   markAllRead: '모두 읽음으로 표시',
   clearNotifications: '모두 지우기',
+  clearNotificationsConfirm: '모든 알림을 지울까요? 되돌릴 수 없습니다.',
+  keepNotifications: '그대로 두기',
   notificationsUnread: (count) => (count ? '알림, 읽지 않음 ' + n(count) + '개' : '알림'),
   decrease: '줄이기',
   increase: '늘리기',

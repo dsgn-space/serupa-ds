@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   markRead: '既読にする',
   markAllRead: 'すべて既読にする',
   clearNotifications: 'すべてクリア',
+  clearNotificationsConfirm: 'すべての通知をクリアしますか？元に戻せません。',
+  keepNotifications: '残す',
   notificationsUnread: (count) => (count ? '通知、未読 ' + n(count) + ' 件' : '通知'),
   decrease: '減らす',
   increase: '増やす',

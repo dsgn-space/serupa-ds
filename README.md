@@ -168,6 +168,10 @@ The package also exports what the components use themselves, so a component you 
 | `announce(text, { assertive? })` | Says `text` to screen readers through the components' live regions, which move into an open Dialog or Drawer so it's heard there too. `assertive` interrupts: only for errors. |
 | `announcePage({ title?, focus? })` | After a client-side route change, does what a full page load would: focuses the new page's main heading (the `h1` in `<main>`, made focusable with `tabindex="-1"`) and says its title (`document.title` by default) to screen readers, unless the focused heading already says it. `focus` takes an element or a selector, or `false` to leave focus where it is. Call it in an effect once the new page has rendered. |
 | `withViewTransition(update, { types? })` | Runs a state change as a View Transition, so what it moves glides to its new place instead of jumping: a list reordered or filtered, a card expanded, a layout switched. Mark what should travel with `view-transition-name` or the `view-transition-match` class. It uses `motion-change-md` with `ease-move`, only crossfades under reduced motion, and applies the change at once where View Transitions are missing. |
+| `useBreakpoint(name, { serverValue? })` | Whether the screen is at least `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px) wide: the `screen-*` tokens, so markup the hook picks switches at the same width as the `md:` utilities around it. Kept up to date as the window resizes. |
+| `useMediaQuery(query, { serverValue? })` | Whether any CSS media query matches now, such as `'(hover: hover)'`, kept up to date. Server HTML and hydration use `serverValue` (default `false`) and the browser's answer follows right after, so nothing mismatches. Prefer CSS where it can do the job: a hook is for when the markup itself changes. |
+| `useReducedMotion()` | Whether the visitor asked for less motion, to skip an animation you run from JavaScript (a smooth scroll, a count going up). CSS transitions already follow the setting through the motion tokens. |
+| `useCopyToClipboard({ copiedLabel?, announce?, timeout? })` | CopyButton's copying for a control that isn't a CopyButton, such as a "Copy link" menu item: `copy(value)` resolves `true` once it's on the clipboard (`false` when the browser refuses), `copied` stays true for `timeout` ms, and it says "Copied", or why it couldn't, to screen readers unless `announce` is `false`. It works inside a modal Dialog and where the clipboard API is refused. |
 
 ```tsx
 import { announce, useLocale } from "serupa-ds";
@@ -191,6 +195,20 @@ function RouteAnnouncer({ path }: { path: string }) {
     announcePage();
   }, [path]);
   return null;
+}
+```
+
+```tsx
+import { Button, Menu, MenuItem, toast, useBreakpoint, useCopyToClipboard } from "serupa-ds";
+
+function ShareMenu({ url }: { url: string }) {
+  const wide = useBreakpoint("md");
+  const { copy } = useCopyToClipboard({ announce: false });   // the toast says it
+  return (
+    <Menu trigger={<Button variant="secondary">{wide ? "Share project" : "Share"}</Button>}>
+      <MenuItem icon="link" onSelect={() => { void copy(url).then((ok) => toast(ok ? "Link copied" : "Couldn't copy the link")); }}>Copy link</MenuItem>
+    </Menu>
+  );
 }
 ```
 
