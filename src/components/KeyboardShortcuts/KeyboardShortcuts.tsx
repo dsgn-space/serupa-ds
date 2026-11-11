@@ -9,6 +9,7 @@ import { topModal } from '../../internal/layers';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import { Dialog, type DialogProps } from '../Dialog/Dialog';
 import { Kbd, isApple } from '../Kbd/Kbd';
+import { Switch } from '../Switch/Switch';
 import { DescriptionItem, DescriptionList } from '../DescriptionList/DescriptionList';
 import { en as words } from './labels';
 
@@ -95,6 +96,7 @@ function onKey(e: KeyboardEvent): void {
   for (let i = entries.length - 1; i >= 0; i--) {
     const x = entries[i];
     if (!matches(x, e, x.apple)) continue;
+    if (characterKey(x) && !singleKeysOn()) continue;   // turned off in the help dialog
     // The field itself, not its web component's host: a keydown from a shadow root's <input> reaches the document
     // retargeted to the host element, and a lone "g" typed there ran the page's "g" (L8E43).
     if (typing(e.composedPath()[0] || e.target) && !x.inInputs && !x.mod && !x.ctrl && !x.meta) continue;
@@ -116,6 +118,24 @@ function add(x: Registered): () => void {
 const watch = (w: () => void) => { watchers.add(w); return () => { watchers.delete(w); }; };
 const current = () => entries;
 const none = () => NONE;
+
+/* Single-key shortcuts (a character key with no mod, ctrl, cmd or alt, such as "?" or "N") can be turned off by the
+   person using the page, from the switch in the help dialog (WCAG 2.1.4): speech input, or a stray key, sets them off
+   by accident. The choice is kept in localStorage for every page of the app; where storage is blocked it lasts until
+   the page reloads. Keys such as Escape or the arrows aren't character keys, so they keep working. */
+const SINGLE_KEYS = 'serupa-single-key-shortcuts';
+let single: boolean | undefined;
+function singleKeysOn(): boolean {
+  if (single === undefined) { try { single = localStorage.getItem(SINGLE_KEYS) !== 'off'; } catch { single = true; } }
+  return single;
+}
+function setSingleKeys(on: boolean): void {
+  single = on;
+  try { if (on) localStorage.removeItem(SINGLE_KEYS); else localStorage.setItem(SINGLE_KEYS, 'off'); } catch { /* blocked: this page only */ }
+  changed();
+}
+const characterKey = (c: Combo): boolean => c.key.length === 1 && !c.mod && !c.ctrl && !c.meta && !c.alt;
+const on = () => true;
 
 /* useShortcut: runs handler when the keys are pressed anywhere on the page, while the component is mounted. Keys are
    as Kbd takes them ("mod" is ⌘ on Apple devices and Ctrl elsewhere). It doesn't fire while typing in a text field
@@ -161,6 +181,10 @@ export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, Ke
   const help = props.helpKeys === false ? null : props.helpKeys && props.helpKeys.length ? props.helpKeys : ['?'];
   useShortcut(help || [], () => change(true, { reason: 'trigger' }), { description: labels.showShortcuts, enabled: !!help && !open });
   const live = React.useSyncExternalStore(watch, current, none);
+  const singleKeys = React.useSyncExternalStore(watch, singleKeysOn, on);
+  // The switch shows while a one-key shortcut is set up or listed: "?" itself, by default.
+  const single1 = (keys: string[]) => { const c = parse(keys); return !!c && characterKey(c); };
+  const hasSingle = (!!help && single1(help)) || live.some(characterKey) || (props.shortcuts || []).some((x) => single1(x.keys));
   // By group, in the order each first appears; the same keys and words listed once.
   const groups = new Map<string, Shortcut[]>();
   const seen = new Set<string>();
@@ -172,7 +196,9 @@ export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, Ke
   }
   return (
     <Dialog {...rest} ref={ref} className={cn('dk-keyboard-shortcuts', props.className)}
-      title={props.title != null ? props.title : labels.keyboardShortcuts} open={open} onOpenChange={change}>
+      title={props.title != null ? props.title : labels.keyboardShortcuts} open={open} onOpenChange={change}
+      footer={hasSingle ? <Switch className="dk-keyboard-shortcuts__single" checked={singleKeys} onCheckedChange={setSingleKeys}
+        description={labels.singleKeyHint}>{labels.singleKeyShortcuts}</Switch> : undefined}>
       {[...groups].map(([name, items]) => (
         <section key={name} className="dk-keyboard-shortcuts__group">
           {groups.size > 1 ? <h3 className="dk-keyboard-shortcuts__heading">{name}</h3> : null}

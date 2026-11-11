@@ -169,7 +169,7 @@
       "name": "Character Key Shortcuts",
       "level": "A",
       "conformance": "Supports",
-      "remarks": "No component reacts to a single character key on the page. Type-ahead in menus, lists and trees works only while focus is in them."
+      "remarks": "KeyboardShortcuts opens its help dialog on \"?\" by default, and useShortcut can set up other single character keys. The help dialog has a \"Single-key shortcuts\" switch that turns all of them off, kept for every page; shortcuts with a modifier and named keys such as F2 keep working. No other component reacts to a single character key on the page: type-ahead in menus, lists and trees works only while focus is in them."
     },
     {
       "id": "2.2.1",

@@ -191,6 +191,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: '키보드 단축키',
   generalShortcuts: '일반',
   showShortcuts: '키보드 단축키 보기',
+  singleKeyShortcuts: '한 키 단축키',
+  singleKeyHint: '? 같은 한 키 단축키(텍스트 입력란 밖). 실수로 실행되면 끄세요.',
   opensInNewTab: '(새 탭에서 열림)',
   loadMore: '더 불러오기',
   showingOf: (shown, total) => `${total}개 중 ${shown}개 표시`,

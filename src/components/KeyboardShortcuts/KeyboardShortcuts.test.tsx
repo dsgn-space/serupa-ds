@@ -139,6 +139,49 @@ describe('KeyboardShortcuts', () => {
     expect(log).toEqual(['compose']);
   });
 
+  // WCAG 2.1.4: a shortcut that is one character key can be turned off by the person using the page.
+  test('the dialog\'s "Single-key shortcuts" switch turns off "?" and every one-key shortcut, kept for the next page; mod shortcuts and named keys keep working', async () => {
+    const log: string[] = [];
+    try {
+      const screen = await render(<SerupaProvider locale="en" platform="other">
+        <button id="before">Before</button>
+        <Shortcut keys={['mod', 'K']} log={log} name="search" description="Search" />
+        <Shortcut keys={['N']} log={log} name="new" description="New" />
+        <Shortcut keys={['F2']} log={log} name="rename" description="Rename" />
+        <KeyboardShortcuts id="ks" />
+      </SerupaProvider>);
+      el('before').focus();
+      await userEvent.keyboard('?');
+      await expect.poll(() => dialog()?.id).toBe('ks');
+      const single = () => dialog()!.querySelector<HTMLInputElement>('[role="switch"]')!;
+      expect([single().checked, single().labels?.[0]?.textContent?.startsWith('Single-key shortcuts')]).toEqual([true, true]);
+      await userEvent.click(single());
+      await expect.poll(() => single().checked).toBe(false);
+      expect(localStorage.getItem('serupa-single-key-shortcuts')).toBe('off');
+      await userEvent.keyboard('{Escape}');
+      await expect.poll(() => dialog()).toBe(null);
+      await userEvent.keyboard('?n{F2}{Control>}k{/Control}');
+      expect([dialog(), log]).toEqual([null, ['rename', 'search']]);
+      // A new page (a new mount) keeps the choice.
+      await screen.rerender(<SerupaProvider locale="en" platform="other"><Shortcut keys={['N']} log={log} name="new2" /><KeyboardShortcuts id="ks2" defaultOpen /></SerupaProvider>);
+      await expect.poll(() => dialog()?.id).toBe('ks2');
+      expect(single().checked).toBe(false);
+      await userEvent.click(single());
+      await expect.poll(() => single().checked).toBe(true);
+      expect(localStorage.getItem('serupa-single-key-shortcuts')).toBe(null);
+      await userEvent.keyboard('{Escape}');
+      await expect.poll(() => dialog()).toBe(null);
+      await userEvent.keyboard('n');
+      expect(log).toEqual(['rename', 'search', 'new2']);
+    } finally { localStorage.removeItem('serupa-single-key-shortcuts'); }
+  });
+
+  test('no switch when nothing is a single key: helpKeys with mod, and only mod shortcuts', async () => {
+    await render(<SerupaProvider locale="en" platform="other"><Shortcut keys={['mod', 'K']} log={[]} name="search" description="Search" /><KeyboardShortcuts helpKeys={['mod', '/']} defaultOpen /></SerupaProvider>);
+    await expect.poll(() => !!dialog()).toBe(true);
+    expect(dialog()!.querySelector('[role="switch"]')).toBe(null);
+  });
+
   test('one group shows no heading; helpKeys changes the keys or turns them off; open and onOpenChange control it', async () => {
     const changes: boolean[] = [];
     function Controlled() {
