@@ -73,3 +73,9 @@ export const LongText: Story = {
     rows: ROWS.map((r) => ({ ...r, note: 'A note long enough to need the frame to scroll sideways in a narrow column' })),
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a grid people edit cell by cell. */
+export const DoEditable: Story = { name: 'Do: editable', render: () => <Editable /> };
+/** Don't: a grid nobody edits, where a Table would do. */
+export const DontReadOnly: Story = { name: "Don't: read only" };
