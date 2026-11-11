@@ -82,6 +82,23 @@ describe('Blocks/Pricing', () => {
     expect(text('pro').replace(/\s/g, ' ')).toContain('Rp 1.500.000 ditagih per tahun');
   });
 
+  test('before anyone chooses, a line under the plans says paid plans renew until cancelled and links to where to cancel', async () => {
+    const renews = () => [...document.querySelectorAll('p')].find((p) => /renew/.test(p.textContent || ''))?.textContent;
+    await render(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} cancelHref="/settings/billing" /></SerupaProvider>);
+    expect(renews()).toBe('Paid plans renew every month at the price shown until you cancel. Cancel any time in Billing settings.');
+    await expect.element(page.getByRole('link', { name: 'Cancel any time in Billing settings' })).toHaveAttribute('href', '/settings/billing');
+    await userEvent.click(page.getByRole('radio', { name: /^Yearly/ }));
+    await expect.poll(renews).toMatch(/^Paid plans renew every year /);
+  });
+
+  test('with only free plans there is nothing to renew, so the line is left out; the link defaults to #settings-billing', async () => {
+    const free: PricingPlan[] = [{ id: 'free', name: 'Free', monthly: 0, yearly: 0, features: [] }];
+    const screen = await render(<SerupaProvider locale="en-US"><Pricing plans={free} currency="USD" onChoose={() => {}} /></SerupaProvider>);
+    expect(document.body.textContent).not.toMatch(/renew/);
+    await screen.rerender(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} /></SerupaProvider>);
+    await expect.element(page.getByRole('link', { name: 'Cancel any time in Billing settings' })).toHaveAttribute('href', '#settings-billing');
+  });
+
   test('the plans and each plan\'s features keep role="list", since Safari stops calling a list without bullets a list (GR151)', async () => {
     await render(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} /></SerupaProvider>);
     const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
