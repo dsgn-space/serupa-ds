@@ -65,6 +65,7 @@ export const labels: SerupaLabels = {
   showOptions: 'Tunjukkan pilihan',
   clearValue: (label) => (label ? 'Kosongkan ' + label : 'Kosongkan'),
   createOption: (text) => 'Tambah “' + text + '”',
+  moreResults: (c) => '+' + n(c) + ' lagi, terus menaip',
   valueAdded: (label) => label + ' ditambah',
   valueRemoved: (label) => label + ' dialih keluar',
   copied: 'Disalin',

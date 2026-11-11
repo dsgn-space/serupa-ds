@@ -64,6 +64,7 @@ export const labels: SerupaLabels = {
   showOptions: '選択肢を表示',
   clearValue: (label) => (label ? label + 'をクリア' : 'クリア'),
   createOption: (text) => '「' + text + '」を追加',
+  moreResults: (c) => '他 ' + n(c) + ' 件、続けて入力してください',
   valueAdded: (label) => label + 'を追加しました',
   valueRemoved: (label) => label + 'を削除しました',
   copied: 'コピーしました',

@@ -68,6 +68,7 @@ export const labels: SerupaLabels = {
   showOptions: 'Pokaż opcje',
   clearValue: (label) => (label ? 'Wyczyść: ' + label : 'Wyczyść'),
   createOption: (text) => 'Dodaj „' + text + '”',
+  moreResults: (c) => '+' + n(c) + ' więcej, pisz dalej',
   valueAdded: (label) => 'Dodano: ' + label,
   valueRemoved: (label) => 'Usunięto: ' + label,
   copied: 'Skopiowano',

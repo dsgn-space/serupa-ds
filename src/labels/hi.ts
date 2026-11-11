@@ -64,6 +64,7 @@ export const labels: SerupaLabels = {
   showOptions: 'विकल्प दिखाएँ',
   clearValue: (label) => (label ? label + ' हटाएँ' : 'हटाएँ'),
   createOption: (text) => '“' + text + '” जोड़ें',
+  moreResults: (c) => '+' + n(c) + ' और, टाइप करते रहें',
   valueAdded: (label) => label + ' जोड़ा गया',
   valueRemoved: (label) => label + ' हटाया गया',
   copied: 'कॉपी हो गया',

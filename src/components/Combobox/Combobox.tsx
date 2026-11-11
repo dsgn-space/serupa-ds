@@ -76,11 +76,16 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
       'Add "text"' (the createOption label). Picking it calls onCreate with the text (trimmed); return the new option's
       value to pick it (and add the option to options), or nothing to leave the pick to you. */
   onCreate?: ((text: string) => V | void) | undefined;
+  /** Shows at most this many matching options, with "+12 more, keep typing" under them (the moreResults label), said
+      with the count once typing stops. For long lists where the first few matches are enough. Default: every match. */
+  limit?: number | undefined;
 }
 /** Picks one option. */
 export interface ComboboxSingleProps<V extends string = string> extends ComboboxBaseProps<V> {
   /** Picks one option (default); true picks any number, as tags. */
   multiple?: false | undefined;
+  /** true: the typed text is the value and the options only suggest (see ComboboxFreeTextProps). */
+  freeText?: false | undefined;
   /** The selected value (controlled), or null. Use with onValueChange. */
   value?: V | null | undefined;
   /** The value selected at first (uncontrolled). */
@@ -88,11 +93,31 @@ export interface ComboboxSingleProps<V extends string = string> extends Combobox
   /** Called with the picked value, or null when the field is emptied or cleared. */
   onValueChange?: ((value: V | null) => void) | undefined;
 }
+/** Free text is the value; the options only suggest. */
+export interface ComboboxFreeTextProps<V extends string = string> extends ComboboxBaseProps<V> {
+  /** The typed text is the value, and the options are suggestions: picking one puts its label in the field, Escape
+      and leaving the field keep what's typed, and Enter with no suggestion active sends the form. For a search box, a
+      city or a job title where anything may be typed. */
+  freeText: true;
+  /** Completes the text in the field with the first suggestion that starts with it, the added part selected, so
+      typing on replaces it and Delete removes it (aria-autocomplete="both"). Default: false. */
+  inlineComplete?: boolean | undefined;
+  /** Free text is one value: multiple doesn't apply. */
+  multiple?: false | undefined;
+  /** The text (controlled), or null when the field is empty. Use with onValueChange. */
+  value?: string | null | undefined;
+  /** The text at first (uncontrolled). */
+  defaultValue?: string | null | undefined;
+  /** Called with the text as it's typed or a suggestion is picked, or null when the field is emptied. */
+  onValueChange?: ((value: string | null) => void) | undefined;
+}
 /** Picks any number of options, each shown as a tag in the field. */
 export interface ComboboxMultipleProps<V extends string = string> extends ComboboxBaseProps<V> {
   /** Picks any number of options: each shows as a removable tag before the text, picking toggles an option and keeps
       the list open, and Backspace in the empty field removes the last tag. */
   multiple: true;
+  /** Tags are picked options: freeText doesn't apply. */
+  freeText?: false | undefined;
   /** The selected values in order (controlled). Use with onValueChange. */
   value?: readonly V[] | undefined;
   /** The values selected at first (uncontrolled). */
@@ -100,8 +125,8 @@ export interface ComboboxMultipleProps<V extends string = string> extends Combob
   /** Called with every selected value, in the order they were picked. */
   onValueChange?: ((value: V[]) => void) | undefined;
 }
-export type ComboboxProps<V extends string = string> = ComboboxSingleProps<V> | ComboboxMultipleProps<V>;
-type AnyProps = ComboboxBaseProps & { multiple?: boolean; value?: string | string[] | null; defaultValue?: string | string[] | null; onValueChange?: unknown };
+export type ComboboxProps<V extends string = string> = ComboboxSingleProps<V> | ComboboxMultipleProps<V> | ComboboxFreeTextProps<V>;
+type AnyProps = ComboboxBaseProps & { freeText?: boolean; inlineComplete?: boolean; multiple?: boolean; value?: string | string[] | null; defaultValue?: string | string[] | null; onValueChange?: unknown };
 const list = (v: string | string[] | null | undefined): string[] => (Array.isArray(v) ? v : []);
 
 const ROW = 32;   // a guess at an option row's height in px (control-height-md), until rows are measured
@@ -159,8 +184,9 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
   const locale = useLocale();
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
   const multi = props.multiple === true;
+  const free = !multi && props.freeText === true, inline = free && !!props.inlineComplete;
   const size = oneOf(SIZES, props.size, 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
@@ -185,7 +211,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
       if (twice) warnOnce('combobox-duplicate-value', `Combobox: more than one option has the value "${twice.value}", so picking one shows the first one's label and marks them all as selected. Give every option its own value.`);
     }
   }, [opts]);
-  const creatable = !!props.onCreate;
+  const creatable = !!props.onCreate && !free;
   // loadOptions: one request at a time. A new one (after the debounce) aborts the one before, and an answer that
   // isn't for the latest request is dropped, so a slow answer never overwrites a newer one.
   const loader = React.useRef<{ timer: number; ctl: AbortController | null; n: number; q: string | null }>({ timer: 0, ctl: null, n: 0, q: null });
@@ -225,8 +251,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const value = multi ? null : controlled ? one(props.value) : ownValue;
   const values = multi ? (controlled ? list(props.value) : ownValues) : [];
   const chosen = new Set(values);
-  const selected = multi ? null : opts.find((o) => o.value === value) || null;
-  const pickedLabel = selected ? selected.label : value != null ? seen.current.get(value) ?? '' : '';
+  const selected = multi ? null : opts.find((o) => (free ? o.label === value : o.value === value)) || null;
+  const pickedLabel = free ? value ?? '' : selected ? selected.label : value != null ? seen.current.get(value) ?? '' : '';
   // The field's text: inputValue when given (controlled), else its own. Every change goes through setText, which
   // tells onInputChange, so a controlled field follows picks, Escape and clearing as well as typing.
   const [ownText, setOwnText] = React.useState(() => props.defaultInputValue ?? pickedLabel);
@@ -302,7 +328,12 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     const t = fold(addText);
     return opts.some((o) => o.folded === t) ? null : { value: '', label: '', i: opts.length, folded: '', add: addText };
   }, [creatable, typed, addText, loading, opts]);
-  const shown = React.useMemo(() => (adding ? matches.concat(adding) : matches), [matches, adding]);
+  const cap = typeof props.limit === 'number' && props.limit >= 1 ? Math.floor(props.limit) : Infinity;
+  const more = Math.max(0, matches.length - cap);
+  const shown = React.useMemo(() => {
+    const few = cap < matches.length ? matches.slice(0, cap) : matches;
+    return adding ? few.concat(adding) : few;
+  }, [matches, adding, cap]);
   // An option by its index: the options, then the add row.
   const byIndex = (i: number) => (adding && i === adding.i ? adding : opts[i]);
   // The enabled matches, which the arrow and Page keys move through. Only the rows in view are drawn (below), so a
@@ -340,6 +371,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const pick = (o: Opt, reason: OpenChangeReason = 'select') => {
     if (o.disabled) return;
     later.current = null;
+    if (free) { commit(o.label); setText(o.label); setOpen(false, reason); setActive(-1); setTyped(false); return; }
     if (o.add != null) {
       // The add row: the app adds the option, and the value it returns is picked, labelled with the text until the
       // option arrives in options.
@@ -404,7 +436,24 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   });
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     later.current = null;
-    const t = e.target.value;
+    let t = e.target.value;
+    if (free) {
+      // Inline completion: the first suggestion that starts with what was typed fills in the rest, selected, unless
+      // the change was a deletion (Backspace on "Jak" mustn't bring back "Jakarta").
+      const kind = (e.nativeEvent as InputEvent).inputType || '';
+      const head = fold(t);
+      const o = inline && t && !kind.startsWith('delete') ? opts.find((x) => !x.disabled && x.folded.startsWith(head) && fold(x.label.slice(0, t.length)) === head) : undefined;
+      if (o && o.label.length > t.length) {
+        // Set on the field now too: typing "a" over the selected "akarta" of "jakarta" leaves the text as it was, so
+        // nothing renders and only this selects the rest again.
+        const n = t.length;
+        t = t + o.label.slice(n);
+        select.current = [n, t.length];
+        e.target.value = t;
+        e.target.setSelectionRange(n, t.length);
+      }
+      commit(t === '' ? null : t);
+    }
     setText(t); setTyped(true);
     if (!locked) setOpen(true, 'trigger');
     const q = fold(t.trim());
@@ -422,8 +471,9 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (e.key === 'ArrowDown') { e.preventDefault(); if (!open) show(e.altKey ? 'selected' : 'first'); else move(1); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); if (!open) show('last'); else move(-1); }
     else if (e.key === 'Enter' && open && waiting()) { e.preventDefault(); later.current = 'select'; }
+    else if (e.key === 'Enter' && open && free) { const o = byIndex(active); if (o && shown.includes(o)) { e.preventDefault(); pick(o); } else hide('select', false); }
     else if (e.key === 'Enter' && open) { e.preventDefault(); const o = byIndex(active); if (o && shown.includes(o)) pick(o); else { const x = exact() || adding; if (x) pick(x); else hide('select'); } }
-    else if (e.key === 'Escape' && open) { e.preventDefault(); e.stopPropagation(); hide('escape'); }
+    else if (e.key === 'Escape' && open) { e.preventDefault(); e.stopPropagation(); hide('escape', !free); }
     else if ((e.key === 'PageDown' || e.key === 'PageUp') && open) { e.preventDefault(); page(e.key === 'PageDown' ? 1 : -1); }
     else if (e.key === 'Backspace' && multi && text === '' && values.length) remove(values[values.length - 1]);
   };
@@ -431,6 +481,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (rest.onBlur) rest.onBlur(e);
     if (windowBlur(e)) return;   // switched windows: the typing goes on when they come back
     if (multi) { hide('blur'); return; }
+    if (free) { hide('blur', false); return; }   // what's typed is the value already
     // Its answer still decides the pick (GR106), but the list closes now, so it doesn't sit over the next field (GR107).
     if (waiting()) { later.current = 'blur'; setOpen(false, 'blur'); return; }
     const x = exact();
@@ -449,7 +500,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   // are plain text and the shared announcer says them, as it says the counts.
   const count = usable.length - (adding ? 1 : 0);
   const empty = typeof props.emptyText === 'string' ? props.emptyText : sds.labels.noResults;
-  const said = failed ? sds.labels.loadFailed : shown.length === 0 ? empty : count ? sds.labels.resultsCount(count, displayNumber(count, locale)) : adding ? sds.labels.createOption(adding.add!) : '';
+  const moreText = more ? sds.labels.moreResults(more, displayNumber(more, locale)) : '';
+  const said = failed ? sds.labels.loadFailed : shown.length === 0 ? empty : count ? sds.labels.resultsCount(count + more, displayNumber(count + more, locale)) + (moreText ? '. ' + moreText : '') : adding ? sds.labels.createOption(adding.add!) : '';
   React.useEffect(() => {
     if (!open || !typed || loading || !said) return;
     const t = setTimeout(() => announce(said), announcePause);
@@ -488,6 +540,13 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   toActive.current = () => { if (open && at >= 0) win.scrollToIndex(lay.slot[at]); };
   React.useEffect(() => toActive.current?.(), [active, open]);
 
+  // Inline completion's added part, selected once the field shows it.
+  const select = React.useRef<[number, number] | null>(null);
+  React.useLayoutEffect(() => {
+    const r = select.current, el = input.current;
+    select.current = null;
+    if (r && el && el.value.length >= r[1]) el.setSelectionRange(r[0], r[1]);
+  });
   const left = asIcon(props.leftIcon);
   const keep = (e: React.MouseEvent) => e.preventDefault();   // presses in the list and buttons keep focus in the field
   const listId = base + '-list';
@@ -526,7 +585,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   }
   const field = (
       <input {...rest} ref={mergedRef}
-        type="text" role="combobox" aria-expanded={open} aria-controls={open ? listId : undefined} aria-autocomplete="list" aria-haspopup="listbox"
+        type="text" role="combobox" aria-expanded={open} aria-controls={open ? listId : undefined} aria-autocomplete={inline ? 'both' : 'list'} aria-haspopup="listbox"
         aria-activedescendant={open && activeShown ? base + '-opt-' + active : undefined}
         autoComplete={rest.autoComplete || 'off'} autoCorrect="off" autoCapitalize={rest.autoCapitalize ?? 'off'} spellCheck={false} className="dk-input__field" value={text}
         // With multiple, the text is empty once tags are picked, so a native required blocked the form with tags in
@@ -561,6 +620,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
           {/* Only while open (and fading out): a closed Combobox with thousands of options keeps none of them in the page. */}
           {shownList ? rows : null}
         </div>
+        {more && !loading && !failed ? <div className="dk-combobox__message">{moreText}</div> : null}
         {!loading && failed ? <div className="dk-combobox__message">{sds.labels.loadFailed}</div> : null}
         {!loading && !failed && shown.length === 0 ? <div className="dk-combobox__message">{props.emptyText ?? sds.labels.noResults}</div> : null}
       </div>

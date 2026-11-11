@@ -67,6 +67,7 @@ export const labels: SerupaLabels = {
   showOptions: '옵션 보기',
   clearValue: (label) => (label ? label + ' 지우기' : '지우기'),
   createOption: (text) => '“' + text + '” 추가',
+  moreResults: (c) => '+' + n(c) + '개 더, 계속 입력하세요',
   valueAdded: (label) => label + ' 추가됨',
   valueRemoved: (label) => label + ' 삭제됨',
   copied: '복사됨',

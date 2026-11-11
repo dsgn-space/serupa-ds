@@ -16,6 +16,8 @@ export interface ComboboxLabels {
   clearValue: (label: string) => string;
   /** Combobox with onCreate: the row at the end of the list that adds the typed text as an option. */
   createOption: (text: string) => string;
+  /** Combobox with limit: under the list when more options match than it shows. `formatted` as in resultsCount. */
+  moreResults: (count: number, formatted: string) => string;
   /** Combobox with multiple, read out when an option is picked and its tag added ("Design added"). */
   valueAdded: (label: string) => string;
   /** Combobox with multiple, read out when a tag is removed ("Design removed"). */
@@ -29,6 +31,7 @@ export const en: ComboboxLabels = {
   showOptions: 'Show options',
   clearValue: (label) => label ? 'Clear ' + label : 'Clear',
   createOption: (text) => 'Add \u201c' + text + '\u201d',
+  moreResults: (count, formatted = String(count)) => '+' + formatted + ' more, keep typing',
   valueAdded: (label) => label + ' added',
   valueRemoved: (label) => label + ' removed',
 };
@@ -40,6 +43,7 @@ export const id: ComboboxLabels = {
   showOptions: 'Tampilkan pilihan',
   clearValue: (label) => label ? 'Hapus ' + label : 'Hapus',
   createOption: (text) => 'Tambahkan \u201c' + text + '\u201d',
+  moreResults: (count, formatted = String(count)) => '+' + formatted + ' lagi, terus ketik',
   valueAdded: (label) => label + ' ditambahkan',
   valueRemoved: (label) => label + ' dihapus',
 };
