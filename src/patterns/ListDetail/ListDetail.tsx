@@ -12,6 +12,8 @@ import { useLocale } from '../../internal/provider';
    - 1.3.1: the list and the open message are regions named by their headings; the open item is aria-current.
    - 1.4.10: on a narrow screen the panes don't squeeze side by side: the list shows, choosing one shows it alone
      with "Back to messages", and nothing scrolls sideways.
+   - 3.2.3: on a phone, the browser's or the system's Back from a message returns to the list, as "Back to messages"
+     does, rather than leaving the page: opening a message adds a history entry (with no new address).
    - 2.4.3: on a phone, opening a message puts focus on its heading, and Back puts it on the message it came from,
      still marked as open, so the place in the list is never lost. On a wide screen focus stays in the list.
    - 2.1.1: the panes' divider is a Splitter, moved with the arrow keys as well as by dragging.
@@ -66,13 +68,27 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
     else if (to) document.getElementById(`message-${to}`)?.focus();
   });
 
+  // On a phone, a message open on its own has a history entry of its own (pushed), so the browser's Back closes it.
+  const pushed = React.useRef(false);
   const choose = (m: Message) => (e: React.MouseEvent) => {
     e.preventDefault();
     setPicked(m.id);
     onSelect?.(m.id);
-    if (!wide) { setShowing(true); focus.current = 'detail'; }
+    if (!wide) {
+      setShowing(true); focus.current = 'detail';
+      if (!pushed.current) { history.pushState(history.state, ''); pushed.current = true; }
+    }
   };
-  const back = () => { setShowing(false); focus.current = open?.id ?? null; };
+  const close = () => { setShowing(false); focus.current = open?.id ?? null; };
+  // "Back to messages" closes it at once, and takes back the entry it added, which the listener below then ignores.
+  const back = () => { close(); if (pushed.current) { pushed.current = false; history.back(); } };
+  const closeRef = React.useRef(close);
+  React.useEffect(() => { closeRef.current = close; });
+  React.useEffect(() => {
+    const onPop = () => { if (pushed.current) { pushed.current = false; closeRef.current(); } };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
   const list = (
     <section aria-labelledby="messages-title" className="flex h-full min-w-0 flex-col gap-3 p-4">
