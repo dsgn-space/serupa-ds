@@ -55,7 +55,7 @@ describe('ShowMore', () => {
     try {
       await render(<SerupaProvider locale="en"><div lang="en" style={{ width: '300px', fontSize: '14px', lineHeight: '20px', fontFamily: 'SmLate, monospace' }}>
         <ShowMore id="f" lines={2}>Fresh coffee, packed well and sent the same day, with a note from the roaster.</ShowMore></div></SerupaProvider>);
-      await expect.element(page.getByRole('button', { name: 'Show more' })).toBeInTheDocument();
+      await expect.poll(() => page.getByRole('button', { name: 'Show more' }).query(), { timeout: 5000 }).not.toBeNull();
       document.head.append(rule);
       await expect.poll(() => page.getByRole('button').query(), { timeout: 5000 }).toBeNull();
       expect(text('f').scrollHeight).toBeLessThanOrEqual(text('f').clientHeight + 1);
